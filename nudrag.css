@@ -1,0 +1,97 @@
+.nuDragSelected {
+			outline:1px solid red;
+}
+
+
+.nuDragSelected:hover{
+			cursor:move;
+}
+
+
+.nuDragObject {
+			position:absolute;
+			border-style:none;
+			border-width:0px;
+			overflow:hidden;
+}
+
+
+.nuDragNoSelect {
+			-webkit-touch-callout: none;
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+}
+
+.nuDragArea {
+			position:absolute;
+			top:0px; 
+			left: 0px; 
+			border-style:solid; 
+			border-width:1px; 
+			border-color:black; 
+			-webkit-user-select:none; 
+			overflow:visible; 
+			background-color:white;
+			background-image: url("graphics/grid.png"); 
+			z-index: 1;
+}
+
+.nuDragDialog{
+			-webkit-box-shadow: 5px 5px 5px 0px rgba(150,147,150,1);
+			-moz-box-shadow: 5px 5px 5px 0px rgba(150,147,150,1);
+			box-shadow: 5px 5px 5px 0px rgba(150,147,150,1);
+}
+
+
+.nuSection{
+			-webkit-touch-callout: none;
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			border-width:1px;
+			font-size:12px;
+			font-family:Helvetica;
+}
+
+.nuDragLine{
+			position:absolute;
+			height:10px;
+			background-color:darkgrey;
+			border-style:none;
+			z-index:2000;
+}
+
+.nuDragLine:hover{
+			background-color:red;
+			cursor:ns-resize;
+}
+
+.nuDragToolbar {
+			cursor: pointer; 
+			list-style-type: none; 
+			text-align: center;
+			padding-top:4px;
+			font-family: Helvetica;
+			font-size: 14;
+			z-index: 1000;
+			
+}
+.nuToolbar {
+			cursor: pointer; 
+			text-align: center;
+			display: inline-block;
+			width:150px;
+			height:20px;
+			font-family: Helvetica;
+			
+}
+
+.nuToolbar:hover{
+			color:red;
+}
+
