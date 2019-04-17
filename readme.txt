@@ -1,11 +1,7 @@
-=== nuBuilder Forte ===
-Name: nuBuilder Forte
-Contributors: nubuilder
-Donate link: https://www.nubuilder.com/wordpress
-Tags: reports, manage data, inventory, statistics, report, customer report, user report, custom application, build application
-Requires at least: 4.9.8
-Tested up to: 4.9.8
-Stable tag: 4.9.8
+=== nuBuilder 4 ===
+Name: nuBuilder 4 - Standalone
+Contributors: Steven Copley
+Donate link: https://www.nubuilder.com/#donate
 Requires PHP: 5.2.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/old-licenses/gpl-3.0.html
@@ -55,10 +51,6 @@ nuBuilder is a enterprise level application builder but with no limitations on d
 
 == Installation ==
 
-If you are using nuBuilder as a Wordpress plugin, then follow these instructions:
-1. Upload the plugin files to the `/wp-content/plugins/nubuilder-forte` directory, or install the plugin through the WordPress plugins screen directly.
-2. Activate the plugin through the 'Plugins' screen in WordPress
-
 If you are using nuBuilder as a standalone application, then follow these instructions:
 1. Upload the unzipped nuBuilder files to your webroot 
 2. Edit nuconfig.php to set you database credentials and globeadmin credentials
@@ -66,7 +58,6 @@ If you are using nuBuilder as a standalone application, then follow these instru
 == Changelog ==
 
 = 1.0 =
-* This is the first version of nuBuilder Forte which has been converted to work as both a Wordpress plugin and the original mode as a standalone application.
 
 == Documentation ==
 

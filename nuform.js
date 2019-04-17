@@ -2612,6 +2612,8 @@ function nuPopulateLookup(fm, target){
 	var p 		= String($('#' + target).attr('data-nu-prefix'));
 	var f		= fm.lookup_values;
 	
+	window.nuSubformRow	= Number(p.substr(p.length - 3));
+	
 	for(var i = 0 ; i < f.length ; i++){
 		
 		var	id	= String(f[i][0]);
