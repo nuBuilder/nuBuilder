@@ -151,12 +151,12 @@ function nuBuildForm(f){
 		
 	}
 	
+	$('#nuSearchField').focus();
+	
 	if(window.nuOnLoad){
 		nuOnLoad();
 	}
 
-	$('#nuSearchField').focus();
-	
 	if(window.nuMESSAGES.length > 0){
 		
 		nuMessage(window.nuMESSAGES);
