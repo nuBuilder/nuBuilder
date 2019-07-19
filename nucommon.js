@@ -1,6 +1,7 @@
 
 window.nuDialog 				= new nuCreateDialog('');
 window.nuFORM					= new nuFormObject();
+window.nuRESPONSIVE 			= new nuResponseForm();
 window.nuHideMessage 			= true;
 window.nuDragID					= 1000;
 window.nuLastForm				= '';

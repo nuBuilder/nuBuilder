@@ -1,5 +1,268 @@
 
 
+class nuResponseForm {
+	
+	getStartPositions() {
+
+		var SR				= window.nuSERVERRESPONSE;
+
+		this.top			= 0;
+		this.objects		= SR.objects;
+		this.StartPositions	= [];
+		this.tabs			= SR.tabs;
+	
+		for (var i = 0 ; i < SR.objects.length ; i++){
+			
+			var sp			= this.setStartPosition(SR.objects[i]);
+
+			this.StartPositions.push(sp);
+			
+		}
+
+		this.getLongestLabel(this.StartPositions);
+
+	}
+
+	setStartPosition(o){
+
+		var	id		= o.id
+		var	lid		= 'label_' + o.id;
+
+		var l		= $('#' + lid);
+		var c 		= $('#' + id + 'code');
+		var d 		= $('#' + id + 'description');
+		
+		if(o.input == 'file'){
+			
+			id		= id + '_file';
+			o.type	= 'file';
+			
+		}
+		
+		
+		var sp		= {
+			id			: id,
+			labelid		: lid,
+			type		: o.type,
+			top			: Number(o.top),
+			left		: Number(o.left),
+			height		: Number(o.height),  
+			tab			: Number(o.tab),  
+			lleft		: l.length == 0 ? 0 : parseInt(l.css('left')),
+			lheight		: l.length == 0 ? 0 : parseInt(l.css('height')),
+			lwidth		: l.length == 0 ? 0 : parseInt(l.css('width')),
+			screenwidth	: isNaN(parseInt(c.css('width'))) ? 0 : parseInt(c.css('width')),
+			cwidth		: isNaN(parseInt(c.css('width'))) ? 0 : parseInt(c.css('width')),
+			dwidth		: isNaN(parseInt(d.css('width'))) ? 20 : parseInt(d.css('width')) + 20,
+			tabtitle	: window.nuSERVERRESPONSE.tabs[o.tab].title
+		};
+
+		return sp;
+		
+	}
+	
+	getLongestLabel(o){
+		
+		this.label_length = 0;
+		
+		for(var i = 0 ; i < o.length ; i++){
+			
+			if(o[i].lleft > 0){
+				
+				var w 	= $('#label_' + o.id).html();
+				var ww	= nuGetWordWidth(w);
+				this.label_length = Math.max(this.label_length, ww);
+
+			}
+			
+		}
+		
+		this.label_length  = this.label_length  + 5;
+	
+	}
+	
+
+	setSelect(){
+		
+		if($('#nuResponseTabs').length == 1){return;}
+		
+		var sel = document.createElement('select');
+		sel.setAttribute('id', 'nuResponseTabs');
+		$('#nuResponseTabs').remove();
+		$('.nuTab').hide();
+		$('#nuTabHolder').prepend(sel);
+		$('#nuResponseTabs').attr('onchange', 'nuSelectAllTabs(this)');
+
+		var tabs	= nuSERVERRESPONSE.tabs;
+
+		for(var n = 0 ; n < tabs.length ; n++){
+			
+			var t = tabs[n].title.replaceAll(' ', '&#160;')
+
+			$('#nuResponseTabs').append('<option value="nuTab' + n + '">' + t + '</option>');
+
+		}
+
+		$('#nuResponseTabs').val($('.nuTabSelected')[0].id);
+
+	}
+	
+
+
+	
+	setTabsColumn(all, wrap){
+	
+		var D	 = this.StartPositions;
+		var top = 10;
+		var scr	= 0;
+
+
+		if($('#nuResponseTabs').length == 1){
+			var tab	= String($('#nuResponseTabs').val()).substr(5);
+		}else{
+			var tab	= $('.nuTabSelected')[0].id.substr(5);
+		}
+
+
+		
+		$('.nuTabTitleColumn').remove();
+		
+		this.setSelect();
+
+		for (var i = 0 ; i < D.length ; i++){
+			
+			if(scr < D[i].cwidth + D[i].dwidth + 50){scr = (D[i].cwidth + D[i].dwidth + 50)}
+			
+			var dl	= D[i].left;
+
+			if(arguments.length == 2){
+				window.nuRESPONSEWRAP	= wrap;
+			}
+
+			if(tab == D[i].tab){
+
+				top 	= this.placeObject(D[i], top, window.nuRESPONSEWRAP);
+				
+				if($('#' + D[i].id).attr('data-nu-tab') != 'x'){
+					top = top + D[i].height + 10;
+				}
+
+			}
+			
+		}
+
+		top = top + 30;
+
+		$('#nuRECORD').append("<div id='nuTabTitleColumnBottom' style='left:0px;top:" + top + "px;position:absolute;visibility:hidden'>.<div>");
+		
+		$("[data-nu-form][data-nu-tab]:not([data-nu-lookup-id]):not('.nuIframe, .nuHtml')").show();
+		$(".nuIframe").css('visibility','visible');
+		$(".nuHtml").css('visibility','visible');
+		$("[data-nu-tab='x']").css('visibility','hidden');
+
+		$('.nuTabSelected').click();
+		
+	}
+	
+	placeObject(O, t, one_row){
+	
+		var left= 5;
+		var o 	= $('#' + O.id);
+		var l	= $('#label_' + O.id);
+		var c 	= $('#' + O.id + 'code');
+		var b 	= $('#' + O.id + 'button');
+		var d 	= $('#' + O.id + 'description');
+		var ll	= this.label_length + 5;
+
+		if(O.type == 'file'){
+			l	= $('#' + O.labelid);
+		}
+
+		if(one_row){
+			
+			l.css({top:t, left:left, width:this.label_length, 'text-align':'right'});
+			
+		}else{
+			
+			ll	= 0;
+			l.css({top:t, left:left, 'text-align':'left'});
+			
+			if($('#' + O.id).attr('data-nu-tab') != 'x'){
+				t = t + O.lheight + 2;
+			}
+			
+		}
+
+		o.css({top:t, left:left + ll});
+		c.css({top:t, left:left + ll});
+		b.css({top:t, left:left + ll + O.cwidth + 7});
+		d.css({top:t, left:left + ll + O.cwidth + 26});
+	
+		return t;
+		
+	}
+
+
+
+
+
+
+
+	
+	resetDefault(){
+	
+		var D	= this.StartPositions;
+		var ll	= this.label_length + 5;
+		
+		$('.nuTabTitleColumn').remove();
+		
+		this.unsetSelect();
+
+		for (var i = 0 ; i < D.length ; i++){
+			
+			$('#' + D[i].id).css({top:D[i].top, left:D[i].left})
+			$('#' + D[i].labelid).css({top:D[i].top, left:D[i].lleft, width:D[i].lwidth, 'text-align':'right'})
+			
+			if(D[i].type == 'lookup'){
+				
+				$('#' + D[i].id + 'code').css({top:D[i].top, left:D[i].left})
+				$('#' + D[i].id + 'button').css({top:D[i].top, left:D[i].left + D[i].cwidth + 7});
+				$('#' + D[i].id + 'description').css({top:D[i].top, left:D[i].left + D[i].cwidth + 26});
+
+			}
+		}
+			
+		$('.nuTabSelected').click();
+
+	}
+	
+
+
+	unsetSelect(){
+		
+		$('#nuResponseTabs').remove()
+		$('.nuTab').show();
+		
+	}
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+}
+
+
 class nuFormObject {
 	
 	constructor() {

@@ -223,6 +223,11 @@ window.nuHASH				= [];
 			$('#nuActionHolder').css('width', window.innerWidth);
 			$('#nuBreadcrumbHolder').css('width', window.innerWidth);
 			$('#nuTabHolder').css('width', window.innerWidth);
+			$('.nuTabTitleColumn').css('width', window.innerWidth);
+		}
+		
+		if(window.nuResponsive != null){
+			nuResponsive();
 		}
 		
 	}

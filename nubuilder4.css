@@ -109,6 +109,7 @@ textarea {
 }
 
 body {
+  transform-origin: top left;
   padding: 0px;
   margin: 0px;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -1051,7 +1052,17 @@ input[type=range]::-webkit-slider-runnable-track {
 	cursor:pointer;
 }
 
+.nuTabTitleColumn{
+	font-size: 30px;
+	font-weight:bold;
+	width:100%;
+}
 
-
+#nuResponseTabs{
+	top:-5px;
+	left:5px;
+	width:150px;
+	position:relative;
+}
 
 
