@@ -27,6 +27,7 @@ $PDF->SetAutoPageBreak(true);
 $PDF->setPrintHeader(false);
 $PDF->setPrintFooter(false);
 $REPORT                     = nuSetPixelsToMM($LAYOUT);
+
 $PDF->SetMargins(1,1,1);
 $fl							= json_decode(nuFontList());
 
@@ -311,7 +312,7 @@ class nuSECTION{
         $this->pageHeight     = $this->LAY->height;
         $this->sectionTop     = $sectionTop;
         $this->sectionHeight  = $this->LAY->groups[$group]->sections[$section]->height;
-		
+
     }
 
     public function buildSection(){
@@ -411,7 +412,7 @@ class nuSECTION{
         $pages                                = 0;
         $expandedSectionHeight                = $this->sectionHeight + $this->extendedHeight() - .25;
         $pageBreak                            = 0;
-		
+
         if( property_exists($this->LAY->groups[$this->group]->sections[$this->section], 'page_break') ) {
             $pageBreak                        = $this->LAY->groups[$this->group]->sections[$this->section]->page_break;
         }

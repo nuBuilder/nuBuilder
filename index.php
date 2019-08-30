@@ -17,7 +17,7 @@
 	nuMigrateSQL();
 ?>
 <!DOCTYPE html>
-<html onclick="nuClick(event)">
+<html id="nuhtml" onclick="nuClick(event)">
 <head>
 <title><?php echo $nuConfigTitle;?></title>
 <meta http-equiv='Content-type' content='text/html;charset=UTF-8'>
@@ -58,6 +58,8 @@ nuJSIndexInclude('nureportjson.js');
 nuJSIndexInclude('nuajax.js');       //-- calls to server
 nuCSSIndexInclude('nubuilder4.css');
 ?>
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
 <script>
 
@@ -224,10 +226,6 @@ window.nuHASH				= [];
 			$('#nuBreadcrumbHolder').css('width', window.innerWidth);
 			$('#nuTabHolder').css('width', window.innerWidth);
 			$('.nuTabTitleColumn').css('width', window.innerWidth);
-		}
-		
-		if(window.nuResponsive != null){
-			nuResponsive();
 		}
 		
 	}

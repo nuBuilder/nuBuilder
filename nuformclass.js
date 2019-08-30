@@ -3,13 +3,14 @@
 class nuResponseForm {
 	
 	getStartPositions() {
-
+		
 		var SR				= window.nuSERVERRESPONSE;
-
+		var scale			= nuTransformScale();
 		this.top			= 0;
 		this.objects		= SR.objects;
 		this.StartPositions	= [];
 		this.tabs			= SR.tabs;
+		$('body').css('transform', 'scale(1)');
 	
 		for (var i = 0 ; i < SR.objects.length ; i++){
 			
@@ -21,21 +22,24 @@ class nuResponseForm {
 
 		this.getLongestLabel(this.StartPositions);
 
+		$('body').css('transform', 'scale(' + scale + ')');
+
 	}
 
-	setStartPosition(o){
+	setStartPosition(O){
 
-		var	id		= o.id
-		var	lid		= 'label_' + o.id;
+		var	id		= O.id
+		var	lid		= 'label_' + O.id;
 
+		var o		= $('#' + id);
 		var l		= $('#' + lid);
 		var c 		= $('#' + id + 'code');
 		var d 		= $('#' + id + 'description');
 		
-		if(o.input == 'file'){
+		if(O.input == 'file'){
 			
 			id		= id + '_file';
-			o.type	= 'file';
+			O.type	= 'file';
 			
 		}
 		
@@ -43,18 +47,18 @@ class nuResponseForm {
 		var sp		= {
 			id			: id,
 			labelid		: lid,
-			type		: o.type,
-			top			: Number(o.top),
-			left		: Number(o.left),
-			height		: Number(o.height),  
-			tab			: Number(o.tab),  
+			type		: O.type,
+			top			: Number(O.top),
+			left		: Number(O.left),
+			height		: Number(O.height),  
+			tab			: Number(O.tab),  
 			lleft		: l.length == 0 ? 0 : parseInt(l.css('left')),
 			lheight		: l.length == 0 ? 0 : parseInt(l.css('height')),
+			owidth		: parseInt(o.css('width')),
 			lwidth		: l.length == 0 ? 0 : parseInt(l.css('width')),
-			screenwidth	: isNaN(parseInt(c.css('width'))) ? 0 : parseInt(c.css('width')),
 			cwidth		: isNaN(parseInt(c.css('width'))) ? 0 : parseInt(c.css('width')),
 			dwidth		: isNaN(parseInt(d.css('width'))) ? 20 : parseInt(d.css('width')) + 20,
-			tabtitle	: window.nuSERVERRESPONSE.tabs[o.tab].title
+			tabtitle	: window.nuSERVERRESPONSE.tabs[O.tab].title
 		};
 
 		return sp;

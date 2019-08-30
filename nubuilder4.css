@@ -34,28 +34,28 @@
 
 
 .php {
-   background-color: #cc99ff;
+   background-color: #f0e4fd;
    font-family:Lucida Console;
    padding: 2px;
    font-size: 10px;
 }
 
 .js {
-   background-color: #FFF3B1;
+   background-color: #fffbe2;
    font-family:Lucida Console;
    padding: 0px 2px 0px 2px;
    font-size: 10px;
 }
 
 .html {
-   background-color: #FFCFBA;
+   background-color: #feeee7;
    font-family:Lucida Console;
    padding: 2px;
    font-size: 10px;
 }
 
 .sql {
-   background-color: #C4E7FF;
+   background-color: #eaf6ff;
    font-family:Lucida Console;
    padding: 2px;
 }
@@ -98,6 +98,8 @@ select {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   border: 1px solid rgba(0, 0, 0, 0.2);
   box-sizing: initial;
+  border-radius: 2px;
+
 }
 
 textarea {
@@ -106,22 +108,29 @@ textarea {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   border: 1px solid rgba(0, 0, 0, 0.2);
   font-size: 13.3333px;
+  border-radius: 2px;
 }
 
 body {
+  background-color: #f9f9f9;
   transform-origin: top left;
   padding: 0px;
   margin: 0px;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13px;
-  color: #202020;
 }
 
 
 input {
   border: 1px solid rgba(0, 0, 0, 0.2);
   padding: 0px 2px 0px 2px;
+  border-radius: 2px;
 }
+
+button {
+  border-radius: 2px;
+}
+
 
 input[type=range]::-webkit-slider-runnable-track {
   background: darkgrey;
@@ -130,11 +139,15 @@ input[type=range]::-webkit-slider-runnable-track {
 
 
 .nuCellOdd{
-  background-color: #E6E6E6;
+  background-color: #F5F5F5;
+  border-style: solid;
+  border-width: 1px 0px 0px 0px;
 }
 
 .nuCellEven{
-  background-color: #E6E6E6;
+  background-color: white;
+  border-style: solid;
+  border-width: 1px 0px 0px 0px;
 }
 
 
@@ -158,20 +171,20 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 .nuEditBody {
-  background-color: #DEDEDE;
+  background-color: #f9f9f9;
 }
 
 .nuTabHolder {
-  background-color: #C1C1C1;
+  background-color: white;
   border-style: solid;
-  border-width: 1px 0px 0px 0px;
-  border-color: rgba(0, 0, 0, 0.08);
+  border-width: 0px 0px 1px 0px;
+  border-color: lightgrey;
   padding: 15px 0px 0px 0px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .nuActionHolder {
-  padding: 5px 0px 0px 0px;
+  padding: 20px 0px 0px 0px;
   background-color: white;
   height: 22px;
   text-align: left;
@@ -179,20 +192,20 @@ input[type=range]::-webkit-slider-runnable-track {
 
 .nuBreadcrumbHolder {
   padding: 5px 0px 5px 0px;
-  background-color: white;
-  color: orange;
-  font-size: 16px;
+  background-color: #00adef;
+  color: white;
+  font-size: 12px;
 }
 
 .nuBreadcrumb {
-  color: orange;
+  color: white;
   display: inline-block;
   text-decoration: underline;
-  font-size: 16px;
+  font-size: 12px;
 }
 
 .nuBreadcrumbArrow {
-  color: orange;
+  color: white;
   display: inline-block;
   font-size:12px;
 }
@@ -231,7 +244,7 @@ input[type=range]::-webkit-slider-runnable-track {
 
 
 .nuScroll, .input_nuScroll {
-  background-color: #EBEBEB;
+  background-color: #ebebeb;
 }
 
 .nuDate, .input_nuDate {
@@ -247,9 +260,9 @@ input[type=range]::-webkit-slider-runnable-track {
 
 
 .nuNotBreadcrumb {
-  color: orange;
+  color: white;
   display: inline-block;
-  font-size: 16px;
+  font-size: 12px;
 }
 
 .nuOptionsBox {
@@ -283,7 +296,7 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 .nuOptionsItem:hover {
-   background-color: darkorange;
+   background-color: #00adef;
    border-width: 0px;
    border-style: none;
    cursor: pointer;
@@ -294,7 +307,7 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 .nuOptionsList {
-   background-color: orange;
+   background-color: #BADEEB;
    box-shadow: 5px 5px 5px 0px rgba(150,147,150,1);
    padding-top: 4px;
    height:20px;
@@ -317,7 +330,7 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 .nuOptionsItemShortcutKey {
-   background-color: orange;
+   background-color: #BADEEB;
    color: darkslategray;
    height:20px;
    display: inline-block;
@@ -329,10 +342,12 @@ input[type=range]::-webkit-slider-runnable-track {
   display: inline;
   margin: 0px 5px;
   position:absolute;
+  background-color: transparent;
+  width: 99.3%;
 }
 
 .nuLogin {
-  background-color: #d8e4ff;
+  background-color: #c7f0ff;
   border-style: solid;
   border-width: 1px;
   border-color: rgba(0, 0, 0, 0.08);
@@ -346,18 +361,15 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 .nuLookupCode {
-  background-color: #b1dbad;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid lightgrey;
   text-align: left;
   position: absolute;
 }
 
 
 .nuLookupButton {
-  background-color: #D8D8D8;
-  border-style: solid;
-  border-width: 0px 1px 1px 0px;
-  border-color: darkgray;
+  background-color: transparent;
+  border-style: none;
   text-align: center;
   position: absolute;
   border-radius: 3px;
@@ -373,8 +385,6 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 .nuLookupButton:hover {
-  background-color: #CCCCCC;
-  border-width: 1px 0px 0px 1px;
   cursor: pointer;
 }
 
@@ -403,6 +413,7 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 .nuIcon {
+  color: black;
   width: 12px;
   height: 12px;
 }
@@ -414,6 +425,11 @@ input[type=range]::-webkit-slider-runnable-track {
 .nuLanding {
   border: 1px solid red;	
   cursor: pointer;
+}
+
+.nuSort {
+  font-weight: bold;
+  font-size: 14px;
 }
 
 .nuSort:hover {
@@ -436,23 +452,20 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 .nuBrowseTitle {
-  background-color: #CCCCCC;
+  background-color: white
   height: 55px;
-  border-style: solid;
-  border-width: 1px 0px 1px 0px;
-  border-color: rgba(0, 0, 0, 0.08);
+  border-style: none;
   position:absolute;
-  top:0px;
+  top:3px;
   font-size:12px;
   overflow: visible;
+  height:30px;
 }
 
 .nuBrowseTable {
-  background-color: #E6E6E6;
   height: 70px;
   border-style: solid;
   border-color: #D8D8D8;
-  border-width: 1px;
   padding: 3px;
   position:absolute;
   top:75px;
@@ -465,13 +478,13 @@ input[type=range]::-webkit-slider-runnable-track {
 .nuSelectBrowse {
   height: 70px;
   border-style: solid;
-  border-width: 1px 2px 1px 1px;
+  border-width: 1px 0px 0px 0px;
   padding: 3px;
   position:absolute;
   top:75px;
   font-size:14px;
-  background-color: #9ED374 !important;
-  border-color: #9ED374 !important;
+  background-color: #E6E6E6 !important;
+  border-color: #D8D8D8 !important;
   line-height: 150%;
 }
 
@@ -518,26 +531,25 @@ input[type=range]::-webkit-slider-runnable-track {
   border-style: solid;
   border-width: 0px;
   border-color: #CCCCCC;
-  font-size: 14px;
-  padding: 8px 10px 15px 10px;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 7px 5px 0px 5px;
   height: 24px;
 }
 
 .nuTab:hover{
   cursor: pointer;
+  background-color: #f4f4f4;
 }
 
 .nuTabSelected {
-  background-color: #DEDEDE;
+  background-color: transparent;
   display: inline;
-  border-style: solid;
-  border-width: 0px;
-  border-color: #DFDFDF;
-  font-size: 13.3333px;
-  padding: 8px 5px 20px 5px;
+  border-style: none;
+  font-size: 12px;
+  padding: 8px 5px 0px 5px;
   margin-left: 1px;
   border-radius: 3px 3px 0px 0px;
-  height: 24px;
 }
 
 .nuSubform {
@@ -545,11 +557,13 @@ input[type=range]::-webkit-slider-runnable-track {
   border-style: solid;
   border-color: lightgrey;
   position: absolute;
-  background-color: #C1C1C1;
+  background-color: white;
+  border-radius: 3px;
+
 }
 
 .nuSubform0 {
-  background-color: #DEDEDE;
+  background-color: white;
   border-style: solid !important;
   border-width: 0px 0px 1px 0px !important;
   border-color: rgba(0, 0, 0, 0.08) !important;
@@ -557,7 +571,7 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 .nuSubform1 {
-  background-color: #E0E0E0;
+  background-color: white;
   border-style: solid !important;
   border-width: 0px 0px 1px 0px !important;
   border-color: rgba(0, 0, 0, 0.08) !important;
@@ -565,7 +579,7 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 .nuSubform2 {
-  background-color: #C7C7C7;
+  background-color: white;
   border-style: solid !important;
   border-width: 0px 0px 1px 0px !important;
   border-color: rgba(0, 0, 0, 0.08) !important;
@@ -573,7 +587,7 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 .nuSubformScrollDiv {
-  background-color: #DEDEDE;
+  background-color: white;
 }
 
 .nuButton, .input_button {
@@ -637,8 +651,8 @@ input[type=range]::-webkit-slider-runnable-track {
 .nuWindow {border:1px solid #e1e8ea}
 
 .nuReadonly {
-  background-color:lightgrey;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  background-color:#ebebeb;
+  border: 1px solid #ebebeb;
 }
 
 .nuFormula{
@@ -647,7 +661,7 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 .nuCalculator {
-	background-color:lightgray;
+	background-color:#ebebeb;
 }
 
 .nuCalculatorButton {
@@ -657,7 +671,7 @@ input[type=range]::-webkit-slider-runnable-track {
 	height:30px;
 	font: 20px bold;
 	font-family:monospace;
-	background-color:lightgray;
+	background-color:#ebebeb;
 }
 
 .nuCalculatorButton:hover{
@@ -673,7 +687,7 @@ input[type=range]::-webkit-slider-runnable-track {
 	height:30px;
 	font: 16px bold;
 	font-family:monospace;
-	background-color:lightgray;
+	background-color:#ebebeb;
 	
 }
 
@@ -684,11 +698,13 @@ input[type=range]::-webkit-slider-runnable-track {
 
 .nuSearch {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  background-color: #b1dbad;
+  background-color: white;
   text-align: left;
   vertical-align: top;
   color: #666666;
-  border: none;
+  border: solid;
+  border-width: 1px;
+  border-color: lightgrey;
   font-size: 16px;
   height: 18px;
   padding: 1px 1px 1px 4px;
@@ -696,23 +712,24 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 #nuModal {
-  background-color: grey;
+  background-color: #DEDEDE;
   top: 0px;
   left: 0px;
   position: absolute;
   width: 100%;
-  height: 100%;
   opacity: 0.70;
+  z-index: 4;
 }
 
 #nuPopupModal {
-  background-color: grey;
+  background-color: #DEDEDE;
   top: 40px;
   left: 0px;
   position: absolute;
   width: 100%;
   height: 100%;
   opacity: 0;
+  z-index: 4;
 }
 
 .nuDragOptionsField {
@@ -879,9 +896,52 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 .nuDragOptionsButton {
+	text-align:left;
     display: block;
     height: 25px;
     width: 140px;
+	padding: 0px 0px 0px 10px;
+}
+
+.nuDragOptionsIcon {
+	margin: 5px;
+	color:black;
+    width: 10px;
+}
+
+.nuDragOptionsIcon45 {
+	margin: 5px;
+	color:black;
+	transform: rotate(45deg);
+    width: 10px;
+}
+
+.nuDragOptionsIcon135 {
+	margin: 5px;
+	color:black;
+	transform: rotate(135deg);
+    width: 10px;
+}
+
+.nuDragOptionsIcon90 {
+	margin: 5px;
+	color:black;
+	transform: rotate(90deg);
+    width: 10px;
+}
+
+.nuDragOptionsIcon180 {
+	margin: 5px;
+	color:black;
+	transform: rotate(180deg);
+    width: 10px;
+}
+
+.nuDragOptionsIcon270 {
+	margin: 5px;
+	color:black;
+	transform: rotate(270deg);
+    width: 10px;
 }
 
 .nuDragOptionsButtonDisabled {
@@ -982,6 +1042,8 @@ input[type=range]::-webkit-slider-runnable-track {
 .nuWord {
     font-family:Tahoma,Geneva,Arial,sans-serif;
     font-weight:bold;
+	background-color:transparent;
+	border-style:none;
 }
 
 

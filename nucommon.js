@@ -299,7 +299,7 @@ function nuBuildLookup(t, s, like){
 }
 
 function nuPopup(f, r, filter){
-	
+
 	if(nuSERVERRESPONSE.global_access == '0' && f == 'nuobject'){return;}
 
 	$('#nuCalendar').remove();
@@ -409,7 +409,7 @@ function nuCreateDialog(t){
 
 		e.setAttribute('id', 'nuDragDialog');
 
-		$('body').append('<div id="nuModal"></div>')
+		$('body').append('<div id="nuModal" style="height:' + window.innerHeight + 'px"></div>')
 		.append(e);
 
 		$('#nuDragDialog').addClass('nuDragDialog nuDragNoSelect')
@@ -1335,6 +1335,7 @@ function nu_get_column_widths(){
 
 function nu_browse_add_listeners(){
 
+	if(nuIsMobile()){return;}
     $('#nubody').on('mouseup.nuresizecolumn', function(event) {nu_end_resize();});
 	
     $('#nubody').on('mousemove.nuresizecolumn', function(event) {
@@ -1347,17 +1348,6 @@ function nu_browse_add_listeners(){
 																
 }
 
-/*
-function while_moving(event){
-
-    event.preventDefault();
-    
-    if (window.nuBROWSERESIZE.mouse_down){
-        resize_div_diam(event,window.nuBROWSERESIZE.moving_element);
-    } 
-	
-}
-*/
 
 function nu_set_column_widths(array_col_widths){
 
@@ -1368,7 +1358,7 @@ function nu_set_column_widths(array_col_widths){
             nu_set_left_pos_array();
         
             for (var z = 0; z < array_col_widths.length; z++){
-                nu_modify_column_width(z, array_col_widths[z]);
+                nu_modify_column_width(z, array_col_widths[z]-2);
             }
 			
         }else{
@@ -1588,11 +1578,11 @@ function nu_resize_div(elem_id, direction, offset_value, row){
     
     
     if (direction == "right"){
-        var new_l_width 							= current_l_width + offset_value;
+        var new_l_width 							= current_l_width + offset_value +2;
     }
     
     if (direction == "left"){
-        var new_l_width 							= current_l_width - offset_value;
+        var new_l_width 							= current_l_width - offset_value +2;
     }
 	
     if (new_l_width >= min_col_val){
@@ -1638,7 +1628,7 @@ function nu_adjust_col_min_width(min_col_val){
 function nu_set_title_width(l_side_id, new_l_width, div_number, div_id, current_r_left_pos, direction, offset_value){
 
     $("#"+l_side_id)
-	.css("background-color", "#b1dbad")
+	.css("background-color", "#BADEEB")
     
     $("#"+l_side_id).width(new_l_width);
     
@@ -1939,3 +1929,63 @@ function nuStartDatabaseAdmin() {
 
 	window.open("nupmalogin.php?sessid="+window.nuSESSION);
 }
+
+function nuIsMobile(){
+    return navigator.userAgent.toLowerCase().split('mobile').length > 1
+}
+
+function nuTransformScale(){
+
+		if($('body').css('transform') == 'none'){
+			return 1;
+		}
+		
+		return Number($('body').css('transform').split('(')[1].split(',')[0]);
+		
+}
+
+
+
+function nuWorker(){
+		
+	function checkScreenSize() {
+		setTimeout("checkScreenSize()", 500);
+	}
+
+	checkScreenSize();
+
+}
+
+
+
+function nuStartWorker(){
+
+	var iw	= 0;
+
+	if(typeof(Worker) !== 'undefined') {
+		
+		if(typeof(w) === 'undefined') {
+			var w = new Worker('nuworkers.js');
+		}
+
+		w.onmessage = function(event) {
+			
+			if(iw != window.innerWidth){
+				
+				iw = window.innerWidth;
+				nuResize();
+				
+				if(window.nuResponsive != null){
+					nuResponsive();
+				}
+				
+			}
+			
+			
+		};
+
+	}
+
+}
+
+

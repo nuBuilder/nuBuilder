@@ -639,7 +639,7 @@ class FormDisplay
                 case 'double':
                     $_POST[$key] = Util::requestString($_POST[$key]);
                     settype($_POST[$key], 'float');
-                    break;
+                    continue 2;
                 case 'boolean':
                 case 'integer':
                     if ($_POST[$key] !== '') {
@@ -655,7 +655,7 @@ class FormDisplay
                     if (! $successfully_validated) {
                         $this->_errors[$work_path][] = __('Incorrect value!');
                         $result = false;
-                        continue;
+						continue 2;
                     }
                     break;
                 case 'string':
