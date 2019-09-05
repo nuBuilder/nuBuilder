@@ -9,7 +9,7 @@
     $nuConfigTitle                  = "nuBuilder 4";
     $nuConfigIsDemo                 = false;
 	$nuConfigTimeOut             	= 1440;
-/*    $nuWelcomeBodyInnerHTML			= " 
+  /*$nuWelcomeBodyInnerHTML			= " 
 	
 	
 			<div id='outer' style='width:100%'>
@@ -17,21 +17,19 @@
 				<div id='login' class='nuLogin'>
 					<table>
 						<tr>
-							<td align='center' style='text-align:center;height:50px' colspan='2'>
-								<div id='nulogo' style='margin:50px 0px 20px 65px;background-size:100% 100%;background-image:url(\"graphics/logo.png\");width:200px;height:80px;'></div>
+							<td align='center' style='padding:0px 0px 0px 33px; text-align:center;'>
+							<img src='graphics/logo.png'><br><br>
 							</td>
 						</tr>
 						<tr>
-							<td style='text-align:right;margin:0px 5px 0px 20px;'><span style='padding:0px 5px 0px 40px;'>Username</span></td>
-							<td style='text-align:left'><input id='nuusername'/></td>
+							<td><div style='width:90px'>Username</div><input class='nuLoginInput' id='nuusername'/><br><br></td>
 						</tr>
 						<tr>
-							<td style='text-align:right;margin:0px 5px 0px 20px;'><span style='padding:0px 5px 0px 40px;'>Password</span></td>
-							<td style='text-align:left'><input id='nupassword' type='password'  onkeypress='nuSubmit(event)'/></td>
+							<td><div style='width:90px'>Password</div><input class='nuLoginInput' id='nupassword' type='password'  onkeypress='nuSubmit(event)'/><br></td>
 						</tr>
 						<tr>
-							<td style='text-align:center' colspan='2'>
-								<input id='submit' type='button' class='nuButton'  style='margin:20px 0px 0px 50px;width:90px;height:30px;' onclick='nuLoginRequest()' value='Log in'/>
+							<td style='text-align:center' colspan='2'><br><br>
+								<input id='submit' type='button' class='nuButton' onclick='nuLoginRequest()' value='Log in'/>
 							</td>
 						</tr>
 					</table>
@@ -39,7 +37,9 @@
 				
 			</div>
 				
+				
 									";
+
 */
 									
     if(array_key_exists('REQUEST_URI', $_SERVER)){

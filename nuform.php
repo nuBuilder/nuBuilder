@@ -1356,7 +1356,7 @@ function nuFormDimensions($f){
 
 	$grid		= ['height'=>$gh, 'width'=> $gw];
 	$browse		= ['height'=>$bh + 0, 'width'=> $bw];
-	$edit		= ['height'=>$h + 40,  'width'=> $w];
+	$edit		= ['height'=>$h + 60,  'width'=> $w];
 
 	return ['browse'=>$browse, 'edit'=>$edit, 'grid'=>$grid];
 	

@@ -87,7 +87,11 @@ function nuBuildForm(f){
 	
 	
 	nuAddHolder('nuBreadcrumbHolder');
-	$('#nuBreadcrumbHolder').append('<span id="nulink" style="position:absolute;right:5px"><a href="https://www.nubuilder.com" target="_blank">nuBuilder</a></span>');
+
+	if(window.parent.length == 0 || parent['nuHashFromEditForm']===undefined){ //-- only if Main Form
+		$('#nuBreadcrumbHolder').append('<span id="nulink" style="position:absolute;right:5px;padding:2px"><a href="https://www.nubuilder.com" target="_blank">nuBuilder</a></span>');
+	}
+
 	nuAddHolder('nuActionHolder');
 	
 	if(nuFormType() == 'edit'){
@@ -156,6 +160,8 @@ function nuBuildForm(f){
 	
 	if(nuFormType() == 'edit'){
 		window.nuRESPONSIVE.getStartPositions();
+	}else{
+		nuResizeBrowseColumns()
 	}
 	
 	if(window.nuOnLoad){
@@ -348,10 +354,6 @@ function nuAddActionButtons(form){
 		}
 		
 	}
-	
-//	if(window.parent.length == 0 || parent['nuHashFromEditForm']===undefined){ //-- only if Main Form
-//		$('#nuActionHolder').append("<img id='nulogo' width='120px' src='graphics/logo.png' style='position:absolute;right:20px'>");
-//	}
 	
 }
 
@@ -1646,7 +1648,7 @@ function nuAddBreadcrumb(i){
 				.css('cursor', "pointer")
 				.css('font-size', 16)
 				.attr('onclick', "nuLogout()")
-				.html('<i class="fa fa-sign-out fa-rotate-270"></i>')
+				.html('<i style="font-size:20px;" class="fa fa-sign-out fa-rotate-270"></i>')
 				.attr('title', logout)
 				
 			}
@@ -1664,7 +1666,7 @@ function nuAddBreadcrumb(i){
 	if(bc.title == 'Home' && logout == '' && i == 0){
 		
 		$('#' + bcId)
-		.html('<i class="fa fa-home" style="font-size:16px"></i>' + '<div id="nuarrow'+i+'" class="nuBreadcrumbArrow">&nbsp;<i class="fa fa-caret-right"></i>&nbsp;</div>')
+		.html('<i class="fa fa-home" style="font-size:20px;padding:0px 5px 0px 0px"></i>' + '<div id="nuarrow'+i+'" class="nuBreadcrumbArrow">&nbsp;<i class="fa fa-caret-right"></i>&nbsp;</div>')
 		.attr('title', nuTranslate(bc.title))
 		
 	}
@@ -1862,6 +1864,7 @@ function nuOptions(p, f, t, access){
 			
 		}else{
 			
+			$('#nuBreadcrumbHolder').prepend('&nbsp;&nbsp;&nbsp;');	
 			$('#nuBreadcrumbHolder').prepend(img);	
 			
 			$('#' + id)
@@ -2164,8 +2167,10 @@ function nuAddTabBottomBorder(tab){
 	var t	= $(tab).offset().top;
 	var l	= $(tab).offset().left + 1;
 	var w	= parseInt($(tab).css('width')) + 10;
+	var t 	= nuTotalHeight('nuBreadcrumbHolder') + nuTotalHeight('nuActionHolder') + nuTotalHeight('nuTabHolder');	
+	
 	var h	= parseInt($(tab).css('height'));
-	var s	= "<div id='" + p + "nuTabBottomBorder' style='position:absolute; top: " + (t+h+8) + "px; left: " + l + "px; width: " + w + "px; height: 3px;background-color:darkgrey'<div>";
+	var s	= "<div id='" + p + "nuTabBottomBorder' style='position:absolute; top: " + t + "px; left: " + l + "px; width: " + w + "px; height: 2px;background-color:#606060'<div>";
 	
 	$('#' + p + 'nuTabBottomBorder').remove();
 	$('body').append(s);
@@ -2189,7 +2194,9 @@ function nuBrowseTitle(b, i, l){
 	var un		= bc.nosearch_columns.indexOf(i);
 	var id  	= 'nuBrowseTitle' + i;
 	var w 		= Number(b[i].width);
+	var a 		= b[i].align;
 	var div 	= document.createElement('div');
+	var ar		= {l:'left', c:'center', r:'right'};
 	
 	div.setAttribute('id', id);
 	
@@ -2198,9 +2205,9 @@ function nuBrowseTitle(b, i, l){
 	if(bc.sort == i){
 		
 		if(bc.sort_direction == 'asc'){
-			cb	= cb + '<span id="sort_direction"><i style="font-size:14px" class="fa fa-sort-asc"></i></span>';
+			cb	= cb + '<span id="sort_direction"><i style="font-size:14px" class="fa fa-caret-up"></i></span>';
 		}else{
-			cb	= cb + '<span id="sort_direction"><i style="font-size:14px" class="fa fa-sort-desc"></i></span>';
+			cb	= cb + '<span id="sort_direction"><i style="font-size:14px" class="fa fa-caret-down"></i></span>';
 		}
 		
 	}
@@ -2213,7 +2220,7 @@ function nuBrowseTitle(b, i, l){
 	$('#' + id)
 	.html(cb + br + sp)
 	.addClass('nuBrowseTitle')
-	.css({	'text-align'	: 'center',
+	.css({	'text-align'	: ar[a],
 			'overflow'		: 'visible',
 			'width'			: w,
 			'left'			: l,
@@ -2312,7 +2319,7 @@ function nuBrowseTable(){
 	var row				= bc.browse_rows;
 	var rows			= bc.rows;
 	var h				= bc.row_height;
-	var t				= parseInt($('#nuBrowseTitle0').css('height'))- h - 7 + 10;
+	var t				= parseInt($('#nuBrowseTitle0').css('height'))- h - 7 + 5;
 	var l				= 7;
 
 	for(r = 0 ; r < rows ; r++){
@@ -2410,7 +2417,7 @@ function nuBrowseTable(){
 	var of	= '&nbsp;/&nbsp;' + (bc.pages==0?1:bc.pages) + '&nbsp;';
 
 	var id	= 'nuBrowseFooter';
-	var footerTop	= t + h + 7;
+	var footerTop	= t + h + 30;
 	var div = document.createElement('div');
 	div.setAttribute('id', id);
 		
@@ -3818,11 +3825,11 @@ function nuBrowseBorders(){
 	for(var i = 0 ; i < c ; i++){
 		
 		$('#nucell_0_' + i)
-		.css('border-top', 'solid darkgrey 3px')
+		.css('border-top', 'solid #606060 1px')
 		
 		
 		$('#nucell_' + (r-1) + '_' + i)
-		.css('border-bottom', 'solid darkgrey 3px')
+		.css('border-bottom', 'solid #606060 1px')
 		
 	}
 	

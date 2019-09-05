@@ -8,7 +8,9 @@ $DBName         	= $_SESSION['nubuilder_session_data']['DB_NAME'];
 $DBUser         	= $_SESSION['nubuilder_session_data']['DB_USER'];
 $DBPassword     	= $_SESSION['nubuilder_session_data']['DB_PASSWORD'];
 $DBCharset      	= $_SESSION['nubuilder_session_data']['DB_CHARSET'];
-$nuDB 			= new PDO("mysql:host=$DBHost;dbname=$DBName;charset=$DBCharset", $DBUser, $DBPassword, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $DBCharset"));
+
+$nuDB 				= new PDO("mysql:host=$DBHost;dbname=$DBName;charset=$DBCharset", $DBUser, $DBPassword, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $DBCharset"));
+
 $nuDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 function nuRunQuery($s, $a = array(), $isInsert = false){

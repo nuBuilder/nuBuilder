@@ -179,7 +179,7 @@ input[type=range]::-webkit-slider-runnable-track {
   border-style: solid;
   border-width: 0px 0px 1px 0px;
   border-color: lightgrey;
-  padding: 15px 0px 0px 0px;
+  padding: 15px 0px 3px 0px;
   overflow: visible;
 }
 
@@ -229,11 +229,11 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 .nuCalendarColor {
-   background-color	: orange;
+   background-color	: #BADEEB;
 }
 
 .nuCalendarSelected:hover {
-   background-color	: #FFCC6F;
+   background-color	: #00ADEF;
 }
 
 .nuDragIn {
@@ -347,14 +347,24 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 .nuLogin {
-  background-color: #c7f0ff;
+  background-color: white;
   border-style: solid;
-  border-width: 1px;
+  border-width: 1px 3px 3px 1px;
   border-color: rgba(0, 0, 0, 0.08);
   height: 300px;
-  width: 330px;
+  width: 350px;
   margin: 50px auto 0px auto;
+  padding: 30px;
 }
+
+.nuLoginInput {
+  height:40px;
+  width:330px;
+  border-width:0px 0px 1px 0px;
+  padding:0px 0px 0px 10px;
+}
+
+
 
 .nuDragBox:hover {
   color: red;
@@ -428,8 +438,8 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 .nuSort {
-  font-weight: bold;
   font-size: 14px;
+  padding:0px 2px 0px 2px;
 }
 
 .nuSort:hover {
@@ -457,7 +467,7 @@ input[type=range]::-webkit-slider-runnable-track {
   border-style: none;
   position:absolute;
   top:3px;
-  font-size:12px;
+  font-size:14px;
   overflow: visible;
   height:30px;
 }
@@ -531,10 +541,9 @@ input[type=range]::-webkit-slider-runnable-track {
   border-style: solid;
   border-width: 0px;
   border-color: #CCCCCC;
-  font-size: 12px;
-  font-weight: bold;
-  padding: 7px 5px 0px 5px;
-  height: 24px;
+  font-size: 14px;
+  padding: 3px 7px 7px 7px;
+  height: 33px;
 }
 
 .nuTab:hover{
@@ -546,7 +555,7 @@ input[type=range]::-webkit-slider-runnable-track {
   background-color: transparent;
   display: inline;
   border-style: none;
-  font-size: 12px;
+  font-size: 14px;
   padding: 8px 5px 0px 5px;
   margin-left: 1px;
   border-radius: 3px 3px 0px 0px;
