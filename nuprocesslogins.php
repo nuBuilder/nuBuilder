@@ -51,13 +51,19 @@ function nuCheckStandaloneUserLoginRequest() {
 function nuCheckIsLoginRequest() {
 
 	if(array_key_exists('nuSTATE', $_POST)){
-        	if(array_key_exists('call_type', $_POST['nuSTATE'])){
-                	if($_POST['nuSTATE']['call_type'] == 'login'){
+		
+       	if(array_key_exists('call_type', $_POST['nuSTATE'])){
+
+          	if($_POST['nuSTATE']['call_type'] == 'login'){
+
 				return true;
+				
 			}
 		}
 	}
+	
 	return false;
+
 }
 
 function nuLoginSetupGlobeadmin() {

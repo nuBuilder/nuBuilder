@@ -55,13 +55,12 @@ function nuBuildForm(f){
 	
 	nuRedefine_nuSelectBrowse();
 	
-	if(f.tableSchema.length != 0){  						//-- its an Object (load these once,  at login)
-		nuFORM.tableSchema		= f.tableSchema;
-	}
-	
+	nuFORM.tableSchema			= f.tableSchema;
 	nuFORM.formSchema			= f.formSchema;
 	window.nuLANGUAGE			= f.translation;
-		
+	
+	nuSetProperty('refreshed', nuGetProperty('refreshed') + 1);
+	
 	var b 						= window.nuFORM.getCurrent();
 
 	nuAddedByLookup(f);
@@ -88,7 +87,8 @@ function nuBuildForm(f){
 	
 	nuAddHolder('nuBreadcrumbHolder');
 
-	if(window.parent.length == 0 || parent['nuHashFromEditForm']===undefined){ //-- only if Main Form
+	//if(window.parent.length == 0 || parent['nuHashFromEditForm']===undefined){ //-- only if Main Form
+	if(nuMainForm()){
 		$('#nuBreadcrumbHolder').append('<span id="nulink" style="position:absolute;right:5px;padding:2px"><a href="https://www.nubuilder.com" target="_blank">nuBuilder</a></span>');
 	}
 
@@ -141,7 +141,8 @@ function nuBuildForm(f){
 	}else{
 		nuAddJavascript(f);
 	}
-	nuAddBrowseListeners(b.column_widths);
+	nuDragTitleEvents();
+//	nuAddBrowseListeners(b.column_widths);
 	
 	if(window.nuLoginH != ''){
 		
@@ -240,13 +241,33 @@ function nuTotalHeight(i){
 }
 
 
+function nuTotalWidth(i){
+	
+	var h	= 0;
+
+	if($('#' + i).length == 0){return 0;}
+
+	h = h + parseInt($('#' + i).css('width'));
+	h = h + parseInt($('#' + i).css('padding-left'));
+	h = h + parseInt($('#' + i).css('padding-right'));
+	h = h + parseInt($('#' + i).css('border-left-width'));
+	h = h + parseInt($('#' + i).css('border-right-width'));
+	h = h + parseInt($('#' + i).css('margin-left'));
+	h = h + parseInt($('#' + i).css('margin-right'));
+
+	return h;
+	
+}
+
+
+
 function nuResizeBody(f){
 
 	var d				= f.dimensions;
 	var headers			= nuDialogHeadersHeight();
 	
 	if(nuFormType() == 'browse'){
-
+/*
 		var spacing		= 7 * f.rows;
 		var h			= Number(d.browse.height) + headers + spacing;
 		var w			= Number(d.browse.width);
@@ -256,7 +277,7 @@ function nuResizeBody(f){
 		
 		$('body').css('height', h);
 		$('#nuRECORD').css('height', 0).css('width', 0);
-		
+*/		
 	}else{
 		
 		var h			= Number(d.edit.height) + headers;
@@ -2156,26 +2177,8 @@ function nuSelectTab(tab){
 	$(".nuHtml[data-nu-form='" + form + "'][data-nu-tab='"  + filt + "']").css('visibility','visible');
 	$('#' + tab.id).addClass('nuTabSelected');
 	
-	nuAddTabBottomBorder(tab);
-
 }
 
-
-function nuAddTabBottomBorder(tab){
-
-	var p	= $(tab)[0].id.split('nuTab')[0];
-	var t	= $(tab).offset().top;
-	var l	= $(tab).offset().left + 1;
-	var w	= parseInt($(tab).css('width')) + 10;
-	var t 	= nuTotalHeight('nuBreadcrumbHolder') + nuTotalHeight('nuActionHolder') + nuTotalHeight('nuTabHolder');	
-	
-	var h	= parseInt($(tab).css('height'));
-	var s	= "<div id='" + p + "nuTabBottomBorder' style='position:absolute; top: " + t + "px; left: " + l + "px; width: " + w + "px; height: 2px;background-color:#606060'<div>";
-	
-	$('#' + p + 'nuTabBottomBorder').remove();
-	$('body').append(s);
-	
-}
 
 
 
@@ -2232,7 +2235,7 @@ function nuBrowseTitle(b, i, l){
 
 	$('#nusearch_' + i).attr('checked', un == -1);
 	
-	return l + w;
+	return l + nuTotalWidth(id);
 	
 }
 
@@ -2348,7 +2351,7 @@ function nuBrowseTable(){
 			.addClass(w == 0 ? '' : 'nuBrowseTable')
 			.css({	'text-align'	: a,
 					'overflow'	: 'hidden',
-					'width'		: w-6,
+					'width'		: w,
 					'top'		: t,
 					'left'		: l,
 					'height'	: h,
@@ -2359,7 +2362,7 @@ function nuBrowseTable(){
 				$('#' + id).hide();
 			}
 			
-			if(w < 8){
+			if(w < 0){
 				
 				$('#' + id)
 				.css('padding', 0)
@@ -2403,7 +2406,7 @@ function nuBrowseTable(){
 
 			}
 			
-			l = l + w;
+			l = l + (w == 0 ? 0 : nuTotalWidth(id));
 
 		}
 		
@@ -2417,7 +2420,7 @@ function nuBrowseTable(){
 	var of	= '&nbsp;/&nbsp;' + (bc.pages==0?1:bc.pages) + '&nbsp;';
 
 	var id	= 'nuBrowseFooter';
-	var footerTop	= t + h + 30;
+	var footerTop	= t + h + 10;
 	var div = document.createElement('div');
 	div.setAttribute('id', id);
 		
@@ -2448,7 +2451,7 @@ function nuBrowseTable(){
 	$('#nuDragDialog', 	window.parent.document).css({'height': h + 30, 'visibility': 'visible', 'overflow': 'hidden'});
 	$('#nuWindow', 		window.parent.document).css({'height': h});
 	
-	$('body').css('height', h);
+	$('body').css('height', h-30);
 	$('#nuRECORD').css('height', 0).css('width', 0);
 	
 }
@@ -3658,6 +3661,8 @@ function nuFastReportFormat(width){
 	o.width			= width;
 	o.height		= 1;
 	o.borderWidth	= 1;
+	o.objectType	= 'label';
+	o.fieldName		= 'KEEP EXACT HEIGHT';
 
 	nuREPORT.groups[2].sections[0].objects.push(o);
 
@@ -3667,6 +3672,8 @@ function nuFastReportFormat(width){
 	o.width			= pageWidth;
 	o.height		= 1;
 	o.borderWidth	= 1;
+	o.objectType	= 'label';
+	o.fieldName		= 'KEEP EXACT HEIGHT';
 
 	nuREPORT.groups[2].sections[1].objects.push(o);
 	
@@ -3697,6 +3704,8 @@ function nuFastReportFormat(width){
 		o.width			= width;
 		o.height		= 1;
 		o.borderWidth	= 1;
+		o.objectType	= 'label';
+		o.fieldName		= 'KEEP EXACT HEIGHT';
 
 		nuREPORT.groups[1].sections[1].objects.push(o);
 		

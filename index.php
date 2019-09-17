@@ -81,17 +81,22 @@ function nuHomeWarning(){
 
 function nuLoginRequest(u, p){
 
+	var w = {
+				call_type		: 'login', 
+				username		: arguments.length == 0 ? $('#nuusername').val() : u, 
+				password		: arguments.length == 0 ? $('#nupassword').val() : p,
+				login_form_id	: nuLoginF,
+				login_record_id	: nuLoginR
+			};
+
+	w	= JSON.stringify(w);
+
     $.ajax({
         async    : true,  
         dataType : "json",
         url      : "nuapi.php",
         method   : "POST",
-        data     : {nuSTATE 				: 
-						{call_type			: 'login', 
-						username			: arguments.length == 0 ? $('#nuusername').val() : u, 
-						password			: arguments.length == 0 ? $('#nupassword').val() : p,
-						login_form_id		: nuLoginF,
-						login_record_id		: nuLoginR}
+        data     : {nuSTATE : w
 					},
         dataType : "json",          
         success  : function(data,textStatus,jqXHR){
@@ -219,16 +224,20 @@ window.nuHASH				= [];
 	// end choose h2
 	
 	$h3 = "
+
 	function nuResize(){
 
 		if($('#nuTabHolder').css('display') == 'block'){
+			
 			$('#nuActionHolder').css('width', window.innerWidth);
 			$('#nuBreadcrumbHolder').css('width', window.innerWidth);
 			$('#nuTabHolder').css('width', window.innerWidth);
 			$('.nuTabTitleColumn').css('width', window.innerWidth);
+			
 		}
 		
 	}
+
 	</script>
 	<script id='nuheader'>
 		$nuHeader

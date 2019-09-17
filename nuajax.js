@@ -3,6 +3,8 @@ function nuAjax(w,successCallback,errorCallback){
 
 	w	= nuAddEditFieldsToHash(w);
 	
+	w	= JSON.stringify(w);
+	
  	$.ajax({
 
 		async    : true,  

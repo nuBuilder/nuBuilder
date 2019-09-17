@@ -1,14 +1,15 @@
 <?php
 	header("Content-Type: application/json");
-        header("Cache-Control: no-cache, must-revalidate");
+	header("Cache-Control: no-cache, must-revalidate");
+	$_POST['nuSTATE'] = json_decode($_POST['nuSTATE'], JSON_OBJECT_AS_ARRAY);
 
 	require_once('nuconfig.php');
-    	require_once('nusession.php');
+	require_once('nusession.php');
 	require_once('nucommon.php');
 	require_once('nuform.php'); 
 	require_once('nudata.php');
-    	require_once('nudrag.php');
-    	require_once('nudatabase.php');
+	require_once('nudrag.php');
+	require_once('nudatabase.php');
 
 	$_POST['nuCounter']						= rand(0, 999);
 	$_POST['nuErrors']						= array();
@@ -21,7 +22,6 @@
 	
 	$_POST['FORM_ID'] 						= $F;
 	$_POST['nuHash']						= array_merge($U, nuSetHashList($P));
-
 	$_POST['nuHash']['PREVIOUS_RECORD_ID'] 	= $R;
 	$_POST['nuHash']['RECORD_ID'] 			= $R;
 	$_POST['nuHash']['FORM_ID'] 			= $F;
@@ -54,7 +54,6 @@
     	if($CT == 'systemupdate')	{$f->forms[0]->id					= nuRunSystemUpdate();}
 		
     }
-
 	$f->forms[0]->after_event				= $_POST['nuAfterEvent'];
 	$f->forms[0]->user_name					= nuUser($U['USER_ID'])->sus_name;
 	$f->forms[0]->access_level_code			= $U['ACCESS_LEVEL_CODE'];
@@ -66,6 +65,8 @@
 	$f->forms[0]->viewSchema				= nuBuildViewSchema($CT);
 	$f->forms[0]->formSchema				= nuUpdateFormSchema();
 	$f->forms[0]->session_id				= $_SESSION['nubuilder_session_data']['SESSION_ID'];
+	
+
 	$f->forms[0]->callback					= $_POST['nuCallback'];
 	$f->forms[0]->errors					= $_POST['nuErrors'];
 	$f->forms[0]->log_again				    = $_POST['nuLogAgain'];

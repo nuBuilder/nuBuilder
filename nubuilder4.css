@@ -142,12 +142,14 @@ input[type=range]::-webkit-slider-runnable-track {
   background-color: #F5F5F5;
   border-style: solid;
   border-width: 1px 0px 0px 0px;
+  padding: 3px 10px 3px 10px;
 }
 
 .nuCellEven{
   background-color: white;
   border-style: solid;
   border-width: 1px 0px 0px 0px;
+  padding: 3px 10px 3px 10px;
 }
 
 
@@ -315,7 +317,7 @@ input[type=range]::-webkit-slider-runnable-track {
 
 
 #nuSearchList{
-  background-color: orange;
+  background-color: #BADEEB;
   box-shadow: 5px 5px 5px 0px rgba(150,147,150,1);
   padding-top: 4px;
 }
@@ -439,7 +441,7 @@ input[type=range]::-webkit-slider-runnable-track {
 
 .nuSort {
   font-size: 14px;
-  padding:0px 2px 0px 2px;
+  padding: 0px;
 }
 
 .nuSort:hover {
@@ -470,13 +472,14 @@ input[type=range]::-webkit-slider-runnable-track {
   font-size:14px;
   overflow: visible;
   height:30px;
+  padding: 0px 10px 3px 10px;
 }
 
 .nuBrowseTable {
   height: 70px;
   border-style: solid;
   border-color: #D8D8D8;
-  padding: 3px;
+  padding: 3px 10px 3px 10px;
   position:absolute;
   top:75px;
   font-size:14px;
@@ -489,7 +492,7 @@ input[type=range]::-webkit-slider-runnable-track {
   height: 70px;
   border-style: solid;
   border-width: 1px 0px 0px 0px;
-  padding: 3px;
+  padding: 3px 10px 3px 10px;
   position:absolute;
   top:75px;
   font-size:14px;
@@ -554,11 +557,13 @@ input[type=range]::-webkit-slider-runnable-track {
 .nuTabSelected {
   background-color: transparent;
   display: inline;
-  border-style: none;
   font-size: 14px;
-  padding: 8px 5px 0px 5px;
+  padding: 8px 5px 3px 5px;
   margin-left: 1px;
-  border-radius: 3px 3px 0px 0px;
+  border-radius: 0px;
+  border-style: solid;
+  border-color: #606060;
+  border-width: 0px 0px 2px 0px;
 }
 
 .nuSubform {

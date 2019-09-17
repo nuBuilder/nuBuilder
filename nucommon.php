@@ -1134,36 +1134,18 @@ function nuUpdateFormSchema(){
 
 
 function nuUpdateTableSchema($call_type){
-	
-	if($call_type == 'runhiddenphp' and nuHash()['form_code'] == 'nufflaunch'){
+
+	$j	= nuGetJSONData('clientTableSchema');
+
+	if(($call_type == 'runhiddenphp' and nuHash()['form_code'] == 'nufflaunch') or is_null($j)){
 		
-		nuSetJSONData('clientTableSchema', []);			//-- force updating Table Schema
-		return;
+		$j	= nuBuildTableSchema();
+		nuSetJSONData('clientTableSchema', $j);			//-- force updating Table Schema
 		
 	}
 
-	$was	= nuGetJSONData('clientTableSchema');
-	$is		= nuBuildTableSchema();
-	
-	if(is_null($was)){
-		
-		nuSetJSONData('clientTableSchema', $is);
-		
-		return $is;
-		
-	}else{
-		
-		if(json_encode($was) == json_encode($is)){
-			return [];
-		}else{
-			
-			nuSetJSONData('clientTableSchema', $is);
-			return $is;
-			
-		}
-		
-	}
-	
+	return $j;
+
 }
 
 

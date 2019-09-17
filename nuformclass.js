@@ -384,6 +384,7 @@ class nuFormObject {
 		b.tab_start      	= [];
 		b.username			= '';
 		b.user_id			= '';
+		b.refreshed			= -1;
 		
 		this.breadcrumbs.push(b);
 		
