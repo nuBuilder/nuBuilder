@@ -1256,9 +1256,10 @@ function nuProcedure($c){
 	$php						= "$php \n\n//--Added by nuProcedure()\n\n$"."_POST['nuProcedureEval'] = '';";
 	$_POST['nuProcedureEval']	= "Procedure <b>$r->sph_code</b> - run inside ";
 	
-	return $php;
+	return '';//$php;
 	
 }
+
 
 
 function nuExceptionHandler($e, $code){

@@ -277,7 +277,7 @@ function nuDragReport(){
 		e.setAttribute('id', 'nuSectionLeft' + i);
 		
 		$('#nuSectionHolder').append(e);
-		$('#nuSectionLeft' + i).css({'position':'absolute', 'top': this.sectionTop, 'width':140, 'height':S.height, 'background-color':S.color, 'border-style':b, 'visibility':v});
+		$('#nuSectionLeft' + i).css({'position':'absolute', 'top': this.sectionTop, 'width':140, 'height':S.height - 3, 'background-color':S.color, 'border-style':b, 'visibility':v});
 		$('#nuSectionLeft' + i).addClass('nuSection');
 		$('#nuSectionLeft' + i).html(t);
 		
@@ -290,7 +290,7 @@ function nuDragReport(){
 		e.setAttribute('id', 'nuSection' + i);
 		
 		$('#nuDragArea').append(e);
-		$('#nuSection' + i).css({'position':'absolute', 'top': this.sectionTop, 'width':nuDrag.areaWidth(), 'height':S.height-1, 'background-color':S.color, 'border-style':b, 'visibility':v});
+		$('#nuSection' + i).css({'position':'absolute', 'top': this.sectionTop, 'width':nuDrag.areaWidth(), 'height':S.height - 3, 'background-color':S.color, 'border-style':b, 'visibility':v});
 		$('#nuSection' + i).attr({'data-group': g, 'data-section':s, 'data-order':i});
 		$('#nuSection' + i).addClass('nuSection nuDragArea nuRight');
 		
@@ -378,24 +378,29 @@ function nuDragReport(){
 			S        = this.sectionOfObject(sel[i].id);
 			g        = $('#nuSection'+S).attr('data-group');
 			s        = $('#nuSection'+S).attr('data-section');
-			o.width  = parseInt($('#' + o.id).css('width'));
-			o.height = parseInt($('#' + o.id).css('height'));
-			o.left   = parseInt($('#' + o.id).css('left'));
-			
+			o.width  = nuRemovePX($('#' + o.id).css('width'));
+			o.height = nuRemovePX($('#' + o.id).css('height'));
+			o.left   = nuRemovePX($('#' + o.id).css('left'));
 			
 			this.removeObject(o.id);
+
 			if(m){
-				T        = parseInt($('#nuSection'+S).css('top'));
-				o.top    = parseInt($('#' + o.id).css('top')) - T;
+
+				T        = nuRemovePX($('#nuSection'+S).css('top'));
+				o.top    = nuRemovePX($('#' + o.id).css('top')) - T;
+				
 				$('#' + o.id).attr('data-order', S);
 				this.addObject(g, s, o);
 				this.resizeSection(g, s, 0);
+
 			}else{
-				T        = parseInt($('#nuSection'+min).css('top'));
-				o.top    = parseInt($('#' + o.id).css('top')) - T;
+
+				T        = nuRemovePX($('#nuSection'+min).css('top'));
+				o.top    = nuRemovePX($('#' + o.id).css('top')) - T;
 				this.addObject(grp, sec, o);
 				$('#' + o.id).attr('data-order', min);
 				this.resizeSection(grp, sec, 0);
+
 			}
 			
 		}
@@ -428,11 +433,10 @@ function nuDragReport(){
 
 		var i = this.groups[g][s];
 		var l = this.lowestSectionObject(g, s);
-		var h = parseInt($('#nuSection' + i).css('height'));
+		var h = nuRemovePX($('#nuSection' + i).css('height'));
 		var m = Math.max(c, l - h);
 
-//		nuREPORT.groups[g].sections[s].height = h + m + 2;
-		nuREPORT.groups[g].sections[s].height = h + m + 1;
+		nuREPORT.groups[g].sections[s].height = h + m + 3;
 		
 	}
 
@@ -440,7 +444,7 @@ function nuDragReport(){
 	this.lowestSectionObject = function(g, s) {
 
 		var i        = this.groups[g][s];
-		var T        = parseInt($('#nuSection' + i).css('top'));
+		var T        = nuRemovePX($('#nuSection' + i).css('top'));
 		var a        = $("[data-order='"+i+"']").filter(".nuDragObject");
 		var t        = 0;
 		var h        = 0;
@@ -766,7 +770,8 @@ function nuSelectDialog(){
 		$("#nuObjectList").append("<option "+ sel +" value='"+ a[i].id +"'>"+sec + " : " + a[i].id + " : " + val +"</option>") ;
 		
 	}
-	
+
+	$('#nuDragDialog').css('visibility','visible');
 	$('#nuModal').remove();
 		
 
@@ -789,6 +794,7 @@ function nuAdjustDialog(){
 	nuAdjustButton(265, 10,'nuResizeThinestClick()' , 		opener.nuTranslate('Thinnest'), 			opener.nuTranslate('Resize to Thinnest'));
 	nuAdjustButton(285, 140,'nuResizeShortestClick()' , 	opener.nuTranslate('Shortest'), 			opener.nuTranslate('Resize to Shortest'));
 
+	$('#nuDragDialog').css('visibility','visible');
 	$('#nuModal').remove();
 	
 }
@@ -1158,7 +1164,7 @@ function nuObjectDialog(){
 	nuDIALOG.dialog = 'nuObjectDialog';
 	
 	nuDragD.createDialog(400, window.scrollY + 50, 450, 450, 'Object Properties');
-	
+
 	var D   = nuDragR.getObject(S[0].id);
 	var top = 60;
 	var fun = 'nuUpdateProperties';
@@ -1225,6 +1231,7 @@ function nuObjectDialog(){
 	}
 	
 
+	$('#nuDragDialog').css('visibility','visible');
 	$('#nuModal').remove();
 
 }
@@ -1294,6 +1301,7 @@ function nuReportDialog(){
 	$('#height').attr('disabled', true);
 
 	$('#nuDragDialog').css('height', top + 20);
+	$('#nuDragDialog').css('visibility','visible');
 
 	$('#nuModal').remove();
 
@@ -1384,6 +1392,7 @@ function nuGroupDialog(){
 	nuMoveGroup();
 	
 	$('#nuDragDialog').css('height', top + 20);
+	$('#nuDragDialog').css('visibility','visible');
 
 	nuSetnuScroll(window.nuTT);
 

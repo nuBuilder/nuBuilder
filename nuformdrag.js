@@ -306,7 +306,7 @@ function nuRemoveBox(ctrlKey) {
 	var selectedTab = $('.nuTabSelected')[0].id.substring(5);
 	
 	o.each(function(index) {
-		
+
 		if($(this).attr('data-nu-tab') == selectedTab) {
 			var l 	=     parseInt($(this).css('left'));
 			var t 	=     parseInt($(this).css('top'));
@@ -494,13 +494,13 @@ function nuFindFieldInState(tabNo, fieldID){
 
 function nuCreateDragOptionsBox(form){
 	
-    var dragOptionsBoxWidth 		= 341;
+    var dragOptionsBoxWidth 		= 400;
     var dragOptionsBoxMinHeight 	= 535;
-	
-    $('#nuDragDialog',window.parent.document.body).css('top', 35);
-    $('#nuDragDialog',window.parent.document.body).css('width',$('#nuDragDialog',window.parent.document.body).width()+dragOptionsBoxWidth - 25);
-    $('#nuDragDialog',window.parent.document.body).css('min-height',dragOptionsBoxMinHeight+'px');
-	
+    var dragOptionsBoxMinHeight 	= 520;
+	var wh	= nuFormWH();
+	var w	= wh.width;
+	var h	= wh.height;
+
     var optionsBoxHTML = '<div id="nuDragOptionsBox" class="nuDragOptionsBox" style="width:'+(dragOptionsBoxWidth-20)+'px;height:100%;min-height:'+dragOptionsBoxMinHeight+'px;">'+
         '<div class="nuDragOptionsBoxContainer">'+
             '<div id="dragOptionsTitle" class="nuDragOptionsBoxTitle">Options</div>'+
@@ -549,24 +549,16 @@ function nuCreateDragOptionsBox(form){
         '</div>'+
     '</div>';
 	
-    $('#nuDragDialog',window.parent.document.body).prepend(optionsBoxHTML);
-	$('#nuRECORD').css('height', window.innerHeight);
+    $('#nuWindow',window.parent.document.body).css('right', 15);
 	
-/*
-	parent.nuAttachButtonImage('move_up_btn','UP');
-	parent.nuAttachButtonImage('move_down_btn','DOWN');
-	parent.nuAttachButtonImage('move_ver_btn','VER');
-	parent.nuAttachButtonImage('move_hor_btn','HOR');
-	parent.nuAttachButtonImage('move_short_btn','SHORT');
-	parent.nuAttachButtonImage('move_tall_btn','TALL');
-	parent.nuAttachButtonImage('move_top_btn','TOP');
-	parent.nuAttachButtonImage('move_bottom_btn','BOTTOM');
-	parent.nuAttachButtonImage('move_left_btn','LEFT');
-	parent.nuAttachButtonImage('move_right_btn','RIGHT');
-	parent.nuAttachButtonImage('move_thin_btn','THIN');
-	parent.nuAttachButtonImage('move_wide_btn','WIDE');
+    $('#nuDragDialog',window.parent.document.body)
+	.css('top', 35)
+	.prepend(optionsBoxHTML)
+	.css('height', Math.max(dragOptionsBoxMinHeight + 10, window.innerHeight + 40))
+	.css('width',  w + dragOptionsBoxWidth - 15);
 
-*/
+	$('#nuBreadcrumbHolder').remove();
+	$('#nuRECORD').css('height', window.innerHeight);
 
     nuInitialiseDragState();
     nuPopulateFieldsList(0);
@@ -1135,14 +1127,17 @@ function nuCanMove() {
 function nuGetTopArea() {
 	
 	var nuActionHolder 		= parseInt($('#nuActionHolder').css('height'));
-	var nuBreadcrumbHolder	= parseInt($('#nuBreadcrumbHolder').css('height'));
 	var nuTabHolder 		= parseInt($('#nuTabHolder').css('height'));
-//	$p = parent.window.$;
-//	var dialogTitle = parseInt($p('#dialogTitle').css('height'));
 	var p 					= parent.window.$;
 	var dialogTitle 		= parseInt(p('#dialogTitle').css('height'));
 
-	return parseInt(nuActionHolder) + parseInt(nuBreadcrumbHolder) + parseInt(nuTabHolder) + parseInt(dialogTitle);	
+	if($('#nuBreadcrumbHolder').length == 1){
+		var nuBreadcrumbHolder	= parseInt($('#nuBreadcrumbHolder').css('height'));
+	}else{
+		var nuBreadcrumbHolder	= 0;
+	}
+	
+	return nuActionHolder + nuBreadcrumbHolder + nuTabHolder + dialogTitle;	
 	
 }
 

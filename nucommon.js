@@ -292,7 +292,7 @@ function nuBuildLookup(t, s, like){
 	
 	$('#nuDragDialog')
 	.css('visibility', 'hidden')
-	.append('<iframe style="right:5px;top:35px;width:400px;height:400px;position:absolute" id="nuWindow" src="index.php?&opener=' +open.id + '&target=' + tar + '&search=' + s + '&like=' + like + '&browsefunction=lookup&iframe=1"></iframe>');
+	.append('<iframe style="border-style:none;right:5px;top:35px;width:400px;height:400px;position:absolute" id="nuWindow" src="index.php?&opener=' +open.id + '&target=' + tar + '&search=' + s + '&like=' + like + '&browsefunction=lookup&iframe=1"></iframe>');
 
 }
 
@@ -314,7 +314,7 @@ function nuPopup(f, r, filter){
 	
 	$('#nuDragDialog')
 	.css('visibility', 'hidden')
-	.append('<iframe style="right:5px;top:35px;width:400px;height:400px;position:absolute" id="nuWindow" src="index.php?opener=' + id + '&browsefunction=browse&iframe=1"></iframe>')
+	.append('<iframe style="border-style:none;right:5px;top:35px;width:400px;height:400px;position:absolute" id="nuWindow" src="index.php?opener=' + id + '&browsefunction=browse&iframe=1"></iframe>')
 	.prepend('<div id="nuDraggingBox" style="position:absolute; bottom:0px; right:0px; width:20px; height:20px; z-index:200"></div>');
 	
 }
@@ -416,9 +416,10 @@ function nuCreateDialog(t){
 			'top'				: t, 
 			'width'				: w, 
 			'height'			: h, 
-			'background-color'	: '#E0E0E0', 
+			'background-color'	: '#CCCCCC', 
 			'z-index'			: 3000, 
-			'position'			: 'absolute'
+			'position'			: 'absolute',
+			'visibility'		: 'hidden'
 		})
 		.html('<div id="dialogTitle" style="background-color:#CCCCCC ;position:absolute;width:100%;height:35px;font-size:16px;font-family:Helvetica"><div id="dialogTitleWords" style="padding-top: 9px;height:30px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+translation+'</div><img id="dialogClose" src="graphics/close.png" style="position:absolute; top:2px; left:0px"></div>')
 //		.html('<div id="dialogTitle" ondblclick="nuResizeWindow(event)" style="background-color:#CCCCCC ;position:absolute;width:100%;height:35px;font-size:16px;font-family:Helvetica"><div id="dialogTitleWords" style="padding-top: 9px;height:30px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+translation+'</div><img id="dialogClose" src="graphics/close.png" style="position:absolute; top:2px; left:0px"></div>')
@@ -2049,10 +2050,10 @@ function nuResizeBrowseColumns(){
 		
 		var W	= nuTotalWidth('nuBrowseFooter') + 30;
 
-		$('#nuDragDialog', 	window.parent.document).css('width', W);
+		$('#nuDragDialog', 	window.parent.document).css('width', W + 14);
 		$('#nuWindow', 		window.parent.document).css('width', W);
 		
-		$('body').css('width', W - 20).css('padding', '0px 0px 0px 7px');
+		$('body').css('width', W);//.css('padding', '0px 0px 0px 7px');
 
 	}
 
@@ -2175,6 +2176,55 @@ function nuDragBrowseColumn(e){
 
 	} 
 
+}
+
+
+function nuRemovePX(s){
+	return Number(String(s).split('px')[0]);
+}
+
+
+function nuImportCSV(t, s){
+
+	var c	= String(s).split('\n');
+	var	h	= String(c[0]).split(',');
+	var R	= [];
+
+	for(var i = 1 ; i < c.length ; i++){
+		
+		var r	= String(c[i]).replaceAll('""', '\"').split(',');
+		
+		if(h.length == r.length){
+			R.push('"' + r.join('","') + '"');
+		}else{
+			
+			for(var f = 0 ; f < r.length ; f++){
+					
+				if(String(r[f]).substr(0,1) == '"'){
+					
+					var Q = f;
+					
+					for(var q = f ; q < r.length ; q++){
+						
+						if(String(r[q]).substr(String(r[q]).length - 1) != '"'){
+							
+							r[f] = r[f] + ',' + r[q];
+							r.splice(q,1)
+							
+						}
+						
+					}
+					
+				}
+				
+			}
+			
+			R.push('"' + r.join('","') + '"');
+			
+		}
+			
+	}
+	
 }
 
 

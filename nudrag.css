@@ -54,6 +54,8 @@
 			-ms-user-select: none;
 			user-select: none;
 			border-width:1px;
+			border-color:#606060;
+			padding:2px 0px 0px 5px;
 			font-size:12px;
 			font-family:Helvetica;
 }

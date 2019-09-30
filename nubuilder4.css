@@ -90,6 +90,7 @@ label {
 iframe {
   padding: 0px;
   margin: 0px;  
+  border-style: none;
 }
 
 select {
@@ -181,12 +182,12 @@ input[type=range]::-webkit-slider-runnable-track {
   border-style: solid;
   border-width: 0px 0px 1px 0px;
   border-color: lightgrey;
-  padding: 15px 0px 3px 0px;
+  padding: 10px 0px 0px 0px;
   overflow: visible;
 }
 
 .nuActionHolder {
-  padding: 20px 0px 0px 0px;
+  padding: 10px 0px 10px 5px;
   background-color: white;
   height: 22px;
   text-align: left;
@@ -424,8 +425,14 @@ input[type=range]::-webkit-slider-runnable-track {
   background-color: #8DC9DC;
 }
 
+.nuBuilderLink {
+	text-decoration-line: none;
+	color: #606060; 
+}
+
+
 .nuIcon {
-  color: black;
+  color: #606060;
   width: 12px;
   height: 12px;
 }
@@ -472,7 +479,7 @@ input[type=range]::-webkit-slider-runnable-track {
   font-size:14px;
   overflow: visible;
   height:30px;
-  padding: 0px 10px 3px 10px;
+  padding: 7px 10px 0px 10px;
 }
 
 .nuBrowseTable {
@@ -545,7 +552,7 @@ input[type=range]::-webkit-slider-runnable-track {
   border-width: 0px;
   border-color: #CCCCCC;
   font-size: 14px;
-  padding: 3px 7px 7px 7px;
+  padding: 3px 7px 3px 7px;
   height: 33px;
 }
 
@@ -558,7 +565,7 @@ input[type=range]::-webkit-slider-runnable-track {
   background-color: transparent;
   display: inline;
   font-size: 14px;
-  padding: 8px 5px 3px 5px;
+  padding: 3px 7px 0px 7px;
   margin-left: 1px;
   border-radius: 0px;
   border-style: solid;
@@ -651,6 +658,7 @@ input[type=range]::-webkit-slider-runnable-track {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
   border-color: #2a8bcc;
   border-width: 0px 0px 1px 0px;
+  margin: 0px 5px 0px 5px;
 }
 
 .nuSaveButtonEdited {
@@ -662,7 +670,9 @@ input[type=range]::-webkit-slider-runnable-track {
 
 .nuText {}
 
-.nuWindow {border:1px solid #e1e8ea}
+.nuWindow {
+  border: none;
+}
 
 .nuReadonly {
   background-color:#ebebeb;
@@ -721,8 +731,8 @@ input[type=range]::-webkit-slider-runnable-track {
   border-color: lightgrey;
   font-size: 16px;
   height: 18px;
-  padding: 1px 1px 1px 4px;
-  margin-left: 1px;
+  padding: 1px 1px 1px 1px;
+  margin-left: 5px;
 }
 
 #nuModal {
@@ -795,6 +805,7 @@ input[type=range]::-webkit-slider-runnable-track {
 	-webkit-box-shadow: 5px 5px 5px 0px rgba(150,147,150,1);
 	-moz-box-shadow: 5px 5px 5px 0px rgba(150,147,150,1);
 	box-shadow: 5px 5px 5px 0px rgba(150,147,150,1);
+	background-color: #cccccc;
 }
 
 .nuSection{
@@ -887,13 +898,14 @@ input[type=range]::-webkit-slider-runnable-track {
     position: absolute;
     left: 0px;
     top: 0px;
-    background-color: #c1c1c1;
+    background-color: #cccccc;
     z-index: -1;
     min-height: 440px;
 }
 
 .nuDragOptionsBoxContainer {
     padding-left: 15px;
+    background-color: #cccccc;
 }
 
 .nuDragOptionsFieldsLabel {
@@ -905,7 +917,7 @@ input[type=range]::-webkit-slider-runnable-track {
 
 .nuDragOptionsFields {
     display: block;
-    width: 285px;
+    width: 296px;
     height: 200px;
 }
 

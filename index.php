@@ -227,7 +227,7 @@ window.nuHASH				= [];
 
 	function nuResize(){
 
-		if($('#nuTabHolder').css('display') == 'block'){
+		if($('#nuTabHolder').css('display') == 'block' || nuFormType() == 'browse'){
 			
 			$('#nuActionHolder').css('width', window.innerWidth);
 			$('#nuBreadcrumbHolder').css('width', window.innerWidth);

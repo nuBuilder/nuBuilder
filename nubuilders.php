@@ -137,7 +137,7 @@ function nuBuildFastForm($table, $form_type){
 					(?, ?, ?, ?, ?, ?, ?)
 
 	";
-	$array          = Array($form_id, $form_type, $form_code, $form_desc, $form_type=='launch'?'':$table, $form_type=='launch'?'':$PK, "SELECT * FROM $table");
+	$array          = Array($form_id, $form_type, $form_code, ucfirst($form_desc), $form_type=='launch'?'':$table, $form_type=='launch'?'':$PK, "SELECT * FROM $table");
 
 	nuRunQuery($sql, $array);
 
@@ -183,8 +183,7 @@ function nuBuildFastForm($table, $form_type){
 
 	";
 
-	$gap            = 30;
-	$left			= 50;
+	$top            = 10;
 
 	for($i = 0 ; $i < count($SF->rows) ; $i++){
 		
@@ -194,10 +193,12 @@ function nuBuildFastForm($table, $form_type){
 			$label      = $SF->rows[$i][1];
 			$field      = $SF->rows[$i][2];
 			$oldid      = $SF->rows[$i][3];
-			$corner		= $left + ($gap * $i);
 
-			$array      = Array($field, $label, $corner, $corner, $corner + 100, $table, $form_id, $tab_id, $newid, $oldid);
+			$array      = Array($field, $label, $i * 5, $top, 150, $table, $form_id, $tab_id, $newid, $oldid);
 			nuRunQuery($sql, $array);
+
+			$OT			= nuRunQuery("SELECT * FROM $TT WHERE zzzzsys_object_id = ? ", [$newid]);
+			$top		= $top + db_fetch_object($OT)->sob_all_height + 10;
 			
 		}
 
@@ -340,7 +341,7 @@ function nuBuildFastForm($table, $form_type){
 		
 		$form_count		= nuFastForms() * 50;
 		$record_id		= substr($form_type, 0, 6) == 'browse' ? '' : '-1';
-		$array          = Array(nuID(), 'nuuserhome', 'nufastforms', "ff$form_id", $table, $table, 11, 50 + $form_count, 50 + $form_count, 150, 30, $form_id, $record_id, 'b', 0, 0, 0, 'center', 'run');
+		$array          = Array(nuID(), 'nuuserhome', 'nufastforms', "ff$form_id", ucfirst($table), $table, 11, 50 + $form_count, $form_count, 150, 30, $form_id, $record_id, 'b', 0, 0, 0, 'center', 'run');
 		
 		nuRunQuery($sql, $array);
 
