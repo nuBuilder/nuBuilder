@@ -98,11 +98,7 @@ function nuGetBreadcrumb(bc){
 		var b		= bc;
 	}
 	
-//	if(window.nuTimesSaved > 0){	
-		window.nuTimesSaved 	= -1;
-//	}
-
-
+	window.nuTimesSaved 	= -1;
 	
 	if(e && nuFORM.getCurrent().form_type != 'launch'){
 		
@@ -1161,6 +1157,19 @@ function nuOpenTab(i){
 }
 
 
+function nuHideHolders(h){
+	
+	for(var i = 0 ; i < arguments.length ; i++){
+		
+		if(arguments[i] == 0){$('#nuActionHolder').hide();}
+		if(arguments[i] == 1){$('#nuBreadcrumbHolder').hide();}
+		if(arguments[i] == 2){$('#nuTabHolder').hide();}
+		
+	}
+	
+}
+
+
 function nuRemoveHolders(h){
 	
 	for(var i = 0 ; i < arguments.length ; i++){
@@ -2043,12 +2052,12 @@ function nuResizeBrowseColumns(){
 		}
 
 		for(var i = 0 ; i < w.length ; i++){
-			w[i] = parseInt((window.innerWidth - 40) * w[i] / t) - p;
+			w[i] = parseInt((window.innerWidth - 30) * w[i] / t) - p;
 		}
 
 	}else{
 		
-		var W	= nuTotalWidth('nuBrowseFooter') + 30;
+		var W	= nuTotalWidth('nuBrowseFooter') + 22;
 
 		$('#nuDragDialog', 	window.parent.document).css('width', W + 14);
 		$('#nuWindow', 		window.parent.document).css('width', W);

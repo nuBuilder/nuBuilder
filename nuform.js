@@ -86,7 +86,7 @@ function nuBuildForm(f){
 	
 	
 	nuAddHolder('nuBreadcrumbHolder');
-
+	
 	if(nuMainForm()){
 		$('#nuBreadcrumbHolder').append('<span id="nulink" style="position:absolute;right:5px;padding:2px"><a href="https://www.nubuilder.com" class="nuBuilderLink" target="_blank">nuBuilder</a></span>');
 	}
@@ -1536,7 +1536,6 @@ function nuAddHolder(t){
 	
 	$('body').append(d);
 	$('#' + t).addClass(t)
-	//.html('&nbsp;&nbsp;&nbsp;');
 	
 }
 
@@ -3938,3 +3937,16 @@ function nuResizeFormDialogCoordinates(){
 	
 }
 
+
+function nuClickTab(t,s){
+
+	t = "nuTab" + t;
+
+	if(arguments.length == 2){
+		t = s + t;
+	}
+	
+	nuSelectTab($('#' + t)[0]);
+	
+	
+}

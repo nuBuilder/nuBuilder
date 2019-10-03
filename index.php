@@ -229,10 +229,13 @@ window.nuHASH				= [];
 
 		if($('#nuTabHolder').css('display') == 'block' || nuFormType() == 'browse'){
 			
-			$('#nuActionHolder').css('width', window.innerWidth);
-			$('#nuBreadcrumbHolder').css('width', window.innerWidth);
-			$('#nuTabHolder').css('width', window.innerWidth);
-			$('.nuTabTitleColumn').css('width', window.innerWidth);
+			var w = window.innerWidth;
+			//var w = '100%';
+			
+			$('#nuActionHolder').css('width', w);
+			$('#nuBreadcrumbHolder').css('width', w);
+			$('#nuTabHolder').css('width', w);
+			$('.nuTabTitleColumn').css('width', w);
 			
 		}
 		

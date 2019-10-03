@@ -43,7 +43,6 @@ function nuForm(f, r, filter, search, n, like){
 	if(n == 2){
 		
 		window.nuNEW	= 1;
-		//filter			= '';
 		search			= '';
 		
 	}
