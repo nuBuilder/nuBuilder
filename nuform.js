@@ -84,13 +84,8 @@ function nuBuildForm(f){
 	b.run_description			= f.run_description;
 	b.browse_table_id			= f.browse_table_id;
 	
-	
 	nuAddHolder('nuBreadcrumbHolder');
-	
-	if(nuMainForm()){
-		$('#nuBreadcrumbHolder').append('<span id="nulink" style="position:absolute;right:5px;padding:2px"><a href="https://www.nubuilder.com" class="nuBuilderLink" target="_blank">nuBuilder</a></span>');
-	}
-
+	nuAddHomeLogout();
 	nuAddHolder('nuActionHolder');
 	
 	if(nuFormType() == 'edit'){
@@ -101,8 +96,6 @@ function nuBuildForm(f){
 	$('#nuRECORD').attr('data-nu-table', f.table);
 	$('#nuRECORD').attr('data-nu-primary-key-name', f.primary_key);
 	
-//	nuResizeBody(f);
-
 	nuAddBreadcrumbs();
 	nuAddEditTabs('', f);
 	
@@ -142,7 +135,6 @@ function nuBuildForm(f){
 		nuAddJavascript(f);
 	}
 	nuDragTitleEvents();
-//	nuAddBrowseListeners(b.column_widths);
 	
 	if(window.nuLoginH != ''){
 		
@@ -179,6 +171,67 @@ function nuBuildForm(f){
 	window.nuSAVED		= true;
 
 }
+
+
+
+
+
+
+
+
+function nuAddHomeLogout(){
+	
+	if(nuMainForm()){
+
+		if(window.nuFORM.breadcrumbs.length > 1){
+				
+			var c	= document.createElement('div');
+			c.setAttribute('id', 'nuBreadcrumb0');
+			
+			$('#nuBreadcrumbHolder').append(c);
+
+			$('#nuBreadcrumb0')
+			.addClass('nuBreadcrumb')
+			.css('cursor', "pointer")
+			.css('font-size', 16)
+			.attr('onclick', "nuGetBreadcrumb(0)")
+			.html('<i class="fa fa-home" style="font-size:20px;padding:0px 5px 0px 0px"></i>')
+			.attr('title', nuTranslate('Log out'))
+
+		}
+
+		$('#nuBreadcrumbHolder').append('<span id="nulink" style="position:absolute;right:50px;padding:5px"><a href="https://www.nubuilder.com" class="nuBuilderLink" target="_blank">nuBuilder</a></span>');
+
+		var l	= document.createElement('div');
+		l.setAttribute('id', 'nuLogout');
+
+		$('#nuBreadcrumbHolder').append(l);
+
+		$('#nuLogout')
+		.addClass('nuNotBreadcrumb')
+		.css('cursor', "pointer")
+		.css('font-size', 16)
+		.css('position', 'absolute')
+		.css('right', 8)
+		.attr('onclick', "nuLogout()")
+		.html('<i class="fa fa-external-link" style="font-size:20px;"></i>')
+		.attr('title', nuTranslate('Log out'))
+
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 function nuAddedByLookup(f){
@@ -1347,8 +1400,16 @@ function nuSUBFORM(w, i, l, p, prop){
 
 	}
 	
-	if(SF.add == 1 && prefix != ''){
-		nuNewRowObject(String(prefix));
+	if(prefix != ''){
+		
+		
+		if(SF.add == 1){
+			nuNewRowObject(String(prefix));
+		}else{
+			$('#' + prefix + 'nuRECORD').hide();
+			
+		}
+		
 	}
 	
 	nuSetAccess(id, prop.objects[i].read);
@@ -1642,69 +1703,51 @@ function nuBuildSubformDeleteTitle(l, id, subform_id){
 function nuAddBreadcrumbs(){
 
 	var b	= window.nuFORM.breadcrumbs.length;
+
+	if(nuMainForm()){
 	
-    for(var i = 0 ; i < b ; i++){
-		nuAddBreadcrumb(i);
-    }
-    
+		for(var i = 1 ; i < b ; i++){
+			nuAddBreadcrumb(i);
+		}
+		
+	}else{
+	
+		for(var i = 0 ; i < b ; i++){
+			nuAddBreadcrumb(i);
+		}
+		
+	}
+	
 }
 
 
 function nuAddBreadcrumb(i){
 
-	var last 	= (i + 1 == window.nuFORM.breadcrumbs.length);                 //-- last breadcrumb
-
+	var isLast	= (i + 1 == window.nuFORM.breadcrumbs.length);                 //-- last breadcrumb
 	var bc 		= window.nuFORM.breadcrumbs[i];
-	var bcId 	= 'nu_bc_' + i;
-	var bcId 	= 'nuBreadcrumb' + i;
-	var logout = '';
-	
+	var id 		= 'nuBreadcrumb' + i;
 	var div		= document.createElement('div');
-	div.setAttribute('id', bcId);
+	var h		= '<div id="nuarrow'+i+'" class="nuBreadcrumbArrow">&nbsp;<i class="fa fa-caret-right"></i>&nbsp;</div>';
 
-	$('#' + 'nuBreadcrumbHolder').append(div);
+	div.setAttribute('id', id);
+
+	$('#nuBreadcrumbHolder').append(div);
 	
-	if(last){
-		
-		$('#' + bcId)
-		.addClass('nuNotBreadcrumb')
-		.html(nuTranslate(bc.title))
-		.css('font-size', 14)
-		
-		if(i == 0){
-
-			if(window.parent.length == 0 || parent['nuHashFromEditForm']===undefined){ //-- only if Main Form
-
-				if(nuMainForm()){
-					logout = nuTranslate('Logout');
-				}
-					
-				$('#' + bcId)
-				.css('cursor', "pointer")
-				.css('font-size', 16)
-				.attr('onclick', "nuLogout()")
-				.html('<i style="font-size:20px;" class="fa fa-sign-out fa-rotate-270"></i>')
-				.attr('title', logout)
-				
-			}
-		}
-		
+	$('#' + id)
+	.css('font-size', 14)
+	.attr('onclick', 'nuGetBreadcrumb(' + i + ')')
+	.html(h + nuTranslate(bc.title));
+	
+	if(isLast){
+		$('#' + id).addClass('nuNotBreadcrumb')
 	}else{
-		
-		$('#' + bcId)
-		.attr('onclick', 'nuGetBreadcrumb(' + i + ')')
-		.addClass('nuBreadcrumb')
-		.html(nuTranslate(bc.title) + '<div id="nuarrow'+i+'" class="nuBreadcrumbArrow">&nbsp;<i class="fa fa-caret-right"></i>&nbsp;</div>');
-		
+		$('#' + id).addClass('nuBreadcrumb')
 	}
 	
-	if(bc.title == 'Home' && logout == '' && i == 0){
-		
-		$('#' + bcId)
-		.html('<i class="fa fa-home" style="font-size:20px;padding:0px 5px 0px 0px"></i>' + '<div id="nuarrow'+i+'" class="nuBreadcrumbArrow">&nbsp;<i class="fa fa-caret-right"></i>&nbsp;</div>')
-		.attr('title', nuTranslate(bc.title))
-		
+	if(i==0){
+		$('#nuarrow0').remove()
 	}
+	
 }
 
 
@@ -1732,8 +1775,13 @@ function nuSetTitle(t){
 	nuFORM.setProperty('title', t);
 	
 	var b 	= $('.nuBreadcrumb').length;
+	var h	= '<div id="nuarrow' + (i-1) + '" class="nuBreadcrumbArrow">&nbsp;<i class="fa fa-caret-right"></i>&nbsp;</div>';
 	
-	$('#nuBreadcrumb' + b).html(t);
+	if(nuFORM.breadcrumbs.length == 1){
+		h	= '';
+	}
+	
+	$('#nuBreadcrumb' + b).html(h + t);
 	
 }
 
@@ -3234,19 +3282,14 @@ function nuAddJavascript(o){
 
 	var nuLoadEdit		= null;
 	var nuLoadBrowse	= null;
-	
+
 	var s				= document.createElement('script');
 	s.innerHTML 		= "\n\n" + o.javascript + "\n\n";
 	
 	$('body').append(s);
-/*
-	if(nuFormType() == 'browse'){
-		if(nuLoadBrowse != null){nuLoadBrowse();}
-	}else{
-		if(nuLoadEdit != null){nuLoadEdit();}
-	}
-*/	
+
 }
+
 
 function nuHashFromEditForm(){
 

@@ -1,6 +1,10 @@
 
 function nuAjax(w,successCallback,errorCallback){
 
+	if(!window.nuAjaxCompleted){return;}
+
+	window.nuAjaxCompleted = false;
+	
 	w	= nuAddEditFieldsToHash(w);
 	
 	w	= JSON.stringify(w);
@@ -14,9 +18,12 @@ function nuAjax(w,successCallback,errorCallback){
 		data     : {nuSTATE : w},
 		dataType : "json",			
 		success	 : function(data,textStatus,jqXHR){
+				window.nuAjaxCompleted	= true;
 				successCallback(data,textStatus,jqXHR);
 		},
 		error    : function(jqXHR,textStatus,errorThrown){
+			
+			window.nuAjaxCompleted	= true;
 			
 			var msg			= String(jqXHR.responseText).split("\n");
  			nuMessage(msg);
@@ -31,7 +38,7 @@ function nuAjax(w,successCallback,errorCallback){
 		},
 
 		complete: function(jqXHR,textStatus){
-			//todo - probably not needed
+			//--
 		}
 		
 	});    

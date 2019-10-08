@@ -144,7 +144,7 @@ function nuUpdateDatabase(){
 	$EFid			= $nudata[0]->object_id;
 	$cts			= nuGetJSONData('clientTableSchema');
 	$user			= $_POST['nuHash']['USER_ID'];
-		
+
 	for($d = 0 ; $d < count($nudata) ; $d++){
 		
 		$sf			= $nudata[$d];

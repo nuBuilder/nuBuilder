@@ -705,15 +705,13 @@ function nuGetSubformRecords($R, $A){
 
     }
 
-    if($A == 1){  //-- add blank record
-    
-		$_POST['nuHash']['RECORD_ID']			= -1;
-        $o										= nuGetFormObject($R->sob_subform_zzzzsys_form_id, -1, count($a));
-        $o->foreign_key							= $R->subform_fk;
-        $o->foreign_key_name					= $R->sob_subform_foreign_key;
-        $a[] 									= $o;
+
+	$_POST['nuHash']['RECORD_ID']				= -1;
+	$o											= nuGetFormObject($R->sob_subform_zzzzsys_form_id, -1, count($a));
+	$o->foreign_key								= $R->subform_fk;
+	$o->foreign_key_name						= $R->sob_subform_foreign_key;
+	$a[] 										= $o;
         
-    }
 	$_POST['nuHash']['RECORD_ID'] 				= $I;
 	
     return $a;

@@ -1153,4 +1153,6 @@ input[type=range]::-webkit-slider-runnable-track {
 	position:relative;
 }
 
-
+span.nuActionButton{
+	margin:5px 0px 0px 0px;
+}

@@ -39,6 +39,7 @@ function nuLoadNewSession() {
 	}
        
 	$_SESSION['nubuilder_session_data'] = $nubuilder_session_data->get_nubuilder_session_data();
+
 }
 
 function nuCheckGarbageCollector() {

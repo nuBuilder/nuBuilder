@@ -3,6 +3,7 @@ window.nuDialog 				= new nuCreateDialog('');
 window.nuFORM					= new nuFormObject();
 window.nuRESPONSIVE 			= new nuResponseForm();
 window.nuHideMessage 			= true;
+window.nuAjaxCompleted			= true;
 window.nuDragID					= 1000;
 window.nuLastForm				= '';
 window.nuNEW					= '';
@@ -223,6 +224,15 @@ function nuLogin(nuconfigNuWelcomeBodyInnerHTML){
 	window.nuLoginP	= window.nuLoginP===undefined?'':window.nuLoginP;
 
 	$('body').html(H);
+
+	if(nuIsMobile()){
+		
+		$('#outer')
+		.css('width', '')
+		.css('position', 'absolute')
+		.css('left', 0)
+		
+	}
 	
 	if(window.nuLoginU == '' && window.nuLoginP == ''){
 		$('#nuusername').focus();
@@ -2195,15 +2205,16 @@ function nuRemovePX(s){
 
 function nuImportCSV(t, s){
 
-	var c	= String(s).split('\n');
-	var	h	= String(c[0]).split(',');
-	var R	= [];
+	var csv		= String(s).split('\n');
+	var	header	= String(c[0]).split(',');
+	var inserts	= [];
 
 	for(var i = 1 ; i < c.length ; i++){
 		
-		var r	= String(c[i]).replaceAll('""', '\"').split(',');
+		var r	= String(c[i]);
+		var c	= nuCSVcolumn(r);
 		
-		if(h.length == r.length){
+		if(r.substr(0,2) == '"'){
 			R.push('"' + r.join('","') + '"');
 		}else{
 			
@@ -2235,6 +2246,3 @@ function nuImportCSV(t, s){
 	}
 	
 }
-
-
-

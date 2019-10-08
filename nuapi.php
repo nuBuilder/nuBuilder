@@ -2,7 +2,6 @@
 	header("Content-Type: application/json");
 	header("Cache-Control: no-cache, must-revalidate");
 	$_POST['nuSTATE'] = json_decode($_POST['nuSTATE'], JSON_OBJECT_AS_ARRAY);
-
 	require_once('nuconfig.php');
 	require_once('nusession.php');
 	require_once('nucommon.php');
