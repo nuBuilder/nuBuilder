@@ -227,7 +227,7 @@ window.nuHASH				= [];
 
 	function nuResize(){
 
-		if($('#nuTabHolder').css('display') == 'block' || nuFormType() == 'browse'){
+		//if($('#nuTabHolder').css('display') == 'block' || nuFormType() == 'browse'){
 			
 			var w = window.innerWidth;
 			//var w = '100%';
@@ -236,8 +236,9 @@ window.nuHASH				= [];
 			$('#nuBreadcrumbHolder').css('width', w);
 			$('#nuTabHolder').css('width', w);
 			$('.nuTabTitleColumn').css('width', w);
-			
-		}
+			$('body').css('width', w);
+			console.log(w)
+		//}
 		
 	}
 

@@ -3,8 +3,8 @@
 function nuLoadBody($debug = false) {
 
         if ( !$debug ) {
-//                echo "<body id='nubody' onload='nuLoad()' onresize='nuResize()'>";
-                echo "<body id='nubody' onload='nuLoad()'>";
+                echo "<body id='nubody' onload='nuLoad()' onresize='nuResize()'>";
+//                echo "<body id='nubody' onload='nuLoad()'>";
         } else {
                 echo "<body>";
                 echo "<pre>";

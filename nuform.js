@@ -51,7 +51,7 @@ function nuBuildForm(f){
 	nuFORM.edited				= false;
 	nuFORM.scroll				= [];
 	nuSetSuffix(1000);
-	nuSetBody();
+	nuSetBody(f);
 	
 	nuRedefine_nuSelectBrowse();
 	
@@ -83,7 +83,7 @@ function nuBuildForm(f){
 	b.run_code					= f.run_code;
 	b.run_description			= f.run_description;
 	b.browse_table_id			= f.browse_table_id;
-	
+
 	nuAddHolder('nuBreadcrumbHolder');
 	nuAddHomeLogout();
 	nuAddHolder('nuActionHolder');
@@ -247,7 +247,7 @@ function nuAddedByLookup(f){
 }
 
 
-function nuSetBody(){
+function nuSetBody(f){
 
 	$('body').html('');
 	$('body').removeClass('nuBrowseBody nuEditBody');
@@ -255,7 +255,11 @@ function nuSetBody(){
 	if(nuFormType() == 'browse'){
 		$('body').addClass('nuBrowseBody')
 	}else{
+		
 		$('body').addClass('nuEditBody')
+		.css('width', window.innerWidth-1)
+		.css('height', f.dimensions.edit.height)
+		
 	}
 	
 }
