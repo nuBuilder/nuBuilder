@@ -229,7 +229,7 @@ window.nuHASH				= [];
 
 		//if($('#nuTabHolder').css('display') == 'block' || nuFormType() == 'browse'){
 			
-			var w = window.innerWidth;
+			var w = window.innerWidth-5;
 			//var w = '100%';
 			
 			$('#nuActionHolder').css('width', w);

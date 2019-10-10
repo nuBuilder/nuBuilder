@@ -335,61 +335,6 @@ function nuTotalHolderWidth(i){
 }
 
 
-
-function nuResizeBody(f){
-
-	var d				= f.dimensions;
-	var headers			= nuDialogHeadersHeight();
-	
-	if(nuFormType() == 'browse'){
-/*
-		var spacing		= 7 * f.rows;
-		var h			= Number(d.browse.height) + headers + spacing;
-		var w			= Number(d.browse.width);
-
-		$('#nuDragDialog', 	window.parent.document).css({'width': w + 43});
-		$('#nuWindow', 		window.parent.document).css({'width': w + 30});
-		
-		$('body').css('height', h);
-		$('#nuRECORD').css('height', 0).css('width', 0);
-*/		
-	}else{
-
-/*		
-		var h	= c.height;//) + headers;
-		var w	= c.width;
-		
-		if(f.record_id == '-2'){			//-- bigger for moving objects
-
-			$('body').css('transform', 'scale(1)');			
-			h			= h + 200;
-			w			= w + 200;
-			
-		}
-		$('#nuDragDialog', window.parent.document).
-		css({'height'		:	h + 'px',
-			'width' 		:	(w + 10) + 'px',
-			'overflow'		: 'hidden',
-			'visibility' 	:	'visible'
-		});
-
-		$('#nuWindow', window.parent.document).
-		css({'height'		:	(h + 20) + 'px',
-			'width' 		:	(w - 3) + 'px'
-		});
-		
-		if(h < window.innerHeight){
-			$('body').css('height', '100%');
-		}else{
-			$('body').css('height', h);
-		}
-*/		
-		
-	}
-	
-}
-
-
 function nuDefine(v){
 
 	if(v === undefined){
@@ -3952,7 +3897,7 @@ function nuResizeFormDialogCoordinates(){
 	var h	= wh.height;
 
 
-	h		= h + nuDialogHeadersHeight() + 40;
+	h		= h + nuDialogHeadersHeight() + 50;
 	w		= w + 40
 
 
@@ -3964,15 +3909,15 @@ function nuResizeFormDialogCoordinates(){
 	$('body').css('width', w);
 
 	$('#nuDragDialog', window.parent.document).css('height', h + 50).css('visibility', 'visible');
-	$('#nuWindow', window.parent.document).css('height', h + 7);
-	$('body').css('height', window.innerHTML);
+	$('#nuWindow', window.parent.document).css('height', h + 10);
+	$('body').css('height', window.innerHeight);
 
 	if(h < window.innerHeight){
 		$('body').css('height', '100%');
 	}else{
 		$('body').css('height', h);
 	}
-
+	
 	if(w > window.innerWidth){
 		
 		$('#nuBreadcrumbHolder').css('width', window.innerHTML);
