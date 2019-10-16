@@ -2215,7 +2215,7 @@ function nuBrowseTitle(b, i, l){
 	
 	div.setAttribute('id', id);
 	
-	var sp	= '<span id="nusort_' + i + '" class="nuSort" onclick="nuSortBrowse(' + i + ')"> ' + nuTranslate(b[i].title) + ' </span>'
+	var sp	= '<span id="nusort_' + i + '" class="nuSort" onclick="nuSortBrowse(' + i + ')" ontouchstart="nuSortBrowse(' + i + ')"> ' + nuTranslate(b[i].title) + ' </span>'
 
 	if(bc.sort == i){
 		
@@ -2453,7 +2453,7 @@ function nuBrowseTable(){
 	$('#nuRECORD').append(div);
 
 	$('#' + id)
-	.addClass('nuBrowseTitle')
+	.addClass('nuBrowseFooter')
 	.html(la+pg+cu+of+ne)
 	.css({	'text-align'	: 'center',
 			'width'			: l - 7,
@@ -2461,7 +2461,7 @@ function nuBrowseTable(){
 			'left'			: 7,
 			'height'		: 25,
 			'position'		: 'absolute',
-			'padding'		: 5,
+			'padding'		: '5px 0px',
 	});
 	
 	nuHighlightSearch();

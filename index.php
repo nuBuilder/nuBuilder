@@ -227,18 +227,13 @@ window.nuHASH				= [];
 
 	function nuResize(){
 
-		//if($('#nuTabHolder').css('display') == 'block' || nuFormType() == 'browse'){
-			
-			var w = window.innerWidth-5;
-			//var w = '100%';
-			
-			$('#nuActionHolder').css('width', w);
-			$('#nuBreadcrumbHolder').css('width', w);
-			$('#nuTabHolder').css('width', w);
-			$('.nuTabTitleColumn').css('width', w);
-			$('body').css('width', w);
-			console.log(w)
-		//}
+		var w = window.innerWidth-5;
+		
+		$('#nuActionHolder').css('width', w);
+		$('#nuBreadcrumbHolder').css('width', w);
+		$('#nuTabHolder').css('width', w);
+		$('.nuTabTitleColumn').css('width', w);
+		$('body').css('width', w);
 		
 	}
 
