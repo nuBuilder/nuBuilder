@@ -187,7 +187,7 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 .nuActionHolder {
-  padding: 10px 0px 10px 5px;
+  padding: 10px 0px 10px 0px;
   background-color: white;
   height: 22px;
   text-align: left;

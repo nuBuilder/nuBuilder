@@ -226,12 +226,7 @@ function nuLogin(nuconfigNuWelcomeBodyInnerHTML){
 	$('body').html(H);
 
 	if(nuIsMobile()){
-		
-		$('#outer')
-		.css('width', '')
-		.css('position', 'absolute')
-		.css('left', 0)
-		
+		$('body').css('width', 300).css('height', 300)
 	}
 	
 	if(window.nuLoginU == '' && window.nuLoginP == ''){
@@ -1329,13 +1324,21 @@ function nuClosePopup(){
 }
 
 
-
+/*
 function nuStopClick(e){
 
 	if(window.nuCLICKER != ''){
 		$(e.target).prop('onclick',null).off('click');
 	}
 	
+}
+*/
+
+function nuStopClick(e){
+
+   if(window.nuCLICKER != '' && e.ctrlKey == false ){
+      $(e.target).prop('onclick',null).off('click');
+   }   
 }
 
 

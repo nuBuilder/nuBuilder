@@ -168,6 +168,10 @@ function nuBuildForm(f){
 		
 	}
 	
+	if(!nuMainForm() && nuFormType() == 'edit'){
+		$('body').css('width', Number(nuFormWH().width) + 5)
+	}
+
 	window.nuSAVED		= true;
 
 }
@@ -1705,12 +1709,12 @@ function nuMainForm(){
 	var result = false; 	
 
 	if(opener){
+
 		try {
 			result = nuDocumentID == opener.nuDocumentID;	
 		} catch ( error ) {
 			result = false;
 		}
-		return result;
 	}
 	
 	return nuDocumentID == parent.nuDocumentID;
@@ -3917,7 +3921,7 @@ function nuResizeFormDialogCoordinates(){
 	}else{
 		$('body').css('height', h);
 	}
-	
+
 	if(w > window.innerWidth){
 		
 		$('#nuBreadcrumbHolder').css('width', window.innerHTML);
