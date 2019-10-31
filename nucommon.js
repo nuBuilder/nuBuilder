@@ -3,7 +3,6 @@ window.nuDialog 				= new nuCreateDialog('');
 window.nuFORM					= new nuFormObject();
 window.nuRESPONSIVE 			= new nuResponseForm();
 window.nuHideMessage 			= true;
-window.nuAjaxCompleted			= true;
 window.nuDragID					= 1000;
 window.nuLastForm				= '';
 window.nuNEW					= '';
@@ -868,7 +867,7 @@ function nuReadonly(i){  			               //-- set Edit Form Object to readonly
 			
 		$('#' + o[c])
 		.addClass('nuReadonly')
-		.attr('onclick','')
+		.attr('onclick',"return false")
 		.prop('readonly', true);
 		
 	}
