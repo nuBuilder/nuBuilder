@@ -1440,7 +1440,7 @@ function nuGetFonts(){
 	return $a;
 	
 }
-
+/*
 function nuSendEmail($to, $from, $fromname, $content, $subject, $filelist, $html = false, $cc = "", $bcc = "", $reply_to_addresses = array()) {
 
 	// nuSendEmail function is being retired and replaced with nuSendEmail
@@ -1448,7 +1448,19 @@ function nuSendEmail($to, $from, $fromname, $content, $subject, $filelist, $html
 	return nuEmail($to_list,$from,$fromname,$content,$subject,$filelist,$html,$reply_to_addresses);
 }
 
+*/
 
+function nuSendEmail($to, $from, $fromname, $content, $subject, $filelist, $html = false, $cc = "", $bcc = "", $reply_to_addresses = array()) {
+
+   // nuSendEmail function is being retired and replaced with nuSendEmail
+   $to_list   = explode(',',$to);
+   $cc_list   = explode(',',$cc); // added
+   $bcc_list   = explode(',',$bcc); // added
+ 
+ // return nuEmail($to_list,$from,$fromname,$content,$subject,$filelist,$html,$reply_to_addresses); // removed
+   return nuEmail($to_list,$from,$fromname,$content,$subject,$filelist,$html,$cc_list, $bcc_list,$reply_to_addresses); // added
+   
+}
 
 
 function nuUser(){
