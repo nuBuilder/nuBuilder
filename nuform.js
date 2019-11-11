@@ -1412,7 +1412,8 @@ function nuRecordHolderObject(t){
 	while ($('#' + this.form + nuPad3(this.intNo + c) + h).length != 0){c++;}
 	
 	this.rows	= this.intNo + c;
-	this.top	= parseInt(p.css('height')) * this.rows + this.rows;  //--  + this.rows adds the border height
+//	this.top	= parseInt(p.css('height')) * this.rows + this.rows;  //--  + this.rows adds the border height
+	this.top	= (parseInt(p.css('height')+1) * this.rows);  //--  + this.rows adds the border height
 	var s		= this.form  + nuPad3(this.intNo + 1) + h;
 	this.last	= $('#' + s).length == 0;
 	var s		= this.form  + nuPad3(this.rows - 1);

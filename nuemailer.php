@@ -35,7 +35,10 @@ function nuEmail($to_list=array(),$from_address='',$from_name='',$content='',$su
         $mail->CharSet          = $nuEmailSettings->charset;                    // defaults to UTF-8
         $mail->IsHTML($nuEmailSettings->html);
 
-        _nuEmailHelperAdd($mail, $to_list,                              'AddAddress');
+        _nuEmailHelperAdd($mail, $to_list,                              'AddAddress');		
+		_nuEmailHelperAdd($mail, $cc_list,                              'AddCC');		
+		_nuEmailHelperAdd($mail, $bcc_list,                             'AddBCC');
+		
         _nuEmailHelperAdd($mail, $nuEmailSettings->reply_to_list, 	'AddReplyTo');
         _nuEmailHelperAttach($mail, $file_list);
 
