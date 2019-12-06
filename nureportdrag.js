@@ -4,7 +4,7 @@
 function nuLoadReport(b){
 	
 	window.addEventListener("keydown", function(e) {
-		
+
 		if([38, 40].indexOf(e.keyCode) > -1) {					// space and arrow keys
 			e.preventDefault();
 		}

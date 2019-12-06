@@ -1621,20 +1621,20 @@ function nuDragTitleEvents(){
 		nuSetBrowserColumns(nuFORM.getCurrent().column_widths);
 	}
 
-    $('#nubody').on('mousemove.nuresizecolumn', 		function(event) {nuDragBrowseColumn(event);});
+    $('#nubody').on('mousemove.nuresizecolumn',       function(event) {nuDragBrowseColumn(event, 'pointer');});
 
-    $('.nuBrowseTitle').on('mousedown.nuresizecolumn', 	function(event) {nuDownBrowseResize(event)});
+    $('.nuBrowseTitle').on('mousedown.nuresizecolumn',    function(event) {nuDownBrowseResize(event, 'pointer')});
 
-    $('#nubody').on('mouseup.nuresizecolumn', 			function(event) {nuEndBrowseResize();});
-    
-    $('.nuBrowseTitle').on('touchstart.nuresizecolumn', function(event) {nuDownBrowseResize(event);});
-                                                        
-    $('.nuBrowseTitle').on('touchmove.nuresizecolumn', 	function(event) {nuDragBrowseColumn(event);});
-                                                        
-    $('.nuBrowseTitle').on('touchend.nuresizecolumn', 	function(event)	{nuEndBrowseResize(event);});
+    $('#nubody').on('mouseup.nuresizecolumn',          function(event) {nuEndBrowseResize();});
+   
+    $('.nuBrowseTitle').on('touchstart.nuresizecolumn', function(event) {nuDownBrowseResize(event, 'finger_touch');});
+                                                       
+    $('.nuBrowseTitle').on('touchmove.nuresizecolumn',    function(event) {nuDragBrowseColumn(event, 'finger_touch');});
+                                                       
+    $('.nuBrowseTitle').on('touchend.nuresizecolumn',    function(event)   {nuEndBrowseResize(event);});
 
-    $('.nuBrowseTitle').on('touchcancel.nuresizecolumn',function(event)	{nuEndBrowseResize(event);});
-	
+    $('.nuBrowseTitle').on('touchcancel.nuresizecolumn',function(event)   {nuEndBrowseResize(event);});
+   
 }
 
 
@@ -1656,6 +1656,7 @@ function nuDownBrowseResize(e){
 	event.preventDefault();
 	
 	window.nuBROWSERESIZE.mouse_down 		= true;
+	window.nuBROWSERESIZE.pointer          	= p; // Added
 	window.nuBROWSERESIZE.moving_element 	= e.target.id;
     window.nuBROWSERESIZE.x_position 		= event.clientX;
 	$(e.target).css('background-color', '#badeeb');
@@ -1678,6 +1679,7 @@ function nuDragBrowseColumn(e){
 
 	if (window.nuBROWSERESIZE.mouse_down && window.nuBROWSERESIZE.moving_element == e.target.id){
 
+		window.nuBROWSERESIZE.pointer = p; // added
 		var id				= window.nuBROWSERESIZE.moving_element;
 		var offset_limit	= 100000000;
 		var min_offset		= 2;

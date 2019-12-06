@@ -328,12 +328,32 @@ function nuGetFormObject($F, $R, $OBJS){
     $f->browse_table_id		= nuHash()['TABLE_ID'];
     $f->pages				= ceil($B[1]/$f->rows);
     $f->objects 			= $a;
+    $f->browse_totals		= nuBrowseTotals($f);
     $O 						= new stdClass();
     $O->forms[] 			= $f;
 
     return $O->forms[0];
 
 }
+
+
+function nuBrowseTotals($f){
+	
+    $SQL			= new nuSqlString(nuReplaceHashVariables($f->browse_sql));
+	$s				= array();
+
+	for($i = 0 ; $i < count($f->browse_columns) ; $i++){
+		$d			= $f->browse_columns[$i]->display;
+		$SQL->addField("SUM($d) AS total_$i");
+	}
+	
+	$t = nuRunQuery($SQL->SQL);
+	
+	return db_fetch_row($t);
+	
+}
+
+
 
 
 function nuGetSrc($i){

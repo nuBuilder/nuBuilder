@@ -46,14 +46,14 @@ function nuEmail($to_list=array(),$from_address='',$from_name='',$content='',$su
 
 	try {
 
-        	$result[0]	= $mail->Send();
+		$result[0]		= $mail->Send();
 		$result[1]     	= "Message sent successfully";
 		$result[2]      = $mail->ErrorInfo;	
 
 	} catch(Exception $e) {
 
 		$result[0]      = false;
-                $result[1]      = $e->errorMessage();
+		$result[1]      = $e->errorMessage();
 		$result[2]      = $mail->ErrorInfo;
 	}
 

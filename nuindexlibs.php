@@ -10,6 +10,7 @@ function nuLoadBody($debug = false) {
                 echo "<pre>";
                 print_r($_SESSION);
                 print_r($_SERVER);
+                print('<br>' . session_id());
                 echo "</pre>";
         }
 }
