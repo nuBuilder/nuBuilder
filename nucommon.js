@@ -1651,17 +1651,19 @@ function nuGetColumWidths(){
 }
 
 
-function nuDownBrowseResize(e){
-	
-	event.preventDefault();
-	
-	window.nuBROWSERESIZE.mouse_down 		= true;
-	window.nuBROWSERESIZE.pointer          	= p; // Added
-	window.nuBROWSERESIZE.moving_element 	= e.target.id;
-    window.nuBROWSERESIZE.x_position 		= event.clientX;
-	$(e.target).css('background-color', '#badeeb');
+function nuDownBrowseResize(e, p){
+   
+   e.preventDefault();
+   
+   window.nuBROWSERESIZE.mouse_down       = true;
+   window.nuBROWSERESIZE.pointer          = p; // Added
+   window.nuBROWSERESIZE.moving_element    = e.target.id;
+        window.nuBROWSERESIZE.x_position       = e.clientX;
+   $(e.target).css('background-color', '#badeeb');
 
 }
+
+
 
 function nuEndBrowseResize(e){
 	
@@ -1673,7 +1675,7 @@ function nuEndBrowseResize(e){
 
 
 
-function nuDragBrowseColumn(e){
+function nuDragBrowseColumn(e, p){
 
 	event.preventDefault();
 
