@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 01, 2020 at 11:32 PM
--- Server version: 10.4.10-MariaDB
--- PHP Version: 7.3.12
+-- Generation Time: Nov 16, 2019 at 11:59 PM
+-- Server version: 10.4.8-MariaDB
+-- PHP Version: 7.1.32
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -380,8 +380,7 @@ CREATE TABLE `zzzzsys_format` (
 INSERT INTO `zzzzsys_format` (`zzzzsys_format_id`, `srm_type`, `srm_format`) VALUES
 ('nu59e28f061a779da', 'Number', '$ 1000.00'),
 ('nu5d8a9b303b55b6d', 'Date', 'dd-mm-yy'),
-('nu5d8a9b47ac4f5ae', 'Number', ' 1000.00'),
-('5e0d1b8e022a9fe', 'Date', 'dd-mm-yyyy');
+('nu5d8a9b47ac4f5ae', 'Number', ' 1000.00');
 
 -- --------------------------------------------------------
 
@@ -625,7 +624,7 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu59e446589ac75be', 'nusample', '', 'word', 'wordsample', 'Word', 'nu5bad6cb370eb06a', 180, 33, 261, 117, 18, '1', 'center', '0', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', '', '', ''),
 ('nu59e446589adce4d', 'nusample', '', 'input', 'inputbuttonsample', 'Run', 'nu5bad6cb373c384f', 90, 13, 249, 117, 31, '1', 'center', '0', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, 'N|$ 1,000.00', 'button', '', '', '', '', '', '', '', ''),
 ('nu59e446589af5d86', 'nusample', '', 'input', 'inputnumbersample', 'Input:number', 'nu5bad6cb373c384f', 40, 438, 249, 55, 20, '1', 'right', '0', '0', '', '', '', '', '', '', 'SELECT COUNT(*) FROM zzzzsys_debug', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, 'N|$ 1,000.00', 'number', '', '', '', '', '', '', '', ''),
-('nu59e446589b0af4c', 'nusample', '', 'input', 'inputnudatesample', 'Input:nuDate', 'nu5bad6cb373c384f', 20, 318, 249, 95, 20, '1', 'left', '0', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, 'D|dd-mm-yyyy', 'nuDate', '', '', '', '', '', '', '', ''),
+('nu59e446589b0af4c', 'nusample', '', 'input', 'inputnudatesample', 'Input:nuDate', 'nu5bad6cb373c384f', 20, 318, 249, 95, 20, '1', 'left', '0', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, 'D|dd-mm-yy', 'nuDate', '', '', '', '', '', '', '', ''),
 ('nu59e446589b20a14', 'nusample', '', 'input', 'inputnunumbersample', 'Input:nuNumber', 'nu5bad6cb373c384f', 30, 378, 249, 90, 20, '1', 'right', '0', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, 'N|1000.00', 'nuNumber', '', '', '', '', '', '', '', ''),
 ('nu59e446589b3714b', 'nusample', '', 'calc', 'calcsample', 'Calc', 'nu5bad6cb370eb06a', 170, 81, 261, 98, 20, '1', 'right', '0', '0', 'nuTotal(\'inputnunumbersample\') + nuTotal(\'inputnumbersample\')', 'N|1000.00', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, 'N|$ 1,000.00', 'nuNumber', '', '', '', '', '', '', '', ''),
 ('nu59e446589b4c69b', 'nusample', '', 'input', 'inputcheckboxsample', 'Input:checkbox', 'nu5bad6cb373c384f', 70, 78, 249, 70, 18, '1', 'right', '0', '0', '', '', '', '', '', '', 'SELECT COUNT(*) FROM zzzzsys_debug', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, 'N|$ 1,000.00', 'checkbox', '', '', '', '', '', '', '', ''),
