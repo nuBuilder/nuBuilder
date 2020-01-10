@@ -32,6 +32,7 @@
 	$_POST['nuCallback']					= '';
 	$_POST['nuAfterEvent']					= false;
 
+	$f										= new stdClass;
 	$f->forms[0]							= new stdClass;
 
     if(count($formAndSessionData->errors) == 0){
