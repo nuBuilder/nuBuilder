@@ -3776,28 +3776,25 @@ function nuRedefine_nuSelectBrowse(){
 
 
 function nuSetVerticalTabs(){
-	
-	$('#nuTabHolder').css('display', 'inline-block');
-	$('.nuTab').css('display', 'block');
-	$('.nuTab').css('width', 200);
-	$('#nuRecord').css('display', 'inline-block');
-	$('.nuTab').css('padding', '8px 2px 0px 2px');
-	$('#nuTabHolder').css('height', window.innerHeight)
+   
+   $('#nuTabHolder').css('display', 'inline-block');
+   $('.nuTab').css('display', 'block');
+   $('#nuRecord').css('display', 'inline-block');
+   $('.nuTab').css('padding', '8px 2px 0px 2px');
+   $('#nuTabHolder').css('height', window.innerHeight)
 
-	var w   = 0;
+   var w   = 0;
 
-	$('.nuTab').each(function( index ) {
+   $('.nuTab').each(function( index ) {
+      $(this).html('&nbsp;&nbsp;&nbsp;' + $(this).html());
+      w   = Math.max(w, nuGetWordWidth($(this).html()));
 
-		$(this).html('&nbsp;&nbsp;&nbsp;' + $(this).html());
-		w   = Math.max(w, nuGetWordWidth($(this).html()));
+   });
 
-	});
-
-	$('#nuTabHolder').html($('#nuTabHolder').html().substr(18));
-	$('#nuTabHolder').css('width', w + 30);
+   $('#nuTabHolder').css('width', w + 30);
+   $('.nuTab').css('width', w + 30);
 
 }
-
 
 function nuHasBeenSaved(){
 	
