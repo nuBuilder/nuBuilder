@@ -413,9 +413,10 @@ function nuDefaultObject($r, $t){
 }
 
 function nuGetEditForm($F, $R){
-	
+
 	$r					= nuFormProperties($F);
-    $SQL 				= new nuSqlString(nuReplaceHashVariables($r->sfo_browse_sql));
+	$SQL 				= new nuSqlString(nuReplaceHashVariables($r->sfo_browse_sql));
+	
     $f              	= new stdClass();
     $f->id          	= $r->zzzzsys_form_id;
     $f->form_code       = $r->sfo_code;

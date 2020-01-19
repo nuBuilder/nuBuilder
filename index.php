@@ -228,7 +228,6 @@ window.nuHASH				= [];
 	function nuResize(){
 
 		var w = window.innerWidth;
-
 		$('#nuActionHolder').css('width', w);
 		$('#nuBreadcrumbHolder').css('width', w);
 		$('#nuTabHolder').css('width', w);

@@ -117,6 +117,14 @@ class nuSqlString{
         $this->groupBy    = $groupBy;
         $this->having     = $having;
         $this->orderBy    = $orderBy;
+	
+		if($from == ''){
+			
+			$this->from       = 'FROM zzzzsys_setup';
+			$this->where      = 'WHERE 0';
+			$this->addField('*');
+
+		}
 
         $this->Dfrom      = $this->from;
         $this->Dwhere     = $this->where;
@@ -125,7 +133,8 @@ class nuSqlString{
         $this->DorderBy   = $this->orderBy;
 
     	$this->buildSQL();
-    }
+
+}
 
     public function restoreDefault($pString){
 
