@@ -56,6 +56,7 @@ nuJSIndexInclude('nucalendar.js');
 nuJSIndexInclude('nucommon.js');
 nuJSIndexInclude('nureportjson.js');
 nuJSIndexInclude('nuajax.js');       //-- calls to server
+nuJSIndexInclude('fastclick.js');
 nuCSSIndexInclude('nubuilder4.css');
 ?>
 

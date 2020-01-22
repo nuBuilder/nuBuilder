@@ -174,6 +174,10 @@ function nuBuildForm(f){
 
 	window.nuSAVED		= true;
 
+	$(function() {
+		FastClick.attach(document.body);
+	});
+	
 }
 
 
