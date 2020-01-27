@@ -3948,3 +3948,28 @@ function nuClickTab(t,s){
 	
 	
 }
+
+
+function nuFilterRun(id, f){
+	
+	var r = JSON.parse(JSON.stringify(nuSERVERRESPONSE));
+	var o = -1;
+	
+	for(var i = 0 ; i < r.objects.length ; i++){
+
+			if(r.objects[i].id == id){
+				
+				r.objects[i].filter = f;
+				o = i;
+				
+			}
+
+	}
+
+	if(o == -1){return;}
+
+	nuRUN(r, o, '', '', r);
+
+}
+
+
