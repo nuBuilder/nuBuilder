@@ -3959,6 +3959,8 @@ function nuFilterRun(id, f){
 
 			if(r.objects[i].id == id){
 				
+				if(r.objects[i].filter == f){return;}
+				
 				r.objects[i].filter = f;
 				o = i;
 				
