@@ -4001,3 +4001,13 @@ function nuRecordRun(id, f){
 }
 
 
+
+function nuGetIframeValue(f, o){
+	return $('#' + f).contents().find('#' + o).val();
+}
+
+
+function nuSetIframeValue(f, o, v){
+	return $('#' + f).contents().find('#' + o).val(v);
+}
+
