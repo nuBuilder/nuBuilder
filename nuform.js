@@ -76,13 +76,14 @@ function nuBuildForm(f){
 	b.browse_columns 			= f.browse_columns;
 	b.browse_sql				= f.browse_sql;
 	b.browse_rows 				= f.browse_rows;
+	b.browse_table_id			= f.browse_table_id;
+	b.browse_filtered_rows		= f.browse_height;
 	b.pages 					= f.pages;
 	b.form_code					= f.form_code;
 	b.form_description			= f.form_description;
 	b.form_type					= f.form_type;
 	b.run_code					= f.run_code;
 	b.run_description			= f.run_description;
-	b.browse_table_id			= f.browse_table_id;
 
 	nuAddHolder('nuBreadcrumbHolder');
 	nuAddHomeLogout();
