@@ -3047,6 +3047,7 @@ function nuHasBeenEdited(){
 	
 	$('#nuSaveButton').addClass('nuSaveButtonEdited');
 	nuFORM.edited	= true;
+	window.nuSAVED	= false;
 	
 }
 

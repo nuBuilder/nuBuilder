@@ -158,7 +158,14 @@ function nuUpdateDatabase(){
 		$fk			= $sf->foreign_key;
 		$fv			= $_POST['nuHash']['record_id'];
 		$auto		= nuAutoNumbers($sf->object_id);
-		$log		= in_array($table . '_nulog', $cts[$table]['names']);
+		
+		if(is_array($cts[$table]['names'])){
+			$CTSTN = $cts[$table]['names'];
+		}else{
+			$CTSTN = array();
+		}
+		
+		$log		= in_array($table . '_nulog', $CTSTN);
 		
 		for($r = 0 ; $r < count($rows) ; $r++){
 			
@@ -224,7 +231,7 @@ function nuUpdateDatabase(){
 
 						}
 						
-						if(in_array($fields[$R], $cts[$table]['names'])){								//-- valid field names
+						if(in_array($fields[$R], $CTSTN)){								//-- valid field names
 
 							if($isAN){
 								$v	= nuAutoNumber($sf->object_id, $fields[$R], $row[$R]);
