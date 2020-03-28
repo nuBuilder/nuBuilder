@@ -1304,6 +1304,11 @@ function nuAccessLevelCode(){
 	return nuSERVERRESPONSE.access_level_code;
 }
 
+
+function nuAccessLevelId(){
+	return nuSERVERRESPONSE.access_level_id;
+}
+
 function nuUserName(){
 	return nuSERVERRESPONSE.user_name;
 }
