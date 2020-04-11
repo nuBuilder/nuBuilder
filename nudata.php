@@ -53,7 +53,8 @@ function nuValidateSubforms(){
 							if($d == 0){
 								nuDisplayError("$label " . nuTranslate('cannot be left blank'));
 							}else{
-								nuDisplayError("$label on row $noz " . nuTranslate('cannot be left blank') . " $slabel");
+								//nuDisplayError("$label on row $noz " . nuTranslate('cannot be left blank') . " $slabel");
+								nuDisplayError("$label ".nuTranslate('on row'). " " .$noz. " " . nuTranslate('cannot be left blank') . " $slabel");
 							}
 							
 						}
@@ -67,9 +68,11 @@ function nuValidateSubforms(){
 						if($dupe and $notDeleted){
 							
 							if($d == 0){
-								nuDisplayError("$label has a duplicate");
+								//nuDisplayError("$label has a duplicate");
+								nuDisplayError("$label " . nuTranslate('has a duplicate'));
 							}else{
-								nuDisplayError("$label on row $noz has a duplicate $slabel");
+								//nuDisplayError("$label on row $noz has a duplicate $slabel");
+								nuDisplayError("$label ".nuTranslate('on row'). " " .$noz. " ". nuTranslate('has a duplicate') . " $slabel");
 							}
 							
 						}
