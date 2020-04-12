@@ -2904,12 +2904,8 @@ function nuChange(e){
 		var sfid	= $(e.target).parent().parent().parent()[0].id;
 		var click	= $('#' + sfid).attr('data-nu-clickdelete');
 		
-		var nuCancel = false;
-		
 		eval(click);
 		
-		if(nuCancel){return;}
-	
 		nuHasBeenEdited();
 		nuCalculateForm();
 		
