@@ -3061,8 +3061,8 @@ function nuHasNotBeenEdited(){
 
 function nuDeleteAction(){
 	
-    if (confirm("Delete This Record?")) {
-
+//    if (confirm("Delete This Record?")) {
+    if (confirm(nuTranslate("Delete This Record?"))){
 		$('#nuDelete').prop('checked', true);
 		
 		nuUpdateData('delete');
@@ -3074,8 +3074,8 @@ function nuDeleteAction(){
 
 function nuDeleteAllAction(){
 	
-    if (confirm("Delete This Record?")) {
-
+//    if (confirm("Delete This Record?")) {
+if (confirm(nuTranslate("Delete This Record?"))){
 		$('#nuDelete').prop('checked', true);
 		
 		nuUpdateData('delete', 'all');

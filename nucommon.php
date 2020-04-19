@@ -367,7 +367,8 @@ function nuRunPHP($procedure_code){
 	$j									= json_encode($_POST['nuHash']);
 
 	if(!$_SESSION['nubuilder_session_data']['isGlobeadmin'] and !in_array($ob->zzzzsys_php_id, $p)){
-		nuDisplayError("Access To Procedure Denied... ($procedure_code)");
+	//	nuDisplayError("Access To Procedure Denied... ($procedure_code)");
+		nuDisplayError(nuTranslate("Access To Procedure Denied...")." ($procedure_code)");
 	}
 
 	nuSetJSONData($id, $j);
@@ -389,7 +390,8 @@ function nuRunPHPHidden($nuCode){
 	if($_SESSION['nubuilder_session_data']['isGlobeadmin'] or in_array($r->zzzzsys_php_id, $p)){
 		nuEval($r->zzzzsys_php_id);
 	}else{
-		nuDisplayError("Access To Procedure Denied... ($nuCode)");
+//		nuDisplayError("Access To Procedure Denied... ($nuCode)");
+		nuDisplayError(nuTranslate("Access To Procedure Denied...")." ($nuCode)");
 	}
 
 	$f						= new stdClass;
