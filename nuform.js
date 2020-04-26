@@ -373,7 +373,7 @@ function nuAddActionButtons(form){
 		
 		$('#nuActionHolder').append("<input id='nuSearchField' type='text' class='nuSearch' onfocus='this.value = this.value;' onkeypress='nuSearchPressed(event)' onkeydown='nuArrowPressed(event)' value='" + s + "'>");
 		$('#nuActionHolder').append("<input id='nuFilter' style='visibility:hidden;width:0px' value='" + f + "'>");
-		$('#nuActionHolder').append("<button id='nuSearchButton' type='button' class='nuActionButton'  onclick='nuSearchAction(1)'><i class='fa fa-search'></i>&nbsp;" + nuTranslate('Search') + "</button>");
+		$('#nuActionHolder').append("<button id='nuSearchButton' type='button' class='nuActionButton'  onclick='nuSearchAction()'><i class='fa fa-search'></i>&nbsp;" + nuTranslate('Search') + "</button>");
 		
 		if(button.Add == 1){nuAddActionButton('Add');}
 		if(button.Print == 1){nuAddActionButton('Print');}
@@ -2612,7 +2612,14 @@ function nuArrowPressed(e){
     
 }
 
-function nuSearchAction(p){
+function nuSearchAction(S, F){
+
+	if(arguments.length > 0){
+		$('#nuSearchField').val(S);
+	}
+	if(arguments.length == 2){
+		$('#nuFilter').val(F);
+	}
 
 	var s	= String($('#nuSearchField').val()).replaceAll("'","&#39;", true);
 	var f	= String($('#nuFilter').val()).replaceAll("'","&#39;", true);
