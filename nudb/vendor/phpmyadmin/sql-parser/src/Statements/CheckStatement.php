@@ -1,8 +1,8 @@
 <?php
-
 /**
  * `CHECK` statement.
  */
+declare(strict_types=1);
 
 namespace PhpMyAdmin\SqlParser\Statements;
 
@@ -10,10 +10,6 @@ namespace PhpMyAdmin\SqlParser\Statements;
  * `CHECK` statement.
  *
  * CHECK TABLE tbl_name [, tbl_name] ... [option] ...
- *
- * @category   Statements
- *
- * @license    https://www.gnu.org/licenses/gpl-2.0.txt GPL-2.0+
  */
 class CheckStatement extends MaintenanceStatement
 {
@@ -22,7 +18,7 @@ class CheckStatement extends MaintenanceStatement
      *
      * @var array
      */
-    public static $OPTIONS = array(
+    public static $OPTIONS = [
         'TABLE' => 1,
 
         'FOR UPGRADE' => 2,
@@ -31,5 +27,5 @@ class CheckStatement extends MaintenanceStatement
         'MEDIUM' => 5,
         'EXTENDED' => 6,
         'CHANGED' => 7,
-    );
+    ];
 }

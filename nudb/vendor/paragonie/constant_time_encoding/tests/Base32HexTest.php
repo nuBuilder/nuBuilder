@@ -1,7 +1,7 @@
 <?php
 use \ParagonIE\ConstantTime\Base32Hex;
 
-class Base32HexTest extends PHPUnit_Framework_TestCase
+class Base32HexTest extends PHPUnit\Framework\TestCase
 {
     /**
      * @covers Base32Hex::encode()
@@ -20,11 +20,28 @@ class Base32HexTest extends PHPUnit_Framework_TestCase
                     $random,
                     Base32Hex::decode($enc)
                 );
+                $unpadded = \rtrim($enc, '=');
+                $this->assertSame(
+                    $unpadded,
+                    Base32Hex::encodeUnpadded($random)
+                );
+                $this->assertSame(
+                    $random,
+                    Base32Hex::decode($unpadded)
+                );
 
                 $enc = Base32Hex::encodeUpper($random);
                 $this->assertSame(
                     $random,
                     Base32Hex::decodeUpper($enc)
+                );                $unpadded = \rtrim($enc, '=');
+                $this->assertSame(
+                    $unpadded,
+                    Base32Hex::encodeUpperUnpadded($random)
+                );
+                $this->assertSame(
+                    $random,
+                    Base32Hex::decodeUpper($unpadded)
                 );
             }
         }

@@ -1,7 +1,7 @@
 <?php
 use \ParagonIE\ConstantTime\Base64DotSlashOrdered;
 
-class Base64DotSlashOrderedTest extends PHPUnit_Framework_TestCase
+class Base64DotSlashOrderedTest extends PHPUnit\Framework\TestCase
 {
     /**
      * @covers Base64DotSlashOrdered::encode()
@@ -17,6 +17,16 @@ class Base64DotSlashOrderedTest extends PHPUnit_Framework_TestCase
                 $this->assertSame(
                     $random,
                     Base64DotSlashOrdered::decode($enc)
+                );
+
+                $unpadded = \rtrim($enc, '=');
+                $this->assertSame(
+                    $random,
+                    Base64DotSlashOrdered::decode($unpadded)
+                );
+                $this->assertSame(
+                    $random,
+                    Base64DotSlashOrdered::decode($unpadded)
                 );
             }
         }

@@ -5,6 +5,7 @@
  *
  * @package PhpMyAdmin-GIS
  */
+declare(strict_types=1);
 
 namespace PhpMyAdmin\Gis;
 
@@ -28,9 +29,9 @@ class GisVisualization
     /**
      * @var array   Set of default settings values are here.
      */
-    private $_settings = array(
+    private $_settings = [
         // Array of colors to be used for GIS visualizations.
-        'colors' => array(
+        'colors' => [
             '#B02EE0',
             '#E0642E',
             '#E0D62E',
@@ -48,12 +49,12 @@ class GisVisualization
             '#238C74',
             '#4C489B',
             '#87C9BF',
-        ),
+        ],
         // The width of the GIS visualization.
         'width'  => 600,
         // The height of the GIS visualization.
         'height' => 450,
-    );
+    ];
     /**
      * @var array   Options that the user has specified.
      */
@@ -163,15 +164,23 @@ class GisVisualization
     private function _modifySqlQuery($sql_query, $rows, $pos)
     {
         $modified_query = 'SELECT ';
+        $spatialAsText = 'ASTEXT';
+        $spatialSrid = 'SRID';
+
+        if ($this->_userSpecifiedSettings['mysqlVersion'] >= 50600) {
+            $spatialAsText = 'ST_ASTEXT';
+            $spatialSrid = 'ST_SRID';
+        }
+
         // If label column is chosen add it to the query
-        if (!empty($this->_userSpecifiedSettings['labelColumn'])) {
+        if (! empty($this->_userSpecifiedSettings['labelColumn'])) {
             $modified_query .= Util::backquote(
                 $this->_userSpecifiedSettings['labelColumn']
             )
             . ', ';
         }
-        // Wrap the spatial column with 'ASTEXT()' function and add it
-        $modified_query .= 'ASTEXT('
+        // Wrap the spatial column with 'ST_ASTEXT()' function and add it
+        $modified_query .= $spatialAsText . '('
             . Util::backquote($this->_userSpecifiedSettings['spatialColumn'])
             . ') AS ' . Util::backquote(
                 $this->_userSpecifiedSettings['spatialColumn']
@@ -179,7 +188,7 @@ class GisVisualization
             . ', ';
 
         // Get the SRID
-        $modified_query .= 'SRID('
+        $modified_query .= $spatialSrid . '('
             . Util::backquote($this->_userSpecifiedSettings['spatialColumn'])
             . ') AS ' . Util::backquote('srid') . ' ';
 
@@ -203,17 +212,17 @@ class GisVisualization
     /**
      * Returns raw data for GIS visualization.
      *
-     * @return string the raw data.
+     * @return array the raw data.
      */
     private function _fetchRawData()
     {
         $modified_result = $GLOBALS['dbi']->tryQuery($this->_modified_sql);
 
         if ($modified_result === false) {
-            return array();
+            return [];
         }
 
-        $data = array();
+        $data = [];
         while ($row = $GLOBALS['dbi']->fetchAssoc($modified_result)) {
             $data[] = $row;
         }
@@ -230,7 +239,7 @@ class GisVisualization
      */
     private function _handleOptions()
     {
-        if (!is_null($this->_userSpecifiedSettings)) {
+        if ($this->_userSpecifiedSettings !== null) {
             $this->_settings = array_merge(
                 $this->_settings,
                 $this->_userSpecifiedSettings
@@ -294,7 +303,7 @@ class GisVisualization
     {
         $this->init();
 
-        $output = '<?xml version="1.0" encoding="UTF-8" standalone="no"?' . ' >'
+        $output = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>'
             . "\n"
             . '<svg version="1.1" xmlns:svg="http://www.w3.org/2000/svg"'
             . ' xmlns="http://www.w3.org/2000/svg"'
@@ -318,9 +327,7 @@ class GisVisualization
      */
     public function asSVG()
     {
-        $output = $this->_svg();
-
-        return $output;
+        return $this->_svg();
     }
 
     /**
@@ -391,7 +398,7 @@ class GisVisualization
         // base64 encode
         $encoded = base64_encode($output);
 
-        return '<img src="data:image/png;base64,' . $encoded . '" />';
+        return '<img src="data:image/png;base64,' . $encoded . '">';
     }
 
     /**
@@ -474,7 +481,12 @@ class GisVisualization
 
         // create pdf
         $pdf = new TCPDF(
-            '', 'pt', $GLOBALS['cfg']['PDFDefaultPageSize'], true, 'UTF-8', false
+            '',
+            'pt',
+            $GLOBALS['cfg']['PDFDefaultPageSize'],
+            true,
+            'UTF-8',
+            false
         );
 
         // disable header and footer
@@ -505,7 +517,7 @@ class GisVisualization
     public function toImage($format)
     {
         if ($format == 'svg') {
-            return $this->asSvg();
+            return $this->asSVG();
         } elseif ($format == 'png') {
             return $this->asPng();
         } elseif ($format == 'ol') {
@@ -542,14 +554,18 @@ class GisVisualization
      */
     private function _scaleDataSet(array $data)
     {
-        $min_max = array();
+        $min_max = [
+            'maxX' => 0.0,
+            'maxY' => 0.0,
+            'minX' => 0.0,
+            'minY' => 0.0,
+        ];
         $border = 15;
         // effective width and height of the plot
         $plot_width = $this->_settings['width'] - 2 * $border;
         $plot_height = $this->_settings['height'] - 2 * $border;
 
         foreach ($data as $row) {
-
             // Figure out the data type
             $ref_data = $row[$this->_settings['spatialColumn']];
             $type_pos = mb_strpos($ref_data, '(');
@@ -559,7 +575,7 @@ class GisVisualization
             $type = mb_substr($ref_data, 0, $type_pos);
 
             $gis_obj = GisFactory::factory($type);
-            if (!$gis_obj) {
+            if (! $gis_obj) {
                 continue;
             }
             $scale_data = $gis_obj->scaleRow(
@@ -567,23 +583,23 @@ class GisVisualization
             );
 
             // Update minimum/maximum values for x and y coordinates.
-            $c_maxX = (float)$scale_data['maxX'];
-            if (!isset($min_max['maxX']) || $c_maxX > $min_max['maxX']) {
+            $c_maxX = (float) $scale_data['maxX'];
+            if ($min_max['maxX'] === 0.0 || $c_maxX > $min_max['maxX']) {
                 $min_max['maxX'] = $c_maxX;
             }
 
-            $c_minX = (float)$scale_data['minX'];
-            if (!isset($min_max['minX']) || $c_minX < $min_max['minX']) {
+            $c_minX = (float) $scale_data['minX'];
+            if ($min_max['minX'] === 0.0 || $c_minX < $min_max['minX']) {
                 $min_max['minX'] = $c_minX;
             }
 
-            $c_maxY = (float)$scale_data['maxY'];
-            if (!isset($min_max['maxY']) || $c_maxY > $min_max['maxY']) {
+            $c_maxY = (float) $scale_data['maxY'];
+            if ($min_max['maxY'] === 0.0 || $c_maxY > $min_max['maxY']) {
                 $min_max['maxY'] = $c_maxY;
             }
 
-            $c_minY = (float)$scale_data['minY'];
-            if (!isset($min_max['minY']) || $c_minY < $min_max['minY']) {
+            $c_minY = (float) $scale_data['minY'];
+            if ($min_max['minY'] === 0.0 || $c_minY < $min_max['minY']) {
                 $min_max['minY'] = $c_minY;
             }
         }
@@ -607,7 +623,7 @@ class GisVisualization
             $y = ($min_max['maxY'] + $min_max['minY'] - $plot_height / $scale) / 2;
         }
 
-        return array(
+        return [
             'scale'  => $scale,
             'x'      => $x,
             'y'      => $y,
@@ -616,7 +632,7 @@ class GisVisualization
             'minY'   => $min_max['minY'],
             'maxY'   => $min_max['maxY'],
             'height' => $this->_settings['height'],
-        );
+        ];
     }
 
     /**
@@ -637,7 +653,7 @@ class GisVisualization
 
         // loop through the rows
         foreach ($data as $row) {
-            $index = $color_number % sizeof($this->_settings['colors']);
+            $index = $color_number % count($this->_settings['colors']);
 
             // Figure out the data type
             $ref_data = $row[$this->_settings['spatialColumn']];
@@ -648,7 +664,7 @@ class GisVisualization
             $type = mb_substr($ref_data, 0, $type_pos);
 
             $gis_obj = GisFactory::factory($type);
-            if (!$gis_obj) {
+            if (! $gis_obj) {
                 continue;
             }
             $label = '';

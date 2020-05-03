@@ -6,6 +6,8 @@
  * @package PhpMyAdmin
  *
  */
+declare(strict_types=1);
+
 namespace PhpMyAdmin\Database;
 
 use PhpMyAdmin\ListDatabase;
@@ -30,13 +32,13 @@ class DatabaseList
      * @param string $param parameter name
      *
      * @return mixed
-     * @see https://secure.php.net/language.oop5.overloading
+     * @see https://www.php.net/language.oop5.overloading
      */
     public function __get($param)
     {
         switch ($param) {
-        case 'databases' :
-            return $this->getDatabaseList();
+            case 'databases':
+                return $this->getDatabaseList();
         }
 
         return null;

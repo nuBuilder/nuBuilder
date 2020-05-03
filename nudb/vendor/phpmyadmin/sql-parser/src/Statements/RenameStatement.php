@@ -1,8 +1,8 @@
 <?php
-
 /**
  * `RENAME` statement.
  */
+declare(strict_types=1);
 
 namespace PhpMyAdmin\SqlParser\Statements;
 
@@ -17,10 +17,6 @@ use PhpMyAdmin\SqlParser\TokensList;
  *
  * RENAME TABLE tbl_name TO new_tbl_name
  *  [, tbl_name2 TO new_tbl_name2] ...
- *
- * @category   Statements
- *
- * @license    https://www.gnu.org/licenses/gpl-2.0.txt GPL-2.0+
  */
 class RenameStatement extends Statement
 {
@@ -46,5 +42,13 @@ class RenameStatement extends Statement
             // Checking if it is the beginning of the query.
             $list->getNextOfTypeAndValue(Token::TYPE_KEYWORD, 'TABLE');
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function build()
+    {
+        return 'RENAME TABLE ' . RenameOperation::build($this->renames);
     }
 }

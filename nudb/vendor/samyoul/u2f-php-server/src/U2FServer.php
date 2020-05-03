@@ -196,6 +196,7 @@ class U2FServer
     public static function makeAuthentication(array $registrations, $appId)
     {
         $signatures = [];
+        $challenge = static::createChallenge();
         foreach ($registrations as $reg) {
             if( !is_object( $reg ) ) {
                 throw new \InvalidArgumentException('$registrations of makeAuthentication() method only accepts array of object.');
@@ -204,7 +205,7 @@ class U2FServer
             $signatures[] = new SignRequest([
                 'appId' => $appId,
                 'keyHandle' => $reg->keyHandle,
-                'challenge' => static::createChallenge(),
+                'challenge' => $challenge,
             ]);
         }
         return $signatures;

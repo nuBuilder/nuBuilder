@@ -1,7 +1,12 @@
 {
     "name": "pragmarx/google2fa",
     "description": "A One Time Password Authentication package, compatible with Google Authenticator.",
-    "keywords": ["authentication", "two factor authentication", "google2fa", "laravel", "2fa"],
+    "keywords": [
+        "authentication",
+        "two factor authentication",
+        "google2fa",
+        "2fa"
+    ],
     "license": "MIT",
     "authors": [
         {
@@ -13,12 +18,11 @@
     "require": {
         "php": ">=5.4",
         "paragonie/constant_time_encoding": "~1.0|~2.0",
-        "paragonie/random_compat": "~1.4|~2.0",
+        "paragonie/random_compat": ">=1",
         "symfony/polyfill-php56": "~1.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4|~5|~6",
-        "bacon/bacon-qr-code": "~1.0"
+        "phpunit/phpunit": "~4|~5|~6|~7|~8"
     },
     "autoload": {
         "psr-4": {
@@ -29,11 +33,8 @@
     "extra": {
         "component": "package",
         "branch-alias": {
-          "dev-master": "2.0-dev"
+            "dev-master": "2.0-dev"
         }
-    },
-    "suggest": {
-      "bacon/bacon-qr-code": "Required to generate inline QR Codes."
     },
     "minimum-stability": "dev",
     "prefer-stable": true

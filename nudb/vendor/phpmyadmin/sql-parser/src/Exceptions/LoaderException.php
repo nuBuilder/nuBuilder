@@ -1,19 +1,17 @@
 <?php
-
 /**
  * Exception thrown by the lexer.
  */
+declare(strict_types=1);
 
 namespace PhpMyAdmin\SqlParser\Exceptions;
 
+use Exception;
+
 /**
  * Exception thrown by the lexer.
- *
- * @category   Exceptions
- *
- * @license    https://www.gnu.org/licenses/gpl-2.0.txt GPL-2.0+
  */
-class LoaderException extends \Exception
+class LoaderException extends Exception
 {
     /**
      * The failed load name.
@@ -23,13 +21,9 @@ class LoaderException extends \Exception
     public $name;
 
     /**
-     * Constructor.
-     *
      * @param string $msg  the message of this exception
-     * @param string $ch   the character that produced this exception
-     * @param int    $pos  the position of the character
+     * @param string $name the character that produced this exception
      * @param int    $code the code of this error
-     * @param mixed  $name
      */
     public function __construct($msg = '', $name = '', $code = 0)
     {
