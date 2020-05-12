@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin\Twig
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Twig;
 
 use Twig\Extension\AbstractExtension;
@@ -26,12 +24,12 @@ class StorageEngineExtension extends AbstractExtension
      */
     public function getFunctions()
     {
-        return [
+        return array(
             new TwigFunction(
-                'get_html_select',
+                'StorageEngine_getHtmlSelect',
                 'PhpMyAdmin\StorageEngine::getHtmlSelect',
-                ['is_safe' => ['html']]
+                array('is_safe' => array('html'))
             ),
-        ];
+        );
     }
 }

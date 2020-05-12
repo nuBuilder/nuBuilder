@@ -5,15 +5,13 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Plugins\Schema\Dia;
 
-use PhpMyAdmin\Plugins\Schema\Dia\TableStatsDia;
 use PhpMyAdmin\Plugins\Schema\Eps\TableStatsEps;
 use PhpMyAdmin\Plugins\Schema\ExportRelationSchema;
 use PhpMyAdmin\Plugins\Schema\Pdf\TableStatsPdf;
 use PhpMyAdmin\Plugins\Schema\Svg\TableStatsSvg;
+use PhpMyAdmin\Plugins\Schema\Dia\TableStatsDia;
 use PhpMyAdmin\Relation;
 
 /**
@@ -36,9 +34,9 @@ class DiaRelationSchema extends ExportRelationSchema
     /**
      * @var TableStatsDia[]|TableStatsEps[]|TableStatsPdf[]|TableStatsSvg[]
      */
-    private $_tables = [];
+    private $_tables = array();
     /** @var RelationStatsDia[] Relations */
-    private $_relations = [];
+    private $_relations = array();
     private $_topMargin = 2.8222000598907471;
     private $_bottomMargin = 2.8222000598907471;
     private $_leftMargin = 2.8222000598907471;
@@ -76,14 +74,10 @@ class DiaRelationSchema extends ExportRelationSchema
         $alltables = $this->getTablesFromRequest();
 
         foreach ($alltables as $table) {
-            if (! isset($this->_tables[$table])) {
+            if (!isset($this->tables[$table])) {
                 $this->_tables[$table] = new TableStatsDia(
-                    $this->diagram,
-                    $this->db,
-                    $table,
-                    $this->pageNumber,
-                    $this->showKeys,
-                    $this->offline
+                    $this->diagram, $this->db, $table, $this->pageNumber,
+                    $this->showKeys, $this->offline
                 );
             }
         }
@@ -91,7 +85,7 @@ class DiaRelationSchema extends ExportRelationSchema
         $seen_a_relation = false;
         foreach ($alltables as $one_table) {
             $exist_rel = $this->relation->getForeigners($this->db, $one_table, '', 'both');
-            if (! $exist_rel) {
+            if (!$exist_rel) {
                 continue;
             }
 
@@ -116,7 +110,7 @@ class DiaRelationSchema extends ExportRelationSchema
                 }
 
                 foreach ($rel as $one_key) {
-                    if (! in_array($one_key['ref_table_name'], $alltables)) {
+                    if (!in_array($one_key['ref_table_name'], $alltables)) {
                         continue;
                     }
 
@@ -172,16 +166,12 @@ class DiaRelationSchema extends ExportRelationSchema
         $foreignField,
         $showKeys
     ) {
-        if (! isset($this->_tables[$masterTable])) {
+        if (!isset($this->_tables[$masterTable])) {
             $this->_tables[$masterTable] = new TableStatsDia(
-                $this->diagram,
-                $this->db,
-                $masterTable,
-                $this->pageNumber,
-                $showKeys
+                $this->diagram, $this->db, $masterTable, $this->pageNumber, $showKeys
             );
         }
-        if (! isset($this->_tables[$foreignTable])) {
+        if (!isset($this->_tables[$foreignTable])) {
             $this->_tables[$foreignTable] = new TableStatsDia(
                 $this->diagram,
                 $this->db,

@@ -5,25 +5,16 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Config\Forms\User;
 
 use PhpMyAdmin\Config\Forms\BaseForm;
 
-/**
- * Class FeaturesForm
- * @package PhpMyAdmin\Config\Forms\User
- */
 class FeaturesForm extends BaseForm
 {
-    /**
-     * @return array
-     */
     public static function getForms()
     {
-        $result = [
-            'General' => [
+        $result = array(
+            'General' => array(
                 'VersionCheck',
                 'NaturalOrder',
                 'InitialSlidersState',
@@ -33,15 +24,16 @@ class FeaturesForm extends BaseForm
                 'SendErrorReports',
                 'ConsoleEnterExecutes',
                 'DisableShortcutKeys',
-            ],
-            'Databases' => [
+                'FontSize',
+            ),
+            'Databases' => array(
                 'Servers/1/only_db', // saves to Server/only_db
                 'Servers/1/hide_db', // saves to Server/hide_db
                 'MaxDbList',
                 'MaxTableList',
                 'DefaultConnectionCollation',
-            ],
-            'Text_fields' => [
+            ),
+            'Text_fields' => array(
                 'CharEditing',
                 'MinSizeForInputField',
                 'MaxSizeForInputField',
@@ -49,21 +41,21 @@ class FeaturesForm extends BaseForm
                 'CharTextareaRows',
                 'TextareaCols',
                 'TextareaRows',
-                'LongtextDoubleTextarea',
-            ],
-            'Page_titles' => [
+                'LongtextDoubleTextarea'
+            ),
+            'Page_titles' => array(
                 'TitleDefault',
                 'TitleTable',
                 'TitleDatabase',
-                'TitleServer',
-            ],
-            'Warnings' => [
+                'TitleServer'
+            ),
+            'Warnings' => array(
                 'PmaNoRelation_DisableWarning',
                 'SuhosinDisableWarning',
                 'LoginCookieValidityDisableWarning',
-                'ReservedWordDisableWarning',
-            ],
-            'Console' => [
+                'ReservedWordDisableWarning'
+            ),
+            'Console' => array(
                 'Console/Mode',
                 'Console/StartHistory',
                 'Console/AlwaysExpand',
@@ -74,20 +66,17 @@ class FeaturesForm extends BaseForm
                 'Console/GroupQueries',
                 'Console/OrderBy',
                 'Console/Order',
-            ],
-        ];
+            ),
+        );
         // skip Developer form if no setting is available
         if ($GLOBALS['cfg']['UserprefsDeveloperTab']) {
-            $result['Developer'] = [
-                'DBG/sql',
-            ];
+            $result['Developer'] = array(
+                'DBG/sql'
+            );
         }
         return $result;
     }
 
-    /**
-     * @return string
-     */
     public static function getName()
     {
         return __('Features');

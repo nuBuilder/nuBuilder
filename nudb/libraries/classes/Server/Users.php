@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Server;
 
 use PhpMyAdmin\Url;
@@ -27,20 +25,20 @@ class Users
      */
     public static function getHtmlForSubMenusOnUsersPage($selfUrl)
     {
-        $items = [
-            [
+        $items = array(
+            array(
                 'name' => __('User accounts overview'),
                 'url' => 'server_privileges.php',
-                'params' => Url::getCommon(['viewing_mode' => 'server']),
-            ],
-        ];
+                'params' => Url::getCommon(array('viewing_mode' => 'server')),
+            )
+        );
 
         if ($GLOBALS['dbi']->isSuperuser()) {
-            $items[] = [
+            $items[] = array(
                 'name' => __('User groups'),
                 'url' => 'server_user_groups.php',
                 'params' => Url::getCommon(),
-            ];
+            );
         }
 
         $retval  = '<ul id="topmenu2">';

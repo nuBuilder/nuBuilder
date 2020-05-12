@@ -13,7 +13,7 @@ var RTE = {
      * Construct for the object that provides the
      * functionality for Routines, Triggers and Events
      */
-    Object: function (type) {
+    object: function (type) {
         $.extend(this, RTE.COMMON);
         this.editorType = type;
 
@@ -31,11 +31,10 @@ var RTE = {
             break;
         }
     },
-
     /**
-     * @var {string} paramTemplate Template for a row in the routine editor
+     * @var string param_template Template for a row in the routine editor
      */
-    paramTemplate: ''
+    param_template: ''
 };
 
 /**
@@ -78,8 +77,8 @@ RTE.COMMON = {
         // and the definition must be provided for an item
         $elm = $('table.rte_table').last().find('input[name=item_name]');
         if ($elm.val() === '') {
-            $elm.trigger('focus');
-            alert(Messages.strFormEmpty);
+            $elm.focus();
+            alert(PMA_messages.strFormEmpty);
             return false;
         }
         $elm = $('table.rte_table').find('textarea[name=item_definition]');
@@ -87,9 +86,9 @@ RTE.COMMON = {
             if (this.syntaxHiglighter !== null) {
                 this.syntaxHiglighter.focus();
             } else {
-                $('textarea[name=item_definition]').last().trigger('focus');
+                $('textarea[name=item_definition]').last().focus();
             }
-            alert(Messages.strFormEmpty);
+            alert(PMA_messages.strFormEmpty);
             return false;
         }
         // The validation has so far passed, so now
@@ -115,25 +114,25 @@ RTE.COMMON = {
     }, // end postDialogShow()
 
     exportDialog: function ($this) {
-        var $msg = Functions.ajaxShowMessage();
+        var $msg = PMA_ajaxShowMessage();
         if ($this.hasClass('mult_submit')) {
             var combined = {
                 success: true,
-                title: Messages.strExport,
+                title: PMA_messages.strExport,
                 message: '',
                 error: ''
             };
             // export anchors of all selected rows
-            var exportAnchors = $('input.checkall:checked').parents('tr').find('.export_anchor');
-            var count = exportAnchors.length;
+            var export_anchors = $('input.checkall:checked').parents('tr').find('.export_anchor');
+            var count = export_anchors.length;
             var returnCount = 0;
 
             // No routine is exportable (due to privilege issues)
             if (count === 0) {
-                Functions.ajaxShowMessage(Messages.NoExportable);
+                PMA_ajaxShowMessage(PMA_messages.NoExportable);
             }
 
-            exportAnchors.each(function () {
+            export_anchors.each(function () {
                 $.get($(this).attr('href'), { 'ajax_request': true }, function (data) {
                     returnCount++;
                     if (data.success === true) {
@@ -154,17 +153,17 @@ RTE.COMMON = {
         } else {
             $.get($this.attr('href'), { 'ajax_request': true }, showExport);
         }
-        Functions.ajaxRemoveMessage($msg);
+        PMA_ajaxRemoveMessage($msg);
 
         function showExport (data) {
             if (data.success === true) {
-                Functions.ajaxRemoveMessage($msg);
+                PMA_ajaxRemoveMessage($msg);
                 /**
                  * @var button_options Object containing options
                  *                     for jQueryUI dialog buttons
                  */
-                var buttonOptions = {};
-                buttonOptions[Messages.strClose] = function () {
+                var button_options = {};
+                button_options[PMA_messages.strClose] = function () {
                     $(this).dialog('close').remove();
                 };
                 /**
@@ -173,7 +172,7 @@ RTE.COMMON = {
                 data.message = '<textarea cols="40" rows="15" class="all100">' + data.message + '</textarea>';
                 var $ajaxDialog = $('<div>' + data.message + '</div>').dialog({
                     width: 500,
-                    buttons: buttonOptions,
+                    buttons: button_options,
                     title: data.title
                 });
                 // Attach syntax highlighted editor to export dialog
@@ -182,38 +181,38 @@ RTE.COMMON = {
                  *           to the Export textarea.
                  */
                 var $elm = $ajaxDialog.find('textarea');
-                Functions.getSqlEditor($elm);
+                PMA_getSQLEditor($elm);
             } else {
-                Functions.ajaxShowMessage(data.error, false);
+                PMA_ajaxShowMessage(data.error, false);
             }
         } // end showExport()
     },  // end exportDialog()
-    editorDialog: function (isNew, $this) {
+    editorDialog: function (is_new, $this) {
         var that = this;
         /**
          * @var $edit_row jQuery object containing the reference to
          *                the row of the the item being edited
          *                from the list of items
          */
-        var $editRow = null;
+        var $edit_row = null;
         if ($this.hasClass('edit_anchor')) {
             // Remeber the row of the item being edited for later,
             // so that if the edit is successful, we can replace the
             // row with info about the modified item.
-            $editRow = $this.parents('tr');
+            $edit_row = $this.parents('tr');
         }
         /**
          * @var $msg jQuery object containing the reference to
          *           the AJAX message shown to the user
          */
-        var $msg = Functions.ajaxShowMessage();
+        var $msg = PMA_ajaxShowMessage();
         $.get($this.attr('href'), { 'ajax_request': true }, function (data) {
             if (data.success === true) {
                 // We have successfully fetched the editor form
-                Functions.ajaxRemoveMessage($msg);
+                PMA_ajaxRemoveMessage($msg);
                 // Now define the function that is called when
                 // the user presses the "Go" button
-                that.buttonOptions[Messages.strGo] = function () {
+                that.buttonOptions[PMA_messages.strGo] = function () {
                     // Move the data from the codemirror editor back to the
                     // textarea, where it can be used in the form submission.
                     if (typeof CodeMirror !== 'undefined') {
@@ -225,20 +224,20 @@ RTE.COMMON = {
                          * @var data Form data to be sent in the AJAX request
                          */
                         var data = $('form.rte_form').last().serialize();
-                        $msg = Functions.ajaxShowMessage(
-                            Messages.strProcessingRequest
+                        $msg = PMA_ajaxShowMessage(
+                            PMA_messages.strProcessingRequest
                         );
                         var url = $('form.rte_form').last().attr('action');
                         $.post(url, data, function (data) {
                             if (data.success === true) {
                                 // Item created successfully
-                                Functions.ajaxRemoveMessage($msg);
-                                Functions.slidingMessage(data.message);
+                                PMA_ajaxRemoveMessage($msg);
+                                PMA_slidingMessage(data.message);
                                 that.$ajaxDialog.dialog('close');
                                 // If we are in 'edit' mode, we must
                                 // remove the reference to the old row.
-                                if (mode === 'edit' && $editRow !== null) {
-                                    $editRow.remove();
+                                if (mode === 'edit' && $edit_row !== null) {
+                                    $edit_row.remove();
                                 }
                                 // Sometimes, like when moving a trigger from
                                 // a table to another one, the new row should
@@ -321,14 +320,14 @@ RTE.COMMON = {
                                         $('table.data').show('slow');
                                     });
                                 }
-                                Navigation.reload();
+                                PMA_reloadNavigation();
                             } else {
-                                Functions.ajaxShowMessage(data.error, false);
+                                PMA_ajaxShowMessage(data.error, false);
                             }
                         }); // end $.post()
                     } // end "if (that.validate())"
                 }; // end of function that handles the submission of the Editor
-                that.buttonOptions[Messages.strClose] = function () {
+                that.buttonOptions[PMA_messages.strClose] = function () {
                     $(this).dialog('close');
                 };
                 /**
@@ -337,22 +336,20 @@ RTE.COMMON = {
                 that.$ajaxDialog = $('<div id="rteDialog">' + data.message + '</div>').dialog({
                     width: 700,
                     minWidth: 500,
+                    maxHeight: $(window).height(),
                     buttons: that.buttonOptions,
-                    // Issue #15810 - use button titles for modals (eg: new procedure)
-                    // Respect the order: title on href tag, href content, title sent in response
-                    title: $this.attr('title') || $this.text() || $(data.title).text(),
+                    title: data.title,
                     modal: true,
                     open: function () {
-                        $('#rteDialog').dialog('option', 'max-height', $(window).height());
                         if ($('#rteDialog').parents('.ui-dialog').height() > $(window).height()) {
                             $('#rteDialog').dialog('option', 'height', $(window).height());
                         }
-                        $(this).find('input[name=item_name]').trigger('focus');
+                        $(this).find('input[name=item_name]').focus();
                         $(this).find('input.datefield').each(function () {
-                            Functions.addDatepicker($(this).css('width', '95%'), 'date');
+                            PMA_addDatepicker($(this).css('width', '95%'), 'date');
                         });
                         $(this).find('input.datetimefield').each(function () {
-                            Functions.addDatepicker($(this).css('width', '95%'), 'datetime');
+                            PMA_addDatepicker($(this).css('width', '95%'), 'datetime');
                         });
                         $.datepicker.initialized = false;
                     },
@@ -376,12 +373,12 @@ RTE.COMMON = {
                 var $elm = $('textarea[name=item_definition]').last();
                 var linterOptions = {};
                 linterOptions[that.editorType + '_editor'] = true;
-                that.syntaxHiglighter = Functions.getSqlEditor($elm, {}, null, linterOptions);
+                that.syntaxHiglighter = PMA_getSQLEditor($elm, {}, null, linterOptions);
 
                 // Execute item-specific code
                 that.postDialogShow(data);
             } else {
-                Functions.ajaxShowMessage(data.error, false);
+                PMA_ajaxShowMessage(data.error, false);
             }
         }); // end $.get()
     },
@@ -390,28 +387,28 @@ RTE.COMMON = {
         /**
          * @var $curr_row Object containing reference to the current row
          */
-        var $currRow = $this.parents('tr');
+        var $curr_row = $this.parents('tr');
         /**
          * @var question String containing the question to be asked for confirmation
          */
-        var question = $('<div></div>').text(
-            $currRow.children('td').children('.drop_sql').html()
+        var question = $('<div/>').text(
+            $curr_row.children('td').children('.drop_sql').html()
         );
         // We ask for confirmation first here, before submitting the ajax request
-        $this.confirm(question, $this.attr('href'), function (url) {
+        $this.PMA_confirm(question, $this.attr('href'), function (url) {
             /**
              * @var msg jQuery object containing the reference to
              *          the AJAX message shown to the user
              */
-            var $msg = Functions.ajaxShowMessage(Messages.strProcessingRequest);
-            var params = Functions.getJsConfirmCommonParam(this, $this.getPostData());
+            var $msg = PMA_ajaxShowMessage(PMA_messages.strProcessingRequest);
+            var params = getJSConfirmCommonParam(this, $this.getPostData());
             $.post(url, params, function (data) {
                 if (data.success === true) {
                     /**
                      * @var $table Object containing reference
                      *             to the main list of elements
                      */
-                    var $table = $currRow.parent();
+                    var $table = $curr_row.parent();
                     // Check how many rows will be left after we remove
                     // the one that the user has requested us to remove
                     if ($table.find('tr').length === 3) {
@@ -425,7 +422,7 @@ RTE.COMMON = {
                             $('#nothing2display').show('slow');
                         });
                     } else {
-                        $currRow.hide('slow', function () {
+                        $curr_row.hide('slow', function () {
                             $(this).remove();
                             // Now we have removed the row from the list, but maybe
                             // some row classes are wrong now. So we will itirate
@@ -447,39 +444,39 @@ RTE.COMMON = {
                         });
                     }
                     // Get rid of the "Loading" message
-                    Functions.ajaxRemoveMessage($msg);
+                    PMA_ajaxRemoveMessage($msg);
                     // Show the query that we just executed
-                    Functions.slidingMessage(data.sql_query);
-                    Navigation.reload();
+                    PMA_slidingMessage(data.sql_query);
+                    PMA_reloadNavigation();
                 } else {
-                    Functions.ajaxShowMessage(data.error, false);
+                    PMA_ajaxShowMessage(data.error, false);
                 }
             }); // end $.post()
-        });
+        }); // end $.PMA_confirm()
     },
 
     dropMultipleDialog: function ($this) {
         // We ask for confirmation here
-        $this.confirm(Messages.strDropRTEitems, '', function () {
+        $this.PMA_confirm(PMA_messages.strDropRTEitems, '', function (url) {
             /**
              * @var msg jQuery object containing the reference to
              *          the AJAX message shown to the user
              */
-            var $msg = Functions.ajaxShowMessage(Messages.strProcessingRequest);
+            var $msg = PMA_ajaxShowMessage(PMA_messages.strProcessingRequest);
 
             // drop anchors of all selected rows
-            var dropAnchors = $('input.checkall:checked').parents('tr').find('.drop_anchor');
+            var drop_anchors = $('input.checkall:checked').parents('tr').find('.drop_anchor');
             var success = true;
-            var count = dropAnchors.length;
+            var count = drop_anchors.length;
             var returnCount = 0;
 
-            dropAnchors.each(function () {
+            drop_anchors.each(function () {
                 var $anchor = $(this);
                 /**
                  * @var $curr_row Object containing reference to the current row
                  */
-                var $currRow = $anchor.parents('tr');
-                var params = Functions.getJsConfirmCommonParam(this, $anchor.getPostData());
+                var $curr_row = $anchor.parents('tr');
+                var params = getJSConfirmCommonParam(this, $anchor.getPostData());
                 $.post($anchor.attr('href'), params, function (data) {
                     returnCount++;
                     if (data.success === true) {
@@ -487,7 +484,7 @@ RTE.COMMON = {
                          * @var $table Object containing reference
                          *             to the main list of elements
                          */
-                        var $table = $currRow.parent();
+                        var $table = $curr_row.parent();
                         // Check how many rows will be left after we remove
                         // the one that the user has requested us to remove
                         if ($table.find('tr').length === 3) {
@@ -501,7 +498,7 @@ RTE.COMMON = {
                                 $('#nothing2display').show('slow');
                             });
                         } else {
-                            $currRow.hide('fast', function () {
+                            $curr_row.hide('fast', function () {
                                 $(this).remove();
                                 // Now we have removed the row from the list, but maybe
                                 // some row classes are wrong now. So we will itirate
@@ -525,21 +522,21 @@ RTE.COMMON = {
                         if (returnCount === count) {
                             if (success) {
                                 // Get rid of the "Loading" message
-                                Functions.ajaxRemoveMessage($msg);
+                                PMA_ajaxRemoveMessage($msg);
                                 $('#rteListForm_checkall').prop({ checked: false, indeterminate: false });
                             }
-                            Navigation.reload();
+                            PMA_reloadNavigation();
                         }
                     } else {
-                        Functions.ajaxShowMessage(data.error, false);
+                        PMA_ajaxShowMessage(data.error, false);
                         success = false;
                         if (returnCount === count) {
-                            Navigation.reload();
+                            PMA_reloadNavigation();
                         }
                     }
                 }); // end $.post()
             }); // end drop_anchors.each()
-        });
+        }); // end $.PMA_confirm()
     }
 }; // end RTE namespace
 
@@ -557,16 +554,16 @@ RTE.EVENT = {
             // The interval field must not be empty for recurring events
             $elm = this.$ajaxDialog.find('input[name=item_interval_value]');
             if ($elm.val() === '') {
-                $elm.trigger('focus');
-                alert(Messages.strFormEmpty);
+                $elm.focus();
+                alert(PMA_messages.strFormEmpty);
                 return false;
             }
         } else {
             // The execute_at field must not be empty for "once off" events
             $elm = this.$ajaxDialog.find('input[name=item_execute_at]');
             if ($elm.val() === '') {
-                $elm.trigger('focus');
-                alert(Messages.strFormEmpty);
+                $elm.focus();
+                alert(PMA_messages.strFormEmpty);
                 return false;
             }
         }
@@ -585,7 +582,7 @@ RTE.ROUTINE = {
      */
     postDialogShow: function (data) {
         // Cache the template for a parameter table row
-        RTE.paramTemplate = data.paramTemplate;
+        RTE.param_template = data.param_template;
         var that = this;
         // Make adjustments in the dialog to make it AJAX compatible
         $('td.routine_param_remove').show();
@@ -613,7 +610,7 @@ RTE.ROUTINE = {
         $('.routine_params_table tbody').sortable({
             containment: '.routine_params_table tbody',
             handle: '.dragHandle',
-            stop: function () {
+            stop: function (event, ui) {
                 that.reindexParameters();
             },
         });
@@ -675,7 +672,7 @@ RTE.ROUTINE = {
                         inputname.substr(0, 15) === 'item_param_name' ||
                         inputname.substr(0, 15) === 'item_param_type') {
                         if ($(this).val() === '') {
-                            $(this).trigger('focus');
+                            $(this).focus();
                             isSuccess = false;
                             return false;
                         }
@@ -686,7 +683,7 @@ RTE.ROUTINE = {
             }
         });
         if (! isSuccess) {
-            alert(Messages.strFormEmpty);
+            alert(PMA_messages.strFormEmpty);
             return false;
         }
         this.$ajaxDialog.find('table.routine_params_table').last().find('tr').each(function () {
@@ -697,14 +694,14 @@ RTE.ROUTINE = {
                 if (($inputtyp.val() === 'ENUM' || $inputtyp.val() === 'SET' || $inputtyp.val().substr(0, 3) === 'VAR') &&
                     $inputlen.val() === ''
                 ) {
-                    $inputlen.trigger('focus');
+                    $inputlen.focus();
                     isSuccess = false;
                     return false;
                 }
             }
         });
         if (! isSuccess) {
-            alert(Messages.strFormEmpty);
+            alert(PMA_messages.strFormEmpty);
             return false;
         }
         if (this.$ajaxDialog.find('select[name=item_type]').find(':selected').val() === 'FUNCTION') {
@@ -715,8 +712,8 @@ RTE.ROUTINE = {
             if (($returntyp.val() === 'ENUM' || $returntyp.val() === 'SET' || $returntyp.val().substr(0, 3) === 'VAR') &&
                 $returnlen.val() === ''
             ) {
-                $returnlen.trigger('focus');
-                alert(Messages.strFormEmpty);
+                $returnlen.focus();
+                alert(PMA_messages.strFormEmpty);
                 return false;
             }
         }
@@ -724,7 +721,7 @@ RTE.ROUTINE = {
             // A function must contain a RETURN statement in its definition
             if (this.$ajaxDialog.find('table.rte_table').find('textarea[name=item_definition]').val().toUpperCase().indexOf('RETURN') < 0) {
                 this.syntaxHiglighter.focus();
-                alert(Messages.MissingReturn);
+                alert(PMA_messages.MissingReturn);
                 return false;
             }
         }
@@ -752,13 +749,13 @@ RTE.ROUTINE = {
          *              to an element to be displayed when no
          *              options are available
          */
-        var $noOpts = $text.parent().parent().find('.no_opts');
+        var $no_opts = $text.parent().parent().find('.no_opts');
         /**
          * @var no_len a jQuery object containing the reference
          *             to an element to be displayed when no
          *             "length/values" field is available
          */
-        var $noLen  = $len.parent().parent().find('.no_len');
+        var $no_len  = $len.parent().parent().find('.no_len');
 
         // Process for parameter options
         switch ($type.val()) {
@@ -773,7 +770,7 @@ RTE.ROUTINE = {
         case 'REAL':
             $text.parent().hide();
             $num.parent().show();
-            $noOpts.hide();
+            $no_opts.hide();
             break;
         case 'TINYTEXT':
         case 'TEXT':
@@ -785,12 +782,12 @@ RTE.ROUTINE = {
         case 'ENUM':
             $text.parent().show();
             $num.parent().hide();
-            $noOpts.hide();
+            $no_opts.hide();
             break;
         default:
             $text.parent().hide();
             $num.parent().hide();
-            $noOpts.show();
+            $no_opts.show();
             break;
         }
         // Process for parameter length
@@ -806,7 +803,7 @@ RTE.ROUTINE = {
         case 'LONGTEXT':
             $text.closest('tr').find('a:first').hide();
             $len.parent().hide();
-            $noLen.show();
+            $no_len.show();
             break;
         default:
             if ($type.val() === 'ENUM' || $type.val() === 'SET') {
@@ -815,7 +812,7 @@ RTE.ROUTINE = {
                 $text.closest('tr').find('a:first').hide();
             }
             $len.parent().show();
-            $noLen.hide();
+            $no_len.hide();
             break;
         }
     },
@@ -825,37 +822,39 @@ RTE.ROUTINE = {
          * @var msg jQuery object containing the reference to
          *          the AJAX message shown to the user
          */
-        var $msg = Functions.ajaxShowMessage();
-        var params = Functions.getJsConfirmCommonParam($this[0], $this.getPostData());
+        var $msg = PMA_ajaxShowMessage();
+        var params = {
+            'ajax_request': true
+        };
         $.post($this.attr('href'), params, function (data) {
             if (data.success === true) {
-                Functions.ajaxRemoveMessage($msg);
+                PMA_ajaxRemoveMessage($msg);
                 // If 'data.dialog' is true we show a dialog with a form
                 // to get the input parameters for routine, otherwise
                 // we just show the results of the query
                 if (data.dialog) {
                     // Define the function that is called when
                     // the user presses the "Go" button
-                    that.buttonOptions[Messages.strGo] = function () {
+                    that.buttonOptions[PMA_messages.strGo] = function () {
                         /**
                          * @var data Form data to be sent in the AJAX request
                          */
                         var data = $('form.rte_form').last().serialize();
-                        $msg = Functions.ajaxShowMessage(
-                            Messages.strProcessingRequest
+                        $msg = PMA_ajaxShowMessage(
+                            PMA_messages.strProcessingRequest
                         );
                         $.post('db_routines.php', data, function (data) {
                             if (data.success === true) {
                                 // Routine executed successfully
-                                Functions.ajaxRemoveMessage($msg);
-                                Functions.slidingMessage(data.message);
+                                PMA_ajaxRemoveMessage($msg);
+                                PMA_slidingMessage(data.message);
                                 $ajaxDialog.dialog('close');
                             } else {
-                                Functions.ajaxShowMessage(data.error, false);
+                                PMA_ajaxShowMessage(data.error, false);
                             }
                         });
                     };
-                    that.buttonOptions[Messages.strClose] = function () {
+                    that.buttonOptions[PMA_messages.strClose] = function () {
                         $(this).dialog('close');
                     };
                     /**
@@ -870,12 +869,12 @@ RTE.ROUTINE = {
                             $(this).remove();
                         }
                     });
-                    $ajaxDialog.find('input[name^=params]').first().trigger('focus');
+                    $ajaxDialog.find('input[name^=params]').first().focus();
                     /**
                      * Attach the datepickers to the relevant form fields
                      */
                     $ajaxDialog.find('input.datefield, input.datetimefield').each(function () {
-                        Functions.addDatepicker($(this).css('width', '95%'));
+                        PMA_addDatepicker($(this).css('width', '95%'));
                     });
                     /*
                     * Define the function if the user presses enter
@@ -887,29 +886,29 @@ RTE.ROUTINE = {
                             * @var data Form data to be sent in the AJAX request
                             */
                             var data = $(this).serialize();
-                            $msg = Functions.ajaxShowMessage(
-                                Messages.strProcessingRequest
+                            $msg = PMA_ajaxShowMessage(
+                                PMA_messages.strProcessingRequest
                             );
                             var url = $(this).attr('action');
                             $.post(url, data, function (data) {
                                 if (data.success === true) {
                                     // Routine executed successfully
-                                    Functions.ajaxRemoveMessage($msg);
-                                    Functions.slidingMessage(data.message);
+                                    PMA_ajaxRemoveMessage($msg);
+                                    PMA_slidingMessage(data.message);
                                     $('form.rte_form').off('keyup');
                                     $ajaxDialog.remove();
                                 } else {
-                                    Functions.ajaxShowMessage(data.error, false);
+                                    PMA_ajaxShowMessage(data.error, false);
                                 }
                             });
                         }
                     });
                 } else {
                     // Routine executed successfully
-                    Functions.slidingMessage(data.message);
+                    PMA_slidingMessage(data.message);
                 }
             } else {
-                Functions.ajaxShowMessage(data.error, false);
+                PMA_ajaxShowMessage(data.error, false);
             }
         }); // end $.post()
     }
@@ -934,7 +933,7 @@ $(function () {
         } else {
             type = '';
         }
-        var dialog = new RTE.Object(type);
+        var dialog = new RTE.object(type);
         dialog.editorDialog($(this).hasClass('add_anchor'), $(this));
     }); // end $(document).on()
 
@@ -943,7 +942,7 @@ $(function () {
      */
     $(document).on('click', 'a.ajax.exec_anchor', function (event) {
         event.preventDefault();
-        var dialog = new RTE.Object('routine');
+        var dialog = new RTE.object('routine');
         dialog.executeDialog($(this));
     }); // end $(document).on()
 
@@ -952,13 +951,13 @@ $(function () {
      */
     $(document).on('click', 'a.ajax.export_anchor', function (event) {
         event.preventDefault();
-        var dialog = new RTE.Object();
+        var dialog = new RTE.object();
         dialog.exportDialog($(this));
     }); // end $(document).on()
 
     $(document).on('click', '#rteListForm.ajax .mult_submit[value="export"]', function (event) {
         event.preventDefault();
-        var dialog = new RTE.Object();
+        var dialog = new RTE.object();
         dialog.exportDialog($(this));
     }); // end $(document).on()
 
@@ -968,13 +967,13 @@ $(function () {
      */
     $(document).on('click', 'a.ajax.drop_anchor', function (event) {
         event.preventDefault();
-        var dialog = new RTE.Object();
+        var dialog = new RTE.object();
         dialog.dropDialog($(this));
     }); // end $(document).on()
 
     $(document).on('click', '#rteListForm.ajax .mult_submit[value="drop"]', function (event) {
         event.preventDefault();
-        var dialog = new RTE.Object();
+        var dialog = new RTE.object();
         dialog.dropMultipleDialog($(this));
     }); // end $(document).on()
 
@@ -1002,7 +1001,7 @@ $(function () {
          *          a row in the routine parameters table
          */
         var $row = $(this).parents('tr').first();
-        var rte = new RTE.Object('routine');
+        var rte = new RTE.object('routine');
         rte.setOptionsForParameter(
             $row.find('select[name^=item_param_type]'),
             $row.find('input[name^=item_param_length]'),
@@ -1017,7 +1016,7 @@ $(function () {
      * if any, are shown when changing the function return type type
      */
     $(document).on('change', 'select[name=item_returntype]', function () {
-        var rte = new RTE.Object('routine');
+        var rte = new RTE.object('routine');
         var $table = $(this).closest('table.rte_table');
         rte.setOptionsForParameter(
             $table.find('select[name=item_returntype]'),
@@ -1036,14 +1035,14 @@ $(function () {
          * @var routine_params_table jQuery object containing the reference
          *                           to the routine parameters table
          */
-        var $routineParamsTable = $(this).closest('div.ui-dialog').find('.routine_params_table');
+        var $routine_params_table = $(this).closest('div.ui-dialog').find('.routine_params_table');
         /**
          * @var new_param_row A string containing the HTML code for the
          *                    new row for the routine parameters table
          */
-        var newParamRow = RTE.paramTemplate.replace(/%s/g, $routineParamsTable.find('tr').length - 1);
+        var new_param_row = RTE.param_template.replace(/%s/g, $routine_params_table.find('tr').length - 1);
         // Append the new row to the parameters table
-        $routineParamsTable.append(newParamRow);
+        $routine_params_table.append(new_param_row);
         // Make sure that the row is correctly shown according to the type of routine
         if ($(this).closest('div.ui-dialog').find('table.rte_table select[name=item_type]').val() === 'FUNCTION') {
             $('tr.routine_return_row').show();
@@ -1055,7 +1054,7 @@ $(function () {
          */
         var $newrow = $(this).closest('div.ui-dialog').find('table.routine_params_table').find('tr').has('td').last();
         // Enable/disable the 'options' dropdowns for parameters as necessary
-        var rte = new RTE.Object('routine');
+        var rte = new RTE.object('routine');
         rte.setOptionsForParameter(
             $newrow.find('select[name^=item_param_type]'),
             $newrow.find('input[name^=item_param_length]'),

@@ -1,7 +1,7 @@
 <form method="post" action="{{ action }}" class="
     {{- action == 'tbl_create.php' ? 'create_table' : 'append_fields' -}}
     _form ajax lock-page">
-    {{ get_hidden_inputs(form_params) }}
+    {{ Url_getHiddenInputs(form_params) }}
     {# happens when an index has been set on a column #}
     {# and a column is added to the table creation dialog #}
     {# This contains a JSON-encoded string #}
@@ -26,7 +26,7 @@
                         size="40"
                         maxlength="64"
                         value="{{ table is defined ? table }}"
-                        class="textfield" autofocus required>
+                        class="textfield" autofocus required />
                     </td>
                     <td>
                         {% trans 'Add' %}
@@ -36,11 +36,11 @@
                             size="2"
                             value="1"
                             min="1"
-                            onfocus="this.select()">
+                            onfocus="this.select()" />
                         {% trans 'column(s)' %}
-                        <input class="btn btn-secondary" type="button"
+                        <input type="button"
                             name="submit_num_fields"
-                            value="{% trans 'Go' %}">
+                            value="{% trans 'Go' %}" />
                     </td>
                 </tr>
             </table>
@@ -61,7 +61,8 @@
             'attribute_types': attribute_types,
             'privs_available': privs_available,
             'max_length': max_length,
-            'charsets': charsets
+            'dbi': dbi,
+            'disable_is': disable_is
         } only %}
     {% endif %}
     {% if action == 'tbl_create.php' %}
@@ -74,12 +75,12 @@
                 <td width="25">&nbsp;</td>
                 <th>
                     {% trans 'Storage Engine:' %}
-                    {{ show_mysql_docu('Storage_engines') }}
+                    {{ Util_showMySQLDocu('Storage_engines') }}
                 </th>
                 <td width="25">&nbsp;</td>
                 <th>
                     {% trans 'Connection:' %}
-                    {{ show_mysql_docu('federated-create-connection') }}
+                    {{ Util_showMySQLDocu('federated-create-connection') }}
                 </th>
             </tr>
             <tr>
@@ -89,27 +90,22 @@
                         size="40"
                         maxlength="60"
                         value="{{ comment is defined ? comment }}"
-                        class="textfield">
+                        class="textfield" />
                 </td>
                 <td width="25">&nbsp;</td>
                 <td>
-                  <select lang="en" dir="ltr" name="tbl_collation">
-                    <option value=""></option>
-                    {% for charset in charsets %}
-                      <optgroup label="{{ charset.name }}" title="{{ charset.description }}">
-                        {% for collation in charset.collations %}
-                          <option value="{{ collation.name }}" title="{{ collation.description }}"
-                            {{- collation.name == tbl_collation ? ' selected' }}>
-                            {{- collation.name -}}
-                          </option>
-                        {% endfor %}
-                      </optgroup>
-                    {% endfor %}
-                  </select>
+                    {{ Charsets_getCollationDropdownBox(
+                        dbi,
+                        disable_is,
+                        'tbl_collation',
+                        null,
+                        tbl_collation,
+                        false
+                    ) }}
                 </td>
                 <td width="25">&nbsp;</td>
                 <td>
-                    {{ get_html_select(
+                    {{ StorageEngine_getHtmlSelect(
                         'tbl_storage_engine',
                         null,
                         tbl_storage_engine
@@ -123,14 +119,14 @@
                         value="{{ connection is defined ? connection }}"
                         placeholder="scheme://user_name[:password]@host_name[:port_num]/db_name/tbl_name"
                         class="textfield"
-                        required="required">
+                        required="required" />
                 </td>
             </tr>
             {% if have_partitioning %}
                 <tr class="vtop">
                     <th colspan="5">
                         {% trans 'PARTITION definition:' %}
-                        {{ show_mysql_docu('Partitioning') }}
+                        {{ Util_showMySQLDocu('Partitioning') }}
                     </th>
                 </tr>
                 <tr>
@@ -145,11 +141,12 @@
         </div>
     {% endif %}
     <fieldset class="tblFooters">
-        <input class="btn btn-secondary preview_sql" type="button"
-            value="{% trans 'Preview SQL' %}">
-        <input class="btn btn-primary" type="submit"
+        <input type="button"
+            class="preview_sql"
+            value="{% trans 'Preview SQL' %}" />
+        <input type="submit"
             name="do_save_data"
-            value="{% trans 'Save' %}">
+            value="{% trans 'Save' %}" />
     </fieldset>
     <div id="properties_message"></div>
 </form>

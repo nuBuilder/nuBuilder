@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin\Twig
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Twig;
 
 use Twig\Extension\AbstractExtension;
@@ -26,27 +24,31 @@ class UrlExtension extends AbstractExtension
      */
     public function getFunctions()
     {
-        return [
+        return array(
             new TwigFunction(
-                'get_hidden_inputs',
+                'Url_getHiddenInputs',
                 'PhpMyAdmin\Url::getHiddenInputs',
-                ['is_safe' => ['html']]
+                array('is_safe' => array('html'))
             ),
             new TwigFunction(
-                'get_hidden_fields',
+                'Url_getHiddenFields',
                 'PhpMyAdmin\Url::getHiddenFields',
-                ['is_safe' => ['html']]
+                array('is_safe' => array('html'))
             ),
             new TwigFunction(
-                'get_common',
+                'Url_getCommon',
                 'PhpMyAdmin\Url::getCommon',
-                ['is_safe' => ['html']]
+                array('is_safe' => array('html'))
             ),
             new TwigFunction(
-                'get_common_raw',
+                'Url_getCommonRaw',
                 'PhpMyAdmin\Url::getCommonRaw',
-                ['is_safe' => ['html']]
+                array('is_safe' => array('html'))
             ),
-        ];
+            new TwigFunction(
+                'Url_link',
+                'PhpMyAdmin\Core::linkURL'
+            ),
+        );
     }
 }

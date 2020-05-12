@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Config;
 
 use PhpMyAdmin\Config\ConfigFile;
@@ -58,35 +56,32 @@ class Form
     /**
      * Constructor, reads default config values
      *
-     * @param string     $formName Form name
-     * @param array      $form     Form data
-     * @param ConfigFile $cf       Config file instance
-     * @param int        $index    arbitrary index, stored in Form::$index
+     * @param string     $form_name Form name
+     * @param array      $form      Form data
+     * @param ConfigFile $cf        Config file instance
+     * @param int        $index     arbitrary index, stored in Form::$index
      */
     public function __construct(
-        $formName,
-        array $form,
-        ConfigFile $cf,
-        $index = null
+        $form_name, array $form, ConfigFile $cf, $index = null
     ) {
         $this->index = $index;
         $this->_configFile = $cf;
-        $this->loadForm($formName, $form);
+        $this->loadForm($form_name, $form);
     }
 
     /**
      * Returns type of given option
      *
-     * @param string $optionName path or field name
+     * @param string $option_name path or field name
      *
-     * @return string|null one of: boolean, integer, double, string, select, array
+     * @return string|null  one of: boolean, integer, double, string, select, array
      */
-    public function getOptionType($optionName)
+    public function getOptionType($option_name)
     {
         $key = ltrim(
             mb_substr(
-                $optionName,
-                (int) mb_strrpos($optionName, '/')
+                $option_name,
+                mb_strrpos($option_name, '/')
             ),
             '/'
         );
@@ -98,20 +93,20 @@ class Form
     /**
      * Returns allowed values for select fields
      *
-     * @param string $optionPath Option path
+     * @param string $option_path Option path
      *
      * @return array
      */
-    public function getOptionValueList($optionPath)
+    public function getOptionValueList($option_path)
     {
-        $value = $this->_configFile->getDbEntry($optionPath);
+        $value = $this->_configFile->getDbEntry($option_path);
         if ($value === null) {
-            trigger_error("$optionPath - select options not defined", E_USER_ERROR);
-            return [];
+            trigger_error("$option_path - select options not defined", E_USER_ERROR);
+            return array();
         }
-        if (! is_array($value)) {
-            trigger_error("$optionPath - not a static value list", E_USER_ERROR);
-            return [];
+        if (!is_array($value)) {
+            trigger_error("$option_path - not a static value list", E_USER_ERROR);
+            return array();
         }
         // convert array('#', 'a', 'b') to array('a', 'b')
         if (isset($value[0]) && $value[0] === '#') {
@@ -122,16 +117,16 @@ class Form
         }
 
         // convert value list array('a', 'b') to array('a' => 'a', 'b' => 'b')
-        $hasStringKeys = false;
-        $keys = [];
+        $has_string_keys = false;
+        $keys = array();
         for ($i = 0, $nb = count($value); $i < $nb; $i++) {
-            if (! isset($value[$i])) {
-                $hasStringKeys = true;
+            if (!isset($value[$i])) {
+                $has_string_keys = true;
                 break;
             }
-            $keys[] = is_bool($value[$i]) ? (int) $value[$i] : $value[$i];
+            $keys[] = is_bool($value[$i]) ? (int)$value[$i] : $value[$i];
         }
-        if (! $hasStringKeys) {
+        if (! $has_string_keys) {
             $value = array_combine($keys, $value);
         }
 
@@ -151,21 +146,21 @@ class Form
      */
     private function _readFormPathsCallback($value, $key, $prefix)
     {
-        static $groupCounter = 0;
+        static $group_counter = 0;
 
         if (is_array($value)) {
             $prefix .= $key . '/';
-            array_walk($value, [$this, '_readFormPathsCallback'], $prefix);
+            array_walk($value, array($this, '_readFormPathsCallback'), $prefix);
             return;
         }
 
-        if (! is_int($key)) {
+        if (!is_int($key)) {
             $this->default[$prefix . $key] = $value;
             $value = $key;
         }
         // add unique id to group ends
         if ($value == ':group:end') {
-            $value .= ':' . $groupCounter++;
+            $value .= ':' . $group_counter++;
         }
         $this->fields[] = $prefix . $value;
     }
@@ -180,16 +175,16 @@ class Form
     protected function readFormPaths(array $form)
     {
         // flatten form fields' paths and save them to $fields
-        $this->fields = [];
-        array_walk($form, [$this, '_readFormPathsCallback'], '');
+        $this->fields = array();
+        array_walk($form, array($this, '_readFormPathsCallback'), '');
 
         // $this->fields is an array of the form: [0..n] => 'field path'
         // change numeric indexes to contain field names (last part of the path)
         $paths = $this->fields;
-        $this->fields = [];
+        $this->fields = array();
         foreach ($paths as $path) {
             $key = ltrim(
-                mb_substr($path, (int) mb_strrpos($path, '/')),
+                mb_substr($path, mb_strrpos($path, '/')),
                 '/'
             );
             $this->fields[$key] = $path;
@@ -206,7 +201,7 @@ class Form
     {
         $cf = $this->_configFile;
         foreach ($this->fields as $name => $path) {
-            if (mb_strpos((string) $name, ':group:') === 0) {
+            if (mb_strpos($name, ':group:') === 0) {
                 $this->_fieldsTypes[$name] = 'group';
                 continue;
             }
@@ -221,38 +216,17 @@ class Form
     }
 
     /**
-     * Remove slashes from group names
-     * @see issue #15836
-     *
-     * @param array $form The form data
-     *
-     * @return array
-     */
-    protected function cleanGroupPaths(array $form): array
-    {
-        foreach ($form as &$name) {
-            if (is_string($name)) {
-                if (mb_strpos($name, ':group:') === 0) {
-                    $name = str_replace('/', '-', $name);
-                }
-            }
-        }
-        return $form;
-    }
-
-    /**
      * Reads form settings and prepares class to work with given subset of
      * config file
      *
-     * @param string $formName Form name
-     * @param array  $form     Form
+     * @param string $form_name Form name
+     * @param array  $form      Form
      *
      * @return void
      */
-    public function loadForm($formName, array $form)
+    public function loadForm($form_name, array $form)
     {
-        $this->name = $formName;
-        $form = $this->cleanGroupPaths($form);
+        $this->name = $form_name;
         $this->readFormPaths($form);
         $this->readTypes();
     }

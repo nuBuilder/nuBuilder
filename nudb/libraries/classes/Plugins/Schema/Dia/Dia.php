@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Plugins\Schema\Dia;
 
 use PhpMyAdmin\Core;
@@ -19,7 +17,7 @@ use XMLWriter;
  *
  * @package PhpMyAdmin
  * @access  public
- * @see     https://www.php.net/manual/en/book.xmlwriter.php
+ * @see     https://secure.php.net/manual/en/book.xmlwriter.php
  */
 class Dia extends XMLWriter
 {

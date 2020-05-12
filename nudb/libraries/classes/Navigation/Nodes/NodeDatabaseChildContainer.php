@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin-Navigation
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Navigation\Nodes;
 
 /**
@@ -27,7 +25,9 @@ abstract class NodeDatabaseChildContainer extends NodeDatabaseChild
         parent::__construct($name, $type);
         if ($GLOBALS['cfg']['NavigationTreeEnableGrouping']) {
             $this->separator = $GLOBALS['cfg']['NavigationTreeTableSeparator'];
-            $this->separatorDepth = (int) $GLOBALS['cfg']['NavigationTreeTableLevel'];
+            $this->separator_depth = (int)(
+            $GLOBALS['cfg']['NavigationTreeTableLevel']
+            );
         }
     }
 

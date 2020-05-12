@@ -7,53 +7,36 @@
  * @todo    display executed query, optional?
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
 
 use PhpMyAdmin\Database\Search;
-use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Response;
-use PhpMyAdmin\Template;
 use PhpMyAdmin\Util;
 
-if (! defined('ROOT_PATH')) {
-    define('ROOT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
-}
+/**
+* Gets some core libraries
+*/
+require_once 'libraries/common.inc.php';
 
-global $db, $url_query;
-
-require_once ROOT_PATH . 'libraries/common.inc.php';
-
-/** @var Response $response */
-$response = $containerBuilder->get(Response::class);
-
-/** @var DatabaseInterface $dbi */
-$dbi = $containerBuilder->get(DatabaseInterface::class);
-
-/** @var Template $template */
-$template = $containerBuilder->get('template');
-
-$header = $response->getHeader();
-$scripts = $header->getScripts();
-$scripts->addFile('database/search.js');
+$response = Response::getInstance();
+$header   = $response->getHeader();
+$scripts  = $header->getScripts();
+$scripts->addFile('db_search.js');
 $scripts->addFile('sql.js');
 $scripts->addFile('makegrid.js');
 
-require ROOT_PATH . 'libraries/db_common.inc.php';
+require 'libraries/db_common.inc.php';
 
 // If config variable $GLOBALS['cfg']['UseDbSearch'] is on false : exit.
 if (! $GLOBALS['cfg']['UseDbSearch']) {
     Util::mysqlDie(
-        __('Access denied!'),
-        '',
-        false,
-        $err_url
+        __('Access denied!'), '', false, $err_url
     );
 } // end if
 $url_query .= '&amp;goto=db_search.php';
 $url_params['goto'] = 'db_search.php';
 
 // Create a database search instance
-$db_search = new Search($dbi, $db, $template);
+$db_search = new Search($GLOBALS['db']);
 
 // Display top links if we are not in an Ajax request
 if (! $response->isAjax()) {
@@ -71,7 +54,7 @@ if (! $response->isAjax()) {
 }
 
 // Main search form has been submitted, get results
-if (isset($_POST['submit_search'])) {
+if (isset($_REQUEST['submit_search'])) {
     $response->addHTML($db_search->getSearchResults());
 }
 
@@ -81,4 +64,10 @@ if ($response->isAjax() && empty($_REQUEST['ajax_page_request'])) {
 }
 
 // Display the search form
-$response->addHTML($db_search->getMainHtml());
+$response->addHTML($db_search->getSelectionForm());
+$response->addHTML('<div id="searchresults"></div>');
+$response->addHTML(
+    '<div id="togglesearchresultsdiv"><a id="togglesearchresultlink"></a></div>'
+);
+$response->addHTML('<br class="clearfloat" />');
+$response->addHTML($db_search->getResultDivs());

@@ -20,9 +20,12 @@ class Expression
 {
     protected $expression;
 
-    public function __construct(string $expression)
+    /**
+     * @param string $expression An expression
+     */
+    public function __construct($expression)
     {
-        $this->expression = $expression;
+        $this->expression = (string) $expression;
     }
 
     /**

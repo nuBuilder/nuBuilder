@@ -1,17 +1,6 @@
-var designerTables = [
-    {
-        name: 'pdf_pages',
-        key: 'pgNr',
-        autoIncrement: true
-    },
-    {
-        name: 'table_coords',
-        key: 'id',
-        autoIncrement: true
-    }
-];
+var designer_tables = [{ name: 'pdf_pages', key: 'pg_nr', auto_inc: true },
+    { name: 'table_coords', key: 'id', auto_inc: true }];
 
-// eslint-disable-next-line no-unused-vars
 var DesignerOfflineDB = (function () {
     var designerDB = {};
     var datastore = null;
@@ -24,17 +13,16 @@ var DesignerOfflineDB = (function () {
             var db = e.target.result;
             e.target.transaction.onerror = designerDB.onerror;
 
-            var t;
-            for (t in designerTables) {
-                if (db.objectStoreNames.contains(designerTables[t].name)) {
-                    db.deleteObjectStore(designerTables[t].name);
+            for (var t in designer_tables) {
+                if (db.objectStoreNames.contains(designer_tables[t].name)) {
+                    db.deleteObjectStore(designer_tables[t].name);
                 }
             }
 
-            for (t in designerTables) {
-                db.createObjectStore(designerTables[t].name, {
-                    keyPath: designerTables[t].key,
-                    autoIncrement: designerTables[t].autoIncrement
+            for (var t in designer_tables) {
+                db.createObjectStore(designer_tables[t].name, {
+                    keyPath: designer_tables[t].key,
+                    autoIncrement: designer_tables[t].auto_inc
                 });
             }
         };
@@ -70,7 +58,7 @@ var DesignerOfflineDB = (function () {
         var cursorRequest = objStore.openCursor(keyRange);
         var results = [];
 
-        transaction.oncomplete = function () {
+        transaction.oncomplete = function (e) {
             callback(results);
         };
 
@@ -94,7 +82,7 @@ var DesignerOfflineDB = (function () {
         var cursorRequest = objStore.openCursor(keyRange);
         var firstResult = null;
 
-        transaction.oncomplete = function () {
+        transaction.oncomplete = function (e) {
             callback(firstResult);
         };
 
@@ -130,7 +118,7 @@ var DesignerOfflineDB = (function () {
         var objStore = transaction.objectStore(table);
         var request = objStore.delete(parseInt(id));
 
-        request.onsuccess = function () {
+        request.onsuccess = function (e) {
             if (typeof callback !== 'undefined' && callback !== null) {
                 callback(true);
             }
@@ -140,7 +128,6 @@ var DesignerOfflineDB = (function () {
     };
 
     designerDB.onerror = function (e) {
-        // eslint-disable-next-line no-console
         console.log(e);
     };
 

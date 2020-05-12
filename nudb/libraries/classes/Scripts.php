@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin;
 
 use PhpMyAdmin\Header;
@@ -30,17 +28,36 @@ class Scripts
      */
     private $_files;
     /**
-     * A string of discrete javascript code snippets
+     * An array of discrete javascript code snippets
      *
      * @access private
-     * @var string
+     * @var array of strings
      */
     private $_code;
 
     /**
-     * @var Template
+     * Returns HTML code to include javascript file.
+     *
+     * @param array $files The list of js file to include
+     *
+     * @return string HTML code for javascript inclusion.
      */
-    private $template;
+    private function _includeFiles(array $files)
+    {
+        $result = '';
+        foreach ($files as $value) {
+            if (strpos($value['filename'], ".php") !== false) {
+                $file_name = $value['filename'] . Url::getCommon($value['params'] + array('v' => PMA_VERSION));
+                $result .= "<script data-cfasync='false' "
+                    . "type='text/javascript' src='js/" . $file_name
+                    . "'></script>\n";
+            } else {
+                $result .= '<script data-cfasync="false" type="text/javascript" src="js/'
+                    .  $value['filename'] . '?' . Header::getVersionParameter() . '"></script>' . "\n";
+            }
+        }
+        return $result;
+    }
 
     /**
      * Generates new Scripts objects
@@ -48,9 +65,9 @@ class Scripts
      */
     public function __construct()
     {
-        $this->template = new Template();
-        $this->_files  = [];
+        $this->_files  = array();
         $this->_code   = '';
+
     }
 
     /**
@@ -63,19 +80,19 @@ class Scripts
      */
     public function addFile(
         $filename,
-        array $params = []
+        array $params = array()
     ) {
         $hash = md5($filename);
-        if (! empty($this->_files[$hash])) {
+        if (!empty($this->_files[$hash])) {
             return;
         }
 
         $has_onload = $this->_eventBlacklist($filename);
-        $this->_files[$hash] = [
+        $this->_files[$hash] = array(
             'has_onload' => $has_onload,
             'filename' => $filename,
             'params' => $params,
-        ];
+        );
     }
 
     /**
@@ -134,16 +151,17 @@ class Scripts
      */
     public function getFiles()
     {
-        $retval = [];
+        $retval = array();
         foreach ($this->_files as $file) {
             //If filename contains a "?", continue.
             if (strpos($file['filename'], "?") !== false) {
                 continue;
             }
-            $retval[] = [
+            $retval[] = array(
                 'name' => $file['filename'],
-                'fire' => $file['has_onload'],
-            ];
+                'fire' => $file['has_onload']
+            );
+
         }
         return $retval;
     }
@@ -155,10 +173,42 @@ class Scripts
      */
     public function getDisplay()
     {
-        return $this->template->render('scripts', [
-            'files' => $this->_files,
-            'version' => PMA_VERSION,
-            'code' => $this->_code,
-        ]);
+        $retval = '';
+
+        if (count($this->_files) > 0) {
+            $retval .= $this->_includeFiles(
+                $this->_files
+            );
+        }
+
+        $code = 'AJAX.scriptHandler';
+        foreach ($this->_files as $file) {
+            $code .= sprintf(
+                '.add("%s",%d)',
+                Sanitize::escapeJsString($file['filename']),
+                $file['has_onload'] ? 1 : 0
+            );
+        }
+        $code .= ';';
+        $this->addCode($code);
+
+        $code = '$(function() {';
+        foreach ($this->_files as $file) {
+            if ($file['has_onload']) {
+                $code .= 'AJAX.fireOnload("';
+                $code .= Sanitize::escapeJsString($file['filename']);
+                $code .= '");';
+            }
+        }
+        $code .= '});';
+        $this->addCode($code);
+
+        $retval .= '<script data-cfasync="false" type="text/javascript">';
+        $retval .= "// <![CDATA[\n";
+        $retval .= $this->_code;
+        $retval .= '// ]]>';
+        $retval .= '</script>';
+
+        return $retval;
     }
 }

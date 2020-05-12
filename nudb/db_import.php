@@ -5,19 +5,12 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
 
 use PhpMyAdmin\Config\PageSettings;
 use PhpMyAdmin\Display\Import;
 use PhpMyAdmin\Response;
 
-if (! defined('ROOT_PATH')) {
-    define('ROOT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
-}
-
-global $db, $table;
-
-require_once ROOT_PATH . 'libraries/common.inc.php';
+require_once 'libraries/common.inc.php';
 
 PageSettings::showGroup('Import');
 
@@ -26,12 +19,10 @@ $header   = $response->getHeader();
 $scripts  = $header->getScripts();
 $scripts->addFile('import.js');
 
-$import = new Import();
-
 /**
  * Gets tables information and displays top links
  */
-require ROOT_PATH . 'libraries/db_common.inc.php';
+require 'libraries/db_common.inc.php';
 
 list(
     $tables,
@@ -47,10 +38,7 @@ list(
 
 $response = Response::getInstance();
 $response->addHTML(
-    $import->get(
-        'database',
-        $db,
-        $table,
-        $max_upload_size
+    Import::get(
+        'database', $db, $table, $max_upload_size
     )
 );

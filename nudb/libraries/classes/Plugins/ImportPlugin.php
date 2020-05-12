@@ -5,11 +5,9 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
 
 namespace PhpMyAdmin\Plugins;
 
-use PhpMyAdmin\Import;
 use PhpMyAdmin\Properties\Plugins\ImportPluginProperties;
 
 /**
@@ -28,26 +26,11 @@ abstract class ImportPlugin
     protected $properties;
 
     /**
-     * @var Import
-     */
-    protected $import;
-
-    /**
-     * ImportPlugin constructor.
-     */
-    public function __construct()
-    {
-        $this->import = new Import();
-    }
-
-    /**
      * Handles the whole import logic
-     *
-     * @param array $sql_data 2-element array with sql data
      *
      * @return void
      */
-    abstract public function doImport(array &$sql_data = []);
+    abstract public function doImport();
 
 
     /* ~~~~~~~~~~~~~~~~~~~~ Getters and Setters ~~~~~~~~~~~~~~~~~~~~ */
@@ -55,7 +38,7 @@ abstract class ImportPlugin
     /**
      * Gets the import specific format plugin properties
      *
-     * @return ImportPluginProperties
+     * @return \PhpMyAdmin\Properties\Plugins\ImportPluginProperties
      */
     public function getProperties()
     {
@@ -80,17 +63,14 @@ abstract class ImportPlugin
      */
     protected function getDbnameAndOptions($currentDb, $defaultDb)
     {
-        if (strlen((string) $currentDb) > 0) {
+        if (strlen($currentDb) > 0) {
             $db_name = $currentDb;
-            $options = ['create_db' => false];
+            $options = array('create_db' => false);
         } else {
             $db_name = $defaultDb;
             $options = null;
         }
 
-        return [
-            $db_name,
-            $options,
-        ];
+        return array($db_name, $options);
     }
 }

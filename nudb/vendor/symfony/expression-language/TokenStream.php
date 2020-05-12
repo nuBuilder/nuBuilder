@@ -24,7 +24,11 @@ class TokenStream
     private $position = 0;
     private $expression;
 
-    public function __construct(array $tokens, string $expression = '')
+    /**
+     * @param array  $tokens     An array of tokens
+     * @param string $expression
+     */
+    public function __construct(array $tokens, $expression = '')
     {
         $this->tokens = $tokens;
         $this->current = $tokens[0];
@@ -83,8 +87,10 @@ class TokenStream
 
     /**
      * @internal
+     *
+     * @return string
      */
-    public function getExpression(): string
+    public function getExpression()
     {
         return $this->expression;
     }

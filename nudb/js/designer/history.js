@@ -3,62 +3,56 @@
  * @fileoverview    function used in this file builds history tab and generates query.
   *
   * @requires    jQuery
-  * @requires    move.js
+  * @requires    moves.js
   * @version $Id$
   */
 
-/* global contr */ // js/designer/init.js
-/* global fromArray:writable */ // js/designer/move.js
-/* global pmaThemeImage */ // js/messages.php
-
-var DesignerHistory = {};
-
-var historyArray = []; // Global array to store history objects
-var selectField = [];  // Global array to store information for columns which are used in select clause
-var gIndex;
-var vqbEditor = null;
+var history_array = []; // Global array to store history objects
+var select_field = [];  // Global array to store informaation for columns which are used in select clause
+var g_index;
+var vqb_editor = null;
 
 /**
  * To display details of objects(where,rename,Having,aggregate,groupby,orderby,having)
  *
- * @param index index of historyArray where change is to be made
+ * @param index index of history_array where change is to be made
  *
 **/
 
-DesignerHistory.detail = function (index) {
-    var type = historyArray[index].getType();
+function detail (index) {
+    var type = history_array[index].get_type();
     var str;
     if (type === 'Where') {
-        str = 'Where ' + historyArray[index].getColumnName() + historyArray[index].getObj().getRelationOperator() + historyArray[index].getObj().getQuery();
+        str = 'Where ' + history_array[index].get_column_name() + history_array[index].get_obj().getrelation_operator() + history_array[index].get_obj().getquery();
     }
     if (type === 'Rename') {
-        str = 'Rename ' + historyArray[index].getColumnName() + ' To ' + historyArray[index].getObj().getRenameTo();
+        str = 'Rename ' + history_array[index].get_column_name() + ' To ' + history_array[index].get_obj().getrename_to();
     }
     if (type === 'Aggregate') {
-        str = 'Select ' + historyArray[index].getObj().getOperator() + '( ' + historyArray[index].getColumnName() + ' )';
+        str = 'Select ' + history_array[index].get_obj().get_operator() + '( ' + history_array[index].get_column_name() + ' )';
     }
     if (type === 'GroupBy') {
-        str = 'GroupBy ' + historyArray[index].getColumnName();
+        str = 'GroupBy ' + history_array[index].get_column_name();
     }
     if (type === 'OrderBy') {
-        str = 'OrderBy ' + historyArray[index].getColumnName() + ' ' + historyArray[index].getObj().getOrder();
+        str = 'OrderBy ' + history_array[index].get_column_name() + ' ' + history_array[index].get_obj().get_order();
     }
     if (type === 'Having') {
         str = 'Having ';
-        if (historyArray[index].getObj().getOperator() !== 'None') {
-            str += historyArray[index].getObj().getOperator() + '( ' + historyArray[index].getColumnName() + ' )';
-            str += historyArray[index].getObj().getRelationOperator() + historyArray[index].getObj().getQuery();
+        if (history_array[index].get_obj().get_operator() !== 'None') {
+            str += history_array[index].get_obj().get_operator() + '( ' + history_array[index].get_column_name() + ' )';
+            str += history_array[index].get_obj().getrelation_operator() + history_array[index].get_obj().getquery();
         } else {
-            str = 'Having ' + historyArray[index].getColumnName() + historyArray[index].getObj().getRelationOperator() + historyArray[index].getObj().getQuery();
+            str = 'Having ' + history_array[index].get_column_name() + history_array[index].get_obj().getrelation_operator() + history_array[index].get_obj().getquery();
         }
     }
     return str;
-};
+}
 
 /**
- * Sorts historyArray[] first,using table name as the key and then generates the HTML code for history tab,
+ * Sorts history_array[] first,using table name as the key and then generates the HTML code for history tab,
  * clubbing all objects of same tables together
- * This function is called whenever changes are made in historyArray[]
+ * This function is called whenever changes are made in history_array[]
  *
  *
  * @param {int}  init starting index of unsorted array
@@ -66,7 +60,7 @@ DesignerHistory.detail = function (index) {
  *
 **/
 
-DesignerHistory.display = function (init, finit) {
+function display (init, finit) {
     var str;
     var i;
     var j;
@@ -75,49 +69,47 @@ DesignerHistory.display = function (init, finit) {
     var temp;
     // this part sorts the history array based on table name,this is needed for clubbing all object of same name together.
     for (i = init; i < finit; i++) {
-        sto = historyArray[i];
-        temp = historyArray[i].getTab();// + '.' + historyArray[i].getObjNo(); for Self JOINS
+        sto = history_array[i];
+        temp = history_array[i].get_tab();// + '.' + history_array[i].get_obj_no(); for Self JOINS
         for (j = 0; j < i; j++) {
-            if (temp > (historyArray[j].getTab())) {// + '.' + historyArray[j].getObjNo())) { //for Self JOINS
+            if (temp > (history_array[j].get_tab())) {// + '.' + history_array[j].get_obj_no())) { //for Self JOINS
                 for (k = i; k > j; k--) {
-                    historyArray[k] = historyArray[k - 1];
+                    history_array[k] = history_array[k - 1];
                 }
-                historyArray[j] = sto;
+                history_array[j] = sto;
                 break;
             }
         }
     }
     // this part generates HTML code for history tab.adds delete,edit,and/or and detail features with objects.
     str = ''; // string to store Html code for history tab
-    for (i = 0; i < historyArray.length; i++) {
-        temp = historyArray[i].getTab(); // + '.' + historyArray[i].getObjNo(); for Self JOIN
+    for (i = 0; i < history_array.length; i++) {
+        temp = history_array[i].get_tab(); // + '.' + history_array[i].get_obj_no(); for Self JOIN
         str += '<h3 class="tiger"><a href="#">' + temp + '</a></h3>';
         str += '<div class="toggle_container">\n';
-        while ((historyArray[i].getTab()) === temp) { // + '.' + historyArray[i].getObjNo()) === temp) {
+        while ((history_array[i].get_tab()) === temp) { // + '.' + history_array[i].get_obj_no()) === temp) {
             str += '<div class="block"> <table width ="250">';
             str += '<thead><tr><td>';
-            if (historyArray[i].getAndOr()) {
-                str += '<img src="' + pmaThemeImage + 'designer/or_icon.png" onclick="DesignerHistory.andOr(' + i + ')" title="OR"></td>';
+            if (history_array[i].get_and_or()) {
+                str += '<img src="' + pmaThemeImage + 'designer/or_icon.png" onclick="and_or(' + i + ')" title="OR"/></td>';
             } else {
-                str += '<img src="' + pmaThemeImage + 'designer/and_icon.png" onclick="DesignerHistory.andOr(' + i + ')" title="AND"></td>';
+                str += '<img src="' + pmaThemeImage + 'designer/and_icon.png" onclick="and_or(' + i + ')" title="AND"/></td>';
             }
-            str += '<td style="padding-left: 5px;" class="right">' + Functions.getImage('b_sbrowse', Messages.strColumnName) + '</td>' +
-                '<td width="175" style="padding-left: 5px">' + $('<div/>').text(historyArray[i].getColumnName()).html() + '<td>';
-            if (historyArray[i].getType() === 'GroupBy' || historyArray[i].getType() === 'OrderBy') {
-                var detailDescGroupBy = $('<div/>').text(DesignerHistory.detail(i)).html();
-                str += '<td class="center">' + Functions.getImage('s_info', DesignerHistory.detail(i)) + '</td>' +
-                    '<td title="' + detailDescGroupBy + '">' + historyArray[i].getType() + '</td>' +
-                    '<td onclick=DesignerHistory.historyDelete(' + i + ')>' + Functions.getImage('b_drop', Messages.strDelete) + '</td>';
+            str += '<td style="padding-left: 5px;" class="right">' + PMA_getImage('b_sbrowse', 'column name') + '</td>' +
+                '<td width="175" style="padding-left: 5px">' + history_array[i].get_column_name() + '<td>';
+            if (history_array[i].get_type() === 'GroupBy' || history_array[i].get_type() === 'OrderBy') {
+                str += '<td class="center">' + PMA_getImage('s_info', detail(i)) + '</td>' +
+                    '<td title="' + detail(i) + '">' + history_array[i].get_type() + '</td>' +
+                    '<td onclick=history_delete(' + i + ')>' + PMA_getImage('b_drop', PMA_messages.strDelete) + '</td>';
             } else {
-                var detailDesc = $('<div/>').text(DesignerHistory.detail(i)).html();
-                str += '<td class="center">' + Functions.getImage('s_info', DesignerHistory.detail(i)) + '</td>' +
-                    '<td title="' + detailDesc + '">' + historyArray[i].getType() + '</td>' +
-                    '<td onclick=DesignerHistory.historyEdit(' + i + ')>' + Functions.getImage('b_edit', Messages.strEdit) + '</td>' +
-                    '<td onclick=DesignerHistory.historyDelete(' + i + ')>' + Functions.getImage('b_drop', Messages.strDelete) + '</td>';
+                str += '<td class="center">' + PMA_getImage('s_info', detail(i)) + '</td>' +
+                    '<td title="' + detail(i) + '">' + history_array[i].get_type() + '</td>' +
+                    '<td onclick=history_edit(' + i + ')>' + PMA_getImage('b_edit', PMA_messages.strEdit) + '</td>' +
+                    '<td onclick=history_delete(' + i + ')>' + PMA_getImage('b_drop', PMA_messages.strDelete) + '</td>';
             }
             str += '</tr></thead>';
             i++;
-            if (i >= historyArray.length) {
+            if (i >= history_array.length) {
                 break;
             }
             str += '</table></div>';
@@ -126,60 +118,60 @@ DesignerHistory.display = function (init, finit) {
         str += '</div>';
     }
     return str;
-};
+}
 
 /**
  * To change And/Or relation in history tab
  *
  *
- * @param {int} index of historyArray where change is to be made
+ * @param {int} index of history_array where change is to be made
  *
 **/
 
-DesignerHistory.andOr = function (index) {
-    if (historyArray[index].getAndOr()) {
-        historyArray[index].setAndOr(0);
+function and_or (index) {
+    if (history_array[index].get_and_or()) {
+        history_array[index].set_and_or(0);
     } else {
-        historyArray[index].setAndOr(1);
+        history_array[index].set_and_or(1);
     }
     var existingDiv = document.getElementById('ab');
-    existingDiv.innerHTML = DesignerHistory.display(0, 0);
+    existingDiv.innerHTML = display(0, 0);
     $('#ab').accordion('refresh');
-};
+}
 
 /**
- * Deletes entry in historyArray
+ * Deletes entry in history_array
  *
- * @param index index of historyArray[] which is to be deleted
+ * @param index index of history_array[] which is to be deleted
  *
 **/
 
-DesignerHistory.historyDelete = function (index) {
-    for (var k = 0; k < fromArray.length; k++) {
-        if (fromArray[k] === historyArray[index].getTab()) {
-            fromArray.splice(k, 1);
+function history_delete (index) {
+    for (var k = 0; k < from_array.length; k++) {
+        if (from_array[k] === history_array[index].get_tab()) {
+            from_array.splice(k, 1);
             break;
         }
     }
-    historyArray.splice(index, 1);
+    history_array.splice(index, 1);
     var existingDiv = document.getElementById('ab');
-    existingDiv.innerHTML = DesignerHistory.display(0, 0);
+    existingDiv.innerHTML = display(0, 0);
     $('#ab').accordion('refresh');
-};
+}
 
 /**
  * To show where,rename,aggregate,having forms to edit a object
  *
- * @param{int} index index of historyArray where change is to be made
+ * @param{int} index index of history_array where change is to be made
  *
 **/
 
-DesignerHistory.historyEdit = function (index) {
-    gIndex = index;
-    var type = historyArray[index].getType();
+function history_edit (index) {
+    g_index = index;
+    var type = history_array[index].get_type();
     if (type === 'Where') {
-        document.getElementById('eQuery').value = historyArray[index].getObj().getQuery();
-        document.getElementById('erel_opt').value = historyArray[index].getObj().getRelationOperator();
+        document.getElementById('eQuery').value = history_array[index].get_obj().getquery();
+        document.getElementById('erel_opt').value = history_array[index].get_obj().getrelation_operator();
         document.getElementById('query_where').style.left =  '530px';
         document.getElementById('query_where').style.top  = '130px';
         document.getElementById('query_where').style.position  = 'absolute';
@@ -188,9 +180,9 @@ DesignerHistory.historyEdit = function (index) {
         document.getElementById('query_where').style.display = 'block';
     }
     if (type === 'Having') {
-        document.getElementById('hQuery').value = historyArray[index].getObj().getQuery();
-        document.getElementById('hrel_opt').value = historyArray[index].getObj().getRelationOperator();
-        document.getElementById('hoperator').value = historyArray[index].getObj().getOperator();
+        document.getElementById('hQuery').value = history_array[index].get_obj().getquery();
+        document.getElementById('hrel_opt').value = history_array[index].get_obj().getrelation_operator();
+        document.getElementById('hoperator').value = history_array[index].get_obj().get_operator();
         document.getElementById('query_having').style.left =  '530px';
         document.getElementById('query_having').style.top  = '130px';
         document.getElementById('query_having').style.position  = 'absolute';
@@ -199,7 +191,7 @@ DesignerHistory.historyEdit = function (index) {
         document.getElementById('query_having').style.display = 'block';
     }
     if (type === 'Rename') {
-        document.getElementById('e_rename').value = historyArray[index].getObj().getRenameTo();
+        document.getElementById('e_rename').value = history_array[index].get_obj().getrename_to();
         document.getElementById('query_rename_to').style.left =  '530px';
         document.getElementById('query_rename_to').style.top  = '130px';
         document.getElementById('query_rename_to').style.position  = 'absolute';
@@ -208,7 +200,7 @@ DesignerHistory.historyEdit = function (index) {
         document.getElementById('query_rename_to').style.display = 'block';
     }
     if (type === 'Aggregate') {
-        document.getElementById('e_operator').value = historyArray[index].getObj().getOperator();
+        document.getElementById('e_operator').value = history_array[index].get_obj().get_operator();
         document.getElementById('query_Aggregate').style.left = '530px';
         document.getElementById('query_Aggregate').style.top  = '130px';
         document.getElementById('query_Aggregate').style.position  = 'absolute';
@@ -216,228 +208,228 @@ DesignerHistory.historyEdit = function (index) {
         document.getElementById('query_Aggregate').style.visibility = 'visible';
         document.getElementById('query_Aggregate').style.display = 'block';
     }
-};
+}
 
 /**
- * Make changes in historyArray when Edit button is clicked
+ * Make changes in history_array when Edit button is clicked
  * checks for the type of object and then sets the new value
  *
- * @param index index of historyArray where change is to be made
+ * @param index index of history_array where change is to be made
 **/
 
-DesignerHistory.edit = function (type) {
+function edit (type) {
     if (type === 'Rename') {
         if (document.getElementById('e_rename').value !== '') {
-            historyArray[gIndex].getObj().setRenameTo(document.getElementById('e_rename').value);
+            history_array[g_index].get_obj().setrename_to(document.getElementById('e_rename').value);
             document.getElementById('e_rename').value = '';
         }
         document.getElementById('query_rename_to').style.visibility = 'hidden';
     }
     if (type === 'Aggregate') {
         if (document.getElementById('e_operator').value !== '---') {
-            historyArray[gIndex].getObj().setOperator(document.getElementById('e_operator').value);
+            history_array[g_index].get_obj().set_operator(document.getElementById('e_operator').value);
             document.getElementById('e_operator').value = '---';
         }
         document.getElementById('query_Aggregate').style.visibility = 'hidden';
     }
     if (type === 'Where') {
         if (document.getElementById('erel_opt').value !== '--' && document.getElementById('eQuery').value !== '') {
-            historyArray[gIndex].getObj().setQuery(document.getElementById('eQuery').value);
-            historyArray[gIndex].getObj().setRelationOperator(document.getElementById('erel_opt').value);
+            history_array[g_index].get_obj().setquery(document.getElementById('eQuery').value);
+            history_array[g_index].get_obj().setrelation_operator(document.getElementById('erel_opt').value);
         }
         document.getElementById('query_where').style.visibility = 'hidden';
     }
     if (type === 'Having') {
         if (document.getElementById('hrel_opt').value !== '--' && document.getElementById('hQuery').value !== '') {
-            historyArray[gIndex].getObj().setQuery(document.getElementById('hQuery').value);
-            historyArray[gIndex].getObj().setRelationOperator(document.getElementById('hrel_opt').value);
-            historyArray[gIndex].getObj().setOperator(document.getElementById('hoperator').value);
+            history_array[g_index].get_obj().setquery(document.getElementById('hQuery').value);
+            history_array[g_index].get_obj().setrelation_operator(document.getElementById('hrel_opt').value);
+            history_array[g_index].get_obj().set_operator(document.getElementById('hoperator').value);
         }
         document.getElementById('query_having').style.visibility = 'hidden';
     }
     var existingDiv = document.getElementById('ab');
-    existingDiv.innerHTML = DesignerHistory.display(0, 0);
+    existingDiv.innerHTML = display(0, 0);
     $('#ab').accordion('refresh');
-};
+}
 
 /**
  * history object closure
  *
- * @param nColumnName  name of the column on which conditions are put
- * @param nObj          object details(where,rename,orderby,groupby,aggregate)
- * @param nTab          table name of the column on which conditions are applied
- * @param nObjNo       object no used for inner join
- * @param nType         type of object
+ * @param ncolumn_name  name of the column on which conditions are put
+ * @param nobj          object details(where,rename,orderby,groupby,aggregate)
+ * @param ntab          table name of the column on which conditions are applied
+ * @param nobj_no       object no used for inner join
+ * @param ntype         type of object
  *
 **/
 
-DesignerHistory.HistoryObj = function (nColumnName, nObj, nTab, nObjNo, nType) {
-    var andOr;
+function history_obj (ncolumn_name, nobj, ntab, nobj_no, ntype) {
+    var and_or;
     var obj;
     var tab;
-    var columnName;
-    var objNo;
+    var column_name;
+    var obj_no;
     var type;
-    this.setColumnName = function (nColumnName) {
-        columnName = nColumnName;
+    this.set_column_name = function (ncolumn_name) {
+        column_name = ncolumn_name;
     };
-    this.getColumnName = function () {
-        return columnName;
+    this.get_column_name = function () {
+        return column_name;
     };
-    this.setAndOr = function (nAndOr) {
-        andOr = nAndOr;
+    this.set_and_or = function (nand_or) {
+        and_or = nand_or;
     };
-    this.getAndOr = function () {
-        return andOr;
+    this.get_and_or = function () {
+        return and_or;
     };
-    this.getRelation = function () {
-        return andOr;
+    this.get_relation = function () {
+        return and_or;
     };
-    this.setObj = function (nObj) {
-        obj = nObj;
+    this.set_obj = function (nobj) {
+        obj = nobj;
     };
-    this.getObj = function () {
+    this.get_obj = function () {
         return obj;
     };
-    this.setTab = function (nTab) {
-        tab = nTab;
+    this.set_tab = function (ntab) {
+        tab = ntab;
     };
-    this.getTab = function () {
+    this.get_tab = function () {
         return tab;
     };
-    this.setObjNo = function (nObjNo) {
-        objNo = nObjNo;
+    this.set_obj_no = function (nobj_no) {
+        obj_no = nobj_no;
     };
-    this.getObjNo = function () {
-        return objNo;
+    this.get_obj_no = function () {
+        return obj_no;
     };
-    this.setType = function (nType) {
-        type = nType;
+    this.set_type = function (ntype) {
+        type = ntype;
     };
-    this.getType = function () {
+    this.get_type = function () {
         return type;
     };
-    this.setObjNo(nObjNo);
-    this.setTab(nTab);
-    this.setAndOr(0);
-    this.setObj(nObj);
-    this.setColumnName(nColumnName);
-    this.setType(nType);
-};
+    this.set_obj_no(nobj_no);
+    this.set_tab(ntab);
+    this.set_and_or(0);
+    this.set_obj(nobj);
+    this.set_column_name(ncolumn_name);
+    this.set_type(ntype);
+}
 
 /**
  * where object closure, makes an object with all information of where
  *
- * @param nRelationOperator type of relation operator to be applied
- * @param nQuery             stores value of value/sub-query
+ * @param nrelation_operator type of relation operator to be applied
+ * @param nquery             stores value of value/sub-query
  *
 **/
 
 
-DesignerHistory.Where = function (nRelationOperator, nQuery) {
-    var relationOperator;
+var where = function (nrelation_operator, nquery) {
+    var relation_operator;
     var query;
-    this.setRelationOperator = function (nRelationOperator) {
-        relationOperator = nRelationOperator;
+    this.setrelation_operator = function (nrelation_operator) {
+        relation_operator = nrelation_operator;
     };
-    this.setQuery = function (nQuery) {
-        query = nQuery;
+    this.setquery = function (nquery) {
+        query = nquery;
     };
-    this.getQuery = function () {
+    this.getquery = function () {
         return query;
     };
-    this.getRelationOperator = function () {
-        return relationOperator;
+    this.getrelation_operator = function () {
+        return relation_operator;
     };
-    this.setQuery(nQuery);
-    this.setRelationOperator(nRelationOperator);
+    this.setquery(nquery);
+    this.setrelation_operator(nrelation_operator);
 };
 
 /**
  * Orderby object closure
  *
- * @param nOrder order, ASC or DESC
+ * @param norder order, ASC or DESC
  */
-DesignerHistory.OrderBy = function (nOrder) {
+var orderby = function (norder) {
     var order;
-    this.setOrder = function (nOrder) {
-        order = nOrder;
+    this.set_order = function (norder) {
+        order = norder;
     };
-    this.getOrder = function () {
+    this.get_order = function () {
         return order;
     };
-    this.setOrder(nOrder);
+    this.set_order(norder);
 };
 
 /**
  * Having object closure, makes an object with all information of where
  *
- * @param nRelationOperator type of relation operator to be applied
- * @param nQuery             stores value of value/sub-query
- * @param nOperator          operator
+ * @param nrelation_operator type of relation operator to be applied
+ * @param nquery             stores value of value/sub-query
+ * @param noperator          operator
 **/
 
-DesignerHistory.Having = function (nRelationOperator, nQuery, nOperator) {
-    var relationOperator;
+var having = function (nrelation_operator, nquery, noperator) {
+    var relation_operator;
     var query;
     var operator;
-    this.setOperator = function (nOperator) {
-        operator = nOperator;
+    this.set_operator = function (noperator) {
+        operator = noperator;
     };
-    this.setRelationOperator = function (nRelationOperator) {
-        relationOperator = nRelationOperator;
+    this.setrelation_operator = function (nrelation_operator) {
+        relation_operator = nrelation_operator;
     };
-    this.setQuery = function (nQuery) {
-        query = nQuery;
+    this.setquery = function (nquery) {
+        query = nquery;
     };
-    this.getQuery = function () {
+    this.getquery = function () {
         return query;
     };
-    this.getRelationOperator = function () {
-        return relationOperator;
+    this.getrelation_operator = function () {
+        return relation_operator;
     };
-    this.getOperator = function () {
+    this.get_operator = function () {
         return operator;
     };
-    this.setQuery(nQuery);
-    this.setRelationOperator(nRelationOperator);
-    this.setOperator(nOperator);
+    this.setquery(nquery);
+    this.setrelation_operator(nrelation_operator);
+    this.set_operator(noperator);
 };
 
 /**
  * rename object closure,makes an object with all information of rename
  *
- * @param nRenameTo new name information
+ * @param nrename_to new name information
  *
 **/
 
-DesignerHistory.Rename = function (nRenameTo) {
-    var renameTo;
-    this.setRenameTo = function (nRenameTo) {
-        renameTo = nRenameTo;
+var rename = function (nrename_to) {
+    var rename_to;
+    this.setrename_to = function (nrename_to) {
+        rename_to = nrename_to;
     };
-    this.getRenameTo = function () {
-        return renameTo;
+    this.getrename_to = function () {
+        return rename_to;
     };
-    this.setRenameTo(nRenameTo);
+    this.setrename_to(nrename_to);
 };
 
 /**
  * aggregate object closure
  *
- * @param nOperator aggregte operator
+ * @param noperator aggregte operator
  *
 **/
 
-DesignerHistory.Aggregate = function (nOperator) {
+var aggregate = function (noperator) {
     var operator;
-    this.setOperator = function (nOperator) {
-        operator = nOperator;
+    this.set_operator = function (noperator) {
+        operator = noperator;
     };
-    this.getOperator = function () {
+    this.get_operator = function () {
         return operator;
     };
-    this.setOperator(nOperator);
+    this.set_operator(noperator);
 };
 
 /**
@@ -447,7 +439,7 @@ DesignerHistory.Aggregate = function (nOperator) {
  * @return unique array
  */
 
-DesignerHistory.unique = function (arrayName) {
+function unique (arrayName) {
     var newArray = [];
     uniquetop:
     for (var i = 0; i < arrayName.length; i++) {
@@ -459,7 +451,7 @@ DesignerHistory.unique = function (arrayName) {
         newArray[newArray.length] = arrayName[i];
     }
     return newArray;
-};
+}
 
 /**
  * This function takes in array and a value as input and returns 1 if values is present in array
@@ -469,14 +461,14 @@ DesignerHistory.unique = function (arrayName) {
  * @param value  value which is to be searched in the array
  */
 
-DesignerHistory.found = function (arrayName, value) {
+function found (arrayName, value) {
     for (var i = 0; i < arrayName.length; i++) {
         if (arrayName[i] === value) {
             return 1;
         }
     }
     return -1;
-};
+}
 
 /**
  * This function concatenates two array
@@ -484,21 +476,20 @@ DesignerHistory.found = function (arrayName, value) {
  * @params add array elements of which are pushed in
  * @params arr array in which elements are added
  */
-DesignerHistory.addArray = function (add, arr) {
+function add_array (add, arr) {
     for (var i = 0; i < add.length; i++) {
         arr.push(add[i]);
     }
     return arr;
-};
+}
 
-/**
- * This function removes all elements present in one array from the other.
+/* This function removes all elements present in one array from the other.
  *
  * @params rem array from which each element is removed from other array.
  * @params arr array from which elements are removed.
  *
  */
-DesignerHistory.removeArray = function (rem, arr) {
+function remove_array (rem, arr) {
     for (var i = 0; i < rem.length; i++) {
         for (var j = 0; j < arr.length; j++) {
             if (rem[i] === arr[j]) {
@@ -507,40 +498,40 @@ DesignerHistory.removeArray = function (rem, arr) {
         }
     }
     return arr;
-};
+}
 
 /**
  * This function builds the groupby clause from history object
  *
  */
 
-DesignerHistory.queryGroupBy = function () {
+function query_groupby () {
     var i;
     var str = '';
-    for (i = 0; i < historyArray.length; i++) {
-        if (historyArray[i].getType() === 'GroupBy') {
-            str += '`' + historyArray[i].getColumnName() + '`, ';
+    for (i = 0; i < history_array.length;i++) {
+        if (history_array[i].get_type() === 'GroupBy') {
+            str += '`' + history_array[i].get_column_name() + '`, ';
         }
     }
     str = str.substr(0, str.length - 2);
     return str;
-};
+}
 
 /**
  * This function builds the Having clause from the history object.
  *
  */
 
-DesignerHistory.queryHaving = function () {
+function query_having () {
     var i;
     var and = '(';
-    for (i = 0; i < historyArray.length; i++) {
-        if (historyArray[i].getType() === 'Having') {
-            if (historyArray[i].getObj().getOperator() !== 'None') {
-                and += historyArray[i].getObj().getOperator() + '(`' + historyArray[i].getColumnName() + '`) ' + historyArray[i].getObj().getRelationOperator();
-                and += ' ' + historyArray[i].getObj().getQuery() + ', ';
+    for (i = 0; i < history_array.length;i++) {
+        if (history_array[i].get_type() === 'Having') {
+            if (history_array[i].get_obj().get_operator() !== 'None') {
+                and += history_array[i].get_obj().get_operator() + '(`' + history_array[i].get_column_name() + '`) ' + history_array[i].get_obj().getrelation_operator();
+                and += ' ' + history_array[i].get_obj().getquery() + ', ';
             } else {
-                and += '`' + historyArray[i].getColumnName() + '` ' + historyArray[i].getObj().getRelationOperator() + ' ' + historyArray[i].getObj().getQuery() + ', ';
+                and += '`' + history_array[i].get_column_name() + '` ' + history_array[i].get_obj().getrelation_operator() + ' ' + history_array[i].get_obj().getquery() + ', ';
             }
         }
     }
@@ -550,7 +541,7 @@ DesignerHistory.queryHaving = function () {
         and = and.substr(0, and.length - 2) + ')';
     }
     return and;
-};
+}
 
 
 /**
@@ -558,18 +549,18 @@ DesignerHistory.queryHaving = function () {
  *
  */
 
-DesignerHistory.queryOrderBy = function () {
+function query_orderby () {
     var i;
     var str = '';
-    for (i = 0; i < historyArray.length; i++) {
-        if (historyArray[i].getType() === 'OrderBy') {
-            str += '`' + historyArray[i].getColumnName() + '` ' +
-                historyArray[i].getObj().getOrder() + ', ';
+    for (i = 0; i < history_array.length;i++) {
+        if (history_array[i].get_type() === 'OrderBy') {
+            str += '`' + history_array[i].get_column_name() + '` ' +
+                history_array[i].get_obj().get_order() + ', ';
         }
     }
     str = str.substr(0, str.length - 2);
     return str;
-};
+}
 
 
 /**
@@ -577,17 +568,17 @@ DesignerHistory.queryOrderBy = function () {
  *
  */
 
-DesignerHistory.queryWhere = function () {
+function query_where () {
     var i;
     var and = '(';
     var or = '(';
-    for (i = 0; i < historyArray.length; i++) {
-        if (historyArray[i].getType() === 'Where') {
-            if (historyArray[i].getAndOr() === 0) {
-                and += '( `' + historyArray[i].getColumnName() + '` ' + historyArray[i].getObj().getRelationOperator() + ' ' + historyArray[i].getObj().getQuery() + ')';
+    for (i = 0; i < history_array.length;i++) {
+        if (history_array[i].get_type() === 'Where') {
+            if (history_array[i].get_and_or() === 0) {
+                and += '( `' + history_array[i].get_column_name() + '` ' + history_array[i].get_obj().getrelation_operator() + ' ' + history_array[i].get_obj().getquery() + ')';
                 and += ' AND ';
             } else {
-                or += '( `' + historyArray[i].getColumnName() + '` ' + historyArray[i].getObj().getRelationOperator() + ' ' + historyArray[i].getObj().getQuery() + ')';
+                or += '( `' + history_array[i].get_column_name() + '` ' + history_array[i].get_obj().getrelation_operator() + ' ' + history_array[i].get_obj().getquery() + ')';
                 or += ' OR ';
             }
         }
@@ -606,29 +597,29 @@ DesignerHistory.queryWhere = function () {
         and = and + ' OR ' + or + ' )';
     }
     return and;
-};
+}
 
-DesignerHistory.checkAggregate = function (idThis) {
+function check_aggregate (id_this) {
     var i;
-    for (i = 0; i < historyArray.length; i++) {
-        var temp = '`' + historyArray[i].getTab() + '`.`' + historyArray[i].getColumnName() + '`';
-        if (temp === idThis && historyArray[i].getType() === 'Aggregate') {
-            return historyArray[i].getObj().getOperator() + '(' + idThis + ')';
+    for (i = 0; i < history_array.length; i++) {
+        var temp = '`' + history_array[i].get_tab() + '`.`' + history_array[i].get_column_name() + '`';
+        if (temp === id_this && history_array[i].get_type() === 'Aggregate') {
+            return history_array[i].get_obj().get_operator() + '(' + id_this + ')';
         }
     }
     return '';
-};
+}
 
-DesignerHistory.checkRename = function (idThis) {
+function check_rename (id_this) {
     var i;
-    for (i = 0; i < historyArray.length; i++) {
-        var temp = '`' + historyArray[i].getTab() + '`.`' + historyArray[i].getColumnName() + '`';
-        if (temp === idThis && historyArray[i].getType() === 'Rename') {
-            return ' AS `' + historyArray[i].getObj().getRenameTo() + '`';
+    for (i = 0; i < history_array.length; i++) {
+        var temp = '`' + history_array[i].get_tab() + '`.`' + history_array[i].get_column_name() + '`';
+        if (temp === id_this && history_array[i].get_type() === 'Rename') {
+            return ' AS `' + history_array[i].get_obj().getrename_to() + '`';
         }
     }
     return '';
-};
+}
 
 /**
   * This function builds from clause of query
@@ -636,17 +627,18 @@ DesignerHistory.checkRename = function (idThis) {
   *
   *
   */
-DesignerHistory.queryFrom = function () {
+function query_from () {
     var i;
-    var tabLeft = [];
-    var tabUsed = [];
-    var tTabLeft = [];
+    var tab_left = [];
+    var tab_used = [];
+    var t_tab_used = [];
+    var t_tab_left = [];
     var temp;
     var query = '';
     var quer = '';
     var parts = [];
-    var tArray = [];
-    tArray = fromArray;
+    var t_array = [];
+    t_array = from_array;
     var K = 0;
     var k;
     var key;
@@ -655,16 +647,16 @@ DesignerHistory.queryFrom = function () {
     var parts1;
 
     // the constraints that have been used in the LEFT JOIN
-    var constraintsAdded = [];
+    var constraints_added = [];
 
-    for (i = 0; i < historyArray.length; i++) {
-        fromArray.push(historyArray[i].getTab());
+    for (i = 0; i < history_array.length; i++) {
+        from_array.push(history_array[i].get_tab());
     }
-    fromArray = DesignerHistory.unique(fromArray);
-    tabLeft = fromArray;
-    temp = tabLeft.shift();
+    from_array = unique(from_array);
+    tab_left = from_array;
+    temp = tab_left.shift();
     quer = '`' + temp + '`';
-    tabUsed.push(temp);
+    tab_used.push(temp);
 
     // if master table (key2) matches with tab used get all keys and check if tab_left matches
     // after this check if master table (key2) matches with tab left then check if any foreign matches with master .
@@ -673,11 +665,11 @@ DesignerHistory.queryFrom = function () {
             for (key in contr[K]) {// contr name
                 for (key2 in contr[K][key]) {// table name
                     parts = key2.split('.');
-                    if (DesignerHistory.found(tabUsed, parts[1]) > 0) {
+                    if (found(tab_used, parts[1]) > 0) {
                         for (key3 in contr[K][key][key2]) {
                             parts1 = contr[K][key][key2][key3][0].split('.');
-                            if (DesignerHistory.found(tabLeft, parts1[1]) > 0) {
-                                if (DesignerHistory.found(constraintsAdded, key) > 0) {
+                            if (found(tab_left, parts1[1]) > 0) {
+                                if (found(constraints_added, key) > 0) {
                                     query += ' AND ' + '`' + parts[1] + '`.`' + key3 + '` = ';
                                     query += '`' + parts1[1] + '`.`' + contr[K][key][key2][key3][1] + '` ';
                                 } else {
@@ -686,9 +678,9 @@ DesignerHistory.queryFrom = function () {
                                     query += '`' + parts1[1] + '`.`' + contr[K][key][key2][key3][1] + '` = ';
                                     query += '`' + parts[1] + '`.`' + key3 + '` ';
 
-                                    constraintsAdded.push(key);
+                                    constraints_added.push(key);
                                 }
-                                tTabLeft.push(parts[1]);
+                                t_tab_left.push(parts[1]);
                             }
                         }
                     }
@@ -696,19 +688,19 @@ DesignerHistory.queryFrom = function () {
             }
         }
         K = 0;
-        tTabLeft = DesignerHistory.unique(tTabLeft);
-        tabUsed = DesignerHistory.addArray(tTabLeft, tabUsed);
-        tabLeft = DesignerHistory.removeArray(tTabLeft, tabLeft);
-        tTabLeft = [];
+        t_tab_left = unique(t_tab_left);
+        tab_used = add_array(t_tab_left, tab_used);
+        tab_left = remove_array(t_tab_left, tab_left);
+        t_tab_left = [];
         for (K in contr) {
             for (key in contr[K]) {
                 for (key2 in contr[K][key]) {// table name
                     parts = key2.split('.');
-                    if (DesignerHistory.found(tabLeft, parts[1]) > 0) {
+                    if (found(tab_left, parts[1]) > 0) {
                         for (key3 in contr[K][key][key2]) {
                             parts1 = contr[K][key][key2][key3][0].split('.');
-                            if (DesignerHistory.found(tabUsed, parts1[1]) > 0) {
-                                if (DesignerHistory.found(constraintsAdded, key) > 0) {
+                            if (found(tab_used, parts1[1]) > 0) {
+                                if (found(constraints_added, key) > 0) {
                                     query += ' AND ' + '`' + parts[1] + '`.`' + key3 + '` = ';
                                     query += '`' + parts1[1] + '`.`' + contr[K][key][key2][key3][1] + '` ';
                                 } else {
@@ -717,100 +709,104 @@ DesignerHistory.queryFrom = function () {
                                     query += '`' + parts1[1] + '`.`' + contr[K][key][key2][key3][1] + '` = ';
                                     query += '`' + parts[1] + '`.`' + key3 + '` ';
 
-                                    constraintsAdded.push(key);
+                                    constraints_added.push(key);
                                 }
-                                tTabLeft.push(parts[1]);
+                                t_tab_left.push(parts[1]);
                             }
                         }
                     }
                 }
             }
         }
-        tTabLeft = DesignerHistory.unique(tTabLeft);
-        tabUsed = DesignerHistory.addArray(tTabLeft, tabUsed);
-        tabLeft = DesignerHistory.removeArray(tTabLeft, tabLeft);
-        tTabLeft = [];
+        t_tab_left = unique(t_tab_left);
+        tab_used = add_array(t_tab_left, tab_used);
+        tab_left = remove_array(t_tab_left, tab_left);
+        t_tab_left = [];
     }
-    for (k in tabLeft) {
-        quer += ' , `' + tabLeft[k] + '`';
+    for (k in tab_left) {
+        quer += ' , `' + tab_left[k] + '`';
     }
     query = quer + query;
-    fromArray = tArray;
+    from_array = t_array;
     return query;
-};
+}
 
 /**
  * This function is the main function for query building.
  * uses history object details for this.
  *
- * @uses DesignerHistory.queryWhere()
- * @uses DesignerHistory.queryGroupBy()
- * @uses DesignerHistory.queryHaving()
- * @uses DesignerHistory.queryOrderBy()
+ * @ uses query_where()
+ * @ uses query_groupby()
+ * @ uses query_having()
+ * @ uses query_orderby()
+ *
+ * @param formtitle title for the form
+ * @param fadin
  */
-DesignerHistory.buildQuery = function () {
-    var qSelect = 'SELECT ';
+
+function build_query (formtitle, fadin) {
+    var q_select = 'SELECT ';
     var temp;
-    if (selectField.length > 0) {
-        for (var i = 0; i < selectField.length; i++) {
-            temp = DesignerHistory.checkAggregate(selectField[i]);
+    if (select_field.length > 0) {
+        for (var i = 0; i < select_field.length; i++) {
+            temp = check_aggregate(select_field[i]);
             if (temp !== '') {
-                qSelect += temp;
-                temp = DesignerHistory.checkRename(selectField[i]);
-                qSelect += temp + ', ';
+                q_select += temp;
+                temp = check_rename(select_field[i]);
+                q_select += temp + ', ';
             } else {
-                temp = DesignerHistory.checkRename(selectField[i]);
-                qSelect += selectField[i] + temp + ', ';
+                temp = check_rename(select_field[i]);
+                q_select += select_field[i] + temp + ', ';
             }
         }
-        qSelect = qSelect.substring(0, qSelect.length - 2);
+        q_select = q_select.substring(0, q_select.length - 2);
     } else {
-        qSelect += '* ';
+        q_select += '* ';
     }
 
-    qSelect += '\nFROM ' + DesignerHistory.queryFrom();
+    q_select += '\nFROM ' + query_from();
 
-    var qWhere = DesignerHistory.queryWhere();
-    if (qWhere !== '') {
-        qSelect += '\nWHERE ' + qWhere;
+    var q_where = query_where();
+    if (q_where !== '') {
+        q_select += '\nWHERE ' + q_where;
     }
 
-    var qGroupBy = DesignerHistory.queryGroupBy();
-    if (qGroupBy !== '') {
-        qSelect += '\nGROUP BY ' + qGroupBy;
+    var q_groupby = query_groupby();
+    if (q_groupby !== '') {
+        q_select += '\nGROUP BY ' + q_groupby;
     }
 
-    var qHaving = DesignerHistory.queryHaving();
-    if (qHaving !== '') {
-        qSelect += '\nHAVING ' + qHaving;
+    var q_having = query_having();
+    if (q_having !== '') {
+        q_select += '\nHAVING ' + q_having;
     }
 
-    var qOrderBy = DesignerHistory.queryOrderBy();
-    if (qOrderBy !== '') {
-        qSelect += '\nORDER BY ' + qOrderBy;
+    var q_orderby = query_orderby();
+    if (q_orderby !== '') {
+        q_select += '\nORDER BY ' + q_orderby;
     }
 
     /**
      * @var button_options Object containing options
      *                     for jQueryUI dialog buttons
      */
-    var buttonOptions = {};
-    buttonOptions[Messages.strClose] = function () {
+    var button_options = {};
+    button_options[PMA_messages.strClose] = function () {
         $(this).dialog('close');
     };
-    buttonOptions[Messages.strSubmit] = function () {
-        if (vqbEditor) {
+    button_options[PMA_messages.strSubmit] = function () {
+        if (vqb_editor) {
             var $elm = $ajaxDialog.find('textarea');
-            vqbEditor.save();
-            $elm.val(vqbEditor.getValue());
+            vqb_editor.save();
+            $elm.val(vqb_editor.getValue());
         }
-        $('#vqb_form').trigger('submit');
+        $('#vqb_form').submit();
     };
 
     var $ajaxDialog = $('#box').dialog({
         appendTo: '#page_content',
         width: 500,
-        buttons: buttonOptions,
+        buttons: button_options,
         modal: true,
         title: 'SELECT'
     });
@@ -820,22 +816,22 @@ DesignerHistory.buildQuery = function () {
      *           to the query textarea.
      */
     var $elm = $ajaxDialog.find('textarea');
-    if (! vqbEditor) {
-        vqbEditor = Functions.getSqlEditor($elm);
+    if (! vqb_editor) {
+        vqb_editor = PMA_getSQLEditor($elm);
     }
-    if (vqbEditor) {
-        vqbEditor.setValue(qSelect);
-        vqbEditor.focus();
+    if (vqb_editor) {
+        vqb_editor.setValue(q_select);
+        vqb_editor.focus();
     } else {
-        $elm.val(qSelect);
-        $elm.trigger('focus');
+        $elm.val(q_select);
+        $elm.focus();
     }
-};
+}
 
 AJAX.registerTeardown('designer/history.js', function () {
-    vqbEditor = null;
-    historyArray = [];
-    selectField = [];
+    vqb_editor = null;
+    history_array = [];
+    select_field = [];
     $('#ok_edit_rename').off('click');
     $('#ok_edit_having').off('click');
     $('#ok_edit_Aggr').off('click');
@@ -843,17 +839,17 @@ AJAX.registerTeardown('designer/history.js', function () {
 });
 
 AJAX.registerOnload('designer/history.js', function () {
-    $('#ok_edit_rename').on('click', function () {
-        DesignerHistory.edit('Rename');
+    $('#ok_edit_rename').click(function () {
+        edit('Rename');
     });
-    $('#ok_edit_having').on('click', function () {
-        DesignerHistory.edit('Having');
+    $('#ok_edit_having').click(function () {
+        edit('Having');
     });
-    $('#ok_edit_Aggr').on('click', function () {
-        DesignerHistory.edit('Aggregate');
+    $('#ok_edit_Aggr').click(function () {
+        edit('Aggregate');
     });
-    $('#ok_edit_where').on('click', function () {
-        DesignerHistory.edit('Where');
+    $('#ok_edit_where').click(function () {
+        edit('Where');
     });
     $('#ab').accordion({ collapsible : true, active : 'none' });
 });

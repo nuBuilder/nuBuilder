@@ -18,7 +18,6 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
 
 /**
  * Your phpMyAdmin URL.
@@ -92,11 +91,9 @@ $cfg['TranslationWarningThreshold'] = 80;
 
 /**
  * Allows phpMyAdmin to be included from a other document in a frame;
- * setting this to true is a potential security hole. Setting this to
- * 'sameorigin' prevents phpMyAdmin to be included from another document
- * in a frame, unless that document belongs to the same domain.
+ * setting this to true is a potential security hole
  *
- * @global boolean|string $cfg['AllowThirdPartyFraming']
+ * @global boolean $cfg['AllowThirdPartyFraming']
  */
 $cfg['AllowThirdPartyFraming'] = false;
 
@@ -122,7 +119,7 @@ $cfg['blowfish_secret'] = '';
  *
  * @global array $cfg['Servers']
  */
-$cfg['Servers'] = [];
+$cfg['Servers'] = array();
 
 $i = 1;
 
@@ -284,7 +281,7 @@ $cfg['Servers'][$i]['SignonSession'] = '';
  *
  * @global array $cfg['Servers'][$i]['SignonCookieParams']
  */
-$cfg['Servers'][$i]['SignonCookieParams'] = [];
+$cfg['Servers'][$i]['SignonCookieParams'] = array();
 
 /**
  * PHP script to use for 'signon' authentication method
@@ -552,7 +549,7 @@ $cfg['Servers'][$i]['AllowDeny']['order'] = '';
  *
  * @global array $cfg['Servers'][$i]['AllowDeny']['rules']
  */
-$cfg['Servers'][$i]['AllowDeny']['rules'] = [];
+$cfg['Servers'][$i]['AllowDeny']['rules'] = array();
 
 /**
  * Disable use of INFORMATION_SCHEMA.
@@ -849,14 +846,6 @@ $cfg['CaptchaLoginPublicKey'] = '';
  */
 $cfg['CaptchaLoginPrivateKey'] = '';
 
-/**
- * Enable drag and drop import
- * @see feature request : https://github.com/phpmyadmin/phpmyadmin/issues/13155
- *
- * @global bool $cfg['enable_drag_drop_import']
- */
-$cfg['enable_drag_drop_import'] = true;
-
 /*******************************************************************************
  * Navigation panel setup
  */
@@ -1063,13 +1052,6 @@ $cfg['NavigationTreeShowEvents'] = true;
  */
 $cfg['NavigationWidth'] = 240;
 
-/**
- * Automatically expands single database in navigation panel
- *
- * @global boolean $cfg['NavigationAutoexpandSingleDb']
- */
-$cfg['NavigationTreeAutoexpandSingleDb'] = true;
-
 /*******************************************************************************
  * In the main panel, at startup...
  */
@@ -1219,7 +1201,7 @@ $cfg['SaveCellsAtOnce'] = false;
  *
  * @global string $cfg['GridEditing']
  */
-$cfg['GridEditing'] = 'double-click';
+$cfg['GridEditing'] ='double-click';
 
 /**
  * Options > Relational display
@@ -1300,10 +1282,7 @@ $cfg['InsertRows'] = 2;
  *
  * @global array $cfg['ForeignKeyDropdownOrder']
  */
-$cfg['ForeignKeyDropdownOrder'] = [
-    'content-id',
-    'id-content',
-];
+$cfg['ForeignKeyDropdownOrder'] = array('content-id', 'id-content');
 
 /**
  * A drop-down list will be used if fewer items are present
@@ -1424,7 +1403,7 @@ $cfg['RowActionType'] = 'both';
 /*******************************************************************************
  * Export defaults
  */
-$cfg['Export'] = [];
+$cfg['Export'] = array();
 
 /**
  * codegen/csv/excel/htmlexcel/htmlword/latex/ods/odt/pdf/sql/texytext/xml/yaml
@@ -1969,16 +1948,6 @@ $cfg['Export']['sql_drop_table'] = false;
 $cfg['Export']['sql_if_not_exists'] = false;
 
 /**
- * @global boolean $cfg['Export']['sql_view_current_user']
- */
-$cfg['Export']['sql_view_current_user'] = false;
-
-/**
- * @global boolean $cfg['Export']['sql_or_replace']
- */
-$cfg['Export']['sql_or_replace_view'] = false;
-
-/**
  *
  *
  * @global boolean $cfg['Export']['sql_procedure_function']
@@ -2184,7 +2153,7 @@ $cfg['Export']['yaml_structure_or_data'] = 'data';
 /*******************************************************************************
  * Import defaults
  */
-$cfg['Import'] = [];
+$cfg['Import'] = array();
 
 /**
  *
@@ -2378,7 +2347,7 @@ $cfg['Import']['ods_recognize_currency'] = true;
 /*******************************************************************************
  * Schema export defaults
 */
-$cfg['Schema'] = [];
+$cfg['Schema'] = array();
 
 /**
  * pdf/eps/dia/svg
@@ -2529,13 +2498,7 @@ $cfg['Schema']['svg_all_tables_same_width'] = false;
  *
  * @global array $cfg['PDFPageSizes']
  */
-$cfg['PDFPageSizes'] = [
-    'A3',
-    'A4',
-    'A5',
-    'letter',
-    'legal',
-];
+$cfg['PDFPageSizes'] = array('A3', 'A4', 'A5', 'letter', 'legal');
 
 /**
  *
@@ -2595,7 +2558,7 @@ $cfg['RecodingEngine'] = 'auto';
 /**
  * Specify some parameters for iconv used in character set conversion. See iconv
  * documentation for details:
- * https://www.gnu.org/savannah-checkouts/gnu/libiconv/documentation/libiconv-1.15/iconv_open.3.html
+ * https://www.gnu.org/software/libiconv/documentation/libiconv/iconv_open.3.html
  *
  * @global string $cfg['IconvExtraParams']
  */
@@ -2609,7 +2572,7 @@ $cfg['IconvExtraParams'] = '//TRANSLIT';
  *
  * @global array $cfg['AvailableCharsets']
  */
-$cfg['AvailableCharsets'] = [
+$cfg['AvailableCharsets'] = array(
     'iso-8859-1',
     'iso-8859-2',
     'iso-8859-3',
@@ -2643,7 +2606,7 @@ $cfg['AvailableCharsets'] = [
     'SHIFT_JIS',
     'SJIS',
     'SJIS-win',
-];
+);
 
 
 /*******************************************************************************
@@ -2771,7 +2734,7 @@ $cfg['ShowBrowseComments'] = true;
  *
  * @global boolean $cfg['ShowPropertyComments']
  */
-$cfg['ShowPropertyComments'] = true;
+$cfg['ShowPropertyComments']= true;
 
 /**
  * repeat header names every X cells? (0 = deactivate)
@@ -2837,7 +2800,7 @@ $cfg['InitialSlidersState'] = 'closed';
  *
  * @global array $cfg['UserprefsDisallow']
  */
-$cfg['UserprefsDisallow'] = [];
+$cfg['UserprefsDisallow'] = array();
 
 /**
  * User preferences: enable the Developer tab
@@ -2903,6 +2866,12 @@ $cfg['ThemeDefault'] = 'pmahomme';
  */
 $cfg['ThemePerServer'] = false;
 
+
+/**
+ * Font size to use by default
+ */
+$cfg['FontSize'] = '82%';
+
 /*******************************************************************************
  *
  */
@@ -2928,7 +2897,7 @@ $cfg['DefaultQueryDatabase'] = '';
  *
  * @global array $cfg['SQLQuery']
  */
-$cfg['SQLQuery'] = [];
+$cfg['SQLQuery'] = array();
 
 /**
  * Display an "Edit" link on the results page to change a query
@@ -2996,7 +2965,7 @@ $cfg['SaveDir'] = '';
 if (defined('TEMP_DIR')) {
     $cfg['TempDir'] = TEMP_DIR;
 } else {
-    $cfg['TempDir'] = ROOT_PATH . 'tmp/';
+    $cfg['TempDir'] = './tmp/';
 }
 
 
@@ -3017,7 +2986,7 @@ $cfg['GD2Available'] = 'auto';
  *
  * @global array $cfg['TrustedProxies']
  */
-$cfg['TrustedProxies'] = [];
+$cfg['TrustedProxies'] = array();
 
 /**
  * We normally check the permissions on the configuration file to ensure
@@ -3080,7 +3049,7 @@ $cfg['ZeroConf'] = true;
  *
  * @global array $cfg['DBG']
  */
-$cfg['DBG'] = [];
+$cfg['DBG'] = array();
 
 /**
  * Output executed queries and their execution times
@@ -3120,14 +3089,14 @@ $cfg['DBG']['simple2fa'] = false;
  *
  * @global array $cfg['DefaultFunctions']
  */
-$cfg['DefaultFunctions'] = [
+$cfg['DefaultFunctions'] = array(
     'FUNC_CHAR' => '',
     'FUNC_DATE' => '',
     'FUNC_NUMBER' => '',
     'FUNC_SPATIAL' => 'GeomFromText',
     'FUNC_UUID' => 'UUID',
     'first_timestamp' => 'NOW',
-];
+);
 
 /**
  * Max rows retrieved for zoom search
@@ -3146,10 +3115,10 @@ $cfg['ShowGitRevision'] = true;
  *
  * @global array $cfg['MysqlMinVersion']
  */
-$cfg['MysqlMinVersion'] = [
+$cfg['MysqlMinVersion'] = array(
     'internal' => 50500,
-    'human' => '5.5.0',
-];
+    'human' => '5.5.0'
+);
 
 /**
  * Disable shortcuts
@@ -3186,78 +3155,56 @@ $cfg['Console'] = [
  *
  * @global array $cfg['DefaultTransformations']
  */
-$cfg['DefaultTransformations'] = [];
+$cfg['DefaultTransformations'] = array();
 
 /**
  * Default transformations for Substring
  *
  * @global array $cfg['DefaultTransformations']['Substring']
  */
-$cfg['DefaultTransformations']['Substring'] = [
-    0,
-    'all',
-    '…',
-];
+$cfg['DefaultTransformations']['Substring'] = array(0, 'all', '…');
 
 /**
  * Default transformations for Bool2Text
  *
  * @global array $cfg['DefaultTransformations']['Bool2Text']
  */
-$cfg['DefaultTransformations']['Bool2Text'] = [
-    'T',
-    'F',
-];
+$cfg['DefaultTransformations']['Bool2Text'] = array('T', 'F');
 
 /**
  * Default transformations for External
  *
  * @global array $cfg['DefaultTransformations']['External']
  */
-$cfg['DefaultTransformations']['External'] = [
-    0,
-    '-f /dev/null -i -wrap -q',
-    1,
-    1,
-];
+$cfg['DefaultTransformations']['External'] = array(0, '-f /dev/null -i -wrap -q', 1, 1);
 
 /**
  * Default transformations for PreApPend
  *
  * @global array $cfg['DefaultTransformations']['PreApPend']
  */
-$cfg['DefaultTransformations']['PreApPend'] = [
-    '',
-    '',
-];
+$cfg['DefaultTransformations']['PreApPend'] = array('', '');
 
 /**
  * Default transformations for Hex
  *
  * @global array $cfg['DefaultTransformations']['Hex']
  */
-$cfg['DefaultTransformations']['Hex'] = ['2'];
+$cfg['DefaultTransformations']['Hex'] = array('2');
 
 /**
  * Default transformations for DateFormat
  *
  * @global array $cfg['DefaultTransformations']['DateFormat']
  */
-$cfg['DefaultTransformations']['DateFormat'] = [
-    0,
-    '',
-    'local',
-];
+$cfg['DefaultTransformations']['DateFormat'] = array(0, '', 'local');
 
 /**
  * Default transformations for Inline
  *
  * @global array $cfg['DefaultTransformations']['Inline']
  */
-$cfg['DefaultTransformations']['Inline'] = [
-    '100',
-    100,
-];
+$cfg['DefaultTransformations']['Inline'] = array('100', 100);
 $cfg['DefaultTransformations']['Inline']['wrapper_link'] = null;
 
 /**
@@ -3265,19 +3212,11 @@ $cfg['DefaultTransformations']['Inline']['wrapper_link'] = null;
  *
  * @global array $cfg['DefaultTransformations']['TextImageLink']
  */
-$cfg['DefaultTransformations']['TextImageLink'] = [
-    null,
-    100,
-    50,
-];
+$cfg['DefaultTransformations']['TextImageLink'] = array(null, 100, 50);
 
 /**
  * Default transformations for TextLink
  *
  * @global array $cfg['DefaultTransformations']['TextLink']
  */
-$cfg['DefaultTransformations']['TextLink'] = [
-    null,
-    null,
-    null,
-];
+$cfg['DefaultTransformations']['TextLink'] = array(null, null, null);

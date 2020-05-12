@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin\Twig
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Twig;
 
 use Twig\Extension\AbstractExtension;
@@ -26,11 +24,11 @@ class TableExtension extends AbstractExtension
      */
     public function getFunctions()
     {
-        return [
+        return array(
             new TwigFunction(
-                'table_get',
+                'Table_get',
                 'PhpMyAdmin\Table::get'
             ),
-        ];
+        );
     }
 }

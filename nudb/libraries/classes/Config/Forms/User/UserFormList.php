@@ -5,31 +5,19 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Config\Forms\User;
 
 use PhpMyAdmin\Config\Forms\BaseFormList;
 
-/**
- * Class UserFormList
- * @package PhpMyAdmin\Config\Forms\User
- */
 class UserFormList extends BaseFormList
 {
-    /**
-     * @var array
-     */
-    protected static $all = [
+    protected static $all = array(
         'Features',
         'Sql',
         'Navi',
         'Main',
-        'Export',
         'Import',
-    ];
-    /**
-     * @var string
-     */
+        'Export',
+    );
     protected static $ns = '\\PhpMyAdmin\\Config\\Forms\\User\\';
 }

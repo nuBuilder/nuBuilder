@@ -5,11 +5,7 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Properties\Options;
-
-use Countable;
 
 /**
  * Parents group property items and provides methods to manage groups of
@@ -18,7 +14,7 @@ use Countable;
  * @todo    modify descriptions if needed, when the options are integrated
  * @package PhpMyAdmin
  */
-abstract class OptionsPropertyGroup extends OptionsPropertyItem implements Countable
+abstract class OptionsPropertyGroup extends OptionsPropertyItem implements \Countable
 {
     /**
      * Holds a group of properties (PhpMyAdmin\Properties\Options\OptionsPropertyItem instances)
@@ -37,12 +33,12 @@ abstract class OptionsPropertyGroup extends OptionsPropertyItem implements Count
      */
     public function addProperty($property)
     {
-        if (! $this->getProperties() == null
+        if (!$this->getProperties() == null
             && in_array($property, $this->getProperties(), true)
         ) {
             return;
         }
-        $this->_properties[] = $property;
+        $this->_properties [] = $property;
     }
 
     /**
@@ -57,7 +53,7 @@ abstract class OptionsPropertyGroup extends OptionsPropertyItem implements Count
     {
         $this->_properties = array_diff(
             $this->getProperties(),
-            [$property]
+            array($property)
         );
     }
 
@@ -67,7 +63,7 @@ abstract class OptionsPropertyGroup extends OptionsPropertyItem implements Count
     /**
      * Gets the instance of the class
      *
-     * @return OptionsPropertyGroup
+     * @return array
      */
     public function getGroup()
     {
@@ -91,7 +87,7 @@ abstract class OptionsPropertyGroup extends OptionsPropertyItem implements Count
      */
     public function getNrOfProperties()
     {
-        if ($this->_properties === null) {
+        if (is_null($this->_properties)) {
             return 0;
         }
         return count($this->_properties);
@@ -102,8 +98,7 @@ abstract class OptionsPropertyGroup extends OptionsPropertyItem implements Count
      *
      * @return int
      */
-    public function count()
-    {
+    public function count() {
         return $this->getNrOfProperties();
     }
 }

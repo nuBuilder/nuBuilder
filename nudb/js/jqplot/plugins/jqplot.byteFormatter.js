@@ -6,28 +6,26 @@
  */
 (function ($) {
     'use strict';
-    var formatByte = function (value, index) {
-        var val = value;
-        var i = index;
+    var formatByte = function (val, index) {
         var units = [
-            Messages.strB,
-            Messages.strKiB,
-            Messages.strMiB,
-            Messages.strGiB,
-            Messages.strTiB,
-            Messages.strPiB,
-            Messages.strEiB
+            PMA_messages.strB,
+            PMA_messages.strKiB,
+            PMA_messages.strMiB,
+            PMA_messages.strGiB,
+            PMA_messages.strTiB,
+            PMA_messages.strPiB,
+            PMA_messages.strEiB
         ];
-        while (val >= 1024 && i <= 6) {
+        while (val >= 1024 && index <= 6) {
             val /= 1024;
-            i++;
+            index++;
         }
         var format = '%.1f';
         if (Math.floor(val) === val) {
             format = '%.0f';
         }
         return $.jqplot.sprintf(
-            format + ' ' + units[i], val
+            format + ' ' + units[index], val
         );
     };
     /**
@@ -35,12 +33,11 @@
      * 0 for bytes, 1 for kilobytes and so on...
      */
     $.jqplot.byteFormatter = function (index) {
-        var i = index || 0;
-        return function (format, value) {
-            var val = value;
+        index = index || 0;
+        return function (format, val) {
             if (typeof val === 'number') {
                 val = parseFloat(val) || 0;
-                return formatByte(val, i);
+                return formatByte(val, index);
             } else {
                 return String(val);
             }

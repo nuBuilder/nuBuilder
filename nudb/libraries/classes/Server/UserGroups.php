@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Server;
 
 use PhpMyAdmin\Relation;
@@ -29,7 +27,7 @@ class UserGroups
      */
     public static function getHtmlForListingUsersofAGroup($userGroup)
     {
-        $relation = new Relation($GLOBALS['dbi']);
+        $relation = new Relation();
         $html_output  = '<h2>'
             . sprintf(__('Users of \'%s\' user group'), htmlspecialchars($userGroup))
             . '</h2>';
@@ -73,7 +71,7 @@ class UserGroups
      */
     public static function getHtmlForUserGroupsTable()
     {
-        $relation = new Relation($GLOBALS['dbi']);
+        $relation = new Relation();
         $html_output  = '<h2>' . __('User groups') . '</h2>';
         $cfgRelation = $relation->getRelationsParam();
         $groupTable = Util::backquote($cfgRelation['db'])
@@ -96,11 +94,11 @@ class UserGroups
             $html_output .= '</tr></thead>';
             $html_output .= '<tbody>';
 
-            $userGroups = [];
+            $userGroups = array();
             while ($row = $GLOBALS['dbi']->fetchAssoc($result)) {
                 $groupName = $row['usergroup'];
                 if (! isset($userGroups[$groupName])) {
-                    $userGroups[$groupName] = [];
+                    $userGroups[$groupName] = array();
                 }
                 $userGroups[$groupName][$row['tab']] = $row['allowed'];
             }
@@ -112,37 +110,31 @@ class UserGroups
                 $html_output .= '<td>' . self::getAllowedTabNames($tabs, 'table') . '</td>';
 
                 $html_output .= '<td>';
-                $html_output .= '<a class="" href="server_user_groups.php" data-post="'
+                $html_output .= '<a class="" href="server_user_groups.php'
                     . Url::getCommon(
-                        [
-                            'viewUsers' => 1,
-                            'userGroup' => $groupName,
-                        ],
-                        ''
+                        array(
+                            'viewUsers' => 1, 'userGroup' => $groupName
+                        )
                     )
                     . '">'
                     . Util::getIcon('b_usrlist', __('View users'))
                     . '</a>';
                 $html_output .= '&nbsp;&nbsp;';
-                $html_output .= '<a class="" href="server_user_groups.php" data-post="'
+                $html_output .= '<a class="" href="server_user_groups.php'
                     . Url::getCommon(
-                        [
-                            'editUserGroup' => 1,
-                            'userGroup' => $groupName,
-                        ],
-                        ''
+                        array(
+                            'editUserGroup' => 1, 'userGroup' => $groupName
+                        )
                     )
                     . '">'
                     . Util::getIcon('b_edit', __('Edit')) . '</a>';
                 $html_output .= '&nbsp;&nbsp;';
                 $html_output .= '<a class="deleteUserGroup ajax"'
-                    . ' href="server_user_groups.php" data-post="'
+                    . ' href="server_user_groups.php'
                     . Url::getCommon(
-                        [
-                            'deleteUserGroup' => 1,
-                            'userGroup' => $groupName,
-                        ],
-                        ''
+                        array(
+                            'deleteUserGroup' => 1, 'userGroup' => $groupName
+                        )
                     )
                     . '">'
                     . Util::getIcon('b_drop', __('Delete')) . '</a>';
@@ -159,7 +151,7 @@ class UserGroups
 
         $html_output .= '<fieldset id="fieldset_add_user_group">';
         $html_output .= '<a href="server_user_groups.php'
-            . Url::getCommon(['addUserGroup' => 1]) . '">'
+            . Url::getCommon(array('addUserGroup' => 1)) . '">'
             . Util::getIcon('b_usradd')
             . __('Add user group') . '</a>';
         $html_output .= '</fieldset>';
@@ -178,7 +170,7 @@ class UserGroups
      */
     public static function getAllowedTabNames(array $row, $level)
     {
-        $tabNames = [];
+        $tabNames = array();
         $tabs = Util::getMenuTabList($level);
         foreach ($tabs as $tab => $tabName) {
             if (! isset($row[$level . '_' . $tab])
@@ -199,7 +191,7 @@ class UserGroups
      */
     public static function delete($userGroup)
     {
-        $relation = new Relation($GLOBALS['dbi']);
+        $relation = new Relation();
         $cfgRelation = $relation->getRelationsParam();
         $userTable = Util::backquote($cfgRelation['db'])
             . "." . Util::backquote($cfgRelation['users']);
@@ -224,7 +216,7 @@ class UserGroups
      */
     public static function getHtmlToEditUserGroup($userGroup = null)
     {
-        $relation = new Relation($GLOBALS['dbi']);
+        $relation = new Relation();
         $html_output = '';
         if ($userGroup == null) {
             $html_output .= '<h2>' . __('Add user group') . '</h2>';
@@ -236,7 +228,7 @@ class UserGroups
 
         $html_output .= '<form name="userGroupForm" id="userGroupForm"'
             . ' action="server_user_groups.php" method="post">';
-        $urlParams = [];
+        $urlParams = array();
         if ($userGroup != null) {
             $urlParams['userGroup'] = $userGroup;
             $urlParams['editUserGroupSubmit'] = '1';
@@ -255,15 +247,15 @@ class UserGroups
 
         if ($userGroup == null) {
             $html_output .= '<label for="userGroup">' . __('Group name:') . '</label>';
-            $html_output .= '<input type="text" name="userGroup" maxlength="64" autocomplete="off" required="required">';
+            $html_output .= '<input type="text" name="userGroup" maxlength="64" autocomplete="off" required="required" />';
             $html_output .= '<div class="clearfloat"></div>';
         }
 
-        $allowedTabs = [
-            'server' => [],
-            'db'     => [],
-            'table'  => [],
-        ];
+        $allowedTabs = array(
+            'server' => array(),
+            'db'     => array(),
+            'table'  => array()
+        );
         if ($userGroup != null) {
             $cfgRelation = $relation->getRelationsParam();
             $groupTable = Util::backquote($cfgRelation['db'])
@@ -291,26 +283,20 @@ class UserGroups
         }
 
         $html_output .= self::getTabList(
-            __('Server-level tabs'),
-            'server',
-            $allowedTabs['server']
+            __('Server-level tabs'), 'server', $allowedTabs['server']
         );
         $html_output .= self::getTabList(
-            __('Database-level tabs'),
-            'db',
-            $allowedTabs['db']
+            __('Database-level tabs'), 'db', $allowedTabs['db']
         );
         $html_output .= self::getTabList(
-            __('Table-level tabs'),
-            'table',
-            $allowedTabs['table']
+            __('Table-level tabs'), 'table', $allowedTabs['table']
         );
 
         $html_output .= '</fieldset>';
 
         $html_output .= '<fieldset id="fieldset_user_group_rights_footer"'
             . ' class="tblFooters">';
-        $html_output .= '<input class="btn btn-primary" type="submit" value="' . __('Go') . '">';
+        $html_output .= '<input type="submit" value="' . __('Go') . '">';
         $html_output .= '</fieldset>';
 
         return $html_output;
@@ -335,8 +321,8 @@ class UserGroups
             $html_output .= '<div class="item">';
             $html_output .= '<input type="checkbox" class="checkall"'
                 . (in_array($tab, $selected) ? ' checked="checked"' : '')
-                . ' name="' . $level . '_' . $tab . '" value="Y">';
-            $html_output .= '<label for="' . $level . '_' . $tab . '">'
+                . ' name="' . $level . '_' . $tab .  '" value="Y" />';
+            $html_output .= '<label for="' . $level . '_' . $tab .  '">'
                 . '<code>' . $tabName . '</code>'
                 . '</label>';
             $html_output .= '</div>';
@@ -355,7 +341,7 @@ class UserGroups
      */
     public static function edit($userGroup, $new = false)
     {
-        $relation = new Relation($GLOBALS['dbi']);
+        $relation = new Relation();
         $tabs = Util::getMenuTabList();
         $cfgRelation = $relation->getRelationsParam();
         $groupTable = Util::backquote($cfgRelation['db'])
@@ -378,7 +364,7 @@ class UserGroups
                     $sql_query .= ", ";
                 }
                 $tabName = $tabGroupName . '_' . $tab;
-                $allowed = isset($_POST[$tabName]) && $_POST[$tabName] == 'Y';
+                $allowed = isset($_REQUEST[$tabName]) && $_REQUEST[$tabName] == 'Y';
                 $sql_query .= "('" . $GLOBALS['dbi']->escapeString($userGroup) . "', '" . $tabName . "', '"
                     . ($allowed ? "Y" : "N") . "')";
                 $first = false;

@@ -13,78 +13,59 @@
  * in the select dropdown
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
 
-use PhpMyAdmin\Controllers\Table\RelationController;
-use PhpMyAdmin\DatabaseInterface;
+use PhpMyAdmin\Controllers\Table\TableRelationController;
+use PhpMyAdmin\Di\Container;
 use PhpMyAdmin\Relation;
+use PhpMyAdmin\Response;
 use PhpMyAdmin\Table;
 use PhpMyAdmin\Util;
-use Symfony\Component\DependencyInjection\Definition;
 
-if (! defined('ROOT_PATH')) {
-    define('ROOT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
-}
+require_once 'libraries/common.inc.php';
 
-require_once ROOT_PATH . 'libraries/common.inc.php';
+$container = Container::getDefaultContainer();
+$container->factory('PhpMyAdmin\Controllers\Table\TableRelationController');
+$container->alias(
+    'TableRelationController',
+    'PhpMyAdmin\Controllers\Table\TableRelationController'
+);
+$container->set('PhpMyAdmin\Response', Response::getInstance());
+$container->alias('response', 'PhpMyAdmin\Response');
 
 /* Define dependencies for the concerned controller */
-$db = $containerBuilder->getParameter('db');
-$table = $containerBuilder->getParameter('table');
-
-/** @var DatabaseInterface $dbi */
-$dbi = $containerBuilder->get(DatabaseInterface::class);
-
-$options_array = [
+$db = $container->get('db');
+$table = $container->get('table');
+$dbi = $container->get('dbi');
+$options_array = array(
     'CASCADE' => 'CASCADE',
     'SET_NULL' => 'SET NULL',
     'NO_ACTION' => 'NO ACTION',
     'RESTRICT' => 'RESTRICT',
-];
-/** @var Relation $relation */
-$relation = $containerBuilder->get('relation');
+);
+$relation = new Relation();
 $cfgRelation = $relation->getRelationsParam();
 $tbl_storage_engine = mb_strtoupper(
-    $dbi->getTable($db, $table)->getStatusInfo('Engine') ?? ''
+    $dbi->getTable($db, $table)->getStatusInfo('Engine')
 );
 $upd_query = new Table($table, $db, $dbi);
 
-/* Define dependencies for the concerned controller */
-$dependency_definitions = [
-    'options_array' => $options_array,
-    'cfgRelation' => $cfgRelation,
-    'tbl_storage_engine' => $tbl_storage_engine,
-    'existrel' => [],
-    'existrel_foreign' => [],
-    'upd_query' => $upd_query,
-];
+$dependency_definitions = array(
+    "options_array" => $options_array,
+    "cfgRelation" => $cfgRelation,
+    "tbl_storage_engine" => $tbl_storage_engine,
+    "upd_query" => $upd_query
+);
 if ($cfgRelation['relwork']) {
     $dependency_definitions['existrel'] = $relation->getForeigners(
-        $db,
-        $table,
-        '',
-        'internal'
+        $db, $table, '', 'internal'
     );
 }
 if (Util::isForeignKeySupported($tbl_storage_engine)) {
     $dependency_definitions['existrel_foreign'] = $relation->getForeigners(
-        $db,
-        $table,
-        '',
-        'foreign'
+        $db, $table, '', 'foreign'
     );
 }
 
-/** @var Definition $definition */
-$definition = $containerBuilder->getDefinition(RelationController::class);
-array_map(
-    static function (string $parameterName, $value) use ($definition) {
-        $definition->replaceArgument($parameterName, $value);
-    },
-    array_keys($dependency_definitions),
-    $dependency_definitions
-);
-
-/** @var RelationController $controller */
-$controller = $containerBuilder->get(RelationController::class);
+/** @var TableRelationController $controller */
+$controller = $container->get('TableRelationController', $dependency_definitions);
 $controller->indexAction();

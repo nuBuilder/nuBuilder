@@ -5,20 +5,26 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
 
-use PhpMyAdmin\Controllers\Server\CollationsController;
+use PhpMyAdmin\Controllers\Server\ServerCollationsController;
+use PhpMyAdmin\Di\Container;
 use PhpMyAdmin\Response;
 
-if (! defined('ROOT_PATH')) {
-    define('ROOT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
-}
+require_once 'libraries/common.inc.php';
 
-require_once ROOT_PATH . 'libraries/common.inc.php';
+$container = Container::getDefaultContainer();
+$container->factory(
+    'PhpMyAdmin\Controllers\Server\ServerCollationsController'
+);
+$container->alias(
+    'ServerCollationsController',
+    'PhpMyAdmin\Controllers\Server\ServerCollationsController'
+);
+$container->set('PhpMyAdmin\Response', Response::getInstance());
+$container->alias('response', 'PhpMyAdmin\Response');
 
-/** @var CollationsController $controller */
-$controller = $containerBuilder->get(CollationsController::class);
-
-/** @var Response $response */
-$response = $containerBuilder->get(Response::class);
-$response->addHTML($controller->indexAction());
+/** @var ServerCollationsController $controller */
+$controller = $container->get(
+    'ServerCollationsController', array()
+);
+$controller->indexAction();

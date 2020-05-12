@@ -6,12 +6,10 @@
  * @package    PhpMyAdmin-Transformations
  * @subpackage SQL
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Plugins\Transformations\Output;
 
-use PhpMyAdmin\Plugins\Transformations\Abs\SQLTransformationsPlugin;
 use PhpMyAdmin\Response;
+use PhpMyAdmin\Plugins\Transformations\Abs\SQLTransformationsPlugin;
 
 /**
  * Handles the sql transformation for text plain
@@ -27,14 +25,14 @@ class Text_Plain_Sql extends SQLTransformationsPlugin
      */
     public function __construct()
     {
-        if (! empty($GLOBALS['cfg']['CodemirrorEnable'])) {
+        if (!empty($GLOBALS['cfg']['CodemirrorEnable'])) {
             $response = Response::getInstance();
             $scripts = $response->getHeader()
                 ->getScripts();
             $scripts->addFile('vendor/codemirror/lib/codemirror.js');
             $scripts->addFile('vendor/codemirror/mode/sql/sql.js');
             $scripts->addFile('vendor/codemirror/addon/runmode/runmode.js');
-            $scripts->addFile('functions.js');
+            $scripts->addFile('function.js');
         }
     }
 

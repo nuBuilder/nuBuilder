@@ -11,14 +11,12 @@
 
 namespace Symfony\Component\ExpressionLanguage;
 
-use Symfony\Contracts\Service\ResetInterface;
-
 /**
  * Compiles a node to PHP code.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Compiler implements ResetInterface
+class Compiler
 {
     private $source;
     private $functions;
@@ -112,7 +110,7 @@ class Compiler implements ResetInterface
      */
     public function repr($value)
     {
-        if (\is_int($value) || \is_float($value)) {
+        if (is_int($value) || is_float($value)) {
             if (false !== $locale = setlocale(LC_NUMERIC, 0)) {
                 setlocale(LC_NUMERIC, 'C');
             }
@@ -124,10 +122,10 @@ class Compiler implements ResetInterface
             }
         } elseif (null === $value) {
             $this->raw('null');
-        } elseif (\is_bool($value)) {
+        } elseif (is_bool($value)) {
             $this->raw($value ? 'true' : 'false');
-        } elseif (\is_array($value)) {
-            $this->raw('[');
+        } elseif (is_array($value)) {
+            $this->raw('array(');
             $first = true;
             foreach ($value as $key => $value) {
                 if (!$first) {
@@ -138,7 +136,7 @@ class Compiler implements ResetInterface
                 $this->raw(' => ');
                 $this->repr($value);
             }
-            $this->raw(']');
+            $this->raw(')');
         } else {
             $this->string($value);
         }

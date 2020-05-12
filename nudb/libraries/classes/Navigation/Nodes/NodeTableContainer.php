@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin-Navigation
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Navigation\Nodes;
 
 use PhpMyAdmin\Navigation\NodeFactory;
@@ -26,29 +24,28 @@ class NodeTableContainer extends NodeDatabaseChildContainer
     {
         parent::__construct(__('Tables'), Node::CONTAINER);
         $this->icon = Util::getImage('b_browse', __('Tables'));
-        $this->links = [
+        $this->links = array(
             'text' => 'db_structure.php?server=' . $GLOBALS['server']
                 . '&amp;db=%1$s&amp;tbl_type=table',
             'icon' => 'db_structure.php?server=' . $GLOBALS['server']
                 . '&amp;db=%1$s&amp;tbl_type=table',
-        ];
-        $this->realName = 'tables';
+        );
+        $this->real_name = 'tables';
         $this->classes = 'tableContainer subContainer';
 
-        $newLabel = _pgettext('Create new table', 'New');
+        $new_label = _pgettext('Create new table', 'New');
         $new = NodeFactory::getInstance(
             'Node',
-            $newLabel
+            $new_label
         );
         $new->isNew = true;
-        $new->icon = Util::getImage('b_table_add', $newLabel);
-        $new->title = $newLabel;
-        $new->links = [
+        $new->icon = Util::getImage('b_table_add', $new_label);
+        $new->links = array(
             'text' => 'tbl_create.php?server=' . $GLOBALS['server']
                 . '&amp;db=%2$s',
             'icon' => 'tbl_create.php?server=' . $GLOBALS['server']
                 . '&amp;db=%2$s',
-        ];
+        );
         $new->classes = 'new_table italics';
         $this->addChild($new);
     }

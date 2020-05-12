@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin\Twig
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Twig;
 
 use PhpMyAdmin\Relation;
@@ -27,45 +25,30 @@ class RelationExtension extends AbstractExtension
      */
     public function getFunctions()
     {
-        $relation = new Relation($GLOBALS['dbi']);
-        return [
+        $relation = new Relation();
+        return array(
             new TwigFunction(
-                'foreign_dropdown',
-                [
-                    $relation,
-                    'foreignDropdown',
-                ],
-                ['is_safe' => ['html']]
+                'Relation_foreignDropdown',
+                [$relation, 'foreignDropdown'],
+                array('is_safe' => array('html'))
             ),
             new TwigFunction(
-                'get_display_field',
-                [
-                    $relation,
-                    'getDisplayField',
-                ],
-                ['is_safe' => ['html']]
+                'Relation_getDisplayField',
+                [$relation, 'getDisplayField'],
+                array('is_safe' => array('html'))
             ),
             new TwigFunction(
-                'get_foreign_data',
-                [
-                    $relation,
-                    'getForeignData',
-                ]
+                'Relation_getForeignData',
+                [$relation, 'getForeignData']
             ),
             new TwigFunction(
-                'get_tables',
-                [
-                    $relation,
-                    'getTables',
-                ]
+                'Relation_getTables',
+                [$relation, 'getTables']
             ),
             new TwigFunction(
-                'search_column_in_foreigners',
-                [
-                    $relation,
-                    'searchColumnInForeigners',
-                ]
+                'Relation_searchColumnInForeigners',
+                [$relation, 'searchColumnInForeigners']
             ),
-        ];
+        );
     }
 }

@@ -6,12 +6,9 @@
  * @package    PhpMyAdmin-Transformations
  * @subpackage Substring
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Plugins\Transformations\Abs;
 
 use PhpMyAdmin\Plugins\TransformationsPlugin;
-use stdClass;
 
 /**
  * Provides common methods for all of the substring transformations plugins.
@@ -39,13 +36,13 @@ abstract class SubstringTransformationsPlugin extends TransformationsPlugin
     /**
      * Does the actual work of each specific transformations plugin.
      *
-     * @param string        $buffer  text to be transformed
-     * @param array         $options transformation options
-     * @param stdClass|null $meta    meta information
+     * @param string $buffer  text to be transformed
+     * @param array  $options transformation options
+     * @param string $meta    meta information
      *
      * @return string
      */
-    public function applyTransformation($buffer, array $options = [], ?stdClass $meta = null)
+    public function applyTransformation($buffer, array $options = array(), $meta = '')
     {
         // possibly use a global transform and feed it with special options
 
@@ -70,7 +67,7 @@ abstract class SubstringTransformationsPlugin extends TransformationsPlugin
                 $newtext = $options[2] . $newtext;
             }
 
-            if (($length + (int) $options[0]) != $baselength) {
+            if (($length + $options[0]) != $baselength) {
                 $newtext .= $options[2];
             }
         }

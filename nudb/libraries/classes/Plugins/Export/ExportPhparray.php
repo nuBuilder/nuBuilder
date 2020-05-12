@@ -6,17 +6,16 @@
  * @package    PhpMyAdmin-Export
  * @subpackage PHP
  */
-declare(strict_types=1);
 
 namespace PhpMyAdmin\Plugins\Export;
 
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Export;
 use PhpMyAdmin\Plugins\ExportPlugin;
+use PhpMyAdmin\Properties\Plugins\ExportPluginProperties;
+use PhpMyAdmin\Properties\Options\Items\HiddenPropertyItem;
 use PhpMyAdmin\Properties\Options\Groups\OptionsPropertyMainGroup;
 use PhpMyAdmin\Properties\Options\Groups\OptionsPropertyRootGroup;
-use PhpMyAdmin\Properties\Options\Items\HiddenPropertyItem;
-use PhpMyAdmin\Properties\Plugins\ExportPluginProperties;
 use PhpMyAdmin\Util;
 
 /**
@@ -32,7 +31,6 @@ class ExportPhparray extends ExportPlugin
      */
     public function __construct()
     {
-        parent::__construct();
         $this->setProperties();
     }
 
@@ -89,7 +87,7 @@ class ExportPhparray extends ExportPlugin
      */
     public function exportHeader()
     {
-        $this->export->outputHandler(
+        Export::outputHandler(
             '<?php' . $GLOBALS['crlf']
             . '/**' . $GLOBALS['crlf']
             . ' * Export to PHP Array plugin for PHPMyAdmin' . $GLOBALS['crlf']
@@ -123,7 +121,7 @@ class ExportPhparray extends ExportPlugin
         if (empty($db_alias)) {
             $db_alias = $db;
         }
-        $this->export->outputHandler(
+        Export::outputHandler(
             '/**' . $GLOBALS['crlf']
             . ' * Database ' . $this->commentString(Util::backquote($db_alias))
             . $GLOBALS['crlf'] . ' */' . $GLOBALS['crlf']
@@ -176,7 +174,7 @@ class ExportPhparray extends ExportPlugin
         $crlf,
         $error_url,
         $sql_query,
-        array $aliases = []
+        array $aliases = array()
     ) {
         $db_alias = $db;
         $table_alias = $table;
@@ -189,18 +187,18 @@ class ExportPhparray extends ExportPlugin
         );
 
         $columns_cnt = $GLOBALS['dbi']->numFields($result);
-        $columns = [];
+        $columns = array();
         for ($i = 0; $i < $columns_cnt; $i++) {
             $col_as = $GLOBALS['dbi']->fieldName($result, $i);
-            if (! empty($aliases[$db]['tables'][$table]['columns'][$col_as])) {
+            if (!empty($aliases[$db]['tables'][$table]['columns'][$col_as])) {
                 $col_as = $aliases[$db]['tables'][$table]['columns'][$col_as];
             }
             $columns[$i] = stripslashes($col_as);
         }
 
         // fix variable names (based on
-        // https://www.php.net/manual/en/language.variables.basics.php)
-        if (! preg_match(
+        // https://secure.php.net/manual/language.variables.basics.php)
+        if (!preg_match(
             '/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/',
             $table_alias
         )
@@ -248,7 +246,7 @@ class ExportPhparray extends ExportPlugin
         }
 
         $buffer .= $crlf . ');' . $crlf;
-        if (! $this->export->outputHandler($buffer)) {
+        if (!Export::outputHandler($buffer)) {
             return false;
         }
 

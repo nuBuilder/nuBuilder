@@ -6,13 +6,10 @@
  * @package    PhpMyAdmin-Transformations
  * @subpackage SQL
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Plugins\Transformations\Output;
 
 use PhpMyAdmin\Plugins\TransformationsPlugin;
 use PhpMyAdmin\Response;
-use stdClass;
 
 /**
  * Handles the json transformation for text plain
@@ -28,7 +25,7 @@ class Text_Plain_Json extends TransformationsPlugin
      */
     public function __construct()
     {
-        if (! empty($GLOBALS['cfg']['CodemirrorEnable'])) {
+        if (!empty($GLOBALS['cfg']['CodemirrorEnable'])) {
             $response = Response::getInstance();
             $scripts = $response->getHeader()
                 ->getScripts();
@@ -54,13 +51,13 @@ class Text_Plain_Json extends TransformationsPlugin
     /**
      * Does the actual work of each specific transformations plugin.
      *
-     * @param string        $buffer  text to be transformed
-     * @param array         $options transformation options
-     * @param stdClass|null $meta    meta information
+     * @param string $buffer  text to be transformed
+     * @param array  $options transformation options
+     * @param string $meta    meta information
      *
      * @return string
      */
-    public function applyTransformation($buffer, array $options = [], ?stdClass $meta = null)
+    public function applyTransformation($buffer, array $options = array(), $meta = '')
     {
         return '<code class="json"><pre>' . "\n"
         . htmlspecialchars($buffer) . "\n"

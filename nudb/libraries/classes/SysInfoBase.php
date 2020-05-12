@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin;
 
 /**
@@ -25,7 +23,7 @@ class SysInfoBase
      */
     public function loadavg()
     {
-        return ['loadavg' => 0];
+        return array('loadavg' => 0);
     }
 
     /**
@@ -35,13 +33,13 @@ class SysInfoBase
      */
     public function memory()
     {
-        return [];
+        return array();
     }
 
     /**
      * Checks whether class is supported in this environment
      *
-     * @return bool true on success
+     * @return true on success
      */
     public function supported()
     {

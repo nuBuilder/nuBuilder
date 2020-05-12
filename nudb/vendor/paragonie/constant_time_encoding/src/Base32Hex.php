@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 namespace ParagonIE\ConstantTime;
 
 /**
- *  Copyright (c) 2016 - 2018 Paragon Initiative Enterprises.
+ *  Copyright (c) 2016 - 2017 Paragon Initiative Enterprises.
  *  Copyright (c) 2014 Steve "Sc00bz" Thomas (steve at tobtu dot com)
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -40,7 +39,7 @@ abstract class Base32Hex extends Base32
      * @param int $src
      * @return int
      */
-    protected static function decode5Bits(int $src): int
+    protected static function decode5Bits($src)
     {
         $ret = -1;
 
@@ -60,7 +59,7 @@ abstract class Base32Hex extends Base32
      * @param int $src
      * @return int
      */
-    protected static function decode5BitsUpper(int $src): int
+    protected static function decode5BitsUpper($src)
     {
         $ret = -1;
 
@@ -80,7 +79,7 @@ abstract class Base32Hex extends Base32
      * @param int $src
      * @return string
      */
-    protected static function encode5Bits(int $src): string
+    protected static function encode5Bits($src)
     {
         $src += 0x30;
 
@@ -99,7 +98,7 @@ abstract class Base32Hex extends Base32
      * @param int $src
      * @return string
      */
-    protected static function encode5BitsUpper(int $src): string
+    protected static function encode5BitsUpper($src)
     {
         $src += 0x30;
 

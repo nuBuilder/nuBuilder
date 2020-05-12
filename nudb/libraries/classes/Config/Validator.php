@@ -5,18 +5,12 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Config;
 
 use PhpMyAdmin\Config\ConfigFile;
 use PhpMyAdmin\Core;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Util;
-use function mysql_close;
-use function mysql_connect;
-use function mysqli_close;
-use function mysqli_connect;
 
 /**
  * Validation class for various validation functions
@@ -49,7 +43,7 @@ class Validator
             return $validators;
         }
 
-        $validators = $cf->getDbEntry('_validators', []);
+        $validators = $cf->getDbEntry('_validators', array());
         if ($GLOBALS['PMA_Config']->get('is_setup')) {
             return $validators;
         }
@@ -58,11 +52,11 @@ class Validator
         // preferences we need original config values not overwritten
         // by user preferences, creating a new PhpMyAdmin\Config instance is a
         // better idea than hacking into its code
-        $uvs = $cf->getDbEntry('_userValidators', []);
-        foreach ($uvs as $field => $uvList) {
-            $uvList = (array) $uvList;
-            foreach ($uvList as &$uv) {
-                if (! is_array($uv)) {
+        $uvs = $cf->getDbEntry('_userValidators', array());
+        foreach ($uvs as $field => $uv_list) {
+            $uv_list = (array)$uv_list;
+            foreach ($uv_list as &$uv) {
+                if (!is_array($uv)) {
                     continue;
                 }
                 for ($i = 1, $nb = count($uv); $i < $nb; $i++) {
@@ -75,8 +69,8 @@ class Validator
                 }
             }
             $validators[$field] = isset($validators[$field])
-                ? array_merge((array) $validators[$field], $uvList)
-                : $uvList;
+                ? array_merge((array)$validators[$field], $uv_list)
+                : $uv_list;
         }
         return $validators;
     }
@@ -91,24 +85,21 @@ class Validator
      * o false - when no validators match name(s) given by $validator_id
      *
      * @param ConfigFile   $cf           Config file instance
-     * @param string|array $validatorId  ID of validator(s) to run
-     * @param array        $values       Values to validate
+     * @param string|array $validator_id ID of validator(s) to run
+     * @param array        &$values      Values to validate
      * @param bool         $isPostSource tells whether $values are directly from
      *                                   POST request
      *
      * @return bool|array
      */
     public static function validate(
-        ConfigFile $cf,
-        $validatorId,
-        array &$values,
-        $isPostSource
+        ConfigFile $cf, $validator_id, array &$values, $isPostSource
     ) {
         // find validators
-        $validatorId = (array) $validatorId;
+        $validator_id = (array) $validator_id;
         $validators = static::getValidators($cf);
-        $vids = [];
-        foreach ($validatorId as &$vid) {
+        $vids = array();
+        foreach ($validator_id as &$vid) {
             $vid = $cf->getCanonicalPath($vid);
             if (isset($validators[$vid])) {
                 $vids[] = $vid;
@@ -119,71 +110,66 @@ class Validator
         }
 
         // create argument list with canonical paths and remember path mapping
-        $arguments = [];
-        $keyMap = [];
+        $arguments = array();
+        $key_map = array();
         foreach ($values as $k => $v) {
             $k2 = $isPostSource ? str_replace('-', '/', $k) : $k;
             $k2 = mb_strpos($k2, '/')
                 ? $cf->getCanonicalPath($k2)
                 : $k2;
-            $keyMap[$k2] = $k;
+            $key_map[$k2] = $k;
             $arguments[$k2] = $v;
         }
 
         // validate
-        $result = [];
+        $result = array();
         foreach ($vids as $vid) {
             // call appropriate validation functions
-            foreach ((array) $validators[$vid] as $validator) {
+            foreach ((array)$validators[$vid] as $validator) {
                 $vdef = (array) $validator;
                 $vname = array_shift($vdef);
                 $vname = 'PhpMyAdmin\Config\Validator::' . $vname;
-                $args = array_merge([$vid, &$arguments], $vdef);
+                $args = array_merge(array($vid, &$arguments), $vdef);
                 $r = call_user_func_array($vname, $args);
 
                 // merge results
-                if (! is_array($r)) {
+                if (!is_array($r)) {
                     continue;
                 }
 
-                foreach ($r as $key => $errorList) {
+                foreach ($r as $key => $error_list) {
                     // skip empty values if $isPostSource is false
-                    if (! $isPostSource && empty($errorList)) {
+                    if (! $isPostSource && empty($error_list)) {
                         continue;
                     }
                     if (! isset($result[$key])) {
-                        $result[$key] = [];
+                        $result[$key] = array();
                     }
                     $result[$key] = array_merge(
-                        $result[$key],
-                        (array) $errorList
+                        $result[$key], (array)$error_list
                     );
                 }
             }
         }
 
         // restore original paths
-        $newResult = [];
+        $new_result = array();
         foreach ($result as $k => $v) {
-            $k2 = isset($keyMap[$k]) ? $keyMap[$k] : $k;
-            if (is_array($v)) {
-                $newResult[$k2] = array_map('htmlspecialchars', $v);
-            } else {
-                $newResult[$k2] = htmlspecialchars($v);
-            }
+            $k2 = isset($key_map[$k]) ? $key_map[$k] : $k;
+            $new_result[$k2] = $v;
         }
-        return empty($newResult) ? true : $newResult;
+        return empty($new_result) ? true : $new_result;
     }
 
     /**
      * Test database connection
      *
-     * @param string $host     host name
-     * @param string $port     tcp port to use
-     * @param string $socket   socket to use
-     * @param string $user     username to use
-     * @param string $pass     password to use
-     * @param string $errorKey key to use in return array
+     * @param string $host      host name
+     * @param string $port      tcp port to use
+     * @param string $socket    socket to use
+     * @param string $user      username to use
+     * @param string $pass      password to use
+     * @param string $error_key key to use in return array
      *
      * @return bool|array
      */
@@ -193,7 +179,7 @@ class Validator
         $socket,
         $user,
         $pass = null,
-        $errorKey = 'Server'
+        $error_key = 'Server'
     ) {
         if ($GLOBALS['cfg']['DBG']['demo']) {
             // Connection test disabled on the demo server!
@@ -203,7 +189,10 @@ class Validator
         $error = null;
         $host = Core::sanitizeMySQLHost($host);
 
-        error_clear_last();
+        if (function_exists('error_clear_last')) {
+            /* PHP 7 only code */
+            error_clear_last();
+        }
 
         if (DatabaseInterface::checkDbExtension('mysqli')) {
             $socket = empty($socket) ? null : $socket;
@@ -230,13 +219,10 @@ class Validator
                 mysqli_close($conn);
             }
         }
-        if ($error !== null) {
-            $lastError = error_get_last();
-            if ($lastError !== null) {
-                $error .= ' - ' . $lastError['message'];
-            }
+        if (! is_null($error)) {
+            $error .= ' - ' . error_get_last();
         }
-        return $error === null ? true : [$errorKey => $error];
+        return is_null($error) ? true : array($error_key => $error);
     }
 
     /**
@@ -251,12 +237,12 @@ class Validator
      */
     public static function validateServer($path, array $values)
     {
-        $result = [
+        $result = array(
             'Server' => '',
             'Servers/1/user' => '',
             'Servers/1/SignonSession' => '',
-            'Servers/1/SignonURL' => '',
-        ];
+            'Servers/1/SignonURL' => ''
+        );
         $error = false;
         if (empty($values['Servers/1/auth_type'])) {
             $values['Servers/1/auth_type'] = '';
@@ -323,18 +309,18 @@ class Validator
      */
     public static function validatePMAStorage($path, array $values)
     {
-        $result = [
+        $result = array(
             'Server_pmadb' => '',
             'Servers/1/controluser' => '',
-            'Servers/1/controlpass' => '',
-        ];
+            'Servers/1/controlpass' => ''
+        );
         $error = false;
 
         if (empty($values['Servers/1/pmadb'])) {
             return $result;
         }
 
-        $result = [];
+        $result = array();
         if (empty($values['Servers/1/controluser'])) {
             $result['Servers/1/controluser'] = __(
                 'Empty phpMyAdmin control user while using phpMyAdmin configuration '
@@ -376,24 +362,33 @@ class Validator
      */
     public static function validateRegex($path, array $values)
     {
-        $result = [$path => ''];
+        $result = array($path => '');
 
         if (empty($values[$path])) {
             return $result;
         }
 
-        error_clear_last();
+        if (function_exists('error_clear_last')) {
+            /* PHP 7 only code */
+            error_clear_last();
+            $last_error = null;
+        } else {
+            // As fallback we trigger another error to ensure
+            // that preg error will be different
+            @strpos();
+            $last_error = error_get_last();
+        }
 
-        $matches = [];
+        $matches = array();
         // in libraries/ListDatabase.php _checkHideDatabase(),
         // a '/' is used as the delimiter for hide_db
         @preg_match('/' . Util::requestString($values[$path]) . '/', '', $matches);
 
-        $currentError = error_get_last();
+        $current_error = error_get_last();
 
-        if ($currentError !== null) {
-            $error = preg_replace('/^preg_match\(\): /', '', $currentError['message']);
-            return [$path => $error];
+        if ($current_error !== $last_error) {
+            $error = preg_replace('/^preg_match\(\): /', '', $current_error['message']);
+            return array($path => $error);
         }
 
         return $result;
@@ -409,7 +404,7 @@ class Validator
      */
     public static function validateTrustedProxies($path, array $values)
     {
-        $result = [$path => []];
+        $result = array($path => array());
 
         if (empty($values[$path])) {
             return $result;
@@ -417,7 +412,7 @@ class Validator
 
         if (is_array($values[$path]) || is_object($values[$path])) {
             // value already processed by FormDisplay::save
-            $lines = [];
+            $lines = array();
             foreach ($values[$path] as $ip => $v) {
                 $v = Util::requestString($v);
                 $lines[] = preg_match('/^-\d+$/', $ip)
@@ -430,9 +425,9 @@ class Validator
         }
         foreach ($lines as $line) {
             $line = trim($line);
-            $matches = [];
+            $matches = array();
             // we catch anything that may (or may not) be an IP
-            if (! preg_match("/^(.+):(?:[ ]?)\\w+$/", $line, $matches)) {
+            if (!preg_match("/^(.+):(?:[ ]?)\\w+$/", $line, $matches)) {
                 $result[$path][] = __('Incorrect value:') . ' '
                     . htmlspecialchars($line);
                 continue;
@@ -453,22 +448,22 @@ class Validator
     /**
      * Tests integer value
      *
-     * @param string $path          path to config
-     * @param array  $values        config values
-     * @param bool   $allowNegative allow negative values
-     * @param bool   $allowZero     allow zero
-     * @param int    $maxValue      max allowed value
-     * @param string $errorString   error message string
+     * @param string $path         path to config
+     * @param array  $values       config values
+     * @param bool   $allow_neg    allow negative values
+     * @param bool   $allow_zero   allow zero
+     * @param int    $max_value    max allowed value
+     * @param string $error_string error message string
      *
      * @return string  empty string if test is successful
      */
     public static function validateNumber(
         $path,
         array $values,
-        $allowNegative,
-        $allowZero,
-        $maxValue,
-        $errorString
+        $allow_neg,
+        $allow_zero,
+        $max_value,
+        $error_string
     ) {
         if (empty($values[$path])) {
             return '';
@@ -477,11 +472,11 @@ class Validator
         $value = Util::requestString($values[$path]);
 
         if (intval($value) != $value
-            || (! $allowNegative && $value < 0)
-            || (! $allowZero && $value == 0)
-            || $value > $maxValue
+            || (! $allow_neg && $value < 0)
+            || (! $allow_zero && $value == 0)
+            || $value > $max_value
         ) {
-            return $errorString;
+            return $error_string;
         }
 
         return '';
@@ -497,7 +492,7 @@ class Validator
      */
     public static function validatePortNumber($path, array $values)
     {
-        return [
+        return array(
             $path => static::validateNumber(
                 $path,
                 $values,
@@ -505,8 +500,8 @@ class Validator
                 false,
                 65535,
                 __('Not a valid port number!')
-            ),
-        ];
+            )
+        );
     }
 
     /**
@@ -519,7 +514,7 @@ class Validator
      */
     public static function validatePositiveNumber($path, array $values)
     {
-        return [
+        return array(
             $path => static::validateNumber(
                 $path,
                 $values,
@@ -527,8 +522,8 @@ class Validator
                 false,
                 PHP_INT_MAX,
                 __('Not a positive number!')
-            ),
-        ];
+            )
+        );
     }
 
     /**
@@ -541,7 +536,7 @@ class Validator
      */
     public static function validateNonNegativeNumber($path, array $values)
     {
-        return [
+        return array(
             $path => static::validateNumber(
                 $path,
                 $values,
@@ -549,8 +544,8 @@ class Validator
                 true,
                 PHP_INT_MAX,
                 __('Not a non-negative number!')
-            ),
-        ];
+            )
+        );
     }
 
     /**
@@ -561,34 +556,30 @@ class Validator
      * @param array  $values config values
      * @param string $regex  regular expression to match
      *
-     * @return array|string
+     * @return array
      */
     public static function validateByRegex($path, array $values, $regex)
     {
-        if (! isset($values[$path])) {
+        if (!isset($values[$path])) {
             return '';
         }
         $result = preg_match($regex, Util::requestString($values[$path]));
-        return [$path => $result ? '' : __('Incorrect value!')];
+        return array($path => ($result ? '' : __('Incorrect value!')));
     }
 
     /**
      * Validates upper bound for numeric inputs
      *
-     * @param string $path     path to config
-     * @param array  $values   config values
-     * @param int    $maxValue maximal allowed value
+     * @param string $path      path to config
+     * @param array  $values    config values
+     * @param int    $max_value maximal allowed value
      *
      * @return array
      */
-    public static function validateUpperBound($path, array $values, $maxValue)
+    public static function validateUpperBound($path, array $values, $max_value)
     {
-        $result = $values[$path] <= $maxValue;
-        return [
-            $path => $result ? '' : sprintf(
-                __('Value must be less than or equal to %s!'),
-                $maxValue
-            ),
-        ];
+        $result = $values[$path] <= $max_value;
+        return array($path => ($result ? ''
+            : sprintf(__('Value must be equal or lower than %s!'), $max_value)));
     }
 }

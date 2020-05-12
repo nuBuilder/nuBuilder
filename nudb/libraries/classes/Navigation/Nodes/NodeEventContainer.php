@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin-Navigation
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Navigation\Nodes;
 
 use PhpMyAdmin\Navigation\NodeFactory;
@@ -26,28 +24,26 @@ class NodeEventContainer extends NodeDatabaseChildContainer
     {
         parent::__construct(__('Events'), Node::CONTAINER);
         $this->icon = Util::getImage('b_events', '');
-        $this->links = [
+        $this->links = array(
             'text' => 'db_events.php?server=' . $GLOBALS['server']
                 . '&amp;db=%1$s',
             'icon' => 'db_events.php?server=' . $GLOBALS['server']
                 . '&amp;db=%1$s',
-        ];
-        $this->realName = 'events';
+        );
+        $this->real_name = 'events';
 
-        $newLabel = _pgettext('Create new event', 'New');
         $new = NodeFactory::getInstance(
             'Node',
-            $newLabel
+            _pgettext('Create new event', 'New')
         );
         $new->isNew = true;
         $new->icon = Util::getImage('b_event_add', '');
-        $new->title = $newLabel;
-        $new->links = [
+        $new->links = array(
             'text' => 'db_events.php?server=' . $GLOBALS['server']
                 . '&amp;db=%2$s&add_item=1',
             'icon' => 'db_events.php?server=' . $GLOBALS['server']
                 . '&amp;db=%2$s&add_item=1',
-        ];
+        );
         $new->classes = 'new_event italics';
         $this->addChild($new);
     }

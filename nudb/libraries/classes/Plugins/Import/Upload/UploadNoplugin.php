@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Plugins\Import\Upload;
 
 use PhpMyAdmin\Plugins\UploadInterface;
@@ -45,16 +43,18 @@ class UploadNoplugin implements UploadInterface
         if (trim($id) == "") {
             return null;
         }
-        if (! array_key_exists($id, $_SESSION[$SESSION_KEY])) {
-            $_SESSION[$SESSION_KEY][$id] = [
+        if (!array_key_exists($id, $_SESSION[$SESSION_KEY])) {
+            $_SESSION[$SESSION_KEY][$id] = array(
                 'id'       => $id,
                 'finished' => false,
                 'percent'  => 0,
                 'total'    => 0,
                 'complete' => 0,
                 'plugin'   => UploadNoplugin::getIdKey(),
-            ];
+            );
         }
-        return $_SESSION[$SESSION_KEY][$id];
+        $ret = $_SESSION[$SESSION_KEY][$id];
+
+        return $ret;
     }
 }

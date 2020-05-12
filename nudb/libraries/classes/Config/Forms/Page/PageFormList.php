@@ -5,22 +5,13 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Config\Forms\Page;
 
 use PhpMyAdmin\Config\Forms\BaseFormList;
 
-/**
- * Class PageFormList
- * @package PhpMyAdmin\Config\Forms\Page
- */
 class PageFormList extends BaseFormList
 {
-    /**
-     * @var array
-     */
-    protected static $all = [
+    protected static $all = array(
         'Browse',
         'DbStructure',
         'Edit',
@@ -29,9 +20,6 @@ class PageFormList extends BaseFormList
         'Navi',
         'Sql',
         'TableStructure',
-    ];
-    /**
-     * @var string
-     */
+    );
     protected static $ns = '\\PhpMyAdmin\\Config\\Forms\\Page\\';
 }

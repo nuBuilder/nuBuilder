@@ -5,16 +5,11 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
-if (! defined('ROOT_PATH')) {
-    define('ROOT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
-}
 
 /**
  * Gets core libraries and defines some variables
  */
-require_once ROOT_PATH . 'libraries/common.inc.php';
+require_once 'libraries/common.inc.php';
 $response = PhpMyAdmin\Response::getInstance();
 $response->disable();
 $response->getHeader()->sendHttpHeaders();

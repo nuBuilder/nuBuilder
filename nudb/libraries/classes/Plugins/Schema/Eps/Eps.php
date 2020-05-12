@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Plugins\Schema\Eps;
 
 use PhpMyAdmin\Core;
@@ -18,7 +16,7 @@ use PhpMyAdmin\Response;
  *
  * @package PhpMyAdmin
  * @access  public
- * @see     https://www.php.net/manual/en/book.xmlwriter.php
+ * @see     https://secure.php.net/manual/en/book.xmlwriter.php
  */
 class Eps
 {

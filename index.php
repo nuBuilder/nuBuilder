@@ -20,8 +20,6 @@
 <html id="nuhtml" onclick="nuClick(event)">
 <head>
 <title><?php echo $nuConfigTitle;?></title>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv='Content-type' content='text/html;charset=UTF-8'>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <?php
@@ -58,7 +56,6 @@ nuJSIndexInclude('nucalendar.js');
 nuJSIndexInclude('nucommon.js');
 nuJSIndexInclude('nureportjson.js');
 nuJSIndexInclude('nuajax.js');       //-- calls to server
-nuJSIndexInclude('fastclick.js');
 nuCSSIndexInclude('nubuilder4.css');
 ?>
 
@@ -231,6 +228,7 @@ window.nuHASH				= [];
 	function nuResize(){
 
 		var w = window.innerWidth;
+
 		$('#nuActionHolder').css('width', w);
 		$('#nuBreadcrumbHolder').css('width', w);
 		$('#nuTabHolder').css('width', w);

@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Plugins\Import\Upload;
 
 use PhpMyAdmin\Display\ImportAjax;
@@ -46,19 +44,19 @@ class UploadSession implements UploadInterface
             return null;
         }
 
-        if (! array_key_exists($id, $_SESSION[$SESSION_KEY])) {
-            $_SESSION[$SESSION_KEY][$id] = [
+        if (!array_key_exists($id, $_SESSION[$SESSION_KEY])) {
+            $_SESSION[$SESSION_KEY][$id] = array(
                 'id'       => $id,
                 'finished' => false,
                 'percent'  => 0,
                 'total'    => 0,
                 'complete' => 0,
                 'plugin'   => UploadSession::getIdKey(),
-            ];
+            );
         }
         $ret = $_SESSION[$SESSION_KEY][$id];
 
-        if (! ImportAjax::sessionCheck() || $ret['finished']) {
+        if (!ImportAjax::sessionCheck() || $ret['finished']) {
             return $ret;
         }
 
@@ -78,14 +76,14 @@ class UploadSession implements UploadInterface
                 $ret['percent'] = $ret['complete'] / $ret['total'] * 100;
             }
         } else {
-            $ret = [
+            $ret = array(
                 'id'       => $id,
                 'finished' => true,
                 'percent'  => 100,
                 'total'    => $ret['total'],
                 'complete' => $ret['total'],
                 'plugin'   => UploadSession::getIdKey(),
-            ];
+            );
         }
 
         $_SESSION[$SESSION_KEY][$id] = $ret;

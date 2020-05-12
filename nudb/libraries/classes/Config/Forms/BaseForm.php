@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Config\Forms;
 
 use PhpMyAdmin\Config\ConfigFile;
@@ -14,22 +12,20 @@ use PhpMyAdmin\Config\FormDisplay;
 
 /**
  * Base form for user preferences
- *
- * @package PhpMyAdmin
  */
 abstract class BaseForm extends FormDisplay
 {
     /**
      * Constructor
      *
-     * @param ConfigFile $cf       Config file instance
-     * @param int|null   $serverId 0 if new server, validation; >= 1 if editing a server
+     * @param ConfigFile $cf        Config file instance
+     * @param int|null   $server_id 0 if new server, validation; >= 1 if editing a server
      */
-    public function __construct(ConfigFile $cf, $serverId = null)
+    public function __construct(ConfigFile $cf, $server_id = null)
     {
         parent::__construct($cf);
-        foreach (static::getForms() as $formName => $form) {
-            $this->registerForm($formName, $form, $serverId);
+        foreach (static::getForms() as $form_name => $form) {
+            $this->registerForm($form_name, $form, $server_id);
         }
     }
 
@@ -56,7 +52,7 @@ abstract class BaseForm extends FormDisplay
      */
     public static function getForms()
     {
-        return [];
+        return array();
     }
 
     /**

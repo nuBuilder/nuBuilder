@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Plugins\Schema\Dia;
 
 /**
@@ -40,20 +38,16 @@ class RelationStatsDia
     /**
      * The "PhpMyAdmin\Plugins\Schema\Dia\RelationStatsDia" constructor
      *
-     * @param Dia           $diagram       The DIA diagram
-     * @param TableStatsDia $master_table  The master table name
-     * @param string        $master_field  The relation field in the master table
-     * @param TableStatsDia $foreign_table The foreign table name
-     * @param string        $foreign_field The relation field in the foreign table
+     * @param object $diagram       The DIA diagram
+     * @param string $master_table  The master table name
+     * @param string $master_field  The relation field in the master table
+     * @param string $foreign_table The foreign table name
+     * @param string $foreign_field The relation field in the foreign table
      *
      * @see Relation_Stats_Dia::_getXy
      */
     public function __construct(
-        $diagram,
-        $master_table,
-        $master_field,
-        $foreign_table,
-        $foreign_field
+        $diagram, $master_table, $master_field, $foreign_table, $foreign_field
     ) {
         $this->diagram = $diagram;
         $src_pos  = $this->_getXy($master_table, $master_field);
@@ -75,8 +69,8 @@ class RelationStatsDia
      * then determines its left and right connection
      * points.
      *
-     * @param TableStatsDia $table  The current table name
-     * @param string        $column The relation column name
+     * @param string $table  The current table name
+     * @param string $column The relation column name
      *
      * @return array Table right,left connection points and key position
      *
@@ -88,17 +82,9 @@ class RelationStatsDia
         // left, right, position
         $value = 12;
         if ($pos != 0) {
-            return [
-                $pos + $value + $pos,
-                $pos + $value + $pos + 1,
-                $pos,
-            ];
+            return array($pos + $value + $pos, $pos + $value + $pos + 1, $pos);
         }
-        return [
-            $pos + $value,
-            $pos + $value + 1,
-            $pos,
-        ];
+        return array($pos + $value , $pos + $value + 1, $pos);
     }
 
     /**
@@ -136,11 +122,11 @@ class RelationStatsDia
         }
 
         if ($showColor) {
-            $listOfColors = [
+            $listOfColors = array(
                 'FF0000',
                 '000099',
                 '00FF00',
-            ];
+            );
             shuffle($listOfColors);
             $this->referenceColor = '#' . $listOfColors[0] . '';
         } else {

@@ -5,44 +5,42 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
-use PhpMyAdmin\Controllers\Database\SqlController;
-use PhpMyAdmin\DatabaseInterface;
+use PhpMyAdmin\Config\PageSettings;
 use PhpMyAdmin\Response;
 use PhpMyAdmin\SqlQueryForm;
 
-if (! defined('ROOT_PATH')) {
-    define('ROOT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
-}
+/**
+ *
+ */
+require_once 'libraries/common.inc.php';
 
-global $containerBuilder;
+PageSettings::showGroup('Sql');
 
-require_once ROOT_PATH . 'libraries/common.inc.php';
-
-/** @var Response $response */
-$response = $containerBuilder->get(Response::class);
-
-/** @var DatabaseInterface $dbi */
-$dbi = $containerBuilder->get(DatabaseInterface::class);
-
-/** @var SqlController $controller */
-$controller = $containerBuilder->get(SqlController::class);
-
-/** @var SqlQueryForm $sqlQueryForm */
-$sqlQueryForm = $containerBuilder->get('sql_query_form');
-
-$header = $response->getHeader();
-$scripts = $header->getScripts();
+/**
+ * Runs common work
+ */
+$response = Response::getInstance();
+$header   = $response->getHeader();
+$scripts  = $header->getScripts();
 $scripts->addFile('makegrid.js');
 $scripts->addFile('vendor/jquery/jquery.uitablefilter.js');
 $scripts->addFile('sql.js');
 
+require 'libraries/db_common.inc.php';
+
+// After a syntax error, we return to this script
+// with the typed query in the textarea.
+$goto = 'db_sql.php';
+$back = 'db_sql.php';
+
+/**
+ * Query box, bookmark, insert data from textfile
+ */
 $response->addHTML(
-    $controller->index(
-        [
-            'delimiter' => $_POST['delimiter'] ?? null,
-        ],
-        $sqlQueryForm
+    SqlQueryForm::getHtml(
+        true, false,
+        isset($_REQUEST['delimiter'])
+        ? htmlspecialchars($_REQUEST['delimiter'])
+        : ';'
     )
 );

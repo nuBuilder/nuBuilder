@@ -6,8 +6,6 @@
  * @package    PhpMyAdmin-Transformations
  * @subpackage Hex
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Plugins\Transformations\Output;
 
 use PhpMyAdmin\Plugins\Transformations\Abs\HexTransformationsPlugin;

@@ -6,42 +6,31 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
 
-use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Display\ChangePassword;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\Response;
 use PhpMyAdmin\UserPassword;
 
-if (! defined('ROOT_PATH')) {
-    define('ROOT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
-}
+/**
+ * Gets some core libraries
+ */
+require_once './libraries/common.inc.php';
 
-global $cfg;
-
-require_once ROOT_PATH . 'libraries/common.inc.php';
-
-/** @var Response $response */
-$response = $containerBuilder->get(Response::class);
-
-/** @var DatabaseInterface $dbi */
-$dbi = $containerBuilder->get(DatabaseInterface::class);
-
-$header = $response->getHeader();
-$scripts = $header->getScripts();
-$scripts->addFile('server/privileges.js');
+$response = Response::getInstance();
+$header   = $response->getHeader();
+$scripts  = $header->getScripts();
+$scripts->addFile('server_privileges.js');
 $scripts->addFile('vendor/zxcvbn.js');
 
-/** @var UserPassword $userPassword */
-$userPassword = $containerBuilder->get('user_password');
+$userPassword = new UserPassword();
 
 /**
  * Displays an error message and exits if the user isn't allowed to use this
  * script
  */
-if (! $cfg['ShowChgPassword']) {
-    $cfg['ShowChgPassword'] = $dbi->selectDb('mysql');
+if (! $GLOBALS['cfg']['ShowChgPassword']) {
+    $GLOBALS['cfg']['ShowChgPassword'] = $GLOBALS['dbi']->selectDb('mysql');
 }
 if ($cfg['Server']['auth_type'] == 'config' || ! $cfg['ShowChgPassword']) {
     Message::error(
@@ -54,11 +43,11 @@ if ($cfg['Server']['auth_type'] == 'config' || ! $cfg['ShowChgPassword']) {
  * If the "change password" form has been submitted, checks for valid values
  * and submit the query or logout
  */
-if (isset($_POST['nopass'])) {
-    if ($_POST['nopass'] == '1') {
+if (isset($_REQUEST['nopass'])) {
+    if ($_REQUEST['nopass'] == '1') {
         $password = '';
     } else {
-        $password = $_POST['pma_pw'];
+        $password = $_REQUEST['pma_pw'];
     }
     $change_password_message = $userPassword->setChangePasswordMsg();
     $msg = $change_password_message['msg'];

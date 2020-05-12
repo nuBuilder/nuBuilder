@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin-Engines
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Engines;
 
 use PhpMyAdmin\StorageEngine;
@@ -25,31 +23,31 @@ class Bdb extends StorageEngine
      */
     public function getVariables()
     {
-        return [
-            'version_bdb'         => [
+        return array(
+            'version_bdb'         => array(
                 'title' => __('Version information'),
-            ],
-            'bdb_cache_size'      => [
+            ),
+            'bdb_cache_size'      => array(
                 'type' => PMA_ENGINE_DETAILS_TYPE_SIZE,
-            ],
-            'bdb_home'            => [],
-            'bdb_log_buffer_size' => [
+            ),
+            'bdb_home'            => array(),
+            'bdb_log_buffer_size' => array(
                 'type' => PMA_ENGINE_DETAILS_TYPE_SIZE,
-            ],
-            'bdb_logdir'          => [],
-            'bdb_max_lock'        => [
+            ),
+            'bdb_logdir'          => array(),
+            'bdb_max_lock'        => array(
                 'type' => PMA_ENGINE_DETAILS_TYPE_NUMERIC,
-            ],
-            'bdb_shared_data'     => [],
-            'bdb_tmpdir'          => [],
-            'bdb_data_direct'     => [],
-            'bdb_lock_detect'     => [],
-            'bdb_log_direct'      => [],
-            'bdb_no_recover'      => [],
-            'bdb_no_sync'         => [],
-            'skip_sync_bdb_logs'  => [],
-            'sync_bdb_logs'       => [],
-        ];
+            ),
+            'bdb_shared_data'     => array(),
+            'bdb_tmpdir'          => array(),
+            'bdb_data_direct'     => array(),
+            'bdb_lock_detect'     => array(),
+            'bdb_log_direct'      => array(),
+            'bdb_no_recover'      => array(),
+            'bdb_no_sync'         => array(),
+            'skip_sync_bdb_logs'  => array(),
+            'sync_bdb_logs'       => array(),
+        );
     }
 
     /**
@@ -74,3 +72,4 @@ class Bdb extends StorageEngine
         return 'bdb';
     }
 }
+

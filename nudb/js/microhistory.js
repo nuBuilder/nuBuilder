@@ -1,13 +1,10 @@
 /* vim: set expandtab sw=4 ts=4 sts=4: */
-
-/* global GotoWhitelist */ // js/whitelist.php
-
 /**
  * An implementation of a client-side page cache.
  * This object also uses the cache to provide a simple microhistory,
  * that is the ability to use the back and forward buttons in the browser
  */
-var MicroHistory = {
+PMA_MicroHistory = {
     /**
      * @var int The maximum number of pages to keep in the cache
      */
@@ -34,7 +31,7 @@ var MicroHistory = {
      * @param array  scripts A list of scripts that is required for the page
      * @param string menu    A hash that links to a menu stored
      *                       in a dedicated menu cache
-     * @param array  params  A list of parameters used by CommonParams()
+     * @param array  params  A list of parameters used by PMA_commonParams()
      * @param string rel     A relationship to the current page:
      *                       'samepage': Forces the response to be treated as
      *                                   the same page as the current one
@@ -47,7 +44,7 @@ var MicroHistory = {
      * @return void
      */
     add: function (hash, scripts, menu, params, rel) {
-        if (this.pages.length > MicroHistory.MAX) {
+        if (this.pages.length > PMA_MicroHistory.MAX) {
             // Trim the cache, to the maximum number of allowed entries
             // This way we will have a cached menu for every page
             for (var i = 0; i < this.pages.length - this.MAX; i++) {
@@ -75,7 +72,7 @@ var MicroHistory = {
                 menu: menu,
                 params: params
             });
-            MicroHistory.setUrlHash(this.current, hash);
+            PMA_SetUrlHash(this.current, hash);
             this.current++;
         }
     },
@@ -88,26 +85,25 @@ var MicroHistory = {
      * @return void
      */
     navigate: function (index) {
-        var localIndex = index;
-        if (typeof this.pages[localIndex] === 'undefined' ||
-            typeof this.pages[localIndex].content === 'undefined' ||
-            typeof this.pages[localIndex].menu === 'undefined' ||
-            ! MicroHistory.menus.get(this.pages[localIndex].menu)
+        if (typeof this.pages[index] === 'undefined' ||
+            typeof this.pages[index].content === 'undefined' ||
+            typeof this.pages[index].menu === 'undefined' ||
+            ! PMA_MicroHistory.menus.get(this.pages[index].menu)
         ) {
-            Functions.ajaxShowMessage(
-                '<div class="error">' + Messages.strInvalidPage + '</div>',
+            PMA_ajaxShowMessage(
+                '<div class="error">' + PMA_messages.strInvalidPage + '</div>',
                 false
             );
         } else {
             AJAX.active = true;
-            var record = this.pages[localIndex];
+            var record = this.pages[index];
             AJAX.scriptHandler.reset(function () {
                 $('#page_content').html(record.content);
                 $('#selflink').html(record.selflink);
-                MicroHistory.menus.replace(MicroHistory.menus.get(record.menu));
-                CommonParams.setAll(record.params);
+                PMA_MicroHistory.menus.replace(PMA_MicroHistory.menus.get(record.menu));
+                PMA_commonParams.setAll(record.params);
                 AJAX.scriptHandler.load(record.scripts);
-                MicroHistory.current = ++localIndex;
+                PMA_MicroHistory.current = ++index;
             });
         }
     },
@@ -155,7 +151,7 @@ var MicroHistory = {
          * @return void
          */
         add: function (hash, content) {
-            if (this.size(this.data) > MicroHistory.MAX) {
+            if (this.size(this.data) > PMA_MicroHistory.MAX) {
                 // when the cache grows, we remove the oldest entry
                 var oldest;
                 var key;
@@ -206,7 +202,7 @@ var MicroHistory = {
             }
             var menuHashesParam = menuHashes.join('-');
             if (menuHashesParam) {
-                param = CommonParams.get('arg_separator') + 'menuHashes=' + menuHashesParam;
+                param = PMA_commonParams.get('arg_separator') + 'menuHashes=' + menuHashesParam;
             }
             return param;
         },
@@ -220,7 +216,7 @@ var MicroHistory = {
                 // Remove duplicate wrapper
                 // TODO: don't send it in the response
                 .children().first().remove();
-            $('#topmenu').menuResizer(Functions.mainMenuResizerCallback);
+            $('#topmenu').menuResizer(PMA_mainMenuResizerCallback);
         }
     }
 };
@@ -229,7 +225,7 @@ var MicroHistory = {
  * URL hash management module.
  * Allows direct bookmarking and microhistory.
  */
-MicroHistory.setUrlHash = (function (jQuery, window) {
+PMA_SetUrlHash = (function (jQuery, window) {
     'use strict';
     /**
      * Indictaes whether we have already completed
@@ -287,17 +283,17 @@ MicroHistory.setUrlHash = (function (jQuery, window) {
     /**
      * Start initialisation
      */
-    var urlHash = window.location.hash;
-    if (urlHash.substring(0, 8) === '#PMAURL-') {
+    var urlhash = window.location.hash;
+    if (urlhash.substring(0, 8) === '#PMAURL-') {
         // We have a valid hash, let's redirect the user
         // to the page that it's pointing to
-        var colonPosition = urlHash.indexOf(':');
-        var questionMarkPosition = urlHash.indexOf('?');
-        if (colonPosition !== -1 && questionMarkPosition !== -1 && colonPosition < questionMarkPosition) {
-            var hashUrl = urlHash.substring(colonPosition + 1, questionMarkPosition);
-            if (GotoWhitelist.indexOf(hashUrl) !== -1) {
-                window.location = urlHash.substring(
-                    colonPosition + 1
+        var colon_position = urlhash.indexOf(':');
+        var questionmark_position = urlhash.indexOf('?');
+        if (colon_position !== -1 && questionmark_position !== -1 && colon_position < questionmark_position) {
+            var hash_url = urlhash.substring(colon_position + 1, questionmark_position);
+            if (PMA_gotoWhitelist.indexOf(hash_url) !== -1) {
+                window.location = urlhash.substring(
+                    colon_position + 1
                 );
             }
         }
@@ -328,7 +324,7 @@ MicroHistory.setUrlHash = (function (jQuery, window) {
                 var index = window.location.hash.substring(
                     8, window.location.hash.indexOf(':')
                 );
-                MicroHistory.navigate(index);
+                PMA_MicroHistory.navigate(index);
             }
         });
     });

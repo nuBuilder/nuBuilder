@@ -5,54 +5,31 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Config\Forms;
 
 use PhpMyAdmin\Config\ConfigFile;
 
-/**
- * Class BaseFormList
- * @package PhpMyAdmin\Config\Forms
- */
 class BaseFormList
 {
     /**
      * List of all forms
      */
-    protected static $all = [];
+    protected static $all = array();
 
-    /**
-     * @var string
-     */
     protected static $ns = 'PhpMyAdmin\\Config\\Forms\\';
 
-    /**
-     * @var array
-     */
     private $_forms;
 
-    /**
-     * @return array
-     */
     public static function getAll()
     {
         return static::$all;
     }
 
-    /**
-     * @param string $name Name
-     * @return bool
-     */
     public static function isValid($name)
     {
         return in_array($name, static::$all);
     }
 
-    /**
-     * @param string $name Name
-     * @return null|string
-     */
     public static function get($name)
     {
         if (static::isValid($name)) {
@@ -68,7 +45,7 @@ class BaseFormList
      */
     public function __construct(ConfigFile $cf)
     {
-        $this->_forms = [];
+        $this->_forms = array();
         foreach (static::$all as $form) {
             $class = static::get($form);
             $this->_forms[] = new $class($cf);
@@ -78,17 +55,17 @@ class BaseFormList
     /**
      * Processes forms, returns true on successful save
      *
-     * @param bool $allowPartialSave allows for partial form saving
-     *                               on failed validation
-     * @param bool $checkFormSubmit  whether check for $_POST['submit_save']
+     * @param bool $allow_partial_save allows for partial form saving
+     *                                 on failed validation
+     * @param bool $check_form_submit  whether check for $_POST['submit_save']
      *
      * @return boolean whether processing was successful
      */
-    public function process($allowPartialSave = true, $checkFormSubmit = true)
+    public function process($allow_partial_save = true, $check_form_submit = true)
     {
         $ret = true;
         foreach ($this->_forms as $form) {
-            $ret = $ret && $form->process($allowPartialSave, $checkFormSubmit);
+            $ret = $ret && $form->process($allow_partial_save, $check_form_submit);
         }
         return $ret;
     }

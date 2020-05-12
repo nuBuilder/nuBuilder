@@ -5,41 +5,28 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
-use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Relation;
 use PhpMyAdmin\Response;
 use PhpMyAdmin\Server\UserGroups;
 use PhpMyAdmin\Server\Users;
 
-if (! defined('ROOT_PATH')) {
-    define('ROOT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
-}
+require_once 'libraries/common.inc.php';
 
-require_once ROOT_PATH . 'libraries/common.inc.php';
-
-/** @var Response $response */
-$response = $containerBuilder->get(Response::class);
-
-/** @var DatabaseInterface $dbi */
-$dbi = $containerBuilder->get(DatabaseInterface::class);
-
-/** @var Relation $relation */
-$relation = $containerBuilder->get('relation');
-$cfgRelation = $relation->getRelationsParam();
-if (! $cfgRelation['menuswork']) {
+$relation = new Relation();
+$relation->getRelationsParam();
+if (! $GLOBALS['cfgRelation']['menuswork']) {
     exit;
 }
 
-$header = $response->getHeader();
-$scripts = $header->getScripts();
-$scripts->addFile('server/user_groups.js');
+$response = Response::getInstance();
+$header   = $response->getHeader();
+$scripts  = $header->getScripts();
+$scripts->addFile('server_user_groups.js');
 
 /**
  * Only allowed to superuser
  */
-if (! $dbi->isSuperuser()) {
+if (! $GLOBALS['dbi']->isSuperuser()) {
     $response->addHTML(
         PhpMyAdmin\Message::error(__('No Privileges'))
             ->getDisplay()
@@ -53,35 +40,35 @@ $response->addHTML(Users::getHtmlForSubMenusOnUsersPage('server_user_groups.php'
 /**
  * Delete user group
  */
-if (! empty($_POST['deleteUserGroup'])) {
-    UserGroups::delete($_POST['userGroup']);
+if (! empty($_REQUEST['deleteUserGroup'])) {
+    UserGroups::delete($_REQUEST['userGroup']);
 }
 
 /**
  * Add a new user group
  */
-if (! empty($_POST['addUserGroupSubmit'])) {
-    UserGroups::edit($_POST['userGroup'], true);
+if (! empty($_REQUEST['addUserGroupSubmit'])) {
+    UserGroups::edit($_REQUEST['userGroup'], true);
 }
 
 /**
  * Update a user group
  */
-if (! empty($_POST['editUserGroupSubmit'])) {
-    UserGroups::edit($_POST['userGroup']);
+if (! empty($_REQUEST['editUserGroupSubmit'])) {
+    UserGroups::edit($_REQUEST['userGroup']);
 }
 
-if (isset($_POST['viewUsers'])) {
+if (isset($_REQUEST['viewUsers'])) {
     // Display users belonging to a user group
-    $response->addHTML(UserGroups::getHtmlForListingUsersofAGroup($_POST['userGroup']));
+    $response->addHTML(UserGroups::getHtmlForListingUsersofAGroup($_REQUEST['userGroup']));
 }
 
-if (isset($_GET['addUserGroup'])) {
+if (isset($_REQUEST['addUserGroup'])) {
     // Display add user group dialog
     $response->addHTML(UserGroups::getHtmlToEditUserGroup());
-} elseif (isset($_POST['editUserGroup'])) {
+} elseif (isset($_REQUEST['editUserGroup'])) {
     // Display edit user group dialog
-    $response->addHTML(UserGroups::getHtmlToEditUserGroup($_POST['userGroup']));
+    $response->addHTML(UserGroups::getHtmlToEditUserGroup($_REQUEST['userGroup']));
 } else {
     // Display user groups table
     $response->addHTML(UserGroups::getHtmlForUserGroupsTable());

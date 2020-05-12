@@ -5,75 +5,49 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
 
 use PhpMyAdmin\Core;
-use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Mime;
 use PhpMyAdmin\Response;
 
-if (! defined('ROOT_PATH')) {
-    define('ROOT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
-}
+/**
+ * Common functions.
+ */
+require_once 'libraries/common.inc.php';
 
-require_once ROOT_PATH . 'libraries/common.inc.php';
-
-/** @var Response $response */
-$response = $containerBuilder->get(Response::class);
-
-/** @var DatabaseInterface $dbi */
-$dbi = $containerBuilder->get(DatabaseInterface::class);
-
-/** @var string $db */
-$db = $containerBuilder->getParameter('db');
-
-/** @var string $table */
-$table = $containerBuilder->getParameter('table');
-
+// we don't want the usual PhpMyAdmin\Response-generated HTML above the column's
+// data
+$response = Response::getInstance();
 $response->disable();
 
 /* Check parameters */
 PhpMyAdmin\Util::checkParameters(
-    [
-        'db',
-        'table',
-    ]
+    array('db', 'table')
 );
 
 /* Select database */
-if (! $dbi->selectDb($db)) {
+if (!$GLOBALS['dbi']->selectDb($db)) {
     PhpMyAdmin\Util::mysqlDie(
         sprintf(__('\'%s\' database does not exist.'), htmlspecialchars($db)),
-        '',
-        false
+        '', false
     );
 }
 
 /* Check if table exists */
-if (! $dbi->getColumns($db, $table)) {
+if (!$GLOBALS['dbi']->getColumns($db, $table)) {
     PhpMyAdmin\Util::mysqlDie(__('Invalid table name'));
-}
-
-if (! isset($_GET['where_clause'])
-    || ! isset($_GET['where_clause_sign'])
-    || ! Core::checkSqlQuerySignature($_GET['where_clause'], $_GET['where_clause_sign'])
-) {
-/* l10n: In case a SQL query did not pass a security check  */
-    Core::fatalError(__('There is an issue with your request.'));
-    exit;
 }
 
 /* Grab data */
 $sql = 'SELECT ' . PhpMyAdmin\Util::backquote($_GET['transform_key'])
     . ' FROM ' . PhpMyAdmin\Util::backquote($table)
     . ' WHERE ' . $_GET['where_clause'] . ';';
-$result = $dbi->fetchValue($sql);
+$result = $GLOBALS['dbi']->fetchValue($sql);
 
 /* Check return code */
 if ($result === false) {
     PhpMyAdmin\Util::mysqlDie(
-        __('MySQL returned an empty result set (i.e. zero rows).'),
-        $sql
+        __('MySQL returned an empty result set (i.e. zero rows).'), $sql
     );
 }
 
@@ -81,7 +55,7 @@ if ($result === false) {
 ini_set('url_rewriter.tags', '');
 
 Core::downloadHeader(
-    $table . '-' . $_GET['transform_key'] . '.bin',
+    $table . '-' .  $_GET['transform_key'] . '.bin',
     Mime::detect($result),
     strlen($result)
 );

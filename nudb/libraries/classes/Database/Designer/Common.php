@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin-Designer
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Database\Designer;
 
 use PhpMyAdmin\DatabaseInterface;
@@ -14,8 +12,6 @@ use PhpMyAdmin\Index;
 use PhpMyAdmin\Relation;
 use PhpMyAdmin\Table;
 use PhpMyAdmin\Util;
-use function rawurlencode;
-use PhpMyAdmin\Database\Designer\DesignerTable;
 
 /**
  * Common functions for Designer
@@ -25,170 +21,173 @@ use PhpMyAdmin\Database\Designer\DesignerTable;
 class Common
 {
     /**
-     * @var Relation
+     * @var Relation $relation
      */
     private $relation;
 
     /**
-     * @var DatabaseInterface
+     * Constructor
      */
-    private $dbi;
-
-    /**
-     * Common constructor.
-     *
-     * @param DatabaseInterface $dbi      DatabaseInterface object
-     * @param Relation          $relation Relation instance
-     */
-    public function __construct(DatabaseInterface $dbi, Relation $relation)
+    public function __construct()
     {
-        $this->dbi = $dbi;
-        $this->relation = $relation;
+        $this->relation = new Relation();
     }
 
     /**
-     * Retrieves table info and returns it
+     * Retrieves table info and stores it in $GLOBALS['designer']
      *
-     * @param string $db    (optional) Filter only a DB ($table is required if you use $db)
-     * @param string $table (optional) Filter only a table ($db is now required)
-     * @return DesignerTable[] with table info
+     * @return array with table info
      */
-    public function getTablesInfo(string $db = null, string $table = null): array
+    public function getTablesInfo()
     {
-        $designerTables = [];
-        $db = ($db === null) ? $GLOBALS['db'] : $db;
+        $retval = array();
+
+        $GLOBALS['designer']['TABLE_NAME'] = array();// that foreach no error
+        $GLOBALS['designer']['OWNER'] = array();
+        $GLOBALS['designer']['TABLE_NAME_SMALL'] = array();
+
+        $tables = $GLOBALS['dbi']->getTablesFull($GLOBALS['db']);
         // seems to be needed later
-        $this->dbi->selectDb($db);
-        if ($db === null && $table === null) {
-            $tables = $this->dbi->getTablesFull($db);
-        } else {
-            $tables = $this->dbi->getTablesFull($db, $table);
-        }
-
+        $GLOBALS['dbi']->selectDb($GLOBALS['db']);
+        $i = 0;
         foreach ($tables as $one_table) {
-            $DF = $this->relation->getDisplayField($db, $one_table['TABLE_NAME']);
-            $DF = is_string($DF) ? $DF : '';
-            $DF = ($DF !== '') ? $DF : null;
-            $designerTables[] = new DesignerTable(
-                $db,
-                $one_table['TABLE_NAME'],
-                is_string($one_table['ENGINE']) ? $one_table['ENGINE'] : '',
-                $DF
+            $GLOBALS['designer']['TABLE_NAME'][$i]
+                = $GLOBALS['db'] . "." . $one_table['TABLE_NAME'];
+            $GLOBALS['designer']['OWNER'][$i] = $GLOBALS['db'];
+            $GLOBALS['designer']['TABLE_NAME_SMALL'][$i] = htmlspecialchars(
+                $one_table['TABLE_NAME'], ENT_QUOTES
             );
+
+            $GLOBALS['designer_url']['TABLE_NAME'][$i]
+                = $GLOBALS['db'] . "." . $one_table['TABLE_NAME'];
+            $GLOBALS['designer_url']['OWNER'][$i] = $GLOBALS['db'];
+            $GLOBALS['designer_url']['TABLE_NAME_SMALL'][$i]
+                = $one_table['TABLE_NAME'];
+
+            $GLOBALS['designer_out']['TABLE_NAME'][$i] = htmlspecialchars(
+                $GLOBALS['db'] . "." . $one_table['TABLE_NAME'], ENT_QUOTES
+            );
+            $GLOBALS['designer_out']['OWNER'][$i] = htmlspecialchars(
+                $GLOBALS['db'], ENT_QUOTES
+            );
+            $GLOBALS['designer_out']['TABLE_NAME_SMALL'][$i] = htmlspecialchars(
+                $one_table['TABLE_NAME'], ENT_QUOTES
+            );
+
+            $GLOBALS['designer']['TABLE_TYPE'][$i] = mb_strtoupper(
+                $one_table['ENGINE']
+            );
+
+            $DF = $this->relation->getDisplayField($GLOBALS['db'], $one_table['TABLE_NAME']);
+            if ($DF != '') {
+                $retval[$GLOBALS['designer_url']["TABLE_NAME_SMALL"][$i]] = $DF;
+            }
+
+            $i++;
         }
 
-        return $designerTables;
+        return $retval;
     }
 
     /**
      * Retrieves table column info
      *
-     * @param DesignerTable[] $designerTables The designer tables
-     * @return array table column nfo
+     * @return array   table column nfo
      */
-    public function getColumnsInfo(array $designerTables): array
+    public function getColumnsInfo()
     {
-        //$this->dbi->selectDb($GLOBALS['db']);
-        $tabColumn = [];
-
-        foreach ($designerTables as $designerTable) {
-            $fieldsRs = $this->dbi->query(
-                $this->dbi->getColumnsSql(
-                    $designerTable->getDatabaseName(),
-                    $designerTable->getTableName(),
+        $GLOBALS['dbi']->selectDb($GLOBALS['db']);
+        $tab_column = array();
+        for ($i = 0, $cnt = count($GLOBALS['designer']["TABLE_NAME"]); $i < $cnt; $i++) {
+            $fields_rs = $GLOBALS['dbi']->query(
+                $GLOBALS['dbi']->getColumnsSql(
+                    $GLOBALS['db'],
+                    $GLOBALS['designer_url']["TABLE_NAME_SMALL"][$i],
                     null,
                     true
                 ),
                 DatabaseInterface::CONNECT_USER,
                 DatabaseInterface::QUERY_STORE
             );
+            $tbl_name_i = $GLOBALS['designer']['TABLE_NAME'][$i];
             $j = 0;
-            while ($row = $this->dbi->fetchAssoc($fieldsRs)) {
-                if (! isset($tabColumn[$designerTable->getDbTableString()])) {
-                    $tabColumn[$designerTable->getDbTableString()] = [];
-                }
-                $tabColumn[$designerTable->getDbTableString()]['COLUMN_ID'][$j]   = $j;
-                $tabColumn[$designerTable->getDbTableString()]['COLUMN_NAME'][$j] = $row['Field'];
-                $tabColumn[$designerTable->getDbTableString()]['TYPE'][$j]        = $row['Type'];
-                $tabColumn[$designerTable->getDbTableString()]['NULLABLE'][$j]    = $row['Null'];
+            while ($row = $GLOBALS['dbi']->fetchAssoc($fields_rs)) {
+                $tab_column[$tbl_name_i]['COLUMN_ID'][$j]   = $j;
+                $tab_column[$tbl_name_i]['COLUMN_NAME'][$j] = $row['Field'];
+                $tab_column[$tbl_name_i]['TYPE'][$j]        = $row['Type'];
+                $tab_column[$tbl_name_i]['NULLABLE'][$j]    = $row['Null'];
                 $j++;
             }
         }
-
-        return $tabColumn;
+        return $tab_column;
     }
 
     /**
      * Returns JavaScript code for initializing vars
      *
-     * @param DesignerTable[] $designerTables The designer tables
-     * @return array JavaScript code
+     * @return string   JavaScript code
      */
-    public function getScriptContr(array $designerTables): array
+    public function getScriptContr()
     {
-        $this->dbi->selectDb($GLOBALS['db']);
-        $con = [];
-        $con["C_NAME"] = [];
+        $GLOBALS['dbi']->selectDb($GLOBALS['db']);
+        $con = array();
+        $con["C_NAME"] = array();
         $i = 0;
-        $alltab_rs = $this->dbi->query(
+        $alltab_rs = $GLOBALS['dbi']->query(
             'SHOW TABLES FROM ' . Util::backquote($GLOBALS['db']),
             DatabaseInterface::CONNECT_USER,
             DatabaseInterface::QUERY_STORE
         );
-        while ($val = @$this->dbi->fetchRow($alltab_rs)) {
+        while ($val = @$GLOBALS['dbi']->fetchRow($alltab_rs)) {
             $row = $this->relation->getForeigners($GLOBALS['db'], $val[0], '', 'internal');
 
             if ($row !== false) {
                 foreach ($row as $field => $value) {
                     $con['C_NAME'][$i] = '';
-                    $con['DTN'][$i]    = rawurlencode($GLOBALS['db'] . "." . $val[0]);
-                    $con['DCN'][$i]    = rawurlencode($field);
-                    $con['STN'][$i]    = rawurlencode(
+                    $con['DTN'][$i]    = urlencode($GLOBALS['db'] . "." . $val[0]);
+                    $con['DCN'][$i]    = urlencode($field);
+                    $con['STN'][$i]    = urlencode(
                         $value['foreign_db'] . "." . $value['foreign_table']
                     );
-                    $con['SCN'][$i]    = rawurlencode($value['foreign_field']);
+                    $con['SCN'][$i]    = urlencode($value['foreign_field']);
                     $i++;
                 }
             }
             $row = $this->relation->getForeigners($GLOBALS['db'], $val[0], '', 'foreign');
 
-            // We do not have access to the foreign keys if he user has partial access to the columns
-            if ($row !== false && isset($row['foreign_keys_data'])) {
+            if ($row !== false) {
                 foreach ($row['foreign_keys_data'] as $one_key) {
                     foreach ($one_key['index_list'] as $index => $one_field) {
-                        $con['C_NAME'][$i] = rawurlencode($one_key['constraint']);
-                        $con['DTN'][$i]    = rawurlencode($GLOBALS['db'] . "." . $val[0]);
-                        $con['DCN'][$i]    = rawurlencode($one_field);
-                        $con['STN'][$i]    = rawurlencode(
+                        $con['C_NAME'][$i] = $one_key['constraint'];
+                        $con['DTN'][$i]    = urlencode($GLOBALS['db'] . "." . $val[0]);
+                        $con['DCN'][$i]    = urlencode($one_field);
+                        $con['STN'][$i]    = urlencode(
                             (isset($one_key['ref_db_name']) ?
                                 $one_key['ref_db_name'] : $GLOBALS['db'])
                             . "." . $one_key['ref_table_name']
                         );
-                        $con['SCN'][$i] = rawurlencode($one_key['ref_index_list'][$index]);
+                        $con['SCN'][$i] = urlencode($one_key['ref_index_list'][$index]);
                         $i++;
                     }
                 }
             }
         }
 
-        $tableDbNames = [];
-        foreach ($designerTables as $designerTable) {
-            $tableDbNames[] = $designerTable->getDbTableString();
-        }
-
         $ti = 0;
-        $retval = [];
+        $retval = array();
         for ($i = 0, $cnt = count($con["C_NAME"]); $i < $cnt; $i++) {
             $c_name_i = $con['C_NAME'][$i];
             $dtn_i = $con['DTN'][$i];
-            $retval[$ti] = [];
-            $retval[$ti][$c_name_i] = [];
-            if (in_array($dtn_i, $tableDbNames) && in_array($con['STN'][$i], $tableDbNames)) {
-                $retval[$ti][$c_name_i][$dtn_i] = [];
-                $retval[$ti][$c_name_i][$dtn_i][$con['DCN'][$i]] = [
+            $retval[$ti] = array();
+            $retval[$ti][$c_name_i] = array();
+            if (in_array($dtn_i, $GLOBALS['designer_url']["TABLE_NAME"])
+                && in_array($con['STN'][$i], $GLOBALS['designer_url']["TABLE_NAME"])
+            ) {
+                $retval[$ti][$c_name_i][$dtn_i] = array();
+                $retval[$ti][$c_name_i][$dtn_i][$con['DCN'][$i]] = array(
                     0 => $con['STN'][$i],
-                    1 => $con['SCN'][$i],
-                ];
+                    1 => $con['SCN'][$i]
+                );
             }
             $ti++;
         }
@@ -198,36 +197,34 @@ class Common
     /**
      * Returns UNIQUE and PRIMARY indices
      *
-     * @param DesignerTable[] $designerTables The designer tables
      * @return array unique or primary indices
      */
-    public function getPkOrUniqueKeys(array $designerTables): array
+    public function getPkOrUniqueKeys()
     {
-        return $this->getAllKeys($designerTables, true);
+        return $this->getAllKeys(true);
     }
 
     /**
      * Returns all indices
      *
-     * @param DesignerTable[] $designerTables The designer tables
-     * @param bool            $unique_only    whether to include only unique ones
+     * @param bool $unique_only whether to include only unique ones
      *
      * @return array indices
      */
-    public function getAllKeys(array $designerTables, bool $unique_only = false): array
+    public function getAllKeys($unique_only = false)
     {
-        $keys = [];
+        $keys = array();
 
-        foreach ($designerTables as $designerTable) {
-            $schema = $designerTable->getDatabaseName();
+        foreach ($GLOBALS['designer']['TABLE_NAME_SMALL'] as $I => $table) {
+            $schema = $GLOBALS['designer']['OWNER'][$I];
             // for now, take into account only the first index segment
-            foreach (Index::getFromTable($designerTable->getTableName(), $schema) as $index) {
+            foreach (Index::getFromTable($table, $schema) as $index) {
                 if ($unique_only && ! $index->isUnique()) {
                     continue;
                 }
                 $columns = $index->getColumns();
                 foreach ($columns as $column_name => $dummy) {
-                    $keys[$schema . '.' . $designerTable->getTableName() . '.' . $column_name] = 1;
+                    $keys[$schema . '.' . $table . '.' . $column_name] = 1;
                 }
             }
         }
@@ -235,24 +232,25 @@ class Common
     }
 
     /**
-     * Return j_tab and h_tab arrays
+     * Return script to create j_tab and h_tab arrays
      *
-     * @param DesignerTable[] $designerTables The designer tables
-     * @return array
+     * @return string
      */
-    public function getScriptTabs(array $designerTables): array
+    public function getScriptTabs()
     {
-        $retval = [
-            'j_tabs' => [],
-            'h_tabs' => [],
-        ];
+        $retval = array(
+            'j_tabs' => array(),
+            'h_tabs' => array()
+        );
 
-        foreach ($designerTables as $designerTable) {
-            $key = rawurlencode($designerTable->getDbTableString());
-            $retval['j_tabs'][$key] = $designerTable->supportsForeignkeys() ? 1 : 0;
-            $retval['h_tabs'][$key] = 1;
+        for ($i = 0, $cnt = count($GLOBALS['designer']['TABLE_NAME']); $i < $cnt; $i++) {
+            $j = 0;
+            if (Util::isForeignKeySupported($GLOBALS['designer']['TABLE_TYPE'][$i])) {
+                $j = 1;
+            }
+            $retval['j_tabs'][$GLOBALS['designer_url']['TABLE_NAME'][$i]] = $j;
+            $retval['h_tabs'][$GLOBALS['designer_url']['TABLE_NAME'][$i]] = 1;
         }
-
         return $retval;
     }
 
@@ -261,18 +259,17 @@ class Common
      *
      * @param int $pg pdf page id
      *
-     * @return array|null of table positions
+     * @return array of table positions
      */
-    public function getTablePositions($pg): ?array
+    public function getTablePositions($pg)
     {
         $cfgRelation = $this->relation->getRelationsParam();
         if (! $cfgRelation['pdfwork']) {
-            return [];
+            return null;
         }
 
         $query = "
             SELECT CONCAT_WS('.', `db_name`, `table_name`) AS `name`,
-                `db_name` as `dbName`, `table_name` as `tableName`,
                 `x` AS `X`,
                 `y` AS `Y`,
                 1 AS `V`,
@@ -281,13 +278,14 @@ class Common
                 . "." . Util::backquote($cfgRelation['table_coords']) . "
             WHERE pdf_page_number = " . intval($pg);
 
-        return $this->dbi->fetchResult(
+        $tab_pos = $GLOBALS['dbi']->fetchResult(
             $query,
             'name',
             null,
             DatabaseInterface::CONNECT_CONTROL,
             DatabaseInterface::QUERY_STORE
         );
+        return $tab_pos;
     }
 
     /**
@@ -295,7 +293,7 @@ class Common
      *
      * @param int $pg pdf page id
      *
-     * @return string|null table name
+     * @return string table name
      */
     public function getPageName($pg)
     {
@@ -308,14 +306,14 @@ class Common
             . " FROM " . Util::backquote($cfgRelation['db'])
             . "." . Util::backquote($cfgRelation['pdf_pages'])
             . " WHERE " . Util::backquote('page_nr') . " = " . intval($pg);
-        $page_name = $this->dbi->fetchResult(
+        $page_name = $GLOBALS['dbi']->fetchResult(
             $query,
             null,
             null,
             DatabaseInterface::CONNECT_CONTROL,
             DatabaseInterface::QUERY_STORE
         );
-        return ( is_array($page_name) && isset($page_name[0]) ) ? $page_name[0] : null;
+        return count($page_name) ? $page_name[0] : null;
     }
 
     /**
@@ -336,9 +334,7 @@ class Common
             . "." . Util::backquote($cfgRelation['table_coords'])
             . " WHERE " . Util::backquote('pdf_page_number') . " = " . intval($pg);
         $success = $this->relation->queryAsControlUser(
-            $query,
-            true,
-            DatabaseInterface::QUERY_STORE
+            $query, true, DatabaseInterface::QUERY_STORE
         );
 
         if ($success) {
@@ -346,13 +342,11 @@ class Common
                 . "." . Util::backquote($cfgRelation['pdf_pages'])
                 . " WHERE " . Util::backquote('page_nr') . " = " . intval($pg);
             $success = $this->relation->queryAsControlUser(
-                $query,
-                true,
-                DatabaseInterface::QUERY_STORE
+                $query, true, DatabaseInterface::QUERY_STORE
             );
         }
 
-        return (bool) $success;
+        return (boolean) $success;
     }
 
     /**
@@ -361,22 +355,22 @@ class Common
      *
      * @param string $db database
      *
-     * @return int|null id of the default pdf page for the database
+     * @return int id of the default pdf page for the database
      */
-    public function getDefaultPage($db): ?int
+    public function getDefaultPage($db)
     {
         $cfgRelation = $this->relation->getRelationsParam();
         if (! $cfgRelation['pdfwork']) {
-            return -1;
+            return null;
         }
 
         $query = "SELECT `page_nr`"
             . " FROM " . Util::backquote($cfgRelation['db'])
             . "." . Util::backquote($cfgRelation['pdf_pages'])
-            . " WHERE `db_name` = '" . $this->dbi->escapeString($db) . "'"
-            . " AND `page_descr` = '" . $this->dbi->escapeString($db) . "'";
+            . " WHERE `db_name` = '" . $GLOBALS['dbi']->escapeString($db) . "'"
+            . " AND `page_descr` = '" .  $GLOBALS['dbi']->escapeString($db) . "'";
 
-        $default_page_no = $this->dbi->fetchResult(
+        $default_page_no = $GLOBALS['dbi']->fetchResult(
             $query,
             null,
             null,
@@ -384,42 +378,10 @@ class Common
             DatabaseInterface::QUERY_STORE
         );
 
-        if (is_array($default_page_no) && isset($default_page_no[0])) {
+        if (isset($default_page_no) && count($default_page_no)) {
             return intval($default_page_no[0]);
         }
         return -1;
-    }
-
-    /**
-     * Get the status if the page already exists
-     * If no such exists, returns negative index.
-     *
-     * @param string $pg name
-     *
-     * @return bool if the page already exists
-     */
-    public function getPageExists(string $pg): bool
-    {
-        $cfgRelation = $this->relation->getRelationsParam();
-        if (! $cfgRelation['pdfwork']) {
-            return false;
-        }
-
-        $query = 'SELECT `page_nr`'
-            . ' FROM ' . Util::backquote($cfgRelation['db'])
-            . '.' . Util::backquote($cfgRelation['pdf_pages'])
-            . " WHERE `page_descr` = '" . $this->dbi->escapeString($pg) . "'";
-        $pageNos = $this->dbi->fetchResult(
-            $query,
-            null,
-            null,
-            DatabaseInterface::CONNECT_CONTROL,
-            DatabaseInterface::QUERY_STORE
-        );
-        if (is_array($pageNos) && count($pageNos) > 0) {
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -434,7 +396,7 @@ class Common
     {
         $cfgRelation = $this->relation->getRelationsParam();
         if (! $cfgRelation['pdfwork']) {
-            return -1;
+            return null;
         }
 
         $page_no = -1;
@@ -446,16 +408,16 @@ class Common
             $query = "SELECT MIN(`page_nr`)"
                 . " FROM " . Util::backquote($cfgRelation['db'])
                 . "." . Util::backquote($cfgRelation['pdf_pages'])
-                . " WHERE `db_name` = '" . $this->dbi->escapeString($db) . "'";
+                . " WHERE `db_name` = '" . $GLOBALS['dbi']->escapeString($db) . "'";
 
-            $min_page_no = $this->dbi->fetchResult(
+            $min_page_no = $GLOBALS['dbi']->fetchResult(
                 $query,
                 null,
                 null,
                 DatabaseInterface::CONNECT_CONTROL,
                 DatabaseInterface::QUERY_STORE
             );
-            if (is_array($min_page_no) && isset($min_page_no[0])) {
+            if (isset($min_page_no[0]) && count($min_page_no[0])) {
                 $page_no = $min_page_no[0];
             }
         }
@@ -474,11 +436,12 @@ class Common
     {
         $cfgRelation = $this->relation->getRelationsParam();
         if ($cfgRelation['pdfwork']) {
-            return $this->relation->createPage(
+            $pageNumber = $this->relation->createPage(
                 $pageName,
                 $cfgRelation,
                 $db
             );
+            return $pageNumber;
         }
         return null;
     }
@@ -492,21 +455,20 @@ class Common
      */
     public function saveTablePositions($pg)
     {
-        $pageId = $this->dbi->escapeString($pg);
-
-        $db = $this->dbi->escapeString($_POST['db']);
-
         $cfgRelation = $this->relation->getRelationsParam();
         if (! $cfgRelation['pdfwork']) {
             return false;
         }
 
         $query =  "DELETE FROM "
-            . Util::backquote($cfgRelation['db'])
+            . Util::backquote($GLOBALS['cfgRelation']['db'])
             . "." . Util::backquote(
-                $cfgRelation['table_coords']
+                $GLOBALS['cfgRelation']['table_coords']
             )
-            . " WHERE `pdf_page_number` = '" . $pageId . "'";
+            . " WHERE `db_name` = '" . $GLOBALS['dbi']->escapeString($_REQUEST['db'])
+            . "'"
+            . " AND `pdf_page_number` = '" . $GLOBALS['dbi']->escapeString($pg)
+            . "'";
 
         $res = $this->relation->queryAsControlUser(
             $query,
@@ -514,36 +476,33 @@ class Common
             DatabaseInterface::QUERY_STORE
         );
 
-        if (! $res) {
-            return (bool) $res;
+        if (!$res) {
+            return (boolean)$res;
         }
 
-        foreach ($_POST['t_h'] as $key => $value) {
-            $DB = $_POST['t_db'][$key];
-            $TAB = $_POST['t_tbl'][$key];
-            if (! $value) {
+        foreach ($_REQUEST['t_h'] as $key => $value) {
+            list($DB, $TAB) = explode(".", $key);
+            if (!$value) {
                 continue;
             }
 
             $query = "INSERT INTO "
-                . Util::backquote($cfgRelation['db']) . "."
-                . Util::backquote($cfgRelation['table_coords'])
+                . Util::backquote($GLOBALS['cfgRelation']['db']) . "."
+                . Util::backquote($GLOBALS['cfgRelation']['table_coords'])
                 . " (`db_name`, `table_name`, `pdf_page_number`, `x`, `y`)"
                 . " VALUES ("
-                . "'" . $this->dbi->escapeString($DB) . "', "
-                . "'" . $this->dbi->escapeString($TAB) . "', "
-                . "'" . $pageId . "', "
-                . "'" . $this->dbi->escapeString($_POST['t_x'][$key]) . "', "
-                . "'" . $this->dbi->escapeString($_POST['t_y'][$key]) . "')";
+                . "'" . $GLOBALS['dbi']->escapeString($DB) . "', "
+                . "'" . $GLOBALS['dbi']->escapeString($TAB) . "', "
+                . "'" . $GLOBALS['dbi']->escapeString($pg) . "', "
+                . "'" . $GLOBALS['dbi']->escapeString($_REQUEST['t_x'][$key]) . "', "
+                . "'" . $GLOBALS['dbi']->escapeString($_REQUEST['t_y'][$key]) . "')";
 
             $res = $this->relation->queryAsControlUser(
-                $query,
-                true,
-                DatabaseInterface::QUERY_STORE
+                $query,  true, DatabaseInterface::QUERY_STORE
             );
         }
 
-        return (bool) $res;
+        return (boolean) $res;
     }
 
     /**
@@ -553,28 +512,19 @@ class Common
      * @param string $table table name
      * @param string $field display field name
      *
-     * @return array<bool,string>
+     * @return boolean
      */
     public function saveDisplayField($db, $table, $field)
     {
         $cfgRelation = $this->relation->getRelationsParam();
-        if (! $cfgRelation['displaywork']) {
-            return [
-                false,
-                _pgettext(
-                    'phpMyAdmin configuration storage is not configured for "Display Features" on designer when user tries to set a display field.',
-                    'phpMyAdmin configuration storage is not configured for "Display Features".'
-                ),
-            ];
+        if (!$cfgRelation['displaywork']) {
+            return false;
         }
 
-        $upd_query = new Table($table, $db, $this->dbi);
+        $upd_query = new Table($table, $db, $GLOBALS['dbi']);
         $upd_query->updateDisplayField($field, $cfgRelation);
 
-        return [
-            true,
-            null,
-        ];
+        return true;
     }
 
     /**
@@ -594,10 +544,10 @@ class Common
      */
     public function addNewRelation($db, $T1, $F1, $T2, $F2, $on_delete, $on_update, $DB1, $DB2)
     {
-        $tables = $this->dbi->getTablesFull($DB1, $T1);
-        $type_T1 = mb_strtoupper($tables[$T1]['ENGINE'] ?? '');
-        $tables = $this->dbi->getTablesFull($DB2, $T2);
-        $type_T2 = mb_strtoupper($tables[$T2]['ENGINE'] ?? '');
+        $tables = $GLOBALS['dbi']->getTablesFull($DB1, $T1);
+        $type_T1 = mb_strtoupper($tables[$T1]['ENGINE']);
+        $tables = $GLOBALS['dbi']->getTablesFull($DB2, $T2);
+        $type_T2 = mb_strtoupper($tables[$T2]['ENGINE']);
 
         // native foreign key
         if (Util::isForeignKeySupported($type_T1)
@@ -610,36 +560,33 @@ class Common
             if ($foreigner
                 && isset($foreigner['constraint'])
             ) {
-                return [
-                    false,
-                    __('Error: relationship already exists.'),
-                ];
+                return array(false, __('Error: relationship already exists.'));
             }
             // note: in InnoDB, the index does not requires to be on a PRIMARY
             // or UNIQUE key
             // improve: check all other requirements for InnoDB relations
-            $result = $this->dbi->query(
+            $result = $GLOBALS['dbi']->query(
                 'SHOW INDEX FROM ' . Util::backquote($DB1)
                 . '.' . Util::backquote($T1) . ';'
             );
 
             // will be use to emphasis prim. keys in the table view
-            $index_array1 = [];
-            while ($row = $this->dbi->fetchAssoc($result)) {
+            $index_array1 = array();
+            while ($row = $GLOBALS['dbi']->fetchAssoc($result)) {
                 $index_array1[$row['Column_name']] = 1;
             }
-            $this->dbi->freeResult($result);
+            $GLOBALS['dbi']->freeResult($result);
 
-            $result = $this->dbi->query(
+            $result = $GLOBALS['dbi']->query(
                 'SHOW INDEX FROM ' . Util::backquote($DB2)
                 . '.' . Util::backquote($T2) . ';'
             );
             // will be used to emphasis prim. keys in the table view
-            $index_array2 = [];
-            while ($row = $this->dbi->fetchAssoc($result)) {
+            $index_array2 = array();
+            while ($row = $GLOBALS['dbi']->fetchAssoc($result)) {
                 $index_array2[$row['Column_name']] = 1;
             }
-            $this->dbi->freeResult($result);
+            $GLOBALS['dbi']->freeResult($result);
 
             if (! empty($index_array1[$F1]) && ! empty($index_array2[$F2])) {
                 $upd_query  = 'ALTER TABLE ' . Util::backquote($DB2)
@@ -658,33 +605,24 @@ class Common
                     $upd_query   .= ' ON UPDATE ' . $on_update;
                 }
                 $upd_query .= ';';
-                if ($this->dbi->tryQuery($upd_query)) {
-                    return [
-                        true,
-                        __('FOREIGN KEY relationship has been added.'),
-                    ];
+                if ($GLOBALS['dbi']->tryQuery($upd_query)) {
+                    return array(true, __('FOREIGN KEY relationship has been added.'));
                 }
 
-                $error = $this->dbi->getError();
-                return [
+                $error = $GLOBALS['dbi']->getError();
+                return array(
                     false,
                     __('Error: FOREIGN KEY relationship could not be added!')
-                    . "<br>" . $error,
-                ];
+                    . "<br/>" . $error
+                );
             }
 
-            return [
-                false,
-                __('Error: Missing index on column(s).'),
-            ];
+            return array(false, __('Error: Missing index on column(s).'));
         }
 
         // internal (pmadb) relation
         if ($GLOBALS['cfgRelation']['relwork'] == false) {
-            return [
-                false,
-                __('Error: Relational features are disabled!'),
-            ];
+            return array(false, __('Error: Relational features are disabled!'));
         }
 
         // no need to recheck if the keys are primary or unique at this point,
@@ -697,27 +635,24 @@ class Common
             . "(master_db, master_table, master_field, "
             . "foreign_db, foreign_table, foreign_field)"
             . " values("
-            . "'" . $this->dbi->escapeString($DB2) . "', "
-            . "'" . $this->dbi->escapeString($T2) . "', "
-            . "'" . $this->dbi->escapeString($F2) . "', "
-            . "'" . $this->dbi->escapeString($DB1) . "', "
-            . "'" . $this->dbi->escapeString($T1) . "', "
-            . "'" . $this->dbi->escapeString($F1) . "')";
+            . "'" . $GLOBALS['dbi']->escapeString($DB2) . "', "
+            . "'" . $GLOBALS['dbi']->escapeString($T2) . "', "
+            . "'" . $GLOBALS['dbi']->escapeString($F2) . "', "
+            . "'" . $GLOBALS['dbi']->escapeString($DB1) . "', "
+            . "'" . $GLOBALS['dbi']->escapeString($T1) . "', "
+            . "'" . $GLOBALS['dbi']->escapeString($F1) . "')";
 
         if ($this->relation->queryAsControlUser($q, false, DatabaseInterface::QUERY_STORE)
         ) {
-            return [
-                true,
-                __('Internal relationship has been added.'),
-            ];
+            return array(true, __('Internal relationship has been added.'));
         }
 
-        $error = $this->dbi->getError(DatabaseInterface::CONNECT_CONTROL);
-        return [
+        $error = $GLOBALS['dbi']->getError(DatabaseInterface::CONNECT_CONTROL);
+        return array(
             false,
             __('Error: Internal relationship could not be added!')
-            . "<br>" . $error,
-        ];
+            . "<br/>" . $error
+        );
     }
 
     /**
@@ -735,9 +670,9 @@ class Common
         list($DB1, $T1) = explode(".", $T1);
         list($DB2, $T2) = explode(".", $T2);
 
-        $tables = $this->dbi->getTablesFull($DB1, $T1);
+        $tables = $GLOBALS['dbi']->getTablesFull($DB1, $T1);
         $type_T1 = mb_strtoupper($tables[$T1]['ENGINE']);
-        $tables = $this->dbi->getTablesFull($DB2, $T2);
+        $tables = $GLOBALS['dbi']->getTablesFull($DB2, $T2);
         $type_T2 = mb_strtoupper($tables[$T2]['ENGINE']);
 
         if (Util::isForeignKeySupported($type_T1)
@@ -752,19 +687,16 @@ class Common
                 $upd_query = 'ALTER TABLE ' . Util::backquote($DB2)
                     . '.' . Util::backquote($T2) . ' DROP FOREIGN KEY '
                     . Util::backquote($foreigner['constraint']) . ';';
-                if ($this->dbi->query($upd_query)) {
-                    return [
-                        true,
-                        __('FOREIGN KEY relationship has been removed.'),
-                    ];
+                if ($GLOBALS['dbi']->query($upd_query)) {
+                    return array(true, __('FOREIGN KEY relationship has been removed.'));
                 }
 
-                $error = $this->dbi->getError();
-                return [
+                $error = $GLOBALS['dbi']->getError();
+                return array(
                     false,
                     __('Error: FOREIGN KEY relationship could not be removed!')
-                    . "<br>" . $error,
-                ];
+                    . "<br/>" . $error
+                );
             }
         }
 
@@ -772,12 +704,12 @@ class Common
         $delete_query = "DELETE FROM "
             . Util::backquote($GLOBALS['cfgRelation']['db']) . "."
             . $GLOBALS['cfgRelation']['relation'] . " WHERE "
-            . "master_db = '" . $this->dbi->escapeString($DB2) . "'"
-            . " AND master_table = '" . $this->dbi->escapeString($T2) . "'"
-            . " AND master_field = '" . $this->dbi->escapeString($F2) . "'"
-            . " AND foreign_db = '" . $this->dbi->escapeString($DB1) . "'"
-            . " AND foreign_table = '" . $this->dbi->escapeString($T1) . "'"
-            . " AND foreign_field = '" . $this->dbi->escapeString($F1) . "'";
+            . "master_db = '" . $GLOBALS['dbi']->escapeString($DB2) . "'"
+            . " AND master_table = '" . $GLOBALS['dbi']->escapeString($T2) . "'"
+            . " AND master_field = '" . $GLOBALS['dbi']->escapeString($F2) . "'"
+            . " AND foreign_db = '" . $GLOBALS['dbi']->escapeString($DB1) . "'"
+            . " AND foreign_table = '" . $GLOBALS['dbi']->escapeString($T1) . "'"
+            . " AND foreign_field = '" . $GLOBALS['dbi']->escapeString($F1) . "'";
 
         $result = $this->relation->queryAsControlUser(
             $delete_query,
@@ -785,18 +717,15 @@ class Common
             DatabaseInterface::QUERY_STORE
         );
 
-        if (! $result) {
-            $error = $this->dbi->getError(DatabaseInterface::CONNECT_CONTROL);
-            return [
+        if (!$result) {
+            $error = $GLOBALS['dbi']->getError(DatabaseInterface::CONNECT_CONTROL);
+            return array(
                 false,
-                __('Error: Internal relationship could not be removed!') . "<br>" . $error,
-            ];
+                __('Error: Internal relationship could not be removed!') . "<br/>" . $error
+            );
         }
 
-        return [
-            true,
-            __('Internal relationship has been removed.'),
-        ];
+        return array(true, __('Internal relationship has been removed.'));
     }
 
     /**
@@ -810,24 +739,23 @@ class Common
     public function saveSetting($index, $value)
     {
         $cfgRelation = $this->relation->getRelationsParam();
+        $cfgDesigner = array(
+            'user'  => $GLOBALS['cfg']['Server']['user'],
+            'db'    => $cfgRelation['db'],
+            'table' => $cfgRelation['designer_settings']
+        );
+
         $success = true;
-        if ($cfgRelation['designersettingswork']) {
-            $cfgDesigner = [
-                'user'  => $GLOBALS['cfg']['Server']['user'],
-                'db'    => $cfgRelation['db'],
-                'table' => $cfgRelation['designer_settings'],
-            ];
+        if ($GLOBALS['cfgRelation']['designersettingswork']) {
 
             $orig_data_query = "SELECT settings_data"
                 . " FROM " . Util::backquote($cfgDesigner['db'])
                 . "." . Util::backquote($cfgDesigner['table'])
                 . " WHERE username = '"
-                . $this->dbi->escapeString($cfgDesigner['user']) . "';";
+                . $GLOBALS['dbi']->escapeString($cfgDesigner['user']) . "';";
 
-            $orig_data = $this->dbi->fetchSingleRow(
-                $orig_data_query,
-                'ASSOC',
-                DatabaseInterface::CONNECT_CONTROL
+            $orig_data = $GLOBALS['dbi']->fetchSingleRow(
+                $orig_data_query, 'ASSOC', DatabaseInterface::CONNECT_CONTROL
             );
 
             if (! empty($orig_data)) {
@@ -840,18 +768,18 @@ class Common
                     . "." . Util::backquote($cfgDesigner['table'])
                     . " SET settings_data = '" . $orig_data . "'"
                     . " WHERE username = '"
-                    . $this->dbi->escapeString($cfgDesigner['user']) . "';";
+                    . $GLOBALS['dbi']->escapeString($cfgDesigner['user']) . "';";
 
                 $success = $this->relation->queryAsControlUser($save_query);
             } else {
-                $save_data = [$index => $value];
+                $save_data = array($index => $value);
 
                 $query = "INSERT INTO "
                     . Util::backquote($cfgDesigner['db'])
                     . "." . Util::backquote($cfgDesigner['table'])
                     . " (username, settings_data)"
-                    . " VALUES('" . $this->dbi->escapeString($cfgDesigner['user'])
-                    . "', '" . json_encode($save_data) . "');";
+                    . " VALUES('" . $cfgDesigner['user'] . "',"
+                    . " '" . json_encode($save_data) . "');";
 
                 $success = $this->relation->queryAsControlUser($query);
             }

@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Plugins;
 
 use PhpMyAdmin\Plugins\TransformationsPlugin;
@@ -62,7 +60,7 @@ abstract class IOTransformationsPlugin extends TransformationsPlugin
      */
     public function getScripts()
     {
-        return [];
+        return array();
     }
 
     /**

@@ -6,18 +6,15 @@
  * @package    PhpMyAdmin-Import
  * @subpackage SQL
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Plugins\Import;
 
-use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Import;
 use PhpMyAdmin\Plugins\ImportPlugin;
+use PhpMyAdmin\Properties\Plugins\ImportPluginProperties;
 use PhpMyAdmin\Properties\Options\Groups\OptionsPropertyMainGroup;
 use PhpMyAdmin\Properties\Options\Groups\OptionsPropertyRootGroup;
 use PhpMyAdmin\Properties\Options\Items\BoolPropertyItem;
 use PhpMyAdmin\Properties\Options\Items\SelectPropertyItem;
-use PhpMyAdmin\Properties\Plugins\ImportPluginProperties;
 use PhpMyAdmin\SqlParser\Utils\BufferedQuery;
 
 /**
@@ -33,7 +30,6 @@ class ImportSql extends ImportPlugin
      */
     public function __construct()
     {
-        parent::__construct();
         $this->setProperties();
     }
 
@@ -52,7 +48,7 @@ class ImportSql extends ImportPlugin
 
         $compats = $GLOBALS['dbi']->getCompatibilities();
         if (count($compats) > 0) {
-            $values = [];
+            $values = array();
             foreach ($compats as $val) {
                 $values[$val] = $val;
             }
@@ -73,10 +69,10 @@ class ImportSql extends ImportPlugin
             );
             $leaf->setValues($values);
             $leaf->setDoc(
-                [
+                array(
                     'manual_MySQL_Database_Administration',
                     'Server_SQL_mode',
-                ]
+                )
             );
             $generalOptions->addProperty($leaf);
             $leaf = new BoolPropertyItem(
@@ -84,11 +80,11 @@ class ImportSql extends ImportPlugin
                 __('Do not use <code>AUTO_INCREMENT</code> for zero values')
             );
             $leaf->setDoc(
-                [
+                array(
                     'manual_MySQL_Database_Administration',
                     'Server_SQL_mode',
                     'sqlmode_no_auto_value_on_zero',
-                ]
+                )
             );
             $generalOptions->addProperty($leaf);
 
@@ -104,11 +100,11 @@ class ImportSql extends ImportPlugin
     /**
      * Handles the whole import logic
      *
-     * @param array $sql_data 2-element array with sql data
+     * @param array &$sql_data 2-element array with sql data
      *
      * @return void
      */
-    public function doImport(array &$sql_data = [])
+    public function doImport(array &$sql_data = array())
     {
         global $error, $timeout_passed;
 
@@ -127,15 +123,17 @@ class ImportSql extends ImportPlugin
          */
         $GLOBALS['finished'] = false;
 
-        while ((! $error) && (! $timeout_passed)) {
+        while ((!$error) && (!$timeout_passed)) {
+
             // Getting the first statement, the remaining data and the last
             // delimiter.
             $statement = $bq->extract();
 
             // If there is no full statement, we are looking for more data.
             if (empty($statement)) {
+
                 // Importing new data.
-                $newData = $this->import->getNextChunk();
+                $newData = Import::getNextChunk();
 
                 // Subtract data we didn't handle yet and stop processing.
                 if ($newData === false) {
@@ -157,32 +155,32 @@ class ImportSql extends ImportPlugin
             }
 
             // Executing the query.
-            $this->import->runQuery($statement, $statement, $sql_data);
+            Import::runQuery($statement, $statement, $sql_data);
         }
 
         // Extracting remaining statements.
-        while (! $error && ! $timeout_passed && ! empty($bq->query)) {
+        while ((!$error) && (!$timeout_passed) && (!empty($bq->query))) {
             $statement = $bq->extract(true);
-            if (! empty($statement)) {
-                $this->import->runQuery($statement, $statement, $sql_data);
+            if (!empty($statement)) {
+                Import::runQuery($statement, $statement, $sql_data);
             }
         }
 
         // Finishing.
-        $this->import->runQuery('', '', $sql_data);
+        Import::runQuery('', '', $sql_data);
     }
 
     /**
      * Handle compatibility options
      *
-     * @param DatabaseInterface $dbi     Database interface
-     * @param array             $request Request array
+     * @param PhpMyAdmin\DatabaseInterface $dbi     Database interface
+     * @param array                        $request Request array
      *
      * @return void
      */
     private function _setSQLMode($dbi, array $request)
     {
-        $sql_modes = [];
+        $sql_modes = array();
         if (isset($request['sql_compatibility'])
             && 'NONE' != $request['sql_compatibility']
         ) {

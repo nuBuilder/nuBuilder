@@ -6,19 +6,17 @@
  * @package    PhpMyAdmin-Export
  * @subpackage HTML-Word
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Plugins\Export;
 
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Export;
 use PhpMyAdmin\Plugins\ExportPlugin;
+use PhpMyAdmin\Properties\Plugins\ExportPluginProperties;
 use PhpMyAdmin\Properties\Options\Groups\OptionsPropertyMainGroup;
 use PhpMyAdmin\Properties\Options\Groups\OptionsPropertyRootGroup;
 use PhpMyAdmin\Properties\Options\Items\BoolPropertyItem;
 use PhpMyAdmin\Properties\Options\Items\RadioPropertyItem;
 use PhpMyAdmin\Properties\Options\Items\TextPropertyItem;
-use PhpMyAdmin\Properties\Plugins\ExportPluginProperties;
 use PhpMyAdmin\Relation;
 use PhpMyAdmin\Transformations;
 use PhpMyAdmin\Util;
@@ -63,17 +61,16 @@ class ExportHtmlword extends ExportPlugin
 
         // what to dump (structure/data/both)
         $dumpWhat = new OptionsPropertyMainGroup(
-            "dump_what",
-            __('Dump table')
+            "dump_what", __('Dump table')
         );
         // create primary items and add them to the group
         $leaf = new RadioPropertyItem("structure_or_data");
         $leaf->setValues(
-            [
+            array(
                 'structure'          => __('structure'),
                 'data'               => __('data'),
                 'structure_and_data' => __('structure and data'),
-            ]
+            )
         );
         $dumpWhat->addProperty($leaf);
         // add the main group to the root group
@@ -81,8 +78,7 @@ class ExportHtmlword extends ExportPlugin
 
         // data options main group
         $dataOptions = new OptionsPropertyMainGroup(
-            "dump_what",
-            __('Data dump options')
+            "dump_what", __('Data dump options')
         );
         $dataOptions->setForce('structure');
         // create primary items and add them to the group
@@ -113,7 +109,7 @@ class ExportHtmlword extends ExportPlugin
     {
         global $charset;
 
-        return $this->export->outputHandler(
+        return Export::outputHandler(
             '<html xmlns:o="urn:schemas-microsoft-com:office:office"
             xmlns:x="urn:schemas-microsoft-com:office:word"
             xmlns="http://www.w3.org/TR/REC-html40">
@@ -136,7 +132,7 @@ class ExportHtmlword extends ExportPlugin
      */
     public function exportFooter()
     {
-        return $this->export->outputHandler('</body></html>');
+        return Export::outputHandler('</body></html>');
     }
 
     /**
@@ -153,7 +149,7 @@ class ExportHtmlword extends ExportPlugin
             $db_alias = $db;
         }
 
-        return $this->export->outputHandler(
+        return Export::outputHandler(
             '<h1>' . __('Database') . ' ' . htmlspecialchars($db_alias) . '</h1>'
         );
     }
@@ -202,7 +198,7 @@ class ExportHtmlword extends ExportPlugin
         $crlf,
         $error_url,
         $sql_query,
-        array $aliases = []
+        array $aliases = array()
     ) {
         global $what;
 
@@ -210,7 +206,7 @@ class ExportHtmlword extends ExportPlugin
         $table_alias = $table;
         $this->initAlias($aliases, $db_alias, $table_alias);
 
-        if (! $this->export->outputHandler(
+        if (!Export::outputHandler(
             '<h2>'
             . __('Dumping data for table') . ' ' . htmlspecialchars($table_alias)
             . '</h2>'
@@ -218,7 +214,7 @@ class ExportHtmlword extends ExportPlugin
         ) {
             return false;
         }
-        if (! $this->export->outputHandler(
+        if (!Export::outputHandler(
             '<table class="width100" cellspacing="1">'
         )
         ) {
@@ -238,7 +234,7 @@ class ExportHtmlword extends ExportPlugin
             $schema_insert = '<tr class="print-category">';
             for ($i = 0; $i < $fields_cnt; $i++) {
                 $col_as = $GLOBALS['dbi']->fieldName($result, $i);
-                if (! empty($aliases[$db]['tables'][$table]['columns'][$col_as])) {
+                if (!empty($aliases[$db]['tables'][$table]['columns'][$col_as])) {
                     $col_as = $aliases[$db]['tables'][$table]['columns'][$col_as];
                 }
                 $col_as = stripslashes($col_as);
@@ -247,7 +243,7 @@ class ExportHtmlword extends ExportPlugin
                     . '</strong></td>';
             } // end for
             $schema_insert .= '</tr>';
-            if (! $this->export->outputHandler($schema_insert)) {
+            if (!Export::outputHandler($schema_insert)) {
                 return false;
             }
         } // end if
@@ -256,7 +252,7 @@ class ExportHtmlword extends ExportPlugin
         while ($row = $GLOBALS['dbi']->fetchRow($result)) {
             $schema_insert = '<tr class="print-category">';
             for ($j = 0; $j < $fields_cnt; $j++) {
-                if (! isset($row[$j]) || $row[$j] === null) {
+                if (!isset($row[$j]) || is_null($row[$j])) {
                     $value = $GLOBALS[$what . '_null'];
                 } elseif ($row[$j] == '0' || $row[$j] != '') {
                     $value = $row[$j];
@@ -264,17 +260,17 @@ class ExportHtmlword extends ExportPlugin
                     $value = '';
                 }
                 $schema_insert .= '<td class="print">'
-                    . htmlspecialchars((string) $value)
+                    . htmlspecialchars($value)
                     . '</td>';
             } // end for
             $schema_insert .= '</tr>';
-            if (! $this->export->outputHandler($schema_insert)) {
+            if (!Export::outputHandler($schema_insert)) {
                 return false;
             }
         } // end while
         $GLOBALS['dbi']->freeResult($result);
 
-        return $this->export->outputHandler('</table>');
+        return Export::outputHandler('</table>');
     }
 
     /**
@@ -287,7 +283,7 @@ class ExportHtmlword extends ExportPlugin
      *
      * @return string resulting definition
      */
-    public function getTableDefStandIn($db, $view, $crlf, $aliases = [])
+    public function getTableDefStandIn($db, $view, $crlf, $aliases = array())
     {
         $schema_insert = '<table class="width100" cellspacing="1">'
             . '<tr class="print-category">'
@@ -308,7 +304,7 @@ class ExportHtmlword extends ExportPlugin
         /**
          * Get the unique keys in the view
          */
-        $unique_keys = [];
+        $unique_keys = array();
         $keys = $GLOBALS['dbi']->getTableIndexes($db, $view);
         foreach ($keys as $key) {
             if ($key['Non_unique'] == 0) {
@@ -319,7 +315,7 @@ class ExportHtmlword extends ExportPlugin
         $columns = $GLOBALS['dbi']->getColumns($db, $view);
         foreach ($columns as $column) {
             $col_as = $column['Field'];
-            if (! empty($aliases[$db]['tables'][$view]['columns'][$col_as])) {
+            if (!empty($aliases[$db]['tables'][$view]['columns'][$col_as])) {
                 $col_as = $aliases[$db]['tables'][$view]['columns'][$col_as];
             }
             $schema_insert .= $this->formatOneColumnDefinition(
@@ -361,7 +357,7 @@ class ExportHtmlword extends ExportPlugin
         $do_comments,
         $do_mime,
         $view = false,
-        array $aliases = []
+        array $aliases = array()
     ) {
         // set $cfgRelation here, because there is a chance that it's modified
         // since the class initialization
@@ -376,7 +372,7 @@ class ExportHtmlword extends ExportPlugin
 
         // Check if we can use Relations
         list($res_rel, $have_rel) = $this->relation->getRelationsAndStatus(
-            $do_relation && ! empty($cfgRelation['relation']),
+            $do_relation && !empty($cfgRelation['relation']),
             $db,
             $table
         );
@@ -412,9 +408,9 @@ class ExportHtmlword extends ExportPlugin
         }
         if ($do_mime && $cfgRelation['mimework']) {
             $schema_insert .= '<td class="print"><strong>'
-                . __('Media (MIME) type')
+                . htmlspecialchars('MIME')
                 . '</strong></td>';
-            $mime_map = $this->transformations->getMime($db, $table, true);
+            $mime_map = Transformations::getMIME($db, $table, true);
         }
         $schema_insert .= '</tr>';
 
@@ -422,7 +418,7 @@ class ExportHtmlword extends ExportPlugin
         /**
          * Get the unique keys in the table
          */
-        $unique_keys = [];
+        $unique_keys = array();
         $keys = $GLOBALS['dbi']->getTableIndexes($db, $table);
         foreach ($keys as $key) {
             if ($key['Non_unique'] == 0) {
@@ -431,7 +427,7 @@ class ExportHtmlword extends ExportPlugin
         }
         foreach ($columns as $column) {
             $col_as = $column['Field'];
-            if (! empty($aliases[$db]['tables'][$table]['columns'][$col_as])) {
+            if (!empty($aliases[$db]['tables'][$table]['columns'][$col_as])) {
                 $col_as = $aliases[$db]['tables'][$table]['columns'][$col_as];
             }
             $schema_insert .= $this->formatOneColumnDefinition(
@@ -551,7 +547,7 @@ class ExportHtmlword extends ExportPlugin
         $do_comments = false,
         $do_mime = false,
         $dates = false,
-        array $aliases = []
+        array $aliases = array()
     ) {
         $db_alias = $db;
         $table_alias = $table;
@@ -560,55 +556,55 @@ class ExportHtmlword extends ExportPlugin
         $dump = '';
 
         switch ($export_mode) {
-            case 'create_table':
-                $dump .= '<h2>'
+        case 'create_table':
+            $dump .= '<h2>'
                 . __('Table structure for table') . ' '
                 . htmlspecialchars($table_alias)
                 . '</h2>';
-                $dump .= $this->getTableDef(
-                    $db,
-                    $table,
-                    $do_relation,
-                    $do_comments,
-                    $do_mime,
-                    false,
-                    $aliases
-                );
-                break;
-            case 'triggers':
-                $dump = '';
-                $triggers = $GLOBALS['dbi']->getTriggers($db, $table);
-                if ($triggers) {
-                    $dump .= '<h2>'
+            $dump .= $this->getTableDef(
+                $db,
+                $table,
+                $do_relation,
+                $do_comments,
+                $do_mime,
+                false,
+                $aliases
+            );
+            break;
+        case 'triggers':
+            $dump = '';
+            $triggers = $GLOBALS['dbi']->getTriggers($db, $table);
+            if ($triggers) {
+                $dump .= '<h2>'
                     . __('Triggers') . ' ' . htmlspecialchars($table_alias)
                     . '</h2>';
-                    $dump .= $this->getTriggers($db, $table);
-                }
-                break;
-            case 'create_view':
-                $dump .= '<h2>'
+                $dump .= $this->getTriggers($db, $table);
+            }
+            break;
+        case 'create_view':
+            $dump .= '<h2>'
                 . __('Structure for view') . ' ' . htmlspecialchars($table_alias)
                 . '</h2>';
-                $dump .= $this->getTableDef(
-                    $db,
-                    $table,
-                    $do_relation,
-                    $do_comments,
-                    $do_mime,
-                    true,
-                    $aliases
-                );
-                break;
-            case 'stand_in':
-                $dump .= '<h2>'
+            $dump .= $this->getTableDef(
+                $db,
+                $table,
+                $do_relation,
+                $do_comments,
+                $do_mime,
+                true,
+                $aliases
+            );
+            break;
+        case 'stand_in':
+            $dump .= '<h2>'
                 . __('Stand-in structure for view') . ' '
                 . htmlspecialchars($table_alias)
                 . '</h2>';
-                // export a stand-in definition to resolve view dependencies
-                $dump .= $this->getTableDefStandIn($db, $table, $crlf, $aliases);
+            // export a stand-in definition to resolve view dependencies
+            $dump .= $this->getTableDefStandIn($db, $table, $crlf, $aliases);
         } // end switch
 
-        return $this->export->outputHandler($dump);
+        return Export::outputHandler($dump);
     }
 
     /**
@@ -637,7 +633,7 @@ class ExportHtmlword extends ExportPlugin
             $type = '&nbsp;';
         }
 
-        if (! isset($column['Default'])) {
+        if (!isset($column['Default'])) {
             if ($column['Null'] != 'NO') {
                 $column['Default'] = 'NULL';
             }
@@ -647,11 +643,11 @@ class ExportHtmlword extends ExportPlugin
         $fmt_post = '';
         if (in_array($column['Field'], $unique_keys)) {
             $fmt_pre = '<strong>' . $fmt_pre;
-            $fmt_post .= '</strong>';
+            $fmt_post = $fmt_post . '</strong>';
         }
         if ($column['Key'] == 'PRI') {
             $fmt_pre = '<em>' . $fmt_pre;
-            $fmt_post .= '</em>';
+            $fmt_post = $fmt_post . '</em>';
         }
         $definition .= '<td class="print">' . $fmt_pre
             . htmlspecialchars($col_alias) . $fmt_post . '</td>';

@@ -5,19 +5,14 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 use PhpMyAdmin\Config\PageSettings;
 use PhpMyAdmin\Display\Import;
 use PhpMyAdmin\Response;
 
-if (! defined('ROOT_PATH')) {
-    define('ROOT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
-}
-
-global $db, $table;
-
-require_once ROOT_PATH . 'libraries/common.inc.php';
+/**
+ *
+ */
+require_once 'libraries/common.inc.php';
 
 PageSettings::showGroup('Import');
 
@@ -29,16 +24,11 @@ $scripts->addFile('import.js');
 /**
  * Does the common work
  */
-require ROOT_PATH . 'libraries/server_common.inc.php';
-
-$import = new Import();
+require 'libraries/server_common.inc.php';
 
 $response = Response::getInstance();
 $response->addHTML(
-    $import->get(
-        'server',
-        $db,
-        $table,
-        $max_upload_size
+    Import::get(
+        'server', $db, $table, $max_upload_size
     )
 );

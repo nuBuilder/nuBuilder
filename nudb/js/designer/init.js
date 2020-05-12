@@ -3,73 +3,65 @@
  * Initialises the data required to run Designer, then fires it up.
  */
 
-/* global DesignerOfflineDB */ // js/designer/database.js
-/* global DesignerHistory */ // js/designer/history.js
-/* global DesignerMove */ // js/designer/move.js
-/* global DesignerPage */ // js/designer/page.js
-/* global designerConfig */ // templates/database/designer/main.twig
-
-/* eslint-disable no-unused-vars */
-var jTabs;
-var hTabs;
+var j_tabs;
+var h_tabs;
 var contr;
-var displayField;
+var display_field;
 var server;
-var selectedPage;
-/* eslint-enable no-unused-vars */
-
 var db;
-var designerTablesEnabled;
+var selected_page;
+var designer_tables_enabled;
 
 AJAX.registerTeardown('designer/init.js', function () {
     $('.trigger').off('click');
 });
 
 AJAX.registerOnload('designer/init.js', function () {
-    $('.trigger').on('click', function () {
+    $('.trigger').click(function () {
         $('.panel').toggle('fast');
         $(this).toggleClass('active');
         $('#ab').accordion('refresh');
         return false;
     });
+    var tables_data = JSON.parse($('#script_tables').html());
 
-    jTabs = designerConfig.scriptTables.j_tabs;
-    hTabs = designerConfig.scriptTables.h_tabs;
-    contr = designerConfig.scriptContr;
-    displayField = designerConfig.scriptDisplayField;
+    j_tabs             = tables_data.j_tabs;
+    h_tabs             = tables_data.h_tabs;
+    contr              = JSON.parse($('#script_contr').html());
+    display_field      = JSON.parse($('#script_display_field').html());
 
-    server = designerConfig.server;
-    db = designerConfig.db;
-    selectedPage = designerConfig.displayPage;
-    designerTablesEnabled = designerConfig.tablesEnabled;
+    server             = $('#script_server').html();
+    db                 = $('#script_db').html();
+    selected_page      = $('#script_display_page').html() === '' ? '-1' : $('#script_display_page').html();
+    designer_tables_enabled = $('#designer_tables_enabled').html() === '1';
 
-    DesignerMove.main();
+    Main();
 
-    if (! designerTablesEnabled) {
+    if (! designer_tables_enabled) {
         DesignerOfflineDB.open(function (success) {
             if (success) {
-                DesignerPage.showTablesInLandingPage(db);
+                Show_tables_in_landing_page(db);
             }
         });
     }
 
-    $('#query_Aggregate_Button').on('click', function () {
+    $('#query_Aggregate_Button').click(function () {
         document.getElementById('query_Aggregate').style.display = 'none';
     });
 
-    $('#query_having_button').on('click', function () {
+    $('#query_having_button').click(function () {
         document.getElementById('query_having').style.display = 'none';
     });
 
-    $('#query_rename_to_button').on('click', function () {
+    $('#query_rename_to_button').click(function () {
         document.getElementById('query_rename_to').style.display = 'none';
     });
 
-    $('#build_query_button').on('click', function () {
-        DesignerHistory.buildQuery('SQL Query on Database', 0);
+    $('#build_query_button').click(function () {
+        build_query('SQL Query on Database', 0);
     });
 
-    $('#query_where_button').on('click', function () {
+    $('#query_where_button').click(function () {
         document.getElementById('query_where').style.display = 'none';
     });
 });

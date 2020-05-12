@@ -6,8 +6,6 @@
  * @package    PhpMyAdmin-Transformations
  * @subpackage LongToIPv4
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Plugins\Transformations;
 
 use PhpMyAdmin\Plugins\Transformations\Abs\LongToIPv4TransformationsPlugin;

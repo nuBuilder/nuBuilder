@@ -53,8 +53,7 @@ function nuValidateSubforms(){
 							if($d == 0){
 								nuDisplayError("$label " . nuTranslate('cannot be left blank'));
 							}else{
-								//nuDisplayError("$label on row $noz " . nuTranslate('cannot be left blank') . " $slabel");
-								nuDisplayError("$label ".nuTranslate('on row'). " " .$noz. " " . nuTranslate('cannot be left blank') . " $slabel");
+								nuDisplayError("$label on row $noz " . nuTranslate('cannot be left blank') . " $slabel");
 							}
 							
 						}
@@ -68,11 +67,9 @@ function nuValidateSubforms(){
 						if($dupe and $notDeleted){
 							
 							if($d == 0){
-								//nuDisplayError("$label has a duplicate");
-								nuDisplayError("$label " . nuTranslate('has a duplicate'));
+								nuDisplayError("$label has a duplicate");
 							}else{
-								//nuDisplayError("$label on row $noz has a duplicate $slabel");
-								nuDisplayError("$label ".nuTranslate('on row'). " " .$noz. " ". nuTranslate('has a duplicate') . " $slabel");
+								nuDisplayError("$label on row $noz has a duplicate $slabel");
 							}
 							
 						}
@@ -161,14 +158,7 @@ function nuUpdateDatabase(){
 		$fk			= $sf->foreign_key;
 		$fv			= $_POST['nuHash']['record_id'];
 		$auto		= nuAutoNumbers($sf->object_id);
-		
-		if(is_array($cts[$table]['names'])){
-			$CTSTN = $cts[$table]['names'];
-		}else{
-			$CTSTN = array();
-		}
-		
-		$log		= in_array($table . '_nulog', $CTSTN);
+		$log		= in_array($table . '_nulog', $cts[$table]['names']);
 		
 		for($r = 0 ; $r < count($rows) ; $r++){
 			
@@ -234,7 +224,7 @@ function nuUpdateDatabase(){
 
 						}
 						
-						if(in_array($fields[$R], $CTSTN)){								//-- valid field names
+						if(in_array($fields[$R], $cts[$table]['names'])){								//-- valid field names
 
 							if($isAN){
 								$v	= nuAutoNumber($sf->object_id, $fields[$R], $row[$R]);

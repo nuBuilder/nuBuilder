@@ -6,8 +6,6 @@
  * @package    PhpMyAdmin-Export
  * @subpackage CodeGen
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Plugins\Export\Helpers;
 
 use PhpMyAdmin\Plugins\Export\ExportCodegen;
@@ -37,14 +35,14 @@ class TableProperty
     /**
      * Whether the key is nullable or not
      *
-     * @var string
+     * @var bool
      */
     public $nullable;
 
     /**
      * The key
      *
-     * @var string
+     * @var int
      */
     public $key;
 
@@ -69,12 +67,12 @@ class TableProperty
      */
     public function __construct(array $row)
     {
-        $this->name = trim((string) $row[0]);
-        $this->type = trim((string) $row[1]);
-        $this->nullable = trim((string) $row[2]);
-        $this->key = trim((string) $row[3]);
-        $this->defaultValue = trim((string) $row[4]);
-        $this->ext = trim((string) $row[5]);
+        $this->name = trim($row[0]);
+        $this->type = trim($row[1]);
+        $this->nullable = trim($row[2]);
+        $this->key = trim($row[3]);
+        $this->defaultValue = trim($row[4]);
+        $this->ext = trim($row[5]);
     }
 
     /**
@@ -94,24 +92,24 @@ class TableProperty
     /**
      * Tells whether the key is null or not
      *
-     * @return string true if the key is not null, false otherwise
+     * @return bool true if the key is not null, false otherwise
      */
     public function isNotNull()
     {
-        return $this->nullable === "NO" ? "true" : "false";
+        return $this->nullable == "NO" ? "true" : "false";
     }
 
     /**
      * Tells whether the key is unique or not
      *
-     * @return string "true" if the key is unique, "false" otherwise
+     * @return bool true if the key is unique, false otherwise
      */
-    public function isUnique(): string
+    public function isUnique()
     {
-        return ($this->key === "PRI" || $this->key === "UNI") ? "true" : "false";
+        return $this->key == "PRI" || $this->key == "UNI" ? "true" : "false";
     }
 
-    /**
+     /**
      * Gets the .NET primitive type
      *
      * @return string type
@@ -199,9 +197,9 @@ class TableProperty
      *
      * @return bool true if the key is primary, false otherwise
      */
-    public function isPK(): bool
+    public function isPK()
     {
-        return $this->key === "PRI";
+        return $this->key == "PRI";
     }
 
     /**
@@ -214,7 +212,7 @@ class TableProperty
     public function formatCs($text)
     {
         $text = str_replace(
-            '#name#',
+            "#name#",
             ExportCodegen::cgMakeIdentifier($this->name, false),
             $text
         );
@@ -231,14 +229,13 @@ class TableProperty
     public function formatXml($text)
     {
         $text = str_replace(
-            [
-                '#name#',
-                '#indexName#',
-            ],
-            [
-                htmlspecialchars($this->name, ENT_COMPAT, 'UTF-8'),
-                $this->getIndexName(),
-            ],
+            "#name#",
+            htmlspecialchars($this->name, ENT_COMPAT, 'UTF-8'),
+            $text
+        );
+        $text = str_replace(
+            "#indexName#",
+            $this->getIndexName(),
             $text
         );
         return $this->format($text);
@@ -254,22 +251,33 @@ class TableProperty
     public function format($text)
     {
         $text = str_replace(
-            [
-                '#ucfirstName#',
-                '#dotNetPrimitiveType#',
-                '#dotNetObjectType#',
-                '#type#',
-                '#notNull#',
-                '#unique#',
-            ],
-            [
-                ExportCodegen::cgMakeIdentifier($this->name),
-                $this->getDotNetPrimitiveType(),
-                $this->getDotNetObjectType(),
-                $this->getPureType(),
-                $this->isNotNull(),
-                $this->isUnique(),
-            ],
+            "#ucfirstName#",
+            ExportCodegen::cgMakeIdentifier($this->name),
+            $text
+        );
+        $text = str_replace(
+            "#dotNetPrimitiveType#",
+            $this->getDotNetPrimitiveType(),
+            $text
+        );
+        $text = str_replace(
+            "#dotNetObjectType#",
+            $this->getDotNetObjectType(),
+            $text
+        );
+        $text = str_replace(
+            "#type#",
+            $this->getPureType(),
+            $text
+        );
+        $text = str_replace(
+            "#notNull#",
+            $this->isNotNull(),
+            $text
+        );
+        $text = str_replace(
+            "#unique#",
+            $this->isUnique(),
             $text
         );
         return $text;

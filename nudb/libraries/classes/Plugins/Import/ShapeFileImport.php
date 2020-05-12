@@ -7,8 +7,6 @@
  * @package    PhpMyAdmin-Import
  * @subpackage ESRI_Shape
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Plugins\Import;
 
 use PhpMyAdmin\ShapeFile\ShapeFile;

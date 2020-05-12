@@ -6,8 +6,6 @@
  * @package    PhpMyAdmin-Transformations
  * @subpackage Bool2Text
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Plugins\Transformations\Output;
 
 use PhpMyAdmin\Plugins\Transformations\Abs\Bool2TextTransformationsPlugin;

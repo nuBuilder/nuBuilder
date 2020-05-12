@@ -10,11 +10,11 @@
 
 function showSettings (selector) {
     var buttons = {};
-    buttons[Messages.strApply] = function () {
-        $('.config-form').trigger('submit');
+    buttons[PMA_messages.strApply] = function () {
+        $('.config-form').submit();
     };
 
-    buttons[Messages.strCancel] = function () {
+    buttons[PMA_messages.strCancel] = function () {
         $(this).dialog('close');
     };
 
@@ -22,7 +22,7 @@ function showSettings (selector) {
     var $clone = $(selector + ' .page_settings').clone(true);
     $(selector)
         .dialog({
-            title: Messages.strPageSettings,
+            title: PMA_messages.strPageSettings,
             width: 700,
             minHeight: 250,
             modal: true,

@@ -1,8 +1,8 @@
 <?php
+
 /**
  * `REPLACE` statement.
  */
-declare(strict_types=1);
 
 namespace PhpMyAdmin\SqlParser\Statements;
 
@@ -14,9 +14,6 @@ use PhpMyAdmin\SqlParser\Parser;
 use PhpMyAdmin\SqlParser\Statement;
 use PhpMyAdmin\SqlParser\Token;
 use PhpMyAdmin\SqlParser\TokensList;
-use function count;
-use function strlen;
-use function trim;
 
 /**
  * `REPLACE` statement.
@@ -38,6 +35,10 @@ use function trim;
  *   [PARTITION (partition_name,...)]
  *   [(col_name,...)]
  *   SELECT ...
+ *
+ * @category   Statements
+ *
+ * @license    https://www.gnu.org/licenses/gpl-2.0.txt GPL-2.0+
  */
 class ReplaceStatement extends Statement
 {
@@ -46,10 +47,10 @@ class ReplaceStatement extends Statement
      *
      * @var array
      */
-    public static $OPTIONS = [
+    public static $OPTIONS = array(
         'LOW_PRIORITY' => 1,
         'DELAYED' => 1,
-    ];
+    );
 
     /**
      * Tables used as target for this statement.
@@ -86,14 +87,13 @@ class ReplaceStatement extends Statement
      */
     public function build()
     {
-        $ret = 'REPLACE ' . $this->options;
-        $ret = trim($ret) . ' INTO ' . $this->into;
+        $ret = 'REPLACE ' . $this->options . ' INTO ' . $this->into;
 
-        if ($this->values !== null && count($this->values) > 0) {
+        if ($this->values != null && count($this->values) > 0) {
             $ret .= ' VALUES ' . Array2d::build($this->values);
-        } elseif ($this->set !== null && count($this->set) > 0) {
+        } elseif ($this->set != null && count($this->set) > 0) {
             $ret .= ' SET ' . SetOperation::build($this->set);
-        } elseif ($this->select !== null && strlen((string) $this->select) > 0) {
+        } elseif ($this->select != null && strlen($this->select) > 0) {
             $ret .= ' ' . $this->select->build();
         }
 
@@ -155,12 +155,11 @@ class ReplaceStatement extends Statement
                     $parser->error('Unexpected keyword.', $token);
                     break;
                 }
-
                 ++$list->idx;
                 $this->into = IntoKeyword::parse(
                     $parser,
                     $list,
-                    ['fromReplace' => true]
+                    array('fromReplace' => true)
                 );
 
                 $state = 1;
@@ -185,7 +184,6 @@ class ReplaceStatement extends Statement
                         );
                         break;
                     }
-
                     $state = 2;
                 } else {
                     $parser->error(

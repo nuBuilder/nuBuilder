@@ -5,36 +5,29 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 use PhpMyAdmin\ErrorReport;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\Response;
 use PhpMyAdmin\UserPreferences;
 use PhpMyAdmin\Utils\HttpRequest;
 
-if (! defined('ROOT_PATH')) {
-    define('ROOT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
-}
+require_once 'libraries/common.inc.php';
 
-require_once ROOT_PATH . 'libraries/common.inc.php';
-
-if (! isset($_POST['exception_type'])
-    || ! in_array($_POST['exception_type'], ['js', 'php'])
+if (!isset($_REQUEST['exception_type'])
+    ||!in_array($_REQUEST['exception_type'], array('js', 'php'))
 ) {
     die('Oops, something went wrong!!');
 }
 
 $response = Response::getInstance();
 
-/** @var ErrorReport $errorReport */
-$errorReport = $containerBuilder->get('error_report');
+$errorReport = new ErrorReport(new HttpRequest());
 
-if (isset($_POST['send_error_report'])
-    && ($_POST['send_error_report'] == true
-    || $_POST['send_error_report'] == '1')
+if (isset($_REQUEST['send_error_report'])
+    && ($_REQUEST['send_error_report'] == true
+    || $_REQUEST['send_error_report'] == '1')
 ) {
-    if ($_POST['exception_type'] == 'php') {
+    if ($_REQUEST['exception_type'] == 'php') {
         /**
          * Prevent infinite error submission.
          * Happens in case error submissions fails.
@@ -44,36 +37,36 @@ if (isset($_POST['send_error_report'])
         if (isset($_SESSION['prev_error_subm_time'])
             && isset($_SESSION['error_subm_count'])
             && $_SESSION['error_subm_count'] >= 3
-            && ($_SESSION['prev_error_subm_time'] - time()) <= 3000
+            && ($_SESSION['prev_error_subm_time']-time()) <= 3000
         ) {
             $_SESSION['error_subm_count'] = 0;
             $_SESSION['prev_errors'] = '';
-            $response->addJSON('stopErrorReportLoop', '1');
+            $response->addJSON('_stopErrorReportLoop', '1');
         } else {
             $_SESSION['prev_error_subm_time'] = time();
             $_SESSION['error_subm_count'] = (
-                isset($_SESSION['error_subm_count'])
-                    ? ($_SESSION['error_subm_count'] + 1)
-                    : 0
+                (isset($_SESSION['error_subm_count']))
+                    ? ($_SESSION['error_subm_count']+1)
+                    : (0)
             );
         }
     }
-    $reportData = $errorReport->getData($_POST['exception_type']);
+    $reportData = $errorReport->getData($_REQUEST['exception_type']);
     // report if and only if there were 'actual' errors.
     if (count($reportData) > 0) {
         $server_response = $errorReport->send($reportData);
-        if (! is_string($server_response)) {
+        if ($server_response === false) {
             $success = false;
         } else {
             $decoded_response = json_decode($server_response, true);
-            $success = ! empty($decoded_response) ?
+            $success = !empty($decoded_response) ?
                 $decoded_response["success"] : false;
         }
 
         /* Message to show to the user */
         if ($success) {
-            if ((isset($_POST['automatic'])
-                && $_POST['automatic'] === "true")
+            if ((isset($_REQUEST['automatic'])
+                && $_REQUEST['automatic'] === "true")
                 || $GLOBALS['cfg']['SendErrorReports'] == 'always'
             ) {
                 $msg = __(
@@ -105,36 +98,38 @@ if (isset($_POST['send_error_report'])
 
         /* Add message to response */
         if ($response->isAjax()) {
-            if ($_POST['exception_type'] == 'js') {
+            if ($_REQUEST['exception_type'] == 'js') {
                 $response->addJSON('message', $msg);
             } else {
-                $response->addJSON('errSubmitMsg', $msg);
+                $response->addJSON('_errSubmitMsg', $msg);
             }
-        } elseif ($_POST['exception_type'] == 'php') {
-            $jsCode = 'Functions.ajaxShowMessage("<div class=\"error\">'
+        } elseif ($_REQUEST['exception_type'] == 'php') {
+            $jsCode = 'PMA_ajaxShowMessage("<div class=\"error\">'
                     . $msg
                     . '</div>", false);';
             $response->getFooter()->getScripts()->addCode($jsCode);
         }
 
-        if ($_POST['exception_type'] == 'php') {
+        if ($_REQUEST['exception_type'] == 'php') {
             // clear previous errors & save new ones.
             $GLOBALS['error_handler']->savePreviousErrors();
         }
 
         /* Persist always send settings */
-        if (isset($_POST['always_send'])
-            && $_POST['always_send'] === "true"
+        if (isset($_REQUEST['always_send'])
+            && $_REQUEST['always_send'] === "true"
         ) {
             $userPreferences = new UserPreferences();
             $userPreferences->persistOption("SendErrorReports", "always", "ask");
         }
     }
-} elseif (! empty($_POST['get_settings'])) {
+} elseif (! empty($_REQUEST['get_settings'])) {
     $response->addJSON('report_setting', $GLOBALS['cfg']['SendErrorReports']);
-} elseif ($_POST['exception_type'] == 'js') {
-    $response->addHTML($errorReport->getForm());
 } else {
-    // clear previous errors & save new ones.
-    $GLOBALS['error_handler']->savePreviousErrors();
+    if ($_REQUEST['exception_type'] == 'js') {
+        $response->addHTML($errorReport->getForm());
+    } else {
+        // clear previous errors & save new ones.
+        $GLOBALS['error_handler']->savePreviousErrors();
+    }
 }

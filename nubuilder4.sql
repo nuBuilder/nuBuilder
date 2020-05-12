@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.2
+-- version 4.8.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 12, 2020 at 12:19 AM
--- Server version: 10.4.10-MariaDB
--- PHP Version: 7.3.12
+-- Generation Time: Nov 16, 2019 at 11:59 PM
+-- Server version: 10.4.8-MariaDB
+-- PHP Version: 7.1.32
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -3448,59 +3448,7 @@ INSERT INTO `zzzzsys_translate` (`zzzzsys_translate_id`, `trl_language`, `trl_en
 ('nu5bad6cb37f382a8', 'Russian', 'To edit a table go to the Database Button', 'Чтобы отредактировать таблицу, перейдите к кнопке «База данных»'),
 ('nu5bad6cb37f435bd', 'Spanish', 'To edit a table go to the Database Button', 'Para editar una tabla, vaya al botón Base de datos.'),
 ('nu5bad6cb37f4dff3', 'Vietnamese', 'To edit a table go to the Database Button', 'Để chỉnh sửa bảng, hãy chuyển đến nút Cơ sở dữ liệu'),
-('nu5bb18df02b72556', 'Spanish', 'cannot be left blank', ' no se puede dejar en blanco'),
-('5b536277359cf45', 'Czech', 'Access Levels', 'Úroveň přístupu'),
-('5b5362870802a09', 'Czech', 'Add', 'Přidat'),
-('5b5362979651c35', 'Czech', 'Add Table', 'Přidat tabulku'),
-('5b5362bbc24465c', 'Czech', 'Addable Objects', 'Přidávané objekty'),
-('5b5362d8e84055e', 'Czech', 'Adjust All Selected Objects Horizontally', 'Vše vybrané zarovnat horizontálně'),
-('5b5362fa314bb23', 'Czech', 'Adjust All Selected Objects Vertically', 'Vše vybrané zarovnat vertikálně'),
-('5b536310c5b1516', 'Czech', 'Adjust Objects', 'Zarovnat objekty'),
-('5b536324780beeb', 'Czech', 'All', 'Vše'),
-('5b53633b329e126', 'Czech', 'Browse', 'Procházet'),
-('5b53634db3d20d1', 'Czech', 'Change Login', 'Změna přihlášení'),
-('5b536371cdb3a2a', 'Czech', 'Clone', 'Kopie'),
-('5b536385b49c1da', 'Czech', 'Delete', 'Smazat'),
-('5b5363a2629d9a7', 'Czech', 'Home', 'Domu'),
-('5b5363b3f21351d', 'Czech', 'Logout', 'Odhlásit'),
-('5b5363d1e3d1573', 'Czech', 'Refresh', 'Obnovit'),
-('5b5363e5c6edeac', 'Czech', 'Save', 'Uložit'),
-('5b5363f6aee7bfa', 'Czech', 'Search', 'Vyhledat'),
-('5b53640ee31398b', 'Czech', 'Setup', 'Instalace'),
-('5b53643791ddbc2', 'Czech', 'Title', 'Nadpis'),
-('5b53645b00b94f0', 'Czech', 'Username ', 'Uživatel '),
-('5b53647ba4346cc', 'Czech', 'User Home', 'Domácí stránka'),
-('5b536494d5bf01e', 'Czech', 'Translation', 'Překlad'),
-('5b5365de685b403', 'Czech', 'User ', 'Uživatel '),
-('5b5365e9ad44648', 'Czech', 'Password ', 'Heslo '),
-('5b53757baffc478', 'Czech', 'Reenter New Password', 'Znovu nové heslo'),
-('5b53758c7def4ec', 'Czech', 'Enter New Password', 'Nové heslo'),
-('5b5375c94c3a6e0', 'Czech', 'Builders', 'Návrhář'),
-('5b5375ed09d39b0', 'Czech', 'Print', 'Tisk'),
-('5b5377192d8e660', 'Czech', 'Leave this form without saving?', 'Opustit formulář bez uložení dat?'),
-('5b537780e253dba', 'Czech', 'Users', 'Uživatelé'),
-('5b5377a876328ea', 'Czech', 'Fast Form', 'Rychlý formulář'),
-('5b5377c4462b44a', 'Czech', 'New Fast Form', 'Nový rychlý formulář'),
-('5b5377efdba8213', 'Czech', 'Procedure', 'Procedura'),
-('5b53780b8f388b0', 'Czech', 'Procedures', 'Procedury'),
-('5b537820263afd9', 'Czech', 'Run Procedure', 'Spustit proceduru'),
-('5b53784d45a0fac', 'Czech', 'Report', 'Sestava'),
-('5b537861ab754e0', 'Czech', 'Reports', 'Sestavy'),
-('5b5378fc3483bdb', 'Czech', 'Help', 'Nápověda'),
-('5b5379bf90711af', 'Czech', 'Fast Report', 'Rychlá sestava'),
-('5b5379da1542d10', 'Czech', 'New Fast Report', 'Nová rychlá sestava'),
-('5b537a0e2554da0', 'Czech', 'Delete This Row When Saved', 'Smazat tento řádek při uložení'),
-('5b537a984ac6523', 'Czech', 'Run Report', 'Spustit sestavu'),
-('5b537ac0e3b1b35', 'Czech', 'Report Designer', 'Návrhář sestav'),
-('5b537b1dc7dba4c', 'Czech', 'Table Data', 'Datová tabulka'),
-('5b537ec77b418a9', 'Czech', 'Options', 'Možnosti'),
-('5b537ee73cc605c', 'Czech', 'Columns', 'Sloupce'),
-('5b537f1babf7718', 'Czech', 'Searchable Columns', 'Vyhledávat ve sloupcích'),
-('5b54317c39eee66', 'Czech', 'Forms', 'Formuláře'),
-('5b543216c91a0d6', 'Czech', 'Database', 'Databáze'),
-('5b5432404601b65', 'Czech', 'Objects', 'Objekty'),
-('5b543420a333878', 'Czech', 'Language', 'Řeč'),
-('5b543524092bb52', 'Czech', 'Files', 'Soubory');
+('nu5bb18df02b72556', 'Spanish', 'cannot be left blank', ' no se puede dejar en blanco');
 
 -- --------------------------------------------------------
 

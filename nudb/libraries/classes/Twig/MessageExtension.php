@@ -5,13 +5,11 @@
  *
  * @package PhpMyAdmin\Twig
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Twig;
 
 use PhpMyAdmin\Message;
 use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 /**
  * Class MessageExtension
@@ -21,34 +19,27 @@ use Twig\TwigFilter;
 class MessageExtension extends AbstractExtension
 {
     /**
-     * Returns a list of filters to add to the existing list.
+     * Returns a list of functions to add to the existing list.
      *
-     * @return TwigFilter[]
+     * @return TwigFunction[]
      */
-    public function getFilters()
+    public function getFunctions()
     {
-        return [
-            new TwigFilter(
-                'notice',
-                function (string $string) {
+        return array(
+            new TwigFunction(
+                'Message_notice',
+                function ($string) {
                     return Message::notice($string)->getDisplay();
                 },
-                ['is_safe' => ['html']]
+                array('is_safe' => array('html'))
             ),
-            new TwigFilter(
-                'error',
-                function (string $string) {
+            new TwigFunction(
+                'Message_error',
+                function ($string) {
                     return Message::error($string)->getDisplay();
                 },
-                ['is_safe' => ['html']]
+                array('is_safe' => array('html'))
             ),
-            new TwigFilter(
-                'raw_success',
-                function (string $string) {
-                    return Message::rawSuccess($string)->getDisplay();
-                },
-                ['is_safe' => ['html']]
-            ),
-        ];
+        );
     }
 }

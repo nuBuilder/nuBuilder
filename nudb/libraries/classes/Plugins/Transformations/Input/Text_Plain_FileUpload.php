@@ -6,8 +6,6 @@
  * @package    PhpMyAdmin-Transformations
  * @subpackage TextFileUpload
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Plugins\Transformations\Input;
 
 use PhpMyAdmin\Plugins\Transformations\Abs\TextFileUploadTransformationsPlugin;

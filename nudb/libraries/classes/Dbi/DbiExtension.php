@@ -4,8 +4,6 @@
  *
  * @package PhpMyAdmin-DBI
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Dbi;
 
 /**
@@ -25,9 +23,7 @@ interface DbiExtension
      * @return mixed false on error or a connection object on success
      */
     public function connect(
-        $user,
-        $password,
-        array $server
+        $user, $password, array $server
     );
 
     /**
@@ -155,18 +151,16 @@ interface DbiExtension
     /**
      * returns a string that represents the client library version
      *
-     * @param resource $link mysql link
-     *
      * @return string MySQL client library version
      */
-    public function getClientInfo($link);
+    public function getClientInfo();
 
     /**
      * returns last error message or false if no errors occurred
      *
      * @param resource $link connection link
      *
-     * @return string|bool error or false
+     * @return string|bool $error or false
      */
     public function getError($link);
 
@@ -212,7 +206,7 @@ interface DbiExtension
      * @param object $result result set identifier
      * @param int    $i      field
      *
-     * @return int|bool length of field
+     * @return int length of field
      */
     public function fieldLen($result, $i);
 

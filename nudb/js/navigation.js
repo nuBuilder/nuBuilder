@@ -5,26 +5,21 @@
  * @package phpMyAdmin-Navigation
  */
 
-/* global isStorageSupported, setupConfigTabs, setupRestoreField, setupValidation */ // js/config.js
-/* global RTE */ // js/rte.js
-
-var Navigation = {};
-
 /**
  * updates the tree state in sessionStorage
  *
  * @returns void
  */
-Navigation.treeStateUpdate = function () {
+function navTreeStateUpdate () {
     // update if session storage is supported
     if (isStorageSupported('sessionStorage')) {
         var storage = window.sessionStorage;
         // try catch necessary here to detect whether
         // content to be stored exceeds storage capacity
         try {
-            storage.setItem('navTreePaths', JSON.stringify(Navigation.traverseForPaths()));
-            storage.setItem('server', CommonParams.get('server'));
-            storage.setItem('token', CommonParams.get('token'));
+            storage.setItem('navTreePaths', JSON.stringify(traverseNavigationForPaths()));
+            storage.setItem('server', PMA_commonParams.get('server'));
+            storage.setItem('token', PMA_commonParams.get('token'));
         } catch (error) {
             // storage capacity exceeded & old navigation tree
             // state is no more valid, so remove it
@@ -33,14 +28,15 @@ Navigation.treeStateUpdate = function () {
             storage.removeItem('token');
         }
     }
-};
+}
+
 
 /**
  * updates the filter state in sessionStorage
  *
  * @returns void
  */
-Navigation.filterStateUpdate = function (filterName, filterValue) {
+function navFilterStateUpdate (filterName, filterValue) {
     if (isStorageSupported('sessionStorage')) {
         var storage = window.sessionStorage;
         try {
@@ -53,14 +49,15 @@ Navigation.filterStateUpdate = function (filterName, filterValue) {
             storage.removeItem('navTreeSearchFilters');
         }
     }
-};
+}
+
 
 /**
  * restores the filter state on navigation reload
  *
  * @returns void
  */
-Navigation.filterStateRestore = function () {
+function navFilterStateRestore () {
     if (isStorageSupported('sessionStorage')
         && typeof window.sessionStorage.navTreeSearchFilters !== 'undefined'
     ) {
@@ -72,11 +69,11 @@ Navigation.filterStateRestore = function () {
         if (searchClauses.hasOwnProperty('dbFilter')
             && searchClauses.dbFilter.length
         ) {
-            var $obj = $('#pma_navigation_tree');
+            $obj = $('#pma_navigation_tree');
             if (! $obj.data('fastFilter')) {
                 $obj.data(
                     'fastFilter',
-                    new Navigation.FastFilter.Filter($obj, '')
+                    new PMA_fastFilter.filter($obj, '')
                 );
             }
             $obj.find('li.fast_filter.db_fast_filter input.searchClause')
@@ -84,7 +81,7 @@ Navigation.filterStateRestore = function () {
                 .trigger('keyup');
         }
         // find all table filters present in the tree
-        var $tableFilters = $('#pma_navigation_tree li.database')
+        $tableFilters = $('#pma_navigation_tree li.database')
             .children('div.list_container')
             .find('li.fast_filter input.searchClause');
         // restore table filters
@@ -100,13 +97,13 @@ Navigation.filterStateRestore = function () {
                 // happens when table filter becomes invisible
                 // as db filter has already been applied
                 if (! $obj.is(':visible')) {
-                    Navigation.filterStateUpdate(filterName, '');
+                    navFilterStateUpdate(filterName, '');
                     return true;
                 }
                 if (! $obj.data('fastFilter')) {
                     $obj.data(
                         'fastFilter',
-                        new Navigation.FastFilter.Filter($obj, '')
+                        new PMA_fastFilter.filter($obj, '')
                     );
                 }
                 $(this).val(searchClauses[filterName])
@@ -114,7 +111,7 @@ Navigation.filterStateRestore = function () {
             }
         });
     }
-};
+}
 
 /**
  * Loads child items of a node and executes a given callback
@@ -125,7 +122,7 @@ Navigation.filterStateRestore = function () {
  *
  * @returns void
  */
-Navigation.loadChildNodes = function (isNode, $expandElem, callback) {
+function loadChildNodes (isNode, $expandElem, callback) {
     var $destination = null;
     var params = null;
 
@@ -135,28 +132,28 @@ Navigation.loadChildNodes = function (isNode, $expandElem, callback) {
         }
         $destination = $expandElem.closest('li');
         params = {
-            'aPath': $expandElem.find('span.aPath').text(),
-            'vPath': $expandElem.find('span.vPath').text(),
-            'pos': $expandElem.find('span.pos').text(),
-            'pos2_name': $expandElem.find('span.pos2_name').text(),
-            'pos2_value': $expandElem.find('span.pos2_value').text(),
-            'searchClause': '',
-            'searchClause2': ''
+            aPath: $expandElem.find('span.aPath').text(),
+            vPath: $expandElem.find('span.vPath').text(),
+            pos: $expandElem.find('span.pos').text(),
+            pos2_name: $expandElem.find('span.pos2_name').text(),
+            pos2_value: $expandElem.find('span.pos2_value').text(),
+            searchClause: '',
+            searchClause2: ''
         };
         if ($expandElem.closest('ul').hasClass('search_results')) {
-            params.searchClause = Navigation.FastFilter.getSearchClause();
-            params.searchClause2 = Navigation.FastFilter.getSearchClause2($expandElem);
+            params.searchClause = PMA_fastFilter.getSearchClause();
+            params.searchClause2 = PMA_fastFilter.getSearchClause2($expandElem);
         }
     } else {
         $destination = $('#pma_navigation_tree_content');
         params = {
-            'aPath': $expandElem.attr('aPath'),
-            'vPath': $expandElem.attr('vPath'),
-            'pos': $expandElem.attr('pos'),
-            'pos2_name': '',
-            'pos2_value': '',
-            'searchClause': '',
-            'searchClause2': ''
+            aPath: $expandElem.attr('aPath'),
+            vPath: $expandElem.attr('vPath'),
+            pos: $expandElem.attr('pos'),
+            pos2_name: '',
+            pos2_value: '',
+            searchClause: '',
+            searchClause2: ''
         };
     }
 
@@ -178,10 +175,10 @@ Navigation.loadChildNodes = function (isNode, $expandElem, callback) {
                     })
                     .slideDown('slow');
             }
-            if (data.errors) {
-                var $errors = $(data.errors);
+            if (data._errors) {
+                var $errors = $(data._errors);
                 if ($errors.children().length > 0) {
-                    $('#pma_errors').replaceWith(data.errors);
+                    $('#pma_errors').replaceWith(data._errors);
                 }
             }
             if (callback && typeof callback === 'function') {
@@ -191,7 +188,7 @@ Navigation.loadChildNodes = function (isNode, $expandElem, callback) {
             if (window.location.href.indexOf('?') === -1) {
                 window.location.href += '?session_expired=1';
             } else {
-                window.location.href += CommonParams.get('arg_separator') + 'session_expired=1';
+                window.location.href += PMA_commonParams.get('arg_separator') + 'session_expired=1';
             }
             window.location.reload();
         } else {
@@ -199,10 +196,10 @@ Navigation.loadChildNodes = function (isNode, $expandElem, callback) {
             $throbber.hide();
             var $icon = $expandElem.find('img.ic_b_plus');
             $icon.show();
-            Functions.ajaxShowMessage(data.error, false);
+            PMA_ajaxShowMessage(data.error, false);
         }
     });
-};
+}
 
 /**
  * Collapses a node in navigation tree.
@@ -211,7 +208,7 @@ Navigation.loadChildNodes = function (isNode, $expandElem, callback) {
  *
  * @returns void
  */
-Navigation.collapseTreeNode = function ($expandElem) {
+function collapseTreeNode ($expandElem) {
     var $children = $expandElem.closest('li').children('div.list_container');
     var $icon = $expandElem.find('img');
     if ($expandElem.hasClass('loaded')) {
@@ -220,9 +217,9 @@ Navigation.collapseTreeNode = function ($expandElem) {
             $children.slideUp('fast');
         }
     }
-    $expandElem.trigger('blur');
-    $children.promise().done(Navigation.treeStateUpdate);
-};
+    $expandElem.blur();
+    $children.promise().done(navTreeStateUpdate);
+}
 
 /**
  * Traverse the navigation tree backwards to generate all the actual
@@ -231,7 +228,7 @@ Navigation.collapseTreeNode = function ($expandElem) {
  *
  * @return Object
  */
-Navigation.traverseForPaths = function () {
+function traverseNavigationForPaths () {
     var params = {
         pos: $('#pma_navigation_tree').find('div.dbselector select').val()
     };
@@ -246,25 +243,25 @@ Navigation.traverseForPaths = function () {
             params['n' + count + '_aPath'] = $(this).find('span.aPath').text();
             params['n' + count + '_vPath'] = $(this).find('span.vPath').text();
 
-            var pos2Name = $(this).find('span.pos2_name').text();
-            if (! pos2Name) {
-                pos2Name = $(this)
+            var pos2_name = $(this).find('span.pos2_name').text();
+            if (! pos2_name) {
+                pos2_name = $(this)
                     .parent()
                     .parent()
                     .find('span.pos2_name:last')
                     .text();
             }
-            var pos2Value = $(this).find('span.pos2_value').text();
-            if (! pos2Value) {
-                pos2Value = $(this)
+            var pos2_value = $(this).find('span.pos2_value').text();
+            if (! pos2_value) {
+                pos2_value = $(this)
                     .parent()
                     .parent()
                     .find('span.pos2_value:last')
                     .text();
             }
 
-            params['n' + count + '_pos2_name'] = pos2Name;
-            params['n' + count + '_pos2_value'] = pos2Value;
+            params['n' + count + '_pos2_name'] = pos2_name;
+            params['n' + count + '_pos2_value'] = pos2_value;
 
             params['n' + count + '_pos3_name'] = $(this).find('span.pos3_name').text();
             params['n' + count + '_pos3_value'] = $(this).find('span.pos3_value').text();
@@ -272,7 +269,7 @@ Navigation.traverseForPaths = function () {
         }
     });
     return params;
-};
+}
 
 /**
  * Executed on page load
@@ -289,7 +286,7 @@ $(function () {
     });
 
     // Fire up the resize handlers
-    new Navigation.ResizeHandler();
+    new ResizeHandler();
 
     /**
      * opens/closes (hides/shows) tree elements
@@ -300,9 +297,9 @@ $(function () {
         event.stopImmediatePropagation();
         var $icon = $(this).find('img');
         if ($icon.is('.ic_b_plus')) {
-            Navigation.expandTreeNode($(this));
+            expandTreeNode($(this));
         } else {
-            Navigation.collapseTreeNode($(this));
+            collapseTreeNode($(this));
         }
     });
 
@@ -312,26 +309,25 @@ $(function () {
      */
     $(document).on('click', '#pma_navigation_reload', function (event) {
         event.preventDefault();
-
-        // Find the loading symbol and show it
-        var $iconThrobberSrc = $('#pma_navigation').find('.throbber');
-        $iconThrobberSrc.show();
-        // TODO Why is a loading symbol both hidden, and invisible?
-        $iconThrobberSrc.css('visibility', '');
-
-        // Callback to be used to hide the loading symbol when done reloading
-        function hideNav () {
-            $iconThrobberSrc.hide();
-        }
-
-        // Reload the navigation
-        Navigation.reload(hideNav);
+        // reload icon object
+        var $icon = $(this).find('img');
+        // source of the hidden throbber icon
+        var icon_throbber_src = $('#pma_navigation').find('.throbber').attr('src');
+        // source of the reload icon
+        var icon_reload_src = $icon.attr('src');
+        // replace the source of the reload icon with the one for throbber
+        $icon.attr('src', icon_throbber_src);
+        PMA_reloadNavigation();
+        // after one second, put back the reload icon
+        setTimeout(function () {
+            $icon.attr('src', icon_reload_src);
+        }, 1000);
     });
 
-    $(document).on('change', '#navi_db_select',  function () {
+    $(document).on('change', '#navi_db_select',  function (event) {
         if (! $(this).val()) {
-            CommonParams.set('db', '');
-            Navigation.reload();
+            PMA_commonParams.set('db', '');
+            PMA_reloadNavigation();
         }
         $(this).closest('form').trigger('submit');
     });
@@ -345,7 +341,7 @@ $(function () {
         $('#pma_navigation_tree').find('a.expander').each(function () {
             var $icon = $(this).find('img');
             if ($icon.is('.ic_b_minus')) {
-                $(this).trigger('click');
+                $(this).click();
             }
         });
     });
@@ -392,8 +388,8 @@ $(function () {
             $img
                 .removeClass('ic_s_unlink')
                 .addClass('ic_s_link')
-                .attr('alt', Messages.linkWithMain)
-                .attr('title', Messages.linkWithMain);
+                .attr('alt', PMA_messages.linkWithMain)
+                .attr('title', PMA_messages.linkWithMain);
             $('#pma_navigation_tree')
                 .removeClass('synced')
                 .find('li.selected')
@@ -402,27 +398,27 @@ $(function () {
             $img
                 .removeClass('ic_s_link')
                 .addClass('ic_s_unlink')
-                .attr('alt', Messages.unlinkWithMain)
-                .attr('title', Messages.unlinkWithMain);
+                .attr('alt', PMA_messages.unlinkWithMain)
+                .attr('title', PMA_messages.unlinkWithMain);
             $('#pma_navigation_tree').addClass('synced');
-            Navigation.showCurrent();
+            PMA_showCurrentNavigation();
         }
     });
 
     /**
      * Bind all "fast filter" events
      */
-    $(document).on('click', '#pma_navigation_tree li.fast_filter span', Navigation.FastFilter.events.clear);
-    $(document).on('focus', '#pma_navigation_tree li.fast_filter input.searchClause', Navigation.FastFilter.events.focus);
-    $(document).on('blur', '#pma_navigation_tree li.fast_filter input.searchClause', Navigation.FastFilter.events.blur);
-    $(document).on('keyup', '#pma_navigation_tree li.fast_filter input.searchClause', Navigation.FastFilter.events.keyup);
+    $(document).on('click', '#pma_navigation_tree li.fast_filter span', PMA_fastFilter.events.clear);
+    $(document).on('focus', '#pma_navigation_tree li.fast_filter input.searchClause', PMA_fastFilter.events.focus);
+    $(document).on('blur', '#pma_navigation_tree li.fast_filter input.searchClause', PMA_fastFilter.events.blur);
+    $(document).on('keyup', '#pma_navigation_tree li.fast_filter input.searchClause', PMA_fastFilter.events.keyup);
 
     /**
      * Ajax handler for pagination
      */
     $(document).on('click', '#pma_navigation_tree div.pageselector a.ajax', function (event) {
         event.preventDefault();
-        Navigation.treePagination($(this));
+        PMA_navigationTreePagination($(this));
     });
 
     /**
@@ -448,34 +444,34 @@ $(function () {
     /** Create a Routine, Trigger or Event */
     $(document).on('click', 'li.new_procedure a.ajax, li.new_function a.ajax', function (event) {
         event.preventDefault();
-        var dialog = new RTE.Object('routine');
+        var dialog = new RTE.object('routine');
         dialog.editorDialog(1, $(this));
     });
     $(document).on('click', 'li.new_trigger a.ajax', function (event) {
         event.preventDefault();
-        var dialog = new RTE.Object('trigger');
+        var dialog = new RTE.object('trigger');
         dialog.editorDialog(1, $(this));
     });
     $(document).on('click', 'li.new_event a.ajax', function (event) {
         event.preventDefault();
-        var dialog = new RTE.Object('event');
+        var dialog = new RTE.object('event');
         dialog.editorDialog(1, $(this));
     });
 
     /** Edit Routines, Triggers or Events */
     $(document).on('click', 'li.procedure > a.ajax, li.function > a.ajax', function (event) {
         event.preventDefault();
-        var dialog = new RTE.Object('routine');
+        var dialog = new RTE.object('routine');
         dialog.editorDialog(0, $(this));
     });
     $(document).on('click', 'li.trigger > a.ajax', function (event) {
         event.preventDefault();
-        var dialog = new RTE.Object('trigger');
+        var dialog = new RTE.object('trigger');
         dialog.editorDialog(0, $(this));
     });
     $(document).on('click', 'li.event > a.ajax', function (event) {
         event.preventDefault();
-        var dialog = new RTE.Object('event');
+        var dialog = new RTE.object('event');
         dialog.editorDialog(0, $(this));
     });
 
@@ -483,14 +479,14 @@ $(function () {
     $(document).on('click', 'li.procedure div a.ajax img,' +
         ' li.function div a.ajax img', function (event) {
         event.preventDefault();
-        var dialog = new RTE.Object('routine');
+        var dialog = new RTE.object('routine');
         dialog.executeDialog($(this).parent());
     });
     /** Export Triggers and Events */
     $(document).on('click', 'li.trigger div:eq(1) a.ajax img,' +
         ' li.event div:eq(1) a.ajax img', function (event) {
         event.preventDefault();
-        var dialog = new RTE.Object();
+        var dialog = new RTE.object();
         dialog.exportDialog($(this).parent());
     });
 
@@ -499,9 +495,9 @@ $(function () {
         event.preventDefault();
         var url = $(this).attr('href').substr(
             $(this).attr('href').indexOf('?') + 1
-        ) + CommonParams.get('arg_separator') + 'ajax_request=true';
-        var title = Messages.strAddIndex;
-        Functions.indexEditorDialog(url, title);
+        ) + PMA_commonParams.get('arg_separator') + 'ajax_request=true';
+        var title = PMA_messages.strAddIndex;
+        indexEditorDialog(url, title);
     });
 
     /** Edit index */
@@ -509,32 +505,31 @@ $(function () {
         event.preventDefault();
         var url = $(this).attr('href').substr(
             $(this).attr('href').indexOf('?') + 1
-        ) + CommonParams.get('arg_separator') + 'ajax_request=true';
-        var title = Messages.strEditIndex;
-        Functions.indexEditorDialog(url, title);
+        ) + PMA_commonParams.get('arg_separator') + 'ajax_request=true';
+        var title = PMA_messages.strEditIndex;
+        indexEditorDialog(url, title);
     });
 
     /** New view */
     $(document).on('click', 'li.new_view a.ajax', function (event) {
         event.preventDefault();
-        Functions.createViewDialog($(this));
+        PMA_createViewDialog($(this));
     });
 
     /** Hide navigation tree item */
     $(document).on('click', 'a.hideNavItem.ajax', function (event) {
         event.preventDefault();
-        var argSep = CommonParams.get('arg_separator');
-        var params = $(this).getPostData();
-        params += argSep + 'ajax_request=true' + argSep + 'server=' + CommonParams.get('server');
         $.ajax({
             type: 'POST',
-            data: params,
-            url: $(this).attr('href'),
+            data: {
+                server: PMA_commonParams.get('server'),
+            },
+            url: $(this).attr('href') + PMA_commonParams.get('arg_separator') + 'ajax_request=true',
             success: function (data) {
                 if (typeof data !== 'undefined' && data.success === true) {
-                    Navigation.reload();
+                    PMA_reloadNavigation();
                 } else {
-                    Functions.ajaxShowMessage(data.error);
+                    PMA_ajaxShowMessage(data.error);
                 }
             }
         });
@@ -543,18 +538,15 @@ $(function () {
     /** Display a dialog to choose hidden navigation items to show */
     $(document).on('click', 'a.showUnhide.ajax', function (event) {
         event.preventDefault();
-        var $msg = Functions.ajaxShowMessage();
-        var argSep = CommonParams.get('arg_separator');
-        var params = $(this).getPostData();
-        params += argSep + 'ajax_request=true';
-        $.post($(this).attr('href'), params, function (data) {
+        var $msg = PMA_ajaxShowMessage();
+        $.get($(this).attr('href') + PMA_commonParams.get('arg_separator') + 'ajax_request=1', function (data) {
             if (typeof data !== 'undefined' && data.success === true) {
-                Functions.ajaxRemoveMessage($msg);
+                PMA_ajaxRemoveMessage($msg);
                 var buttonOptions = {};
-                buttonOptions[Messages.strClose] = function () {
+                buttonOptions[PMA_messages.strClose] = function () {
                     $(this).dialog('close');
                 };
-                $('<div></div>')
+                $('<div/>')
                     .attr('id', 'unhideNavItemDialog')
                     .append(data.message)
                     .dialog({
@@ -562,13 +554,13 @@ $(function () {
                         minWidth: 200,
                         modal: true,
                         buttons: buttonOptions,
-                        title: Messages.strUnhideNavItem,
+                        title: PMA_messages.strUnhideNavItem,
                         close: function () {
                             $(this).remove();
                         }
                     });
             } else {
-                Functions.ajaxShowMessage(data.error);
+                PMA_ajaxShowMessage(data.error);
             }
         });
     });
@@ -577,26 +569,20 @@ $(function () {
     $(document).on('click', 'a.unhideNavItem.ajax', function (event) {
         event.preventDefault();
         var $tr = $(this).parents('tr');
-        var $hiddenTableCount = $tr.parents('tbody').children().length;
-        var $hideDialogBox = $tr.closest('div.ui-dialog');
-        var $msg = Functions.ajaxShowMessage();
-        var argSep = CommonParams.get('arg_separator');
-        var params = $(this).getPostData();
-        params += argSep + 'ajax_request=true' + argSep + 'server=' + CommonParams.get('server');
+        var $msg = PMA_ajaxShowMessage();
         $.ajax({
             type: 'POST',
-            data: params,
-            url: $(this).attr('href'),
+            data: {
+                server: PMA_commonParams.get('server'),
+            },
+            url: $(this).attr('href') + PMA_commonParams.get('arg_separator') + 'ajax_request=true',
             success: function (data) {
-                Functions.ajaxRemoveMessage($msg);
+                PMA_ajaxRemoveMessage($msg);
                 if (typeof data !== 'undefined' && data.success === true) {
                     $tr.remove();
-                    if ($hiddenTableCount === 1) {
-                        $hideDialogBox.remove();
-                    }
-                    Navigation.reload();
+                    PMA_reloadNavigation();
                 } else {
-                    Functions.ajaxShowMessage(data.error);
+                    PMA_ajaxShowMessage(data.error);
                 }
             }
         });
@@ -605,8 +591,8 @@ $(function () {
     // Add/Remove favorite table using Ajax.
     $(document).on('click', '.favorite_table_anchor', function (event) {
         event.preventDefault();
-        var $self = $(this);
-        var anchorId = $self.attr('id');
+        $self = $(this);
+        var anchor_id = $self.attr('id');
         if ($self.data('favtargetn') !== null) {
             if ($('a[data-favtargets="' + $self.data('favtargetn') + '"]').length > 0) {
                 $('a[data-favtargets="' + $self.data('favtargetn') + '"]').trigger('click');
@@ -619,26 +605,26 @@ $(function () {
             cache: false,
             type: 'POST',
             data: {
-                'favoriteTables': (isStorageSupported('localStorage') && typeof window.localStorage.favoriteTables !== 'undefined')
-                    ? window.localStorage.favoriteTables
+                favorite_tables: (isStorageSupported('localStorage') && typeof window.localStorage.favorite_tables !== 'undefined')
+                    ? window.localStorage.favorite_tables
                     : '',
-                'server': CommonParams.get('server'),
+                server: PMA_commonParams.get('server'),
             },
             success: function (data) {
                 if (data.changes) {
                     $('#pma_favorite_list').html(data.list);
-                    $('#' + anchorId).parent().html(data.anchor);
-                    Functions.tooltip(
-                        $('#' + anchorId),
+                    $('#' + anchor_id).parent().html(data.anchor);
+                    PMA_tooltip(
+                        $('#' + anchor_id),
                         'a',
-                        $('#' + anchorId).attr('title')
+                        $('#' + anchor_id).attr('title')
                     );
                     // Update localStorage.
                     if (isStorageSupported('localStorage')) {
-                        window.localStorage.favoriteTables = data.favoriteTables;
+                        window.localStorage.favorite_tables = data.favorite_tables;
                     }
                 } else {
-                    Functions.ajaxShowMessage(data.message);
+                    PMA_ajaxShowMessage(data.message);
                 }
             }
         });
@@ -647,23 +633,22 @@ $(function () {
     if (isStorageSupported('sessionStorage')) {
         var storage = window.sessionStorage;
         // remove tree from storage if Navi_panel config form is submitted
-        $(document).on('submit', 'form.config-form', function () {
+        $(document).on('submit', 'form.config-form', function (event) {
             storage.removeItem('navTreePaths');
         });
         // Initialize if no previous state is defined
         if ($('#pma_navigation_tree_content').length &&
             typeof storage.navTreePaths === 'undefined'
         ) {
-            Navigation.reload();
-        } else if (CommonParams.get('server') === storage.server &&
-            CommonParams.get('token') === storage.token
+            PMA_reloadNavigation();
+        } else if (PMA_commonParams.get('server') === storage.server &&
+            PMA_commonParams.get('token') === storage.token
         ) {
             // Reload the tree to the state before page refresh
-            Navigation.reload(Navigation.filterStateRestore, JSON.parse(storage.navTreePaths));
+            PMA_reloadNavigation(navFilterStateRestore, JSON.parse(storage.navTreePaths));
         } else {
             // If the user is different
-            Navigation.treeStateUpdate();
-            Navigation.reload();
+            navTreeStateUpdate();
         }
     }
 });
@@ -676,7 +661,7 @@ $(function () {
  *
  * @returns void
  */
-Navigation.expandTreeNode = function ($expandElem, callback) {
+function expandTreeNode ($expandElem, callback) {
     var $children = $expandElem.closest('li').children('div.list_container');
     var $icon = $expandElem.find('img');
     if ($expandElem.hasClass('loaded')) {
@@ -687,17 +672,17 @@ Navigation.expandTreeNode = function ($expandElem, callback) {
         if (callback && typeof callback === 'function') {
             callback.call();
         }
-        $children.promise().done(Navigation.treeStateUpdate);
+        $children.promise().done(navTreeStateUpdate);
     } else {
         var $throbber = $('#pma_navigation').find('.throbber')
             .first()
             .clone()
             .css({ visibility: 'visible', display: 'block' })
-            .on('click', false);
+            .click(false);
         $icon.hide();
         $throbber.insertBefore($icon);
 
-        Navigation.loadChildNodes(true, $expandElem, function (data) {
+        loadChildNodes(true, $expandElem, function (data) {
             if (typeof data !== 'undefined' && data.success === true) {
                 var $destination = $expandElem.closest('li');
                 $icon.removeClass('ic_b_plus').addClass('ic_b_minus');
@@ -706,22 +691,22 @@ Navigation.expandTreeNode = function ($expandElem, callback) {
                 if ($destination.find('ul > li').length === 1) {
                     $destination.find('ul > li')
                         .find('a.expander.container')
-                        .trigger('click');
+                        .click();
                 }
                 if (callback && typeof callback === 'function') {
                     callback.call();
                 }
-                Navigation.showFullName($destination);
+                PMA_showFullName($destination);
             } else {
-                Functions.ajaxShowMessage(data.error, false);
+                PMA_ajaxShowMessage(data.error, false);
             }
             $icon.show();
             $throbber.remove();
-            $children.promise().done(Navigation.treeStateUpdate);
+            $children.promise().done(navTreeStateUpdate);
         });
     }
-    $expandElem.trigger('blur');
-};
+    $expandElem.blur();
+}
 
 /**
  * Auto-scrolls the newly chosen database
@@ -730,8 +715,8 @@ Navigation.expandTreeNode = function ($expandElem, callback) {
  * @param  boolean  $forceToTop Whether to force scroll to top
  *
  */
-Navigation.scrollToView = function ($element, $forceToTop) {
-    Navigation.filterStateRestore();
+function scrollToView ($element, $forceToTop) {
+    navFilterStateRestore();
     var $container = $('#pma_navigation_tree_content');
     var elemTop = $element.offset().top - $container.offset().top;
     var textHeight = 20;
@@ -745,84 +730,58 @@ Navigation.scrollToView = function ($element, $forceToTop) {
             scrollTop: elemTop + textHeight - $container.height() + $container.scrollTop() + scrollPadding
         });
     }
-};
+}
 
 /**
  * Expand the navigation and highlight the current database or table/view
  *
  * @returns void
  */
-Navigation.showCurrent = function () {
-    var db = CommonParams.get('db');
-    var table = CommonParams.get('table');
-
-    var autoexpand = $('#pma_navigation_tree').hasClass('autoexpand');
-
+function PMA_showCurrentNavigation () {
+    var db = PMA_commonParams.get('db');
+    var table = PMA_commonParams.get('table');
     $('#pma_navigation_tree')
         .find('li.selected')
         .removeClass('selected');
-    var $dbItem;
     if (db) {
-        $dbItem = findLoadedItem(
+        var $dbItem = findLoadedItem(
             $('#pma_navigation_tree').find('> div'), db, 'database', !table
         );
         if ($('#navi_db_select').length &&
             $('option:selected', $('#navi_db_select')).length
         ) {
-            if (! Navigation.selectCurrentDatabase()) {
+            if (! PMA_selectCurrentDb()) {
                 return;
             }
             // If loaded database in navigation is not same as current one
             if ($('#pma_navigation_tree_content').find('span.loaded_db:first').text()
                 !== $('#navi_db_select').val()
             ) {
-                Navigation.loadChildNodes(false, $('option:selected', $('#navi_db_select')), function () {
+                loadChildNodes(false, $('option:selected', $('#navi_db_select')), function (data) {
                     handleTableOrDb(table, $('#pma_navigation_tree_content'));
                     var $children = $('#pma_navigation_tree_content').children('div.list_container');
-                    $children.promise().done(Navigation.treeStateUpdate);
+                    $children.promise().done(navTreeStateUpdate);
                 });
             } else {
                 handleTableOrDb(table, $('#pma_navigation_tree_content'));
             }
         } else if ($dbItem) {
-            fullExpand(table, $dbItem);
+            var $expander = $dbItem.children('div:first').children('a.expander');
+            // if not loaded or loaded but collapsed
+            if (! $expander.hasClass('loaded') ||
+                $expander.find('img').is('.ic_b_plus')
+            ) {
+                expandTreeNode($expander, function () {
+                    handleTableOrDb(table, $dbItem);
+                });
+            } else {
+                handleTableOrDb(table, $dbItem);
+            }
         }
     } else if ($('#navi_db_select').length && $('#navi_db_select').val()) {
         $('#navi_db_select').val('').hide().trigger('change');
-    } else if (autoexpand && $('#pma_navigation_tree_content > ul > li.database').length === 1) {
-        // automatically expand the list if there is only single database
-
-        // find the name of the database
-        var dbItemName = '';
-
-        $('#pma_navigation_tree_content > ul > li.database').children('a').each(function () {
-            var name = $(this).text();
-            if (!dbItemName && name.trim()) { // if the name is not empty, it is the desired element
-                dbItemName = name;
-            }
-        });
-
-        $dbItem = findLoadedItem(
-            $('#pma_navigation_tree').find('> div'), dbItemName, 'database', !table
-        );
-
-        fullExpand(table, $dbItem);
     }
-    Navigation.showFullName($('#pma_navigation_tree'));
-
-    function fullExpand (table, $dbItem) {
-        var $expander = $dbItem.children('div:first').children('a.expander');
-        // if not loaded or loaded but collapsed
-        if (! $expander.hasClass('loaded') ||
-            $expander.find('img').is('.ic_b_plus')
-        ) {
-            Navigation.expandTreeNode($expander, function () {
-                handleTableOrDb(table, $dbItem);
-            });
-        } else {
-            handleTableOrDb(table, $dbItem);
-        }
-    }
+    PMA_showFullName($('#pma_navigation_tree'));
 
     function handleTableOrDb (table, $dbItem) {
         if (table) {
@@ -833,11 +792,11 @@ Navigation.showCurrent = function () {
             if ($tableContainer.length > 0) {
                 var $expander = $tableContainer.children('div:first').children('a.expander');
                 $tableContainer.addClass('selected');
-                Navigation.expandTreeNode($expander, function () {
-                    Navigation.scrollToView($dbItem, true);
+                expandTreeNode($expander, function () {
+                    scrollToView($dbItem, true);
                 });
             } else {
-                Navigation.scrollToView($dbItem, true);
+                scrollToView($dbItem, true);
             }
         }
     }
@@ -870,7 +829,7 @@ Navigation.showCurrent = function () {
                             $(this)
                                 .children('div:first')
                                 .children('a.expander')
-                                .trigger('click');
+                                .click();
                         }
                     });
                     ret = $li;
@@ -899,11 +858,11 @@ Navigation.showCurrent = function () {
             showTableOrView($whichItem, $relatedContainer.children('div:first').children('a.expander'));
         // else if item not there, try loading once
         } else {
-            var $subContainers = $dbItem.find('.subContainer');
+            var $sub_containers = $dbItem.find('.subContainer');
             // If there are subContainers i.e. tableContainer or viewContainer
-            if ($subContainers.length > 0) {
+            if ($sub_containers.length > 0) {
                 var $containers = [];
-                $subContainers.each(function (index) {
+                $sub_containers.each(function (index) {
                     $containers[index] = $(this);
                     $expander = $containers[index]
                         .children('div:first')
@@ -925,7 +884,7 @@ Navigation.showCurrent = function () {
     }
 
     function loadAndShowTableOrView ($expander, $relatedContainer, itemName) {
-        Navigation.loadChildNodes(true, $expander, function () {
+        loadChildNodes(true, $expander, function (data) {
             var $whichItem = findLoadedItem(
                 $relatedContainer.children('div.list_container'),
                 itemName, null, true
@@ -937,16 +896,17 @@ Navigation.showCurrent = function () {
     }
 
     function showTableOrView ($whichItem, $expander) {
-        Navigation.expandTreeNode($expander, function () {
+        expandTreeNode($expander, function (data) {
             if ($whichItem) {
-                Navigation.scrollToView($whichItem, false);
+                scrollToView($whichItem, false);
             }
         });
     }
 
     function isItemInContainer ($container, name, clazz) {
         var $whichItem = null;
-        var $items = $container.find(clazz);
+        $items = $container.find(clazz);
+        var found = false;
         $items.each(function () {
             if ($(this).children('a').text() === name) {
                 $whichItem = $(this);
@@ -955,17 +915,17 @@ Navigation.showCurrent = function () {
         });
         return $whichItem;
     }
-};
+}
 
 /**
  * Disable navigation panel settings
  *
  * @return void
  */
-Navigation.disableSettings = function () {
+function PMA_disableNaviSettings () {
     $('#pma_navigation_settings_icon').addClass('hide');
     $('#pma_navigation_settings').remove();
-};
+}
 
 /**
  * Ensure that navigation panel settings is properly setup.
@@ -973,13 +933,13 @@ Navigation.disableSettings = function () {
  *
  * @return void
  */
-Navigation.ensureSettings = function (selflink) {
+function PMA_ensureNaviSettings (selflink) {
     $('#pma_navigation_settings_icon').removeClass('hide');
 
     if (!$('#pma_navigation_settings').length) {
         var params = {
             getNaviSettings: true,
-            server: CommonParams.get('server'),
+            server: PMA_commonParams.get('server'),
         };
         var url = $('#pma_navigation').find('a.navigation_url').attr('href');
         $.post(url, params, function (data) {
@@ -990,13 +950,13 @@ Navigation.ensureSettings = function (selflink) {
                 setupConfigTabs();
                 $('#pma_navigation_settings').find('form').attr('action', selflink);
             } else {
-                Functions.ajaxShowMessage(data.error);
+                PMA_ajaxShowMessage(data.error);
             }
         });
     } else {
         $('#pma_navigation_settings').find('form').attr('action', selflink);
     }
-};
+}
 
 /**
  * Reloads the whole navigation tree while preserving its state
@@ -1006,16 +966,16 @@ Navigation.ensureSettings = function (selflink) {
  *
  * @return void
  */
-Navigation.reload = function (callback, paths) {
+function PMA_reloadNavigation (callback, paths) {
     var params = {
-        'reload': true,
-        'no_debug': true,
-        'server': CommonParams.get('server'),
+        reload: true,
+        no_debug: true,
+        server: PMA_commonParams.get('server'),
     };
-    var pathsLocal = paths || Navigation.traverseForPaths();
-    $.extend(params, pathsLocal);
+    paths = paths || traverseNavigationForPaths();
+    $.extend(params, paths);
     if ($('#navi_db_select').length) {
-        params.db = CommonParams.get('db');
+        params.db = PMA_commonParams.get('db');
         requestNaviReload(params);
         return;
     }
@@ -1027,35 +987,35 @@ Navigation.reload = function (callback, paths) {
             if (typeof data !== 'undefined' && data.success) {
                 $('#pma_navigation_tree').html(data.message).children('div').show();
                 if ($('#pma_navigation_tree').hasClass('synced')) {
-                    Navigation.selectCurrentDatabase();
-                    Navigation.showCurrent();
+                    PMA_selectCurrentDb();
+                    PMA_showCurrentNavigation();
                 }
                 // Fire the callback, if any
                 if (typeof callback === 'function') {
                     callback.call();
                 }
-                Navigation.treeStateUpdate();
+                navTreeStateUpdate();
             } else {
-                Functions.ajaxShowMessage(data.error);
+                PMA_ajaxShowMessage(data.error);
             }
         });
     }
-};
+}
 
-Navigation.selectCurrentDatabase = function () {
+function PMA_selectCurrentDb () {
     var $naviDbSelect = $('#navi_db_select');
 
     if (!$naviDbSelect.length) {
         return false;
     }
 
-    if (CommonParams.get('db')) { // db selected
+    if (PMA_commonParams.get('db')) { // db selected
         $naviDbSelect.show();
     }
 
-    $naviDbSelect.val(CommonParams.get('db'));
-    return $naviDbSelect.val() === CommonParams.get('db');
-};
+    $naviDbSelect.val(PMA_commonParams.get('db'));
+    return $naviDbSelect.val() === PMA_commonParams.get('db');
+}
 
 /**
  * Handles any requests to change the page in a branch of a tree
@@ -1067,8 +1027,8 @@ Navigation.selectCurrentDatabase = function () {
  *
  * @return void
  */
-Navigation.treePagination = function ($this) {
-    var $msgbox = Functions.ajaxShowMessage();
+function PMA_navigationTreePagination ($this) {
+    var $msgbox = PMA_ajaxShowMessage();
     var isDbSelector = $this.closest('div.pageselector').is('.dbselector');
     var url;
     var params;
@@ -1077,26 +1037,25 @@ Navigation.treePagination = function ($this) {
         params = 'ajax_request=true';
     } else { // tagName === 'SELECT'
         url = 'navigation.php';
-        params = $this.closest('form').serialize() + CommonParams.get('arg_separator') + 'ajax_request=true';
+        params = $this.closest('form').serialize() + PMA_commonParams.get('arg_separator') + 'ajax_request=true';
     }
-    var searchClause = Navigation.FastFilter.getSearchClause();
+    var searchClause = PMA_fastFilter.getSearchClause();
     if (searchClause) {
-        params += CommonParams.get('arg_separator') + 'searchClause=' + encodeURIComponent(searchClause);
+        params += PMA_commonParams.get('arg_separator') + 'searchClause=' + encodeURIComponent(searchClause);
     }
     if (isDbSelector) {
-        params += CommonParams.get('arg_separator') + 'full=true';
+        params += PMA_commonParams.get('arg_separator') + 'full=true';
     } else {
-        var searchClause2 = Navigation.FastFilter.getSearchClause2($this);
+        var searchClause2 = PMA_fastFilter.getSearchClause2($this);
         if (searchClause2) {
-            params += CommonParams.get('arg_separator') + 'searchClause2=' + encodeURIComponent(searchClause2);
+            params += PMA_commonParams.get('arg_separator') + 'searchClause2=' + encodeURIComponent(searchClause2);
         }
     }
     $.post(url, params, function (data) {
         if (typeof data !== 'undefined' && data.success) {
-            Functions.ajaxRemoveMessage($msgbox);
-            var val;
+            PMA_ajaxRemoveMessage($msgbox);
             if (isDbSelector) {
-                val = Navigation.FastFilter.getSearchClause();
+                var val = PMA_fastFilter.getSearchClause();
                 $('#pma_navigation_tree')
                     .html(data.message)
                     .children('div')
@@ -1108,7 +1067,7 @@ Navigation.treePagination = function ($this) {
                 }
             } else {
                 var $parent = $this.closest('div.list_container').parent();
-                val = Navigation.FastFilter.getSearchClause2($this);
+                var val = PMA_fastFilter.getSearchClause2($this);
                 $this.closest('div.list_container').html(
                     $(data.message).children().show()
                 );
@@ -1123,12 +1082,12 @@ Navigation.treePagination = function ($this) {
                 );
             }
         } else {
-            Functions.ajaxShowMessage(data.error);
-            Functions.handleRedirectAndReload(data);
+            PMA_ajaxShowMessage(data.error);
+            PMA_handleRedirectAndReload(data);
         }
-        Navigation.treeStateUpdate();
+        navTreeStateUpdate();
     });
-};
+}
 
 /**
  * @var ResizeHandler Custom object that manages the resizing of the navigation
@@ -1136,12 +1095,12 @@ Navigation.treePagination = function ($this) {
  * XXX: Must only be ever instanciated once
  * XXX: Inside event handlers the 'this' object is accessed as 'event.data.resize_handler'
  */
-Navigation.ResizeHandler = function () {
+var ResizeHandler = function () {
     /**
-     * @var int panelWidth Used by the collapser to know where to go
+     * @var int panel_width Used by the collapser to know where to go
      *                      back to when uncollapsing the panel
      */
-    this.panelWidth = 0;
+    this.panel_width = 0;
     /**
      * @var string left Used to provide support for RTL languages
      */
@@ -1149,60 +1108,39 @@ Navigation.ResizeHandler = function () {
     /**
      * Adjusts the width of the navigation panel to the specified value
      *
-     * @param {int} position Navigation width in pixels
+     * @param int pos Navigation width in pixels
      *
      * @return void
      */
-    this.setWidth = function (position) {
-        var pos = position;
+    this.setWidth = function (pos) {
         if (typeof pos !== 'number') {
             pos = 240;
         }
         var $resizer = $('#pma_navigation_resizer');
-        var resizerWidth = $resizer.width();
+        var resizer_width = $resizer.width();
         var $collapser = $('#pma_navigation_collapser');
         var windowWidth = $(window).width();
         $('#pma_navigation').width(pos);
         $('body').css('margin-' + this.left, pos + 'px');
-        // Issue #15127 : Adding fixed positioning to menubar
-        // Issue #15570 : Panels on homescreen go underneath of floating menubar
-        $('#floating_menubar')
-            .css('margin-' + this.left, $('#pma_navigation').width() + $('#pma_navigation_resizer').width())
-            .css(this.left, 0)
-            .css({
-                'position': 'fixed',
-                'top': 0,
-                'width': '100%',
-                'z-index': 99
-            })
-            .append($('#serverinfo'))
-            .append($('#topmenucontainer'));
-        // Allow the DOM to render, then adjust the padding on the body
-        setTimeout(function () {
-            $('body').css(
-                'padding-top',
-                $('#floating_menubar').outerHeight(true)
-            );
-        }, 2);
-        $('#pma_console')
-            .css('margin-' + this.left, (pos + resizerWidth) + 'px');
+        $('#floating_menubar, #pma_console')
+            .css('margin-' + this.left, (pos + resizer_width) + 'px');
         $resizer.css(this.left, pos + 'px');
         if (pos === 0) {
             $collapser
-                .css(this.left, pos + resizerWidth)
+                .css(this.left, pos + resizer_width)
                 .html(this.getSymbol(pos))
-                .prop('title', Messages.strShowPanel);
+                .prop('title', PMA_messages.strShowPanel);
         } else if (windowWidth > 768) {
             $collapser
                 .css(this.left, pos)
                 .html(this.getSymbol(pos))
-                .prop('title', Messages.strHidePanel);
+                .prop('title', PMA_messages.strHidePanel);
             $('#pma_navigation_resizer').css({ 'width': '3px' });
         } else {
             $collapser
                 .css(this.left, windowWidth - 22)
                 .html(this.getSymbol(100))
-                .prop('title', Messages.strHidePanel);
+                .prop('title', PMA_messages.strHidePanel);
             $('#pma_navigation').width(windowWidth);
             $('body').css('margin-' + this.left, '0px');
             $('#pma_navigation_resizer').css({ 'width': '0px' });
@@ -1232,7 +1170,7 @@ Navigation.ResizeHandler = function () {
         } else if (pos + 100 >= windowWidth) {
             pos = windowWidth - 100;
         } else {
-            this.panelWidth = 0;
+            this.panel_width = 0;
         }
         return pos;
     };
@@ -1261,7 +1199,7 @@ Navigation.ResizeHandler = function () {
     /**
      * Event handler for initiating a resize of the panel
      *
-     * @param object e Event data (contains a reference to Navigation.ResizeHandler)
+     * @param object e Event data (contains a reference to resizeHandler)
      *
      * @return void
      */
@@ -1277,13 +1215,13 @@ Navigation.ResizeHandler = function () {
     /**
      * Event handler for terminating a resize of the panel
      *
-     * @param object e Event data (contains a reference to Navigation.ResizeHandler)
+     * @param object e Event data (contains a reference to resizeHandler)
      *
      * @return void
      */
     this.mouseup = function (event) {
         $('body').css('cursor', '');
-        Functions.configSet('NavigationWidth', event.data.resize_handler.getPos(event));
+        configSet('NavigationWidth', event.data.resize_handler.getPos(event));
         $('#topmenu').menuResizer('resize');
         $(document)
             .off('mousemove')
@@ -1292,7 +1230,7 @@ Navigation.ResizeHandler = function () {
     /**
      * Event handler for updating the panel during a resize operation
      *
-     * @param object e Event data (contains a reference to Navigation.ResizeHandler)
+     * @param object e Event data (contains a reference to resizeHandler)
      *
      * @return void
      */
@@ -1301,46 +1239,43 @@ Navigation.ResizeHandler = function () {
         var pos = event.data.resize_handler.getPos(event);
         event.data.resize_handler.setWidth(pos);
         if ($('.sticky_columns').length !== 0) {
-            Sql.handleAllStickyColumns();
+            handleAllStickyColumns();
         }
     };
     /**
      * Event handler for collapsing the panel
      *
-     * @param object e Event data (contains a reference to Navigation.ResizeHandler)
+     * @param object e Event data (contains a reference to resizeHandler)
      *
      * @return void
      */
     this.collapse = function (event) {
         event.preventDefault();
-        var panelWidth = event.data.resize_handler.panelWidth;
+        var panel_width = event.data.resize_handler.panel_width;
         var width = $('#pma_navigation').width();
-        if (width === 0 && panelWidth === 0) {
-            panelWidth = 240;
+        if (width === 0 && panel_width === 0) {
+            panel_width = 240;
         }
-        Functions.configSet('NavigationWidth', panelWidth);
-        event.data.resize_handler.setWidth(panelWidth);
-        event.data.resize_handler.panelWidth = width;
+        configSet('NavigationWidth', panel_width);
+        event.data.resize_handler.setWidth(panel_width);
+        event.data.resize_handler.panel_width = width;
     };
     /**
      * Event handler for resizing the navigation tree height on window resize
      *
      * @return void
      */
-    this.treeResize = function () {
-        var $nav = $('#pma_navigation');
-        var $navTree = $('#pma_navigation_tree');
-        var $navHeader = $('#pma_navigation_header');
-        var $navTreeContent = $('#pma_navigation_tree_content');
-        var height = ($nav.height() - $navHeader.height());
-
-        height = height > 50 ? height : 800; // keep min. height
-        $navTree.height(height);
-        if ($navTreeContent.length > 0) {
-            $navTreeContent.height(height - $navTreeContent.position().top);
+    this.treeResize = function (event) {
+        var $nav        = $('#pma_navigation');
+        var $nav_tree   = $('#pma_navigation_tree');
+        var $nav_header = $('#pma_navigation_header');
+        var $nav_tree_content = $('#pma_navigation_tree_content');
+        $nav_tree.height($nav.height() - $nav_header.height());
+        if ($nav_tree_content.length > 0) {
+            $nav_tree_content.height($nav_tree.height() - $nav_tree_content.position().top);
         } else {
             // TODO: in fast filter search response there is no #pma_navigation_tree_content, needs to be added in php
-            $navTree.css({
+            $nav_tree.css({
                 'overflow-y': 'auto'
             });
         }
@@ -1351,7 +1286,7 @@ Navigation.ResizeHandler = function () {
     if ($(window).width() < 768) {
         this.setWidth(0);
     } else {
-        this.setWidth(Functions.configGet('NavigationWidth', false));
+        this.setWidth(configGet('NavigationWidth', false));
         $('#topmenu').menuResizer('resize');
     }
     // Register the events for the resizer and the collapser
@@ -1366,13 +1301,13 @@ Navigation.ResizeHandler = function () {
     // to show/hide horizontal scrollbars depending on page content width
     setInterval(this.treeResize, 2000);
     this.treeResize();
-};
+}; // End of ResizeHandler
 
 /**
- * @var object FastFilter Handles the functionality that allows filtering
+ * @var object PMA_fastFilter Handles the functionality that allows filtering
  *                            of the items in a branch of the navigation tree
  */
-Navigation.FastFilter = {
+var PMA_fastFilter = {
     /**
      * Construct for the asynchronous fast filter functionality
      *
@@ -1380,9 +1315,9 @@ Navigation.FastFilter = {
      *                            which is the nearest parent of the fast filter
      * @param string searchClause The query string for the filter
      *
-     * @return new Navigation.FastFilter.Filter object
+     * @return new PMA_fastFilter.filter object
      */
-    Filter: function ($this, searchClause) {
+    filter: function ($this, searchClause) {
         /**
          * @var object $this A jQuery object pointing to the list container
          *                   which is the nearest parent of the fast filter
@@ -1457,21 +1392,21 @@ Navigation.FastFilter = {
      *                  at the top of this file
      */
     events: {
-        focus: function () {
+        focus: function (event) {
             var $obj = $(this).closest('div.list_container');
             if (! $obj.data('fastFilter')) {
                 $obj.data(
                     'fastFilter',
-                    new Navigation.FastFilter.Filter($obj, $(this).val())
+                    new PMA_fastFilter.filter($obj, $(this).val())
                 );
             }
             if ($(this).val() === this.defaultValue) {
                 $(this).val('');
             } else {
-                $(this).trigger('select');
+                $(this).select();
             }
         },
-        blur: function () {
+        blur: function (event) {
             if ($(this).val() === '') {
                 $(this).val(this.defaultValue);
             }
@@ -1512,10 +1447,10 @@ Navigation.FastFilter = {
             // filters items that are directly under the div as well as grouped in
             // groups. Does not filter child items (i.e. a database search does
             // not filter tables)
-            var itemFilter = function ($curr) {
+            var item_filter = function ($curr) {
                 $curr.children('ul').children('li.navGroup').each(function () {
                     $(this).children('div.list_container').each(function () {
-                        itemFilter($(this)); // recursive
+                        item_filter($(this)); // recursive
                     });
                 });
                 $curr.children('ul').children('li').children('a').not('.container').each(function () {
@@ -1526,14 +1461,14 @@ Navigation.FastFilter = {
                     }
                 });
             };
-            itemFilter(outerContainer);
+            item_filter(outerContainer);
 
             // hides containers that does not have any visible children
-            var containerFilter = function ($curr) {
+            var container_filter = function ($curr) {
                 $curr.children('ul').children('li.navGroup').each(function () {
                     var $group = $(this);
                     $group.children('div.list_container').each(function () {
-                        containerFilter($(this)); // recursive
+                        container_filter($(this)); // recursive
                     });
                     $group.show().removeClass('hidden');
                     if ($group.children('div.list_container').children('ul')
@@ -1542,13 +1477,13 @@ Navigation.FastFilter = {
                     }
                 });
             };
-            containerFilter(outerContainer);
+            container_filter(outerContainer);
 
             if ($(this).val() !== this.defaultValue && $(this).val() !== '') {
                 if (! $obj.data('fastFilter')) {
                     $obj.data(
                         'fastFilter',
-                        new Navigation.FastFilter.Filter($obj, $(this).val())
+                        new PMA_fastFilter.filter($obj, $(this).val())
                     );
                 } else {
                     if (event.keyCode === 13) {
@@ -1565,7 +1500,7 @@ Navigation.FastFilter = {
             } else {
                 filterName = 'dbFilter';
             }
-            Navigation.filterStateUpdate(filterName, $(this).val());
+            navFilterStateUpdate(filterName, $(this).val());
         },
         clear: function (event) {
             event.stopPropagation();
@@ -1586,7 +1521,7 @@ Navigation.FastFilter = {
  *
  * @return void
  */
-Navigation.FastFilter.Filter.prototype.update = function (searchClause) {
+PMA_fastFilter.filter.prototype.update = function (searchClause) {
     if (this.searchClause !== searchClause) {
         this.searchClause = searchClause;
         this.request();
@@ -1598,7 +1533,7 @@ Navigation.FastFilter.Filter.prototype.update = function (searchClause) {
  *
  * @return void
  */
-Navigation.FastFilter.Filter.prototype.request = function () {
+PMA_fastFilter.filter.prototype.request = function () {
     var self = this;
     if (self.$this.find('li.fast_filter').find('img.throbber').length === 0) {
         self.$this.find('li.fast_filter').append(
@@ -1619,7 +1554,7 @@ Navigation.FastFilter.Filter.prototype.request = function () {
     if (self.$this.find('> ul > li > form.fast_filter:first input[name=searchClause]').length === 0) {
         var $input = $('#pma_navigation_tree').find('li.fast_filter.db_fast_filter input.searchClause');
         if ($input.length && $input.val() !== $input[0].defaultValue) {
-            params += CommonParams.get('arg_separator') + 'searchClause=' + encodeURIComponent($input.val());
+            params += PMA_commonParams.get('arg_separator') + 'searchClause=' + encodeURIComponent($input.val());
         }
     }
     self.xhr = $.ajax({
@@ -1645,7 +1580,7 @@ Navigation.FastFilter.Filter.prototype.request = function () {
  *
  * @return void
  */
-Navigation.FastFilter.Filter.prototype.swap = function (list) {
+PMA_fastFilter.filter.prototype.swap = function (list) {
     this.$this
         .html($(list).html())
         .children()
@@ -1662,12 +1597,12 @@ Navigation.FastFilter.Filter.prototype.swap = function (list) {
  *
  * @return void
  */
-Navigation.FastFilter.Filter.prototype.restore = function (focus) {
+PMA_fastFilter.filter.prototype.restore = function (focus) {
     if (this.$this.children('ul').first().hasClass('search_results')) {
         this.$this.html(this.$clone.html()).children().show();
         this.$this.data('fastFilter', this);
         if (focus) {
-            this.$this.find('li.fast_filter input.searchClause').trigger('focus');
+            this.$this.find('li.fast_filter input.searchClause').focus();
         }
     }
     this.searchClause = '';
@@ -1682,8 +1617,8 @@ Navigation.FastFilter.Filter.prototype.restore = function (focus) {
  *
  * @return void
  */
-Navigation.showFullName = function ($containerELem) {
-    $containerELem.find('.hover_show_full').on('mouseenter', function () {
+function PMA_showFullName ($containerELem) {
+    $containerELem.find('.hover_show_full').mouseenter(function () {
         /** mouseenter */
         var $this = $(this);
         var thisOffset = $this.offset();
@@ -1700,7 +1635,7 @@ Navigation.showFullName = function ($containerELem) {
                     /** mouseleave */
                     $(this).addClass('hide')
                         .removeClass('hovering');
-                }).on('mouseenter', function () {
+                }).mouseenter(function () {
                     /** mouseenter */
                     $(this).addClass('hovering');
                 });
@@ -1716,4 +1651,4 @@ Navigation.showFullName = function ($containerELem) {
             }, 200);
         }
     });
-};
+}

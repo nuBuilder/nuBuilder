@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin-Navigation
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Navigation\Nodes;
 
 use PhpMyAdmin\Navigation\NodeFactory;
@@ -26,28 +24,27 @@ class NodeProcedureContainer extends NodeDatabaseChildContainer
     {
         parent::__construct(__('Procedures'), Node::CONTAINER);
         $this->icon = Util::getImage('b_routines', __('Procedures'));
-        $this->links = [
+        $this->links = array(
             'text' => 'db_routines.php?server=' . $GLOBALS['server']
                 . '&amp;db=%1$s&amp;type=PROCEDURE',
             'icon' => 'db_routines.php?server=' . $GLOBALS['server']
                 . '&amp;db=%1$s&amp;type=PROCEDURE',
-        ];
-        $this->realName = 'procedures';
+        );
+        $this->real_name = 'procedures';
 
-        $newLabel = _pgettext('Create new procedure', 'New');
+        $new_label = _pgettext('Create new procedure', 'New');
         $new = NodeFactory::getInstance(
             'Node',
-            $newLabel
+            $new_label
         );
         $new->isNew = true;
-        $new->icon = Util::getImage('b_routine_add', $newLabel);
-        $new->title = $newLabel;
-        $new->links = [
+        $new->icon = Util::getImage('b_routine_add', $new_label);
+        $new->links = array(
             'text' => 'db_routines.php?server=' . $GLOBALS['server']
                 . '&amp;db=%2$s&add_item=1',
             'icon' => 'db_routines.php?server=' . $GLOBALS['server']
                 . '&amp;db=%2$s&add_item=1',
-        ];
+        );
         $new->classes = 'new_procedure italics';
         $this->addChild($new);
     }

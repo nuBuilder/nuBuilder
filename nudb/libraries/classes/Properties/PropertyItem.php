@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Properties;
 
 /**
@@ -21,7 +19,7 @@ abstract class PropertyItem
      *
      * @return string
      */
-    abstract public function getPropertyType();
+    public abstract function getPropertyType();
 
     /**
      * Returns the property item type of either an instance of
@@ -31,7 +29,7 @@ abstract class PropertyItem
      *
      * @return string
      */
-    abstract public function getItemType();
+    public abstract function getItemType();
 
     /**
      * Only overwritten in the PhpMyAdmin\Properties\Options\OptionsPropertyGroup class:
@@ -39,7 +37,7 @@ abstract class PropertyItem
      * the addProperty() or removeProperty() methods, which are not available
      * for simple PhpMyAdmin\Properties\Options\OptionsPropertyOneItem subclasses.
      *
-     * @return null
+     * @return string
      */
     public function getGroup()
     {

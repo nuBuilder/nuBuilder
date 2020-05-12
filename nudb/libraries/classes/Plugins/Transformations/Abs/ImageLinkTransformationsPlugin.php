@@ -6,12 +6,13 @@
  * @package    PhpMyAdmin-Transformations
  * @subpackage Link
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Plugins\Transformations\Abs;
 
 use PhpMyAdmin\Plugins\TransformationsPlugin;
-use stdClass;
+
+if (!defined('PHPMYADMIN')) {
+    exit;
+}
 
 /**
  * Provides common methods for all of the link transformations plugins.
@@ -35,13 +36,13 @@ abstract class ImageLinkTransformationsPlugin extends TransformationsPlugin
     /**
      * Does the actual work of each specific transformations plugin.
      *
-     * @param string        $buffer  text to be transformed
-     * @param array         $options transformation options
-     * @param stdClass|null $meta    meta information
+     * @param string $buffer  text to be transformed
+     * @param array  $options transformation options
+     * @param string $meta    meta information
      *
      * @return string
      */
-    public function applyTransformation($buffer, array $options = [], ?stdClass $meta = null)
+    public function applyTransformation($buffer, array $options = array(), $meta = '')
     {
         // must disable the page loader, see
         // https://wiki.phpmyadmin.net/pma/Page_loader#Bypassing_the_page_loader

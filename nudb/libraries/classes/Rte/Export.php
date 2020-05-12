@@ -5,13 +5,11 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Rte;
 
-use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\Response;
+use PhpMyAdmin\Rte\Words;
 use PhpMyAdmin\Util;
 
 /**
@@ -22,27 +20,6 @@ use PhpMyAdmin\Util;
 class Export
 {
     /**
-     * @var Words
-     */
-    private $words;
-
-    /**
-     * @var DatabaseInterface
-     */
-    private $dbi;
-
-    /**
-     * Export constructor.
-     *
-     * @param DatabaseInterface $dbi DatabaseInterface object
-     */
-    public function __construct(DatabaseInterface $dbi)
-    {
-        $this->dbi = $dbi;
-        $this->words = new Words();
-    }
-
-    /**
      * This function is called from one of the other functions in this file
      * and it completes the handling of the export functionality.
      *
@@ -50,7 +27,7 @@ class Export
      *
      * @return void
      */
-    private function handle($export_data)
+    private static function handle($export_data)
     {
         global $db;
 
@@ -59,7 +36,7 @@ class Export
         $item_name = htmlspecialchars(Util::backquote($_GET['item_name']));
         if ($export_data !== false) {
             $export_data = htmlspecialchars(trim($export_data));
-            $title = sprintf($this->words->get('export'), $item_name);
+            $title = sprintf(Words::get('export'), $item_name);
             if ($response->isAjax()) {
                 $response->addJSON('message', $export_data);
                 $response->addJSON('title', $title);
@@ -75,7 +52,7 @@ class Export
         } else {
             $_db = htmlspecialchars(Util::backquote($db));
             $message  = __('Error in processing request:') . ' '
-                      . sprintf($this->words->get('no_view'), $item_name, $_db);
+                      . sprintf(Words::get('no_view'), $item_name, $_db);
             $message = Message::error($message);
 
             if ($response->isAjax()) {
@@ -86,37 +63,37 @@ class Export
                 $message->display();
             }
         }
-    }
+    } // end self::handle()
 
     /**
      * If necessary, prepares event information and passes
-     * it to handle() for the actual export.
+     * it to self::handle() for the actual export.
      *
      * @return void
      */
-    public function events()
+    public static function events()
     {
-        global $db;
+        global $_GET, $db;
 
         if (! empty($_GET['export_item']) && ! empty($_GET['item_name'])) {
             $item_name = $_GET['item_name'];
-            $export_data = $this->dbi->getDefinition($db, 'EVENT', $item_name);
+            $export_data = $GLOBALS['dbi']->getDefinition($db, 'EVENT', $item_name);
             if (! $export_data) {
                 $export_data = false;
             }
-            $this->handle($export_data);
+            self::handle($export_data);
         }
-    }
+    } // end self::events()
 
     /**
      * If necessary, prepares routine information and passes
-     * it to handle() for the actual export.
+     * it to self::handle() for the actual export.
      *
      * @return void
      */
-    public function routines()
+    public static function routines()
     {
-        global $db;
+        global $_GET, $db;
 
         if (! empty($_GET['export_item'])
             && ! empty($_GET['item_name'])
@@ -124,12 +101,12 @@ class Export
         ) {
             if ($_GET['item_type'] == 'FUNCTION' || $_GET['item_type'] == 'PROCEDURE') {
                 $rtn_definition
-                    = $this->dbi->getDefinition(
+                    = $GLOBALS['dbi']->getDefinition(
                         $db,
                         $_GET['item_type'],
                         $_GET['item_name']
                     );
-                if ($rtn_definition === null) {
+                if (! $rtn_definition) {
                     $export_data = false;
                 } else {
                     $export_data = "DELIMITER $$\n"
@@ -137,24 +114,24 @@ class Export
                         . "$$\nDELIMITER ;\n";
                 }
 
-                $this->handle($export_data);
+                self::handle($export_data);
             }
         }
-    }
+    } // end self::routines()
 
     /**
      * If necessary, prepares trigger information and passes
-     * it to handle() for the actual export.
+     * it to self::handle() for the actual export.
      *
      * @return void
      */
-    public function triggers()
+    public static function triggers()
     {
-        global $db, $table;
+        global $_GET, $db, $table;
 
         if (! empty($_GET['export_item']) && ! empty($_GET['item_name'])) {
             $item_name = $_GET['item_name'];
-            $triggers = $this->dbi->getTriggers($db, $table, '');
+            $triggers = $GLOBALS['dbi']->getTriggers($db, $table, '');
             $export_data = false;
             foreach ($triggers as $trigger) {
                 if ($trigger['name'] === $item_name) {
@@ -162,7 +139,7 @@ class Export
                     break;
                 }
             }
-            $this->handle($export_data);
+            self::handle($export_data);
         }
-    }
+    } // end self::triggers()
 }

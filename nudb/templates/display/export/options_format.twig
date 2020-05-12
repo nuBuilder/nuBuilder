@@ -15,10 +15,10 @@
 {% endif %}
 
 <div class="exportoptions" id="submit">
-    <input id="buttonGo" class="btn btn-primary" type="submit" value="{% trans 'Go' %}"
+    <input type="submit" value="{% trans 'Go' %}" id="buttonGo"
         {#- If the time limit set is zero, then time out won't occur so no need
             to check for time out. -#}
         {%- if exec_time_limit > 0 %}
-            onclick="Export.checkTimeOut({{ exec_time_limit }})"
+            onclick="check_time_out({{ exec_time_limit }})"
         {%- endif %}>
 </div>

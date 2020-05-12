@@ -5,25 +5,16 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Config\Forms\User;
 
 use PhpMyAdmin\Config\Forms\BaseForm;
 
-/**
- * Class NaviForm
- * @package PhpMyAdmin\Config\Forms\User
- */
 class NaviForm extends BaseForm
 {
-    /**
-     * @return array
-     */
     public static function getForms()
     {
-        return [
-            'Navi_panel' => [
+        return array(
+            'Navi_panel' => array(
                 'ShowDatabasesNavigationAsTree',
                 'NavigationLinkWithMainPanel',
                 'NavigationDisplayLogo',
@@ -35,8 +26,8 @@ class NaviForm extends BaseForm
                 'NumRecentTables',
                 'NumFavoriteTables',
                 'NavigationWidth',
-            ],
-            'Navi_tree' => [
+            ),
+            'Navi_tree' => array(
                 'MaxNavigationItems',
                 'NavigationTreeEnableGrouping',
                 'NavigationTreeEnableExpansion',
@@ -44,29 +35,25 @@ class NaviForm extends BaseForm
                 'NavigationTreeShowViews',
                 'NavigationTreeShowFunctions',
                 'NavigationTreeShowProcedures',
-                'NavigationTreeShowEvents',
-                'NavigationTreeAutoexpandSingleDb',
-            ],
-            'Navi_servers' => [
+                'NavigationTreeShowEvents'
+            ),
+            'Navi_servers' => array(
                 'NavigationDisplayServers',
                 'DisplayServersList',
-            ],
-            'Navi_databases' => [
+            ),
+            'Navi_databases' => array(
                 'NavigationTreeDisplayDbFilterMinimum',
-                'NavigationTreeDbSeparator',
-            ],
-            'Navi_tables' => [
+                'NavigationTreeDbSeparator'
+            ),
+            'Navi_tables' => array(
                 'NavigationTreeDefaultTabTable',
                 'NavigationTreeDefaultTabTable2',
                 'NavigationTreeTableSeparator',
                 'NavigationTreeTableLevel',
-            ],
-        ];
+            ),
+        );
     }
 
-    /**
-     * @return string
-     */
     public static function getName()
     {
         return __('Navigation panel');

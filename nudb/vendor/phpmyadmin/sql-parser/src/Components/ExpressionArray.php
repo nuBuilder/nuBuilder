@@ -1,8 +1,8 @@
 <?php
+
 /**
  * Parses a list of expressions delimited by a comma.
  */
-declare(strict_types=1);
 
 namespace PhpMyAdmin\SqlParser\Components;
 
@@ -10,10 +10,13 @@ use PhpMyAdmin\SqlParser\Component;
 use PhpMyAdmin\SqlParser\Parser;
 use PhpMyAdmin\SqlParser\Token;
 use PhpMyAdmin\SqlParser\TokensList;
-use function implode;
 
 /**
  * Parses a list of expressions delimited by a comma.
+ *
+ * @category   Keywords
+ *
+ * @license    https://www.gnu.org/licenses/gpl-2.0.txt GPL-2.0+
  */
 class ExpressionArray extends Component
 {
@@ -23,11 +26,10 @@ class ExpressionArray extends Component
      * @param array      $options parameters for parsing
      *
      * @return Expression[]
-     * @throws \PhpMyAdmin\SqlParser\Exceptions\ParserException
      */
-    public static function parse(Parser $parser, TokensList $list, array $options = [])
+    public static function parse(Parser $parser, TokensList $list, array $options = array())
     {
-        $ret = [];
+        $ret = array();
 
         /**
          * The state of the parser.
@@ -84,7 +86,6 @@ class ExpressionArray extends Component
                 if ($expr === null) {
                     break;
                 }
-
                 $ret[] = $expr;
                 $state = 1;
             } elseif ($state === 1) {
@@ -105,33 +106,22 @@ class ExpressionArray extends Component
 
         --$list->idx;
 
-        if (is_array($ret)) {
-            $retIndex = count($ret) - 1;
-            if (isset($ret[$retIndex])) {
-                $expr = $ret[$retIndex]->expr;
-                if (preg_match('/\s*--\s.*$/', $expr, $matches)) {
-                    $found = $matches[0];
-                    $ret[$retIndex]->expr = substr($expr, 0, strlen($expr) - strlen($found));
-                }
-            }
-        }
-
         return $ret;
     }
 
     /**
-     * @param Expression[] $component the component to be built
-     * @param array        $options   parameters for building
+     * @param ExpressionArray[] $component the component to be built
+     * @param array             $options   parameters for building
      *
      * @return string
      */
-    public static function build($component, array $options = [])
+    public static function build($component, array $options = array())
     {
-        $ret = [];
+        $ret = array();
         foreach ($component as $frag) {
             $ret[] = $frag::build($frag);
         }
 
-        return implode(', ', $ret);
+        return implode($ret, ', ');
     }
 }

@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Plugins\Schema\Svg;
 
 use PhpMyAdmin\Plugins\Schema\RelationStats;
@@ -28,7 +26,7 @@ class RelationStatsSvg extends RelationStats
     /**
      * The "PhpMyAdmin\Plugins\Schema\Svg\RelationStatsSvg" constructor
      *
-     * @param Svg    $diagram       The SVG diagram
+     * @param object $diagram       The SVG diagram
      * @param string $master_table  The master table name
      * @param string $master_field  The relation field in the master table
      * @param string $foreign_table The foreign table name
@@ -64,7 +62,7 @@ class RelationStatsSvg extends RelationStats
     public function relationDraw($showColor)
     {
         if ($showColor) {
-            $listOfColors = [
+            $listOfColors = array(
                 '#c00',
                 '#bbb',
                 '#333',
@@ -72,7 +70,7 @@ class RelationStatsSvg extends RelationStats
                 '#0b0',
                 '#0bf',
                 '#b0b',
-            ];
+            );
             shuffle($listOfColors);
             $color = $listOfColors[0];
         } else {

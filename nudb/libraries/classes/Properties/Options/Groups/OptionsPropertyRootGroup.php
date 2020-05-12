@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Properties\Options\Groups;
 
 use PhpMyAdmin\Properties\Options\OptionsPropertyGroup;

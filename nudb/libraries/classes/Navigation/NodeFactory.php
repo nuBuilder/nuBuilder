@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin-navigation
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Navigation;
 
 use PhpMyAdmin\Navigation\Nodes\Node;
@@ -18,7 +16,7 @@ use PhpMyAdmin\Navigation\Nodes\Node;
  */
 class NodeFactory
 {
-    protected static $namespace = 'PhpMyAdmin\\Navigation\\Nodes\\%s';
+    protected static $_namespace = 'PhpMyAdmin\\Navigation\\Nodes\\%s';
     /**
      * Sanitizes the name of a Node class
      *
@@ -26,9 +24,9 @@ class NodeFactory
      *
      * @return string
      */
-    private static function sanitizeClass($class)
+    private static function _sanitizeClass($class)
     {
-        if (! preg_match('@^Node\w*$@', $class)) {
+        if (!preg_match('@^Node\w*$@', $class)) {
             $class = 'Node';
             trigger_error(
                 sprintf(
@@ -40,7 +38,7 @@ class NodeFactory
             );
         }
 
-        return self::checkClass($class);
+        return self::_checkClass($class);
     }
 
     /**
@@ -52,12 +50,12 @@ class NodeFactory
      *
      * @return string
      */
-    private static function checkClass($class)
+    private static function _checkClass($class)
     {
-        $class = sprintf(self::$namespace, $class);
+        $class = sprintf(self::$_namespace, $class);
 
         if (! class_exists($class)) {
-            $class = sprintf(self::$namespace, 'Node');
+            $class = sprintf(self::$_namespace, 'Node');
             trigger_error(
                 sprintf(
                     __('Could not load class "%1$s"'),
@@ -73,11 +71,11 @@ class NodeFactory
     /**
      * Instantiates a Node object
      *
-     * @param string $class   The name of the class to instantiate
-     * @param string $name    An identifier for the new node
-     * @param int    $type    Type of node, may be one of CONTAINER or OBJECT
-     * @param bool   $isGroup Whether this object has been created
-     *                        while grouping nodes
+     * @param string $class    The name of the class to instantiate
+     * @param string $name     An identifier for the new node
+     * @param int    $type     Type of node, may be one of CONTAINER or OBJECT
+     * @param bool   $is_group Whether this object has been created
+     *                         while grouping nodes
      *
      * @return mixed
      */
@@ -85,9 +83,9 @@ class NodeFactory
         $class = 'Node',
         $name = 'default',
         $type = Node::OBJECT,
-        $isGroup = false
+        $is_group = false
     ) {
-        $class = self::sanitizeClass($class);
-        return new $class($name, $type, $isGroup);
+        $class = self::_sanitizeClass($class);
+        return new $class($name, $type, $is_group);
     }
 }

@@ -7,13 +7,7 @@
  *
  */
 
-/* global isStorageSupported */ // js/config.js
-/* global codeMirrorEditor */ // js/functions.js
-/* global MicroHistory */ // js/microhistory.js
-/* global makeGrid */ // js/makegrid.js
-
-var Sql = {};
-
+var $data_a;
 var prevScrollX = 0;
 
 /**
@@ -22,11 +16,11 @@ var prevScrollX = 0;
  * @param string str
  * @return string the URL-decoded string
  */
-Sql.urlDecode = function (str) {
+function PMA_urldecode (str) {
     if (typeof str !== 'undefined') {
         return decodeURIComponent(str.replace(/\+/g, '%20'));
     }
-};
+}
 
 /**
  * endecode a string URL_decoded
@@ -34,11 +28,11 @@ Sql.urlDecode = function (str) {
  * @param string str
  * @return string the URL-encoded string
  */
-Sql.urlEncode = function (str) {
+function PMA_urlencode (str) {
     if (typeof str !== 'undefined') {
-        return encodeURIComponent(str).replace(/%20/g, '+');
+        return encodeURIComponent(str).replace(/\%20/g, '+');
     }
-};
+}
 
 /**
  * Saves SQL query in local storage or cookie
@@ -46,65 +40,15 @@ Sql.urlEncode = function (str) {
  * @param string SQL query
  * @return void
  */
-Sql.autoSave = function (query) {
-    if (isStorageSupported('localStorage')) {
-        window.localStorage.autoSavedSql = query;
-    } else {
-        Cookies.set('autoSavedSql', query);
-    }
-};
-
-/**
- * Saves SQL query in local storage or cookie
- *
- * @param string database name
- * @param string table name
- * @param string SQL query
- * @return void
- */
-Sql.showThisQuery = function (db, table, query) {
-    var showThisQueryObject = {
-        'db': db,
-        'table': table,
-        'query': query
-    };
-    if (isStorageSupported('localStorage')) {
-        window.localStorage.showThisQuery = 1;
-        window.localStorage.showThisQueryObject = JSON.stringify(showThisQueryObject);
-    } else {
-        Cookies.set('showThisQuery', 1);
-        Cookies.set('showThisQueryObject', JSON.stringify(showThisQueryObject));
-    }
-};
-
-/**
- * Set query to codemirror if show this query is
- * checked and query for the db and table pair exists
- */
-Sql.setShowThisQuery = function () {
-    var db = $('input[name="db"]').val();
-    var table = $('input[name="table"]').val();
-    if (isStorageSupported('localStorage')) {
-        if (window.localStorage.showThisQueryObject !== undefined) {
-            var storedDb = JSON.parse(window.localStorage.showThisQueryObject).db;
-            var storedTable = JSON.parse(window.localStorage.showThisQueryObject).table;
-            var storedQuery = JSON.parse(window.localStorage.showThisQueryObject).query;
-        }
-        if (window.localStorage.showThisQuery !== undefined
-            && window.localStorage.showThisQuery === '1') {
-            $('input[name="show_query"]').prop('checked', true);
-            if (db === storedDb && table === storedTable) {
-                if (codeMirrorEditor) {
-                    codeMirrorEditor.setValue(storedQuery);
-                } else if (document.sqlform) {
-                    document.sqlform.sql_query.value = storedQuery;
-                }
-            }
+function PMA_autosaveSQL (query) {
+    if (query) {
+        if (isStorageSupported('localStorage')) {
+            window.localStorage.auto_saved_sql = query;
         } else {
-            $('input[name="show_query"]').prop('checked', false);
+            Cookies.set('auto_saved_sql', query);
         }
     }
-};
+}
 
 /**
  * Saves SQL query with sort in local storage or cookie
@@ -112,70 +56,57 @@ Sql.setShowThisQuery = function () {
  * @param string SQL query
  * @return void
  */
-Sql.autoSaveWithSort = function (query) {
+function PMA_autosaveSQLSort (query) {
     if (query) {
         if (isStorageSupported('localStorage')) {
-            window.localStorage.autoSavedSqlSort = query;
+            window.localStorage.auto_saved_sql_sort = query;
         } else {
-            Cookies.set('autoSavedSqlSort', query);
+            Cookies.set('auto_saved_sql_sort', query);
         }
     }
-};
-
-/**
- * Clear saved SQL query with sort in local storage or cookie
- *
- * @return void
- */
-Sql.clearAutoSavedSort = function () {
-    if (isStorageSupported('localStorage')) {
-        window.localStorage.removeItem('auto_saved_sql_sort');
-    } else {
-        Cookies.set('auto_saved_sql_sort', '');
-    }
-};
+}
 
 /**
  * Get the field name for the current field.  Required to construct the query
  * for grid editing
  *
- * @param $tableResults enclosing results table
- * @param $thisField    jQuery object that points to the current field's tr
+ * @param $table_results enclosing results table
+ * @param $this_field    jQuery object that points to the current field's tr
  */
-Sql.getFieldName = function ($tableResults, $thisField) {
-    var thisFieldIndex = $thisField.index();
+function getFieldName ($table_results, $this_field) {
+    var this_field_index = $this_field.index();
     // ltr or rtl direction does not impact how the DOM was generated
     // check if the action column in the left exist
-    var leftActionExist = !$tableResults.find('th:first').hasClass('draggable');
+    var left_action_exist = !$table_results.find('th:first').hasClass('draggable');
     // number of column span for checkbox and Actions
-    var leftActionSkip = leftActionExist ? $tableResults.find('th:first').attr('colspan') - 1 : 0;
+    var left_action_skip = left_action_exist ? $table_results.find('th:first').attr('colspan') - 1 : 0;
 
     // If this column was sorted, the text of the a element contains something
     // like <small>1</small> that is useful to indicate the order in case
     // of a sort on multiple columns; however, we dont want this as part
     // of the column name so we strip it ( .clone() to .end() )
-    var fieldName = $tableResults
+    var field_name = $table_results
         .find('thead')
-        .find('th:eq(' + (thisFieldIndex - leftActionSkip) + ') a')
+        .find('th:eq(' + (this_field_index - left_action_skip) + ') a')
         .clone()    // clone the element
         .children() // select all the children
         .remove()   // remove all of them
         .end()      // go back to the selected element
         .text();    // grab the text
     // happens when just one row (headings contain no a)
-    if (fieldName === '') {
-        var $heading = $tableResults.find('thead').find('th:eq(' + (thisFieldIndex - leftActionSkip) + ')').children('span');
+    if (field_name === '') {
+        var $heading = $table_results.find('thead').find('th:eq(' + (this_field_index - left_action_skip) + ')').children('span');
         // may contain column comment enclosed in a span - detach it temporarily to read the column name
         var $tempColComment = $heading.children().detach();
-        fieldName = $heading.text();
+        field_name = $heading.text();
         // re-attach the column comment
         $heading.append($tempColComment);
     }
 
-    fieldName = $.trim(fieldName);
+    field_name = $.trim(field_name);
 
-    return fieldName;
-};
+    return field_name;
+}
 
 /**
  * Unbind all event handlers before tearing down a page
@@ -183,7 +114,7 @@ Sql.getFieldName = function ($tableResults, $thisField) {
 AJAX.registerTeardown('sql.js', function () {
     $(document).off('click', 'a.delete_row.ajax');
     $(document).off('submit', '.bookmarkQueryForm');
-    $('input#bkm_label').off('input');
+    $('input#bkm_label').off('keyup');
     $(document).off('makegrid', '.sqlqueryresults');
     $(document).off('stickycolumns', '.sqlqueryresults');
     $('#togglequerybox').off('click');
@@ -196,11 +127,11 @@ AJAX.registerTeardown('sql.js', function () {
     $(document).off('mouseenter', 'th.column_heading.pointer');
     $(document).off('mouseleave', 'th.column_heading.pointer');
     $(document).off('click', 'th.column_heading.marker');
-    $(document).off('scroll', window);
+    $(window).off('scroll');
     $(document).off('keyup', '.filter_rows');
     $(document).off('click', '#printView');
-    if (codeMirrorEditor) {
-        codeMirrorEditor.off('change');
+    if (codemirror_editor) {
+        codemirror_editor.off('change');
     } else {
         $('#sqlquery').off('input propertychange');
     }
@@ -228,34 +159,31 @@ AJAX.registerTeardown('sql.js', function () {
  * @memberOf    jQuery
  */
 AJAX.registerOnload('sql.js', function () {
-    if (codeMirrorEditor || document.sqlform) {
-        Sql.setShowThisQuery();
-    }
     $(function () {
-        if (codeMirrorEditor) {
-            codeMirrorEditor.on('change', function () {
-                Sql.autoSave(codeMirrorEditor.getValue());
+        if (codemirror_editor) {
+            codemirror_editor.on('change', function () {
+                PMA_autosaveSQL(codemirror_editor.getValue());
             });
         } else {
             $('#sqlquery').on('input propertychange', function () {
-                Sql.autoSave($('#sqlquery').val());
+                PMA_autosaveSQL($('#sqlquery').val());
             });
-            var useLocalStorageValue = isStorageSupported('localStorage') && typeof window.localStorage.auto_saved_sql_sort !== 'undefined';
             // Save sql query with sort
             if ($('#RememberSorting') !== undefined && $('#RememberSorting').is(':checked')) {
                 $('select[name="sql_query"]').on('change', function () {
-                    Sql.autoSaveWithSort($(this).val());
-                });
-                $('.sortlink').on('click', function () {
-                    Sql.clearAutoSavedSort();
+                    PMA_autosaveSQLSort($('select[name="sql_query"]').val());
                 });
             } else {
-                Sql.clearAutoSavedSort();
+                if (isStorageSupported('localStorage') && window.localStorage.auto_saved_sql_sort !== undefined) {
+                    window.localStorage.removeItem('auto_saved_sql_sort');
+                } else {
+                    Cookies.set('auto_saved_sql_sort', '');
+                }
             }
             // If sql query with sort for current table is stored, change sort by key select value
-            var sortStoredQuery = useLocalStorageValue ? window.localStorage.auto_saved_sql_sort : Cookies.get('auto_saved_sql_sort');
+            var sortStoredQuery = (isStorageSupported('localStorage') && typeof window.localStorage.auto_saved_sql_sort !== 'undefined') ? window.localStorage.auto_saved_sql_sort : Cookies.get('auto_saved_sql_sort');
             if (typeof sortStoredQuery !== 'undefined' && sortStoredQuery !== $('select[name="sql_query"]').val() && $('select[name="sql_query"] option[value="' + sortStoredQuery + '"]').length !== 0) {
-                $('select[name="sql_query"]').val(sortStoredQuery).trigger('change');
+                $('select[name="sql_query"]').val(sortStoredQuery).change();
             }
         }
     });
@@ -263,11 +191,11 @@ AJAX.registerOnload('sql.js', function () {
     // Delete row from SQL results
     $(document).on('click', 'a.delete_row.ajax', function (e) {
         e.preventDefault();
-        var question =  Functions.sprintf(Messages.strDoYouReally, Functions.escapeHtml($(this).closest('td').find('div').text()));
+        var question =  PMA_sprintf(PMA_messages.strDoYouReally, escapeHtml($(this).closest('td').find('div').text()));
         var $link = $(this);
-        $link.confirm(question, $link.attr('href'), function (url) {
-            Functions.ajaxShowMessage();
-            var argsep = CommonParams.get('arg_separator');
+        $link.PMA_confirm(question, $link.attr('href'), function (url) {
+            $msgbox = PMA_ajaxShowMessage();
+            var argsep = PMA_commonParams.get('arg_separator');
             var params = 'ajax_request=1' + argsep + 'is_js_confirmed=1';
             var postData = $link.getPostData();
             if (postData) {
@@ -275,10 +203,10 @@ AJAX.registerOnload('sql.js', function () {
             }
             $.post(url, params, function (data) {
                 if (data.success) {
-                    Functions.ajaxShowMessage(data.message);
+                    PMA_ajaxShowMessage(data.message);
                     $link.closest('tr').remove();
                 } else {
-                    Functions.ajaxShowMessage(data.error, false);
+                    PMA_ajaxShowMessage(data.error, false);
                 }
             });
         });
@@ -287,23 +215,23 @@ AJAX.registerOnload('sql.js', function () {
     // Ajaxification for 'Bookmark this SQL query'
     $(document).on('submit', '.bookmarkQueryForm', function (e) {
         e.preventDefault();
-        Functions.ajaxShowMessage();
-        var argsep = CommonParams.get('arg_separator');
+        PMA_ajaxShowMessage();
+        var argsep = PMA_commonParams.get('arg_separator');
         $.post($(this).attr('action'), 'ajax_request=1' + argsep + $(this).serialize(), function (data) {
             if (data.success) {
-                Functions.ajaxShowMessage(data.message);
+                PMA_ajaxShowMessage(data.message);
             } else {
-                Functions.ajaxShowMessage(data.error, false);
+                PMA_ajaxShowMessage(data.error, false);
             }
         });
     });
 
     /* Hides the bookmarkoptions checkboxes when the bookmark label is empty */
-    $('input#bkm_label').on('input', function () {
+    $('input#bkm_label').keyup(function () {
         $('input#id_bkm_all_users, input#id_bkm_replace')
             .parent()
             .toggle($(this).val().length > 0);
-    }).trigger('input');
+    }).trigger('keyup');
 
     /**
      * Attach Event Handler for 'Copy to clipbpard
@@ -365,8 +293,8 @@ AJAX.registerOnload('sql.js', function () {
         });
 
         $('.table_results .column_heading a').each(function () {
-            // Don't copy ordering number text within <small> tag
-            textArea.value += $(this).clone().find('small').remove().end().text() + '\t';
+        	//Don't copy ordering number text within <small> tag
+        	textArea.value += $(this).clone().find('small').remove().end().text() + '\t';
         });
 
         textArea.value += '\n';
@@ -397,7 +325,7 @@ AJAX.registerOnload('sql.js', function () {
         event.preventDefault();
 
         // Take to preview mode
-        Functions.printPreview();
+        printPreview();
     }); // end of 'Print' action
 
     /**
@@ -407,7 +335,7 @@ AJAX.registerOnload('sql.js', function () {
      */
     $(document).on('makegrid', '.sqlqueryresults', function () {
         $('.table_results').each(function () {
-            makeGrid(this);
+            PMA_makegrid(this);
         });
     });
 
@@ -419,13 +347,13 @@ AJAX.registerOnload('sql.js', function () {
     $(document).on('stickycolumns', '.sqlqueryresults', function () {
         $('.sticky_columns').remove();
         $('.table_results').each(function () {
-            var $tableResults = $(this);
+            var $table_results = $(this);
             // add sticky columns div
-            var $stickColumns = Sql.initStickyColumns($tableResults);
-            Sql.rearrangeStickyColumns($stickColumns, $tableResults);
+            var $stick_columns = initStickyColumns($table_results);
+            rearrangeStickyColumns($stick_columns, $table_results);
             // adjust sticky columns on scroll
-            $(document).on('scroll', window, function () {
-                Sql.handleStickyColumns($stickColumns, $tableResults);
+            $(window).on('scroll', function () {
+                handleStickyColumns($stick_columns, $table_results);
             });
         });
     });
@@ -439,24 +367,24 @@ AJAX.registerOnload('sql.js', function () {
     // do not add this link more than once
     if (! $('#sqlqueryform').find('a').is('#togglequerybox')) {
         $('<a id="togglequerybox"></a>')
-            .html(Messages.strHideQueryBox)
+            .html(PMA_messages.strHideQueryBox)
             .appendTo('#sqlqueryform')
         // initially hidden because at this point, nothing else
         // appears under the link
             .hide();
 
         // Attach the toggling of the query box visibility to a click
-        $('#togglequerybox').on('click', function () {
+        $('#togglequerybox').bind('click', function () {
             var $link = $(this);
             $link.siblings().slideToggle('fast');
-            if ($link.text() === Messages.strHideQueryBox) {
-                $link.text(Messages.strShowQueryBox);
+            if ($link.text() === PMA_messages.strHideQueryBox) {
+                $link.text(PMA_messages.strShowQueryBox);
                 // cheap trick to add a spacer between the menu tabs
                 // and "Show query box"; feel free to improve!
                 $('#togglequerybox_spacer').remove();
-                $link.before('<br id="togglequerybox_spacer">');
+                $link.before('<br id="togglequerybox_spacer" />');
             } else {
-                $link.text(Messages.strHideQueryBox);
+                $link.text(PMA_messages.strHideQueryBox);
             }
             // avoid default click action
             return false;
@@ -469,7 +397,7 @@ AJAX.registerOnload('sql.js', function () {
      *
      * @memberOf    jQuery
      */
-    $(document).on('click', '#button_submit_query', function () {
+    $(document).on('click', '#button_submit_query', function (event) {
         $('.success,.error').hide();
         // hide already existing error or success message
         var $form = $(this).closest('form');
@@ -479,33 +407,13 @@ AJAX.registerOnload('sql.js', function () {
         // import.php about what needs to be done
         $form.find('select[name=id_bookmark]').val('');
         // let normal event propagation happen
-        if (isStorageSupported('localStorage')) {
-            window.localStorage.removeItem('autoSavedSql');
-        } else {
-            Cookies.set('autoSavedSql', '');
-        }
-        var isShowQuery =  $('input[name="show_query"]').is(':checked');
-        if (isShowQuery) {
-            window.localStorage.showThisQuery = '1';
-            var db = $('input[name="db"]').val();
-            var table = $('input[name="table"]').val();
-            var query;
-            if (codeMirrorEditor) {
-                query = codeMirrorEditor.getValue();
-            } else {
-                query = $('#sqlquery').val();
-            }
-            Sql.showThisQuery(db, table, query);
-        } else {
-            window.localStorage.showThisQuery = '0';
-        }
     });
 
     /**
      * Event handler to show appropiate number of variable boxes
      * based on the bookmarked query
      */
-    $(document).on('change', '#id_bookmark', function () {
+    $(document).on('change', '#id_bookmark', function (event) {
         var varCount = $(this).find('option:selected').data('varcount');
         if (typeof varCount === 'undefined') {
             varCount = 0;
@@ -514,8 +422,8 @@ AJAX.registerOnload('sql.js', function () {
         var $varDiv = $('#bookmark_variables');
         $varDiv.empty();
         for (var i = 1; i <= varCount; i++) {
-            $varDiv.append($('<label for="bookmark_variable_' + i + '">' + Functions.sprintf(Messages.strBookmarkVariable, i) + '</label>'));
-            $varDiv.append($('<input type="text" size="10" name="bookmark_variable[' + i + ']" id="bookmark_variable_' + i + '">'));
+            $varDiv.append($('<label for="bookmark_variable_' + i + '">' + PMA_sprintf(PMA_messages.strBookmarkVariable, i) + '</label>'));
+            $varDiv.append($('<input type="text" size="10" name="bookmark_variable[' + i + ']" id="bookmark_variable_' + i + '"/>'));
         }
 
         if (varCount === 0) {
@@ -543,7 +451,7 @@ AJAX.registerOnload('sql.js', function () {
             // because when you are in the Bookmarked SQL query
             // section and hit enter, you expect it to do the
             // same action as the Go button in that section.
-            $('#button_submit_bookmark').trigger('click');
+            $('#button_submit_bookmark').click();
             return false;
         } else  {
             return true;
@@ -553,7 +461,7 @@ AJAX.registerOnload('sql.js', function () {
     /**
      * Ajax Event handler for 'SQL Query Submit'
      *
-     * @see         Functions.ajaxShowMessage()
+     * @see         PMA_ajaxShowMessage()
      * @memberOf    jQuery
      * @name        sqlqueryform_submit
      */
@@ -561,22 +469,22 @@ AJAX.registerOnload('sql.js', function () {
         event.preventDefault();
 
         var $form = $(this);
-        if (codeMirrorEditor) {
-            $form[0].elements.sql_query.value = codeMirrorEditor.getValue();
+        if (codemirror_editor) {
+            $form[0].elements.sql_query.value = codemirror_editor.getValue();
         }
-        if (! Functions.checkSqlQuery($form[0])) {
+        if (! checkSqlQuery($form[0])) {
             return false;
         }
 
         // remove any div containing a previous error message
         $('div.error').remove();
 
-        var $msgbox = Functions.ajaxShowMessage();
+        var $msgbox = PMA_ajaxShowMessage();
         var $sqlqueryresultsouter = $('#sqlqueryresultsouter');
 
-        Functions.prepareForAjaxRequest($form);
+        PMA_prepareForAjaxRequest($form);
 
-        var argsep = CommonParams.get('arg_separator');
+        var argsep = PMA_commonParams.get('arg_separator');
         $.post($form.attr('action'), $form.serialize() + argsep + 'ajax_page_request=true', function (data) {
             if (typeof data !== 'undefined' && data.success === true) {
                 // success happens if the query returns rows or not
@@ -587,7 +495,7 @@ AJAX.registerOnload('sql.js', function () {
                     if ('1' === data.action_bookmark) {
                         $('#sqlquery').text(data.sql_query);
                         // send to codemirror if possible
-                        Functions.setQuery(data.sql_query);
+                        setQuery(data.sql_query);
                     }
                     // delete
                     if ('2' === data.action_bookmark) {
@@ -603,42 +511,42 @@ AJAX.registerOnload('sql.js', function () {
                 $sqlqueryresultsouter
                     .show()
                     .html(data.message);
-                Functions.highlightSql($sqlqueryresultsouter);
+                PMA_highlightSQL($sqlqueryresultsouter);
 
-                if (data.menu) {
+                if (data._menu) {
                     if (history && history.pushState) {
                         history.replaceState({
-                            menu : data.menu
+                            menu : data._menu
                         },
                         null
                         );
-                        AJAX.handleMenu.replace(data.menu);
+                        AJAX.handleMenu.replace(data._menu);
                     } else {
-                        MicroHistory.menus.replace(data.menu);
-                        MicroHistory.menus.add(data.menuHash, data.menu);
+                        PMA_MicroHistory.menus.replace(data._menu);
+                        PMA_MicroHistory.menus.add(data._menuHash, data._menu);
                     }
-                } else if (data.menuHash) {
+                } else if (data._menuHash) {
                     if (! (history && history.pushState)) {
-                        MicroHistory.menus.replace(MicroHistory.menus.get(data.menuHash));
+                        PMA_MicroHistory.menus.replace(PMA_MicroHistory.menus.get(data._menuHash));
                     }
                 }
 
-                if (data.params) {
-                    CommonParams.setAll(data.params);
+                if (data._params) {
+                    PMA_commonParams.setAll(data._params);
                 }
 
                 if (typeof data.ajax_reload !== 'undefined') {
                     if (data.ajax_reload.reload) {
                         if (data.ajax_reload.table_name) {
-                            CommonParams.set('table', data.ajax_reload.table_name);
-                            CommonActions.refreshMain();
+                            PMA_commonParams.set('table', data.ajax_reload.table_name);
+                            PMA_commonActions.refreshMain();
                         } else {
-                            Navigation.reload();
+                            PMA_reloadNavigation();
                         }
                     }
                 } else if (typeof data.reload !== 'undefined') {
                     // this happens if a USE or DROP command was typed
-                    CommonActions.setDb(data.db);
+                    PMA_commonActions.setDb(data.db);
                     var url;
                     if (data.db) {
                         if (data.table) {
@@ -649,17 +557,17 @@ AJAX.registerOnload('sql.js', function () {
                     } else {
                         url = 'server_sql.php';
                     }
-                    CommonActions.refreshMain(url, function () {
+                    PMA_commonActions.refreshMain(url, function () {
                         $('#sqlqueryresultsouter')
                             .show()
                             .html(data.message);
-                        Functions.highlightSql($('#sqlqueryresultsouter'));
+                        PMA_highlightSQL($('#sqlqueryresultsouter'));
                     });
                 }
 
                 $('.sqlqueryresults').trigger('makegrid').trigger('stickycolumns');
                 $('#togglequerybox').show();
-                Functions.initSlider();
+                PMA_init_slider();
 
                 if (typeof data.action_bookmark === 'undefined') {
                     if ($('#sqlqueryform input[name="retain_query_box"]').is(':checked') !== true) {
@@ -673,9 +581,8 @@ AJAX.registerOnload('sql.js', function () {
                 $sqlqueryresultsouter
                     .show()
                     .html(data.error);
-                $('html, body').animate({ scrollTop: $(document).height() }, 200);
             }
-            Functions.ajaxRemoveMessage($msgbox);
+            PMA_ajaxRemoveMessage($msgbox);
         }); // end $.post()
     }); // end SQL Query submit
 
@@ -687,44 +594,44 @@ AJAX.registerOnload('sql.js', function () {
     $(document).on('submit', 'form[name=\'displayOptionsForm\'].ajax', function (event) {
         event.preventDefault();
 
-        var $form = $(this);
+        $form = $(this);
 
-        var $msgbox = Functions.ajaxShowMessage();
-        var argsep = CommonParams.get('arg_separator');
+        var $msgbox = PMA_ajaxShowMessage();
+        var argsep = PMA_commonParams.get('arg_separator');
         $.post($form.attr('action'), $form.serialize() + argsep + 'ajax_request=true', function (data) {
-            Functions.ajaxRemoveMessage($msgbox);
+            PMA_ajaxRemoveMessage($msgbox);
             var $sqlqueryresults = $form.parents('.sqlqueryresults');
             $sqlqueryresults
                 .html(data.message)
                 .trigger('makegrid')
                 .trigger('stickycolumns');
-            Functions.initSlider();
-            Functions.highlightSql($sqlqueryresults);
+            PMA_init_slider();
+            PMA_highlightSQL($sqlqueryresults);
         }); // end $.post()
     }); // end displayOptionsForm handler
 
     // Filter row handling. --STARTS--
     $(document).on('keyup', '.filter_rows', function () {
-        var uniqueId = $(this).data('for');
-        var $targetTable = $('.table_results[data-uniqueId=\'' + uniqueId + '\']');
-        var $headerCells = $targetTable.find('th[data-column]');
-        var targetColumns = [];
+        var unique_id = $(this).data('for');
+        var $target_table = $('.table_results[data-uniqueId=\'' + unique_id + '\']');
+        var $header_cells = $target_table.find('th[data-column]');
+        var target_columns = Array();
         // To handle colspan=4, in case of edit,copy etc options.
-        var dummyTh = ($('.edit_row_anchor').length !== 0 ?
+        var dummy_th = ($('.edit_row_anchor').length !== 0 ?
             '<th class="hide dummy_th"></th><th class="hide dummy_th"></th><th class="hide dummy_th"></th>'
             : '');
         // Selecting columns that will be considered for filtering and searching.
-        $headerCells.each(function () {
-            targetColumns.push($.trim($(this).text()));
+        $header_cells.each(function () {
+            target_columns.push($.trim($(this).text()));
         });
 
         var phrase = $(this).val();
         // Set same value to both Filter rows fields.
-        $('.filter_rows[data-for=\'' + uniqueId + '\']').not(this).val(phrase);
+        $('.filter_rows[data-for=\'' + unique_id + '\']').not(this).val(phrase);
         // Handle colspan.
-        $targetTable.find('thead > tr').prepend(dummyTh);
-        $.uiTableFilter($targetTable, phrase, targetColumns);
-        $targetTable.find('th.dummy_th').remove();
+        $target_table.find('thead > tr').prepend(dummy_th);
+        $.uiTableFilter($target_table, phrase, target_columns);
+        $target_table.find('th.dummy_th').remove();
     });
     // Filter row handling. --ENDS--
 
@@ -734,24 +641,24 @@ AJAX.registerOnload('sql.js', function () {
         var $form = $(this).parents('form');
 
         if (! $(this).is(':checked')) { // already showing all rows
-            Sql.submitShowAllForm();
+            submitShowAllForm();
         } else {
-            $form.confirm(Messages.strShowAllRowsWarning, $form.attr('action'), function () {
-                Sql.submitShowAllForm();
+            $form.PMA_confirm(PMA_messages.strShowAllRowsWarning, $form.attr('action'), function (url) {
+                submitShowAllForm();
             });
         }
 
-        Sql.submitShowAllForm = function () {
-            var argsep = CommonParams.get('arg_separator');
+        function submitShowAllForm () {
+            var argsep = PMA_commonParams.get('arg_separator');
             var submitData = $form.serialize() + argsep + 'ajax_request=true' + argsep + 'ajax_page_request=true';
-            Functions.ajaxShowMessage();
+            PMA_ajaxShowMessage();
             AJAX.source = $form;
             $.post($form.attr('action'), submitData, AJAX.responseHandler);
-        };
+        }
     });
 
     $('body').on('keyup', '#sqlqueryform', function () {
-        Functions.handleSimulateQueryButton();
+        PMA_handleSimulateQueryButton();
     });
 
     /**
@@ -761,76 +668,76 @@ AJAX.registerOnload('sql.js', function () {
         var $form = $('#sqlqueryform');
         var query = '';
         var delimiter = $('#id_sql_delimiter').val();
-        var dbName = $form.find('input[name="db"]').val();
+        var db_name = $form.find('input[name="db"]').val();
 
-        if (codeMirrorEditor) {
-            query = codeMirrorEditor.getValue();
+        if (codemirror_editor) {
+            query = codemirror_editor.getValue();
         } else {
             query = $('#sqlquery').val();
         }
 
         if (query.length === 0) {
-            alert(Messages.strFormEmpty);
-            $('#sqlquery').trigger('focus');
+            alert(PMA_messages.strFormEmpty);
+            $('#sqlquery').focus();
             return false;
         }
 
-        var $msgbox = Functions.ajaxShowMessage();
+        var $msgbox = PMA_ajaxShowMessage();
         $.ajax({
             type: 'POST',
             url: $form.attr('action'),
             data: {
-                'server': CommonParams.get('server'),
-                'db': dbName,
-                'ajax_request': '1',
-                'simulate_dml': '1',
-                'sql_query': query,
-                'sql_delimiter': delimiter
+                server: PMA_commonParams.get('server'),
+                db: db_name,
+                ajax_request: '1',
+                simulate_dml: '1',
+                sql_query: query,
+                sql_delimiter: delimiter
             },
             success: function (response) {
-                Functions.ajaxRemoveMessage($msgbox);
+                PMA_ajaxRemoveMessage($msgbox);
                 if (response.success) {
-                    var dialogContent = '<div class="preview_sql">';
+                    var dialog_content = '<div class="preview_sql">';
                     if (response.sql_data) {
                         var len = response.sql_data.length;
                         for (var i = 0; i < len; i++) {
-                            dialogContent += '<strong>' + Messages.strSQLQuery +
+                            dialog_content += '<strong>' + PMA_messages.strSQLQuery +
                                 '</strong>' + response.sql_data[i].sql_query +
-                                Messages.strMatchedRows +
+                                PMA_messages.strMatchedRows +
                                 ' <a href="' + response.sql_data[i].matched_rows_url +
                                 '">' + response.sql_data[i].matched_rows + '</a><br>';
                             if (i < len - 1) {
-                                dialogContent += '<hr>';
+                                dialog_content += '<hr>';
                             }
                         }
                     } else {
-                        dialogContent += response.message;
+                        dialog_content += response.message;
                     }
-                    dialogContent += '</div>';
-                    var $dialogContent = $(dialogContent);
-                    var buttonOptions = {};
-                    buttonOptions[Messages.strClose] = function () {
+                    dialog_content += '</div>';
+                    var $dialog_content = $(dialog_content);
+                    var button_options = {};
+                    button_options[PMA_messages.strClose] = function () {
                         $(this).dialog('close');
                     };
-                    $('<div></div>').append($dialogContent).dialog({
+                    var $response_dialog = $('<div />').append($dialog_content).dialog({
                         minWidth: 540,
                         maxHeight: 400,
                         modal: true,
-                        buttons: buttonOptions,
-                        title: Messages.strSimulateDML,
+                        buttons: button_options,
+                        title: PMA_messages.strSimulateDML,
                         open: function () {
-                            Functions.highlightSql($(this));
+                            PMA_highlightSQL($(this));
                         },
                         close: function () {
                             $(this).remove();
                         }
                     });
                 } else {
-                    Functions.ajaxShowMessage(response.error);
+                    PMA_ajaxShowMessage(response.error);
                 }
             },
-            error: function () {
-                Functions.ajaxShowMessage(Messages.strErrorProcessingRequest);
+            error: function (response) {
+                PMA_ajaxShowMessage(PMA_messages.strErrorProcessingRequest);
             }
         });
     });
@@ -842,9 +749,9 @@ AJAX.registerOnload('sql.js', function () {
         e.preventDefault();
         var $button = $(this);
         var $form = $button.closest('form');
-        var argsep = CommonParams.get('arg_separator');
+        var argsep = PMA_commonParams.get('arg_separator');
         var submitData = $form.serialize() + argsep + 'ajax_request=true' + argsep + 'ajax_page_request=true' + argsep + 'submit_mult=' + $button.val();
-        Functions.ajaxShowMessage();
+        PMA_ajaxShowMessage();
         AJAX.source = $form;
         $.post($form.attr('action'), submitData, AJAX.responseHandler);
     });
@@ -854,48 +761,45 @@ AJAX.registerOnload('sql.js', function () {
  * Starting from some th, change the class of all td under it.
  * If isAddClass is specified, it will be used to determine whether to add or remove the class.
  */
-Sql.changeClassForColumn = function ($thisTh, newClass, isAddClass) {
+function PMA_changeClassForColumn ($this_th, newclass, isAddClass) {
     // index 0 is the th containing the big T
-    var thIndex = $thisTh.index();
-    var hasBigT = $thisTh.closest('tr').children(':first').hasClass('column_action');
+    var th_index = $this_th.index();
+    var has_big_t = $this_th.closest('tr').children(':first').hasClass('column_action');
     // .eq() is zero-based
-    if (hasBigT) {
-        thIndex--;
+    if (has_big_t) {
+        th_index--;
     }
-    var $table = $thisTh.parents('.table_results');
+    var $table = $this_th.parents('.table_results');
     if (! $table.length) {
-        $table = $thisTh.parents('table').siblings('.table_results');
+        $table = $this_th.parents('table').siblings('.table_results');
     }
-    var $tds = $table.find('tbody tr').find('td.data:eq(' + thIndex + ')');
+    var $tds = $table.find('tbody tr').find('td.data:eq(' + th_index + ')');
     if (isAddClass === undefined) {
-        $tds.toggleClass(newClass);
+        $tds.toggleClass(newclass);
     } else {
-        $tds.toggleClass(newClass, isAddClass);
+        $tds.toggleClass(newclass, isAddClass);
     }
-};
+}
 
 /**
  * Handles browse foreign values modal dialog
  *
  * @param object $this_a reference to the browse foreign value link
  */
-Sql.browseForeignDialog = function ($thisA) {
+function browseForeignDialog ($this_a) {
     var formId = '#browse_foreign_form';
     var showAllId = '#foreign_showAll';
     var tableId = '#browse_foreign_table';
     var filterId = '#input_foreign_filter';
     var $dialog = null;
-    var argSep = CommonParams.get('arg_separator');
-    var params = $thisA.getPostData();
-    params += argSep + 'ajax_request=true';
-    $.post($thisA.attr('href'), params, function (data) {
+    $.get($this_a.attr('href'), { 'ajax_request': true }, function (data) {
         // Creates browse foreign value dialog
         $dialog = $('<div>').append(data.message).dialog({
-            title: Messages.strBrowseForeignValues,
+            title: PMA_messages.strBrowseForeignValues,
             width: Math.min($(window).width() - 100, 700),
             maxHeight: $(window).height() - 100,
             dialogClass: 'browse_foreign_modal',
-            close: function () {
+            close: function (ev, ui) {
                 // remove event handlers attached to elements related to dialog
                 $(tableId).off('click', 'td a.foreign_value');
                 $(formId).off('click', showAllId);
@@ -909,10 +813,10 @@ Sql.browseForeignDialog = function ($thisA) {
         var showAll = false;
         $(tableId).on('click', 'td a.foreign_value', function (e) {
             e.preventDefault();
-            var $input = $thisA.prev('input[type=text]');
+            var $input = $this_a.prev('input[type=text]');
             // Check if input exists or get CEdit edit_box
             if ($input.length === 0) {
-                $input = $thisA.closest('.edit_area').prev('.edit_box');
+                $input = $this_a.closest('.edit_area').prev('.edit_box');
             }
             // Set selected value as input value
             $input.val($(this).data('key'));
@@ -946,54 +850,41 @@ Sql.browseForeignDialog = function ($thisA) {
             showAll = false;
         });
     });
-};
-
-Sql.checkSavedQuery = function () {
-    if (isStorageSupported('localStorage') && window.localStorage.autoSavedSql !== undefined) {
-        Functions.ajaxShowMessage(Messages.strPreviousSaveQuery);
-    }
-};
+}
 
 AJAX.registerOnload('sql.js', function () {
     $('body').on('click', 'a.browse_foreign', function (e) {
         e.preventDefault();
-        Sql.browseForeignDialog($(this));
+        browseForeignDialog($(this));
     });
 
     /**
      * vertical column highlighting in horizontal mode when hovering over the column header
      */
-    $(document).on('mouseenter', 'th.column_heading.pointer', function () {
-        Sql.changeClassForColumn($(this), 'hover', true);
+    $(document).on('mouseenter', 'th.column_heading.pointer', function (e) {
+        PMA_changeClassForColumn($(this), 'hover', true);
     });
-    $(document).on('mouseleave', 'th.column_heading.pointer', function () {
-        Sql.changeClassForColumn($(this), 'hover', false);
+    $(document).on('mouseleave', 'th.column_heading.pointer', function (e) {
+        PMA_changeClassForColumn($(this), 'hover', false);
     });
 
     /**
      * vertical column marking in horizontal mode when clicking the column header
      */
     $(document).on('click', 'th.column_heading.marker', function () {
-        Sql.changeClassForColumn($(this), 'marked');
+        PMA_changeClassForColumn($(this), 'marked');
     });
 
     /**
      * create resizable table
      */
     $('.sqlqueryresults').trigger('makegrid').trigger('stickycolumns');
-
-    /**
-     * Check if there is any saved query
-     */
-    if (codeMirrorEditor || document.sqlform) {
-        Sql.checkSavedQuery();
-    }
 });
 
-/**
+/*
  * Profiling Chart
  */
-Sql.makeProfilingChart = function () {
+function makeProfilingChart () {
     if ($('#profilingchart').length === 0 ||
         $('#profilingchart').html().length !== 0 ||
         !$.jqplot || !$.jqplot.Highlighter || !$.jqplot.PieRenderer
@@ -1010,20 +901,16 @@ Sql.makeProfilingChart = function () {
     $('#profilingchart').html('').show();
     $('#profilingChartData').html('');
 
-    Functions.createProfilingChart('profilingchart', data);
-};
+    PMA_createProfilingChart('profilingchart', data);
+}
 
-/**
+/*
  * initialize profiling data tables
  */
-Sql.initProfilingTables = function () {
+function initProfilingTables () {
     if (!$.tablesorter) {
         return;
     }
-    // Added to allow two direction sorting
-    $('#profiletable')
-        .find('thead th')
-        .off('click mousedown');
 
     $('#profiletable').tablesorter({
         widgets: ['zebra'],
@@ -1036,10 +923,6 @@ Sql.initProfilingTables = function () {
             }
         }
     });
-    // Added to allow two direction sorting
-    $('#profilesummarytable')
-        .find('thead th')
-        .off('click mousedown');
 
     $('#profilesummarytable').tablesorter({
         widgets: ['zebra'],
@@ -1052,90 +935,86 @@ Sql.initProfilingTables = function () {
             }
         }
     });
-};
+}
 
-/**
+/*
  * Set position, left, top, width of sticky_columns div
  */
-Sql.setStickyColumnsPosition = function ($stickyColumns, $tableResults, position, top, left, marginLeft) {
-    $stickyColumns
+function setStickyColumnsPosition ($sticky_columns, $table_results, position, top, left, margin_left) {
+    $sticky_columns
         .css('position', position)
         .css('top', top)
         .css('left', left ? left : 'auto')
-        .css('margin-left', marginLeft ? marginLeft : '0px')
-        .css('width', $tableResults.width());
-};
+        .css('margin-left', margin_left ? margin_left : '0px')
+        .css('width', $table_results.width());
+}
 
-/**
+/*
  * Initialize sticky columns
  */
-Sql.initStickyColumns = function ($tableResults) {
+function initStickyColumns ($table_results) {
     return $('<table class="sticky_columns"></table>')
-        .insertBefore($tableResults)
+        .insertBefore($table_results)
         .css('position', 'fixed')
-        .css('z-index', '98')
-        .css('width', $tableResults.width())
+        .css('z-index', '99')
+        .css('width', $table_results.width())
         .css('margin-left', $('#page_content').css('margin-left'))
         .css('top', $('#floating_menubar').height())
         .css('display', 'none');
-};
+}
 
-/**
+/*
  * Arrange/Rearrange columns in sticky header
  */
-Sql.rearrangeStickyColumns = function ($stickyColumns, $tableResults) {
-    var $originalHeader = $tableResults.find('thead');
+function rearrangeStickyColumns ($sticky_columns, $table_results) {
+    var $originalHeader = $table_results.find('thead');
     var $originalColumns = $originalHeader.find('tr:first').children();
     var $clonedHeader = $originalHeader.clone();
-    var isFirefox = navigator.userAgent.indexOf('Firefox') > -1;
-    var isSafari = navigator.userAgent.indexOf('Safari') > -1;
     // clone width per cell
-    $clonedHeader.find('tr:first').children().each(function (i) {
+    $clonedHeader.find('tr:first').children().width(function (i,val) {
         var width = $originalColumns.eq(i).width();
-        if (! isFirefox && ! isSafari) {
+        var is_firefox = navigator.userAgent.indexOf('Firefox') > -1;
+        if (! is_firefox) {
             width += 1;
         }
-        $(this).width(width);
-        if (isSafari) {
-            $(this).css('min-width', width).css('max-width', width);
-        }
+        return width;
     });
-    $stickyColumns.empty().append($clonedHeader);
-};
+    $sticky_columns.empty().append($clonedHeader);
+}
 
-/**
+/*
  * Adjust sticky columns on horizontal/vertical scroll for all tables
  */
-Sql.handleAllStickyColumns = function () {
+function handleAllStickyColumns () {
     $('.sticky_columns').each(function () {
-        Sql.handleStickyColumns($(this), $(this).next('.table_results'));
+        handleStickyColumns($(this), $(this).next('.table_results'));
     });
-};
+}
 
-/**
+/*
  * Adjust sticky columns on horizontal/vertical scroll
  */
-Sql.handleStickyColumns = function ($stickyColumns, $tableResults) {
+function handleStickyColumns ($sticky_columns, $table_results) {
     var currentScrollX = $(window).scrollLeft();
     var windowOffset = $(window).scrollTop();
-    var tableStartOffset = $tableResults.offset().top;
-    var tableEndOffset = tableStartOffset + $tableResults.height();
+    var tableStartOffset = $table_results.offset().top;
+    var tableEndOffset = tableStartOffset + $table_results.height();
     if (windowOffset >= tableStartOffset && windowOffset <= tableEndOffset) {
         // for horizontal scrolling
         if (prevScrollX !== currentScrollX) {
             prevScrollX = currentScrollX;
-            Sql.setStickyColumnsPosition($stickyColumns, $tableResults, 'absolute', $('#floating_menubar').height() + windowOffset - tableStartOffset);
+            setStickyColumnsPosition($sticky_columns, $table_results, 'absolute', $('#floating_menubar').height() + windowOffset - tableStartOffset);
         // for vertical scrolling
         } else {
-            Sql.setStickyColumnsPosition($stickyColumns, $tableResults, 'fixed', $('#floating_menubar').height(), $('#pma_navigation').width() - currentScrollX, $('#page_content').css('margin-left'));
+            setStickyColumnsPosition($sticky_columns, $table_results, 'fixed', $('#floating_menubar').height(), $('#pma_navigation').width() - currentScrollX, $('#page_content').css('margin-left'));
         }
-        $stickyColumns.show();
+        $sticky_columns.show();
     } else {
-        $stickyColumns.hide();
+        $sticky_columns.hide();
     }
-};
+}
 
 AJAX.registerOnload('sql.js', function () {
-    Sql.makeProfilingChart();
-    Sql.initProfilingTables();
+    makeProfilingChart();
+    initProfilingTables();
 });

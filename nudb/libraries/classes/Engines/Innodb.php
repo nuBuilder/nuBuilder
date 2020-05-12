@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin-Engines
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Engines;
 
 use PhpMyAdmin\StorageEngine;
@@ -26,94 +24,94 @@ class Innodb extends StorageEngine
      */
     public function getVariables()
     {
-        return [
-            'innodb_data_home_dir'            => [
+        return array(
+            'innodb_data_home_dir'            => array(
                 'title' => __('Data home directory'),
                 'desc'  => __(
                     'The common part of the directory path for all InnoDB data '
                     . 'files.'
                 ),
-            ],
-            'innodb_data_file_path'           => [
+            ),
+            'innodb_data_file_path'           => array(
                 'title' => __('Data files'),
-            ],
-            'innodb_autoextend_increment'     => [
+            ),
+            'innodb_autoextend_increment'     => array(
                 'title' => __('Autoextend increment'),
                 'desc'  => __(
                     'The increment size for extending the size of an autoextending '
                     . 'tablespace when it becomes full.'
                 ),
                 'type'  => PMA_ENGINE_DETAILS_TYPE_NUMERIC,
-            ],
-            'innodb_buffer_pool_size'         => [
+            ),
+            'innodb_buffer_pool_size'         => array(
                 'title' => __('Buffer pool size'),
                 'desc'  => __(
                     'The size of the memory buffer InnoDB uses to cache data and '
                     . 'indexes of its tables.'
                 ),
                 'type'  => PMA_ENGINE_DETAILS_TYPE_SIZE,
-            ],
-            'innodb_additional_mem_pool_size' => [
+            ),
+            'innodb_additional_mem_pool_size' => array(
                 'title' => 'innodb_additional_mem_pool_size',
                 'type'  => PMA_ENGINE_DETAILS_TYPE_SIZE,
-            ],
-            'innodb_buffer_pool_awe_mem_mb'   => [
+            ),
+            'innodb_buffer_pool_awe_mem_mb'   => array(
                 'type' => PMA_ENGINE_DETAILS_TYPE_SIZE,
-            ],
-            'innodb_checksums'                => [],
-            'innodb_commit_concurrency'       => [],
-            'innodb_concurrency_tickets'      => [
+            ),
+            'innodb_checksums'                => array(),
+            'innodb_commit_concurrency'       => array(),
+            'innodb_concurrency_tickets'      => array(
                 'type' => PMA_ENGINE_DETAILS_TYPE_NUMERIC,
-            ],
-            'innodb_doublewrite'              => [],
-            'innodb_fast_shutdown'            => [],
-            'innodb_file_io_threads'          => [
+            ),
+            'innodb_doublewrite'              => array(),
+            'innodb_fast_shutdown'            => array(),
+            'innodb_file_io_threads'          => array(
                 'type' => PMA_ENGINE_DETAILS_TYPE_NUMERIC,
-            ],
-            'innodb_file_per_table'           => [],
-            'innodb_flush_log_at_trx_commit'  => [],
-            'innodb_flush_method'             => [],
-            'innodb_force_recovery'           => [],
-            'innodb_lock_wait_timeout'        => [
+            ),
+            'innodb_file_per_table'           => array(),
+            'innodb_flush_log_at_trx_commit'  => array(),
+            'innodb_flush_method'             => array(),
+            'innodb_force_recovery'           => array(),
+            'innodb_lock_wait_timeout'        => array(
                 'type' => PMA_ENGINE_DETAILS_TYPE_NUMERIC,
-            ],
-            'innodb_locks_unsafe_for_binlog'  => [],
-            'innodb_log_arch_dir'             => [],
-            'innodb_log_archive'              => [],
-            'innodb_log_buffer_size'          => [
+            ),
+            'innodb_locks_unsafe_for_binlog'  => array(),
+            'innodb_log_arch_dir'             => array(),
+            'innodb_log_archive'              => array(),
+            'innodb_log_buffer_size'          => array(
                 'type' => PMA_ENGINE_DETAILS_TYPE_SIZE,
-            ],
-            'innodb_log_file_size'            => [
+            ),
+            'innodb_log_file_size'            => array(
                 'type' => PMA_ENGINE_DETAILS_TYPE_SIZE,
-            ],
-            'innodb_log_files_in_group'       => [
+            ),
+            'innodb_log_files_in_group'       => array(
                 'type' => PMA_ENGINE_DETAILS_TYPE_NUMERIC,
-            ],
-            'innodb_log_group_home_dir'       => [],
-            'innodb_max_dirty_pages_pct'      => [
+            ),
+            'innodb_log_group_home_dir'       => array(),
+            'innodb_max_dirty_pages_pct'      => array(
                 'type' => PMA_ENGINE_DETAILS_TYPE_NUMERIC,
-            ],
-            'innodb_max_purge_lag'            => [],
-            'innodb_mirrored_log_groups'      => [
+            ),
+            'innodb_max_purge_lag'            => array(),
+            'innodb_mirrored_log_groups'      => array(
                 'type' => PMA_ENGINE_DETAILS_TYPE_NUMERIC,
-            ],
-            'innodb_open_files'               => [
+            ),
+            'innodb_open_files'               => array(
                 'type' => PMA_ENGINE_DETAILS_TYPE_NUMERIC,
-            ],
-            'innodb_support_xa'               => [],
-            'innodb_sync_spin_loops'          => [
+            ),
+            'innodb_support_xa'               => array(),
+            'innodb_sync_spin_loops'          => array(
                 'type' => PMA_ENGINE_DETAILS_TYPE_NUMERIC,
-            ],
-            'innodb_table_locks'              => [
+            ),
+            'innodb_table_locks'              => array(
                 'type' => PMA_ENGINE_DETAILS_TYPE_BOOLEAN,
-            ],
-            'innodb_thread_concurrency'       => [
+            ),
+            'innodb_thread_concurrency'       => array(
                 'type' => PMA_ENGINE_DETAILS_TYPE_NUMERIC,
-            ],
-            'innodb_thread_sleep_delay'       => [
+            ),
+            'innodb_thread_sleep_delay'       => array(
                 'type' => PMA_ENGINE_DETAILS_TYPE_NUMERIC,
-            ],
-        ];
+            ),
+        );
     }
 
     /**
@@ -135,9 +133,9 @@ class Innodb extends StorageEngine
     public function getInfoPages()
     {
         if ($this->support < PMA_ENGINE_SUPPORT_YES) {
-            return [];
+            return array();
         }
-        $pages = [];
+        $pages = array();
         $pages['Bufferpool'] = __('Buffer Pool');
         $pages['Status'] = __('InnoDB Status');
 
@@ -154,9 +152,11 @@ class Innodb extends StorageEngine
         // The following query is only possible because we know
         // that we are on MySQL 5 here (checked above)!
         // side note: I love MySQL 5 for this. :-)
-        $sql = 'SHOW STATUS'
-            . ' WHERE Variable_name LIKE \'Innodb\\_buffer\\_pool\\_%\''
-            . ' OR Variable_name = \'Innodb_page_size\';';
+        $sql
+            = '
+             SHOW STATUS
+            WHERE Variable_name LIKE \'Innodb\\_buffer\\_pool\\_%\'
+               OR Variable_name = \'Innodb_page_size\';';
         $status = $GLOBALS['dbi']->fetchResult($sql, 0, 1);
 
         $output = '<table class="data" id="table_innodb_bufferpool_usage">' . "\n"
@@ -174,7 +174,7 @@ class Innodb extends StorageEngine
             )
             . '&nbsp;' . __('pages')
             . ' / '
-            . implode(
+            . join(
                 '&nbsp;',
                 Util::formatByteDown(
                     $status['Innodb_buffer_pool_pages_total']
@@ -331,11 +331,10 @@ class Innodb extends StorageEngine
     public function getPageStatus()
     {
         return '<pre id="pre_innodb_status">' . "\n"
-            . htmlspecialchars((string) $GLOBALS['dbi']->fetchValue(
-                'SHOW ENGINE INNODB STATUS;',
-                0,
-                'Status'
-            )) . "\n" . '</pre>' . "\n";
+        . htmlspecialchars(
+            $GLOBALS['dbi']->fetchValue('SHOW ENGINE INNODB STATUS;', 0, 'Status')
+        ) . "\n"
+        . '</pre>' . "\n";
     }
 
     /**
@@ -393,3 +392,4 @@ class Innodb extends StorageEngine
         );
     }
 }
+

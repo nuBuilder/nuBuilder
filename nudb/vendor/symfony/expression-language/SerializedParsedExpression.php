@@ -24,9 +24,9 @@ class SerializedParsedExpression extends ParsedExpression
      * @param string $expression An expression
      * @param string $nodes      The serialized nodes for the expression
      */
-    public function __construct(string $expression, string $nodes)
+    public function __construct($expression, $nodes)
     {
-        $this->expression = $expression;
+        $this->expression = (string) $expression;
         $this->nodes = $nodes;
     }
 

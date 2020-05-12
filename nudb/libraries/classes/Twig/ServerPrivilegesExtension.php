@@ -5,14 +5,8 @@
  *
  * @package PhpMyAdmin\Twig
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Twig;
 
-use PhpMyAdmin\Relation;
-use PhpMyAdmin\RelationCleanup;
-use PhpMyAdmin\Server\Privileges;
-use PhpMyAdmin\Template;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -30,22 +24,12 @@ class ServerPrivilegesExtension extends AbstractExtension
      */
     public function getFunctions()
     {
-        $relation = new Relation($GLOBALS['dbi']);
-        $serverPrivileges = new Privileges(
-            new Template(),
-            $GLOBALS['dbi'],
-            $relation,
-            new RelationCleanup($GLOBALS['dbi'], $relation)
-        );
-        return [
+        return array(
             new TwigFunction(
-                'format_privilege',
-                [
-                    $serverPrivileges,
-                    'formatPrivilege',
-                ],
-                ['is_safe' => ['html']]
+                'ServerPrivileges_formatPrivilege',
+                'PhpMyAdmin\Server\Privileges::formatPrivilege',
+                array('is_safe' => array('html'))
             ),
-        ];
+        );
     }
 }

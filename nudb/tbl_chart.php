@@ -5,34 +5,28 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
 
-use PhpMyAdmin\Controllers\Table\ChartController;
-use Symfony\Component\DependencyInjection\Definition;
+use PhpMyAdmin\Controllers\Table\TableChartController;
+use PhpMyAdmin\Di\Container;
+use PhpMyAdmin\Response;
 
-if (! defined('ROOT_PATH')) {
-    define('ROOT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
-}
+require_once 'libraries/common.inc.php';
 
-require_once ROOT_PATH . 'libraries/common.inc.php';
+$container = Container::getDefaultContainer();
+$container->factory('PhpMyAdmin\Controllers\Table\TableChartController');
+$container->alias(
+    'TableChartController', 'PhpMyAdmin\Controllers\Table\TableChartController'
+);
+$container->set('PhpMyAdmin\Response', Response::getInstance());
+$container->alias('response', 'PhpMyAdmin\Response');
 
 /* Define dependencies for the concerned controller */
-$dependency_definitions = [
-    'sql_query' => &$GLOBALS['sql_query'],
-    'url_query' => &$GLOBALS['url_query'],
-    'cfg' => &$GLOBALS['cfg'],
-];
-
-/** @var Definition $definition */
-$definition = $containerBuilder->getDefinition(ChartController::class);
-array_map(
-    static function (string $parameterName, $value) use ($definition) {
-        $definition->replaceArgument($parameterName, $value);
-    },
-    array_keys($dependency_definitions),
-    $dependency_definitions
+$dependency_definitions = array(
+    "sql_query" => &$GLOBALS['sql_query'],
+    "url_query" => &$GLOBALS['url_query'],
+    "cfg" => &$GLOBALS['cfg']
 );
 
-/** @var ChartController $controller */
-$controller = $containerBuilder->get(ChartController::class);
+/** @var TableChartController $controller */
+$controller = $container->get('TableChartController', $dependency_definitions);
 $controller->indexAction();

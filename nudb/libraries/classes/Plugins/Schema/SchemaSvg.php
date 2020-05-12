@@ -6,15 +6,13 @@
  * @package    PhpMyAdmin-Schema
  * @subpackage SVG
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Plugins\Schema;
 
-use PhpMyAdmin\Plugins\Schema\Svg\SvgRelationSchema;
-use PhpMyAdmin\Plugins\SchemaPlugin;
+use PhpMyAdmin\Properties\Options\Items\BoolPropertyItem;
 use PhpMyAdmin\Properties\Options\Groups\OptionsPropertyMainGroup;
 use PhpMyAdmin\Properties\Options\Groups\OptionsPropertyRootGroup;
-use PhpMyAdmin\Properties\Options\Items\BoolPropertyItem;
+use PhpMyAdmin\Plugins\SchemaPlugin;
+use PhpMyAdmin\Plugins\Schema\Svg\SvgRelationSchema;
 use PhpMyAdmin\Properties\Plugins\SchemaPluginProperties;
 
 /**
@@ -83,6 +81,5 @@ class SchemaSvg extends SchemaPlugin
     {
         $export = new SvgRelationSchema($db);
         $export->showOutput();
-        return true;
     }
 }

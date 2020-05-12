@@ -1,8 +1,8 @@
 <?php
+
 /**
  * `VALUES` keyword parser.
  */
-declare(strict_types=1);
 
 namespace PhpMyAdmin\SqlParser\Components;
 
@@ -11,11 +11,13 @@ use PhpMyAdmin\SqlParser\Parser;
 use PhpMyAdmin\SqlParser\Token;
 use PhpMyAdmin\SqlParser\TokensList;
 use PhpMyAdmin\SqlParser\Translator;
-use function count;
-use function sprintf;
 
 /**
  * `VALUES` keyword parser.
+ *
+ * @category   Keywords
+ *
+ * @license    https://www.gnu.org/licenses/gpl-2.0.txt GPL-2.0+
  */
 class Array2d extends Component
 {
@@ -26,9 +28,9 @@ class Array2d extends Component
      *
      * @return ArrayObj[]
      */
-    public static function parse(Parser $parser, TokensList $list, array $options = [])
+    public static function parse(Parser $parser, TokensList $list, array $options = array())
     {
-        $ret = [];
+        $ret = array();
 
         /**
          * The number of values in each set.
@@ -80,7 +82,7 @@ class Array2d extends Component
                     $arrCount = count($arr->values);
                     if ($count === -1) {
                         $count = $arrCount;
-                    } elseif ($arrCount !== $count) {
+                    } elseif ($arrCount != $count) {
                         $parser->error(
                             sprintf(
                                 Translator::gettext('%1$d values were expected, but found %2$d.'),
@@ -90,7 +92,6 @@ class Array2d extends Component
                             $token
                         );
                     }
-
                     $ret[] = $arr;
                     $state = 1;
                 } else {
@@ -123,7 +124,7 @@ class Array2d extends Component
      *
      * @return string
      */
-    public static function build($component, array $options = [])
+    public static function build($component, array $options = array())
     {
         return ArrayObj::build($component);
     }

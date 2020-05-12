@@ -1,33 +1,56 @@
 <?php
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
- * Interface to the MySQL Improved extension (MySQLi)
+ * Interface to the improved MySQL extension (MySQLi)
  *
  * @package    PhpMyAdmin-DBI
  * @subpackage MySQLi
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Dbi;
 
-use mysqli;
-use mysqli_result;
 use PhpMyAdmin\DatabaseInterface;
-use stdClass;
-use function mysqli_init;
+
+if (! defined('PHPMYADMIN')) {
+    exit;
+}
 
 /**
- * Interface to the MySQL Improved extension (MySQLi)
+ * some PHP versions are reporting extra messages like "No index used in query"
+ */
+
+mysqli_report(MYSQLI_REPORT_OFF);
+
+/**
+ * some older mysql client libs are missing these constants ...
+ */
+if (! defined('MYSQLI_BINARY_FLAG')) {
+    define('MYSQLI_BINARY_FLAG', 128);
+}
+
+/**
+ * @see https://bugs.php.net/36007
+ */
+if (! defined('MYSQLI_TYPE_NEWDECIMAL')) {
+    define('MYSQLI_TYPE_NEWDECIMAL', 246);
+}
+if (! defined('MYSQLI_TYPE_BIT')) {
+    define('MYSQLI_TYPE_BIT', 16);
+}
+if (! defined('MYSQLI_TYPE_JSON')) {
+    define('MYSQLI_TYPE_JSON', 245);
+}
+
+
+/* vim: set expandtab sw=4 ts=4 sts=4: */
+/**
+ * Interface to the improved MySQL extension (MySQLi)
  *
  * @package    PhpMyAdmin-DBI
  * @subpackage MySQLi
  */
 class DbiMysqli implements DbiExtension
 {
-    /**
-     * @var array
-     */
-    private static $pma_mysqli_flag_names = [
+    static private $pma_mysqli_flag_names = array(
         MYSQLI_NUM_FLAG => 'num',
         MYSQLI_PART_KEY_FLAG => 'part_key',
         MYSQLI_SET_FLAG => 'set',
@@ -41,7 +64,7 @@ class DbiMysqli implements DbiExtension
         MYSQLI_UNIQUE_KEY_FLAG => 'unique_key',
         MYSQLI_PRI_KEY_FLAG => 'primary_key',
         MYSQLI_NOT_NULL_FLAG => 'not_null',
-    ];
+    );
 
     /**
      * connects to the database server
@@ -50,17 +73,26 @@ class DbiMysqli implements DbiExtension
      * @param string $password mysql user password
      * @param array  $server   host/port/socket/persistent
      *
-     * @return mysqli|bool false on error or a mysqli object on success
+     * @return mixed false on error or a mysqli object on success
      */
-    public function connect($user, $password, array $server)
-    {
+    public function connect(
+        $user, $password, array $server
+    ) {
         if ($server) {
-            $server['host'] = empty($server['host'])
+            $server['host'] = (empty($server['host']))
                 ? 'localhost'
                 : $server['host'];
         }
 
-        $mysqli = mysqli_init();
+        // NULL enables connection to the default socket
+
+        $link = mysqli_init();
+
+        if (defined('PMA_ENABLE_LDI')) {
+            mysqli_options($link, MYSQLI_OPT_LOCAL_INFILE, true);
+        } else {
+            mysqli_options($link, MYSQLI_OPT_LOCAL_INFILE, false);
+        }
 
         $client_flags = 0;
 
@@ -78,22 +110,8 @@ class DbiMysqli implements DbiExtension
                 ! empty($server['ssl_ca_path']) ||
                 ! empty($server['ssl_ciphers'])
             ) {
-                if (! isset($server['ssl_key']) || is_null($server['ssl_key'])) {
-                    $server['ssl_key'] = '';
-                }
-                if (! isset($server['ssl_cert']) || is_null($server['ssl_cert'])) {
-                    $server['ssl_cert'] = '';
-                }
-                if (! isset($server['ssl_ca']) || is_null($server['ssl_ca'])) {
-                    $server['ssl_ca'] = '';
-                }
-                if (! isset($server['ssl_ca_path']) || is_null($server['ssl_ca_path'])) {
-                    $server['ssl_ca_path'] = '';
-                }
-                if (! isset($server['ssl_ciphers']) || is_null($server['ssl_ciphers'])) {
-                    $server['ssl_ciphers'] = '';
-                }
-                $mysqli->ssl_set(
+                mysqli_ssl_set(
+                    $link,
                     $server['ssl_key'],
                     $server['ssl_cert'],
                     $server['ssl_ca'],
@@ -107,7 +125,8 @@ class DbiMysqli implements DbiExtension
              * @link https://github.com/phpmyadmin/phpmyadmin/pull/11838
              */
             if (! $server['ssl_verify']) {
-                $mysqli->options(
+                mysqli_options(
+                    $link,
                     MYSQLI_OPT_SSL_VERIFY_SERVER_CERT,
                     $server['ssl_verify']
                 );
@@ -121,17 +140,18 @@ class DbiMysqli implements DbiExtension
             $host = $server['host'];
         }
 
-        $return_value = $mysqli->real_connect(
+        $return_value = mysqli_real_connect(
+            $link,
             $host,
             $user,
             $password,
             '',
             $server['port'],
-            (string) $server['socket'],
+            $server['socket'],
             $client_flags
         );
 
-        if ($return_value === false || $return_value === null) {
+        if ($return_value === false || is_null($return_value)) {
             /*
              * Switch to SSL if server asked us to do so, unfortunately
              * there are more ways MySQL server can tell this:
@@ -140,8 +160,8 @@ class DbiMysqli implements DbiExtension
              * - #2001 - SSL Connection is required. Please specify SSL options and retry.
              * - #9002 - SSL connection is required. Please specify SSL options and retry.
              */
-            $error_number = $mysqli->connect_errno;
-            $error_message = $mysqli->connect_error;
+            $error_number = mysqli_connect_errno();
+            $error_message = mysqli_connect_error();
             if (! $server['ssl'] && ($error_number == 3159 ||
                 (($error_number == 2001 || $error_number == 9002) && stripos($error_message, 'SSL Connection is required') !== false))
             ) {
@@ -155,38 +175,32 @@ class DbiMysqli implements DbiExtension
             return false;
         }
 
-        if (defined('PMA_ENABLE_LDI')) {
-            $mysqli->options(MYSQLI_OPT_LOCAL_INFILE, true);
-        } else {
-            $mysqli->options(MYSQLI_OPT_LOCAL_INFILE, false);
-        }
-
-        return $mysqli;
+        return $link;
     }
 
     /**
      * selects given database
      *
-     * @param string $databaseName database name to select
-     * @param mysqli $mysqli       the mysqli object
+     * @param string $dbname database name to select
+     * @param mysqli $link   the mysqli object
      *
      * @return boolean
      */
-    public function selectDb($databaseName, $mysqli)
+    public function selectDb($dbname, $link)
     {
-        return $mysqli->select_db($databaseName);
+        return mysqli_select_db($link, $dbname);
     }
 
     /**
      * runs a query and returns the result
      *
      * @param string $query   query to execute
-     * @param mysqli $mysqli  mysqli object
+     * @param mysqli $link    mysqli object
      * @param int    $options query options
      *
      * @return mysqli_result|bool
      */
-    public function realQuery($query, $mysqli, $options)
+    public function realQuery($query, $link, $options)
     {
         if ($options == ($options | DatabaseInterface::QUERY_STORE)) {
             $method = MYSQLI_STORE_RESULT;
@@ -196,20 +210,20 @@ class DbiMysqli implements DbiExtension
             $method = 0;
         }
 
-        return $mysqli->query($query, $method);
+        return mysqli_query($link, $query, $method);
     }
 
     /**
      * Run the multi query and output the results
      *
-     * @param mysqli $mysqli mysqli object
-     * @param string $query  multi query statement to execute
+     * @param mysqli $link  mysqli object
+     * @param string $query multi query statement to execute
      *
-     * @return bool
+     * @return mysqli_result collection | boolean(false)
      */
-    public function realMultiQuery($mysqli, $query)
+    public function realMultiQuery($link, $query)
     {
-        return $mysqli->multi_query($query);
+        return mysqli_multi_query($link, $query);
     }
 
     /**
@@ -217,14 +231,11 @@ class DbiMysqli implements DbiExtension
      *
      * @param mysqli_result $result result set identifier
      *
-     * @return array|null
+     * @return array
      */
     public function fetchArray($result)
     {
-        if (! $result instanceof mysqli_result) {
-            return null;
-        }
-        return $result->fetch_array(MYSQLI_BOTH);
+        return mysqli_fetch_array($result, MYSQLI_BOTH);
     }
 
     /**
@@ -232,14 +243,11 @@ class DbiMysqli implements DbiExtension
      *
      * @param mysqli_result $result result set identifier
      *
-     * @return array|null
+     * @return array
      */
     public function fetchAssoc($result)
     {
-        if (! $result instanceof mysqli_result) {
-            return null;
-        }
-        return $result->fetch_array(MYSQLI_ASSOC);
+        return mysqli_fetch_array($result, MYSQLI_ASSOC);
     }
 
     /**
@@ -247,14 +255,11 @@ class DbiMysqli implements DbiExtension
      *
      * @param mysqli_result $result result set identifier
      *
-     * @return array|null
+     * @return array
      */
     public function fetchRow($result)
     {
-        if (! $result instanceof mysqli_result) {
-            return null;
-        }
-        return $result->fetch_array(MYSQLI_NUM);
+        return mysqli_fetch_array($result, MYSQLI_NUM);
     }
 
     /**
@@ -267,7 +272,7 @@ class DbiMysqli implements DbiExtension
      */
     public function dataSeek($result, $offset)
     {
-        return $result->data_seek($offset);
+        return mysqli_data_seek($result, $offset);
     }
 
     /**
@@ -280,99 +285,97 @@ class DbiMysqli implements DbiExtension
     public function freeResult($result)
     {
         if ($result instanceof mysqli_result) {
-            $result->close();
+            mysqli_free_result($result);
         }
     }
 
     /**
      * Check if there are any more query results from a multi query
      *
-     * @param mysqli $mysqli the mysqli object
+     * @param mysqli $link the mysqli object
      *
      * @return bool true or false
      */
-    public function moreResults($mysqli)
+    public function moreResults($link)
     {
-        return $mysqli->more_results();
+        return mysqli_more_results($link);
     }
 
     /**
      * Prepare next result from multi_query
      *
-     * @param mysqli $mysqli the mysqli object
+     * @param mysqli $link the mysqli object
      *
      * @return bool true or false
      */
-    public function nextResult($mysqli)
+    public function nextResult($link)
     {
-        return $mysqli->next_result();
+        return mysqli_next_result($link);
     }
 
     /**
      * Store the result returned from multi query
      *
-     * @param mysqli $mysqli the mysqli object
+     * @param mysqli $link the mysqli object
      *
-     * @return mysqli_result|bool false when empty results / result set when not empty
+     * @return mixed false when empty results / result set when not empty
      */
-    public function storeResult($mysqli)
+    public function storeResult($link)
     {
-        return $mysqli->store_result();
+        return mysqli_store_result($link);
     }
 
     /**
      * Returns a string representing the type of connection used
      *
-     * @param mysqli $mysqli mysql link
+     * @param resource $link mysql link
      *
      * @return string type of connection used
      */
-    public function getHostInfo($mysqli)
+    public function getHostInfo($link)
     {
-        return $mysqli->host_info;
+        return mysqli_get_host_info($link);
     }
 
     /**
      * Returns the version of the MySQL protocol used
      *
-     * @param mysqli $mysqli mysql link
+     * @param resource $link mysql link
      *
-     * @return string version of the MySQL protocol used
+     * @return integer version of the MySQL protocol used
      */
-    public function getProtoInfo($mysqli)
+    public function getProtoInfo($link)
     {
-        return $mysqli->protocol_version;
+        return mysqli_get_proto_info($link);
     }
 
     /**
      * returns a string that represents the client library version
      *
-     * @param mysqli $mysqli mysql link
-     *
      * @return string MySQL client library version
      */
-    public function getClientInfo($mysqli)
+    public function getClientInfo()
     {
-        return $mysqli->get_client_info();
+        return mysqli_get_client_info();
     }
 
     /**
      * returns last error message or false if no errors occurred
      *
-     * @param mysqli $mysqli mysql link
+     * @param resource $link mysql link
      *
-     * @return string|bool error or false
+     * @return string|bool $error or false
      */
-    public function getError($mysqli)
+    public function getError($link)
     {
         $GLOBALS['errno'] = 0;
 
-        if (null !== $mysqli && false !== $mysqli) {
-            $error_number = $mysqli->errno;
-            $error_message = $mysqli->error;
+        if (null !== $link && false !== $link) {
+            $error_number = mysqli_errno($link);
+            $error_message = mysqli_error($link);
         } else {
-            $error_number = $mysqli->connect_errno;
-            $error_message = $mysqli->connect_error;
+            $error_number = mysqli_connect_errno();
+            $error_message = mysqli_connect_error();
         }
         if (0 == $error_number) {
             return false;
@@ -399,35 +402,32 @@ class DbiMysqli implements DbiExtension
             return 0;
         }
 
-        return $result->num_rows;
+        return @mysqli_num_rows($result);
     }
 
     /**
      * returns the number of rows affected by last query
      *
-     * @param mysqli $mysqli the mysqli object
+     * @param mysqli $link the mysqli object
      *
      * @return int
      */
-    public function affectedRows($mysqli)
+    public function affectedRows($link)
     {
-        return $mysqli->affected_rows;
+        return mysqli_affected_rows($link);
     }
 
     /**
-     * returns meta info for fields in $result
+     * returns metainfo for fields in $result
      *
      * @param mysqli_result $result result set identifier
      *
-     * @return array|bool meta info for fields in $result
+     * @return array meta info for fields in $result
      */
     public function getFieldsMeta($result)
     {
-        if (! $result instanceof mysqli_result) {
-            return false;
-        }
         // Build an associative array for a type look up
-        $typeAr = [];
+        $typeAr = array();
         $typeAr[MYSQLI_TYPE_DECIMAL]     = 'real';
         $typeAr[MYSQLI_TYPE_NEWDECIMAL]  = 'real';
         $typeAr[MYSQLI_TYPE_BIT]         = 'int';
@@ -462,9 +462,10 @@ class DbiMysqli implements DbiExtension
         $typeAr[MYSQLI_TYPE_BIT]         = 'bit';
         $typeAr[MYSQLI_TYPE_JSON]        = 'json';
 
-        $fields = $result->fetch_fields();
+        $fields = mysqli_fetch_fields($result);
 
-        if (! is_array($fields)) {
+        // this happens sometimes (seen under MySQL 4.0.25)
+        if (!is_array($fields)) {
             return false;
         }
 
@@ -506,7 +507,7 @@ class DbiMysqli implements DbiExtension
      */
     public function numFields($result)
     {
-        return $result->field_count;
+        return mysqli_num_fields($result);
     }
 
     /**
@@ -515,19 +516,11 @@ class DbiMysqli implements DbiExtension
      * @param mysqli_result $result result set identifier
      * @param int           $i      field
      *
-     * @return int|bool length of field
+     * @return int length of field
      */
     public function fieldLen($result, $i)
     {
-        if ($i >= $this->numFields($result)) {
-            return false;
-        }
-        /** @var stdClass $fieldDefinition */
-        $fieldDefinition = $result->fetch_field_direct($i);
-        if ($fieldDefinition !== false) {
-            return $fieldDefinition->length;
-        }
-        return false;
+        return mysqli_fetch_field_direct($result, $i)->length;
     }
 
     /**
@@ -536,19 +529,11 @@ class DbiMysqli implements DbiExtension
      * @param mysqli_result $result result set identifier
      * @param int           $i      field
      *
-     * @return string|bool name of $i. field in $result
+     * @return string name of $i. field in $result
      */
     public function fieldName($result, $i)
     {
-        if ($i >= $this->numFields($result)) {
-            return false;
-        }
-        /** @var stdClass $fieldDefinition */
-        $fieldDefinition = $result->fetch_field_direct($i);
-        if ($fieldDefinition !== false) {
-            return $fieldDefinition->name;
-        }
-        return false;
+        return mysqli_fetch_field_direct($result, $i)->name;
     }
 
     /**
@@ -557,54 +542,46 @@ class DbiMysqli implements DbiExtension
      * @param mysqli_result $result result set identifier
      * @param int           $i      field
      *
-     * @return string|false field flags
+     * @return string field flags
      */
     public function fieldFlags($result, $i)
     {
-        if ($i >= $this->numFields($result)) {
-            return false;
-        }
-        /** @var stdClass $fieldDefinition */
-        $fieldDefinition = $result->fetch_field_direct($i);
-        if ($fieldDefinition !== false) {
-            $type = $fieldDefinition->type;
-            $charsetNumber = $fieldDefinition->charsetnr;
-            $fieldDefinitionFlags = $fieldDefinition->flags;
-            $flags = [];
-            foreach (self::$pma_mysqli_flag_names as $flag => $name) {
-                if ($fieldDefinitionFlags & $flag) {
-                    $flags[] = $name;
-                }
+        $f = mysqli_fetch_field_direct($result, $i);
+        $type = $f->type;
+        $charsetnr = $f->charsetnr;
+        $f = $f->flags;
+        $flags = array();
+        foreach (self::$pma_mysqli_flag_names as $flag => $name) {
+            if ($f & $flag) {
+                $flags[] = $name;
             }
-            // See https://dev.mysql.com/doc/refman/6.0/en/c-api-datatypes.html:
-            // to determine if a string is binary, we should not use MYSQLI_BINARY_FLAG
-            // but instead the charsetnr member of the MYSQL_FIELD
-            // structure. Watch out: some types like DATE returns 63 in charsetnr
-            // so we have to check also the type.
-            // Unfortunately there is no equivalent in the mysql extension.
-            if (($type == MYSQLI_TYPE_TINY_BLOB || $type == MYSQLI_TYPE_BLOB
-                || $type == MYSQLI_TYPE_MEDIUM_BLOB || $type == MYSQLI_TYPE_LONG_BLOB
-                || $type == MYSQLI_TYPE_VAR_STRING || $type == MYSQLI_TYPE_STRING)
-                && 63 == $charsetNumber
-            ) {
-                $flags[] = 'binary';
-            }
-            return implode(' ', $flags);
-        } else {
-            return '';
         }
+        // See https://dev.mysql.com/doc/refman/6.0/en/c-api-datatypes.html:
+        // to determine if a string is binary, we should not use MYSQLI_BINARY_FLAG
+        // but instead the charsetnr member of the MYSQL_FIELD
+        // structure. Watch out: some types like DATE returns 63 in charsetnr
+        // so we have to check also the type.
+        // Unfortunately there is no equivalent in the mysql extension.
+        if (($type == MYSQLI_TYPE_TINY_BLOB || $type == MYSQLI_TYPE_BLOB
+            || $type == MYSQLI_TYPE_MEDIUM_BLOB || $type == MYSQLI_TYPE_LONG_BLOB
+            || $type == MYSQLI_TYPE_VAR_STRING || $type == MYSQLI_TYPE_STRING)
+            && 63 == $charsetnr
+        ) {
+            $flags[] = 'binary';
+        }
+        return implode(' ', $flags);
     }
 
     /**
      * returns properly escaped string for use in MySQL queries
      *
-     * @param mysqli $mysqli database link
-     * @param string $string string to be escaped
+     * @param mixed  $link database link
+     * @param string $str  string to be escaped
      *
      * @return string a MySQL escaped string
      */
-    public function escapeString($mysqli, $string)
+    public function escapeString($link, $str)
     {
-        return $mysqli->real_escape_string($string);
+        return mysqli_real_escape_string($link, $str);
     }
 }

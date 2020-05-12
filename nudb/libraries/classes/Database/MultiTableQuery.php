@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Database;
 
 use PhpMyAdmin\DatabaseInterface;
@@ -54,29 +52,20 @@ class MultiTableQuery
     private $tables;
 
     /**
-     * @var Template
-     */
-    public $template;
-
-    /**
      * Constructor
      *
      * @param DatabaseInterface $dbi                DatabaseInterface instance
-     * @param Template          $template           Template instance
      * @param string            $dbName             Database name
      * @param integer           $defaultNoOfColumns Default number of columns
      */
     public function __construct(
         DatabaseInterface $dbi,
-        Template $template,
         $dbName,
         $defaultNoOfColumns = 3
     ) {
         $this->dbi = $dbi;
         $this->db = $dbName;
         $this->defaultNoOfColumns = $defaultNoOfColumns;
-
-        $this->template = $template;
 
         $this->tables = $this->dbi->getTables($this->db);
     }
@@ -89,13 +78,13 @@ class MultiTableQuery
     public function getFormHtml()
     {
         $tables = [];
-        foreach ($this->tables as $table) {
+        foreach($this->tables as $table) {
             $tables[$table]['hash'] = md5($table);
             $tables[$table]['columns'] = array_keys(
                 $this->dbi->getColumns($this->db, $table)
             );
         }
-        return $this->template->render('database/multi_table_query/form', [
+        return Template::get('database/multi_table_query/form')->render([
             'db' => $this->db,
             'tables' => $tables,
             'default_no_of_columns' => $this->defaultNoOfColumns,
@@ -116,6 +105,7 @@ class MultiTableQuery
         list(
             $analyzedSqlResults,
             $db,
+            $tableFromSql
         ) = ParseAnalyze::sqlQuery($sqlQuery, $db);
 
         extract($analyzedSqlResults);

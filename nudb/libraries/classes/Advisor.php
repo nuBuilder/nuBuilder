@@ -6,8 +6,6 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin;
 
 use Exception;
@@ -17,8 +15,6 @@ use PhpMyAdmin\SysInfo;
 use PhpMyAdmin\Url;
 use PhpMyAdmin\Util;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
-use Throwable;
-use function array_merge_recursive;
 
 /**
  * Advisor class
@@ -27,9 +23,6 @@ use function array_merge_recursive;
  */
 class Advisor
 {
-    public const GENERIC_RULES_FILE = 'libraries/advisory_rules_generic.txt';
-    public const BEFORE_MYSQL80003_RULES_FILE = 'libraries/advisory_rules_mysql_before80003.txt';
-
     protected $dbi;
     protected $variables;
     protected $globals;
@@ -53,58 +46,51 @@ class Advisor
          */
         $this->expression->register(
             'round',
-            function () {
-            },
+            function (){},
             function ($arguments, $num) {
                 return round($num);
             }
         );
         $this->expression->register(
             'substr',
-            function () {
-            },
+            function (){},
             function ($arguments, $string, $start, $length) {
                 return substr($string, $start, $length);
             }
         );
         $this->expression->register(
             'preg_match',
-            function () {
-            },
-            function ($arguments, $pattern, $subject) {
+            function (){},
+            function ($arguments, $pattern , $subject) {
                 return preg_match($pattern, $subject);
             }
         );
         $this->expression->register(
             'ADVISOR_bytime',
-            function () {
-            },
+            function (){},
             function ($arguments, $num, $precision) {
                 return self::byTime($num, $precision);
             }
         );
         $this->expression->register(
             'ADVISOR_timespanFormat',
-            function () {
-            },
+            function (){},
             function ($arguments, $seconds) {
-                return self::timespanFormat((int) $seconds);
+                return self::timespanFormat($seconds);
             }
         );
         $this->expression->register(
             'ADVISOR_formatByteDown',
-            function () {
-            },
+            function (){},
             function ($arguments, $value, $limes = 6, $comma = 0) {
                 return self::formatByteDown($value, $limes, $comma);
             }
         );
         $this->expression->register(
             'fired',
-            function () {
-            },
+            function (){},
             function ($arguments, $value) {
-                if (! isset($this->runResult['fired'])) {
+                if (!isset($this->runResult['fired'])) {
                     return 0;
                 }
 
@@ -119,9 +105,10 @@ class Advisor
             }
         );
         /* Some global variables for advisor */
-        $this->globals = [
+        $this->globals = array(
             'PMA_MYSQL_INT_VERSION' => $this->dbi->getVersion(),
-        ];
+        );
+
     }
 
     /**
@@ -141,7 +128,7 @@ class Advisor
      *
      * @return Advisor
      */
-    public function setVariables(array $variables): self
+    public function setVariables(array $variables)
     {
         $this->variables = $variables;
 
@@ -154,9 +141,9 @@ class Advisor
      * @param string|int $variable Variable to set
      * @param mixed      $value    Value to set
      *
-     * @return Advisor
+     * @return $this
      */
-    public function setVariable($variable, $value): self
+    public function setVariable($variable, $value)
     {
         $this->variables[$variable] = $value;
 
@@ -180,7 +167,7 @@ class Advisor
      *
      * @return Advisor
      */
-    public function setParseResult(array $parseResult): self
+    public function setParseResult(array $parseResult)
     {
         $this->parseResult = $parseResult;
 
@@ -204,7 +191,7 @@ class Advisor
      *
      * @return Advisor
      */
-    public function setRunResult(array $runResult): self
+    public function setRunResult(array $runResult)
     {
         $this->runResult = $runResult;
 
@@ -216,7 +203,7 @@ class Advisor
      *
      * @return array with run and parse results
      */
-    public function run(): array
+    public function run()
     {
         // HowTo: A simple Advisory system in 3 easy steps.
 
@@ -234,34 +221,27 @@ class Advisor
         $this->variables['system_memory']
             = isset($memory['MemTotal']) ? $memory['MemTotal'] : 0;
 
-        $ruleFiles = $this->defineRulesFiles();
-
         // Step 2: Read and parse the list of rules
-        $parsedResults = [];
-        foreach ($ruleFiles as $ruleFile) {
-            $parsedResults[] = $this->parseRulesFile($ruleFile);
-        }
-        $this->setParseResult(array_merge_recursive(...$parsedResults));
-
+        $this->setParseResult(static::parseRulesFile());
         // Step 3: Feed the variables to the rules and let them fire. Sets
         // $runResult
         $this->runRules();
 
-        return [
-            'parse' => ['errors' => $this->parseResult['errors']],
-            'run'   => $this->runResult,
-        ];
+        return array(
+            'parse' => array('errors' => $this->parseResult['errors']),
+            'run'   => $this->runResult
+        );
     }
 
     /**
      * Stores current error in run results.
      *
      * @param string    $description description of an error.
-     * @param Throwable $exception   exception raised
+     * @param Exception $exception   exception raised
      *
      * @return void
      */
-    public function storeError(string $description, Throwable $exception): void
+    public function storeError($description, $exception)
     {
         $this->runResult['errors'][] = $description
             . ' '
@@ -276,15 +256,15 @@ class Advisor
      *
      * @return boolean
      */
-    public function runRules(): bool
+    public function runRules()
     {
         $this->setRunResult(
-            [
-                'fired'     => [],
-                'notfired'  => [],
-                'unchecked' => [],
-                'errors'    => [],
-            ]
+            array(
+                'fired'     => array(),
+                'notfired'  => array(),
+                'unchecked' => array(),
+                'errors'    => array(),
+            )
         );
 
         foreach ($this->parseResult['rules'] as $rule) {
@@ -352,7 +332,7 @@ class Advisor
      *
      * @return string
      */
-    public static function escapePercent(string $str): string
+    public static function escapePercent($str)
     {
         return preg_replace('/%( |,|\.|$|\(|\)|<|>)/', '%%\1', $str);
     }
@@ -364,15 +344,14 @@ class Advisor
      * @param string $param the parameters
      *
      * @return string
-     * @throws Exception
      */
-    public function translate(string $str, ?string $param = null): string
+    public function translate($str, $param = null)
     {
         $string = _gettext(self::escapePercent($str));
-        if ($param !== null) {
+        if (! is_null($param)) {
             $params = $this->ruleExprEvaluate('[' . $param . ']');
         } else {
-            $params = [];
+            $params = array();
         }
         return vsprintf($string, $params);
     }
@@ -384,16 +363,13 @@ class Advisor
      *
      * @return string[]
      */
-    public static function splitJustification(array $rule): array
+    public static function splitJustification(array $rule)
     {
         $jst = preg_split('/\s*\|\s*/', $rule['justification'], 2);
         if (count($jst) > 1) {
-            return [
-                $jst[0],
-                $jst[1],
-            ];
+            return array($jst[0], $jst[1]);
         }
-        return [$rule['justification']];
+        return array($rule['justification']);
     }
 
     /**
@@ -403,77 +379,54 @@ class Advisor
      * @param array  $rule rule itself
      *
      * @return void
-     * @throws Exception
      */
-    public function addRule(string $type, array $rule): void
+    public function addRule($type, array $rule)
     {
         switch ($type) {
-            case 'notfired':
-            case 'fired':
-                $jst = self::splitJustification($rule);
-                if (count($jst) > 1) {
-                    try {
-                        /* Translate */
-                        $str = $this->translate($jst[0], $jst[1]);
-                    } catch (Exception $e) {
-                        $this->storeError(
-                            sprintf(
-                                __('Failed formatting string for rule \'%s\'.'),
-                                $rule['name']
-                            ),
-                            $e
-                        );
-                        return;
-                    }
-
-                    $rule['justification'] = $str;
-                } else {
-                    $rule['justification'] = $this->translate($rule['justification']);
+        case 'notfired':
+        case 'fired':
+            $jst = self::splitJustification($rule);
+            if (count($jst) > 1) {
+                try {
+                    /* Translate */
+                    $str = $this->translate($jst[0], $jst[1]);
+                } catch (Exception $e) {
+                    $this->storeError(
+                        sprintf(
+                            __('Failed formatting string for rule \'%s\'.'),
+                            $rule['name']
+                        ),
+                        $e
+                    );
+                    return;
                 }
-                $rule['id'] = $rule['name'];
-                $rule['name'] = $this->translate($rule['name']);
-                $rule['issue'] = $this->translate($rule['issue']);
 
-                // Replaces {server_variable} with 'server_variable'
-                // linking to server_variables.php
-                $rule['recommendation'] = preg_replace_callback(
-                    '/\{([a-z_0-9]+)\}/Ui',
-                    [
-                        $this,
-                        'replaceVariable',
-                    ],
-                    $this->translate($rule['recommendation'])
-                );
+                $rule['justification'] = $str;
+            } else {
+                $rule['justification'] = $this->translate($rule['justification']);
+            }
+            $rule['id'] = $rule['name'];
+            $rule['name'] = $this->translate($rule['name']);
+            $rule['issue'] = $this->translate($rule['issue']);
 
-                // Replaces external Links with Core::linkURL() generated links
-                $rule['recommendation'] = preg_replace_callback(
-                    '#href=("|\')(https?://[^\1]+)\1#i',
-                    [
-                        $this,
-                        'replaceLinkURL',
-                    ],
-                    $rule['recommendation']
-                );
-                break;
+            // Replaces {server_variable} with 'server_variable'
+            // linking to server_variables.php
+            $rule['recommendation'] = preg_replace_callback(
+                '/\{([a-z_0-9]+)\}/Ui',
+                array($this, 'replaceVariable'),
+                $this->translate($rule['recommendation'])
+            );
+
+            // Replaces external Links with Core::linkURL() generated links
+            $rule['recommendation'] = preg_replace_callback(
+                '#href=("|\')(https?://[^\1]+)\1#i',
+                array($this, 'replaceLinkURL'),
+                $rule['recommendation']
+            );
+            break;
         }
 
         $this->runResult[$type][] = $rule;
-    }
-
-    /**
-     * Defines the rules files to use
-     *
-     * @return array
-     */
-    protected function defineRulesFiles(): array
-    {
-        $isMariaDB = false !== strpos($this->getVariables()['version'], 'MariaDB');
-        $ruleFiles = [self::GENERIC_RULES_FILE];
-        // If MariaDB (= not MySQL) OR MYSQL < 8.0.3, add another rules file.
-        if ($isMariaDB || $this->globals['PMA_MYSQL_INT_VERSION'] < 80003) {
-            $ruleFiles[] = self::BEFORE_MYSQL80003_RULES_FILE;
-        }
-        return $ruleFiles;
     }
 
     /**
@@ -483,7 +436,7 @@ class Advisor
      *
      * @return string Replacement value
      */
-    private function replaceLinkURL(array $matches): string
+    private function replaceLinkURL(array $matches)
     {
         return 'href="' . Core::linkURL($matches[2]) . '" target="_blank" rel="noopener noreferrer"';
     }
@@ -495,9 +448,9 @@ class Advisor
      *
      * @return string Replacement value
      */
-    private function replaceVariable(array $matches): string
+    private function replaceVariable(array $matches)
     {
-        return '<a href="server_variables.php' . Url::getCommon(['filter' => $matches[1]])
+        return '<a href="server_variables.php' . Url::getCommon(array('filter' => $matches[1]))
                 . '">' . htmlspecialchars($matches[1]) . '</a>';
     }
 
@@ -507,11 +460,11 @@ class Advisor
      *
      * @param string $expr expression to evaluate
      *
-     * @return mixed result of evaluated expression
+     * @return integer result of evaluated expression
      *
      * @throws Exception
      */
-    public function ruleExprEvaluate(string $expr)
+    public function ruleExprEvaluate($expr)
     {
         // Actually evaluate the code
         // This can throw exception
@@ -527,38 +480,28 @@ class Advisor
      * Reads the rule file into an array, throwing errors messages on syntax
      * errors.
      *
-     * @param string $filename Name of file to parse
-     *
      * @return array with parsed data
      */
-    public static function parseRulesFile(string $filename): array
+    public static function parseRulesFile()
     {
+        $filename = 'libraries/advisory_rules.txt';
         $file = file($filename, FILE_IGNORE_NEW_LINES);
 
-        $errors = [];
-        $rules = [];
-        $lines = [];
+        $errors = array();
+        $rules = array();
+        $lines = array();
 
         if ($file === false) {
             $errors[] = sprintf(
                 __('Error in reading file: The file \'%s\' does not exist or is not readable!'),
                 $filename
             );
-            return [
-                'rules' => $rules,
-                'lines' => $lines,
-                'errors' => $errors,
-            ];
+            return array('rules' => $rules, 'lines' => $lines, 'errors' => $errors);
         }
 
-        $ruleSyntax = [
-            'name',
-            'formula',
-            'test',
-            'issue',
-            'recommendation',
-            'justification',
-        ];
+        $ruleSyntax = array(
+            'name', 'formula', 'test', 'issue', 'recommendation', 'justification'
+        );
         $numRules = count($ruleSyntax);
         $numLines = count($file);
         $ruleNo = -1;
@@ -586,8 +529,8 @@ class Advisor
                 if (preg_match("/rule\s'(.*)'( \[(.*)\])?$/", $line, $match)) {
                     $ruleLine = 1;
                     $ruleNo++;
-                    $rules[$ruleNo] = ['name' => $match[1]];
-                    $lines[$ruleNo] = ['name' => $i + 1];
+                    $rules[$ruleNo] = array('name' => $match[1]);
+                    $lines[$ruleNo] = array('name' => $i + 1);
                     if (isset($match[3])) {
                         $rules[$ruleNo]['precondition'] = $match[3];
                         $lines[$ruleNo]['precondition'] = $i + 1;
@@ -599,16 +542,18 @@ class Advisor
                     );
                 }
                 continue;
-            } elseif ($ruleLine == -1) {
-                $errors[] = sprintf(
-                    __('Unexpected characters on line %s.'),
-                    $i + 1
-                );
+            } else {
+                if ($ruleLine == -1) {
+                    $errors[] = sprintf(
+                        __('Unexpected characters on line %s.'),
+                        $i + 1
+                    );
+                }
             }
 
             // Reading rule lines
             if ($ruleLine > 0) {
-                if (! isset($line[0])) {
+                if (!isset($line[0])) {
                     continue; // Empty lines are ok
                 }
                 // Non tabbed lines are not
@@ -623,7 +568,7 @@ class Advisor
                     );
                     continue;
                 }
-                $rules[$ruleNo][$ruleSyntax[$ruleLine]] = rtrim(
+                $rules[$ruleNo][$ruleSyntax[$ruleLine]] = chop(
                     mb_substr($line, 1)
                 );
                 $lines[$ruleNo][$ruleSyntax[$ruleLine]] = $i + 1;
@@ -636,29 +581,25 @@ class Advisor
             }
         }
 
-        return [
-            'rules' => $rules,
-            'lines' => $lines,
-            'errors' => $errors,
-        ];
+        return array('rules' => $rules, 'lines' => $lines, 'errors' => $errors);
     }
 
     /**
      * Formats interval like 10 per hour
      *
-     * @param float   $num       number to format
+     * @param integer $num       number to format
      * @param integer $precision required precision
      *
      * @return string formatted string
      */
-    public static function byTime(float $num, int $precision): string
+    public static function byTime($num, $precision)
     {
         if ($num >= 1) { // per second
             $per = __('per second');
         } elseif ($num * 60 >= 1) { // per minute
-            $num *= 60;
+            $num = $num * 60;
             $per = __('per minute');
-        } elseif ($num * 60 * 60 >= 1) { // per hour
+        } elseif ($num * 60 * 60 >= 1 ) { // per hour
             $num = $num * 60 * 60;
             $per = __('per hour');
         } else {
@@ -684,7 +625,7 @@ class Advisor
      *
      * @return string  the formatted value
      */
-    public static function timespanFormat(int $seconds): string
+    public static function timespanFormat($seconds)
     {
         return Util::timespanFormat($seconds);
     }
@@ -694,13 +635,13 @@ class Advisor
      *
      * This function is used when evaluating advisory_rules.txt
      *
-     * @param double|string $value the value to format
-     * @param int           $limes the sensitiveness
-     * @param int           $comma the number of decimals to retain
+     * @param double $value the value to format
+     * @param int    $limes the sensitiveness
+     * @param int    $comma the number of decimals to retain
      *
      * @return string the formatted value with unit
      */
-    public static function formatByteDown($value, int $limes = 6, int $comma = 0): string
+    public static function formatByteDown($value, $limes = 6, $comma = 0)
     {
         return implode(' ', Util::formatByteDown($value, $limes, $comma));
     }

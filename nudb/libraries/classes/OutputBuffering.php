@@ -4,8 +4,6 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin;
 
 /**
@@ -90,10 +88,7 @@ class OutputBuffering
                 header('X-ob_mode: ' . $this->_mode);
             }
             register_shutdown_function(
-                [
-                    OutputBuffering::class,
-                    'stop',
-                ]
+                array(OutputBuffering::class, 'stop')
             );
             $this->_on = true;
         }
@@ -112,9 +107,7 @@ class OutputBuffering
         if ($buffer->_on) {
             $buffer->_on = false;
             $buffer->_content = ob_get_contents();
-            if (ob_get_length() > 0) {
-                ob_end_clean();
-            }
+            ob_end_clean();
         }
     }
 

@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin-Engines
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Engines;
 
 /**
@@ -17,3 +15,4 @@ namespace PhpMyAdmin\Engines;
 class Berkeleydb extends Bdb
 {
 }
+

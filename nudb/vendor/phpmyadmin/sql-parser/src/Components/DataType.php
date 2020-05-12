@@ -1,8 +1,8 @@
 <?php
+
 /**
  * Parses a data type.
  */
-declare(strict_types=1);
 
 namespace PhpMyAdmin\SqlParser\Components;
 
@@ -10,13 +10,13 @@ use PhpMyAdmin\SqlParser\Component;
 use PhpMyAdmin\SqlParser\Parser;
 use PhpMyAdmin\SqlParser\Token;
 use PhpMyAdmin\SqlParser\TokensList;
-use function implode;
-use function strtolower;
-use function strtoupper;
-use function trim;
 
 /**
  * Parses a data type.
+ *
+ * @category   Components
+ *
+ * @license    https://www.gnu.org/licenses/gpl-2.0.txt GPL-2.0+
  */
 class DataType extends Component
 {
@@ -25,23 +25,14 @@ class DataType extends Component
      *
      * @var array
      */
-    public static $DATA_TYPE_OPTIONS = [
+    public static $DATA_TYPE_OPTIONS = array(
         'BINARY' => 1,
-        'CHARACTER SET' => [
-            2,
-            'var',
-        ],
-        'CHARSET' => [
-            2,
-            'var',
-        ],
-        'COLLATE' => [
-            3,
-            'var',
-        ],
+        'CHARACTER SET' => array(2, 'var'),
+        'CHARSET' => array(2, 'var'),
+        'COLLATE' => array(3, 'var'),
         'UNSIGNED' => 4,
         'ZEROFILL' => 5,
-    ];
+    );
 
     /**
      * The name of the data type.
@@ -63,7 +54,7 @@ class DataType extends Component
      *
      * @var array
      */
-    public $parameters = [];
+    public $parameters = array();
 
     /**
      * The options of this data type.
@@ -73,13 +64,15 @@ class DataType extends Component
     public $options;
 
     /**
+     * Constructor.
+     *
      * @param string       $name       the name of this data type
      * @param array        $parameters the parameters (size or possible values)
      * @param OptionsArray $options    the options of this data type
      */
     public function __construct(
         $name = null,
-        array $parameters = [],
+        array $parameters = array(),
         $options = null
     ) {
         $this->name = $name;
@@ -92,11 +85,11 @@ class DataType extends Component
      * @param TokensList $list    the list of tokens that are being parsed
      * @param array      $options parameters for parsing
      *
-     * @return DataType|null
+     * @return DataType
      */
-    public static function parse(Parser $parser, TokensList $list, array $options = [])
+    public static function parse(Parser $parser, TokensList $list, array $options = array())
     {
-        $ret = new static();
+        $ret = new self();
 
         /**
          * The state of the parser.
@@ -125,20 +118,18 @@ class DataType extends Component
             }
 
             if ($state === 0) {
-                $ret->name = strtoupper((string) $token->value);
-                if (($token->type !== Token::TYPE_KEYWORD) || (! ($token->flags & Token::FLAG_KEYWORD_DATA_TYPE))) {
+                $ret->name = strtoupper($token->value);
+                if (($token->type !== Token::TYPE_KEYWORD) || (!($token->flags & Token::FLAG_KEYWORD_DATA_TYPE))) {
                     $parser->error('Unrecognized data type.', $token);
                 }
-
                 $state = 1;
             } elseif ($state === 1) {
                 if (($token->type === Token::TYPE_OPERATOR) && ($token->value === '(')) {
                     $parameters = ArrayObj::parse($parser, $list);
                     ++$list->idx;
-                    $ret->parameters = ($ret->name === 'ENUM') || ($ret->name === 'SET') ?
+                    $ret->parameters = (($ret->name === 'ENUM') || ($ret->name === 'SET')) ?
                         $parameters->raw : $parameters->values;
                 }
-
                 $ret->options = OptionsArray::parse($parser, $list, static::$DATA_TYPE_OPTIONS);
                 ++$list->idx;
                 break;
@@ -160,13 +151,13 @@ class DataType extends Component
      *
      * @return string
      */
-    public static function build($component, array $options = [])
+    public static function build($component, array $options = array())
     {
-        $name = empty($options['lowercase']) ?
+        $name = (empty($options['lowercase'])) ?
             $component->name : strtolower($component->name);
 
         $parameters = '';
-        if (! empty($component->parameters)) {
+        if (!empty($component->parameters)) {
             $parameters = '(' . implode(',', $component->parameters) . ')';
         }
 

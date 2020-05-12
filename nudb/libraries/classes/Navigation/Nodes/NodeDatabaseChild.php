@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin-Navigation
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Navigation\Nodes;
 
 use PhpMyAdmin\Relation;
@@ -27,7 +25,7 @@ abstract class NodeDatabaseChild extends Node
      *
      * @return string type of the item
      */
-    abstract protected function getItemType();
+    protected abstract function getItemType();
 
     /**
      * Returns HTML for control buttons displayed infront of a node
@@ -39,19 +37,19 @@ abstract class NodeDatabaseChild extends Node
         $ret = '';
         $cfgRelation = $this->relation->getRelationsParam();
         if ($cfgRelation['navwork']) {
-            $db = $this->realParent()->realName;
-            $item = $this->realName;
+            $db = $this->realParent()->real_name;
+            $item = $this->real_name;
 
-            $params = [
+            $params = array(
                 'hideNavItem' => true,
                 'itemType' => $this->getItemType(),
                 'itemName' => $item,
-                'dbName' => $db,
-            ];
+                'dbName' => $db
+            );
 
             $ret = '<span class="navItemControls">'
-                . '<a href="navigation.php" data-post="'
-                . Url::getCommon($params, '') . '"'
+                . '<a href="navigation.php'
+                . Url::getCommon($params) . '"'
                 . ' class="hideNavItem ajax">'
                 . Util::getImage('hide', __('Hide'))
                 . '</a></span>';

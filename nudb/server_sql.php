@@ -5,35 +5,30 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
-use PhpMyAdmin\Controllers\Server\SqlController;
-use PhpMyAdmin\DatabaseInterface;
+use PhpMyAdmin\Config\PageSettings;
 use PhpMyAdmin\Response;
 use PhpMyAdmin\SqlQueryForm;
 
-if (! defined('ROOT_PATH')) {
-    define('ROOT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
-}
+/**
+ *
+ */
+require_once 'libraries/common.inc.php';
 
-require_once ROOT_PATH . 'libraries/common.inc.php';
+PageSettings::showGroup('Sql');
 
-/** @var Response $response */
-$response = $containerBuilder->get(Response::class);
-
-/** @var DatabaseInterface $dbi */
-$dbi = $containerBuilder->get(DatabaseInterface::class);
-
-/** @var SqlController $controller */
-$controller = $containerBuilder->get(SqlController::class);
-
-/** @var SqlQueryForm $sqlQueryForm */
-$sqlQueryForm = $containerBuilder->get('sql_query_form');
-
-$header = $response->getHeader();
-$scripts = $header->getScripts();
+/**
+ * Does the common work
+ */
+$response = Response::getInstance();
+$header   = $response->getHeader();
+$scripts  = $header->getScripts();
 $scripts->addFile('makegrid.js');
 $scripts->addFile('vendor/jquery/jquery.uitablefilter.js');
 $scripts->addFile('sql.js');
 
-$response->addHTML($controller->index($sqlQueryForm));
+require_once 'libraries/server_common.inc.php';
+
+/**
+ * Query box, bookmark, insert data from textfile
+ */
+$response->addHTML(SqlQueryForm::getHtml());

@@ -5,10 +5,17 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin;
 
+use PhpMyAdmin\Config;
+use PhpMyAdmin\Core;
+use PhpMyAdmin\Message;
+use PhpMyAdmin\Relation;
+use PhpMyAdmin\Response;
+use PhpMyAdmin\Sanitize;
+use PhpMyAdmin\Scripts;
+use PhpMyAdmin\Url;
+use PhpMyAdmin\Util;
 use Traversable;
 
 /**
@@ -49,25 +56,19 @@ class Footer
     private $_isEnabled;
 
     /**
-     * @var Relation
+     * @var Relation $relation
      */
     private $relation;
-
-    /**
-     * @var Template
-     */
-    private $template;
 
     /**
      * Creates a new class instance
      */
     public function __construct()
     {
-        $this->template = new Template();
         $this->_isEnabled = true;
-        $this->_scripts = new Scripts();
+        $this->_scripts   = new Scripts();
         $this->_isMinimal = false;
-        $this->relation = new Relation($GLOBALS['dbi']);
+        $this->relation = new Relation();
     }
 
     /**
@@ -75,17 +76,17 @@ class Footer
      *
      * @return string
      */
-    private function _getDemoMessage(): string
+    private function _getDemoMessage()
     {
         $message = '<a href="/">' . __('phpMyAdmin Demo Server') . '</a>: ';
-        if (@file_exists(ROOT_PATH . 'revision-info.php')) {
-            include ROOT_PATH . 'revision-info.php';
+        if (@file_exists('./revision-info.php')) {
+            include './revision-info.php';
             $message .= sprintf(
                 __('Currently running Git revision %1$s from the %2$s branch.'),
-                '<a target="_blank" rel="noopener noreferrer" href="' . htmlspecialchars($repobase . $fullrevision) . '">'
-                . htmlspecialchars($revision) . '</a>',
-                '<a target="_blank" rel="noopener noreferrer" href="' . htmlspecialchars($repobranchbase . $branch) . '">'
-                . htmlspecialchars($branch) . '</a>'
+                '<a target="_blank" rel="noopener noreferrer" href="' . $repobase . $fullrevision . '">'
+                . $revision . '</a>',
+                '<a target="_blank" rel="noopener noreferrer" href="' . $repobranchbase . $branch . '">'
+                . $branch . '</a>'
             );
         } else {
             $message .= __('Git information missing!');
@@ -97,18 +98,18 @@ class Footer
     /**
      * Remove recursions and iterator objects from an object
      *
-     * @param object|array $object Object to clean
-     * @param array        $stack  Stack used to keep track of recursion,
-     *                             need not be passed for the first time
+     * @param object|array &$object Object to clean
+     * @param array        $stack   Stack used to keep track of recursion,
+     *                              need not be passed for the first time
      *
      * @return object Reference passed object
      */
-    private static function _removeRecursion(&$object, array $stack = [])
+    private static function _removeRecursion(&$object, array $stack = array())
     {
         if ((is_object($object) || is_array($object)) && $object) {
             if ($object instanceof Traversable) {
                 $object = "***ITERATOR***";
-            } elseif (! in_array($object, $stack, true)) {
+            } elseif (!in_array($object, $stack, true)) {
                 $stack[] = $object;
                 foreach ($object as &$subobject) {
                     self::_removeRecursion($subobject, $stack);
@@ -125,21 +126,21 @@ class Footer
      *
      * @return string
      */
-    public function getDebugMessage(): string
+    public function getDebugMessage()
     {
         $retval = '\'null\'';
         if ($GLOBALS['cfg']['DBG']['sql']
             && empty($_REQUEST['no_debug'])
-            && ! empty($_SESSION['debug'])
+            && !empty($_SESSION['debug'])
         ) {
             // Remove recursions and iterators from $_SESSION['debug']
             self::_removeRecursion($_SESSION['debug']);
 
-            $retval = json_encode($_SESSION['debug']);
-            $_SESSION['debug'] = [];
+            $retval = JSON_encode($_SESSION['debug']);
+            $_SESSION['debug'] = array();
             return json_last_error() ? '\'false\'' : $retval;
         }
-        $_SESSION['debug'] = [];
+        $_SESSION['debug'] = array();
         return $retval;
     }
 
@@ -148,43 +149,43 @@ class Footer
      *
      * @return string
      */
-    public function getSelfUrl(): string
+    public function getSelfUrl()
     {
         $db = isset($GLOBALS['db']) && strlen($GLOBALS['db']) ? $GLOBALS['db'] : '';
         $table = isset($GLOBALS['table']) && strlen($GLOBALS['table']) ? $GLOBALS['table'] : '';
         $target = isset($_REQUEST['target']) && strlen($_REQUEST['target']) ? $_REQUEST['target'] : '';
-        $params = [
+        $params = array(
             'db' => $db,
             'table' => $table,
             'server' => $GLOBALS['server'],
-            'target' => $target,
-        ];
+            'target' => $target
+        );
         // needed for server privileges tabs
-        if (isset($_GET['viewing_mode'])
-            && in_array($_GET['viewing_mode'], ['server', 'db', 'table'])
+        if (isset($_REQUEST['viewing_mode'])
+            && in_array($_REQUEST['viewing_mode'], array('server', 'db', 'table'))
         ) {
-            $params['viewing_mode'] = $_GET['viewing_mode'];
+            $params['viewing_mode'] = $_REQUEST['viewing_mode'];
         }
         /*
          * @todo    coming from server_privileges.php, here $db is not set,
          *          add the following condition below when that is fixed
-         *          && $_GET['checkprivsdb'] == $db
+         *          && $_REQUEST['checkprivsdb'] == $db
          */
-        if (isset($_GET['checkprivsdb'])
+        if (isset($_REQUEST['checkprivsdb'])
         ) {
-            $params['checkprivsdb'] = $_GET['checkprivsdb'];
+            $params['checkprivsdb'] = $_REQUEST['checkprivsdb'];
         }
         /*
          * @todo    coming from server_privileges.php, here $table is not set,
          *          add the following condition below when that is fixed
          *          && $_REQUEST['checkprivstable'] == $table
          */
-        if (isset($_GET['checkprivstable'])
+        if (isset($_REQUEST['checkprivstable'])
         ) {
-            $params['checkprivstable'] = $_GET['checkprivstable'];
+            $params['checkprivstable'] = $_REQUEST['checkprivstable'];
         }
         if (isset($_REQUEST['single_table'])
-            && in_array($_REQUEST['single_table'], [true, false])
+            && in_array($_REQUEST['single_table'], array(true, false))
         ) {
             $params['single_table'] = $_REQUEST['single_table'];
         }
@@ -198,7 +199,7 @@ class Footer
      *
      * @return string
      */
-    private function _getSelfLink(string $url): string
+    private function _getSelfLink($url)
     {
         $retval  = '';
         $retval .= '<div id="selflink" class="print_ignore">';
@@ -222,7 +223,7 @@ class Footer
      *
      * @return string
      */
-    public function getErrorMessages(): string
+    public function getErrorMessages()
     {
         $retval = '';
         if ($GLOBALS['error_handler']->hasDisplayErrors()) {
@@ -242,7 +243,7 @@ class Footer
      *
      * @return void
      */
-    private function _setHistory(): void
+    private function _setHistory()
     {
         if (! Core::isValid($_REQUEST['no_history'])
             && empty($GLOBALS['error_message'])
@@ -264,7 +265,7 @@ class Footer
      *
      * @return void
      */
-    public function disable(): void
+    public function disable()
     {
         $this->_isEnabled = false;
     }
@@ -277,9 +278,9 @@ class Footer
      *
      * @return void
      */
-    public function setAjax(bool $isAjax): void
+    public function setAjax($isAjax)
     {
-        $this->_isAjax = $isAjax;
+        $this->_isAjax = (boolean) $isAjax;
     }
 
     /**
@@ -287,7 +288,7 @@ class Footer
      *
      * @return void
      */
-    public function setMinimal(): void
+    public function setMinimal()
     {
         $this->_isMinimal = true;
     }
@@ -297,7 +298,7 @@ class Footer
      *
      * @return Scripts object
      */
-    public function getScripts(): Scripts
+    public function getScripts()
     {
         return $this->_scripts;
     }
@@ -307,10 +308,14 @@ class Footer
      *
      * @return string
      */
-    public function getDisplay(): string
+    public function getDisplay()
     {
+        $retval = '';
         $this->_setHistory();
         if ($this->_isEnabled) {
+            if (! $this->_isAjax) {
+                $retval .= "</div>";
+            }
             if (! $this->_isAjax && ! $this->_isMinimal) {
                 if (Core::getenv('SCRIPT_NAME')
                     && empty($_POST)
@@ -324,7 +329,7 @@ class Footer
                     $this->_scripts->addCode(
                         sprintf(
                             'if (! (history && history.pushState)) '
-                            . 'MicroHistory.primer = {'
+                            . 'PMA_MicroHistory.primer = {'
                             . ' url: "%s",'
                             . ' scripts: %s,'
                             . ' menuHash: "%s"'
@@ -339,32 +344,28 @@ class Footer
                     && ! $this->_isAjax
                 ) {
                     $url = $this->getSelfUrl();
-                    $selfLink = $this->_getSelfLink($url);
+                    $retval .= $this->_getSelfLink($url);
                 }
                 $this->_scripts->addCode(
                     'var debugSQLInfo = ' . $this->getDebugMessage() . ';'
                 );
-
-                $errorMessages = $this->getErrorMessages();
-                $scripts = $this->_scripts->getDisplay();
-
+                $retval .= '<div class="clearfloat" id="pma_errors">';
+                $retval .= $this->getErrorMessages();
+                $retval .= '</div>';
+                $retval .= $this->_scripts->getDisplay();
                 if ($GLOBALS['cfg']['DBG']['demo']) {
-                    $demoMessage = $this->_getDemoMessage();
+                    $retval .= '<div id="pma_demo">';
+                    $retval .= $this->_getDemoMessage();
+                    $retval .= '</div>';
                 }
 
-                $footer = Config::renderFooter();
+                $retval .= Config::renderFooter();
             }
-            return $this->template->render('footer', [
-                'is_ajax' => $this->_isAjax,
-                'is_minimal' => $this->_isMinimal,
-                'self_link' => $selfLink ?? '',
-                'error_messages' => $errorMessages ?? '',
-                'scripts' => $scripts ?? '',
-                'is_demo' => $GLOBALS['cfg']['DBG']['demo'],
-                'demo_message' => $demoMessage ?? '',
-                'footer' => $footer ?? '',
-            ]);
+            if (! $this->_isAjax) {
+                $retval .= "</body></html>";
+            }
         }
-        return '';
+
+        return $retval;
     }
 }

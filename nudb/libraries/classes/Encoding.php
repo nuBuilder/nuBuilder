@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin;
 
 use PhpMyAdmin\Config\ConfigFile;
@@ -25,28 +23,28 @@ class Encoding
      *
      * @var int
      */
-    public const ENGINE_NONE = 0;
 
+    const ENGINE_NONE = 0;
     /**
      * iconv encoding conversion engine
      *
      * @var int
      */
-    public const ENGINE_ICONV = 1;
+    const ENGINE_ICONV = 1;
 
     /**
      * recode encoding conversion engine
      *
      * @var int
      */
-    public const ENGINE_RECODE = 2;
+    const ENGINE_RECODE = 2;
 
     /**
      * mbstring encoding conversion engine
      *
      * @var int
      */
-    public const ENGINE_MB = 3;
+    const ENGINE_MB = 3;
 
     /**
      * Chosen encoding engine
@@ -66,39 +64,21 @@ class Encoding
      *
      * @var array
      */
-    private static $_enginemap = [
-        'iconv' => [
-            'iconv',
-            self::ENGINE_ICONV,
-            'iconv',
-        ],
-        'recode' => [
-            'recode_string',
-            self::ENGINE_RECODE,
-            'recode',
-        ],
-        'mb' => [
-            'mb_convert_encoding',
-            self::ENGINE_MB,
-            'mbstring',
-        ],
-        'none' => [
-            'isset',
-            self::ENGINE_NONE,
-            '',
-        ],
-    ];
+    private static $_enginemap = array(
+        'iconv' => array('iconv', self::ENGINE_ICONV, 'iconv'),
+        'recode' => array('recode_string', self::ENGINE_RECODE, 'recode'),
+        'mb' => array('mb_convert_encoding', self::ENGINE_MB, 'mbstring'),
+        'none' => array('isset', self::ENGINE_NONE, ''),
+    );
 
     /**
      * Order of automatic detection of engines
      *
      * @var array
      */
-    private static $_engineorder = [
-        'iconv',
-        'mb',
-        'recode',
-    ];
+    private static $_engineorder = array(
+        'iconv', 'mb', 'recode',
+    );
 
     /**
      * Kanji encodings list
@@ -112,7 +92,7 @@ class Encoding
      *
      * @return void
      */
-    public static function initEngine(): void
+    public static function initEngine()
     {
         $engine = 'auto';
         if (isset($GLOBALS['cfg']['RecodingEngine'])) {
@@ -144,11 +124,11 @@ class Encoding
     /**
      * Setter for engine. Use with caution, mostly useful for testing.
      *
-     * @param int $engine Engine encoding
+     * @param int $engine Engine enconding
      *
      * @return void
      */
-    public static function setEngine(int $engine): void
+    public static function setEngine($engine)
     {
         self::$_engine = $engine;
     }
@@ -158,9 +138,9 @@ class Encoding
      *
      * @return bool
      */
-    public static function isSupported(): bool
+    public static function isSupported()
     {
-        if (self::$_engine === null) {
+        if (is_null(self::$_engine)) {
             self::initEngine();
         }
         return self::$_engine != self::ENGINE_NONE;
@@ -178,21 +158,18 @@ class Encoding
      *
      * @access  public
      */
-    public static function convertString(
-        string $src_charset,
-        string $dest_charset,
-        string $what
-    ): string {
+    public static function convertString($src_charset, $dest_charset, $what)
+    {
         if ($src_charset == $dest_charset) {
             return $what;
         }
-        if (self::$_engine === null) {
+        if (is_null(self::$_engine)) {
             self::initEngine();
         }
         switch (self::$_engine) {
             case self::ENGINE_RECODE:
                 return recode_string(
-                    $src_charset . '..' . $dest_charset,
+                    $src_charset . '..'  . $dest_charset,
                     $what
                 );
             case self::ENGINE_ICONV:
@@ -218,7 +195,7 @@ class Encoding
      *
      * @return bool
      */
-    public static function canConvertKanji(): bool
+    public static function canConvertKanji()
     {
         return $GLOBALS['lang'] == 'ja';
     }
@@ -228,7 +205,7 @@ class Encoding
      *
      * @return string
      */
-    public static function getKanjiEncodings(): string
+    public static function getKanjiEncodings()
     {
         return self::$_kanji_encodings;
     }
@@ -240,7 +217,7 @@ class Encoding
      *
      * @return void
      */
-    public static function setKanjiEncodings(string $value): void
+    public static function setKanjiEncodings($value)
     {
         self::$_kanji_encodings = $value;
     }
@@ -250,7 +227,7 @@ class Encoding
      *
      * @return void
      */
-    public static function kanjiChangeOrder(): void
+    public static function kanjiChangeOrder()
     {
         $parts = explode(',', self::$_kanji_encodings);
         if ($parts[1] == 'EUC-JP') {
@@ -269,7 +246,7 @@ class Encoding
      *
      * @return string   the converted string
      */
-    public static function kanjiStrConv(string $str, string $enc, string $kana): string
+    public static function kanjiStrConv($str, $enc, $kana)
     {
         if ($enc == '' && $kana == '') {
             return $str;
@@ -302,7 +279,7 @@ class Encoding
      *
      * @return string   the name of the converted file
      */
-    public static function kanjiFileConv(string $file, string $enc, string $kana): string
+    public static function kanjiFileConv($file, $enc, $kana)
     {
         if ($enc == '' && $kana == '') {
             return $file;
@@ -311,10 +288,10 @@ class Encoding
         $fpd      = fopen($tmpfname, 'wb');
         $fps      = fopen($file, 'r');
         self::kanjiChangeOrder();
-        while (! feof($fps)) {
+        while (!feof($fps)) {
             $line = fgets($fps, 4096);
             $dist = self::kanjiStrConv($line, $enc, $kana);
-            fwrite($fpd, $dist);
+            fputs($fpd, $dist);
         } // end while
         self::kanjiChangeOrder();
         fclose($fps);
@@ -327,12 +304,11 @@ class Encoding
     /**
      * Defines radio form fields to switch between encoding modes
      *
-     * @return string HTML code for the radio controls
+     * @return string   xhtml code for the radio controls
      */
-    public static function kanjiEncodingForm(): string
+    public static function kanjiEncodingForm()
     {
-        $template = new Template();
-        return $template->render('encoding/kanji_encoding_form');
+        return Template::get('encoding/kanji_encoding_form')->render();
     }
 
     /**
@@ -340,9 +316,9 @@ class Encoding
      *
      * @return array
      */
-    public static function listEncodings(): array
+    public static function listEncodings()
     {
-        if (self::$_engine === null) {
+        if (is_null(self::$_engine)) {
             self::initEngine();
         }
         /* Most engines do not support listing */

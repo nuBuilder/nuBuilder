@@ -5,12 +5,10 @@
  *
  * @package PhpMyAdmin\Twig
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Twig;
 
 use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 /**
  * Class CoreExtension
@@ -20,22 +18,18 @@ use Twig\TwigFilter;
 class CoreExtension extends AbstractExtension
 {
     /**
-     * Returns a list of filters to add to the existing list.
+     * Returns a list of functions to add to the existing list.
      *
-     * @return TwigFilter[]
+     * @return TwigFunction[]
      */
-    public function getFilters()
+    public function getFunctions()
     {
-        return [
-            new TwigFilter(
-                'mime_default_function',
+        return array(
+            new TwigFunction(
+                'Core_mimeDefaultFunction',
                 'PhpMyAdmin\Core::mimeDefaultFunction',
-                ['is_safe' => ['html']]
+                array('is_safe' => array('html'))
             ),
-            new TwigFilter(
-                'link',
-                'PhpMyAdmin\Core::linkURL'
-            ),
-        ];
+        );
     }
 }

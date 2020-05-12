@@ -5,11 +5,11 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin;
 
-use PhpMyAdmin\Error;
+use PhpMyAdmin\Relation;
+use PhpMyAdmin\Template;
+use PhpMyAdmin\Url;
 use PhpMyAdmin\Utils\HttpRequest;
 
 /**
@@ -24,7 +24,7 @@ class ErrorReport
      *
      * @var string
      */
-    private $submissionUrl = 'https://reports.phpmyadmin.net/incidents/create';
+    private $submissionUrl;
 
     /**
      * @var HttpRequest
@@ -32,38 +32,20 @@ class ErrorReport
     private $httpRequest;
 
     /**
-     * @var Relation
+     * @var Relation $relation
      */
     private $relation;
-
-    /**
-     * @var Template
-     */
-    public $template;
 
     /**
      * Constructor
      *
      * @param HttpRequest $httpRequest HttpRequest instance
-     * @param Relation    $relation    Relation instance
-     * @param Template    $template    Template instance
      */
-    public function __construct(HttpRequest $httpRequest, Relation $relation, Template $template)
+    public function __construct(HttpRequest $httpRequest)
     {
         $this->httpRequest = $httpRequest;
-        $this->relation = $relation;
-        $this->template = $template;
-    }
-
-    /**
-     * Set the URL where to submit reports to
-     *
-     * @param string $submissionUrl Submission URL
-     * @return void
-     */
-    public function setSubmissionUrl(string $submissionUrl): void
-    {
-        $this->submissionUrl = $submissionUrl;
+        $this->submissionUrl = 'https://reports.phpmyadmin.net/incidents/create';
+        $this->relation = new Relation();
     }
 
     /**
@@ -73,7 +55,7 @@ class ErrorReport
      *
      * @return string the report
      */
-    private function getPrettyData(): string
+    private function getPrettyData()
     {
         $report = $this->getData();
 
@@ -88,11 +70,8 @@ class ErrorReport
      *
      * @return array error report if success, Empty Array otherwise
      */
-    public function getData(string $exceptionType = 'js'): array
+    public function getData($exceptionType = 'js')
     {
-        /** @var Config $PMA_Config */
-        global $PMA_Config;
-
         $relParams = $this->relation->getRelationsParam();
         // common params for both, php & js exceptions
         $report = [
@@ -102,53 +81,41 @@ class ErrorReport
             "user_os" => PMA_USR_OS,
             "server_software" => $_SERVER['SERVER_SOFTWARE'],
             "user_agent_string" => $_SERVER['HTTP_USER_AGENT'],
-            "locale" => $PMA_Config->getCookie('pma_lang'),
+            "locale" => $_COOKIE['pma_lang'],
             "configuration_storage" =>
-                $relParams['db'] === null ? "disabled" : "enabled",
-            "php_version" => PHP_VERSION,
+                is_null($relParams['db']) ? "disabled" : "enabled",
+            "php_version" => phpversion()
         ];
 
         if ($exceptionType == 'js') {
-            if (empty($_POST['exception'])) {
+            if (empty($_REQUEST['exception'])) {
                 return [];
             }
-            $exception = $_POST['exception'];
+            $exception = $_REQUEST['exception'];
             $exception["stack"] = $this->translateStacktrace($exception["stack"]);
-
-            if (isset($exception["url"])) {
-                list($uri, $scriptName) = $this->sanitizeUrl($exception["url"]);
-                $exception["uri"] = $uri;
-                $report["script_name"] = $scriptName;
-                unset($exception["url"]);
-            } elseif (isset($_POST["url"])) {
-                list($uri, $scriptName) = $this->sanitizeUrl($_POST["url"]);
-                $exception["uri"] = $uri;
-                $report["script_name"] = $scriptName;
-                unset($_POST["url"]);
-            } else {
-                $report["script_name"] = null;
-            }
+            list($uri, $scriptName) = $this->sanitizeUrl($exception["url"]);
+            $exception["uri"] = $uri;
+            unset($exception["url"]);
 
             $report["exception_type"] = 'js';
             $report["exception"] = $exception;
-            if (isset($_POST['microhistory'])) {
-                $report["microhistory"] = $_POST['microhistory'];
-            }
+            $report["script_name"] = $scriptName;
+            $report["microhistory"] = $_REQUEST['microhistory'];
 
-            if (! empty($_POST['description'])) {
-                $report['steps'] = $_POST['description'];
+            if (! empty($_REQUEST['description'])) {
+                $report['steps'] = $_REQUEST['description'];
             }
         } elseif ($exceptionType == 'php') {
             $errors = [];
             // create php error report
             $i = 0;
-            if (! isset($_SESSION['prev_errors'])
+            if (!isset($_SESSION['prev_errors'])
                 || $_SESSION['prev_errors'] == ''
             ) {
                 return [];
             }
             foreach ($_SESSION['prev_errors'] as $errorObj) {
-                /** @var Error $errorObj */
+                /* @var $errorObj PhpMyAdmin\Error */
                 if ($errorObj->getLine()
                     && $errorObj->getType()
                     && $errorObj->getNumber() != E_USER_WARNING
@@ -159,14 +126,14 @@ class ErrorReport
                         "type" => $errorObj->getType(),
                         "msg" => $errorObj->getOnlyMessage(),
                         "stackTrace" => $errorObj->getBacktrace(5),
-                        "stackhash" => $errorObj->getHash(),
+                        "stackhash" => $errorObj->getHash()
                     ];
                 }
             }
 
             // if there were no 'actual' errors to be submitted.
-            if ($i == 0) {
-                return []; // then return empty array
+            if ($i==0) {
+                return [];   // then return empty array
             }
             $report["exception_type"] = 'php';
             $report["errors"] = $errors;
@@ -189,7 +156,7 @@ class ErrorReport
      *
      * @return array the uri and script name
      */
-    private function sanitizeUrl(string $url): array
+    private function sanitizeUrl($url)
     {
         $components = parse_url($url);
         if (isset($components["fragment"])
@@ -201,7 +168,7 @@ class ErrorReport
         }
 
         // get script name
-        preg_match("<([a-zA-Z\-_\d\.]*\.php|js\/[a-zA-Z\-_\d\/\.]*\.js)$>", $components["path"], $matches);
+        preg_match("<([a-zA-Z\-_\d]*\.php)$>", $components["path"], $matches);
         if (count($matches) < 2) {
             $scriptName = 'index.php';
         } else {
@@ -221,10 +188,7 @@ class ErrorReport
         }
 
         $uri = $scriptName . "?" . $query;
-        return [
-            $uri,
-            $scriptName,
-        ];
+        return [$uri, $scriptName];
     }
 
     /**
@@ -232,17 +196,18 @@ class ErrorReport
      *
      * @param array $report the report info to be sent
      *
-     * @return string|null|bool the reply of the server
+     * @return string the reply of the server
      */
     public function send(array $report)
     {
-        return $this->httpRequest->create(
+        $response = $this->httpRequest->create(
             $this->submissionUrl,
             "POST",
             false,
             json_encode($report),
             "Content-Type: application/json"
         );
+        return $response;
     }
 
     /**
@@ -251,9 +216,9 @@ class ErrorReport
      *
      * @param array $stack the stack trace
      *
-     * @return array the modified stack trace
+     * @return array $stack the modified stack trace
      */
-    private function translateStacktrace(array $stack): array
+    private function translateStacktrace(array $stack)
     {
         foreach ($stack as &$level) {
             foreach ($level["context"] as &$line) {
@@ -261,6 +226,7 @@ class ErrorReport
                     $line = mb_substr($line, 0, 75) . "//...";
                 }
             }
+            unset($level["context"]);
             list($uri, $scriptName) = $this->sanitizeUrl($level["url"]);
             $level["uri"] = $uri;
             $level["scriptname"] = $scriptName;
@@ -276,7 +242,7 @@ class ErrorReport
      *
      * @return string the form
      */
-    public function getForm(): string
+    public function getForm()
     {
         $datas = [
             'report_data' => $this->getPrettyData(),
@@ -285,10 +251,10 @@ class ErrorReport
         ];
 
         $reportData = $this->getData();
-        if (! empty($reportData)) {
-            $datas['hidden_fields'] = Url::getHiddenFields($reportData, '', true);
+        if (!empty($reportData)) {
+            $datas['hidden_fields'] = Url::getHiddenFields($reportData);
         }
 
-        return $this->template->render('error/report_form', $datas);
+        return Template::get('error/report_form')->render($datas);
     }
 }

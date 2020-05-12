@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin;
 
 /**
@@ -113,7 +111,7 @@ class SubPartition
     /**
      * Return the ordinal of the partition
      *
-     * @return int the ordinal
+     * @return number the ordinal
      */
     public function getOrdinal()
     {

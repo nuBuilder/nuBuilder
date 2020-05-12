@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin;
 
 use PhpMyAdmin\Core;
@@ -23,21 +21,6 @@ use PhpMyAdmin\Util;
  */
 class UserPassword
 {
-    /**
-     * @var Privileges
-     */
-    private $serverPrivileges;
-
-    /**
-     * UserPassword constructor.
-     *
-     * @param Privileges $serverPrivileges Privileges object
-     */
-    public function __construct(Privileges $serverPrivileges)
-    {
-        $this->serverPrivileges = $serverPrivileges;
-    }
-
     /**
      * Send the message as an ajax request
      *
@@ -78,24 +61,21 @@ class UserPassword
         $error = false;
         $message = Message::success(__('The profile has been updated.'));
 
-        if ($_POST['nopass'] != '1') {
-            if (strlen($_POST['pma_pw']) === 0 || strlen($_POST['pma_pw2']) === 0) {
+        if (($_REQUEST['nopass'] != '1')) {
+            if (strlen($_REQUEST['pma_pw']) === 0 || strlen($_REQUEST['pma_pw2']) === 0) {
                 $message = Message::error(__('The password is empty!'));
                 $error = true;
-            } elseif ($_POST['pma_pw'] !== $_POST['pma_pw2']) {
+            } elseif ($_REQUEST['pma_pw'] !== $_REQUEST['pma_pw2']) {
                 $message = Message::error(
                     __('The passwords aren\'t the same!')
                 );
                 $error = true;
-            } elseif (strlen($_POST['pma_pw']) > 256) {
+            } elseif (strlen($_REQUEST['pma_pw']) > 256) {
                 $message = Message::error(__('Password is too long!'));
                 $error = true;
             }
         }
-        return [
-            'error' => $error,
-            'msg' => $message,
-        ];
+        return array('error' => $error, 'msg' => $message);
     }
 
     /**
@@ -118,15 +98,13 @@ class UserPassword
         $serverType = Util::getServerType();
         $serverVersion = $GLOBALS['dbi']->getVersion();
 
-        if (isset($_POST['authentication_plugin'])
-            && ! empty($_POST['authentication_plugin'])
+        if (isset($_REQUEST['authentication_plugin'])
+            && ! empty($_REQUEST['authentication_plugin'])
         ) {
-            $orig_auth_plugin = $_POST['authentication_plugin'];
+            $orig_auth_plugin = $_REQUEST['authentication_plugin'];
         } else {
-            $orig_auth_plugin = $this->serverPrivileges->getCurrentAuthenticationPlugin(
-                'change',
-                $username,
-                $hostname
+            $orig_auth_plugin = Privileges::getCurrentAuthenticationPlugin(
+                'change', $username, $hostname
             );
         }
 
@@ -136,8 +114,7 @@ class UserPassword
         if ($serverType == 'MySQL'
             && $serverVersion >= 50706
         ) {
-            $sql_query = 'ALTER USER \'' . $GLOBALS['dbi']->escapeString($username)
-                . '\'@\'' . $GLOBALS['dbi']->escapeString($hostname)
+            $sql_query = 'ALTER USER \'' . $username . '\'@\'' . $hostname
                 . '\' IDENTIFIED WITH ' . $orig_auth_plugin . ' BY '
                 . (($password == '') ? '\'\'' : '\'***\'');
         } elseif (($serverType == 'MySQL'
@@ -158,12 +135,8 @@ class UserPassword
         }
 
         $this->changePassUrlParamsAndSubmitQuery(
-            $username,
-            $hostname,
-            $password,
-            $sql_query,
-            $hashing_function,
-            $orig_auth_plugin
+            $username, $hostname, $password,
+            $sql_query, $hashing_function, $orig_auth_plugin
         );
 
         $auth_plugin->handlePasswordChange($password);
@@ -174,14 +147,12 @@ class UserPassword
     /**
      * Generate the hashing function
      *
-     * @return string
+     * @return string  $hashing_function
      */
     private function changePassHashingFunction()
     {
         if (Core::isValid(
-            $_POST['authentication_plugin'],
-            'identical',
-            'mysql_old_password'
+            $_REQUEST['authentication_plugin'], 'identical', 'mysql_old_password'
         )) {
             $hashing_function = 'OLD_PASSWORD';
         } else {
@@ -203,12 +174,7 @@ class UserPassword
      * @return void
      */
     private function changePassUrlParamsAndSubmitQuery(
-        $username,
-        $hostname,
-        $password,
-        $sql_query,
-        $hashing_function,
-        $orig_auth_plugin
+        $username, $hostname, $password, $sql_query, $hashing_function, $orig_auth_plugin
     ) {
         $err_url = 'user_password.php' . Url::getCommon();
 
@@ -216,8 +182,7 @@ class UserPassword
         $serverVersion = $GLOBALS['dbi']->getVersion();
 
         if ($serverType == 'MySQL' && $serverVersion >= 50706) {
-            $local_query = 'ALTER USER \'' . $GLOBALS['dbi']->escapeString($username)
-                . '\'@\'' . $GLOBALS['dbi']->escapeString($hostname) . '\''
+            $local_query = 'ALTER USER \'' . $username . '\'@\'' . $hostname . '\''
                 . ' IDENTIFIED with ' . $orig_auth_plugin . ' BY '
                 . (($password == '')
                 ? '\'\''
@@ -237,14 +202,14 @@ class UserPassword
                 $GLOBALS['dbi']->tryQuery('SET `old_passwords` = 2;');
             }
 
-            $hashedPassword = $this->serverPrivileges->getHashedPassword($_POST['pma_pw']);
+            $hashedPassword = Privileges::getHashedPassword($_POST['pma_pw']);
 
             $local_query = "UPDATE `mysql`.`user` SET"
                 . " `authentication_string` = '" . $hashedPassword
                 . "', `Password` = '', "
                 . " `plugin` = '" . $orig_auth_plugin . "'"
-                . " WHERE `User` = '" . $GLOBALS['dbi']->escapeString($username)
-                . "' AND Host = '" . $GLOBALS['dbi']->escapeString($hostname) . "';";
+                . " WHERE `User` = '" . $username . "' AND Host = '"
+                . $hostname . "';";
         } else {
             $local_query = 'SET password = ' . (($password == '')
                 ? '\'\''
@@ -276,9 +241,7 @@ class UserPassword
     {
         echo '<h1>' , __('Change password') , '</h1>' , "\n\n";
         echo Util::getMessage(
-            $message,
-            $sql_query,
-            'success'
+            $message, $sql_query, 'success'
         );
         echo '<a href="index.php' , Url::getCommon()
             , ' target="_parent">' , "\n"

@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin;
 
 use PhpMyAdmin\Core;
@@ -28,14 +26,14 @@ class Sanitize
      *
      * @return boolean True if string can be used as link
      */
-    public static function checkLink($url, $http = false, $other = false)
+    public static function checkLink($url, $http=false, $other=false)
     {
         $url = strtolower($url);
-        $valid_starts = [
+        $valid_starts = array(
             'https://',
             './url.php?url=https%3a%2f%2f',
             './doc/html/',
-            // possible return values from Util::getScriptNameForOption
+            # possible return values from Util::getScriptNameForOption
             './index.php?',
             './server_databases.php?',
             './server_status.php?',
@@ -50,13 +48,13 @@ class Sanitize
             './tbl_select.php?',
             './tbl_change.php?',
             './sql.php?',
-            // Hardcoded options in \PhpMyAdmin\Config\SpecialSchemaLinks
+            # Hardcoded options in libraries/special_schema_links.inc.php
             './db_events.php?',
             './db_routines.php?',
             './server_privileges.php?',
             './tbl_structure.php?',
-        ];
-        $is_setup = $GLOBALS['PMA_Config'] !== null && $GLOBALS['PMA_Config']->get('is_setup');
+        );
+        $is_setup = !is_null($GLOBALS['PMA_Config']) && $GLOBALS['PMA_Config']->get('is_setup');
         // Adjust path to setup script location
         if ($is_setup) {
             foreach ($valid_starts as $key => $value) {
@@ -156,9 +154,9 @@ class Sanitize
      *
      * Examples:
      *
-     * <p><?php echo Sanitize::sanitizeMessage($foo); ?></p>
+     * <p><?php echo Sanitize::sanitize($foo); ?></p>
      *
-     * <a title="<?php echo Sanitize::sanitizeMessage($foo, true); ?>">bar</a>
+     * <a title="<?php echo Sanitize::sanitize($foo, true); ?>">bar</a>
      *
      * @param string  $message the message
      * @param boolean $escape  whether to escape html in result
@@ -166,14 +164,14 @@ class Sanitize
      *
      * @return string   the sanitized message
      */
-    public static function sanitizeMessage($message, $escape = false, $safe = false)
+    public static function sanitize($message, $escape = false, $safe = false)
     {
-        if (! $safe) {
-            $message = strtr((string) $message, ['<' => '&lt;', '>' => '&gt;']);
+        if (!$safe) {
+            $message = strtr($message, array('<' => '&lt;', '>' => '&gt;'));
         }
 
         /* Interpret bb code */
-        $replace_pairs = [
+        $replace_pairs = array(
             '[em]'      => '<em>',
             '[/em]'     => '</em>',
             '[strong]'  => '<strong>',
@@ -182,7 +180,7 @@ class Sanitize
             '[/code]'   => '</code>',
             '[kbd]'     => '<kbd>',
             '[/kbd]'    => '</kbd>',
-            '[br]'      => '<br>',
+            '[br]'      => '<br />',
             '[/a]'      => '</a>',
             '[/doc]'      => '</a>',
             '[sup]'     => '<sup>',
@@ -191,7 +189,7 @@ class Sanitize
             '[conferr]' => '<iframe src="show_config_errors.php"><a href="show_config_errors.php">show_config_errors.php</a></iframe>',
             // used in libraries/Util.php
             '[dochelpicon]' => Util::getImage('b_help', __('Documentation')),
-        ];
+        );
 
         $message = strtr($message, $replace_pairs);
 
@@ -199,18 +197,18 @@ class Sanitize
         $pattern = '/\[a@([^]"@]*)(@([^]"]*))?\]/';
 
         /* Find and replace all links */
-        $message = preg_replace_callback($pattern, function ($match) {
+        $message = preg_replace_callback($pattern, function($match){
             return self::replaceBBLink($match);
         }, $message);
 
         /* Replace documentation links */
         $message = preg_replace_callback(
             '/\[doc@([a-zA-Z0-9_-]+)(@([a-zA-Z0-9_-]*))?\]/',
-            function ($match) {
+            function($match){
                 return self::replaceDocLink($match);
             },
-            $message
-        );
+                $message
+            );
 
         /* Possibly escape result */
         if ($escape) {
@@ -264,7 +262,7 @@ class Sanitize
      */
     public static function jsFormat($a_string = '', $add_backquotes = true)
     {
-        $a_string = htmlspecialchars((string) $a_string);
+        $a_string = htmlspecialchars($a_string);
         $a_string = self::escapeJsString($a_string);
         // Needed for inline javascript to prevent some browsers
         // treating it as a anchor
@@ -290,18 +288,17 @@ class Sanitize
     public static function escapeJsString($string)
     {
         return preg_replace(
-            '@</script@i',
-            '</\' + \'script',
+            '@</script@i', '</\' + \'script',
             strtr(
-                (string) $string,
-                [
+                $string,
+                array(
                     "\000" => '',
                     '\\' => '\\\\',
                     '\'' => '\\\'',
                     '"' => '\"',
                     "\n" => '\n',
-                    "\r" => '\r',
-                ]
+                    "\r" => '\r'
+                )
             )
         );
     }
@@ -324,7 +321,7 @@ class Sanitize
         }
 
         if (is_int($value)) {
-            return (int) $value;
+            return (int)$value;
         }
 
         return '"' . self::escapeJsString($value) . '"';
@@ -344,7 +341,7 @@ class Sanitize
     public static function getJsValue($key, $value, $escape = true)
     {
         $result = $key . ' = ';
-        if (! $escape) {
+        if (!$escape) {
             $result .= $value;
         } elseif (is_array($value)) {
             $result .= '[';
@@ -410,7 +407,7 @@ class Sanitize
      *
      * @return void
      */
-    public static function printJsValueForFormValidation($key, $value, $addOn = false, $comma = true)
+    public static function printJsValueForFormValidation($key, $value, $addOn=false, $comma=true)
     {
         echo self::getJsValueForFormValidation($key, $value, $addOn, $comma);
     }
@@ -418,30 +415,30 @@ class Sanitize
     /**
      * Removes all variables from request except whitelisted ones.
      *
-     * @param string[] $whitelist list of variables to allow
+     * @param string &$whitelist list of variables to allow
      *
      * @return void
      * @access public
      */
-    public static function removeRequestVars(&$whitelist): void
+    public static function removeRequestVars(&$whitelist)
     {
         // do not check only $_REQUEST because it could have been overwritten
         // and use type casting because the variables could have become
         // strings
         if (! isset($_REQUEST)) {
-            $_REQUEST = [];
+            $_REQUEST = array();
         }
         if (! isset($_GET)) {
-            $_GET = [];
+            $_GET = array();
         }
         if (! isset($_POST)) {
-            $_POST = [];
+            $_POST = array();
         }
         if (! isset($_COOKIE)) {
-            $_COOKIE = [];
+            $_COOKIE = array();
         }
         $keys = array_keys(
-            array_merge((array) $_REQUEST, (array) $_GET, (array) $_POST, (array) $_COOKIE)
+            array_merge((array)$_REQUEST, (array)$_GET, (array)$_POST, (array)$_COOKIE)
         );
 
         foreach ($keys as $key) {

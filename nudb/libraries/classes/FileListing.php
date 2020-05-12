@@ -1,16 +1,14 @@
 <?php
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
- * Holds the PhpMyAdmin\FileListing class
+ * Functions for listing directories
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin;
 
 /**
- * Functions for listing directories
+ * PhpMyAdmin\FileListing class
  *
  * @package PhpMyAdmin
  */
@@ -22,15 +20,15 @@ class FileListing
      * @param string $dir        directory to list
      * @param string $expression regular expression to match files
      *
-     * @return array|bool sorted file list on success, false on failure
+     * @return array   sorted file list on success, false on failure
      */
-    public function getDirContent(string $dir, string $expression = '')
+    public static function getDirContent($dir, $expression = '')
     {
-        if (! @file_exists($dir) || ! ($handle = @opendir($dir))) {
+        if (!@file_exists($dir) || !($handle = @opendir($dir))) {
             return false;
         }
 
-        $result = [];
+        $result = array();
         if (substr($dir, -1) != '/') {
             $dir .= '/';
         }
@@ -54,14 +52,11 @@ class FileListing
      * @param string $extensions regular expression to match files
      * @param string $active     currently active choice
      *
-     * @return string|false Html <option> field, false if not files in dir
+     * @return array   sorted file list on success, false on failure
      */
-    public function getFileSelectOptions(
-        string $dir,
-        string $extensions = '',
-        string $active = ''
-    ) {
-        $list = $this->getDirContent($dir, $extensions);
+    public static function getFileSelectOptions($dir, $extensions = '', $active = '')
+    {
+        $list = self::getDirContent($dir, $extensions);
         if ($list === false) {
             return false;
         }
@@ -79,25 +74,28 @@ class FileListing
     /**
      * Get currently supported decompressions.
      *
-     * @return string separated list of extensions usable in getDirContent
+     * @return string separated list of extensions usable in self::getDirContent
      */
-    public function supportedDecompressions(): string
+    public static function supportedDecompressions()
     {
         global $cfg;
 
         $compressions = '';
 
         if ($cfg['GZipDump'] && function_exists('gzopen')) {
-            $compressions = 'gz';
+            if (!empty($compressions)) {
+                $compressions .= '|';
+            }
+            $compressions .= 'gz';
         }
         if ($cfg['BZipDump'] && function_exists('bzopen')) {
-            if (! empty($compressions)) {
+            if (!empty($compressions)) {
                 $compressions .= '|';
             }
             $compressions .= 'bz2';
         }
         if ($cfg['ZipDump'] && function_exists('gzinflate')) {
-            if (! empty($compressions)) {
+            if (!empty($compressions)) {
                 $compressions .= '|';
             }
             $compressions .= 'zip';

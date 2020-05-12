@@ -10,8 +10,6 @@ gettext mechanism, see https://wiki.phpmyadmin.net/pma/Gettext_for_developers.
  * @package    PhpMyAdmin-Import
  * @subpackage [Name]
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Plugins\Import;
 
 use PhpMyAdmin\Import;
@@ -36,7 +34,6 @@ class Import[Name] extends ImportPlugin
      */
     public function __construct()
     {
-        parent::__construct();
         $this->setProperties();
     }
 
@@ -108,7 +105,7 @@ class Import[Name] extends ImportPlugin
 
         $buffer = '';
         while (! ($finished && $i >= $len) && ! $error && ! $timeout_passed) {
-            $data = $this->import->getNextChunk();
+            $data = Import::getNextChunk();
             if ($data === false) {
                 // subtract data we didn't handle yet and stop processing
                 $GLOBALS['offset'] -= strlen($buffer);
@@ -120,10 +117,10 @@ class Import[Name] extends ImportPlugin
                 $buffer .= $data;
             }
             // PARSE $buffer here, post sql queries using:
-            $this->import->runQuery($sql, $verbose_sql_with_comments, $sql_data);
+            Import::runQuery($sql, $verbose_sql_with_comments, $sql_data);
         } // End of import loop
         // Commit any possible data in buffers
-        $this->import->runQuery('', '', $sql_data);
+        Import::runQuery('', '', $sql_data);
     }
 
 

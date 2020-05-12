@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin-Engines
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Engines;
 
 use PhpMyAdmin\StorageEngine;
@@ -29,3 +27,4 @@ class Binlog extends StorageEngine
         return 'binary-log';
     }
 }
+

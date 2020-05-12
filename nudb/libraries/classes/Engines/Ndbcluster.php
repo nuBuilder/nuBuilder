@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin-Engines
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Engines;
 
 use PhpMyAdmin\StorageEngine;
@@ -25,9 +23,9 @@ class Ndbcluster extends StorageEngine
      */
     public function getVariables()
     {
-        return [
-            'ndb_connectstring' => [],
-        ];
+        return array(
+            'ndb_connectstring' => array(),
+        );
     }
 
     /**
@@ -52,3 +50,4 @@ class Ndbcluster extends StorageEngine
         return 'ndbcluster';
     }
 }
+

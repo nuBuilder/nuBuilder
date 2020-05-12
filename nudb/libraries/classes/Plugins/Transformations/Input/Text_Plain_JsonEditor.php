@@ -6,8 +6,6 @@
  * @package    PhpMyAdmin-Transformations
  * @subpackage JSON
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Plugins\Transformations\Input;
 
 use PhpMyAdmin\Plugins\Transformations\Abs\CodeMirrorEditorTransformationPlugin;
@@ -41,7 +39,7 @@ class Text_Plain_JsonEditor extends CodeMirrorEditorTransformationPlugin
      */
     public function getScripts()
     {
-        $scripts = [];
+        $scripts = array();
         if ($GLOBALS['cfg']['CodemirrorEnable']) {
             $scripts[] = 'vendor/codemirror/lib/codemirror.js';
             $scripts[] = 'vendor/codemirror/mode/javascript/javascript.js';

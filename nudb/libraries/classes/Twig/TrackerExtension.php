@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin\Twig
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Twig;
 
 use Twig\Extension\AbstractExtension;
@@ -26,11 +24,11 @@ class TrackerExtension extends AbstractExtension
      */
     public function getFunctions()
     {
-        return [
+        return array(
             new TwigFunction(
-                'get_tracker_version',
+                'Tracker_getVersion',
                 'PhpMyAdmin\Tracker::getVersion'
             ),
-        ];
+        );
     }
 }

@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin;
 
 use PhpMyAdmin\Error;
@@ -25,7 +23,7 @@ class ErrorHandler
      *
      * @var Error[]
      */
-    protected $errors = [];
+    protected $errors = array();
 
     /**
      * Hide location of errors
@@ -49,12 +47,10 @@ class ErrorHandler
          * This behavior is not tested there and breaks other tests as they
          * rely on PHPUnit doing it's own error handling which we break here.
          */
-        if (! defined('TESTSUITE')) {
-            set_error_handler([$this, 'handleError']);
+        if (!defined('TESTSUITE')) {
+            set_error_handler(array($this, 'handleError'));
         }
-        if (function_exists('error_reporting')) {
-            $this->error_reporting = error_reporting();
-        }
+        $this->error_reporting = error_reporting();
     }
 
     /**
@@ -67,7 +63,7 @@ class ErrorHandler
     {
         if (isset($_SESSION)) {
             if (! isset($_SESSION['errors'])) {
-                $_SESSION['errors'] = [];
+                $_SESSION['errors'] = array();
             }
 
             // remember only not displayed errors
@@ -101,7 +97,7 @@ class ErrorHandler
      *
      * @return void
      */
-    public function setHideLocation(bool $hide): void
+    public function setHideLocation($hide)
     {
         $this->hide_location = $hide;
     }
@@ -113,7 +109,7 @@ class ErrorHandler
      *
      * @return Error[]
      */
-    public function getErrors(bool $check = true): array
+    public function getErrors($check=true)
     {
         if ($check) {
             $this->checkSavedErrors();
@@ -122,12 +118,12 @@ class ErrorHandler
     }
 
     /**
-     * returns the errors occurred in the current run only.
-     * Does not include the errors saved in the SESSION
-     *
-     * @return Error[]
-     */
-    public function getCurrentErrors(): array
+    * returns the errors occurred in the current run only.
+    * Does not include the errors saved in the SESSION
+    *
+    * @return Error[]
+    */
+    public function getCurrentErrors()
     {
         return $this->errors;
     }
@@ -139,7 +135,7 @@ class ErrorHandler
      *
      * @return Error[]
      */
-    public function sliceErrors(int $count): array
+    public function sliceErrors($count)
     {
         $errors = $this->getErrors(false);
         $this->errors = array_splice($errors, 0, $count);
@@ -159,29 +155,18 @@ class ErrorHandler
      *
      * @return void
      */
-    public function handleError(
-        int $errno,
-        string $errstr,
-        string $errfile,
-        int $errline
-    ): void {
-        if (function_exists('error_reporting')) {
-            /**
-            * Check if Error Control Operator (@) was used, but still show
-            * user errors even in this case.
-            */
-            if (error_reporting() == 0 &&
-                $this->error_reporting != 0 &&
-                ($errno & (E_USER_WARNING | E_USER_ERROR | E_USER_NOTICE | E_USER_DEPRECATED)) == 0
-            ) {
-                return;
-            }
-        } else {
-            if (($errno & (E_USER_WARNING | E_USER_ERROR | E_USER_NOTICE | E_USER_DEPRECATED)) == 0) {
-                return;
-            }
+    public function handleError($errno, $errstr, $errfile, $errline)
+    {
+        /**
+         * Check if Error Control Operator (@) was used, but still show
+         * user errors even in this case.
+         */
+        if (error_reporting() == 0 &&
+            $this->error_reporting != 0 &&
+            ($errno & (E_USER_WARNING | E_USER_ERROR | E_USER_NOTICE)) == 0
+        ) {
+            return;
         }
-
         $this->addError($errstr, $errno, $errfile, $errline, true);
     }
 
@@ -204,13 +189,8 @@ class ErrorHandler
      *
      * @return void
      */
-    public function addError(
-        string $errstr,
-        int $errno,
-        string $errfile,
-        int $errline,
-        bool $escape = true
-    ): void {
+    public function addError($errstr, $errno, $errfile, $errline, $escape = true)
+    {
         if ($escape) {
             $errstr = htmlspecialchars($errstr);
         }
@@ -227,31 +207,30 @@ class ErrorHandler
         $this->errors[$error->getHash()] = $error;
 
         switch ($error->getNumber()) {
-            case E_STRICT:
-            case E_DEPRECATED:
-            case E_NOTICE:
-            case E_WARNING:
-            case E_CORE_WARNING:
-            case E_COMPILE_WARNING:
-            case E_RECOVERABLE_ERROR:
-                /* Avoid rendering BB code in PHP errors */
-                $error->setBBCode(false);
-                break;
-            case E_USER_NOTICE:
-            case E_USER_WARNING:
-            case E_USER_ERROR:
-            case E_USER_DEPRECATED:
-                // just collect the error
-                // display is called from outside
-                break;
-            case E_ERROR:
-            case E_PARSE:
-            case E_CORE_ERROR:
-            case E_COMPILE_ERROR:
-            default:
-                // FATAL error, display it and exit
-                $this->dispFatalError($error);
-                exit;
+        case E_STRICT:
+        case E_DEPRECATED:
+        case E_NOTICE:
+        case E_WARNING:
+        case E_CORE_WARNING:
+        case E_COMPILE_WARNING:
+        case E_RECOVERABLE_ERROR:
+            /* Avoid rendering BB code in PHP errors */
+            $error->setBBCode(false);
+            break;
+        case E_USER_NOTICE:
+        case E_USER_WARNING:
+        case E_USER_ERROR:
+            // just collect the error
+            // display is called from outside
+            break;
+        case E_ERROR:
+        case E_PARSE:
+        case E_CORE_ERROR:
+        case E_COMPILE_ERROR:
+        default:
+            // FATAL error, display it and exit
+            $this->dispFatalError($error);
+            exit;
         }
     }
 
@@ -263,7 +242,7 @@ class ErrorHandler
      *
      * @return void
      */
-    public function triggerError(string $errorInfo, ?int $errorNumber = null): void
+    public function triggerError($errorInfo, $errorNumber = null)
     {
         // we could also extract file and line from backtrace
         // and call handleError() directly
@@ -277,7 +256,7 @@ class ErrorHandler
      *
      * @return void
      */
-    protected function dispFatalError(Error $error): void
+    protected function dispFatalError($error)
     {
         if (! headers_sent()) {
             $this->dispPageStart($error);
@@ -292,7 +271,7 @@ class ErrorHandler
      *
      * @return void
      */
-    public function dispUserErrors(): void
+    public function dispUserErrors()
     {
         echo $this->getDispUserErrors();
     }
@@ -302,7 +281,7 @@ class ErrorHandler
      *
      * @return string
      */
-    public function getDispUserErrors(): string
+    public function getDispUserErrors()
     {
         $retval = '';
         foreach ($this->getErrors() as $error) {
@@ -320,7 +299,7 @@ class ErrorHandler
      *
      * @return void
      */
-    protected function dispPageStart(?Error $error = null): void
+    protected function dispPageStart($error = null)
     {
         Response::getInstance()->disable();
         echo '<html><head><title>';
@@ -337,7 +316,7 @@ class ErrorHandler
      *
      * @return void
      */
-    protected function dispPageEnd(): void
+    protected function dispPageEnd()
     {
         echo '</body></html>';
     }
@@ -347,7 +326,7 @@ class ErrorHandler
      *
      * @return string
      */
-    public function getDispErrors(): string
+    public function getDispErrors()
     {
         $retval = '';
         // display errors if SendErrorReports is set to 'ask'.
@@ -373,16 +352,15 @@ class ErrorHandler
                 $retval .= ' class="hide"';
             }
             $retval .=  '>';
-            $retval .= Url::getHiddenFields([
+            $retval .= Url::getHiddenFields(array(
                 'exception_type' => 'php',
                 'send_error_report' => '1',
-                'server' => $GLOBALS['server'],
-            ]);
+            ));
             $retval .= '<input type="submit" value="'
                     . __('Report')
-                    . '" id="pma_report_errors" class="btn btn-primary floatright">'
+                    . '" id="pma_report_errors" class="floatright">'
                     . '<input type="checkbox" name="always_send"'
-                    . ' id="always_send_checkbox" value="true">'
+                    . ' id="always_send_checkbox" value="true"/>'
                     . '<label for="always_send_checkbox">'
                     . __('Automatically send report next time')
                     . '</label>';
@@ -391,11 +369,11 @@ class ErrorHandler
                 // add ignore buttons
                 $retval .= '<input type="submit" value="'
                         . __('Ignore')
-                        . '" id="pma_ignore_errors_bottom" class="btn btn-secondary floatright">';
+                        . '" id="pma_ignore_errors_bottom" class="floatright">';
             }
             $retval .= '<input type="submit" value="'
                     . __('Ignore All')
-                    . '" id="pma_ignore_all_errors_bottom" class="btn btn-secondary floatright">';
+                    . '" id="pma_ignore_all_errors_bottom" class="floatright">';
             $retval .= '</form>';
         }
         return $retval;
@@ -406,7 +384,7 @@ class ErrorHandler
      *
      * @return void
      */
-    public function dispErrors(): void
+    public function dispErrors()
     {
         echo $this->getDispErrors();
     }
@@ -416,9 +394,10 @@ class ErrorHandler
      *
      * @return void
      */
-    protected function checkSavedErrors(): void
+    protected function checkSavedErrors()
     {
         if (isset($_SESSION['errors'])) {
+
             // restore saved errors
             foreach ($_SESSION['errors'] as $hash => $error) {
                 if ($error instanceof Error && ! isset($this->errors[$hash])) {
@@ -427,7 +406,7 @@ class ErrorHandler
             }
 
             // delete stored errors
-            $_SESSION['errors'] = [];
+            $_SESSION['errors'] = array();
             unset($_SESSION['errors']);
         }
     }
@@ -439,7 +418,7 @@ class ErrorHandler
      *
      * @return integer number of errors occurred
      */
-    public function countErrors(bool $check = true): int
+    public function countErrors($check=true)
     {
         return count($this->getErrors($check));
     }
@@ -449,7 +428,7 @@ class ErrorHandler
      *
      * @return integer number of user errors occurred
      */
-    public function countUserErrors(): int
+    public function countUserErrors()
     {
         $count = 0;
         if ($this->countErrors()) {
@@ -468,7 +447,7 @@ class ErrorHandler
      *
      * @return boolean
      */
-    public function hasUserErrors(): bool
+    public function hasUserErrors()
     {
         return (bool) $this->countUserErrors();
     }
@@ -478,7 +457,7 @@ class ErrorHandler
      *
      * @return boolean
      */
-    public function hasErrors(): bool
+    public function hasErrors()
     {
         return (bool) $this->countErrors();
     }
@@ -488,7 +467,7 @@ class ErrorHandler
      *
      * @return integer number of errors to be displayed
      */
-    public function countDisplayErrors(): int
+    public function countDisplayErrors()
     {
         if ($GLOBALS['cfg']['SendErrorReports'] != 'never') {
             return $this->countErrors();
@@ -502,19 +481,19 @@ class ErrorHandler
      *
      * @return boolean
      */
-    public function hasDisplayErrors(): bool
+    public function hasDisplayErrors()
     {
         return (bool) $this->countDisplayErrors();
     }
 
     /**
-     * Deletes previously stored errors in SESSION.
-     * Saves current errors in session as previous errors.
-     * Required to save current errors in case  'ask'
-     *
-     * @return void
-     */
-    public function savePreviousErrors(): void
+    * Deletes previously stored errors in SESSION.
+    * Saves current errors in session as previous errors.
+    * Required to save current errors in case  'ask'
+    *
+    * @return void
+    */
+    public function savePreviousErrors()
     {
         unset($_SESSION['prev_errors']);
         $_SESSION['prev_errors'] = $GLOBALS['error_handler']->getCurrentErrors();
@@ -527,9 +506,9 @@ class ErrorHandler
      * This distinguishes between the actual errors
      *      and user errors raised to warn user.
      *
-     * @return boolean true if there are errors to be "prompted", false otherwise
+     *@return boolean true if there are errors to be "prompted", false otherwise
      */
-    public function hasErrorsForPrompt(): bool
+    public function hasErrorsForPrompt()
     {
         return (
             $GLOBALS['cfg']['SendErrorReports'] != 'never'
@@ -544,10 +523,10 @@ class ErrorHandler
      *
      * @return void
      */
-    public function reportErrors(): void
+    public function reportErrors()
     {
         // if there're no actual errors,
-        if (! $this->hasErrors()
+        if (!$this->hasErrors()
             || $this->countErrors() ==  $this->countUserErrors()
         ) {
             // then simply return.
@@ -560,12 +539,12 @@ class ErrorHandler
         if ($GLOBALS['cfg']['SendErrorReports'] == 'always') {
             if ($response->isAjax()) {
                 // set flag for automatic report submission.
-                $response->addJSON('sendErrorAlways', '1');
+                $response->addJSON('_sendErrorAlways', '1');
             } else {
                 // send the error reports asynchronously & without asking user
                 $jsCode .= '$("#pma_report_errors_form").submit();'
-                        . 'Functions.ajaxShowMessage(
-                            Messages.phpErrorsBeingSubmitted, false
+                        . 'PMA_ajaxShowMessage(
+                            PMA_messages["phpErrorsBeingSubmitted"], false
                         );';
                 // js code to appropriate focusing,
                 $jsCode .= '$("html, body").animate({
@@ -574,24 +553,24 @@ class ErrorHandler
             }
         } elseif ($GLOBALS['cfg']['SendErrorReports'] == 'ask') {
             //ask user whether to submit errors or not.
-            if (! $response->isAjax()) {
+            if (!$response->isAjax()) {
                 // js code to show appropriate msgs, event binding & focusing.
-                $jsCode = 'Functions.ajaxShowMessage(Messages.phpErrorsFound);'
-                        . '$("#pma_ignore_errors_popup").on("click", function() {
-                            Functions.ignorePhpErrors()
+                $jsCode = 'PMA_ajaxShowMessage(PMA_messages["phpErrorsFound"]);'
+                        . '$("#pma_ignore_errors_popup").bind("click", function() {
+                            PMA_ignorePhpErrors()
                         });'
-                        . '$("#pma_ignore_all_errors_popup").on("click",
+                        . '$("#pma_ignore_all_errors_popup").bind("click",
                             function() {
-                                Functions.ignorePhpErrors(false)
+                                PMA_ignorePhpErrors(false)
                             });'
-                        . '$("#pma_ignore_errors_bottom").on("click", function(e) {
-                            e.preventDefault();
-                            Functions.ignorePhpErrors()
+                        . '$("#pma_ignore_errors_bottom").bind("click", function(e) {
+                            e.preventDefaulut();
+                            PMA_ignorePhpErrors()
                         });'
-                        . '$("#pma_ignore_all_errors_bottom").on("click",
+                        . '$("#pma_ignore_all_errors_bottom").bind("click",
                             function(e) {
                                 e.preventDefault();
-                                Functions.ignorePhpErrors(false)
+                                PMA_ignorePhpErrors(false)
                             });'
                         . '$("html, body").animate({
                             scrollTop:$(document).height()

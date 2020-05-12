@@ -5,19 +5,14 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
 
 use PhpMyAdmin\Core;
-use PhpMyAdmin\Response;
 use PhpMyAdmin\VersionInformation;
-
-if (! defined('ROOT_PATH')) {
-    define('ROOT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
-}
+use PhpMyAdmin\Response;
 
 $_GET['ajax_request'] = 'true';
 
-require_once ROOT_PATH . 'libraries/common.inc.php';
+require_once 'libraries/common.inc.php';
 
 // Disabling standard response.
 Response::getInstance()->disable();
@@ -29,7 +24,7 @@ $versionInformation = new VersionInformation();
 $versionDetails = $versionInformation->getLatestVersion();
 
 if (empty($versionDetails)) {
-    echo json_encode([]);
+    echo json_encode(array());
 } else {
     $latestCompatible = $versionInformation->getLatestCompatibleVersion(
         $versionDetails->releases
@@ -41,9 +36,9 @@ if (empty($versionDetails)) {
         $date = $latestCompatible['date'];
     }
     echo json_encode(
-        [
-            'version' => ! empty($version) ? $version : '',
-            'date' => ! empty($date) ? $date : '',
-        ]
+        array(
+            'version' => (! empty($version) ? $version : ''),
+            'date' => (! empty($date) ? $date : ''),
+        )
     );
 }

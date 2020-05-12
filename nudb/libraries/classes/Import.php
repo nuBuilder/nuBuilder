@@ -1,12 +1,10 @@
 <?php
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
- * Holds the PhpMyAdmin\Import class
+ * Library that provides common import functions that are used by import plugins
  *
  * @package PhpMyAdmin-Import
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin;
 
 use PhpMyAdmin\Encoding;
@@ -23,42 +21,37 @@ use PhpMyAdmin\Url;
 use PhpMyAdmin\Util;
 
 /**
- * Library that provides common import functions that are used by import plugins
+ * We need to know something about user
+ */
+$GLOBALS['cfg']['Server']['DisableIS'] = false;
+require_once './libraries/check_user_privileges.inc.php';
+
+/**
+ * PhpMyAdmin\Import class
  *
  * @package PhpMyAdmin
  */
 class Import
 {
     /* MySQL type defs */
-    public const NONE = 0;
-    public const VARCHAR = 1;
-    public const INT = 2;
-    public const DECIMAL = 3;
-    public const BIGINT = 4;
-    public const GEOMETRY = 5;
+    const NONE = 0;
+    const VARCHAR = 1;
+    const INT = 2;
+    const DECIMAL = 3;
+    const BIGINT = 4;
+    const GEOMETRY = 5;
     /* Decimal size defs */
-    public const M = 0;
-    public const D = 1;
-    public const FULL = 2;
+    const M = 0;
+    const D = 1;
+    const FULL = 2;
     /* Table array defs */
-    public const TBL_NAME = 0;
-    public const COL_NAMES = 1;
-    public const ROWS = 2;
+    const TBL_NAME = 0;
+    const COL_NAMES = 1;
+    const ROWS = 2;
     /* Analysis array defs */
-    public const TYPES = 0;
-    public const SIZES = 1;
-    public const FORMATTEDSQL = 2;
-
-    /**
-     * Import constructor.
-     */
-    public function __construct()
-    {
-        $GLOBALS['cfg']['Server']['DisableIS'] = false;
-
-        $checkUserPrivileges = new CheckUserPrivileges($GLOBALS['dbi']);
-        $checkUserPrivileges->getPrivileges();
-    }
+    const TYPES = 0;
+    const SIZES = 1;
+    const FORMATTEDSQL = 2;
 
     /**
      * Checks whether timeout is getting close
@@ -66,7 +59,7 @@ class Import
      * @return boolean true if timeout is close
      * @access public
      */
-    public function checkTimeout(): bool
+    public static function checkTimeout()
     {
         global $timestamp, $maximum_time, $timeout_passed;
         if ($maximum_time == 0) {
@@ -86,16 +79,17 @@ class Import
      * Runs query inside import buffer. This is needed to allow displaying
      * of last SELECT, SHOW or HANDLER results and similar nice stuff.
      *
-     * @param string $sql      query to run
-     * @param string $full     query to display, this might be commented
-     * @param array  $sql_data SQL parse data storage
+     * @param string $sql       query to run
+     * @param string $full      query to display, this might be commented
+     * @param array  &$sql_data SQL parse data storage
      *
      * @return void
      * @access public
      */
-    public function executeQuery(string $sql, string $full, array &$sql_data): void
+    public static function executeQuery($sql, $full, array &$sql_data)
     {
-        global $sql_query, $my_die, $error, $reload,
+        global $go_sql,
+            $sql_query, $my_die, $error, $reload,
             $result, $msg,
             $cfg, $sql_query_disabled, $db;
 
@@ -108,12 +102,12 @@ class Import
         $msg = '# ';
         if ($result === false) { // execution failed
             if (! isset($my_die)) {
-                $my_die = [];
+                $my_die = array();
             }
-            $my_die[] = [
+            $my_die[] = array(
                 'sql' => $full,
-                'error' => $GLOBALS['dbi']->getError(),
-            ];
+                'error' => $GLOBALS['dbi']->getError()
+            );
 
             $msg .= __('Error');
 
@@ -122,8 +116,8 @@ class Import
                 return;
             }
         } else {
-            $a_num_rows = (int) @$GLOBALS['dbi']->numRows($result);
-            $a_aff_rows = (int) @$GLOBALS['dbi']->affectedRows();
+            $a_num_rows = (int)@$GLOBALS['dbi']->numRows($result);
+            $a_aff_rows = (int)@$GLOBALS['dbi']->affectedRows();
             if ($a_num_rows > 0) {
                 $msg .= __('Rows') . ': ' . $a_num_rows;
             } elseif ($a_aff_rows > 0) {
@@ -140,7 +134,7 @@ class Import
 
             if (($a_num_rows > 0) || $is_use_query) {
                 $sql_data['valid_sql'][] = $sql;
-                if (! isset($sql_data['valid_queries'])) {
+                if (!isset($sql_data['valid_queries'])) {
                     $sql_data['valid_queries'] = 0;
                 }
                 $sql_data['valid_queries']++;
@@ -153,7 +147,7 @@ class Import
         // If a 'USE <db>' SQL-clause was found and the query
         // succeeded, set our current $db to the new one
         if ($result != false) {
-            list($db, $reload) = $this->lookForUse(
+            list($db, $reload) = self::lookForUse(
                 $sql,
                 $db,
                 $reload
@@ -173,27 +167,24 @@ class Import
      * Runs query inside import buffer. This is needed to allow displaying
      * of last SELECT, SHOW or HANDLER results and similar nice stuff.
      *
-     * @param string $sql      query to run
-     * @param string $full     query to display, this might be commented
-     * @param array  $sql_data SQL parse data storage
+     * @param string $sql       query to run
+     * @param string $full      query to display, this might be commented
+     * @param array  &$sql_data SQL parse data storage
      *
      * @return void
      * @access public
      */
-    public function runQuery(
-        string $sql = '',
-        string $full = '',
-        array &$sql_data = []
-    ): void {
-        global $import_run_buffer, $go_sql, $complete_query, $display_query, $sql_query, $msg,
-            $skip_queries, $executed_queries, $max_sql_len, $read_multiply, $sql_query_disabled, $run_query;
+    public static function runQuery($sql = '', $full = '', array &$sql_data = array())
+    {
+        global $import_run_buffer, $go_sql, $complete_query, $display_query,
+            $sql_query, $error, $reload, $result, $msg,
+            $skip_queries, $executed_queries, $max_sql_len, $read_multiply,
+            $cfg, $sql_query_disabled, $db, $run_query;
         $read_multiply = 1;
-        if (! isset($import_run_buffer)) {
+        if (!isset($import_run_buffer)) {
             // Do we have something to push into buffer?
-            $import_run_buffer = $this->runQueryPost(
-                $import_run_buffer,
-                $sql,
-                $full
+            $import_run_buffer = self::runQueryPost(
+                $import_run_buffer, $sql, $full
             );
             return;
         }
@@ -202,10 +193,8 @@ class Import
         if ($skip_queries > 0) {
             $skip_queries--;
             // Do we have something to push into buffer?
-            $import_run_buffer = $this->runQueryPost(
-                $import_run_buffer,
-                $sql,
-                $full
+            $import_run_buffer = self::runQueryPost(
+                $import_run_buffer, $sql, $full
             );
             return;
         }
@@ -241,6 +230,7 @@ class Import
                 }
                 $sql_data['valid_queries']++;
             } elseif ($run_query) {
+
                 /* Handle rollback from go_sql */
                 if ($go_sql && isset($sql_data['valid_full'])) {
                     $queries = $sql_data['valid_sql'];
@@ -248,11 +238,11 @@ class Import
                     $count = $sql_data['valid_queries'];
                     $go_sql = false;
 
-                    $sql_data['valid_sql'] = [];
+                    $sql_data['valid_sql'] = array();
                     $sql_data['valid_queries'] = 0;
                     unset($sql_data['valid_full']);
                     for ($i = 0; $i < $count; $i++) {
-                        $this->executeQuery(
+                        self::executeQuery(
                             $queries[$i],
                             $fulls[$i],
                             $sql_data
@@ -260,7 +250,7 @@ class Import
                     }
                 }
 
-                $this->executeQuery(
+                self::executeQuery(
                     $import_run_buffer['sql'],
                     $import_run_buffer['full'],
                     $sql_data
@@ -271,28 +261,32 @@ class Import
             if ($go_sql) {
                 $complete_query .= $import_run_buffer['full'];
                 $display_query .= $import_run_buffer['full'];
-            } elseif (! $sql_query_disabled) {
-                $sql_query .= $import_run_buffer['full'];
+            } else {
+                if (! $sql_query_disabled) {
+                    $sql_query .= $import_run_buffer['full'];
+                }
             }
         }
         // check length of query unless we decided to pass it to sql.php
         // (if $run_query is false, we are just displaying so show
         // the complete query in the textarea)
-        if (! $go_sql && $run_query && ! empty($sql_query)) {
-            if (mb_strlen($sql_query) > 50000
-                || $executed_queries > 50
-                || $max_sql_len > 1000
-            ) {
-                $sql_query = '';
-                $sql_query_disabled = true;
+        if (! $go_sql && $run_query) {
+            if (! empty($sql_query)) {
+                if (mb_strlen($sql_query) > 50000
+                    || $executed_queries > 50
+                    || $max_sql_len > 1000
+                ) {
+                    $sql_query = '';
+                    $sql_query_disabled = true;
+                }
             }
         }
 
         // Do we have something to push into buffer?
-        $import_run_buffer = $this->runQueryPost($import_run_buffer, $sql, $full);
+        $import_run_buffer = self::runQueryPost($import_run_buffer, $sql, $full);
 
         // In case of ROLLBACK, notify the user.
-        if (isset($_POST['rollback_query'])) {
+        if (isset($_REQUEST['rollback_query'])) {
             $msg .= __('[ROLLBACK occurred.]');
         }
     }
@@ -306,16 +300,10 @@ class Import
      *
      * @return array Buffer of queries for import
      */
-    public function runQueryPost(
-        ?array $import_run_buffer,
-        string $sql,
-        string $full
-    ): ?array {
-        if (! empty($sql) || ! empty($full)) {
-            $import_run_buffer = [
-                'sql' => $sql,
-                'full' => $full,
-            ];
+    public static function runQueryPost($import_run_buffer, $sql, $full)
+    {
+        if (!empty($sql) || !empty($full)) {
+            $import_run_buffer = array('sql' => $sql, 'full' => $full);
             return $import_run_buffer;
         }
 
@@ -333,23 +321,20 @@ class Import
      * @return array (current or new db, whether to reload)
      * @access public
      */
-    public function lookForUse(?string $buffer, ?string $db, ?bool $reload): array
+    public static function lookForUse($buffer, $db, $reload)
     {
-        if (preg_match('@^[\s]*USE[[:space:]]+([\S]+)@i', (string) $buffer, $match)) {
+        if (preg_match('@^[\s]*USE[[:space:]]+([\S]+)@i', $buffer, $match)) {
             $db = trim($match[1]);
             $db = trim($db, ';'); // for example, USE abc;
 
             // $db must not contain the escape characters generated by backquote()
-            // ( used in buildSql() as: backquote($db_name), and then called
-            // in runQuery() which in turn calls lookForUse() )
+            // ( used in self::buildSql() as: backquote($db_name), and then called
+            // in self::runQuery() which in turn calls self::lookForUse() )
             $db = Util::unQuote($db);
 
             $reload = true;
         }
-        return [
-            $db,
-            $reload,
-        ];
+        return(array($db, $reload));
     }
 
 
@@ -359,12 +344,12 @@ class Import
      * @param int $size size of buffer to read
      *                  (this is maximal size function will return)
      *
-     * @return string|bool part of file/buffer
+     * @return string part of file/buffer
      * @access public
      */
-    public function getNextChunk(int $size = 32768)
+    public static function getNextChunk($size = 32768)
     {
-        global $import_handle, $charset_conversion, $charset_of_file,
+        global $compression, $import_handle, $charset_conversion, $charset_of_file,
             $read_multiply;
 
         // Add some progression while reading large amount of data
@@ -380,7 +365,7 @@ class Import
             $size = $GLOBALS['read_limit'];
         }
 
-        if ($this->checkTimeout()) {
+        if (self::checkTimeout()) {
             return false;
         }
         if ($GLOBALS['finished']) {
@@ -455,14 +440,14 @@ class Import
      * @return string The column's "Excel" name
      * @access  public
      */
-    public function getColumnAlphaName(int $num): string
+    public static function getColumnAlphaName($num)
     {
         $A = 65; // ASCII value for capital "A"
         $col_name = "";
 
         if ($num > 26) {
-            $div = (int) ($num / 26);
-            $remain = $num % 26;
+            $div = (int)($num / 26);
+            $remain = (int)($num % 26);
 
             // subtract 1 of divided value in case the modulus is 0,
             // this is necessary because A-Z has no 'zero'
@@ -471,7 +456,7 @@ class Import
             }
 
             // recursive function call
-            $col_name = $this->getColumnAlphaName($div);
+            $col_name = self::getColumnAlphaName($div);
             // use modulus as new column number
             $num = $remain;
         }
@@ -502,7 +487,7 @@ class Import
      * @return int The column number
      * @access  public
      */
-    public function getColumnNumberFromName(string $name): int
+    public static function getColumnNumberFromName($name)
     {
         if (empty($name)) {
             return 0;
@@ -519,7 +504,7 @@ class Import
             // and subtract 64 to get corresponding decimal value
             // ASCII value of "A" is 65, "B" is 66, etc.
             // Decimal equivalent of "A" is 1, "B" is 2, etc.
-            $number = (int) (mb_ord($name[$char_pos]) - 64);
+            $number = (int)(mb_ord($name[$char_pos]) - 64);
 
             // base26 to base10 conversion : multiply each number
             // with corresponding value of the position, in this case
@@ -537,9 +522,9 @@ class Import
      * @return int Precision of the given decimal size notation
      * @access  public
      */
-    public function getDecimalPrecision(string $last_cumulative_size): int
+    public static function getDecimalPrecision($last_cumulative_size)
     {
-        return (int) substr(
+        return (int)substr(
             $last_cumulative_size,
             0,
             strpos($last_cumulative_size, ",")
@@ -555,12 +540,12 @@ class Import
      * @return int Scale of the given decimal size notation
      * @access  public
      */
-    public function getDecimalScale(string $last_cumulative_size): int
+    public static function getDecimalScale($last_cumulative_size)
     {
-        return (int) substr(
+        return (int)substr(
             $last_cumulative_size,
-            strpos($last_cumulative_size, ",") + 1,
-            strlen($last_cumulative_size) - strpos($last_cumulative_size, ",")
+            (strpos($last_cumulative_size, ",") + 1),
+            (strlen($last_cumulative_size) - strpos($last_cumulative_size, ","))
         );
     }
 
@@ -573,44 +558,37 @@ class Import
      *                representation of the given decimal cell
      * @access  public
      */
-    public function getDecimalSize(string $cell): array
+    public static function getDecimalSize($cell)
     {
-        $curr_size = mb_strlen($cell);
+        $curr_size = mb_strlen((string)$cell);
         $decPos = mb_strpos($cell, ".");
         $decPrecision = ($curr_size - 1) - $decPos;
 
         $m = $curr_size - 1;
         $d = $decPrecision;
 
-        return [
-            $m,
-            $d,
-            $m . "," . $d,
-        ];
+        return array($m, $d, ($m . "," . $d));
     }
 
     /**
      * Obtains the size of the given cell
      *
-     * @param string|int $last_cumulative_size Last cumulative column size
-     * @param int        $last_cumulative_type Last cumulative column type
-     *                                         (NONE or VARCHAR or DECIMAL or INT or BIGINT)
-     * @param int        $curr_type            Type of the current cell
-     *                                         (NONE or VARCHAR or DECIMAL or INT or BIGINT)
-     * @param string     $cell                 The current cell
+     * @param string $last_cumulative_size Last cumulative column size
+     * @param int    $last_cumulative_type Last cumulative column type
+     *                                     (NONE or VARCHAR or DECIMAL or INT or BIGINT)
+     * @param int    $curr_type            Type of the current cell
+     *                                     (NONE or VARCHAR or DECIMAL or INT or BIGINT)
+     * @param string $cell                 The current cell
      *
-     * @return string|int Size of the given cell in the type-appropriate format
+     * @return string  Size of the given cell in the type-appropriate format
      * @access  public
      *
      * @todo    Handle the error cases more elegantly
      */
-    public function detectSize(
-        $last_cumulative_size,
-        int $last_cumulative_type,
-        int $curr_type,
-        string $cell
+    public static function detectSize($last_cumulative_size, $last_cumulative_type,
+        $curr_type, $cell
     ) {
-        $curr_size = mb_strlen($cell);
+        $curr_size = mb_strlen((string)$cell);
 
         /**
          * If the cell is NULL, don't treat it as a varchar
@@ -634,7 +612,7 @@ class Import
                 /**
                  * The last cumulative type was DECIMAL
                  */
-                $oldM = $this->getDecimalPrecision($last_cumulative_size);
+                $oldM = self::getDecimalPrecision($last_cumulative_size);
 
                 if ($curr_size >= $oldM) {
                     return $curr_size;
@@ -674,7 +652,7 @@ class Import
              */
             if ($last_cumulative_type == self::VARCHAR) {
                 /* Convert $last_cumulative_size from varchar to decimal format */
-                $size = $this->getDecimalSize($cell);
+                $size = self::getDecimalSize($cell);
 
                 if ($size[self::M] >= $last_cumulative_size) {
                     return $size[self::M];
@@ -685,10 +663,10 @@ class Import
                 /**
                  * The last cumulative type was DECIMAL
                  */
-                $size = $this->getDecimalSize($cell);
+                $size = self::getDecimalSize($cell);
 
-                $oldM = $this->getDecimalPrecision($last_cumulative_size);
-                $oldD = $this->getDecimalScale($last_cumulative_size);
+                $oldM = self::getDecimalPrecision($last_cumulative_size);
+                $oldD = self::getDecimalScale($last_cumulative_size);
 
                 /* New val if M or D is greater than current largest */
                 if ($size[self::M] > $oldM || $size[self::D] > $oldD) {
@@ -703,7 +681,7 @@ class Import
                  * The last cumulative type was BIGINT or INT
                  */
                 /* Convert $last_cumulative_size from int to decimal format */
-                $size = $this->getDecimalSize($cell);
+                $size = self::getDecimalSize($cell);
 
                 if ($size[self::M] >= $last_cumulative_size) {
                     return $size[self::FULL];
@@ -715,7 +693,7 @@ class Import
                  * This is the first row to be analyzed
                  */
                 /* First row of the column */
-                $size = $this->getDecimalSize($cell);
+                $size = self::getDecimalSize($cell);
 
                 return $size[self::FULL];
             }
@@ -745,10 +723,10 @@ class Import
                 /**
                  * The last cumulative type was DECIMAL
                  */
-                $oldM = $this->getDecimalPrecision($last_cumulative_size);
-                $oldD = $this->getDecimalScale($last_cumulative_size);
+                $oldM = self::getDecimalPrecision($last_cumulative_size);
+                $oldD = self::getDecimalScale($last_cumulative_size);
                 $oldInt = $oldM - $oldD;
-                $newInt = mb_strlen((string) $cell);
+                $newInt = mb_strlen((string)$cell);
 
                 /* See which has the larger integer length */
                 if ($oldInt >= $newInt) {
@@ -806,14 +784,14 @@ class Import
      *               (VARCHAR or INT or BIGINT or DECIMAL or NONE)
      * @access  public
      */
-    public function detectType(?int $last_cumulative_type, ?string $cell): int
+    public static function detectType($last_cumulative_type, $cell)
     {
         /**
          * If numeric, determine if decimal, int or bigint
          * Else, we call it varchar for simplicity
          */
 
-        if (! strcmp('NULL', (string) $cell)) {
+        if (! strcmp('NULL', $cell)) {
             if ($last_cumulative_type === null || $last_cumulative_type == self::NONE) {
                 return self::NONE;
             }
@@ -821,23 +799,19 @@ class Import
             return $last_cumulative_type;
         }
 
-        if (! is_numeric($cell)) {
+        if (!is_numeric($cell)) {
             return self::VARCHAR;
         }
 
-        if ($cell == (string) (float) $cell
+        if ($cell == (string)(float)$cell
             && mb_strpos($cell, ".") !== false
-            && mb_substr_count($cell, ".") === 1
+            && mb_substr_count($cell, ".") == 1
         ) {
             return self::DECIMAL;
         }
 
-        if (abs((int) $cell) > 2147483647) {
+        if (abs($cell) > 2147483647) {
             return self::BIGINT;
-        }
-
-        if ($cell !== (string) (int) $cell) {
-            return self::VARCHAR;
         }
 
         return self::INT;
@@ -846,24 +820,24 @@ class Import
     /**
      * Determines if the column types are int, decimal, or string
      *
-     * @param array $table array(string $table_name, array $col_names, array $rows)
+     * @param array &$table array(string $table_name, array $col_names, array $rows)
      *
-     * @return array|bool array(array $types, array $sizes)
+     * @return array    array(array $types, array $sizes)
      * @access  public
      *
      * @link https://wiki.phpmyadmin.net/pma/Import
      *
      * @todo    Handle the error case more elegantly
      */
-    public function analyzeTable(array &$table)
+    public static function analyzeTable(array &$table)
     {
         /* Get number of rows in table */
         $numRows = count($table[self::ROWS]);
         /* Get number of columns */
         $numCols = count($table[self::COL_NAMES]);
         /* Current type for each column */
-        $types = [];
-        $sizes = [];
+        $types = array();
+        $sizes = array();
 
         /* Initialize $sizes to all 0's */
         for ($i = 0; $i < $numCols; ++$i) {
@@ -876,10 +850,10 @@ class Import
         }
 
         /* If the passed array is not of the correct form, do not process it */
-        if (! is_array($table)
+        if (!is_array($table)
             || is_array($table[self::TBL_NAME])
-            || ! is_array($table[self::COL_NAMES])
-            || ! is_array($table[self::ROWS])
+            || !is_array($table[self::COL_NAMES])
+            || !is_array($table[self::ROWS])
         ) {
             /**
              * TODO: Handle this better
@@ -893,13 +867,13 @@ class Import
             /* Analyze the column in each row */
             for ($j = 0; $j < $numRows; ++$j) {
                 /* Determine type of the current cell */
-                $curr_type = $this->detectType($types[$i], $table[self::ROWS][$j][$i]);
+                $curr_type = self::detectType($types[$i], $table[self::ROWS][$j][$i]);
                 /* Determine size of the current cell */
-                $sizes[$i] = $this->detectSize(
+                $sizes[$i] = self::detectSize(
                     $sizes[$i],
                     $types[$i],
                     $curr_type,
-                    (string) $table[self::ROWS][$j][$i]
+                    $table[self::ROWS][$j][$i]
                 );
 
                 /**
@@ -932,53 +906,45 @@ class Import
         /* Check to ensure that all types are valid */
         $len = count($types);
         for ($n = 0; $n < $len; ++$n) {
-            if (! strcmp((string) self::NONE, (string) $types[$n])) {
+            if (! strcmp(self::NONE, $types[$n])) {
                 $types[$n] = self::VARCHAR;
                 $sizes[$n] = '10';
             }
         }
 
-        return [
-            $types,
-            $sizes,
-        ];
+        return array($types, $sizes);
     }
 
     /**
      * Builds and executes SQL statements to create the database and tables
      * as necessary, as well as insert all the data.
      *
-     * @param string     $db_name        Name of the database
-     * @param array      $tables         Array of tables for the specified database
-     * @param array|null $analyses       Analyses of the tables
-     * @param array|null $additional_sql Additional SQL statements to be executed
-     * @param array|null $options        Associative array of options
-     * @param array      $sql_data       2-element array with sql data
+     * @param string     $db_name         Name of the database
+     * @param array      &$tables         Array of tables for the specified database
+     * @param array|null &$analyses       Analyses of the tables
+     * @param array|null &$additional_sql Additional SQL statements to be executed
+     * @param array|null $options         Associative array of options
+     * @param array      &$sql_data       2-element array with sql data
      *
      * @return void
      * @access  public
      *
      * @link https://wiki.phpmyadmin.net/pma/Import
      */
-    public function buildSql(
-        string $db_name,
-        array &$tables,
-        ?array &$analyses = null,
-        ?array &$additional_sql = null,
-        ?array $options = null,
-        array &$sql_data
-    ): void {
+    public static function buildSql($db_name, array &$tables, &$analyses = null,
+        &$additional_sql = null, $options = null, array &$sql_data
+    ) {
         /* Needed to quell the beast that is Message */
         $import_notice = null;
 
         /* Take care of the options */
-        if (isset($options['db_collation']) && $options['db_collation'] !== null) {
+        if (isset($options['db_collation'])&& ! is_null($options['db_collation'])) {
             $collation = $options['db_collation'];
         } else {
             $collation = "utf8_general_ci";
         }
 
-        if (isset($options['db_charset']) && $options['db_charset'] !== null) {
+        if (isset($options['db_charset']) && ! is_null($options['db_charset'])) {
             $charset = $options['db_charset'];
         } else {
             $charset = "utf8";
@@ -991,7 +957,7 @@ class Import
         }
 
         /* Create SQL code to handle the database */
-        $sql = [];
+        $sql = array();
 
         if ($create_db) {
             $sql[] = "CREATE DATABASE IF NOT EXISTS " . Util::backquote($db_name)
@@ -1009,7 +975,7 @@ class Import
         /* Execute the SQL statements create above */
         $sql_len = count($sql);
         for ($i = 0; $i < $sql_len; ++$i) {
-            $this->runQuery($sql[$i], $sql[$i], $sql_data);
+            self::runQuery($sql[$i], $sql[$i], $sql_data);
         }
 
         /* No longer needed */
@@ -1044,23 +1010,23 @@ class Import
                     $additional_sql[$i]
                 );
                 /* Execute the resulting statements */
-                $this->runQuery($additional_sql[$i], $additional_sql[$i], $sql_data);
+                self::runQuery($additional_sql[$i], $additional_sql[$i], $sql_data);
             }
         }
 
         if ($analyses != null) {
-            $type_array = [
+            $type_array = array(
                 self::NONE => "NULL",
                 self::VARCHAR => "varchar",
                 self::INT => "int",
                 self::DECIMAL => "decimal",
                 self::BIGINT => "bigint",
-                self::GEOMETRY => 'geometry',
-            ];
+                self::GEOMETRY => 'geometry'
+            );
 
             /* TODO: Do more checking here to make sure they really are matched */
             if (count($tables) != count($analyses)) {
-                exit;
+                exit();
             }
 
             /* Create SQL code to create the tables */
@@ -1072,7 +1038,7 @@ class Import
                 . '.' . Util::backquote($tables[$i][self::TBL_NAME]) . " (";
                 for ($j = 0; $j < $num_cols; ++$j) {
                     $size = $analyses[$i][self::SIZES][$j];
-                    if ((int) $size == 0) {
+                    if ((int)$size == 0) {
                         $size = 10;
                     }
 
@@ -1096,7 +1062,7 @@ class Import
                  * after it is formed so that we don't have
                  * to store them in a (possibly large) buffer
                  */
-                $this->runQuery($tempSQLStr, $tempSQLStr, $sql_data);
+                self::runQuery($tempSQLStr, $tempSQLStr, $sql_data);
             }
         }
 
@@ -1144,15 +1110,15 @@ class Import
                         }
 
                         /* Don't put quotes around NULL fields */
-                        if (! strcmp((string) $tables[$i][self::ROWS][$j][$k], 'NULL')) {
+                        if (! strcmp($tables[$i][self::ROWS][$j][$k], 'NULL')) {
                             $is_varchar = false;
                         }
 
-                        $tempSQLStr .= $is_varchar ? "'" : "";
+                        $tempSQLStr .= (($is_varchar) ? "'" : "");
                         $tempSQLStr .= $GLOBALS['dbi']->escapeString(
                             (string) $tables[$i][self::ROWS][$j][$k]
                         );
-                        $tempSQLStr .= $is_varchar ? "'" : "";
+                        $tempSQLStr .= (($is_varchar) ? "'" : "");
                     }
 
                     if ($k != ($num_cols - 1)) {
@@ -1187,7 +1153,7 @@ class Import
              * after it is formed so that we don't have
              * to store them in a (possibly large) buffer
              */
-            $this->runQuery($tempSQLStr, $tempSQLStr, $sql_data);
+            self::runQuery($tempSQLStr, $tempSQLStr, $sql_data);
         }
 
         /* No longer needed */
@@ -1204,15 +1170,15 @@ class Import
         $table_pattern = '@CREATE TABLE IF NOT EXISTS `([^`]+)`@';
         /* Check a third pattern to make sure its not a "USE `db_name`;" statement */
 
-        $regs = [];
+        $regs = array();
 
         $inTables = false;
 
-        $additional_sql_len = $additional_sql === null ? 0 : count($additional_sql);
+        $additional_sql_len = is_null($additional_sql) ? 0 : count($additional_sql);
         for ($i = 0; $i < $additional_sql_len; ++$i) {
             preg_match($view_pattern, $additional_sql[$i], $regs);
 
-            if (count($regs) === 0) {
+            if (count($regs) == 0) {
                 preg_match($table_pattern, $additional_sql[$i], $regs);
             }
 
@@ -1225,23 +1191,23 @@ class Import
                 }
 
                 if (! $inTables) {
-                    $tables[] = [self::TBL_NAME => $regs[1]];
+                    $tables[] = array(self::TBL_NAME => $regs[1]);
                 }
             }
 
             /* Reset the array */
-            $regs = [];
+            $regs = array();
             $inTables = false;
         }
 
-        $params = ['db' => $db_name];
+        $params = array('db' => (string)$db_name);
         $db_url = 'db_structure.php' . Url::getCommon($params);
         $db_ops_url = 'db_operations.php' . Url::getCommon($params);
 
-        $message = '<br><br>';
+        $message = '<br /><br />';
         $message .= '<strong>' . __(
             'The following structures have either been created or altered. Here you can:'
-        ) . '</strong><br>';
+        ) . '</strong><br />';
         $message .= '<ul><li>' . __(
             "View a structure's contents by clicking on its name."
         ) . '</li>';
@@ -1251,7 +1217,7 @@ class Import
         $message .= '<li>' . __('Edit structure by following the "Structure" link.')
             . '</li>';
         $message .= sprintf(
-            '<br><li><a href="%s" title="%s">%s</a> (<a href="%s" title="%s">'
+            '<br /><li><a href="%s" title="%s">%s</a> (<a href="%s" title="%s">'
             . __('Options') . '</a>)</li>',
             $db_url,
             sprintf(
@@ -1270,18 +1236,19 @@ class Import
 
         unset($params);
 
-        foreach ($tables as $table) {
-            $params = [
-                'db' => $db_name,
-                'table' => (string) $table[self::TBL_NAME],
-            ];
+        $num_tables = count($tables);
+        for ($i = 0; $i < $num_tables; ++$i) {
+            $params = array(
+                 'db' => (string) $db_name,
+                 'table' => (string) $tables[$i][self::TBL_NAME]
+            );
             $tbl_url = 'sql.php' . Url::getCommon($params);
             $tbl_struct_url = 'tbl_structure.php' . Url::getCommon($params);
             $tbl_ops_url = 'tbl_operations.php' . Url::getCommon($params);
 
             unset($params);
 
-            $_table = new Table($table[self::TBL_NAME], $db_name);
+            $_table = new Table($tables[$i][self::TBL_NAME], $db_name);
             if (! $_table->isView()) {
                 $message .= sprintf(
                     '<li><a href="%s" title="%s">%s</a> (<a href="%s" title="%s">' . __(
@@ -1291,22 +1258,22 @@ class Import
                     sprintf(
                         __('Go to table: %s'),
                         htmlspecialchars(
-                            Util::backquote($table[self::TBL_NAME])
+                            Util::backquote($tables[$i][self::TBL_NAME])
                         )
                     ),
-                    htmlspecialchars($table[self::TBL_NAME]),
+                    htmlspecialchars($tables[$i][self::TBL_NAME]),
                     $tbl_struct_url,
                     sprintf(
                         __('Structure of %s'),
                         htmlspecialchars(
-                            Util::backquote($table[self::TBL_NAME])
+                            Util::backquote($tables[$i][self::TBL_NAME])
                         )
                     ),
                     $tbl_ops_url,
                     sprintf(
                         __('Edit settings for %s'),
                         htmlspecialchars(
-                            Util::backquote($table[self::TBL_NAME])
+                            Util::backquote($tables[$i][self::TBL_NAME])
                         )
                     )
                 );
@@ -1317,10 +1284,10 @@ class Import
                     sprintf(
                         __('Go to view: %s'),
                         htmlspecialchars(
-                            Util::backquote($table[self::TBL_NAME])
+                            Util::backquote($tables[$i][self::TBL_NAME])
                         )
                     ),
-                    htmlspecialchars($table[self::TBL_NAME])
+                    htmlspecialchars($tables[$i][self::TBL_NAME])
                 );
             }
         }
@@ -1329,6 +1296,8 @@ class Import
 
         global $import_notice;
         $import_notice = $message;
+
+        unset($tables);
     }
 
 
@@ -1341,7 +1310,7 @@ class Import
      * @access  public
      *
      */
-    public function stop(Message $error_message): void
+    public static function stop(Message $error_message)
     {
         global $import_handle, $file_to_unlink;
 
@@ -1369,13 +1338,13 @@ class Import
      *
      * @return void
      */
-    public function handleSimulateDmlRequest(): void
+    public static function handleSimulateDmlRequest()
     {
         $response = Response::getInstance();
         $error = false;
         $error_msg = __('Only single-table UPDATE and DELETE queries can be simulated.');
-        $sql_delimiter = $_POST['sql_delimiter'];
-        $sql_data = [];
+        $sql_delimiter = $_REQUEST['sql_delimiter'];
+        $sql_data = array();
         $queries = explode($sql_delimiter, $GLOBALS['sql_query']);
         foreach ($queries as $sql_query) {
             if (empty($sql_query)) {
@@ -1391,15 +1360,15 @@ class Import
 
             $statement = $parser->statements[0];
 
-            $analyzed_sql_results = [
+            $analyzed_sql_results = array(
                 'query' => $sql_query,
                 'parser' => $parser,
                 'statement' => $statement,
-            ];
+            );
 
-            if ((! (($statement instanceof UpdateStatement)
+            if ((!(($statement instanceof UpdateStatement)
                 || ($statement instanceof DeleteStatement)))
-                || ! empty($statement->join)
+                || (!empty($statement->join))
             ) {
                 $error = $error_msg;
                 break;
@@ -1412,7 +1381,7 @@ class Import
             }
 
             // Get the matched rows for the query.
-            $result = $this->getMatchedRows($analyzed_sql_results);
+            $result = self::getMatchedRows($analyzed_sql_results);
             if (! $error = $GLOBALS['dbi']->getError()) {
                 $sql_data[] = $result;
             } else {
@@ -1434,34 +1403,34 @@ class Import
      *
      * @param array $analyzed_sql_results Analyzed SQL results from parser.
      *
-     * @return array
+     * @return mixed
      */
-    public function getMatchedRows(array $analyzed_sql_results = []): array
+    public static function getMatchedRows(array $analyzed_sql_results = array())
     {
         $statement = $analyzed_sql_results['statement'];
 
         $matched_row_query = '';
         if ($statement instanceof DeleteStatement) {
-            $matched_row_query = $this->getSimulatedDeleteQuery($analyzed_sql_results);
+            $matched_row_query = self::getSimulatedDeleteQuery($analyzed_sql_results);
         } elseif ($statement instanceof UpdateStatement) {
-            $matched_row_query = $this->getSimulatedUpdateQuery($analyzed_sql_results);
+            $matched_row_query = self::getSimulatedUpdateQuery($analyzed_sql_results);
         }
 
         // Execute the query and get the number of matched rows.
-        $matched_rows = $this->executeMatchedRowQuery($matched_row_query);
+        $matched_rows = self::executeMatchedRowQuery($matched_row_query);
 
         // URL to matched rows.
-        $_url_params = [
+        $_url_params = array(
             'db'        => $GLOBALS['db'],
-            'sql_query' => $matched_row_query,
-        ];
+            'sql_query' => $matched_row_query
+        );
         $matched_rows_url  = 'sql.php' . Url::getCommon($_url_params);
 
-        return [
+        return array(
             'sql_query' => Util::formatSql($analyzed_sql_results['query']),
             'matched_rows' => $matched_rows,
-            'matched_rows_url' => $matched_rows_url,
-        ];
+            'matched_rows_url' => $matched_rows_url
+        );
     }
 
     /**
@@ -1471,7 +1440,7 @@ class Import
      *
      * @return string SQL query
      */
-    public function getSimulatedUpdateQuery(array $analyzed_sql_results): string
+    public static function getSimulatedUpdateQuery(array $analyzed_sql_results)
     {
         $table_references = Query::getTables(
             $analyzed_sql_results['statement']
@@ -1487,23 +1456,23 @@ class Import
             $where = '1';
         }
 
-        $columns = [];
-        $diff = [];
+        $columns = array();
+        $diff = array();
         foreach ($analyzed_sql_results['statement']->set as $set) {
             $columns[] = $set->column;
             $not_equal_operator = ' <> ';
-            if (strtoupper($set->value) == 'NULL') {
+            if(strtoupper($set->value) == 'NULL'){
                 $not_equal_operator = ' IS NOT ';
             }
             $diff[] = $set->column . $not_equal_operator . $set->value;
         }
-        if (! empty($diff)) {
+        if (!empty($diff)) {
             $where .= ' AND (' . implode(' OR ', $diff) . ')';
         }
 
         $order_and_limit = '';
 
-        if (! empty($analyzed_sql_results['statement']->order)) {
+        if (!empty($analyzed_sql_results['statement']->order)) {
             $order_and_limit .= ' ORDER BY ' . Query::getClause(
                 $analyzed_sql_results['statement'],
                 $analyzed_sql_results['parser']->list,
@@ -1511,7 +1480,7 @@ class Import
             );
         }
 
-        if (! empty($analyzed_sql_results['statement']->limit)) {
+        if (!empty($analyzed_sql_results['statement']->limit)) {
             $order_and_limit .= ' LIMIT ' . Query::getClause(
                 $analyzed_sql_results['statement'],
                 $analyzed_sql_results['parser']->list,
@@ -1519,7 +1488,7 @@ class Import
             );
         }
 
-        return 'SELECT ' . implode(', ', $columns) .
+        return 'SELECT '  . implode(', ', $columns) .
             ' FROM ' . implode(', ', $table_references) .
             ' WHERE ' . $where . $order_and_limit;
     }
@@ -1531,7 +1500,7 @@ class Import
      *
      * @return string SQL query
      */
-    public function getSimulatedDeleteQuery(array $analyzed_sql_results): string
+    public static function getSimulatedDeleteQuery(array $analyzed_sql_results)
     {
         $table_references = Query::getTables(
             $analyzed_sql_results['statement']
@@ -1549,7 +1518,7 @@ class Import
 
         $order_and_limit = '';
 
-        if (! empty($analyzed_sql_results['statement']->order)) {
+        if (!empty($analyzed_sql_results['statement']->order)) {
             $order_and_limit .= ' ORDER BY ' . Query::getClause(
                 $analyzed_sql_results['statement'],
                 $analyzed_sql_results['parser']->list,
@@ -1557,7 +1526,7 @@ class Import
             );
         }
 
-        if (! empty($analyzed_sql_results['statement']->limit)) {
+        if (!empty($analyzed_sql_results['statement']->limit)) {
             $order_and_limit .= ' LIMIT ' . Query::getClause(
                 $analyzed_sql_results['statement'],
                 $analyzed_sql_results['parser']->list,
@@ -1576,7 +1545,7 @@ class Import
      *
      * @return integer Number of rows returned
      */
-    public function executeMatchedRowQuery(string $matched_row_query): int
+    public static function executeMatchedRowQuery($matched_row_query)
     {
         $GLOBALS['dbi']->selectDb($GLOBALS['db']);
         // Execute the query.
@@ -1594,9 +1563,9 @@ class Import
      *
      * @return void
      */
-    public function handleRollbackRequest(string $sql_query): void
+    public static function handleRollbackRequest($sql_query)
     {
-        $sql_delimiter = $_POST['sql_delimiter'];
+        $sql_delimiter = $_REQUEST['sql_delimiter'];
         $queries = explode($sql_delimiter, $sql_query);
         $error = false;
         $error_msg = __(
@@ -1609,7 +1578,7 @@ class Import
             }
 
             // Check each query for ROLLBACK support.
-            if (! $this->checkIfRollbackPossible($sql_query)) {
+            if (! self::checkIfRollbackPossible($sql_query)) {
                 $global_error = $GLOBALS['dbi']->getError();
                 if ($global_error) {
                     $error = $global_error;
@@ -1621,7 +1590,7 @@ class Import
         }
 
         if ($error) {
-            unset($_POST['rollback_query']);
+            unset($_REQUEST['rollback_query']);
             $response = Response::getInstance();
             $message = Message::rawError($error);
             $response->addJSON('message', $message);
@@ -1639,18 +1608,18 @@ class Import
      *
      * @return bool
      */
-    public function checkIfRollbackPossible(string $sql_query): bool
+    public static function checkIfRollbackPossible($sql_query)
     {
         $parser = new Parser($sql_query);
 
         if (empty($parser->statements[0])) {
-            return true;
+            return false;
         }
 
         $statement = $parser->statements[0];
 
         // Check if query is supported.
-        if (! (($statement instanceof InsertStatement)
+        if (!(($statement instanceof InsertStatement)
             || ($statement instanceof UpdateStatement)
             || ($statement instanceof DeleteStatement)
             || ($statement instanceof ReplaceStatement))
@@ -1663,7 +1632,7 @@ class Import
 
         // Check if each table is 'InnoDB'.
         foreach ($tables as $table) {
-            if (! $this->isTableTransactional($table)) {
+            if (! self::isTableTransactional($table)) {
                 return false;
             }
         }
@@ -1678,10 +1647,10 @@ class Import
      *
      * @return bool
      */
-    public function isTableTransactional(string $table): bool
+    public static function isTableTransactional($table)
     {
         $table = explode('.', $table);
-        if (count($table) === 2) {
+        if (count($table) == 2) {
             $db = Util::unQuote($table[0]);
             $table = Util::unQuote($table[1]);
         } else {
@@ -1701,7 +1670,7 @@ class Import
         }
 
         // List of Transactional Engines.
-        $transactional_engines = [
+        $transactional_engines = array(
             'INNODB',
             'FALCON',
             'NDB',
@@ -1709,8 +1678,8 @@ class Import
             'TOKUDB',
             'XTRADB',
             'SEQUENCE',
-            'BDB',
-        ];
+            'BDB'
+        );
 
         // Query to check if table is 'Transactional'.
         $check_query = 'SELECT `ENGINE` FROM `information_schema`.`tables` '

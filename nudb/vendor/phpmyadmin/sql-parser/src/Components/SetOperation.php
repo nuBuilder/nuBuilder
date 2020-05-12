@@ -1,8 +1,8 @@
 <?php
+
 /**
  * `SET` keyword parser.
  */
-declare(strict_types=1);
 
 namespace PhpMyAdmin\SqlParser\Components;
 
@@ -10,12 +10,13 @@ use PhpMyAdmin\SqlParser\Component;
 use PhpMyAdmin\SqlParser\Parser;
 use PhpMyAdmin\SqlParser\Token;
 use PhpMyAdmin\SqlParser\TokensList;
-use function implode;
-use function is_array;
-use function trim;
 
 /**
  * `SET` keyword parser.
+ *
+ * @category   Keywords
+ *
+ * @license    https://www.gnu.org/licenses/gpl-2.0.txt GPL-2.0+
  */
 class SetOperation extends Component
 {
@@ -34,10 +35,12 @@ class SetOperation extends Component
     public $value;
 
     /**
+     * Constructor.
+     *
      * @param string $column Field's name..
      * @param string $value  new value
      */
-    public function __construct($column = '', $value = '')
+    public function __construct($column = null, $value = null)
     {
         $this->column = $column;
         $this->value = $value;
@@ -50,32 +53,25 @@ class SetOperation extends Component
      *
      * @return SetOperation[]
      */
-    public static function parse(Parser $parser, TokensList $list, array $options = [])
+    public static function parse(Parser $parser, TokensList $list, array $options = array())
     {
-        $ret = [];
+        $ret = array();
 
-        $expr = new static();
+        $expr = new self();
 
         /**
          * The state of the parser.
          *
          * Below are the states of the parser.
          *
-         *      0 ---------------------[ col_name ]--------------------> 0
-         *      0 ------------------------[ = ]------------------------> 1
-         *      1 -----------------------[ value ]---------------------> 1
+         *      0 -------------------[ column name ]-------------------> 1
+         *
          *      1 ------------------------[ , ]------------------------> 0
+         *      1 ----------------------[ value ]----------------------> 1
          *
          * @var int
          */
         $state = 0;
-
-        /**
-         * Token when the parser has seen the latest comma
-         *
-         * @var Token
-         */
-        $commaLastSeenAt = null;
 
         for (; $list->idx < $list->count; ++$list->idx) {
             /**
@@ -98,7 +94,7 @@ class SetOperation extends Component
             // No keyword is expected.
             if (($token->type === Token::TYPE_KEYWORD)
                 && ($token->flags & Token::FLAG_KEYWORD_RESERVED)
-                && ($state === 0)
+                && ($state == 0)
             ) {
                 break;
             }
@@ -108,35 +104,28 @@ class SetOperation extends Component
                     $state = 1;
                 } elseif ($token->value !== ',') {
                     $expr->column .= $token->token;
-                } elseif ($token->value === ',') {
-                    $commaLastSeenAt = $token;
                 }
             } elseif ($state === 1) {
                 $tmp = Expression::parse(
                     $parser,
                     $list,
-                    ['breakOnAlias' => true]
+                    array(
+                        'breakOnAlias' => true,
+                    )
                 );
-                if ($tmp === null) {
+                if ($tmp == null) {
                     $parser->error('Missing expression.', $token);
                     break;
                 }
-
                 $expr->column = trim($expr->column);
                 $expr->value = $tmp->expr;
                 $ret[] = $expr;
-                $expr = new static();
+                $expr = new self();
                 $state = 0;
-                $commaLastSeenAt = null;
             }
         }
 
         --$list->idx;
-
-        // We saw a comma, but didn't see a column-value pair after it
-        if ($commaLastSeenAt !== null) {
-            $parser->error('Unexpected token.', $commaLastSeenAt);
-        }
 
         return $ret;
     }
@@ -147,7 +136,7 @@ class SetOperation extends Component
      *
      * @return string
      */
-    public static function build($component, array $options = [])
+    public static function build($component, array $options = array())
     {
         if (is_array($component)) {
             return implode(', ', $component);

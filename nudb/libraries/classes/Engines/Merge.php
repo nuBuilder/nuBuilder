@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin-Engines
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Engines;
 
 use PhpMyAdmin\StorageEngine;
@@ -19,3 +17,4 @@ use PhpMyAdmin\StorageEngine;
 class Merge extends StorageEngine
 {
 }
+

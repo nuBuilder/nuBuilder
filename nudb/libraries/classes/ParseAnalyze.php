@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin;
 
 use PhpMyAdmin\Response;
@@ -31,7 +29,6 @@ class ParseAnalyze
      */
     public static function sqlQuery($sql_query, $db)
     {
-        global $reload;
         // @todo: move to returned results (also in all the calling chain)
         $GLOBALS['unparsed_sql'] = $sql_query;
 
@@ -44,7 +41,8 @@ class ParseAnalyze
         // If the targeted table (and database) are different than the ones that is
         // currently browsed, edit `$db` and `$table` to match them so other elements
         // (page headers, links, navigation panel) can be updated properly.
-        if (! empty($analyzed_sql_results['select_tables'])) {
+        if (!empty($analyzed_sql_results['select_tables'])) {
+
             // Previous table and database name is stored to check if it changed.
             $prev_db = $db;
 
@@ -59,7 +57,7 @@ class ParseAnalyze
                 $table = '';
             } else {
                 $table = $analyzed_sql_results['select_tables'][0][0];
-                if (! empty($analyzed_sql_results['select_tables'][0][1])) {
+                if (!empty($analyzed_sql_results['select_tables'][0][1])) {
                     $db = $analyzed_sql_results['select_tables'][0][1];
                 }
             }
@@ -75,10 +73,6 @@ class ParseAnalyze
             $analyzed_sql_results['reload'] = $reload;
         }
 
-        return [
-            $analyzed_sql_results,
-            $db,
-            $table,
-        ];
+        return array($analyzed_sql_results, $db, $table);
     }
 }
