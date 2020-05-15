@@ -5,31 +5,44 @@
  *
  * @package PhpMyAdmin
  */
+declare(strict_types=1);
+
 use PhpMyAdmin\Config\PageSettings;
+use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Display\Export;
 use PhpMyAdmin\Relation;
 use PhpMyAdmin\Response;
 
-/**
- *
- */
-require_once 'libraries/common.inc.php';
+if (! defined('ROOT_PATH')) {
+    define('ROOT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
+}
+
+global $containerBuilder, $db, $table, $url_query;
+
+require_once ROOT_PATH . 'libraries/common.inc.php';
+
+/** @var Response $response */
+$response = $containerBuilder->get(Response::class);
+
+/** @var DatabaseInterface $dbi */
+$dbi = $containerBuilder->get(DatabaseInterface::class);
 
 PageSettings::showGroup('Export');
 
-$response = Response::getInstance();
-$header   = $response->getHeader();
-$scripts  = $header->getScripts();
+$header = $response->getHeader();
+$scripts = $header->getScripts();
 $scripts->addFile('export.js');
 
 // Get the relation settings
-$relation = new Relation();
+/** @var Relation $relation */
+$relation = $containerBuilder->get('relation');
 $cfgRelation = $relation->getRelationsParam();
 
-$displayExport = new Export();
+/** @var Export $displayExport */
+$displayExport = $containerBuilder->get('display_export');
 
 // handling export template actions
-if (isset($_REQUEST['templateAction']) && $cfgRelation['exporttemplateswork']) {
+if (isset($_POST['templateAction']) && $cfgRelation['exporttemplateswork']) {
     $displayExport->handleTemplateActions($cfgRelation);
     exit;
 }
@@ -37,7 +50,7 @@ if (isset($_REQUEST['templateAction']) && $cfgRelation['exporttemplateswork']) {
 /**
  * Gets tables information and displays top links
  */
-require_once 'libraries/tbl_common.inc.php';
+require_once ROOT_PATH . 'libraries/tbl_common.inc.php';
 $url_query .= '&amp;goto=tbl_export.php&amp;back=tbl_export.php';
 
 // Dump of a table
@@ -50,45 +63,22 @@ $export_page_title = __('View dump (schema) of table');
 if (! empty($sql_query)) {
     $parser = new PhpMyAdmin\SqlParser\Parser($sql_query);
 
-    if ((!empty($parser->statements[0]))
+    if (! empty($parser->statements[0])
         && ($parser->statements[0] instanceof PhpMyAdmin\SqlParser\Statements\SelectStatement)
     ) {
-
-        // Finding aliases and removing them, but we keep track of them to be
-        // able to replace them in select expression too.
-        $aliases = array();
-        foreach ($parser->statements[0]->from as $from) {
-            if ((!empty($from->table)) && (!empty($from->alias))) {
-                $aliases[$from->alias] = $from->table;
-                // We remove the alias of the table because they are going to
-                // be replaced anyway.
-                $from->alias = null;
-                $from->expr = null; // Force rebuild.
-            }
-        }
-
-        // Rebuilding the SELECT and FROM clauses.
-        if (count($parser->statements[0]->from) > 0
-            && count($parser->statements[0]->union) === 0
-        ) {
-            $replaces = array(
-                array(
-                    'FROM', 'FROM ' . PhpMyAdmin\SqlParser\Components\ExpressionArray::build(
-                        $parser->statements[0]->from
-                    ),
-                ),
-            );
-        }
-
         // Checking if the WHERE clause has to be replaced.
-        if ((!empty($where_clause)) && (is_array($where_clause))) {
-            $replaces[] = array(
-                'WHERE', 'WHERE (' . implode(') OR (', $where_clause) . ')'
-            );
+        if (! empty($where_clause) && is_array($where_clause)) {
+            $replaces[] = [
+                'WHERE',
+                'WHERE (' . implode(') OR (', $where_clause) . ')',
+            ];
         }
 
         // Preparing to remove the LIMIT clause.
-        $replaces[] = array('LIMIT', '');
+        $replaces[] = [
+            'LIMIT',
+            '',
+        ];
 
         // Replacing the clauses.
         $sql_query = PhpMyAdmin\SqlParser\Utils\Query::replaceClauses(
@@ -96,28 +86,6 @@ if (! empty($sql_query)) {
             $parser->list,
             $replaces
         );
-
-        // Removing the aliases by finding the alias followed by a dot.
-        $tokens = PhpMyAdmin\SqlParser\Lexer::getTokens($sql_query);
-        foreach ($aliases as $alias => $table) {
-            $tokens = PhpMyAdmin\SqlParser\Utils\Tokens::replaceTokens(
-                $tokens,
-                array(
-                    array(
-                        'value_str' => $alias,
-                    ),
-                    array(
-                        'type' => PhpMyAdmin\SqlParser\Token::TYPE_OPERATOR,
-                        'value_str' => '.',
-                    )
-                ),
-                array(
-                    new PhpMyAdmin\SqlParser\Token($table),
-                    new PhpMyAdmin\SqlParser\Token('.',PhpMyAdmin\SqlParser\Token::TYPE_OPERATOR)
-                )
-            );
-        }
-        $sql_query = PhpMyAdmin\SqlParser\TokensList::build($tokens);
     }
 
     echo PhpMyAdmin\Util::getMessage(PhpMyAdmin\Message::success());
@@ -138,7 +106,12 @@ if (! isset($multi_values)) {
 $response = Response::getInstance();
 $response->addHTML(
     $displayExport->getDisplay(
-        'table', $db, $table, $sql_query, $num_tables,
-        $unlim_num_rows, $multi_values
+        'table',
+        $db,
+        $table,
+        $sql_query,
+        $num_tables,
+        $unlim_num_rows,
+        $multi_values
     )
 );

@@ -1,8 +1,8 @@
 <?php
-
 /**
  * `DROP` statement.
  */
+declare(strict_types=1);
 
 namespace PhpMyAdmin\SqlParser\Statements;
 
@@ -11,10 +11,6 @@ use PhpMyAdmin\SqlParser\Statement;
 
 /**
  * `DROP` statement.
- *
- * @category   Statements
- *
- * @license    https://www.gnu.org/licenses/gpl-2.0.txt GPL-2.0+
  */
 class DropStatement extends Statement
 {
@@ -23,7 +19,7 @@ class DropStatement extends Statement
      *
      * @var array
      */
-    public static $OPTIONS = array(
+    public static $OPTIONS = [
         'DATABASE' => 1,
         'EVENT' => 1,
         'FUNCTION' => 1,
@@ -36,10 +32,11 @@ class DropStatement extends Statement
         'VIEW' => 1,
         'TABLESPACE' => 1,
         'TRIGGER' => 1,
+        'USER' => 1,
 
         'TEMPORARY' => 2,
         'IF EXISTS' => 3,
-    );
+    ];
 
     /**
      * The clauses of this statement, in order.
@@ -48,14 +45,26 @@ class DropStatement extends Statement
      *
      * @var array
      */
-    public static $CLAUSES = array(
-        'DROP' => array('DROP', 2),
+    public static $CLAUSES = [
+        'DROP' => [
+            'DROP',
+            2,
+        ],
         // Used for options.
-        '_OPTIONS' => array('_OPTIONS', 1),
+        '_OPTIONS' => [
+            '_OPTIONS',
+            1,
+        ],
         // Used for select expressions.
-        'DROP_' => array('DROP', 1),
-        'ON' => array('ON', 3),
-    );
+        'DROP_' => [
+            'DROP',
+            1,
+        ],
+        'ON' => [
+            'ON',
+            3,
+        ],
+    ];
 
     /**
      * Dropped elements.

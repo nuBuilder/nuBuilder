@@ -1,10 +1,10 @@
 <?php
-
 /**
  * Parses the create definition of a column or a key.
  *
  * Used for parsing `CREATE TABLE` statement.
  */
+declare(strict_types=1);
 
 namespace PhpMyAdmin\SqlParser\Components;
 
@@ -13,15 +13,14 @@ use PhpMyAdmin\SqlParser\Context;
 use PhpMyAdmin\SqlParser\Parser;
 use PhpMyAdmin\SqlParser\Token;
 use PhpMyAdmin\SqlParser\TokensList;
+use function implode;
+use function is_array;
+use function trim;
 
 /**
  * Parses the create definition of a column or a key.
  *
  * Used for parsing `CREATE TABLE` statement.
- *
- * @category   Components
- *
- * @license    https://www.gnu.org/licenses/gpl-2.0.txt GPL-2.0+
  */
 class CreateDefinition extends Component
 {
@@ -30,33 +29,61 @@ class CreateDefinition extends Component
      *
      * @var array
      */
-    public static $FIELD_OPTIONS = array(
+    public static $FIELD_OPTIONS = [
         // Tells the `OptionsArray` to not sort the options.
         // See the note below.
         '_UNSORTED' => true,
 
         'NOT NULL' => 1,
         'NULL' => 1,
-        'DEFAULT' => array(2, 'expr', array('breakOnAlias' => true)),
+        'DEFAULT' => [
+            2,
+            'expr',
+            ['breakOnAlias' => true],
+        ],
         /* Following are not according to grammar, but MySQL happily accepts
          * these at any location */
-        'CHARSET' => array(2, 'var'),
-        'COLLATE' => array(3, 'var'),
+        'CHARSET' => [
+            2,
+            'var',
+        ],
+        'COLLATE' => [
+            3,
+            'var',
+        ],
         'AUTO_INCREMENT' => 3,
         'PRIMARY' => 4,
         'PRIMARY KEY' => 4,
         'UNIQUE' => 4,
         'UNIQUE KEY' => 4,
-        'COMMENT' => array(5, 'var'),
-        'COLUMN_FORMAT' => array(6, 'var'),
-        'ON UPDATE' => array(7, 'expr'),
+        'COMMENT' => [
+            5,
+            'var',
+        ],
+        'COLUMN_FORMAT' => [
+            6,
+            'var',
+        ],
+        'ON UPDATE' => [
+            7,
+            'expr',
+        ],
 
         // Generated columns options.
         'GENERATED ALWAYS' => 8,
-        'AS' => array(9, 'expr', array('parenthesesDelimited' => true)),
+        'AS' => [
+            9,
+            'expr',
+            ['parenthesesDelimited' => true],
+        ],
         'VIRTUAL' => 10,
         'PERSISTENT' => 11,
         'STORED' => 11,
+        'CHECK' => [
+            12,
+            'expr',
+            ['parenthesesDelimited' => true],
+        ],
         // Common entries.
         //
         // NOTE: Some of the common options are not in the same order which
@@ -66,12 +93,12 @@ class CreateDefinition extends Component
         //
         // 'UNIQUE'                        => 4,
         // 'UNIQUE KEY'                    => 4,
-        // 'COMMENT'                       => array(5, 'var'),
+        // 'COMMENT'                       => [5, 'var'],
         // 'NOT NULL'                      => 1,
         // 'NULL'                          => 1,
         // 'PRIMARY'                       => 4,
         // 'PRIMARY KEY'                   => 4,
-    );
+    ];
 
     /**
      * The name of the new column.
@@ -116,8 +143,6 @@ class CreateDefinition extends Component
     public $options;
 
     /**
-     * Constructor.
-     *
      * @param string       $name         the name of the field
      * @param OptionsArray $options      the options of this field
      * @param DataType|Key $type         the data type of this field or the key
@@ -149,11 +174,11 @@ class CreateDefinition extends Component
      *
      * @return CreateDefinition[]
      */
-    public static function parse(Parser $parser, TokensList $list, array $options = array())
+    public static function parse(Parser $parser, TokensList $list, array $options = [])
     {
-        $ret = array();
+        $ret = [];
 
-        $expr = new self();
+        $expr = new static();
 
         /**
          * The state of the parser.
@@ -216,7 +241,7 @@ class CreateDefinition extends Component
                     $state = 4;
                 } elseif ($token->type === Token::TYPE_SYMBOL || $token->type === Token::TYPE_NONE) {
                     $expr->name = $token->value;
-                    if (!$expr->isConstraint) {
+                    if (! $expr->isConstraint) {
                         $state = 2;
                     }
                 } elseif ($token->type === Token::TYPE_KEYWORD) {
@@ -257,12 +282,14 @@ class CreateDefinition extends Component
                 } else {
                     --$list->idx;
                 }
+
                 $state = 5;
             } elseif ($state === 5) {
-                if ((!empty($expr->type)) || (!empty($expr->key))) {
+                if (! empty($expr->type) || ! empty($expr->key)) {
                     $ret[] = $expr;
                 }
-                $expr = new self();
+
+                $expr = new static();
                 if ($token->value === ',') {
                     $state = 1;
                 } elseif ($token->value === ')') {
@@ -281,7 +308,7 @@ class CreateDefinition extends Component
         }
 
         // Last iteration was not saved.
-        if ((!empty($expr->type)) || (!empty($expr->key))) {
+        if (! empty($expr->type) || ! empty($expr->key)) {
             $ret[] = $expr;
         }
 
@@ -303,7 +330,7 @@ class CreateDefinition extends Component
      *
      * @return string
      */
-    public static function build($component, array $options = array())
+    public static function build($component, array $options = [])
     {
         if (is_array($component)) {
             return "(\n  " . implode(",\n  ", $component) . "\n)";
@@ -315,22 +342,22 @@ class CreateDefinition extends Component
             $tmp .= 'CONSTRAINT ';
         }
 
-        if ((isset($component->name)) && ($component->name !== '')) {
+        if (isset($component->name) && ($component->name !== '')) {
             $tmp .= Context::escape($component->name) . ' ';
         }
 
-        if (!empty($component->type)) {
+        if (! empty($component->type)) {
             $tmp .= DataType::build(
                 $component->type,
-                array('lowercase' => true)
+                ['lowercase' => true]
             ) . ' ';
         }
 
-        if (!empty($component->key)) {
+        if (! empty($component->key)) {
             $tmp .= $component->key . ' ';
         }
 
-        if (!empty($component->references)) {
+        if (! empty($component->references)) {
             $tmp .= 'REFERENCES ' . $component->references . ' ';
         }
 

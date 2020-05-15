@@ -5,34 +5,57 @@
  *
  * @package PhpMyAdmin
  */
+declare(strict_types=1);
 
+use PhpMyAdmin\Config;
 use PhpMyAdmin\CreateAddField;
+use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\Response;
 use PhpMyAdmin\Transformations;
 use PhpMyAdmin\Url;
 use PhpMyAdmin\Util;
 
-/**
- * Get some core libraries
- */
-require_once 'libraries/common.inc.php';
+if (! defined('ROOT_PATH')) {
+    define('ROOT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
+}
 
-$response = Response::getInstance();
-$header   = $response->getHeader();
-$scripts  = $header->getScripts();
-$scripts->addFile('tbl_structure.js');
+require_once ROOT_PATH . 'libraries/common.inc.php';
+
+/** @var Response $response */
+$response = $containerBuilder->get(Response::class);
+
+/** @var DatabaseInterface $dbi */
+$dbi = $containerBuilder->get(DatabaseInterface::class);
+
+$header = $response->getHeader();
+$scripts = $header->getScripts();
+$scripts->addFile('table/structure.js');
 
 // Check parameters
-Util::checkParameters(array('db', 'table'));
+Util::checkParameters(['db', 'table']);
+
+/** @var Transformations $transformations */
+$transformations = $containerBuilder->get('transformations');
+
+/** @var string $db */
+$db = $containerBuilder->getParameter('db');
+
+/** @var string $table */
+$table = $containerBuilder->getParameter('table');
+
+/** @var Config $config */
+$config = $containerBuilder->get('config');
+$cfg = $config->settings;
 
 /**
  * Defines the url to return to in case of error in a sql statement
  */
 $err_url = 'tbl_sql.php' . Url::getCommon(
-    array(
-        'db' => $db, 'table' => $table
-    )
+    [
+        'db' => $db,
+        'table' => $table,
+    ]
 );
 
 /**
@@ -41,51 +64,52 @@ $err_url = 'tbl_sql.php' . Url::getCommon(
 $abort = false;
 
 // check number of fields to be created
-if (isset($_REQUEST['submit_num_fields'])) {
-    if (isset($_REQUEST['orig_after_field'])) {
-        $_REQUEST['after_field'] = $_REQUEST['orig_after_field'];
+if (isset($_POST['submit_num_fields'])) {
+    if (isset($_POST['orig_after_field'])) {
+        $_POST['after_field'] = $_POST['orig_after_field'];
     }
-    if (isset($_REQUEST['orig_field_where'])) {
-        $_REQUEST['field_where'] = $_REQUEST['orig_field_where'];
+    if (isset($_POST['orig_field_where'])) {
+        $_POST['field_where'] = $_POST['orig_field_where'];
     }
     $num_fields = min(
-        intval($_REQUEST['orig_num_fields']) + intval($_REQUEST['added_fields']),
+        intval($_POST['orig_num_fields']) + intval($_POST['added_fields']),
         4096
     );
     $regenerate = true;
-} elseif (isset($_REQUEST['num_fields']) && intval($_REQUEST['num_fields']) > 0) {
-    $num_fields = min(4096, intval($_REQUEST['num_fields']));
+} elseif (isset($_POST['num_fields']) && intval($_POST['num_fields']) > 0) {
+    $num_fields = min(4096, intval($_POST['num_fields']));
 } else {
     $num_fields = 1;
 }
 
-if (isset($_REQUEST['do_save_data'])) {
+if (isset($_POST['do_save_data'])) {
     //avoid an incorrect calling of PMA_updateColumns() via
     //tbl_structure.php below
-    unset($_REQUEST['do_save_data']);
+    unset($_POST['do_save_data']);
 
-    $createAddField = new CreateAddField($GLOBALS['dbi']);
+    $createAddField = new CreateAddField($dbi);
 
     list($result, $sql_query) = $createAddField->tryColumnCreationQuery($db, $table, $err_url);
 
     if ($result === true) {
         // Update comment table for mime types [MIME]
-        if (isset($_REQUEST['field_mimetype'])
-            && is_array($_REQUEST['field_mimetype'])
+        if (isset($_POST['field_mimetype'])
+            && is_array($_POST['field_mimetype'])
             && $cfg['BrowseMIME']
         ) {
-            foreach ($_REQUEST['field_mimetype'] as $fieldindex => $mimetype) {
-                if (isset($_REQUEST['field_name'][$fieldindex])
-                    && strlen($_REQUEST['field_name'][$fieldindex]) > 0
+            foreach ($_POST['field_mimetype'] as $fieldindex => $mimetype) {
+                if (isset($_POST['field_name'][$fieldindex])
+                    && strlen($_POST['field_name'][$fieldindex]) > 0
                 ) {
-                    Transformations::setMIME(
-                        $db, $table,
-                        $_REQUEST['field_name'][$fieldindex],
+                    $transformations->setMime(
+                        $db,
+                        $table,
+                        $_POST['field_name'][$fieldindex],
                         $mimetype,
-                        $_REQUEST['field_transformation'][$fieldindex],
-                        $_REQUEST['field_transformation_options'][$fieldindex],
-                        $_REQUEST['field_input_transformation'][$fieldindex],
-                        $_REQUEST['field_input_transformation_options'][$fieldindex]
+                        $_POST['field_transformation'][$fieldindex],
+                        $_POST['field_transformation_options'][$fieldindex],
+                        $_POST['field_input_transformation'][$fieldindex],
+                        $_POST['field_input_transformation_options'][$fieldindex]
                     );
                 }
             }
@@ -118,16 +142,16 @@ if (isset($_REQUEST['do_save_data'])) {
 /**
  * Displays the form used to define the new field
  */
-if ($abort == false) {
+if ($abort === false) {
     /**
      * Gets tables information
      */
-    include_once 'libraries/tbl_common.inc.php';
+    include_once ROOT_PATH . 'libraries/tbl_common.inc.php';
 
     $active_page = 'tbl_structure.php';
     /**
      * Display the form
      */
     $action = 'tbl_addfield.php';
-    include_once 'libraries/tbl_columns_definition_form.inc.php';
+    include_once ROOT_PATH . 'libraries/tbl_columns_definition_form.inc.php';
 }

@@ -1,7 +1,7 @@
 <?php
 use \ParagonIE\ConstantTime\Base64DotSlash;
 
-class Base64DotSlashTest extends PHPUnit_Framework_TestCase
+class Base64DotSlashTest extends PHPUnit\Framework\TestCase
 {
     /**
      * @covers Base64DotSlash::encode()
@@ -17,6 +17,16 @@ class Base64DotSlashTest extends PHPUnit_Framework_TestCase
                 $this->assertSame(
                     $random,
                     Base64DotSlash::decode($enc)
+                );
+
+                $unpadded = \rtrim($enc, '=');
+                $this->assertSame(
+                    $random,
+                    Base64DotSlash::decode($unpadded)
+                );
+                $this->assertSame(
+                    $random,
+                    Base64DotSlash::decode($unpadded)
                 );
             }
         }

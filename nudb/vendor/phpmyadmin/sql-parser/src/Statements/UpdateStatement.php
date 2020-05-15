@@ -1,8 +1,8 @@
 <?php
-
 /**
  * `UPDATE` statement.
  */
+declare(strict_types=1);
 
 namespace PhpMyAdmin\SqlParser\Statements;
 
@@ -27,10 +27,6 @@ use PhpMyAdmin\SqlParser\Statement;
  * UPDATE [LOW_PRIORITY] [IGNORE] table_references
  *     SET col_name1={expr1|DEFAULT} [, col_name2={expr2|DEFAULT}] ...
  *     [WHERE where_condition]
- *
- * @category   Statements
- *
- * @license    https://www.gnu.org/licenses/gpl-2.0.txt GPL-2.0+
  */
 class UpdateStatement extends Statement
 {
@@ -39,10 +35,10 @@ class UpdateStatement extends Statement
      *
      * @var array
      */
-    public static $OPTIONS = array(
+    public static $OPTIONS = [
         'LOW_PRIORITY' => 1,
         'IGNORE' => 2,
-    );
+    ];
 
     /**
      * The clauses of this statement, in order.
@@ -51,17 +47,38 @@ class UpdateStatement extends Statement
      *
      * @var array
      */
-    public static $CLAUSES = array(
-        'UPDATE' => array('UPDATE', 2),
+    public static $CLAUSES = [
+        'UPDATE' => [
+            'UPDATE',
+            2,
+        ],
         // Used for options.
-        '_OPTIONS' => array('_OPTIONS', 1),
+        '_OPTIONS' => [
+            '_OPTIONS',
+            1,
+        ],
         // Used for updated tables.
-        '_UPDATE' => array('UPDATE', 1),
-        'SET' => array('SET', 3),
-        'WHERE' => array('WHERE', 3),
-        'ORDER BY' => array('ORDER BY', 3),
-        'LIMIT' => array('LIMIT', 3),
-    );
+        '_UPDATE' => [
+            'UPDATE',
+            1,
+        ],
+        'SET' => [
+            'SET',
+            3,
+        ],
+        'WHERE' => [
+            'WHERE',
+            3,
+        ],
+        'ORDER BY' => [
+            'ORDER BY',
+            3,
+        ],
+        'LIMIT' => [
+            'LIMIT',
+            3,
+        ],
+    ];
 
     /**
      * Tables used as sources for this statement.

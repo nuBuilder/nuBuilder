@@ -1,8 +1,31 @@
 # U2F-php-server
+
+[![Latest Stable Version](https://img.shields.io/packagist/v/samyoul/u2f-php-server.svg?style=flat-square)](https://packagist.org/packages/samyoul/u2f-php-server)
+[![License](https://img.shields.io/badge/license-BSD_2_Clause-brightgreen.svg?style=flat-square)](LICENCE.md)
+
 Server-side handling of FIDO U2F registration and authentication for PHP.
 
 Securing your online accounts and doing your bit to protect your data is extremely important and increasingly more so as hackers get more sophisticated.
 FIDO's U2F enables you to add a simple unobtrusive method of 2nd factor authentication, allowing users of your service and/or application to link a hardware key to their account.
+
+## The Family of U2F php Libraries
+
+**Base Library**
+
+https://github.com/Samyoul/U2F-php-server
+
+**Fido Test Suite (UTD)**
+
+https://github.com/Samyoul/U2F-php-UTD
+
+**Frameworks**
+
+*Laravel* https://github.com/Samyoul/U2F-Laravel-server
+
+*Yii* https://github.com/Samyoul/U2F-Yii-server
+
+*CodeIgniter* https://github.com/Samyoul/U2F-CodeIgniter-server
+
 
 ## Contents
 

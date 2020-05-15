@@ -1,22 +1,25 @@
 <?php
-
 /**
  * The result of the parser is an array of statements are extensions of the
  * class defined here.
  *
  * A statement represents the result of parsing the lexemes.
  */
+declare(strict_types=1);
 
 namespace PhpMyAdmin\SqlParser;
 
+use PhpMyAdmin\SqlParser\Components\FunctionCall;
 use PhpMyAdmin\SqlParser\Components\OptionsArray;
+use function array_flip;
+use function array_keys;
+use function count;
+use function in_array;
+use function stripos;
+use function trim;
 
 /**
  * Abstract statement definition.
- *
- * @category Statements
- *
- * @license  https://www.gnu.org/licenses/gpl-2.0.txt GPL-2.0+
  */
 abstract class Statement
 {
@@ -39,7 +42,7 @@ abstract class Statement
      *
      * @var array
      */
-    public static $OPTIONS = array();
+    public static $OPTIONS = [];
 
     /**
      * The clauses of this statement, in order.
@@ -53,14 +56,16 @@ abstract class Statement
      *
      * @var array
      */
-    public static $CLAUSES = array();
+    public static $CLAUSES = [];
+
+    public static $END_OPTIONS = [];
 
     /**
      * The options of this query.
      *
-     * @var OptionsArray
-     *
      * @see static::$OPTIONS
+     *
+     * @var OptionsArray
      */
     public $options;
 
@@ -79,8 +84,6 @@ abstract class Statement
     public $last;
 
     /**
-     * Constructor.
-     *
      * @param Parser     $parser the instance that requests parsing
      * @param TokensList $list   the list of tokens to be parsed
      */
@@ -117,7 +120,7 @@ abstract class Statement
          *
          * @var array
          */
-        $built = array();
+        $built = [];
 
         /**
          * Statement's clauses.
@@ -165,20 +168,21 @@ abstract class Statement
 
             // Checking if this field was already built.
             if ($type & 1) {
-                if (!empty($built[$field])) {
+                if (! empty($built[$field])) {
                     continue;
                 }
+
                 $built[$field] = true;
             }
 
             // Checking if the name of the clause should be added.
             if ($type & 2) {
-                $query .= $name . ' ';
+                $query = trim($query) . ' ' . $name;
             }
 
             // Checking if the result of the builder should be added.
             if ($type & 1) {
-                $query .= $class::build($this->$field) . ' ';
+                $query = trim($query) . ' ' . $class::build($this->$field);
             }
         }
 
@@ -190,6 +194,7 @@ abstract class Statement
      *
      * @param Parser     $parser the instance that requests parsing
      * @param TokensList $list   the list of tokens to be parsed
+     * @throws Exceptions\ParserException
      */
     public function parse(Parser $parser, TokensList $list)
     {
@@ -199,7 +204,7 @@ abstract class Statement
          *
          * @var array
          */
-        $parsedClauses = array();
+        $parsedClauses = [];
 
         // This may be corrected by the parser.
         $this->first = $list->idx;
@@ -236,21 +241,22 @@ abstract class Statement
             // Only keywords are relevant here. Other parts of the query are
             // processed in the functions below.
             if ($token->type !== Token::TYPE_KEYWORD) {
-                if (($token->type !== TOKEN::TYPE_COMMENT)
+                if (($token->type !== Token::TYPE_COMMENT)
                     && ($token->type !== Token::TYPE_WHITESPACE)
                 ) {
                     $parser->error('Unexpected token.', $token);
                 }
+
                 continue;
             }
 
             // Unions are parsed by the parser because they represent more than
             // one statement.
             if (($token->keyword === 'UNION') ||
-                    ($token->keyword === 'UNION ALL') ||
-                    ($token->keyword === 'UNION DISTINCT') ||
-                    ($token->keyword === 'EXCEPT') ||
-                    ($token->keyword === 'INTERSECT')
+                ($token->keyword === 'UNION ALL') ||
+                ($token->keyword === 'UNION DISTINCT') ||
+                ($token->keyword === 'EXCEPT') ||
+                ($token->keyword === 'INTERSECT')
             ) {
                 break;
             }
@@ -260,7 +266,7 @@ abstract class Statement
             // ON DUPLICATE KEY UPDATE ...
             // has to be parsed in parent statement (INSERT or REPLACE)
             // so look for it and break
-            if ($this instanceof \PhpMyAdmin\SqlParser\Statements\SelectStatement
+            if ($this instanceof Statements\SelectStatement
                 && $token->value === 'ON'
             ) {
                 ++$list->idx; // Skip ON
@@ -279,6 +285,7 @@ abstract class Statement
                     break;
                 }
             }
+
             $list->idx = $lastIdx;
 
             /**
@@ -300,35 +307,40 @@ abstract class Statement
              *
              * @var array
              */
-            $options = array();
+            $options = [];
 
             // Looking for duplicated clauses.
-            if ((!empty(Parser::$KEYWORD_PARSERS[$token->value]))
-                || (!empty(Parser::$STATEMENT_PARSERS[$token->value]))
+            if (! empty(Parser::$KEYWORD_PARSERS[$token->value])
+                || ! empty(Parser::$STATEMENT_PARSERS[$token->value])
             ) {
-                if (!empty($parsedClauses[$token->value])) {
+                if (! empty($parsedClauses[$token->value])) {
                     $parser->error(
                         'This type of clause was previously parsed.',
                         $token
                     );
                     break;
                 }
+
                 $parsedClauses[$token->value] = true;
             }
 
             // Checking if this is the beginning of a clause.
-            if (!empty(Parser::$KEYWORD_PARSERS[$token->value]) && $list->idx < $list->count) {
-                $class = Parser::$KEYWORD_PARSERS[$token->value]['class'];
-                $field = Parser::$KEYWORD_PARSERS[$token->value]['field'];
-                if (!empty(Parser::$KEYWORD_PARSERS[$token->value]['options'])) {
-                    $options = Parser::$KEYWORD_PARSERS[$token->value]['options'];
+            // Fix Issue #221: As `truncate` is not a keyword
+            // but it might be the beginning of a statement of truncate,
+            // so let the value use the keyword field for truncate type.
+            $token_value = in_array($token->keyword, ['TRUNCATE']) ? $token->keyword : $token->value;
+            if (! empty(Parser::$KEYWORD_PARSERS[$token_value]) && $list->idx < $list->count) {
+                $class = Parser::$KEYWORD_PARSERS[$token_value]['class'];
+                $field = Parser::$KEYWORD_PARSERS[$token_value]['field'];
+                if (! empty(Parser::$KEYWORD_PARSERS[$token_value]['options'])) {
+                    $options = Parser::$KEYWORD_PARSERS[$token_value]['options'];
                 }
             }
 
             // Checking if this is the beginning of the statement.
-            if (!empty(Parser::$STATEMENT_PARSERS[$token->keyword])) {
-                if ((!empty(static::$CLAUSES)) // Undefined for some statements.
-                    && (empty(static::$CLAUSES[$token->value]))
+            if (! empty(Parser::$STATEMENT_PARSERS[$token->keyword])) {
+                if (! empty(static::$CLAUSES) // Undefined for some statements.
+                    && empty(static::$CLAUSES[$token->value])
                 ) {
                     // Some keywords (e.g. `SET`) may be the beginning of a
                     // statement and a clause.
@@ -341,11 +353,13 @@ abstract class Statement
                     );
                     break;
                 }
-                if (!$parsedOptions) {
+
+                if (! $parsedOptions) {
                     if (empty(static::$OPTIONS[$token->value])) {
                         // Skipping keyword because if it is not a option.
                         ++$list->idx;
                     }
+
                     $this->options = OptionsArray::parse(
                         $parser,
                         $list,
@@ -354,12 +368,23 @@ abstract class Statement
                     $parsedOptions = true;
                 }
             } elseif ($class === null) {
-                // Handle special end options in Select statement
-                // See Statements\SelectStatement::$END_OPTIONS
-                if ($this instanceof \PhpMyAdmin\SqlParser\Statements\SelectStatement
+                if ($this instanceof Statements\SelectStatement
                     && ($token->value === 'FOR UPDATE'
-                    || $token->value === 'LOCK IN SHARE MODE')
+                        || $token->value === 'LOCK IN SHARE MODE')
                 ) {
+                    // Handle special end options in Select statement
+                    // See Statements\SelectStatement::$END_OPTIONS
+                    $this->end_options = OptionsArray::parse(
+                        $parser,
+                        $list,
+                        static::$END_OPTIONS
+                    );
+                } elseif ($this instanceof Statements\SetStatement
+                    && ($token->value === 'COLLATE'
+                        || $token->value === 'DEFAULT')
+                ) {
+                    // Handle special end options in SET statement
+                    // See Statements\SetStatement::$END_OPTIONS
                     $this->end_options = OptionsArray::parse(
                         $parser,
                         $list,
@@ -382,11 +407,19 @@ abstract class Statement
                     $parser->error('Keyword at end of statement.', $token);
                     continue;
                 }
+
                 ++$list->idx; // Skipping keyword or last option.
                 $this->$field = $class::parse($parser, $list, $options);
             }
 
             $this->after($parser, $list, $token);
+
+            // #223 Here may make a patch, if last is delimiter, back one
+            if ($class === FunctionCall::class
+                && $list->offsetGet($list->idx)->type === Token::TYPE_DELIMITER
+            ) {
+                --$list->idx;
+            }
         }
 
         // This may be corrected by the parser.
@@ -446,14 +479,13 @@ abstract class Statement
      * @param TokensList $list   the list of tokens to be parsed
      *
      * @return bool
+     * @throws Exceptions\ParserException
      */
     public function validateClauseOrder($parser, $list)
     {
         $clauses = array_flip(array_keys($this->getClauses()));
 
-        if (empty($clauses)
-            || count($clauses) == 0
-        ) {
+        if (empty($clauses) || count($clauses) === 0) {
             return true;
         }
 
@@ -488,12 +520,23 @@ abstract class Statement
                 $clauseType
             );
 
+            if ($clauseStartIdx !== -1
+                && $this instanceof Statements\SelectStatement
+                && ($clauseType === 'FORCE'
+                    || $clauseType === 'IGNORE'
+                    || $clauseType === 'USE')
+            ) {
+                // TODO: ordering of clauses in a SELECT statement with
+                // Index hints is not supported
+                return true;
+            }
+
             // Handle ordering of Multiple Joins in a query
-            if ($clauseStartIdx != -1) {
+            if ($clauseStartIdx !== -1) {
                 if ($minJoin === 0 && stripos($clauseType, 'JOIN')) {
                     // First JOIN clause is detected
                     $minJoin = $maxJoin = $clauseStartIdx;
-                } elseif ($minJoin !== 0 && !stripos($clauseType, 'JOIN')) {
+                } elseif ($minJoin !== 0 && ! stripos($clauseType, 'JOIN')) {
                     // After a previous JOIN clause, a non-JOIN clause has been detected
                     $maxJoin = $lastIdx;
                 } elseif ($maxJoin < $clauseStartIdx && stripos($clauseType, 'JOIN')) {
@@ -501,7 +544,7 @@ abstract class Statement
                 }
             }
 
-            if ($clauseStartIdx != -1 && $clauseStartIdx < $minIdx) {
+            if ($clauseStartIdx !== -1 && $clauseStartIdx < $minIdx) {
                 if ($minJoin === 0 || $error === 1) {
                     $token = $list->tokens[$clauseStartIdx];
                     $parser->error(
@@ -511,12 +554,13 @@ abstract class Statement
 
                     return false;
                 }
+
                 $minIdx = $clauseStartIdx;
-            } elseif ($clauseStartIdx != -1) {
+            } elseif ($clauseStartIdx !== -1) {
                 $minIdx = $clauseStartIdx;
             }
 
-            $lastIdx = ($clauseStartIdx !== -1) ? $clauseStartIdx : $lastIdx;
+            $lastIdx = $clauseStartIdx !== -1 ? $clauseStartIdx : $lastIdx;
         }
 
         return true;

@@ -1,21 +1,19 @@
 <?php
-
 /**
  * Token utilities.
  */
+declare(strict_types=1);
 
 namespace PhpMyAdmin\SqlParser\Utils;
 
 use PhpMyAdmin\SqlParser\Lexer;
 use PhpMyAdmin\SqlParser\Token;
 use PhpMyAdmin\SqlParser\TokensList;
+use function count;
+use function strcasecmp;
 
 /**
  * Token utilities.
- *
- * @category   Token
- *
- * @license    https://www.gnu.org/licenses/gpl-2.0.txt GPL-2.0+
  */
 class Tokens
 {
@@ -30,40 +28,35 @@ class Tokens
     public static function match(Token $token, array $pattern)
     {
         // Token.
-        if ((isset($pattern['token']))
+        if (isset($pattern['token'])
             && ($pattern['token'] !== $token->token)
         ) {
             return false;
         }
 
         // Value.
-        if ((isset($pattern['value']))
+        if (isset($pattern['value'])
             && ($pattern['value'] !== $token->value)
         ) {
             return false;
         }
 
-        if ((isset($pattern['value_str']))
-            && (strcasecmp($pattern['value_str'], $token->value))
+        if (isset($pattern['value_str'])
+            && strcasecmp($pattern['value_str'], (string) $token->value)
         ) {
             return false;
         }
 
         // Type.
-        if ((isset($pattern['type']))
+        if (isset($pattern['type'])
             && ($pattern['type'] !== $token->type)
         ) {
             return false;
         }
 
         // Flags.
-        if ((isset($pattern['flags']))
-            && (($pattern['flags'] & $token->flags) === 0)
-        ) {
-            return false;
-        }
-
-        return true;
+        return ! isset($pattern['flags'])
+            || (! (($pattern['flags'] & $token->flags) === 0));
     }
 
     public static function replaceTokens($list, array $find, array $replace)
@@ -76,7 +69,7 @@ class Tokens
         $isList = $list instanceof TokensList;
 
         // Parsing the tokens.
-        if (!$isList) {
+        if (! $isList) {
             $list = Lexer::getTokens($list);
         }
 
@@ -85,7 +78,7 @@ class Tokens
          *
          * @var array
          */
-        $newList = array();
+        $newList = [];
 
         /**
          * The length of the find pattern is calculated only once.
@@ -136,7 +129,7 @@ class Tokens
                     ++$j;
                 }
 
-                if (!static::match($list->tokens[$j], $find[$k])) {
+                if (! static::match($list->tokens[$j], $find[$k])) {
                     // This token does not match the pattern.
                     break;
                 }

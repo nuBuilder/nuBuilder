@@ -5,8 +5,10 @@
  *
  * @package PhpMyAdmin
  *
- * @see     https://secure.php.net/session
+ * @see     https://www.php.net/manual/en/features.sessions.php
  */
+declare(strict_types=1);
+
 namespace PhpMyAdmin;
 
 use PhpMyAdmin\Config;
@@ -28,7 +30,8 @@ class Session
      */
     private static function generateToken()
     {
-        $_SESSION[' PMA_token '] = Util::generateRandom(16);
+        $_SESSION[' PMA_token '] = Util::generateRandom(16, true);
+        $_SESSION[' HMAC_secret '] = Util::generateRandom(16);
 
         /**
          * Check if token is properly generated (the generation can fail, for example
@@ -68,7 +71,7 @@ class Session
      */
     private static function sessionFailed(array $errors)
     {
-        $messages = array();
+        $messages = [];
         foreach ($errors as $error) {
             /*
              * Remove path from open() in error message to avoid path disclossure
@@ -98,26 +101,26 @@ class Session
             . 'webserver log file and configure your PHP '
             . 'installation properly. Also ensure that cookies are enabled '
             . 'in your browser.'
-            . '<br /><br />'
-            . implode('<br /><br />', $messages)
+            . '<br><br>'
+            . implode('<br><br>', $messages)
         );
     }
 
     /**
      * Set up session
      *
-     * @param PhpMyAdmin\Config       $config       Configuration handler
-     * @param PhpMyAdmin\ErrorHandler $errorHandler Error handler
+     * @param Config       $config       Configuration handler
+     * @param ErrorHandler $errorHandler Error handler
      * @return void
      */
     public static function setUp(Config $config, ErrorHandler $errorHandler)
     {
         // verify if PHP supports session, die if it does not
-        if (!function_exists('session_name')) {
+        if (! function_exists('session_name')) {
             Core::warnMissingExtension('session', true);
         } elseif (! empty(ini_get('session.auto_start'))
             && session_name() != 'phpMyAdmin'
-            && !empty(session_id())) {
+            && ! empty(session_id())) {
             // Do not delete the existing non empty session, it might be used by
             // other applications; instead just close it.
             if (empty($_SESSION)) {
@@ -134,8 +137,11 @@ class Session
 
         // session cookie settings
         session_set_cookie_params(
-            0, $config->getRootPath(),
-            '', $config->isHttps(), true
+            0,
+            $config->getRootPath(),
+            '',
+            $config->isHttps(),
+            true
         );
 
         // cookies are safer (use ini_set() in case this function is disabled)
@@ -143,7 +149,7 @@ class Session
 
         // optionally set session_save_path
         $path = $config->get('SessionSavePath');
-        if (!empty($path)) {
+        if (! empty($path)) {
             session_save_path($path);
             // We can not do this unconditionally as this would break
             // any more complex setup (eg. cluster), see
@@ -163,23 +169,16 @@ class Session
         // delete session/cookies when browser is closed
         ini_set('session.cookie_lifetime', '0');
 
-        // warn but don't work with bug
-        ini_set('session.bug_compat_42', 'false');
-        ini_set('session.bug_compat_warn', 'true');
-
-        // use more secure session ids
-        ini_set('session.hash_function', '1');
-
         // some pages (e.g. stylesheet) may be cached on clients, but not in shared
         // proxy servers
         session_cache_limiter('private');
 
-        $session_name = 'phpMyAdmin';
-        @session_name($session_name);
+        $httpCookieName = $config->getCookieName('phpMyAdmin');
+        @session_name($httpCookieName);
 
         // Restore correct sesion ID (it might have been reset by auto started session
-        if (isset($_COOKIE['phpMyAdmin'])) {
-            session_id($_COOKIE['phpMyAdmin']);
+        if ($config->issetCookie('phpMyAdmin')) {
+            session_id($config->getCookie('phpMyAdmin'));
         }
 
         // on first start of session we check for errors
@@ -191,7 +190,7 @@ class Session
         if ($session_result !== true
             || $orig_error_count != $errorHandler->countErrors(false)
         ) {
-            setcookie($session_name, '', 1);
+            setcookie($httpCookieName, '', 1);
             $errors = $errorHandler->sliceErrors($orig_error_count);
             self::sessionFailed($errors);
         }
@@ -200,7 +199,7 @@ class Session
         /**
          * Disable setting of session cookies for further session_start() calls.
          */
-        if(session_status() !== PHP_SESSION_ACTIVE) {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
             ini_set('session.use_cookies', 'true');
         }
 

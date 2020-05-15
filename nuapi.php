@@ -32,6 +32,7 @@
 	$_POST['nuCallback']					= '';
 	$_POST['nuAfterEvent']					= false;
 
+	$f										= new stdClass;
 	$f->forms[0]							= new stdClass;
 
     if(count($formAndSessionData->errors) == 0){
@@ -55,6 +56,7 @@
     }
 	$f->forms[0]->after_event				= $_POST['nuAfterEvent'];
 	$f->forms[0]->user_name					= nuUser($U['USER_ID'])->sus_name;
+	$f->forms[0]->access_level_id			= $U['USER_GROUP_ID'];
 	$f->forms[0]->access_level_code			= $U['ACCESS_LEVEL_CODE'];
 	$f->forms[0]->user_id					= $U['USER_ID'];
 	$f->forms[0]->database					= $nuConfigDBName;

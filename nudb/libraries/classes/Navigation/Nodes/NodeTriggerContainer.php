@@ -5,6 +5,8 @@
  *
  * @package PhpMyAdmin-Navigation
  */
+declare(strict_types=1);
+
 namespace PhpMyAdmin\Navigation\Nodes;
 
 use PhpMyAdmin\Navigation\NodeFactory;
@@ -24,26 +26,28 @@ class NodeTriggerContainer extends Node
     {
         parent::__construct(__('Triggers'), Node::CONTAINER);
         $this->icon = Util::getImage('b_triggers');
-        $this->links = array(
+        $this->links = [
             'text' => 'db_triggers.php?server=' . $GLOBALS['server']
                 . '&amp;db=%2$s&amp;table=%1$s',
             'icon' => 'db_triggers.php?server=' . $GLOBALS['server']
                 . '&amp;db=%2$s&amp;table=%1$s',
-        );
-        $this->real_name = 'triggers';
+        ];
+        $this->realName = 'triggers';
 
+        $newLabel = _pgettext('Create new trigger', 'New');
         $new = NodeFactory::getInstance(
             'Node',
-            _pgettext('Create new trigger', 'New')
+            $newLabel
         );
         $new->isNew = true;
         $new->icon = Util::getImage('b_trigger_add', '');
-        $new->links = array(
+        $new->title = $newLabel;
+        $new->links = [
             'text' => 'db_triggers.php?server=' . $GLOBALS['server']
                 . '&amp;db=%3$s&amp;add_item=1',
             'icon' => 'db_triggers.php?server=' . $GLOBALS['server']
                 . '&amp;db=%3$s&amp;add_item=1',
-        );
+        ];
         $new->classes = 'new_trigger italics';
         $this->addChild($new);
     }

@@ -693,7 +693,6 @@ function nuUpdateData(action, instruction){
 				
 			}else{
 
-//				window.nuSAVED	= true;
 				nuForm(f, fm.record_id, fm.filter, fm.search, 1);		//-- go to saved or created record
 				
 			}

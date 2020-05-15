@@ -76,13 +76,14 @@ function nuBuildForm(f){
 	b.browse_columns 			= f.browse_columns;
 	b.browse_sql				= f.browse_sql;
 	b.browse_rows 				= f.browse_rows;
+	b.browse_table_id			= f.browse_table_id;
+	b.browse_filtered_rows		= f.browse_height;
 	b.pages 					= f.pages;
 	b.form_code					= f.form_code;
 	b.form_description			= f.form_description;
 	b.form_type					= f.form_type;
 	b.run_code					= f.run_code;
 	b.run_description			= f.run_description;
-	b.browse_table_id			= f.browse_table_id;
 
 	nuAddHolder('nuBreadcrumbHolder');
 	nuAddHomeLogout();
@@ -174,6 +175,10 @@ function nuBuildForm(f){
 
 	window.nuSAVED		= true;
 
+	$(function() {
+		FastClick.attach(document.body);
+	});
+	
 }
 
 
@@ -368,7 +373,7 @@ function nuAddActionButtons(form){
 		
 		$('#nuActionHolder').append("<input id='nuSearchField' type='text' class='nuSearch' onfocus='this.value = this.value;' onkeypress='nuSearchPressed(event)' onkeydown='nuArrowPressed(event)' value='" + s + "'>");
 		$('#nuActionHolder').append("<input id='nuFilter' style='visibility:hidden;width:0px' value='" + f + "'>");
-		$('#nuActionHolder').append("<button id='nuSearchButton' type='button' class='nuActionButton'  onclick='nuSearchAction(1)'><i class='fa fa-search'></i>&nbsp;" + nuTranslate('Search') + "</button>");
+		$('#nuActionHolder').append("<button id='nuSearchButton' type='button' class='nuActionButton'  onclick='nuSearchAction()'><i class='fa fa-search'></i>&nbsp;" + nuTranslate('Search') + "</button>");
 		
 		if(button.Add == 1){nuAddActionButton('Add');}
 		if(button.Print == 1){nuAddActionButton('Print');}
@@ -2607,7 +2612,14 @@ function nuArrowPressed(e){
     
 }
 
-function nuSearchAction(p){
+function nuSearchAction(S, F){
+
+	if(arguments.length > 0){
+		$('#nuSearchField').val(S);
+	}
+	if(arguments.length == 2){
+		$('#nuFilter').val(F);
+	}
 
 	var s	= String($('#nuSearchField').val()).replaceAll("'","&#39;", true);
 	var f	= String($('#nuFilter').val()).replaceAll("'","&#39;", true);
@@ -2898,9 +2910,9 @@ function nuChange(e){
 
 		var sfid	= $(e.target).parent().parent().parent()[0].id;
 		var click	= $('#' + sfid).attr('data-nu-clickdelete');
-
+		
 		eval(click);
-	
+		
 		nuHasBeenEdited();
 		nuCalculateForm();
 		
@@ -3042,6 +3054,7 @@ function nuHasBeenEdited(){
 	
 	$('#nuSaveButton').addClass('nuSaveButtonEdited');
 	nuFORM.edited	= true;
+	window.nuSAVED	= false;
 	
 }
 
@@ -3055,8 +3068,8 @@ function nuHasNotBeenEdited(){
 
 function nuDeleteAction(){
 	
-    if (confirm("Delete This Record?")) {
-
+//    if (confirm("Delete This Record?")) {
+    if (confirm(nuTranslate("Delete This Record?"))){
 		$('#nuDelete').prop('checked', true);
 		
 		nuUpdateData('delete');
@@ -3068,8 +3081,8 @@ function nuDeleteAction(){
 
 function nuDeleteAllAction(){
 	
-    if (confirm("Delete This Record?")) {
-
+//    if (confirm("Delete This Record?")) {
+if (confirm(nuTranslate("Delete This Record?"))){
 		$('#nuDelete').prop('checked', true);
 		
 		nuUpdateData('delete', 'all');
@@ -3776,28 +3789,25 @@ function nuRedefine_nuSelectBrowse(){
 
 
 function nuSetVerticalTabs(){
-	
-	$('#nuTabHolder').css('display', 'inline-block');
-	$('.nuTab').css('display', 'block');
-	$('.nuTab').css('width', 200);
-	$('#nuRecord').css('display', 'inline-block');
-	$('.nuTab').css('padding', '8px 2px 0px 2px');
-	$('#nuTabHolder').css('height', window.innerHeight)
+   
+   $('#nuTabHolder').css('display', 'inline-block');
+   $('.nuTab').css('display', 'block');
+   $('#nuRecord').css('display', 'inline-block');
+   $('.nuTab').css('padding', '8px 2px 0px 2px');
+   $('#nuTabHolder').css('height', window.innerHeight)
 
-	var w   = 0;
+   var w   = 0;
 
-	$('.nuTab').each(function( index ) {
+   $('.nuTab').each(function( index ) {
+      $(this).html('&nbsp;&nbsp;&nbsp;' + $(this).html());
+      w   = Math.max(w, nuGetWordWidth($(this).html()));
 
-		$(this).html('&nbsp;&nbsp;&nbsp;' + $(this).html());
-		w   = Math.max(w, nuGetWordWidth($(this).html()));
+   });
 
-	});
-
-	$('#nuTabHolder').html($('#nuTabHolder').html().substr(18));
-	$('#nuTabHolder').css('width', w + 30);
+   $('#nuTabHolder').css('width', w + 30);
+   $('.nuTab').css('width', w + 30);
 
 }
-
 
 function nuHasBeenSaved(){
 	
@@ -3947,3 +3957,66 @@ function nuClickTab(t,s){
 	
 	
 }
+
+
+function nuFilterRun(id, f){
+	
+	var r = JSON.parse(JSON.stringify(nuSERVERRESPONSE));
+	var o = -1;
+	
+	for(var i = 0 ; i < r.objects.length ; i++){
+
+			if(r.objects[i].id == id){
+				
+				if(r.objects[i].filter == f){return;}
+				
+				r.objects[i].filter = f;
+				o = i;
+				
+			}
+
+	}
+
+	if(o == -1){return;}
+
+	nuRUN(r, o, '', '', r);
+
+}
+
+
+
+function nuRecordRun(id, f){
+	
+	var r = JSON.parse(JSON.stringify(nuSERVERRESPONSE));
+	var o = -1;
+	
+	for(var i = 0 ; i < r.objects.length ; i++){
+
+			if(r.objects[i].id == id){
+				
+				if(r.objects[i].record_id == f){return;}
+				
+				r.objects[i].record_id = f;
+				o = i;
+				
+			}
+
+	}
+
+	if(o == -1){return;}
+
+	nuRUN(r, o, '', '', r);
+
+}
+
+
+
+function nuGetIframeValue(f, o){
+	return $('#' + f).contents().find('#' + o).val();
+}
+
+
+function nuSetIframeValue(f, o, v){
+	return $('#' + f).contents().find('#' + o).val(v);
+}
+

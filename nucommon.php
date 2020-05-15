@@ -117,6 +117,14 @@ class nuSqlString{
         $this->groupBy    = $groupBy;
         $this->having     = $having;
         $this->orderBy    = $orderBy;
+	
+		if($from == ''){
+			
+			$this->from       = 'FROM zzzzsys_setup';
+			$this->where      = 'WHERE 0';
+			$this->addField('*');
+
+		}
 
         $this->Dfrom      = $this->from;
         $this->Dwhere     = $this->where;
@@ -125,7 +133,8 @@ class nuSqlString{
         $this->DorderBy   = $this->orderBy;
 
     	$this->buildSQL();
-    }
+
+}
 
     public function restoreDefault($pString){
 
@@ -358,7 +367,8 @@ function nuRunPHP($procedure_code){
 	$j									= json_encode($_POST['nuHash']);
 
 	if(!$_SESSION['nubuilder_session_data']['isGlobeadmin'] and !in_array($ob->zzzzsys_php_id, $p)){
-		nuDisplayError("Access To Procedure Denied... ($procedure_code)");
+	//	nuDisplayError("Access To Procedure Denied... ($procedure_code)");
+		nuDisplayError(nuTranslate("Access To Procedure Denied...")." ($procedure_code)");
 	}
 
 	nuSetJSONData($id, $j);
@@ -380,7 +390,8 @@ function nuRunPHPHidden($nuCode){
 	if($_SESSION['nubuilder_session_data']['isGlobeadmin'] or in_array($r->zzzzsys_php_id, $p)){
 		nuEval($r->zzzzsys_php_id);
 	}else{
-		nuDisplayError("Access To Procedure Denied... ($nuCode)");
+//		nuDisplayError("Access To Procedure Denied... ($nuCode)");
+		nuDisplayError(nuTranslate("Access To Procedure Denied...")." ($nuCode)");
 	}
 
 	$f						= new stdClass;
@@ -1247,18 +1258,41 @@ function nuEval($phpid){
 
 
 
+//function nuProcedure($c){
+//
+//	$s							= "SELECT * FROM zzzzsys_php WHERE sph_code = ? ";
+//	$t							= nuRunQuery($s, [$c]);
+//	$r							= db_fetch_object($t);
+//	$php						= nuReplaceHashVariables($r->sph_php);
+//	$php						= "$php \n\n//--Added by nuProcedure()\n\n$"."_POST['nuProcedureEval'] = '';";
+//	$_POST['nuProcedureEval']	= "Procedure <b>$r->sph_code</b> - run inside ";
+//	
+//	return '';//$php;
+//	
+//}
+
+
+
+
 function nuProcedure($c){
 
-	$s							= "SELECT * FROM zzzzsys_php WHERE sph_code = ? ";
-	$t							= nuRunQuery($s, [$c]);
-	$r							= db_fetch_object($t);
-	$php						= nuReplaceHashVariables($r->sph_php);
-	$php						= "$php \n\n//--Added by nuProcedure()\n\n$"."_POST['nuProcedureEval'] = '';";
-	$_POST['nuProcedureEval']	= "Procedure <b>$r->sph_code</b> - run inside ";
-	
-	return '';//$php;
-	
+   $s                     = "SELECT * FROM zzzzsys_php WHERE sph_code = ? ";
+   $t                     = nuRunQuery($s, [$c]);
+   
+   if (db_num_rows($t) > 0) {  // procedure exists
+   
+      $r                     = db_fetch_object($t);
+      $php                  = nuReplaceHashVariables($r->sph_php);
+      $php                  = "$php \n\n//--Added by nuProcedure()\n\n$"."_POST['nuProcedureEval'] = '';";
+      $_POST['nuProcedureEval']   = "Procedure <b>$r->sph_code</b> - run inside ";
+      return $php;
+   } else
+   {
+      return '';
+   }
+   
 }
+
 
 
 
