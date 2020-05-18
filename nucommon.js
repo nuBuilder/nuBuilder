@@ -1773,3 +1773,9 @@ function nuImportCSV(t, s){
 	}
 	
 }
+
+function nuIsIframe(){
+
+	return parent.window.nuDocumentID != window.nuDocumentID;
+		
+}
