@@ -939,7 +939,9 @@ class nuFormObject {
 			
 			var d		= o.length==1?'':o[1];
 			var p		= F.sign + ' ' + h + F.decimal;
-			var s		= String(d + String(0).repeat(100)).substr(0, F.places).trim();
+			var s 		= Number('0.'+ d).toFixed(F.places).slice(2);			// -- kev1n
+			
+			//var s		= String(d + String(0).repeat(100)).substr(0, F.places).trim();
 
 			if(String(h) == 'toobig' && nuSERVERRESPONSE.access_level_code == ''){
 				nuMessage(["What did we say ?",'','<img id="thebig" src="graphics\\point.png">']);return '';

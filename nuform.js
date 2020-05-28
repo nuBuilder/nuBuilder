@@ -858,7 +858,8 @@ function nuINPUT(w, i, l, p, prop){
 
 		nuSetAccess(ID, prop.objects[i].read);
 		
-		return Number(prop.objects[i].width) + 4;
+//		return Number(prop.objects[i].width) + 4;
+		return Number(prop.objects[i].width) + (prop.objects[i].read == 2 ? -2 : 4);		//-- kev1n
 		
 	}
 	
@@ -1592,7 +1593,8 @@ function nuGetSubformRowSize(o, SF, id){
         if(SF.subform_type == 'g'){                                             //-- grid
             
             nuBuildSubformTitle(o[i], l, w, id, i);
-            l = l + w + 6;
+            //l = l + w + 6;
+			l = l + w + (o[i].read == 2 ? 0 : 6);								//-- kev1n
             
         }
         
