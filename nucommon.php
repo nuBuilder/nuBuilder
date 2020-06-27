@@ -426,7 +426,7 @@ function nuSetJSONData($i, $nj){
 
 
 function nuGetJSONData($i){
-	
+
 	$s					= "SELECT * FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
 	$t					= nuRunQuery($s, array($_SESSION['nubuilder_session_data']['SESSION_ID']));			 
 	$r					= db_fetch_object($t);

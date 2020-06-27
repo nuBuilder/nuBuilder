@@ -11,6 +11,7 @@ $GLOBALS['nu_columns']      = array();
 $GLOBALS['nu_files']        = array();
 
 $jsonID                     = $_GET['i'];
+
 $J							= nuGetJSONData($jsonID);
 $TABLE_ID                   = nuTT();
 $JSON                       = json_decode($J);
@@ -814,7 +815,7 @@ function pdfObject($id, $t){
 function nuSetPixelsToMM($pxREPORT){
 
     $ratio = .25;
-    
+	
     for($g = 0 ; $g < count($pxREPORT->groups) ; $g++){
         
         for($s = 0 ; $s < count($pxREPORT->groups[$g]->sections) ; $s++){

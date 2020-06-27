@@ -48,7 +48,7 @@ function nuBuildFastReport(){
 
 	$js		= "
 
-		var m1	= '<h1>A Fast Report been created!</h1>';
+		var m1	= '<h1>A Fast Report has been created!</h1>';
 		var m2	= '<p>(There is now a Report with a Code of <b>$c</b> found in <b>Reports</b>)';
 
 		nuMessage([m1, m2]);

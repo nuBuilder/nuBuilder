@@ -3783,7 +3783,10 @@ function nuRedefine_nuSelectBrowse(){
 			
 		}
 		
-		nuSelectBrowse = function (e, t){}					//-- so that it doesn't run twice.
+      if (e.ctrlKey == false) {
+          nuSelectBrowse = function (e, t) {} //-- so that it doesn't run twice.
+      }
+//	  nuSelectBrowse = function (e, t){}					//-- so that it doesn't run twice.
 		
 	}
 		
