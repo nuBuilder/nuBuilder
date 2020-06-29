@@ -385,7 +385,7 @@ function nuFastForms(){
 function nuBuildNewTable($tab, $array, $newT){
 
 	$id			= $tab . '_id';
-	$start		= "CREATE TABLE $tab";
+	$start	= "CREATE TABLE $tab";
 	$a			= Array();
 	$a[] 		= "$id VARCHAR(25) NOT NULL";
 
@@ -393,26 +393,27 @@ function nuBuildNewTable($tab, $array, $newT){
 	$ff_fk		= nuHash()['fastform_fk'];
 
 	if($ff_type == 'subform' && $newT){
-		$a[] 	= "$ff_fk VARCHAR(25) NOT NULL";
+		$a[] 	= "$ff_fk VARCHAR(25) DEFAULT NULL";
 	}
 
 	for($i = 0 ; $i < count($array) ; $i++){
 
-		$f		= $array[$i]['name'];
-		$t		= $array[$i]['type'];
+		$f = $array[$i]['name'];
+		$t = $array[$i]['type'];
 		
-		if($t == 'id'){				$a[] = "$f VARCHAR(25) NOT NULL";}
-		if($t == 'varchar'){		$a[] = "$f VARCHAR(1000) NOT NULL";}
-		if($t == 'int'){			$a[] = "$f INT NOT NULL";}
-		if($t == 'textarea'){		$a[] = "$f TEXT NOT NULL";}
-		if($t == 'decimal'){		$a[] = "$f DECIMAL(12,4) NOT NULL";}
-		if($t == 'date'){			$a[] = "$f DATE NOT NULL";}
-		if($t == 'longtext'){		$a[] = "$f LONGTEXT NOT NULL";}
+		if($t == 'id'){			$a[] = "$f VARCHAR(25) DEFAULT NULL";}
+		if($t == 'varchar'){		$a[] = "$f VARCHAR(1000) DEFAULT NULL";}
+		if($t == 'int'){		$a[] = "$f INT DEFAULT NULL";}
+		if($t == 'textarea'){		$a[] = "$f TEXT DEFAULT NULL";}
+		if($t == 'decimal'){		$a[] = "$f DECIMAL(12,4) DEFAULT NULL";}
+		if($t == 'date'){		$a[] = "$f DATE DEFAULT NULL";}
+		if($t == 'longtext'){		$a[] = "$f LONGTEXT DEFAULT NULL";}
 		
 	}
 	
-	$a[]							= "PRIMARY KEY  ($id)";
-	$im								= implode(',', $a);
+	$a[] = "PRIMARY KEY  ($id)";
+	$im  = implode(',', $a);
+
 	return "$start ($im)";
 
 }
