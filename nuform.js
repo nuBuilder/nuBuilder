@@ -49,6 +49,7 @@ function nuBuildForm(f){
 	window.nuUniqueID			= 'c' + String(Date.now());
 	window.global_access		= f.global_access == '1';
 	nuFORM.edited				= false;
+	window.nuVerticalTabs 		= false;
 	nuFORM.scroll				= [];
 	nuSetSuffix(1000);
 	nuSetBody(f);
