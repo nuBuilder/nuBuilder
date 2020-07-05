@@ -24,13 +24,14 @@ function nuBuildForm(f){
 		
 		window.nuTimesSaved		= window.nuTimesSaved + 1;
 		
-		if(window.nuLastForm != f.form_id){
+		if(window.nuLastForm != f.form_id || nuLastRecordId != f.record_id){
 			window.nuTimesSaved	= 0;
 		}
 		
 	}
 	
 	window.nuLastForm			= f.form_id;
+	window.nuLastRecordId		= f.record_id;
 	window.nuSubformRow			= -1;
 	window.nuBeforeSave			= null;
 	window.nuBeforeDelete		= null;

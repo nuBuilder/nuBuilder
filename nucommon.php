@@ -8,7 +8,10 @@ require_once('nuemailer.php');
 require_once dirname(__FILE__) . '/nusqlclass.php';
 require_once dirname(__FILE__) . '/nusearchclass.php';
 
-set_time_limit(0);
+//set_time_limit(0);
+
+nuSetTimeLimit(0);
+
 mb_internal_encoding('UTF-8');
 
 $GLOBALS['nuSetup']			= db_setup();
@@ -44,6 +47,14 @@ function nuClientTimeZone(){
     // set timezone setting for MYSQL
     nuRunQuery("SET time_zone = '$offset'");       
  
+}
+
+
+
+function nuSetTimeLimit(){
+	if (function_exists('set_time_limit')) {
+		set_time_limit(0);
+	}
 }
 
 
