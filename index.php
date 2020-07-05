@@ -237,6 +237,10 @@ window.nuHASH				= [];
 		$('.nuTabTitleColumn').css('width', w);
 		$('body').css('width', w);
 		
+		if (window.nuVerticalTabs) {
+			nuSetVerticalTabs();
+		}
+
 	}
 
 	</script>

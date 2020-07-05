@@ -2893,7 +2893,8 @@ function nuHighlightSearch(){
 				h	= h.replaceAll(search[i],'`````' + search[i] + '````', true);
 			}
 
-			h 		= h.replaceAll('`````', '<span class="nuBrowseSearch" onclick="this.offsetParent.onclick()">', true);
+//			h 		= h.replaceAll('`````', '<span class="nuBrowseSearch" onclick="this.offsetParent.onclick()">', true);
+			h       = h.replaceAll('`````', '<span class="nuBrowseSearch" >', true);
 			h 		= h.replaceAll('````', '</span>', true);
 			
 			$(this).html(h);
@@ -3792,7 +3793,7 @@ function nuRedefine_nuSelectBrowse(){
 		
 }
 
-
+/*
 function nuSetVerticalTabs(){
    
    $('#nuTabHolder').css('display', 'inline-block');
@@ -3813,6 +3814,31 @@ function nuSetVerticalTabs(){
    $('.nuTab').css('width', w + 30);
 
 }
+*/
+
+function nuSetVerticalTabs(){
+   
+   $('#nuTabHolder').css('display', 'inline-block');
+   $('.nuTab').css('display', 'block');
+   $('#nuRecord').css('display', 'inline-block');
+   $('.nuTab').css('padding', '8px 2px 0px 2px');
+   $('#nuTabHolder').css('height', window.innerHeight)
+
+   var w   = 0;
+
+   var s = '&nbsp;&nbsp;&nbsp;';   
+   $('.nuTab').each(function( index ) {
+      $(this).html($(this).html().includes(s) ? $(this).html() : s + $(this).html());
+      w   = Math.max(w, nuGetWordWidth($(this).html()));
+
+   });
+
+   $('#nuTabHolder').css('width', w + 30);
+   $('.nuTab').css('width', w + 30);
+   
+   window.nuVerticalTabs = true;
+}
+
 
 function nuHasBeenSaved(){
 	
