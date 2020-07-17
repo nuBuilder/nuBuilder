@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 20, 2020 at 10:36 PM
+-- Generation Time: Jul 18, 2020 at 01:17 AM
 -- Server version: 10.4.10-MariaDB
 -- PHP Version: 7.3.12
 
@@ -379,7 +379,8 @@ CREATE TABLE `zzzzsys_format` (
 INSERT INTO `zzzzsys_format` (`zzzzsys_format_id`, `srm_type`, `srm_format`) VALUES
 ('nu59e28f061a779da', 'Number', '$ 1000.00'),
 ('nu5d8a9b303b55b6d', 'Date', 'dd-mm-yy'),
-('nu5d8a9b47ac4f5ae', 'Number', ' 1000.00');
+('nu5d8a9b47ac4f5ae', 'Number', ' 1000.00'),
+('5f122e6ed6723e9', 'Date', 'dd-mm-yyyy');
 
 -- --------------------------------------------------------
 
@@ -623,7 +624,7 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu59e446589ac75be', 'nusample', '', 'word', 'wordsample', 'Word', 'nu5bad6cb370eb06a', 180, 33, 261, 117, 18, '1', 'center', '0', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', '', '', ''),
 ('nu59e446589adce4d', 'nusample', '', 'input', 'inputbuttonsample', 'Run', 'nu5bad6cb373c384f', 90, 13, 249, 117, 31, '1', 'center', '0', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, 'N|$ 1,000.00', 'button', '', '', '', '', '', '', '', ''),
 ('nu59e446589af5d86', 'nusample', '', 'input', 'inputnumbersample', 'Input:number', 'nu5bad6cb373c384f', 40, 438, 249, 55, 20, '1', 'right', '0', '0', '', '', '', '', '', '', 'SELECT COUNT(*) FROM zzzzsys_debug', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, 'N|$ 1,000.00', 'number', '', '', '', '', '', '', '', ''),
-('nu59e446589b0af4c', 'nusample', '', 'input', 'inputnudatesample', 'Input:nuDate', 'nu5bad6cb373c384f', 20, 318, 249, 95, 20, '1', 'left', '0', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, 'D|dd-mm-yy', 'nuDate', '', '', '', '', '', '', '', ''),
+('nu59e446589b0af4c', 'nusample', '', 'input', 'inputnudatesample', 'Input:nuDate', 'nu5bad6cb373c384f', 20, 318, 249, 95, 20, '1', 'left', '0', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, 'D|dd-mm-yyyy', 'nuDate', '', '', '', '', '', '', '', ''),
 ('nu59e446589b20a14', 'nusample', '', 'input', 'inputnunumbersample', 'Input:nuNumber', 'nu5bad6cb373c384f', 30, 378, 249, 90, 20, '1', 'right', '0', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, 'N|1000.00', 'nuNumber', '', '', '', '', '', '', '', ''),
 ('nu59e446589b3714b', 'nusample', '', 'calc', 'calcsample', 'Calc', 'nu5bad6cb370eb06a', 170, 81, 261, 98, 20, '1', 'right', '0', '0', 'nuTotal(\'inputnunumbersample\') + nuTotal(\'inputnumbersample\')', 'N|1000.00', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, 'N|$ 1,000.00', 'nuNumber', '', '', '', '', '', '', '', ''),
 ('nu59e446589b4c69b', 'nusample', '', 'input', 'inputcheckboxsample', 'Input:checkbox', 'nu5bad6cb373c384f', 70, 78, 249, 70, 18, '1', 'right', '0', '0', '', '', '', '', '', '', 'SELECT COUNT(*) FROM zzzzsys_debug', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, 'N|$ 1,000.00', 'checkbox', '', '', '', '', '', '', '', ''),
@@ -3946,7 +3947,7 @@ CREATE TABLE `zzzzsys_user` (
 --
 DROP TABLE IF EXISTS `zzzzsys_report_data`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `zzzzsys_report_data`  AS  select concat('PROCEDURE:',`zzzzsys_php`.`zzzzsys_php_id`) AS `id`,`zzzzsys_php`.`sph_code` AS `code`,`zzzzsys_php`.`sph_description` AS `description` from `zzzzsys_php` where `zzzzsys_php`.`sph_system` <> '1' and locate('#TABLE_ID#',`zzzzsys_php`.`sph_php`) > '0' union select concat('SQL:',`zzzzsys_select`.`zzzzsys_select_id`) AS `id`,'nuSQL' AS `code`,`zzzzsys_select`.`sse_description` AS `description` from `zzzzsys_select` where `zzzzsys_select`.`sse_system` is null or `zzzzsys_select`.`sse_system` = '' union select concat('TABLE:',`zzzzsys_table`.`zzzzsys_table_id`) AS `id`,'nuTABLE' AS `code`,`zzzzsys_table`.`zzzzsys_table_id` AS `description` from `zzzzsys_table` ;
+CREATE VIEW `zzzzsys_report_data`  AS  select concat('PROCEDURE:',`zzzzsys_php`.`zzzzsys_php_id`) AS `id`,`zzzzsys_php`.`sph_code` AS `code`,`zzzzsys_php`.`sph_description` AS `description` from `zzzzsys_php` where `zzzzsys_php`.`sph_system` <> '1' and locate('#TABLE_ID#',`zzzzsys_php`.`sph_php`) > '0' union select concat('SQL:',`zzzzsys_select`.`zzzzsys_select_id`) AS `id`,'nuSQL' AS `code`,`zzzzsys_select`.`sse_description` AS `description` from `zzzzsys_select` where `zzzzsys_select`.`sse_system` is null or `zzzzsys_select`.`sse_system` = '' union select concat('TABLE:',`zzzzsys_table`.`zzzzsys_table_id`) AS `id`,'nuTABLE' AS `code`,`zzzzsys_table`.`zzzzsys_table_id` AS `description` from `zzzzsys_table` ;
 
 -- --------------------------------------------------------
 
@@ -3955,7 +3956,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `zzzzsys_run_list`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `zzzzsys_run_list`  AS  select `zzzzsys_form`.`zzzzsys_form_id` AS `id`,'Form' AS `run`,`zzzzsys_form`.`sfo_code` AS `code`,`zzzzsys_form`.`sfo_description` AS `description` from `zzzzsys_form` union select `zzzzsys_report`.`zzzzsys_report_id` AS `id`,'Report' AS `run`,`zzzzsys_report`.`sre_code` AS `code`,`zzzzsys_report`.`sre_description` AS `description` from `zzzzsys_report` union select `zzzzsys_php`.`zzzzsys_php_id` AS `id`,'Procedure' AS `run`,`zzzzsys_php`.`sph_code` AS `code`,`zzzzsys_php`.`sph_description` AS `description` from `zzzzsys_php` where `zzzzsys_php`.`sph_system` <> 1 order by `code` ;
+CREATE VIEW `zzzzsys_run_list`  AS  select `zzzzsys_form`.`zzzzsys_form_id` AS `id`,'Form' AS `run`,`zzzzsys_form`.`sfo_code` AS `code`,`zzzzsys_form`.`sfo_description` AS `description` from `zzzzsys_form` union select `zzzzsys_report`.`zzzzsys_report_id` AS `id`,'Report' AS `run`,`zzzzsys_report`.`sre_code` AS `code`,`zzzzsys_report`.`sre_description` AS `description` from `zzzzsys_report` union select `zzzzsys_php`.`zzzzsys_php_id` AS `id`,'Procedure' AS `run`,`zzzzsys_php`.`sph_code` AS `code`,`zzzzsys_php`.`sph_description` AS `description` from `zzzzsys_php` where `zzzzsys_php`.`sph_system` <> 1 order by `code` ;
 
 --
 -- Indexes for dumped tables
