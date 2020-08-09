@@ -1106,17 +1106,17 @@ function nuBuildFormSchema(){
 
 function nuBuildTableSchema(){
 
-	$a				= array();
-	$t				= nuRunQuery("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = DATABASE()");
+   $a            = array();
+   $t            = nuRunQuery("SELECT table_name as TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = DATABASE()");
 
-	while($r = db_fetch_object($t)){
-		
-		$tn			= $r->table_name;
-		$a[$tn] 	= array('names' => db_field_names($tn), 'types' => db_field_types($tn), 'primary_key' => db_primary_key($tn), 'valid' => 1);
-		
-	}
-	
-	return $a;
+   while($r = db_fetch_object($t)){
+      
+      $tn         = $r->TABLE_NAME;
+      $a[$tn]    = array('names' => db_field_names($tn), 'types' => db_field_types($tn), 'primary_key' => db_primary_key($tn), 'valid' => 1);
+      
+   }
+   
+   return $a;
 
 }
 
@@ -1124,19 +1124,16 @@ function nuBuildTableSchema(){
 
 function nuBuildViewSchema(){
 
-	$a				= array();
-	$t				= nuRunQuery("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'VIEW' AND table_schema = DATABASE()");
+   $a            = array();
+   $t            = nuRunQuery("SELECT table_name as TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'VIEW' AND table_schema = DATABASE()");
 
-	while($r = db_fetch_object($t)){
-		$a[]		= $r->table_name;
-	}
-	
-	return $a;
+   while($r = db_fetch_object($t)){
+      $a[]      = $r->TABLE_NAME;
+   }
+   
+   return $a;
 
 }
-
-
-
 function nuUpdateFormSchema(){
 
 	$s 		= nuGetJSONData('clientFormSchema');
