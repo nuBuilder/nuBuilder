@@ -83,6 +83,7 @@ function nuGetJS_action_screen($nuBrowseFunction, $target, $welcome, $opener, $s
 				
 		}
 		nuBindCtrlEvents();
+
 		if(p.type == 'R') {
 			nuRunReport(p.record_id, p.parameters);
 		} else if(p.type == 'P') {

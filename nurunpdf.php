@@ -20,7 +20,6 @@ $hashData                   = nuAddToHashList($JSON, 'report');
 $hashData['TABLE_ID']       = $TABLE_ID;
 $GLOBALS['TABLE_ID']        = $TABLE_ID;
 $_POST['nuHash']			= $hashData;
-
 $PDF                        = new TCPDF($LAYOUT->orientation, 'mm', $LAYOUT->paper, true, 'UTF-8', false);
 
 $PDF->SetAutoPageBreak(true);

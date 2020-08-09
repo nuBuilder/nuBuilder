@@ -1052,7 +1052,7 @@ function nuRUN(w, i, l, p, prop){
 	
 	
 	var O			= prop.objects[i];
-	
+
 	$('#' + id).css({'top'     		: Number(O.top),
 					'left'     		: Number(O.left),
 					'width'    		: Number(O.width),

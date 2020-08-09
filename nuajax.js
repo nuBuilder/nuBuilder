@@ -167,8 +167,8 @@ function nuRunReport(f, iframe){
 	last.session_id 	= window.nuSESSION;
 	last.call_type		= 'runreport';
 	last.form_id		= f;
-	last.hash 			= nuHashFromEditForm();
-	
+	last.hash 			= parent.nuHashFromEditForm();
+
 	var successCallback = function(data,textStatus,jqXHR){
 		
 		var fm 			= data;
