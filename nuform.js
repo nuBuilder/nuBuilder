@@ -3504,8 +3504,8 @@ function nuMessage(o){
 	//var l		= (screen.width - widest) / 2;
 	var l		= ( $(window.top.document).width() - widest) / 2;
 
-	$('body', par).append("<div id='nuMessageDiv' class='nuMessage' style='overflow:hidden;width:" + widest + "px;left:" + l + "px' ></div>")
-	
+//	$('body', par).append("<div id='nuMessageDiv' class='nuMessage' style='overflow:hidden;width:" + widest + "px;left:" + l + "px' ></div>")
+	$('body', par).append("<div id='nuMessageDiv' class='nuMessage' style='position:fixed; overflow:hidden;width:" + widest + "px;top:55px; left:10px' ></div>")	
 	
 	for(var i = 0 ; i < o.length ; i++){
 		
