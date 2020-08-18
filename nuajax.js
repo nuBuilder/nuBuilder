@@ -585,6 +585,8 @@ function nuGetLookupCode(e){
 	last.code		 		= e.target.value;
 	last.hash  				= nuHashFromEditForm();
 	
+	window.nuLOOKUPSTATE[last.object_id] = 'looking';
+
 	var successCallback = function(data,textStatus,jqXHR){		
 		
 		nuSERVERRESPONSELU 	= data;

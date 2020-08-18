@@ -45,6 +45,7 @@ function nuBuildForm(f){
 	window.nuHASH				= [];                       //-- remove any hash variables previously set.
 	window.nuTABHELP			= [];
 	window.nuFORMHELP			= [];
+	window.nuLOOKUPSTATE		= [];
 	window.nuBROWSEROW			= -1;
 	window.nuBROWSECLICKED		= false;
 	window.nuUniqueID			= 'c' + String(Date.now());
@@ -2775,6 +2776,8 @@ function nuPopulateLookup(fm, target){
 		if(i == 1){$('#' + id).focus();}
 		
 	}
+
+	window.nuLOOKUPSTATE[$('#' + target).attr('data-nu-object-id')] = 'found';
 	
 	nuCalculateForm();
 
@@ -3200,8 +3203,11 @@ function nuIsNewRecord(){
 
 function nuSaveAction(){
 	
-	if(nuNoDuplicates()){
-		nuUpdateData('save');
+	if(!nuLookingUp()){
+		
+		if(nuNoDuplicates()){
+			nuUpdateData('save');
+		}
 	}
 
 }
@@ -4053,4 +4059,27 @@ function nuGetIframeValue(f, o){
 function nuSetIframeValue(f, o, v){
 	return $('#' + f).contents().find('#' + o).val(v);
 }
+
+
+function nuLookingUp(){
+
+	for (var lu in window.nuLOOKUPSTATE){
+		
+		if (window.nuLOOKUPSTATE.hasOwnProperty(lu)){
+			
+			if(window.nuLOOKUPSTATE[lu] == 'looking'){
+				
+				alert(nuTranslate('A Lookup is still being populated...'));
+				return true;
+				
+			}
+
+		}
+		
+	}
+
+	return false;
+	
+}
+
 
