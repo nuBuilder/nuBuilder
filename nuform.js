@@ -4064,18 +4064,14 @@ function nuSetIframeValue(f, o, v){
 function nuLookingUp(){
 
 	for (var lu in window.nuLOOKUPSTATE){
-		
-		if (window.nuLOOKUPSTATE.hasOwnProperty(lu)){
+	
+		if(window.nuLOOKUPSTATE[lu] == 'looking'){
 			
-			if(window.nuLOOKUPSTATE[lu] == 'looking'){
-				
-				alert(nuTranslate('A Lookup is still being populated...'));
-				return true;
-				
-			}
-
+			alert(nuTranslate('A Lookup is still being populated...'));
+			return true;
+			
 		}
-		
+	
 	}
 
 	return false;
