@@ -4067,7 +4067,7 @@ function nuLookingUp(){
 	
 		if(window.nuLOOKUPSTATE[lu] == 'looking'){
 			
-			alert(nuTranslate('A Lookup is still being populated...'));
+			nuMessage([nuTranslate('A Lookup is still being populated...')]);
 			return true;
 			
 		}
