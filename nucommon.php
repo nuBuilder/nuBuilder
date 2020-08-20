@@ -277,7 +277,7 @@ function nuSetHashList($p){
 
 	foreach ($p as $key => $value){											//-- The 'opener' Form's properties
 
-		if(gettype($value) == 'string'){
+		if(gettype($value) == 'string' or is_numeric ($value)){
 			$h[$key]			= addslashes($value);
 		}else{
 			$h[$key]			= '';
@@ -289,7 +289,7 @@ function nuSetHashList($p){
 		
 		foreach ($p['hash'] as $key => $value){								//-- The 'opener' Form's hash variables
 
-			if(gettype($value) == 'string'){
+			if(gettype($value) == 'string' or is_numeric ($value)){
 				$h[$key]			= addslashes($value);
 			}else{
 				$h[$key]			= '';

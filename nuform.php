@@ -1123,7 +1123,7 @@ function nuGatherFormAndSessionData($home){
 	}
     
     $formAndSessionData->errors 		= $_POST['nuErrors'];
-	
+
 	return $formAndSessionData;
 	
 }

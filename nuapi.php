@@ -27,7 +27,6 @@
 	$_POST['nuHash']['nuFORMdata']			= json_decode(json_encode($_POST['nuSTATE']['nuFORMdata']));		//-- this holds data from an Edit Form
 	$_POST['nuHash']['TABLE_ID'] 			= nuTT();
 	$_POST['nuHash']['SESSION_ID'] 			= $_SESSION['nubuilder_session_data']['SESSION_ID'];
-
 	$_POST['nuValidate']					= array();
 	$_POST['nuCallback']					= '';
 	$_POST['nuAfterEvent']					= false;
