@@ -235,7 +235,7 @@ function nuUpdateDatabase(){
 						}
 
 						$idx = array_search($fields[$R], $CTSTN);
-						if($idx != false){								//-- valid field names
+						if($idx !== false){								//-- valid field names
 
 							if($isAN){
 								$v	= nuAutoNumber($sf->object_id, $fields[$R], $row[$R]);
