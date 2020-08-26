@@ -63,7 +63,9 @@ If you are using nuBuilder as a standalone application, then follow these instru
 
 == Changelog ==
 2019-11-01 : Increased size for calc formula.- need to run Update.
+
 2019-11-01 : Calc Objects can use Select Objects.
+
 2019-11-01 : Clicking Checkbox Objects set to readony will not change their value.
 2019-11-11 : updated email functions
 2019-12-06 : added pointer events for widening Browse columns
@@ -106,6 +108,9 @@ If you are using nuBuilder as a standalone application, then follow these instru
 2020-08-20 : Added Checkbox values to Hash Cookies.
 2020-08-23 : Fixed bug comparing valid field names.
 2020-08-27 : Fixed Browser search bug.
+
+
+
 
 = 1.0 =
 
