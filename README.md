@@ -62,50 +62,52 @@ If you are using nuBuilder as a standalone application, then follow these instru
 2. Edit nuconfig.php to set you database credentials and globeadmin credentials
 
 == Changelog ==
-=2019-11-01 : Increased size for calc formula.- need to run Update.
-=2019-11-01 : Calc Objects can use Select Objects.
-=2019-11-01 : Clicking Checkbox Objects set to readony will not change their value.
-=2019-11-11 : updated email functions
-=2019-12-06 : added pointer events for widening Browse columns
-=2020-01-11 : Improved nuEmailer.php
-=2020-01-11 : Fixed class bug in nuapi.php for future PHP versions
-=2020-01-12 : Czech added to translations
-=2020-01-15 : Fixed nuSetVerticalTabs() bug.
-=2020-01-20 : Fixed SQL error in Launch Forms
-=2020-01-27 : added JS function nuFilterRun()
-=2020-01-31 : added JS function nuRecordRun()
-=2020-02-15 : added JS function nuGetIframeValue() and nuSetIframeValue()
-=2020-02-15 : improved nuProcedure()
-=2020-02-15 : improved nuFormDimensions()
-=2020-02-23 : added property browse_filtered_rows to nuFORM.getCurrent()
-=2020-03-01 : Adding a Subform row will return false with nuIsSaved()
-=2020-03-29 : Added nuAccessLevelId()
-=2020-04-12 : The phrases 'on row' and 'has a duplicate' will now be translated if there is a translation alternative.
-=2020-04-12 : Subform Object event beforeinsertrow can set nuCancel = true; stop a row being added.
-=2020-04-20 : added "Delete This Record?" and "Access To Procedure Denied..." for nuTranslate()
-=2020-04-27 : Parameters added to nuSearchAction()
-=2020-05-04 : Updated phpMyAdmin to 5.0.2
-=2020-05-19 : Updated German, Russian, Armenian Languages
-=2020-05-29 : fix for nuNumber rounding and Subform columns.
-=2020-05-29 : Added Language use for Globeadmin.
-=2020-06-28 : Fix for nuSelectBrowse().
-=2020-06-29 : Fix TCPDF error.Fix nuBuildNewTable()
-=2020-07-06 : Fix highlight bug in Browse Forms. Improved nuSetVerticalTabs()
-=2020-07-06 : Improved time outs and improved nuHasBeenSaved()
-=2020-07-10 : Empty date values are now stored as null in database.
-=2020-07-10 : Prevent a user from double-clicking am Action Button.
-=2020-07-18 : Set default date format to dd-mm-yyyy (run update)
-=2020-07-24 : Removed fastclick and upDated database.
-=2020-08-09 : Fix filter in Iframe Reports
-=2020-08-10 : Improved nuBuildViewSchema() and nuBuildTableSchema()
-=2020-08-11 : Improved nuMessage() positioning
-=2020-08-13 : upgraded jquery to jquery-3.5.1.min.js
-=2020-08-13 : Improved nuMessage() positioning again
-=2020-08-13 : Improved nuMessage() positioning again again
-=2020-08-18 : Added Lookup checking before saving a record.
-=2020-08-20 : Added Checkbox values to Hash Cookies.
-=2020-08-23 : Fixed bug comparing valid field names.
-=2020-08-27 : Fixed Browser search bug.
+
+2019-11-01 : Increased size for calc formula.- need to run Update.</br>
+2019-11-01 : Calc Objects can use Select Objects.</br>
+2019-11-01 : Clicking Checkbox Objects set to readony will not change their value.</br>
+2019-11-11 : updated email functions</br>
+2019-12-06 : added pointer events for widening Browse columns</br>
+2020-01-11 : Improved nuEmailer.php</br>
+2020-01-11 : Fixed class bug in nuapi.php for future PHP versions</br>
+2020-01-12 : Czech added to translations</br>
+2020-01-15 : Fixed nuSetVerticalTabs() bug.</br>
+2020-01-20 : Fixed SQL error in Launch Forms</br>
+2020-01-27 : added JS function nuFilterRun()</br>
+2020-01-31 : added JS function nuRecordRun()</br>
+2020-02-15 : added JS function nuGetIframeValue() and nuSetIframeValue()</br>
+2020-02-15 : improved nuProcedure()</br>
+2020-02-15 : improved nuFormDimensions()</br>
+2020-02-23 : added property browse_filtered_rows to nuFORM.getCurrent()</br>
+2020-03-01 : Adding a Subform row will return false with nuIsSaved()</br>
+2020-03-29 : Added nuAccessLevelId()</br>
+2020-04-12 : The phrases 'on row' and 'has a duplicate' will now be translated if there is a translation alternative.</br>
+2020-04-12 : Subform Object event beforeinsertrow can set nuCancel = true; stop a row being added.</br>
+2020-04-20 : added "Delete This Record?" and "Access To Procedure Denied..." for nuTranslate()</br>
+2020-04-27 : Parameters added to nuSearchAction()</br>
+2020-05-04 : Updated phpMyAdmin to 5.0.2</br>
+2020-05-19 : Updated German, Russian, Armenian Languages</br>
+2020-05-29 : fix for nuNumber rounding and Subform columns.</br>
+2020-05-29 : Added Language use for Globeadmin.</br>
+2020-06-28 : Fix for nuSelectBrowse().</br>
+2020-06-29 : Fix TCPDF error.Fix nuBuildNewTable()</br>
+2020-07-06 : Fix highlight bug in Browse Forms. Improved nuSetVerticalTabs()</br>
+2020-07-06 : Improved time outs and improved nuHasBeenSaved()</br>
+2020-07-10 : Empty date values are now stored as null in database.</br>
+2020-07-10 : Prevent a user from double-clicking am Action Button.</br>
+2020-07-18 : Set default date format to dd-mm-yyyy (run update)</br>
+2020-07-24 : Removed fastclick and upDated database.</br>
+2020-08-09 : Fix filter in Iframe Reports</br>
+2020-08-10 : Improved nuBuildViewSchema() and nuBuildTableSchema()</br>
+2020-08-11 : Improved nuMessage() positioning</br>
+2020-08-13 : upgraded jquery to jquery-3.5.1.min.js</br>
+2020-08-13 : Improved nuMessage() positioning again</br>
+2020-08-13 : Improved nuMessage() positioning again again</br>
+2020-08-18 : Added Lookup checking before saving a record.</br>
+2020-08-20 : Added Checkbox values to Hash Cookies.</br>
+2020-08-23 : Fixed bug comparing valid field names.</br>
+2020-08-27 : Fixed Browser search bug.</br>
+
 
 == Documentation ==
 
