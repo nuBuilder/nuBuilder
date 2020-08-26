@@ -106,7 +106,6 @@ If you are using nuBuilder as a standalone application, then follow these instru
 2020-08-18 : Added Lookup checking before saving a record.</br>
 2020-08-20 : Added Checkbox values to Hash Cookies.</br>
 2020-08-23 : Fixed bug comparing valid field names.</br>
-2020-08-27 : Fixed Browser search bug.</br>
 
 
 == Documentation ==
