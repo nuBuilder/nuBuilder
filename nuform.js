@@ -2632,8 +2632,7 @@ function nuSearchAction(S, F){
 	window.nuFORM.setProperty('search', s);
 	window.nuFORM.setProperty('filter', f);
 	
-//	if(arguments.length == 1){
-	if(arguments.length == 1 || s !== ''){
+	if(arguments.length == 1){
 
 		window.nuFORM.setProperty('page_number', 0);
 	}
