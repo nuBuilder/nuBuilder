@@ -765,9 +765,11 @@ class nuFormObject {
 				
 			});
 			
+		if(!(na == 0 && dnpk == -1)){
 			o.rows.push(V);
 			o.edited.push(E);
 			o.deleted.push(chk);
+		}
 			
 		});
 		
