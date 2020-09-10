@@ -2632,7 +2632,7 @@ function nuSearchAction(S, F){
 	window.nuFORM.setProperty('search', s);
 	window.nuFORM.setProperty('filter', f);
 	
-	if(arguments.length == 0 && nuSearchAction.caller.name != 'nuGetPage'){
+	if(arguments.length == 0 && arguments.callee.caller.name != 'nuGetPage'){
 		window.nuFORM.setProperty('page_number', 0);
 	}
 	if(arguments.length == 1){
