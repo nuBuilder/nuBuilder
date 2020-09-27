@@ -1599,4 +1599,114 @@ function nuTranslate($e){
 }
 
 
+function nuExportCSV($f, $t, $d){
+	
+	$T = nuRunQuery("SELECT * FROM `$t`");
+	$a = array();
+	$c = db_field_names($t);
+	
+	while($r = db_fetch_row($T)){
+		$a[] = $r;
+	}
+
+	header('Content-Type: application/excel');
+	header('Content-Encoding: UTF-8');
+	header('Content-Disposition: attachment; filename="' . $f . '"');
+	
+	$fp = fopen('php://output', 'w');
+
+	fputcsv($fp, $c, chr($d));
+
+	for($i = 0 ; $i < count($a) ; $i++) {
+		fputcsv($fp, $a[$i], chr($d));
+	}
+	
+	fclose($fp);
+
+}
+
+function nuImportCSV($f, $t, $d){
+
+	ini_set('auto_detect_line_endings', true);
+
+	$a = array();
+	$w = array();
+	$c = array();
+	$h = fopen('csvfiles/' . $f, "r");
+	$id = $t . '_nuid';
+
+	if(empty($h) === false) {
+
+		while(($data = fgetcsv($h, 0, chr($d))) !== false){
+			
+			if(count($a) == 0){
+				array_unshift($data, $id);
+			}else{
+				array_unshift($data, nuID());
+			}
+			
+			$a[] = $data;
+		}
+
+		for($I = 1 ; $I < count($a) ; $I++){
+			
+			for($i = 0 ; $i < count($a[$I]) ; $i++){
+				
+				if(isset($w[$i])){
+					$w[$i] = max($i[$w], strlen($a[$I][$i]));
+				}else{
+					$w[] = 0;
+				}
+				
+			}
+			
+		}
+
+		fclose($h);
+		
+	}
+	
+	$columns = array();
+	$rows = array();
+
+	for($i = 0 ; $i < count($w) ; $i++){
+		
+		$name = $a[0][$i];
+		$size = $w[$i];
+		$columns[] = '`' . $name . '`';
+		
+		if($size > 3000){
+			$c[] = "`$name` text NOT NULL";
+		}else{
+			$c[] = "`$name` varchar($size) NOT NULL";
+		}
+		
+	}
+
+	nuRunQuery("CREATE TABLE `$t` (" . implode(',',$c) . ") CHARSET=utf8;");
+
+	$s1 = "INSERT INTO `$t` (" . implode(',',$columns) . ") VALUES " ;
+
+
+	for($I = 1 ; $I < count($a) ; $I++){
+		
+		$values = array();
+	
+		for($i = 0 ; $i < count($a[$I]) ; $i++){
+			$values[] = '"' . $a[$I][$i] . '"';
+		}
+
+		$rows[] = '(' . implode(',',$values) . ")\n";
+		
+	}
+
+
+	nuRunQuery($s1 . implode(',',$rows));
+	
+	nuRunQuery("ALTER TABLE `$t` ADD PRIMARY KEY(`$id`);");
+	
+}
+
+
+
 ?>
