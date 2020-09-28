@@ -2635,7 +2635,7 @@ function nuSearchAction(S, F){
 	if(arguments.length == 0 && arguments.callee.caller !== 'nuGetPage'){
 		window.nuFORM.setProperty('page_number', 0);
 	}
-	if(arguments.length == 1){
+	if(arguments.length >= 1){
 		window.nuFORM.setProperty('page_number', 0);
 	}
 
