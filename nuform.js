@@ -2628,11 +2628,14 @@ function nuSearchAction(S, F){
 
 	var s	= String($('#nuSearchField').val()).replaceAll("'","&#39;", true);
 	var f	= String($('#nuFilter').val()).replaceAll("'","&#39;", true);
+	var c 	= arguments.callee.caller === null ? '' :  arguments.callee.caller.name;
 	
 	window.nuFORM.setProperty('search', s);
 	window.nuFORM.setProperty('filter', f);
 	
-	if(arguments.length == 0 && arguments.callee.caller !== 'nuGetPage'){
+//	if(arguments.length == 0 && arguments.callee.caller !== 'nuGetPage'){
+
+	if(arguments.length === 0 && c != 'nuGetPage'){					//--kev1n
 		window.nuFORM.setProperty('page_number', 0);
 	}
 	if(arguments.length >= 1){
