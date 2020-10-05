@@ -1,0 +1,10 @@
+trl_language,trl_english,trl_translation
+,This tablename has already been used,
+,has been created in the database,
+,A table called,
+,No fields can be left blank,
+,No such tablename,
+,There is already a table named,
+,File not found,
+,CSV File must be located in the csvfiles directory of the nubuilder directory,
+,Could not create table,

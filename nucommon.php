@@ -1599,11 +1599,11 @@ function nuTranslate($e){
 }
 
 
-function nuExportCSV($f, $t, $d){
+function nuToCSV($table, $file, $d){
 	
-	$T = nuRunQuery("SELECT * FROM `$t`");
+	$T = nuRunQuery("SELECT * FROM `$table`");
 	$a = array();
-	$c = db_field_names($t);
+	$c = db_field_names($table);
 	
 	while($r = db_fetch_row($T)){
 		$a[] = $r;
@@ -1611,7 +1611,7 @@ function nuExportCSV($f, $t, $d){
 
 	header('Content-Type: application/excel');
 	header('Content-Encoding: UTF-8');
-	header('Content-Disposition: attachment; filename="' . $f . '"');
+	header('Content-Disposition: attachment; filename="' . $file . '"');
 	
 	$fp = fopen('php://output', 'w');
 
@@ -1625,15 +1625,20 @@ function nuExportCSV($f, $t, $d){
 
 }
 
-function nuImportCSV($f, $t, $d){
+function nuFromCSV($file, $table, $d){
 
+	if(in_array($table,nuListTables())){
+		print '<br>&nbsp;&nbsp;<br>' . nuTranslate("This tablename has already been used") . " (<b>$table</b>)";
+		return;
+	}
+	
 	ini_set('auto_detect_line_endings', true);
 
 	$a = array();
 	$w = array();
 	$c = array();
-	$h = fopen('csvfiles/' . $f, "r");
-	$id = $t . '_nuid';
+	$h = fopen('csvfiles/' . $file, "r");
+	$id = $table . '_nuid';
 
 	if(empty($h) === false) {
 
@@ -1653,7 +1658,7 @@ function nuImportCSV($f, $t, $d){
 			for($i = 0 ; $i < count($a[$I]) ; $i++){
 				
 				if(isset($w[$i])){
-					$w[$i] = max($i[$w], strlen($a[$I][$i]));
+					$w[$i] = max($w[$i], strlen($a[$I][$i]));
 				}else{
 					$w[] = 0;
 				}
@@ -1668,7 +1673,6 @@ function nuImportCSV($f, $t, $d){
 	
 	$columns = array();
 	$rows = array();
-
 	for($i = 0 ; $i < count($w) ; $i++){
 		
 		$name = $a[0][$i];
@@ -1683,9 +1687,16 @@ function nuImportCSV($f, $t, $d){
 		
 	}
 
-	nuRunQuery("CREATE TABLE `$t` (" . implode(',',$c) . ") CHARSET=utf8;");
+	nuRunQuery("CREATE TABLE `$table` (" . implode(',',$c) . ") CHARSET=utf8;");
+	
+	if(!in_array($table, nuListTables())){
+		
+		print "<br>" . "&nbsp;&nbsp;" . nuTranslate("Could not create table") . "&nbsp;<b>$table</b>";
+		return;
+		
+	}
 
-	$s1 = "INSERT INTO `$t` (" . implode(',',$columns) . ") VALUES " ;
+	$s1 = "INSERT INTO `$table` (" . implode(',',$columns) . ") VALUES " ;
 
 
 	for($I = 1 ; $I < count($a) ; $I++){
@@ -1703,10 +1714,23 @@ function nuImportCSV($f, $t, $d){
 
 	nuRunQuery($s1 . implode(',',$rows));
 	
-	nuRunQuery("ALTER TABLE `$t` ADD PRIMARY KEY(`$id`);");
+	nuRunQuery("ALTER TABLE `$table` ADD PRIMARY KEY(`$id`);");
+	
+	print "<br>" . "&nbsp;&nbsp;" . nuTranslate("A table called") . "&nbsp;<b>$table</b>&nbsp;" . nuTranslate("has been created in the database");
 	
 }
 
-
+function nuListTables(){
+	
+	$a	= [];
+	$t 	= nuRunQuery("SHOW TABLES");
+	
+	while($r = db_fetch_row($t)){
+		$a[] = $r[0];
+	}
+		
+	return $a;
+	
+}
 
 ?>
