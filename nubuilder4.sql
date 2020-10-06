@@ -269,7 +269,7 @@ INSERT INTO `zzzzsys_event` (`zzzzsys_event_id`, `sev_zzzzsys_object_id`, `sev_e
 ('nu5bad6cb37cda28d', 'nu5bad6cb366e865e', 'onchange', 'nuSetFFTable();'),
 ('nu5bad6cb37ce6dae', 'nu5bad6cb3670b7db', 'onclick', 'nuPickTableType();'),
 ('5bd8f419d886e17', 'nu5bad6cb327ab3b8', 'afterinsertrow', 'default_description()'),
-('5f7129d5424e73c', '5f711b9351ae752', 'onchange', 'nuCSVTransfer(this.value)');
+('nu5f7129d5424e73c', '5f711b9351ae752', 'onchange', 'nuCSVTransfer(this.value)');
 
 -- --------------------------------------------------------
 
