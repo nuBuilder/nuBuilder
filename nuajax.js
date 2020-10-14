@@ -191,6 +191,33 @@ function nuRunReport(f, iframe){
 	
 }
 
+function nuRunReportSave(f){
+
+	var current   			= nuFORM.getCurrent();
+	var last                = $.extend(true, {}, current);
+	last.session_id         = window.nuSESSION;
+	last.call_type          = 'runreport';
+	last.form_id			= f;
+	last.hash				= nuHashFromEditForm();
+	var successCallback		= function(data,textStatus,jqXHR){
+		
+		var fm				= data;
+		
+		if(!nuDisplayError(fm)){
+
+			var fd 			= new FormData();
+			fd.append('ID', fm.id);
+			var xhr 		= new XMLHttpRequest();
+			xhr.open('POST', 'nurunpdf.php', true);
+			xhr.send(fd);
+			
+		}
+		
+	};
+	
+	nuAjax(last,successCallback);
+
+}
 
 function nuLogout(f, iframe){
 

@@ -9,8 +9,14 @@ define('FPDF_FONTPATH','tcpdf/font/');
 $GLOBALS['nu_report']       = array();
 $GLOBALS['nu_columns']      = array();
 $GLOBALS['nu_files']        = array();
+$get 						= isset($_GET['i']);
 
-$jsonID                     = $_GET['i'];
+if($get){
+	$jsonID					= $_GET['i'];
+}else{
+	$jsonID					= $_POST['ID'];
+}
+
 
 $J							= nuGetJSONData($jsonID);
 $TABLE_ID                   = nuTT();
@@ -52,7 +58,15 @@ nuPrintReport($PDF, $REPORT, $GLOBALS['nu_report'], $JSON);
 
 nuRunQuery("DROP TABLE IF EXISTS $TABLE_ID");
 nuRunQuery("DROP TABLE IF EXISTS $TABLE_ID".'_nu_summary');
-$PDF->Output('nureport.pdf', 'I');
+
+
+if($get){
+	$PDF->Output('nureport.pdf', 'I');
+}else{
+	nuSavePDF($PDF);
+}
+
+
 nuRemoveFiles();
 
 function nuPrintReport($PDF, $LAY, $DATA, $JSON){
@@ -1134,6 +1148,39 @@ function nuRemovePageBreak($S){
 	}
 }
 
+
+
+
+function nuSavePDF($PDF){
+		
+	// output to file
+	$filename1 ='nupdf_'.nuID().'.pdf';
+
+	$filename =	getcwd().'/temp/'.$filename1;              // for linux
+
+	$PDF->Output($filename,'F');
+
+	$s 			= nuHash();
+	$usr 		= $s["USER_ID"];
+	$rid		= nuID();
+
+	// after created initially you can comment/exclude creation of the pdf_temp table
+	$q1 		= "
+	CREATE TABLE IF NOT EXISTS pdf_temp (
+		pdf_temp_id VARCHAR(25) PRIMARY KEY,
+		pdf_added_by VARCHAR(25),
+		pdf_file_name VARCHAR(255),
+		pdf_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	); ";
+
+	nuRunQuery($q1);
+
+	$q1 		= "INSERT INTO pdf_temp (pdf_temp_id,pdf_added_by,pdf_file_name) 
+	VALUES ('$rid','$usr','$filename');";
+
+	nuRunQuery($q1);
+
+}
 
 
 
