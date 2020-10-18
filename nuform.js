@@ -4088,6 +4088,8 @@ function nuLookingUp(){
 
 function nuPortraitScreen(){
     
+	if(nuFormType() == 'browse'){return;}
+	
     var o = nuSERVERRESPONSE.objects;
     var t = 10;
     var b = -1;
