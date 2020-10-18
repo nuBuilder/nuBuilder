@@ -4132,8 +4132,6 @@ function nuPortraitScreen(){
            
     	}
 
-       console.log(t, I);
-       
     }
     
     $("[data-nu-tab!='x'][data-nu-form='']:not([data-nu-lookup-id])").show();
