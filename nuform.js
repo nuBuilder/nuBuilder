@@ -4085,3 +4085,63 @@ function nuLookingUp(){
 }
 
 
+
+function nuPortraitScreen(){
+    
+    var o = nuSERVERRESPONSE.objects;
+    var t = 10;
+    var b = -1;
+    
+    for(var i = 0 ; i < o.length ; i++){
+       
+       var I = o[i].id;
+       var L = $('#label_' + I).length == 0 ? 0 : $('#label_' + I).outerHeight()
+       var O = $('#' + I).outerHeight()
+
+        if(o[i].tab != b){
+            
+            b = o[i].tab;
+            var l = $('#nuTab' + o[i].tab).html();
+            var d = '<div class="nuPortraitTab" id="nuPort' + b + '" style="top:' + t + 'px" >'+ l +'</div>';
+            $('#nuRECORD').append(d);
+            var OH = $('#nuPort' + b ).outerHeight()
+            
+            t = t + OH + 20;
+            
+        }
+    
+    	if(o[i].read != 2){
+    	
+
+           $('#label_' + o[i].id).css({'top' : t , 'left' : 10, 'text-align' : 'left', 'font-weight' : 700});
+           t = t + L + 5;
+    
+           $('#'+o[i].id).css({'top' : t , 'left' : 10});
+           
+           if(o[i].type == 'lookup'){
+        
+               var w = parseInt($('#'+o[i].id+'code').css('width'));
+               
+               $('#'+o[i].id+'code').css({'top' : t , 'left' : 10});
+               $('#'+o[i].id+'button').css({'top' : t , 'left' : w + 15});
+               $('#'+o[i].id+'description').css({'top' : t , 'left' : w + 35});
+                   
+           }
+           
+           t = t + O + 5;
+           
+    	}
+
+       console.log(t, I);
+       
+    }
+    
+    $("[data-nu-tab!='x'][data-nu-form='']:not([data-nu-lookup-id])").show();
+    $('#nuTabHolder').hide();
+
+    t = t + 50;
+    
+    $('#nuRECORD').append('<div id="nuPortEnd" style="left:0px;position:absolute;top:' + t + 'px" >&nbsp;</div>');
+
+}
+

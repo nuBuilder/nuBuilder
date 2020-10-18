@@ -1156,3 +1156,13 @@ input[type=range]::-webkit-slider-runnable-track {
 span.nuActionButton{
 	margin:5px 0px 0px 0px;
 }
+
+.nuPortraitTab {
+	
+	font-size:x-large;
+	padding:10px;
+	font-weight:900;
+	position:absolute;
+	height:40px;
+
+}
