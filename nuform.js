@@ -4086,13 +4086,18 @@ function nuLookingUp(){
 
 
 
-function nuPortraitScreen(){
+function nuPortraitScreen(columns){
     
 	$('#nubody').css('transform', 'scale(1)')
 
 	if(nuFormType() == 'browse'){return;}
 	
+	if(arguments.length == 0){columns = 1;}
+	
+	$('.nuPortraitTab').remove();
+	
     var o = nuSERVERRESPONSE.objects;
+	var lw = columns == 1 ? 0 : nuPortraitLabelWidth(o);
     var t = 10;
     var b = -1;
 	var W = 0;
@@ -4118,11 +4123,14 @@ function nuPortraitScreen(){
     
     	if(o[i].read != 2){
     	
+			$('#label_' + o[i].id).css({'top' : t+2 , 'left' : 7, 'text-align' : 'left', 'font-weight' : 700});
 
-           $('#label_' + o[i].id).css({'top' : t , 'left' : 10, 'text-align' : 'left', 'font-weight' : 700});
-           t = t + L + 5;
-    
-           $('#'+o[i].id).css({'top' : t , 'left' : 10});
+		   
+			if(columns == 1){
+				t = t + L + 5;
+			}
+			   
+           $('#'+o[i].id).css({'top' : t , 'left' : lw + 10});
            
            if(o[i].type == 'lookup'){
 
@@ -4130,9 +4138,9 @@ function nuPortraitScreen(){
 				var d = $('#'+o[i].id+'description').outerWidth()
 				W 	= Math.max(W, w + d + 30);
 
-				$('#'+o[i].id+'code').css({'top' : t , 'left' : 10});
-				$('#'+o[i].id+'button').css({'top' : t , 'left' : w + 15});
-				$('#'+o[i].id+'description').css({'top' : t , 'left' : w + 35});
+				$('#'+o[i].id+'code').css({'top' : t , 'left' : lw + 10});
+				$('#'+o[i].id+'button').css({'top' : t , 'left' : lw + w + 15});
+				$('#'+o[i].id+'description').css({'top' : t , 'left' : lw + w + 35});
 
            }
            
@@ -4146,13 +4154,32 @@ function nuPortraitScreen(){
     $('#nuTabHolder').hide();
 
     t 		= t + 50;
-	var s 	= 1/(W/(window.innerWidth - 50));
+	var s 	= 1/((W + lw)/(window.innerWidth));
     
     $('#nuRECORD').append('<div id="nuPortEnd" style="left:0px;position:absolute;top:' + t + 'px" >&nbsp;</div>');
+
+	if(columns == 1){
+		$('label').css('text-align', 'right').css({'width':W,'text-align':'left','left':12});
+	}else{
+		$('label').css('text-align', 'left').css('width', lw);
+	}
+		
 	
 	$('#nubody').css('transform', 'scale('+ s+')')
 	
 	return s;
+
+}
+
+function nuPortraitLabelWidth(o){
+	
+	var w 	= 0
+
+    for(var i = 0 ; i < o.length ; i++){
+		w = Math.max($('#label_' + o[i].id).innerWidth());
+	}
+
+	return w + 10;
 
 }
 
