@@ -661,51 +661,6 @@ function nuIsOpener() {
 	return false;
 }
 
-/*
-function nuFormValues(){  //-- list of changed fields and values
-
-    var list   = {};
-    
-    $("[data-nu-data]").each(function() {
-        
-        list[$(this).attr('id')] = $(this).val();
-        
-    });
-    
-    var f = {};
-    
-    for (var fld in list) {
-		
-        f[fld] = $('#' + fld).val();
-		
-    }
-
-	return f;
-    
-}
-
-
-function nuEditPHP(ev){
-
-	var r	= window.nuFORM.getProperty('record_id');
-	var i	= r + '_' + ev;
-	
-	if(r == '-1'){
-	
-		alert('Must Save Record Before Adding Procedures');
-		return;
-		
-	}
-	
-	c	= $('#sfo_code').val();
-	d	= $('#sfo_description').val();
-	
-	nuSetHash('the_form', d + ' (' + c + ')');
-	nuSetHash('nuSystemPHP', 1);
-	nuPopup("nuphp", i);
-
-}
-*/
 
 function nuPreview(a){
 
@@ -803,33 +758,6 @@ function  nuGetLookupFields(id){
 	return a;
 	
 }
-
-/*
-function nuEnable(i){                 //-- Enable Edit Form Object
-
-	var o	= [i, i + 'code', i + 'button', i + 'description'];
-	
-	for(var c = 0 ; c < o.length ; c++){
-			
-		$('#' + o[c])
-		.removeClass('nuReadonly')
-		.prop('readonly', false)
-		.prop('disabled', false);
-		
-	}
-	
-	if(c == 2){										//-- button
-		
-		$('#' + o[c])
-		.on( "click", function() {
-		  nuBuildLookup(this,"");
-		})
-		
-	}
-
-}
-
-*/
 
 
 

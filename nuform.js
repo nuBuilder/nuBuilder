@@ -4154,7 +4154,6 @@ function nuPortraitScreen(columns){
     $('#nuTabHolder').hide();
 
     t 		= t + 50;
-	var s 	= 1/((W + lw)/(window.innerWidth));
     
     $('#nuRECORD').append('<div id="nuPortEnd" style="left:0px;position:absolute;top:' + t + 'px" >&nbsp;</div>');
 
@@ -4163,9 +4162,10 @@ function nuPortraitScreen(columns){
 	}else{
 		$('label').css('text-align', 'left').css('width', lw);
 	}
-		
 	
-	$('#nubody').css('transform', 'scale('+ s+')')
+	var s 	= 1/((W + lw + 40)/(window.innerWidth));
+
+	$('#nubody').css('transform', 'scale(' + s + ')')
 	
 	return s;
 
@@ -4174,12 +4174,15 @@ function nuPortraitScreen(columns){
 function nuPortraitLabelWidth(o){
 	
 	var w 	= 0
+	$('label').css('width', '');
+
 
     for(var i = 0 ; i < o.length ; i++){
-		w = Math.max($('#label_' + o[i].id).innerWidth());
+		console.log(w);
+		w = nuGetWordWidth($('#label_' + o[i].id).html());
 	}
 
-	return w + 10;
+	return w + 15;
 
 }
 
