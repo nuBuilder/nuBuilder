@@ -4092,6 +4092,7 @@ function nuPortraitScreen(columns){
 
 	if(nuFormType() == 'browse'){return;}
 	
+	$('.nuBuilderLink').remove();
 	if(arguments.length == 0){columns = 1;}
 	
 	$('.nuPortraitTab').remove();
@@ -4107,6 +4108,7 @@ function nuPortraitScreen(columns){
        var I = o[i].id;
        var L = $('#label_' + I).length == 0 ? 0 : $('#label_' + I).outerHeight()
        var O = $('#' + I).outerHeight()
+
 	   W 	= Math.max(W, $('#' + I).outerWidth());
 
         if(o[i].tab != b){
@@ -4163,11 +4165,13 @@ function nuPortraitScreen(columns){
 		$('label').css('text-align', 'left').css('width', lw);
 	}
 	
-	var s 	= 1/((W + lw + 40)/(window.innerWidth));
+	var objectWidth = W + lw;
+	var screenWidth = screen.width;
+	var scale 		= screenWidth/(objectWidth+50);
 
-	$('#nubody').css('transform', 'scale(' + s + ')')
+	$('#nubody').css('transform', 'scale(' + scale + ')')
 	
-	return s;
+	return scale;
 
 }
 
@@ -4178,7 +4182,6 @@ function nuPortraitLabelWidth(o){
 
 
     for(var i = 0 ; i < o.length ; i++){
-		console.log(w);
 		w = nuGetWordWidth($('#label_' + o[i].id).html());
 	}
 
