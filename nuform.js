@@ -3108,6 +3108,9 @@ if (confirm(nuTranslate("Delete This Record?"))){
 
 function nuCloneAction(){
 	
+	nuSetProperty('CLONED_RECORD', 1);
+	nuSetProperty('CLONED_RECORD_ID', nuFORM.getCurrent().record_id);
+
 	window.nuTimesSaved	= 0;
 
 	$('[data-nu-primary-key]').each(function(index){
@@ -3132,7 +3135,6 @@ function nuCloneAction(){
 	.css('visibility','visible');
 	
 	nuCLONE	= true;
-	nuSetProperty('CLONED_RECORD', 1);
 	nuEmptyNoClone();
 	
 	if(window.nuOnClone){

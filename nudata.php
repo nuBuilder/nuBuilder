@@ -679,6 +679,10 @@ function nuSubformObject($id){
 }
 
 
+function nuCloneForm(){
+	//nudebug(nuhash());
+}
+
 function nuDeleteForm($f){
 	
 	$s		= "DELETE FROM zzzzsys_browse WHERE sbr_zzzzsys_form_id = ? ";
