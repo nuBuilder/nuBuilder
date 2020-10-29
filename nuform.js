@@ -24,7 +24,8 @@ function nuBuildForm(f){
 		
 		window.nuTimesSaved		= window.nuTimesSaved + 1;
 		
-		if(window.nuLastForm != f.form_id || nuLastRecordId != f.record_id){
+//		if(window.nuLastForm != f.form_id || nuLastRecordId != f.record_id){
+		if(window.nuLastForm != f.form_id || (nuLastRecordId != f.record_id && nuLastRecordId !== "-1")) {			
 			window.nuTimesSaved	= 0;
 		}
 		

@@ -221,7 +221,7 @@ function nuUpdateDatabase(){
 					$isAN			= in_array($fields[$R], $auto);
 
 					if($edit[$R] == 1 or $isAN){														//-- has been edited
-					
+
 						if($cts[$table] == ''){															//-- not valid table name
 
 							if($form_type == 'launch'){
@@ -680,8 +680,62 @@ function nuSubformObject($id){
 
 
 function nuCloneForm(){
+	
+	return;
 	//nudebug(nuhash());
+
+	$f 		= nuHash()['CLONED_RECORD_ID'];
+	$TT		= nuTT();
+
+	$s		= "CREATE TABLE p$TT SELECT * FROM zzzzsys_php WHERE zzzzsys_php_id LIKE CONCAT(?,'%') ";
+	$t		= nuRunQuery($s, [$f]);
+
+	$s		= "CREATE TABLE o$TT SELECT * FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = ? ";
+	$t		= nuRunQuery($s, [$f]);
+
+	$s		= "
+				CREATE TABLE e$TT 
+				SELECT * 
+				FROM zzzzsys_event 
+				WHERE sev_zzzzsys_object_id IN(SELECT zzzzsys_object_id FROM o$TT)
+			";
+	$t		= nuRunQuery($s);
+
+	$s		= "SELECT * FROM o$TT";
+	$t		= nuRunQuery($s);
+	
+	while($r = db_fetch_object($t)){																																	
+		
+		$was	= $r->zzzzsys_object_id;																																
+		$is 	= nuID();
+		$s		= "UPDATE o$t SET zzzzsys_object_id = ? WHERE zzzzsys_object_id = ?";
+		nuUpdateEvent($t, $is);
+			
+	}
+	
 }
+
+
+function nuUpdateEvent($t, $o){
+
+	$s	= "
+			UPDATE e$t 
+			SET sev_zzzzsys_object_id = ?, zzzzsys_event_id  = ? 
+			WHERE zzzzsys_event_id = ?
+		";
+	$t 	= nuRunQuery("SELECT * FROM e$t");
+	
+	while($r = db_fetch_row($r)){
+
+		$i 	= nuID();
+		nuRunQuery($s, [$o, $i, $r->zzzzsys_event_id]);
+		
+	}
+	
+	
+}
+
+
 
 function nuDeleteForm($f){
 	
