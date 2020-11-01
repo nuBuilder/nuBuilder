@@ -106,6 +106,16 @@ If you are using nuBuilder as a standalone application, then follow these instru
 2020-08-18 : Added Lookup checking before saving a record.</br>
 2020-08-20 : Added Checkbox values to Hash Cookies.</br>
 2020-08-23 : Fixed bug comparing valid field names.</br>
+2020-08-31 : Fixed Subform bug when addable and deletable both set to No.</br>
+2020-09-11 : Fixed Browse paging bug.</br>
+2020-09-11 : Fixed nuSearchAction() bug</br>
+2020-09-29 : Updated nuSearchAction()</br>
+2020-10-01 : Updated nuSearchAction()</br>
+2020-10-06 : Added Simple CSV Import and Export (requires running Update Button.)</br>
+2020-10-15 : nuRunReportSave() added for testing.</br>
+2020-10-18 : Added nuPortraitScreen() for testing.</br>
+2020-10-18 : Remove Clone Button on PHP Events and add help to CSV Transfer (requires running Update Button.)</br>
+2020-10-29 : fixing nuHasBeenSaved()</br>
 
 
 == Documentation ==
