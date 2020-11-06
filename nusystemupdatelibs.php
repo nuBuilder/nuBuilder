@@ -10,7 +10,7 @@ function nuCopySystemFiles() {
 
 	for($i = 0 ; $i < count($t) ; $i++){
         
-        	$table  = $t[$i];
+        $table  = $t[$i];
 		$sql	= "DROP TABLE IF EXISTS sys_$table";
         	nuRunQuery($sql);
 
@@ -21,7 +21,7 @@ function nuCopySystemFiles() {
 			$sql= "DROP TABLE IF EXISTS $table";
 			nuRunQuery($sql);
 		}
-    	}
+    }
 }
 
 function nuImportSystemFiles() {
@@ -145,6 +145,9 @@ function nuAddNewSystemTables(){
 			}
 		}
 	}
+	nuRunQuery("ALTER TABLE `zzzzsys_object` CHANGE `sob_input_count` `sob_input_count` BIGINT(20) NULL DEFAULT '0';");
+	nuRunQuery("ALTER TABLE `zzzzsys_object` CHANGE `sob_all_order` `sob_all_order` INT(11) NULL DEFAULT '0';");
+
 }
 
 function nuJustNuRecords(){
