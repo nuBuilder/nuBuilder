@@ -328,6 +328,7 @@ function nuGetFormObject($F, $R, $OBJS){
     $f->browse_table_id		= nuHash()['TABLE_ID'];
     $f->pages				= ceil($B[1]/$f->rows);
     $f->objects 			= $a;
+	$f->number_formats		= nuBuildCurrencyFormats();
     $O 						= new stdClass();
     $O->forms[] 			= $f;
 

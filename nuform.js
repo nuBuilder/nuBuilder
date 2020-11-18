@@ -2,6 +2,8 @@
 function nuBuildForm(f){
 
     $('#nubody').off('.nuresizecolumn'); 				//removes (if exist) the cursormove/touchmove event listeners binded to nubody
+	$('#nubody').css('transform', 'scale(1)');
+	$('html,body').scrollTop(0).scrollLeft(0);
 
 	nuSetProperty('CLONED_RECORD', 0);
 	nuSetProperty('NEW_RECORD', 0);
@@ -4168,11 +4170,13 @@ function nuPortraitScreen(columns){
 		$('label').css('text-align', 'left').css('width', lw);
 	}
 	
-	var objectWidth = W + lw;
-	var screenWidth = screen.width;
-	var scale 		= screenWidth/(objectWidth+50);
+	var objectWidth = W + lw + 50;
+	var screenWidth = window.innerWidth;
+	var scale 		= screenWidth/(objectWidth);
 
+	$('#nubody').css('width', objectWidth)
 	$('#nubody').css('transform', 'scale(' + scale + ')')
+	$('html,body').scrollTop(0).scrollLeft(0);
 	
 	return scale;
 

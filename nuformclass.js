@@ -926,30 +926,15 @@ class nuFormObject {
 		v				= String(v);
 		f				= String(f);
 		
-		if(f[0] == 'N'){									//-- number  '456.789','N|€ 1,000.00'
+		if(f[0] == 'N'){													//-- number  '456.789','N|€ 1,000.00'
 
-			var F		= nuNumberFormat(f);
-			
-			if(F.decimal.length == 1){
-				v	= v.replace(F.decimal, '.')
-			}
+			//var F		= nuNumberFormat(f);
+			var CF		= nuGetNumberFormat(f);								//-- CF[0]=sign, CF[1]=separator, CF[2]=decimal, CF[3]=places
+			v			= Number(v.replace(CF.decimal, '.')).toFixed(CF[3]);
 			
 			if(isNaN(Number(v))){return '';}
-			
-			var o		= v.split('.');
-			var h		= nuAddThousandSpaces(o[0], F.separator);
-			
-			var d		= o.length==1?'':o[1];
-			var p		= F.sign + ' ' + h + F.decimal;
-			var s 		= Number('0.'+ d).toFixed(F.places).slice(2);			// -- kev1n
-			
-			//var s		= String(d + String(0).repeat(100)).substr(0, F.places).trim();
-
-			if(String(h) == 'toobig' && nuSERVERRESPONSE.access_level_code == ''){
-				nuMessage(["What did we say ?",'','<img id="thebig" src="graphics\\point.png">']);return '';
-			}
-			
-			return String(p + s).trim();
+			var splitNumber		= v.split('.');
+			return String(CF[0] + ' ' + nuAddThousandSpaces(splitNumber[0], CF[1]) + CF[2] + splitNumber[1]).trim();
 		
 		}
 		
@@ -1024,29 +1009,15 @@ class nuFormObject {
 		f				= String(f);
 
 		if(f[0] == 'N'){										//-- number
-		
-			var F		= nuNumberFormat(f);
-			
-			v			= v.replaceAll(F.separator, '')
-			
-			if(F.decimal.length == 1){
-				v	= v.replace(F.decimal, '.')
-			}
-			
-			var sign	= '';
-			
-			if(v.split(' ').length == 2){
-				sign	= v.split(' ')[0];
-			}
-			
-			var bits	= v.split('.');
 
-			if(bits.length == 1){bits.push('');}
-
-			bits[0]		= String(bits[0]).replace(sign, '') + (F.places==0?'':'.');
-			bits[1]		= String(bits[1]).substr(0, F.places)
+			//var F		= nuNumberFormat(f);
+			var CF		= nuGetNumberFormat(f);								//-- CF[0]=sign, CF[1]=separator, CF[2]=decimal, CF[3]=places
 			
-			return String(bits[0] + bits[1]).trim();
+			if(CF[2] == ''){
+				return v.replace(CF[0], '').replace(' ', '').replaceAll(CF[1], '');
+			}else{
+				return v.replace(CF[0], '').replace(' ', '').replaceAll(CF[1], '').replace(CF[2], '.');
+			}
 			
 		}
 
@@ -1154,6 +1125,24 @@ function nuNumberFormat(f){
 	}
 	
 	return o;
+	
+}
+
+
+function nuGetNumberFormat(f){
+
+	var a = ['','','',''];
+	var n = nuSERVERRESPONSE.number_formats;
+	
+	for(var i = 0 ; i < n.length ; i++){
+
+		if(n[i][0] == f){
+			return JSON.parse(n[i][1])
+		}
+		
+	}
+	
+	return a;
 	
 }
 

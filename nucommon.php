@@ -803,50 +803,13 @@ function nuAddFormatting($v, $f){
 
 	if($v == '' || $f == ''){return $v;}
 	
-	if($f[0] == 'N'){									//-- number  '456.789','N|€ 1,000.00'
+	if($f[0] == 'N'){												//-- number  '456.789','N|€ 1,000.00'
+		$CF				= nuGetNumberFormat(substr($f,2));			//-- CF[0]=sign, CF[1]=separator, CF[2]=decimal, CF[3]=places
+		$v 				= round($v, $CF[3]);
+		$splitNumber	= explode('.', $v);
 
-		$f			= substr($f, 2);
-		$e			= explode(' ', $f);
-		$s			= $e[0];							//-- sign
-		$n			= $e[1];							//-- number
-		$p			= nuPunctuation($f);				//-- returns [comma, decimal]
-		$c			= $p[0];							//-- comma
-		$dp			= $p[1];							//-- decimal point
-		$o			= explode('.', $v);
-		
-		if(count($o) == 1){$o[1] = '';}
-		
-		$d			= $o[1];							//-- decimal number
+		return trim($CF[0] . ' ' . nuAddThousandSpaces($splitNumber[0], $CF[1]) . $CF[2] . $splitNumber[1]);
 
-		if($dp == ''){
-			$p		= 0;								//-- decimal places
-		}else{
-			
-			$pos	= strpos($f, $dp);					//-- decimal places
-			$p		= strlen(substr($f, $pos));
-		}
-
-		$h			= nuAddThousandSpaces($o[0], $c);
-		
-		$ss			= substr($s, 0,2);
-		
-		if($ss == '10' || $ss == '1,' || $ss == '1.'){		// no sign
-			$s		= '';
-		}else{
-			$s		= $s . ' ';
-		}
-		
-		if($p == 0){ 									//-- no decimal numbers even if it has a decimal place
-			$m		= $s . $h;
-		}else{
-			
-			$suf	= substr($d . str_repeat('0', 20), 0, $p - 1);
-			$m		= $s . $h . $dp . $suf;
-			
-		}
-
-		return $m;
-	
 	}
 	
 	if($f[0] == 'D'){	//-- date
@@ -888,6 +851,17 @@ function nuAddFormatting($v, $f){
 	}
 	
 	return $v;
+	
+}
+
+function nuGetNumberFormat($f){
+
+	$s = "SELECT * FROM zzzzsys_format WHERE srm_format = ?";
+	$t = nuRunQuery($s, [$f]);
+
+	while($r = db_fetch_object($t)){
+		return json_decode($r->srm_currency);
+	}
 	
 }
 
@@ -1732,5 +1706,60 @@ function nuListTables(){
 	return $a;
 	
 }
+
+
+
+
+
+function nuBuildCurrencyFormats(){
+
+	$t = nuRunQuery("SHOW COLUMNS FROM zzzzsys_format LIKE 'srm_currency'");
+	
+	if(db_num_rows($t) == 0){
+		nuRunQuery("ALTER TABLE zzzzsys_format ADD srm_currency VARCHAR(25) NULL DEFAULT NULL AFTER srm_format");
+	}
+	
+	$s = "SELECT * FROM zzzzsys_format WHERE srm_type = 'Number' AND ISNULL(srm_currency)";
+	$t = nuRunQuery($s);
+	
+	while($r = db_fetch_object($t)){
+		
+
+		$e			= explode(' ', $r->srm_format);
+		$si			= $e[0];										//-- sign
+		$se			= $e[1][1] == '0' ? '' : $e[1][1];				//-- separator
+		$de			= $e[1][1] == '0' ? $e[1][4] : $e[1][5];		//-- decimal point
+
+		if($de == ''){
+			$ex		= $e[1];
+		}else{
+			$ex		= explode($de, $e[1]);
+		}
+		$dp			= strlen($ex[1]);								//-- decimal places
+		$js			= json_encode([$si, $se, $de, $dp], JSON_UNESCAPED_UNICODE);
+		
+		$s			= "
+						UPDATE zzzzsys_format 
+						SET srm_currency = ? 
+						WHERE zzzzsys_format_id = ?
+						";
+						
+		nuRunQuery($s, [$js, $r->zzzzsys_format_id]);
+		
+		$a[]		= ['N|'. $r->srm_format, $js];
+
+	}
+
+
+	$t = nuRunQuery("SELECT * FROM zzzzsys_format WHERE srm_type = 'Number'");
+	$a = [];
+	while($r = db_fetch_object($t)){
+		$a[]		= ['N|'. trim($r->srm_format), $r->srm_currency];
+	}
+
+	return $a;
+	
+}
+
 
 ?>

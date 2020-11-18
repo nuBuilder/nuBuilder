@@ -231,11 +231,11 @@ window.nuHASH				= [];
 	function nuResize(){
 
 		var w = window.innerWidth;
-		$('#nuActionHolder').css('width', w);
-		$('#nuBreadcrumbHolder').css('width', w);
-		$('#nuTabHolder').css('width', w);
-		$('.nuTabTitleColumn').css('width', w);
-		$('body').css('width', w);
+		$('#nuActionHolder').css('width', '100%');
+		$('#nuBreadcrumbHolder').css('width', '100%');
+		$('#nuTabHolder').css('width', '100%');
+		$('.nuTabTitleColumn').css('width', '100%');
+		$('body').css('width', '100%');
 		
 		if (window.nuVerticalTabs) {
 			nuSetVerticalTabs();

@@ -116,7 +116,8 @@ If you are using nuBuilder as a standalone application, then follow these instru
 2020-10-18 : Added nuPortraitScreen() for testing.</br>
 2020-10-18 : Remove Clone Button on PHP Events and add help to CSV Transfer (requires running Update Button.)</br>
 2020-10-29 : fixing nuHasBeenSaved()</br>
-
+2020-11-06 : Fix 2 for Cloning Objects.</br>
+2020-11-18 : Added flexibility to the Format Builder for nuNumbers (requires running Update Button.)</br>
 
 == Documentation ==
 
