@@ -934,8 +934,10 @@ class nuFormObject {
 			
 			if(isNaN(Number(v))){return '';}
 			var splitNumber		= v.split('.');
-			return String(CF[0] + ' ' + nuAddThousandSpaces(splitNumber[0], CF[1]) + CF[2] + splitNumber[1]).trim();
-		
+		//	return String(CF[0] + ' ' + nuAddThousandSpaces(splitNumber[0], CF[1]) + CF[2] + splitNumber[1]).trim();
+			var decimals = splitNumber.length == 1 ? '' : splitNumber[1];
+			return String(CF[0] + ' ' + nuAddThousandSpaces(splitNumber[0], CF[1]) + CF[2] + decimals).trim();		
+			
 		}
 		
 		if(f[0] == 'D'){	//-- date
