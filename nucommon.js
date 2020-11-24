@@ -881,6 +881,7 @@ function nuHide(i){                 //-- Hide Edit Form Object
 
 }
 
+/*
 function nuAddThousandSpaces(s, c){
 
 	var a	= String(s).split('');
@@ -899,6 +900,11 @@ function nuAddThousandSpaces(s, c){
 	
 	return r.join('');
 	
+}
+*/
+
+function nuAddThousandSpaces(s, c){
+    return s.replace(/\B(?=(\d{3})+(?!\d))/g, c)
 }
 
 function nuDuplicates(arr){
