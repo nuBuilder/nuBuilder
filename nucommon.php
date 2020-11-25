@@ -856,11 +856,13 @@ function nuAddFormatting($v, $f){
 
 function nuGetNumberFormat($f){
 
-	$s = "SELECT * FROM zzzzsys_format WHERE srm_format = ?";
-	$t = nuRunQuery($s, [$f]);
+	$s = "SELECT * FROM zzzzsys_format WHERE srm_format";
+	$t = nuRunQuery($s);
 
 	while($r = db_fetch_object($t)){
-		return json_decode($r->srm_currency);
+		if($r->srm_format == $f){
+			return json_decode($r->srm_currency);
+		}
 	}
 	
 }
