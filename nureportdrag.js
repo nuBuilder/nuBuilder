@@ -1469,7 +1469,11 @@ function nuDialogInput(cap, id, top, left, val, fun, sel){
 
 		for(var i = 0 ; i < sel.length ; i++){
 			
-			$('#' + id).append("<option value='"+ sel[i][0] +"'>" + sel[i][1] + "</option>") ;
+			if(String(sel[i][0]).includes("'")){
+				$('#' + id).append('<option value="'+ sel[i][0] +'">' + sel[i][1] + "</option>") ;
+			}else{
+				$('#' + id).append("<option value='"+ sel[i][0] +"'>" + sel[i][1] + "</option>") ;
+			}
 			
 		}
 		

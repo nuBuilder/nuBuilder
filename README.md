@@ -121,6 +121,7 @@ If you are using nuBuilder as a standalone application, then follow these instru
 2020-11-24 : number format Bug Fix</br>
 2020-11-25 : number format Fixed for negative numbers</br>
 2020-11-26 : bug fix to report number formatting</br>
+2020-11-27 : bug fix (2) to report number formatting</br>
 
 
 == Documentation ==

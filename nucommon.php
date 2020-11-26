@@ -802,13 +802,14 @@ function nuFormatList(){
 function nuAddFormatting($v, $f){
 
 	if($v == '' || $f == ''){return $v;}
+	$m = $v < 0 ? '-' : '';
 	
 	if($f[0] == 'N'){												//-- number  '456.789','N|€ 1,000.00'
 		$CF				= nuGetNumberFormat(substr($f,2));			//-- CF[0]=sign, CF[1]=separator, CF[2]=decimal, CF[3]=places
-		$v 				= round($v, $CF[3]);
-		$splitNumber	= explode('.', $v);
+		$nf				= number_format ($v , $CF[3] , $CF[2] , $CF[1]);
+		$nm				= str_replace('-', '', $nf);
 
-		return trim($CF[0] . ' ' . nuAddThousandSpaces($splitNumber[0], $CF[1]) . $CF[2] . $splitNumber[1]);
+		return $m . $CF[0] . ' ' . $nm;
 
 	}
 	
@@ -856,7 +857,7 @@ function nuAddFormatting($v, $f){
 
 function nuGetNumberFormat($f){
 
-	$s = "SELECT * FROM zzzzsys_format WHERE srm_format";
+	$s = "SELECT * FROM zzzzsys_format";
 	$t = nuRunQuery($s);
 
 	while($r = db_fetch_object($t)){
