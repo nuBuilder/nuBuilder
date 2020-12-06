@@ -1187,8 +1187,13 @@ function nuButtonIcon(j){
 function nuChart(d, t, a, h, x, y, st, is){
 
 	a				= eval(a);
+
+	try {
+		google.charts.load('current', {'packages':['corechart']});	  
+	} catch(error) {
+	  return;
+	}	
 	
-	google.charts.load('current', {'packages':['corechart']});
 	google.charts.setOnLoadCallback(drawVisualization);
 	
 	if(a == ''){return;}

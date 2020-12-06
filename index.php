@@ -1,5 +1,5 @@
 <?php	
-
+	
 	require_once('nuchoosesetup.php');
 	require_once('nuindexlibs.php');
 
@@ -7,6 +7,8 @@
 	nuStandaloneImportNewDB();
 
 	require_once('nusystemupdatelibs.php');
+	require_once('nuchoosesetup.php');
+		
 	nuMigrateSQL();
 	
 ?>
@@ -17,7 +19,6 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv='Content-type' content='text/html;charset=UTF-8'>
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <?php
 
 function nuJSIndexInclude($pfile){
@@ -31,6 +32,17 @@ function nuCSSIndexInclude($pfile){
 
 	$timestamp = date("YmdHis", filemtime($pfile));                                         //-- Add timestamp so javascript changes are effective immediately
 	print "<link rel='stylesheet' href='$pfile?ts=$timestamp' />\n";
+}
+
+function nuJSGstaticLoaderInclude(){
+	
+	global $nuIncludeGoogleCharts;
+	
+	if ($nuIncludeGoogleCharts != false) {
+		$pfile = "https://www.gstatic.com/charts/loader.js";
+		print "<script src='$pfile' type='text/javascript'></script>\n";
+	}
+	
 }
 
 function nuHeader(){
@@ -53,6 +65,8 @@ nuJSIndexInclude('nucommon.js');
 nuJSIndexInclude('nureportjson.js');
 nuJSIndexInclude('nuajax.js');       //-- calls to server
 nuCSSIndexInclude('css/nubuilder4.css');
+
+nuJSGstaticLoaderInclude();
 ?>
 
 <link href="./css/font-awesome.min.css" rel="stylesheet">
