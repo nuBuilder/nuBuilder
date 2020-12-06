@@ -62,7 +62,7 @@ nuJSIndexInclude('fastclick.js');
 nuCSSIndexInclude('nubuilder4.css');
 ?>
 
-<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="./css/font-awesome.min.css" rel="stylesheet">
 
 <script>
 
