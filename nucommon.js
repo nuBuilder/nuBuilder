@@ -529,13 +529,18 @@ function nuRunIt(t, email, type){
 
 function nuBindCtrlEvents(){
 
-	var nuCtrlKeydownListener = function(e){	
-	
-		if(e.keyCode == 17) { //Ctrl
-			window.nuNEW = 1;
-		}
-		
-	}
+    var nuCtrlKeydownListener = function(e) {
+
+        if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) { // exclude Ctrl + f
+            window.nuNEW = 0;
+        } else {
+            if (e.keyCode == 17) { //Ctrl                            
+                window.nuNEW = 1;
+            }
+
+        }
+      
+    }
 	
 	$(document).keydown(function(e) {
 		
