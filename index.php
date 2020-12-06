@@ -3,18 +3,12 @@
 	require_once('nuchoosesetup.php');
 	require_once('nuindexlibs.php');
 
-	if ( !$_SESSION['nubuilder_session_data']['PLUGIN'] ) {
-		require_once('nustandalonesetuplibs.php'); 
-		nuStandaloneImportNewDB();
-	}
-
-	if ( $_SESSION['nubuilder_session_data']['PLUGIN'] && !isset($_SESSION['nubuilder_session_data']['SESSION_ID']) ) {
-                require_once('nuwordpresssetuplibs.php');
-		nuCheckWPUser();
-        }
+	require_once('nustandalonesetuplibs.php'); 
+	nuStandaloneImportNewDB();
 
 	require_once('nusystemupdatelibs.php');
 	nuMigrateSQL();
+	
 ?>
 <!DOCTYPE html>
 <html id="nuhtml" onclick="nuClick(event)">
@@ -188,17 +182,8 @@ window.nuHASH				= [];
 	window.nuImages							= [];
 	";
 
-	if ( $_SESSION['nubuilder_session_data']['PLUGIN'] ) {
-			$h1 .= "\nwindow.nuWordpress = true;\n";
-			$p	= true;
-	} else {
-			$h1 .= "\nwindow.nuWordpress = false;\n";
-			$p	= false;
-	}
 	
 	$s	= isset($_SESSION['nubuilder_session_data']['SESSION_ID']);
-
-
 
 	if ( $nuUser != ''  &&  $nuPassword != '' ){
 		$h2 = nuUseUP($nuBrowseFunction, $target, $welcome, $nuUser, $nuPassword);

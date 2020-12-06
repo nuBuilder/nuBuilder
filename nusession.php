@@ -6,17 +6,7 @@ require_once('nuprocesslogins.php');
 
 if ( nuCheckIsLoginRequest() ) {
 
-	if ( nuCheckWordpressGlobeadminLoginRequest() ) {
-
-		// Check for Wordpress Globeadmin login
-		nuLoginSetupGlobeadmin();
-
-	} else if ( nuCheckWordpressUserLoginRequest() ) {
-
-		// Check for Wordpress User login
-		nuLoginSetupNOTGlobeadmin(false);
-
-	} else if ( nuCheckStandaloneGlobeadminLoginRequest() ) {
+	if ( nuCheckStandaloneGlobeadminLoginRequest() ) {
 
 		// Check for Standalone Globeadmin login
 		nuLoginSetupGlobeadmin();

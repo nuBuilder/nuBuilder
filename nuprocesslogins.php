@@ -9,23 +9,6 @@ function nuCheckExistingSession() {
         }
 }
 
-//Check for Wordpress Globeadmin login
-function nuCheckWordpressGlobeadminLoginRequest() {
-
-	if ( $_SESSION['nubuilder_session_data']['PLUGIN'] && $_SESSION['nubuilder_session_data']['GLOBEADMIN'] ) {
-		return true;
-	}
-	return false;
-}
-
-//Check for Wordpress User login
-function nuCheckWordpressUserLoginRequest() {
-
-	if ( $_SESSION['nubuilder_session_data']['PLUGIN'] && !$_SESSION['nubuilder_session_data']['GLOBEADMIN'] ) {
-                return true;
-        }
-        return false;
-}
 
 //Check for Standalone Globeadmin login
 function nuCheckStandaloneGlobeadminLoginRequest() {
