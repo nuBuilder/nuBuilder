@@ -1803,6 +1803,7 @@ function nuSetStartingTab(p, w){
 	
 	if(w.tabs.length == 0){
 		nuFORMHELP[p] 	= ''
+		return;
 	}else{
 		nuFORMHELP[p] 	= nuTABHELP[w.tabs[0].id]
 	}
