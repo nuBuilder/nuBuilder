@@ -121,6 +121,20 @@ function nuGetBreadcrumb(bc){
 	
 }
 
+function nuOpenPreviousBreadcrumb() {
+    
+    // If a popup is open, close it
+    if (parent.$('#nuModal').length > 0) {
+        nuClosePopup();
+        return;
+    }
+ 
+    var l = window.nuFORM.breadcrumbs.length;
+    if (l > 1) {
+        nuGetBreadcrumb(l - 2);
+    }
+}
+
 
 function nuDisplayError(e){
 
@@ -1746,3 +1760,11 @@ function nuOnLoad() {
    
 }
 
+function nuEnableBrowserBackButton() {
+    window.history.pushState({page: 1}, "", "");
+    window.onpopstate = function(event) {
+      if(event){
+         nuOpenPreviousBreadcrumb();
+      }
+    }
+}

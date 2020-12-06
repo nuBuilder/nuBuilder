@@ -167,6 +167,8 @@ function nuBuildForm(f){
 	if(window.nuOnLoad){
 		nuOnLoad();
 	}
+	
+	nuEnableBrowserBackButton();
 
 	if(window.nuMESSAGES.length > 0){
 		
@@ -181,9 +183,6 @@ function nuBuildForm(f){
 
 	window.nuSAVED		= true;
 
-//	$(function() {
-//		FastClick.attach(document.body);
-//	});
 	
 }
 
