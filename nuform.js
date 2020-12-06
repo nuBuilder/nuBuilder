@@ -169,6 +169,8 @@ function nuBuildForm(f){
 	}
 	
 	nuEnableBrowserBackButton();
+	
+	nuSetTabTitle('nuBuilder');
 
 	if(window.nuMESSAGES.length > 0){
 		

@@ -7,7 +7,6 @@
 	nuStandaloneImportNewDB();
 
 	require_once('nusystemupdatelibs.php');
-	require_once('nuchoosesetup.php');
 		
 	nuMigrateSQL();
 	

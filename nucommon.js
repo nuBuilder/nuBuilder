@@ -1773,3 +1773,12 @@ function nuEnableBrowserBackButton() {
       }
     }
 }
+
+function nuSetTabTitle(prefix) {
+    var t = window.nuFORM.getProperty('title');
+    if (t === "") {
+        t = "Properties";
+    }
+    prefix = (typeof prefix === "undefined") ? "" : prefix + " - ";
+    document.title = prefix + t;
+}    
