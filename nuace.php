@@ -30,7 +30,7 @@ function nuLoad(){
 	
     window.editor = ace.edit("nu_editor");
 	
-    editor.setTheme("ace/theme/monokai");
+    editor.setTheme("ace/theme/Chrome");
     editor.setOptions({
         enableBasicAutocompletion: true,
         enableSnippets: true,
