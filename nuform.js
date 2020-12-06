@@ -361,6 +361,16 @@ function nuDefine(v){
 	
 }
 
+function nuSearchFieldSetSearchType() {
+  
+	  $("#nuSearchField")
+		  .prop("type", "search")
+		  .attr('autocomplete', 'off')
+		  .on('search', function () {
+			  nuSearchAction();
+		  });
+		  
+}
 
 function nuAddActionButtons(form){
 
@@ -379,8 +389,12 @@ function nuAddActionButtons(form){
 		var f 	= nuDefine(nuFORM.getProperty('filter'));
 		
 		$('#nuActionHolder').append("<input id='nuSearchField' type='text' class='nuSearch' onfocus='this.value = this.value;' onkeypress='nuSearchPressed(event)' onkeydown='nuArrowPressed(event)' value='" + s + "'>");
+		nuSearchFieldSetSearchType();
+		
 		$('#nuActionHolder').append("<input id='nuFilter' style='visibility:hidden;width:0px' value='" + f + "'>");
 		$('#nuActionHolder').append("<button id='nuSearchButton' type='button' class='nuActionButton'  onclick='nuSearchAction()'><i class='fa fa-search'></i>&nbsp;" + nuTranslate('Search') + "</button>");
+		
+		
 		
 		if(button.Add == 1){nuAddActionButton('Add');}
 		if(button.Print == 1){nuAddActionButton('Print');}
