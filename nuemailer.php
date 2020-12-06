@@ -52,10 +52,11 @@ function _nuMarshallEmailSettingsHelper($obj, $key, $default = '') {
 	if ( !isset($obj->$key) ) { 
 		return $default;	
 	}
-	if ( empty(trim($obj->$key)) ) {
+	$a = trim($obj->$key);
+	if ( empty($a) ) {
 		return $default;
 	}
-	return trim($obj->$key);
+	return $a;
 }
 function nuMarshallEmailSettings( $from_address = '', $from_name = '', $html = false, $reply_to_list = array() ) {
 	$word_press_path = '../../../wp-includes/class-phpmailer.php';
