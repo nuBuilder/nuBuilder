@@ -22,9 +22,9 @@
 
 function nuJSIndexInclude($pfile){
 
-    	//$timestamp = date("YmdHis", filemtime($pfile));                                         //-- Add timestamp so javascript changes are effective immediately
+    //$timestamp = date("YmdHis", filemtime($pfile));                                         //-- Add timestamp so javascript changes are effective immediately
 	$timestamp = date("YmdHis");
-    	print "<script src='$pfile?ts=$timestamp' type='text/javascript'></script>\n";
+    print "<script src='$pfile?ts=$timestamp' type='text/javascript'></script>\n";
 }
 
 function nuCSSIndexInclude($pfile){
@@ -34,14 +34,19 @@ function nuCSSIndexInclude($pfile){
 }
 
 function nuJSGstaticLoaderInclude(){
-	
+
 	global $nuIncludeGoogleCharts;
-	
+	global $nuIncludeApexCharts;
+
 	if ($nuIncludeGoogleCharts != false) {
-		$pfile = "https://www.gstatic.com/charts/loader.js";
-		print "<script src='$pfile' type='text/javascript'></script>\n";
+			$pfile = "https://www.gstatic.com/charts/loader.js";
+			print "<script src='$pfile' type='text/javascript'></script>\n";
 	}
-	
+
+	if ($nuIncludeApexCharts != false) {
+			$pfile = "./libs/apexcharts/apexcharts.min.js";
+			print "<script src='$pfile' type='text/javascript'></script>\n";
+	}
 }
 
 function nuHeader(){
