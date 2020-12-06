@@ -20,8 +20,8 @@ nuJSInclude('nucommon.js');
 nuJSInclude('nuajax.js');       //-- calls to server
 nuJSInclude('nureportjson.js');
 
-nuCSSInclude('nubuilder4.css');
-nuCSSInclude('nudrag.css');
+nuCSSInclude('css/nubuilder4.css');
+nuCSSInclude('css/nudrag.css');
 
 
 $f		= nuFormatList();
