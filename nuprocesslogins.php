@@ -94,6 +94,8 @@ function nuLoginSetupGlobeadmin() {
 	$values								= array($storeSessionInTableJSON, $_SESSION['nubuilder_session_data']['SESSION_ID'] );
 	
 	nuRunQuery($sql, $values);
+	
+	return true;
 }
 
 function nuLoginSetupNOTGlobeadmin($standalone = true) {
@@ -190,6 +192,8 @@ function nuLoginSetupNOTGlobeadmin($standalone = true) {
         $storeSessionInTableJSON 		= json_encode($storeSessionInTable);
 
 	nuRunQuery("INSERT INTO zzzzsys_session SET sss_access = ?, zzzzsys_session_id = ?", array($storeSessionInTableJSON, $_SESSION['nubuilder_session_data']['SESSION_ID']));
+	
+	return true;
 }
 
 function nuTempAnonReport() {

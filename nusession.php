@@ -4,17 +4,28 @@ require_once('nuchoosesetup.php');
 require_once('nucommon.php');
 require_once('nuprocesslogins.php');
 
+function nuStartup() {
+	
+	$p    = nuProcedure('nuStartup');
+	$error = '';
+	if($p != ''){		
+		eval($p);
+		if ($error != '') nuDie($error);
+	}
+	
+}
+
 if ( nuCheckIsLoginRequest() ) {
 
 	if ( nuCheckStandaloneGlobeadminLoginRequest() ) {
 
 		// Check for Standalone Globeadmin login
-		nuLoginSetupGlobeadmin();
+		if (nuLoginSetupGlobeadmin()) nuStartup();
 
 	} else if ( nuCheckStandaloneUserLoginRequest() ) {
 
 		// Check for Standlone User login
-		nuLoginSetupNOTGlobeadmin(true);
+		if (nuLoginSetupNOTGlobeadmin(true)) nuStartup();		
 
 	} else {
 
