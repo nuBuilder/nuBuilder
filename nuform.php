@@ -15,8 +15,13 @@ function nuBeforeBrowse($f){
 	
 	$_POST['nuMessages']	= [];
 	$r						= nuFormProperties($f);
-	nuEval($f . '_BB');
+
+	$p    = nuProcedure('nuBeforeBrowse');	
+	if($p != '') { eval($p); }	
+	if(count($_POST['nuErrors']) > 0){return;}
 	
+	nuEval($f . '_BB');
+			
 }
 
 
@@ -64,7 +69,13 @@ function nuBeforeEdit($FID, $RID){
 	}
 
 	if($RID != ''){
+		
+		$p    = nuProcedure('nuBeforeEdit');	
+		if($p != '') { eval($p); }
+		if(count($_POST['nuErrors']) > 0){return;}
+
 		nuEval($FID . '_BE');
+				
 	}
 	
     $GLOBALS['EXTRAJS']		.= $r->sfo_javascript;

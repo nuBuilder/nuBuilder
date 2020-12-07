@@ -366,11 +366,22 @@ function nuUpdateDatabase(){
 	
 	if($nuDelAll == 'Yes'){
 		
+		$p    = nuProcedure('nuBeforeDelete');	
+		if($p != '') { eval($p); }
+		if(count($_POST['nuErrors']) > 0){return;}
+
 		nuEval($EFid . '_BD');
-		$S				= array_reverse($S);				//-- delete children first
+
+		$S	= array_reverse($S);				//-- delete children first
 		
 	}else{
+		
+		$p    = nuProcedure('nuBeforeSave');	
+		if($p != '') { eval($p); }
+		if(count($_POST['nuErrors']) > 0){return;}
+				
 		nuEval($EFid . '_BS');
+		
 	}
 
 	if(count($_POST['nuErrors']) > 0){return;}
@@ -398,8 +409,19 @@ function nuUpdateDatabase(){
     nuChangeHashVariable('RECORD_ID', $nuMainID);
 
 	if($nuDelAll == 'Yes'){
+		
+		$p    = nuProcedure('nuAfterDelete');	
+		if($p != '') { eval($p); }
+		if(count($_POST['nuErrors']) > 0){return;}
+		
 		nuEval($EFid . '_AD');
+		
 	}else{
+				
+		$p    = nuProcedure('nuAfterSave');	
+		if($p != '') { eval($p); }
+		if(count($_POST['nuErrors']) > 0){return;}
+		
 		nuEval($EFid . '_AS');
 	}
 
