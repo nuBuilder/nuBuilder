@@ -835,13 +835,13 @@ CREATE TABLE `zzzzsys_run_list` (
 --
 
 CREATE TABLE `zzzzsys_select` (
-  `zzzzsys_select_id` varchar(25) CHARACTER SET utf8 NOT NULL,
-  `sse_description` varchar(300) CHARACTER SET utf8 DEFAULT NULL,
-  `sse_json` mediumtext CHARACTER SET utf8 DEFAULT NULL,
-  `sse_sql` mediumtext CHARACTER SET utf8 DEFAULT NULL,
-  `sse_edit` varchar(1) CHARACTER SET utf8 DEFAULT NULL,
-  `sse_system` varchar(1) CHARACTER SET utf8 DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `zzzzsys_select_id` varchar(25) NOT NULL,
+  `sse_description` varchar(300) DEFAULT NULL,
+  `sse_json` mediumtext DEFAULT NULL,
+  `sse_sql` mediumtext DEFAULT NULL,
+  `sse_edit` varchar(1) DEFAULT NULL,
+  `sse_system` varchar(1) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -857,7 +857,7 @@ CREATE TABLE `zzzzsys_select_clause` (
   `ssc_clause` varchar(500) DEFAULT NULL,
   `ssc_sort` varchar(10) DEFAULT NULL,
   `ssc_order` varchar(500) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
