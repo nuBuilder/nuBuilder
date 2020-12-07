@@ -91,15 +91,7 @@ function nuMarshallEmailSettings( $from_address = '', $from_name = '', $html = f
                 	$nuEmailSettings->reply_to_list = array($from_address => $from_name);
 		}
     }
-	if ( isset($_SESSION) ) {
-		if ( $_SESSION['nubuilder_session_data']['PLUGIN'] ) {
-				if ( file_exists($word_press_path) ) { 
-					$nuEmailSettings->phpmailer_path = $word_press_path;
-				} else {
-					$nuEmailSettings->error_text    .= 'Cannot locate phpmailer files';
-				}
-        	}
-	}
+
 	var_dump($nuEmailSettings);
 	return $nuEmailSettings;
 }

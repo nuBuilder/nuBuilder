@@ -2,10 +2,9 @@
 
 class nubuilder_session_data {
 
-	var $nubuilder		= array(
-	'PLUGIN'		=> false,
+	var $nubuilder	= array(	
 	'GLOBEADMIN'         	=> false,
-	'GLOBEADMIN_NAME'	=> '',
+	'GLOBEADMIN_NAME'		=> '',
 	'GLOBEADMIN_PASS'    	=> '',
 	'USER_LOGIN'         	=> '',
 	'USER_PASS'          	=> '',
@@ -18,12 +17,12 @@ class nubuilder_session_data {
 	'DB_HOST'            	=> '',
 	'DB_CHARSET'         	=> '',
 	'NU_SITE_URL'        	=> '',
-	'IS_DEMO'		=> false,	
-	'JQ_PATH'		=> '',
-	'SESSION_ID'		=> null,
-	'SESSION_TIMESTAMP'	=> null,
-	'IsDemo'		=> null,
-	'translation'		=> null);
+	'IS_DEMO'				=> false,	
+	'JQ_PATH'				=> '',
+	'SESSION_ID'			=> null,
+	'SESSION_TIMESTAMP'		=> null,
+	'IsDemo'				=> null,
+	'translation'			=> null);
 
 	function __construct() {
         }
@@ -35,17 +34,16 @@ class nubuilder_session_data {
 
 
         function construct_standalone($nuConfigDBHost, $nuConfigDBName, $nuConfigDBUser, $nuConfigDBPassword, $nuConfigDBGlobeadminUsername, $nuConfigDBGlobeadminPassword, $nuConfigIsDemo = false) {
-
-		$this->nubuilder['PLUGIN']		= false;
-		$this->nubuilder['DB_NAME']		= $nuConfigDBName;
-		$this->nubuilder['DB_USER']		= $nuConfigDBUser;
+		
+		$this->nubuilder['DB_NAME']			= $nuConfigDBName;
+		$this->nubuilder['DB_USER']			= $nuConfigDBUser;
 		$this->nubuilder['DB_PASSWORD']		= $nuConfigDBPassword;
-		$this->nubuilder['DB_HOST']		= $nuConfigDBHost;
+		$this->nubuilder['DB_HOST']			= $nuConfigDBHost;
 		$this->nubuilder['DB_CHARSET']		= 'utf8';
 		$this->nubuilder['GLOBEADMIN_NAME']	= $nuConfigDBGlobeadminUsername;
 		$this->nubuilder['GLOBEADMIN_PASS']	= $nuConfigDBGlobeadminPassword;
-		$this->nubuilder['IS_DEMO']         	= $nuConfigIsDemo;
-		$this->nubuilder['JQ_PATH']          	= 'jquery/jquery.js';
+		$this->nubuilder['IS_DEMO']         = $nuConfigIsDemo;
+		$this->nubuilder['JQ_PATH']         = 'libs/jquery/jquery.js';
         }
 }
 

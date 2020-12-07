@@ -25,11 +25,9 @@ nuCSSInclude('css/nudrag.css');
 
 
 $f		= nuFormatList();
-$ft 		= nuFontList();
+$ft 	= nuFontList();
 $tt		= nuTTList($_GET['tt'], $_GET['launch']);				//-- Field list from Temp table
 $i		= nuImageList(json_decode($tt));
-
-echo $_SESSION['nubuilder_session_data']['PLUGIN'] ? '<script> var $ = jQuery; </script>' : '';
 
 $h		= "
 <script>

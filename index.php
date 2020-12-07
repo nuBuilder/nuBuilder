@@ -77,8 +77,6 @@ nuJSGstaticLoaderInclude();
 
 <script>
 
-<?php echo $_SESSION['nubuilder_session_data']['PLUGIN'] ? 'var $ = jQuery;' : ''; ?>
-
 function nuValidCaller(o){
 	
 	if(o === null){return false;}
