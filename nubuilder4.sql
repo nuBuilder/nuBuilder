@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 06, 2020 at 04:58 PM
+-- Generation Time: Dec 07, 2020 at 05:19 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.2
 
@@ -753,7 +753,7 @@ INSERT INTO `zzzzsys_php` (`zzzzsys_php_id`, `sph_code`, `sph_description`, `sph
 ('nutranslate_AS', 'nutranslate_AS', 'System PHP', 'nubuilder', '\n$i  = \'trl_english\';\n$t  = nuRunQuery(\'SELECT COUNT(*) FROM zzzzsys_debug\');\n$c  = db_fetch_row($t)[0];\n$j  = \";$(\'#$i\').val($c);console.log(\'callback\');\";\n\nnuJavascriptCallback($j);\n\n\n\n', '', '', '1', ''),
 ('nuaccessreport_BB', 'nuaccessreport_BB', 'System PHP', 'nubuilder', '', '', '', '1', ''),
 ('nutranslate_BE', 'nutranslate_BE', 'System PHP', 'nubuilder', '\n$t          = nuRunQuery(\"SELECT MAX(trl_language) FROM zzzzsys_translate GROUP BY trl_language\");\n$a          = [];\n\nwhile($r = db_fetch_row($t)){\n    $a[]    = $r[0];    \n}\n\n$j          = json_encode($a);\n$f          = \"\n\nfunction nuLanguages(){\n    \n    return $j;\n    \n}\n\n\";\n\nnuAddJavascript($f);', '', '', '1', ''),
-('nuhome_BE', 'nuhome_BE', 'System PHP', 'nubuilder', '\n$a  = [\'LUJSTA\',\'FLOWB\',\'JSTA\',\'LUJS\',\'JS\',\'FLOW\',\'PB\',\'PE\',\'BB\',\'AB\',\'BE\',\'BS\',\'AS\',\'BD\',\'AD\',\'BBTA\',\'ABTA\',\'BETA\',\'BSTA\',\'ASTA\',\'BDTA\',\'ADTA\',\'DB\',\'SET\',\'F\',\'U\',\'KEY\',\'UH\',\'FF\',\'P\',\'FMT\',\'R\',\'BUT\',\'RR\',\'FILE\', \'RP\',\'FR\',\'OB\',\'SQL\', \'BRO\', \'BS\', \'AS\', \'BD\', \'AD\', \'TR\',\'DOWN\',\'HOR\', \'VER\',\'UP\',\'TALL\',\'SHORT\',\'TOP\',\'BOTTOM\',\'LEFT\',\'RIGHT\',\'THIN\',\'WIDE\',\'SU\',\'RD\'];\n$s  = nuGetJSONData(\'nufirsttime\');\n	\nif(is_null($s)){\n    \n    nuSetJSONData(\'nufirsttime\',\'non\');\n    nuPreloadImages($a);\n    \n}\n\n', '', '', '1', ''),
+('nuhome_BE', 'nuhome_BE', 'System PHP', 'nubuilder', '\n$a  = [\'LUJSTA\',\'FLOWB\',\'JSTA\',\'LUJS\',\'JS\',\'FLOW\',\'PB\',\'PE\',\'BB\',\'AB\',\'BE\',\'BS\',\'AS\',\'BD\',\'AD\',\'BBTA\',\'ABTA\',\'BETA\',\'BSTA\',\'ASTA\',\'BDTA\',\'ADTA\',\'DB\',\'SET\',\'F\',\'U\',\'KEY\',\'UH\',\'FF\',\'P\',\'FMT\',\'R\',\'BUT\',\'RR\',\'FILE\', \'RP\',\'FR\',\'OB\',\'SQL\', \'BRO\', \'BS\', \'AS\', \'BD\', \'AD\', \'TR\',\'DOWN\',\'HOR\', \'VER\',\'UP\',\'TALL\',\'SHORT\',\'TOP\',\'BOTTOM\',\'LEFT\',\'RIGHT\',\'THIN\',\'WIDE\',\'SU\',\'RD\'];\n$s  = nuGetJSONData(\'nufirsttime\');\n	\nif(is_null($s)){\n    \n    nuSetJSONData(\'nufirsttime\',\'non\');\n    nuPreloadImages($a);\n    \n}\n', '', '', '1', ''),
 ('nuphp_AD', 'nuphp_AD', 'System PHP', 'nubuilder', '', '', '', '1', ''),
 ('nuform_BE', 'nuform_BE', 'System PHP', 'nubuilder', '', '', '', '1', ''),
 ('nuupdatesystemids', 'USI', 'Update System IDs', 'nubuilder', 'nuUpdateSystemIds();', 'window', 'nublank', '1', ''),
@@ -783,7 +783,9 @@ INSERT INTO `zzzzsys_php` (`zzzzsys_php_id`, `sph_code`, `sph_description`, `sph
 ('nutablookup_BB', 'nutablookup_BB', 'System PHP', 'nubuilder', '$s  = \"CREATE TABLE #TABLE_ID# SELECT zzzzsys_form_id AS theid FROM zzzzsys_form WHERE \";\n$w  = \"1\";\nif ( $GLOBALS[\'nuSetup\']->set_denied == 1 )  { \n$w  = \"zzzzsys_form_id NOT LIKE \'nu%\' OR zzzzsys_form_id = \'nuuserhome\'\"; \n}\nnuRunQuery(\"$s$w\");\n', '', '', '1', ''),
 ('nuuser_BS', 'nuuser_BS', 'System PHP', 'nubuilder', '\nif(\'#check_password#\' != \'\'){\n    \n    if(\'#new_password#\' != \'#check_password#\'){\n        nuDisplayError(\'<b>Enter New Password</b> and <b>Reenter New Password</b> must match\');\n    }\n    \n}\n\n', '', '', '1', ''),
 ('nu5f6fe8bd7ff850a', 'CSVTRANSFER', 'CSV Transfer', 'nubuilder', '\n\n    if(\'#csv_transfer#\' == \'export\'){\n        nuToCSV(\'#csv_from#\', \'#csv_to#\', \'#csv_delimiter#\');\n    }\n    \n    if(\'#csv_transfer#\' == \'import\'){\n        nuFromCSV(\'#csv_from#\', \'#csv_to#\', \'#csv_delimiter#\');\n    }\n    \n\n\n\n\n', 'window', 'nublank', '1', ''),
-('nucsvtransfer_BE', 'nucsvtransfer_BE', 'System PHP', 'nubuilder', '\n\n\nif(\'csvfiles\'){\n    $f = scandir(\"csvfiles/\");\n}else{\n    $f = [];\n    \n}\n\n$a = [];\n\n\nfor($i = 0 ; $i < count($f) ; $i ++){\n    \n    if($f[$i][0] != \'.\'){\n        $a[] = \"\'\" . $f[$i] . \"\'\";\n    }\n}\n\n\nnuAddJavascript(\"\\n var nuCSVfiles = [\" . implode(\',\', $a) . \"];\\n\");\n', NULL, NULL, '1', '');
+('nucsvtransfer_BE', 'nucsvtransfer_BE', 'System PHP', 'nubuilder', '\n\n\nif(\'csvfiles\'){\n    $f = scandir(\"csvfiles/\");\n}else{\n    $f = [];\n    \n}\n\n$a = [];\n\n\nfor($i = 0 ; $i < count($f) ; $i ++){\n    \n    if($f[$i][0] != \'.\'){\n        $a[] = \"\'\" . $f[$i] . \"\'\";\n    }\n}\n\n\nnuAddJavascript(\"\\n var nuCSVfiles = [\" . implode(\',\', $a) . \"];\\n\");\n', NULL, NULL, '1', ''),
+('nusethashcookie', 'SETHASHCOOKIE', 'Sets session persistent hash cookies', 'System', '\n// Set session persistent hash cookies\n// Usage: Call from JavaScript: nuSetProperty(\"YourHashCookieName\",\"YourValue\",true);\n// Credits: Neil\n\n$i  	= \'#hcname#\';\n$nj 	= \'#hcvalue#\';\n$s		= \"SELECT * FROM zzzzsys_session WHERE zzzzsys_session_id = ? \";\n$t		= nuRunQuery($s, array($_SESSION[\'nubuilder_session_data\'][\'SESSION_ID\']));			 \n$r		= db_fetch_object($t);\n$j		= json_decode($r->sss_hashcookies, true);\n$j[$i]	= $nj;\n$J		= json_encode($j);\n$s		= \"UPDATE zzzzsys_session SET sss_hashcookies = ? WHERE zzzzsys_session_id = ? \";\n$t		= nuRunQuery($s, array($J, $_SESSION[\'nubuilder_session_data\'][\'SESSION_ID\']));', 'hide', NULL, '1', ''),
+('5fcda9aa353a5ad', '5fcda9aa353a5ad', 'System PHP', 'nubuilder', NULL, NULL, NULL, '1', NULL);
 
 -- --------------------------------------------------------
 
@@ -866,6 +868,7 @@ CREATE TABLE `zzzzsys_select_clause` (
 CREATE TABLE `zzzzsys_session` (
   `zzzzsys_session_id` varchar(25) NOT NULL DEFAULT '',
   `sss_access` mediumtext DEFAULT NULL,
+  `sss_hashcookies` mediumtext DEFAULT NULL,
   `sss_time` int(11) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

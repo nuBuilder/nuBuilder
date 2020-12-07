@@ -491,12 +491,21 @@ function nuRunHTML(){
 
 function nuReplaceHashVariables($s){
 
-	$s		= trim($s);
-	
+	$s	= trim($s);
 	if($s == ''){
 		return '';
+	}	
+	
+	$q	= "SELECT * FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
+	$t	=  nuRunQuery($q, array($_SESSION['nubuilder_session_data']['SESSION_ID']));			 
+	$r	= db_fetch_object($t);
+	$j	= json_decode($r->sss_hashcookies, true);
+		
+	$a 	= $_POST['nuHash'];
+	
+	if (is_array($j)) {
+		$a = array_merge($j, $a);
 	}
-	$a 		= $_POST['nuHash'];
 
 	if (!is_array($a)) {
 		return $s;
@@ -511,6 +520,7 @@ function nuReplaceHashVariables($s){
 	return $s;
 
 }
+
 
 
 function hex2rgb($hexOrColor) {
