@@ -29,7 +29,7 @@
 function pmaGood() {
 
 	$time = time();
-	$page = "nudb/db_structure.php?server=1&db=".$_SESSION['nubuilder_session_data']['DB_NAME']."&$time=$time";
+	$page = "libs/nudb/db_structure.php?server=1&db=".$_SESSION['nubuilder_session_data']['DB_NAME']."&$time=$time";
 	setcookie("nupmalogin",         "good");
 	setcookie("nuConfigDBHost",     $_SESSION['nubuilder_session_data']['DB_HOST']);
 	setcookie("nuConfigDBUser",     $_SESSION['nubuilder_session_data']['DB_USER']);
