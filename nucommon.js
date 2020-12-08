@@ -1766,19 +1766,31 @@ function nuOnLoad() {
 }
 
 function nuEnableBrowserBackButton() {
+	
     window.history.pushState({page: 1}, "", "");
     window.onpopstate = function(event) {
       if(event){
          nuOpenPreviousBreadcrumb();
       }
     }
+	
 }
 
 function nuSetTabTitle(prefix) {
+	
     var t = window.nuFORM.getProperty('title');
     if (t === "") {
         t = "Properties";
     }
     prefix = (typeof prefix === "undefined") ? "" : prefix + " - ";
     document.title = prefix + t;
+	
 }    
+
+
+function nuBrowseTitleMultiLine() {
+	    
+    $('#nuActionHolder').css({'height': '40px'});	    
+    $('.nuBrowseTitle').css('top', "-20px");	
+}    
+
