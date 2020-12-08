@@ -1765,6 +1765,8 @@ function nuOnLoad() {
    
 }
 
+// Functions added by kev1n:
+
 function nuEnableBrowserBackButton() {
 	
     window.history.pushState({page: 1}, "", "");
@@ -1794,3 +1796,14 @@ function nuBrowseTitleMultiLine() {
     $('.nuBrowseTitle').css('top', "-20px");	
 }    
 
+
+function nuSetBrowseColumnWidth(column, width) {
+
+    var cw = this;
+    if (nuIsIframe()) {
+        cw = parent.$("#" + window.frameElement.id)[0].contentWindow;
+    }
+    cw.nuFORM.breadcrumbs[cw.nuFORM.breadcrumbs.length - 1].column_widths[column] = width;
+    cw.nuSetBrowserColumns(cw.nuFORM.breadcrumbs[cw.nuFORM.breadcrumbs.length - 1].column_widths);
+	
+}
