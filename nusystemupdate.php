@@ -14,6 +14,17 @@ if($J  != 'valid'){
 	return;
 }
 
+
+if ($nuEnableDatabaseUpdate == false) {
+	
+	print "The Database update is disabled.";	
+	return;
+	
+}
+
+print "The Database update is enabled.";
+return;
+
 print '<br><span style="font-family:Helvetica;padding:10px;">Copied SYSTEM FILES to TEMP FILES <br></span>';
 nuCopySystemFiles();
 

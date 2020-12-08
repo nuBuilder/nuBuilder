@@ -11,7 +11,8 @@
 		
     $nuConfigIsDemo                 = false;
 	$nuIncludeGoogleCharts          = true;
-	$nuIncludeApexCharts			= true;
+	$nuIncludeApexCharts			= false;
+	$nuEnableDatabaseUpdate			= true;
 	
 	$nuConfigTimeOut             	= 1440;
 	
