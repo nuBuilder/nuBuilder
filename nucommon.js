@@ -1807,3 +1807,25 @@ function nuSetBrowseColumnWidth(column, width) {
     cw.nuSetBrowserColumns(cw.nuFORM.breadcrumbs[cw.nuFORM.breadcrumbs.length - 1].column_widths);
 	
 }
+
+function nuPrintEditForm() {
+ 
+  $('#nuBreadcrumbHolder').hide();
+  $('#nuTabHolder').hide();
+  $('.nuActionButton').hide();
+
+  window.onafterprint = function(e){
+        $(window).off('mousemove', window.onafterprint);
+                
+        $('#nuBreadcrumbHolder').show();
+        $('#nuTabHolder').show();
+        $('.nuActionButton').show();
+    };
+
+    window.print();
+
+    setTimeout(function(){
+        $(window).one('mousemove', window.onafterprint);
+    }, 1);
+	
+}
