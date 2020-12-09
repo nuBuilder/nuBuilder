@@ -306,7 +306,20 @@ function nuSetHashList($p){
 	$h['ID']					= addslashes($_POST['nuSTATE']['primary_key']);
 	$h['CODE']					= addslashes($_POST['nuSTATE']['code']);
 	
-	return array_merge($h, $r, $A);
+	
+	$cj = array();
+	$cq = "SELECT sss_hashcookies FROM zzzzsys_session WHERE LENGTH(sss_hashcookies) > 0 AND zzzzsys_session_id = ? ";
+	$ct = nuRunQuery($cq, array(
+		$_SESSION['nubuilder_session_data']['SESSION_ID']
+	));
+	$cr = db_fetch_object($ct);
+	
+	if (db_num_rows($ct) > 0) {
+		$cj = json_decode($cr->sss_hashcookies, true);
+		return array_merge($cj, $h, $r, $A);
+	} else {
+		return array_merge($h, $r, $A);
+	}
 
 }
 
