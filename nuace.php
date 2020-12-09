@@ -9,11 +9,9 @@
 
 <script src="<?php echo $jquery; ?>" type="text/javascript"></script>
 
-<?php echo $_SESSION['nubuilder_session_data']['PLUGIN'] ? '<script> var $ = jQuery; </script>' : ''; ?>
-
-<script src="ace/ace.js" type="text/javascript" charset="utf-8"></script>
-<script src="ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
-<script src="ace/src-min-noconflict/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
+<script src="libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="libs/ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="libs/ace/src-min-noconflict/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
 <link rel="stylesheet" href="css/nubuilder4.css">
 
 <script>
@@ -26,11 +24,11 @@ window.l = $('#' + o, window.opener.document).attr('data-nu-label');
 
 function nuLoad(){
 
-	ace.require("ace/ext/language_tools");
+	ace.require("libs/ace/ext/language_tools");
 	
     window.editor = ace.edit("nu_editor");
 	
-    editor.setTheme("ace/theme/Chrome");
+    editor.setTheme("ace/theme/chrome");
     editor.setOptions({
         enableBasicAutocompletion: true,
         enableSnippets: true,
@@ -43,11 +41,11 @@ function nuLoad(){
 	editor.setFontSize(14);
 	var cl			= '';
 
-	if ( window.c == 'HTML' ) 		{editor.getSession().setMode({path:"ace/mode/html", inline:true});cl='html';}
-	if ( window.c == 'Javascript' ) {editor.getSession().setMode({path:"ace/mode/javascript", inline:true});cl='js';}
-	if ( window.c == 'MySql' ) 		{editor.getSession().setMode({path:"ace/mode/mysql", inline:true});cl='sql';}
-	if ( window.c == 'PHP' ) 		{editor.getSession().setMode({path:"ace/mode/php", inline:true});cl='php';}
-	if ( window.c == 'SQL' ) 		{editor.getSession().setMode({path:"ace/mode/sql", inline:true});cl='sql';}
+	if ( window.c == 'HTML' ) 		{editor.getSession().setMode({path:"libs/ace/mode/html", inline:true});cl='html';}
+	if ( window.c == 'Javascript' ) {editor.getSession().setMode({path:"libs/ace/mode/javascript", inline:true});cl='js';}
+	if ( window.c == 'MySql' ) 		{editor.getSession().setMode({path:"libs/ace/mode/mysql", inline:true});cl='sql';}
+	if ( window.c == 'PHP' ) 		{editor.getSession().setMode({path:"libs/ace/mode/php", inline:true});cl='php';}
+	if ( window.c == 'SQL' ) 		{editor.getSession().setMode({path:"libs/ace/mode/sql", inline:true});cl='sql';}
 
 	document.getElementById('nu_language').innerHTML	= c;
 
