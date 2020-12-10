@@ -204,24 +204,13 @@ window.nuHASH				= [];
 	if ( $nuUser != ''  &&  $nuPassword != '' ){
 		$h2 = nuUseUP($nuBrowseFunction, $target, $welcome, $nuUser, $nuPassword);
 	}else{
-		
-		if($p){
-			
-			if($s){
-				$h2 = nuGetJS_action_screen($nuBrowseFunction, $target, $welcome, $opener, $search, $like);
-			}else{
-				$h2 = nuGetJS_plugin_login($nuBrowseFunction, $target);
-			}
-			
-		}else{
 			
 			if($opener == ''){
 				$h2 = nuGetJS_standalone_login($nuBrowseFunction, $target, $welcome);
 			}else{
 				$h2 = nuGetJS_action_screen($nuBrowseFunction, $target, $welcome, $opener, $search, $like);
 			}
-			
-		}
+
 	}
 
 	// end choose h2
