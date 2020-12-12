@@ -730,7 +730,7 @@ input[type=range]::-webkit-slider-runnable-track {
   border-width: 1px;
   border-color: lightgrey;
   font-size: 16px;
-  height: 18px;
+  height: 20px;
   padding: 1px 1px 1px 1px;
   margin-left: 5px;
 }
