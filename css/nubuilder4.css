@@ -50,7 +50,7 @@
 .html {
    background-color: #feeee7;
    font-family:Lucida Console;
-   padding: 2px;
+   padding: 5px;
    font-size: 10px;
 }
 
@@ -99,17 +99,17 @@ select {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   border: 1px solid rgba(0, 0, 0, 0.2);
   box-sizing: initial;
-  border-radius: 2px;
+  border-radius: 4px;
 
 }
 
 textarea {
-  padding: 2px;
+  padding: 5px;  
   margin: 0px;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   border: 1px solid rgba(0, 0, 0, 0.2);
   font-size: 13.3333px;
-  border-radius: 2px;
+  border-radius: 4px;
 }
 
 body {
@@ -129,7 +129,7 @@ input {
 }
 
 button {
-  border-radius: 2px;
+  border-radius: 4px;
 }
 
 
@@ -546,6 +546,15 @@ input[type=range]::-webkit-slider-runnable-track {
   color: red;
 }
 
+#nuNext { 
+	font-size: 18px; 
+	color: DimGrey; 
+}
+#nuLast { 
+	font-size: 18px; 
+	color: DimGrey; 
+}
+
 .nuTab {
   display: inline;
   border-style: solid;
@@ -720,20 +729,21 @@ input[type=range]::-webkit-slider-runnable-track {
 	cursor:pointer;
 }
 
+
 .nuSearch {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  background-color: white;
-  text-align: left;
-  vertical-align: top;
-  color: #666666;
-  border: solid;
-  border-width: 1px;
-  border-color: lightgrey;
-  font-size: 16px;
-  height: 20px;
-  padding: 1px 1px 1px 1px;
-  margin-left: 5px;
+    height: 26px;
+    line-height: 26px;
+    box-sizing: border-box;
+    padding: 0 15px 0 30px;
+    border: 1px solid #e3e3e3;
+    color: #2c3e50;
+    outline: none;
+    border-radius: 10px;
+    margin-right: 10px;
+    transition: border-color 0.2s ease;
+    vertical-align: middle !important;
 }
+
 
 #nuModal {
   background-color: #DEDEDE;
@@ -860,9 +870,16 @@ input[type=range]::-webkit-slider-runnable-track {
 	cursor:ew-resize;
 }
 
-#dialogTitle {
+.nuDialogTitle {
 	cursor: pointer; 
+	background-color:#ffffff3f;
+	position:absolute;
+	width:100%;
+	height:35px;
+	font-size:16px;
+	font-family:Helvetica
 }
+
 
 .nuDragToolbar {
 	cursor: pointer; 

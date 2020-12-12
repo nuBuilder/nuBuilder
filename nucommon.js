@@ -430,13 +430,12 @@ function nuCreateDialog(t){
 			'top'				: t, 
 			'width'				: w, 
 			'height'			: h, 
-			'background-color'	: '#CCCCCC', 
+			'background-color'	: '#ffffff3f', 
 			'z-index'			: 3000, 
 			'position'			: 'absolute',
 			'visibility'		: 'hidden'
 		})
-		.html('<div id="dialogTitle" style="background-color:#CCCCCC ;position:absolute;width:100%;height:35px;font-size:16px;font-family:Helvetica"><div id="dialogTitleWords" style="padding-top: 9px;height:30px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+translation+'</div><img id="dialogClose" src="graphics/close.png" style="position:absolute; top:2px; left:0px"></div>')
-//		.html('<div id="dialogTitle" ondblclick="nuResizeWindow(event)" style="background-color:#CCCCCC ;position:absolute;width:100%;height:35px;font-size:16px;font-family:Helvetica"><div id="dialogTitleWords" style="padding-top: 9px;height:30px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+translation+'</div><img id="dialogClose" src="graphics/close.png" style="position:absolute; top:2px; left:0px"></div>')
+		.html('<div id="dialogTitle" class="nuDialogTitle"><div id="dialogTitleWords" style="padding-top: 9px;height:30px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+translation+'</div><img id="dialogClose" src="graphics/close.png" style="position:absolute; top:2px; left:0px"></div>')
 
 		$('body')
 		.on('mousemove.popup', 	function(event){nuDialog.move(event);})
@@ -985,9 +984,9 @@ function nuResizeWindow(e){
 
 		if(D.length == 0){
 			
-			d.css(f.nuDialogSize);
-			w.css(f.nuWindowSize);
-			
+				d.css(f.nuDialogSize);
+				w.css(f.nuWindowSize);
+						
 		}
 		
 	}else{
