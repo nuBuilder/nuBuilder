@@ -782,29 +782,38 @@ function  nuGetLookupFields(id){
 
 function nuEnable(i) {            //-- Enable Edit Form Object
 
-    var o = [i, i + 'code', i + 'button', i + 'description'];
+    a = [];
+    if (!$.isArray(i)) {
+        a.push(i);
+    } else {
+        a = i;
+    }
 
-    for (var c = 0; c < o.length; c++) {
+    $.each(a, function(index, value) {
 
-        $('#' + o[c])
-            .removeClass('nuReadonly')
-            .prop('readonly', false)
-            .prop('disabled', false);
-
-        if (c == 2) { //-- button
+        i = a[index];
+		
+		var o = [i, i + 'code', i + 'button', i + 'description'];
+	
+        for (var c = 0; c < o.length; c++) {
 
             $('#' + o[c])
-                .on("click", function () {
-                    nuBuildLookup(this, "");
-                })
+                .removeClass('nuReadonly')
+                .prop('readonly', false)
+                .prop('disabled', false);
 
+            if (c == 2) { //-- button
+
+                $('#' + o[c])
+                    .on("click", function() {
+                        nuBuildLookup(this, "");
+                    })
+
+            }
         }
-    }
+    });
+
 }
-
-
-
-
 
 function nuReadonly(i){  			               //-- set Edit Form Object to readonly
 
@@ -824,22 +833,35 @@ function nuReadonly(i){  			               //-- set Edit Form Object to readonly
 
 function nuDisable(i){                 	//-- Disable Edit Form Object
 
-	var o	= [i, i + 'code', i + 'button', i + 'description'];
-	
-	for(var c = 0 ; c < o.length ; c++){
-			
-		$('#' + o[c])
-		.addClass('nuReadonly')
-		.prop('readonly', true)
-		.prop('disabled', true);
-		
-		if(c == 2){						//-- button
-			
-			$('#' + o[c]).off();
-			
-		}
-		
-	}
+    a = [];
+    if (!$.isArray(i)) {
+        a.push(i);
+    } else {
+        a = i;
+    }
+
+    $.each(a, function(index, value) {
+
+        i = a[index];
+
+        var o = [i, i + 'code', i + 'button', i + 'description'];
+
+        for (var c = 0; c < o.length; c++) {
+
+            $('#' + o[c])
+                .addClass('nuReadonly')
+                .prop('readonly', true)
+                .prop('disabled', true);
+
+            if (c == 2) { //-- button
+
+                $('#' + o[c]).off();
+
+            }
+
+        }
+
+    });
 
 }
 
