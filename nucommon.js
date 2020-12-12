@@ -216,7 +216,7 @@ function nuLogin(nuconfigNuWelcomeBodyInnerHTML){
 						</tr>
 						<tr>
 							<td style='text-align:center' colspan='2'><br><br>
-								<input id='submit' type='button' class='nuButton' onclick='nuLoginRequest()' value='Log in'/>
+								<input id='submit' style='width:90px' type='button' class='nuButton' onclick='nuLoginRequest()' value='Log in'/>
 							</td>
 						</tr>
 					</table>
@@ -1828,4 +1828,40 @@ function nuPrintEditForm() {
         $(window).one('mousemove', window.onafterprint);
     }, 1);
 	
+}
+
+function nuSetPlaceholder(i, placeholder) {
+    
+    var f = $('#'+i);    
+
+    if (typeof placeholder === 'undefined') {	
+		 placeholder = f.attr('data-nu-format').substring(2);
+	} else {
+		placeholder = nuTranslate(placeholder);
+	}	
+       
+    f.attr("placeholder", placeholder);    
+      
+}
+
+/**
+* Show tooltip on object hover.
+*
+* @param  {string}  id           - Object ID
+* @param  {string}  message      - Message to show on object hover
+* @param  {boolean} [labelHover] - true = show message also on label hover
+*/
+function nuSetToolTip(i, message, labelHover) {
+
+    // Show tooltip on object hover
+    $("#" + i).hover(function() {
+        $(this).attr("title", message);
+    });
+
+    if (labelHover === true) {
+        // Show tooltip on label hover
+        $("#label_" + i).hover(function() {
+            $(this).attr("title", message);
+        });
+    }
 }
