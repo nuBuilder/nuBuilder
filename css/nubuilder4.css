@@ -1,16 +1,16 @@
 .nu_browse                   {background-color : #8de2e2 !important}
 .nu_button                   {background-color : #98AFC7 !important}
-.nu_display                  {background-color : #cc9a5c !important}
+.nu_display                  {background-color : #EDBB99 !important}
 .nu_dropdown                 {background-color : #7bce98 !important}
-.nu_html                     {background-color : #dd6eb3 !important}
-.nu_input                    {background-color : #8db3dd !important}
-.nu_image                    {background-color : #acc637 !important}
-.nu_word                     {background-color : #68c994 !important}
-.nu_lookup                   {background-color : #EDDA74 !important}
-.nu_subform                  {background-color : #fa9b96 !important}
+.nu_html                     {background-color : #d86fb0 !important}
+.nu_input                    {background-color : #A9CCE3 !important}
+.nu_image                    {background-color : #c6e04e !important}
+.nu_word                     {background-color : #82dbaa !important}
+.nu_lookup                   {background-color : #f0e8a1 !important}
+.nu_subform                  {background-color : #daa5a3 !important}
 .nu_run                      {background-color : #cbc287 !important}
 .nu_textarea                 {background-color : #babedb !important}
-.nu_select                   {background-color : #caa5f6 !important}   
+.nu_select                   {background-color : #cebae6 !important}   
 .nu_calc                     {background-color : #B6B6B4 !important}   
 
 .nu_browseedit               {background-color : #a0a7d6 !important}
@@ -25,7 +25,7 @@
 
 
 .input_file { 
-   background-color : #ffe0b7;
+  background-color: #faf0e1;
 }
 
 .nuRelatedTab {
@@ -140,7 +140,7 @@ input[type=range]::-webkit-slider-runnable-track {
 
 
 .nuCellOdd{
-  background-color: #F5F5F5;
+  background-color: #f9f9f9;
   border-style: solid;
   border-width: 1px 0px 0px 0px;
   padding: 3px 10px 3px 10px;
@@ -476,7 +476,7 @@ input[type=range]::-webkit-slider-runnable-track {
   border-style: none;
   position:absolute;
   top:3px;
-  font-size:14px;
+  font-size:13px;
   overflow: visible;
   height:30px;
   padding: 7px 10px 0px 10px;
@@ -485,12 +485,13 @@ input[type=range]::-webkit-slider-runnable-track {
 .nuBrowseTable {
   height: 70px;
   border-style: solid;
-  border-color: #ebebeb;
+  border-color: #ebebeb70;
+  border-top: 1px solid #ddd;
   border-width: 1px;
   padding: 3px 10px 3px 10px;
   position:absolute;
   top:75px;
-  font-size:14px;
+  font: 13px "Helvetica Neue",HelveticaNeue,Helvetica,Arial,sans-serif !important
   line-height: 150%;
 }
 
@@ -499,14 +500,14 @@ input[type=range]::-webkit-slider-runnable-track {
 .nuSelectBrowse {
   height: 70px;
   border-style: solid;
-  border-width: 1px 0px 0px 0px;
+  border-width: 1px;
   padding: 3px 10px 3px 10px;
   position:absolute;
   top:75px;
-  font-size:14px;
-  background-color: #E6E6E6 !important;
-  border-color: #D8D8D8 !important;
-  line-height: 150%;
+  background-color: #f6f6f6 !important;
+  border-color: #ebebeb70 !important;
+  font: 13px "Helvetica Neue",HelveticaNeue,Helvetica,Arial,sans-serif !important
+  line-height: 150%;  
 }
 
 .nuBrowseSearch {
@@ -542,18 +543,22 @@ input[type=range]::-webkit-slider-runnable-track {
   background-color: #C0E2A5;
 }
 
-.nuBrowsePage:hover{
-  cursor: pointer;
-  color: red;
+
+#nuNext {
+        font-size: 18px;
+        color: DimGrey;
+}
+#nuLast {
+        font-size: 18px;
+        color: DimGrey;
 }
 
-#nuNext { 
-	font-size: 18px; 
-	color: DimGrey; 
+
+#nuNext:hover { 	
+	color: Red; 
 }
-#nuLast { 
-	font-size: 18px; 
-	color: DimGrey; 
+#nuLast:hover { 
+	color: Red; 
 }
 
 .nuTab {

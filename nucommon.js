@@ -1160,6 +1160,12 @@ function nuRemoveHolders(h){
 	
 }
 
+function nuAttachFontAwesome(i, c, s) {
+
+  var size = s === undefined ? 'medium' : s;
+  $('#' + i).prepend('<i style="font-size:' + size + '" class="' + c + '"></i>&nbsp;');
+  
+}
 
 function nuAttachFile(j, c){
 
@@ -1851,27 +1857,24 @@ function nuPrintEditForm() {
 	
 }
 
-function nuSetPlaceholder(i, placeholder) {
+function nuSetPlaceholder(i, placeholder, translate) {
     
     var f = $('#'+i);    
+
+	if (typeof translate === 'undefined') {
+		var translate = true;
+	}
 
     if (typeof placeholder === 'undefined') {	
 		 placeholder = f.attr('data-nu-format').substring(2);
 	} else {
-		placeholder = nuTranslate(placeholder);
+		placeholder = translate ? nuTranslate(placeholder) : placeholder;
 	}	
        
     f.attr("placeholder", placeholder);    
       
 }
 
-/**
-* Show tooltip on object hover.
-*
-* @param  {string}  id           - Object ID
-* @param  {string}  message      - Message to show on object hover
-* @param  {boolean} [labelHover] - true = show message also on label hover
-*/
 function nuSetToolTip(i, message, labelHover) {
 
     // Show tooltip on object hover
@@ -1886,3 +1889,19 @@ function nuSetToolTip(i, message, labelHover) {
         });
     }
 }
+
+function nuAddDatalist(i, a) {
+	
+    var datalist = document.createElement('datalist');
+    datalist.id = "datalist";
+    document.body.appendChild(datalist);
+    a.forEach(function (data) {
+        var option = document.createElement('option');				
+        option.value = $.isArray(data) ? data[0]: data;
+        option.text =  $.isArray(data) ? data[1]: data;
+        datalist.appendChild(option);
+    });
+    $('#' + i).attr('list', "datalist").attr('autocomplete', 'off');
+	
+}
+

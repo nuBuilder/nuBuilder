@@ -33,7 +33,7 @@ function nuCSSIndexInclude($pfile){
 	print "<link rel='stylesheet' href='$pfile?ts=$timestamp' />\n";
 }
 
-function nuJSGstaticLoaderInclude(){
+function nuJSChartsInclude(){
 
 	global $nuIncludeGoogleCharts;
 	global $nuIncludeApexCharts;
@@ -68,11 +68,9 @@ nuJSIndexInclude('nucalendar.js');
 nuJSIndexInclude('nucommon.js');
 nuJSIndexInclude('nureportjson.js');
 nuJSIndexInclude('nuajax.js');       //-- calls to server
-nuJSIndexInclude('libs/trumbowyg/trumbowyg.min.js'); 
-nuCSSIndexInclude('libs/trumbowyg/ui/trumbowyg.min.css');
 nuCSSIndexInclude('css/nubuilder4.css');
+nuJSChartsInclude();
 
-nuJSGstaticLoaderInclude();
 ?>
 
 <link href="./css/font-awesome.min.css" rel="stylesheet">
@@ -207,10 +205,22 @@ window.nuHASH				= [];
 		$h2 = nuUseUP($nuBrowseFunction, $target, $welcome, $nuUser, $nuPassword);
 	}else{
 		
-		if($opener == ''){
-			$h2 = nuGetJS_standalone_login($nuBrowseFunction, $target, $welcome);
+		if($p){
+			
+			if($s){
+				$h2 = nuGetJS_action_screen($nuBrowseFunction, $target, $welcome, $opener, $search, $like);
+			}else{
+				$h2 = nuGetJS_plugin_login($nuBrowseFunction, $target);
+			}
+			
 		}else{
-			$h2 = nuGetJS_action_screen($nuBrowseFunction, $target, $welcome, $opener, $search, $like);
+			
+			if($opener == ''){
+				$h2 = nuGetJS_standalone_login($nuBrowseFunction, $target, $welcome);
+			}else{
+				$h2 = nuGetJS_action_screen($nuBrowseFunction, $target, $welcome, $opener, $search, $like);
+			}
+			
 		}
 	}
 
