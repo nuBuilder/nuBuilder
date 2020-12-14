@@ -195,6 +195,8 @@ function nuBuildForm(f){
 	}
 
 	window.nuSAVED		= true;
+	
+	nuWindowPosition();
 
 	
 }
@@ -2048,7 +2050,7 @@ function nuGetOptionsList(f, t, p, a, type){
 	'height'		: 20 + (list.length * 20),
 	'width'			: 300,
 	'position'		: 'absolute',
-	'z-index'		: 2,
+	'z-index'		: 99,
 	'text-align' 	: 'left'})
 	.html('<span style="font-weight:bold">&nbsp;&nbsp;Options<\span>')
 	.addClass('nuOptionsList');
