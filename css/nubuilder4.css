@@ -660,8 +660,6 @@ input[type=range]::-webkit-slider-runnable-track {
   color: #E2EAFF;
 }
 
-
-
 .nuActionButton {
   color: white;
   background-color: #00ADEF;
@@ -675,6 +673,21 @@ input[type=range]::-webkit-slider-runnable-track {
   border-width: 0px 0px 1px 0px;
   margin: 0px 0px 0px 10px;
 }
+
+.nuQuickButton {
+	background-color: white;
+	color : #595353;
+	text-shadow : none;
+	font-size: 10px;
+	border-radius: 0px;
+	border-color: unset;
+}
+
+.nuQuickButton:hover {
+	background-color: #00ADEF;
+	color: white;
+}
+
 
 .nuSaveButtonEdited {
   background-color: red;
@@ -1072,7 +1085,7 @@ input[type=range]::-webkit-slider-runnable-track {
 	top:10px;
  	text-align: center;
 	padding:20px;
-	background-color: #FFEEA6;
+	background-color: #f9efc5;
 	box-shadow: 5px 5px 5px 0px rgba(150,147,150,1);
     opacity: 100;
     z-index: 5000;

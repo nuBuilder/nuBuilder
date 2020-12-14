@@ -656,6 +656,10 @@ function nuUnbindDragEvents(){
 
 function nuTranslate(s){
 	
+	if (s === '' || s.startsWith('@@') ) {
+		return '';
+	}
+	
 	for(var i = 0 ; i < nuLANGUAGE.length ; i ++){
 		
 		if(nuLANGUAGE[i].english == s){
@@ -667,8 +671,6 @@ function nuTranslate(s){
 	return s;
 	
 }
-
-
 
 function nuIsOpener() {
 	
@@ -1905,3 +1907,35 @@ function nuAddDatalist(i, a) {
 	
 }
 
+function nuLabelOnTop(f, e) {
+
+    for (var i = 0; i < f.length; i++) {
+        if (jQuery.inArray(f[i], e) == -1) {
+
+            $('#' + 'label_' + f[i]).css({
+                   'top': parseInt($('#'+f[i]).css("top")) - 18
+                , 'left': parseInt($('#'+f[i]).css("left"))
+                , 'text-align': 'left'
+            })
+        }
+    }
+}
+
+jQuery.fn.nuLabelOnTop = function (offsetTop = -18, offsetLeft = 0) {
+
+    return this.each(function () {
+        $('#' + 'label_' + this.id).css({
+            'top': parseInt($(this).css("top")) + offsetTop
+            , 'left': parseInt($(this).css("left")) + offsetLeft
+            , 'text-align': 'left'
+        })
+    });
+
+};
+
+jQuery.fn.cssNumber = function(prop) {
+	
+    var v = parseInt(this.css(prop), 10);
+    return isNaN(v) ? 0 : v;
+	
+};

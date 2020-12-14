@@ -1,4 +1,3 @@
-
 function nuBuildForm(f){
 
     $('#nubody').off('.nuresizecolumn'); 				//removes (if exist) the cursormove/touchmove event listeners binded to nubody
@@ -55,6 +54,10 @@ function nuBuildForm(f){
 	window.global_access		= f.global_access == '1';
 	nuFORM.edited				= false;
 	window.nuVerticalTabs 		= false;
+	window.nuDisableTabTitle	= false;
+	window.nuDisableDevButtons	= false;
+	window.nuDisableBrowserBackButton	= false;
+	
 	nuFORM.scroll				= [];
 	nuSetSuffix(1000);
 	nuSetBody(f);
@@ -168,9 +171,17 @@ function nuBuildForm(f){
 		nuOnLoad();
 	}
 	
-	nuEnableBrowserBackButton();
+    if (nuDisableTabTitle !== true) {		
+		nuSetTabTitle(typeof nuTabTitlePrefix === 'undefined' ? 'nuBuilder': nuTabTitlePrefix );
+	}
 	
-	nuSetTabTitle('nuBuilder');
+	if (nuDisableDevButtons !== true) {		
+		nuAddDevButtons();
+	}
+	
+	if (nuDisableBrowserBackButton !== true) {		
+		nuEnableBrowserBackButton();
+	}
 
 	if(window.nuMESSAGES.length > 0){
 		
@@ -187,13 +198,6 @@ function nuBuildForm(f){
 
 	
 }
-
-
-
-
-
-
-
 
 function nuAddHomeLogout(){
 	
@@ -237,19 +241,6 @@ function nuAddHomeLogout(){
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 function nuAddedByLookup(f){
 	
 	var isEdit			= nuFormType() 			== 'edit';
@@ -261,7 +252,6 @@ function nuAddedByLookup(f){
 	}
 	
 }
-
 
 function nuSetBody(f){
 
@@ -279,7 +269,6 @@ function nuSetBody(f){
 	}
 	
 }
-
 
 function nuDialogHeadersHeight(){
 
@@ -423,7 +412,7 @@ function nuAddActionButtons(form){
 
 
 
-function nuAddActionButton(i, v, f){
+function nuAddActionButton(i, v, f, t){
 	
 	if(arguments.length == 1){
 		
@@ -431,8 +420,13 @@ function nuAddActionButton(i, v, f){
 		f	= 'nu' + i + 'Action()';
 		
 	}
+
+	if (typeof t === 'undefined') {
+		var t = '';
+	}
+
 	
-	$('#nuActionHolder').append("<input id='nu" + i + "Button' type='button' class='nuActionButton' value='" + nuTranslate(v) + "' onclick='" + f + "'>");
+	$('#nuActionHolder').append("<input id='nu" + i + "Button' type='button' title='" + nuTranslate(t) + "' class='nuActionButton' value='" + nuTranslate(v) + "' onclick='" + f + "'>");
 
 }
 
