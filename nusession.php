@@ -51,6 +51,6 @@ if ( $_SESSION['nubuilder_session_data']['SESSION_ID'] == 'tempanonreport' ) {
 
 } else {
 
-	nuDie('Your nuBuilder session has timed out.');
+	nuDie('Your session has timed out.');
 
 }

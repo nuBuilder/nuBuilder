@@ -48,7 +48,7 @@
 }
 
 .html {
-   background-color: #feeee7;
+   background-color: #faf3ef;
    font-family:Lucida Console;
    padding: 5px;
    font-size: 10px;
@@ -679,8 +679,8 @@ input[type=range]::-webkit-slider-runnable-track {
 	color : #595353;
 	text-shadow : none;
 	font-size: 10px;
-	border-radius: 0px;
-	border-color: unset;
+	border-radius: 1px;	
+	border: none;
 }
 
 .nuQuickButton:hover {
@@ -688,6 +688,18 @@ input[type=range]::-webkit-slider-runnable-track {
 	color: white;
 }
 
+.nuDevButton {
+	margin-bottom: 10px; 
+	background-color: rgb(246, 246, 246); 
+	background-image: none; 
+	color: black; border-color: rgb(159, 165, 169); 
+	text-shadow: none;
+}
+
+.nuDevButton:hover {
+	background-color: #00ADEF;
+	color: white;
+}
 
 .nuSaveButtonEdited {
   background-color: red;
@@ -1085,10 +1097,11 @@ input[type=range]::-webkit-slider-runnable-track {
 	top:10px;
  	text-align: center;
 	padding:20px;
-	background-color: #f9efc5;
+	background-color: #f9f4e1;
 	box-shadow: 5px 5px 5px 0px rgba(150,147,150,1);
     opacity: 100;
     z-index: 5000;
+	border-radius: 4px;
 }
 
 #nuErrorCode {

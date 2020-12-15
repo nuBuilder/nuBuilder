@@ -72,7 +72,9 @@ nuJSIndexInclude('nucommon.js');
 nuJSIndexInclude('nuadmin.js');
 nuJSIndexInclude('nureportjson.js');
 nuJSIndexInclude('nuajax.js');       //-- calls to server
+nuJSIndexInclude('libs/quill/quill.js'); 
 nuCSSIndexInclude('css/nubuilder4.css');
+nuCSSIndexInclude('libs/quill/themes/quill.snow.css');
 nuJSChartsInclude();
 
 ?>

@@ -5,7 +5,7 @@
 
 require_once('nucommon.php');	
 
-nuJSInclude('jquery/jquery.js');
+nuJSInclude('libs/jquery/jquery.js');
 nuJSInclude('nuselectclass.js');
 nuJSInclude('nuformclass.js');
 nuJSInclude('nuform.js');
