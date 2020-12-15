@@ -1,3 +1,105 @@
-/* SCEditor v2.1.3 | (C) 2017, Sam Clarke | sceditor.com/license */
+/**
+ * SCEditor AutoSave Plugin
+ * http://www.sceditor.com/
+ *
+ * Copyright (C) 2017, Sam Clarke (samclarke.com)
+ *
+ * SCEditor is licensed under the MIT license:
+ *	http://www.opensource.org/licenses/mit-license.php
+ *
+ * @author Sam Clarke
+ */
+(function (sceditor) {
+	'use strict';
 
-!function(e){"use strict";var t="sce-autodraft-"+location.pathname+location.search;function i(e){localStorage.removeItem(e||t)}e.plugins.autosave=function(){var a,e=this,o=t,r=864e5,n=function(e){localStorage.setItem(o,JSON.stringify(e))},s=function(){return JSON.parse(localStorage.getItem(o))};e.init=function(){var e=(a=this).opts&&a.opts.autosave||{};n=e.save||n,s=e.load||s,o=e.storageKey||o,r=e.expires||r,function(){for(var e=0;e<localStorage.length;e++){var t=localStorage.key(e);if(/^sce\-autodraft\-/.test(t)){var a=JSON.parse(localStorage.getItem(o));a&&a.time<Date.now()-r&&i(t)}}}()},e.signalReady=function(){for(var e=a.getContentAreaContainer();e;){if(/form/i.test(e.nodeName)){e.addEventListener("submit",i.bind(null,o),!0);break}e=e.parentNode}var t=s();t&&(a.sourceMode(t.sourceMode),a.val(t.value,!1),a.focus(),t.sourceMode?a.sourceEditorCaret(t.caret):a.getRangeHelper().restoreRange()),n({caret:this.sourceEditorCaret(),sourceMode:this.sourceMode(),value:a.val(null,!1),time:Date.now()})},e.signalValuechangedEvent=function(e){n({caret:this.sourceEditorCaret(),sourceMode:this.sourceMode(),value:e.detail.rawValue,time:Date.now()})}},e.plugins.autosave.clear=i}(sceditor);
+	var defaultKey = 'sce-autodraft-' + location.pathname + location.search;
+
+	function clear(key) {
+		localStorage.removeItem(key || defaultKey);
+	}
+
+	sceditor.plugins.autosave = function () {
+		var base = this;
+		var editor;
+		var storageKey = defaultKey;
+		// 86400000 = 24 hrs (24 * 60 * 60 * 1000)
+		var expires = 86400000;
+		var saveHandler = function (value) {
+			localStorage.setItem(storageKey, JSON.stringify(value));
+		};
+		var loadHandler = function () {
+			return JSON.parse(localStorage.getItem(storageKey));
+		};
+
+		function gc() {
+			for (var i = 0; i < localStorage.length; i++) {
+				var key = localStorage.key(i);
+
+				if (/^sce\-autodraft\-/.test(key)) {
+					var item = JSON.parse(localStorage.getItem(storageKey));
+					if (item && item.time < Date.now() - expires) {
+						clear(key);
+					}
+				}
+			}
+		}
+
+		base.init = function () {
+			editor = this;
+			var opts = editor.opts && editor.opts.autosave || {};
+
+			saveHandler = opts.save || saveHandler;
+			loadHandler = opts.load || loadHandler;
+			storageKey = opts.storageKey || storageKey;
+			expires = opts.expires || expires;
+
+			gc();
+		};
+
+		base.signalReady = function () {
+			// Add submit event listener to clear autosave
+			var parent = editor.getContentAreaContainer();
+			while (parent) {
+				if (/form/i.test(parent.nodeName)) {
+					parent.addEventListener(
+						'submit', clear.bind(null, storageKey), true
+					);
+					break;
+				}
+
+				parent = parent.parentNode;
+			}
+
+			var state = loadHandler();
+			if (state) {
+				editor.sourceMode(state.sourceMode);
+				editor.val(state.value, false);
+				editor.focus();
+
+				if (state.sourceMode) {
+					editor.sourceEditorCaret(state.caret);
+				} else {
+					editor.getRangeHelper().restoreRange();
+				}
+			}
+
+			saveHandler({
+				caret: this.sourceEditorCaret(),
+				sourceMode: this.sourceMode(),
+				value: editor.val(null, false),
+				time: Date.now()
+			});
+		};
+
+		base.signalValuechangedEvent = function (e) {
+			saveHandler({
+				caret: this.sourceEditorCaret(),
+				sourceMode: this.sourceMode(),
+				value: e.detail.rawValue,
+				time: Date.now()
+			});
+		};
+	};
+
+	sceditor.plugins.autosave.clear = clear;
+}(sceditor));
