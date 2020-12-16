@@ -57,6 +57,8 @@ function nuBuildForm(f){
 	window.nuDisableTabTitle	= false;
 	window.nuDisableDevButtons	= false;
 	window.nuDisableBrowserBackButton	= false;
+	window.nuDisablePreventButtonDblClick = false;
+	
 	
 	nuFORM.scroll				= [];
 	nuSetSuffix(1000);
@@ -183,11 +185,14 @@ function nuBuildForm(f){
 		nuEnableBrowserBackButton();
 	}
 
-
 	if (nuDisableBrowserBackButton !== true) {		
 		nuEnableBrowserBackButton();
 	}
-		
+	
+	if (nuDisablePreventButtonDblClick !== true) {		
+		nuPreventButtonDblClick();
+	}
+	
 	nuInitSetBrowseWidthHelper();
 	
 	if(window.nuMESSAGES.length > 0){

@@ -1769,9 +1769,9 @@ function nuIsIframe(){
 
 // After clicking a nuActionButton (Save, Delete, Print, Clone etc.), disable it for 1.5 secs to prevent a user from double-clicking it.
 
-function preventButtonDblClick() {
-
-   $('.nuActionButton').click(function() {   
+function nuPreventButtonDblClick () {
+console.log('nuPreventButtonDblClick');
+   $('.nuActionButton .nuButton').click(function() {   
    
       var id = $(this).attr("id");   
 
@@ -1787,12 +1787,13 @@ function preventButtonDblClick() {
 
 }
 
-
+/*
 function nuOnLoad() {
 
-   preventButtonDblClick();
+   nuPreventButtonDblClick();
    
 }
+*/
 
 // Functions added by kev1n:
 

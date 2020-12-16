@@ -1,21 +1,23 @@
 // Developer Buttons
 
 function nuEditPHP(type) {
-	
-    nuForm('nuphp', nuCurrentProperties().form_id + '_' + type, 'justphp', '', 2);
-	
+    nuForm('nuphp', nuCurrentProperties().form_id + '_' + type, 'justphp', '', 2);	
 }
 
 function nuOpenCurrentFormProperties() {
-	
     nuForm('nuform', window.nuFORM.getCurrent().form_id, '', '', 2);
-	
 }
 
 function nuOpenCurrentObjectList() {
-	
     nuForm('nuobject','',window.nuFORM.getCurrent().form_id,'',2);
-	
+}
+
+function nuOpenSetup() {
+    nuForm('nusetup','1',window.nuFORM.getCurrent().form_id,'',2);
+}
+
+function nuOpenDatabase() {
+	window.open('nupmalogin.php?sessid='+window.nuSESSION);
 }
 
 function nuAddDevButton(i, v, f, t) {
@@ -50,6 +52,13 @@ function nuAddRefreshButton() {
 
 }
 
+function nuIsDevMode() {
+  
+  var d = localStorage.getItem("nuDevMode");
+  return d !== null && d !== 'null' && window.global_access;
+  
+}
+
 function nuAddDevButtons() {
 
     if (global_access) {
@@ -62,9 +71,15 @@ function nuAddDevButtons() {
         
         nuAddDevButton("DevBtnFormInfo", "Info", 'nuShowFormInfo();', nuTranslate('Form Info'));
         
+		var devMode = nuIsDevMode();
 		var code = nuCurrentProperties().form_code;
-		if (! code.startsWith('nu')) { 		
+		if (! code.startsWith('nu') || devMode) { 		
 		
+			if (devMode) {			
+				nuAddDevButton("DevBtnDB", "DB", 'nuOpenDatabase();',nuTranslate('Database'));
+				nuAddDevButton("DevBtnSetup", "Setup", 'nuOpenSetup();',nuTranslate('Setup'));
+			}	
+					
 			nuAddDevButton("DevBtnObjectList", "Obj", 'nuOpenCurrentObjectList();',nuTranslate('Object List'));
 			nuAddDevButton("DevBtnProperties", "Prop", 'nuOpenCurrentFormProperties();',nuTranslate('Form Properties'));
 		
