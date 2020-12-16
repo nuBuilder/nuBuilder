@@ -183,6 +183,13 @@ function nuBuildForm(f){
 		nuEnableBrowserBackButton();
 	}
 
+
+	if (nuDisableBrowserBackButton !== true) {		
+		nuEnableBrowserBackButton();
+	}
+		
+	nuInitSetBrowseWidthHelper();
+	
 	if(window.nuMESSAGES.length > 0){
 		
 		nuMessage(window.nuMESSAGES);

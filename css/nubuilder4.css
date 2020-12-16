@@ -667,7 +667,7 @@ input[type=range]::-webkit-slider-runnable-track {
 	background-color: white;
 	color : #595353;
 	text-shadow : none;
-	font-size: 10px;
+	font-size: 13px;
 	border-radius: 1px;	
 	border: none;
 }
@@ -724,7 +724,7 @@ input[type=range]::-webkit-slider-runnable-track {
 	height:30px;
 	font: 20px bold;
 	font-family:monospace;
-	background-color:#ebebeb;
+	background-color:#f6f4f4;
 }
 
 .nuCalculatorButton:hover{
@@ -740,7 +740,7 @@ input[type=range]::-webkit-slider-runnable-track {
 	height:30px;
 	font: 16px bold;
 	font-family:monospace;
-	background-color:#ebebeb;
+	background-color:#f6f4f4;
 	
 }
 

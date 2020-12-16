@@ -1160,7 +1160,7 @@ function nuSetProperty(f, v, p){
 		// set the hash cookie to persist
 		nuSetProperty('hcname',f);
 		nuSetProperty('hcvalue',v);
-		nuRunPHPHidden('SETHASHCOOKIE', 0);
+		nuRunPHPHidden('nusethashcookie', 0);
 	}	
 }
 

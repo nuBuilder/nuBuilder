@@ -1,3 +1,5 @@
+// Developer Buttons
+
 function nuEditPHP(type) {
 	
     nuForm('nuphp', nuCurrentProperties().form_id + '_' + type, 'justphp', '', 2);
@@ -85,3 +87,4 @@ function nuAddDevButtons() {
     }
 
 }
+
