@@ -80,7 +80,7 @@ function nuAddDevButtons() {
         var dragDialog = parent.$('#nuDragDialog')
         dragDialog.css('height', dragDialog.cssNumber("height") + 50);
 
-        $("input[type='button'][id^='nuDevBtn']").css({ 'margin-bottom': '10px', 'background-color': '#f6f6f6', 'background-image': 'none', 'color': 'black', 'border-color': '#9fa5a9', 'text-shadow': 'none' });
+        $("input[type='button'][id^='nuDevBtn']").addClass('nuDevButton');
         $("<br>").insertAfter($("#nuDevBtnFormInfoButton"));
     }
 

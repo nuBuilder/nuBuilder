@@ -299,7 +299,7 @@ function nuBuildLookup(t, s, like){
 	var open 		= window.nuOPENER[window.nuOPENER.length - 1];
 	
 	if(parent.window == window){
-		window.nuDialog.createDialog(50, 50, 50, 50, '');
+		window.nuDialog.createDialog(50, 25, 50, 50, '');
 	}else{
 		window.nuDialog.createDialog(0, 30, 50, 50, '');
 	}
@@ -321,7 +321,7 @@ function nuPopup(f, r, filter){
 	var id 	= window.nuOPENER[window.nuOPENER.length - 1].id;
 	
 	if(parent.window==window){
-		window.nuDialog.createDialog(50, 50, 50, 50, '');
+		window.nuDialog.createDialog(50, 25, 50, 50, '');
 	}else{
 		window.nuDialog.createDialog(0, 30, 50, 50, '');
 	}

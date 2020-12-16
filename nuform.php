@@ -735,14 +735,22 @@ function nuBuildTabList($i){
 
     $o 				= 0;
     $a 				= array();
+	
     $s 				= "
     
-        SELECT * 
-        FROM zzzzsys_tab 
-        INNER JOIN zzzzsys_object ON sob_all_zzzzsys_form_id = syt_zzzzsys_form_id
-        WHERE syt_zzzzsys_form_id = '$i'
-        GROUP BY syt_zzzzsys_form_id, syt_title
-        ORDER BY syt_order
+		SELECT zzzzsys_tab_id, 
+			   syt_zzzzsys_form_id, 
+			   syt_title, 
+			   syt_order, 
+			   syt_help, 
+			   zzzzsys_object_id 
+		FROM   zzzzsys_tab 
+			   INNER JOIN zzzzsys_object 
+					   ON sob_all_zzzzsys_form_id = syt_zzzzsys_form_id 
+		WHERE  syt_zzzzsys_form_id = '$i' 
+		GROUP  BY syt_order, 
+				  syt_zzzzsys_form_id, 
+				  syt_title 
     
     ";
 
