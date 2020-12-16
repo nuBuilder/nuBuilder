@@ -88,3 +88,50 @@ function nuAddDevButtons() {
 
 }
 
+// Set Browse Column Widths in a Browse Screen
+
+function nuRoundNearest(n, v) {
+    n = n / v;
+    n = Math.round(n) * v;
+    return n;
+}
+
+function nuSetBrowseColumnWidths() {
+    if (confirm(nuTranslate("Copy Column Widths from the Browse Table (Overwrite existing values)?"))) {
+
+        var sf = nuSubformObject('zzzzsys_browse_sf');
+        for (var i = 0; i < sf.rows.length; i++) {
+
+            if (sf.deleted[i] == 0) {
+                var c = $("div[id='nuBrowseTitle" + i + "']", window.parent.document);
+                var w = Math.ceil(nuRoundNearest(parseFloat(c[0].style.width), 5)).toString();
+                $('#' + 'zzzzsys_browse_sf' + nuPad3(i) + 'sbr_width').val(w.replace('px', '')).change();
+            }
+
+        }
+    }
+
+}
+
+function nuInitSetBrowseWidthHelper() {
+    var p = nuCurrentProperties();
+    if ((p.form_id == 'nuform' && p.form_type == 'browseedit')) {
+        if (window.location != window.parent.location) {
+            
+            var w = $('#title_zzzzsys_browse_sfsbr_width');
+
+            if (w.length == 1) {
+                w.css({
+                    "text-decoration": "underline",
+                    "text-decoration-style": "dashed",
+                    "color": "blue"
+                });
+
+                w.prop('onclick', null).off('click');
+                w.click(function (e) {
+                    nuSetBrowseColumnWidths();
+                });
+            }
+        }
+    }
+} 
