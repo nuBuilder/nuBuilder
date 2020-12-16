@@ -1797,6 +1797,13 @@ function nuOnLoad() {
 
 // Functions added by kev1n:
 
+function nuAddBackButton() {
+    var b  = $('.nuBreadcrumb').length;
+    if (b>0){
+        nuAddActionButton('BackBtn', nuTranslate('Back'), 'if (!nuFORM.edited) { nuDisable(this.id) }; nuOpenPreviousBreadcrumb();');
+    }
+}
+
 function nuEnableBrowserBackButton() {
 	
     window.history.pushState({page: 1}, "", "");

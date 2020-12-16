@@ -1064,7 +1064,8 @@ var Quill = function () {
         }
       } else {
         if (this.imports[path] != null && !overwrite) {
-          debug.warn('Overwriting ' + path + ' with', target);
+		  // disabled by kev1n	
+          // debug.warn('Overwriting ' + path + ' with', target);
         }
         this.imports[path] = target;
         if ((path.startsWith('blots/') || path.startsWith('formats/')) && target.blotName !== 'abstract') {

@@ -683,7 +683,11 @@ input[type=range]::-webkit-slider-runnable-track {
 	background-image: none; 
 	color: black; border-color: rgb(159, 165, 169); 
 	text-shadow: none;
+	border-radius: 3px;
 }
+
+#nuBackBtnButton.nuActionButton {background-color:#28A251;}
+#nuBackBtnButton.nuActionButton:disabled {background-color:#f0f0f0;}
 
 .nuDevButton:hover {
 	background-color: #00ADEF;

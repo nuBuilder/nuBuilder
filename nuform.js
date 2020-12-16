@@ -58,7 +58,8 @@ function nuBuildForm(f){
 	window.nuDisableDevButtons	= false;
 	window.nuDisableBrowserBackButton	= false;
 	window.nuDisablePreventButtonDblClick = false;
-	
+	window.nuShowBackButton = false;
+
 	
 	nuFORM.scroll				= [];
 	nuSetSuffix(1000);
@@ -192,6 +193,11 @@ function nuBuildForm(f){
 	if (nuDisablePreventButtonDblClick !== true) {		
 		nuPreventButtonDblClick();
 	}
+
+	if (nuShowBackButton === true) {		
+		nuAddBackButton();
+	}
+
 	
 	nuInitSetBrowseWidthHelper();
 	
