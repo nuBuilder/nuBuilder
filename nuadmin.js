@@ -44,14 +44,6 @@ function nuShowFormInfo() {
 	
 }
 
-function nuAddRefreshButton() {
-
-    if (nuFormType() != 'browse') {
-        nuAddActionButton('nuRefreshBtn', nuTranslate('Refresh'), 'nuGetBreadcrumb()');
-    }
-
-}
-
 function nuIsDevMode() {
   
   var d = localStorage.getItem("nuDevMode");
@@ -75,7 +67,7 @@ function nuAddDevButtons() {
 		var code = nuCurrentProperties().form_code;
 		if (! code.startsWith('nu') || devMode) { 		
 		
-			if (devMode) {			
+			if (devMode && nuFormType() !== 'browse') {			
 				nuAddDevButton("DevBtnDB", "DB", 'nuOpenDatabase();',nuTranslate('Database'));
 				nuAddDevButton("DevBtnSetup", "Setup", 'nuOpenSetup();',nuTranslate('Setup'));
 			}	
@@ -88,8 +80,8 @@ function nuAddDevButtons() {
 			if (e) { nuAddDevButton("DevBtnBS", "BS", 'nuEditPHP("BS");','Before Save'); }
 			if (e) { nuAddDevButton("DevBtnAS", "AS", 'nuEditPHP("AS");','After Save'); }
 		}
-		
-		nuAddDevButton("DevBtnRefresh", nuTranslate("Refresh"), 'nuGetBreadcrumb();');
+				
+		if (nuFormType() !== 'browse') nuAddActionButton('DevBtnRefresh', nuTranslate('Refresh'), 'nuGetBreadcrumb()');
 
         var frame = parent.$('#nuDragDialog iframe')
         frame.css('height', frame.cssNumber("height") + 50);
@@ -97,7 +89,7 @@ function nuAddDevButtons() {
         var dragDialog = parent.$('#nuDragDialog')
         dragDialog.css('height', dragDialog.cssNumber("height") + 50);
 
-        $("input[type='button'][id^='nuDevBtn']").addClass('nuDevButton');
+        $("input[type='button'][id^='nuDevBtn']").not('#nuDevBtnRefreshButton').addClass('nuDevButton');
         $("<br>").insertAfter($("#nuDevBtnFormInfoButton"));
     }
 

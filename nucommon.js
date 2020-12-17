@@ -1954,3 +1954,24 @@ jQuery.fn.cssNumber = function(prop) {
     return isNaN(v) ? 0 : v;
 	
 };
+
+function nuDisableAllObjects(excludeTypes, excludeIds) {
+
+    if (typeof excludeTypes === 'undefined') {
+        let excludeTypes = [];
+    }
+
+    if (typeof excludeIds === 'undefined') {
+        let excludeIds = [];
+    }
+	
+    var r = JSON.parse(JSON.stringify(nuSERVERRESPONSE));
+    for (var i = 0; i < r.objects.length; i++) {
+        let obj = r.objects[i];
+		
+        if ($.inArray(obj.type, excludeTypes) == -1 && $.inArray(obj.id, excludeIds) == -1 ) {
+            nuDisable(obj.id);
+        }
+    }
+	
+}

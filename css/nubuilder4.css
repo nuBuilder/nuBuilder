@@ -670,6 +670,7 @@ input[type=range]::-webkit-slider-runnable-track {
 	font-size: 13px;
 	border-radius: 1px;	
 	border: none;
+	padding-left: 10px;
 }
 
 .nuQuickButton:hover {
@@ -1206,4 +1207,36 @@ span.nuActionButton{
 	position:absolute;
 	height:40px;
 
+}
+
+.nuContentBox .content {
+    height:inherit;
+    padding: 10px;
+    font-size: 15px;
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
+    border:1px solid #dddddd;  
+    background-color: #fff;   
+   
+}
+
+.nuContentBox .title {   
+    height:4px;
+    line-height:4px;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    color: #333;
+    font-size:14px;
+    font-weight:bold;    
+    font-family: sans-serif, "Segoe UI", Helvetica, "Helvetica Neue", Arial, sans-serif;
+    display:block;
+    margin:-1px;
+    padding:9px;
+    letter-spacing: 1px;
+}
+
+.nuContentBox {
+   z-index:-1;
+   position: absolute;
+   height:90px;
 }

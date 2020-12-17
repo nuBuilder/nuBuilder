@@ -23,7 +23,7 @@ window.f = opener.window.nuFORM.formSchema;
 window.l = $('#' + o, window.opener.document).attr('data-nu-label');
 
 function nuLoad(){
-debugger;
+
 	ace.require("ace/ext/language_tools");
 	
     window.editor = ace.edit("nu_editor");
@@ -41,11 +41,13 @@ debugger;
 	editor.setFontSize(14);
 	var cl			= '';
 
-	if ( window.c == 'HTML' ) 		{editor.getSession().setMode({path:"ace/mode/html", inline:true});cl='html';}
-	if ( window.c == 'Javascript' ) {editor.getSession().setMode({path:"ace/mode/javascript", inline:true});cl='js';}
-	if ( window.c == 'MySql' ) 		{editor.getSession().setMode({path:"ace/mode/mysql", inline:true});cl='sql';}
-	if ( window.c == 'PHP' ) 		{editor.getSession().setMode({path:"ace/mode/php", inline:true});cl='php';}
-	if ( window.c == 'SQL' ) 		{editor.getSession().setMode({path:"ace/mode/sql", inline:true});cl='sql';}
+    var language = window.c.toUpperCase();
+
+	if ( language == 'HTML' ) {editor.getSession().setMode({path:"ace/mode/html", inline:true});cl='html';}
+	if ( language == 'JAVASCRIPT' ) {editor.getSession().setMode({path:"ace/mode/javascript", inline:true});cl='js';}	
+	if ( language == 'MYSQL' ){editor.getSession().setMode({path:"ace/mode/mysql", inline:true});cl='sql';}
+	if ( language == 'PHP' ) {editor.getSession().setMode({path:"ace/mode/php", inline:true});cl='php';}
+	if ( language == 'SQL' ) {editor.getSession().setMode({path:"ace/mode/sql", inline:true});cl='sql';}
 
 	document.getElementById('nu_language').innerHTML	= c;
 
