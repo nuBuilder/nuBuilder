@@ -1778,7 +1778,7 @@ function nuIsIframe(){
 
 function nuPreventButtonDblClick () {
 
-   $('.nuActionButton .nuButton').click(function() {   
+   $('.nuActionButton, .nuButton').click(function() {   
    
       var id = $(this).attr("id");   
 
@@ -1975,3 +1975,16 @@ function nuDisableAllObjects(excludeTypes, excludeIds) {
     }
 	
 }
+
+function nuInsertTextAtCaret(i, text) {
+	
+  const textarea = $('#'+ i)[0];
+  textarea.setRangeText(
+    text,
+    textarea.selectionStart,
+    textarea.selectionEnd,
+    'end'
+  )
+  
+}
+
