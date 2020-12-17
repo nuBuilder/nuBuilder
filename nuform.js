@@ -54,11 +54,13 @@ function nuBuildForm(f){
 	window.global_access		= f.global_access == '1';
 	nuFORM.edited				= false;
 	window.nuVerticalTabs 		= false;
-	window.nuDisableTabTitle	= false;
-	window.nuDisableDevButtons	= false;
-	window.nuDisableBrowserBackButton	= false;
-	window.nuDisablePreventButtonDblClick = false;
-	window.nuShowBackButton = false;
+	
+	window.nuDisableTabTitle				= false;
+	window.nuDisableDevButtons				= false;
+	window.nuDisableBrowserBackButton		= false;
+	window.nuDisablePreventButtonDblClick 	= false;
+	window.nuDisableStretchColumns	   		= true;
+	window.nuShowBackButton 				= false;
 
 	
 	nuFORM.scroll				= [];
@@ -167,7 +169,10 @@ function nuBuildForm(f){
 	if(nuFormType() == 'edit'){
 		window.nuRESPONSIVE.getStartPositions();
 	}else{
-		nuResizeBrowseColumns()
+		
+		if (nuDisableStretchColumns !== true || nuDocumentID !== parent.nuDocumentID) {				 
+			nuResizeBrowseColumns();
+		}
 	}
 	
 	if(window.nuOnLoad){

@@ -1562,7 +1562,15 @@ function nuStopBrowserResize(){
 
 }
 
-
+function nuDisableBrowseResize() {
+  if (nuFormType() == 'browse') {
+    $("div[id^='nuBrowseTitle']")
+        .off('mousedown.nuresizecolumn')
+        .off('touchstart.nuresizecolumn')
+        .off('touchmove.nuresizecolumn')
+        .off('touchstart.nuresizecolumn');
+    }
+}
 
 function nuResizeBrowseColumns(){
 
@@ -1770,7 +1778,7 @@ function nuIsIframe(){
 // After clicking a nuActionButton (Save, Delete, Print, Clone etc.), disable it for 1.5 secs to prevent a user from double-clicking it.
 
 function nuPreventButtonDblClick () {
-console.log('nuPreventButtonDblClick');
+
    $('.nuActionButton .nuButton').click(function() {   
    
       var id = $(this).attr("id");   

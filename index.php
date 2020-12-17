@@ -70,10 +70,13 @@ nuJSIndexInclude('nucommon.js');
 nuJSIndexInclude('nuadmin.js');
 nuJSIndexInclude('nureportjson.js');
 nuJSIndexInclude('nuajax.js');       //-- calls to server
+nuJSChartsInclude();
 nuJSIndexInclude('libs/quill/quill.js'); 
+nuJSIndexInclude('libs/quill/modules/quill-divider.js'); 
+
 nuCSSIndexInclude('css/nubuilder4.css');
 nuCSSIndexInclude('libs/quill/themes/quill.snow.css');
-nuJSChartsInclude();
+
 
 ?>
 
