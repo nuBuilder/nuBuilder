@@ -84,9 +84,9 @@ function nuAddDevButtons() {
 			nuAddDevButton("DevBtnProperties", "Prop", 'nuOpenCurrentFormProperties();',nuTranslate('Form Properties'));
 		
 			if (b || l) { nuAddDevButton("DevBtnBE", "BE", 'nuEditPHP("BE");','Before Edit'); }
-			if (e) { nuAddDevButton("DevBtnBB", "BB", 'editPHP("BB");','Before Browse'); }
-			if (e) { nuAddDevButton("DevBtnBS", "BS", 'editPHP("BS");','Before Save'); }
-			if (e) { nuAddDevButton("DevBtnAS", "AS", 'editPHP("AS");','After Save'); }
+			if (e) { nuAddDevButton("DevBtnBB", "BB", 'nuEditPHP("BB");','Before Browse'); }
+			if (e) { nuAddDevButton("DevBtnBS", "BS", 'nuEditPHP("BS");','Before Save'); }
+			if (e) { nuAddDevButton("DevBtnAS", "AS", 'nuEditPHP("AS");','After Save'); }
 		}
 		
 		nuAddDevButton("DevBtnRefresh", nuTranslate("Refresh"), 'nuGetBreadcrumb();');

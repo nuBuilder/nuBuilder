@@ -52,8 +52,7 @@ function nuValidateSubforms(){
 
 							if($d == 0){
 								nuDisplayError("$label " . nuTranslate('cannot be left blank'));
-							}else{
-								//nuDisplayError("$label on row $noz " . nuTranslate('cannot be left blank') . " $slabel");
+							}else{								
 								nuDisplayError("$label ".nuTranslate('on row'). " " .$noz. " " . nuTranslate('cannot be left blank') . " $slabel");
 							}
 							
@@ -67,11 +66,9 @@ function nuValidateSubforms(){
 					
 						if($dupe and $notDeleted){
 							
-							if($d == 0){
-								//nuDisplayError("$label has a duplicate");
+							if($d == 0){								
 								nuDisplayError("$label " . nuTranslate('has a duplicate'));
-							}else{
-								//nuDisplayError("$label on row $noz has a duplicate $slabel");
+							}else{								
 								nuDisplayError("$label ".nuTranslate('on row'). " " .$noz. " ". nuTranslate('has a duplicate') . " $slabel");
 							}
 							
@@ -103,11 +100,11 @@ function nuCheckAccessLevel($data){
 	$r		= db_fetch_object($t);
 	
 	if($a == 'save' and $r->slf_save_button != 1){
-		nuDisplayError("Save is disabled for this Access Level");
+		nuDisplayError(nuTranslate("Save is disabled for this Access Level"));
 	}
 	
 	if($a == 'delete' and $r->slf_delete_button != 1){
-		nuDisplayError("Delete is disabled for this Access Level");
+		nuDisplayError(nuTranslate("Delete is disabled for this Access Level"));
 	}
 	
 }
@@ -132,7 +129,7 @@ function nuUpdateDatabase(){
 
 	if($_SESSION['nubuilder_session_data']['IsDemo']){
 		
-		nuDisplayError('Not available in the Demo...');
+		nuDisplayError(nuTranslate('Not available in the Demo')."..");
 		return;
 	
 	}
@@ -225,9 +222,9 @@ function nuUpdateDatabase(){
 						if($cts[$table] == ''){															//-- not valid table name
 
 							if($form_type == 'launch'){
-								nuDisplayError("Launch Forms Cannot Be Saved");
+								nuDisplayError(nuTranslate("Launch Forms Cannot Be Saved"));
 							}else{
-								nuDisplayError("<b>$table</b> is not a valid table name for a Subform");
+								nuDisplayError("<b>$table</b> ". nuTranslate("is not a valid table name for a Subform"));
 							}
 							
 							return;
@@ -575,7 +572,7 @@ function nuUpdateCounter($id){
 
 	}
 	
-	nuDisplayError('Could not get AutoNumber');
+	nuDisplayError(nuTranslate('Could not get AutoNumber'));
 	
 	return -1;
 	
@@ -666,13 +663,13 @@ function nuCheckAccess($f, $r = ''){
 			return 2;
 		}else{
 
-			nuDisplayError("Access Denied..");
+			nuDisplayError(nuTranslate("Access Denied")."..");
 			
 			return 3;
 			
 		}
 		
-		nuDisplayError("Access Denied..");
+		nuDisplayError(nuTranslate("Access Denied")."..");
 		
 		return 4;
 		
