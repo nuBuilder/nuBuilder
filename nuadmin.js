@@ -98,12 +98,14 @@ function nuAddDevButtons() {
 // Set Browse Column Widths in a Browse Screen
 
 function nuRoundNearest(n, v) {
+	
     n = n / v;
     n = Math.round(n) * v;
     return n;
 }
 
 function nuSetBrowseColumnWidths() {
+	
     if (confirm(nuTranslate("Copy Column Widths from the Browse Table (Overwrite existing values)?"))) {
 
         var sf = nuSubformObject('zzzzsys_browse_sf');
@@ -121,6 +123,7 @@ function nuSetBrowseColumnWidths() {
 }
 
 function nuInitSetBrowseWidthHelper() {
+	
     var p = nuCurrentProperties();
     if ((p.form_id == 'nuform' && p.form_type == 'browseedit')) {
         if (window.location != window.parent.location) {
@@ -141,4 +144,39 @@ function nuInitSetBrowseWidthHelper() {
             }
         }
     }
+	
 } 
+
+function nuOpenPropertiesOnMiddleClick(e) {
+
+    if (window.global_access) {
+		
+        if (e.button === 1) {
+			
+            var id = e.target.id;
+
+            if (id == "nubody" || id == "nuRECORD" || id == "nuhtml") {
+                // Form Properties
+                nuForm('nuform', window.nuFORM.getCurrent().form_id, '', '', 2);
+            } else {
+                var objId = nuObjectIdFromId(e.target.id);
+                if (objId !== null) {
+                    // Object Properties
+                    nuForm('nuobject', objId, '', '', '2');
+                } 
+            }
+        }
+    }	
+	
+}
+
+function nuSetSnippetFormFilter(custom, setup, sql) {
+
+	nuSetProperty('IS_CUSTOM_CODE',custom);
+	nuSetProperty('IS_SETUP_HEADER',setup);    
+	nuSetProperty('IS_SQL',sql);
+
+}
+
+
+

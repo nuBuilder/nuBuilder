@@ -1164,7 +1164,13 @@ function nuRemoveHolders(h){
 function nuAttachFontAwesome(i, c, s) {
 
   var size = s === undefined ? 'medium' : s;
-  $('#' + i).prepend('<i style="font-size:' + size + '" class="' + c + '"></i>&nbsp;');
+  
+  var o = '#' + i;
+  if (i instanceof jQuery){
+	 o = i; 
+  }
+  
+  $(o).prepend('<i style="font-size:' + size + '" class="' + c + '"></i>&nbsp;');
   
 }
 
@@ -1986,5 +1992,23 @@ function nuInsertTextAtCaret(i, text) {
     'end'
   )
   
+}
+
+
+function nuObjectIdFromId(i) {
+
+	if (i !== null) {
+	
+		var f = window.nuSERVERRESPONSE;
+		var objId;
+		for (var o = 0; o < f.objects.length; o++) {
+			if (f.objects[o].id == i) {
+				objId = f.objects[o].object_id;
+				return objId;
+			}
+		}
+	}
+
+    return null;
 }
 

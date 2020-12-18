@@ -54,13 +54,13 @@ function nuBuildForm(f){
 	nuFORM.edited				= false;
 	window.nuVerticalTabs 		= false;
 	
-	window.nuDisableTabTitle				= false;
-	window.nuDisableDevButtons				= false;
-	window.nuDisableBrowserBackButton		= false;
-	window.nuDisablePreventButtonDblClick 	= false;
-	window.nuDisableStretchColumns	   		= true;
-	window.nuShowBackButton 				= false;
-
+	window.nuDisableTabTitle				 	= false;
+	window.nuDisableDevButtons				 	= false;
+	window.nuDisableBrowserBackButton		 	= false;
+	window.nuDisablePreventButtonDblClick 	 	= false;
+	window.nuDisableOpenPropertiesOnMiddleClick  = false;
+	window.nuDisableStretchColumns	   		 	= true;
+	window.nuShowBackButton 				 	= false;
 	
 	nuFORM.scroll				= [];
 	nuSetSuffix(1000);
@@ -200,6 +200,10 @@ function nuBuildForm(f){
 
 	if (nuShowBackButton === true) {		
 		nuAddBackButton();
+	}
+
+	if (nuDisableOpenPropertiesOnMiddleClick !== true) {	
+		document.addEventListener("mousedown", nuOpenPropertiesOnMiddleClick, false);
 	}
 
 	
