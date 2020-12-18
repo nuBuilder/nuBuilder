@@ -34,7 +34,7 @@
 
 
 .php {
-   background-color: #f0e4fd;
+   background-color: #f3f0f7;
    font-family:Lucida Console;
    padding: 2px;
    font-size: 10px;
@@ -1240,3 +1240,12 @@ span.nuActionButton{
    position: absolute;
    height:90px;
 }
+
+.nuPaginationInfo {
+	float:left;
+	vertical-align: middle;
+	line-height: 25px;
+	padding-left:5px	
+}	
+
+

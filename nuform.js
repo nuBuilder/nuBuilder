@@ -53,15 +53,16 @@ function nuBuildForm(f){
 	window.global_access		= f.global_access == '1';
 	nuFORM.edited				= false;
 	window.nuVerticalTabs 		= false;
-	
-	window.nuDisableTabTitle				 	= false;
-	window.nuDisableDevButtons				 	= false;
-	window.nuDisableBrowserBackButton		 	= false;
-	window.nuDisablePreventButtonDblClick 	 	= false;
+
+	window.nuDisableTabTitle				 	 = false;
+	window.nuDisableDevButtons				 	 = false;
+	window.nuDisableBrowserBackButton		 	 = false;
+	window.nuDisablePreventButtonDblClick 	 	 = false;
 	window.nuDisableOpenPropertiesOnMiddleClick  = false;
-	window.nuDisableStretchColumns	   		 	= true;
-	window.nuShowBackButton 				 	= false;
-	
+	window.nuDisableStretchColumns	   		 	 = true;
+	window.nuShowBackButton 				 	 = false;
+	window.nuDisablePaginationInfo	   		 	 = false;
+		
 	nuFORM.scroll				= [];
 	nuSetSuffix(1000);
 	nuSetBody(f);
@@ -206,6 +207,9 @@ function nuBuildForm(f){
 		document.addEventListener("mousedown", nuOpenPropertiesOnMiddleClick, false);
 	}
 
+	if (nuDisablePaginationInfo !== true) {	
+		nuShowPaginationInfo();
+	}
 	
 	nuInitSetBrowseWidthHelper();
 	
@@ -4236,3 +4240,57 @@ function nuPortraitLabelWidth(o){
 
 }
 
+function nuGetPaginationInfo() {
+
+    r = $("div[id^='nucell_']" + "[id$='_1']").length // Number of Rows per page
+
+    with(nuFORM.getCurrent()) {
+        c = page_number; // Current page number
+        f = browse_filtered_rows; // Number of records in the table after filtering
+        p = pages; // Total number of pages
+    }
+
+    var e; // Row number of the last record on the current page
+    var s; // Row number of the first record on the current page
+
+    if (c == 0 && f > 0 & p == 1) {
+        s = 1;
+        e = f;
+    } else
+    if (p == c + 1 || f == 0) {
+        s = f == 0 ? 0 : c * r + 1;
+        e = f
+    } else
+    if (c == 0 && p > 1) {
+        s = 1;
+        e = r;
+    } else
+    if (c > 0 && c < p) {
+        e = (c + 1) * r;
+        s = e - r + 1;
+    };
+
+    return {
+        startRow: s
+        , endRow: e
+        , filteredRows: f
+    };
+
+}
+
+function nuShowPaginationInfo() {
+	
+    if (nuFormType() == 'browse') {
+        var {
+            startRow
+            , endRow
+            , filteredRows
+        } = nuGetPaginationInfo();
+        		
+		var p = startRow + " - " + endRow + " " + nuTranslate('of') + " " + filteredRows;
+		
+		$('#nuBrowseFooter').append('<span class="nuPaginationInfo">' + p + '</span>');
+		
+    }
+	
+}
