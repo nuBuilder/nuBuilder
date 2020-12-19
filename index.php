@@ -221,6 +221,22 @@ window.nuHASH				= [];
 	}
 
 	// end choose h2
+
+	$sessionAlive = '';
+	if ($nuKeepSessionAlive) {
+		$sessionAlive  = '
+		var refreshTime = 600000; // every 10 minutes in milliseconds
+		window.setInterval( function() {
+			$.ajax({
+				cache: false,
+				type: "GET",
+				url: "nukeepsessionalive.php",
+				success: function(data) {
+				}
+			});
+		}, refreshTime );
+		';
+	}
 	
 	$h3 = "
 
@@ -242,9 +258,12 @@ window.nuHASH				= [];
 	</script>
 	<script id='nuheader'>
 		$nuHeader
+		$sessionAlive
 	</script>
 	<script>
 	";
+
+
 
 	$h = $h1.$h2.$h3;
 	print $h;

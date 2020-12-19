@@ -239,6 +239,11 @@ input[type=range]::-webkit-slider-runnable-track {
   background-color: #ebebeb;
 }
 
+.nuScroll, .input_nuScroll:hover::-webkit-inner-spin-button { 
+    background: #eee url('../graphics/nu_scroll.png') no-repeat 50% 50%;  
+	background-position: right 5px top 2px;
+}
+
 .nuDate, .input_nuDate {
 }
 
@@ -299,7 +304,7 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 .nuOptionsList {
-   background-color: #BADEEB;
+   background-color: #d5edf5;
    box-shadow: 5px 5px 5px 0px rgba(150,147,150,1);
    padding-top: 4px;
    height:20px;
@@ -322,7 +327,7 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 .nuOptionsItemShortcutKey {
-   background-color: #BADEEB;
+   background-color: #d5edf5;
    color: darkslategray;
    height:20px;
    display: inline-block;
@@ -699,6 +704,14 @@ input[type=range]::-webkit-slider-runnable-track {
   background-color: red;
   border-color: #CC2A2A;
 }
+
+.nuSaveButton {}
+
+.nuDeleteButton {}
+
+.nuCloneButton {}
+
+.nuRefreshButton {}
 
 .nuLabel {}
 

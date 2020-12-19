@@ -62,6 +62,7 @@ function nuBuildForm(f){
 	window.nuDisableStretchColumns	   		 	 = true;
 	window.nuShowBackButton 				 	 = false;
 	window.nuDisablePaginationInfo	   		 	 = false;
+	window.nuShowBuilderLink					 = false;
 		
 	nuFORM.scroll				= [];
 	nuSetSuffix(1000);
@@ -220,11 +221,11 @@ function nuBuildForm(f){
 		
 	}
 	
-	
+	/*
 	if(!nuMainForm() && nuFormType() == 'edit'){
 		$('body').css('width', Number(nuFormWH().width) + 5)	
 	}
-	
+	*/
 	
 	window.nuSAVED		= true;
 	
@@ -253,8 +254,10 @@ function nuAddHomeLogout(){
 			.attr('title', nuTranslate('Home'))
 
 		}
-
-		$('#nuBreadcrumbHolder').append('<span id="nulink" style="position:absolute;right:50px;padding:5px"><a href="https://www.nubuilder.com" class="nuBuilderLink" target="_blank">nuBuilder</a></span>');
+		
+		if (nuShowBuilderLink === true) {
+			$('#nuBreadcrumbHolder').append('<span id="nulink" style="position:absolute;right:50px;padding:5px"><a href="https://www.nubuilder.com" class="nuBuilderLink" target="_blank">nuBuilder</a></span>');
+		}
 
 		var l	= document.createElement('div');
 		l.setAttribute('id', 'nuLogout');
@@ -2502,7 +2505,9 @@ function nuBrowseTable(){
 
 	var la	= '<span id="nuLast" onclick="nuGetPage(' + (bc.page_number)     + ')" class="nuBrowsePage">&#9668;</span>';
 	var ne	= '<span id="nuNext" onclick="nuGetPage(' + (bc.page_number + 2) + ')" class="nuBrowsePage">&#9658;</span>';
-
+	
+	// var ne	= '<span style="font-size: 30px;" id="nuNext" onclick="nuGetPage(' + (bc.page_number + 2) + ')" class="nuBrowsePage"><i class="fa fa-caret-right " aria-hidden="true"></i></span>';
+		
 	var pg	= '&nbsp;Page&nbsp;';
 	var cu	= '<input id="browsePage" style="text-align:center;margin:3px 0px 0px 0px;width:40px" onchange="nuGetPage(this.value)" value="' + (bc.page_number + 1) + '" class="browsePage"/>';
 	var of	= '&nbsp;/&nbsp;' + (bc.pages==0?1:bc.pages) + '&nbsp;';

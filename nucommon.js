@@ -1568,6 +1568,7 @@ function nuStopBrowserResize(){
 }
 
 function nuDisableBrowseResize() {
+	
   if (nuFormType() == 'browse') {
     $("div[id^='nuBrowseTitle']")
         .off('mousedown.nuresizecolumn')
@@ -1575,6 +1576,7 @@ function nuDisableBrowseResize() {
         .off('touchmove.nuresizecolumn')
         .off('touchstart.nuresizecolumn');
     }
+	
 }
 
 function nuResizeBrowseColumns(){
