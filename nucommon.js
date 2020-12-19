@@ -199,8 +199,8 @@ function nuLogin(nuconfigNuWelcomeBodyInnerHTML){
 
 	var h 	= `	
 
-   			<div id='outer' style='width:100%'>
-			<form id='nuLoginForm' action='#' method='post' onsubmit='return false'">
+			<div id='outer' style='width:100%'>
+			<form id='nuLoginForm' action='#' method='post' onsubmit='return false'>
 				<div id='login' class='nuLogin'>
 					<table>
 						<tr>
@@ -209,20 +209,21 @@ function nuLogin(nuconfigNuWelcomeBodyInnerHTML){
 							</td>
 						</tr>
 						<tr>
-							<td><div style='width:90px'>Username</div><input class='nuLoginInput' id='nuusername' autocomplete='off' /><br><br></td>
+							<td><div style='width:90px; margin-bottom: 5px;'>Username</div><input class='nuLoginInput' id='nuusername' autocomplete='off' /><br><br></td>
 						</tr>
 						<tr>
-							<td><div style='width:90px'>Password</div><input class='nuLoginInput' id='nupassword' type='password' autocomplete='off'  onkeypress='nuSubmit(event)'/><br></td>
+							<td><div style='width:90px; margin-bottom: 5px;'>Password</div><input class='nuLoginInput' id='nupassword' type='password' autocomplete='off'  onkeypress='nuSubmit(event)'/><br></td>
 						</tr>
 						<tr>
 							<td style='text-align:center' colspan='2'><br><br>
-								<input id='submit' style='width:90px' type='button' class='nuButton' onclick='nuLoginRequest()' value='Log in'/>
+								<input id='submit' style='width:90px' type='submit' class='nuButton' onclick='nuLoginRequest()' value='Log in'/>
 							</td>
 						</tr>
 					</table>
 				</div>
 			</form>	
-			</div>				
+			</div>			
+		
 
 	`;
 	

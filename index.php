@@ -223,19 +223,21 @@ window.nuHASH				= [];
 	// end choose h2
 
 	$sessionAlive = '';
+	
 	if ($nuKeepSessionAlive) {
-		$sessionAlive  = '
-		var refreshTime = 600000; // every 10 minutes in milliseconds
+		$sessionAliveInterval = !isset($sessionAliveInterval) ? 600 : $sessionAliveInterval;
+		$sessionAlive  = "
+		var refreshTime = 1000 * $sessionAliveInterval; // refresh interval in milliseconds
 		window.setInterval( function() {
 			$.ajax({
 				cache: false,
-				type: "GET",
-				url: "nukeepsessionalive.php",
+				type: 'GET',
+				url: 'nukeepsessionalive.php',
 				success: function(data) {
 				}
 			});
 		}, refreshTime );
-		';
+		";
 	}
 	
 	$h3 = "
