@@ -22,26 +22,28 @@ if ($nuEnableDatabaseUpdate == false) {
 	
 }
 
-print '<br><span style="font-family:Helvetica;padding:10px;">Copied SYSTEM FILES to TEMP FILES <br></span>';
-nuCopySystemFiles();
+// Copy zzzz-tables to temp sys-tables
+nuCopySystemTables();
+print '<br><span style="font-family:Helvetica;padding:10px;">Copied SYSTEM zzzz-TABLES to TEMP sys-TABLES <br></span>';
 
-print '<br><span style="font-family:Helvetica;padding:10px;">Copied SYSTEM FILES to TEMP FILES <br></span>';
+// Import nubuilder4.sql
 nuImportSystemFiles();
+print '<br><span style="font-family:Helvetica;padding:10px;">Imported nubuilder4.sql into the DATABASE <br></span>';
 
-print '<br><span style="font-family:Helvetica;padding:10px;">Copied SYSTEM FILES to TEMP FILES for any new tables added from the import. <br></span>';
 nuAddNewSystemTables();
+print '<br><span style="font-family:Helvetica;padding:10px;">Copied SYSTEM FILES to TEMP FILES for any new tables added from the import. <br></span>';
 
-print '<br><span style="font-family:Helvetica;padding:10px;">Updated TEMP FILE table structure\'s to SYSTEM FILES <br></span>';
 nuUpdateSystemRecords();
+print '<br><span style="font-family:Helvetica;padding:10px;">Updated TEMP FILE table structure\'s to SYSTEM FILES <br></span>';
 
-print '<br><span style="font-family:Helvetica;padding:10px;">Removed all ids starting with nu from TEMP FILES <br></span>';
 nuRemoveNuRecords();
+print '<br><span style="font-family:Helvetica;padding:10px;">Removed all ids starting with nu from TEMP FILES <br></span>';
 
-print '<br><span style="font-family:Helvetica;padding:10px;">Removed all ids not starting with nu from SYSTEM FILES <br></span>';
 nuJustNuRecords();
+print '<br><span style="font-family:Helvetica;padding:10px;">Removed all ids not starting with nu from SYSTEM FILES <br></span>';
 
-print '<br><span style="font-family:Helvetica;padding:10px;">Inserted TEMP FILES into SYSTEM FILES <br></span>';
 nuAppendToSystemTables();
+print '<br><span style="font-family:Helvetica;padding:10px;">Inserted TEMP FILES into SYSTEM FILES <br></span>';
 
 nuSetCollation();
 print '<br><span style="font-family:Helvetica;font-style:italic;font-size:20px;font-weight:bold;padding:10px">You will need to log in again for the changes to take effect.</span><br>';

@@ -250,7 +250,7 @@ function nuAddHomeLogout(){
 			.css('font-size', 16)
 			.attr('onclick', "nuGetBreadcrumb(0)")
 			.html('<i class="fa fa-home" style="font-size:20px;padding:0px 5px 0px 0px"></i>')
-			.attr('title', nuTranslate('Log out'))
+			.attr('title', nuTranslate('Home'))
 
 		}
 
