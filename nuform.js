@@ -3230,6 +3230,8 @@ function nuEmptyNoClone(){
 	
 	var c		= nuSERVERRESPONSE.noclone;
 	
+	if (c === null) return;
+	
 	for(var i = 0 ; i < c.length ; i++){
 		
 		if(c[i].subform){

@@ -1,4 +1,3 @@
-
 window.nuDialog 				= new nuCreateDialog('');
 window.nuFORM					= new nuFormObject();
 window.nuRESPONSIVE 			= new nuResponseForm();
@@ -73,7 +72,6 @@ function nuGetOpenerById(pOPENER, pid) {
 	return;
 }
 
-
 function nuRemoveOpenerById(o, pid) {
 
 	for (var i = 0; i < o.length; i++) {
@@ -85,7 +83,6 @@ function nuRemoveOpenerById(o, pid) {
 	}
 
 }
-
 
 function nuGetBreadcrumb(bc){
 	
@@ -208,6 +205,28 @@ $.fn.enterKey = function (fnc) {
     })
 }
 
+jQuery.fn.extend({
+  nuEnable: function() {
+    return this.each(function() {
+      nuEnable(this.id);
+    });
+  },
+  nuDisable: function() {
+    return this.each(function() {
+      nuDisable(this.id);
+    });
+  },
+  nuShow: function(visible) {
+    return this.each(function() {
+        nuShow(this.id, visible);
+    });
+  }, 
+  nuHide: function() {
+    return this.each(function() {
+        nuHide(this.id);
+    });
+  }  
+});
 
 function loginInputKeyup(event){
     if(event.keyCode == 13){
@@ -382,9 +401,9 @@ function nuCreateDialog(t){
 		}
 		
 		if(event.target.id == 'dialogClose'){
-			$('#dialogClose').css('background-color','lightgrey');
+			$('#dialogClose').attr("src","graphics/close_red.png"); 
 		}else{
-			$('#dialogClose').css('background-color','');
+			$('#dialogClose').attr("src","graphics/close.png"); 
 		}
 		
 	}
@@ -1497,8 +1516,9 @@ function nuEmbedObject(f, d, w, h){
     
     x.setAttribute("type", ty);
     x.setAttribute("src", ur);
-    x.setAttribute("width", w + "px");
-    x.setAttribute("height", h + "px");
+	
+	if (w !== -1)  x.setAttribute("width", w + "px");
+    if (h !== -1)  x.setAttribute("height", h + "px");
 
     $('#' + d).html('');
     document.getElementById(d).appendChild(x);
@@ -1835,16 +1855,6 @@ function nuPreventButtonDblClick () {
 
 }
 
-/*
-function nuOnLoad() {
-
-   nuPreventButtonDblClick();
-   
-}
-*/
-
-// Functions added by kev1n:
-
 function nuAddBackButton() {
     var b  = $('.nuBreadcrumb').length;
     if (b>0){
@@ -1873,7 +1883,6 @@ function nuSetTabTitle(prefix) {
     document.title = prefix + t;
 	
 }    
-
 
 function nuBrowseTitleMultiLine() {
 	    
@@ -2029,7 +2038,6 @@ function nuInsertTextAtCaret(i, text) {
   
 }
 
-
 function nuObjectIdFromId(i) {
 
 	if (i !== null) {
@@ -2047,3 +2055,19 @@ function nuObjectIdFromId(i) {
     return null;
 }
 
+ /*
+ * Set the column size of a Browse Screen
+ *
+ * @param  {int}  column     - Column number (first column = 0, second column = 1 etc.)
+ * @param  {int}  size       - Size in pixels
+ */
+function nuSetBrowseColumnSize(column, size) {
+	
+    var cw = this;
+    if (nuIsIframe()) {
+        cw = parent.$("#" + window.frameElement.id)[0].contentWindow;
+    }
+    cw.nuFORM.breadcrumbs[cw.nuFORM.breadcrumbs.length - 1].column_widths[column] = size;
+    cw.nuSetBrowserColumns(cw.nuFORM.breadcrumbs[cw.nuFORM.breadcrumbs.length - 1].column_widths)
+	
+}
