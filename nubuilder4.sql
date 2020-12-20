@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 20, 2020 at 06:38 PM
+-- Generation Time: Dec 20, 2020 at 07:00 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.2
 
@@ -912,9 +912,9 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu5fdcef9a8e8c47c', 'nuform', 'zzzzsys_form', 'lookup', 'sfo_code_snippet_sql_lookup', 'Insert Snippet', 'nu5bad6cb36757b92', 140, 339, 833, 2, 18, '1', 'right', '0', '0', '', '', '', '', '', '', '', '0', 'SELECT zzzzsys_form_id, CONCAT(sfo_code, \' - \', sfo_description)\nFROM zzzzsys_form\nORDER BY sfo_code', 'cot_code', 'cot_source_code', '0', NULL, 'nucodesnippet', 'var c = $(\'#sfo_code_snippet_paste\').val();\n\nif (c !== \'\') {\n   nuInsertTextAtCaret(\'sfo_browse_sql\', c);\n   $(\'#sfo_code_snippet_sql_lookupcode\').val(\'\');\n}\n\n\n\n', NULL, 'zzzzsys_code_snippet', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', '', '', ''),
 ('nu5fde5c8f1e64a86', 'nuselect', 'zzzzsys_select', 'lookup', 'sse_code_snippet_lookup', 'Insert Snippet', 'nu5bad6cb371e2de7', 90, 362, 746, 5, 18, '1', 'right', '0', '0', '', '', '', '', '', '', '', '0', 'SELECT zzzzsys_form_id, CONCAT(sfo_code, \' - \', sfo_description)\nFROM zzzzsys_form\nORDER BY sfo_code', 'cot_code', 'cot_source_code', '0', NULL, 'nucodesnippet', '\nvar c = $(\'#sse_code_snippet_paste\').val();\n\nif (c !== \'\') {\n   nuInsertTextAtCaret(\'sse_sql\', c);\n   $(\'#sse_code_snippet_lookupcode\').val(\'\');\n}\n\n\n', NULL, 'zzzzsys_code_snippet', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', '', '', ''),
 ('nu5fde5d5ad6f69ec', 'nuselect', 'zzzzsys_select', 'textarea', 'sse_code_snippet_paste', ' ', 'nu5bad6cb371e2de7', 100, 100, 643, 5, 18, '1', 'right', '0', '2', '', '', '', '', '', '', '', '0', 'SELECT zzzzsys_form_id, CONCAT(sfo_code, \' - \', sfo_description)\nFROM zzzzsys_form\nORDER BY sfo_code', '', '', '0', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', '', '', ''),
-('nu5feb9ff762770', 'nubuildreport', 'zzzzsys_access', 'subform', 'accrept', ' ', '5fdf7fc6680a0b2', 90, 34, 56, 370, 552, '1', 'left', '0', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'nu5feb9ffd45efe', 'sre_zzzzsys_report_id', '1', '1', 'g', '', 0, '', '', '', '', '', '', '', '', '', ''),
+('nu5feb9ff762770', 'nubuildreport', 'zzzzsys_access', 'subform', 'accrept', ' ', 'nu5fdf7fc6680a0b2', 90, 34, 56, 370, 552, '1', 'left', '0', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'nu5feb9ffd45efe', 'sre_zzzzsys_report_id', '1', '1', 'g', '', 0, '', '', '', '', '', '', '', '', '', ''),
 ('nu5feb9ffe0330e', 'nu5feb9ffd45efe', '', 'select', 'sre_zzzzsys_access_id', 'Access levels that can use this report', 'nu5feb9ffd6fbca', 10, 300, 250, 300, 18, '1', 'left', '1', '0', '', '', '', '', '', '', '', '0', 'SELECT `zzzzsys_access_id`, CONCAT(`sal_code`,\" : \",`sal_description`) FROM `zzzzsys_access` ORDER BY 2', 'sfo_code', 'sfo_description', '185', '', 'nunonsystemform', '', '', 'zzzzsys_form', '', '', '1', '', '', '', 0, '', '', '', '', '', '', '', '', '', ''),
-('nu5fee9ff762770', 'nuphp', 'zzzzsys_access', 'subform', 'accphp', ' ', '5fdf7df2d873dd1', 100, 34, 56, 370, 552, '1', 'left', '0', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'nu5fee9ffd45efe', 'slp_zzzzsys_php_id', '1', '1', 'g', '', 0, '', '', '', '', '', '', '', '', '', ''),
+('nu5fee9ff762770', 'nuphp', 'zzzzsys_access', 'subform', 'accphp', ' ', 'nu5fdf7df2d873dd1', 100, 34, 56, 370, 552, '1', 'left', '0', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'nu5fee9ffd45efe', 'slp_zzzzsys_php_id', '1', '1', 'g', '', 0, '', '', '', '', '', '', '', '', '', ''),
 ('nu5fee9ffe0330e', 'nu5fee9ffd45efe', '', 'select', 'slp_zzzzsys_access_id', 'Access levels that can use this procedure', 'nu5fee9ffd6fbca', 10, 300, 250, 300, 18, '1', 'left', '1', '0', '', '', '', '', '', '', '', '0', 'SELECT `zzzzsys_access_id`, CONCAT(`sal_code`,\" : \",`sal_description`) FROM `zzzzsys_access` ORDER BY 2', 'sfo_code', 'sfo_description', '185', '', 'nunonsystemform', '', '', 'zzzzsys_form', '', '', '1', '', '', '', 0, '', '', '', '', '', '', '', '', '', '');
 
 -- --------------------------------------------------------
@@ -1002,7 +1002,12 @@ INSERT INTO `zzzzsys_php` (`zzzzsys_php_id`, `sph_code`, `sph_description`, `sph
 ('nu5fdcef9a8e8c47c_AB', 'nu5fdcef9a8e8c47c_AB', 'System PHP', 'nubuilder', 'nuSetFormValue(\'sfo_code_snippet_paste\', nuLookupRecord()->cot_source_code);', NULL, NULL, '1', NULL),
 ('nu5fdefa3f19faf1e', 'nugetrecord', 'Edit Record Navigator: Get Next/Previous Primary Key', 'nubuilder', '$eri = json_decode(base64_decode(\'#NU_EDIT_RECORD_INFO#\'));\n$pk = $eri->primary_key;\n$action = $eri->_action;\n\n$goto_pk = \"\";\n$cr = \"\";\n\nif ($action == \'next\' || $action == \'back\') {\n    $t = nuRunQuery($eri->browse_sql);\n\n    while ($r = db_fetch_object($t)) {\n\n        if ($eri->record_id == $r->$pk) {\n            if ($action == \"next\") {\n                $r = db_fetch_object($t);\n                $goto_pk = $r->$pk;\n                break;\n            }\n            else {\n                $goto_pk = $cr;\n                break;\n            }\n        }\n\n        $cr = $r->$pk;\n    }\n}\n\n$j = \" onOpenRecord(\'$goto_pk\',\'$action\'); \";\n\nnuJavascriptCallback($j);', 'hide', NULL, '1', ''),
 ('nuuserhome_BE', 'nuuserhome_BE', 'System PHP', 'nubuilder', NULL, NULL, NULL, '1', NULL),
-('nu5fde5c8f1e64a86_AB', 'nu5fde5c8f1e64a86_AB', 'System PHP', 'nubuilder', 'nuSetFormValue(\'sse_code_snippet_paste\', nuLookupRecord()->cot_source_code);', NULL, NULL, '1', NULL);
+('nu5fde5c8f1e64a86_AB', 'nu5fde5c8f1e64a86_AB', 'System PHP', 'nubuilder', 'nuSetFormValue(\'sse_code_snippet_paste\', nuLookupRecord()->cot_source_code);', NULL, NULL, '1', NULL),
+('nubuildreport_AS', 'nubuildreport_AS', 'System PHP', 'nubuilder', NULL, NULL, NULL, '1', NULL),
+('nubuildreport_BB', 'nubuildreport_BB', 'System PHP', 'nubuilder', NULL, NULL, NULL, '1', NULL),
+('nubuildreport_BS', 'nubuildreport_BS', 'System PHP', 'nubuilder', NULL, NULL, NULL, '1', NULL),
+('nubuildreport_BE', 'nubuildreport_BE', 'System PHP', 'nubuilder', NULL, NULL, NULL, '1', NULL),
+('nubuildreport_AD', 'nubuildreport_AD', 'System PHP', 'nubuilder', NULL, NULL, NULL, '1', NULL);
 
 -- --------------------------------------------------------
 
