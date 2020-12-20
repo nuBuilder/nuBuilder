@@ -183,6 +183,21 @@ String.prototype.rtrim = function() {
 	return this.replace(/\s+$/,"");
 }
 
+String.prototype.nuFormat = function() {
+    var args;
+    args = arguments;
+    if (args.length === 1 && args[0] !== null && typeof args[0] === 'object') {
+        args = args[0];
+    }
+    return this.replace(/{([^}]*)}/g, function(match, key) {
+        return (typeof args[key] !== "undefined" ? args[key] : match);
+    });
+};
+// Examples:
+// "This is an example from {name}".format({name:"Blaine"});
+// "This is an example from {0}".format("Blaine");
+
+
 function loginInputKeyup(event){
     if(event.keyCode == 13){
         $('input#submit').click();

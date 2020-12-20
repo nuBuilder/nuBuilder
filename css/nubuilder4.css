@@ -234,13 +234,8 @@ input[type=range]::-webkit-slider-runnable-track {
    cursor: pointer;
 }
 
-
-.nuScroll, .input_nuScroll {
-  background-color: #ebebeb;
-}
-
 .nuScroll, .input_nuScroll:hover::-webkit-inner-spin-button { 
-    background: #eee url('../graphics/nu_scroll.png') no-repeat 50% 50%;  
+    background: url('../graphics/nu_scroll.png') no-repeat 50% 50%;  
 	background-position: right 5px top 2px;
 }
 
@@ -722,8 +717,9 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 .nuReadonly {
-  background-color:#ebebeb;
-  border: 1px solid #ebebeb;
+	background-color: rgba(239, 239, 239, 0.3);
+    border: 1px solid #ebebeb;
+    color: rgb(84, 84, 84);
 }
 
 .nuFormula{

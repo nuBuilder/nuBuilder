@@ -62,7 +62,9 @@ function nuBuildForm(f){
 	window.nuDisableStretchColumns	   		 	 = true;
 	window.nuShowBackButton 				 	 = false;
 	window.nuDisablePaginationInfo	   		 	 = false;
-	window.nuShowBuilderLink					 = false;
+	window.nuPaginationInfoFormat	   		 	 = '';
+	window.nuShowNuBuilderLink					 = false;
+	window.nuShowLoggedInUser					 = false;				
 		
 	nuFORM.scroll				= [];
 	nuSetSuffix(1000);
@@ -209,9 +211,16 @@ function nuBuildForm(f){
 	}
 
 	if (nuDisablePaginationInfo !== true) {	
-		nuShowPaginationInfo();
+		nuShowPaginationInfo(nuPaginationInfoFormat);
 	}
-	
+		
+	if (nuShowLoggedInUser === true) {
+		nuDisplayLoggedInUser();
+	} else
+	if (nuShowNuBuilderLink === false) {
+		$('.nuBuilderLink').remove();
+	}
+		
 	nuInitSetBrowseWidthHelper();
 	
 	if(window.nuMESSAGES.length > 0){
@@ -232,6 +241,13 @@ function nuBuildForm(f){
 	nuWindowPosition();
 
 	
+}
+
+function nuDisplayLoggedInUser() {
+	$('.nuBuilderLink').html(window.global_access ? nuCurrentProperties().user_id : nuUserName()).attr('href', '').css({
+		'cursor': 'pointer'
+		, 'pointer-events': 'none'
+	});
 }
 
 function nuAddHomeLogout(){
@@ -255,10 +271,9 @@ function nuAddHomeLogout(){
 
 		}
 		
-		if (nuShowBuilderLink === true) {
-			$('#nuBreadcrumbHolder').append('<span id="nulink" style="position:absolute;right:50px;padding:5px"><a href="https://www.nubuilder.com" class="nuBuilderLink" target="_blank">nuBuilder</a></span>');
-		}
-
+		
+		$('#nuBreadcrumbHolder').append('<span id="nulink" style="position:absolute;right:50px;padding:5px"><a href="https://www.nubuilder.com" class="nuBuilderLink" target="_blank">nuBuilder</a></span>');
+	
 		var l	= document.createElement('div');
 		l.setAttribute('id', 'nuLogout');
 
@@ -727,8 +742,9 @@ function nuINPUT(w, i, l, p, prop){
 		
 		$('#' + id)
 		.addClass('nuScroll')
-		.attr('onkeydown', input_js);
-		
+		.attr('onkeydown', input_js)
+		.attr("title", nuTranslate('Use the keyboard up and down arrows to scroll through the list or add text that is not in the list.'));
+	
 	}
 
 
@@ -4278,24 +4294,77 @@ function nuGetPaginationInfo() {
     return {
         startRow: s
         , endRow: e
-        , filteredRows: f
+        , totalRows: f // filtered rows
     };
 
 }
 
-function nuShowPaginationInfo() {
+function nuShowPaginationInfo(f) {
 	
     if (nuFormType() == 'browse') {
         var {
             startRow
             , endRow
-            , filteredRows
+            , totalRows
         } = nuGetPaginationInfo();
         		
-		var p = startRow + " - " + endRow + " " + nuTranslate('of') + " " + filteredRows;
+		// var p = startRow + " - " + endRow + " " + nuTranslate('of') + " " + filteredRows;
+		if (f === '')
+			var f = '{StartRow} - {EndRow} ' + nuTranslate('of') + ' ' + '{TotalRows}';
+		}
+		
+		p = f.nuFormat({StartRow:startRow, EndRow:endRow, TotalRows:totalRows });
 		
 		$('#nuBrowseFooter').append('<span class="nuPaginationInfo">' + p + '</span>');
 		
-    }
+}
+
+
+function nuPrintEditForm(hideObjects, showObjects) {
+
+	// hide some elements before calling the print dialog 
+	$('#nuBreadcrumbHolder').hide();
+	$('#nuTabHolder').hide();
+	$('.nuActionButton').hide();
+	  
+	if (typeof hideObjects === 'undefined') {
+		let hideObjects = [];
+	}
+
+	if (typeof showObjects === 'undefined') {
+		let showObjects = [];
+	}
 	
+	for (var i = 0; i < hideObjects.length; i++) {
+		nuHide(hideObjects[i]);
+	}
+
+	for (var i = 0; i < showObjects.length; i++) {
+		nuShow(hideObjects[i]);
+	}
+
+  window.onafterprint = function(e){
+        $(window).off('mousemove', window.onafterprint);
+        
+        // Show the elements again when the dialog closes
+        $('#nuBreadcrumbHolder').show();
+        $('#nuTabHolder').show();
+        $('.nuActionButton').show();
+		
+	
+		for (var i = 0; i < hideObjects.length; i++) {
+			nuShow(hideObjects[i]);
+		}
+
+		for (var i = 0; i < showObjects.length; i++) {
+			nuHide(hideObjects[i]);
+		}
+	
+    };
+
+    window.print();
+
+    setTimeout(function(){
+        $(window).one('mousemove', window.onafterprint);
+    }, 1);
 }
