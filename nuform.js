@@ -63,7 +63,7 @@ function nuBuildForm(f){
 	window.nuShowBackButton 				 	 = false;
 	window.nuDisablePaginationInfo	   		 	 = false;
 	window.nuPaginationInfoFormat	   		 	 = '';
-	window.nuShowNuBuilderLink					 = false;
+	window.nuShowNuBuilderLink					 = true;
 	window.nuShowLoggedInUser					 = false;	
 	window.nuShowBeforeUnloadMessage 			 = true;		
 		
@@ -797,7 +797,7 @@ function nuINPUT(w, i, l, p, prop){
 		}else{
 			
 			if(input_type == 'datetime-local'){													//-- replace ' ' between date and time with 'T'
-				w.objects[i].value = w.objects[i].value.replace(' ','T');
+				w.objects[i].value = w.objects[i].value == null ? null : w.objects[i].value.replace(' ','T');
 			}
 			
 			$('#' + id).val(nuFORM.addFormatting(w.objects[i].value, w.objects[i].format));

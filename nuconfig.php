@@ -11,7 +11,7 @@
     $nuConfigDBGlobeadminPassword   = "nu";             //-- globeadmin password
 
 // Settings:
-    $nuConfigTitle                  = "nuBuilder 5";    //-- nuBuilder Title
+    $nuConfigTitle                  = "nuBuilder 4";    //-- nuBuilder Title
     $nuConfigTimeOut                = 1440;             //-- Session Timeout. Default: 1440 (24h)
 
 // Options:

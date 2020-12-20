@@ -23,17 +23,22 @@ function nuCheckStandaloneGlobeadminLoginRequest() {
     return false;
 }
 
+
 //Check for Standlone User login
 function nuCheckStandaloneUserLoginRequest() {
 
-    $sql = "SELECT * FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id WHERE sus_login_name = ? AND sus_login_password = ? ";
+    $sql = "SELECT * FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id WHERE sus_login_name = ? AND sus_login_password = ? AND (sus_expires_on > CURDATE() OR sus_expires_on IS null )";
     $rs = nuRunQuery($sql, array(
         $_POST['nuSTATE']['username'],
-        md5($_POST['nuSTATE']['password'])
+        md5($_POST['nuSTATE']['password']) 
     ));
+	
+	nuDebug($sql);    	
 
     if (db_num_rows($rs) > 0) {
-        return true;
+		
+		$r = db_fetch_object($rs);
+		return true;		
     }
     return false;
 }
@@ -56,6 +61,10 @@ function nuCheckIsLoginRequest() {
 
 }
 
+function nuGetIPAddress() {
+	return $_SERVER['REMOTE_ADDR']?:($_SERVER['HTTP_X_FORWARDED_FOR']?:$_SERVER['HTTP_CLIENT_IP']);
+}	
+
 function nuLoginSetupGlobeadmin() {
 
     $_SESSION['nubuilder_session_data']['SESSION_ID'] = nuIDTEMP();
@@ -63,11 +72,14 @@ function nuLoginSetupGlobeadmin() {
     $_SESSION['nubuilder_session_data']['IsDemo'] = $_SESSION['nubuilder_session_data']['IS_DEMO'];
     $_SESSION['nubuilder_session_data']['isGlobeadmin'] = true;
     $_SESSION['nubuilder_session_data']['translation'] = nuGetTranslation(db_setup()->set_language);
+		
     $sessionIds = new stdClass;
     $sessionIds->zzzzsys_access_id = '';
     $sessionIds->zzzzsys_user_id = $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'];
     $sessionIds->zzzzsys_form_id = 'nuhome';
     $sessionIds->global_access = '1';
+	$sessionIds->ip_address = nuGetIPAddress();
+		
     $storeSessionInTable = new stdClass;
     $storeSessionInTable->session = $sessionIds;
 
@@ -113,6 +125,7 @@ function nuLoginSetupNOTGlobeadmin($standalone = true) {
     $_SESSION['nubuilder_session_data']['SESSION_ID'] = nuIDTEMP();
     $_SESSION['nubuilder_session_data']['SESSION_TIMESTAMP'] = time();
     $_SESSION['nubuilder_session_data']['IsDemo'] = $_SESSION['nubuilder_session_data']['IS_DEMO'];
+	
     $checkLoginDetailsSQL = "SELECT * FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id WHERE sus_login_name = ? AND sus_login_password = ? ";
 
     if ($standalone) {
@@ -150,6 +163,8 @@ function nuLoginSetupNOTGlobeadmin($standalone = true) {
     $sessionIds->zzzzsys_user_id = $checkLoginDetailsOBJ->zzzzsys_user_id;
     $sessionIds->zzzzsys_form_id = $getAccessLevelOBJ->zzzzsys_form_id;
     $sessionIds->global_access = '0';
+	$sessionIds->ip_address = nuGetIPAddress();
+	
     $storeSessionInTable = new stdClass;
     $storeSessionInTable->session = $sessionIds;
     $storeSessionInTable->access_level_code = nuAccessLevelCode($checkLoginDetailsOBJ->zzzzsys_user_id);
