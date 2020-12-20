@@ -64,7 +64,8 @@ function nuBuildForm(f){
 	window.nuDisablePaginationInfo	   		 	 = false;
 	window.nuPaginationInfoFormat	   		 	 = '';
 	window.nuShowNuBuilderLink					 = false;
-	window.nuShowLoggedInUser					 = false;				
+	window.nuShowLoggedInUser					 = false;	
+	window.nuShowBeforeUnloadMessage 			 = true;		
 		
 	nuFORM.scroll				= [];
 	nuSetSuffix(1000);
@@ -212,6 +213,10 @@ function nuBuildForm(f){
 
 	if (nuDisablePaginationInfo !== true) {	
 		nuShowPaginationInfo(nuPaginationInfoFormat);
+	}
+	
+	if (! nuShowBeforeUnloadMessage) {
+		window.onbeforeunload = () => {}
 	}
 		
 	if (nuShowLoggedInUser === true) {
@@ -861,6 +866,15 @@ function nuINPUT(w, i, l, p, prop){
 		.addClass('nuLookupCode')
 		.attr('onchange', 'nuGetLookupCode(event)')
 		.attr('onfocus', 'nuLookupFocus(event)');
+				
+		$('#' + id).enterKey(function ( ) {
+			if ($(this).val().length == 0) {			
+				var element = $('#' + target + 'button');
+				var element = element[0];
+				nuBuildLookup( element, "" );
+			}
+		})
+
 		
 		w.objects[i].values[0][0]	= p + prop.objects[i].id;
 		w.objects[i].values[1][0]	= p + prop.objects[i].id + 'code';

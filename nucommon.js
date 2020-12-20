@@ -197,6 +197,17 @@ String.prototype.nuFormat = function() {
 // "This is an example from {name}".format({name:"Blaine"});
 // "This is an example from {0}".format("Blaine");
 
+$.fn.enterKey = function (fnc) {
+    return this.each(function () {
+        $(this).keypress(function (ev) {
+            var keycode = (ev.keyCode ? ev.keyCode : ev.which);
+            if (keycode == '13') {
+                fnc.call(this, ev);
+            }
+        })
+    })
+}
+
 
 function loginInputKeyup(event){
     if(event.keyCode == 13){
@@ -882,8 +893,13 @@ function nuDisable(i){                 	//-- Disable Edit Form Object
 }
 
 
-function nuShow(i){                 	//-- Show Edit Form Object
+function nuShow(i, visible){ //-- Show Edit Form Object
 
+	if(visible === false){
+		nuHide(i);
+		return;
+	}
+	
 	var o	= [i, i + 'code', i + 'button', i + 'description', 'label_' + i];
 	
 	for(var c = 0 ; c < o.length ; c++){
@@ -909,6 +925,7 @@ function nuShow(i){                 	//-- Show Edit Form Object
 	nuOpenTab($('.nuTabSelected')[0].id.substr(5));
 	
 }
+
 
 
 function nuHide(i){                 //-- Hide Edit Form Object

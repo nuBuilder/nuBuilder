@@ -29,6 +29,7 @@ function nuBindDragEvents(){
 		
     });
 	
+	
     $(document).on('mousedown.nuformdrag', function(e) {	
 
 		window.startX 		= e.clientX + window.scrollX;

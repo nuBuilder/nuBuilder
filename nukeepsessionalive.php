@@ -1,3 +1,3 @@
 <?php
-	$d = date();
+	$d = date('N');
 ?>

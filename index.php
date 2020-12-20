@@ -77,7 +77,6 @@ nuJSIndexInclude('libs/quill/modules/quill-divider.js');
 nuCSSIndexInclude('css/nubuilder4.css');
 nuCSSIndexInclude('libs/quill/themes/quill.snow.css');
 
-
 ?>
 
 <link href="./css/font-awesome.min.css" rel="stylesheet">
@@ -153,12 +152,13 @@ function nuLoginRequest(u, p){
     }); 
 }
 
-window.nuVersion 		= 'nuBuilder4';
+window.nuVersion 		= 'nuBuilder5';
 window.nuDocumentID		= Date.now();
 
 if(parent.window.nuDocumentID == window.nuDocumentID){
 	window.onbeforeunload	= nuHomeWarning;
 }
+
 window.nuHASH				= [];
 
 <?php
@@ -225,9 +225,9 @@ window.nuHASH				= [];
 	$sessionAlive = '';
 	
 	if ($nuKeepSessionAlive) {
-		$sessionAliveInterval = !isset($sessionAliveInterval) ? 600 : $sessionAliveInterval;
+		$nuKeepSessionAliveInterval = !isset($nuKeepSessionAliveInterval) ? 600 : $nuKeepSessionAliveInterval;
 		$sessionAlive  = "
-		var refreshTime = 1000 * $sessionAliveInterval; // refresh interval in milliseconds
+		var refreshTime = 1000 * $nuKeepSessionAliveInterval; // refresh interval in milliseconds
 		window.setInterval( function() {
 			$.ajax({
 				cache: false,
