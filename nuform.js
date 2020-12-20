@@ -482,8 +482,10 @@ function nuAddActionButton(i, v, f, t){
 		var t = '';
 	}
 
+	var nuClass = "";
+	if (i == 'Save' || i == 'Add' || i == 'Clone' || i == 'Delete') { nuClass = " " + "nu" + i + "Button" };
 	
-	$('#nuActionHolder').append("<input id='nu" + i + "Button' type='button' title='" + nuTranslate(t) + "' class='nuActionButton' value='" + nuTranslate(v) + "' onclick='" + f + "'>");
+	$('#nuActionHolder').append("<input id='nu" + i + "Button' type='button' title='" + nuTranslate(t) + "' class='nuActionButton" + nuClass + "' value='" + nuTranslate(v) + "' onclick='" + f + "'>");
 
 }
 
@@ -2142,7 +2144,7 @@ function nuBuildOptionsList(l, p, type){												//-- loop through adding opt
 	}
 
 	for(var i = 0 ; i < l.length ; i++){
-		
+	
 		var t			= l[i][0];
 		var f			= l[i][1];
 		var c			= l[i][2];

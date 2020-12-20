@@ -469,6 +469,7 @@ input[type=range]::-webkit-slider-runnable-track {
   overflow: visible;
   height:30px;
   padding: 7px 10px 0px 10px;
+ 
 }
 
 .nuBrowseTable {
@@ -482,6 +483,7 @@ input[type=range]::-webkit-slider-runnable-track {
   top:75px;
   font: 13px "Helvetica Neue",HelveticaNeue,Helvetica,Arial,sans-serif !important
   line-height: 150%;
+  white-space : nowrap;
 }
 
 
@@ -497,6 +499,7 @@ input[type=range]::-webkit-slider-runnable-track {
   border-color: #ebebeb70 !important;
   font: 13px "Helvetica Neue",HelveticaNeue,Helvetica,Arial,sans-serif !important
   line-height: 150%;  
+  white-space : nowrap;
 }
 
 .nuBrowseSearch {
@@ -944,18 +947,20 @@ input[type=range]::-webkit-slider-runnable-track {
    word-wrap: break-word;      /* IE */
 }
 
+
+
 .nuDragOptionsBox {
     position: absolute;
     left: 0px;
     top: 0px;
-    background-color: #cccccc;
+    background-color: #ececec;
     z-index: -1;
     min-height: 440px;
 }
 
 .nuDragOptionsBoxContainer {
     padding-left: 15px;
-    background-color: #cccccc;
+    background-color: #edecec;
 }
 
 .nuDragOptionsFieldsLabel {
