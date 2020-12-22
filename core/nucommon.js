@@ -139,7 +139,7 @@ function nuDisplayError(e){
 		return false;
 	}
 
-	var im	= ['<img src="graphics/nuerror.png" width="30px" height="30px" style="position:absolute;left:10px;top:10px"><br>'];
+	var im	= ['<img src="core/graphics/nuerror.png" width="30px" height="30px" style="position:absolute;left:10px;top:10px"><br>'];
 
 	im.concat(e.errors);
 
@@ -250,7 +250,7 @@ function nuLogin(nuconfigNuWelcomeBodyInnerHTML){
 					<table>
 						<tr>
 							<td align='center' style='padding:0px 0px 0px 33px; text-align:center;'>
-							<img src='graphics/logo.png'><br><br>
+							<img src='core/graphics/logo.png'><br><br>
 							</td>
 						</tr>
 						<tr>
@@ -401,9 +401,9 @@ function nuCreateDialog(t){
 		}
 		
 		if(event.target.id == 'dialogClose'){
-			$('#dialogClose').attr("src","graphics/close_red.png"); 
+			$('#dialogClose').attr("src","core/graphics/close_red.png"); 
 		}else{
-			$('#dialogClose').attr("src","graphics/close.png"); 
+			$('#dialogClose').attr("src","core/graphics/close.png"); 
 		}
 		
 	}
@@ -443,6 +443,8 @@ function nuCreateDialog(t){
 		if(window.nuCurrentID == 'nuModal'){return;}
 		
 		var s 	= document.getElementById('nuDragDialog');
+		if (s === null) return;
+		
 		var o 	= s.style;
 		var l 	= parseInt(o.left) + this.moveX;
 		var t 	= parseInt(o.top)  + this.moveY;
@@ -480,7 +482,7 @@ function nuCreateDialog(t){
 			'position'			: 'absolute',
 			'visibility'		: 'hidden'
 		})
-		.html('<div id="dialogTitle" class="nuDialogTitle"><div id="dialogTitleWords" style="padding-top: 9px;height:30px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+translation+'</div><img id="dialogClose" src="graphics/close.png" style="position:absolute; top:2px; left:0px"></div>')
+		.html('<div id="dialogTitle" class="nuDialogTitle"><div id="dialogTitleWords" style="padding-top: 9px;height:30px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+translation+'</div><img id="dialogClose" src="core/graphics/close.png" style="position:absolute; top:2px; left:0px"></div>')
 
 		$('body')
 		.on('mousemove.popup', 	function(event){nuDialog.move(event);})
@@ -535,7 +537,7 @@ function nuOpenAce(lang, obj){
 	var ts			= new Date().getTime();
 	window.nuAce	= [lang, obj];
 	
-	window.open('nuace.php?' + ts);
+	window.open('core/nuace.php?' + ts);
 
 }
 
@@ -701,7 +703,7 @@ function nuUnbindDragEvents(){
 
 function nuTranslate(s){
 	
-	if (s === '' || s.startsWith('@@') ) {
+	if (s === '' || s === null || s.startsWith('@@') ) {
 		return '';
 	}
 	
@@ -1528,7 +1530,7 @@ function nuEmbedObject(f, d, w, h){
 
 function nuStartDatabaseAdmin() {
 
-	window.open("nupmalogin.php?sessid="+window.nuSESSION);
+	window.open("core/nupmalogin.php?sessid="+window.nuSESSION);
 }
 
 function nuIsMobile(){

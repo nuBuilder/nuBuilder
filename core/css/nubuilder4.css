@@ -1169,7 +1169,7 @@ input[type=range]::-webkit-slider-runnable-track {
 .nuBoxHeader {
 	position			: absolute;
 	text-align   		: left;
-	background-color	: lightgrey;
+	background-color	: #e7e4e4;
 	border				: none;
 }
 

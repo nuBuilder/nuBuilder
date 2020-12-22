@@ -1,12 +1,12 @@
 <?php	
 	
-	require_once('nuchoosesetup.php');
-	require_once('nuindexlibs.php');
+	require_once('core/nuchoosesetup.php');
+	require_once('core/nuindexlibs.php');
 
-	require_once('nustandalonesetuplibs.php'); 
+	require_once('core/nustandalonesetuplibs.php'); 
 	nuStandaloneImportNewDB();
 
-	require_once('nusystemupdatelibs.php');
+	require_once('core/nusystemupdatelibs.php');
 		
 	nuMigrateSQL();
 	
@@ -36,16 +36,16 @@ function nuCSSIndexInclude($pfile){
 
 function nuJSChartsInclude(){
 
-	global $nuIncludeGoogleCharts;
-	global $nuIncludeApexCharts;
+	global $nuConfigIncludeGoogleCharts;
+	global $nuConfigIncludeApexCharts;
 
-	if ($nuIncludeGoogleCharts != false) {
+	if ($nuConfigIncludeGoogleCharts != false) {
 			$pfile = "https://www.gstatic.com/charts/loader.js";
 			print "<script src='$pfile' type='text/javascript'></script>\n";
 	}
 
-	if ($nuIncludeApexCharts != false) {
-			$pfile = "./libs/apexcharts/apexcharts.min.js";
+	if ($nuConfigIncludeApexCharts != false) {
+			$pfile = "core/libs/apexcharts/apexcharts.min.js";
 			print "<script src='$pfile' type='text/javascript'></script>\n";
 	}
 }
@@ -61,26 +61,24 @@ function nuHeader(){
 }
 
 nuJSIndexInclude($_SESSION['nubuilder_session_data']['JQ_PATH']);
-
-nuJSIndexInclude('nuformclass.js');
-nuJSIndexInclude('nuform.js');
-nuJSIndexInclude('nuformdrag.js');
-nuJSIndexInclude('nucalendar.js');
-nuJSIndexInclude('nucommon.js');
-nuJSIndexInclude('nuadmin.js');
-nuJSIndexInclude('nureportjson.js');
-nuJSIndexInclude('nuajax.js');       //-- calls to server
+nuJSIndexInclude('core/nuformclass.js');
+nuJSIndexInclude('core/nuform.js');
+nuJSIndexInclude('core/nuformdrag.js');
+nuJSIndexInclude('core/nucalendar.js');
+nuJSIndexInclude('core/nucommon.js');
+nuJSIndexInclude('core/nuadmin.js');
+nuJSIndexInclude('core/nureportjson.js');
+nuJSIndexInclude('core/nuajax.js');       //-- calls to server
 nuJSChartsInclude();
+nuJSIndexInclude('core/libs/quill/quill.js'); 
+nuJSIndexInclude('core/libs/quill/modules/quill-divider.js'); 
 
-nuJSIndexInclude('libs/quill/quill.js'); 
-nuJSIndexInclude('libs/quill/modules/quill-divider.js'); 
-nuCSSIndexInclude('libs/quill/themes/quill.snow.css');
-
-nuCSSIndexInclude('css/nubuilder4.css');
+nuCSSIndexInclude('core/css/nubuilder4.css');
+nuCSSIndexInclude('core/libs/quill/themes/quill.snow.css');
 
 ?>
 
-<link href="./css/font-awesome.min.css" rel="stylesheet">
+<link href="core/css/font-awesome.min.css" rel="stylesheet">
 
 <script>
 
@@ -113,7 +111,7 @@ function nuLoginRequest(u, p){
     $.ajax({
         async    : true,  
         dataType : "json",
-        url      : "nuapi.php",
+        url      : "core/nuapi.php",
         method   : "POST",
         data     : {nuSTATE : w
 					},
@@ -126,10 +124,16 @@ function nuLoginRequest(u, p){
                 window.nuFORM.addBreadcrumb();
                 var last            = window.nuFORM.getCurrent();
                 last.call_type      = 'getform';
-               // last.form_id        = data.form_id;
+                last.form_id        = data.form_id;
 				
+				/*
 				last.form_id        = 'nuauthentication';
-				
+				data.form_id = 'nuauthentication'; 
+				data.form_code = 'nuauthentication'; 
+				data.redirect_form_id = 'nuauthentication'; 
+				data.id = 'nuauthentication'; 
+				*/
+					
                 last.record_id      = data.record_id;
                 last.filter         = data.filter;
                 last.search         = data.search;
@@ -173,7 +177,7 @@ window.nuHASH				= [];
     $search             	= '';
     $iframe					= '';
     $target					= '';
-	$l 						= scandir('graphics');
+	$l 						= scandir('core/graphics');
 	$f  					= JSON_encode($l);
     $nuBrowseFunction 		= 'browse';
 	$like					= '';
@@ -228,15 +232,15 @@ window.nuHASH				= [];
 
 	$sessionAlive = '';
 	
-	if ($nuKeepSessionAlive) {
-		$nuKeepSessionAliveInterval = !isset($nuKeepSessionAliveInterval) ? 600 : $nuKeepSessionAliveInterval;
+	if ($$nuConfigKeepSessionAlive) {
+		$nuConfigKeepSessionAliveInterval = !isset($nuConfigKeepSessionAliveInterval) ? 600 : $nuConfigKeepSessionAliveInterval;
 		$sessionAlive  = "
-		var refreshTime = 1000 * $nuKeepSessionAliveInterval; // refresh interval in milliseconds
+		var refreshTime = 1000 * $nuConfigKeepSessionAliveInterval; // refresh interval in milliseconds
 		window.setInterval( function() {
 			$.ajax({
 				cache: false,
 				type: 'GET',
-				url: 'nukeepsessionalive.php',
+				url: 'core/nukeepsessionalive.php',
 				success: function(data) {
 				}
 			});

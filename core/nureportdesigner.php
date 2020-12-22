@@ -8,8 +8,10 @@
 
 require_once('nucommon.php');	
 
-nuJSInclude($_SESSION['nubuilder_session_data']['JQ_PATH']);
+$jquery = "libs/jquery/jquery.js"; 
+// $jquery = $_SESSION['nubuilder_session_data']['JQ_PATH'];
 
+nuJSInclude($jquery);
 nuJSInclude('nuformclass.js');
 nuJSInclude('nuform.js');
 nuJSInclude('nuformdrag.js');

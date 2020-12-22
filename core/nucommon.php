@@ -525,7 +525,7 @@ function nuReplaceHashVariables($s){
 	}
 
 	foreach ($a as $k => $v) {
-		if(!is_object ($a[$k])) {
+		if(!is_object ($a[$k]) && !is_array ($a[$k])) {
 			$s	= str_replace ('#' . $k . '#', $v, $s);
 		}
 	}
@@ -1808,6 +1808,5 @@ function nuGetRecordURL($origin = '', $subFolder = '', $homepageId = '') {
   return $origin. $subFolder . '/index.php?f=' . 'xx'. '&r=' . '-1' . $homepageId;  
   
 }
-
 
 ?>

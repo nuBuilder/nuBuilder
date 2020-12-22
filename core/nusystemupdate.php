@@ -15,7 +15,7 @@ if($J  != 'valid'){
 }
 
 
-if ($nuEnableDatabaseUpdate == false) {
+if ($nuConfigEnableDatabaseUpdate == false) {
 	
 	print "The Database update is disabled.";	
 	return;

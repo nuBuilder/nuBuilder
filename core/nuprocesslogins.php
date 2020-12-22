@@ -32,8 +32,6 @@ function nuCheckStandaloneUserLoginRequest() {
         $_POST['nuSTATE']['username'],
         md5($_POST['nuSTATE']['password']) 
     ));
-	
-	nuDebug($sql);    	
 
     if (db_num_rows($rs) > 0) {
 		
@@ -67,6 +65,8 @@ function nuGetIPAddress() {
 
 function nuLoginSetupGlobeadmin() {
 
+	global $nuConfig2FAAdmin;	
+	
     $_SESSION['nubuilder_session_data']['SESSION_ID'] = nuIDTEMP();
     $_SESSION['nubuilder_session_data']['SESSION_TIMESTAMP'] = time();
     $_SESSION['nubuilder_session_data']['IsDemo'] = $_SESSION['nubuilder_session_data']['IS_DEMO'];
@@ -76,11 +76,14 @@ function nuLoginSetupGlobeadmin() {
     $sessionIds = new stdClass;
     $sessionIds->zzzzsys_access_id = '';
     $sessionIds->zzzzsys_user_id = $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'];
-	
-	
-    // $sessionIds->zzzzsys_form_id = 'nuhome';
-
-	$sessionIds->zzzzsys_form_id = 'nuauthentication';
+    
+	if ($nuConfig2FAAdmin) {
+		$sessionIds->zzzzsys_form_id = 'nuauthentication';
+		$_SESSION['nubuilder_session_data']['SESSION_2FA_STATUS'] = 'PENDING';
+		$_SESSION['nubuilder_session_data']['SESSION_2FA_REDIRECT_FORM_ID'] = 'nuhome';
+	} else {
+		$sessionIds->zzzzsys_form_id = 'nuhome';
+	}	
 	
     $sessionIds->global_access = '1';
 	$sessionIds->ip_address = nuGetIPAddress();

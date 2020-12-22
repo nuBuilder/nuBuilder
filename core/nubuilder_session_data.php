@@ -43,7 +43,7 @@ class nubuilder_session_data {
 		$this->nubuilder['GLOBEADMIN_NAME']	= $nuConfigDBGlobeadminUsername;
 		$this->nubuilder['GLOBEADMIN_PASS']	= $nuConfigDBGlobeadminPassword;
 		$this->nubuilder['IS_DEMO']         = $nuConfigIsDemo;
-		$this->nubuilder['JQ_PATH']         = 'libs/jquery/jquery.js';
+		$this->nubuilder['JQ_PATH']         = 'core/libs/jquery/jquery.js';
         }
 }
 

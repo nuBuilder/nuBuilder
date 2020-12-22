@@ -1,6 +1,7 @@
 <?php
 	require_once('nuchoosesetup.php');
-	$jquery = $_SESSION['nubuilder_session_data']['JQ_PATH'];
+	$jquery = "libs/jquery/jquery.js"; 
+	// $_SESSION['nubuilder_session_data']['JQ_PATH'];
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>

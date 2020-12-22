@@ -9,7 +9,7 @@ function nuAjax(w,successCallback,errorCallback){
 
 		async    : true,  
 		dataType : "json",
-		url      : "nuapi.php",
+		url      : "core/nuapi.php",
 		method   : "POST",
 		data     : {nuSTATE : w},
 		dataType : "json",			
@@ -175,7 +175,7 @@ function nuRunReport(f, iframe){
 		
 		if(!nuDisplayError(fm)){
 			
-			var pdfUrl	= 'nurunpdf.php?i=' + fm.id;
+			var pdfUrl	= 'core/nurunpdf.php?i=' + fm.id;
 			
 			if(iframe === undefined){
 				window.open(pdfUrl);
@@ -208,7 +208,7 @@ function nuRunReportSave(f){
 			var fd 			= new FormData();
 			fd.append('ID', fm.id);
 			var xhr 		= new XMLHttpRequest();
-			xhr.open('POST', 'nurunpdf.php', true);
+			xhr.open('POST', 'core/nurunpdf.php', true);
 			xhr.send(fd);
 			
 		}
@@ -328,7 +328,7 @@ function nuRunPHP(pCode, iframe, rbs){
 		
 		if(!nuDisplayError(fm)){
 			
-			var pdfUrl		= 'nurunphp.php?i=' + fm.id;
+			var pdfUrl		= 'core/nurunphp.php?i=' + fm.id;
 			
 			if(iframe === undefined || iframe === ''){
 				window.open(pdfUrl);
@@ -403,8 +403,8 @@ function nuSystemUpdate(){
 		
 		if(!nuDisplayError(fm)){
 			
-			var pdfUrl		= 'nusystemupdate.php?i=' + fm.id;
-			window.open(pdfUrl);
+			var updateUrl		= 'core/nusystemupdate.php?i=' + fm.id;
+			window.open(updateUrl);
 			
 		}
 		
@@ -428,7 +428,7 @@ function nuAttachImage(i, c){
 
 	if(window.nuGraphics.indexOf(c + '.png') != -1){						//-- check filenames in graphics dir.
 	
-		$('#' + imgID).attr('src', "graphics/" + c + ".png")
+		$('#' + imgID).attr('src', "core/graphics/" + c + ".png")
 
 		return;
 		
@@ -482,7 +482,7 @@ function nuAttachButtonImage(i, c){
 	if(window.nuGraphics.indexOf(c + '.png') != -1){						//-- check filenames in graphics dir.
 
 		$('#' + i)
-		.css('background-image', 'url("graphics/' + c + '.png')
+		.css('background-image', 'url("core/graphics/' + c + '.png')
 		.css('background-repeat', 'no-repeat')
 		.css('background-size', '30px')
 		.css('padding', '0px 0px 0px 33px')

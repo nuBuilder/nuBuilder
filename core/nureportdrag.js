@@ -630,7 +630,7 @@ function nuSetTools(){
 	
 		var e  = document.createElement('div');
 		var h = '';
-		h = h + '<img id="nuItema"  onclick="nuUndo()" src="graphics/nu_undo.png" title="Undo" style="position:absolute;top:5px;left:5px;height:15px;width:15px">';
+		h = h + '<img id="nuItema"  onclick="nuUndo()" src="core/graphics/nu_undo.png" title="Undo" style="position:absolute;top:5px;left:5px;height:15px;width:15px">';
 //		h = h + '<div id="nuItemU" onclick="nuUndo()" title="Undo" class="nuToolbar" style="width:80px">Undo<span style="font-weight:normal;font-size:12px;">('+(nuBACKUP.length-1)+')</span></div>';
 		h = h + '<div id="nuItem0" onclick="nuNewObject()" class="nuToolbar">' 			+ opener.nuTranslate('New Object') + '</div>';
 		h = h + '<div id="nuItem1" onclick="nuCloneObjects(false)" class="nuToolbar">' 	+ opener.nuTranslate('Clone Object') + '</div>';

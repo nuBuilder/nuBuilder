@@ -148,7 +148,7 @@ function db_field_names($n){
 function db_field_types($n){
     
     $a       = array();
-    $s       = "dESCRIBE $n";
+    $s       = "DESCRIBE $n";
     $t       = nuRunQuery($s);
 
     while($r = db_fetch_row($t)){
@@ -277,7 +277,8 @@ function nuID(){
 
     while($i == uniqid()){}
 
-    return uniqid().$s[0].$s[1];
+   // return "nu".uniqid().$s[0].$s[1];
+	 return uniqid().$s[0].$s[1];
 
 }
 

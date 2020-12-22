@@ -6,7 +6,7 @@ function nuStandaloneImportNewDB() {
 	while($r = db_fetch_row($t)){
 		if($r[0] == 'zzzzsys_object'){return;}
 	}
-	$file						= realpath(dirname(__FILE__))."/nubuilder4.sql";
+	$file						= __DIR__."/../nubuilder4.sql";
 	@$handle					= fopen($file, "r");
 	$temp						= "";
 	if($handle){

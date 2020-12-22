@@ -2,7 +2,8 @@
 	header("Content-Type: application/json");
 	header("Cache-Control: no-cache, must-revalidate");
 	$_POST['nuSTATE'] = json_decode($_POST['nuSTATE'], JSON_OBJECT_AS_ARRAY);
-	require_once('nuconfig.php');
+	require_once('../nuconfig.php');
+	require_once('nusecurity.php');
 	require_once('nusession.php');
 	require_once('nucommon.php');
 	require_once('nuform.php'); 
@@ -14,10 +15,20 @@
 	$_POST['nuErrors']						= array();
 	$U										= nuGetUserAccess();
 	$formAndSessionData						= nuGatherFormAndSessionData($U['HOME_ID']);
-	$F										= $formAndSessionData->form_id;
-	$R										= $formAndSessionData->record_id;
+	
 	$P										= $_POST['nuSTATE'];
 	$CT										= $P['call_type'];
+	
+	// 2FA, check authentication Status.		
+	if ($nuConfig2FAAdmin && $_SESSION['nubuilder_session_data']['SESSION_2FA_STATUS'] == 'PENDING') {
+
+		if ($formAndSessionData->form_id != 'nuauthentication' && $CT != 'runhiddenphp') {
+		  nuDisplayError(nuTranslate('Access denied. Authentication Pending.'));
+		}
+	}
+	
+	$F										= $formAndSessionData->form_id;
+	$R										= $formAndSessionData->record_id;
 	
 	$_POST['FORM_ID'] 						= $F;
 	$_POST['nuHash']						= array_merge($U, nuSetHashList($P));

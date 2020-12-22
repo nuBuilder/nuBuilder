@@ -1,12 +1,18 @@
-=== nuBuilder 4 ===
+=== nuBuilder Forte ===
 Name: nuBuilder 4 - Standalone
-Contributors: Steven Copley
-Donate link: https://www.nubuilder.com/#donate
-Requires PHP: 5.2.4
-License: GPLv3
-License URI: https://www.gnu.org/licenses/old-licenses/gpl-3.0.html
 
-nuBuilder is the world's best: open-source, low-code application and report builder.
+Contributors: Steven Copley, Ap.Muthu, Janusz, kev1n, Neil
+Donate link: https://www.nubuilder.com/#donate
+License: GPLv3
+Home Page: https://www.nubuilder.com
+Wiki: https://wiki.nubuilder.net/
+Forum: https://forums.nubuilder.com/
+
+Requires: PHP: 5.2.4 (phpMyAdmin that is shipped with nuBuilder will require PHP 7.1+)
+Requires: MySQL: 5.5. (or MariaDB)
+Requires: Web Server: (e.g. Apache or Nginx)
+
+nuBuilder is the world's best open-source, low-code application and report builder.
 
 == Description ==
 
@@ -15,6 +21,7 @@ nuBuilder enables you to make any application that want or need with the least a
 nuBuilder Forte is the 4th version of nuBuilder. A browser-based tool created by nuSoftware for developing web-based database applications.
 
 nuBuilder uses either MySQL or Maria DB databases and gives its users the ability to do database operations like: 
+
 * Search
 * Create
 * Insert
@@ -51,13 +58,12 @@ nuBuilder is a enterprise level application builder but with no limitations on d
 
 == Installation ==
 
-If you are using nuBuilder as a standalone application, then follow these instructions:
-1. Upload the unzipped nuBuilder files to your webroot 
-2. Edit nuconfig.php to set you database credentials and globeadmin credentials
+1. Upload the unzipped nuBuilder files to your webroot
+2. Create a database (e.g. nubuilder4)
+3. Edit nuconfig.php to set your database credentials and globeadmin credentials
 
-== Changelog ==
+Detailed installation instructions can be found here:  https://github.com/smalos/nuBuilder4-Code-Library/wiki/Installing-nuBuilder
 
-= 1.0 =
 
 == Documentation ==
 

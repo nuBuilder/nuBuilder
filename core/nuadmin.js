@@ -44,17 +44,23 @@ function nuShowFormInfo() {
 	
 }
 
-function nuIsDevMode() {
+function nuGetDevMode() {
   
   var d = localStorage.getItem("nuDevMode");
-  return d !== null && d !== 'null' && window.global_access;
+  if (d !== null && d !== 'null' && window.global_access) {
+	  nuSetProperty('nuDevMode', '1', true);
+	  return true;
+  }
   
+  return false;
 }
 
 function nuAddDevButtons() {
 
     if (global_access) {
         var ft = nuCurrentProperties().form_type;
+		if (ft === null) return;
+		
         var b = ft.indexOf("browse") >= 0;
         var e = ft.indexOf("edit") >= 0;
         var l = ft.indexOf("launch") >= 0;
@@ -63,7 +69,7 @@ function nuAddDevButtons() {
         
         nuAddDevButton("DevBtnFormInfo", "Info", 'nuShowFormInfo();', nuTranslate('Form Info'));
         
-		var devMode = nuIsDevMode();
+		var devMode = nuGetDevMode();
 		var code = nuCurrentProperties().form_code;
 		if (! code.startsWith('nu') || devMode) { 		
 		
@@ -75,8 +81,8 @@ function nuAddDevButtons() {
 			nuAddDevButton("DevBtnObjectList", "Obj", 'nuOpenCurrentObjectList();',nuTranslate('Object List'));
 			nuAddDevButton("DevBtnProperties", "Prop", 'nuOpenCurrentFormProperties();',nuTranslate('Form Properties'));
 		
-			if (b || l) { nuAddDevButton("DevBtnBE", "BE", 'nuEditPHP("BE");','Before Edit'); }
-			if (e) { nuAddDevButton("DevBtnBB", "BB", 'nuEditPHP("BB");','Before Browse'); }
+			if (e || l) { nuAddDevButton("DevBtnBE", "BE", 'nuEditPHP("BE");','Before Edit'); }
+			if (b) { nuAddDevButton("DevBtnBB", "BB", 'nuEditPHP("BB");','Before Browse'); }
 			if (e) { nuAddDevButton("DevBtnBS", "BS", 'nuEditPHP("BS");','Before Save'); }
 			if (e) { nuAddDevButton("DevBtnAS", "AS", 'nuEditPHP("AS");','After Save'); }
 		}

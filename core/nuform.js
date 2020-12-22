@@ -170,18 +170,19 @@ function nuBuildForm(f){
 		$('#nuSearchField').focus();
 	}
 	
-	if(nuFormType() == 'edit'){
+
+	if(window.nuOnLoad){
+		nuOnLoad();
+	}
+	
+    if(nuFormType() == 'edit'){
 		window.nuRESPONSIVE.getStartPositions();
-	}else{
-		
+	}else{	
 		if (nuDisableStretchColumns !== true || nuDocumentID !== parent.nuDocumentID) {				 
 			nuResizeBrowseColumns();
 		}
 	}
 	
-	if(window.nuOnLoad){
-		nuOnLoad();
-	}
 	
     if (nuDisableTabTitle !== true) {		
 		nuSetTabTitle(typeof nuTabTitlePrefix === 'undefined' ? 'nuBuilder': nuTabTitlePrefix );
@@ -208,7 +209,7 @@ function nuBuildForm(f){
 	}
 
 	if (nuDisableOpenPropertiesOnMiddleClick !== true) {	
-		document.addEventListener("mousedown", nuOpenPropertiesOnMiddleClick, false);
+		document.addEventListener("mousedown", nuOpenPropertiesOnMiddleClick, { passive: true} );
 	}
 
 	if (nuDisablePaginationInfo !== true) {	
@@ -905,7 +906,7 @@ function nuINPUT(w, i, l, p, prop){
 		.attr('onfocus', 'nuLookupFocus(event)')
 		.attr('onclick', 'nuBuildLookup(this,"")')
 		.addClass('nuLookupButton')
-		.html('<i style="padding:4px" class="fa fa-search"></i>')//<img border="0" src="graphics/magnify.png" class="nuLookupImg">')
+		.html('<i style="padding:4px" class="fa fa-search"></i>')//<img border="0" src="core/graphics/magnify.png" class="nuLookupImg">')
 		.css('visibility', vis);
 
 		id = p + prop.objects[i].id + 'description';
@@ -4015,6 +4016,18 @@ function nuBrowseBorders(){
 }
 
 
+function nuObjectPosition(i) {
+
+	var t  = parseInt($(i).css('top'));
+	var l  = parseInt($(i).css('left'));
+	var h  = parseInt($(i).css('height'));
+	var w  = parseInt($(i).css('width'));
+	
+	var b  = t + h; // bottom
+	var r  = l + w; // right 
+	
+    return [t, l, h, w, b, r];
+}
 
 function nuFormWH(){
 	
@@ -4038,10 +4051,38 @@ function nuFormWH(){
 	
 }
 
+/* 
+DEV 2020-12-21
+function nuFormWH(){
+	
+	var w	= 0;
+	var h	= 0;
+	var s	= '[data-nu-object-id][data-nu-prefix=""]';
+
+	if(nuSERVERRESPONSE.record_id == -2){
+		s	= '[data-nu-object-id]';
+	}
+
+	$(s).each(function( index ) {
+		
+		var p = nuObjectPosition();				
+		var b = p[5];
+		var r = p[6];
+		
+		w	= Math.max(w, r);
+		h	= Math.max(h, b);
+		
+	});
+	
+	return {'width' : w, 'height' : h};
+	
+}
+*/
+
 function nuResizeFormDialogCoordinates(){
 
 	var wh	= nuFormWH();
-debugger;
+
 	var w	= wh.width;
 	var h	= wh.height;
 

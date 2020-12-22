@@ -9,18 +9,24 @@
 // Administrator Login:
     $nuConfigDBGlobeadminUsername   = "globeadmin";     //-- globeadmin username
     $nuConfigDBGlobeadminPassword   = "nu";             //-- globeadmin password
-
+	
+	
 // Settings:
     $nuConfigTitle                  = "nuBuilder 4";    //-- nuBuilder Title
     $nuConfigTimeOut                = 1440;             //-- Session Timeout. Default: 1440 (24h)
-
-// Options:
     $nuConfigIsDemo                 = false;            //-- Demo mode. Saving not permitted.
-    $nuIncludeGoogleCharts          = true;             //-- Include external link to www.gstatic.com
-    $nuIncludeApexCharts            = false;            //-- Include apex charts (libs/apexcharts)
-    $nuEnableDatabaseUpdate         = true;             //-- Enable updating the database within nuBuilder
-    $nuKeepSessionAlive             = true;             //-- Use a timer to keep the session alive
-    $nuKeepSessionAliveInterval     = 600;              //-- Keep-alive interval. Default 600 s (10 min)	
+	
+// Options:
+    $nuConfigIncludeGoogleCharts    = true;             //-- Include external link to www.gstatic.com
+    $nuConfigIncludeApexCharts      = false;            //-- Include apex charts (libs/apexcharts)
+    $nuConfigEnableDatabaseUpdate   = true;             //-- Enable updating the database within nuBuilder
+    $nuConfigKeepSessionAlive       = true;             //-- Use a timer to keep the session alive
+    $nuConfigKeepSessionAliveInterval  = 600;           //-- Keep-alive interval. Default 600 s (10 min)	
+
+// Experimental Options (Do not use in production):
+    $nuConfig2FAAdmin               = false;
+    $nuConfig2FAUser                = false;
+
 
 // Uncomment this block to customise the login form:
 

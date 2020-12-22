@@ -1,6 +1,21 @@
 <?php
 
-function nuEmail($to_list=array(),$from_address='',$from_name='',$content='',$subject='',$file_list=array(),$html=false,$cc_list=array(), $bcc_list=array(), $reply_to_list=array(),$debug=0,$method='SMTP'){  // changed
+// Send email using the built in PHP function
+function nuEmailPHP($sendTo, $fromAddress, $fromName, $content, $subject){
+
+    $headers  = "MIME-Version: 1.0\r\n";
+    $headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
+    $headers .= "From: {$fromAddress} <{$fromName}> \n";
+ 
+    if(mail($sendTo, $subject, $content, $headers)){
+        return true;
+    }
+ 
+    return false;
+}
+
+// Send email using PHPMailer
+function nuEmail($to_list=array(),$from_address='',$from_name='',$content='',$subject='',$file_list=array(),$html=false,$cc_list=array(), $bcc_list=array(), $reply_to_list=array(),$debug=0,$method='SMTP'){  
 	ob_start();
         $nuEmailSettings = nuMarshallEmailSettings($from_address, $from_name, $html, $reply_to_list);
         require_once($nuEmailSettings->phpmailer_path);
@@ -59,16 +74,16 @@ function _nuMarshallEmailSettingsHelper($obj, $key, $default = '') {
 	return $a;
 }
 function nuMarshallEmailSettings( $from_address = '', $from_name = '', $html = false, $reply_to_list = array() ) {
-	$word_press_path = '../../../wp-includes/class-phpmailer.php';
-	$standalone_path = 'phpmailer/nuemailer/class-phpmailer.php';
+	
+	$standalone_path = 'libs/phpmailer/nuemailer/class-phpmailer.php';
 	$setup = db_setup();
 	$nuEmailSettings = new stdClass();
 	$nuEmailSettings->error_text                = '';
     $nuEmailSettings->username					= _nuMarshallEmailSettingsHelper($setup, 'set_smtp_username');
     $nuEmailSettings->password					= _nuMarshallEmailSettingsHelper($setup, 'set_smtp_password');
 	$nuEmailSettings->host              		= _nuMarshallEmailSettingsHelper($setup, 'set_smtp_host', '127.0.0.1');
-    $nuEmailSettings->smtp_port					= _nuMarshallEmailSettingsHelper($setup, 'set_smtp_port', '25');
-    $nuEmailSettings->smtp_use_secure			= _nuMarshallEmailSettingsHelper($setup, 'set_smtp_use_ssl', false);
+    $nuEmailSettings->smtp_port					= _nuMarshallEmailSettingsHelper($setup, 'set_smtp_port', '25'); 
+	$nuEmailSettings->smtp_use_secure			= _nuMarshallEmailSettingsHelper($setup, 'set_smtp_use_ssl', false);
     $nuEmailSettings->smtp_use_authentication 	= _nuMarshallEmailSettingsHelper($setup, 'set_smtp_use_authentication', false);
 	$nuEmailSettings->from_address      		= $from_address != '' ? $from_address : _nuMarshallEmailSettingsHelper($setup, 'set_smtp_from_address');	
     $nuEmailSettings->from_name					= $from_name != '' ? $from_name :  _nuMarshallEmailSettingsHelper($setup, 'set_smtp_from_name');	
