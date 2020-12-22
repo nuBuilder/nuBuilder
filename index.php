@@ -232,7 +232,7 @@ window.nuHASH				= [];
 
 	$sessionAlive = '';
 	
-	if ($$nuConfigKeepSessionAlive) {
+	if ($nuConfigKeepSessionAlive) {
 		$nuConfigKeepSessionAliveInterval = !isset($nuConfigKeepSessionAliveInterval) ? 600 : $nuConfigKeepSessionAliveInterval;
 		$sessionAlive  = "
 		var refreshTime = 1000 * $nuConfigKeepSessionAliveInterval; // refresh interval in milliseconds
