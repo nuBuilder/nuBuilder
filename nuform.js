@@ -4041,7 +4041,7 @@ function nuFormWH(){
 function nuResizeFormDialogCoordinates(){
 
 	var wh	= nuFormWH();
-
+debugger;
 	var w	= wh.width;
 	var h	= wh.height;
 

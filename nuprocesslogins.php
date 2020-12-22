@@ -76,7 +76,12 @@ function nuLoginSetupGlobeadmin() {
     $sessionIds = new stdClass;
     $sessionIds->zzzzsys_access_id = '';
     $sessionIds->zzzzsys_user_id = $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'];
-    $sessionIds->zzzzsys_form_id = 'nuhome';
+	
+	
+    // $sessionIds->zzzzsys_form_id = 'nuhome';
+
+	$sessionIds->zzzzsys_form_id = 'nuauthentication';
+	
     $sessionIds->global_access = '1';
 	$sessionIds->ip_address = nuGetIPAddress();
 		

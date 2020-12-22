@@ -71,11 +71,12 @@ nuJSIndexInclude('nuadmin.js');
 nuJSIndexInclude('nureportjson.js');
 nuJSIndexInclude('nuajax.js');       //-- calls to server
 nuJSChartsInclude();
+
 nuJSIndexInclude('libs/quill/quill.js'); 
 nuJSIndexInclude('libs/quill/modules/quill-divider.js'); 
+nuCSSIndexInclude('libs/quill/themes/quill.snow.css');
 
 nuCSSIndexInclude('css/nubuilder4.css');
-nuCSSIndexInclude('libs/quill/themes/quill.snow.css');
 
 ?>
 
@@ -125,7 +126,10 @@ function nuLoginRequest(u, p){
                 window.nuFORM.addBreadcrumb();
                 var last            = window.nuFORM.getCurrent();
                 last.call_type      = 'getform';
-                last.form_id        = data.form_id;
+               // last.form_id        = data.form_id;
+				
+				last.form_id        = 'nuauthentication';
+				
                 last.record_id      = data.record_id;
                 last.filter         = data.filter;
                 last.search         = data.search;
