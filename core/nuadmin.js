@@ -74,7 +74,7 @@ function nuAddDevButtons() {
 		if (! code.startsWith('nu') || devMode) { 		
 		
 			if (devMode && nuFormType() !== 'browse') {			
-				nuAddDevButton("DevBtnDB", "DB", 'nuOpenDatabase();',nuTranslate('Database'));
+				nuAddDevButton("DevBtnDB", "DB", 'nuStartDatabaseAdmin();',nuTranslate('Database'));
 				nuAddDevButton("DevBtnSetup", "Setup", 'nuOpenSetup();',nuTranslate('Setup'));
 			}	
 					

@@ -123,23 +123,33 @@ function nuDuplicate($S, $R, $F){
 	
 }
 
-
-
 function nuUpdateDatabase(){
 
-	if($_SESSION['nubuilder_session_data']['IsDemo']){
-		
+	if($_SESSION['nubuilder_session_data']['IsDemo']){		
 		nuDisplayError(nuTranslate('Not available in the Demo')."..");
-		return;
+		return;	
+	}
 	
+	$nudata			= $_POST['nuHash']['nuFORMdata'];
+	$nuMainID		= $_POST['nuHash']['record_id'];
+	$form_id		= $_POST['nuHash']['form_id'];
+	$form_type		= nuGetFormProperties($form_id)->sfo_type;
+	$nuDelAll		= $_POST['nuHash']['deleteAll'];
+
+		
+	if ($_POST['nuHash']['GLOBAL_ACCESS'] == '0') {
+		$dm = nuGetDataMode($form_id);			
+		$recordID	= $_POST['nuHash']['RECORD_ID'];		
+		
+		if ($dm == "0" && $recordID != '-1') { // No Edits				
+				nuDisplayError(nuTranslate('Changes to existing records are not allowed'));
+				return;
+		}				
+
 	}
 	
 	nuValidateSubforms();
 	
-	$nudata			= $_POST['nuHash']['nuFORMdata'];
-	$nuMainID		= $_POST['nuHash']['record_id'];
-	$form_type		= nuGetFormProperties($_POST['nuHash']['form_id'])->sfo_type;
-	$nuDelAll		= $_POST['nuHash']['deleteAll'];
 	$nuMainTable	= $nudata[0]->table;
 	$EFid			= $nudata[0]->object_id;
 	$cts			= nuGetJSONData('clientTableSchema');
@@ -257,23 +267,6 @@ function nuUpdateDatabase(){
 							
 							
 						}
-
-						
-//						if(in_array($fields[$R], $CTSTN)){								//-- valid field names
-//
-//							if($isAN){
-//								$v	= nuAutoNumber($sf->object_id, $fields[$R], $row[$R]);
-//							}else{
-//								$v	= $row[$R];
-//							}
-//							
-//							$add	= addslashes($v);
-//							$fld	= $fields[$R];
-//							$V[]	= "'$add'";
-//							$I[]	= "`$fld`";
-//							$F[]	= "`$fld` = '$add'";
-//							
-//						}
 						
 					}
 					

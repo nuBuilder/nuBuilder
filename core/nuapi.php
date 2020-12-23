@@ -64,6 +64,7 @@
     	if($CT == 'systemupdate')	{$f->forms[0]->id					= nuRunSystemUpdate();}
 		
     }
+	
 	$f->forms[0]->after_event				= $_POST['nuAfterEvent'];
 	$f->forms[0]->user_name					= nuUser($U['USER_ID'])->sus_name;
 	$f->forms[0]->access_level_id			= $U['USER_GROUP_ID'];
@@ -82,6 +83,7 @@
 	$f->forms[0]->errors					= $_POST['nuErrors'];
 	$f->forms[0]->log_again				    = $_POST['nuLogAgain'];
 	$f->forms[0]->global_access				= $_POST['nuHash']['GLOBAL_ACCESS'];
+	$f->forms[0]->data_mode					= $_POST['nuHash']['GLOBAL_ACCESS'] == '1' ? null : nuGetDataMode($F);
 	$f->forms[0]->form_access				= $GLOBALS['nuSetup']->set_denied;
 	$f->forms[0]->javascript				= $GLOBALS['EXTRAJS'];
 	$f->forms[0]->target					= $P['target'];
@@ -89,7 +91,7 @@
 	
 	$f->forms[0]->buttons					= $b[0];
 	$f->forms[0]->run_code					= $b[1];
-	$f->forms[0]->run_description			= $b[2];
+	$f->forms[0]->run_description			= $b[2];		
 	
 
 	$j								    	= json_encode($f->forms[0]);

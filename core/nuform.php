@@ -24,7 +24,6 @@ function nuBeforeBrowse($f){
 			
 }
 
-
 function nuBeforeEdit($FID, $RID){
 
 	$r						= nuFormProperties($FID);
@@ -38,6 +37,18 @@ function nuBeforeEdit($FID, $RID){
 		$logfield					= $r->sfo_table . '_nulog';
 		$cts						= nuGetJSONData('clientTableSchema');
 		$user						= $_POST['nuHash']['USER_ID'];
+	
+		/* 
+		To-Do: Check if not Launch Form
+		if ($_POST['nuHash']['GLOBAL_ACCESS'] == '1') {
+			$dm = nuGetDataMode($FID);			
+			$recordID	= $_POST['nuHash']['RECORD_ID'];			
+			if ($dm == "2" && RECORD_ID != '-1') {
+					nuDisplayError('Existing Records cannot be viewed.');
+					return:
+			}				
+		}
+		*/
 
 		if($cts[$r->sfo_table] !== NULL){
 				
@@ -733,39 +744,30 @@ function nuGetSubformRecords($R, $A){
 
 function nuBuildTabList($i){
 
-    $o 				= 0;
-    $a 				= array();
-	
-    $s 				= "
-    
-		SELECT zzzzsys_tab_id, 
-			   syt_zzzzsys_form_id, 
-			   syt_title, 
-			   syt_order, 
-			   syt_help, 
-			   zzzzsys_object_id 
-		FROM   zzzzsys_tab 
-			   INNER JOIN zzzzsys_object 
-					   ON sob_all_zzzzsys_form_id = syt_zzzzsys_form_id 
-		WHERE  syt_zzzzsys_form_id = '$i' 
-		GROUP  BY syt_order, 
-				  syt_zzzzsys_form_id, 
-				  syt_title 
-    
+    $o                 = 0;
+    $a                 = array();
+    $s                 = "
+
+        SELECT DISTINCT zzzzsys_tab.*
+        FROM zzzzsys_tab 
+        INNER JOIN zzzzsys_object ON sob_all_zzzzsys_form_id = syt_zzzzsys_form_id
+        WHERE syt_zzzzsys_form_id = '$i'
+        ORDER BY syt_order
+
     ";
 
     $t = nuRunQuery($s);
 
     while($r = db_fetch_object($t)){
-        
-        $r->number	= $o;
+
+        $r->number    = $o;
         $o++;
-        $a[]		= $r;
-        
+        $a[]        = $r;
+
     }
-	
+
     return $a;
-    
+
 }
 
 
@@ -1106,7 +1108,7 @@ function nuGatherFormAndSessionData($home){
 
 			
 
-				$nuT					= nuRunQuery("SELECT * FROM zzzzsys_report WHERE zzzzsys_report_id = '$formAndSessionData->record_id'");
+				$nuT					= nuRunQuery("SELECT sph_code FROM zzzzsys_report WHERE zzzzsys_report_id = '$formAndSessionData->record_id'");
 				$nuR					= db_fetch_object($nuT);
 				
 				nuDisplayError("Access To Report Denied... ($nuR->sre_code)");
@@ -1121,7 +1123,7 @@ function nuGatherFormAndSessionData($home){
 
             if(!in_array($formAndSessionData->record_id, $p)) { //form_id is record_id for getphp
 			
-                $nuT					= nuRunQuery("SELECT * FROM zzzzsys_php WHERE zzzzsys_php_id = '$formAndSessionData->record_id'");
+                $nuT					= nuRunQuery("SELECT sph_code FROM zzzzsys_php WHERE zzzzsys_php_id = '$formAndSessionData->record_id'");
                 $nuR					= db_fetch_object($nuT);
 				
                 nuDisplayError("Access To Procedure Denied... ($nuR->sph_code)");
@@ -1133,7 +1135,7 @@ function nuGatherFormAndSessionData($home){
 		
 		if(!in_array($formAndSessionData->form_id, $f) && ($formAndSessionData->call_type == 'getform' || $formAndSessionData->call_type == 'login')){
 
-			$nuT						= nuRunQuery("SELECT * FROM zzzzsys_form WHERE zzzzsys_form_id = '$formAndSessionData->form_id'");
+			$nuT						= nuRunQuery("SELECT sfo_code FROM zzzzsys_form WHERE zzzzsys_form_id = '$formAndSessionData->form_id'");
 			$nuR						= db_fetch_object($nuT);
 
 			nuDisplayError("Access To Form Denied... ($nuR->sfo_code)");
@@ -1148,9 +1150,26 @@ function nuGatherFormAndSessionData($home){
 	
 }
 
+function nuGetDataMode($f) {
+	
+	$s = "SELECT slf_data_mode FROM zzzzsys_access_form WHERE slf_zzzzsys_access_id = ? AND slf_zzzzsys_form_id = ?";	
+	$t	= nuRunQuery($s, [$_POST['nuHash']['USER_GROUP_ID'], $f]);	
+
+    if (db_num_rows($t) == 1) {
+		$r = db_fetch_row($t)[0];		
+		nuDebug("db_fetch_row". $r);		
+	} else {
+		$r = null;
+	}
+	
+    return  $r;	
+	
+}
+
+
 function nuFormAccessList($j){
 	
-	$a			= array();
+	$a			= [];
 	$t			= nuRunQuery("SELECT zzzzsys_form_id FROM zzzzsys_form WHERE sfo_type = 'subform'");
 	
 	while($r = db_fetch_row($t)){
