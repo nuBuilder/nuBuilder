@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 23, 2020 at 01:06 PM
+-- Generation Time: Dec 23, 2020 at 02:13 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.2
 
@@ -245,7 +245,7 @@ CREATE TABLE `zzzzsys_code_snippet` (
   `cot_language` varchar(20) DEFAULT NULL,
   `cot_scope` varchar(50) DEFAULT NULL,
   `cot_updated_on` timestamp NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `zzzzsys_code_snippet`
@@ -512,8 +512,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu 5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2020.12.23.02'),
-(' nu 5fe23e83aea3466', 'nuFilesVersion', 'V.4.5-2020.12.23.02');
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2020.12.23.02'),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2020.12.23.02');
 
 -- --------------------------------------------------------
 
@@ -522,12 +522,12 @@ INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
 --
 
 CREATE TABLE `zzzzsys_note` (
-  `zzzzsys_note_id` varchar(25) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `not_title` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `not_content` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `zzzzsys_note_id` varchar(25) NOT NULL,
+  `not_title` varchar(60) NOT NULL,
+  `not_content` mediumtext DEFAULT NULL,
   `not_updated_on` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `not_zzzzsys_note_category_id` varchar(25) COLLATE utf8mb4_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `not_zzzzsys_note_category_id` varchar(25) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1147,7 +1147,7 @@ CREATE TABLE `zzzzsys_setup` (
 --
 
 INSERT INTO `zzzzsys_setup` (`zzzzsys_setup_id`, `set_time_out_minutes`, `set_zzzzsys_timezone_id`, `set_language`, `set_smtp_username`, `set_smtp_password`, `set_smtp_host`, `set_smtp_from_address`, `set_smtp_from_name`, `set_smtp_port`, `set_smtp_use_authentication`, `set_header`, `set_denied`) VALUES
-('1', 480, '5281a1220508372', '', '1', '1', '1', '1', '1', 1, '1', 'function nuHeaderTest() {\n    console.log(\'Functions placed here before a closing script tag are available anywhere in nuBuilder Forte\');\n}\n\n// The nuOnLoad() will be run after each Browse and Edit Form loads. \nfunction nuOnLoad() {\n\n    // Options: Uncomment to override the defaults.\n   \n   \n	\n    window.nuAdminButtons =\n        {\'nuDebug\'                           : false, \n         \'nuPHP\'                             : true, \n         \'nuRefresh\'                         : true, \n         \'nuObjects\'                         : true, \n         \'nuProperties\'                      : true, \n         \'nuInfo\'                            : true, \n         \'nuDB\'                              : false, \n         \'nuSetup\'                           : false  \n        };    \n       \n    window.nuUXOptions =\n        {\'nuEnableBrowserBackButton\'         : true,         // Enable the browser\'s Back button \n        \'nuPreventButtonDblClick\'            : true,         // Disable a button for 1 5 s to prevent a double click\n        \'nuShowPropertiesOnMiddleClick\'      : true,         // Show the Object Properties on middle mouse click\n        \'nuAutosizeBrowseColumns\'            : true,         // Autosize columns to fit the document width\n        \'nuShowBackButton\'                   : false,        // Show a Back Button\n        \'nuBrowsePaginationInfo\'             : \'default\',    // Default Format is: \'{StartRow} - {EndRow} \' + nuTranslate(\'of\') + \' \' + \'{TotalRows}\'  \n        \'nuShowNuBuilderLink\'                : true,         // Show the link to nubuilder com\n        \'nuShowLoggedInUser\'                 : false,        // Show the logged in User    \n        \'nuShowBeforeUnloadMessage\'          : true,         // Show or disable \"Leave site?\" message\n        \'nuShowBrowserTabTitle\'              : true,         // Show the Form Title in the Browser Tab\n        \'nuBrowserTabTitlePrefix\'            : \'nuBuilder\'   // Prefix in the Browser Tab\n       };\n    \n    \n}\n\n</script>\n\n\n<style>    \n\n   //	.nuActionButton {background-color:#0073aa;}\n\n</style>\n\n\n<script>\n\n', '0');
+('1', 480, '5281a1220508372', '', '1', '1', '1', '1', '1', 1, '1', 'function nuHeaderTest() {\n    console.log(\'Functions placed here before a closing script tag are available anywhere in nuBuilder Forte\');\n}\n\n// The nuOnLoad() will be run after each Browse and Edit Form loads. \nfunction nuOnLoad() {\n\n    // Options: Uncomment to override the defaults.\n   \n   \nwindow.nuAdminButtons = {};	\n/*\n    window.nuAdminButtons =\n        {\'nuDebug\'                           : false, \n         \'nuPHP\'                             : true, \n         \'nuRefresh\'                         : true, \n         \'nuObjects\'                         : true, \n         \'nuProperties\'                      : true, \n         \'nuInfo\'                            : true, \n         \'nuDB\'                              : false, \n         \'nuSetup\'                           : false  \n        };    \n       \n    window.nuUXOptions =\n        {\'nuEnableBrowserBackButton\'         : true,         // Enable the browser\'s Back button \n        \'nuPreventButtonDblClick\'            : true,         // Disable a button for 1 5 s to prevent a double click\n        \'nuShowPropertiesOnMiddleClick\'      : true,         // Show the Object Properties on middle mouse click\n        \'nuAutosizeBrowseColumns\'            : true,         // Autosize columns to fit the document width\n        \'nuShowBackButton\'                   : false,        // Show a Back Button\n        \'nuBrowsePaginationInfo\'             : \'default\',    // Default Format is: \'{StartRow} - {EndRow} \' + nuTranslate(\'of\') + \' \' + \'{TotalRows}\'  \n        \'nuShowNuBuilderLink\'                : true,         // Show the link to nubuilder com\n        \'nuShowLoggedInUser\'                 : false,        // Show the logged in User    \n        \'nuShowBeforeUnloadMessage\'          : true,         // Show or disable \"Leave site?\" message\n        \'nuShowBrowserTabTitle\'              : true,         // Show the Form Title in the Browser Tab\n        \'nuBrowserTabTitlePrefix\'            : \'nuBuilder\'   // Prefix in the Browser Tab\n       };\n*/    \n    \n}\n\n</script>\n\n\n<style>    \n\n   //	.nuActionButton {background-color:#0073aa;}\n\n</style>\n\n\n<script>\n\n', '1');
 
 -- --------------------------------------------------------
 
@@ -1227,8 +1227,8 @@ INSERT INTO `zzzzsys_tab` (`zzzzsys_tab_id`, `syt_zzzzsys_form_id`, `syt_title`,
 ('nu5bad6cb3737e773', 'nufrlaunch', 'Main', 10, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Report_Builder\');'),
 ('nu5bad6cb373c384f', 'nusample', 'Inputs', 10, ''),
 ('nu5bad6cb37405d73', 'nusamplesubformform', 'Main', 10, ''),
-('nu5bad6cb374207e3', 'nuuserhome', 'Main', 20, ''),
 ('nufastforms', 'nuuserhome', 'Fast Forms', 10, NULL),
+('nu5bad6cb374207e3', 'nuuserhome', 'Main', 20, ''),
 ('nu5bad6cb37434d3a', 'nulaunchform', 'Forms', 10, ''),
 ('nu5bad6cb374482e8', 'nutablookup', 'Tabs', 10, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Forms#Tabs_.28Subform.29\');'),
 ('nu5f711b9343afdbd', 'nucsvtransfer', 'Transfer', 10, 'window.open(\'https://wiki.nubuilder.net/nubuilderforte/index.php/CSV_Transfer\');'),
