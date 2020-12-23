@@ -10,7 +10,6 @@ function nuFormProperties($f){
 	
 }
 
-
 function nuBeforeBrowse($f){
 	
 	$_POST['nuMessages']	= [];
@@ -776,9 +775,7 @@ function nuRefineTabList($t){
     $a 			= array();
 
     for($i = 0 ; $i < count($t) ; $i++){
-		
-		//$a[]	= array(title => $t[$i]->syt_title, id => $t[$i]->zzzzsys_tab_id, help => $t[$i]->syt_help);
-		//changed SG 10/10/2018
+				
 		$a[]	= array('title' => $t[$i]->syt_title, 'id' => $t[$i]->zzzzsys_tab_id, 'help' => $t[$i]->syt_help);
         
     }
@@ -942,21 +939,21 @@ function nuBrowseWhereClause($searchFields, $searchString, $returnArray = false)
 
     while (true) {
 		
-        $pos = strpos($searchString, '"', $pos + 1);                              //-- search for double quotes
+        $pos = strpos($searchString, '"', $pos + 1);					//-- search for double quotes
 		
         if ($pos === false) {
 			
-            break;                                                                            //-- stop searching
+            break;														//-- stop searching
 			
         } else {
 			
             if ($start == -1) {
 				
-                $start     	= $pos;                                                            //-- find start position of phrase
+                $start     	= $pos;										//-- find start position of phrase
 				
             } else {
 				
-                $phrases[] 	= "$start," . ($pos + 1);                                             //-- add start and end to array
+                $phrases[] 	= "$start," . ($pos + 1);					//-- add start and end to array
                 $start     	= -1;
 				
             }
@@ -1156,8 +1153,7 @@ function nuGetDataMode($f) {
 	$t	= nuRunQuery($s, [$_POST['nuHash']['USER_GROUP_ID'], $f]);	
 
     if (db_num_rows($t) == 1) {
-		$r = db_fetch_row($t)[0];		
-		nuDebug("db_fetch_row". $r);		
+		$r = db_fetch_row($t)[0];					
 	} else {
 		$r = null;
 	}

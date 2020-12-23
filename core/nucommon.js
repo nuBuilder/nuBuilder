@@ -1858,10 +1858,12 @@ function nuPreventButtonDblClick () {
 }
 
 function nuAddBackButton() {
+	
     var b  = $('.nuBreadcrumb').length;
     if (b>0){
         nuAddActionButton('BackBtn', nuTranslate('Back'), 'if (!nuFORM.edited) { nuDisable(this.id) }; nuOpenPreviousBreadcrumb();');
     }
+	
 }
 
 function nuEnableBrowserBackButton() {
@@ -1875,13 +1877,13 @@ function nuEnableBrowserBackButton() {
 	
 }
 
-function nuSetTabTitle(prefix) {
+function nuSetBrowserTabTitle(prefix) {
 	
     var t = window.nuFORM.getProperty('title');
-    if (t === "") {
+    if (t === '') {
         t = "Properties";
     }
-    prefix = (typeof prefix === "undefined") ? "" : prefix + " - ";
+    prefix = prefix === '' ? '' : prefix + ' - ';
     document.title = prefix + t;
 	
 }    
@@ -2072,4 +2074,15 @@ function nuSetBrowseColumnSize(column, size) {
     cw.nuFORM.breadcrumbs[cw.nuFORM.breadcrumbs.length - 1].column_widths[column] = size;
     cw.nuSetBrowserColumns(cw.nuFORM.breadcrumbs[cw.nuFORM.breadcrumbs.length - 1].column_widths)
 	
+}
+
+function nuCreateAppendHTML(htmlStr) {
+	
+    var df = document.createDocumentFragment()
+        , temp = document.createElement('div');
+    temp.innerHTML = htmlStr;
+    while (temp.firstChild) {
+        df.appendChild(temp.firstChild);
+    }
+    return df;
 }

@@ -1,5 +1,7 @@
 <?php
 
+// Important Note: You must restart your browser after modifying nuconfig.php in order for changes to be reflected 
+
 // Database Settings:
     $nuConfigDBHost                 = "127.0.0.1";      //-- Database Host / IP
     $nuConfigDBName                 = "nubuilder4";     //-- Database Name
@@ -9,8 +11,7 @@
 // Administrator Login:
     $nuConfigDBGlobeadminUsername   = "globeadmin";     //-- globeadmin username
     $nuConfigDBGlobeadminPassword   = "nu";             //-- globeadmin password
-	
-	
+
 // Settings:
     $nuConfigTitle                  = "nuBuilder 4";    //-- nuBuilder Title
     $nuConfigTimeOut                = 1440;             //-- Session Timeout. Default: 1440 (24h)
@@ -22,10 +23,9 @@
     $nuConfigEnableDatabaseUpdate   = true;             //-- Enable updating the database within nuBuilder
     $nuConfigKeepSessionAlive       = true;             //-- Use a timer to keep the session alive
     $nuConfigKeepSessionAliveInterval  = 600;           //-- Keep-alive interval. Default 600 s (10 min)	
-
-// Experimental Options (Do not use in production):
-    $nuConfig2FAAdmin               = false;
-    $nuConfig2FAUser                = false;
+    
+    $nuConfig2FAAdmin               = false;			//-- Use 2FA authentication for admininstrator
+    $nuConfig2FAUser                = false;			//-- Use 2FA authentication for users
 
 
 // Uncomment this block to customise the login form:

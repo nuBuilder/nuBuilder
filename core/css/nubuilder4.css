@@ -152,6 +152,11 @@ input[type=range]::-webkit-slider-runnable-track {
    background-color	: red
 }
 
+.nuHomeGap {
+	width: 10px;
+	display: inline-block;
+}
+
 .nuIframe {
   border-color: lightgrey;
   border-style: solid;
@@ -681,7 +686,7 @@ input[type=range]::-webkit-slider-runnable-track {
 	color: white;
 }
 
-.nuDevButton {
+.nuAdminButton {
 	margin-bottom: 10px; 
 	background-color: rgb(246, 246, 246); 
 	background-image: none; 
@@ -693,7 +698,7 @@ input[type=range]::-webkit-slider-runnable-track {
 #nuBackBtnButton.nuActionButton {background-color:#28A251;}
 #nuBackBtnButton.nuActionButton:disabled {background-color:#f0f0f0;}
 
-.nuDevButton:hover {
+.nuAdminButton:hover {
 	background-color: #00ADEF;
 	color: white;
 }

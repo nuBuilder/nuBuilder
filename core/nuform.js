@@ -53,19 +53,31 @@ function nuBuildForm(f){
 	window.global_access		= f.global_access == '1';
 	nuFORM.edited				= false;
 	window.nuVerticalTabs 		= false;
-
-	window.nuDisableTabTitle				 	 = false;
-	window.nuDisableDevButtons				 	 = false;
-	window.nuDisableBrowserBackButton		 	 = false;
-	window.nuDisablePreventButtonDblClick 	 	 = false;
-	window.nuDisableOpenPropertiesOnMiddleClick  = false;
-	window.nuDisableStretchColumns	   		 	 = true;
-	window.nuShowBackButton 				 	 = false;
-	window.nuDisablePaginationInfo	   		 	 = false;
-	window.nuPaginationInfoFormat	   		 	 = '';
-	window.nuShowNuBuilderLink					 = true;
-	window.nuShowLoggedInUser					 = false;	
-	window.nuShowBeforeUnloadMessage 			 = true;		
+	
+   	window.nuAdminButtons =
+        {'nuDebug'                           : false, 
+         'nuPHP'                             : true, 
+         'nuRefresh'                         : true, 
+         'nuObjects'                         : true, 
+         'nuProperties'                      : true, 
+         'nuInfo'                            : true, 
+         'nuDB'                              : false, 
+         'nuSetup'                           : false  
+        };    
+       
+    window.nuUXOptions =
+        {'nuEnableBrowserBackButton'         : true,         // Enable the browser's Back button 
+        'nuPreventButtonDblClick'            : true,         // Disable a button for 1 5 s to prevent a double click
+        'nuShowPropertiesOnMiddleClick'      : true,         // Show the Object Properties on middle mouse click
+        'nuAutosizeBrowseColumns'            : true,         // Autosize columns to fit the document width
+        'nuShowBackButton'                   : false,        // Show a Back Button
+        'nuBrowsePaginationInfo'             : 'default',    // Default Format is: '{StartRow} - {EndRow} ' + nuTranslate('of') + ' ' + '{TotalRows}'  
+        'nuShowNuBuilderLink'                : true,         // Show the link to nubuilder com
+        'nuShowLoggedInUser'                 : false,        // Show the logged in User    
+        'nuShowBeforeUnloadMessage'          : true,         // Show or disable "Leave site?" message
+        'nuShowBrowserTabTitle'              : true,         // Show the Form Title in the Browser Tab
+        'nuBrowserTabTitlePrefix'            : 'nuBuilder'   // Prefix in the Browser Tab
+       };
 		
 	nuFORM.scroll				= [];
 	nuSetSuffix(1000);
@@ -178,52 +190,47 @@ function nuBuildForm(f){
     if(nuFormType() == 'edit'){
 		window.nuRESPONSIVE.getStartPositions();
 	}else{	
-		if (nuDisableStretchColumns !== true || nuDocumentID !== parent.nuDocumentID) {				 
+		if (nuUXOptions["nuAutosizeBrowseColumns"] || nuDocumentID !== parent.nuDocumentID) {			 
 			nuResizeBrowseColumns();
 		}
 	}
-	
-	
-    if (nuDisableTabTitle !== true) {		
-		nuSetTabTitle(typeof nuTabTitlePrefix === 'undefined' ? 'nuBuilder': nuTabTitlePrefix );
+				
+    if (nuUXOptions["nuShowBrowserTabTitle"]) {		 
+		nuSetBrowserTabTitle(nuUXOptions["nuBrowserTabTitlePrefix"]);
 	}
+	    
+	if (Object.keys(window.nuAdminButtons).length) {	
+		nuAddAdminButtons();
+	}	
 	
-	if (nuDisableDevButtons !== true) {		
-		nuAddDevButtons();
-	}
-	
-	if (nuDisableBrowserBackButton !== true) {		
-		nuEnableBrowserBackButton();
-	}
-
-	if (nuDisableBrowserBackButton !== true) {		
+	if (nuUXOptions["nuEnableBrowserBackButton"]) {			
 		nuEnableBrowserBackButton();
 	}
 	
-	if (nuDisablePreventButtonDblClick !== true) {		
+	if (nuUXOptions["nuPreventButtonDblClick"]) {	
 		nuPreventButtonDblClick();
 	}
 
-	if (nuShowBackButton === true) {		
+	if (nuUXOptions["nuShowBackButton"]) {	
 		nuAddBackButton();
 	}
 
-	if (nuDisableOpenPropertiesOnMiddleClick !== true) {	
+	if (nuUXOptions["nuShowPropertiesOnMiddleClick"]) {	
 		document.addEventListener("mousedown", nuOpenPropertiesOnMiddleClick, { passive: true} );
 	}
-
-	if (nuDisablePaginationInfo !== true) {	
-		nuShowPaginationInfo(nuPaginationInfoFormat);
+	
+	if ((nuUXOptions["nuBrowsePaginationInfo"])  !== '') {	
+		nuShowBrowsePaginationInfo((nuUXOptions["nuBrowsePaginationInfo"]));
 	}
 	
-	if (! nuShowBeforeUnloadMessage) {
+	if (nuUXOptions["nuShowBeforeUnloadMessage"] == false) {		
 		window.onbeforeunload = () => {}
 	}
 		
-	if (nuShowLoggedInUser === true) {
+	if (nuUXOptions["nuShowLoggedInUser"]) {
 		nuDisplayLoggedInUser();
 	} else
-	if (nuShowNuBuilderLink === false) {
+	if (! nuUXOptions["nuShowNuBuilderLink"]) {
 		$('.nuBuilderLink').remove();
 	}
 		
@@ -278,25 +285,34 @@ function nuAddHomeLogout(){
 		}
 		
 		
-		$('#nuBreadcrumbHolder').append('<span id="nulink" style="position:absolute;right:50px;padding:5px"><a href="https://www.nubuilder.com" class="nuBuilderLink" target="_blank">nuBuilder</a></span>');
+		$('#nuBreadcrumbHolder').append('<span id="nulink" style="position:absolute;right:55px;padding:5px"><a href="https://www.nubuilder.com" class="nuBuilderLink" target="_blank">nuBuilder</a></span>');
+	
+		nuAddIconToBreadCrumb('nuLogout', 'Log out', 16, 'nuLogout()', 'fa fa-external-link');
+		
+		// nuAddIconToBreadCrumb('nuDebug', 'nuDebug Results', 47, "nuForm('nudebug','','','',2);return false;", 'fa fa-bug');
+
+
+	}
+
+}
+
+function nuAddIconToBreadCrumb(id, title,  right, handler, _class) {
 	
 		var l	= document.createElement('div');
-		l.setAttribute('id', 'nuLogout');
+		l.setAttribute('id', id);
 
 		$('#nuBreadcrumbHolder').append(l);
 
-		$('#nuLogout')
+		$('#' + id)
 		.addClass('nuNotBreadcrumb')
 		.css('cursor', "pointer")
 		.css('font-size', 16)
 		.css('position', 'absolute')
-		.css('right', 8)
-		.attr('onclick', "nuLogout()")
-		.html('<i class="fa fa-external-link" style="font-size:20px;"></i>')
-		.attr('title', nuTranslate('Log out'))
-
-	}
-
+		.css('right', right)
+		.attr('onclick', handler)
+		.html('<i class="'+_class +'" style="font-size:20px;"></i>')
+		.attr('title', nuTranslate(title))
+	
 }
 
 function nuAddedByLookup(f){
@@ -1994,7 +2010,7 @@ function nuOptions(p, f, t, access){
 			
 		}else{
 			
-			$('#nuBreadcrumbHolder').prepend('<div id="nuHomeGap" style="width:40px;display: inline-block;"></div>');	
+			$('#nuBreadcrumbHolder').prepend('<div id="nuHomeGap" class="nuHomeGap"></div>');	
 			$('#nuBreadcrumbHolder').prepend(img);	
 			
 			$('#' + id)
@@ -4320,7 +4336,7 @@ function nuPortraitLabelWidth(o){
 
 }
 
-function nuGetPaginationInfo() {
+function nuGetBrowsePaginationInfo() {
 
     r = $("div[id^='nucell_']" + "[id$='_1']").length // Number of Rows per page
 
@@ -4358,17 +4374,16 @@ function nuGetPaginationInfo() {
 
 }
 
-function nuShowPaginationInfo(f) {
+function nuShowBrowsePaginationInfo(f) {
 	
     if (nuFormType() == 'browse') {
         var {
             startRow
             , endRow
             , totalRows
-        } = nuGetPaginationInfo();
-        		
-		// var p = startRow + " - " + endRow + " " + nuTranslate('of') + " " + filteredRows;
-		if (f === '')
+        } = nuGetBrowsePaginationInfo();
+        				
+		if (f === 'default')
 			var f = '{StartRow} - {EndRow} ' + nuTranslate('of') + ' ' + '{TotalRows}';
 		}
 		
@@ -4426,4 +4441,36 @@ function nuPrintEditForm(hideObjects, showObjects) {
     setTimeout(function(){
         $(window).one('mousemove', window.onafterprint);
     }, 1);
+}
+
+function nuAddBrowseAdditionalNavButtons() {
+    
+    if (nuFormType() == 'browse') {
+
+        var disabled = {
+            'opacity': '0.3',
+            'pointer-events': 'none'
+        };
+
+        var currentPage = Number($('#browsePage').val());
+        var lastPage = nuCurrentProperties().pages;
+
+        var html = '<span id="nuFirst" class="nuBrowsePage" style="font-size: 15px;"><i class="fa fa-step-backward ml-5 mr-5" onclick="nuGetPage(0)">&nbsp;&nbsp;&nbsp;&nbsp;</i></span>';
+        $(html).insertBefore("#nuLast");
+
+        html = '<span id="nuEnd" class="nuBrowsePage" style="font-size: 15px;">&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-step-forward ml-5 mr-5" onclick="nuGetPage(' + lastPage + ')"></i></span>';
+        $(html).insertAfter("#nuNext");
+
+
+        if (currentPage == 1) {
+            $('#nuFirst').css(disabled);
+            $('#nuLast').css(disabled);
+        }
+
+        if (currentPage == lastPage) {
+            $('#nuNext').css(disabled);
+            $('#nuEnd').css(disabled);
+        }
+    }
+
 }

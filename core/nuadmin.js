@@ -1,5 +1,3 @@
-// Developer Buttons
-
 function nuEditPHP(type) {
     nuForm('nuphp', nuCurrentProperties().form_id + '_' + type, 'justphp', '', 2);	
 }
@@ -20,13 +18,13 @@ function nuOpenDatabase() {
 	window.open('nupmalogin.php?sessid='+window.nuSESSION);
 }
 
-function nuAddDevButton(i, v, f, t) {
+function nuAddAdminButton(i, v, f, t) {
 	
 	if (typeof t === 'undefined') {
 		var t = '';
 	}
 	
-    var button = "<input id='nu" + i + "Button' type='button' type='button' title='" + nuTranslate(t) + "' class='nuActionButton' value='" + nuTranslate(v) + "' onclick='" + f + "'>";
+    var button = "<input id='nu" + i + "Button' type='button' type='button' title='" + nuTranslate(t) + "' class='nuActionButton nuAdminButton' value='" + nuTranslate(v) + "' onclick='" + f + "'>";
     $('#nuActionHolder').prepend(button);
 	
 }
@@ -55,39 +53,45 @@ function nuGetDevMode() {
   return false;
 }
 
-function nuAddDevButtons() {
+function nuAddAdminButtons() {
 
     if (global_access) {
-        var ft = nuCurrentProperties().form_type;
+		
+        
+		var ft = nuCurrentProperties().form_type;
 		if (ft === null) return;
+		
+		var devMode = nuGetDevMode();
 		
         var b = ft.indexOf("browse") >= 0;
         var e = ft.indexOf("edit") >= 0;
         var l = ft.indexOf("launch") >= 0;
 
+		if (nuAdminButtons["nuDebug"] || devMode) nuAddDebugIcon();
+		
         $('#nuActionHolder').css('height', '50px');
         
-        nuAddDevButton("DevBtnFormInfo", "Info", 'nuShowFormInfo();', nuTranslate('Form Info'));
-        
-		var devMode = nuGetDevMode();
+		if (nuAdminButtons["nuInfo"]) nuAddAdminButton("AdminFormInfo", "Info", 'nuShowFormInfo();', nuTranslate('Form Info'));
+
+		if (nuFormType() !== 'browse') {			
+			if (nuAdminButtons["nuDB"] || devMode)  nuAddAdminButton("AdminDB", "DB", 'nuStartDatabaseAdmin();',nuTranslate('Database'));
+			if (nuAdminButtons["nuSetup"] || devMode) nuAddAdminButton("AdminSetup", "Setup", 'nuOpenSetup();',nuTranslate('Setup'));			
+		}
+
 		var code = nuCurrentProperties().form_code;
 		if (! code.startsWith('nu') || devMode) { 		
 		
-			if (devMode && nuFormType() !== 'browse') {			
-				nuAddDevButton("DevBtnDB", "DB", 'nuStartDatabaseAdmin();',nuTranslate('Database'));
-				nuAddDevButton("DevBtnSetup", "Setup", 'nuOpenSetup();',nuTranslate('Setup'));
-			}	
-					
-			nuAddDevButton("DevBtnObjectList", "Obj", 'nuOpenCurrentObjectList();',nuTranslate('Object List'));
-			nuAddDevButton("DevBtnProperties", "Prop", 'nuOpenCurrentFormProperties();',nuTranslate('Form Properties'));
+			
+			if (nuAdminButtons["nuObjects"])  nuAddAdminButton("AdminObjectList", "Obj", 'nuOpenCurrentObjectList();',nuTranslate('Object List'));
+			if (nuAdminButtons["nuProperties"])  nuAddAdminButton("AdminProperties", "Prop", 'nuOpenCurrentFormProperties();',nuTranslate('Form Properties'));
 		
-			if (e || l) { nuAddDevButton("DevBtnBE", "BE", 'nuEditPHP("BE");','Before Edit'); }
-			if (b) { nuAddDevButton("DevBtnBB", "BB", 'nuEditPHP("BB");','Before Browse'); }
-			if (e) { nuAddDevButton("DevBtnBS", "BS", 'nuEditPHP("BS");','Before Save'); }
-			if (e) { nuAddDevButton("DevBtnAS", "AS", 'nuEditPHP("AS");','After Save'); }
+			if (e || l) { nuAddAdminButton("AdminBE", "BE", 'nuEditPHP("BE");','Before Edit'); }
+			if (b) { nuAddAdminButton("AdminBB", "BB", 'nuEditPHP("BB");','Before Browse'); }
+			if (e) { nuAddAdminButton("AdminBS", "BS", 'nuEditPHP("BS");','Before Save'); }
+			if (e) { nuAddAdminButton("AdminAS", "AS", 'nuEditPHP("AS");','After Save'); }
 		}
 				
-		if (nuFormType() !== 'browse') nuAddActionButton('DevBtnRefresh', nuTranslate('Refresh'), 'nuGetBreadcrumb()');
+		if (nuFormType() !== 'browse' && nuAdminButtons["nuRefresh"]) nuAddActionButton('AdminRefresh', nuTranslate('Refresh'), 'nuGetBreadcrumb()');
 
         var frame = parent.$('#nuDragDialog iframe')
         frame.css('height', frame.cssNumber("height") + 50);
@@ -95,8 +99,8 @@ function nuAddDevButtons() {
         var dragDialog = parent.$('#nuDragDialog')
         dragDialog.css('height', dragDialog.cssNumber("height") + 50);
 
-        $("input[type='button'][id^='nuDevBtn']").not('#nuDevBtnRefreshButton').addClass('nuDevButton');
-        $("<br>").insertAfter($("#nuDevBtnFormInfoButton"));
+		//    $("input[type='button'][id^='nuAdmin']").not('#nuAdminRefreshButton').addClass('nuAdminButton');
+        $("<br>").insertAfter($("#nuAdminFormInfoButton"));
     }
 
 }
@@ -183,6 +187,27 @@ function nuSetSnippetFormFilter(custom, setup, sql) {
 	nuSetProperty('IS_SQL',sql);
 
 }
+
+
+function nuOpenNuDebug(w) {
+	nuForm('nudebug','','','',w);
+}
+
+function nuAddDebugIcon() {
+	
+	var h = "<div id='nuSearchButton' title='nuDebug Results' style='font-size: 16px; display: inline-block; cursor : pointer' onclick='nuOpenNuDebug(2)'><i class='fa fa-bug'></i>&nbsp;" + '' + "</div>";
+
+	 var fragment = nuCreateAppendHTML(h);
+	if (window.nuFORM.breadcrumbs.length == 1) { 
+	  var options = $('#nuBreadcrumbHolder').find("[id$=nuOptions]");
+	  $(fragment).insertAfter(options); 
+	} else 
+	{
+	  $(fragment).insertBefore("#nuBreadcrumb0");  
+	}
+	
+}
+
 
 
 
