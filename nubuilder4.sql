@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 23, 2020 at 02:13 PM
+-- Generation Time: Dec 23, 2020 at 04:13 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.2
 
@@ -493,7 +493,7 @@ INSERT INTO `zzzzsys_format` (`zzzzsys_format_id`, `srm_type`, `srm_format`, `sr
 ('nu59e28f061a779da', 'Number', '$ 1,000.00', '[\"$\",\",\",\".\",\"2\"]'),
 ('nu5d8a9b303b55b6d', 'Date', 'dd-mm-yy', NULL),
 ('nu5d8a9b47ac4f5ae', 'Number', ' 1000.00', '[\"\",\"\",\".\",2]'),
-('5fdfc72e7021ccf', 'Date', 'yyyy-mm-dd', NULL);
+('nu5fdfc72e7021ccf', 'Date', 'yyyy-mm-dd', NULL);
 
 -- --------------------------------------------------------
 
@@ -512,8 +512,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2020.12.23.02'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2020.12.23.02');
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2020.12.23.03'),
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2020.12.23.03');
 
 -- --------------------------------------------------------
 
@@ -1147,7 +1147,7 @@ CREATE TABLE `zzzzsys_setup` (
 --
 
 INSERT INTO `zzzzsys_setup` (`zzzzsys_setup_id`, `set_time_out_minutes`, `set_zzzzsys_timezone_id`, `set_language`, `set_smtp_username`, `set_smtp_password`, `set_smtp_host`, `set_smtp_from_address`, `set_smtp_from_name`, `set_smtp_port`, `set_smtp_use_authentication`, `set_header`, `set_denied`) VALUES
-('1', 480, '5281a1220508372', '', '1', '1', '1', '1', '1', 1, '1', 'function nuHeaderTest() {\n    console.log(\'Functions placed here before a closing script tag are available anywhere in nuBuilder Forte\');\n}\n\n// The nuOnLoad() will be run after each Browse and Edit Form loads. \nfunction nuOnLoad() {\n\n    // Options: Uncomment to override the defaults.\n   \n   \nwindow.nuAdminButtons = {};	\n/*\n    window.nuAdminButtons =\n        {\'nuDebug\'                           : false, \n         \'nuPHP\'                             : true, \n         \'nuRefresh\'                         : true, \n         \'nuObjects\'                         : true, \n         \'nuProperties\'                      : true, \n         \'nuInfo\'                            : true, \n         \'nuDB\'                              : false, \n         \'nuSetup\'                           : false  \n        };    \n       \n    window.nuUXOptions =\n        {\'nuEnableBrowserBackButton\'         : true,         // Enable the browser\'s Back button \n        \'nuPreventButtonDblClick\'            : true,         // Disable a button for 1 5 s to prevent a double click\n        \'nuShowPropertiesOnMiddleClick\'      : true,         // Show the Object Properties on middle mouse click\n        \'nuAutosizeBrowseColumns\'            : true,         // Autosize columns to fit the document width\n        \'nuShowBackButton\'                   : false,        // Show a Back Button\n        \'nuBrowsePaginationInfo\'             : \'default\',    // Default Format is: \'{StartRow} - {EndRow} \' + nuTranslate(\'of\') + \' \' + \'{TotalRows}\'  \n        \'nuShowNuBuilderLink\'                : true,         // Show the link to nubuilder com\n        \'nuShowLoggedInUser\'                 : false,        // Show the logged in User    \n        \'nuShowBeforeUnloadMessage\'          : true,         // Show or disable \"Leave site?\" message\n        \'nuShowBrowserTabTitle\'              : true,         // Show the Form Title in the Browser Tab\n        \'nuBrowserTabTitlePrefix\'            : \'nuBuilder\'   // Prefix in the Browser Tab\n       };\n*/    \n    \n}\n\n</script>\n\n\n<style>    \n\n   //	.nuActionButton {background-color:#0073aa;}\n\n</style>\n\n\n<script>\n\n', '1');
+('1', 480, '5281a1220508372', '', '1', '1', '1', '1', '1', 1, '1', 'function nuHeaderTest() {\n    console.log(\'Functions placed here before a closing script tag are available anywhere in nuBuilder Forte\');\n}\n\n// The nuOnLoad() will be run after each Browse and Edit Form loads. \nfunction nuOnLoad() {\n\n    // Options: Uncomment to override the defaults.\n   \n   	\n/*\n    window.nuAdminButtons =\n        {\'nuDebug\'                           : false, \n         \'nuPHP\'                             : true, \n         \'nuRefresh\'                         : true, \n         \'nuObjects\'                         : true, \n         \'nuProperties\'                      : true, \n         \'nuInfo\'                            : true, \n         \'nuDB\'                              : false, \n         \'nuSetup\'                           : false  \n        };    \n       \n    window.nuUXOptions =\n        {\'nuEnableBrowserBackButton\'         : true,         // Enable the browser\'s Back button \n        \'nuPreventButtonDblClick\'            : true,         // Disable a button for 1 5 s to prevent a double click\n        \'nuShowPropertiesOnMiddleClick\'      : true,         // Show the Object Properties on middle mouse click\n        \'nuAutosizeBrowseColumns\'            : true,         // Autosize columns to fit the document width\n        \'nuShowBackButton\'                   : false,        // Show a Back Button\n        \'nuBrowsePaginationInfo\'             : \'default\',    // Default Format is: \'{StartRow} - {EndRow} \' + nuTranslate(\'of\') + \' \' + \'{TotalRows}\'  \n        \'nuShowNuBuilderLink\'                : true,         // Show the link to nubuilder com\n        \'nuShowLoggedInUser\'                 : false,        // Show the logged in User    \n        \'nuShowBeforeUnloadMessage\'          : true,         // Show or disable \"Leave site?\" message\n        \'nuShowBrowserTabTitle\'              : true,         // Show the Form Title in the Browser Tab\n        \'nuBrowserTabTitlePrefix\'            : \'nuBuilder\'   // Prefix in the Browser Tab\n       };\n*/    \n    \n}\n\n</script>\n\n\n<style>    \n\n   //	.nuActionButton {background-color:#0073aa;}\n\n</style>\n\n\n<script>\n\n', '0');
 
 -- --------------------------------------------------------
 

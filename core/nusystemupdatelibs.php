@@ -219,23 +219,23 @@ function nuRemoveNuRecords(){
 	nuRunQuery($s);
 
 	//-- delete all note with ids that start with 'nu'       
-	$s  =  "DELETE FROM sys_zzzsys_note WHERE zzzzsys_note_id LIKE 'nu%'";  				  							
+	$s  =  "DELETE FROM sys_zzzzsys_note WHERE zzzzsys_note_id LIKE 'nu%'";  				  							
 	nuRunQuery($s);
 	
 	//-- delete all note categories with ids that start with 'nu'       
-	$s  =  "DELETE FROM sys_note_category WHERE zzzzsys_note_category_id LIKE 'nu%'";  				  							
+	$s  =  "DELETE FROM sys_zzzzsys_note_category WHERE zzzzsys_note_category_id LIKE 'nu%'";  				  							
 	nuRunQuery($s);
 
 	//-- delete all snippets with ids that start with 'nu'       
-	$s  =  "DELETE FROM sys_code_snippet WHERE zzzzsys_code_snippet_id LIKE 'nu%'";  				  							
+	$s  =  "DELETE FROM sys_zzzzsys_code_snippet WHERE zzzzsys_code_snippet_id LIKE 'nu%'";  				  							
 	nuRunQuery($s);
 	
 	//-- delete all cloner rows with ids that start with 'nu'       
-	$s  =  "DELETE FROM sys_cloner WHERE zzzzsys_cloner_id LIKE 'nu%'";  				  							
+	$s  =  "DELETE FROM sys_zzzzsys_cloner WHERE zzzzsys_cloner_id LIKE 'nu%'";  				  							
 	nuRunQuery($s);	
 	
 	//-- delete all info rows with ids that start with 'nu'       
-	$s  =  "DELETE FROM zzzzsys_info WHERE zzzzsys_info_id LIKE 'nu%'";  				  							
+	$s  =  "DELETE FROM sys_zzzzsys_info WHERE zzzzsys_info_id LIKE 'nu%'";  				  							
 	nuRunQuery($s);	
 
 	//-- delete all timezones

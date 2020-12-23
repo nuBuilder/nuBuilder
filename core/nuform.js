@@ -200,6 +200,7 @@ function nuBuildForm(f){
 	}
 	    
 	if (Object.keys(window.nuAdminButtons).length) {	
+	
 		nuAddAdminButtons();
 	}	
 	

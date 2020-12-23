@@ -45,7 +45,7 @@ function nuShowFormInfo() {
 function nuGetDevMode() {
   
   var d = localStorage.getItem("nuDevMode");
-  if (d === '1' || d === true && window.global_access) {
+  if ((d === '1' || d === true) && window.global_access) {
 	  nuSetProperty('nuDevMode', '1', true);
 	  return true;
   }
