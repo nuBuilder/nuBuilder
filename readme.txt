@@ -1,7 +1,7 @@
 === nuBuilder Forte ===
-Name: nuBuilder 4 - Standalone
+Name: nuBuilder 4
 
-Contributors: Steven Copley, Ap.Muthu, Janusz, kev1n, Neil
+Contributors: Steven Copley, kev1n, Janusz, Neil, Ap.Muthu
 Donate link: https://www.nubuilder.com/#donate
 License: GPLv3
 Home Page: https://www.nubuilder.com
@@ -63,7 +63,6 @@ nuBuilder is a enterprise level application builder but with no limitations on d
 3. Edit nuconfig.php to set your database credentials and globeadmin credentials
 
 Detailed installation instructions can be found here:  https://github.com/smalos/nuBuilder4-Code-Library/wiki/Installing-nuBuilder
-
 
 == Documentation ==
 

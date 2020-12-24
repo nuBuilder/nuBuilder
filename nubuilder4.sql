@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 23, 2020 at 04:13 PM
+-- Generation Time: Dec 24, 2020 at 06:47 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.2
 
@@ -53,6 +53,13 @@ CREATE TABLE `zzzzsys_access_form` (
   `slf_print_button` varchar(1) DEFAULT NULL,
   `slf_data_mode` varchar(2) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `zzzzsys_access_form`
+--
+
+INSERT INTO `zzzzsys_access_form` (`zzzzsys_access_form_id`, `slf_zzzzsys_access_id`, `slf_zzzzsys_form_id`, `slf_add_button`, `slf_save_button`, `slf_delete_button`, `slf_clone_button`, `slf_new_button`, `slf_print_button`, `slf_data_mode`) VALUES
+('5fe4297283f635c', '5fe2ceed176ce09', 'nufile', '1', '0', '1', '1', NULL, '1', NULL);
 
 -- --------------------------------------------------------
 
@@ -512,8 +519,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2020.12.23.03'),
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2020.12.23.03');
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2020.12.24.01'),
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2020.12.24.01');
 
 -- --------------------------------------------------------
 
@@ -1227,8 +1234,8 @@ INSERT INTO `zzzzsys_tab` (`zzzzsys_tab_id`, `syt_zzzzsys_form_id`, `syt_title`,
 ('nu5bad6cb3737e773', 'nufrlaunch', 'Main', 10, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Report_Builder\');'),
 ('nu5bad6cb373c384f', 'nusample', 'Inputs', 10, ''),
 ('nu5bad6cb37405d73', 'nusamplesubformform', 'Main', 10, ''),
-('nufastforms', 'nuuserhome', 'Fast Forms', 10, NULL),
 ('nu5bad6cb374207e3', 'nuuserhome', 'Main', 20, ''),
+('nufastforms', 'nuuserhome', 'Fast Forms', 10, NULL),
 ('nu5bad6cb37434d3a', 'nulaunchform', 'Forms', 10, ''),
 ('nu5bad6cb374482e8', 'nutablookup', 'Tabs', 10, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Forms#Tabs_.28Subform.29\');'),
 ('nu5f711b9343afdbd', 'nucsvtransfer', 'Transfer', 10, 'window.open(\'https://wiki.nubuilder.net/nubuilderforte/index.php/CSV_Transfer\');'),

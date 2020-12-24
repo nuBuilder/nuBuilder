@@ -1,8 +1,8 @@
 # nuBuilder 4
 
-* ***Name:*** nuBuilder 4 - Standalone
+* ***Name:*** nuBuilder 4
 * ***This Fork:*** https://github.com/smalos/nubuilder4
-* ***Contributors:*** Steven Copley, Ap.Muthu, smalos
+* ***Contributors:*** Steven Copley, kev1n, Janusz, Neil, Ap.Muthu
 * ***Donate link:*** https://www.nubuilder.com/#donate
 * ***License:*** [GPLv3](https://www.gnu.org/licenses/old-licenses/gpl-3.0.html)
 * ***Home Page:*** https://www.nubuilder.com
