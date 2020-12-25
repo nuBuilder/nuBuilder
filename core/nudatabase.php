@@ -90,7 +90,7 @@ $trace
 
 
 function db_is_auto_id($table, $pk){
-
+	
 	$s		= "SHOW COLUMNS FROM `$table` WHERE `Field` = '$pk'";
 	$t      = nuRunQuery($s);   									//-- mysql's way of checking if its an auto-incrementing id primary key
 	$r      = db_fetch_object($t);
@@ -103,7 +103,7 @@ function db_fetch_array($o){
 
 	if (is_object($o)) {
 		return $o->fetch(PDO::FETCH_ASSOC);
-	} else {
+	} else {		
 		return array();
 	}
 

@@ -21,7 +21,7 @@ class nubuilder_session_data {
 	'JQ_PATH'				=> '',
 	'SESSION_ID'			=> null,
 	'SESSION_TIMESTAMP'		=> null,
-	'IsDemo'				=> null,
+	'IsDemo'				=> false,
 	'translation'			=> null);
 
 	function __construct() {

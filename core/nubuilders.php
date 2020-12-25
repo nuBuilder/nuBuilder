@@ -3,7 +3,7 @@
 
 function nuBuildFastReport(){
 
-	if($_SESSION['IsDemo']){
+	if($_SESSION['nubuilder_session_data']['IS_DEMO']){
 		
 		nuDisplayError('Not available in the Demo...');
 		return;
@@ -62,9 +62,8 @@ function nuBuildFastReport(){
 }
 
 function nuBuildFastForm($table, $form_type){
-
 	
-	if($_SESSION['IsDemo']){
+	if($_SESSION['nubuilder_session_data']['IS_DEMO']){
 		
 		nuDisplayError('Not available in the Demo...');
 		return;

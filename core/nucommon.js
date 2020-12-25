@@ -396,14 +396,16 @@ function nuCreateDialog(t){
 		this.startX = event.clientX;
 		this.startY = event.clientY;
 		
-		if(event.buttons == 1){					//} && event.target.id == 'dialogTitleWords'){
+		if(event.buttons == 1){	
 			this.moveDialog(event);
 		}
 		
+		var dir = event.target.parentElement.baseURI.includes('nureportdesigner') ? '' : 'core/';
+		
 		if(event.target.id == 'dialogClose'){
-			$('#dialogClose').attr("src","core/graphics/close_red.png"); 
+			$('#dialogClose').attr("src",dir + "graphics/close_red.png"); 
 		}else{
-			$('#dialogClose').attr("src","core/graphics/close.png"); 
+			$('#dialogClose').attr("src",dir + "graphics/close.png"); 
 		}
 		
 	}
@@ -460,7 +462,8 @@ function nuCreateDialog(t){
 
 	this.createDialog = function(l, t, w, h, title) {
 
-		nuDialog.dialog = this.createDialog.caller.name;
+		var callerName = this.createDialog.caller.name; 
+		nuDialog.dialog = callerName;
 		
 		var e = document.createElement('div');
 		
@@ -470,19 +473,21 @@ function nuCreateDialog(t){
 
 		$('body').append('<div id="nuModal" style="height:' + window.innerHeight + 'px"></div>')
 		.append(e);
-
+		
+		var subDir = callerName == 'nuPopup' ? 'core/' : '';
+		debugger;
 		$('#nuDragDialog').addClass('nuDragDialog nuDragNoSelect')
 		.css({
 			'left'				: l, 
 			'top'				: t, 
 			'width'				: w, 
 			'height'			: h, 
-			'background-color'	: '#ffffff3f', 
+			'background-color'	: '#e9e8e8', 
 			'z-index'			: 3000, 
 			'position'			: 'absolute',
 			'visibility'		: 'hidden'
 		})
-		.html('<div id="dialogTitle" class="nuDialogTitle"><div id="dialogTitleWords" style="padding-top: 9px;height:30px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+translation+'</div><img id="dialogClose" src="core/graphics/close.png" style="position:absolute; top:2px; left:0px"></div>')
+		.html('<div id="dialogTitle" class="nuDialogTitle"><div id="dialogTitleWords" style="padding-top: 9px;height:30px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+translation+'</div><img id="dialogClose" src="'+subDir+'graphics/close.png" style="position:absolute; top:2px; left:0px"></div>')
 
 		$('body')
 		.on('mousemove.popup', 	function(event){nuDialog.move(event);})
@@ -1698,6 +1703,7 @@ function nuDragTitleEvents(){
     $('.nuBrowseTitle').on('touchcancel.nuresizecolumn',function(event)   {nuEndBrowseResize(event);});
    
 }
+
 
 
 function nuGetColumWidths(){

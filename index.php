@@ -82,6 +82,7 @@ nuCSSIndexInclude('core/libs/quill/themes/quill.snow.css');
 
 <script>
 
+
 function nuValidCaller(o){
 	
 	if(o === null){return false;}

@@ -112,29 +112,33 @@ function nuUpdateSystemRecords(){
 			$newt	= $ts["$table"]['types'];
 			$old	= $ts["sys_$table"]['names'];
 			$oldt	= $ts["sys_$table"]['types'];
-			$ofield	= $old[$c];
-			$nfield	= $new[$c];
-			$otype	= $oldt[$c];
-			$ntype	= $newt[$c];
-
-			if($ofield != $nfield){
-				
-				$sql= "ALTER TABLE sys_$table ADD COLUMN $nfield $ntype $lfield";
-				nuRunQuery($sql);
-				$ts	= nuBuildTableSchema();
-				//-- start from the beginning again
-				$c	= -1;					
-				
-			}else if($otype != $ntype){
-				
-				$sql= "ALTER TABLE sys_$table MODIFY COLUMN $nfield $ntype";
-				nuRunQuery($sql);
-			}
 			
-			if($ofield == ''){
-				$lfield	= '';
-			}else{
-				$lfield	= "AFTER $ofield";
+			if(nuObjKey($old,$c, false) && nuObjKey($new,$c, false)){
+				
+				$ofield	= $old[$c];
+				$nfield	= $new[$c];
+				$otype	= $oldt[$c];
+				$ntype	= $newt[$c];
+
+				if($ofield != $nfield){
+					
+					$sql= "ALTER TABLE sys_$table ADD COLUMN $nfield $ntype $lfield";
+					nuRunQuery($sql);
+					$ts	= nuBuildTableSchema();
+					//-- start from the beginning again
+					$c	= -1;					
+					
+				}else if($otype != $ntype){
+					
+					$sql= "ALTER TABLE sys_$table MODIFY COLUMN $nfield $ntype";
+					nuRunQuery($sql);
+				}
+				
+				if($ofield == ''){
+					$lfield	= '';
+				}else{
+					$lfield	= "AFTER $ofield";
+				}
 			}
 		}
 	}
@@ -145,13 +149,17 @@ function nuAddNewSystemTables(){
 	$ts			= nuBuildTableSchema();
 	foreach ($ts as $k => $v) {
 		if(substr($k,0,8) == 'zzzzsys_'){
-			$v	= $ts["sys_$k"]['valid'];
-			if($v == ''){
-				$sql	= "CREATE TABLE sys_$k SELECT * FROM $k";
-				nuRunQuery($sql);
+			
+			if(nuObjKey($ts,"sys_$k", false)){
+				$v	= $ts["sys_$k"]['valid'];
+				if($v == ''){
+					$sql	= "CREATE TABLE sys_$k SELECT * FROM $k";
+					nuRunQuery($sql);
+				}
 			}
 		}
 	}
+	
 	nuRunQuery("ALTER TABLE `zzzzsys_object` CHANGE `sob_input_count` `sob_input_count` BIGINT(20) NULL DEFAULT '0';");
 	nuRunQuery("ALTER TABLE `zzzzsys_object` CHANGE `sob_all_order` `sob_all_order` INT(11) NULL DEFAULT '0';");
 

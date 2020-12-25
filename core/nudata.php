@@ -22,10 +22,10 @@ function nuValidateSubforms(){
 			';												//-- get Form
 		$t	= nuRunQuery($s, [$sf->object_id]);
 		$r	= db_fetch_row($t);
-		$f	= $r[0]==''?$sf->object_id:$r[0];
-		$l	= $r[1];
+		$f	= nuObjKey($r,0,'') == '' ? $sf->object_id : nuObjKey($r,0);
+		$l	= nuObjKey($r,1);
 		
-		if($r[2] != 1){										//-- not readonly
+		if(nuObjKey($r,1,'') != 1){										//-- not readonly
 				
 			$s	= 'SELECT sob_all_id AS id, sob_all_label AS label, sob_all_validate AS validate FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id  = ? ';			//-- get Objects
 			$t	= nuRunQuery($s, [$f]);
@@ -40,8 +40,8 @@ function nuValidateSubforms(){
 				for($I = 1 ; $I < count($sf->fields) ; $I++){
 					
 					$fld			= $sf->fields[$I];
-					$val			= $a[$fld];
-					$label			= '<b>' . $L[$fld] . '</b>';
+					$val			= nuObjKey($a,$fld);
+					$label			= '<b>' . nuObjKey($L,$fld) . '</b>';
 					$notDeleted 	= $sf->deleted[$i] == 0;
 					$slabel			= $l == '' ? '' : "($l)";
 					$noz			= $i + 1;
@@ -130,10 +130,14 @@ function nuUpdateDatabase(){
 		return;	
 	}
 	
+	$form_id		= $_POST['nuHash']['form_id'];		
 	$nudata			= $_POST['nuHash']['nuFORMdata'];
 	$nuMainID		= $_POST['nuHash']['record_id'];
 	$form_id		= $_POST['nuHash']['form_id'];
-	$form_type		= nuGetFormProperties($form_id)->sfo_type;
+	
+	$formProp = 	nuGetFormProperties($form_id);
+	
+	$form_type		= $formProp->sfo_type;
 	$nuDelAll		= $_POST['nuHash']['deleteAll'];
 
 		
@@ -154,9 +158,10 @@ function nuUpdateDatabase(){
 	$EFid			= $nudata[0]->object_id;
 	$cts			= nuGetJSONData('clientTableSchema');
 	$user			= $_POST['nuHash']['USER_ID'];
-
+	$S = [];
+	
 	for($d = 0 ; $d < count($nudata) ; $d++){
-		
+	
 		$sf			= $nudata[$d];
 		$action		= $sf->action;
 		$rows		= $sf->rows;
@@ -169,13 +174,17 @@ function nuUpdateDatabase(){
 		$fv			= $_POST['nuHash']['record_id'];
 		$auto		= nuAutoNumbers($sf->object_id);
 		
-		if(is_array($cts[$table]['names'])){
-			$CTSTN = $cts[$table]['names'];
+		$tableCts =  nuObjKey($cts, $table);
+		
+		$names = nuObjKey($tableCts,'names');
+		
+		if($names != null && is_array($names)){
+			$CTSTN = $names;
 		}else{
 			$CTSTN = array();
 		}
 		
-		$log		= in_array($table . '_nulog', $CTSTN);
+		$log		= in_array($table . '_nulog', $CTSTN);		
 		
 		for($r = 0 ; $r < count($rows) ; $r++){
 			
@@ -229,8 +238,8 @@ function nuUpdateDatabase(){
 
 					if($edit[$R] == 1 or $isAN){														//-- has been edited
 
-						if($cts[$table] == ''){															//-- not valid table name
-
+						if(nuObjKey($cts,$table,'') == ''){															//-- not valid table name
+							
 							if($form_type == 'launch'){
 								nuDisplayError(nuTranslate("Launch Forms Cannot Be Saved"));
 							}else{
@@ -298,8 +307,9 @@ function nuUpdateDatabase(){
 						}
 						
 					}else{
-						
+												
 						$sql		= "UPDATE $table SET $fs WHERE `$pk` = '$pv';";
+						
 						$S[]		= $sql;
 						
 						if($log){
@@ -376,6 +386,7 @@ function nuUpdateDatabase(){
 
 	if(count($_POST['nuErrors']) > 0){return;}
 
+	
 	if($S != null){
 
 		for($i = 0 ; $i < count($S) ; $i++){
@@ -423,7 +434,7 @@ function nuUpdateDatabase(){
 
 
 function nuBuildPrimaryKey($t, $p){
-	
+		
 	$autopk	= db_is_auto_id($t, $p);
 
 	if($autopk){
@@ -693,8 +704,7 @@ function nuSubformObject($id){
 
 function nuCloneForm(){
 	
-	return;
-	//nudebug(nuhash());
+	return;	
 
 	$f 		= nuHash()['CLONED_RECORD_ID'];
 	$TT		= nuTT();
@@ -780,11 +790,12 @@ function nuDeleteForm($f){
 function nuGetFile(){
 	
 	$f		= $_POST['nuSTATE']['fileCode'];
+	
 	$s		= "SELECT * FROM zzzzsys_file WHERE sfi_code = ? ";
 	$t		= nuRunQuery($s, [$f]);
 	$r		= db_fetch_object($t);
 	
-	return $r->sfi_json;
+	return db_num_rows($t) == 1 ? $r->sfi_json : null;
 	
 }
 

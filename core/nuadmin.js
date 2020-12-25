@@ -195,7 +195,7 @@ function nuOpenNuDebug(w) {
 
 function nuAddDebugIcon() {
 	
-	var h = "<div id='nuSearchButton' title='nuDebug Results' style='font-size: 16px; display: inline-block; cursor : pointer' onclick='nuOpenNuDebug(2)'><i class='fa fa-bug'></i>&nbsp;" + '' + "</div>";
+	var h = "<div id='nuDebugButton' title='nuDebug Results' style='font-size: 16px; display: inline-block; cursor : pointer' onclick='nuOpenNuDebug(2)'><i class='fa fa-bug'></i>&nbsp;" + '' + "</div>";
 
 	 var fragment = nuCreateAppendHTML(h);
 	if (window.nuFORM.breadcrumbs.length == 1) { 

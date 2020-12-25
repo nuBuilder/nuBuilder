@@ -24,7 +24,7 @@ function nuBeforeBrowse($f){
 }
 
 function nuBeforeEdit($FID, $RID){
-
+	
 	$r						= nuFormProperties($FID);
     $GLOBALS['EXTRAJS']		= '';
 	$ct						= $_POST['nuSTATE']['call_type'];
@@ -48,12 +48,13 @@ function nuBeforeEdit($FID, $RID){
 			}				
 		}
 		*/
-
-		if($cts[$r->sfo_table] !== NULL){
+		
+		if(( nuObjKey($cts,$r->sfo_table) != NULL &&  $_POST['nuSTATE']['record_id'] != '' )){
 				
 			if(in_array($logfield, $cts[$r->sfo_table]['names'])){								//-- valid log field name
 				
 				$S				= "SELECT $logfield FROM `$r->sfo_table` WHERE `$r->sfo_primary_key` = ? ";
+				
 				$T				= nuRunQuery($S, [$RID]);
 				$J				= db_fetch_row($T)[0];
 				$jd				= json_decode($J);
@@ -101,7 +102,6 @@ function nuFormCode($f){
 	
 }
 
-//function nuGetFormObject($F, $R, $OBJS, $P = new stdClass){
 function nuGetFormObject($F, $R, $OBJS){
 	
     $tabs 			= nuBuildTabList($F);
@@ -113,14 +113,14 @@ function nuGetFormObject($F, $R, $OBJS){
 		$A 			= [];
 	}else{
 		
-		$s 			= "Select * From `$f->table` Where `$f->primary_key` = '$R'";
-		$t 			= nuRunQuery($s);
-		$A 			= db_fetch_array($t);
+		$s	= "Select * From `$f->table` Where `$f->primary_key` = '$R'";
+		$t	= nuRunQuery($s);
+		$A 	= db_fetch_array($t);
 		
 	}
 
 
-	$s 				= "
+	$s = "
  
     SELECT * 
     FROM zzzzsys_form
@@ -131,11 +131,14 @@ function nuGetFormObject($F, $R, $OBJS){
 
     ";
 	
+	$t 							= nuRunQuery($s, array($F));
+	
+	$cloneable					= array();
+	$a 							= array();
+	
 	if($R != ''){
 		
 		$t 							= nuRunQuery($s, array($F));
-		$a 							= array();
-		$cloneable					= array();
 
 		while($r = db_fetch_object($t)){
 			
@@ -148,11 +151,11 @@ function nuGetFormObject($F, $R, $OBJS){
 			if($R == '-1'){
 				$o->value			= '';//nuGetSQLValue($r->sob_all_default_value_sql);
 			}else{
-				$o->value			= $A[$r->sob_all_id];
+				$o->value			= nuObjKey($A,$r->sob_all_id,'');
 			}
 
 			if($r->sob_all_type == 'calc'){
-				
+								
 				$o->formula			= $r->sob_calc_formula;
 				$o->format			= $r->sob_calc_format;
 				$o->align 			= $r->sob_all_align;
@@ -191,11 +194,16 @@ function nuGetFormObject($F, $R, $OBJS){
 				}
 
 				if($r->sob_all_type == 'display'){
-					
+								
 					$disS			= nuReplaceHashVariables($r->sob_display_sql);
 					$disT			= nuRunQuery($disS);
-					$disR			= db_fetch_row($disT);
-					$o->value		= $disR[0];
+					
+					if (db_num_rows($disT) >= 1) {
+						$disR			= db_fetch_row($disT);
+						$o->value		= $disR[0];
+					} else {
+						$o->value	= null;
+					}
 					
 				}
 
@@ -209,28 +217,32 @@ function nuGetFormObject($F, $R, $OBJS){
 					$o->html 		= '';
 					$htmljs			= addSlashes($r->sob_html_javascript);
 					
+					$v = isset($r->sob_html_vertictal_label) ? $r->sob_html_vertictal_label : '';
+					$h = isset($r->sob_html_horizontal_label) ? $r->sob_html_horizontal_label : '';
+					$title = isset($r->sob_html_title) ? $r->sob_html_title : '';
+					
 					if($r->sob_html_chart_type == 'p'){
-						$htmlj	= "\nnuChart('$r->sob_all_id', 'PieChart', '$htmljs', '$r->sob_html_title', '$r->sob_html_horizontal_label', '$r->sob_html_vertictal_label', 'bars', false);";
+						$htmlj	= "\nnuChart('$r->sob_all_id', 'PieChart', '$htmljs', '$title', '$h', '$v', 'bars', false);";
 					}
 
 					if($r->sob_html_chart_type == 'l'){
-						$htmlj	= "\nnuChart('$r->sob_all_id', 'ComboChart', '$htmljs', '$r->sob_html_title', '$r->sob_html_horizontal_label', '$r->sob_html_vertictal_label', 'lines', false);";
+						$htmlj	= "\nnuChart('$r->sob_all_id', 'ComboChart', '$htmljs', '$title', '$h', '$v', 'lines', false);";
 					}
 
 					if($r->sob_html_chart_type == 'b'){
-						$htmlj	= "\nnuChart('$r->sob_all_id', 'ComboChart', '$htmljs', '$r->sob_html_title', '$r->sob_html_horizontal_label', '$r->sob_html_vertictal_label', 'bars', false);";
+						$htmlj	= "\nnuChart('$r->sob_all_id', 'ComboChart', '$htmljs', '$title', '$h', '$v', 'bars', false);";
 					}
 
 					if($r->sob_html_chart_type == 'bs'){
-						$htmlj	= "\nnuChart('$r->sob_all_id', 'ComboChart', '$htmljs', '$r->sob_html_title', '$r->sob_html_horizontal_label', '$r->sob_html_vertictal_label', 'bars', true);";
+						$htmlj	= "\nnuChart('$r->sob_all_id', 'ComboChart', '$htmljs', '$title', '$h', '$v', 'bars', true);";
 					}
 
 					if($r->sob_html_chart_type == 'bh'){
-						$htmlj	= "\nnuChart('$r->sob_all_id', 'BarChart', '$htmljs', '$r->sob_html_title', '$r->sob_html_horizontal_label', '$r->sob_html_vertictal_label', 'bars', false);";
+						$htmlj	= "\nnuChart('$r->sob_all_id', 'BarChart', '$htmljs', '$title', '$h', '$v', 'bars', false);";
 					}
 
 					if($r->sob_html_chart_type == 'bhs'){
-						$htmlj	= "\nnuChart('$r->sob_all_id', 'BarChart', '$htmljs', '$r->sob_html_title', '$r->sob_html_horizontal_label', '$r->sob_html_vertictal_label', 'bars', true);";
+						$htmlj	= "\nnuChart('$r->sob_all_id', 'BarChart', '$htmljs', '$title', '$h', '$v', 'bars', true);";
 					}
 
 					nuAddJavascript($htmlj);
@@ -343,11 +355,11 @@ function nuGetFormObject($F, $R, $OBJS){
 	$f->noclone				= $cloneable;
     $f->browse_columns		= nuBrowseColumns($f);
     $B						= nuBrowseRows($f);
-    $f->browse_rows			= $B[0];
-    $f->browse_height		= $B[1];
-    $f->browse_sql			= $B[2];
+    $f->browse_rows			= nuObjKey($B,0,0);
+    $f->browse_height		= nuObjKey($B,1,0);
+    $f->browse_sql			= nuObjKey($B,2,0);;
     $f->browse_table_id		= nuHash()['TABLE_ID'];
-    $f->pages				= ceil($B[1]/$f->rows);
+    $f->pages				= ceil($f->browse_height/$f->rows);
     $f->objects 			= $a;
 	$f->number_formats		= nuBuildCurrencyFormats();
     $O 						= new stdClass();
@@ -360,12 +372,18 @@ function nuGetFormObject($F, $R, $OBJS){
 
 function nuGetSrc($i){
 	
-	$s	= "SELECT * FROM zzzzsys_file WHERE zzzzsys_file_id = ? ";
+	$s	= "SELECT sfi_json FROM zzzzsys_file WHERE zzzzsys_file_id = ? ";
 	$t	= nuRunQuery($s, [$i]);
-	$r	= db_fetch_object($t);
-	$j	= JSON_decode($r->sfi_json);
 	
-	return $j->file;
+	if (db_num_rows($t) == 1) {
+		$r		= db_fetch_object($t);
+		$json	= JSON_decode($r->sfi_json);
+		$j 		= $json->file;
+	} else {
+		$j	= null;
+	}
+
+	return $j;
 	
 }
 
@@ -454,7 +472,7 @@ function nuBreadcrumbDescription($r, $R){
 	
 	if($R 								== '')	{return $r->sfo_description;}		//-- Browse Form
 	if($R 								== '-1'){return $r->sfo_description;}		//-- new record
-	if(trim($r->sfo_breadcrumb_title) 	== '')	{return $r->sfo_description;}		//-- no breadcrumb
+	if(!isset($r->sfo_breadcrumb_title) || trim($r->sfo_breadcrumb_title) == '')	{return $r->sfo_description;}		//-- no breadcrumb
 	
 	$b		= nuReplaceHashVariables($r->sfo_breadcrumb_title);
 	
@@ -520,13 +538,15 @@ function nuGetAllLookupValues(){
 	$o->value				= $PK;
 	$l						= nuGetLookupValues($r, $o);
 	
+	
 	$_POST['nuHash']['LOOKUP_RECORD_ID'] = $l[0][1];
 
 	$e						= nuGetOtherLookupValues($o);
+	
 	$f						= new stdClass;
 	$f->lookup_values		= array_merge($l, $e);
 	$f->lookup_javascript	= $r->sob_lookup_javascript;
-	
+		
 	return $f;
 	
 }
@@ -534,7 +554,7 @@ function nuGetAllLookupValues(){
 
 
 function nuGetLookupValues($R, $O){
-
+	
 	$was		= $_POST['nuHash']['TABLE_ID'];
 	
 	$_POST['nuHash']['TABLE_ID'] = nuTT();
@@ -558,17 +578,18 @@ function nuGetLookupValues($R, $O){
 	$s			= nuReplaceHashVariables($s);
     $t 			= nuRunQuery($s);
     $l 			= db_fetch_row($t);
-	$f			= $_POST['nuSTATE']['prefix'] . $O->id;
-
+	
+	$f			= nuObjKey($_POST['nuSTATE'],'prefix','') . $O->id;
+	
 	nuRunQuery(nuReplaceHashVariables('DROP TABLE if EXISTS #TABLE_ID#'));
 	
 	$_POST['nuHash']['TABLE_ID'] = $was;
-
+	
 	$v			= array();
 	$v[]		= array($f, 				isset($l[0]) ? $l[0] : '');
 	$v[]		= array($f . 'code', 		isset($l[1]) ? $l[1] : '');
 	$v[]		= array($f . 'description', isset($l[2]) ? $l[2] : '');
-	
+
 	return $v;
 	
 }
@@ -577,9 +598,9 @@ function nuGetLookupValues($R, $O){
 function nuGetAllLookupList(){
 
 	$O				= $_POST['nuSTATE']['object_id'];
-	$PK				= $_POST['nuSTATE']['primary_key'];
+	$PK				= nuObjKey($_POST['nuSTATE'],'primary_key');
 	$C				= $_POST['nuSTATE']['code'];
-	$was			= $_POST['nuHash']['TABLE_ID'];
+	$was			= nuObjKey($_POST['nuHash'],'TABLE_ID');
 
 	$_POST['nuHash']['TABLE_ID'] = nuTT();
 
@@ -743,45 +764,45 @@ function nuGetSubformRecords($R, $A){
 
 function nuBuildTabList($i){
 
-    $o                 = 0;
-    $a                 = array();
-    $s                 = "
+	$o = 0;
+	$a = [];
+	$s = "
 
-        SELECT DISTINCT zzzzsys_tab.*
-        FROM zzzzsys_tab 
+		SELECT DISTINCT zzzzsys_tab.*
+        FROM zzzzsys_tab
         INNER JOIN zzzzsys_object ON sob_all_zzzzsys_form_id = syt_zzzzsys_form_id
-        WHERE syt_zzzzsys_form_id = '$i'
-        ORDER BY syt_order
+        WHERE syt_zzzzsys_form_id = ?
+        ORDER BY syt_order;
 
-    ";
+		";
 
-    $t = nuRunQuery($s);
+	$t = nuRunQuery($s, [$i]);
 
-    while($r = db_fetch_object($t)){
+	while($r = db_fetch_object($t)){
 
-        $r->number    = $o;
-        $o++;
-        $a[]        = $r;
+		$r->number = $o;
+		$o++;
+		$a[] = $r;
 
-    }
+	}
 
-    return $a;
+	return $a;
 
 }
 
 
 function nuRefineTabList($t){
 
-    $a 			= array();
+	$a 			= array();
 
-    for($i = 0 ; $i < count($t) ; $i++){
+	for($i = 0 ; $i < count($t) ; $i++){
 				
 		$a[]	= array('title' => $t[$i]->syt_title, 'id' => $t[$i]->zzzzsys_tab_id, 'help' => $t[$i]->syt_help);
-        
-    }
 
-    return $a;
-   
+	}
+
+	return $a;
+
 }
 
 
@@ -859,8 +880,8 @@ function nuBrowseRows($f){
 
 	$page_number	= $P['page_number'];
 	$start			= $page_number * $rows;
-	$search			= str_replace('&#39;', "'", $P['search']);
-	$filter			= str_replace('&#39;', "'", $P['filter']);
+	$search			= str_replace('&#39;', "'", nuObjKey($P,'search'));
+	$filter			= str_replace('&#39;', "'", nuObjKey($P,'filter'));
 	$s 				= "SELECT * FROM zzzzsys_form WHERE zzzzsys_form_id = '$f->id'";
 	$t 				= nuRunQuery($s);
 	$r 				= db_fetch_object($t);
@@ -1074,8 +1095,7 @@ function nuGatherFormAndSessionData($home){
 		}
 		
 	}
-	
-	
+		
     if(isset($_POST['nuSTATE']['login_form_id'])){//-- check empty form_id not empty record_id
 		
 		if($_POST['nuSTATE']['login_form_id'] != ''){
@@ -1086,10 +1106,13 @@ function nuGatherFormAndSessionData($home){
 
 	$formAndSessionData->session_id 	= $_SESSION['nubuilder_session_data']['SESSION_ID'];
 	$formAndSessionData->call_type 		= $_POST['nuSTATE']['call_type'];
-	$formAndSessionData->filter 		= $_POST['nuFilter'];
+	$formAndSessionData->filter 		= $_POST['nuFilter'] ?? null;
 	$formAndSessionData->errors 		= array();
-	$formAndSessionData->translation 	= $_SESSION['nubuilder_session_data']['translation'];
-	$formAndSessionData->dimensions 	= nuFormDimensions($formAndSessionData->form_id);
+	$formAndSessionData->translation 	= $_SESSION['nubuilder_session_data']['translation'];	
+	
+	if($formAndSessionData->form_id != null){			
+		$formAndSessionData->dimensions 	= nuFormDimensions($formAndSessionData->form_id);
+	}
 
 	if(!$_SESSION['nubuilder_session_data']['isGlobeadmin'] && $formAndSessionData->form_id != 'nuhome') {
 
@@ -1231,26 +1254,27 @@ function nuButtons($formid, $POST){
 	$a						= nuFormAccess($formid, $nuJ->forms);
 	$f						= nuFormProperties($formid);
 	$c						= $POST['call_type'];
+	$recordID				= nuObjKey($POST,'record_id');
 	
 	if($c == 'getphp' or $c == 'getreport'){
 
 			
 		$s					= 'SELECT * FROM zzzzsys_php WHERE zzzzsys_php_id = ? ';
-		$t					= nuRunQuery($s,[$POST['record_id']]);
+		$t					= nuRunQuery($s,[$recordID]);
 		$P					= db_fetch_object($t);
 		
 		$s					= 'SELECT * FROM zzzzsys_report WHERE zzzzsys_report_id = ? ';
-		$t					= nuRunQuery($s,[$POST['record_id']]);
+		$t					= nuRunQuery($s,[$recrodId]);
 		$R					= db_fetch_object($t);
 		
 	}else{
 			
 		$s					= 'SELECT * FROM zzzzsys_php WHERE sph_code = ? ';
-		$t					= nuRunQuery($s,[$POST['record_id']]);
+		$t					= nuRunQuery($s,[$recordID]);
 		$P					= db_fetch_object($t);
 		
 		$s					= 'SELECT * FROM zzzzsys_report WHERE sre_code = ? ';
-		$t					= nuRunQuery($s,[$POST['record_id']]);
+		$t					= nuRunQuery($s,[$recordID]);
 		$R					= db_fetch_object($t);
 		
 	}
@@ -1345,61 +1369,18 @@ function nuFormAccess($s, $a){
 
 }
 
-// function nuFormDimensions($f){
-
-	// $d			= array();
-	// $t			= nuRunQuery("SELECT * FROM zzzzsys_form WHERE zzzzsys_form_id = '$f'");
-	// $r			= db_fetch_object($t);
-	
-	// $bt			= 57; 	//-- browse title
-	// $rh			= intval($r->sfo_browse_row_height)    == 0 ? 18 : $r->sfo_browse_row_height;
-	// $rs			= intval($r->sfo_browse_rows_per_page) == 0 ? 25 : $r->sfo_browse_rows_per_page;
-	// $t			= nuRunQuery("SELECT * FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = '$f'");
-	// $h			= 0;
-	// $w			= 0;
-	// $gh			= 0;
-	// $gw			= 0;
-	
-	// while($r	= db_fetch_object($t)){
-		
-		// if($r->sob_all_type == 'lookup'){
-			
-			// $w 	= max($w, $r->sob_all_left + $r->sob_all_width + $r->sob_lookup_description_width + 40);
-			// $gw	= $gw + $r->sob_all_width + $r->sob_lookup_description_width + 40;
-			
-		// }else{
-			
-			// $w 	= max($w, $r->sob_all_left + $r->sob_all_width + 40);
-			// $gw = $gw + $r->sob_all_width + 4;
-			
-		// }
-
-		// $h		= max($h, $r->sob_all_top + $r->sob_all_height);
-		// $gh 	= max($r->sob_all_height, 25);
-
-	// }
-
-	// $bh			= $bt + ($rs * $rh);
-	// $bw			= nuGetBrowseWidth($f);	
-
-	// $grid		= ['height'=>$gh, 'width'=> $gw];
-	// $browse		= ['height'=>$bh + 0, 'width'=> $bw];
-	// $edit		= ['height'=>$h + 60,  'width'=> $w];
-
-	// return ['browse'=>$browse, 'edit'=>$edit, 'grid'=>$grid];
-	
-// }
-
-
 function nuFormDimensions($f){
-
+	
    $d         = array();
-   $t         = nuRunQuery("SELECT * FROM zzzzsys_form WHERE zzzzsys_form_id = '$f'");
+   $t         = nuRunQuery("SELECT * FROM zzzzsys_form WHERE zzzzsys_form_id = '$f'");   
    $r         = db_fetch_object($t);
+
+   $brh = isset($r->sfo_browse_row_height) ? $r->sfo_browse_row_height : 0;
+   $brp = isset($r->sfo_browse_rows_per_page) ? $r->sfo_browse_rows_per_page : 0;
    
    $bt         = 57;    //-- browse title
-   $rh         = intval($r->sfo_browse_row_height)    == 0 ? 25 : $r->sfo_browse_row_height;
-   $rs         = intval($r->sfo_browse_rows_per_page) == 0 ? 25 : $r->sfo_browse_rows_per_page;
+   $rh         = intval($brh)    == 0 ? 25 : $brh;
+   $rs         = intval($brp) == 0 ? 25 : $brp;
    $bb         = 25;   //-- browse footer
    $t         = nuRunQuery("SELECT * FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = '$f'");
    $h         = 0;
@@ -1523,7 +1504,7 @@ function nuAddJavascript($js){
 }
 
 function nuPreloadImages($a){
-	
+
 	$js = '';
 
 	
@@ -1538,6 +1519,7 @@ function nuPreloadImages($a){
 
 		$t  = nuRunQuery($s, [$a[$i]]);
 		$r	= db_fetch_object($t);
+				
 		$tr	= trim($r->sfi_code);
 		$js = $js . "\nnuImages['$tr'] = '" . addslashes($r->sfi_json) . "';";
 

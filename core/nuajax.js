@@ -79,7 +79,8 @@ function nuForm(f, r, filter, search, n, like){
 		}
 		
 	}
-	
+
+
 	var last	 		= $.extend(true, {}, current);
 
 	last.call_type		= 'getform';
@@ -494,9 +495,11 @@ function nuAttachButtonImage(i, c){
 	
 	var PARENT				= parent.parent.parent.parent.parent.parent.parent.parent.parent;
 	
-	if(PARENT.nuImages[c] !== undefined){
+	var pi = PARENT.nuImages[c];
+	
+	if(pi !== undefined && pi !== ''){
 		
-		var p				= JSON.parse(PARENT.nuImages[c]);
+		var p				= JSON.parse(pi);
 		var b				= atob(p.file);
 		
 		$('#' + i)
@@ -524,7 +527,7 @@ function nuAttachButtonImage(i, c){
 		if(data.JSONfile !== null){
 			
 			PARENT.nuImages[c] 	= data.JSONfile;
-			var p			= JSON.parse(PARENT.nuImages[c]);
+			var p			= JSON.parse(pi);
 			var b			= atob(p.file);
 			
 			$('#' + i)
@@ -657,11 +660,11 @@ function nuPrintAction(){
 }
 
 function nuUpdateData(action, instruction){
+
 	
 	if(action == 'save' && window.nuBeforeSave){if(nuBeforeSave() === false ){return;}}
 	if(action != 'save' && window.nuBeforeDelete){if(nuBeforeDelete() === false ){return;}}
 	if(nuFORM.getCurrent().record_id == -1){nuSetProperty('NEW_RECORD', 1);}
-
 
 
 	var current				= window.nuFORM.getCurrent();
@@ -682,6 +685,8 @@ function nuUpdateData(action, instruction){
 	last.session_id 		= window.nuSESSION;
 	
 	$('.nuActionButton').hide();
+	
+	
 	
 	var successCallback 	= function(data,textStatus,jqXHR){
 		

@@ -1,5 +1,4 @@
 
-
 class nuResponseForm {
 	
 	getStartPositions() {
@@ -206,12 +205,6 @@ class nuResponseForm {
 		
 	}
 
-
-
-
-
-
-
 	
 	resetDefault(){
 	
@@ -249,20 +242,6 @@ class nuResponseForm {
 		
 	}
 	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	
 }
 
@@ -393,6 +372,7 @@ class nuFormObject {
 	}
 
 	setProperty(f, v) {
+
 		this.breadcrumbs[this.breadcrumbs.length -1][f] = v;
 	}
 	
@@ -724,6 +704,7 @@ class nuFormObject {
 		o.deleted		= [];
 		var deleteRow	= false;
 		
+		
 		$(sel).each(function(index){
 			
 			var THIS			= $(this);
@@ -733,8 +714,11 @@ class nuFormObject {
 			var C				= 1;
 			var chk				= $('#' + this.id).prop("checked");
 
+
+
 			THIS.children('[data-nu-data]').each(function(){
-				
+		
+			
 				if(this.id.substr(-8) == 'nuDelete'){
 					chk			=($('#' + this.id).prop("checked") || deleteAll) ? 1 : 0 ;
 				}
@@ -774,6 +758,7 @@ class nuFormObject {
 		});
 		
 		o.fields				= F;
+		
 		var titles				= [];
 
 		
@@ -1155,6 +1140,8 @@ function nuCurrentProperties(){
 
 
 function nuSetProperty(f, v, p){
+	
+	
 	nuFORM.setProperty(f, v);
 	if (p === true) {
 		// set the hash cookie to persist
