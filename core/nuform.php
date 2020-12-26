@@ -119,7 +119,6 @@ function nuGetFormObject($F, $R, $OBJS){
 		
 	}
 
-
 	$s = "
  
     SELECT * 

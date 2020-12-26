@@ -20,8 +20,8 @@ function nuRunQuery($s, $a = array(), $isInsert = false){
 	global $DBUser;
 	global $DBPassword;
 	global $nuDB;
-	global $DBCharset;
-	
+	global $DBCharset;	
+ 	
 	if($s == ''){
 		$a           = array();
 		$a[0]        = $DBHost;
@@ -129,6 +129,29 @@ function db_fetch_row($o){
 
 }
 
+function db_field_info($n){
+	
+	$fields		= [];
+	$types		= [];
+	$pk			= [];
+	
+	$s		 = "DESCRIBE $n";
+	$t		= nuRunQuery($s);
+
+	while($r = db_fetch_row($t)){
+
+		$fields[] = $r[0];
+		$types[]  = $r[1];
+		
+		if($r[3] == 'PRI'){
+			$pk[] = $r[0];
+		}
+		
+	}
+
+	return array($fields, $types, $pk);
+
+}	
 
 function db_field_names($n){
     
@@ -207,9 +230,6 @@ function nuUpdateTables(){
 		
 }
 
-
-
-
 function nuDebugResult($t){
 	
 	if(is_object($t)){
@@ -223,7 +243,6 @@ function nuDebugResult($t){
 	
 	return $i;
 }
-
 
 function nuDebug($a){
 	
@@ -268,7 +287,14 @@ function nuDebug($a){
 
 }
 
+function nuLog($s1, $s2 = '', $s3 = '') {
 
+	$dataToLog = array(date("Y-m-d H:i:s"), $s1, $s2, $s3);
+	$data = implode(" - ", $dataToLog);
+
+	file_put_contents('..\nulog.txt', $data.PHP_EOL , FILE_APPEND | LOCK_EX);
+	
+}	
 
 function nuID(){
 
