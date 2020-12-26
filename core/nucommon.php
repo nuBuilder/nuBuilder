@@ -1164,7 +1164,6 @@ function nuUpdateFormSchema(){
 	
 }
 
-
 function nuUpdateTableSchema($call_type){
 
 	$j	= nuGetJSONData('clientTableSchema');
@@ -1179,8 +1178,6 @@ function nuUpdateTableSchema($call_type){
 	return $j;
 
 }
-
-
 
 function nuListSystemTables(){
 
@@ -1198,7 +1195,6 @@ function nuListSystemTables(){
 	return $a;
 
 }
-
 
 function nuFontList(){
 

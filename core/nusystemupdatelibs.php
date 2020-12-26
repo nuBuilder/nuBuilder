@@ -1,15 +1,15 @@
 <?php 
 
-// Drop temp tables if exists. E.g. : DROP TABLE IF EXISTS sys_zzzzsys_form
-// Copy zzzz... into sys... E.g. CREATE TABLE sys_zzzzsys_form SELECT * FROM zzzzsys_form
-// Drop zzzz.... E.g. DROP TABLE IF EXISTS zzzzsys_form
-
 function dropObject($name, $type) {
 
 		$sql = 'DROP '.$type.' IF EXISTS `'.$name.'`';
 		nuRunQuery($sql);
 
 }
+
+// Drop temp tables if exists. E.g. : DROP TABLE IF EXISTS sys_zzzzsys_form
+// Copy zzzz... into sys... E.g. CREATE TABLE sys_zzzzsys_form SELECT * FROM zzzzsys_form
+// Drop zzzz.... E.g. DROP TABLE IF EXISTS zzzzsys_form
 
 function nuCopySystemTables() {
     
@@ -87,11 +87,14 @@ function nuUpdateSystemRecords(){
 	$ts			= nuBuildTableSchema();
 	$t			= nuListSystemTables();
 
+
 	for($i = 0 ; $i < count($t) ; $i++){
 
 		$table  	= $t[$i];
 		$new		= $ts["$table"]['names'];
 		$old		= $ts["sys_$table"]['names'];
+		
+		if (is_array($old)) {
 		//-- remove unused fields from old
 		for($c = 0 ; $c < count($old) ; $c++){
 			$field	= $old[$c];
@@ -99,6 +102,9 @@ function nuUpdateSystemRecords(){
 				$sql= "ALTER TABLE sys_$table DROP COLUMN $field";
 				nuRunQuery($sql);
 			}
+		}
+		} else {
+			// print "Names does not exist in sys_$table" . '<br>';
 		}
 	}
 	
@@ -162,12 +168,18 @@ function nuAddNewSystemTables(){
 			}
 		}
 	}
-	
-	nuRunQuery("ALTER TABLE `zzzzsys_object` CHANGE `sob_input_count` `sob_input_count` BIGINT(20) NULL DEFAULT '0';");
-	nuRunQuery("ALTER TABLE `zzzzsys_object` CHANGE `sob_all_order` `sob_all_order` INT(11) NULL DEFAULT '0';");
 
 }
 
+
+function nuAlterSystemTables(){
+	
+	nuRunQuery("ALTER TABLE `zzzzsys_object` CHANGE `sob_input_count` `sob_input_count` BIGINT(20) NULL DEFAULT '0';");
+	nuRunQuery("ALTER TABLE `zzzzsys_object` CHANGE `sob_all_order` `sob_all_order` INT(11) NULL DEFAULT '0';");	
+	nuRunQuery("ALTER TABLE `zzzzsys_session` ADD `sss_hashcookies` MEDIUMTEXT NULL DEFAULT NULL AFTER `sss_access`;");
+	
+}	
+	
 function nuJustNuRecords(){
 
 	$s  =  "DELETE FROM zzzzsys_event WHERE zzzzsys_event_id NOT LIKE 'nu%'";

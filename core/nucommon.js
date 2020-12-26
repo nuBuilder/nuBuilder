@@ -474,8 +474,8 @@ function nuCreateDialog(t){
 		$('body').append('<div id="nuModal" style="height:' + window.innerHeight + 'px"></div>')
 		.append(e);
 		
-		var subDir = callerName == 'nuPopup' ? 'core/' : '';
-		debugger;
+		var subDir = callerName == 'nuPopup' || callerName == 'nuBuildLookup' ? 'core/' : '';
+		
 		$('#nuDragDialog').addClass('nuDragDialog nuDragNoSelect')
 		.css({
 			'left'				: l, 

@@ -9,9 +9,13 @@ $DBUser         	= $_SESSION['nubuilder_session_data']['DB_USER'];
 $DBPassword     	= $_SESSION['nubuilder_session_data']['DB_PASSWORD'];
 $DBCharset      	= $_SESSION['nubuilder_session_data']['DB_CHARSET'];
 
-$nuDB 				= new PDO("mysql:host=$DBHost;dbname=$DBName;charset=$DBCharset", $DBUser, $DBPassword, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $DBCharset"));
-
-$nuDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+try {
+	$nuDB 				= new PDO("mysql:host=$DBHost;dbname=$DBName;charset=$DBCharset", $DBUser, $DBPassword, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $DBCharset"));
+	$nuDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    echo 'Connection failed: ' . $e->getMessage();
+	die();
+}
 
 function nuRunQuery($s, $a = array(), $isInsert = false){
 
@@ -290,7 +294,9 @@ function nuDebug($a){
 function nuLog($s1, $s2 = '', $s3 = '') {
 
 	$dataToLog = array(date("Y-m-d H:i:s"), $s1, $s2, $s3);
+	
 	$data = implode(" - ", $dataToLog);
+	// $data = print_r($dataToLog, true); 
 
 	file_put_contents('..\nulog.txt', $data.PHP_EOL , FILE_APPEND | LOCK_EX);
 	

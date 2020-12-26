@@ -33,17 +33,17 @@ print '<br><span style="font-family:Helvetica;padding:10px;">Imported nubuilder4
 nuAddNewSystemTables();
 print '<br><span style="font-family:Helvetica;padding:10px;">Copied SYSTEM FILES to TEMP FILES for any new tables added from the import. <br></span>';
 
+nuAlterSystemTables();
+print '<br><span style="font-family:Helvetica;padding:10px;">Altered System Tables <br></span>';
+
 nuUpdateSystemRecords();
 print '<br><span style="font-family:Helvetica;padding:10px;">Updated TEMP FILE table structure\'s to SYSTEM FILES <br></span>';
-
 
 nuRemoveNuRecords();
 print '<br><span style="font-family:Helvetica;padding:10px;">Removed all ids starting with nu from TEMP FILES <br></span>';
 
-
 nuJustNuRecords();
 print '<br><span style="font-family:Helvetica;padding:10px;">Removed all ids not starting with nu from SYSTEM FILES <br></span>';
-
 
 nuAppendToSystemTables();
 print '<br><span style="font-family:Helvetica;padding:10px;">Inserted TEMP FILES into SYSTEM FILES <br></span>';
