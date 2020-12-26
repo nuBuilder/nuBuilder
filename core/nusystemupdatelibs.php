@@ -4,42 +4,45 @@
 // Copy zzzz... into sys... E.g. CREATE TABLE sys_zzzzsys_form SELECT * FROM zzzzsys_form
 // Drop zzzz.... E.g. DROP TABLE IF EXISTS zzzzsys_form
 
+function dropObject($name, $type) {
+
+		$sql = 'DROP '.$type.' IF EXISTS `'.$name.'`';
+		nuRunQuery($sql);
+
+}
+
 function nuCopySystemTables() {
     
-	$t      	= nuSystemList();
-	$sql		= "DROP VIEW IF EXISTS zzzzsys_report_data";
-	nuRunQuery($sql);
+	dropObject('zzzzsys_report_data', 'VIEW');
+	dropObject('zzzzsys_run_list', 'VIEW');
+	dropObject('zzzzsys_table_list', 'VIEW');
 
-	$sql		= "DROP VIEW IF EXISTS zzzzsys_run_list";
-	nuRunQuery($sql);
-
+	$t	= nuSystemList();
 	for($i = 0 ; $i < count($t) ; $i++){
-        
-        $table  = $t[$i];
-		$sql	= "DROP TABLE IF EXISTS sys_$table";
-        	nuRunQuery($sql);
 
-		$sql	= "CREATE TABLE sys_$table SELECT * FROM $table";
-        	nuRunQuery($sql);
+		$table = $t[$i];
+		dropObject("sys_".$table, 'TABLE');
+
+		$sql = "CREATE TABLE sys_$table SELECT * FROM $table";
+		nuRunQuery($sql);
 		
 		if($table != 'zzzzsys_debug'){
-			$sql= "DROP TABLE IF EXISTS $table";
-			nuRunQuery($sql);
+			dropObject($table, 'TABLE');
 		}
-    }
+	}
 }
 
 // Import nubuilder4.sql
 function nuImportSystemFiles() {
 
 	try{
-		
+
 		$file = 					 dirname(__FILE__). '/../nubuilder4.sql';
 		@$handle					= fopen($file, "r");
 		$temp						= "";
 		if ( $handle ) {
 
-			nuRunQuery("DROP TABLE IF EXISTS zzzzsys_debug");
+			dropObject('zzzzsys_debug', 'TABLE');
 
 			while(($line = fgets($handle)) !== false){
 
@@ -79,18 +82,18 @@ function nuInstallException($e){
 }
 
 //-- after zzzzsys files have been imported
-function nuUpdateSystemRecords(){									
+function nuUpdateSystemRecords(){
 
 	$ts			= nuBuildTableSchema();
 	$t			= nuListSystemTables();
 
- 	for($i = 0 ; $i < count($t) ; $i++){
-        
-        	$table  	= $t[$i];
+	for($i = 0 ; $i < count($t) ; $i++){
+
+		$table  	= $t[$i];
 		$new		= $ts["$table"]['names'];
 		$old		= $ts["sys_$table"]['names'];
 		//-- remove unused fields from old
-		for($c = 0 ; $c < count($old) ; $c++){						
+		for($c = 0 ; $c < count($old) ; $c++){
 			$field	= $old[$c];
 			if(!in_array($field, $new)){
 				$sql= "ALTER TABLE sys_$table DROP COLUMN $field";
@@ -101,12 +104,12 @@ function nuUpdateSystemRecords(){
 	
 	$ts 			= nuBuildTableSchema();
 	for($i = 0 ; $i < count($t) ; $i++){
-        
-		$table  	= $t[$i];
+
+		$table		= $t[$i];
 		$lfield		= 'FIRST';
 	
-		//-- insert extra new fields into old	
-		for($c = 0 ; $c < count($new) ; $c++){			
+		//-- insert extra new fields into old
+		for($c = 0 ; $c < count($new) ; $c++){
 
 			$new	= $ts["$table"]['names'];
 			$newt	= $ts["$table"]['types'];
@@ -126,7 +129,7 @@ function nuUpdateSystemRecords(){
 					nuRunQuery($sql);
 					$ts	= nuBuildTableSchema();
 					//-- start from the beginning again
-					$c	= -1;					
+					$c	= -1;
 					
 				}else if($otype != $ntype){
 					
@@ -166,112 +169,111 @@ function nuAddNewSystemTables(){
 }
 
 function nuJustNuRecords(){
-    
-	$s  =  "DELETE FROM zzzzsys_event WHERE zzzzsys_event_id NOT LIKE 'nu%'"; 															
+
+	$s  =  "DELETE FROM zzzzsys_event WHERE zzzzsys_event_id NOT LIKE 'nu%'";
+	nuRunQuery($s);
+
+	$s  =  "DELETE FROM zzzzsys_file WHERE zzzzsys_file_id NOT LIKE 'nu%'"; 
 	nuRunQuery($s);
     
-	$s  =  "DELETE FROM zzzzsys_file WHERE zzzzsys_file_id NOT LIKE 'nu%'"; 															
+	$s  =  "DELETE FROM zzzzsys_format WHERE zzzzsys_format_id NOT LIKE 'nu%'";
 	nuRunQuery($s);
-    
-	$s  =  "DELETE FROM zzzzsys_format WHERE zzzzsys_format_id NOT LIKE 'nu%'"; 															
-    	nuRunQuery($s);
 
 	//-- delete records that start with ids starting with 'nu' or linked to forms starting with 'nu'    
-    	$s  =  "DELETE FROM zzzzsys_php WHERE sph_zzzzsys_form_id NOT LIKE 'nu%' AND zzzzsys_php_id NOT LIKE 'nu%' ";  		  				
-    	nuRunQuery($s);
-    
-    	$s  =  "DELETE FROM zzzzsys_setup";
-    	nuRunQuery($s);
-    
+	$s  =  "DELETE FROM zzzzsys_php WHERE sph_zzzzsys_form_id NOT LIKE 'nu%' AND zzzzsys_php_id NOT LIKE 'nu%' ";
+	nuRunQuery($s);
+
+	$s  =  "DELETE FROM zzzzsys_setup";
+	nuRunQuery($s);
+
 	//-- delete tabs with forms starting with 'nu'
-    	$s  =  "DELETE FROM zzzzsys_tab WHERE  syt_zzzzsys_form_id NOT LIKE 'nu%' OR syt_zzzzsys_form_id = 'nuuserhome'";
-    	nuRunQuery($s);
+	$s  =  "DELETE FROM zzzzsys_tab WHERE  syt_zzzzsys_form_id NOT LIKE 'nu%' OR syt_zzzzsys_form_id = 'nuuserhome'";
+	nuRunQuery($s);
 }
 
 function nuRemoveNuRecords(){
-    
+
 	$O	= nuTT();
   
-	//-- delete if attached to objects on forms with ids starting with 'nu'	  
-	$s  =  "DELETE FROM sys_zzzzsys_event WHERE zzzzsys_event_id LIKE 'nu%'"; 
+	//-- delete if attached to objects on forms with ids starting with 'nu'
+	$s = "DELETE FROM sys_zzzzsys_event WHERE zzzzsys_event_id LIKE 'nu%'";
 	nuRunQuery($s);
 
-	$s  =  "DELETE FROM sys_zzzzsys_file WHERE zzzzsys_file_id LIKE 'nu%'"; 															
+	$s = "DELETE FROM sys_zzzzsys_file WHERE zzzzsys_file_id LIKE 'nu%'";
 	nuRunQuery($s);
 
-	$s  =  "DELETE FROM sys_zzzzsys_format WHERE zzzzsys_format_id LIKE 'nu%'"; 															
-	nuRunQuery($s);
-
-	//-- delete all objects on forms with ids that start with 'nu'
-	$s  =  "DELETE FROM sys_zzzzsys_object WHERE sob_all_zzzzsys_form_id LIKE 'nu%'  AND sob_all_zzzzsys_form_id != 'nuuserhome'";   	
+	$s = "DELETE FROM sys_zzzzsys_format WHERE zzzzsys_format_id LIKE 'nu%'";
 	nuRunQuery($s);
 
 	//-- delete all objects on forms with ids that start with 'nu'
-	$s  =  "DELETE FROM sys_zzzzsys_tab WHERE syt_zzzzsys_form_id LIKE 'nu%' AND syt_zzzzsys_form_id != 'nuuserhome'"; 					
+	$s = "DELETE FROM sys_zzzzsys_object WHERE sob_all_zzzzsys_form_id LIKE 'nu%'  AND sob_all_zzzzsys_form_id != 'nuuserhome'";
 	nuRunQuery($s);
 
 	//-- delete all objects on forms with ids that start with 'nu'
-	$s  =  "DELETE FROM sys_zzzzsys_form WHERE zzzzsys_form_id LIKE 'nu%' ";    														
+	$s = "DELETE FROM sys_zzzzsys_tab WHERE syt_zzzzsys_form_id LIKE 'nu%' AND syt_zzzzsys_form_id != 'nuuserhome'";
+	nuRunQuery($s);
+
+	//-- delete all objects on forms with ids that start with 'nu'
+	$s = "DELETE FROM sys_zzzzsys_form WHERE zzzzsys_form_id LIKE 'nu%' ";
 	nuRunQuery($s);
 
 	//-- delete records that start with ids starting with 'nu' or linked to forms starting with 'nu'
-	$s  =  "DELETE FROM sys_zzzzsys_php WHERE zzzzsys_php_id LIKE 'nu%' AND zzzzsys_php_id != 'nuuserhome_BE'";  		  				
+	$s = "DELETE FROM sys_zzzzsys_php WHERE zzzzsys_php_id LIKE 'nu%' AND zzzzsys_php_id != 'nuuserhome_BE'";
 	nuRunQuery($s);
 
 	//-- delete all browse on forms with ids that start with 'nu'    
-	$s  =  "DELETE FROM sys_zzzzsys_browse WHERE sbr_zzzzsys_form_id LIKE 'nu%'";  
+	$s = "DELETE FROM sys_zzzzsys_browse WHERE sbr_zzzzsys_form_id LIKE 'nu%'";  
 	nuRunQuery($s);
 
 	//-- delete all translate on forms with ids that start with 'nu'       
-	$s  =  "DELETE FROM sys_zzzzsys_translate WHERE zzzzsys_translate_id LIKE 'nu%'";  				  							
+	$s = "DELETE FROM sys_zzzzsys_translate WHERE zzzzsys_translate_id LIKE 'nu%'";
 	nuRunQuery($s);
 
 	//-- delete all note with ids that start with 'nu'       
-	$s  =  "DELETE FROM sys_zzzzsys_note WHERE zzzzsys_note_id LIKE 'nu%'";  				  							
+	$s = "DELETE FROM sys_zzzzsys_note WHERE zzzzsys_note_id LIKE 'nu%'";
 	nuRunQuery($s);
 	
 	//-- delete all note categories with ids that start with 'nu'       
-	$s  =  "DELETE FROM sys_zzzzsys_note_category WHERE zzzzsys_note_category_id LIKE 'nu%'";  				  							
+	$s = "DELETE FROM sys_zzzzsys_note_category WHERE zzzzsys_note_category_id LIKE 'nu%'";
 	nuRunQuery($s);
 
 	//-- delete all snippets with ids that start with 'nu'       
-	$s  =  "DELETE FROM sys_zzzzsys_code_snippet WHERE zzzzsys_code_snippet_id LIKE 'nu%'";  				  							
+	$s = "DELETE FROM sys_zzzzsys_code_snippet WHERE zzzzsys_code_snippet_id LIKE 'nu%'";
 	nuRunQuery($s);
 	
 	//-- delete all cloner rows with ids that start with 'nu'       
-	$s  =  "DELETE FROM sys_zzzzsys_cloner WHERE zzzzsys_cloner_id LIKE 'nu%'";  				  							
+	$s = "DELETE FROM sys_zzzzsys_cloner WHERE zzzzsys_cloner_id LIKE 'nu%'";
 	nuRunQuery($s);	
 	
 	//-- delete all info rows with ids that start with 'nu'       
-	$s  =  "DELETE FROM sys_zzzzsys_info WHERE zzzzsys_info_id LIKE 'nu%'";  				  							
+	$s = "DELETE FROM sys_zzzzsys_info WHERE zzzzsys_info_id LIKE 'nu%'";
 	nuRunQuery($s);	
 
 	//-- delete all timezones
-	$s  =  "DELETE FROM sys_zzzzsys_timezone";									   				 										
+	$s = "DELETE FROM sys_zzzzsys_timezone";
 	nuRunQuery($s);
 }
 
 function nuAppendToSystemTables(){
 
 	try{
-		$t      	= nuSystemList();
+		$t = nuSystemList();
 		for($i = 0 ; $i < count($t) ; $i++){
 			$table  = $t[$i];
 
 			//-- if duplicate records, use latest record from zzzzsys_object
-			if($table == 'zzzzsys_object'){				
+			if($table == 'zzzzsys_object'){
 				nuRunQuery("REPLACE INTO sys_zzzzsys_object SELECT * FROM zzzzsys_object");
 				nuRunQuery("DELETE FROM zzzzsys_object");
 			}
 			nuRunQuery("REPLACE INTO $table SELECT * FROM sys_$table");
-			nuRunQuery("DROP TABLE sys_$table");
+			
+			dropObject("sys_".$table, 'TABLE');
 		}
 
-		$s		= "DROP TABLE sys_zzzzsys_report_data";
-		nuRunQuery($s);
-		
-		$s		= "DROP TABLE sys_zzzzsys_run_list";
-		nuRunQuery($s);
+		dropObject('sys_zzzzsys_report_data', 'VIEW');
+		dropObject('sys_zzzzsys_run_list', 'VIEW');
+		dropObject('sys_zzzzsys_table_list', 'VIEW');
 
 		$s		= "UPDATE zzzzsys_setup SET set_denied = '1'";
 		nuRunQuery($s);
@@ -285,29 +287,29 @@ function nuAppendToSystemTables(){
 
 function nuSystemList(){
 	
-	$t      = [];
-    	$t[]	= 'zzzzsys_access';
-    	$t[]	= 'zzzzsys_access_form';
-    	$t[]	= 'zzzzsys_access_php';
-    	$t[]	= 'zzzzsys_access_report';
-    	$t[]	= 'zzzzsys_browse';
-    	$t[]	= 'zzzzsys_debug';
-    	$t[]	= 'zzzzsys_event';
-    	$t[]	= 'zzzzsys_file';
-    	$t[]	= 'zzzzsys_form';
-    	$t[]	= 'zzzzsys_format';
-    	$t[]	= 'zzzzsys_object';
-    	$t[]	= 'zzzzsys_php';
-    	$t[]	= 'zzzzsys_report';
-    	$t[]	= 'zzzzsys_select';
-    	$t[]	= 'zzzzsys_select_clause';
-    	$t[]	= 'zzzzsys_session';
-    	$t[]	= 'zzzzsys_setup';
-    	$t[]	= 'zzzzsys_tab';
-    	$t[]	= 'zzzzsys_table';
-    	$t[]	= 'zzzzsys_timezone';
-    	$t[]	= 'zzzzsys_translate';
-    	$t[]	= 'zzzzsys_user';
+	$t	= [];
+		$t[]	= 'zzzzsys_access';
+		$t[]	= 'zzzzsys_access_form';
+		$t[]	= 'zzzzsys_access_php';
+		$t[]	= 'zzzzsys_access_report';
+		$t[]	= 'zzzzsys_browse';
+		$t[]	= 'zzzzsys_debug';
+		$t[]	= 'zzzzsys_event';
+		$t[]	= 'zzzzsys_file';
+		$t[]	= 'zzzzsys_form';
+		$t[]	= 'zzzzsys_format';
+		$t[]	= 'zzzzsys_object';
+		$t[]	= 'zzzzsys_php';
+		$t[]	= 'zzzzsys_report';
+		$t[]	= 'zzzzsys_select';
+		$t[]	= 'zzzzsys_select_clause';
+		$t[]	= 'zzzzsys_session';
+		$t[]	= 'zzzzsys_setup';
+		$t[]	= 'zzzzsys_tab';
+		$t[]	= 'zzzzsys_table';
+		$t[]	= 'zzzzsys_timezone';
+		$t[]	= 'zzzzsys_translate';
+		$t[]	= 'zzzzsys_user';
 		$t[]	= 'zzzzsys_cloner';
 		$t[]	= 'zzzzsys_code_snippet';
 		$t[]	= 'zzzzsys_note';
@@ -316,7 +318,6 @@ function nuSystemList(){
 
 	return $t;
 }
-
 
 function nuSetCollation(){
 	
@@ -344,74 +345,74 @@ function nuSetCollation(){
 
 function nuMigrateSQL() {
 
-        $set    = "nuStartDatabaseAdmin();";
-	$where  = 'nu5bad6cb37966261';;
-        $values = array($set,$where);
-        $sql    = "UPDATE `zzzzsys_event` SET `sev_javascript` = ? WHERE `zzzzsys_event_id` = ? ";
-        nuRunQuery($sql, $values);
+	$set    = "nuStartDatabaseAdmin();";
+	$where  = 'nu5bad6cb37966261';
+	$values = array($set,$where);
+	$sql    = "UPDATE `zzzzsys_event` SET `sev_javascript` = ? WHERE `zzzzsys_event_id` = ? ";
+	nuRunQuery($sql, $values);
 
 	$set    = "<iframe id='sqlframe' src='core/nuselect.php' style='height:180px;width:700px'></iframe>";
-        $where  = 'nu5bad6cb359e7a1a';
-        $values = array($set,$where);
-        $sql    = "UPDATE `zzzzsys_object` SET `sob_html_code` = ? WHERE `zzzzsys_object_id` = ? ";
-        nuRunQuery($sql, $values);
+	$where  = 'nu5bad6cb359e7a1a';
+	$values = array($set,$where);
+	$sql    = "UPDATE `zzzzsys_object` SET `sob_html_code` = ? WHERE `zzzzsys_object_id` = ? ";
+	nuRunQuery($sql, $values);
 
 	$set    = 'window.open(\'core/nureportdesigner.php?tt=\' + $("#sre_zzzzsys_php_id").val() + \'&launch=\' + $("#sre_zzzzsys_form_id").val());';
-        $where  = 'nu5bad6cb3797b0a7';
-        $values = array($set,$where);
-        $sql    = "UPDATE `zzzzsys_event` SET `sev_javascript` = ? WHERE `zzzzsys_event_id` = ?";
-        nuRunQuery($sql, $values);
+	$where  = 'nu5bad6cb3797b0a7';
+	$values = array($set,$where);
+	$sql    = "UPDATE `zzzzsys_event` SET `sev_javascript` = ? WHERE `zzzzsys_event_id` = ?";
+	nuRunQuery($sql, $values);
 
-        $set  = '$s  = "CREATE TABLE #TABLE_ID# SELECT zzzzsys_object_id AS theid FROM zzzzsys_object WHERE ";';
-        $set .= "\n";
-        $set .= '$w  = "1";';
-        $set .= "\n";
-        $set .= 'if ( $GLOBALS[\'nuSetup\']->set_denied == 1 )  { ';
-        $set .= "\n";
-        $set .= '$w  = "sob_all_zzzzsys_form_id NOT LIKE \'nu%\' OR sob_all_zzzzsys_form_id = \'nuuserhome\'"; ';
-        $set .= "\n";
-        $set .= '}';
-        $set .= "\n";
-        $set .= 'nuRunQuery("$s$w");';
-        $set .= "\n";
-        $where  = 'nuobject_BB';
-        $values = array($set,$where);
-        $sql    = "UPDATE `zzzzsys_php` SET `sph_php` = ? WHERE `zzzzsys_php_id` = ?";
-        nuRunQuery($sql, $values);
+	$set  = '$s  = "CREATE TABLE #TABLE_ID# SELECT zzzzsys_object_id AS theid FROM zzzzsys_object WHERE ";';
+	$set .= "\n";
+	$set .= '$w  = "1";';
+	$set .= "\n";
+	$set .= 'if ( $GLOBALS[\'nuSetup\']->set_denied == 1 )  { ';
+	$set .= "\n";
+	$set .= '$w  = "sob_all_zzzzsys_form_id NOT LIKE \'nu%\' OR sob_all_zzzzsys_form_id = \'nuuserhome\'"; ';
+	$set .= "\n";
+	$set .= '}';
+	$set .= "\n";
+	$set .= 'nuRunQuery("$s$w");';
+	$set .= "\n";
+	$where  = 'nuobject_BB';
+	$values = array($set,$where);
+	$sql    = "UPDATE `zzzzsys_php` SET `sph_php` = ? WHERE `zzzzsys_php_id` = ?";
+	nuRunQuery($sql, $values);
 
-        $set  = '$s  = "CREATE TABLE #TABLE_ID# SELECT zzzzsys_form_id AS theid FROM zzzzsys_form WHERE ";';
-        $set .= "\n";
-        $set .= '$w  = "1";';
-        $set .= "\n";
-        $set .= 'if ( $GLOBALS[\'nuSetup\']->set_denied == 1 )  { ';
-        $set .= "\n";
-        $set .= '$w  = "zzzzsys_form_id NOT LIKE \'nu%\' OR zzzzsys_form_id = \'nuuserhome\'"; ';
-        $set .= "\n";
-        $set .= '}';
-        $set .= "\n";
-        $set .= 'nuRunQuery("$s$w");';
-        $set .= "\n";
-        $where  = 'nuform_BB';
-        $values = array($set,$where);
-        $sql    = "UPDATE `zzzzsys_php` SET `sph_php` = ? WHERE `zzzzsys_php_id` = ?";
-        nuRunQuery($sql, $values);
+	$set  = '$s  = "CREATE TABLE #TABLE_ID# SELECT zzzzsys_form_id AS theid FROM zzzzsys_form WHERE ";';
+	$set .= "\n";
+	$set .= '$w  = "1";';
+	$set .= "\n";
+	$set .= 'if ( $GLOBALS[\'nuSetup\']->set_denied == 1 )  { ';
+	$set .= "\n";
+	$set .= '$w  = "zzzzsys_form_id NOT LIKE \'nu%\' OR zzzzsys_form_id = \'nuuserhome\'"; ';
+	$set .= "\n";
+	$set .= '}';
+	$set .= "\n";
+	$set .= 'nuRunQuery("$s$w");';
+	$set .= "\n";
+	$where  = 'nuform_BB';
+	$values = array($set,$where);
+	$sql    = "UPDATE `zzzzsys_php` SET `sph_php` = ? WHERE `zzzzsys_php_id` = ?";
+	nuRunQuery($sql, $values);
 
-        $set  = '$s  = "CREATE TABLE #TABLE_ID# SELECT zzzzsys_form_id AS theid FROM zzzzsys_form WHERE ";';
-        $set .= "\n";
-        $set .= '$w  = "1";';
-        $set .= "\n";
-        $set .= 'if ( $GLOBALS[\'nuSetup\']->set_denied == 1 )  { ';
-        $set .= "\n";
-        $set .= '$w  = "zzzzsys_form_id NOT LIKE \'nu%\' OR zzzzsys_form_id = \'nuuserhome\'"; ';
-        $set .= "\n";
-        $set .= '}';
-        $set .= "\n";
-        $set .= 'nuRunQuery("$s$w");';
-        $set .= "\n";
-        $where  = 'nutablookup_BB';
-        $values = array($set,$where);
-        $sql    = "UPDATE `zzzzsys_php` SET `sph_php` = ? WHERE `zzzzsys_php_id` = ?";
-        nuRunQuery($sql, $values);
+	$set  = '$s  = "CREATE TABLE #TABLE_ID# SELECT zzzzsys_form_id AS theid FROM zzzzsys_form WHERE ";';
+	$set .= "\n";
+	$set .= '$w  = "1";';
+	$set .= "\n";
+	$set .= 'if ( $GLOBALS[\'nuSetup\']->set_denied == 1 )  { ';
+	$set .= "\n";
+	$set .= '$w  = "zzzzsys_form_id NOT LIKE \'nu%\' OR zzzzsys_form_id = \'nuuserhome\'"; ';
+	$set .= "\n";
+	$set .= '}';
+	$set .= "\n";
+	$set .= 'nuRunQuery("$s$w");';
+	$set .= "\n";
+	$where  = 'nutablookup_BB';
+	$values = array($set,$where);
+	$sql    = "UPDATE `zzzzsys_php` SET `sph_php` = ? WHERE `zzzzsys_php_id` = ?";
+	nuRunQuery($sql, $values);
 }
 
 ?>
