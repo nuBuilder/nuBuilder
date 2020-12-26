@@ -767,11 +767,12 @@ function nuBuildTabList($i){
 	$a = [];
 	$s = "
 
-		SELECT DISTINCT zzzzsys_tab.*
-        FROM zzzzsys_tab
-        INNER JOIN zzzzsys_object ON sob_all_zzzzsys_form_id = syt_zzzzsys_form_id
-        WHERE syt_zzzzsys_form_id = ?
-        ORDER BY syt_order;
+		SELECT zzzzsys_tab.*
+		FROM zzzzsys_tab
+		INNER JOIN zzzzsys_object ON sob_all_zzzzsys_form_id = syt_zzzzsys_form_id
+		GROUP BY `zzzzsys_tab_id`, `syt_zzzzsys_form_id`
+		HAVING syt_zzzzsys_form_id = ?
+		ORDER BY `syt_order`;
 
 		";
 
