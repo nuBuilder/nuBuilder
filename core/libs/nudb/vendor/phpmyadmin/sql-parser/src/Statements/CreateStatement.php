@@ -2,6 +2,7 @@
 /**
  * `CREATE` statement.
  */
+
 declare(strict_types=1);
 
 namespace PhpMyAdmin\SqlParser\Statements;
@@ -280,10 +281,11 @@ class CreateStatement extends Statement
 
     /**
      * If `CREATE TABLE ... SELECT`.
+     * If `CREATE VIEW AS ` ... SELECT`.
      *
-     * Used by `CREATE TABLE`
+     * Used by `CREATE TABLE`, `CREATE VIEW`
      *
-     * @var SelectStatement
+     * @var SelectStatement|null
      */
     public $select;
 
@@ -359,9 +361,8 @@ class CreateStatement extends Statement
     public $parameters;
 
     /**
-     * The body of this function or procedure. For views, it is the select
-     * statement that gets the.
-     *
+     * The body of this function or procedure.
+     * For views, it is the select statement that creates the view.
      * Used by `CREATE FUNCTION`, `CREATE PROCEDURE` and `CREATE VIEW`.
      *
      * @var Token[]|string
@@ -432,7 +433,7 @@ class CreateStatement extends Statement
             return 'CREATE '
                 . OptionsArray::build($this->options) . ' '
                 . Expression::build($this->name) . ' '
-                . $fields . ' AS ' . TokensList::build($this->body) . ' '
+                . $fields . ' AS ' . ($this->select ? $this->select->build() : TokensList::build($this->body)) . ' '
                 . OptionsArray::build($this->entityOptions);
         } elseif ($this->options->has('TRIGGER')) {
             return 'CREATE '
@@ -688,6 +689,7 @@ class CreateStatement extends Statement
                 $this->body[] = $token;
             }
         } elseif ($this->options->has('VIEW')) {
+            /** @var Token $token */
             $token = $list->getNext(); // Skipping whitespaces and comments.
 
             // Parsing columns list.
@@ -698,14 +700,26 @@ class CreateStatement extends Statement
                 $list->getNext();
             }
 
-            // Parsing the `AS` keyword.
-            for (; $list->idx < $list->count; ++$list->idx) {
-                $token = $list->tokens[$list->idx];
-                if ($token->type === Token::TYPE_DELIMITER) {
-                    break;
+            // Parsing the SELECT expression with and without the `AS` keyword
+            if ($token->type === Token::TYPE_KEYWORD
+                && $token->keyword === 'SELECT'
+            ) {
+                $this->select = new SelectStatement($parser, $list);
+            } elseif ($token->type === Token::TYPE_KEYWORD
+                && $token->keyword === 'AS'
+                && $list->tokens[$nextidx]->type === Token::TYPE_KEYWORD
+                && $list->tokens[$nextidx]->value === 'SELECT'
+            ) {
+                $list->idx = $nextidx;
+                $this->select = new SelectStatement($parser, $list);
+            } else {
+                for (; $list->idx < $list->count; ++$list->idx) {
+                    $token = $list->tokens[$list->idx];
+                    if ($token->type === Token::TYPE_DELIMITER) {
+                        break;
+                    }
+                    $this->body[] = $token;
                 }
-
-                $this->body[] = $token;
             }
         } elseif ($this->options->has('TRIGGER')) {
             // Parsing the time and the event.

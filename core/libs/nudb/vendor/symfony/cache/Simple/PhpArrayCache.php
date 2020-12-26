@@ -19,7 +19,7 @@ use Symfony\Component\Cache\ResettableInterface;
 use Symfony\Component\Cache\Traits\PhpArrayTrait;
 use Symfony\Contracts\Cache\CacheInterface;
 
-@trigger_error(sprintf('The "%s" class is deprecated since Symfony 4.3, use "%s" and type-hint for "%s" instead.', PhpArrayCache::class, PhpArrayAdapter::class, CacheInterface::class), E_USER_DEPRECATED);
+@trigger_error(sprintf('The "%s" class is deprecated since Symfony 4.3, use "%s" and type-hint for "%s" instead.', PhpArrayCache::class, PhpArrayAdapter::class, CacheInterface::class), \E_USER_DEPRECATED);
 
 /**
  * @deprecated since Symfony 4.3, use PhpArrayAdapter and type-hint for CacheInterface instead.
@@ -91,7 +91,7 @@ class PhpArrayCache implements Psr16CacheInterface, PruneableInterface, Resettab
         if ($keys instanceof \Traversable) {
             $keys = iterator_to_array($keys, false);
         } elseif (!\is_array($keys)) {
-            throw new InvalidArgumentException(sprintf('Cache keys must be array or Traversable, "%s" given', \is_object($keys) ? \get_class($keys) : \gettype($keys)));
+            throw new InvalidArgumentException(sprintf('Cache keys must be array or Traversable, "%s" given.', \is_object($keys) ? \get_class($keys) : \gettype($keys)));
         }
         foreach ($keys as $key) {
             if (!\is_string($key)) {
@@ -147,7 +147,7 @@ class PhpArrayCache implements Psr16CacheInterface, PruneableInterface, Resettab
     public function deleteMultiple($keys)
     {
         if (!\is_array($keys) && !$keys instanceof \Traversable) {
-            throw new InvalidArgumentException(sprintf('Cache keys must be array or Traversable, "%s" given', \is_object($keys) ? \get_class($keys) : \gettype($keys)));
+            throw new InvalidArgumentException(sprintf('Cache keys must be array or Traversable, "%s" given.', \is_object($keys) ? \get_class($keys) : \gettype($keys)));
         }
 
         $deleted = true;
@@ -200,7 +200,7 @@ class PhpArrayCache implements Psr16CacheInterface, PruneableInterface, Resettab
     public function setMultiple($values, $ttl = null)
     {
         if (!\is_array($values) && !$values instanceof \Traversable) {
-            throw new InvalidArgumentException(sprintf('Cache values must be array or Traversable, "%s" given', \is_object($values) ? \get_class($values) : \gettype($values)));
+            throw new InvalidArgumentException(sprintf('Cache values must be array or Traversable, "%s" given.', \is_object($values) ? \get_class($values) : \gettype($values)));
         }
 
         $saved = true;

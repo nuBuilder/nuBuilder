@@ -70,8 +70,9 @@ class SearchTest extends TestCase
     {
         $this->expectException(KBException::class);
         $this->expectExceptionCode(0);
-        $this->expectExceptionMessageRegExp('/(.+) does not exist for this type of documentation !/');
-        Search::getByName("variable-3", Search::MARIADB);
+        $varName = 'variable-3';
+        $this->expectExceptionMessage($varName . ' does not exist for this type of documentation !');
+        Search::getByName($varName, Search::MARIADB);
     }
 
     /**
@@ -84,8 +85,9 @@ class SearchTest extends TestCase
     {
         $this->expectException(KBException::class);
         $this->expectExceptionCode(0);
-        $this->expectExceptionMessageRegExp('/(.+) does not exist !/');
-        Search::getVariableType("acbdefghi0202");
+        $varType = 'acbdefghi0202';
+        $this->expectExceptionMessage($varType . ' does not exist !');
+        Search::getVariableType($varType);
     }
 
     /**
@@ -98,8 +100,9 @@ class SearchTest extends TestCase
     {
         $this->expectException(KBException::class);
         $this->expectExceptionCode(0);
-        $this->expectExceptionMessageRegExp('/(.+) does not exist !/');
-        Search::getByName("acbdefghi0202", Search::MARIADB);
+        $varName = 'acbdefghi0202';
+        $this->expectExceptionMessage($varName . ' does not exist !');
+        Search::getByName($varName, Search::MARIADB);
     }
 
     /**
@@ -112,8 +115,9 @@ class SearchTest extends TestCase
     {
         $this->expectException(KBException::class);
         $this->expectExceptionCode(0);
-        $this->expectExceptionMessageRegExp('/(.+) does not exist !/');
-        Search::getVariable("acbdefghi0202");
+        $varName = 'acbdefghi0202';
+        $this->expectExceptionMessage($varName . ' does not exist !');
+        Search::getVariable($varName);
     }
 
     /**
@@ -127,7 +131,7 @@ class SearchTest extends TestCase
     {
         $this->expectException(KBException::class);
         $this->expectExceptionCode(0);
-        $this->expectExceptionMessageRegExp('/(.+) does not exist !/');
+        $this->expectExceptionMessage('.merged-ultraslim.json does not exist !');
         Search::$DATA_DIR = ".";
         Search::$loaded   = false;
         Search::loadData();
@@ -160,8 +164,9 @@ class SearchTest extends TestCase
     {
         $this->expectException(KBException::class);
         $this->expectExceptionCode(0);
-        $this->expectExceptionMessageRegExp('/(.+) does have a known type !/');
-        Search::getVariableType("variable-2");
+        $varType = 'variable-2';
+        $this->expectExceptionMessage($varType . ' does have a known type !');
+        Search::getVariableType($varType);
     }
 
     /**

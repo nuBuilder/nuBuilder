@@ -17,7 +17,9 @@ command line:
 Configuration
 -------------
 
-You need to register this extension before using the ``trans`` block::
+You need to register this extension before using the ``trans`` block
+
+.. code-block:: php
 
     use PhpMyAdmin\Twig\Extensions\I18nExtension;
 
@@ -25,7 +27,9 @@ You need to register this extension before using the ``trans`` block::
 
 Note that you must configure the ``gettext`` extension before rendering any
 internationalized template. Here is a simple configuration example from the
-PHP `documentation`_::
+PHP `documentation`_
+
+.. code-block:: php
 
     // Set language to French
     putenv('LC_ALL=fr_FR');
@@ -48,7 +52,7 @@ Usage
 
 Use the ``trans`` block to mark parts in the template as translatable:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% trans "Hello World!" %}
 
@@ -60,7 +64,7 @@ Use the ``trans`` block to mark parts in the template as translatable:
 
 In a translatable string, you can embed variables:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% trans %}
         Hello {{ name }}!
@@ -75,7 +79,7 @@ During the gettext lookup these placeholders are converted. ``{{ name }}`` becom
 If you need to apply filters to the variables, you first need to assign the
 result to a variable:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% set name = name|capitalize %}
 
@@ -85,7 +89,7 @@ result to a variable:
 
 To pluralize a translatable string, use the ``plural`` block:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% trans %}
         Hey {{ name }}, I have one apple.
@@ -99,7 +103,7 @@ contain the count value (here the value of ``apple_count``).
 
 To add notes for translators, use the ``notes`` block:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% trans %}
         Hey {{ name }}, I have one apple.
@@ -115,7 +119,7 @@ configure the ``gettext`` parser to get something like this: ``xgettext --add-co
 Within an expression or in a tag, you can use the ``trans`` filter to translate
 simple strings or variables:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ var|default(default_value|trans) }}
 
@@ -127,7 +131,7 @@ The filter is less powerful as it only works for simple variables or strings.
 For more complex scenario, like pluralization, you can use a two-step
 strategy:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {# assign the translation to a temporary variable #}
     {% set default_value %}
@@ -162,18 +166,24 @@ But there is a simple workaround: as Twig converts templates to
 PHP files, you can use ``xgettext`` on the template cache instead.
 
 Create a script that forces the generation of the cache for all your
-templates. Here is a simple example to get you started::
+templates. Here is a simple example to get you started
 
-    $tplDir = dirname(__FILE__).'/templates';
+.. code-block:: php
+
+    use Twig\Environment;
+    use Twig\Loader\FilesystemLoader;
+    use PhpMyAdmin\Twig\Extensions\I18nExtension;
+
+    $tplDir = __DIR__ . '/templates';
     $tmpDir = '/tmp/cache/';
-    $loader = new Twig_Loader_Filesystem($tplDir);
+    $loader = new FilesystemLoader($tplDir);
 
     // force auto-reload to always have the latest version of the template
-    $twig = new Twig_Environment($loader, array(
+    $twig = new Environment($loader, [
+        'auto_reload' => true,
         'cache' => $tmpDir,
-        'auto_reload' => true
-    ));
-    $twig->addExtension(new \PhpMyAdmin\Twig\Extensions\I18nExtension());
+    ]);
+    $twig->addExtension(new I18nExtension());
     // configure Twig the way you want
 
     // iterate over all your templates
@@ -181,7 +191,7 @@ templates. Here is a simple example to get you started::
     {
         // force compilation
         if ($file->isFile()) {
-            $twig->loadTemplate(str_replace($tplDir.'/', '', $file));
+            $twig->loadTemplate(str_replace($tplDir . '/', '', $file));
         }
     }
 
@@ -195,7 +205,20 @@ code:
 Another workaround is to use `Twig Gettext Extractor`_ and extract the template
 strings right from `Poedit`_.
 
-.. _`gettext`:                http://www.php.net/gettext
-.. _`documentation`:          http://fr.php.net/manual/en/function.gettext.php
-.. _`Twig Gettext Extractor`: https://github.com/umpirsky/Twig-Gettext-Extractor
-.. _`Poedit`:                 http://www.poedit.net/
+.. _`gettext`:                https://www.php.net/gettext
+.. _`documentation`:          https://www.php.net/manual/en/function.gettext.php
+.. _`Twig Gettext Extractor`: https://github.com/umpirsky/Twig-Gettext-Extractor#readme
+.. _`Poedit`:                 https://poedit.net/
+
+History
+-------
+
+This project was forked in 2019 by the phpMyAdmin team, since it was abandoned by the
+`Twig project`_ but was still in use for phpMyAdmin.
+
+.. _`Twig project`: https://github.com/twigphp/Twig-extensions
+
+If you find this work useful, or have a pull request to contribute, please find us on
+`Github`_.
+
+.. _`Github`: https://github.com/phpmyadmin/twig-i18n-extension/

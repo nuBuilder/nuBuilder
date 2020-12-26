@@ -41,7 +41,7 @@ trait PhpFilesTrait
     {
         self::$startTime = self::$startTime ?? $_SERVER['REQUEST_TIME'] ?? time();
 
-        return \function_exists('opcache_invalidate') && filter_var(ini_get('opcache.enable'), FILTER_VALIDATE_BOOLEAN) && (!\in_array(\PHP_SAPI, ['cli', 'phpdbg'], true) || filter_var(ini_get('opcache.enable_cli'), FILTER_VALIDATE_BOOLEAN));
+        return \function_exists('opcache_invalidate') && filter_var(ini_get('opcache.enable'), \FILTER_VALIDATE_BOOLEAN) && (!\in_array(\PHP_SAPI, ['cli', 'phpdbg'], true) || filter_var(ini_get('opcache.enable_cli'), \FILTER_VALIDATE_BOOLEAN));
     }
 
     /**
@@ -194,7 +194,7 @@ trait PhpFilesTrait
     /**
      * {@inheritdoc}
      */
-    protected function doSave(array $values, $lifetime)
+    protected function doSave(array $values, int $lifetime)
     {
         $ok = true;
         $expiry = $lifetime ? time() + $lifetime : 'PHP_INT_MAX';
@@ -209,7 +209,7 @@ trait PhpFilesTrait
                 try {
                     $value = VarExporter::export($value, $isStaticValue);
                 } catch (\Exception $e) {
-                    throw new InvalidArgumentException(sprintf('Cache key "%s" has non-serializable %s value.', $key, \is_object($value) ? \get_class($value) : 'array'), 0, $e);
+                    throw new InvalidArgumentException(sprintf('Cache key "%s" has non-serializable "%s" value.', $key, \is_object($value) ? \get_class($value) : 'array'), 0, $e);
                 }
             } elseif (\is_string($value)) {
                 // Wrap "N;" in a closure to not confuse it with an encoded `null`
@@ -218,7 +218,7 @@ trait PhpFilesTrait
                 }
                 $value = var_export($value, true);
             } elseif (!is_scalar($value)) {
-                throw new InvalidArgumentException(sprintf('Cache key "%s" has non-serializable %s value.', $key, \gettype($value)));
+                throw new InvalidArgumentException(sprintf('Cache key "%s" has non-serializable "%s" value.', $key, \gettype($value)));
             } else {
                 $value = var_export($value, true);
             }
@@ -247,7 +247,7 @@ trait PhpFilesTrait
         }
 
         if (!$ok && !is_writable($this->directory)) {
-            throw new CacheException(sprintf('Cache directory is not writable (%s)', $this->directory));
+            throw new CacheException(sprintf('Cache directory is not writable (%s).', $this->directory));
         }
 
         return $ok;

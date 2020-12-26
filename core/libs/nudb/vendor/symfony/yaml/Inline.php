@@ -90,7 +90,7 @@ class Inline
             }
 
             // some comments are allowed at the end
-            if (preg_replace('/\s+#.*$/A', '', substr($value, $i))) {
+            if (preg_replace('/\s*#.*$/A', '', substr($value, $i))) {
                 throw new ParseException(sprintf('Unexpected characters near "%s".', substr($value, $i)), self::$parsedLineNumber + 1, $value, self::$parsedFilename);
             }
 
@@ -161,10 +161,10 @@ class Inline
                 return 'false';
             case ctype_digit($value):
                 return \is_string($value) ? "'$value'" : (int) $value;
-            case is_numeric($value):
-                $locale = setlocale(LC_NUMERIC, 0);
+            case is_numeric($value) && false === strpos($value, "\f") && false === strpos($value, "\n") && false === strpos($value, "\r") && false === strpos($value, "\t") && false === strpos($value, "\v"):
+                $locale = setlocale(\LC_NUMERIC, 0);
                 if (false !== $locale) {
-                    setlocale(LC_NUMERIC, 'C');
+                    setlocale(\LC_NUMERIC, 'C');
                 }
                 if (\is_float($value)) {
                     $repr = (string) $value;
@@ -178,7 +178,7 @@ class Inline
                     $repr = \is_string($value) ? "'$value'" : (string) $value;
                 }
                 if (false !== $locale) {
-                    setlocale(LC_NUMERIC, $locale);
+                    setlocale(\LC_NUMERIC, $locale);
                 }
 
                 return $repr;
@@ -289,7 +289,7 @@ class Inline
                 $i += \strlen($output);
 
                 // remove comments
-                if (Parser::preg_match('/[ \t]+#/', $output, $match, PREG_OFFSET_CAPTURE)) {
+                if (Parser::preg_match('/[ \t]+#/', $output, $match, \PREG_OFFSET_CAPTURE)) {
                     $output = substr($output, 0, $match[0][1]);
                 }
             } elseif (Parser::preg_match('/^(.*?)('.implode('|', $delimiters).')/', substr($scalar, $i), $match)) {
@@ -297,7 +297,7 @@ class Inline
                 $i += \strlen($output);
                 $output = trim($output);
             } else {
-                throw new ParseException(sprintf('Malformed inline YAML string: %s.', $scalar), self::$parsedLineNumber + 1, null, self::$parsedFilename);
+                throw new ParseException(sprintf('Malformed inline YAML string: "%s".', $scalar), self::$parsedLineNumber + 1, null, self::$parsedFilename);
             }
 
             // a non-quoted string cannot start with @ or ` (reserved) nor with a scalar indicator (| or >)
@@ -321,7 +321,7 @@ class Inline
     private static function parseQuotedScalar(string $scalar, int &$i): string
     {
         if (!Parser::preg_match('/'.self::REGEX_QUOTED_STRING.'/Au', substr($scalar, $i), $match)) {
-            throw new ParseException(sprintf('Malformed inline YAML string: %s.', substr($scalar, $i)), self::$parsedLineNumber + 1, $scalar, self::$parsedFilename);
+            throw new ParseException(sprintf('Malformed inline YAML string: "%s".', substr($scalar, $i)), self::$parsedLineNumber + 1, $scalar, self::$parsedFilename);
         }
 
         $output = substr($match[0], 1, \strlen($match[0]) - 2);
@@ -397,7 +397,7 @@ class Inline
             ++$i;
         }
 
-        throw new ParseException(sprintf('Malformed inline YAML string: %s.', $sequence), self::$parsedLineNumber + 1, null, self::$parsedFilename);
+        throw new ParseException(sprintf('Malformed inline YAML string: "%s".', $sequence), self::$parsedLineNumber + 1, null, self::$parsedFilename);
     }
 
     /**
@@ -538,7 +538,7 @@ class Inline
             }
         }
 
-        throw new ParseException(sprintf('Malformed inline YAML string: %s.', $mapping), self::$parsedLineNumber + 1, null, self::$parsedFilename);
+        throw new ParseException(sprintf('Malformed inline YAML string: "%s".', $mapping), self::$parsedLineNumber + 1, null, self::$parsedFilename);
     }
 
     /**
@@ -615,7 +615,7 @@ class Inline
                             throw new ParseException(sprintf('The constant "%s" is not defined.', $const), self::$parsedLineNumber + 1, $scalar, self::$parsedFilename);
                         }
                         if (self::$exceptionOnInvalidType) {
-                            throw new ParseException(sprintf('The string "%s" could not be parsed as a constant. Have you forgotten to pass the "Yaml::PARSE_CONSTANT" flag to the parser?', $scalar), self::$parsedLineNumber + 1, $scalar, self::$parsedFilename);
+                            throw new ParseException(sprintf('The string "%s" could not be parsed as a constant. Did you forget to pass the "Yaml::PARSE_CONSTANT" flag to the parser?', $scalar), self::$parsedLineNumber + 1, $scalar, self::$parsedFilename);
                         }
 
                         return null;
@@ -636,15 +636,21 @@ class Inline
 
                 switch (true) {
                     case ctype_digit($scalar):
-                        $raw = $scalar;
+                        if (preg_match('/^0[0-7]+$/', $scalar)) {
+                            return octdec($scalar);
+                        }
+
                         $cast = (int) $scalar;
 
-                        return '0' == $scalar[0] ? octdec($scalar) : (((string) $raw == (string) $cast) ? $cast : $raw);
+                        return ($scalar === (string) $cast) ? $cast : $scalar;
                     case '-' === $scalar[0] && ctype_digit(substr($scalar, 1)):
-                        $raw = $scalar;
+                        if (preg_match('/^-0[0-7]+$/', $scalar)) {
+                            return -octdec(substr($scalar, 1));
+                        }
+
                         $cast = (int) $scalar;
 
-                        return '0' == $scalar[1] ? -octdec(substr($scalar, 1)) : (($raw === (string) $cast) ? $cast : $raw);
+                        return ($scalar === (string) $cast) ? $cast : $scalar;
                     case is_numeric($scalar):
                     case Parser::preg_match(self::getHexRegex(), $scalar):
                         $scalar = str_replace('_', '', $scalar);

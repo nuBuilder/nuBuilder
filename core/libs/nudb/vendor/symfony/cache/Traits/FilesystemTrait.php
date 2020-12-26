@@ -91,7 +91,7 @@ trait FilesystemTrait
     /**
      * {@inheritdoc}
      */
-    protected function doSave(array $values, $lifetime)
+    protected function doSave(array $values, int $lifetime)
     {
         $expiresAt = $lifetime ? (time() + $lifetime) : 0;
         $values = $this->marshaller->marshall($values, $failed);
@@ -103,7 +103,7 @@ trait FilesystemTrait
         }
 
         if ($failed && !is_writable($this->directory)) {
-            throw new CacheException(sprintf('Cache directory is not writable (%s)', $this->directory));
+            throw new CacheException(sprintf('Cache directory is not writable (%s).', $this->directory));
         }
 
         return $failed;

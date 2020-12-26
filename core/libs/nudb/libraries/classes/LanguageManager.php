@@ -54,6 +54,13 @@ class LanguageManager
             'ar|arabic',
             'ar_AE',
         ],
+        'ar_ly' => [
+            'ar_LY',
+            'Arabic (Libya)',
+            'ليبي',
+            'ar[_-]ly|arabic (libya)|libian arabic',
+            'ar_LY',
+        ],
         'az' => [
             'az',
             'Azerbaijani',
@@ -80,6 +87,13 @@ class LanguageManager
             'Belarusian (latin)',
             'Bie&#0322;aruskaja',
             'be[-_]lat|be@latin|belarusian latin',
+            '',
+        ],
+        'ber' => [
+            'ber',
+            'Berber',
+            'Tamaziɣt',
+            'ber|berber',
             '',
         ],
         'bg' => [
@@ -495,6 +509,13 @@ class LanguageManager
             'pt[-_]br|portuguese (brazil)',
             'pt_BR',
         ],
+        'rcf' => [
+            'rcf',
+            'R&eacute;union Creole',
+            'Kr&eacute;ol',
+            'rcf|creole (reunion)',
+            '',
+        ],
         'ro' => [
             'ro',
             'Romanian',
@@ -598,6 +619,13 @@ class LanguageManager
             'Tatarish',
             'Tatar&ccedil;a',
             'tt|tatarish',
+            '',
+        ],
+        'tzm' => [
+            'tzm',
+            'Central Atlas Tamazight',
+            'Tamaziɣt',
+            'tzm|central atlas tamazight',
             '',
         ],
         'ug' => [

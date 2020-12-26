@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 if ( $_COOKIE["nupmalogin"] != "good" ) {
         echo "please log into nubuilder";

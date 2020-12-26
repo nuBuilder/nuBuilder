@@ -41,13 +41,12 @@ abstract class AbstractTagAwareAdapter implements TagAwareAdapterInterface, TagA
     {
         $this->namespace = '' === $namespace ? '' : CacheItem::validateKey($namespace).':';
         if (null !== $this->maxIdLength && \strlen($namespace) > $this->maxIdLength - 24) {
-            throw new InvalidArgumentException(sprintf('Namespace must be %d chars max, %d given ("%s")', $this->maxIdLength - 24, \strlen($namespace), $namespace));
+            throw new InvalidArgumentException(sprintf('Namespace must be %d chars max, %d given ("%s").', $this->maxIdLength - 24, \strlen($namespace), $namespace));
         }
         $this->createCacheItem = \Closure::bind(
-            static function ($key, $value, $isHit) use ($defaultLifetime) {
+            static function ($key, $value, $isHit) {
                 $item = new CacheItem();
                 $item->key = $key;
-                $item->defaultLifetime = $defaultLifetime;
                 $item->isTaggable = true;
                 // If structure does not match what we expect return item as is (no value and not a hit)
                 if (!\is_array($value) || !\array_key_exists('value', $value)) {
@@ -72,7 +71,7 @@ abstract class AbstractTagAwareAdapter implements TagAwareAdapterInterface, TagA
         $getId = \Closure::fromCallable([$this, 'getId']);
         $tagPrefix = self::TAGS_PREFIX;
         $this->mergeByLifetime = \Closure::bind(
-            static function ($deferred, &$expiredIds) use ($getId, $tagPrefix) {
+            static function ($deferred, &$expiredIds) use ($getId, $tagPrefix, $defaultLifetime) {
                 $byLifetime = [];
                 $now = microtime(true);
                 $expiredIds = [];
@@ -80,7 +79,9 @@ abstract class AbstractTagAwareAdapter implements TagAwareAdapterInterface, TagA
                 foreach ($deferred as $key => $item) {
                     $key = (string) $key;
                     if (null === $item->expiry) {
-                        $ttl = 0 < $item->defaultLifetime ? $item->defaultLifetime : 0;
+                        $ttl = 0 < $defaultLifetime ? $defaultLifetime : 0;
+                    } elseif (0 === $item->expiry) {
+                        $ttl = 0;
                     } elseif (0 >= $ttl = (int) (0.1 + $item->expiry - $now)) {
                         $expiredIds[] = $getId($key);
                         continue;
@@ -128,7 +129,7 @@ abstract class AbstractTagAwareAdapter implements TagAwareAdapterInterface, TagA
      *
      * @return array The identifiers that failed to be cached or a boolean stating if caching succeeded or not
      */
-    abstract protected function doSave(array $values, ?int $lifetime, array $addTagData = [], array $removeTagData = []): array;
+    abstract protected function doSave(array $values, int $lifetime, array $addTagData = [], array $removeTagData = []): array;
 
     /**
      * Removes multiple items from the pool and their corresponding tags.

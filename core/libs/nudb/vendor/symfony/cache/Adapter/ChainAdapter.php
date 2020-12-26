@@ -51,6 +51,9 @@ class ChainAdapter implements AdapterInterface, CacheInterface, PruneableInterfa
             if (!$adapter instanceof CacheItemPoolInterface) {
                 throw new InvalidArgumentException(sprintf('The class "%s" does not implement the "%s" interface.', \get_class($adapter), CacheItemPoolInterface::class));
             }
+            if (\in_array(\PHP_SAPI, ['cli', 'phpdbg'], true) && $adapter instanceof ApcuAdapter && !filter_var(ini_get('apc.enable_cli'), \FILTER_VALIDATE_BOOLEAN)) {
+                continue; // skip putting APCu in the chain when the backend is disabled
+            }
 
             if ($adapter instanceof AdapterInterface) {
                 $this->adapters[] = $adapter;
@@ -67,15 +70,11 @@ class ChainAdapter implements AdapterInterface, CacheInterface, PruneableInterfa
                 unset($sourceMetadata[CacheItem::METADATA_TAGS]);
 
                 $item->value = $sourceItem->value;
-                $item->expiry = $sourceMetadata[CacheItem::METADATA_EXPIRY] ?? $sourceItem->expiry;
                 $item->isHit = $sourceItem->isHit;
                 $item->metadata = $item->newMetadata = $sourceItem->metadata = $sourceMetadata;
 
-                if (0 < $sourceItem->defaultLifetime && $sourceItem->defaultLifetime < $defaultLifetime) {
-                    $defaultLifetime = $sourceItem->defaultLifetime;
-                }
-                if (0 < $defaultLifetime && ($item->defaultLifetime <= 0 || $defaultLifetime < $item->defaultLifetime)) {
-                    $item->defaultLifetime = $defaultLifetime;
+                if (0 < $defaultLifetime) {
+                    $item->expiresAfter($defaultLifetime);
                 }
 
                 return $item;
@@ -96,7 +95,7 @@ class ChainAdapter implements AdapterInterface, CacheInterface, PruneableInterfa
             $adapter = $this->adapters[$i];
             if (isset($this->adapters[++$i])) {
                 $callback = $wrap;
-                $beta = INF === $beta ? INF : 0;
+                $beta = \INF === $beta ? \INF : 0;
             }
             if ($adapter instanceof CacheInterface) {
                 $value = $adapter->get($key, $callback, $beta, $metadata);

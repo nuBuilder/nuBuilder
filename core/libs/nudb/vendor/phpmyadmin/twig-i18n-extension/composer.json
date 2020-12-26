@@ -15,12 +15,22 @@
             "homepage": "https://www.phpmyadmin.net/team/"
         }
     ],
+    "support": {
+        "issues": "https://github.com/phpmyadmin/twig-i18n-extension/issues",
+        "source": "https://github.com/phpmyadmin/twig-i18n-extension"
+    },
     "require": {
-        "php": ">=5.5.0",
-        "twig/twig": "^1.42.3|^2.0"
+        "php": ">=7.1",
+        "twig/twig": "^1.42.3|^2.0|^3.0"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^4.2|^5.0"
+        "phpmyadmin/coding-standard": "^2.0",
+        "phpunit/phpunit": "^7 || ^8 || ^9"
+    },
+    "scripts": {
+        "phpunit": "phpunit",
+        "phpcs": "phpcs",
+        "phpcbf": "phpcbf"
     },
     "autoload": {
         "psr-4": { "PhpMyAdmin\\Twig\\Extensions\\": "src/" }
@@ -28,9 +38,7 @@
     "autoload-dev": {
         "psr-4": { "PhpMyAdmin\\Tests\\Twig\\Extensions\\": "test/" }
     },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "2.0-dev"
-        }
+    "config":{
+        "sort-packages": true
     }
 }

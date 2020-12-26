@@ -4,6 +4,7 @@
  *
  * Used for parsing `CREATE TABLE` statement.
  */
+
 declare(strict_types=1);
 
 namespace PhpMyAdmin\SqlParser\Components;
@@ -84,6 +85,8 @@ class CreateDefinition extends Component
             'expr',
             ['parenthesesDelimited' => true],
         ],
+
+        'INVISIBLE' => 13,
         // Common entries.
         //
         // NOTE: Some of the common options are not in the same order which

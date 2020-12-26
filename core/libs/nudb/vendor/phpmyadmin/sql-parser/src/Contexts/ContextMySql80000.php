@@ -1,11 +1,5 @@
 <?php
-/**
- * Context for MySQL 8.0.
- *
- * This file was auto-generated.
- *
- * @see https://dev.mysql.com/doc/refman/8.0/en/keywords.html
- */
+
 declare(strict_types=1);
 
 namespace PhpMyAdmin\SqlParser\Contexts;
@@ -16,9 +10,10 @@ use PhpMyAdmin\SqlParser\Token;
 /**
  * Context for MySQL 8.0.
  *
- * @category   Contexts
+ * This class was auto-generated from tools/contexts/*.txt.
+ * Use tools/run_generators.sh for update.
  *
- * @license    https://www.gnu.org/licenses/gpl-2.0.txt GPL-2.0+
+ * @see https://dev.mysql.com/doc/refman/8.0/en/keywords.html
  */
 class ContextMySql80000 extends Context
 {
@@ -78,10 +73,10 @@ class ContextMySql80000 extends Context
         'SECURITY' => 1, 'SHUTDOWN' => 1, 'SNAPSHOT' => 1, 'SWITCHES' => 1, 'TRIGGERS' => 1,
         'UNDOFILE' => 1, 'WARNINGS' => 1,
         'AGGREGATE' => 1, 'ALGORITHM' => 1, 'COMMITTED' => 1, 'DIRECTORY' => 1,
-        'DUPLICATE' => 1, 'EXPANSION' => 1, 'IO_THREAD' => 1, 'ISOLATION' => 1,
-        'NODEGROUP' => 1, 'PACK_KEYS' => 1, 'READ_ONLY' => 1, 'REDUNDANT' => 1,
-        'SAVEPOINT' => 1, 'SQL_CACHE' => 1, 'TEMPORARY' => 1, 'TEMPTABLE' => 1,
-        'UNDEFINED' => 1, 'UNINSTALL' => 1, 'VARIABLES' => 1,
+        'DUPLICATE' => 1, 'EXPANSION' => 1, 'INVISIBLE' => 1, 'IO_THREAD' => 1,
+        'ISOLATION' => 1, 'NODEGROUP' => 1, 'PACK_KEYS' => 1, 'READ_ONLY' => 1,
+        'REDUNDANT' => 1, 'SAVEPOINT' => 1, 'SQL_CACHE' => 1, 'TEMPORARY' => 1,
+        'TEMPTABLE' => 1, 'UNDEFINED' => 1, 'UNINSTALL' => 1, 'VARIABLES' => 1,
         'COMPLETION' => 1, 'COMPRESSED' => 1, 'CONCURRENT' => 1, 'CONNECTION' => 1,
         'CONSISTENT' => 1, 'DEALLOCATE' => 1, 'IDENTIFIED' => 1, 'MASTER_SSL' => 1,
         'NDBCLUSTER' => 1, 'PARTITIONS' => 1, 'PERSISTENT' => 1, 'PLUGIN_DIR' => 1,
@@ -136,10 +131,10 @@ class ContextMySql80000 extends Context
         'UNION' => 3, 'USAGE' => 3, 'USING' => 3, 'WHERE' => 3, 'WHILE' => 3,
         'WRITE' => 3,
         'BEFORE' => 3, 'CHANGE' => 3, 'COLUMN' => 3, 'CREATE' => 3, 'CURSOR' => 3,
-        'DELETE' => 3, 'ELSEIF' => 3, 'EXISTS' => 3, 'FLOAT4' => 3, 'FLOAT8' => 3,
-        'HAVING' => 3, 'IGNORE' => 3, 'INFILE' => 3, 'LINEAR' => 3, 'OPTION' => 3,
-        'REGEXP' => 3, 'RENAME' => 3, 'RETURN' => 3, 'REVOKE' => 3, 'SELECT' => 3,
-        'SIGNAL' => 3, 'STORED' => 3, 'UNLOCK' => 3, 'UPDATE' => 3,
+        'DELETE' => 3, 'ELSEIF' => 3, 'FLOAT4' => 3, 'FLOAT8' => 3, 'HAVING' => 3,
+        'IGNORE' => 3, 'INFILE' => 3, 'LINEAR' => 3, 'OPTION' => 3, 'REGEXP' => 3,
+        'RENAME' => 3, 'RETURN' => 3, 'REVOKE' => 3, 'SELECT' => 3, 'SIGNAL' => 3,
+        'STORED' => 3, 'UNLOCK' => 3, 'UPDATE' => 3,
         'ANALYZE' => 3, 'BETWEEN' => 3, 'CASCADE' => 3, 'COLLATE' => 3, 'DECLARE' => 3,
         'DELAYED' => 3, 'ESCAPED' => 3, 'EXPLAIN' => 3, 'FOREIGN' => 3, 'ITERATE' => 3,
         'LEADING' => 3, 'NATURAL' => 3, 'OUTFILE' => 3, 'PRIMARY' => 3, 'RELEASE' => 3,
@@ -326,7 +321,7 @@ class ContextMySql80000 extends Context
         'MOD' => 35,
         'LEFT' => 35,
         'MATCH' => 35, 'RIGHT' => 35,
-        'INSERT' => 35, 'REPEAT' => 35, 'SCHEMA' => 35, 'VALUES' => 35,
+        'EXISTS' => 35, 'INSERT' => 35, 'REPEAT' => 35, 'SCHEMA' => 35, 'VALUES' => 35,
         'CONVERT' => 35, 'DEFAULT' => 35, 'REPLACE' => 35,
         'DATABASE' => 35, 'UTC_DATE' => 35, 'UTC_TIME' => 35,
         'LOCALTIME' => 35,

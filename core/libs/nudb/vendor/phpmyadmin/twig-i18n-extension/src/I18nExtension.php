@@ -9,7 +9,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PhpMyAdmin\Twig\Extensions;
 
 use PhpMyAdmin\Twig\Extensions\TokenParser\TransTokenParser;
@@ -23,7 +22,7 @@ class I18nExtension extends AbstractExtension
      */
     public function getTokenParsers()
     {
-        return array(new TransTokenParser());
+        return [new TransTokenParser()];
     }
 
     /**
@@ -31,9 +30,9 @@ class I18nExtension extends AbstractExtension
      */
     public function getFilters()
     {
-        return array(
+        return [
             new TwigFilter('trans', 'gettext'),
-        );
+        ];
     }
 
     /**

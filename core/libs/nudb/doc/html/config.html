@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Configuration &#8212; phpMyAdmin 5.0.2 documentation</title>
+    <title>Configuration &#8212; phpMyAdmin 5.0.4 documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
@@ -34,7 +34,7 @@
         <li class="right" >
           <a href="setup.html" title="Installation"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.0.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.0.4 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -383,7 +383,7 @@ define all settings, just those you need to change).</p>
 <p class="last">The <span class="target" id="index-9"></span><a class="reference internal" href="#cfg_Servers"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['Servers']</span></code></a> array starts with
 $cfg[‘Servers’][1]. Do not use $cfg[‘Servers’][0]. If you want more
 than one server, just copy following section (including $i
-incrementation) serveral times. There is no need to define full server
+increment) several times. There is no need to define full server
 array, just define values you need to change.</p>
 </div>
 </dd></dl>
@@ -1937,11 +1937,11 @@ SERVER_ADDRESS might not be available on all webservers):</p>
 <span class="pre">from</span> <span class="pre">all'</span></code> if your rule order is set to <code class="docutils literal notranslate"><span class="pre">'deny,allow'</span></code> or <code class="docutils literal notranslate"><span class="pre">'deny</span> <span class="pre">%</span>
 <span class="pre">from</span> <span class="pre">all'</span></code> if your rule order is set to <code class="docutils literal notranslate"><span class="pre">'allow,deny'</span></code> or
 <code class="docutils literal notranslate"><span class="pre">'explicit'</span></code>.</p>
-<p>For the <a class="reference internal" href="glossary.html#term-ip-address"><span class="xref std std-term">IP address</span></a> matching
+<p>For the <a class="reference internal" href="glossary.html#term-ip-address"><span class="xref std std-term">IP Address</span></a> matching
 system, the following work:</p>
 <ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">xxx.xxx.xxx.xxx</span></code> (an exact <a class="reference internal" href="glossary.html#term-ip-address"><span class="xref std std-term">IP address</span></a>)</li>
-<li><code class="docutils literal notranslate"><span class="pre">xxx.xxx.xxx.[yyy-zzz]</span></code> (an <a class="reference internal" href="glossary.html#term-ip-address"><span class="xref std std-term">IP address</span></a> range)</li>
+<li><code class="docutils literal notranslate"><span class="pre">xxx.xxx.xxx.xxx</span></code> (an exact <a class="reference internal" href="glossary.html#term-ip-address"><span class="xref std std-term">IP Address</span></a>)</li>
+<li><code class="docutils literal notranslate"><span class="pre">xxx.xxx.xxx.[yyy-zzz]</span></code> (an <a class="reference internal" href="glossary.html#term-ip-address"><span class="xref std std-term">IP Address</span></a> range)</li>
 <li><code class="docutils literal notranslate"><span class="pre">xxx.xxx.xxx.xxx/nn</span></code> (CIDR, Classless Inter-Domain Routing type <a class="reference internal" href="glossary.html#term-ip"><span class="xref std std-term">IP</span></a> addresses)</li>
 </ul>
 <p>But the following does not work:</p>
@@ -2797,7 +2797,7 @@ See also <span class="target" id="index-136"></span><a class="reference internal
 matching the <a class="reference internal" href="glossary.html#term-ip"><span class="xref std std-term">IP</span></a> or the hostname of the MySQL server
 to the given regular expression. The regular expression must be enclosed
 with a delimiter character.</p>
-<p>It is recommended to include start and end symbols in the regullar
+<p>It is recommended to include start and end symbols in the regular
 expression, so that you can avoid partial matches on the string.</p>
 <p><strong>Examples:</strong></p>
 <div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="c1">// Allow connection to three listed servers:</span>
@@ -2815,8 +2815,31 @@ expression, so that you can avoid partial matches on the string.</p>
 <p class="last">The whole server name is matched, it can include port as well. Due to
 way MySQL is permissive in connection parameters, it is possible to use
 connection strings as <code class="docutils literal notranslate"><span class="pre">`server:3306-mysql`</span></code>. This can be used to
-bypass regullar expression by the suffix, while connecting to another
+bypass regular expression by the suffix, while connecting to another
 server.</p>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cfg_CaptchaMethod">
+<code class="descname">$cfg['CaptchaMethod']</code><a class="headerlink" href="#cfg_CaptchaMethod" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Default value:</th><td class="field-body"><code class="docutils literal notranslate"><span class="pre">'invisible'</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>Valid values are:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">'invisible'</span></code> Use an invisible captcha checking method;</li>
+<li><code class="docutils literal notranslate"><span class="pre">'checkbox'</span></code> Use a checkbox to confirm the user is not a robot.</li>
+</ul>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.3.</span></p>
 </div>
 </dd></dl>
 
@@ -2833,8 +2856,12 @@ server.</p>
 </tr>
 </tbody>
 </table>
-<p>The public key for the reCaptcha service that can be obtained from
-<a class="reference external" href="https://www.google.com/recaptcha/intro/v3.html">https://www.google.com/recaptcha/intro/v3.html</a>.</p>
+<p>The public key for the reCaptcha service that can be obtained from the
+“Admin Console” on <a class="reference external" href="https://www.google.com/recaptcha/about/">https://www.google.com/recaptcha/about/</a>.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">&lt;<a class="reference external" href="https://developers.google.com/recaptcha/docs/v3">https://developers.google.com/recaptcha/docs/v3</a>&gt;</p>
+</div>
 <p>reCaptcha will be then used in <a class="reference internal" href="setup.html#cookie"><span class="std std-ref">Cookie authentication mode</span></a>.</p>
 </dd></dl>
 
@@ -2851,8 +2878,12 @@ server.</p>
 </tr>
 </tbody>
 </table>
-<p>The private key for the reCaptcha service that can be obtain from
-<a class="reference external" href="https://www.google.com/recaptcha/intro/v3.html">https://www.google.com/recaptcha/intro/v3.html</a>.</p>
+<p>The private key for the reCaptcha service that can be obtained from the
+“Admin Console” on <a class="reference external" href="https://www.google.com/recaptcha/about/">https://www.google.com/recaptcha/about/</a>.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">&lt;<a class="reference external" href="https://developers.google.com/recaptcha/docs/v3">https://developers.google.com/recaptcha/docs/v3</a>&gt;</p>
+</div>
 <p>reCaptcha will be then used in <a class="reference internal" href="setup.html#cookie"><span class="std std-ref">Cookie authentication mode</span></a>.</p>
 </dd></dl>
 
@@ -3464,7 +3495,7 @@ entered directly.</p>
 </tr>
 </tbody>
 </table>
-<p>Defines whether to display informations about the current Git revision (if
+<p>Defines whether to display information about the current Git revision (if
 applicable) on the main panel.</p>
 </dd></dl>
 
@@ -5275,7 +5306,7 @@ all visual sliders, use <code class="docutils literal notranslate"><span class="
 </table>
 <p>Contains names of configuration options (keys in <code class="docutils literal notranslate"><span class="pre">$cfg</span></code> array) that
 users can’t set through user preferences. For possible values, refer
-to clases under <code class="file docutils literal notranslate"><span class="pre">libraries/classes/Config/Forms/User/</span></code>.</p>
+to classes under <code class="file docutils literal notranslate"><span class="pre">libraries/classes/Config/Forms/User/</span></code>.</p>
 </dd></dl>
 
 <dl class="option">
@@ -6034,7 +6065,6 @@ as password.</p>
 <div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;?</span><span class="nx">php</span>
 <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
-<span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;Servers&#39;</span><span class="p">][</span><span class="nv">$i</span><span class="p">][</span><span class="s1">&#39;extension&#39;</span><span class="p">]</span>     <span class="o">=</span> <span class="s1">&#39;mysqli&#39;</span><span class="p">;</span>
 <span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;Servers&#39;</span><span class="p">][</span><span class="nv">$i</span><span class="p">][</span><span class="s1">&#39;auth_type&#39;</span><span class="p">]</span>     <span class="o">=</span> <span class="s1">&#39;signon&#39;</span><span class="p">;</span>
 <span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;Servers&#39;</span><span class="p">][</span><span class="nv">$i</span><span class="p">][</span><span class="s1">&#39;SignonSession&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;SignonSession&#39;</span><span class="p">;</span>
 <span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;Servers&#39;</span><span class="p">][</span><span class="nv">$i</span><span class="p">][</span><span class="s1">&#39;SignonURL&#39;</span><span class="p">]</span>     <span class="o">=</span> <span class="s1">&#39;examples/signon.php&#39;</span><span class="p">;</span>
@@ -6073,7 +6103,6 @@ following example shows two of them:</p>
 <span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;Servers&#39;</span><span class="p">][</span><span class="nv">$i</span><span class="p">][</span><span class="s1">&#39;auth_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;cookie&#39;</span><span class="p">;</span>
 <span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;Servers&#39;</span><span class="p">][</span><span class="nv">$i</span><span class="p">][</span><span class="s1">&#39;verbose&#39;</span><span class="p">]</span>   <span class="o">=</span> <span class="s1">&#39;no1&#39;</span><span class="p">;</span>
 <span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;Servers&#39;</span><span class="p">][</span><span class="nv">$i</span><span class="p">][</span><span class="s1">&#39;host&#39;</span><span class="p">]</span>      <span class="o">=</span> <span class="s1">&#39;localhost&#39;</span><span class="p">;</span>
-<span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;Servers&#39;</span><span class="p">][</span><span class="nv">$i</span><span class="p">][</span><span class="s1">&#39;extension&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;mysqli&#39;</span><span class="p">;</span>
 <span class="c1">// more options for #1 ...</span>
 
 <span class="nv">$i</span><span class="o">++</span><span class="p">;</span> <span class="c1">// server 2 :</span>
@@ -6082,7 +6111,6 @@ following example shows two of them:</p>
 <span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;Servers&#39;</span><span class="p">][</span><span class="nv">$i</span><span class="p">][</span><span class="s1">&#39;host&#39;</span><span class="p">]</span>      <span class="o">=</span> <span class="s1">&#39;remote.host.addr&#39;</span><span class="p">;</span><span class="c1">//or ip:&#39;10.9.8.1&#39;</span>
 <span class="c1">// this server must allow remote clients, e.g., host 10.9.8.%</span>
 <span class="c1">// not only in mysql.host but also in the startup configuration</span>
-<span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;Servers&#39;</span><span class="p">][</span><span class="nv">$i</span><span class="p">][</span><span class="s1">&#39;extension&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;mysqli&#39;</span><span class="p">;</span>
 <span class="c1">// more options for #2 ...</span>
 
 <span class="c1">// end of server sections</span>
@@ -6095,9 +6123,9 @@ following example shows two of them:</p>
 <div class="section" id="google-cloud-sql-with-ssl">
 <span id="example-google-ssl"></span><h3>Google Cloud SQL with SSL<a class="headerlink" href="#google-cloud-sql-with-ssl" title="Permalink to this headline">¶</a></h3>
 <p>To connect to Google Could SQL, you currently need to disable certificate
-verification. This is caused by the certficate being issued for CN matching
+verification. This is caused by the certificate being issued for CN matching
 your instance name, but you connect to an IP address and PHP tries to match
-these two. With verfication you end up with error message like:</p>
+these two. With verification you end up with error message like:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Peer certificate CN=`api-project-851612429544:pmatest&#39; did not match expected CN=`8.8.8.8&#39;
 </pre></div>
 </div>
@@ -6225,11 +6253,11 @@ server certificates and tell phpMyAdmin to use them:</p>
         <li class="right" >
           <a href="setup.html" title="Installation"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.0.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.0.4 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; <a href="copyright.html">Copyright</a> 2012 - 2018, The phpMyAdmin devel team.
+        &#169; <a href="copyright.html">Copyright</a> 2012 - 2020, The phpMyAdmin devel team.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.4.
     </div>
   </body>

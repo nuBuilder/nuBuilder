@@ -9,10 +9,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PhpMyAdmin\Twig\Extensions\Node;
 
 use Twig\Compiler;
+use Twig\Node\CheckToStringNode;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
@@ -20,29 +20,33 @@ use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\TempNameExpression;
 use Twig\Node\Node;
 use Twig\Node\PrintNode;
-use Twig\Node\SetTempNode;
+use function array_merge;
+use function count;
+use function sprintf;
+use function str_replace;
+use function trim;
 
 /**
  * Represents a trans node.
  *
- * @author Fabien Potencier <fabien.potencier@symfony-project.com>
+ * Author Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class TransNode extends Node
 {
-    public function __construct(Node $body, Node $plural = null, AbstractExpression $count = null, Node $notes = null, $lineno, $tag = null)
+    public function __construct(Node $body, ?Node $plural, ?AbstractExpression $count, ?Node $notes, int $lineno = 0, ?string $tag = null)
     {
-        $nodes = array('body' => $body);
-        if (null !== $count) {
+        $nodes = ['body' => $body];
+        if ($count !== null) {
             $nodes['count'] = $count;
         }
-        if (null !== $plural) {
+        if ($plural !== null) {
             $nodes['plural'] = $plural;
         }
-        if (null !== $notes) {
+        if ($notes !== null) {
             $nodes['notes'] = $notes;
         }
 
-        parent::__construct($nodes, array(), $lineno, $tag);
+        parent::__construct($nodes, [], $lineno, $tag);
     }
 
     /**
@@ -52,10 +56,10 @@ class TransNode extends Node
     {
         $compiler->addDebugInfo($this);
 
-        list($msg, $vars) = $this->compileString($this->getNode('body'));
+        [$msg, $vars] = $this->compileString($this->getNode('body'));
 
         if ($this->hasNode('plural')) {
-            list($msg1, $vars1) = $this->compileString($this->getNode('plural'));
+            [$msg1, $vars1] = $this->compileString($this->getNode('plural'));
 
             $vars = array_merge($vars, $vars1);
         }
@@ -66,15 +70,14 @@ class TransNode extends Node
             $message = trim($this->getNode('notes')->getAttribute('data'));
 
             // line breaks are not allowed cause we want a single line comment
-            $message = str_replace(array("\n", "\r"), ' ', $message);
-            $compiler->write("// notes: {$message}\n");
+            $message = str_replace(["\n", "\r"], ' ', $message);
+            $compiler->write('// notes: ' . $message . "\n");
         }
 
         if ($vars) {
             $compiler
-                ->write('echo strtr('.$function.'(')
-                ->subcompile($msg)
-            ;
+                ->write('echo strtr(' . $function . '(')
+                ->subcompile($msg);
 
             if ($this->hasNode('plural')) {
                 $compiler
@@ -82,36 +85,32 @@ class TransNode extends Node
                     ->subcompile($msg1)
                     ->raw(', abs(')
                     ->subcompile($this->hasNode('count') ? $this->getNode('count') : null)
-                    ->raw(')')
-                ;
+                    ->raw(')');
             }
 
             $compiler->raw('), array(');
 
             foreach ($vars as $var) {
-                if ('count' === $var->getAttribute('name')) {
+                if ($var->getAttribute('name') === 'count') {
                     $compiler
                         ->string('%count%')
                         ->raw(' => abs(')
                         ->subcompile($this->hasNode('count') ? $this->getNode('count') : null)
-                        ->raw('), ')
-                    ;
+                        ->raw('), ');
                 } else {
                     $compiler
-                        ->string('%'.$var->getAttribute('name').'%')
+                        ->string('%' . $var->getAttribute('name') . '%')
                         ->raw(' => ')
                         ->subcompile($var)
-                        ->raw(', ')
-                    ;
+                        ->raw(', ');
                 }
             }
 
             $compiler->raw("));\n");
         } else {
             $compiler
-                ->write('echo '.$function.'(')
-                ->subcompile($msg)
-            ;
+                ->write('echo ' . $function . '(')
+                ->subcompile($msg);
 
             if ($this->hasNode('plural')) {
                 $compiler
@@ -119,8 +118,7 @@ class TransNode extends Node
                     ->subcompile($msg1)
                     ->raw(', abs(')
                     ->subcompile($this->hasNode('count') ? $this->getNode('count') : null)
-                    ->raw(')')
-                ;
+                    ->raw(')');
             }
 
             $compiler->raw(");\n");
@@ -128,29 +126,27 @@ class TransNode extends Node
     }
 
     /**
-     * @param Node $body A Node instance
-     *
-     * @return array
+     * Keep this method protected instead of private
+     * Twig/I18n/NodeTrans from phpmyadmin/phpmyadmin uses it
      */
-    protected function compileString(Node $body)
+    protected function compileString(Node $body): array
     {
         if ($body instanceof NameExpression || $body instanceof ConstantExpression || $body instanceof TempNameExpression) {
-            return array($body, array());
+            return [$body, []];
         }
 
-        $vars = array();
+        $vars = [];
         if (count($body)) {
             $msg = '';
 
             foreach ($body as $node) {
-                if (get_class($node) === Node::class && $node->getNode(0) instanceof SetTempNode) {
-                    $node = $node->getNode(1);
-                }
-
                 if ($node instanceof PrintNode) {
                     $n = $node->getNode('expr');
                     while ($n instanceof FilterExpression) {
                         $n = $n->getNode('node');
+                    }
+                    while ($n instanceof CheckToStringNode) {
+                        $n = $n->getNode('expr');
                     }
                     $msg .= sprintf('%%%s%%', $n->getAttribute('name'));
                     $vars[] = new NameExpression($n->getAttribute('name'), $n->getTemplateLine());
@@ -162,15 +158,10 @@ class TransNode extends Node
             $msg = $body->getAttribute('data');
         }
 
-        return array(new Node(array(new ConstantExpression(trim($msg), $body->getTemplateLine()))), $vars);
+        return [new Node([new ConstantExpression(trim($msg), $body->getTemplateLine())]), $vars];
     }
 
-    /**
-     * @param bool $plural Return plural or singular function to use
-     *
-     * @return string
-     */
-    protected function getTransFunction($plural)
+    private function getTransFunction(bool $plural): string
     {
         return $plural ? 'ngettext' : 'gettext';
     }

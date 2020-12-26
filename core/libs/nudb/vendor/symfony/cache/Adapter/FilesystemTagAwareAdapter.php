@@ -72,7 +72,7 @@ class FilesystemTagAwareAdapter extends AbstractTagAwareAdapter implements Prune
                         if (!file_exists($d = $dir.$chars[$i].\DIRECTORY_SEPARATOR.$chars[$j])) {
                             continue;
                         }
-                        foreach (scandir($d, SCANDIR_SORT_NONE) ?: [] as $link) {
+                        foreach (scandir($d, \SCANDIR_SORT_NONE) ?: [] as $link) {
                             if ('.' !== $link && '..' !== $link && (null !== $renamed || !realpath($d.\DIRECTORY_SEPARATOR.$link))) {
                                 unlink($d.\DIRECTORY_SEPARATOR.$link);
                             }
@@ -93,7 +93,7 @@ class FilesystemTagAwareAdapter extends AbstractTagAwareAdapter implements Prune
     /**
      * {@inheritdoc}
      */
-    protected function doSave(array $values, ?int $lifetime, array $addTagData = [], array $removeTagData = []): array
+    protected function doSave(array $values, int $lifetime, array $addTagData = [], array $removeTagData = []): array
     {
         $failed = $this->doSaveCache($values, $lifetime);
 
@@ -107,7 +107,7 @@ class FilesystemTagAwareAdapter extends AbstractTagAwareAdapter implements Prune
 
                 $file = $this->getFile($id);
 
-                if (!@symlink($file, $this->getFile($id, true, $tagFolder))) {
+                if (!@symlink($file, $tagLink = $this->getFile($id, true, $tagFolder)) && !is_link($tagLink)) {
                     @unlink($file);
                     $failed[] = $id;
                 }

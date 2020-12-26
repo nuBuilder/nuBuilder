@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Installation &#8212; phpMyAdmin 5.0.2 documentation</title>
+    <title>Installation &#8212; phpMyAdmin 5.0.4 documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
@@ -34,7 +34,7 @@
         <li class="right" >
           <a href="require.html" title="Requirements"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.0.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.0.4 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -126,7 +126,7 @@ which include phpMyAdmin together with a database and web server such as
 <li><a class="reference external" href="https://git-scm.com/downloads">Git</a> to download the source, or you can download the most recent source directly from <a class="reference external" href="https://codeload.github.com/phpmyadmin/phpmyadmin/zip/master">Github</a></li>
 <li><a class="reference external" href="https://getcomposer.org/download/">Composer</a></li>
 <li><a class="reference external" href="https://nodejs.org/en/download/">Node.js</a> (version 8 or higher)</li>
-<li><a class="reference external" href="https://legacy.yarnpkg.com/en/docs/install">Yarn</a></li>
+<li><a class="reference external" href="https://classic.yarnpkg.com/en/docs/install">Yarn</a></li>
 </ul>
 <p>You can clone current phpMyAdmin source from
 <code class="docutils literal notranslate"><span class="pre">https://github.com/phpmyadmin/phpmyadmin.git</span></code>:</p>
@@ -142,8 +142,8 @@ by invoking:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>composer update --no-dev
 </pre></div>
 </div>
-<p>Finally, you’ll need to use <a class="reference external" href="https://legacy.yarnpkg.com/en/docs/install">Yarn</a> to install some JavaScript dependencies:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>yarn install
+<p>Finally, you’ll need to use <a class="reference external" href="https://classic.yarnpkg.com/en/docs/install">Yarn</a> to install some JavaScript dependencies:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>yarn install --production
 </pre></div>
 </div>
 </div>
@@ -171,9 +171,9 @@ the release tarballs and is available at
 </div>
 <div class="section" id="installing-using-docker">
 <span id="docker"></span><h2>Installing using Docker<a class="headerlink" href="#installing-using-docker" title="Permalink to this headline">¶</a></h2>
-<p>phpMyAdmin comes with a <a class="reference external" href="https://hub.docker.com/r/phpmyadmin/phpmyadmin/">Docker image</a>, which you can easily deploy. You can
+<p>phpMyAdmin comes with a <a class="reference external" href="https://hub.docker.com/_/phpmyadmin">Docker official image</a>, which you can easily deploy. You can
 download it using:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>docker pull phpmyadmin/phpmyadmin
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>docker pull phpmyadmin
 </pre></div>
 </div>
 <p>The phpMyAdmin server will listen on port 80. It supports several ways of
@@ -272,6 +272,35 @@ proxy makes phpMyAdmin available.</p>
 <p class="first admonition-title">See also</p>
 <p class="last"><span class="target" id="index-6"></span><a class="reference internal" href="config.html#cfg_PmaAbsoluteUri"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['PmaAbsoluteUri']</span></code></a></p>
 </div>
+</dd></dl>
+
+<dl class="envvar">
+<dt id="envvar-HIDE_PHP_VERSION">
+<code class="descname">HIDE_PHP_VERSION</code><a class="headerlink" href="#envvar-HIDE_PHP_VERSION" title="Permalink to this definition">¶</a></dt>
+<dd><p>If defined, this option will hide the PHP version (<cite>expose_php = Off</cite>).
+Set to any value (such as <cite>HIDE_PHP_VERSION=true</cite>).</p>
+</dd></dl>
+
+<dl class="envvar">
+<dt id="envvar-UPLOAD_LIMIT">
+<code class="descname">UPLOAD_LIMIT</code><a class="headerlink" href="#envvar-UPLOAD_LIMIT" title="Permalink to this definition">¶</a></dt>
+<dd><p>If set, this option will override the default value for apache and php-fpm (this will change <code class="docutils literal notranslate"><span class="pre">upload_max_filesize</span></code> and <code class="docutils literal notranslate"><span class="pre">post_max_size</span></code> values).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Format as <cite>[0-9+](K,M,G)</cite> default value is <cite>2048K</cite></p>
+</div>
+</dd></dl>
+
+<dl class="envvar">
+<dt id="envvar-PMA_CONFIG_BASE64">
+<code class="descname">PMA_CONFIG_BASE64</code><a class="headerlink" href="#envvar-PMA_CONFIG_BASE64" title="Permalink to this definition">¶</a></dt>
+<dd><p>If set, this option will override the default <cite>config.inc.php</cite> with the base64 decoded contents of the variable.</p>
+</dd></dl>
+
+<dl class="envvar">
+<dt id="envvar-PMA_USER_CONFIG_BASE64">
+<code class="descname">PMA_USER_CONFIG_BASE64</code><a class="headerlink" href="#envvar-PMA_USER_CONFIG_BASE64" title="Permalink to this definition">¶</a></dt>
+<dd><p>If set, this option will override the default <cite>config.user.inc.php</cite> with the base64 decoded contents of the variable.</p>
 </dd></dl>
 
 <p>By default, <a class="reference internal" href="#cookie"><span class="std std-ref">Cookie authentication mode</span></a> is used, but if <span class="target" id="index-7"></span><a class="reference internal" href="#envvar-PMA_USER"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PMA_USER</span></code></a> and
@@ -525,7 +554,7 @@ simple configuration may look like this:</p>
 <span class="nv">$i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
 <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
 <span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;Servers&#39;</span><span class="p">][</span><span class="nv">$i</span><span class="p">][</span><span class="s1">&#39;user&#39;</span><span class="p">]</span>          <span class="o">=</span> <span class="s1">&#39;root&#39;</span><span class="p">;</span>
-<span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;Servers&#39;</span><span class="p">][</span><span class="nv">$i</span><span class="p">][</span><span class="s1">&#39;password&#39;</span><span class="p">]</span>      <span class="o">=</span> <span class="s1">&#39;cbb74bc&#39;</span><span class="p">;</span> <span class="c1">// use here your password</span>
+<span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;Servers&#39;</span><span class="p">][</span><span class="nv">$i</span><span class="p">][</span><span class="s1">&#39;password&#39;</span><span class="p">]</span>      <span class="o">=</span> <span class="s1">&#39;changeme&#39;</span><span class="p">;</span> <span class="c1">// use here your password</span>
 <span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;Servers&#39;</span><span class="p">][</span><span class="nv">$i</span><span class="p">][</span><span class="s1">&#39;auth_type&#39;</span><span class="p">]</span>     <span class="o">=</span> <span class="s1">&#39;config&#39;</span><span class="p">;</span>
 </pre></div>
 </div>
@@ -653,8 +682,7 @@ Handbook covers this topic in the chapter <a class="reference external" href="ht
 keyring</a>. The most reliable method is to meet the developer in person and
 exchange key fingerprints, however, you can also rely on the web of trust. This way
 you can trust the key transitively though signatures of others, who have met
-the developer in person. For example, you can see how <a class="reference external" href="https://pgp.cs.uu.nl/paths/79be3e4300411886/to/ce752f178259bd92.html">Isaac’s key links to
-Linus’s key</a>.</p>
+the developer in person.</p>
 <p>Once the key is trusted, the warning will not occur:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> gpg --verify phpMyAdmin-4.5.4.1-all-languages.zip.asc
 <span class="go">gpg: Signature made Fri 29 Jan 2016 08:59:37 AM EST using RSA key ID 8259BD92</span>
@@ -923,6 +951,7 @@ the login process.</li>
     <span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;PMA_single_signon_port&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;port&#39;</span><span class="p">];</span>
     <span class="cm">/* Update another field of server configuration */</span>
     <span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;PMA_single_signon_cfgupdate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;verbose&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Signon test&#39;</span><span class="p">];</span>
+    <span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;PMA_single_signon_HMAC_secret&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">(</span><span class="s1">&#39;sha1&#39;</span><span class="p">,</span> <span class="nb">uniqid</span><span class="p">(</span><span class="nb">strval</span><span class="p">(</span><span class="nb">rand</span><span class="p">()),</span> <span class="k">true</span><span class="p">));</span>
     <span class="nv">$id</span> <span class="o">=</span> <span class="nb">session_id</span><span class="p">();</span>
     <span class="cm">/* Close that session */</span>
     <span class="o">@</span><span class="nb">session_write_close</span><span class="p">();</span>
@@ -1136,6 +1165,7 @@ in <code class="file docutils literal notranslate"><span class="pre">examples/op
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="k">empty</span><span class="p">(</span><span class="nv">$id</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nb">isset</span><span class="p">(</span><span class="nv">$AUTH_MAP</span><span class="p">[</span><span class="nv">$id</span><span class="p">]))</span> <span class="p">{</span>
         <span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;PMA_single_signon_user&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$AUTH_MAP</span><span class="p">[</span><span class="nv">$id</span><span class="p">][</span><span class="s1">&#39;user&#39;</span><span class="p">];</span>
         <span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;PMA_single_signon_password&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$AUTH_MAP</span><span class="p">[</span><span class="nv">$id</span><span class="p">][</span><span class="s1">&#39;password&#39;</span><span class="p">];</span>
+        <span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;PMA_single_signon_HMAC_secret&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">(</span><span class="s1">&#39;sha1&#39;</span><span class="p">,</span> <span class="nb">uniqid</span><span class="p">(</span><span class="nb">strval</span><span class="p">(</span><span class="nb">rand</span><span class="p">()),</span> <span class="k">true</span><span class="p">));</span>
         <span class="nb">session_write_close</span><span class="p">();</span>
         <span class="cm">/* Redirect to phpMyAdmin (should use absolute URL here!) */</span>
         <span class="nb">header</span><span class="p">(</span><span class="s1">&#39;Location: ../index.php&#39;</span><span class="p">);</span>
@@ -1453,11 +1483,11 @@ manually or after a period of inactivity). <a class="reference external" href="h
         <li class="right" >
           <a href="require.html" title="Requirements"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.0.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.0.4 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; <a href="copyright.html">Copyright</a> 2012 - 2018, The phpMyAdmin devel team.
+        &#169; <a href="copyright.html">Copyright</a> 2012 - 2020, The phpMyAdmin devel team.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.4.
     </div>
   </body>

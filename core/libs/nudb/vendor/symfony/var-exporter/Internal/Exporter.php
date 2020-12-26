@@ -78,7 +78,7 @@ class Exporter
 
             if ($reflector->hasMethod('__serialize')) {
                 if (!$reflector->getMethod('__serialize')->isPublic()) {
-                    throw new \Error(sprintf('Call to %s method %s::__serialize()', $reflector->getMethod('__serialize')->isProtected() ? 'protected' : 'private', $class));
+                    throw new \Error(sprintf('Call to %s method "%s::__serialize()".', $reflector->getMethod('__serialize')->isProtected() ? 'protected' : 'private', $class));
                 }
 
                 if (!\is_array($properties = $value->__serialize())) {
@@ -117,7 +117,7 @@ class Exporter
 
             if (method_exists($class, '__sleep')) {
                 if (!\is_array($sleep = $value->__sleep())) {
-                    trigger_error('serialize(): __sleep should return an array only containing the names of instance-variables to serialize', E_USER_NOTICE);
+                    trigger_error('serialize(): __sleep should return an array only containing the names of instance-variables to serialize', \E_USER_NOTICE);
                     $value = null;
                     goto handle_value;
                 }
@@ -162,7 +162,7 @@ class Exporter
             if ($sleep) {
                 foreach ($sleep as $n => $v) {
                     if (false !== $v) {
-                        trigger_error(sprintf('serialize(): "%s" returned as member variable from __sleep() but does not exist', $n), E_USER_NOTICE);
+                        trigger_error(sprintf('serialize(): "%s" returned as member variable from __sleep() but does not exist', $n), \E_USER_NOTICE);
                     }
                 }
             }

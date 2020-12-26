@@ -2,6 +2,7 @@
 /**
  * Defines the localization helper infrastructure of the library.
  */
+
 declare(strict_types=1);
 
 namespace PhpMyAdmin\SqlParser;
@@ -26,7 +27,7 @@ class Translator
     private static $translator;
 
     /**
-     * Loads transator.
+     * Loads translator.
      */
     public static function load()
     {

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>FAQ - Frequently Asked Questions &#8212; phpMyAdmin 5.0.2 documentation</title>
+    <title>FAQ - Frequently Asked Questions &#8212; phpMyAdmin 5.0.4 documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
@@ -34,7 +34,7 @@
         <li class="right" >
           <a href="other.html" title="Other sources of information"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.0.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.0.4 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -52,7 +52,7 @@ or interface.</p>
 <span id="faqserver"></span><h2>Server<a class="headerlink" href="#server" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="my-server-is-crashing-each-time-a-specific-action-is-required-or-phpmyadmin-sends-a-blank-page-or-a-page-full-of-cryptic-characters-to-my-browser-what-can-i-do">
 <span id="faq1-1"></span><h3>1.1 My server is crashing each time a specific action is required or phpMyAdmin sends a blank page or a page full of cryptic characters to my browser, what can I do?<a class="headerlink" href="#my-server-is-crashing-each-time-a-specific-action-is-required-or-phpmyadmin-sends-a-blank-page-or-a-page-full-of-cryptic-characters-to-my-browser-what-can-i-do" title="Permalink to this headline">¶</a></h3>
-<p>Try to set the <span class="target" id="index-0"></span><a class="reference internal" href="config.html#cfg_OBGzip"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['OBGzip']</span></code></a>  directive to <code class="docutils literal notranslate"><span class="pre">false</span></code> in your
+<p>Try to set the <span class="target" id="index-0"></span><a class="reference internal" href="config.html#cfg_OBGzip"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['OBGzip']</span></code></a> directive to <code class="docutils literal notranslate"><span class="pre">false</span></code> in your
 <code class="file docutils literal notranslate"><span class="pre">config.inc.php</span></code> file and the <code class="docutils literal notranslate"><span class="pre">zlib.output_compression</span></code> directive to
 <code class="docutils literal notranslate"><span class="pre">Off</span></code> in your php configuration file.</p>
 </div>
@@ -84,7 +84,7 @@ Please use instead the cookie authentication mode.</p>
 <span id="faq1-6"></span><h3>1.6 I can’t use phpMyAdmin on PWS: nothing is displayed!<a class="headerlink" href="#i-can-t-use-phpmyadmin-on-pws-nothing-is-displayed" title="Permalink to this headline">¶</a></h3>
 <p>This seems to be a PWS bug. Filippo Simoncini found a workaround (at
 this time there is no better fix): remove or comment the <code class="docutils literal notranslate"><span class="pre">DOCTYPE</span></code>
-declarations (2 lines) from the scripts <code class="file docutils literal notranslate"><span class="pre">libraries/Header.class.php</span></code>
+declarations (2 lines) from the scripts <code class="file docutils literal notranslate"><span class="pre">libraries/classes/Header.php</span></code>
 and <code class="file docutils literal notranslate"><span class="pre">index.php</span></code>.</p>
 </div>
 <div class="section" id="how-can-i-gzip-a-dump-or-a-csv-export-it-does-not-seem-to-work">
@@ -247,7 +247,7 @@ can tell it to use specific path for this file using <code class="docutils liter
 </div>
 <p>In some rare cases this problem can be also caused by other extensions loaded
 in PHP which prevent MySQL extensions to be loaded. If anything else fails, you
-can try commenting out extensions for other databses from <code class="file docutils literal notranslate"><span class="pre">php.ini</span></code>.</p>
+can try commenting out extensions for other databases from <code class="file docutils literal notranslate"><span class="pre">php.ini</span></code>.</p>
 </div>
 <div class="section" id="i-am-running-the-cgi-version-of-php-under-unix-and-i-cannot-log-in-using-cookie-auth">
 <span id="faq1-21"></span><h3>1.21 I am running the CGI version of PHP under Unix, and I cannot log in using cookie auth.<a class="headerlink" href="#i-am-running-the-cgi-version-of-php-under-unix-and-i-cannot-log-in-using-cookie-auth" title="Permalink to this headline">¶</a></h3>
@@ -428,8 +428,8 @@ error log file might give a clue.</p>
 <div class="section" id="i-run-phpmyadmin-on-cluster-of-different-machines-and-password-encryption-in-cookie-auth-doesn-t-work">
 <span id="faq1-37"></span><h3>1.37 I run phpMyAdmin on cluster of different machines and password encryption in cookie auth doesn’t work.<a class="headerlink" href="#i-run-phpmyadmin-on-cluster-of-different-machines-and-password-encryption-in-cookie-auth-doesn-t-work" title="Permalink to this headline">¶</a></h3>
 <p>If your cluster consist of different architectures, PHP code used for
-encryption/decryption won’t work correct. This is caused by use of
-pack/unpack functions in code. Only solution is to use mcrypt
+encryption/decryption won’t work correctly. This is caused by use of
+pack/unpack functions in code. Only solution is to use openssl
 extension which works fine in this case.</p>
 </div>
 <div class="section" id="can-i-use-phpmyadmin-on-a-server-on-which-suhosin-is-enabled">
@@ -691,19 +691,13 @@ by <a class="reference external" href="https://bugs.php.net/bug.php?id=39842">bu
 <div class="section" id="seeing-an-upload-progress-bar">
 <span id="faq2-9"></span><h3>2.9 Seeing an upload progress bar<a class="headerlink" href="#seeing-an-upload-progress-bar" title="Permalink to this headline">¶</a></h3>
 <p>To be able to see a progress bar during your uploads, your server must
-have the <a class="reference external" href="https://www.php.net/manual/en/book.apc.php">APC</a> extension, the
-<a class="reference external" href="https://pecl.php.net/package/uploadprogress">uploadprogress</a> one, or
+have the <a class="reference external" href="https://pecl.php.net/package/uploadprogress">uploadprogress</a> extension, and
 you must be running PHP 5.4.0 or higher. Moreover, the JSON extension
 has to be enabled in your PHP.</p>
-<p>If using APC, you must set <code class="docutils literal notranslate"><span class="pre">apc.rfc1867</span></code> to <code class="docutils literal notranslate"><span class="pre">on</span></code> in your <code class="file docutils literal notranslate"><span class="pre">php.ini</span></code>.</p>
 <p>If using PHP 5.4.0 or higher, you must set
 <code class="docutils literal notranslate"><span class="pre">session.upload_progress.enabled</span></code> to <code class="docutils literal notranslate"><span class="pre">1</span></code> in your <code class="file docutils literal notranslate"><span class="pre">php.ini</span></code>. However,
 starting from phpMyAdmin version 4.0.4, session-based upload progress has
 been temporarily deactivated due to its problematic behavior.</p>
-<div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<p class="last"><span class="target" id="index-11"></span><a class="rfc reference external" href="https://tools.ietf.org/html/rfc1867.html"><strong>RFC 1867</strong></a></p>
-</div>
 </div>
 </div>
 <div class="section" id="known-limitations">
@@ -719,7 +713,7 @@ again.</p>
 <span id="faq3-2"></span><h3>3.2 When dumping a large table in compressed mode, I get a memory limit error or a time limit error.<a class="headerlink" href="#when-dumping-a-large-table-in-compressed-mode-i-get-a-memory-limit-error-or-a-time-limit-error" title="Permalink to this headline">¶</a></h3>
 <p>Compressed dumps are built in memory and because of this are limited
 to php’s memory limit. For gzip/bzip2 exports this can be overcome
-since 2.5.4 using <span class="target" id="index-12"></span><a class="reference internal" href="config.html#cfg_CompressOnFly"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['CompressOnFly']</span></code></a> (enabled by default).
+since 2.5.4 using <span class="target" id="index-11"></span><a class="reference internal" href="config.html#cfg_CompressOnFly"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['CompressOnFly']</span></code></a> (enabled by default).
 zip exports can not be handled this way, so if you need zip files for larger
 dump, you have to use another way.</p>
 </div>
@@ -753,7 +747,7 @@ your table name. If you have to, think about using another
 TableSeparator or disabling that feature.</p>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><span class="target" id="index-13"></span><a class="reference internal" href="config.html#cfg_NavigationTreeTableSeparator"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['NavigationTreeTableSeparator']</span></code></a></p>
+<p class="last"><span class="target" id="index-12"></span><a class="reference internal" href="config.html#cfg_NavigationTreeTableSeparator"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['NavigationTreeTableSeparator']</span></code></a></p>
 </div>
 </div>
 <div class="section" id="faq3-6">
@@ -799,14 +793,14 @@ can use it for the Edit and Delete links.</p>
 <span id="faq3-11"></span><h3>3.11 The number of rows for InnoDB tables is not correct.<a class="headerlink" href="#the-number-of-rows-for-innodb-tables-is-not-correct" title="Permalink to this headline">¶</a></h3>
 <p>phpMyAdmin uses a quick method to get the row count, and this method only
 returns an approximate count in the case of InnoDB tables. See
-<span class="target" id="index-14"></span><a class="reference internal" href="config.html#cfg_MaxExactCount"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['MaxExactCount']</span></code></a> for a way to modify those results, but
+<span class="target" id="index-13"></span><a class="reference internal" href="config.html#cfg_MaxExactCount"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['MaxExactCount']</span></code></a> for a way to modify those results, but
 this could have a serious impact on performance.
 However, one can easily replace the approximate row count with exact count by
 simply clicking on the approximate count. This can also be done for all tables
 at once by clicking on the rows sum displayed at the bottom.</p>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><span class="target" id="index-15"></span><a class="reference internal" href="config.html#cfg_MaxExactCount"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['MaxExactCount']</span></code></a></p>
+<p class="last"><span class="target" id="index-14"></span><a class="reference internal" href="config.html#cfg_MaxExactCount"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['MaxExactCount']</span></code></a></p>
 </div>
 </div>
 <div class="section" id="faq3-12">
@@ -905,7 +899,7 @@ normal operation of phpMyAdmin.</p>
 <span id="faq4-4"></span><h3>4.4 phpMyAdmin always gives “Access denied” when using HTTP authentication.<a class="headerlink" href="#phpmyadmin-always-gives-access-denied-when-using-http-authentication" title="Permalink to this headline">¶</a></h3>
 <p>This could happen for several reasons:</p>
 <ul class="simple">
-<li><span class="target" id="index-16"></span><a class="reference internal" href="config.html#cfg_Servers_controluser"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['Servers'][$i]['controluser']</span></code></a> and/or <span class="target" id="index-17"></span><a class="reference internal" href="config.html#cfg_Servers_controlpass"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['Servers'][$i]['controlpass']</span></code></a>  are wrong.</li>
+<li><span class="target" id="index-15"></span><a class="reference internal" href="config.html#cfg_Servers_controluser"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['Servers'][$i]['controluser']</span></code></a> and/or <span class="target" id="index-16"></span><a class="reference internal" href="config.html#cfg_Servers_controlpass"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['Servers'][$i]['controlpass']</span></code></a>  are wrong.</li>
 <li>The username/password you specify in the login dialog are invalid.</li>
 <li>You have already setup a security mechanism for the phpMyAdmin-
 directory, eg. a <a class="reference internal" href="glossary.html#term-htaccess"><span class="xref std std-term">.htaccess</span></a> file. This would interfere with phpMyAdmin’s
@@ -927,7 +921,7 @@ add a username between the <code class="docutils literal notranslate"><span clas
 strings. Using the username wildcard of <code class="docutils literal notranslate"><span class="pre">'%'</span></code> would be a major
 benefit here if your installation is suited to using it. Then you can
 just add those updated lines into the
-<span class="target" id="index-18"></span><a class="reference internal" href="config.html#cfg_Servers_AllowDeny_rules"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['Servers'][$i]['AllowDeny']['rules']</span></code></a> array.</p>
+<span class="target" id="index-17"></span><a class="reference internal" href="config.html#cfg_Servers_AllowDeny_rules"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['Servers'][$i]['AllowDeny']['rules']</span></code></a> array.</p>
 <p>If you want a pre-made sample, you can try this fragment. It stops the
 ‘root’ user from logging in from any networks other than the private
 network <a class="reference internal" href="glossary.html#term-ip"><span class="xref std std-term">IP</span></a> blocks.</p>
@@ -946,7 +940,7 @@ network <a class="reference internal" href="glossary.html#term-ip"><span class="
 <div class="section" id="authentication-window-is-displayed-more-than-once-why">
 <span id="faq4-7"></span><h3>4.7 Authentication window is displayed more than once, why?<a class="headerlink" href="#authentication-window-is-displayed-more-than-once-why" title="Permalink to this headline">¶</a></h3>
 <p>This happens if you are using a <a class="reference internal" href="glossary.html#term-url"><span class="xref std std-term">URL</span></a> to start phpMyAdmin which is
-different than the one set in your <span class="target" id="index-19"></span><a class="reference internal" href="config.html#cfg_PmaAbsoluteUri"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['PmaAbsoluteUri']</span></code></a>. For
+different than the one set in your <span class="target" id="index-18"></span><a class="reference internal" href="config.html#cfg_PmaAbsoluteUri"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['PmaAbsoluteUri']</span></code></a>. For
 example, a missing “www”, or entering with an <a class="reference internal" href="glossary.html#term-ip"><span class="xref std std-term">IP</span></a> address while a domain
 name is defined in the config file.</p>
 </div>
@@ -1046,7 +1040,7 @@ Netscape and Mozilla do not have this problem.</p>
 <span id="faq5-16"></span><h3>5.16 With Internet Explorer, I get “Access is denied” Javascript errors. Or I cannot make phpMyAdmin work under Windows.<a class="headerlink" href="#with-internet-explorer-i-get-access-is-denied-javascript-errors-or-i-cannot-make-phpmyadmin-work-under-windows" title="Permalink to this headline">¶</a></h3>
 <p>Please check the following points:</p>
 <ul class="simple">
-<li>Maybe you have defined your <span class="target" id="index-20"></span><a class="reference internal" href="config.html#cfg_PmaAbsoluteUri"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['PmaAbsoluteUri']</span></code></a> setting in
+<li>Maybe you have defined your <span class="target" id="index-19"></span><a class="reference internal" href="config.html#cfg_PmaAbsoluteUri"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['PmaAbsoluteUri']</span></code></a> setting in
 <code class="file docutils literal notranslate"><span class="pre">config.inc.php</span></code> to an <a class="reference internal" href="glossary.html#term-ip"><span class="xref std std-term">IP</span></a> address and you are starting phpMyAdmin
 with a <a class="reference internal" href="glossary.html#term-url"><span class="xref std std-term">URL</span></a> containing a domain name, or the reverse situation.</li>
 <li>Security settings in IE and/or Microsoft Security Center are too high,
@@ -1144,7 +1138,7 @@ data, or both. This will generate standard <a class="reference internal" href="g
 used to recreate your database/table.  You will need to choose “Save as file”,
 so that phpMyAdmin can transmit the resulting dump to your station.  Depending
 on your PHP configuration, you will see options to compress the dump. See also
-the <span class="target" id="index-21"></span><a class="reference internal" href="config.html#cfg_ExecTimeLimit"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['ExecTimeLimit']</span></code></a> configuration variable. For
+the <span class="target" id="index-20"></span><a class="reference internal" href="config.html#cfg_ExecTimeLimit"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['ExecTimeLimit']</span></code></a> configuration variable. For
 additional help on this subject, look for the word “dump” in this document.</p>
 </div>
 <div class="section" id="how-can-i-restore-upload-my-database-or-table-using-a-dump-how-can-i-run-a-sql-file">
@@ -1392,7 +1386,7 @@ second list containing the display column and the key. The reason for
 this is to be able to type the first letter of either the key or the
 display column. For 100 values or more, a distinct window will appear,
 to browse foreign key values and choose one. To change the default
-limit of 100, see <span class="target" id="index-22"></span><a class="reference internal" href="config.html#cfg_ForeignKeyMaxLimit"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['ForeignKeyMaxLimit']</span></code></a>.</p>
+limit of 100, see <span class="target" id="index-21"></span><a class="reference internal" href="config.html#cfg_ForeignKeyMaxLimit"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['ForeignKeyMaxLimit']</span></code></a>.</p>
 </div>
 <div class="section" id="bookmarks-can-i-execute-a-default-bookmark-automatically-when-entering-browse-mode-for-a-table">
 <span id="faq6-22"></span><h3>6.22 Bookmarks: Can I execute a default bookmark automatically when entering Browse mode for a table?<a class="headerlink" href="#bookmarks-can-i-execute-a-default-bookmark-automatically-when-entering-browse-mode-for-a-table" title="Permalink to this headline">¶</a></h3>
@@ -1439,7 +1433,7 @@ name), but the following variables can be used:</p>
 <dt><code class="docutils literal notranslate"><span class="pre">&#64;SERVER&#64;</span></code></dt>
 <dd>MySQL server name</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">&#64;VERBOSE&#64;</span></code></dt>
-<dd>Verbose MySQL server name as defined in <span class="target" id="index-23"></span><a class="reference internal" href="config.html#cfg_Servers_verbose"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['Servers'][$i]['verbose']</span></code></a></dd>
+<dd>Verbose MySQL server name as defined in <span class="target" id="index-22"></span><a class="reference internal" href="config.html#cfg_Servers_verbose"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['Servers'][$i]['verbose']</span></code></a></dd>
 <dt><code class="docutils literal notranslate"><span class="pre">&#64;VSERVER&#64;</span></code></dt>
 <dd>Verbose MySQL server name if set, otherwise normal</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">&#64;DATABASE&#64;</span></code></dt>
@@ -1488,10 +1482,10 @@ compiled with the dBase extension (–enable-dbase). Otherwise only
 geometry data will be imported.</p>
 <p>To upload these set of files you can use either of the following
 methods:</p>
-<p>Configure upload directory with <span class="target" id="index-24"></span><a class="reference internal" href="config.html#cfg_UploadDir"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['UploadDir']</span></code></a>, upload both .shp and .dbf files with
+<p>Configure upload directory with <span class="target" id="index-23"></span><a class="reference internal" href="config.html#cfg_UploadDir"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['UploadDir']</span></code></a>, upload both .shp and .dbf files with
 the same filename and chose the .shp file from the import page.</p>
 <p>Create a zip archive with .shp and .dbf files and import it. For this
-to work, you need to set <span class="target" id="index-25"></span><a class="reference internal" href="config.html#cfg_TempDir"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['TempDir']</span></code></a> to a place where the web server user can
+to work, you need to set <span class="target" id="index-24"></span><a class="reference internal" href="config.html#cfg_TempDir"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['TempDir']</span></code></a> to a place where the web server user can
 write (for example <code class="docutils literal notranslate"><span class="pre">'./tmp'</span></code>).</p>
 <p>To create the temporary directory on a UNIX-based system, you can do:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> phpMyAdmin
@@ -1564,7 +1558,7 @@ of a table name in the list of tables of a Database and wait until it
 turns to <cite>Yellow</cite>.
 To remove a table from list, simply click on the <cite>Yellow</cite> star and
 wait until it turns <cite>Gray</cite> again.</p>
-<p>Using <span class="target" id="index-26"></span><a class="reference internal" href="config.html#cfg_NumFavoriteTables"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['NumFavoriteTables']</span></code></a> in your <code class="file docutils literal notranslate"><span class="pre">config.inc.php</span></code>
+<p>Using <span class="target" id="index-25"></span><a class="reference internal" href="config.html#cfg_NumFavoriteTables"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['NumFavoriteTables']</span></code></a> in your <code class="file docutils literal notranslate"><span class="pre">config.inc.php</span></code>
 file, you can define the  maximum number of favorite tables shown in the
 navigation panel. Its default value is <cite>10</cite>.</p>
 </div>
@@ -2027,11 +2021,11 @@ spreadsheet program to properly parse and sanitize such data on input instead.</
         <li class="right" >
           <a href="other.html" title="Other sources of information"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.0.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.0.4 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; <a href="copyright.html">Copyright</a> 2012 - 2018, The phpMyAdmin devel team.
+        &#169; <a href="copyright.html">Copyright</a> 2012 - 2020, The phpMyAdmin devel team.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.4.
     </div>
   </body>

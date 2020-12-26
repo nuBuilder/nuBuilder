@@ -2,6 +2,7 @@
 /**
  * CLI interface.
  */
+
 declare(strict_types=1);
 
 namespace PhpMyAdmin\SqlParser\Utils;
@@ -15,7 +16,7 @@ use function implode;
 use function in_array;
 use function rtrim;
 use function stream_get_contents;
-use function stream_set_blocking;
+use function stream_select;
 use function var_export;
 use const STDIN;
 
@@ -89,7 +90,9 @@ class CLI
         }
 
         if (! isset($params['q'])) {
-            if ($stdIn = $this->readStdin()) {
+            $stdIn = $this->readStdin();
+
+            if ($stdIn) {
                 $params['q'] = $stdIn;
             }
         }
@@ -154,7 +157,9 @@ class CLI
         }
 
         if (! isset($params['q'])) {
-            if ($stdIn = $this->readStdin()) {
+            $stdIn = $this->readStdin();
+
+            if ($stdIn) {
                 $params['q'] = $stdIn;
             }
         }
@@ -219,7 +224,9 @@ class CLI
         }
 
         if (! isset($params['q'])) {
-            if ($stdIn = $this->readStdin()) {
+            $stdIn = $this->readStdin();
+
+            if ($stdIn) {
                 $params['q'] = $stdIn;
             }
         }
@@ -253,10 +260,19 @@ class CLI
 
     public function readStdin()
     {
-        stream_set_blocking(STDIN, false);
-        $stdin = stream_get_contents(STDIN);
-        // restore-default block-mode setting
-        stream_set_blocking(STDIN, true);
+        $read = [STDIN];
+        $write = [];
+        $except = [];
+
+        // Assume there's nothing to be read from STDIN.
+        $stdin = null;
+
+        // Try to read from STDIN.  Wait 0.2 second before timing out.
+        $result = stream_select($read, $write, $except, 0, 2000);
+
+        if ($result > 0) {
+            $stdin = stream_get_contents(STDIN);
+        }
 
         return $stdin;
     }

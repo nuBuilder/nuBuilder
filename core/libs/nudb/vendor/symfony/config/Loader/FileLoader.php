@@ -73,8 +73,8 @@ abstract class FileLoader extends Loader
      */
     public function import($resource, $type = null, $ignoreErrors = false, $sourceResource = null/*, $exclude = null*/)
     {
-        if (\func_num_args() < 5 && __CLASS__ !== static::class && 0 !== strpos(static::class, 'Symfony\Component\\') && __CLASS__ !== (new \ReflectionMethod($this, __FUNCTION__))->getDeclaringClass()->getName() && !$this instanceof \PHPUnit\Framework\MockObject\MockObject && !$this instanceof \Prophecy\Prophecy\ProphecySubjectInterface) {
-            @trigger_error(sprintf('The "%s()" method will have a new "$exclude = null" argument in version 5.0, not defining it is deprecated since Symfony 4.4.', __METHOD__), E_USER_DEPRECATED);
+        if (\func_num_args() < 5 && __CLASS__ !== static::class && 0 !== strpos(static::class, 'Symfony\Component\\') && __CLASS__ !== (new \ReflectionMethod($this, __FUNCTION__))->getDeclaringClass()->getName() && !$this instanceof \PHPUnit\Framework\MockObject\MockObject && !$this instanceof \Prophecy\Prophecy\ProphecySubjectInterface && !$this instanceof \Mockery\MockInterface) {
+            @trigger_error(sprintf('The "%s()" method will have a new "$exclude = null" argument in version 5.0, not defining it is deprecated since Symfony 4.4.', __METHOD__), \E_USER_DEPRECATED);
         }
         $exclude = \func_num_args() >= 5 ? func_get_arg(4) : null;
 
@@ -90,7 +90,7 @@ abstract class FileLoader extends Loader
             $ret = [];
             $isSubpath = 0 !== $i && false !== strpos(substr($resource, 0, $i), '/');
             foreach ($this->glob($resource, false, $_, $ignoreErrors || !$isSubpath, false, $excluded) as $path => $info) {
-                if (null !== $res = $this->doImport($path, $type, $ignoreErrors, $sourceResource)) {
+                if (null !== $res = $this->doImport($path, 'glob' === $type ? null : $type, $ignoreErrors, $sourceResource)) {
                     $ret[] = $res;
                 }
                 $isSubpath = true;
