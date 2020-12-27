@@ -1264,7 +1264,7 @@ function nuButtons($formid, $POST){
 		$P					= db_fetch_object($t);
 		
 		$s					= 'SELECT * FROM zzzzsys_report WHERE zzzzsys_report_id = ? ';
-		$t					= nuRunQuery($s,[$recrodId]);
+		$t					= nuRunQuery($s,[$recordID]);
 		$R					= db_fetch_object($t);
 		
 	}else{
