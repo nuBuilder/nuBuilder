@@ -177,6 +177,17 @@ function nuAlterSystemTables(){
 	nuRunQuery("ALTER TABLE `zzzzsys_object` CHANGE `sob_input_count` `sob_input_count` BIGINT(20) NULL DEFAULT '0';");
 	nuRunQuery("ALTER TABLE `zzzzsys_object` CHANGE `sob_all_order` `sob_all_order` INT(11) NULL DEFAULT '0';");	
 	nuRunQuery("ALTER TABLE `zzzzsys_session` ADD `sss_hashcookies` MEDIUMTEXT NULL DEFAULT NULL AFTER `sss_access`;");
+	nuRunQuery("ALTER TABLE `zzzzsys_session` ADD COLUMN IF NOT EXISTS sss_login_time timestamp NULL DEFAULT current_timestamp(); AFTER sss_time");
+	
+	nuRunQuery("ALTER TABLE `zzzzsys_user` ADD `sus_code` varchar(50) DEFAULT NULL AFTER `sus_name`;");
+	nuRunQuery("ALTER TABLE `zzzzsys_user` ADD `sus_position` varchar(50) DEFAULT NULL AFTER `sus_code`;");
+	nuRunQuery("ALTER TABLE `zzzzsys_user` ADD `sus_department` varchar(50) DEFAULT NULL AFTER `sus_position`;");
+	nuRunQuery("ALTER TABLE `zzzzsys_user` ADD `sus_team` varchar(50) DEFAULT NULL AFTER `sus_department`;");
+	nuRunQuery("ALTER TABLE `zzzzsys_user` ADD `sus_additional1` varchar(100) DEFAULT NULL AFTER `sus_email`;");
+	nuRunQuery("ALTER TABLE `zzzzsys_user` ADD `sus_additional2` varchar(100) DEFAULT NULL AFTER `sus_additional1`;");
+	nuRunQuery("ALTER TABLE `zzzzsys_user` ADD `sus_expires_on` datetime DEFAULT NULL AFTER `sus_login_password`;");
+	
+	nuRunQuery("ALTER TABLE `zzzzsys_access_form` ADD `slf_data_mode` varchar(2) DEFAULT NULL AFTER `slf_print_button`;");
 	
 }	
 	

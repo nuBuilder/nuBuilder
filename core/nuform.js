@@ -4127,9 +4127,11 @@ function nuFilterRun(id, f){
 
 			if(r.objects[i].id == id){
 				
-				if(r.objects[i].filter == f){return;}
+				if (typeof f !== 'undefined') {		
+					if(r.objects[i].filter == f){return;}				
+					r.objects[i].filter = f;
+				}
 				
-				r.objects[i].filter = f;
 				o = i;
 				
 			}
@@ -4141,8 +4143,6 @@ function nuFilterRun(id, f){
 	nuRUN(r, o, '', '', r);
 
 }
-
-
 
 function nuRecordRun(id, f){
 	
@@ -4152,10 +4152,12 @@ function nuRecordRun(id, f){
 	for(var i = 0 ; i < r.objects.length ; i++){
 
 			if(r.objects[i].id == id){
+
+				if (typeof f !== 'undefined') {					
+					if(r.objects[i].record_id == f){return;}				
+					r.objects[i].record_id = f;
+				}
 				
-				if(r.objects[i].record_id == f){return;}
-				
-				r.objects[i].record_id = f;
 				o = i;
 				
 			}
@@ -4168,8 +4170,6 @@ function nuRecordRun(id, f){
 
 }
 
-
-
 function nuGetIframeValue(f, o){
 	return $('#' + f).contents().find('#' + o).val();
 }
@@ -4178,7 +4178,6 @@ function nuGetIframeValue(f, o){
 function nuSetIframeValue(f, o, v){
 	return $('#' + f).contents().find('#' + o).val(v);
 }
-
 
 function nuLookingUp(){
 
@@ -4196,8 +4195,6 @@ function nuLookingUp(){
 	return false;
 	
 }
-
-
 
 function nuPortraitScreen(columns){
     

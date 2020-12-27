@@ -22,7 +22,10 @@ if ($nuConfigEnableDatabaseUpdate == false) {
 	
 }
 
-// 1. Copy all zzzz-tables to temp sys-tables
+nuAlterSystemTables();
+print '<br><span style="font-family:Helvetica;padding:10px;">Altered System Tables <br></span>';
+
+// Copy all zzzz-tables to temp sys-tables
 nuCopySystemTables();
 print '<br><span style="font-family:Helvetica;padding:10px;">Copied SYSTEM zzzz-TABLES to TEMP sys-TABLES <br></span>';
 
@@ -32,9 +35,6 @@ print '<br><span style="font-family:Helvetica;padding:10px;">Imported nubuilder4
 
 nuAddNewSystemTables();
 print '<br><span style="font-family:Helvetica;padding:10px;">Copied SYSTEM FILES to TEMP FILES for any new tables added from the import. <br></span>';
-
-nuAlterSystemTables();
-print '<br><span style="font-family:Helvetica;padding:10px;">Altered System Tables <br></span>';
 
 nuUpdateSystemRecords();
 print '<br><span style="font-family:Helvetica;padding:10px;">Updated TEMP FILE table structure\'s to SYSTEM FILES <br></span>';
