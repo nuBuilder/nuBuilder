@@ -3,8 +3,8 @@
 require_once('nusession.php');
 require_once('nucommon.php'); 
 require_once('nudata.php'); 
-require_once('tcpdf/tcpdf.php');
-define('FPDF_FONTPATH','tcpdf/font/');
+require_once('libs/tcpdf/tcpdf.php');
+define('FPDF_FONTPATH','libs/tcpdf/font/');
 
 $GLOBALS['nu_report']       = array();
 $GLOBALS['nu_columns']      = array();
