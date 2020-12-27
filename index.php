@@ -229,8 +229,6 @@ window.nuHASH				= [];
 		
 	}
 
-	// end choose h2
-
 	$sessionAlive = '';
 	
 	if ($nuConfigKeepSessionAlive) {
@@ -249,7 +247,9 @@ window.nuHASH				= [];
 		";
 	}
 	
-	$h3 = "
+	$h3 = $nuJSOptions;
+	
+	$h4 = "
 
 	function nuResize(){
 
@@ -276,7 +276,7 @@ window.nuHASH				= [];
 
 
 
-	$h = $h1.$h2.$h3;
+	$h = $h1.$h2.$h3.$h4;
 	print $h;
 ?>
 </script>

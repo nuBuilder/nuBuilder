@@ -1,3 +1,44 @@
+
+function nuInitJSOptions() {
+	
+	if (window.nuAdminButtons  === undefined) {
+
+		window.nuAdminButtons =
+			{'nuDebug'                           : false, 
+			 'nuPHP'                             : true, 
+			 'nuRefresh'                         : true, 
+			 'nuObjects'                         : true, 
+			 'nuProperties'                      : true, 
+			 'nuInfo'                            : true, 
+			 'nuDB'                              : false, 
+			 'nuSetup'                           : false  
+			};    
+		
+	}
+
+	if (window.nuUXOptions  === undefined) {
+		
+		window.nuUXOptions =
+			{'nuEnableBrowserBackButton'         : true,         // Enable the browser's Back button 
+			'nuPreventButtonDblClick'            : true,         // Disable a button for 1 5 s to prevent a double click
+			'nuShowPropertiesOnMiddleClick'      : true,         // Show the Object Properties on middle mouse click
+			'nuAutosizeBrowseColumns'            : true,         // Autosize columns to fit the document width
+			'nuShowBackButton'                   : false,        // Show a Back Button
+			'nuBrowsePaginationInfo'             : 'default',    // Default Format is: '{StartRow} - {EndRow} ' + nuTranslate('of') + ' ' + '{TotalRows}'  
+			'nuShowNuBuilderLink'                : true,         // Show the link to nubuilder com
+			'nuShowLoggedInUser'                 : false,        // Show the logged in User    
+			'nuShowBeforeUnloadMessage'          : true,         // Show or disable "Leave site?" message
+			'nuShowBrowserTabTitle'              : true,         // Show the Form Title in the Browser Tab
+			'nuBrowserTabTitlePrefix'            : 'nuBuilder'   // Prefix in the Browser Tab
+		   };
+	   
+	}  		
+	
+}
+
+nuInitJSOptions();
+
+
 function nuBuildForm(f){
 
     $('#nubody').off('.nuresizecolumn'); 				//removes (if exist) the cursormove/touchmove event listeners binded to nubody
@@ -54,31 +95,6 @@ function nuBuildForm(f){
 	nuFORM.edited				= false;
 	window.nuVerticalTabs 		= false;
 	
-   	window.nuAdminButtons =
-        {'nuDebug'                           : false, 
-         'nuPHP'                             : true, 
-         'nuRefresh'                         : true, 
-         'nuObjects'                         : true, 
-         'nuProperties'                      : true, 
-         'nuInfo'                            : true, 
-         'nuDB'                              : false, 
-         'nuSetup'                           : false  
-        };    
-       
-    window.nuUXOptions =
-        {'nuEnableBrowserBackButton'         : true,         // Enable the browser's Back button 
-        'nuPreventButtonDblClick'            : true,         // Disable a button for 1 5 s to prevent a double click
-        'nuShowPropertiesOnMiddleClick'      : true,         // Show the Object Properties on middle mouse click
-        'nuAutosizeBrowseColumns'            : true,         // Autosize columns to fit the document width
-        'nuShowBackButton'                   : false,        // Show a Back Button
-        'nuBrowsePaginationInfo'             : 'default',    // Default Format is: '{StartRow} - {EndRow} ' + nuTranslate('of') + ' ' + '{TotalRows}'  
-        'nuShowNuBuilderLink'                : true,         // Show the link to nubuilder com
-        'nuShowLoggedInUser'                 : false,        // Show the logged in User    
-        'nuShowBeforeUnloadMessage'          : true,         // Show or disable "Leave site?" message
-        'nuShowBrowserTabTitle'              : true,         // Show the Form Title in the Browser Tab
-        'nuBrowserTabTitlePrefix'            : 'nuBuilder'   // Prefix in the Browser Tab
-       };
-		
 	nuFORM.scroll				= [];
 	nuSetSuffix(1000);
 	nuSetBody(f);
