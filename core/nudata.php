@@ -25,7 +25,7 @@ function nuValidateSubforms(){
 		$f	= nuObjKey($r,0,'') == '' ? $sf->object_id : nuObjKey($r,0);
 		$l	= nuObjKey($r,1);
 		
-		if(nuObjKey($r,1,'') != 1){										//-- not readonly
+		if(nuObjKey($r,2,'') != 1){										//-- not readonly
 				
 			$s	= 'SELECT sob_all_id AS id, sob_all_label AS label, sob_all_validate AS validate FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id  = ? ';			//-- get Objects
 			$t	= nuRunQuery($s, [$f]);
