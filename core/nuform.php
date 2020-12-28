@@ -1176,7 +1176,8 @@ function nuGetDataMode($f) {
 	$t	= nuRunQuery($s, [$_POST['nuHash']['USER_GROUP_ID'], $f]);	
 
     if (db_num_rows($t) == 1) {
-		$r = (int)db_fetch_row($t)[0];					
+		$r = db_fetch_row($t);
+		$r = $r[0] == null || $r[0] == '' ? null : (int)$r[0];					
 	} else {
 		$r = null;
 	}
