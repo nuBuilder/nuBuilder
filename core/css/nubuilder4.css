@@ -312,7 +312,7 @@ input[type=range]::-webkit-slider-runnable-track {
 
 
 #nuSearchList{
-  background-color: #BADEEB;
+  background-color: #d5edf5;
   box-shadow: 5px 5px 5px 0px rgba(150,147,150,1);
   padding-top: 4px;
 }
@@ -491,8 +491,6 @@ input[type=range]::-webkit-slider-runnable-track {
   white-space : nowrap;
 }
 
-
-
 .nuSelectBrowse {
   height: 70px;
   border-style: solid;
@@ -500,7 +498,7 @@ input[type=range]::-webkit-slider-runnable-track {
   padding: 3px 10px 3px 10px;
   position:absolute;
   top:75px;
-  background-color: #f6f6f6 !important;
+  background-color: #338ea01c !important;
   border-color: #ebebeb70 !important;
   font: 13px "Helvetica Neue",HelveticaNeue,Helvetica,Arial,sans-serif !important
   line-height: 150%;  

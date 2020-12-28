@@ -618,7 +618,7 @@ function nuBindCtrlEvents(){
 			if(nuFormType() == 'browse') {
 			
 				if(e.keyCode == 67 && window.global_access) {						//-- c		Searchable Columns
-					nuPopup(window.nuFORM.getCurrent().form_id, "-2");
+					nuGetSearchList();
 				} else if(e.keyCode == 70 && window.global_access) {				//-- f		Form Properties
 					nuPopup("nuform", window.nuFORM.getCurrent().form_id);
 				} else if(e.keyCode == 79 && window.global_access) {				//-- O		Object List
@@ -630,11 +630,13 @@ function nuBindCtrlEvents(){
 				} else if(e.keyCode == 69 && window.global_access) {				//-- t		Database
 					nuStartDatabaseAdmin();							
 				} else if(e.keyCode == 83) {										//-- s		Search
-					nuGetSearchList();
+					nuSearchAction();
 				} else if(e.keyCode == 65 && window.global_access) {				//-- a		Add
-					nuCloneAction();
+					nuAddAction();
 				} else if(e.keyCode == 80 && window.global_access) {				//-- p		Print
 					nuPrintAction();
+				} else if (e.keyCode == 82) {										//-- r		Refresh
+					nuGetBreadcrumb();
 				}
 
 			}

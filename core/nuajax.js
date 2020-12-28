@@ -647,7 +647,7 @@ function nuPrintAction(){
 		
 		if(!nuDisplayError(fm)){
 			
-			var p   			= 'nurunhtml.php?i=' + fm.id;
+			var p   			= 'core/nurunhtml.php?i=' + fm.id;
 			
 			window.open(p);
 
