@@ -8,10 +8,7 @@ function nuInitJSOptions() {
 			 'nuPHP'                             : true, 
 			 'nuRefresh'                         : true, 
 			 'nuObjects'                         : true, 
-			 'nuProperties'                      : true, 
-			 'nuInfo'                            : true, 
-			 'nuDB'                              : false, 
-			 'nuSetup'                           : false  
+			 'nuProperties'                      : true
 			};    
 		
 	}
@@ -2062,7 +2059,10 @@ function nuAllowChanges(f){
 
 
 function nuGetOptionsList(f, t, p, a, type){
-
+	
+	// f: form ID
+	// a: global_access
+	
 	var u		= nuFORM.getProperty('user_id');
 	var list	= [];
 	var ul		= '<ul>';
@@ -2071,7 +2071,7 @@ function nuGetOptionsList(f, t, p, a, type){
 
 		list.push([nuTranslate('Searchable Columns'), 'nuGetSearchList()', 'fa-columns', 'Ctrl+Shft+C']);
 
-		if(a == 1 || f == 'nuuserhome'){
+		if(a == 1 || f == 'nuuserhome'){ 
 			
 			if(nuAllowChanges(f)){
 			
@@ -2080,7 +2080,9 @@ function nuGetOptionsList(f, t, p, a, type){
 				
 			}
 			
-			list.push([nuTranslate('nuDebug Results'), 'nuPopup("nudebug", "")', 'fa-bug', 'Ctrl+Shft+D']);
+			list.push([nuTranslate('Form Info'), 'nuShowFormInfo();', 'fa-info', 'Ctrl+Shft+I']);
+			list.push([nuTranslate('nuDebug Results'), 'nuPopup("nudebug", "")', 'fa-bug', 'Ctrl+Shft+D']);			
+			list.push([nuTranslate('Database'), 'nuStartDatabaseAdmin();', 'fa-database', 'Ctrl+Shft+E']);			
 			
 		}else{
 			list.push([nuTranslate('Change Login'), 'nuPopup("nupassword", "' + u + '", "")','fa-password', 'Ctrl+Shft+L']);
@@ -2104,13 +2106,15 @@ function nuGetOptionsList(f, t, p, a, type){
 				list.push([nuTranslate('Arrange Objects'), 'nuPopup("' + f + '", "-2")', 'fa-arrows', 'Ctrl+Shft+A']);
 				list.push([nuTranslate('Form Properties'), 'nuPopup("nuform", "' + f + '")', 'fa-cog', 'Ctrl+Shft+F']);
 				list.push([nuTranslate('Form Object List'), 'nuPopup("nuobject", "", "' + f + '")', 'fa-th-list', 'Ctrl+Shft+O']);
-				
+				list.push([nuTranslate('Form Info'), 'nuShowFormInfo();', 'fa-info', 'Ctrl+Shft+I']);
 			}
 			
 			if(type != 'subform'){
-				list.push([nuTranslate('nuDebug Results'), 'nuPopup("nudebug", "")', 'fa-bug', 'Ctrl+Shft+D']);
+				list.push([nuTranslate('nuDebug Results'), 'nuPopup("nudebug", "")', 'fa-bug', 'Ctrl+Shft+D']);	
+				list.push([nuTranslate('Database'), 'nuStartDatabaseAdmin();', 'fa-database', 'Ctrl+Shft+E']);							
 			}
 			
+						
 		}else{
 			
 			list.push([nuTranslate('Change Login'), 'nuPopup("nupassword", "' + u + '", "")', 'fa-lock', 'Ctrl+Shft+L']);
@@ -2136,7 +2140,7 @@ function nuGetOptionsList(f, t, p, a, type){
 		if(nuFORMHELP[p] != ''){
 			list.push([nuTranslate('Help'), nuFORMHELP[p], 'fa-question-circle', 'Ctrl+Shft+?']);
 		}
-
+		
 	}
 
 	if(list.length == 0){return;}

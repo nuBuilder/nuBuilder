@@ -10,14 +10,6 @@ function nuOpenCurrentObjectList() {
     nuForm('nuobject','',window.nuFORM.getCurrent().form_id,'',2);
 }
 
-function nuOpenSetup() {
-    nuForm('nusetup','1',window.nuFORM.getCurrent().form_id,'',2);
-}
-
-function nuOpenDatabase() {
-	window.open('nupmalogin.php?sessid='+window.nuSESSION);
-}
-
 function nuAddAdminButton(i, v, f, t) {
 	
 	if (typeof t === 'undefined') {
@@ -67,31 +59,23 @@ function nuAddAdminButtons() {
         var e = ft.indexOf("edit") >= 0;
         var l = ft.indexOf("launch") >= 0;
 
-		if (nuAdminButtons["nuDebug"] || devMode) nuAddDebugIcon();
+		if ((nuAdminButtons["nuDebug"] || devMode) && nuMainForm()) nuAddIconToBreadcrumbHolder('nuDebugButton','nuDebug Results','nuOpenNuDebug(2)','fa fa-bug','0px');	
+		if (nuFormType() !== 'browse' && nuAdminButtons["nuRefresh"]) nuAddIconToBreadcrumbHolder('nuRefreshButton','Refresh','nuGetBreadcrumb()','fa fa-refresh', '7px');				
 		
         $('#nuActionHolder').css('height', '50px');
-        
-		if (nuAdminButtons["nuInfo"]) nuAddAdminButton("AdminFormInfo", "Info", 'nuShowFormInfo();', nuTranslate('Form Info'));
-
-		if (nuFormType() !== 'browse') {			
-			if (nuAdminButtons["nuDB"] || devMode)  nuAddAdminButton("AdminDB", "DB", 'nuStartDatabaseAdmin();',nuTranslate('Database'));
-			if (nuAdminButtons["nuSetup"] || devMode) nuAddAdminButton("AdminSetup", "Setup", 'nuOpenSetup();',nuTranslate('Setup'));			
-		}
 
 		var code = nuCurrentProperties().form_code;
 		if (! code.startsWith('nu') || devMode) { 		
 		
 			
-			if (nuAdminButtons["nuObjects"])  nuAddAdminButton("AdminObjectList", "Obj", 'nuOpenCurrentObjectList();',nuTranslate('Object List'));
 			if (nuAdminButtons["nuProperties"])  nuAddAdminButton("AdminProperties", "Prop", 'nuOpenCurrentFormProperties();',nuTranslate('Form Properties'));
+			if (nuAdminButtons["nuObjects"])  nuAddAdminButton("AdminObjectList", "Obj", 'nuOpenCurrentObjectList();',nuTranslate('Object List'));			
 		
 			if (e || l) { nuAddAdminButton("AdminBE", "BE", 'nuEditPHP("BE");','Before Edit'); }
 			if (b) { nuAddAdminButton("AdminBB", "BB", 'nuEditPHP("BB");','Before Browse'); }
 			if (e) { nuAddAdminButton("AdminBS", "BS", 'nuEditPHP("BS");','Before Save'); }
 			if (e) { nuAddAdminButton("AdminAS", "AS", 'nuEditPHP("AS");','After Save'); }
 		}
-				
-		if (nuFormType() !== 'browse' && nuAdminButtons["nuRefresh"]) nuAddActionButton('AdminRefresh', nuTranslate('Refresh'), 'nuGetBreadcrumb()');
 
         var frame = parent.$('#nuDragDialog iframe')
         frame.css('height', frame.cssNumber("height") + 50);
@@ -100,7 +84,7 @@ function nuAddAdminButtons() {
         dragDialog.css('height', dragDialog.cssNumber("height") + 50);
 
 		//    $("input[type='button'][id^='nuAdmin']").not('#nuAdminRefreshButton').addClass('nuAdminButton');
-        $("<br>").insertAfter($("#nuAdminFormInfoButton"));
+        $("<br>").insertAfter($("#nuAdminPropertiesButton"));
     }
 
 }
@@ -180,11 +164,12 @@ function nuOpenPropertiesOnMiddleClick(e) {
 	
 }
 
-function nuSetSnippetFormFilter(custom, setup, sql) {
+function nuSetSnippetFormFilter(custom, setup, sql, php) {
 
 	nuSetProperty('IS_CUSTOM_CODE',custom);
 	nuSetProperty('IS_SETUP_HEADER',setup);    
 	nuSetProperty('IS_SQL',sql);
+	nuSetProperty('IS_PHP',php);
 
 }
 
@@ -193,9 +178,9 @@ function nuOpenNuDebug(w) {
 	nuForm('nudebug','','','',w);
 }
 
-function nuAddDebugIcon() {
+function nuAddIconToBreadcrumbHolder(i, title, oClick, iClass, paddingLeft) {
 	
-	var h = "<div id='nuDebugButton' title='nuDebug Results' style='font-size: 16px; display: inline-block; cursor : pointer' onclick='nuOpenNuDebug(2)'><i class='fa fa-bug'></i>&nbsp;" + '' + "</div>";
+	var h = "<div id='"+i+"' title='"+title+"' style='font-size: 16px; display: inline-block; cursor : pointer; padding-right:8px; padding-left:"+paddingLeft+"' onclick='"+oClick+"'><i class='"+iClass+"'></i>&nbsp;" + '' + "</div>";
 
 	 var fragment = nuCreateAppendHTML(h);
 	if (window.nuFORM.breadcrumbs.length == 1) { 
