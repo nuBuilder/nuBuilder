@@ -1857,19 +1857,18 @@ function nuIsIframe(){
 
 function nuPreventButtonDblClick () {
 
-   $('.nuActionButton, .nuButton').click(function() {   
-   
-      var id = $(this).attr("id");   
+	$('.nuActionButton, .nuButton').click(function() {   
 
-      nuDisable(id);
+	var id = $(this).attr("id");   
 
-      setTimeout(
-	  
-         function() {
-            nuEnable(id);
-         }
-		 , 1500);
-   });
+	$('#'+id).prop('disabled', true);
+
+	setTimeout(
+
+		function() {
+			$('#'+id).prop('disabled', false);
+		, 1500);
+	});
 
 }
 

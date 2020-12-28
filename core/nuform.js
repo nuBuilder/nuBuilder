@@ -220,7 +220,7 @@ function nuBuildForm(f){
 		nuEnableBrowserBackButton();
 	}
 	
-	if (nuUXOptions["nuPreventButtonDblClick"]) {	
+	if (nuUXOptions["nuPreventButtonDblClick"]) {		
 		nuPreventButtonDblClick();
 	}
 

@@ -397,7 +397,6 @@ function nuRunPHP($procedure_code){
 	$j									= json_encode($_POST['nuHash']);
 
 	if(!$_SESSION['nubuilder_session_data']['isGlobeadmin'] and !in_array($ob->zzzzsys_php_id, $p)){
-	//	nuDisplayError("Access To Procedure Denied... ($procedure_code)");
 		nuDisplayError(nuTranslate("Access To Procedure Denied...")." ($procedure_code)");
 	}
 
@@ -407,7 +406,6 @@ function nuRunPHP($procedure_code){
 	
 }
 
-
 function nuRunPHPHidden($nuCode){
 
 	$aa						= nuAllowedActivities();
@@ -416,12 +414,15 @@ function nuRunPHPHidden($nuCode){
 	$s						= "SELECT * FROM zzzzsys_php WHERE sph_code = ? ";
 	$t						= nuRunQuery($s, [$nuCode]);
 	$r						= db_fetch_object($t);
-
-	if($_SESSION['nubuilder_session_data']['isGlobeadmin'] or in_array($r->zzzzsys_php_id, $p)){
-		nuEval($r->zzzzsys_php_id);
-	}else{
-//		nuDisplayError("Access To Procedure Denied... ($nuCode)");
-		nuDisplayError(nuTranslate("Access To Procedure Denied...")." ($nuCode)");
+	
+	if (db_num_rows($t) == 0) {
+		nuDisplayError(nuTranslate("The Procedure does not exist...")." ($nuCode)");
+	} else {	
+		if($_SESSION['nubuilder_session_data']['isGlobeadmin'] or in_array($r->zzzzsys_php_id, $p)){
+			nuEval($r->zzzzsys_php_id);
+		}else{
+			nuDisplayError(nuTranslate("Access To Procedure Denied...")." ($nuCode)");
+		}
 	}
 
 	$f						= new stdClass;

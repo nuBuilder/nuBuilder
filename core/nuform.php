@@ -297,7 +297,7 @@ function nuGetFormObject($F, $R, $OBJS){
 			
 				
 			if($r->sob_all_type == 'lookup'){
-
+			
 				$o->description_width	= $r->sob_lookup_description_width;
 				$o->form_id				= $r->sob_lookup_zzzzsys_form_id;
 				$o->values				= nuGetLookupValues($r, $o);
@@ -535,9 +535,9 @@ function nuGetAllLookupValues(){
 	$o->description_width	= $r->sob_lookup_description_width;
 	$o->form_id				= $r->sob_lookup_zzzzsys_form_id;
 	$o->value				= $PK;
+	
 	$l						= nuGetLookupValues($r, $o);
-	
-	
+
 	$_POST['nuHash']['LOOKUP_RECORD_ID'] = $l[0][1];
 
 	$e						= nuGetOtherLookupValues($o);
@@ -554,18 +554,19 @@ function nuGetAllLookupValues(){
 
 function nuGetLookupValues($R, $O){
 	
+
 	$was		= $_POST['nuHash']['TABLE_ID'];
 	
 	$_POST['nuHash']['TABLE_ID'] = nuTT();
 
 	nuBeforeBrowse($O->form_id);
 	
-    $s 			= "SELECT * FROM zzzzsys_form WHERE zzzzsys_form_id = '$O->form_id'";
-    $t 			= nuRunQuery($s);
-    $r 			= db_fetch_object($t);
-    $S 			= new nuSqlString(nuReplaceHashVariables($r->sfo_browse_sql));
+	$s 			= "SELECT * FROM zzzzsys_form WHERE zzzzsys_form_id = '$O->form_id'";
+	$t 			= nuRunQuery($s);
+	$r 			= db_fetch_object($t);
+	$S 			= new nuSqlString(nuReplaceHashVariables($r->sfo_browse_sql));
 	
-    $s 			= "
+	$s 			= "
 		SELECT 
 			$r->sfo_primary_key,
 			$R->sob_lookup_code,
@@ -574,9 +575,10 @@ function nuGetLookupValues($R, $O){
 		WHERE 
 			`$r->sfo_primary_key` = '$O->value'
     ";
+	
 	$s			= nuReplaceHashVariables($s);
-    $t 			= nuRunQuery($s);
-    $l 			= db_fetch_row($t);
+	$t 			= nuRunQuery($s);	
+	$l 			= db_fetch_row($t);
 	
 	$f			= nuObjKey($_POST['nuSTATE'],'prefix','') . $O->id;
 	
@@ -1036,8 +1038,8 @@ function nuBrowseWhereClause($searchFields, $searchString, $returnArray = false)
     
     for ($i = 0; $i < count($SEARCHES); $i++) {                                                //-- search for (or exclude) these strings
 	
-        $include = array();
-        $exclude = array();
+        $include = [];
+        $exclude = [];
         
         for ($SF = 0; $SF < count($searchFields); $SF++) {                                     //-- loop through searchable fields
 
