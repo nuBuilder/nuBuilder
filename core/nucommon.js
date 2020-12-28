@@ -1867,6 +1867,7 @@ function nuPreventButtonDblClick () {
 
 		function() {
 			$('#'+id).prop('disabled', false);
+		}	
 		, 1500);
 	});
 
