@@ -25,10 +25,11 @@ function nuShowFormInfo() {
 	
     var cp = nuCurrentProperties();
 	var code = nuCurrentProperties().form_code;
+	var devMode = nuGetDevMode();
 	
     var recordId = nuFormType() == 'edit' && cp.form_type !== 'launch' ? "<b>Record ID:</b> " + cp.record_id : '';
-	var browseSQL = nuFormType() == 'browse' && ! code.startsWith('nu') ? "<b>Browse SQL:</b></br> " + cp.browse_sql : '';    	
-	var table = nuSERVERRESPONSE.table !== '' && ! code.startsWith('nu') ? "<b>Table:</b> " + nuSERVERRESPONSE.table : '';
+	var browseSQL = nuFormType() == 'browse' && (! code.startsWith('nu') || devMode) ? "<b>Browse SQL:</b></br> " + cp.browse_sql : '';    	
+	var table = nuSERVERRESPONSE.table !== '' && (! code.startsWith('nu') || devMode) ? "<b>Table:</b> " + nuSERVERRESPONSE.table : '';
 
     nuMessage(["<h2><u>" + cp.form_description + "</u></h2>", "<b>Form ID:</b> " + cp.form_id, "<b>Form Code:</b> " + cp.form_code, table, recordId, browseSQL]);
 	
@@ -49,7 +50,6 @@ function nuAddAdminButtons() {
 
     if (global_access) {
 		
-        
 		var ft = nuCurrentProperties().form_type;
 		if (ft === null) return;
 		
@@ -62,21 +62,21 @@ function nuAddAdminButtons() {
 		if ((nuAdminButtons["nuDebug"] || devMode) && nuMainForm()) nuAddIconToBreadcrumbHolder('nuDebugButton','nuDebug Results','nuOpenNuDebug(2)','fa fa-bug','0px');	
 		if (nuFormType() !== 'browse' && nuAdminButtons["nuRefresh"]) nuAddIconToBreadcrumbHolder('nuRefreshButton','Refresh','nuGetBreadcrumb()','fa fa-refresh', '7px');				
 		
-        $('#nuActionHolder').css('height', '50px');
-
+		var c = 0;
 		var code = nuCurrentProperties().form_code;
 		if (! code.startsWith('nu') || devMode) { 		
-		
 			
-			if (nuAdminButtons["nuProperties"])  nuAddAdminButton("AdminProperties", "Prop", 'nuOpenCurrentFormProperties();',nuTranslate('Form Properties'));
-			if (nuAdminButtons["nuObjects"])  nuAddAdminButton("AdminObjectList", "Obj", 'nuOpenCurrentObjectList();',nuTranslate('Object List'));			
+			if (nuAdminButtons["nuProperties"]) {c++;  nuAddAdminButton("AdminProperties", "Prop", 'nuOpenCurrentFormProperties();',nuTranslate('Form Properties'));}
+			if (nuAdminButtons["nuObjects"]) {c++; nuAddAdminButton("AdminObjectList", "Obj", 'nuOpenCurrentObjectList();',nuTranslate('Object List'));}
 		
-			if (e || l) { nuAddAdminButton("AdminBE", "BE", 'nuEditPHP("BE");','Before Edit'); }
-			if (b) { nuAddAdminButton("AdminBB", "BB", 'nuEditPHP("BB");','Before Browse'); }
-			if (e) { nuAddAdminButton("AdminBS", "BS", 'nuEditPHP("BS");','Before Save'); }
-			if (e) { nuAddAdminButton("AdminAS", "AS", 'nuEditPHP("AS");','After Save'); }
+			if (e || l) {c++; nuAddAdminButton("AdminBE", "BE", 'nuEditPHP("BE");','Before Edit'); }
+			if (b) {c++; nuAddAdminButton("AdminBB", "BB", 'nuEditPHP("BB");','Before Browse'); }
+			if (e) {c++; nuAddAdminButton("AdminBS", "BS", 'nuEditPHP("BS");','Before Save'); }
+			if (e) {c++; nuAddAdminButton("AdminAS", "AS", 'nuEditPHP("AS");','After Save'); }
 		}
-
+		
+		if (c > 0) $('#nuActionHolder').css('height', '50px');
+		
         var frame = parent.$('#nuDragDialog iframe')
         frame.css('height', frame.cssNumber("height") + 50);
 

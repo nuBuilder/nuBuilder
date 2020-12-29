@@ -696,7 +696,7 @@ input[type=range]::-webkit-slider-runnable-track {
 
 .nuAdminButton {
 	margin-bottom: 10px; 
-	background-color: rgb(246, 246, 246); 
+	background-color: #f6f6f66b;
 	background-image: none; 
 	color: black; border-color: rgb(159, 165, 169); 
 	text-shadow: none;
@@ -1118,7 +1118,7 @@ input[type=range]::-webkit-slider-runnable-track {
 	top:10px;
  	text-align: center;
 	padding:20px;
-	background-color: #f9f4e1;
+	background-color: #fdfaeb;
 	box-shadow: 5px 5px 5px 0px rgba(150,147,150,1);
     opacity: 100;
     z-index: 5000;
