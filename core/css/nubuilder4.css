@@ -127,7 +127,6 @@ input[type=range]::-webkit-slider-runnable-track {
   cursor: pointer;
 }
 
-
 .nuCellOdd{
   background-color: #f9f9f9;
   border-style: solid;
@@ -293,10 +292,19 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 .nuOptionsItem:hover {
-   background-color: #00adef;
+   background-color: #cbe6ff;
    border-width: 0px;
    border-style: none;
    cursor: pointer;
+}
+
+.nuOptionsItem-divider {    
+    border: none;
+    display: block;
+    height: 1px;
+    margin: .5rem 0;
+	padding: 0px 0px 1px 1px;
+	background-color: #ccc;
 }
 
 .nuShadow {
@@ -304,10 +312,11 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 .nuOptionsList {
-   background-color: #d5edf5;
-   box-shadow: 5px 5px 5px 0px rgba(150,147,150,1);
+   background-color: white;
+   box-shadow: 2px 2px 8px 0px rgba(150,147,150,1);
    padding-top: 4px;
    height:20px;
+   border-radius: 4px;
 }
 
 
@@ -327,7 +336,7 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 .nuOptionsItemShortcutKey {
-   background-color: #d5edf5;
+   background-color: white;
    color: darkslategray;
    height:20px;
    display: inline-block;
@@ -352,6 +361,7 @@ input[type=range]::-webkit-slider-runnable-track {
   width: 350px;
   margin: 50px auto 0px auto;
   padding: 30px;
+  border-radius: 10px;
 }
 
 .nuLoginInput {
