@@ -92,7 +92,8 @@ function nuUpdateSystemRecords(){
 
 		$table  	= $t[$i];
 		$new		= $ts["$table"]['names'];
-		$old		= $ts["sys_$table"]['names'];
+		
+		$old = nuObjKey($ts, "sys_$table", false) ? $ts["sys_$table"]['names'] : null;
 		
 		if (is_array($old)) {
 		//-- remove unused fields from old
@@ -118,11 +119,11 @@ function nuUpdateSystemRecords(){
 		for($c = 0 ; $c < count($new) ; $c++){
 
 			$new	= $ts["$table"]['names'];
-			$newt	= $ts["$table"]['types'];
-			$old	= $ts["sys_$table"]['names'];
-			$oldt	= $ts["sys_$table"]['types'];
+			$newt	= $ts["$table"]['types'];			
+			$old = nuObjKey($ts, "sys_$table", false) ? $ts["sys_$table"]['names'] : null;						
+			$oldt = nuObjKey($ts, "sys_$table", false) ? $ts["sys_$table"]['types'] : null;			
 			
-			if(nuObjKey($old,$c, false) && nuObjKey($new,$c, false)){
+			if($old != null && (nuObjKey($old,$c, false) && nuObjKey($new,$c, false))){
 				
 				$ofield	= $old[$c];
 				$nfield	= $new[$c];

@@ -4,13 +4,13 @@
 
 // Database Settings:
     $nuConfigDBHost                     = "127.0.0.1";      //-- Database Host / IP
-    $nuConfigDBName                     = "nubuilder4";     //-- Database Name
-    $nuConfigDBUser                     = "root";           //-- Database User
-    $nuConfigDBPassword                 = "";               //-- Database Password
+    $nuConfigDBName                     = "nubuilder4";     //-- Database Name. You can change the name, if desired. The database must exist or must be created on your server.
+    $nuConfigDBUser                     = "nuadmin";        //-- Database User. Change the user, if desired. The user must exist or must be created.
+    $nuConfigDBPassword                 = "YourDBPassword"; //-- Database Password. We recommend you to use any strong password.
 
 // Administrator Login:
-    $nuConfigDBGlobeadminUsername       = "globeadmin";     //-- globeadmin username
-    $nuConfigDBGlobeadminPassword       = "nu";             //-- globeadmin password
+    $nuConfigDBGlobeadminUsername       = "globeadmin";     //-- globeadmin username. You can choose any username you like.
+    $nuConfigDBGlobeadminPassword       = "nu";             //-- globeadmin password. Please choose a stronger password!
 
 // Settings:
     $nuConfigTitle                      = "nuBuilder 4";    //-- nuBuilder Title
@@ -48,10 +48,7 @@ $nuJSOptions = "
     nuAdminButtons['nuPHP']                        = true; 
     nuAdminButtons['nuRefresh']                    = true;
     nuAdminButtons['nuObjects']                    = true; 
-    nuAdminButtons['nuProperties']                 = true;
-    nuAdminButtons['nuInfo']                       = true;
-    nuAdminButtons['nuDB']                         = false; 
-    nuAdminButtons['nuSetup']                      = false;
+    nuAdminButtons['nuProperties']                 = true;    
 
 ";
 

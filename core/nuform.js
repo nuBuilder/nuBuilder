@@ -791,7 +791,7 @@ function nuINPUT(w, i, l, p, prop){
 		$('#' + id)
 		.addClass('nuDate')
 		.attr('data-nu-format', w.objects[i].format)
-		
+		.attr('autocomplete', 'off');
 	}
 
 

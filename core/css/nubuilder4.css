@@ -493,7 +493,7 @@ input[type=range]::-webkit-slider-runnable-track {
   border-color: #ebebeb70;
   border-top: 1px solid #ddd;
   border-width: 1px;
-  padding: 3px 10px 3px 10px;
+  padding: 6px 10px 3px 10px;
   position:absolute;
   top:75px;
   font: 13px "Helvetica Neue",HelveticaNeue,Helvetica,Arial,sans-serif !important
@@ -505,7 +505,7 @@ input[type=range]::-webkit-slider-runnable-track {
   height: 70px;
   border-style: solid;
   border-width: 1px;
-  padding: 3px 10px 3px 10px;
+  padding: 6px 10px 3px 10px;
   position:absolute;
   top:75px;
   background-color: #338ea01c !important;

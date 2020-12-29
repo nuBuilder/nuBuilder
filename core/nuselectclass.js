@@ -38,7 +38,7 @@ class nuSelectObject{
 			'border'			: 'solid grey 1px',
 			'overflow'			: 'hidden',
 			'padding-top'		: '5px',
-			'background-color'	: 'darkgrey',
+			'background-color'	: '#c5c3c3',
 			'z-index'			: -1,
 		})
 		.addClass('nuBox')
@@ -81,7 +81,7 @@ class nuSelectObject{
 			'text-align'		: 'left',
 			'border' 			: 'none',
 			'font-weight'		: 'bold',
-			'background-color'	: 'darkgrey',
+			'background-color'	: '#c5c3c3',
 		})
 		.html(t)
 		.addClass('nuDragNoSelect')
@@ -117,7 +117,7 @@ class nuSelectObject{
 			'width'				: 30,
 			'top'				: 2,
 			'right'				: 18,
-			'background-color'	: 'darkgrey',
+			'background-color'	: '#c5c3c3',
 		})
 		.change(function(){
 			nuSQL.buildSQL();

@@ -416,7 +416,9 @@ function nuRunPHPHidden($nuCode){
 	$r						= db_fetch_object($t);
 	
 	if (db_num_rows($t) == 0) {
-		nuDisplayError(nuTranslate("The Procedure does not exist...")." ($nuCode)");
+		 if (substr($nuCode, 0, 2) != 'nu') {
+			nuDisplayError(nuTranslate("The Procedure does not exist...")." ($nuCode)");
+		 }
 	} else {	
 		if($_SESSION['nubuilder_session_data']['isGlobeadmin'] or in_array($r->zzzzsys_php_id, $p)){
 			nuEval($r->zzzzsys_php_id);
