@@ -303,14 +303,15 @@ function nuLog($s1, $s2 = '', $s3 = '') {
 }	
 
 function nuID(){
-
+	
+	global $DBUser;
 	$i   = uniqid();
 	$s   = md5($i);
 
     while($i == uniqid()){}
-
-    return "nu".uniqid().$s[0].$s[1];
-	// return uniqid().$s[0].$s[1];
+    
+	$prefix = $DBUser == 'nudev' ? 'nu' : '';
+	return $prefix.uniqid().$s[0].$s[1];
 
 }
 
