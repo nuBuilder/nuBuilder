@@ -309,8 +309,8 @@ function nuID(){
 
     while($i == uniqid()){}
 
-    return "nu".uniqid().$s[0].$s[1];
-	// return uniqid().$s[0].$s[1];
+   // return "nu".uniqid().$s[0].$s[1];
+      return uniqid().$s[0].$s[1];
 
 }
 
