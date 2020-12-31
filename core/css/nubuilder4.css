@@ -321,9 +321,10 @@ input[type=range]::-webkit-slider-runnable-track {
 
 
 #nuSearchList{
-  background-color: #d5edf5;
-  box-shadow: 5px 5px 5px 0px rgba(150,147,150,1);
+  background-color: #fcfcfc;
+  box-shadow: 2px 2px 8px 0px rgba(150,147,150,1);
   padding-top: 4px;
+  border-radius: 4px;
 }
 
 .nuClose:hover{

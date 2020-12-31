@@ -4,7 +4,7 @@ function nuInitJSOptions() {
 	if (window.nuAdminButtons  === undefined) {
 
 		window.nuAdminButtons =
-			{'nuDebug'                           : false, 
+			{'nuDebug'                           : true, 
 			 'nuPHP'                             : true, 
 			 'nuRefresh'                         : true, 
 			 'nuObjects'                         : true, 
@@ -256,12 +256,6 @@ function nuBuildForm(f){
 		
 	}
 	
-	/*
-	if(!nuMainForm() && nuFormType() == 'edit'){
-		$('body').css('width', Number(nuFormWH().width) + 5)	
-	}
-	*/
-	
 	window.nuSAVED		= true;
 	
 	nuWindowPosition();
@@ -374,15 +368,16 @@ function nuTotalHeight(i){
 	
 	var h	= 0;
 
-	if($('#' + i).length == 0){return 0;}
-
-	h = h + parseInt($('#' + i).css('height'));
-	h = h + parseInt($('#' + i).css('padding-top'));
-	h = h + parseInt($('#' + i).css('padding-bottom'));
-	h = h + parseInt($('#' + i).css('border-top-width'));
-	h = h + parseInt($('#' + i).css('border-bottom-width'));
-	h = h + parseInt($('#' + i).css('margin-top'));
-	h = h + parseInt($('#' + i).css('margin-bottom'));
+	let obj = $('#' + i);
+	if(obj.length == 0){return 0;}
+	
+	h = h + parseInt(obj.css('height'));
+	h = h + parseInt(obj.css('padding-top'));
+	h = h + parseInt(obj.css('padding-bottom'));
+	h = h + parseInt(obj.css('border-top-width'));
+	h = h + parseInt(obj.css('border-bottom-width'));
+	h = h + parseInt(obj.css('margin-top'));
+	h = h + parseInt(obj.css('margin-bottom'));
 
 	return h;
 	
@@ -393,15 +388,16 @@ function nuTotalWidth(i){
 	
 	var h	= 0;
 
-	if($('#' + i).length == 0){return 0;}
-
-	h = h + parseInt($('#' + i).css('width'));
-	h = h + parseInt($('#' + i).css('padding-left'));
-	h = h + parseInt($('#' + i).css('padding-right'));
-	h = h + parseInt($('#' + i).css('border-left-width'));
-	h = h + parseInt($('#' + i).css('border-right-width'));
-	h = h + parseInt($('#' + i).css('margin-left'));
-	h = h + parseInt($('#' + i).css('margin-right'));
+	let obj = $('#' + i);
+	if(obj.length == 0){return 0;}
+	
+	h = h + parseInt(obj.css('width'));
+	h = h + parseInt(obj.css('padding-left'));
+	h = h + parseInt(obj.css('padding-right'));
+	h = h + parseInt(obj.css('border-left-width'));
+	h = h + parseInt(obj.css('border-right-width'));
+	h = h + parseInt(obj.css('margin-left'));
+	h = h + parseInt(obj.css('margin-right'));
 
 	return h;
 	
@@ -412,14 +408,15 @@ function nuTotalHolderWidth(i){
 	
 	var h	= 0;
 
-	if($('#' + i).length == 0){return 0;}
-
-	h = h + parseInt($('#' + i).css('padding-left'));
-	h = h + parseInt($('#' + i).css('padding-right'));
-	h = h + parseInt($('#' + i).css('border-left-width'));
-	h = h + parseInt($('#' + i).css('border-right-width'));
-	h = h + parseInt($('#' + i).css('margin-left'));
-	h = h + parseInt($('#' + i).css('margin-right'));
+	let obj = $('#' + i);
+	if(obj.length == 0){return 0;}
+	
+	h = h + parseInt(obj.css('padding-left'));
+	h = h + parseInt(obj.css('padding-right'));
+	h = h + parseInt(obj.css('border-left-width'));
+	h = h + parseInt(obj.css('border-right-width'));
+	h = h + parseInt(obj.css('margin-left'));
+	h = h + parseInt(obj.css('margin-right'));
 
 	return h;
 	
@@ -674,19 +671,20 @@ function nuINPUT(w, i, l, p, prop){
 	
 	var ID			= p + prop.objects[i].id;
 	var id			= p + prop.objects[i].id;
-	var ef			= p + 'nuRECORD';                 						//-- Edit Form Id
+	var ef			= p + 'nuRECORD';							//-- Edit Form Id
 	var ty			= 'textarea';
 	var vis			= prop.objects[i].display == 0 ? 'hidden' : 'visible';
-	var input_type	= prop.objects[i].input;
+	var inputType	= prop.objects[i].input;
+	var objectType  = prop.objects[i].type;
 	var hideSF		= '';
 	
-	if(prop.objects[i].type != 'textarea'){         						//-- Input Object
+	if(objectType != 'textarea'){								//-- Input Object
 		ty			= 'input';
 	}
 
-	if(prop.objects[i].input == 'file'){
+	if(inputType == 'file'){
 		
-		var inp  	= document.createElement('textarea');
+		var inp = document.createElement('textarea');
 
 		inp.setAttribute('id', id);
 
@@ -700,28 +698,28 @@ function nuINPUT(w, i, l, p, prop){
 		.attr('onchange', 'this.className = "nuEdited"')
 		.val(prop.objects[i].value);
 
-		id			= id + '_file';
+		id	= id + '_file';
 		
 	}
 	
-	if(prop.objects[i].input == 'button' && prop.objects[i].type == 'input'){
-		var inp  		= document.createElement('button');
+	if(inputType == 'button' && objectType == 'input'){
+		var inp = document.createElement('button');
 	}else{
-		var inp  		= document.createElement(ty);
+		var inp = document.createElement(ty);
 	}
 
 	inp.setAttribute('id', id);
 
 	$('#' + ef).append(inp);
 
-	if(prop.objects[i].parent_type == 'g'){        							//--  in a grid subform
+	if(prop.objects[i].parent_type == 'g'){        				//-- in a grid subform
 		
 		prop.objects[i].left 	= l;
 		prop.objects[i].top 	= 3;
 		
 	}else{
 
-		if(input_type != 'button'){											//-- Input Object
+		if(inputType != 'button'){								//-- Input Object
 			nuLabel(w, i, p, prop);
 		}
 		
@@ -729,35 +727,35 @@ function nuINPUT(w, i, l, p, prop){
 
 	if(ty == 'input'){														//-- Input Object
 
-		inp.setAttribute('type', prop.objects[i].input);
+		inp.setAttribute('type', inputType);
 
-		if(prop.objects[i].type == 'lookup'){
+		if(objectType == 'lookup'){
 			$('#' + id).addClass('nuHiddenLookup');
 		}else{
-			$('#' + id).addClass('input_' + input_type);
+			$('#' + id).addClass('input_' + inputType);
 		}
 
 	}
 
 	var onChange	= 'nuChange(event)';
 
-	if(input_type == 'file'){
+	if(inputType == 'file'){
 		onChange	= 'nuChangeFile(event)';
 	}
 
-	if(prop.objects[i].type == 'lookup'){
+	if(objectType == 'lookup'){
 		onChange	= 'nuGetLookupId(this.value, this.id)';
 	}
 		
 	var bump		= 0;
 
-	if(input_type == 'button' && p != ''){
+	if(inputType == 'button' && p != ''){
 		var bump	= 3;
 	}
 	
 	nuAddDataTab(id, prop.objects[i].tab, p);
 
-	$('#' + id).css({'top'      : Number(prop.objects[i].top),
+	$('#' + id).css({'top'		: Number(prop.objects[i].top),
 					'left'		: Number(prop.objects[i].left) + bump,
 					'width'		: Number(prop.objects[i].width),
 					'height'	: Number(prop.objects[i].height),
@@ -765,7 +763,7 @@ function nuINPUT(w, i, l, p, prop){
 					'position'	: 'absolute'
 	})
 	.attr('onchange', onChange)
-	.attr('data-nu-field', input_type == 'button' || input_type == 'file' ? null : prop.objects[i].id)
+	.attr('data-nu-field', inputType == 'button' || inputType == 'file' ? null : prop.objects[i].id)
 	.attr('data-nu-object-id', w.objects[i].object_id)
 	.attr('data-nu-format', '')
 	.attr('data-nu-prefix', p)
@@ -774,7 +772,7 @@ function nuINPUT(w, i, l, p, prop){
 	.attr('data-nu-label', w.objects[i].label)
 	.attr('onfocus', 'nuLookupFocus(event)')
 
-	if(input_type == 'nuScroll'){
+	if(inputType == 'nuScroll'){
 		
 		var input_js	= 'nuFORM.scrollList(event, ' + w.objects[i].scroll + ')';
 		
@@ -786,7 +784,7 @@ function nuINPUT(w, i, l, p, prop){
 	}
 
 
-	if(input_type == 'nuDate'){
+	if(inputType == 'nuDate'){
 		
 		$('#' + id)
 		.addClass('nuDate')
@@ -795,7 +793,7 @@ function nuINPUT(w, i, l, p, prop){
 	}
 
 
-	if(input_type == 'nuNumber'){
+	if(inputType == 'nuNumber'){
 		
 		$('#' + id)
 		.addClass('nuNumber')
@@ -803,7 +801,7 @@ function nuINPUT(w, i, l, p, prop){
 		
 	}
 
-	if(input_type != 'button'){
+	if(inputType != 'button'){
 		$('#' + id).attr('data-nu-data', '')
 	}else{
 		
@@ -812,22 +810,22 @@ function nuINPUT(w, i, l, p, prop){
 		
 	}
 	
-	if(w.objects[i].value != '' && window.nuFORM.getCurrent().record_id == '-1'){             //== check for Cannot be left blank
+	if(w.objects[i].value != '' && window.nuFORM.getCurrent().record_id == '-1'){				//== check for Cannot be left blank
 		$('#' + id).addClass('nuEdited');
 	}
 	
-	if(input_type == 'nuDate'){
+	if(inputType == 'nuDate'){
 		$('#' + id).attr('onclick', 'nuPopupCalendar(this);');
 	}
 
-	if(input_type != 'file'){
+	if(inputType != 'file'){
 
-		if(input_type == 'button'){
+		if(inputType == 'button'){
 			
 			$('#' + id).html(nuTranslate(w.objects[i].value))
 		}else{
 			
-			if(input_type == 'datetime-local'){													//-- replace ' ' between date and time with 'T'
+			if(inputType == 'datetime-local'){													//-- replace ' ' between date and time with 'T'
 				w.objects[i].value = w.objects[i].value == null ? null : w.objects[i].value.replace(' ','T');
 			}
 			
@@ -845,14 +843,14 @@ function nuINPUT(w, i, l, p, prop){
 	}
 
 	
-	if(prop.objects[i].type == 'display'){
+	if(objectType == 'display'){
 		
 		$('#' + id).addClass('nuReadonly');
 		$('#' + id).prop('readonly', true);
 		
 	}
 
-	if(prop.objects[i].type == 'calc'){
+	if(objectType == 'calc'){
 		
 		var TOT	= String(w.objects[i].formula).replaceAll("al('", "al('" + p);
 
@@ -868,7 +866,7 @@ function nuINPUT(w, i, l, p, prop){
 		
 	}
 
-	if(prop.objects[i].type == 'lookup'){
+	if(objectType == 'lookup'){
 		
 		$('#' + id).hide();
 		$('#' + id).attr('data-nu-lookup-id','');
@@ -885,8 +883,8 @@ function nuINPUT(w, i, l, p, prop){
 		nuAddDataTab(id, prop.objects[i].tab, p);
 		
 		$('#' + id).css({'top'	: Number(prop.objects[i].top),
-		    			'left'	: Number(prop.objects[i].left),
-			    		'width'	: Number(prop.objects[i].width),
+						'left'	: Number(prop.objects[i].left),
+						'width'	: Number(prop.objects[i].width),
 						'height': Number(prop.objects[i].height)
 		})
 		.attr('data-nu-form-id', w.objects[i].form_id)
@@ -922,9 +920,9 @@ function nuINPUT(w, i, l, p, prop){
 		
 		nuAddDataTab(id, prop.objects[i].tab, p);
 		
-		$('#' + id).css({'top'      	: Number(prop.objects[i].top),
-						'left'      	: Number(prop.objects[i].left) + Number(prop.objects[i].width) + 6,
-						'width'		: 15,
+		$('#' + id).css({'top'			: Number(prop.objects[i].top),
+						'left'			: Number(prop.objects[i].left) + Number(prop.objects[i].width) + 6,
+						'width'			: 15,
 						'height'		: Number(prop.objects[i].height -2)
 		})
 		.attr('type','button')
@@ -964,7 +962,7 @@ function nuINPUT(w, i, l, p, prop){
 		
 	}else{
 	
-		if(prop.objects[i].type == 'input' && input_type == 'nuAutoNumber'){
+		if(objectType == 'input' && inputType == 'nuAutoNumber'){
 			$('#' + id)
 			.prop('readonly', true)
 			.addClass('nuReadonly')
@@ -973,7 +971,6 @@ function nuINPUT(w, i, l, p, prop){
 
 		nuSetAccess(ID, prop.objects[i].read);
 		
-//		return Number(prop.objects[i].width) + 4;
 		return Number(prop.objects[i].width) + (prop.objects[i].read == 2 ? -2 : 4);		//-- kev1n
 		
 	}
@@ -1588,18 +1585,11 @@ function nuAddSubformRow(t, e){
 	
 }
 
-
-
-
-
-
-
 function nuPad4(i){
 	
 	return String('000' + Number(i)).substr(-4);
 
 }
-
 
 function nuPad3(i){
 	
@@ -1613,7 +1603,6 @@ function nuPad2(i){
 	return String('0' + Number(i)).substr(-2);
 
 }
-
 
 function nuLabel(w, i, p, prop){
 	
@@ -1779,19 +1768,11 @@ function nuBuildSubformDeleteTitle(l, id, subform_id){
 function nuAddBreadcrumbs(){
 
 	var b	= window.nuFORM.breadcrumbs.length;
-
-	if(nuMainForm()){
 	
-		for(var i = 1 ; i < b ; i++){
-			nuAddBreadcrumb(i);
-		}
-		
-	}else{
+	iStart = nuMainForm() ? 1 : 0;
 	
-		for(var i = 0 ; i < b ; i++){
-			nuAddBreadcrumb(i);
-		}
-		
+	for(var i = iStart ; i < b ; i++){
+		nuAddBreadcrumb(i);
 	}
 	
 }
@@ -2067,16 +2048,7 @@ function nuGetOptionsList(f, t, p, a, type){
 	var list	= [];
 	var ul		= '<ul>';
 
-	if (a == 1 && (nuFormType() == 'browse' || nuFormType() == 'edit') ) {
-				
-		list.push([nuTranslate('nuDebug Results'), 'nuPopup("nudebug", "")', 'fa-bug', 'Ctrl+Shft+D']);					
-		list.push([nuTranslate('Database'), 'nuStartDatabaseAdmin();', 'fa-database', 'Ctrl+Shft+E']);		
-		list.push([nuTranslate('Setup'), 'nuForm("nusetup","1","", "")', 'fa-cogs', 'Ctrl+Shft+U']);			
-		list.push([nuTranslate('Form Info'), 'nuShowFormInfo();', 'fa-info', 'Ctrl+Shft+I']);			
-		list.push(['', '', '', '']);	
-		
-	}	
-		
+
 	if(nuFormType() == 'browse'){
 
 		list.push([nuTranslate('Searchable Columns'), 'nuGetSearchList()', 'fa-columns', 'Ctrl+Shft+C']);
@@ -2142,6 +2114,18 @@ function nuGetOptionsList(f, t, p, a, type){
 		}
 		
 	}
+	
+		if (a == 1 && (nuFormType() == 'browse' || nuFormType() == 'edit') ) {
+				
+		list.push(['', '', '', '']);	
+		
+		list.push([nuTranslate('nuDebug Results'), 'nuPopup("nudebug", "")', 'fa-bug', 'Ctrl+Shft+D']);					
+		list.push([nuTranslate('Database'), 'nuStartDatabaseAdmin();', 'fa-database', 'Ctrl+Shft+E']);		
+		list.push([nuTranslate('Setup'), 'nuForm("nusetup","1","", "")', 'fa-cogs', 'Ctrl+Shft+U']);			
+		list.push([nuTranslate('Form Info'), 'nuShowFormInfo();', 'fa-info', 'Ctrl+Shft+I']);					
+		
+	}	
+		
 
 	if(list.length == 0){return;}
 	

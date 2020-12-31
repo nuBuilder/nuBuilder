@@ -252,12 +252,12 @@ function nuObjKey($o, $k, $d = null) {
 
 
 function nuSetHashList($p){
-
+	
 	$fid		= addslashes(nuObjKey($p,'form_id'));
 	$rid		= addslashes(nuObjKey($p,'record_id'));
 	$r			= array();
 	$A			= nuGetUserAccess();
-	$s			= "SELECT * FROM zzzzsys_form WHERE zzzzsys_form_id = '$fid'";
+	$s			= "SELECT sfo_table, sfo_primary_key FROM zzzzsys_form WHERE zzzzsys_form_id = '$fid'";
 	$t			= nuRunQuery($s);
 	$R			= db_fetch_object($t);
 	$h			= array();
@@ -266,7 +266,7 @@ function nuSetHashList($p){
 
 		if(trim($R->sfo_table) != ''){
 			
-			$s		= "SELECt * FROM $R->sfo_table WHERE $R->sfo_primary_key = '$rid'";
+			$s		= "SELECT * FROM $R->sfo_table WHERE $R->sfo_primary_key = '$rid'";
 			$t		= nuRunQuery($s);
 			$f		= db_fetch_object($t);
 
@@ -333,7 +333,7 @@ function nuSetHashList($p){
 function nuRunReport($report_id){
 	
 	$id									= nuID();
-	$s									= "SELECT * FROM zzzzsys_report WHERE sre_code = '$report_id'";
+	$s									= "SELECT sre_zzzzsys_php_id, sre_code, sre_description, sre_layout FROM zzzzsys_report WHERE sre_code = '$report_id'";
 	$t									= nuRunQuery($s);
 	$ob									= db_fetch_object($t);
 	$_POST['nuHash']['code']			= $ob->sre_code;
@@ -354,7 +354,7 @@ function nuRunReport($report_id){
 function nuInstall(){
 
 	$id									= nuID();
-	$s									= "SELECT * FROM zzzzsys_php WHERE sph_code = '$procedure_code'";
+	$s									= "SELECT zzzzsys_php_id, sph_code, sph_description,  FROM zzzzsys_php WHERE sph_code = '$procedure_code'";
 	$t									= nuRunQuery($s);
 	$ob									= db_fetch_object($t);
 	$_POST['nuHash']['code']			= $ob->sph_code;
@@ -362,8 +362,6 @@ function nuInstall(){
 	$_POST['nuHash']['parentID']		= $ob->zzzzsys_php_id;
 	$_POST['nuHash']['nuInstall']		= '1';
 	$j									= json_encode($_POST['nuHash']);
-	
-
 
 	nuSetJSONData($id, $j);
 	
@@ -382,7 +380,6 @@ function nuAllowedActivities(){
 }
 
 
-
 function nuRunPHP($procedure_code){
 
 	$aa									= nuAllowedActivities();
@@ -394,12 +391,15 @@ function nuRunPHP($procedure_code){
 	$_POST['nuHash']['code']			= $ob->sph_code;
 	$_POST['nuHash']['description']		= $ob->sph_description;
 	$_POST['nuHash']['parentID']		= $ob->zzzzsys_php_id;
+	$_POST['nuHash']['sph_php']			= $ob->sph_php;
+	
 	$j									= json_encode($_POST['nuHash']);
 
 	if(!$_SESSION['nubuilder_session_data']['isGlobeadmin'] and !in_array($ob->zzzzsys_php_id, $p)){
 		nuDisplayError(nuTranslate("Access To Procedure Denied...")." ($procedure_code)");
 	}
 
+	
 	nuSetJSONData($id, $j);
 	
 	return $id;
@@ -411,10 +411,10 @@ function nuRunPHPHidden($nuCode){
 	$aa						= nuAllowedActivities();
 	$p 						= nuProcedureAccessList($aa);
 
-	$s						= "SELECT * FROM zzzzsys_php WHERE sph_code = ? ";
+	$s						= "SELECT zzzzsys_php_id FROM zzzzsys_php WHERE sph_code = ? ";
 	$t						= nuRunQuery($s, [$nuCode]);
 	$r						= db_fetch_object($t);
-	
+		
 	if (db_num_rows($t) == 0) {
 		 if (substr($nuCode, 0, 2) != 'nu') {
 			nuDisplayError(nuTranslate("The Procedure does not exist...")." ($nuCode)");
@@ -442,7 +442,7 @@ function nuJavascriptCallback($js){
 
 function nuSetJSONData($i, $nj){
 	
-	$s					= "SELECT * FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
+	$s					= "SELECT sss_access FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
 	$t					= nuRunQuery($s, array($_SESSION['nubuilder_session_data']['SESSION_ID']));			 
 	$r					= db_fetch_object($t);
 	$j					= json_decode($r->sss_access, true);
@@ -460,7 +460,7 @@ function nuSetJSONData($i, $nj){
 
 function nuGetJSONData($i){
 	 
-	$s					= "SELECT * FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";	
+	$s					= "SELECT sss_access FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";	
 	$t					= nuRunQuery($s, array($_SESSION['nubuilder_session_data']['SESSION_ID']));			 
 	$r					= db_fetch_object($t);
 
@@ -512,7 +512,7 @@ function nuRunHTML(){
 
 
 function nuReplaceHashVariables($s){
-
+	
 	$s	= trim($s);
 	if($s == ''){
 		return '';
@@ -520,7 +520,7 @@ function nuReplaceHashVariables($s){
 	
 	$a 	= $_POST['nuHash'];
 	
-	$q	= "SELECT * FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
+	$q	= "SELECT sss_hashcookies FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
 	$t	=  nuRunQuery($q, array($_SESSION['nubuilder_session_data']['SESSION_ID']));			 
 	$r	= db_fetch_object($t);
 
@@ -540,7 +540,7 @@ function nuReplaceHashVariables($s){
 	foreach ($a as $k => $v) {
 		
 		 if(!is_object ($a[$k]) && !is_array ($a[$k])) {		
-			$s	= str_replace ('#' . $k . '#', $v, $s);
+			$s	= str_replace ('#' . $k . '#', $v, $s);			
 		}
 	}
 
@@ -774,7 +774,7 @@ function nuGetUserAccess(){
 
 	$A					= [];
 
-	$s					= "SELECT * FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
+	$s					= "SELECT sss_access FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
 	$t					= nuRunQuery($s, array($_SESSION['nubuilder_session_data']['SESSION_ID']));			 
 	$r					= db_fetch_object($t);
 	
@@ -897,7 +897,7 @@ function nuAddFormatting($v, $f){
 
 function nuGetNumberFormat($f){
 
-	$s = "SELECT * FROM zzzzsys_format";
+	$s = "SELECT srm_format, srm_currency FROM zzzzsys_format";
 	$t = nuRunQuery($s);
 
 	while($r = db_fetch_object($t)){
@@ -964,7 +964,7 @@ function nuPunctuation($f){
 
 function nuTTList($id, $l){
 	
-	$t										= nuRunQuery('SELECT * FROM zzzzsys_object WHERE  sob_all_zzzzsys_form_id = ?' , [$l]);
+	$t										= nuRunQuery('SELECT sob_all_id FROM zzzzsys_object WHERE  sob_all_zzzzsys_form_id = ?' , [$l]);
 	
 	while($r = db_fetch_object($t)){						//-- add default empty hash variables
 		$_POST['nuHash'][$r->sob_all_id]	= '';
@@ -1095,19 +1095,19 @@ function nuHash(){
 
 function nuBuildFormSchema(){
 
-	$T				= nuRunQuery("SELECT * FROM zzzzsys_form ORDER BY sfo_code");
+	$T				= nuRunQuery("SELECT zzzzsys_form_id FROM zzzzsys_form ORDER BY sfo_code");
 	$fs				= [];
 
 	while($r = db_fetch_object($T)){
 		
 		$f 			= $r->zzzzsys_form_id;
 		$a 			= array();
-		$t 			= nuRunQuery("SELECT * FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = '$f' ORDER BY sob_all_id");
+		$t 			= nuRunQuery("SELECT sob_all_id, sob_all_type, sob_all_label, sob_input_type FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = '$f' ORDER BY sob_all_id");
 		
 		while($r = db_fetch_object($t)){
 			
 			if(in_array($r->sob_all_type, array('input', 'lookup', 'select', 'textarea'))){
-				$a[]= array($r->zzzzsys_object_id, $r->sob_all_id, $r->sob_all_label, $r->sob_all_type, $r->sob_input_type); 
+				$a[] = array($r->zzzzsys_object_id, $r->sob_all_id, $r->sob_all_label, $r->sob_all_type, $r->sob_input_type); 
 			}
 			
 		}
@@ -1255,7 +1255,7 @@ function nuEventName($e){
 function nuEval($phpid){
 
 	
-	$s						= "SELECT * FROM zzzzsys_php WHERE zzzzsys_php_id = ? ";
+	$s						= "SELECT sph_php, sph_code FROM zzzzsys_php WHERE zzzzsys_php_id = ? ";
 	$t						= nuRunQuery($s, [$phpid]);
 	$r						= db_fetch_object($t);
 		
@@ -1264,6 +1264,7 @@ function nuEval($phpid){
 	$code					= $r->sph_code;
 	$php					= nuReplaceHashVariables($r->sph_php);
 	$_POST['nuSystemEval']	= nuEvalMessage($phpid, $code);
+
 	
 	try{
 		eval($php); 
@@ -1280,7 +1281,7 @@ function nuEval($phpid){
 
 function nuProcedure($c){
 
-   $s                     = "SELECT * FROM zzzzsys_php WHERE sph_code = ? ";
+   $s                     = "SELECT sph_php FROM zzzzsys_php WHERE sph_code = ? ";
    $t                     = nuRunQuery($s, [$c]);
    
    if (db_num_rows($t) > 0) {  // procedure exists
@@ -1290,8 +1291,7 @@ function nuProcedure($c){
       $php                  = "$php \n\n//--Added by nuProcedure()\n\n$"."_POST['nuProcedureEval'] = '';";
       $_POST['nuProcedureEval']   = "Procedure <b>$r->sph_code</b> - run inside ";
       return $php;
-   } else
-   {
+   } else {
       return '';
    }
    
@@ -1332,7 +1332,7 @@ function nuEvalMessage($phpid, $code){
 	if($i[1] != 'AB'){
 		
 		$event	= nuEventName($i[1]);
-		$s		= "SELECT * FROM zzzzsys_form WHERE zzzzsys_form_id = ?	";
+		$s		= "SELECT sfo_code FROM zzzzsys_form WHERE zzzzsys_form_id = ?	";
 		$t		= nuRunQuery($s, [$i[0]]);
 		$O		= db_fetch_object($t);
 	
@@ -1340,7 +1340,7 @@ function nuEvalMessage($phpid, $code){
 		
 	}
 		
-	$s			= "SELECT * FROM zzzzsys_object JOIN zzzzsys_form ON zzzzsys_form_id = sob_all_zzzzsys_form_id	WHERE zzzzsys_object_id = ?	";
+	$s			= "SELECT sob_all_id, sfo_code  FROM zzzzsys_object JOIN zzzzsys_form ON zzzzsys_form_id = sob_all_zzzzsys_form_id	WHERE zzzzsys_object_id = ?	";
 	$t			= nuRunQuery($s, [$i[0]]);
 	$O			= db_fetch_object($t);
 	
@@ -1364,7 +1364,7 @@ function nuUpdateSystemIds(){
 
 function nuUpdateTabIds(){
 
-	$s		= 'SELECT * FROM zzzzsys_tab WHERE zzzzsys_tab_id != "nufastforms"';
+	$s		= 'SELECT zzzzsys_tab_id FROM zzzzsys_tab WHERE zzzzsys_tab_id != "nufastforms"';
 	$t		= nuRunQuery($s);
 	
 	while($r = db_fetch_object($t)){
@@ -1386,7 +1386,7 @@ function nuUpdateTabIds(){
 
 function nuUpdateObjectIds(){
 
-	$s		= 'SELECT * FROM zzzzsys_object';
+	$s		= 'SELECT zzzzsys_object_id FROM zzzzsys_object';
 	$t		= nuRunQuery($s);
 	
 	while($r = db_fetch_object($t)){
@@ -1567,7 +1567,7 @@ function nuTranslate($e){
 		if ($l == '') return $e;
 		
         $s      = "
-                        SELECT *
+                        SELECT trl_translation
                         FROM zzzzsys_translate
                         WHERE trl_language = ?
                         AND trl_english = ?
@@ -1728,7 +1728,7 @@ function nuBuildCurrencyFormats(){
 		nuRunQuery("ALTER TABLE zzzzsys_format ADD srm_currency VARCHAR(25) NULL DEFAULT NULL AFTER srm_format");
 	}
 	
-	$s = "SELECT * FROM zzzzsys_format WHERE srm_type = 'Number' AND ISNULL(srm_currency)";
+	$s = "SELECT zzzzsys_format_id, srm_format FROM zzzzsys_format WHERE srm_type = 'Number' AND ISNULL(srm_currency)";
 	$t = nuRunQuery($s);
 	
 	while($r = db_fetch_object($t)){
@@ -1760,7 +1760,7 @@ function nuBuildCurrencyFormats(){
 	}
 
 
-	$t = nuRunQuery("SELECT * FROM zzzzsys_format WHERE srm_type = 'Number'");
+	$t = nuRunQuery("SELECT srm_format, srm_currency FROM zzzzsys_format WHERE srm_type = 'Number'");
 	$a = [];
 	while($r = db_fetch_object($t)){
 		$a[]		= ['N|'. trim($r->srm_format), $r->srm_currency];

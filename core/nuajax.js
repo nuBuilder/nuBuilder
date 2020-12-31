@@ -313,16 +313,14 @@ function nuRunPHP(pCode, iframe, rbs){
 		}else{
 			last.hash       = parent.nuHashFromEditForm();
 		}
-		
-//		last.hash 			= parent.nuHashFromEditForm();
-		
+				
 	}else{
 
 		last.record_id 		= nuFORM.getCurrent().record_id;
 		last.hash 			= nuHashFromEditForm();
 		
 	}
-	
+
 	var successCallback 	= function(data,textStatus,jqXHR){
 		
 		var fm				= data;
@@ -366,7 +364,6 @@ function nuRunPHPHidden(i, rbs){
 	last.record_id			= i;								//-- php code
 	last.nuFORMdata			= nuFORM.data();
 	last.hash  				= nuHashFromEditForm();
-//	last.HIDDEN_ID			= arguments.length == 2 ? h : '';
 	
 	var successCallback 	= function(data,textStatus,jqXHR){
 		

@@ -28,7 +28,7 @@ if($PHPID == ''){
 require_once('nusession.php');
 if(!array_key_exists('TEMPORARY_SESSION', $_SESSION)){
     $getAccessQRY = nuRunQuery("
-        SELECT * FROM zzzzsys_session WHERE zzzzsys_session_id = ?
+        SELECT sss_access FROM zzzzsys_session WHERE zzzzsys_session_id = ?
     ", array($_SESSION['nubuilder_session_data']['SESSION_ID']));
     if (db_num_rows($getAccessQRY) != 1) {
         header("Content-Type: text/html");

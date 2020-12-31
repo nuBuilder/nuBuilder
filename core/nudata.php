@@ -95,7 +95,7 @@ function nuCheckAccessLevel($data){
 		return;
 	}
 
-	$s		= "SELECT * FROM zzzzsys_access_form WHERE slf_zzzzsys_access_id = ? AND slf_zzzzsys_form_id = ?";
+	$s		= "SELECT slf_save_button, slf_delete_button FROM zzzzsys_access_form WHERE slf_zzzzsys_access_id = ? AND slf_zzzzsys_form_id = ?";
 	$t		= nuRunQuery($s, [$u, $f]);
 	$r		= db_fetch_object($t);
 	
@@ -536,7 +536,7 @@ function nuEditObjects($id){
 function nuAutoNumber($form_id, $field_id, $value){
 	
 
-	$s		= "SELECT * FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = ? AND sob_all_id = ? ";
+	$s		= "SELECT sob_all_type, sob_input_type, zzzzsys_object_id  FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = ? AND sob_all_id = ? ";
 	$t		= nuRunQuery($s, array($form_id, $field_id));
 	$r		= db_fetch_object($t);
 	$input	= $r->sob_all_type == 'input';
@@ -555,7 +555,7 @@ function nuAutoNumber($form_id, $field_id, $value){
 function nuUpdateCounter($id){
 	
 	$n		= nuID();
-	$sql	= "SELECT *	FROM zzzzsys_object	WHERE zzzzsys_object_id = '$id'";
+	$sql	= "SELECT sob_input_count, sob_input_javascript 	FROM zzzzsys_object	WHERE zzzzsys_object_id = '$id'";
 	
 	for($i = 0 ; $i < 10 ; $i++){
 		
@@ -610,7 +610,7 @@ function nuFormatValue($row, $i){
 	$form_id	= $row['fm'];
 	$field		= $row['f'][$i];
 	
-	$s			= "SELECT * FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = ? AND sob_all_id = ? ";
+	$s			= "SELECT sob_all_type, sob_select_multiple, sob_input_type, zzzzsys_object_id FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = ? AND sob_all_id = ? ";
 	$t			= nuRunQuery($s, array($form_id, $field));
 	$r			= db_fetch_object($t);
 	
@@ -791,7 +791,7 @@ function nuGetFile(){
 	
 	$f		= $_POST['nuSTATE']['fileCode'];
 	
-	$s		= "SELECT * FROM zzzzsys_file WHERE sfi_code = ? ";
+	$s		= "SELECT sfi_json FROM zzzzsys_file WHERE sfi_code = ? ";
 	$t		= nuRunQuery($s, [$f]);
 	$r		= db_fetch_object($t);
 	

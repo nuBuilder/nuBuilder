@@ -617,27 +617,27 @@ function nuBindCtrlEvents(){
 			
 			if(nuFormType() == 'browse') {
 			
-				if(e.keyCode == 67 && window.global_access) {						//-- c		Searchable Columns
+				if(e.keyCode == 67 && window.global_access) {							//-- c		Searchable Columns
 					nuGetSearchList();
-				} else if(e.keyCode == 70 && window.global_access) {				//-- f		Form Properties
+				} else if(e.keyCode == 70 && window.global_access) {					//-- f		Form Properties
 					nuPopup("nuform", window.nuFORM.getCurrent().form_id);
-				} else if(e.keyCode == 79 && window.global_access) {				//-- O		Object List
+				} else if(e.keyCode == 79 && window.global_access) {					//-- O		Object List
 					nuPopup("nuobject", "", window.nuFORM.getCurrent().form_id);
-				} else if(e.keyCode == 68 && window.global_access) {				//-- d		nuDebug Results
+				} else if(e.keyCode == 68 && window.global_access) {					//-- d		nuDebug Results
 					nuPopup("nudebug", "");
-				} else if(e.keyCode == 73 && window.global_access) {				//-- i		Form Info
+				} else if(e.keyCode == 73 && window.global_access) {					//-- i		Form Info
 					nuShowFormInfo();
-				} else if(e.keyCode == 69 && window.global_access) {				//-- t		Database
+				} else if(e.keyCode == 69 && window.global_access) {					//-- t		Database
 					nuStartDatabaseAdmin();		
-				} else if(e.keyCode == 85 && window.global_access) {				//-- u		Setup
+				} else if(e.keyCode == 85 && window.global_access) {					//-- u		Setup
 					nuForm('nusetup','1','', '');						
-				} else if(e.keyCode == 83) {										//-- s		Search
+				} else if(e.keyCode == 83) {											//-- s		Search
 					nuSearchAction();
-				} else if(e.keyCode == 65 && window.global_access) {				//-- a		Add
+				} else if(e.keyCode == 65 && window.global_access) {					//-- a		Add
 					nuAddAction();
-				} else if(e.keyCode == 80 && window.global_access) {				//-- p		Print
+				} else if(e.keyCode == 80 && window.global_access) {					//-- p		Print
 					nuPrintAction();
-				} else if (e.keyCode == 82) {										//-- r		Refresh
+				} else if (e.keyCode == 82) {											//-- r		Refresh
 					nuGetBreadcrumb();
 				}
 
@@ -646,30 +646,32 @@ function nuBindCtrlEvents(){
 
 			if(nuFormType() == 'edit') {
 			
-				if(e.keyCode == 65 && window.global_access) {						//-- a		Arrange
+				if(e.keyCode == 65 && window.global_access) {							//-- a		Arrange
 					nuPopup(window.nuFORM.getCurrent().form_id, "-2");
-				} else if(e.keyCode == 70 && window.global_access) {				//-- f		Form Properties
+				} else if(e.keyCode == 70 && window.global_access) {					//-- f		Form Properties
 					nuPopup("nuform", window.nuFORM.getCurrent().form_id);
-				} else if(e.keyCode == 76 && window.global_access) {				//-- L		Change Login
+				} else if(e.keyCode == 76 && window.global_access) {					//-- L		Change Login
 					nuPopup("nupassword", "5b6bb7108a75efc", "");
-				} else if(e.keyCode == 79 && window.global_access) {				//-- O		Object List
+				} else if(e.keyCode == 79 && window.global_access) {					//-- O		Object List
 					nuPopup("nuobject", "", window.nuFORM.getCurrent().form_id);
-				} else if(e.keyCode == 68 && window.global_access) {				//-- d		nuDebug Results
+				} else if(e.keyCode == 71 && window.global_access) {					//-- G		Object Grid
+					nuForm("nuobjectgrid",nuCurrentProperties().form_code,"", "", 2);
+				} else if(e.keyCode == 68 && window.global_access) {					//-- d		nuDebug Results
 					nuPopup("nudebug", "");
-				} else if(e.keyCode == 85 && window.global_access) {				//-- u		Setup
+				} else if(e.keyCode == 85 && window.global_access) {					//-- u		Setup
 					nuForm('nusetup','1','', '');										
-				} else if(e.keyCode == 73 && window.global_access) {				//-- i		Form Info
+				} else if(e.keyCode == 73 && window.global_access) {					//-- i		Form Info
 					nuShowFormInfo();					
-				} else if(e.keyCode == 69 && window.global_access) {				//-- t		Database
+				} else if(e.keyCode == 69 && window.global_access) {					//-- t		Database
 					nuStartDatabaseAdmin();					
-				} else if (e.keyCode == 82) {										//-- r		Refresh
+				} else if (e.keyCode == 82) {											//-- r		Refresh
 					nuGetBreadcrumb();
-				} else if(e.keyCode == 83) {										//-- s		Save
+				} else if(e.keyCode == 83) {											//-- s		Save
 					$(":focus").blur();
 					nuSaveAction();
-				} else if(e.keyCode == 67) {										//-- c		Clone
+				} else if(e.keyCode == 67) {											//-- c		Clone
 					nuCloneAction();
-				} else if(e.keyCode == 98) {										//-- y		Delete
+				} else if(e.keyCode == 98) {											//-- y		Delete
 					nuDeleteAction();
 				}
 
@@ -722,7 +724,7 @@ function nuUnbindDragEvents(){
 
 function nuTranslate(s){
 	
-	if (s === '' || s === null || s.startsWith('@@') ) {
+	if (typeof s === 'undefined' || s === '' || s === null || s.startsWith('@@') ) {
 		return '';
 	}
 	
@@ -1861,7 +1863,7 @@ function nuIsIframe(){
 
 function nuPreventButtonDblClick () {
 
-	$('.nuActionButton, .nuButton').click(function() {   
+	$('.nuActionButton, .nuButton').not(".nuAllowDblClick").click(function() {   
 
 	var id = $(this).attr("id");   
 
@@ -1872,7 +1874,7 @@ function nuPreventButtonDblClick () {
 		function() {
 			$('#'+id).prop('disabled', false);
 		}	
-		, 1500);
+		, 1300);
 	});
 
 }

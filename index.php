@@ -18,6 +18,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv='Content-type' content='text/html;charset=UTF-8'>
+<meta name="theme-color" content="##00adef">
+
 
 <?php
 
@@ -52,12 +54,12 @@ function nuJSChartsInclude(){
 
 function nuHeader(){
 
-	$getHTMLHeaderSQL 	= "SELECT set_header FROM zzzzsys_setup WHERE zzzzsys_setup_id = 1 ";
-	$rs 			= nuRunQuery($getHTMLHeaderSQL);
-    	$obj 			= db_fetch_object($rs);
-    	$HTMLHeader 		= $obj->set_header;
-    	$j  			= "\n\n" . $HTMLHeader . "\n\n";
-    	return $j;
+	$getHTMLHeaderSQL	= "SELECT set_header FROM zzzzsys_setup WHERE zzzzsys_setup_id = 1 ";
+	$rs 				= nuRunQuery($getHTMLHeaderSQL);
+	$obj 				= db_fetch_object($rs);
+	$HTMLHeader 		= $obj->set_header;
+	$j					= "\n\n" . $HTMLHeader . "\n\n";
+    return $j;
 }
 
 nuJSIndexInclude($_SESSION['nubuilder_session_data']['JQ_PATH']);
@@ -81,7 +83,6 @@ nuCSSIndexInclude('core/libs/quill/themes/quill.snow.css');
 <link href="core/css/font-awesome.min.css" rel="stylesheet">
 
 <script>
-
 
 function nuValidCaller(o){
 	
@@ -280,6 +281,11 @@ window.nuHASH				= [];
 	print $h;
 ?>
 </script>
+
+<noscript>
+<p style="padding-left: 30px;">It appears that JavaScript is disabled or your browser does not support it.</p>
+</noscript>
+
 </head>
 <?php
 	nuLoadBody();

@@ -48,10 +48,10 @@
     if(count($formAndSessionData->errors) == 0){
 		
     	if($CT == 'logout')			{nuLogout(); }
-    	if($CT == 'login')			{nuBeforeEdit($F, $R);$f->forms[0] 	= nuGetFormObject($F, $R, 0, $P);}
-    	if($CT == 'getform')		{nuBeforeEdit($F, $R);$f->forms[0] 	= nuGetFormObject($F, $R, 0, $P);}
-    	if($CT == 'getphp')			{nuBeforeEdit($F, $R);$f->forms[0] 	= nuGetFormObject($F, $R, 0, $P);}
-    	if($CT == 'getreport')		{nuBeforeEdit($F, $R);$f->forms[0] 	= nuGetFormObject($F, $R, 0, $P);}
+    	if($CT == 'login')			{nuBeforeEdit($F, $R);$f->forms[0] 	= nuGetFormObject($F, $R, 0);}
+    	if($CT == 'getform')		{nuBeforeEdit($F, $R);$f->forms[0] 	= nuGetFormObject($F, $R, 0);}
+    	if($CT == 'getphp')			{nuBeforeEdit($F, $R);$f->forms[0] 	= nuGetFormObject($F, $R, 0);}
+    	if($CT == 'getreport')		{nuBeforeEdit($F, $R);$f->forms[0] 	= nuGetFormObject($F, $R, 0);}
     	if($CT == 'getlookupid')	{$f->forms[0]				 		= nuGetAllLookupValues();}
     	if($CT == 'getlookupcode')	{$f->forms[0]				 		= nuGetAllLookupList();}
     	if($CT == 'getfile')		{$f->forms[0]->JSONfile		 		= nuGetFile();}

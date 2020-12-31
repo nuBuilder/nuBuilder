@@ -1,8 +1,13 @@
 <!doctype html>
 <html>
 <head>
+
 <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta http-Equiv="Cache-Control" Content="no-cache" />
+<meta http-Equiv="Pragma" Content="no-cache" />
+<meta http-Equiv="Expires" Content="0" />
+
 <title>nuBuilder Update</title>
 <link rel="stylesheet" href="core/libs/bootstrap/bootstrap.min.css">
 <link href='core/css/font-awesome.min.css' rel='stylesheet'>
@@ -102,9 +107,10 @@ p {
     border: 0 none;
     border-radius: 0px;
     cursor: pointer;
-    padding: 10px 5px;
+    padding: 4px 5px;
     margin: 10px 0px 10px 5px;
-    float: right
+    float: right;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 #msform .action-button:hover,
@@ -120,9 +126,10 @@ p {
     border: 0 none;
     border-radius: 0px;
     cursor: pointer;
-    padding: 10px 5px;
+    padding: 4px 5px;
     margin: 10px 5px 10px 0px;
-    float: right
+    float: right;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 #msform .action-button-previous:hover,
@@ -357,7 +364,7 @@ $(document).ready(function() {
     <div class="row justify-content-center">
         <div class="col-11 col-sm-9 col-md-7 col-lg-6 col-xl-5 text-center p-0 mb-2">
             <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
-                <h2 id="heading">nuBuilder Update</h2><br>
+                <h2 id="heading">nuBuilder Update</h2>
 				<center><img id="nulogo" style="display: none;" src="core/graphics/logo.png" width="171px" height="72px" alt="nuBuilder Forte"></center><br>
                 <p id="heading_steps">To update nuBuilder follow these steps:</p>				
 				<p id="heading_outside_nu">Log in to nuBuilder, click the Update Button on the Database Tab of the Home Form to start the Update process.</p>	
@@ -387,7 +394,7 @@ $(document).ready(function() {
                                 </div>
                             </div> 
 							<ul>
-						  <li>Be sure to backup your database before performing this update.<br>You can export your nuBuilder database to a file by using phpMyAdmin or the mysqldump utility.<br>The Backup consists of a single file containing all nuBuilder tables and data (e.g. nubuilder4.sql) </li>
+						  <li>Be sure to backup your database before doing this update.<br>You can export your nuBuilder database to a file by using phpMyAdmin or the mysqldump utility.<br>The Backup consists of a single file containing all nuBuilder tables and data (e.g. nubuilder4.sql) </li>
 						  <li>Backup your nuBuilder files. E.g. add them to an archive 20201229_backup_nubuilder4.zip</li>					
 						  </ul>	
 							
@@ -405,7 +412,7 @@ $(document).ready(function() {
                                 </div>
                             </div>  
 							<ul>
-							<li>Pull the latest nuBuilder 4 files from either <a href="https://sourceforge.net/projects/nubuilder/files/latest/download" target="_blank">Sourceforge</a> or <a href="https://github.com/steven-copley/nubuilder4/archive/master.zip" target="_blank">Github</a>
+							<li>Pull the latest nuBuilder 4 files from either <a href="https://sourceforge.net/projects/nubuilder/files/latest/download" target="_blank">Sourceforge</a> or <a href="https://github.com/steven-copley/nubuilder4/archive/master.zip" target="_blank">Github.</a>
 							  </li> 
 							<li>Alternatively, use a subversion client to obtain the latest files.</li>
 							 </ul>
@@ -423,8 +430,8 @@ $(document).ready(function() {
                                     <h2 class="steps">Step 3 - 4</h2>
                                 </div>                    
 								<ul>
-								<li>Delete all files and folders of your nuBuilder folder (Except for nuconfig.php)</li> 
-								<li>Extract the downloaded ZIP file to your nuBuilder root folder.	</li> 														
+								<li>Delete all files and folders in your nuBuilder folder except for nuconfig.php.</li> 
+								<li>Extract the downloaded .zip file to your nuBuilder root folder.	</li> 														
 								<ul>								
                         </div></div> <input type="button" name="next" class="next action-button" value="Next" /> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
                     </fieldset>
@@ -440,7 +447,7 @@ $(document).ready(function() {
                                     <h2 class="steps">Step 4 - 4</h2>
                                 </div>
                             							
-							<li>Now, you are ready to perform the Update. If all goes well you should see a message: "You will need to log in again for the changes to take effect"</li>
+							<li>Now, you are ready to do the Update. If all goes well you should see a message: "You will need to log in again for the changes to take effect"</li>
 							<li>After updating, test your site carefully to verify there are not any issues.</li>
 							<li>The Github commit/change history information is valuable to see where something changed.</li>							
 							<br>
