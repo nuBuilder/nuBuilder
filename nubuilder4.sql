@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.4
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 31, 2020 at 10:08 AM
+-- Generation Time: Dec 31, 2020 at 10:24 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 8.0.0
 
@@ -230,7 +230,6 @@ CREATE TABLE `zzzzsys_cloner` (
   `clo_notes` text DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-
 -- --------------------------------------------------------
 
 --
@@ -360,7 +359,7 @@ INSERT INTO `zzzzsys_event` (`zzzzsys_event_id`, `sev_zzzzsys_object_id`, `sev_e
 ('nu5fd757f92870577', 'nu5fd757f9266ea99', 'onclick', 'nuSetSelectIndex(\'sob_all_validate\',1);'),
 ('nu5fd7583fbf9bde0', 'nu5fd7583fbdb0750', 'onclick', 'nuSetSelectIndex(\'sob_all_validate\',3);'),
 ('nu5fdbe04a014fa', 'nu5fdbe049f365a', 'onclick', 'if (nuIsSaved()) {   var fid = nuSubformRowId(this); nuPopup(\'nuObject\', fid);} else {  nuMessage([\"Please save any changes before leaving this form.\"])}    '),
-('5fed93a2eb40e94', 'nu5fed8c73e475b16', 'onclick', 'nuForm(\"nuobjectgrid\",nuCurrentProperties().record_id,\"\", \"\", 2)'),
+('nu5fed986754a8a23', 'nu5fed8c73e475b16', 'onclick', 'nuForm(\"nuobjectgrid\",nuCurrentProperties().record_id,\"\", \"\", 2)'),
 ('nu5fdcde23d59bc7a', 'nu5fdcde23d2db265', 'onchange', 'nuFormColor();'),
 ('nu5fddb7fc8b5b539', 'nu5bad6cb32a1c004', 'onchange', 'nuShowDataType();'),
 ('nu5fdf83039b7f6d6', 'nu5fee9ff762770', 'afterinsertrow', 'nuUpdateAclCount();();'),
@@ -515,7 +514,7 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2020.12.31.01'),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2020.12.31.02'),
 ('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2020.12.30.02');
 
 -- --------------------------------------------------------
@@ -921,7 +920,7 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu5fdbdaee571fbb3', 'nuobject', 'zzzzsys_object', 'lookup', 'sob_code_snippet_select_lookup', 'Insert Snippet', 'nu5bad6cb369a6ee3', 360, 76, 576, 5, 18, '1', 'right', '0', '0', '', '', '', '', '', '', '', '0', 'SELECT zzzzsys_form_id, CONCAT(sfo_code, \' - \', sfo_description)\nFROM zzzzsys_form\nORDER BY sfo_code', 'cot_code', 'cot_source_code', '0', NULL, 'nucodesnippet', '\nvar c = $(\'#sob_code_snippet_paste\').val();\n\nif (c !== \'\') {\n   nuInsertTextAtCaret(\'sob_select_sql\', c);\n   $(\'#sob_code_snippet_select_lookupcode\').val(\'\');\n}\n\n\n', NULL, 'zzzzsys_code_snippet', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', '', '', ''),
 ('nu5fdbd8ea4333ed2', 'nuobject', 'zzzzsys_object', 'textarea', 'sob_code_snippet_paste', ' ', 'nu5bad6cb36974818', 330, 100, 643, 5, 18, '1', 'right', '0', '2', '', '', '', '', '', '', '', '0', 'SELECT zzzzsys_form_id, CONCAT(sfo_code, \' - \', sfo_description)\nFROM zzzzsys_form\nORDER BY sfo_code', '', '', '0', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', '', '', ''),
 ('nu5fdb9ff762770', 'nuform', 'zzzzsys_access', 'subform', 'accform', ' ', 'nu5fdb9ff026348', 280, 20, 20, 660, 523, '1', 'left', '0', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'nu5fdb9ffd45efe', 'slf_zzzzsys_form_id', '1', '1', 'g', '', 0, '', '', '', '', '', '', '', '', '', ''),
-('5fed8c73e475b16', 'nuform', 'zzzzsys_form', 'input', 'run_sfo_objects', 'Objects', 'nu5bad6cb36791fd5', 70, 32, 696, 140, 30, '1', 'center', '1', '0', '', '', '', '', '', '', '', '0', 'browse|Browse|\nedit|Edit|browseedit|\nBrowse and Edit|\nlaunch|Launch|\nsubform|Subform', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'button', '', '', '', '', '', '', '', ''),
+('nu5fed8c73e475b16', 'nuform', 'zzzzsys_form', 'input', 'run_sfo_objects', 'Objects', 'nu5bad6cb36791fd5', 70, 32, 696, 140, 30, '1', 'center', '1', '0', '', '', '', '', '', '', '', '0', 'browse|Browse|\nedit|Edit|browseedit|\nBrowse and Edit|\nlaunch|Launch|\nsubform|Subform', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'button', '', '', '', '', '', '', '', ''),
 ('nu5fdb9ffe0330e', 'nu5fdb9ffd45efe', '', 'select', 'slf_zzzzsys_access_id', 'Access level', 'nu5fdb9ffd6fbca', 10, 20, 250, 315, 18, '1', 'left', '1', '0', '', '', '', '', '', '', '', '0', 'SELECT `zzzzsys_access_id`, CONCAT(`sal_code`,\" : \",`sal_description`) FROM `zzzzsys_access` ORDER BY 2', 'sfo_code', 'sfo_description', '185', '', 'nunonsystemform', '', '', 'zzzzsys_form', '', '', '1', '', '', '', 0, '', '', '', '', '', '', '', '', '', ''),
 ('nu5fdb9ffe110d9', 'nu5fdb9ffd45efe', '', 'input', 'slf_add_button', '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp<span class=\'nuActionButton\'>Add</span>', 'nu5fdb9ffd6fbca', 20, 46, 79, 53, 15, '1', 'left', '0', '0', '', '', '', '', '', '', '', '0', '0|No|1|Yes', 'sfo_code', 'sfo_description', '200', '', 'nuform', '', '', 'zzzzsys_form', 'nuform', '', '1', '', '', '', 0, '', 'checkbox', '', '', '', '', '', '', '', ''),
 ('nu5fdb9ffe1eb04', 'nu5fdb9ffd45efe', '', 'input', 'slf_save_button', '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=\'nuActionButton\'>Save</span>', 'nu5fdb9ffd6fbca', 40, 118, 79, 53, 15, '1', 'left', '0', '0', '', '', '', '', '', '', '', '0', '0|No|1|Yes', 'sfo_code', 'sfo_description', '200', '', 'nuform', '', '', 'zzzzsys_form', 'nuform', '', '1', '', '', '', 0, '', 'checkbox', '', '', '', '', '', '', '', ''),
@@ -4378,7 +4377,7 @@ CREATE TABLE `zzzzsys_user` (
 --
 DROP TABLE IF EXISTS `zzzzsys_object_list`;
 
-CREATE VIEW `zzzzsys_object_list`  AS SELECT `information_schema`.`tables`.`TABLE_NAME` AS `zzzzsys_object_list_id` FROM `information_schema`.`tables` WHERE `information_schema`.`tables`.`TABLE_SCHEMA` = database() ;
+CREATE VIEW `zzzzsys_object_list`  AS  select `information_schema`.`tables`.`TABLE_NAME` AS `zzzzsys_object_list_id` from `information_schema`.`tables` where `information_schema`.`tables`.`TABLE_SCHEMA` = database() ;
 
 -- --------------------------------------------------------
 
@@ -4387,7 +4386,7 @@ CREATE VIEW `zzzzsys_object_list`  AS SELECT `information_schema`.`tables`.`TABL
 --
 DROP TABLE IF EXISTS `zzzzsys_report_data`;
 
-CREATE VIEW `zzzzsys_report_data`  AS  select concat('PROCEDURE:',`zzzzsys_php`.`zzzzsys_php_id`) AS `id`,`zzzzsys_php`.`sph_code` AS `code`,`zzzzsys_php`.`sph_description` AS `description` from `zzzzsys_php` where `zzzzsys_php`.`sph_system` <> '1' and locate('#TABLE_ID#',`zzzzsys_php`.`sph_php`) > '0' union select concat('SQL:',`zzzzsys_select`.`zzzzsys_select_id`) AS `id`,'nuSQL' AS `code`,`zzzzsys_select`.`sse_description` AS `description` from `zzzzsys_select` where `zzzzsys_select`.`sse_system` is null or `zzzzsys_select`.`sse_system` = '' union select concat('TABLE:',`zzzzsys_object_list`.`zzzzsys_object_list_id`) AS `id`,'nuTABLE' AS `code`,`zzzzsys_object_list`.`zzzzsys_object_list_id` AS `description` from `zzzzsys_object_list` ;
+CREATE  VIEW `zzzzsys_report_data`  AS  select concat('PROCEDURE:',`zzzzsys_php`.`zzzzsys_php_id`) AS `id`,`zzzzsys_php`.`sph_code` AS `code`,`zzzzsys_php`.`sph_description` AS `description` from `zzzzsys_php` where `zzzzsys_php`.`sph_system` <> '1' and locate('#TABLE_ID#',`zzzzsys_php`.`sph_php`) > '0' union select concat('SQL:',`zzzzsys_select`.`zzzzsys_select_id`) AS `id`,'nuSQL' AS `code`,`zzzzsys_select`.`sse_description` AS `description` from `zzzzsys_select` where `zzzzsys_select`.`sse_system` is null or `zzzzsys_select`.`sse_system` = '' union select concat('TABLE:',`zzzzsys_object_list`.`zzzzsys_object_list_id`) AS `id`,'nuTABLE' AS `code`,`zzzzsys_object_list`.`zzzzsys_object_list_id` AS `description` from `zzzzsys_object_list` ;
 
 -- --------------------------------------------------------
 
@@ -4396,7 +4395,7 @@ CREATE VIEW `zzzzsys_report_data`  AS  select concat('PROCEDURE:',`zzzzsys_php`.
 --
 DROP TABLE IF EXISTS `zzzzsys_run_list`;
 
-CREATE VIEW `zzzzsys_run_list`  AS  select `zzzzsys_form`.`zzzzsys_form_id` AS `id`,'Form' AS `run`,`zzzzsys_form`.`sfo_code` AS `code`,`zzzzsys_form`.`sfo_description` AS `description` from `zzzzsys_form` union select `zzzzsys_report`.`zzzzsys_report_id` AS `id`,'Report' AS `run`,`zzzzsys_report`.`sre_code` AS `code`,`zzzzsys_report`.`sre_description` AS `description` from `zzzzsys_report` union select `zzzzsys_php`.`zzzzsys_php_id` AS `id`,'Procedure' AS `run`,`zzzzsys_php`.`sph_code` AS `code`,`zzzzsys_php`.`sph_description` AS `description` from `zzzzsys_php` where `zzzzsys_php`.`sph_system` <> 1 order by `code` ;
+CREATE  VIEW `zzzzsys_run_list`  AS  select `zzzzsys_form`.`zzzzsys_form_id` AS `id`,'Form' AS `run`,`zzzzsys_form`.`sfo_code` AS `code`,`zzzzsys_form`.`sfo_description` AS `description` from `zzzzsys_form` union select `zzzzsys_report`.`zzzzsys_report_id` AS `id`,'Report' AS `run`,`zzzzsys_report`.`sre_code` AS `code`,`zzzzsys_report`.`sre_description` AS `description` from `zzzzsys_report` union select `zzzzsys_php`.`zzzzsys_php_id` AS `id`,'Procedure' AS `run`,`zzzzsys_php`.`sph_code` AS `code`,`zzzzsys_php`.`sph_description` AS `description` from `zzzzsys_php` where `zzzzsys_php`.`sph_system` <> 1 order by `code` ;
 
 --
 -- Indexes for dumped tables
