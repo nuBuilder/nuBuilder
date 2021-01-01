@@ -2121,7 +2121,7 @@ function nuGetOptionsList(f, t, p, a, type){
 		
 		list.push([nuTranslate('nuDebug Results'), 'nuPopup("nudebug", "")', 'fa-bug', 'Ctrl+Shft+D']);					
 		list.push([nuTranslate('Database'), 'nuStartDatabaseAdmin();', 'fa-database', 'Ctrl+Shft+E']);		
-		list.push([nuTranslate('Setup'), 'nuForm("nusetup","1","", "")', 'fa-cogs', 'Ctrl+Shft+U']);			
+		list.push([nuTranslate('Setup'), 'nuForm("nusetup","1","", "", 2)', 'fa-cogs', 'Ctrl+Shft+U']);			
 		list.push([nuTranslate('Form Info'), 'nuShowFormInfo();', 'fa-info', 'Ctrl+Shft+I']);					
 		
 	}	

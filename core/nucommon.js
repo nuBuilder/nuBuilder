@@ -630,7 +630,7 @@ function nuBindCtrlEvents(){
 				} else if(e.keyCode == 69 && window.global_access) {					//-- t		Database
 					nuStartDatabaseAdmin();		
 				} else if(e.keyCode == 85 && window.global_access) {					//-- u		Setup
-					nuForm('nusetup','1','', '');						
+					nuForm('nusetup','1','', '', 2);						
 				} else if(e.keyCode == 83) {											//-- s		Search
 					nuSearchAction();
 				} else if(e.keyCode == 65 && window.global_access) {					//-- a		Add
@@ -659,7 +659,7 @@ function nuBindCtrlEvents(){
 				} else if(e.keyCode == 68 && window.global_access) {					//-- d		nuDebug Results
 					nuPopup("nudebug", "");
 				} else if(e.keyCode == 85 && window.global_access) {					//-- u		Setup
-					nuForm('nusetup','1','', '');										
+					nuForm('nusetup','1','', '', 2);										
 				} else if(e.keyCode == 73 && window.global_access) {					//-- i		Form Info
 					nuShowFormInfo();					
 				} else if(e.keyCode == 69 && window.global_access) {					//-- t		Database

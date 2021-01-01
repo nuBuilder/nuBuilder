@@ -56,8 +56,13 @@ function nuBeforeEdit($FID, $RID){
 				$S				= "SELECT $logfield FROM `$r->sfo_table` WHERE `$r->sfo_primary_key` = ? ";
 				
 				$T				= nuRunQuery($S, [$RID]);
-				$J				= db_fetch_row($T)[0];
-				$jd				= json_decode($J);
+
+				$jd = '';
+				if (db_num_rows($T) == 1) {
+					$J			= db_fetch_row($T)[0];
+					$L = $J[0];
+					$jd	= json_decode($J);
+				}
 				
 				if(gettype($jd) == 'object'){
 					$jd->viewed	= Array('user' => $user, 'time' => time());								
