@@ -397,9 +397,9 @@ function nuGetSrc($i){
 
 function nuObjectEvents($i){
 
-	$a	= array();
-	$s	= "SELECT sev_event AS event, sev_javascript AS js FROM zzzzsys_event WHERE sev_zzzzsys_object_id = '$i'";
-	$t	= nuRunQuery($s);
+	$a	= [];
+	$s	= "SELECT sev_event AS event, sev_javascript AS js FROM zzzzsys_event WHERE sev_zzzzsys_object_id = ?";
+	$t	= nuRunQuery($s,[$i]);
 	
 	while($r = db_fetch_object($t)){
 		$a[]	= $r;
@@ -1510,6 +1510,7 @@ function nuAddPrintButtons($f, $t, $a){
 
 
 function nuAddJavascript($js){
+
 	$GLOBALS['EXTRAJS'] = $GLOBALS['EXTRAJS'] . "\n\n" . $js;
 }
 

@@ -518,19 +518,22 @@ function nuReplaceHashVariables($s){
 		return '';
 	}	
 	
-	$a 	= $_POST['nuHash'];
-	
-	$q	= "SELECT sss_hashcookies FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
-	$t	=  nuRunQuery($q, array($_SESSION['nubuilder_session_data']['SESSION_ID']));			 
-	$r	= db_fetch_object($t);
-
-	if (isset($r->sss_hashcookies)) {
-	
-		$j	= json_decode($r->sss_hashcookies, true);
+	$a 	= nuObjKey($_POST,'nuHash', null);
+	if ($a != null) {
 		
-		if (is_array($j)) {
-			$a = array_merge($j, $a);
+		$q	= "SELECT sss_hashcookies FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
+		$t	=  nuRunQuery($q, array($_SESSION['nubuilder_session_data']['SESSION_ID']));			 
+		$r	= db_fetch_object($t);
+
+		if (isset($r->sss_hashcookies)) {
+		
+			$j	= json_decode($r->sss_hashcookies, true);
+			
+			if (is_array($j)) {
+				$a = array_merge($j, $a);
+			}
 		}
+		
 	}
 	
 	if (!is_array($a)) {
@@ -1281,12 +1284,13 @@ function nuEval($phpid){
 
 function nuProcedure($c){
 
-   $s                     = "SELECT sph_php FROM zzzzsys_php WHERE sph_code = ? ";
-   $t                     = nuRunQuery($s, [$c]);
+   $s						= "SELECT sph_php, sph_code FROM zzzzsys_php WHERE sph_code = ? ";
+   $t						= nuRunQuery($s, [$c]);
    
    if (db_num_rows($t) > 0) {  // procedure exists
    
-      $r                     = db_fetch_object($t);
+      $r					= db_fetch_object($t);	   
+			  
       $php                  = nuReplaceHashVariables($r->sph_php);
       $php                  = "$php \n\n//--Added by nuProcedure()\n\n$"."_POST['nuProcedureEval'] = '';";
       $_POST['nuProcedureEval']   = "Procedure <b>$r->sph_code</b> - run inside ";

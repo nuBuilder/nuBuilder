@@ -5,32 +5,32 @@ require_once('nucommon.php');
 require_once('nuprocesslogins.php');
 require_once('nusecurity.php');
 
-function nuStartup() {
+function nuRunLoginProcedure($procedure) {
 	
-	$p    = nuProcedure('nuStartup');
+	$p    = nuProcedure($procedure);
 	$error = '';
 	if($p != ''){		
 		eval($p);
 		if ($error != '') nuDie($error);
 	}
-	
-}
+}	
 
 if ( nuCheckIsLoginRequest() ) {
 
 	if ( nuCheckStandaloneGlobeadminLoginRequest() ) {
 
 		// Check for Standalone Globeadmin login
-		if (nuLoginSetupGlobeadmin()) nuStartup();
+		if (nuLoginSetupGlobeadmin()) nuRunLoginProcedure('nuStartup');
 
 	} else if ( nuCheckStandaloneUserLoginRequest() ) {
 
 		// Check for Standlone User login
-		if (nuLoginSetupNOTGlobeadmin(true)) nuStartup();		
+		if (nuLoginSetupNOTGlobeadmin(true)) nuRunLoginProcedure('nuStartup');		
 
 	} else {
 
-		// Failed login
+		// Failed login		
+		nuRunLoginProcedure('nuInvalidLogin');
 		nuDie('Invalid login.');
 	}
 
