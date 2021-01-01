@@ -502,6 +502,14 @@ input[type=range]::-webkit-slider-runnable-track {
   white-space : nowrap;
 }
 
+.nuBrowseBorderTop {
+	border-top: solid #9f9e9e 1px
+}	
+
+.nuBrowseBorderBottom {
+	border-bottom: solid #9f9e9e 1px
+}
+
 .nuSelectBrowse {
   height: 70px;
   border-style: solid;
