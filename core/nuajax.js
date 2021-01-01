@@ -383,9 +383,14 @@ function nuRunPHPHidden(i, rbs){
 
 function nuSystemUpdate(){
 	
-	var mess				= nuTranslate("Update system? Be sure to backup first.");
-    if(confirm(mess) == false){return;}
+	var msg				= nuTranslate("Update nuBuilder now?");
+    if(confirm(msg) == false){return;}
 	
+	if (nuCurrentProperties().form_code == 'nuupdate') {
+		var myWindow = window.open("", "_self");
+		myWindow.document.write(nuTranslate('This tab can be closed after the update.') + ' <br> ' + nuTranslate('You will need to log in again for the changes to take effect.'));
+	}
+
 	var current				= nuFORM.getCurrent();
 	var last		 		= $.extend(true, {}, current);
 	
