@@ -194,5 +194,20 @@ function nuAddIconToBreadcrumbHolder(i, title, oClick, iClass, paddingLeft) {
 }
 
 
+function nuShowObjectTooltip() {
+    
+    if (window.global_access) {
+
+        $("*").each(function() {
+            var id = $(this).attr('id');
+            if (id !== undefined) {
+                $(this).attr('title', 'ID: ' + id);
+            }
+        });
+
+    }
+}
+
+
 
 

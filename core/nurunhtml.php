@@ -11,7 +11,7 @@ $s					= "SELECT deb_message AS json FROM zzzzsys_debug WHERE zzzzsys_debug_id =
 $t					= nuRunQuery($s, array($_GET['i']));
 
 if (db_num_rows($t) == 0) {
-	print nuTranslate("Use to Print Button to refresh the table.");
+	print nuTranslate("Use the Print button to refresh the table.");
 	return;
 }
 

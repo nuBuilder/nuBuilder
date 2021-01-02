@@ -380,6 +380,16 @@ function nuRunPHPHidden(i, rbs){
 	
 }
 
+function nuBase64encode(str) {
+	let encode = encodeURIComponent(str).replace(/%([a-f0-9]{2})/gi, (m, $1) => String.fromCharCode(parseInt($1, 16)))
+	return btoa(encode)
+}
+
+function nuRunPHPHiddenWithParams(i, paramName, paramValue, rbs) {
+	nuSetProperty(paramName, nuBase64encode(JSON.stringify(paramValue)));
+	nuRunPHPHidden(i, rbs);
+}
+
 
 function nuSystemUpdate(){
 	

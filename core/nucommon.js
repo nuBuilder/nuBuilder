@@ -2102,3 +2102,30 @@ function nuCreateAppendHTML(htmlStr) {
     }
     return df;
 }
+
+function nuSelectMultiWithoutCtrl(i) {
+
+   i = i === undefined ? 'select' : '#' + i;
+   $(i + "[multiple] option").mousedown(function (event) {
+   
+      if (event.shiftKey) return;
+      event.preventDefault();
+      this.focus();
+      var scroll = this.scrollTop;
+      event.target.selected = !event.target.selected;
+      this.scrollTop = scroll;
+      $(this).parent().change();
+      
+   });
+
+}
+
+function nuPasteText(t) {
+
+    navigator.clipboard.readText()
+        .then(text => {
+            $('#' + t).val(text);
+        });
+		
+}
+
