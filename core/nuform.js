@@ -2119,10 +2119,16 @@ function nuGetOptionsList(f, t, p, a, type){
 				
 		list.push(['', '', '', '']);	
 		
-		list.push([nuTranslate('nuDebug Results'), 'nuPopup("nudebug", "")', 'fa-bug', 'Ctrl+Shft+D']);					
-		list.push([nuTranslate('Database'), 'nuStartDatabaseAdmin();', 'fa-database', 'Ctrl+Shft+E']);		
-		list.push([nuTranslate('Setup'), 'nuForm("nusetup","1","", "", 2)', 'fa-cogs', 'Ctrl+Shft+U']);			
-		list.push([nuTranslate('Form Info'), 'nuShowFormInfo();', 'fa-info', 'Ctrl+Shft+I']);					
+		if(type != 'subform'){
+			
+			list.push([nuTranslate('nuDebug Results'), 'nuPopup("nudebug", "")', 'fa-bug', 'Ctrl+Shft+D']);					
+			list.push([nuTranslate('Database'), 'nuStartDatabaseAdmin();', 'fa-database', 'Ctrl+Shft+E']);		
+			list.push([nuTranslate('Setup'), 'nuForm("nusetup","1","", "", 2)', 'fa-cogs', 'Ctrl+Shft+U']);		
+			list.push([nuTranslate('Form Info'), 'nuShowFormInfo();', 'fa-info', 'Ctrl+Shft+I']);					
+			
+		}
+		
+					
 		
 	}	
 		
@@ -4024,12 +4030,8 @@ function nuBrowseBorders(){
 
 	for(var i = 0 ; i < c ; i++){
 		
-		$('#nucell_0_' + i)
-		.css('border-top', 'solid #606060 1px')
-		
-		
-		$('#nucell_' + (r-1) + '_' + i)
-		.css('border-bottom', 'solid #606060 1px')
+		$('#nucell_0_' + i).addClass('nuBrowseBorderTop');				
+		$('#nucell_' + (r-1) + '_' + i).addClass('nuBrowseBorderBottom');
 		
 	}
 	
