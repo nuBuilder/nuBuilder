@@ -296,8 +296,8 @@ function nuIDTEMP() {
 function nuGetTranslation($l) {
 
     $a = [];
-    $s = "SELECT * FROM zzzzsys_translate WHERE trl_language = '$l' ";
-    $t = nuRunQuery($s);
+    $s = "SELECT trl_english, trl_translation  FROM zzzzsys_translate WHERE trl_language = ? ORDER BY trl_english, IF(zzzzsys_translate_id like 'nu%', 1, 0) ";
+    $t = nuRunQuery($s,[$l]);
     while ($r = db_fetch_object($t)) {
         $a[] = ['english' => $r->trl_english, 'translation' => $r->trl_translation];
     }

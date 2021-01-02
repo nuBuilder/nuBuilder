@@ -1575,6 +1575,7 @@ function nuTranslate($e){
                         FROM zzzzsys_translate
                         WHERE trl_language = ?
                         AND trl_english = ?
+						ORDER BY trl_english, IF(zzzzsys_translate_id like 'nu%', 1, 0)
 
                 ";
 
