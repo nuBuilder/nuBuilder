@@ -723,22 +723,16 @@ function nuUnbindDragEvents(){
 
 
 function nuTranslate(s){
-	
+
 	if (typeof s === 'undefined' || s === '' || s === null || s.startsWith('@@') ) {
 		return '';
 	}
-	
-	for(var i = 0 ; i < nuLANGUAGE.length ; i ++){
-		
-		if(nuLANGUAGE[i].english == s){
-			return nuLANGUAGE[i].translation;
-		}
-		
-	}
-	
-	return s;
-	
+
+    var l = nuLANGUAGE.find(elem => elem.english === s);
+    return !l ? s : l.translation;
+
 }
+
 
 function nuIsOpener() {
 	
