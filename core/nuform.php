@@ -59,8 +59,7 @@ function nuBeforeEdit($FID, $RID){
 
 				$jd = '';
 				if (db_num_rows($T) == 1) {
-					$J			= db_fetch_row($T)[0];
-					$L = $J[0];
+					$J			= db_fetch_row($T)[0];					
 					$jd	= json_decode($J);
 				}
 				
