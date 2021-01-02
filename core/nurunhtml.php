@@ -9,6 +9,12 @@ print "<meta charset='utf-8'>";
 $table_id			= nuTT();
 $s					= "SELECT deb_message AS json FROM zzzzsys_debug WHERE zzzzsys_debug_id = ? ";		//-- created by nuRunHTML()
 $t					= nuRunQuery($s, array($_GET['i']));
+
+if (db_num_rows($t) == 0) {
+	print nuTranslate("Use to Print Button to refresh the table.");
+	return;
+}
+
 $r					= db_fetch_object($t);
 $j					= json_decode($r->json);
 $q					= $j->sql;
@@ -36,7 +42,7 @@ for($col = 0 ; $col < count($c) ; $col++){
 
 print "</style>\n";
 
-print "<TABLE border=1>\n";
+print "<TABLE border=1; style='border-collapse: collapse'>\n";
 print "\n<TR>";
 
 for($col = 0 ; $col < count($c) ; $col++){

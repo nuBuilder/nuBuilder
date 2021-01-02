@@ -724,7 +724,7 @@ function nuUnbindDragEvents(){
 
 function nuTranslate(s){
 
-	if (typeof s === 'undefined' || s === '' || s === null || s.startsWith('@@') ) {
+	if (typeof s === 'undefined' || s === '' || s === null) {
 		return '';
 	}
 
