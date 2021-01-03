@@ -25,7 +25,7 @@ function nuShowFormInfo() {
 	
     var cp = nuCurrentProperties();
 	var code = nuCurrentProperties().form_code;
-	var devMode = nuGetDevMode();
+	var devMode = nuDevMode();
 	
     var recordId = nuFormType() == 'edit' && cp.form_type !== 'launch' ? "<b>Record ID:</b> " + cp.record_id : '';
 	var browseSQL = nuFormType() == 'browse' && (! code.startsWith('nu') || devMode) ? "<b>Browse SQL:</b></br> " + cp.browse_sql : '';    	
@@ -35,7 +35,7 @@ function nuShowFormInfo() {
 	
 }
 
-function nuGetDevMode() {
+function nuDevMode() {
   
   var d = localStorage.getItem("nuDevMode");
   if ((d === '1' || d === true) && window.global_access) {
@@ -53,7 +53,7 @@ function nuAddAdminButtons() {
 		var ft = nuCurrentProperties().form_type;
 		if (ft === null) return;
 		
-		var devMode = nuGetDevMode();
+		var devMode = nuDevMode();
 		
         var b = ft.indexOf("browse") >= 0;
         var e = ft.indexOf("edit") >= 0;

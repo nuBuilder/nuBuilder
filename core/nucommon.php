@@ -1105,7 +1105,7 @@ function nuBuildFormSchema(){
 		
 		$f 			= $r->zzzzsys_form_id;
 		$a 			= array();
-		$t 			= nuRunQuery("SELECT sob_all_id, sob_all_type, sob_all_label, sob_input_type FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = '$f' ORDER BY sob_all_id");
+		$t 			= nuRunQuery("SELECT zzzzsys_object_id, sob_all_id, sob_all_type, sob_all_label, sob_input_type FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = '$f' ORDER BY sob_all_id");
 		
 		while($r = db_fetch_object($t)){
 			

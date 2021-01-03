@@ -655,7 +655,7 @@ function nuBindCtrlEvents(){
 				} else if(e.keyCode == 79 && window.global_access) {					//-- O		Object List
 					nuPopup("nuobject", "", window.nuFORM.getCurrent().form_id);
 				} else if(e.keyCode == 71 && window.global_access) {					//-- G		Object Grid
-					nuForm("nuobjectgrid",nuCurrentProperties().form_code,"", "", 2);
+					nuForm("nuobjectgrid",nuCurrentProperties().record_id,"", "", 2);
 				} else if(e.keyCode == 68 && window.global_access) {					//-- d		nuDebug Results
 					nuPopup("nudebug", "");
 				} else if(e.keyCode == 85 && window.global_access) {					//-- u		Setup
