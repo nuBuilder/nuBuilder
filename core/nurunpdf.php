@@ -1160,39 +1160,38 @@ function nuRemovePageBreak($S){
 
 
 
-function nuSavePDF($PDF){
-		
-	// output to file
-	$filename1 = 'nupdf_'.nuID().'.pdf';
+function nuSavePDF($PDF) {
 
-	$filename = getcwd().'/../temp/'.$filename1;
+    // save PDF file on the server in the ./temp directory
+    $filename1 = 'nupdf_' . nuID() . '.pdf';
+    $dir = dirname(getcwd()) . '/temp/';
+    $filename = $dir . $filename1;
+    $path = realpath($dir);
 
-	$PDF->Output($filename,'F');
+    if (is_writable($path)) {
+        $PDF->Output($filename, 'F');
+        $s = nuHash();
+        $usr = $s["USER_ID"];
+        $rid = nuID();
 
-	$s 			= nuHash();
-	$usr 		= $s["USER_ID"];
-	$rid		= nuID();
+        // creation of temporary table to store the names of generated files
+        $q1 = "CREATE TABLE IF NOT EXISTS pdf_temp (
+                        pdf_temp_id VARCHAR(25) PRIMARY KEY,
+                        pdf_added_by VARCHAR(25),
+                        pdf_file_name VARCHAR(255),
+                        pdf_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                        ); ";
+        nuRunQuery($q1);
 
-	// after created initially you can comment/exclude creation of the pdf_temp table
-	$q1 		= "
-	CREATE TABLE IF NOT EXISTS pdf_temp (
-		pdf_temp_id VARCHAR(25) PRIMARY KEY,
-		pdf_added_by VARCHAR(25),
-		pdf_file_name VARCHAR(255),
-		pdf_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-	); ";
-
-	nuRunQuery($q1);
-
-	$q1 		= "INSERT INTO pdf_temp (pdf_temp_id,pdf_added_by,pdf_file_name) 
-	VALUES ('$rid','$usr','$filename');";
-
-	nuRunQuery($q1);
-
+        $q1 = "INSERT INTO pdf_temp (pdf_temp_id,pdf_added_by,pdf_file_name)
+                        VALUES ('$rid','$usr','$filename');";
+        nuRunQuery($q1);
+    }
+    else {
+        nuDebug('There was an error saving the report','The directory to save PDF files "$dir" does not exist or you do not have permission to write to this folder!');
+    }
+	
 }
-
-
-
 
 
 ?>

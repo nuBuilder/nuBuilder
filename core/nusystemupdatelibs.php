@@ -190,6 +190,8 @@ function nuAlterSystemTables(){
 	
 	nuRunQuery("ALTER TABLE `zzzzsys_access_form` ADD `slf_data_mode` varchar(2) DEFAULT NULL AFTER `slf_print_button`;");
 	
+	nuRunQuery("ALTER TABLE `zzzzsys_php` ADD `sph_global` VARCHAR(1) NOT NULL DEFAULT '0' AFTER `sph_system`;");
+		
 }	
 	
 function nuJustNuRecords(){
