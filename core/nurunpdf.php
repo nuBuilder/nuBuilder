@@ -36,7 +36,7 @@ $REPORT                     = nuSetPixelsToMM($LAYOUT);
 
 $PDF->SetMargins(1,1,1);
 
-// Disabling the font subsetting to reduce the size of the generated pdf file
+// Font subsetting to reduce the size of the generated pdf file
 /*
 $fl							= json_decode(nuFontList());
 
@@ -75,7 +75,7 @@ if($get){
 nuRemoveFiles();
 
 function nuPrintReport($PDF, $LAY, $DATA, $JSON){
-
+	
     $lastSectionTop 			= 10000;
     $pageNumber     			= 0;
     
@@ -106,11 +106,14 @@ function nuPrintReport($PDF, $LAY, $DATA, $JSON){
             
             if($O->objectType == 'label'){
             
+				$description = isset($JSON->sre_description) ? $JSON->sre_description : '';
+				$sre_code = isset($JSON->sre_code) ? $JSON->sre_code : '';
+				
                 $label        = $DATA[$s]->objects[$o]->lines[0];
 
                 $label        = str_replace('#pages#',       $pageNumber, $label);
-                $label        = str_replace('#description#', $JSON->sre_description, $label);
-                $label        = str_replace('#code#',        $JSON->sre_code, $label);
+                $label        = str_replace('#description#', $description, $label);
+                $label        = str_replace('#code#',        $sre_code, $label);
                 $label        = str_replace('#year#',        date('y'), $label);
                 $label        = str_replace('#month#',       date('m'), $label);
                 $label        = str_replace('#day#',         date('d'), $label);
@@ -166,6 +169,7 @@ function nuBuildReport($PDF, $REPORT, $TABLE_ID){
     $group_by                               = '';
     $order['a']                             = 'asc ';
     $order['d']                             = 'desc ';
+	$lastROW								= 1; 	
     
     for($i = 3 ; $i < 8 ; $i++){
         if($REPORT->groups[$i]->sortField != ''){              //-- loop through groups

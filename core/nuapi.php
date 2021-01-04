@@ -74,7 +74,7 @@
 		$f->forms[0]->access_level_code			= $U['ACCESS_LEVEL_CODE'];
 		
 		$f->forms[0]->database					= $nuConfigDBName;
-		$f->forms[0]->dimensions				= $formAndSessionData->dimensions;
+		$f->forms[0]->dimensions				= isset($formAndSessionData->dimensions) ? $formAndSessionData->dimensions : null;
 		$f->forms[0]->translation				= $formAndSessionData->translation;
 		$f->forms[0]->tableSchema				= nuUpdateTableSchema($CT);
 		$f->forms[0]->viewSchema				= nuBuildViewSchema($CT);

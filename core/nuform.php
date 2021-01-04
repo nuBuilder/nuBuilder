@@ -26,10 +26,12 @@ function nuBeforeBrowse($f){
 function nuBeforeEdit($FID, $RID){
 	
 	$r						= nuFormProperties($FID);
+
     $GLOBALS['EXTRAJS']		= '';
 	$ct						= $_POST['nuSTATE']['call_type'];
 
-	if($_POST['nuSTATE']['call_type'] == 'getform' and $r == ''){return;}
+	if($ct == 'getreport' and $r == ''){return;}
+	if($ct == 'getform' and $r == ''){return;}
 	
 	if($ct == 'getform'){
 		
@@ -93,6 +95,7 @@ function nuBeforeEdit($FID, $RID){
 				
 	}
 	
+
     $GLOBALS['EXTRAJS']		.= $r->sfo_javascript;
 	
 }
@@ -116,7 +119,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
     $f->form_id		= $F;
     $f->record_id	= $R;
 	
-	if($f->table == ''){
+	if(!isset($f->table) || $f->table == ''){
 		$A 			= [];
 	}else{
 		
@@ -365,7 +368,9 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
     $f->browse_height		= nuObjKey($B,1,0);
     $f->browse_sql			= nuObjKey($B,2,0);;
     $f->browse_table_id		= nuHash()['TABLE_ID'];
-    $f->pages				= ceil($f->browse_height/$f->rows);
+	
+	$rows 					= isset($f->rows) ? $f->rows : 1;
+    $f->pages				= ceil($f->browse_height/$rows);
     $f->objects 			= $a;
 	$f->number_formats		= nuBuildCurrencyFormats();
     $O 						= new stdClass();
@@ -440,10 +445,13 @@ function nuDefaultObject($r, $t){
 
 function nuGetEditForm($F, $R){
 
+	$f              	= new stdClass();
+	if ($F == '') return $f;
+
 	$r					= nuFormProperties($F);
 	$SQL 				= new nuSqlString(nuReplaceHashVariables($r->sfo_browse_sql));
 	
-    $f              	= new stdClass();
+    
     $f->id          	= $r->zzzzsys_form_id;
     $f->form_code       = $r->sfo_code;
     $f->form_description= $r->sfo_description;

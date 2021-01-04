@@ -51,7 +51,7 @@ function nuAddAdminButtons() {
     if (global_access) {
 		
 		var ft = nuCurrentProperties().form_type;
-		if (ft === null) return;
+		if (ft === null || typeof ft === 'undefined') return;
 		
 		var devMode = nuDevMode();
 		

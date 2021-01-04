@@ -259,24 +259,30 @@ function nuSetHashList($p){
 	$A			= nuGetUserAccess();
 	$s			= "SELECT sfo_table, sfo_primary_key FROM zzzzsys_form WHERE zzzzsys_form_id = '$fid'";
 	$t			= nuRunQuery($s);
-	$R			= db_fetch_object($t);
-	$h			= array();
 	
-	if($p['call_type'] == 'getform'){
+	if (db_num_rows($t) > 0) {
+		
+		$R			= db_fetch_object($t);
+		$h			= array();
+		
 
-		if(trim($R->sfo_table) != ''){
-			
-			$s		= "SELECT * FROM $R->sfo_table WHERE $R->sfo_primary_key = '$rid'";
-			$t		= nuRunQuery($s);
-			$f		= db_fetch_object($t);
+		if($p['call_type'] == 'getform'){
 
-			if(is_object($f) ){
+			if(trim($R->sfo_table) != ''){
 				
-				foreach ($f as $fld => $value ){								//-- This Edit Form's Object Values
-					$r[$fld] = addslashes($value);
+				$s		= "SELECT * FROM $R->sfo_table WHERE $R->sfo_primary_key = '$rid'";
+				$t		= nuRunQuery($s);
+				$f		= db_fetch_object($t);
+
+				if(is_object($f) ){
+					
+					foreach ($f as $fld => $value ){								//-- This Edit Form's Object Values
+						$r[$fld] = addslashes($value);
+					}
+					
 				}
-				
 			}
+			
 		}
 		
 	}
@@ -354,7 +360,7 @@ function nuRunReport($report_id){
 function nuInstall(){
 
 	$id									= nuID();
-	$s									= "SELECT zzzzsys_php_id, sph_code, sph_description,  FROM zzzzsys_php WHERE sph_code = '$procedure_code'";
+	$s									= "SELECT zzzzsys_php_id, sph_code, sph_description  FROM zzzzsys_php WHERE sph_code = '$procedure_code'";
 	$t									= nuRunQuery($s);
 	$ob									= db_fetch_object($t);
 	$_POST['nuHash']['code']			= $ob->sph_code;
@@ -411,7 +417,7 @@ function nuRunPHPHidden($nuCode){
 	$aa						= nuAllowedActivities();
 	$p 						= nuProcedureAccessList($aa);
 
-	$s						= "SELECT zzzzsys_php_id, FROM zzzzsys_php WHERE sph_code = ? ";
+	$s						= "SELECT zzzzsys_php_id FROM zzzzsys_php WHERE sph_code = ? ";
 	$t						= nuRunQuery($s, [$nuCode]);
 	$r						= db_fetch_object($t);
 		
@@ -758,7 +764,7 @@ function nuAddToHashList($J, $run){
 	if($run == 'report'){
 		
 		$hash['sre_layout']		= $J->sre_layout;
-		$hash['slp_php']		= $J->slp_php;
+		$hash['slp_php']		= isset($J->slp_php) ? $J->slp_php : '';
 		
 	}
 	
@@ -1174,7 +1180,7 @@ function nuUpdateTableSchema($call_type){
 
 	$j	= nuGetJSONData('clientTableSchema');
 
-	if(($call_type == 'runhiddenphp' && nuHash()['form_code'] == 'nufflaunch') || is_null($j) || $j == '' ){
+	if(($call_type == 'runhiddenphp' && nuObjKey(nuHash(),'form_code') == 'nufflaunch') || is_null($j) || $j == '' ){
 		
 		$j	= nuBuildTableSchema();
 		nuSetJSONData('clientTableSchema', $j);			//-- force updating Table Schema

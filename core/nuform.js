@@ -342,9 +342,10 @@ function nuSetBody(f){
 		$('body').addClass('nuBrowseBody')
 	}else{
 		
+		var height = f.dimensions == null ? 0 : f.dimensions.edit.height;
 		$('body').addClass('nuEditBody')
 		.css('width', window.innerWidth-1)
-		.css('height', f.dimensions.edit.height)
+		.css('height', height)
 		
 	}
 	
