@@ -1188,7 +1188,7 @@ function nuSavePDF($PDF) {
         nuRunQuery($q1);
     }
     else {
-        nuDebug('There was an error saving the report','The directory to save PDF files "$dir" does not exist or you do not have permission to write to this folder!');
+        nuDebug('There was an error saving the report','The directory to save PDF files: '. $dir .' does not exist or you do not have permission to write to this folder!');
     }
 	
 }
