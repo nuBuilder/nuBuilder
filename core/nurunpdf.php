@@ -35,6 +35,9 @@ $PDF->setPrintFooter(false);
 $REPORT                     = nuSetPixelsToMM($LAYOUT);
 
 $PDF->SetMargins(1,1,1);
+
+// Disabling the font subsetting to reduce the size of the generated pdf file
+/*
 $fl							= json_decode(nuFontList());
 
 for($i = 0 ; $i < count($fl) ; $i++){
@@ -43,6 +46,8 @@ for($i = 0 ; $i < count($fl) ; $i++){
 	$PDF->AddFont($fnt, '', '', true);
 	
 }
+*/
+
 $justID						= strstr($JSON->parentID, ':');
 
 nuBuildTempTable($JSON->parentID, $TABLE_ID);
@@ -1154,9 +1159,9 @@ function nuRemovePageBreak($S){
 function nuSavePDF($PDF){
 		
 	// output to file
-	$filename1 ='nupdf_'.nuID().'.pdf';
+	$filename1 = 'nupdf_'.nuID().'.pdf';
 
-	$filename =	getcwd().'/temp/'.$filename1;              // for linux
+	$filename = getcwd().'/../temp/'.$filename1;
 
 	$PDF->Output($filename,'F');
 

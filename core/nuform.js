@@ -3131,7 +3131,7 @@ function nuChangeFile(e){
 		
 		if(j.length > 600000){
 			
-			alert('File is too large, cannot be saved. Must be under 300Kb');
+			nuMessage([nuTranslate('File is too large, cannot be saved. Must be under 300Kb')]);
 			return;
 			
 		}

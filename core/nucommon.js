@@ -390,7 +390,7 @@ function nuCreateDialog(t){
 	this.pos		= {};
 	
 	this.move = function(event) {
-	
+			
 		this.moveX  = event.clientX - this.startX ;
 		this.moveY  = event.clientY - this.startY;
 		this.startX = event.clientX;
@@ -655,7 +655,7 @@ function nuBindCtrlEvents(){
 				} else if(e.keyCode == 79 && window.global_access) {					//-- O		Object List
 					nuPopup("nuobject", "", window.nuFORM.getCurrent().form_id);
 				} else if(e.keyCode == 71 && window.global_access) {					//-- G		Object Grid
-					nuForm("nuobjectgrid",nuCurrentProperties().record_id,"", "", 2);
+					nuForm("nuobjectgrid", window.nuFORM.getCurrent().form_id,"", "", 2);
 				} else if(e.keyCode == 68 && window.global_access) {					//-- d		nuDebug Results
 					nuPopup("nudebug", "");
 				} else if(e.keyCode == 85 && window.global_access) {					//-- u		Setup
@@ -753,7 +753,7 @@ function nuPreview(a){
     
     if(r == '-1'){
         
-        alert('Form must be saved first..');
+        alert(nuTranslate('Form must be saved first..'));
         return;
         
     }
@@ -773,7 +773,7 @@ function nuPopPHP(e, nuE){			//-- used in database
 
     if(i == ''){
         
-        alert('Cannot create Event Until This Form Has Been Saved..')
+        alert(nuTranslate('Cannot create Event Until This Form Has Been Saved..'));
         return;
 		
     }
@@ -789,7 +789,7 @@ function nuPopSQL(e, nuE){			//-- used in database
 
     if(i == ''){
         
-        alert('Cannot create SQL Until This Form Has Been Saved..')
+        alert(nuTranslate('Cannot create SQL Until This Form Has Been Saved..'));
         return;
 		
     }
@@ -806,7 +806,7 @@ function nuPopJS(){				//-- used in database
 	
 	if(i == ''){
 		
-		alert('Cannot Create Event Until This Form Has Been Saved..')
+		alert(nuTranslate('Cannot Create Event Until This Form Has Been Saved..'));
 		return;
 		
 	}

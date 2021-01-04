@@ -411,7 +411,7 @@ function nuRunPHPHidden($nuCode){
 	$aa						= nuAllowedActivities();
 	$p 						= nuProcedureAccessList($aa);
 
-	$s						= "SELECT zzzzsys_php_id FROM zzzzsys_php WHERE sph_code = ? ";
+	$s						= "SELECT zzzzsys_php_id, FROM zzzzsys_php WHERE sph_code = ? ";
 	$t						= nuRunQuery($s, [$nuCode]);
 	$r						= db_fetch_object($t);
 		
@@ -420,7 +420,7 @@ function nuRunPHPHidden($nuCode){
 			nuDisplayError(nuTranslate("The Procedure does not exist...")." ($nuCode)");
 		 }
 	} else {	
-		if($_SESSION['nubuilder_session_data']['isGlobeadmin'] or in_array($r->zzzzsys_php_id, $p)){
+		if($_SESSION['nubuilder_session_data']['isGlobeadmin'] or in_array($r->zzzzsys_php_id, $p) or $nuCode == 'nusethashcookie'){
 			nuEval($r->zzzzsys_php_id);
 		}else{
 			nuDisplayError(nuTranslate("Access To Procedure Denied...")." ($nuCode)");
