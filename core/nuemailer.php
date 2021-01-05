@@ -1,5 +1,13 @@
 <?php
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
+
+require './libs/phpmailer/PHPMailer.php';
+require './libs/phpmailer/Exception.php';
+require './libs/phpmailer/SMTP.php';
+
 // Send email using the built in PHP function
 function nuEmailPHP($sendTo, $fromAddress, $fromName, $content, $subject){
 
@@ -15,19 +23,21 @@ function nuEmailPHP($sendTo, $fromAddress, $fromName, $content, $subject){
 }
 
 // Send email using PHPMailer
-function nuEmail($to_list=array(),$from_address='',$from_name='',$content='',$subject='',$file_list=array(),$html=false,$cc_list=array(), $bcc_list=array(), $reply_to_list=array(),$debug=0,$method='SMTP'){  
-	ob_start();
-        $nuEmailSettings = nuMarshallEmailSettings($from_address, $from_name, $html, $reply_to_list);
-        require_once($nuEmailSettings->phpmailer_path);
-        $mail = new PHPMailer();
-	$mail->SMTPDebug = $debug;
-	if ( $method == 'SMTP' ) {
-        	$mail->isSMTP();
+function nuEmail($to_list=array(),$from_address='',$from_name='',$content='',$subject='',$file_list=array(),$html=false,$cc_list=array(), $bcc_list=array(), $reply_to_list=array(),$debug=0,$method='SMTP'){
+    ob_start();
+    $nuEmailSettings = nuMarshallEmailSettings($from_address, $from_name, $html, $reply_to_list);
+        
+    $mail = new \PHPMailer\PHPMailer\PHPMailer();
+    $mail->SMTPDebug = $debug;
+    
+    if ( $method == 'SMTP' ) {
+		$mail->isSMTP();
 	} 
 	if ( $method == 'sendmail' ) {
 		$mail->isSendmail();
 	}
         $mail->Subject          = $subject;
+
         $mail->Body             = $content;
         $mail->Username         = $nuEmailSettings->username;                   // defaults to ''
         $mail->Password         = $nuEmailSettings->password;                   // defaults to ''
@@ -40,17 +50,19 @@ function nuEmail($to_list=array(),$from_address='',$from_name='',$content='',$su
         $mail->WordWrap         = $nuEmailSettings->word_wrap;                  // defaults to 120
         $mail->CharSet          = $nuEmailSettings->charset;                    // defaults to UTF-8
         $mail->IsHTML($nuEmailSettings->html);
+
         _nuEmailHelperAdd($mail, $to_list, 'AddAddress');
         _nuEmailHelperAdd($mail, $nuEmailSettings->reply_to_list, 'AddReplyTo');
         _nuEmailHelperAttach($mail, $file_list);
 	$result = array();
 	try {
-        $result[0] = $mail->Send();
+		nuDebug($mail);
+		$result[0] = $mail->Send();
 		$result[1] = "Message sent successfully";
 		$result[2] = $mail->ErrorInfo;	
 	} catch(Exception $e) {
 		$result[0] = false;
-        $result[1] = $e->errorMessage();
+		$result[1] = $e->errorMessage();
 		$result[2] = $mail->ErrorInfo;
 	}
     _nuEmailHelperClean($file_list);
@@ -74,8 +86,7 @@ function _nuMarshallEmailSettingsHelper($obj, $key, $default = '') {
 	return $a;
 }
 function nuMarshallEmailSettings( $from_address = '', $from_name = '', $html = false, $reply_to_list = array() ) {
-	
-	$standalone_path = 'libs/phpmailer/nuemailer/class-phpmailer.php';
+		
 	$setup = db_setup();
 	$nuEmailSettings = new stdClass();
 	$nuEmailSettings->error_text                = '';
@@ -90,7 +101,7 @@ function nuMarshallEmailSettings( $from_address = '', $from_name = '', $html = f
 	$nuEmailSettings->word_wrap					= 120;
 	$nuEmailSettings->charset                   = 'UTF-8';
 	$nuEmailSettings->html						= $html;
-	$nuEmailSettings->phpmailer_path 			= $standalone_path;
+	
 	$nuEmailSettings->reply_to_list	 			= array();
 	$nuEmailSettings->smtp_secure	 			= '';
 	if ( $nuEmailSettings->smtp_port == '587' ) {
