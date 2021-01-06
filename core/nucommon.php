@@ -1803,7 +1803,7 @@ function nuGetRecordURL($origin = '', $subFolder = '', $homepageId = '') {
   $homepageId = $homepageId  != '' ? '&h='. $homepageId : '';
   $origin = $origin  == '' ? nuGetHttpOrigin() : $origin;
   
-  return $origin. $subFolder . '/index.php?f=' . 'xx'. '&r=' . '-1' . $homepageId;  
+  return $origin. $subFolder . '/index.php?f=' . 'xx'. '&r=' . '#RECORD_ID#' . $homepageId;  
   
 }
 

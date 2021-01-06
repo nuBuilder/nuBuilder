@@ -128,14 +128,6 @@ function nuLoginRequest(u, p){
                 last.call_type      = 'getform';
                 last.form_id        = data.form_id;
 				
-				/*
-				last.form_id        = 'nuauthentication';
-				data.form_id = 'nuauthentication'; 
-				data.form_code = 'nuauthentication'; 
-				data.redirect_form_id = 'nuauthentication'; 
-				data.id = 'nuauthentication'; 
-				*/
-					
                 last.record_id      = data.record_id;
                 last.filter         = data.filter;
                 last.search         = data.search;
@@ -234,17 +226,19 @@ window.nuHASH				= [];
 	
 	if ($nuConfigKeepSessionAlive) {
 		$nuConfigKeepSessionAliveInterval = !isset($nuConfigKeepSessionAliveInterval) ? 600 : $nuConfigKeepSessionAliveInterval;
-		$sessionAlive  = "
-		var refreshTime = 1000 * $nuConfigKeepSessionAliveInterval; // refresh interval in milliseconds
-		window.setInterval( function() {
-			$.ajax({
-				cache: false,
-				type: 'GET',
-				url: 'core/nukeepsessionalive.php',
-				success: function(data) {
-				}
-			});
-		}, refreshTime );
+		$sessionAlive  = "	debugger;	
+		if (nuMainForm()) {
+			var refreshTime = 1000 * $nuConfigKeepSessionAliveInterval; // refresh interval in milliseconds
+			window.setInterval( function() {				
+				$.ajax({
+					cache: false,
+					type: 'GET',
+					url: 'core/nukeepsessionalive.php',
+					success: function(data) {
+					}
+				});
+			}, refreshTime );
+		}
 		";
 	}
 	

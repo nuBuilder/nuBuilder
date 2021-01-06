@@ -56,7 +56,6 @@ function nuEmail($to_list=array(),$from_address='',$from_name='',$content='',$su
         _nuEmailHelperAttach($mail, $file_list);
 	$result = array();
 	try {
-		nuDebug($mail);
 		$result[0] = $mail->Send();
 		$result[1] = "Message sent successfully";
 		$result[2] = $mail->ErrorInfo;	
