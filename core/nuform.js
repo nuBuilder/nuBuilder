@@ -3372,7 +3372,7 @@ function nuSavingProgressMessage(){
     e.setAttribute('id', 'nuProgressSaved');
 
     $('#nuActionHolder').append(e);
-    $('#' + e.id).html('<img src=\'ajax-loader.gif\'/>');
+    $('#' + e.id).html('<img src=\'core/ajax-loader.gif\'/>');
     $('#' + e.id).addClass('nuSaveMessageProgress');
 	$('#' + e.id).css('position','absolute');
 	$('#' + e.id).css('left',(($('#nuActionHolder').width() / 2) - ($('#nuProgressSaved').width() / 2))+ 'px');

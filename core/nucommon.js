@@ -1562,53 +1562,6 @@ function nuTransformScale(){
 		
 }
 
-
-
-function nuWorker(){
-		
-	function checkScreenSize() {
-		setTimeout("checkScreenSize()", 500);
-	}
-
-	checkScreenSize();
-
-}
-
-
-
-function nuStartWorker(){
-
-	var iw	= 0;
-
-	if(typeof(Worker) !== 'undefined') {
-		
-		if(typeof(w) === 'undefined') {
-			var w = new Worker('nuworkers.js');
-		}
-
-		w.onmessage = function(event) {
-			
-			if(iw != window.innerWidth){
-				
-				iw = window.innerWidth;
-				nuResize();
-				
-				if(window.nuResponsive != null){
-					nuResponsive();
-				}
-				
-			}
-			
-			
-		};
-
-	}
-
-}
-
-
-
-
 function nuSetBrowserColumns(c){
 	
 	var r	= $('[data-nu-column="0"]').length;

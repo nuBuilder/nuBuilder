@@ -15,7 +15,7 @@ function nuCopySystemTables() {
     
 	dropObject('zzzzsys_report_data', 'VIEW');
 	dropObject('zzzzsys_run_list', 'VIEW');
-	dropObject('zzzzsys_table_list', 'VIEW');
+	dropObject('zzzzsys_object_list', 'VIEW');
 
 	$t	= nuSystemList();
 	for($i = 0 ; $i < count($t) ; $i++){
@@ -300,7 +300,7 @@ function nuAppendToSystemTables(){
 
 		dropObject('sys_zzzzsys_report_data', 'VIEW');
 		dropObject('sys_zzzzsys_run_list', 'VIEW');
-		dropObject('sys_zzzzsys_table_list', 'VIEW');
+		dropObject('sys_zzzzsys_object_list', 'VIEW'); 
 
 		$s		= "UPDATE zzzzsys_setup SET set_denied = '1'";
 		nuRunQuery($s);
