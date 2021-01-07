@@ -58,22 +58,21 @@ function nuEmail($to_list=array(),$from_address='',$from_name='',$content='',$su
 	_nuEmailHelperAdd($mail, $nuEmailSettings->reply_to_list, 'AddReplyTo');
 	_nuEmailHelperAttach($mail, $file_list);
 	
-	$result = array();
-	$result[0] = false;
-	$result[2] = null;	
-	
+	$result = array();	
+		
 	try {
 		
 		if ($mail->Send()) {
 			$result[0] = true;
-			$result[1] = "Message sent successfully";
-			$result[2] = null;	
+			$result[1] = "Message sent successfully";			
 		} else {			
+			$result[0] = false;
 			$result[1] = "Message sending failed";
 			$result[2] = $mail->ErrorInfo;
 		}
 		
 	} catch(Exception $e) {		
+		$result[0] = false;
 		$result[1] = $e->errorMessage();
 		$result[2] = $mail->ErrorInfo;
 	}
@@ -82,8 +81,11 @@ function nuEmail($to_list=array(),$from_address='',$from_name='',$content='',$su
 	$result[3] = ob_get_contents();
 	ob_end_clean();
 	
+	
+	nuDebug($result);
 	return $result;
 }
+
 function _nuMarshallEmailSettingsHelper($obj, $key, $default = '') {
 	
 	if ( !is_object($obj) ) {

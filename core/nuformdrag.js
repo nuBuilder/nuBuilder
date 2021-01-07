@@ -599,6 +599,8 @@ function nuCreateDragOptionsBox(form){
 	
 	$('body').append(help);
 	
+	$('.nuRECORD').css("width", "99.3%");
+	
 }
 
 function nuResizeToLowest(){

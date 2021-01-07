@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 06, 2021 at 07:51 PM
+-- Generation Time: Jan 07, 2021 at 11:17 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 8.0.0
 
@@ -524,8 +524,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.01.06.00'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.01.06.00');
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.01.07.01'),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.01.07.01');
 
 -- --------------------------------------------------------
 
@@ -1082,7 +1082,7 @@ INSERT INTO `zzzzsys_php` (`zzzzsys_php_id`, `sph_code`, `sph_description`, `sph
 ('nuobjectgrid_BD', 'nuobjectgrid_BD', 'System PHP', 'nubuilder', 'nuDisplayError(nuTranslate(\'The Delete Operation is not available.\'));', NULL, NULL, '1', '0', NULL),
 ('nutranslate_BS', 'nutranslate_BS', 'System PHP', 'nubuilder', 'if (\'#nuDevMode#\' != 1 && substr(\'#RECORD_ID#\', 0, 2) === \'nu\') {\n   nuDisplayError(\"nuBuilder\'s translation strings cannot be modified\");\n}', NULL, NULL, '1', '0', NULL),
 ('nutranslate_BD', 'nutranslate_BD', 'System PHP', 'nubuilder', 'if (\'#nuDevMode#\' != 1 && substr(\'#RECORD_ID#\', 0, 2) === \'nu\') {\n   nuDisplayError(\"nuBuilder\'s translation strings cannot be modified\");\n}', NULL, NULL, '1', '0', NULL),
-('nutestemail', 'nutestemail', 'Send a test email', 'nubuilder', '$to = \'#ema_to#\';\n$fromAddress = \'#set_smtp_from_address#\';\n$fromName = \'#set_smtp_from_name#\';\n$body = \'#ema_body#\';\n$subject = \'#ema_subject#\';\n$bcc = \'#ema_bcc#\';\n$cc = \'#ema_cc#\';\n\nif ( $to ==\'\' || $fromAddress == \'\' || $fromName = \'\' || $body == \'\' || $subject == \'\') {\n    showMessage(nuTranslate(\'Error\'), nuTranslate(\'Required field cannot be blank.\'));\n    return;\n}\n\n$result = nuSendEmail($to, $fromAddress, $fromName, $body, $subject, [], true, $cc, $bcc);\nif ($result) {\n    showMessage(nuTranslate(\'Result\'), $result[1]);\n} else {\n    showMessage(nuTranslate(\'Result\'), $result[1].\'<br>\'.$result[2]);  \n}    \n\n\nfunction showMessage($title, $msg) {\n    nuJavascriptCallback(\"nuMessage([\'<h2>\".$title.\"</h2><br>\" . $msg . \"\']);\");\n}', 'hide', NULL, '1', '0', '');
+('nutestemail', 'nutestemail', 'Send a test email', 'nubuilder', '$to = \'#ema_to#\';\n$fromAddress = \'#set_smtp_from_address#\';\n$fromName = \'#set_smtp_from_name#\';\n$body = \'#ema_body#\';\n$subject = \'#ema_subject#\';\n$bcc = \'#ema_bcc#\';\n$cc = \'#ema_cc#\';\n\n$recipient = ($to == \'\' && $bcc  ==\'\' && $cc == \'\') ? false : true;\n\nif (! $recipient || $fromAddress == \'\' || $fromName = \'\' || $body == \'\' || $subject == \'\') {\n    showMessage(nuTranslate(\'Error\'), nuTranslate(\'Required fields cannot be blank.\'));\n    return;\n}\n\n$result = nuSendEmail($to, $fromAddress, $fromName, $body, $subject, [], true, $cc, $bcc);\nif ($result == \'1\') {\n    showMessage(nuTranslate(\'Result\'), $result[1]);\n} else {\n    showMessage(nuTranslate(\'Result\'), $result[1].\'<br>\'.$result[2]);  \n}    \n\nfunction showMessage($title, $msg) {\n    nuJavascriptCallback(\"nuMessage([\'<h2>\".$title.\"</h2><br>\" . $msg . \"\']);\");\n}', 'hide', NULL, '0', '0', '');
 
 -- --------------------------------------------------------
 
@@ -1198,7 +1198,7 @@ CREATE TABLE `zzzzsys_setup` (
 --
 
 INSERT INTO `zzzzsys_setup` (`zzzzsys_setup_id`, `set_time_out_minutes`, `set_zzzzsys_timezone_id`, `set_language`, `set_smtp_username`, `set_smtp_password`, `set_smtp_host`, `set_smtp_from_address`, `set_smtp_from_name`, `set_smtp_port`, `set_smtp_use_authentication`, `set_smtp_use_ssl`, `set_header`, `set_denied`) VALUES
-('1', 480, '5281a1220508372', '', '1', '1', '1', '1', '1', 1, '1', '1', 'function nuHeaderTest() {\r\n console.log(\'Functions placed here are available anywhere in nuBuilder Forte.\');\r\n}\r\n\r\n// nuOnLoad() will be run after each Browse and Edit Form loads. \r\n\r\nfunction nuOnLoad() {\r\n\r\n if(nuFormType() == \'edit\'){\r\n // Edit Form loaded\r\n } else\r\n if(nuFormType() == \'browse\'){\r\n // Browse Form loaded\r\n }\r\n \r\n}\r\n\r\n</script>\r\n\r\n\r\n<!-- Define your own styles, override styles from nubuilder4.css -->\r\n\r\n<style> \r\n\r\n /*.nuActionButton {background-color:#0073aa;} */\r\n\r\n</style>\r\n\r\n\r\n<script>\r\n\r\n', '0');
+('1', 480, '5281a1220508372', '', '1', '1', '1', '1', '1', 1, '1', '1', 'function nuHeaderTest() {\n console.log(\'Functions placed here are available anywhere in nuBuilder Forte.\');\n}\n\n// nuOnLoad() will be run after each Browse and Edit Form loads. \n\nfunction nuOnLoad() {\n\n if(nuFormType() == \'edit\'){\n // Edit Form loaded\n } else\n if(nuFormType() == \'browse\'){\n // Browse Form loaded\n }\n \n}\n\n</script>\n\n<!-- Define your own styles, override styles from nubuilder4.css -->\n\n<style> \n\n /*.nuActionButton {background-color:#0073aa;} */\n\n\n\n</style>\n\n\n<script>\n\n', '1');
 
 -- --------------------------------------------------------
 
@@ -1300,7 +1300,8 @@ INSERT INTO `zzzzsys_tab` (`zzzzsys_tab_id`, `syt_zzzzsys_form_id`, `syt_title`,
 ('nu5fe19e93306dd6e', 'nusetup', 'Developer', 40, NULL),
 ('nu5feb70e6a6b9cf8', 'nuupdate', 'Update', 10, NULL),
 ('nu5fed7cde6151088', 'nuobjectgrid', 'Main', 10, NULL),
-('nu5ff48b9c18dbf6f', 'nuemailtest', 'Main', 10, NULL);
+('nu5ff48b9c18dbf6f', 'nuemailtest', 'Main', 10, NULL),
+('NU5ff5b92b6e3c731', 'nu5ff5b92b6dbbf5a', 'Main', 10, NULL);
 
 -- --------------------------------------------------------
 

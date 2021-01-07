@@ -17,6 +17,27 @@ try {
 	die();
 }
 
+function nuRunQueryNoDebug($s, $a = array(), $isInsert = false){
+
+	global $nuDB;
+	
+	$object = $nuDB->prepare($s);
+
+	try {
+		$object->execute($a);
+	}catch(PDOException $ex){
+		
+	}
+
+	if($isInsert){		
+		return $nuDB->lastInsertId();		
+	}else{		
+		return $object;	
+	}
+	
+}
+
+
 function nuRunQuery($s, $a = array(), $isInsert = false){
 
 	global $DBHost;
