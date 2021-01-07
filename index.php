@@ -226,7 +226,7 @@ window.nuHASH				= [];
 	
 	if ($nuConfigKeepSessionAlive) {
 		$nuConfigKeepSessionAliveInterval = !isset($nuConfigKeepSessionAliveInterval) ? 600 : $nuConfigKeepSessionAliveInterval;
-		$sessionAlive  = "	debugger;	
+		$sessionAlive  = "
 		if (nuMainForm()) {
 			var refreshTime = 1000 * $nuConfigKeepSessionAliveInterval; // refresh interval in milliseconds
 			window.setInterval( function() {				

@@ -24,50 +24,64 @@ function nuEmailPHP($sendTo, $fromAddress, $fromName, $content, $subject){
 
 // Send email using PHPMailer
 function nuEmail($to_list=array(),$from_address='',$from_name='',$content='',$subject='',$file_list=array(),$html=false,$cc_list=array(), $bcc_list=array(), $reply_to_list=array(),$debug=0,$method='SMTP'){
-    ob_start();
-    $nuEmailSettings = nuMarshallEmailSettings($from_address, $from_name, $html, $reply_to_list);
-        
-    $mail = new \PHPMailer\PHPMailer\PHPMailer();
-    $mail->SMTPDebug = $debug;
-    
-    if ( $method == 'SMTP' ) {
+	ob_start();
+	
+	$nuEmailSettings = nuMarshallEmailSettings($from_address, $from_name, $html, $reply_to_list);
+			
+	$mail = new \PHPMailer\PHPMailer\PHPMailer();
+	$mail->SMTPDebug = $debug;
+	 	
+	if ( $method == 'SMTP' ) {
 		$mail->isSMTP();
 	} 
 	if ( $method == 'sendmail' ) {
 		$mail->isSendmail();
 	}
-        $mail->Subject          = $subject;
+	
+	$mail->Subject	 		 		 	= $subject;
+	$mail->Body	 		 		 		= $content;
+	$mail->Username	 		 			= $nuEmailSettings->username;	 		 		 	// defaults to ''
+	$mail->Password	 		 			= $nuEmailSettings->password;	 		 		 	// defaults to ''
+	$mail->Host	 		 		 		= $nuEmailSettings->host;	 		 		 		// defaults to 127.0.0.1
+	$mail->From	 		 		 		= $nuEmailSettings->from_address;	 		 		// defaults to ''
+	$mail->FromName	 		 			= $nuEmailSettings->from_name;	 		 		 	// defaults to ''
+	$mail->Port	 		 		 		= $nuEmailSettings->smtp_port;	 		 		 	// defaults to 25
+	$mail->SMTPSecure	 		 		= $nuEmailSettings->smtp_secure;	 		 		// defaults to '' otherwsie it will be tls or ssl
+	$mail->SMTPAuth	 		 			= $nuEmailSettings->smtp_use_authentication;	 	// defaults to false
+	$mail->WordWrap	 		 			= $nuEmailSettings->word_wrap;	 		 		 	// defaults to 120
+	$mail->CharSet	 		 		 	= $nuEmailSettings->charset;	 		 		 	// defaults to UTF-8
+	$mail->IsHTML($nuEmailSettings->html);
 
-        $mail->Body             = $content;
-        $mail->Username         = $nuEmailSettings->username;                   // defaults to ''
-        $mail->Password         = $nuEmailSettings->password;                   // defaults to ''
-        $mail->Host             = $nuEmailSettings->host;                       // defaults to 127.0.0.1
-        $mail->From             = $nuEmailSettings->from_address;               // defaults to ''
-        $mail->FromName         = $nuEmailSettings->from_name;                  // defaults to ''
-        $mail->Port             = $nuEmailSettings->smtp_port;                  // defaults to 25
-        $mail->SMTPSecure       = $nuEmailSettings->smtp_secure;                // defaults to '' otherwsie it will be tls or ssl
-        $mail->SMTPAuth         = $nuEmailSettings->smtp_use_authentication;    // defaults to false
-        $mail->WordWrap         = $nuEmailSettings->word_wrap;                  // defaults to 120
-        $mail->CharSet          = $nuEmailSettings->charset;                    // defaults to UTF-8
-        $mail->IsHTML($nuEmailSettings->html);
-
-        _nuEmailHelperAdd($mail, $to_list, 'AddAddress');
-        _nuEmailHelperAdd($mail, $nuEmailSettings->reply_to_list, 'AddReplyTo');
-        _nuEmailHelperAttach($mail, $file_list);
+	_nuEmailHelperAdd($mail, $to_list, 'AddAddress');
+	_nuEmailHelperAdd($mail, $cc_list, 'AddCC');			
+	_nuEmailHelperAdd($mail, $bcc_list, 'AddBCC');	
+	_nuEmailHelperAdd($mail, $nuEmailSettings->reply_to_list, 'AddReplyTo');
+	_nuEmailHelperAttach($mail, $file_list);
+	
 	$result = array();
+	$result[0] = false;
+	$result[2] = null;	
+	
 	try {
-		$result[0] = $mail->Send();
-		$result[1] = "Message sent successfully";
-		$result[2] = $mail->ErrorInfo;	
-	} catch(Exception $e) {
-		$result[0] = false;
+		
+		if ($mail->Send()) {
+			$result[0] = true;
+			$result[1] = "Message sent successfully";
+			$result[2] = null;	
+		} else {			
+			$result[1] = "Message sending failed";
+			$result[2] = $mail->ErrorInfo;
+		}
+		
+	} catch(Exception $e) {		
 		$result[1] = $e->errorMessage();
 		$result[2] = $mail->ErrorInfo;
 	}
-    _nuEmailHelperClean($file_list);
+
+	_nuEmailHelperClean($file_list);
 	$result[3] = ob_get_contents();
 	ob_end_clean();
-    
+	
 	return $result;
 }
 function _nuMarshallEmailSettingsHelper($obj, $key, $default = '') {
