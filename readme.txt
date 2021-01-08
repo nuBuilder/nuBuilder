@@ -1,5 +1,5 @@
 === nuBuilder Forte ===
-Name: nuBuilder 4
+Name: nuBuilder 4.5
 
 Contributors: Steven Copley, kev1n, Janusz, Neil, Ap.Muthu
 Donate link: https://www.nubuilder.com/#donate
@@ -8,7 +8,7 @@ Home Page: https://www.nubuilder.com
 Wiki: https://wiki.nubuilder.net/
 Forum: https://forums.nubuilder.com/
 
-Requires: PHP: 5.2.4 (phpMyAdmin that is shipped with nuBuilder will require PHP 7.1+)
+Requires: PHP: 5.4.0 (phpMyAdmin that is shipped with nuBuilder will require PHP 7.1+)
 Requires: MySQL: 5.5. (or MariaDB)
 Requires: Web Server: (e.g. Apache or Nginx)
 

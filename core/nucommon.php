@@ -1635,7 +1635,7 @@ function nuFromCSV($file, $table, $d){
 	$a = array();
 	$w = array();
 	$c = array();
-	$h = fopen('csvfiles/' . $file, "r");
+	$h = fopen('../temp/' . $file, "r");
 	$id = $table . '_nuid';
 
 	if(empty($h) === false) {

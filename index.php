@@ -24,16 +24,19 @@
 <?php
 
 function nuJSIndexInclude($pfile){
-
-    //$timestamp = date("YmdHis", filemtime($pfile));                                         //-- Add timestamp so javascript changes are effective immediately
-	$timestamp = date("YmdHis");
+	
+	if ($pfile == '') return;
+	$timestamp = date("YmdHis"); //-- Add timestamp so javascript changes are effective immediately
     print "<script src='$pfile?ts=$timestamp' type='text/javascript'></script>\n";
+	
 }
 
 function nuCSSIndexInclude($pfile){
 
-	$timestamp = date("YmdHis", filemtime($pfile));                                         //-- Add timestamp so javascript changes are effective immediately
+	if ($pfile == '') return;
+	$timestamp = date("YmdHis", filemtime($pfile));  //-- Add timestamp so javascript changes are effective immediately                
 	print "<link rel='stylesheet' href='$pfile?ts=$timestamp' />\n";
+	
 }
 
 function nuJSChartsInclude(){
@@ -62,7 +65,7 @@ function nuHeader(){
     return $j;
 }
 
-nuJSIndexInclude($_SESSION['nubuilder_session_data']['JQ_PATH']);
+nuJSIndexInclude('core/libs/jquery/jquery.js');
 nuJSIndexInclude('core/nuformclass.js');
 nuJSIndexInclude('core/nuform.js');
 nuJSIndexInclude('core/nuformdrag.js');
@@ -77,6 +80,15 @@ nuJSIndexInclude('core/libs/quill/modules/quill-divider.js');
 
 nuCSSIndexInclude('core/css/nubuilder4.css');
 nuCSSIndexInclude('core/libs/quill/themes/quill.snow.css');
+
+$nuConfigIncludeJS1 = isset($nuConfigIncludeJS1) ? $nuConfigIncludeJS1 : '';
+nuJSIndexInclude($nuConfigIncludeJS1);
+$nuConfigIncludeJS2 = isset($nuConfigIncludeJS2) ? $nuConfigIncludeJS2 : '';
+nuJSIndexInclude($nuConfigIncludeJS2);
+$nuConfigIncludeJS3 = isset($nuConfigIncludeJS3) ? $nuConfigIncludeJS3 : '';
+nuJSIndexInclude($nuConfigIncludeJS3);
+$nuConfigIncludeCSS = isset($nuConfigIncludeCSS) ? $nuConfigIncludeCSS : '';
+nuCSSIndexInclude($nuConfigIncludeCSS);
 
 ?>
 

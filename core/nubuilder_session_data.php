@@ -17,8 +17,7 @@ class nubuilder_session_data {
 	'DB_HOST'            	=> '',
 	'DB_CHARSET'         	=> '',
 	'NU_SITE_URL'        	=> '',
-	'IS_DEMO'				=> false,	
-	'JQ_PATH'				=> '',
+	'IS_DEMO'				=> false,		
 	'SESSION_ID'			=> null,
 	'SESSION_TIMESTAMP'		=> null,
 	'IsDemo'				=> false,
@@ -42,8 +41,7 @@ class nubuilder_session_data {
 		$this->nubuilder['DB_CHARSET']		= 'utf8';
 		$this->nubuilder['GLOBEADMIN_NAME']	= $nuConfigDBGlobeadminUsername;
 		$this->nubuilder['GLOBEADMIN_PASS']	= $nuConfigDBGlobeadminPassword;
-		$this->nubuilder['IS_DEMO']         = $nuConfigIsDemo;
-		$this->nubuilder['JQ_PATH']         = 'core/libs/jquery/jquery.js';
+		$this->nubuilder['IS_DEMO']         = $nuConfigIsDemo;		
         }
 }
 

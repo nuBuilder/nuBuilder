@@ -1875,6 +1875,38 @@ function nuSetBrowseColumnWidth(column, width) {
 	
 }
 
+function nuBrowseAdditionalNavButtons() {
+    
+    if (nuFormType() == 'browse') {
+
+        var disabled = {
+            'opacity': '0.3',
+            'pointer-events': 'none'
+        };
+
+        var currentPage = Number($('#browsePage').val());
+        var lastPage = nuCurrentProperties().pages;
+
+        var html = '<span id="nuFirst" class="nuBrowsePage"><i class="fa fa-step-backward" style="font-size: 16px" onclick="nuGetPage(0)">&nbsp;&nbsp;&nbsp;&nbsp;</i></span>';
+        $(html).insertBefore("#nuLast");
+
+        html = '<span id="nuEnd" class="nuBrowsePage">&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-step-forward nuBrowsePage" style="font-size: 16px" onclick="nuGetPage(' + lastPage + ')"></i></span>';
+        $(html).insertAfter("#nuNext");
+
+
+        if (currentPage == 1) {
+            $('#nuFirst').css(disabled);
+            $('#nuLast').css(disabled);
+        }
+
+        if (currentPage == lastPage) {
+            $('#nuNext').css(disabled);
+            $('#nuEnd').css(disabled);
+        }
+    }
+
+}
+
 function nuPrintEditForm() {
  
   $('#nuBreadcrumbHolder').hide();

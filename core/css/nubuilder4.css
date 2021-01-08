@@ -558,20 +558,35 @@ input[type=range]::-webkit-slider-runnable-track {
 
 
 #nuNext {
-        font-size: 18px;
-        color: DimGrey;
+  font-size: 18px;
+  color: DimGrey;
 }
 #nuLast {
-        font-size: 18px;
-        color: DimGrey;
+  font-size: 18px;
+  color: DimGrey;
 }
 
+#nuFirst {
+  font-size: 18px;
+  color: DimGrey;
+}
+#nuEnd {
+  font-size: 18px;
+  color: DimGrey;
+}
 
 #nuNext:hover { 	
-	color: Red; 
+  color: Red; 
 }
 #nuLast:hover { 
-	color: Red; 
+  color: Red; 
+}
+
+#nuFirst:hover { 	
+  color: Red; 
+}
+#nuEnd:hover { 
+  color: Red; 
 }
 
 .nuTab {

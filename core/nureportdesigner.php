@@ -9,7 +9,6 @@
 require_once('nucommon.php');	
 
 $jquery = "libs/jquery/jquery.js"; 
-// $jquery = $_SESSION['nubuilder_session_data']['JQ_PATH'];
 
 nuJSInclude($jquery);
 nuJSInclude('nuformclass.js');

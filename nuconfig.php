@@ -27,6 +27,12 @@
     $nuConfig2FAAdmin                   = false;            //-- Use 2FA authentication for admininstrator
     $nuConfig2FAUser                    = false;            //-- Use 2FA authentication for users
 
+// Include:
+    $nuConfigIncludeJS1                 = '';               //-- Include an external JavaScript File
+    $nuConfigIncludeJS2                 = '';               //-- Include an external JavaScript File
+    $nuConfigIncludeJS3                 = '';               //-- Include an external JavaScript File
+    $nuConfigIncludeCSS                 = '';               //-- Include an external CSS File
+
 
 $nuJSOptions = "
 
