@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 08, 2021 at 01:11 PM
+-- Generation Time: Jan 08, 2021 at 08:30 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 8.0.0
 
@@ -52,7 +52,6 @@ CREATE TABLE `zzzzsys_access_form` (
   `slf_print_button` varchar(1) DEFAULT NULL,
   `slf_data_mode` varchar(2) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
 
 -- --------------------------------------------------------
 
@@ -526,8 +525,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.01.08.01'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.01.08.01');
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.01.08.02'),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.01.08.02');
 
 -- --------------------------------------------------------
 
@@ -1146,6 +1145,7 @@ CREATE TABLE `zzzzsys_select` (
   `sse_system` varchar(1) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `zzzzsys_select_clause`
@@ -1203,7 +1203,7 @@ CREATE TABLE `zzzzsys_setup` (
 --
 
 INSERT INTO `zzzzsys_setup` (`zzzzsys_setup_id`, `set_time_out_minutes`, `set_zzzzsys_timezone_id`, `set_language`, `set_smtp_username`, `set_smtp_password`, `set_smtp_host`, `set_smtp_from_address`, `set_smtp_from_name`, `set_smtp_port`, `set_smtp_use_authentication`, `set_smtp_use_ssl`, `set_header`, `set_denied`) VALUES
-('1', 480, '5281a1220508372', '', '1', '1', '1', '1', '1', 1, '1', '1', 'function nuHeaderTest() {\n console.log(\'Functions placed here are available anywhere in nuBuilder Forte.\');\n}\n\n// nuOnLoad() will be run after each Browse and Edit Form loads. \n\nfunction nuOnLoad() {\n\n if(nuFormType() == \'edit\'){\n // Edit Form loaded\n } else\n if(nuFormType() == \'browse\'){\n // Browse Form loaded\n }\n \n}\n\n</script>\n\n<!-- Define your own styles, override styles from nubuilder4.css -->\n\n<style> \n\n /*.nuActionButton {background-color:#0073aa;} */\n\n\n\n</style>\n\n\n<script>\n\n', '1');
+('1', 480, '5281a1220508372', '', '1', '1', '1', '1', '1', 1, '1', '1', 'function nuHeaderTest() {\n  console.log(\'Functions placed here are available anywhere in nuBuilder Forte.\');\n}\n\n// nuOnLoad() will be run after each Browse and Edit Form loads. \n\nfunction nuOnLoad() {\n\n if(nuFormType() == \'edit\'){\n     // Edit Form loaded\n } else\n if(nuFormType() == \'browse\'){\n     // Browse Form loaded\n }\n \n}\n\n</script>\n\n<!-- Define your own styles, override styles from nubuilder4.css -->\n\n<style> \n\n /*.nuActionButton {background-color:#0073aa;} */\n\n\n\n</style>\n\n\n<script>\n\n', '1');
 
 -- --------------------------------------------------------
 
@@ -1305,8 +1305,7 @@ INSERT INTO `zzzzsys_tab` (`zzzzsys_tab_id`, `syt_zzzzsys_form_id`, `syt_title`,
 ('nu5fe19e93306dd6e', 'nusetup', 'Developer', 40, NULL),
 ('nu5feb70e6a6b9cf8', 'nuupdate', 'Update', 10, NULL),
 ('nu5fed7cde6151088', 'nuobjectgrid', 'Main', 10, NULL),
-('nu5ff48b9c18dbf6f', 'nuemailtest', 'Main', 10, NULL),
-('NU5ff5b92b6e3c731', 'nu5ff5b92b6dbbf5a', 'Main', 10, NULL);
+('nu5ff48b9c18dbf6f', 'nuemailtest', 'Main', 10, NULL);
 
 -- --------------------------------------------------------
 

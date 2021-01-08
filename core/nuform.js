@@ -75,6 +75,11 @@ function nuBuildForm(f){
 	window.nuBeforeSave			= null;
 	window.nuBeforeDelete		= null;
 	window.nuOnClone			= null;
+	window.nuOnBeforeGetBreadcrumb = null;
+	window.nuBeforeAddActionButtons = null;
+	window.nuOnSetSaved			= null;
+	window.nuOnTabSelected		= null;
+	window.nuOnSelectTab		= null;
 	window.nuBrowseFunction		= window.nuDefaultBrowseFunction;
 	window.nuCLONE				= false;
 	window.nuSERVERRESPONSE		= f;
@@ -144,8 +149,10 @@ function nuBuildForm(f){
 	nuAddBreadcrumbs();
 	nuAddEditTabs('', f);
 	
-	
-
+	if(window.nuBeforeAddActionButtons){
+		nuBeforeAddActionButtons();
+	}
+		
 	nuAddActionButtons(f);
 	nuRecordProperties(f, '');
 
@@ -255,8 +262,8 @@ function nuBuildForm(f){
 		window.nuMESSAGES	= [];
 		
 	}
-	
-	window.nuSAVED		= true;
+		
+	nuSetSaved(true);
 	
 	nuWindowPosition();
 
@@ -2317,6 +2324,10 @@ function nuSelectAllTabs(pthis){
 
 function nuSelectTab(tab){
 	
+	if(window.nuOnSelectTab){
+		if (nuOnSelectTab(tab) == false) return;
+	}
+	
 	$('.nuTabTitleColumn').remove();
 
     var filt = $('#' + tab.id).attr('data-nu-tab-filter');
@@ -2347,9 +2358,12 @@ function nuSelectTab(tab){
 	$(".nuHtml[data-nu-form='" + form + "'][data-nu-tab='"  + filt + "']").css('visibility','visible');
 	$('#' + tab.id).addClass('nuTabSelected');
 	
+
+	if(window.nuOnTabSelected){
+		nuOnTabSelected();
+	}
+	
 }
-
-
 
 
 function nuAddDataTab(i, t, p){
@@ -3077,7 +3091,7 @@ function nuChange(e){
 		
 	}
 	
-	window.nuSAVED		= false;
+	nuSetSaved(false);
 		
 	var t	= $('#' + e.target.id)[0];
 	var p	= $('#' + t.id).attr('data-nu-prefix');
@@ -3211,7 +3225,7 @@ function nuHasBeenEdited(){
 	
 	$('#nuSaveButton').addClass('nuSaveButtonEdited');
 	nuFORM.edited	= true;
-	window.nuSAVED	= false;
+	nuSetSaved(false);
 	
 }
 
@@ -3219,7 +3233,7 @@ function nuHasNotBeenEdited(){
 	
 	$('#nuSaveButton').removeClass('nuSaveButtonEdited');
 	nuFORM.edited	= false;
-	window.nuSAVED	= true;
+	nuSetSaved(true);
 	
 }
 
@@ -3406,6 +3420,15 @@ function nuAbortSave(){
     $("#nuProgressSaved").hide();
     $('.nuActionButton').show();
 	
+}
+
+function nuSetSaved(v) {
+	
+	if(window.nuOnSetSaved){
+		nuOnSetSaved();
+	}
+	
+	window.nuSAVED = v;	
 }
 
 

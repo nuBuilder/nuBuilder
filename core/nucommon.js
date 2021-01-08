@@ -85,6 +85,10 @@ function nuRemoveOpenerById(o, pid) {
 }
 
 function nuGetBreadcrumb(bc){
+
+	if(window.nuOnBeforeGetBreadcrumb){
+		if (nuOnBeforeGetBreadcrumb(bc) == false) return;
+	}
 	
 	var a			= arguments.length;
 	var e			= nuFORM.edited;
@@ -1408,6 +1412,7 @@ function nuStopClick(e){
 
 
 function nuIsSaved(){
+
 	return window.nuSAVED;
 }
 
