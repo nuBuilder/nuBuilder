@@ -1,14 +1,14 @@
 <?php	
+
+require_once('core/nuchoosesetup.php');
+require_once('core/nuindexlibs.php');
+
+require_once('core/nustandalonesetuplibs.php'); 
+nuStandaloneImportNewDB();
+
+require_once('core/nusystemupdatelibs.php');
 	
-	require_once('core/nuchoosesetup.php');
-	require_once('core/nuindexlibs.php');
-
-	require_once('core/nustandalonesetuplibs.php'); 
-	nuStandaloneImportNewDB();
-
-	require_once('core/nusystemupdatelibs.php');
-		
-	nuMigrateSQL();
+nuMigrateSQL();
 	
 ?>
 <!DOCTYPE html>
@@ -81,12 +81,8 @@ nuJSIndexInclude('core/libs/quill/modules/quill-divider.js');
 nuCSSIndexInclude('core/css/nubuilder4.css');
 nuCSSIndexInclude('core/libs/quill/themes/quill.snow.css');
 
-$nuConfigIncludeJS1 = isset($nuConfigIncludeJS1) ? $nuConfigIncludeJS1 : '';
-nuJSIndexInclude($nuConfigIncludeJS1);
-$nuConfigIncludeJS2 = isset($nuConfigIncludeJS2) ? $nuConfigIncludeJS2 : '';
-nuJSIndexInclude($nuConfigIncludeJS2);
-$nuConfigIncludeJS3 = isset($nuConfigIncludeJS3) ? $nuConfigIncludeJS3 : '';
-nuJSIndexInclude($nuConfigIncludeJS3);
+$nuConfigIncludeJS = isset($nuConfigIncludeJS) ? $nuConfigIncludeJS : '';
+nuJSIndexInclude($nuConfigIncludeJS);
 $nuConfigIncludeCSS = isset($nuConfigIncludeCSS) ? $nuConfigIncludeCSS : '';
 nuCSSIndexInclude($nuConfigIncludeCSS);
 

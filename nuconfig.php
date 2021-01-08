@@ -27,12 +27,10 @@
     $nuConfig2FAAdmin                   = false;            //-- Use 2FA authentication for admininstrator
     $nuConfig2FAUser                    = false;            //-- Use 2FA authentication for users
 
-// Include:
-    $nuConfigIncludeJS1                 = '';               //-- Include an external JavaScript File
-    $nuConfigIncludeJS2                 = '';               //-- Include an external JavaScript File
-    $nuConfigIncludeJS3                 = '';               //-- Include an external JavaScript File
-    $nuConfigIncludeCSS                 = '';               //-- Include an external CSS File
-
+// Includes:
+    $nuConfigIncludeJS                  = '';               //-- Include a JavaScript File.  E.g. 'myjsfunctions.js'
+    $nuConfigIncludeCSS                 = '';               //-- Include a CSS File. E.g. 'mystyles.css'
+    $nuConfigIncludePHP                 = '';               //-- Include a PHP File. E.g. '..\myphpfunctions.php'
 
 $nuJSOptions = "
 

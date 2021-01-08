@@ -2114,3 +2114,25 @@ function nuPasteText(t) {
 		
 }
 
+function nuRefreshSelectObject(selectId, formId) {
+
+    if (typeof formId === 'undefined') {
+        var formId = '';
+    }
+
+    nuSetProperty('nurefreshselectobject_selectid',selectId);
+    nuSetProperty('nurefreshselectobject_formid',formId);
+    nuRunPHPHidden('nurefreshselectobject', 0);
+}
+
+function nuRefreshDisplayObject(displayId, formId) {
+
+    if (typeof formId === 'undefined') {
+        var formId = '';
+    }
+
+    nuSetProperty('nurefreshdisplayobject_displayid',displayId);
+    nuSetProperty('nurefreshdisplayobject_formid',formId);
+    nuRunPHPHidden('nurefreshdisplayobject', 0);
+}
+

@@ -1807,4 +1807,10 @@ function nuGetRecordURL($origin = '', $subFolder = '', $homepageId = '') {
   
 }
 
+function hashCookieNotSetOrEmpty($h) {
+    return (preg_match('/\#(.*)\#/', $h) || trim($h) == "");
+}
+
+
 ?>
+

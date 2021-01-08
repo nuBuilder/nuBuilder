@@ -129,6 +129,8 @@ function nuLoginSetupGlobeadmin() {
 }
 
 function nuLoginSetupNOTGlobeadmin($standalone = true) {
+	
+	global $nuConfig2FAUser;
 
     $_SESSION['nubuilder_session_data']['SESSION_ID'] = nuIDTEMP();
     $_SESSION['nubuilder_session_data']['SESSION_TIMESTAMP'] = time();
@@ -169,10 +171,18 @@ function nuLoginSetupNOTGlobeadmin($standalone = true) {
     $sessionIds = new stdClass;
     $sessionIds->zzzzsys_access_id = $getAccessLevelOBJ->zzzzsys_access_id;
     $sessionIds->zzzzsys_user_id = $checkLoginDetailsOBJ->zzzzsys_user_id;
-    $sessionIds->zzzzsys_form_id = $getAccessLevelOBJ->zzzzsys_form_id;
+    
     $sessionIds->global_access = '0';
 	$sessionIds->ip_address = nuGetIPAddress();
 	
+	if ($nuConfig2FAUser) {
+		$sessionIds->zzzzsys_form_id = 'nuauthentication';
+		$_SESSION['nubuilder_session_data']['SESSION_2FA_STATUS'] = 'PENDING';
+		$_SESSION['nubuilder_session_data']['SESSION_2FA_REDIRECT_FORM_ID'] = $getAccessLevelOBJ->zzzzsys_form_id;
+	} else {
+		$sessionIds->zzzzsys_form_id = $getAccessLevelOBJ->zzzzsys_form_id;
+	}	
+			
     $storeSessionInTable = new stdClass;
     $storeSessionInTable->session = $sessionIds;
     $storeSessionInTable->access_level_code = nuAccessLevelCode($checkLoginDetailsOBJ->zzzzsys_user_id);

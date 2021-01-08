@@ -11,6 +11,10 @@
 	require_once('nudrag.php');
 	require_once('nudatabase.php');
 
+	if (isset($nuConfigIncludePHP) && $nuConfigIncludePHP != '') {
+		require_once($nuConfigIncludePHP);
+	}
+
 	$_POST['nuCounter']						= rand(0, 999);
 	$_POST['nuErrors']						= array();
 	$U										= nuGetUserAccess();
