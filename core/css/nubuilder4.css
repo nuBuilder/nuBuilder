@@ -892,7 +892,13 @@ input[type=range]::-webkit-slider-runnable-track {
 	-webkit-box-shadow: 5px 5px 5px 0px rgba(150,147,150,1);
 	-moz-box-shadow: 5px 5px 5px 0px rgba(150,147,150,1);
 	box-shadow: 5px 5px 5px 0px rgba(150,147,150,1);
-	background-color: #cccccc;
+	background-color: white;
+}
+
+.dialogTitleWords{
+	padding-top: 9px;
+	height: 25px;
+	background-color: #EAEDED;
 }
 
 .nuSection{
@@ -1001,7 +1007,7 @@ input[type=range]::-webkit-slider-runnable-track {
 
 .nuDragOptionsBoxContainer {
     padding-left: 15px;
-    background-color: #edecec;
+    background-color: #f2f2f2;;
 }
 
 .nuDragOptionsFieldsLabel {
@@ -1014,7 +1020,7 @@ input[type=range]::-webkit-slider-runnable-track {
 .nuDragOptionsFields {
     display: block;
     width: 296px;
-    height: 200px;
+    height: 250px;
 }
 
 .nuDragOptionsButton {
@@ -1027,47 +1033,48 @@ input[type=range]::-webkit-slider-runnable-track {
 
 .nuDragOptionsIcon {
 	margin: 5px;
-	color:black;
+	color:white;
     width: 10px;
 }
 
 .nuDragOptionsIcon45 {
 	margin: 5px;
-	color:black;
+	color:white;
 	transform: rotate(45deg);
     width: 10px;
 }
 
 .nuDragOptionsIcon135 {
 	margin: 5px;
-	color:black;
+	color:white;
 	transform: rotate(135deg);
     width: 10px;
 }
 
 .nuDragOptionsIcon90 {
 	margin: 5px;
-	color:black;
+	color:white;
 	transform: rotate(90deg);
     width: 10px;
 }
 
 .nuDragOptionsIcon180 {
 	margin: 5px;
-	color:black;
+	color:white;
 	transform: rotate(180deg);
     width: 10px;
 }
 
 .nuDragOptionsIcon270 {
 	margin: 5px;
-	color:black;
+	color:white;
 	transform: rotate(270deg);
     width: 10px;
 }
 
 .nuDragOptionsButtonDisabled {
     color: gray !important;
+	text-shadow: none;
 }
 
 .nuValidate {

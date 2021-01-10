@@ -699,8 +699,11 @@ class CreateStatement extends Statement
                 ++$list->idx; // Skipping last token from the array.
                 $list->getNext();
             }
-
+			
+			// Kev1n: Quick fix, Views are not completely exported. 
+			// Reference: https://github.com/phpmyadmin/phpmyadmin/issues/16549
             // Parsing the SELECT expression with and without the `AS` keyword
+			/*
             if ($token->type === Token::TYPE_KEYWORD
                 && $token->keyword === 'SELECT'
             ) {
@@ -721,6 +724,17 @@ class CreateStatement extends Statement
                     $this->body[] = $token;
                 }
             }
+			*/
+			
+		   // Parsing the `AS` keyword.
+			for (; $list->idx < $list->count; ++$list->idx) {
+				$token = $list->tokens[$list->idx];
+				if ($token->type === Token::TYPE_DELIMITER) {
+					break;
+				}
+				$this->body[] = $token;
+			}
+			
         } elseif ($this->options->has('TRIGGER')) {
             // Parsing the time and the event.
             $this->entityOptions = OptionsArray::parse(

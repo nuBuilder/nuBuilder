@@ -502,7 +502,7 @@ function nuCreateDragOptionsBox(form){
 	var w	= wh.width;
 	var h	= wh.height;
 
-    var optionsBoxHTML = '<div id="nuDragOptionsBox" class="nuDragOptionsBox" style="width:'+(dragOptionsBoxWidth-20)+'px;height:100%;min-height:'+dragOptionsBoxMinHeight+'px;">'+
+    var optionsBoxHTML = '<div id="nuDragOptionsBox" class="nuDragOptionsBox" style="width:'+(dragOptionsBoxWidth-80)+'px;height:100%;min-height:'+dragOptionsBoxMinHeight+'px;">'+
         '<div class="nuDragOptionsBoxContainer">'+
             '<div id="dragOptionsTitle" class="nuDragOptionsBoxTitle">Options</div>'+
             '<label for="nuDragOptionsFields" class="nuDragOptionsFieldsLabel">Object Tab Order</label>'+
@@ -595,7 +595,7 @@ function nuCreateDragOptionsBox(form){
 	help		+= "\"Hold CTRL to add Objects to the current selection.\", ";
 
 	help		+= "])' ";
-	help		+= "style='top: 2px; left: 2px; width: 21px; height: 21px; text-align: center; position: absolute;'>";
+	help		+= "style='top: 2px; right: 10px; width: 21px; height: 21px; text-align: center; position: absolute;'>";
 	
 	$('body').append(help);
 	
