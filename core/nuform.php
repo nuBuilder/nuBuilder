@@ -882,13 +882,8 @@ function nuBrowseRows($f){
 	
 	if(trim($f->record_id) != ''){return array();}
 	
-	nuDebug($_POST['nuSTATE']);
-	
-	$P				= $_POST['nuSTATE'];
-	
-	$rows			= $P['rows'];
-	$rowsw			= $P['rows'];
-
+	$P				= $_POST['nuSTATE'];	
+	$rows			= isset($P['rows']) ? $P['rows'] : 0;
 
 	if($rows == -1){
 		$rows		= nuFormProperties($f->form_id)->sfo_browse_rows_per_page;
@@ -898,7 +893,8 @@ function nuBrowseRows($f){
 		$rows		= 20;
 	}
 
-	$page_number	= $P['page_number'];
+	$page_number	= isset($P['page_number']) ? $P['page_number'] : 0;
+	$nosearch_columns = isset($_POST['nuSTATE']['nosearch_columns']) ? $_POST['nuSTATE']['nosearch_columns'] : null;
 	$start			= $page_number * $rows;
 	$search			= str_replace('&#39;', "'", nuObjKey($P,'search'));
 	$filter			= str_replace('&#39;', "'", nuObjKey($P,'filter'));
@@ -921,7 +917,7 @@ function nuBrowseRows($f){
 	$flds			= array();
 	$fields 		= array_slice($S->fields,1);
 
-	if($_POST['nuSTATE']['nosearch_columns'] === null){
+	if($nosearch_columns === null){
 		$_POST['nuSTATE']['nosearch_columns']	= array();
 	}
 	
@@ -934,7 +930,8 @@ function nuBrowseRows($f){
 	}
 
 	$where			= trim(nuBrowseWhereClause($flds, $filter . ' ' . $search));
-	$like			= str_replace('\\"','"',nuHash()['like']);
+	$like 			= isset(nuHash()['like']) ? nuHash()['like'] : '';
+	$like			= str_replace('\\"','"',$like);
 	$haswhere		= $where !=  '()';
 	$haslike		= $like != '';
 	$hardwhere		= $S->getWhere();
@@ -943,7 +940,7 @@ function nuBrowseRows($f){
 	if($haslike 	&& !$haswhere){	$S->setWhere(" $hardwhere AND $like");}
 	if(!$haslike 	&& $haswhere){	$S->setWhere(" $hardwhere AND $where");}
 	
-	if($P['sort'] != '-1'){
+	if(isset($P['sort']) && $P['sort'] != '-1'){
 		$S->setOrderBy(' ORDER BY ' . $S->fields[$P['sort'] + 1] . ' ' . $P['sort_direction']);
 	}
 	
