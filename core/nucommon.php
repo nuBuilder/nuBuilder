@@ -246,7 +246,7 @@ function nuSQLTrim($s, $noCR = 0){
 
 function nuObjKey($o, $k, $d = null) {	
 
-	return $o[$k] ?? $d;	
+	return isset($o[$k]) ? $o[$k] : $d;
 	
 }
 
@@ -1811,6 +1811,4 @@ function hashCookieNotSetOrEmpty($h) {
     return (preg_match('/\#(.*)\#/', $h) || trim($h) == "");
 }
 
-
 ?>
-

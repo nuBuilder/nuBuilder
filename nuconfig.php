@@ -28,8 +28,8 @@
     $nuConfig2FAUser                    = false;            //-- Use 2FA authentication for users
 
 // Includes:
-    $nuConfigIncludeJS                  = '';               //-- Include a JavaScript File.  E.g. 'myjsfunctions.js'
-    $nuConfigIncludeCSS                 = '';               //-- Include a CSS File. E.g. 'mystyles.css'
+    $nuConfigIncludeJS                  = '';               //-- Include one or more JavaScript File(s).  E.g. 'myjsfunctions.js' or ['myjsfunctions1.js','myjsfunctions2.js']
+    $nuConfigIncludeCSS                 = '';               //-- Include one or more CSS File(s). E.g. 'mystyles.css' or ['mystyles1.css','mystyles2.css']
     $nuConfigIncludePHP                 = '';               //-- Include a PHP File. E.g. '..\myphpfunctions.php'
 
 $nuJSOptions = "

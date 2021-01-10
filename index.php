@@ -23,20 +23,32 @@ nuMigrateSQL();
 
 <?php
 
-function nuJSIndexInclude($pfile){
+function nuInclude($pfile, $type){
 	
 	if ($pfile == '') return;
-	$timestamp = date("YmdHis"); //-- Add timestamp so javascript changes are effective immediately
-    print "<script src='$pfile?ts=$timestamp' type='text/javascript'></script>\n";
+	
+	$a = array();
+	if (!is_array ($pfile)) {
+		array_push($a, $pfile);
+	} else {
+		$a = $pfile;
+	}
+	
+	foreach ($a as $value) { 
+		$timestamp = date("YmdHis"); //-- Add timestamp so javascript changes are effective immediately
+		// $timestamp = date("YmdHis", filemtime($value));     
+		if ($type == 'script') print "<script src='$value?ts=$timestamp' type='text/javascript'></script>\n";
+		if ($type == 'stylesheet') print "<link rel='stylesheet' href='$value?ts=$timestamp' />\n";
+	}
 	
 }
 
-function nuCSSIndexInclude($pfile){
+function nuJSIndexInclude($pfile){
+	nuInclude($pfile, 'script');
+}
 
-	if ($pfile == '') return;
-	$timestamp = date("YmdHis", filemtime($pfile));  //-- Add timestamp so javascript changes are effective immediately                
-	print "<link rel='stylesheet' href='$pfile?ts=$timestamp' />\n";
-	
+function nuCSSIndexInclude($pfile){
+	nuInclude($pfile, 'stylesheet');
 }
 
 function nuJSChartsInclude(){
@@ -45,13 +57,13 @@ function nuJSChartsInclude(){
 	global $nuConfigIncludeApexCharts;
 
 	if ($nuConfigIncludeGoogleCharts != false) {
-			$pfile = "https://www.gstatic.com/charts/loader.js";
-			print "<script src='$pfile' type='text/javascript'></script>\n";
+		$pfile = "https://www.gstatic.com/charts/loader.js";		
+		nuInclude($pfile, 'script');
 	}
 
 	if ($nuConfigIncludeApexCharts != false) {
-			$pfile = "core/libs/apexcharts/apexcharts.min.js";
-			print "<script src='$pfile' type='text/javascript'></script>\n";
+		$pfile = "core/libs/apexcharts/apexcharts.min.js";		
+		nuInclude($pfile, 'script');
 	}
 }
 

@@ -438,7 +438,8 @@ function nuCreateDialog(t){
 	
 		window.nuCurrentID	= event.target.id;
 		
-		if(event.target.id == 'nuDragDialog'){
+		if(event.target.id == 'dialogTitleWords'){
+			
 			$('#nuDragDialog').append('<div id="nuPopupModal"></div>');
 		}
 		

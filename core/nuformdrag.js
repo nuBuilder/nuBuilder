@@ -1161,8 +1161,4 @@ function nuPopulateTabDropdown(currentlySelectedTabNo){
 	// Select the current tab
 	$('#nuDragOptionsTabsDropdown').find('option:first').prop('selected', 'selected');
 	
-}    
-
-
-
-
+}

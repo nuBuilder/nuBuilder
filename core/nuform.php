@@ -882,7 +882,10 @@ function nuBrowseRows($f){
 	
 	if(trim($f->record_id) != ''){return array();}
 	
+	nuDebug($_POST['nuSTATE']);
+	
 	$P				= $_POST['nuSTATE'];
+	
 	$rows			= $P['rows'];
 	$rowsw			= $P['rows'];
 
@@ -1122,7 +1125,7 @@ function nuGatherFormAndSessionData($home){
 
 	$formAndSessionData->session_id 	= $_SESSION['nubuilder_session_data']['SESSION_ID'];
 	$formAndSessionData->call_type 		= $_POST['nuSTATE']['call_type'];
-	$formAndSessionData->filter 		= $_POST['nuFilter'] ?? null;
+	$formAndSessionData->filter       	= isset($_POST['nuFilter']) ? $_POST['nuFilter'] : '';
 	$formAndSessionData->errors 		= array();
 	$formAndSessionData->translation 	= $_SESSION['nubuilder_session_data']['translation'];	
 	
