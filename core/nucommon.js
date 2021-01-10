@@ -1694,9 +1694,13 @@ function nuDownBrowseResize(e, p){
    
    window.nuBROWSERESIZE.mouse_down       = true;
    window.nuBROWSERESIZE.pointer          = p; // Added
-   window.nuBROWSERESIZE.moving_element    = e.target.id;
-        window.nuBROWSERESIZE.x_position       = e.clientX;
-   $(e.target).css('background-color', '#badeeb');
+   
+   let target = e.target.id.replace('nusort_','nuBrowseTitle');
+   
+   window.nuBROWSERESIZE.moving_element   = target;
+   window.nuBROWSERESIZE.x_position       = e.clientX;
+      
+   $('#' + target).css('background-color', '#badeeb');
 
 }
 
@@ -1716,8 +1720,9 @@ function nuDragBrowseColumn(e, p){
 
 	event.preventDefault();
 
-	if (window.nuBROWSERESIZE.mouse_down && window.nuBROWSERESIZE.moving_element == e.target.id){
-
+//	if (window.nuBROWSERESIZE.mouse_down && window.nuBROWSERESIZE.moving_element == e.target.id){
+	if (window.nuBROWSERESIZE.mouse_down){
+		console.log(window.nuBROWSERESIZE.moving_element);
 		window.nuBROWSERESIZE.pointer = p; // added
 		var id				= window.nuBROWSERESIZE.moving_element;
 		var offset_limit	= 100000000;
@@ -1738,7 +1743,8 @@ function nuDragBrowseColumn(e, p){
 			
 			if (x_offset < offset_limit){
 				
-				var c		= Number(e.target.id.substr(13));
+				var c		= Number(window.nuBROWSERESIZE.moving_element.substr(13));
+								
 				var m		= nuFORM.breadcrumbs[nuFORM.breadcrumbs.length-1].column_widths[c] + x_offset
 				
 				if(m < 40){m=40;}
