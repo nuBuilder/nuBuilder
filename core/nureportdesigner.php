@@ -18,7 +18,7 @@ nuJSInclude('nudrag.js');
 nuJSInclude('nureportdrag.js');
 nuJSInclude('nucalendar.js');
 nuJSInclude('nucommon.js');
-nuJSInclude('nuajax.js');       //-- calls to server
+nuJSInclude('nuajax.js');			//-- calls to server
 nuJSInclude('nureportjson.js');
 
 nuCSSInclude('css/nubuilder4.css');
@@ -63,7 +63,7 @@ $(document).ready(function() {
 		
 	}else{
 		window.nuREPORT 	= window.nuREPORTdefault;
-    }
+	}
 	 
 	nuLoadReport();
 	
@@ -71,7 +71,7 @@ $(document).ready(function() {
 
 function nuStringify(){
 
-    if(window.opener.$('#sre_layout').length == 1){
+	if(window.opener.$('#sre_layout').length == 1){
 
 		window.opener.$('#sre_layout')
 		.val(JSON.stringify(window.nuREPORT))
@@ -85,7 +85,7 @@ function nuStringify(){
 
 		alert('Cannot be saved to Report Form');
 		
-    }
+	}
 }
 
 

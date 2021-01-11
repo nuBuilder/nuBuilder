@@ -30,8 +30,8 @@ class nuSelectObject{
 		box.setAttribute('id', this.boxID);
 		$('body').append(box);
 		$('#' + this.boxID).css({
-			'width'        		: w,
-			'height'       		: Math.min(20 + (n.length * 20), 190),
+			'width'				: w,
+			'height'			: Math.min(20 + (n.length * 20), 190),
 			'top'				: 25 + (25 * $('.nuBox').length),
 			'left'				: 22 + (22 * $('.nuBox').length),
 			'position'			: 'absolute',
@@ -53,8 +53,8 @@ class nuSelectObject{
 		
 		$('#' + this.boxID).append(scroll);
 		$('#' + scroll.id).css({
-			'width'        		: w,
-			'height'       		: Math.min(20 + (n.length * 20), 175),
+			'width'				: w,
+			'height'			: Math.min(20 + (n.length * 20), 175),
 			'top'				: 22,
 			'left'				: 0,
 			'overflow'			: 'scroll',
@@ -140,7 +140,7 @@ class nuSelectObject{
 			'right'				: 1,
 			'position'			: 'absolute',
 			'color'				: 'black',
-			'text-align'    	: 'center',
+			'text-align'		: 'center',
 		})
 		.html('<img onclick="$(this).parent().parent().remove();nuSQL.buildSQL()" id="nbc' + this.boxID + '" src="graphics/nu_box_close.png" width="10px" height="10px">')
 		.addClass('nuDragNoSelect')
@@ -234,7 +234,7 @@ class nuSelectObject{
 			
 		}
 		
-		var SQL	= "SELECT\n    " + s.join(',\n    ') + "\n";
+		var SQL	= "SELECT\n " + s.join(',\n    ') + "\n";
 		
 		return SQL;
 		

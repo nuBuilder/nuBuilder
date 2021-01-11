@@ -92,17 +92,17 @@ function nuBuildFastForm($table, $form_type){
 		
 	}
 
-	$TT             = nuTT();
-	$SF             = nuSubformObject('obj_sf');
-	$tab_id         = nuID();
-	$t              = nuRunQuery("SELECT COUNT(*) FROM zzzzsys_form WHERE SUBSTRING(sfo_code, 1, 2) = 'FF'");
-	$r              = db_fetch_row($t);
-	$form_code      = 'FF' . $r[0];
-	$form_desc      = 'Fast Form ' . $r[0];
-	$s              = Array();
+	$TT				= nuTT();
+	$SF				= nuSubformObject('obj_sf');
+	$tab_id			= nuID();
+	$t				= nuRunQuery("SELECT COUNT(*) FROM zzzzsys_form WHERE SUBSTRING(sfo_code, 1, 2) = 'FF'");
+	$r				= db_fetch_row($t);
+	$form_code		= 'FF' . $r[0];
+	$form_desc		= 'Fast Form ' . $r[0];
+	$s				= Array();
 
 	//----------add tab--------------------
-	$sql            = "
+	$sql = "
 
 					INSERT 
 					INTO zzzzsys_tab
@@ -115,13 +115,13 @@ function nuBuildFastForm($table, $form_type){
 
 	";
 
-	$array          = Array($tab_id, $form_id, 'Main', 10);
+	$array			= Array($tab_id, $form_id, 'Main', 10);
 
 	nuRunQuery($sql, $array);
 
 	//----------add form--------------------
 
-	$sql            = "
+	$sql			= "
 
 					INSERT 
 					INTO zzzzsys_form
@@ -136,11 +136,11 @@ function nuBuildFastForm($table, $form_type){
 					(?, ?, ?, ?, ?, ?, ?)
 
 	";
-	$array          = Array($form_id, $form_type, $form_code, ucfirst($form_desc), $form_type=='launch'?'':$table, $form_type=='launch'?'':$PK, "SELECT * FROM $table");
+	$array			= Array($form_id, $form_type, $form_code, ucfirst($form_desc), $form_type=='launch'?'':$table, $form_type=='launch'?'':$PK, "SELECT * FROM $table");
 
 	nuRunQuery($sql, $array);
 
-	$sql            = "CREATE TABLE $TT SELECT * FROM zzzzsys_object WHERE false";
+	$sql			= "CREATE TABLE $TT SELECT * FROM zzzzsys_object WHERE false";
 	
 	nuRunQuery($sql);
 
@@ -148,7 +148,7 @@ function nuBuildFastForm($table, $form_type){
 		
 		if($SF->rows[$i][5] == 0){							//-- not ticked as deleted
 			
-			$r          		= $SF->rows[$i][3];
+			$r					= $SF->rows[$i][3];
 			$newid				= nuID();
 			$SF->rows[$i][3]	= $newid;
 			
@@ -164,36 +164,36 @@ function nuBuildFastForm($table, $form_type){
 
 	}
 
-	$sql            = "
+	$sql			= "
 
 					UPDATE $TT
 					SET 
-						sob_all_id                  = ?,
-						sob_all_label               = ?,
-						sob_all_order               = ?,
-						sob_all_top                 = ?,
-						sob_all_left                = ?,
-						sob_all_table               = ?,
-						sob_all_zzzzsys_form_id     = ?,
-						sob_all_zzzzsys_tab_id      = ?,
-						zzzzsys_object_id           = ?
+						sob_all_id					= ?,
+						sob_all_label				= ?,
+						sob_all_order				= ?,
+						sob_all_top					= ?,
+						sob_all_left				= ?,
+						sob_all_table				= ?,
+						sob_all_zzzzsys_form_id		= ?,
+						sob_all_zzzzsys_tab_id		= ?,
+						zzzzsys_object_id			= ?
 					WHERE 
-						zzzzsys_object_id           = ?
+						zzzzsys_object_id			= ?
 
 	";
 
-	$top            = 10;
+	$top		= 10;
 
 	for($i = 0 ; $i < count($SF->rows) ; $i++){
 		
 		if($SF->rows[$i][5] == 0){							//-- not ticked as deleted
 			
-			$newid      = nuID();
-			$label      = $SF->rows[$i][1];
-			$field      = $SF->rows[$i][2];
-			$oldid      = $SF->rows[$i][3];
+			$newid		= nuID();
+			$label		= $SF->rows[$i][1];
+			$field		= $SF->rows[$i][2];
+			$oldid		= $SF->rows[$i][3];
 
-			$array      = Array($field, $label, $i * 5, $top, 150, $table, $form_id, $tab_id, $newid, $oldid);
+			$array		= Array($field, $label, $i * 5, $top, 150, $table, $form_id, $tab_id, $newid, $oldid);
 			nuRunQuery($sql, $array);
 
 			$OT			= nuRunQuery("SELECT * FROM $TT WHERE zzzzsys_object_id = ? ", [$newid]);
@@ -207,29 +207,29 @@ function nuBuildFastForm($table, $form_type){
 		nuRunQuery("DELETE FROM $TT WHERE 1");
 	}
 	
-	$t              = nuRunQuery("SELECT * FROM $TT");
-	$a              = Array();
-	$n              = 'number date';
+	$t				= nuRunQuery("SELECT * FROM $TT");
+	$a				= Array();
+	$n				= 'number date';
 	
 	while($r = db_fetch_object($t)){
 		
 
 		
-		$y          = $r->sob_all_type;
-		$i          = $r->sob_input_type;
-		$id         = $r->sob_all_id;
-		$date       = ($i == 'date' || $i == 'nuDate');
-		$norm       = ($y == 'input' && $i != 'date' && $i != 'nuDate' && $i != 'nuNumber' && $i != 'number' && $i != 'file');
+		$y			= $r->sob_all_type;
+		$i			= $r->sob_input_type;
+		$id			= $r->sob_all_id;
+		$date		= ($i == 'date' || $i == 'nuDate');
+		$norm		= ($y == 'input' && $i != 'date' && $i != 'nuDate' && $i != 'nuNumber' && $i != 'number' && $i != 'file');
 		
-		if($y == 'lookup'){                         $a[] = Array('name'=>$id, 'type'=>'id');}
-		if($y == 'select'){                         $a[] = Array('name'=>$id, 'type'=>'varchar');}
-		if($y == 'calc'){                           $a[] = Array('name'=>$id, 'type'=>'decimal');}
-		if($y == 'textarea'){                       $a[] = Array('name'=>$id, 'type'=>'textarea');}
-		if($y == 'input' && $norm){                 $a[] = Array('name'=>$id, 'type'=>'varchar');}
-		if($y == 'input' && $date){                 $a[] = Array('name'=>$id, 'type'=>'date');}
-		if($y == 'input' && $i == 'number'){        $a[] = Array('name'=>$id, 'type'=>'int');}
-		if($y == 'input' && $i == 'nuNumber'){      $a[] = Array('name'=>$id, 'type'=>'decimal');}
-		if($y == 'input' && $i == 'file'){      	$a[] = Array('name'=>$id, 'type'=>'longtext');}
+		if($y == 'lookup'){							$a[] = Array('name'=>$id, 'type'=>'id');}
+		if($y == 'select'){							$a[] = Array('name'=>$id, 'type'=>'varchar');}
+		if($y == 'calc'){							$a[] = Array('name'=>$id, 'type'=>'decimal');}
+		if($y == 'textarea'){						$a[] = Array('name'=>$id, 'type'=>'textarea');}
+		if($y == 'input' && $norm){					$a[] = Array('name'=>$id, 'type'=>'varchar');}
+		if($y == 'input' && $date){					$a[] = Array('name'=>$id, 'type'=>'date');}
+		if($y == 'input' && $i == 'number'){		$a[] = Array('name'=>$id, 'type'=>'int');}
+		if($y == 'input' && $i == 'nuNumber'){		$a[] = Array('name'=>$id, 'type'=>'decimal');}
+		if($y == 'input' && $i == 'file'){			$a[] = Array('name'=>$id, 'type'=>'longtext');}
 		
 	}
 
@@ -257,7 +257,7 @@ function nuBuildFastForm($table, $form_type){
 			$id		= $SF->rows[$i][2];
 
 
-			$sql            = "
+			$sql			= "
 			
 							INSERT 
 							INTO zzzzsys_browse
@@ -274,7 +274,7 @@ function nuBuildFastForm($table, $form_type){
 			
 			";
 			
-			$array      = Array(nuID(), $form_id, $lab, $id, 'l', '', ($i+1) * 10, 250);
+			$array = Array(nuID(), $form_id, $lab, $id, 'l', '', ($i+1) * 10, 250);
 
 			nuRunQuery($sql, $array);
 			
@@ -305,12 +305,12 @@ function nuBuildFastForm($table, $form_type){
 		//----------make sure button has a tab--------------------
 		
 
-		$sql            = "REPLACE INTO zzzzsys_tab (zzzzsys_tab_id, syt_zzzzsys_form_id, syt_title, syt_order) VALUES ('nufastforms', 'nuuserhome', 'Fast Forms', -1);";
+		$sql			= "REPLACE INTO zzzzsys_tab (zzzzsys_tab_id, syt_zzzzsys_form_id, syt_title, syt_order) VALUES ('nufastforms', 'nuuserhome', 'Fast Forms', -1);";
 		nuRunQuery($sql);
 
 		//----------add run button--------------------
 
-		$sql            = "
+		$sql			= "
 
 						INSERT 
 						INTO $TT
@@ -340,7 +340,7 @@ function nuBuildFastForm($table, $form_type){
 		
 		$form_count		= nuFastForms() * 50;
 		$record_id		= substr($form_type, 0, 6) == 'browse' ? '' : '-1';
-		$array          = Array(nuID(), 'nuuserhome', 'nufastforms', "ff$form_id", ucfirst($table), $table, 11, 50 + $form_count, $form_count, 150, 30, $form_id, $record_id, 'b', 0, 0, 0, 'center', 'run');
+		$array			= Array(nuID(), 'nuuserhome', 'nufastforms', "ff$form_id", ucfirst($table), $table, 11, 50 + $form_count, $form_count, 150, 30, $form_id, $record_id, 'b', 0, 0, 0, 'center', 'run');
 		
 		nuRunQuery($sql, $array);
 
@@ -386,13 +386,13 @@ function nuBuildNewTable($tab, $array, $newT){
 	$id			= $tab . '_id';
 	$start	= "CREATE TABLE $tab";
 	$a			= Array();
-	$a[] 		= "$id VARCHAR(25) NOT NULL";
+	$a[]		= "$id VARCHAR(25) NOT NULL";
 
 	$ff_type	= nuHash()['fastform_type'];
 	$ff_fk		= nuHash()['fastform_fk'];
 
 	if($ff_type == 'subform' && $newT){
-		$a[] 	= "$ff_fk VARCHAR(25) DEFAULT NULL";
+		$a[]	= "$ff_fk VARCHAR(25) DEFAULT NULL";
 	}
 
 	for($i = 0 ; $i < count($array) ; $i++){
@@ -410,13 +410,10 @@ function nuBuildNewTable($tab, $array, $newT){
 		
 	}
 	
-	$a[] = "PRIMARY KEY  ($id)";
+	$a[] = "PRIMARY KEY ($id)";
 	$im  = implode(',', $a);
 
 	return "$start ($im)";
 
 }
-
-
-
 ?>

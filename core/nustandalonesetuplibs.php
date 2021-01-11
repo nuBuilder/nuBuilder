@@ -11,7 +11,7 @@ function nuStandaloneImportNewDB() {
 	$temp						= "";
 	if($handle){
 		while(($line = fgets($handle)) !== false){
-			if($line[0] != "-" AND $line[0] != "/"  AND $line[0] != "\n"){
+			if($line[0] != "-" AND $line[0] != "/" AND $line[0] != "\n"){
 				$line 			= trim($line);
 				$temp 			.= $line;
 				if(substr($line, -1) == ";"){

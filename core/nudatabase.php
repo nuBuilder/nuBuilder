@@ -2,25 +2,25 @@
 
 mb_internal_encoding('UTF-8');
 
-$_POST['RunQuery'] 	= 0;
-$DBHost         	= $_SESSION['nubuilder_session_data']['DB_HOST'];
-$DBName         	= $_SESSION['nubuilder_session_data']['DB_NAME'];
-$DBUser         	= $_SESSION['nubuilder_session_data']['DB_USER'];
-$DBPassword     	= $_SESSION['nubuilder_session_data']['DB_PASSWORD'];
-$DBCharset      	= $_SESSION['nubuilder_session_data']['DB_CHARSET'];
+$_POST['RunQuery']		= 0;
+$DBHost					= $_SESSION['nubuilder_session_data']['DB_HOST'];
+$DBName					= $_SESSION['nubuilder_session_data']['DB_NAME'];
+$DBUser					= $_SESSION['nubuilder_session_data']['DB_USER'];
+$DBPassword				= $_SESSION['nubuilder_session_data']['DB_PASSWORD'];
+$DBCharset				= $_SESSION['nubuilder_session_data']['DB_CHARSET'];
 
 try {
 	$nuDB 				= new PDO("mysql:host=$DBHost;dbname=$DBName;charset=$DBCharset", $DBUser, $DBPassword, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $DBCharset"));
 	$nuDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    echo 'Connection failed: ' . $e->getMessage();
+	echo 'Connection failed: ' . $e->getMessage();
 	die();
 }
 
 function nuRunQueryNoDebug($s, $a = array(), $isInsert = false){
 
 	global $nuDB;
-	
+
 	$object = $nuDB->prepare($s);
 
 	try {
@@ -30,13 +30,12 @@ function nuRunQueryNoDebug($s, $a = array(), $isInsert = false){
 	}
 
 	if($isInsert){		
-		return $nuDB->lastInsertId();		
+		return $nuDB->lastInsertId();
 	}else{		
 		return $object;	
 	}
-	
-}
 
+}
 
 function nuRunQuery($s, $a = array(), $isInsert = false){
 
@@ -46,13 +45,13 @@ function nuRunQuery($s, $a = array(), $isInsert = false){
 	global $DBPassword;
 	global $nuDB;
 	global $DBCharset;	
- 	
+
 	if($s == ''){
-		$a           = array();
-		$a[0]        = $DBHost;
-		$a[1]        = $DBName;
-		$a[2]        = $DBUser;
-		$a[3]        = $DBPassword;
+		$a			= array();
+		$a[0]		= $DBHost;
+		$a[1]		= $DBName;
+		$a[2]		= $DBUser;
+		$a[3]		= $DBPassword;
 		return $a;
 	}
 
@@ -61,17 +60,17 @@ function nuRunQuery($s, $a = array(), $isInsert = false){
 	try {
 		$object->execute($a);
 	}catch(PDOException $ex){
-	
-		$user        = 'globeadmin';
-		$message     = $ex->getMessage();
-		$array       = debug_backtrace();
-                $trace       = '';
-                
-                for($i = 0 ; $i < count($array) ; $i ++){
-                    $trace  .= $array[$i]['file'] . ' - line ' . $array[$i]['line'] . ' (' . $array[$i]['function'] . ")\n\n";
-                }
 
-		$debug       = "
+		$user		= 'globeadmin';
+		$message	= $ex->getMessage();
+		$array		= debug_backtrace();
+		$trace		= '';
+
+		for($i = 0 ; $i < count($array) ; $i ++){
+			$trace .= $array[$i]['file'] . ' - line ' . $array[$i]['line'] . ' (' . $array[$i]['function'] . ")\n\n";
+		}
+
+		$debug	= "
 ===USER==========
 
 $user
@@ -93,32 +92,32 @@ $trace
 		$_POST['RunQuery']		= 1;
 		nuDebug($debug);
 		$_POST['RunQuery']		= 0;
-	
+
 		$id						= $nuDB->lastInsertId();
 		$GLOBALS['ERRORS'][]	= $debug;
 
 		return -1;
-		
+
 	}
 
-        if($isInsert){
-            
-            return $nuDB->lastInsertId();
-            
-        }else{
-            
-            return $object;
-        
-        }
-	
+	if($isInsert){
+
+		return $nuDB->lastInsertId();
+
+	}else{
+
+		return $object;
+
+	}
+
 }
 
 
 function db_is_auto_id($table, $pk){
-	
+
 	$s		= "SHOW COLUMNS FROM `$table` WHERE `Field` = '$pk'";
-	$t      = nuRunQuery($s);   									//-- mysql's way of checking if its an auto-incrementing id primary key
-	$r      = db_fetch_object($t);
+	$t		= nuRunQuery($s);									//-- mysql's way of checking if its an auto-incrementing id primary key
+	$r		= db_fetch_object($t);
 	
 	return $r->Extra == 'auto_increment';
 
@@ -143,7 +142,7 @@ function db_fetch_object($o){
 	}
 
 }
-	
+
 function db_fetch_row($o){
 
 	if (is_object($o)) {
@@ -155,23 +154,23 @@ function db_fetch_row($o){
 }
 
 function db_field_info($n){
-	
+
 	$fields		= [];
 	$types		= [];
 	$pk			= [];
-	
+
 	$s		 = "DESCRIBE $n";
 	$t		= nuRunQuery($s);
 
 	while($r = db_fetch_row($t)){
 
 		$fields[] = $r[0];
-		$types[]  = $r[1];
-		
+		$types[] = $r[1];
+
 		if($r[3] == 'PRI'){
 			$pk[] = $r[0];
 		}
-		
+
 	}
 
 	return array($fields, $types, $pk);
@@ -179,51 +178,51 @@ function db_field_info($n){
 }	
 
 function db_field_names($n){
-    
-    $a       = array();
-    $s       = "DESCRIBE $n";
-    $t       = nuRunQuery($s);
 
-    while($r = db_fetch_row($t)){
-        $a[] = $r[0];
-    }
-    
-    return $a;
-    
+	$a	= array();
+	$s	= "DESCRIBE $n";
+	$t	= nuRunQuery($s);
+
+	while($r = db_fetch_row($t)){
+		$a[] = $r[0];
+	}
+
+	return $a;
+
 }
 
 
 function db_field_types($n){
-    
-    $a       = array();
-    $s       = "DESCRIBE $n";
-    $t       = nuRunQuery($s);
 
-    while($r = db_fetch_row($t)){
-        $a[] = $r[1];
-    }
-    
-    return $a;
-    
+	$a		= array();
+	$s		= "DESCRIBE $n";
+	$t		= nuRunQuery($s);
+
+	while($r = db_fetch_row($t)){
+		$a[] = $r[1];
+	}
+
+	return $a;
+
 }
 
 
 function db_primary_key($n){
-    
-    $a       = array();
-    $s       = "DESCRIBE $n";
-    $t       = nuRunQuery($s);
 
-    while($r = db_fetch_row($t)){
+	$a		= array();
+	$s		= "DESCRIBE $n";
+	$t		= nuRunQuery($s);
+
+	while($r = db_fetch_row($t)){
 		
 		if($r[3] == 'PRI'){
 			$a[] = $r[0];
 		}
 		
-    }
-    
-    return $a;
-    
+	}
+
+	return $a;
+
 }
 
 function db_num_rows($o) {
@@ -261,10 +260,10 @@ function nuDebugResult($t){
 		$t	= print_r($t,1);
 	}
 
-    $i		= nuID();
-    $s		= "INSERT INTO zzzzsys_debug (zzzzsys_debug_id, deb_message, deb_added) VALUES (? , ?, ?)";
+	$i		= nuID();
+	$s		= "INSERT INTO zzzzsys_debug (zzzzsys_debug_id, deb_message, deb_added) VALUES (? , ?, ?)";
 
-    nuRunQuery($s, array($i, $t, time()));
+	nuRunQuery($s, array($i, $t, time()));
 	
 	return $i;
 }
@@ -275,7 +274,7 @@ function nuDebug($a){
 	$b					= debug_backtrace();
 	$f					= $b[0]['file'];
 	$l					= $b[0]['line'];
-	$m					= "$date  -  $f line $l\n\n<br>\n";
+	$m					= "$date - $f line $l\n\n<br>\n";
 
 	$nuSystemEval				= '';
 	if ( isset($_POST['nuSystemEval']) ) {
@@ -326,11 +325,11 @@ function nuLog($s1, $s2 = '', $s3 = '') {
 function nuID(){
 	
 	global $DBUser;
-	$i   = uniqid();
-	$s   = md5($i);
+	$i	= uniqid();
+	$s	= md5($i);
 
-    while($i == uniqid()){}
-    
+	while($i == uniqid()){}
+
 	$prefix = $DBUser == 'nudev' ? 'nu' : '';
 	return $prefix.uniqid().$s[0].$s[1];
 

@@ -26,14 +26,14 @@ function nuLoad(){
 
 	ace.require("ace/ext/language_tools");
 	
-    window.editor = ace.edit("nu_editor");
+	window.editor = ace.edit("nu_editor");
 	
-    editor.setTheme("ace/theme/monokai");
-    editor.setOptions({
-        enableBasicAutocompletion: true,
-        enableSnippets: true,
-        enableLiveAutocompletion: true
-    });
+	editor.setTheme("ace/theme/monokai");
+	editor.setOptions({
+		enableBasicAutocompletion: true,
+		enableSnippets: true,
+		enableLiveAutocompletion: true
+	});
 	
 	editor.on('change', function() {$('#copy_to_nubuilder').css('background-color', 'red');});
 	
@@ -41,7 +41,7 @@ function nuLoad(){
 	editor.setFontSize(14);
 	var cl			= '';
 
-    var language = window.c.toUpperCase();
+	var language = window.c.toUpperCase();
 
 	if ( language == 'HTML' ) {editor.getSession().setMode({path:"ace/mode/html", inline:true});cl='html';}
 	if ( language == 'JAVASCRIPT' ) {editor.getSession().setMode({path:"ace/mode/javascript", inline:true});cl='js';}	
@@ -69,10 +69,10 @@ function nuLoad(){
 
 function nuResize(){
 
-   document.getElementById('nu_editor_pad').style.width = String(Number(window.innerWidth)) 		+ 'px';
-   document.getElementById('nu_editor').style.width     = String(Number(window.innerWidth)) 		+ 'px';
-   document.getElementById('nu_editor').style.height    = String(Number(window.innerHeight) - 75) 	+ 'px';
-   
+	document.getElementById('nu_editor_pad').style.width	= String(Number(window.innerWidth)) 		+ 'px';
+	document.getElementById('nu_editor').style.width		= String(Number(window.innerWidth)) 		+ 'px';
+	document.getElementById('nu_editor').style.height		= String(Number(window.innerHeight) - 75) 	+ 'px';
+	
 }
 
 function nuAceSave(){
@@ -132,7 +132,7 @@ function nuChooseSnips(t){
 }
 
 
-window.nuWarn         = 1;
+window.nuWarn = 1;
 window.onbeforeunload = nuWarning;
 
 </script>
@@ -142,10 +142,10 @@ window.onbeforeunload = nuWarning;
 
 	<input type='button' id='copy_to_nubuilder' class='nuActionButton' style='top:8px;left:8px;position:absolute' onclick='nuAceSave()'>
 	
-	<span id='nu_language' 	class="nuNotBreadcrumb" style='top:35px;left:10px;position:absolute;font-wieght:500'></span>
+	<span id='nu_language' 	 class="nuNotBreadcrumb" style='top:35px;left:10px;position:absolute;font-wieght:500'></span>
 	<div  id='nu_editor_pad' style='width:1000px;height:10px;top:55px;left:0px;text-align:left;position:absolute;background-color:#272822;' ></div>
-	<div  id='nu_editor'	style='width:1000px;height:800px;top:65px;left:0px;text-align:left;position:absolute;' ></div>
-	<img  id="nulogo" 		style="position:absolute;top:5px;right:20px" width="120px" src="graphics/logo.png">
+	<div  id='nu_editor'	 style='width:1000px;height:800px;top:65px;left:0px;text-align:left;position:absolute;' ></div>
+	<img  id="nulogo" 		 style="position:absolute;top:5px;right:20px" width="120px" src="graphics/logo.png">
 	
 </body>
 </html> 

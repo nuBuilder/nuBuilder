@@ -14,7 +14,7 @@ nuJSInclude('nudrag.js');
 nuJSInclude('nureportdrag.js');
 nuJSInclude('nucalendar.js');
 nuJSInclude('nucommon.js');
-nuJSInclude('nuajax.js');       //-- calls to server
+nuJSInclude('nuajax.js');				//-- calls to server
 nuJSInclude('nureportjson.js');
 
 nuCSSInclude('css/nubuilder4.css');
@@ -35,8 +35,8 @@ nuCSSInclude('css/nudrag.css');
 	window.nuSuffix				= 1000;
 	window.nuSQL				= new nuSelectObject();
 	window.nuCurrentID			= '';
-	window.nuY				= 0;
-	window.nuX				= 0;
+	window.nuY					= 0;
+	window.nuX					= 0;
 
 	function nuLoad(){
 
@@ -44,17 +44,17 @@ nuCSSInclude('css/nudrag.css');
 			return;
 		}
 
-        	$(document).mousemove(function(event){
-	        	nuMove(event);
-        	});
+			$(document).mousemove(function(event){
+				nuMove(event);
+			});
 
-	        $(document).mousedown(function(event){
-	            	nuDown(event);
-	        });
+			$(document).mousedown(function(event){
+					nuDown(event);
+			});
 
-	        $(document).mouseup(function(event){
-	            	nuUp(event);
-	        });
+			$(document).mouseup(function(event){
+					nuUp(event);
+			});
 
 		parent.nuHasNotBeenEdited();
 

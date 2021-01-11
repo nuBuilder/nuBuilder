@@ -8,7 +8,7 @@ require_once('nusystemupdatelibs.php');
 $jsonID	= $_GET['i'];
 $J	= nuGetJSONData($jsonID);
 
-if($J  != 'valid'){
+if($J != 'valid'){
 	
 	print "Something's wrong. Try logging in again...";	
 	return;

@@ -28,7 +28,7 @@ function nuPopupCalendar(pThis, d){
 	var o	= $('#' + window.nuCalendarCaller);
 	var f	= o.attr('data-nu-format');
 	
-	if(d === undefined){									//-- added by toms
+	if(d === undefined){
 		var v	= o.val();
 	}else{
 		var v	= d;
@@ -44,7 +44,7 @@ function nuPopupCalendar(pThis, d){
 	var h					= parseInt(tar.css('height'));
 
 	
-	window.nuOnCalendar		= 0;          //-- cursor not in calendar
+	window.nuOnCalendar		= 0;							//-- cursor not in calendar
 	
 	var c					= nuAppendChild('body','div','nuCalendar');
 	c						= $('#nuCalendar');
@@ -253,7 +253,7 @@ function nuTitleBox(n, l){
 function nuDayBox(n, l, t){
 
 	var c					= nuAppendChild('#nuCalendar','div','nuCalDay'+n);
-	var today				=  new Date();
+	var today				= new Date();
 
 	c						= $('#nuCalDay' + n);
 
@@ -277,9 +277,9 @@ function nuPopulateCalendar(id, y, m, d){
 
 	if(arguments.length != 1){
 		
-		window.nuCalDay                                   = d;
-		window.nuCalMonth                                 = m - 1;
-		window.nuCalYear                                  = y;
+		window.nuCalDay				= d;
+		window.nuCalMonth			= m - 1;
+		window.nuCalYear			= y;
 		
 	}
 
@@ -293,13 +293,13 @@ function nuPopulateCalendar(id, y, m, d){
 		window.nuCalYear = window.nuCalYear + 1;
 	}
 	
-	document.getElementById('nuCalYear').innerHTML        = window.nuCalYear;
-	document.getElementById('nuCalMonth').innerHTML       = nuTranslate(nuFullMonth(window.nuCalMonth));
+	document.getElementById('nuCalYear').innerHTML			= window.nuCalYear;
+	document.getElementById('nuCalMonth').innerHTML			= nuTranslate(nuFullMonth(window.nuCalMonth));
 	
-	var s                                                 = new Date(window.nuCalYear, window.nuCalMonth, 1);
-	var today                                             = new Date();
-	var day                                               = 0;
-	var nextmonth                                         = 0;
+	var s													= new Date(window.nuCalYear, window.nuCalMonth, 1);
+	var today												= new Date();
+	var day													= 0;
+	var nextmonth											= 0;
 	
 	for(var i = 0 ; i < 42 ; i++){
 		document.getElementById('nuCalDay' + i).innerHTML = '';
@@ -332,8 +332,8 @@ function nuPreviousMonth(y, m, d){
 
 	m 				= nuMonthScope(m-1);
 
-	var d   		= new Date(y, m, 1);
-	var p   		= Array();
+	var d			= new Date(y, m, 1);
+	var p			= Array();
 	var day 		= 1;
 
 	while (d.getDate() == day) {
@@ -350,20 +350,20 @@ function nuPreviousMonth(y, m, d){
 
 function nuFullMonth(n){
 	
-	var m  = Array();
+	var m = Array();
 	
-	m[0]   = 'January';
-	m[1]   = 'February';
-	m[2]   = 'March';
-	m[3]   = 'April';
-	m[4]   = 'May';
-	m[5]   = 'June';
-	m[6]   = 'July';
-	m[7]   = 'August';
-	m[8]   = 'September';
-	m[9]   = 'October';
-	m[10]  = 'November';
-	m[11]  = 'December';
+	m[0]	= 'January';
+	m[1]	= 'February';
+	m[2]	= 'March';
+	m[3]	= 'April';
+	m[4]	= 'May';
+	m[5]	= 'June';
+	m[6]	= 'July';
+	m[7]	= 'August';
+	m[8]	= 'September';
+	m[9]	= 'October';
+	m[10]	= 'November';
+	m[11]	= 'December';
 
 	return String(m[n]);
 	
@@ -436,6 +436,3 @@ function nuMonthScope(m){
 	return m;
 
 }
-
-
-

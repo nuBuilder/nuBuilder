@@ -27,7 +27,7 @@ function nuValidateSubforms(){
 		
 		if(nuObjKey($r,2,'') != 1){										//-- not readonly
 				
-			$s	= 'SELECT sob_all_id AS id, sob_all_label AS label, sob_all_validate AS validate FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id  = ? ';			//-- get Objects
+			$s	= 'SELECT sob_all_id AS id, sob_all_label AS label, sob_all_validate AS validate FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = ? ';			//-- get Objects
 			$t	= nuRunQuery($s, [$f]);
 			
 			while($r = db_fetch_object($t)){
@@ -174,7 +174,7 @@ function nuUpdateDatabase(){
 		$fv			= $_POST['nuHash']['record_id'];
 		$auto		= nuAutoNumbers($sf->object_id);
 		
-		$tableCts =  nuObjKey($cts, $table);
+		$tableCts =	nuObjKey($cts, $table);
 		
 		$names = nuObjKey($tableCts,'names');
 		
@@ -293,7 +293,7 @@ function nuUpdateDatabase(){
 
 				$fs				= implode(', ', $F);							//-- for update statement
 				$vs				= ' VALUES (' . implode(', ', $V) . ')';
-				$is				= '        (' . implode(', ', $I) . ')';
+				$is				= ' (' . implode(', ', $I) . ')';
 
 				if($action == 'save'){
 					
@@ -366,20 +366,20 @@ function nuUpdateDatabase(){
 	
 	if($nuDelAll == 'Yes'){
 		
-		$p    = nuProcedure('nuBeforeDelete');	
+		$p	= nuProcedure('nuBeforeDelete');	
 		if($p != '') { eval($p); }
 		if(count($_POST['nuErrors']) > 0){return;}
 
 		nuEval($EFid . '_BD');
 
-		$S	= array_reverse($S);				//-- delete children first
+		$S= array_reverse($S);				//-- delete children first
 		
 	}else{
 		
-		$p    = nuProcedure('nuBeforeSave');	
+		$p = nuProcedure('nuBeforeSave');	
 		if($p != '') { eval($p); }
 		if(count($_POST['nuErrors']) > 0){return;}
-				
+
 		nuEval($EFid . '_BS');
 		
 	}
@@ -407,19 +407,19 @@ function nuUpdateDatabase(){
 		
 	}
 
-    nuChangeHashVariable('RECORD_ID', $nuMainID);
+	nuChangeHashVariable('RECORD_ID', $nuMainID);
 
 	if($nuDelAll == 'Yes'){
 		
-		$p    = nuProcedure('nuAfterDelete');	
+		$p = nuProcedure('nuAfterDelete');	
 		if($p != '') { eval($p); }
 		if(count($_POST['nuErrors']) > 0){return;}
 		
 		nuEval($EFid . '_AD');
 		
 	}else{
-				
-		$p    = nuProcedure('nuAfterSave');	
+
+		$p = nuProcedure('nuAfterSave');	
 		if($p != '') { eval($p); }
 		if(count($_POST['nuErrors']) > 0){return;}
 		
@@ -536,7 +536,7 @@ function nuEditObjects($id){
 function nuAutoNumber($form_id, $field_id, $value){
 	
 
-	$s		= "SELECT sob_all_type, sob_input_type, zzzzsys_object_id  FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = ? AND sob_all_id = ? ";
+	$s		= "SELECT sob_all_type, sob_input_type, zzzzsys_object_id FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = ? AND sob_all_id = ? ";
 	$t		= nuRunQuery($s, array($form_id, $field_id));
 	$r		= db_fetch_object($t);
 	$input	= $r->sob_all_type == 'input';
@@ -568,7 +568,7 @@ function nuUpdateCounter($id){
 
 		if($a == $n){
 			
-			nuRunQuery("UPDATE zzzzsys_object SET sob_input_javascript = '', sob_input_count = '$c'  WHERE zzzzsys_object_id = '$id'");
+			nuRunQuery("UPDATE zzzzsys_object SET sob_input_javascript = '', sob_input_count = '$c' WHERE zzzzsys_object_id = '$id'");
 			
 			return $c;
 			
@@ -742,7 +742,7 @@ function nuUpdateEvent($t, $o){
 
 	$s	= "
 			UPDATE e$t 
-			SET sev_zzzzsys_object_id = ?, zzzzsys_event_id  = ? 
+			SET sev_zzzzsys_object_id = ?, zzzzsys_event_id = ? 
 			WHERE zzzzsys_event_id = ?
 		";
 	$t 	= nuRunQuery("SELECT * FROM e$t");
@@ -777,7 +777,7 @@ function nuDeleteForm($f){
 		$i	= $r->zzzzsys_object;
 		$s	= "DELETE FROM zzzzsys_event WHERE sev_zzzzsys_object_id = ? ";
 		$t	= nuRunQuery($s, [$i]);
-		$s	= "DELETE FROM zzzzsys_php WHERE zzzzsys_php_id  LIKE CONCAT(?, '_')";
+		$s	= "DELETE FROM zzzzsys_php WHERE zzzzsys_php_id LIKE CONCAT(?, '_')";
 		$t	= nuRunQuery($s, [$i]);
 
 	}

@@ -7,8 +7,8 @@ require_once('nusecurity.php');
 
 function nuRunLoginProcedure($procedure) {
 	
-	$p    = nuProcedure($procedure);
-	$error = '';
+	$p		= nuProcedure($procedure);
+	$error	= '';
 	if($p != ''){		
 		eval($p);
 		if ($error != '') nuDie($error);

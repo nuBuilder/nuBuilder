@@ -1,4 +1,4 @@
-<?php	
+<?php
 
 require_once('core/nuchoosesetup.php');
 require_once('core/nuindexlibs.php');
@@ -7,9 +7,9 @@ require_once('core/nustandalonesetuplibs.php');
 nuStandaloneImportNewDB();
 
 require_once('core/nusystemupdatelibs.php');
-	
+
 nuMigrateSQL();
-	
+
 ?>
 <!DOCTYPE html>
 <html id="nuhtml" onclick="nuClick(event)">
@@ -35,8 +35,8 @@ function nuInclude($pfile, $type){
 	}
 	
 	foreach ($a as $value) { 
-		$timestamp = date("YmdHis"); //-- Add timestamp so javascript changes are effective immediately
-		// $timestamp = date("YmdHis", filemtime($value));     
+		// $timestamp = date("YmdHis"); //-- Add timestamp so javascript changes are effective immediately
+		$timestamp = date("YmdHis", filemtime($value));
 		if ($type == 'script') print "<script src='$value?ts=$timestamp' type='text/javascript'></script>\n";
 		if ($type == 'stylesheet') print "<link rel='stylesheet' href='$value?ts=$timestamp' />\n";
 	}
@@ -74,7 +74,7 @@ function nuHeader(){
 	$obj 				= db_fetch_object($rs);
 	$HTMLHeader 		= $obj->set_header;
 	$j					= "\n\n" . $HTMLHeader . "\n\n";
-    return $j;
+	return $j;
 }
 
 nuJSIndexInclude('core/libs/jquery/jquery.js');
@@ -85,7 +85,7 @@ nuJSIndexInclude('core/nucalendar.js');
 nuJSIndexInclude('core/nucommon.js');
 nuJSIndexInclude('core/nuadmin.js');
 nuJSIndexInclude('core/nureportjson.js');
-nuJSIndexInclude('core/nuajax.js');       //-- calls to server
+nuJSIndexInclude('core/nuajax.js');		//-- calls to server
 nuJSChartsInclude();
 nuJSIndexInclude('core/libs/quill/quill.js'); 
 nuJSIndexInclude('core/libs/quill/modules/quill-divider.js'); 
@@ -109,7 +109,7 @@ function nuValidCaller(o){
 	if(o === null){return false;}
 	return o.hasOwnProperty('nuVersion');
 }
-  
+
 function nuHomeWarning(){
 
 	if(window.nuEDITED){
@@ -130,48 +130,48 @@ function nuLoginRequest(u, p){
 
 	w	= JSON.stringify(w);
 
-    $.ajax({
-        async    : true,  
-        dataType : "json",
-        url      : "core/nuapi.php",
-        method   : "POST",
-        data     : {nuSTATE : w
+	$.ajax({
+		async		: true,	
+		dataType	: "json",
+		url			: "core/nuapi.php",
+		method		 : "POST",
+		data		 : {nuSTATE : w
 					},
-        dataType : "json",          
-        success  : function(data,textStatus,jqXHR){
+		dataType : "json",
+		success	: function(data,textStatus,jqXHR){
 			
-            if(nuDisplayError(data)){
-                if(data.log_again == 1){location.reload();}
-            } else {
-                window.nuFORM.addBreadcrumb();
-                var last            = window.nuFORM.getCurrent();
-                last.call_type      = 'getform';
-                last.form_id        = data.form_id;
+			if(nuDisplayError(data)){
+				if(data.log_again == 1){location.reload();}
+			} else {
+				window.nuFORM.addBreadcrumb();
+				var last					= window.nuFORM.getCurrent();
+				last.call_type				= 'getform';
+				last.form_id				= data.form_id;
 				
-                last.record_id      = data.record_id;
-                last.filter         = data.filter;
-                last.search         = data.search;
+				last.record_id				= data.record_id;
+				last.filter					= data.filter;
+				last.search					= data.search;
 
 				if(parent['nuHashFromEditForm']===undefined){
-					last.hash           = [];
+					last.hash				 = [];
 				}else{
-					last.hash           = parent.nuHashFromEditForm();
+					last.hash				 = parent.nuHashFromEditForm();
 				}
 				
-                last.FORM           = data.form;
-                nuBuildForm(data);
-            }
-        },
-        error    : function(jqXHR,textStatus,errorThrown){
-            
-            var msg         = String(jqXHR.responseText).split("\n");
-            nuMessage(msg);
-            window.test = jqXHR.responseText;
-            
-            nuFormatAjaxErrorMessage(jqXHR, errorThrown);
-            
-        },
-    }); 
+				last.FORM					 = data.form;
+				nuBuildForm(data);
+			}
+		},
+		error		: function(jqXHR,textStatus,errorThrown){
+
+			var msg				 = String(jqXHR.responseText).split("\n");
+			nuMessage(msg);
+			window.test = jqXHR.responseText;
+
+			nuFormatAjaxErrorMessage(jqXHR, errorThrown);
+
+		},
+	}); 
 }
 
 window.nuVersion 		= 'nuBuilder5';
@@ -187,13 +187,13 @@ window.nuHASH				= [];
 	$nuWelcomeBodyInnerHTML	= (isset($nuWelcomeBodyInnerHTML)?$nuWelcomeBodyInnerHTML:'');
 	$welcome				= addslashes($nuWelcomeBodyInnerHTML);
 	$nuHeader				= nuHeader();
-    $opener         		= '';
-    $search             	= '';
-    $iframe					= '';
-    $target					= '';
-	$l 						= scandir('core/graphics');
-	$f  					= JSON_encode($l);
-    $nuBrowseFunction 		= 'browse';
+	$opener					= '';
+	$search					= '';
+	$iframe					= '';
+	$target					= '';
+	$l						= scandir('core/graphics');
+	$f						= JSON_encode($l);
+	$nuBrowseFunction		= 'browse';
 	$like					= '';
 	$nuUser					= '';
 	$nuPassword				= '';
@@ -230,7 +230,7 @@ window.nuHASH				= [];
 	
 	$s	= isset($_SESSION['nubuilder_session_data']['SESSION_ID']);
 
-	if ( $nuUser != ''  &&  $nuPassword != '' ){
+	if ( $nuUser != '' && $nuPassword != '' ){
 		$h2 = nuUseUP($nuBrowseFunction, $target, $welcome, $nuUser, $nuPassword);
 	}else{
 		
@@ -246,10 +246,10 @@ window.nuHASH				= [];
 	
 	if ($nuConfigKeepSessionAlive) {
 		$nuConfigKeepSessionAliveInterval = !isset($nuConfigKeepSessionAliveInterval) ? 600 : $nuConfigKeepSessionAliveInterval;
-		$sessionAlive  = "
+		$sessionAlive = "
 		if (nuMainForm()) {
 			var refreshTime = 1000 * $nuConfigKeepSessionAliveInterval; // refresh interval in milliseconds
-			window.setInterval( function() {				
+			window.setInterval( function() {
 				$.ajax({
 					cache: false,
 					type: 'GET',

@@ -3,16 +3,16 @@
 
 class nuSqlClass{
 
-    public  $STR			= '';
-    public  $OBJ			= '';
+	public $STR			= '';
+	public $OBJ			= '';
 
-    function __construct($sql){
+	function __construct($sql){
 
 		$this->STR			= $sql;
 		$S					= new PHPSQLParser($sql, true);
 		$this->OBJ			= $S->parsed;
 
-    }
+	}
 	
 	public function setMulitArray($n){
 		
@@ -22,15 +22,15 @@ class nuSqlClass{
 		
 	}
 	
-    public function removeSelectElements(){
+	public function removeSelectElements(){
 		
 		$w							= $this->OBJ['SELECT'];
 		$this->OBJ['SELECT']		= array();
 		return $w;
 		
-    }
+	}
 
-    public function addSelectElement($be){
+	public function addSelectElement($be){
 		
 		$this->setMulitArray('SELECT');
 		
@@ -46,9 +46,9 @@ class nuSqlClass{
 		
 		$this->OBJ['SELECT'][$i-1]['delim'] = '';
 		
-    }
+	}
 
-    public function addWhereElement($be){
+	public function addWhereElement($be){
 		
 		
 		if(!isset($this->OBJ['WHERE'])){
@@ -63,10 +63,10 @@ class nuSqlClass{
 		
 		$this->OBJ['WHERE'][] 		= $c;
 		
-    }
+	}
 
 
-    public function addBracketsToWhere(){
+	public function addBracketsToWhere(){
 		
 		if(!isset($this->OBJ['WHERE'])){
 			
@@ -91,15 +91,15 @@ class nuSqlClass{
 		
 		$this->OBJ['WHERE'][]		= $bc; 
 		
-    }
+	}
 
-    public function SQL(){
+	public function SQL(){
 
 			$s						= new PHPSQLCreator($this->OBJ);
 			
 			return $s->created;
 			
-    }
+	}
 
 }
 

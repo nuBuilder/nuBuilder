@@ -24,8 +24,8 @@ function nuLoadNewSession() {
 
 	$nubuilder_session_data = new nubuilder_session_data();
 
-    $nubuilder_session_data->construct_standalone($nuConfigDBHost,$nuConfigDBName,$nuConfigDBUser,$nuConfigDBPassword,$nuConfigDBGlobeadminUsername,$nuConfigDBGlobeadminPassword,$nuConfigIsDemo);
-	       
+	$nubuilder_session_data->construct_standalone($nuConfigDBHost,$nuConfigDBName,$nuConfigDBUser,$nuConfigDBPassword,$nuConfigDBGlobeadminUsername,$nuConfigDBGlobeadminPassword,$nuConfigIsDemo);
+
 	$_SESSION['nubuilder_session_data'] = $nubuilder_session_data->get_nubuilder_session_data();
 
 }
@@ -33,14 +33,12 @@ function nuLoadNewSession() {
 function nuCheckGarbageCollector() {
 
 	global $nuConfigTimeOut;
-	
+
 	if ( isset($nuConfigTimeOut) ) {
 		if ( is_int($nuConfigTimeOut) ) {
-                	$gcLifetime     = 60 * $nuConfigTimeOut;
-                       	ini_set("session.gc_maxlifetime", $gcLifetime);
-    		}
+			$gcLifetime     = 60 * $nuConfigTimeOut;
+			ini_set("session.gc_maxlifetime", $gcLifetime);
+		}
 	}
 }
-
-
 ?>

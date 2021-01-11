@@ -2,26 +2,25 @@
 
 function nuLoadBody($debug = false) {
 
-        if ( !$debug ) {
-                echo "<body id='nubody' onload='nuLoad()' onresize='nuResize()'>";
-//                echo "<body id='nubody' onload='nuLoad()'>";
-        } else {
-                echo "<body>";
-                echo "<pre>";
-                print_r($_SESSION);
-                print_r($_SERVER);
-                print('<br>' . session_id());
-                echo "</pre>";
-        }
+		if ( !$debug ) {
+				echo "<body id='nubody' onload='nuLoad()' onresize='nuResize()'>";
+		} else {
+				echo "<body>";
+				echo "<pre>";
+				print_r($_SESSION);
+				print_r($_SERVER);
+				print('<br>' . session_id());
+				echo "</pre>";
+		}
 }
 
 function nuGetJS_plugin_login($nuBrowseFunction, $target) {
 
 	$h2 = "function nuLoad(){
 		nuBindCtrlEvents();
-		window.nuDefaultBrowseFunction  = '$nuBrowseFunction';
-		window.nuBrowseFunction         = '$nuBrowseFunction';
-		window.nuTARGET                 = '$target';
+		window.nuDefaultBrowseFunction	= '$nuBrowseFunction';
+		window.nuBrowseFunction			= '$nuBrowseFunction';
+		window.nuTARGET					= '$target';
 		nuLoginRequest();
 	}";
 	
@@ -32,10 +31,10 @@ function nuGetJS_standalone_login($nuBrowseFunction, $target, $welcome) {
 
 	$h2 = "function nuLoad(){
 		nuBindCtrlEvents();
-		window.nuDefaultBrowseFunction  = '$nuBrowseFunction';
-		window.nuBrowseFunction       	= '$nuBrowseFunction';
-		window.nuTARGET               	= '$target';
-		var welcome                   	= `$welcome`;
+		window.nuDefaultBrowseFunction	= '$nuBrowseFunction';
+		window.nuBrowseFunction			= '$nuBrowseFunction';
+		window.nuTARGET					= '$target';
+		var welcome						= `$welcome`;
 		nuLogin(welcome);
 	}";
 	
@@ -47,10 +46,10 @@ function nuUseUP($nuBrowseFunction, $target, $welcome, $u, $p) {
 
 	$h2 = "function nuLoad(){
 		nuBindCtrlEvents();
-		window.nuDefaultBrowseFunction  = '$nuBrowseFunction';
-		window.nuBrowseFunction       	= '$nuBrowseFunction';
-		window.nuTARGET               	= '$target';
-		var welcome                   	= `$welcome`;
+		window.nuDefaultBrowseFunction	= '$nuBrowseFunction';
+		window.nuBrowseFunction			= '$nuBrowseFunction';
+		window.nuTARGET					= '$target';
+		var welcome						= `$welcome`;
 		nuLoginRequest('$u', '$p');
 	}";
 	
@@ -65,14 +64,14 @@ function nuGetJS_action_screen($nuBrowseFunction, $target, $welcome, $opener, $s
 		}else{
 			var from		= window.parent;
 		}
-		window.nuFORM.caller		= from.nuFORM.getCurrent();
-		nuFORM.tableSchema		= from.nuFORM.tableSchema;
-		nuFORM.formSchema		= from.nuFORM.formSchema;
+		window.nuFORM.caller			= from.nuFORM.getCurrent();
+		nuFORM.tableSchema				= from.nuFORM.tableSchema;
+		nuFORM.formSchema				= from.nuFORM.formSchema;
 		window.nuDefaultBrowseFunction	= '$nuBrowseFunction';
-		window.nuBrowseFunction		= '$nuBrowseFunction';
-		window.nuTARGET			= '$target';
-		window.nuSESSION		= from.nuSESSION;
-		window.nuSuffix			= 1000;
+		window.nuBrowseFunction			= '$nuBrowseFunction';
+		window.nuTARGET					= '$target';
+		window.nuSESSION				= from.nuSESSION;
+		window.nuSuffix					= 1000;
 		if('$opener' != '') {
 			var p			= nuGetOpenerById(from.nuOPENER, Number($opener));
 			nuRemoveOpenerById(from.nuOPENER, Number($opener));

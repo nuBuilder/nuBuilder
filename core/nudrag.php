@@ -1,33 +1,33 @@
 <?php
 
 function nuDragSave($data){
-	
+
 	if($_SESSION['nubuilder_session_data']['IsDemo']){
-		
+
 		nuDisplayError('Not available in the Demo...');
 		return;
-	
+
 	}
-	
+
 /*	
 	if(!nuIsGlobeadmin()){
-		
+
 		nuDisplayError('Access to Arrange Objects is not allowed');
-		
+
 		return new stdClass;
-		
+
 	}
 */	
-    foreach($data['nuDragState']['tabs'] as $tab){
-		
+	foreach($data['nuDragState']['tabs'] as $tab){
+
 		if($tab['objects'] !== null){
-				
+
 			$tabID = $tab['tab_id'];
-			
+
 			for($i = 0; $i < sizeof($tab['objects']); $i++) {
-				
+
 				$field = $tab['objects'][$i];
-				
+
 				nuRunQuery("
 					UPDATE zzzzsys_object SET 
 					sob_all_order = ?,
@@ -38,15 +38,15 @@ function nuDragSave($data){
 					sob_all_zzzzsys_tab_id = ?
 					WHERE zzzzsys_object_id = ? 
 				", array($field['tab_order'], $field['left'], $field['top'], $field['width'], $field['height'], $tabID, $field['object_id']));
-				
+
 			}
-			
+
 		}
-		
-    }
+
+	}
 	
-    return new stdClass;
-	
+	return new stdClass;
+
 }
 
 ?>

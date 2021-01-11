@@ -49,8 +49,8 @@ class nuResponseForm {
 			type		: O.type,
 			top			: Number(O.top),
 			left		: Number(O.left),
-			height		: Number(O.height),  
-			tab			: Number(O.tab),  
+			height		: Number(O.height),
+			tab			: Number(O.tab),
 			lleft		: l.length == 0 ? 0 : parseInt(l.css('left')),
 			lheight		: l.length == 0 ? 0 : parseInt(l.css('height')),
 			owidth		: parseInt(o.css('width')),
@@ -80,7 +80,7 @@ class nuResponseForm {
 			
 		}
 		
-		this.label_length  = this.label_length  + 5;
+		this.label_length = this.label_length + 5;
 	
 	}
 	
@@ -343,24 +343,24 @@ class nuFormObject {
 		b.redirect_form_id	= '';
 		b.record_id 		= '';
 		b.title				= '';
-		b.call_type        	= '';
-		b.column_widths    	= 0;
-		b.filter           	= '';
-		b.forms        		= [];
+		b.call_type			= '';
+		b.column_widths		= 0;
+		b.filter			= '';
+		b.forms				= [];
 		b.iframe			= 0;
-		b.lookup_id        	= '';
-		b.object_id        	= '1';
-		b.page_number      	= 0;
-		b.password     		= '';
-		b.rows        		= -1;
+		b.lookup_id			= '';
+		b.object_id			= '1';
+		b.page_number	  	= 0;
+		b.password	 		= '';
+		b.rows				= -1;
 		b.row_height		= 25;
-		b.search           	= '';	
+		b.search		   	= '';	
 		b.session_id		= '';
 		b.nosearch_columns 	= [];
-		b.sort             	= '-1';
-		b.sort_direction   	= 'desc';
+		b.sort				= '-1';
+		b.sort_direction	= 'desc';
 		b.subforms			= 0;
-		b.tab_start      	= [];
+		b.tab_start			= [];
 		b.username			= '';
 		b.user_id			= '';
 		b.refreshed			= -1;
@@ -596,7 +596,7 @@ class nuFormObject {
 		var v				= 0;
 		var u				= 0;
 		
-		for(var i =  0 ; i < d.length ; i++){
+		for(var i = 0 ; i < d.length ; i++){
 			
 			var SF			= d[i];
 			
@@ -911,7 +911,7 @@ class nuFormObject {
 		v				= String(v);
 		f				= String(f);
 		
-		if(f[0] == 'N'){													//-- number  '456.789','N|€ 1,000.00'
+		if(f[0] == 'N'){													//-- number '456.789','N|€ 1,000.00'
 
 			//var F		= nuNumberFormat(f);
 			var CF		= nuGetNumberFormat(f);								//-- CF[0]=sign, CF[1]=separator, CF[2]=decimal, CF[3]=places
@@ -1070,9 +1070,9 @@ class nuFormObject {
 			var s	= nuPad2(o.getSeconds());
 
 			if(hasTime){
-				return  String(y+m+a+h+n+s);
+				return String(y+m+a+h+n+s);
 			}else{
-				return  String(y+m+a).trim();
+				return String(y+m+a).trim();
 			}
 			
 		}
