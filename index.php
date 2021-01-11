@@ -35,8 +35,7 @@ function nuInclude($pfile, $type){
 	}
 	
 	foreach ($a as $value) { 
-		// $timestamp = date("YmdHis"); //-- Add timestamp so javascript changes are effective immediately
-		$timestamp = date("YmdHis", filemtime($value));
+		$timestamp = date("YmdHis"); //-- Add timestamp so javascript changes are effective immediately		
 		if ($type == 'script') print "<script src='$value?ts=$timestamp' type='text/javascript'></script>\n";
 		if ($type == 'stylesheet') print "<link rel='stylesheet' href='$value?ts=$timestamp' />\n";
 	}
