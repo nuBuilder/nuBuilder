@@ -173,7 +173,7 @@ function nuLoginRequest(u, p){
 	}); 
 }
 
-window.nuVersion 		= 'nuBuilder5';
+window.nuVersion 		= 'nuBuilder4.5';
 window.nuDocumentID		= Date.now();
 
 if(parent.window.nuDocumentID == window.nuDocumentID){
