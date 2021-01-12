@@ -1666,19 +1666,19 @@ function nuEndBrowseResize(e){
 
 function nuDragBrowseColumn(e, p){
 
-	event.preventDefault();
+	e.preventDefault();
 
 //	if (window.nuBROWSERESIZE.mouse_down && window.nuBROWSERESIZE.moving_element == e.target.id){
 	if (window.nuBROWSERESIZE.mouse_down){
-		console.log(window.nuBROWSERESIZE.moving_element);
+		
 		window.nuBROWSERESIZE.pointer = p; // added
 		var id				= window.nuBROWSERESIZE.moving_element;
 		var offset_limit	= 100000000;
 		var min_offset		= 2;
-		var x				= event.pageX;
+		var x				= e.pageX;
 		
 		if (window.nuBROWSERESIZE.pointer == "finger_touch"){
-			x				= event.changedTouches[0].clientX;
+			x				= e.changedTouches[0].clientX;
 		}
 		
 		var x_offset		= x - window.nuBROWSERESIZE.x_position;

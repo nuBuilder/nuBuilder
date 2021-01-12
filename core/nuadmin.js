@@ -46,6 +46,9 @@ function nuDevMode(m) {
 	if ((d === '1' || d === true) && window.global_access) {
 		nuSetProperty('nuDevMode', '1', true);
 		return true;
+	} 
+	if (m === false) {
+		nuSetProperty('nuDevMode', '0', true);
 	}
 
 	return false;

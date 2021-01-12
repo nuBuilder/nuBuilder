@@ -122,7 +122,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 		$A 			= [];
 	}else{
 		
-		$s	= "Select * From `$f->table` Where `$f->primary_key` = '$R'";
+		$s	= "Select * FROM `$f->table` WHERE `$f->primary_key` = '$R'";
 		$t	= nuRunQuery($s);
 		$A 	= db_fetch_array($t);
 		
@@ -138,8 +138,6 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 	ORDER BY syt_order, (sob_all_type = 'run'), sob_all_zzzzsys_tab_id, sob_all_order
 
 	";
-	
-	$t 							= nuRunQuery($s, array($F));
 	
 	$cloneable					= array();
 	$a 							= array();
@@ -279,17 +277,17 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 				
 				if(isProcedure($type)){
 					
-					$actt			= nuRunQuery('SELECT * FROM zzzzsys_php WHERE zzzzsys_php_id = ?',[$type]);
+					$actt			= nuRunQuery('SELECT sph_zzzzsys_form_id, sph_code FROM zzzzsys_php WHERE zzzzsys_php_id = ?',[$type]);
 					$act			= db_fetch_object($actt);
 					$o->form_id		= $act->sph_zzzzsys_form_id;
 					$o->record_id	= $act->sph_code;
 					$o->run_type	= 'P';
-					$runtab			= nuRunQuery("SELECT * FROM zzzzsys_php WHERE zzzzsys_php_id = '$r->sob_run_zzzzsys_form_id'");
+					$runtab			= nuRunQuery("SELECT sph_run FROM zzzzsys_php WHERE zzzzsys_php_id = '$r->sob_run_zzzzsys_form_id'");
 					$o->run_hidden	= db_fetch_object($runtab)->sph_run == 'hide';
 					
 				}else if(isReport($type)){
 					
-					$actt			= nuRunQuery('SELECT * FROM zzzzsys_report WHERE zzzzsys_report_id = ?',[$type]);
+					$actt			= nuRunQuery('SELECT sre_zzzzsys_form_id, sre_code  FROM zzzzsys_report WHERE zzzzsys_report_id = ?',[$type]);
 					$act			= db_fetch_object($actt);
 					$o->form_id		= $act->sre_zzzzsys_form_id;;
 					$o->record_id	= $act->sre_code;
@@ -378,6 +376,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 	return $O->forms[0];
 
 }
+
 function nuGetSrc($i){
 	
 	$s	= "SELECT sfi_json FROM zzzzsys_file WHERE zzzzsys_file_id = ? ";
@@ -565,7 +564,7 @@ function nuGetLookupValues($R, $O){
 
 	nuBeforeBrowse($O->form_id);
 	
-	$s 			= "SELECT * FROM zzzzsys_form WHERE zzzzsys_form_id = '$O->form_id'";
+	$s 			= "SELECT sfo_primary_key, sfo_browse_sql FROM zzzzsys_form WHERE zzzzsys_form_id = '$O->form_id'";
 	$t 			= nuRunQuery($s);
 	$r 			= db_fetch_object($t);
 	$S 			= new nuSqlString(nuReplaceHashVariables($r->sfo_browse_sql));
@@ -609,7 +608,7 @@ function nuGetAllLookupList(){
 
 	$_POST['nuHash']['TABLE_ID'] = nuTT();
 
-	$s				= "SELECT * FROM zzzzsys_object WHERE zzzzsys_object_id = '$O'";
+	$s				= "SELECT sob_lookup_code, sob_lookup_description, sob_lookup_zzzzsys_form_id, sob_lookup_javascript FROM zzzzsys_object WHERE zzzzsys_object_id = '$O'";
 	$t				= nuRunQuery($s);
 	$r				= db_fetch_object($t);
 	$code			= $r->sob_lookup_code;
@@ -619,7 +618,7 @@ function nuGetAllLookupList(){
 
 	nuBeforeBrowse($form_id);
 	
-	$s		 		= "SELECT * FROM zzzzsys_form WHERE zzzzsys_form_id = '$form_id'";
+	$s		 		= "SELECT sfo_primary_key, sfo_browse_sql FROM zzzzsys_form WHERE zzzzsys_form_id = '$form_id'";
 	$t				= nuRunQuery($s);
 	$r	 			= db_fetch_object($t);
 	$id	 			= $r->sfo_primary_key;
@@ -737,7 +736,7 @@ function nuGetSubformRecords($R, $A){
 
 	$f = nuGetEditForm($R->sob_subform_zzzzsys_form_id, '');
 	$w = $f->where == '' ? '' : ' AND (' . substr($f->where, 6) . ')';
-	$s = "SELECT `$f->primary_key` $f->from WHeRE (`$R->sob_subform_foreign_key` = '$R->subform_fk') $w $f->order";
+	$s = "SELECT `$f->primary_key` $f->from WHERE (`$R->sob_subform_foreign_key` = '$R->subform_fk') $w $f->order";
 	$I = $_POST['nuHash']['RECORD_ID'];
 
 
@@ -945,7 +944,7 @@ function nuBrowseRows($f){
 		$a[] 		= $r;
 	}
 	
-	nuRunQuery(nuReplaceHashVariables('DROP TABLE if EXISTS #TABLE_ID#'));
+	nuRunQuery(nuReplaceHashVariables('DROP TABLE IF EXISTS #TABLE_ID#'));
 
 	return array($a, $rowData, $S->SQL);
 	
