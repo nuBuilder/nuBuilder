@@ -279,7 +279,7 @@ function nuDie($msg = 'Invalid login!') {
 function nuAccessLevelCode($u) {
 
 	$s = "SELECT sal_code FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id WHERE zzzzsys_user_id = ? ";
-	$t = nuRunQuery($s, [$u]);
+	$t = nuRunQuery($s,  array($u));
 	return db_fetch_row($t) [0];
 }
 
@@ -307,7 +307,7 @@ function nuGetTranslation($l) {
 
 	$a = [];
 	$s = "SELECT trl_english, trl_translation FROM zzzzsys_translate WHERE trl_language = ? ORDER BY trl_english, IF(zzzzsys_translate_id like 'nu%', 1, 0) ";
-	$t = nuRunQuery($s,[$l]);
+	$t = nuRunQuery($s, array($l));
 	while ($r = db_fetch_object($t)) {
 		$a[] = ['english' => $r->trl_english, 'translation' => $r->trl_translation];
 	}

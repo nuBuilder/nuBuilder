@@ -9,15 +9,6 @@ function nuDragSave($data){
 
 	}
 
-/*	
-	if(!nuIsGlobeadmin()){
-
-		nuDisplayError('Access to Arrange Objects is not allowed');
-
-		return new stdClass;
-
-	}
-*/	
 	foreach($data['nuDragState']['tabs'] as $tab){
 
 		if($tab['objects'] !== null){

@@ -347,12 +347,13 @@ function nuSystemList(){
 }
 
 function nuSetCollation(){
-	
-	$tbls	= nuRunQuery("SHOW FULL Tables WHERE Table_type = 'BASE TABLE'");
+		
 	$db		= nuRunQuery("SELECT DATABASE()");
 	$dbname	= db_fetch_row($db)[0];
-
+	$dbname	= $dbname[0];
 	nuRunQuery("ALTER DATABASE $dbname CHARACTER SET utf8 COLLATE utf8_general_ci");
+	
+	$tbls	= nuRunQuery("SHOW FULL Tables WHERE Table_type = 'BASE TABLE'");
 	
 	while($row = db_fetch_row($tbls)){
 

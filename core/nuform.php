@@ -57,7 +57,7 @@ function nuBeforeEdit($FID, $RID){
 				
 				$S				= "SELECT $logfield FROM `$r->sfo_table` WHERE `$r->sfo_primary_key` = ? ";
 				
-				$T				= nuRunQuery($S, [$RID]);
+				$T				= nuRunQuery($S, array($RID));
 
 				$jd = '';
 				if (db_num_rows($T) == 1) {
@@ -77,7 +77,7 @@ function nuBeforeEdit($FID, $RID){
 				
 				$je				= addslashes(json_encode($jd));
 				$S				= "UPDATE `$r->sfo_table` SET $logfield = '$je' WHERE `$r->sfo_primary_key` = ? ";
-				$T				= nuRunQuery($S, [$RID]);
+				$T				= nuRunQuery($S, array($RID));
 			
 			}
 			
@@ -122,8 +122,8 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 		$A 			= [];
 	}else{
 		
-		$s	= "Select * FROM `$f->table` WHERE `$f->primary_key` = '$R'";
-		$t	= nuRunQuery($s);
+		$s	= "Select * FROM `$f->table` WHERE `$f->primary_key` = ?";
+		$t	= nuRunQuery($s, array($R));
 		$A 	= db_fetch_array($t);
 		
 	}
@@ -277,7 +277,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 				
 				if(isProcedure($type)){
 					
-					$actt			= nuRunQuery('SELECT sph_zzzzsys_form_id, sph_code FROM zzzzsys_php WHERE zzzzsys_php_id = ?',[$type]);
+					$actt			= nuRunQuery('SELECT sph_zzzzsys_form_id, sph_code FROM zzzzsys_php WHERE zzzzsys_php_id = ?', array($type));
 					$act			= db_fetch_object($actt);
 					$o->form_id		= $act->sph_zzzzsys_form_id;
 					$o->record_id	= $act->sph_code;
@@ -287,7 +287,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 					
 				}else if(isReport($type)){
 					
-					$actt			= nuRunQuery('SELECT sre_zzzzsys_form_id, sre_code  FROM zzzzsys_report WHERE zzzzsys_report_id = ?',[$type]);
+					$actt			= nuRunQuery('SELECT sre_zzzzsys_form_id, sre_code  FROM zzzzsys_report WHERE zzzzsys_report_id = ?', array($type));
 					$act			= db_fetch_object($actt);
 					$o->form_id		= $act->sre_zzzzsys_form_id;;
 					$o->record_id	= $act->sre_code;
@@ -380,7 +380,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 function nuGetSrc($i){
 	
 	$s	= "SELECT sfi_json FROM zzzzsys_file WHERE zzzzsys_file_id = ? ";
-	$t	= nuRunQuery($s, [$i]);
+	$t	= nuRunQuery($s, array($i));
 	
 	if (db_num_rows($t) == 1) {
 		$r		= db_fetch_object($t);
@@ -398,7 +398,7 @@ function nuObjectEvents($i){
 
 	$a	= [];
 	$s	= "SELECT sev_event AS event, sev_javascript AS js FROM zzzzsys_event WHERE sev_zzzzsys_object_id = ?";
-	$t	= nuRunQuery($s,[$i]);
+	$t	= nuRunQuery($s, array($i));
 	
 	while($r = db_fetch_object($t)){
 		$a[]	= $r;
@@ -501,12 +501,12 @@ function nuGetOtherLookupValues($o){
 	$p								= $o->object_id;
 	$l								= $_POST['nuHash']['LOOKUP_RECORD_ID'];
 	$s								= "SELECT sob_lookup_zzzzsys_form_id as form_id FROM zzzzsys_object WHERE zzzzsys_object_id = ? ";
-	$t								= nuRunQuery($s, [$p]);
+	$t								= nuRunQuery($s, array($p));
 	$r								= db_fetch_object($t);
 	$i								= $r->form_id;
 	$f								= nuFormProperties($i);
 	$s								= "SELECT * FROM $f->sfo_table WHERE $f->sfo_primary_key = ? ";
-	$t								= nuRunQuery($s, [$l]);
+	$t								= nuRunQuery($s, array($l));
 	$_POST['lookup_row']			= db_fetch_object($t);
 	
 	if(db_num_rows($t) == 1){
@@ -529,12 +529,11 @@ function nuGetOtherLookupValues($o){
 }
 
 function nuGetAllLookupValues(){
-	
-	$a						= array();
+		
 	$OID					= $_POST['nuSTATE']['object_id'];
 	$PK						= $_POST['nuSTATE']['primary_key'];
-	$s						= "SELECT * FROM zzzzsys_object WHERE zzzzsys_object_id = '$OID'";
-	$t						= nuRunQuery($s);
+	$s						= "SELECT * FROM zzzzsys_object WHERE zzzzsys_object_id = ?";
+	$t						= nuRunQuery($s, array($OID));
 	$r						= db_fetch_object($t);
 	$o						= nuDefaultObject($r, array());
 	$o->description_width	= $r->sob_lookup_description_width;
@@ -601,15 +600,14 @@ function nuGetLookupValues($R, $O){
 
 function nuGetAllLookupList(){
 
-	$O				= $_POST['nuSTATE']['object_id'];
-	$PK				= nuObjKey($_POST['nuSTATE'],'primary_key');
+	$O				= $_POST['nuSTATE']['object_id'];	
 	$C				= $_POST['nuSTATE']['code'];
 	$was			= nuObjKey($_POST['nuHash'],'TABLE_ID');
 
 	$_POST['nuHash']['TABLE_ID'] = nuTT();
 
-	$s				= "SELECT sob_lookup_code, sob_lookup_description, sob_lookup_zzzzsys_form_id, sob_lookup_javascript FROM zzzzsys_object WHERE zzzzsys_object_id = '$O'";
-	$t				= nuRunQuery($s);
+	$s				= "SELECT sob_lookup_code, sob_lookup_description, sob_lookup_zzzzsys_form_id, sob_lookup_javascript FROM zzzzsys_object WHERE zzzzsys_object_id = ?";
+	$t				= nuRunQuery($s, array($o));
 	$r				= db_fetch_object($t);
 	$code			= $r->sob_lookup_code;
 	$description	= $r->sob_lookup_description;
@@ -618,8 +616,8 @@ function nuGetAllLookupList(){
 
 	nuBeforeBrowse($form_id);
 	
-	$s		 		= "SELECT sfo_primary_key, sfo_browse_sql FROM zzzzsys_form WHERE zzzzsys_form_id = '$form_id'";
-	$t				= nuRunQuery($s);
+	$s		 		= "SELECT sfo_primary_key, sfo_browse_sql FROM zzzzsys_form WHERE zzzzsys_form_id = ?";
+	$t				= nuRunQuery($s, array($form_id));
 	$r	 			= db_fetch_object($t);
 	$id	 			= $r->sfo_primary_key;
 	$SQL			= new nuSqlString(nuReplaceHashVariables($r->sfo_browse_sql));
@@ -632,7 +630,7 @@ function nuGetAllLookupList(){
 					";
 
 	$s				= nuReplaceHashVariables($s);
-	$t				= nuRunQuery($s, [$C]);
+	$t				= nuRunQuery($s, array($C));
 	$like			= '';
 	$a				= array();
 
@@ -781,7 +779,7 @@ function nuBuildTabList($i){
 
 		";
 
-	$t = nuRunQuery($s, [$i]);
+	$t = nuRunQuery($s, array($i));
 
 	while($r = db_fetch_object($t)){
 
@@ -1076,40 +1074,36 @@ function nuBrowseWhereClause($searchFields, $searchString, $returnArray = false)
 
 function nuGatherFormAndSessionData($home){
 
-	// nuUpdateTables();
+	$formAndSessionData 					= new stdClass;	
+	$nuState								= $_POST['nuSTATE'];	
+	$sessionId								= $_SESSION['nubuilder_session_data']['SESSION_ID'];	
 	
-	$formAndSessionData 					= new stdClass;
-
-	if(isset($_POST['nuSTATE']['record_id'])){
-		$formAndSessionData->record_id		= $_POST['nuSTATE']['record_id'];
-	} else {
-		$formAndSessionData->record_id		= '-1';
-	}
-	
-	if(isset($_POST['nuSTATE']['form_id'])){
-		$formAndSessionData->form_id 	 	= $_POST['nuSTATE']['form_id'];
+	$formAndSessionData->record_id			= isset($nuState['record_id']) ? $nuState['record_id'] : "-1";
+		
+	if(isset($nuState['form_id'])){
+		$formAndSessionData->form_id 	 	= $nuState['form_id'];
 	} else {
 		$formAndSessionData->form_id 		= $home == '' ? 'nuhome' : $home;
 	}
 	
-	if(isset($_POST['nuSTATE']['login_form_id'])){
+	if(isset($nuState['login_form_id'])){
 		
-		if($_POST['nuSTATE']['login_form_id'] != ''){
-			$formAndSessionData->form_id	= $_POST['nuSTATE']['login_form_id'];
+		if($nuState['login_form_id'] != ''){
+			$formAndSessionData->form_id	= $nuState['login_form_id'];
 		}
 		
 	}
 		
-	if(isset($_POST['nuSTATE']['login_form_id'])){//-- check empty form_id not empty record_id
+	if(isset($nuState['login_form_id'])){//-- check empty form_id not empty record_id
 		
-		if($_POST['nuSTATE']['login_form_id'] != ''){
-			$formAndSessionData->record_id = $_POST['nuSTATE']['login_record_id'];
+		if($nuState['login_form_id'] != ''){
+			$formAndSessionData->record_id = $nuState['login_record_id'];
 		}
 		
 	}
 
-	$formAndSessionData->session_id 	= $_SESSION['nubuilder_session_data']['SESSION_ID'];
-	$formAndSessionData->call_type 		= $_POST['nuSTATE']['call_type'];
+	$formAndSessionData->session_id 	= $sessionId;
+	$formAndSessionData->call_type 		= $nuState['call_type'];
 	$formAndSessionData->filter			= isset($_POST['nuFilter']) ? $_POST['nuFilter'] : '';
 	$formAndSessionData->errors 		= array();
 	$formAndSessionData->translation 	= $_SESSION['nubuilder_session_data']['translation'];	
@@ -1120,7 +1114,7 @@ function nuGatherFormAndSessionData($home){
 
 	if(!$_SESSION['nubuilder_session_data']['isGlobeadmin'] && $formAndSessionData->form_id != 'nuhome') {
 
-		$getAccessFromSessionTableQRY 	= nuRunQuery("SELECT sss_access FROM zzzzsys_session WHERE zzzzsys_session_id = ? ", array($_SESSION['nubuilder_session_data']['SESSION_ID']));
+		$getAccessFromSessionTableQRY 	= nuRunQuery("SELECT sss_access FROM zzzzsys_session WHERE zzzzsys_session_id = ? ", array($sessionId));
 		$getAccessFromSessionTableOBJ 	= db_fetch_object($getAccessFromSessionTableQRY);
 		$access 						= json_decode($getAccessFromSessionTableOBJ->sss_access);
 
@@ -1177,7 +1171,7 @@ function nuGatherFormAndSessionData($home){
 function nuGetDataMode($f) {
 	
 	$s = "SELECT slf_data_mode FROM zzzzsys_access_form WHERE slf_zzzzsys_access_id = ? AND slf_zzzzsys_form_id = ?";	
-	$t	= nuRunQuery($s, [$_POST['nuHash']['USER_GROUP_ID'], $f]);	
+	$t	= nuRunQuery($s, array($_POST['nuHash']['USER_GROUP_ID'], $f));	
 
 	if (db_num_rows($t) == 1) {
 		$r = db_fetch_row($t);
@@ -1264,21 +1258,21 @@ function nuButtons($formid, $POST){
 
 			
 		$s					= 'SELECT sph_code, sph_description, sph_run FROM zzzzsys_php WHERE zzzzsys_php_id = ? ';
-		$t					= nuRunQuery($s,[$recordID]);
+		$t					= nuRunQuery($s, array($recordID));
 		$P					= db_fetch_object($t);
 		
 		$s					= 'SELECT sre_code, sre_description FROM zzzzsys_report WHERE zzzzsys_report_id = ? ';
-		$t					= nuRunQuery($s,[$recordID]);
+		$t					= nuRunQuery($s, array($recordID));
 		$R					= db_fetch_object($t);
 		
 	}else{
 			
 		$s					= 'SELECT sph_code, sph_description, sph_run FROM zzzzsys_php WHERE sph_code = ? ';
-		$t					= nuRunQuery($s,[$recordID]);
+		$t					= nuRunQuery($s, array($recordID));
 		$P					= db_fetch_object($t);
 		
 		$s					= 'SELECT sre_code, sre_description FROM zzzzsys_report WHERE sre_code = ? ';
-		$t					= nuRunQuery($s,[$recordID]);
+		$t					= nuRunQuery($s, array($recordID));
 		$R					= db_fetch_object($t);
 		
 	}
@@ -1293,17 +1287,16 @@ function nuButtons($formid, $POST){
 		}else{
 			return [array('Add' => 0, 'Print' => 0, 'Save' => 0, 'Clone' => 0, 'Delete' => 0, 'Run' => 'nuRunPHP("'.$C.'")', 'RunHidden' => ''), $C, $D];
 		}
-	}
-	
+		
+	} else	
 	if($c == 'getreport'){
 		
 		$C					= $R->sre_code;
 		$D					= $R->sre_description;
 		
 		return [array('Add' => 0, 'Print' => 0, 'Save' => 0, 'Clone' => 0, 'Delete' => 0, 'Run' => 'nuRunReport("'.$C.'")', 'RunHidden' => ''), $C, $D];
-	}
-	
-	if($c != 'getphp' and $c != 'getreport'){
+		
+	} else {	
 		return [array('Add' => $a[0], 'Print' => $a[1], 'Save' => $a[2], 'Clone' => $a[3], 'Delete' => $a[4], 'Run' => '', 'RunHidden' => ''), $C, $D];
 	}
 	
@@ -1315,11 +1308,11 @@ function nuRunCode($P){
 	$f						= nuFormProperties($formid);
 	
 	$s						= 'SELECT sph_code FROM zzzzsys_php WHERE zzzzsys_php_id = ? ';
-	$t						= nuRunQuery($s,[$P['record_id']]);
+	$t						= nuRunQuery($s, array($P['record_id']));
 	$c						= db_fetch_object($t)->sph_code;
 	
 	$s						= 'SELECT sre_code FROM zzzzsys_report WHERE zzzzsys_report_id = ? ';
-	$t						= nuRunQuery($s,[$P['record_id']]);
+	$t						= nuRunQuery($s, array($P['record_id']));
 	
 	if(db_fetch_object($t)->sre_code != ''){
 		$c					= db_fetch_object($t)->sre_code;
@@ -1334,11 +1327,11 @@ function nuRunDescription($P){
 	$f						= nuFormProperties($formid);
 	
 	$s						= 'SELECT sph_description FROM zzzzsys_php WHERE zzzzsys_php_id = ? ';
-	$t						= nuRunQuery($s,[$P['record_id']]);
+	$t						= nuRunQuery($s, array($P['record_id']));
 	$d						= db_fetch_object($t)->sph_description;
 	
 	$s						= 'SELECT sre_code FROM zzzzsys_report WHERE zzzzsys_report_id = ? ';
-	$t						= nuRunQuery($s,[$P['record_id']]);
+	$t						= nuRunQuery($s, array($P['record_id']));
 	
 	if(db_fetch_object($t)->sre_code != ''){
 		$d					= db_fetch_object($t)->sre_description;
@@ -1362,7 +1355,7 @@ function nuFormAccess($s, $a){
 			$F	= $a[$i];
 			
 			if($s == $F[0]){
-				return array($F[1], $F[2], $F[3], $F[4], $F[5]);		//-- Add Print Save Clone Delete
+				return array($F[1], $F[2], $F[3], $F[4], $F[5]);		//-- Add, Print, Save, Clone, Delete
 			}
 			
 		}
@@ -1376,7 +1369,7 @@ function nuFormAccess($s, $a){
 function nuFormDimensions($f){
 	
 	$d			= array();
-	$t			= nuRunQuery("SELECT sfo_browse_row_height, sfo_browse_rows_per_page FROM zzzzsys_form WHERE zzzzsys_form_id = '$f'");
+	$t			= nuRunQuery("SELECT sfo_browse_row_height, sfo_browse_rows_per_page FROM zzzzsys_form WHERE zzzzsys_form_id = ?", array($f));
 	$r			= db_fetch_object($t);
 
 	$brh = isset($r->sfo_browse_row_height) ? $r->sfo_browse_row_height : 0;
@@ -1414,9 +1407,9 @@ function nuFormDimensions($f){
 	$bh		 = $bt + ($rs * $rh) + $bb;
 	$bw		 = nuGetBrowseWidth($f);   
 
-	$grid	= ['height'=>$gh, 'width'=> $gw];
-	$browse	= ['height'=>$bh, 'width'=> $bw];
-	$edit	= ['height'=>$h,  'width'=> $w];
+	$grid	= Array('height'=>$gh, 'width'=> $gw);
+	$browse	= Array('height'=>$bh, 'width'=> $bw);
+	$edit	= Array('height'=>$h,  'width'=> $w);
 
 	$d[]	= $bt + ($rs * $rh) + $bb;	//-- lookup browse height
 	$d[]	= nuGetBrowseWidth($f);
@@ -1427,29 +1420,24 @@ function nuFormDimensions($f){
 	$d[]	= $gh	+ 0;					 //-- grid height
 	$d[]	= $gw	+ 55;					 //-- grid width
 	
-	$d[]	= ['browse'=>$browse, 'edit'=>$edit, 'grid'=>$grid];
+	$d[]	= Array('browse'=>$browse, 'edit'=>$edit, 'grid'=>$grid);
 
-	return ['browse'=>$browse, 'edit'=>$edit, 'grid'=>$grid];
+	return Array('browse'=>$browse, 'edit'=>$edit, 'grid'=>$grid);
 
 }
 
 function nuGetBrowseWidth($f){
-	
-	$w			= 0;
-	$t			= nuRunQuery("SELECT sbr_width FROM zzzzsys_browse WHERE sbr_zzzzsys_form_id = ? ", [$f]);
-	
-	while($r	= db_fetch_object($t)){
-		$w = $w + $r->sbr_width;
-	}
-	
-	return $w;
+
+	$t	= nuRunQuery("SELECT SUM(sbr_width) FROM zzzzsys_browse WHERE sbr_zzzzsys_form_id = ? ", array($f));		
+
+	return db_num_rows($t) > 0 ? db_fetch_row($t)[0] : 0;
 
 }
 
 function isForm($i){
 
-	$s	= "SELECT zzzzsys_form_id_id FROM zzzzsys_form WHERE zzzzsys_form_id = '$i'";
-	$t	= nuRunQuery($s);
+	$s	= "SELECT zzzzsys_form_id_id FROM zzzzsys_form WHERE zzzzsys_form_id = ?";
+	$t	= nuRunQuery($s, array($i));
 	$r	= db_fetch_object($t);
 	
 	return db_num_rows($t) > 0;
@@ -1458,8 +1446,8 @@ function isForm($i){
 
 function isProcedure($i){
 
-	$s	= "SELECT zzzzsys_php_id FROM zzzzsys_php WHERE zzzzsys_php_id = '$i'";
-	$t	= nuRunQuery($s);
+	$s	= "SELECT zzzzsys_php_id FROM zzzzsys_php WHERE zzzzsys_php_id = ?";
+	$t	= nuRunQuery($s, array($i));
 	$r	= db_fetch_object($t);
 	
 	return db_num_rows($t) > 0;
@@ -1468,8 +1456,8 @@ function isProcedure($i){
 
 function isReport($i){
 
-	$s	= "SELECT zzzzsys_report_id FROM zzzzsys_report WHERE zzzzsys_report_id = '$i'";
-	$t	= nuRunQuery($s);
+	$s	= "SELECT zzzzsys_report_id FROM zzzzsys_report WHERE zzzzsys_report_id = ?";
+	$t	= nuRunQuery($s, array($i));
 	$r	= db_fetch_object($t);
 	
 	return db_num_rows($t) > 0;
@@ -1518,7 +1506,7 @@ function nuPreloadImages($a){
 				
 			";
 
-		$t  = nuRunQuery($s, [$a[$i]]);
+		$t  = nuRunQuery($s, array($a[$i]));
 		$r	= db_fetch_object($t);
 				
 		$tr	= trim($r->sfi_code);

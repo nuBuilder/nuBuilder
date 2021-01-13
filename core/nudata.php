@@ -20,7 +20,7 @@ function nuValidateSubforms(){
 				FROM zzzzsys_object 
 				WHERE zzzzsys_object_id = ? 
 			';												//-- get Form
-		$t	= nuRunQuery($s, [$sf->object_id]);
+		$t	= nuRunQuery($s, array($sf->object_id));
 		$r	= db_fetch_row($t);
 		$f	= nuObjKey($r,0,'') == '' ? $sf->object_id : nuObjKey($r,0);
 		$l	= nuObjKey($r,1);
@@ -28,7 +28,7 @@ function nuValidateSubforms(){
 		if(nuObjKey($r,2,'') != 1){										//-- not readonly
 				
 			$s	= 'SELECT sob_all_id AS id, sob_all_label AS label, sob_all_validate AS validate FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = ? ';			//-- get Objects
-			$t	= nuRunQuery($s, [$f]);
+			$t	= nuRunQuery($s, array($f));
 			
 			while($r = db_fetch_object($t)){
 				$a[$r->id]	= $r->validate;
@@ -96,7 +96,7 @@ function nuCheckAccessLevel($data){
 	}
 
 	$s		= "SELECT slf_save_button, slf_delete_button FROM zzzzsys_access_form WHERE slf_zzzzsys_access_id = ? AND slf_zzzzsys_form_id = ?";
-	$t		= nuRunQuery($s, [$u, $f]);
+	$t		= nuRunQuery($s, array($u, $f));
 	$r		= db_fetch_object($t);
 	
 	if($a == 'save' and $r->slf_save_button != 1){
@@ -116,7 +116,7 @@ function nuDuplicate($S, $R, $F){
 	$i		= $S->rows[$R][0];
 	$v		= $S->rows[$R][$F];
 	$sql	= "SELECT $S->primary_key FROM $S->table WHERE $f = ? AND $S->primary_key != ? ";
-	$t		= nuRunQuery($sql, [$v, $i]);
+	$t		= nuRunQuery($sql, array($v, $i));
 	$r		= db_num_rows($t);
 	
 	return $r > 0;
@@ -710,10 +710,10 @@ function nuCloneForm(){
 	$TT		= nuTT();
 
 	$s		= "CREATE TABLE p$TT SELECT * FROM zzzzsys_php WHERE zzzzsys_php_id LIKE CONCAT(?,'%') ";
-	$t		= nuRunQuery($s, [$f]);
+	$t		= nuRunQuery($s, array($f));
 
 	$s		= "CREATE TABLE o$TT SELECT * FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = ? ";
-	$t		= nuRunQuery($s, [$f]);
+	$t		= nuRunQuery($s, array($f));
 
 	$s		= "
 				CREATE TABLE e$TT 
@@ -750,7 +750,7 @@ function nuUpdateEvent($t, $o){
 	while($r = db_fetch_row($r)){
 
 		$i 	= nuID();
-		nuRunQuery($s, [$o, $i, $r->zzzzsys_event_id]);
+		nuRunQuery($s, array($o, $i, $r->zzzzsys_event_id));
 		
 	}
 	
@@ -762,13 +762,13 @@ function nuUpdateEvent($t, $o){
 function nuDeleteForm($f){
 	
 	$s		= "DELETE FROM zzzzsys_browse WHERE sbr_zzzzsys_form_id = ? ";
-	$t		= nuRunQuery($s, [$f]);
+	$t		= nuRunQuery($s, array($f));
 	$s		= "DELETE FROM zzzzsys_tab WHERE syt_zzzzsys_form_id = ? ";
-	$t		= nuRunQuery($s, [$f]);
+	$t		= nuRunQuery($s, array($f));
 	$s		= "DELETE FROM zzzzsys_php WHERE zzzzsys_php_id LIKE CONCAT(?, '_') ";
-	$t		= nuRunQuery($s, [$f]);
+	$t		= nuRunQuery($s, array($f));
 	$s		= "DELETE FROM zzzzsys_object WHERE sob_all_type = 'run' AND sob_run_zzzzsys_form_id = ? ";
-	$t		= nuRunQuery($s, [$f]);
+	$t		= nuRunQuery($s, array($f));
 	$s		= "SELECT * FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = ? ";
 	$t		= nuRunQuery($s);
 
@@ -776,14 +776,14 @@ function nuDeleteForm($f){
 		
 		$i	= $r->zzzzsys_object;
 		$s	= "DELETE FROM zzzzsys_event WHERE sev_zzzzsys_object_id = ? ";
-		$t	= nuRunQuery($s, [$i]);
+		$t	= nuRunQuery($s, array($i));
 		$s	= "DELETE FROM zzzzsys_php WHERE zzzzsys_php_id LIKE CONCAT(?, '_')";
-		$t	= nuRunQuery($s, [$i]);
+		$t	= nuRunQuery($s, array($i));
 
 	}
 
 	$s		= "DELETE FROM zzzzsys_object WHERE sob_all_type = 'run' AND sob_run_zzzzsys_form_id = ? ";
-	$t		= nuRunQuery($s, [$f]);
+	$t		= nuRunQuery($s, array($f));
 	
 }
 
@@ -792,7 +792,7 @@ function nuGetFile(){
 	$f		= $_POST['nuSTATE']['fileCode'];
 	
 	$s		= "SELECT sfi_json FROM zzzzsys_file WHERE sfi_code = ? ";
-	$t		= nuRunQuery($s, [$f]);
+	$t		= nuRunQuery($s, array($f));
 	$r		= db_fetch_object($t);
 	
 	return db_num_rows($t) == 1 ? $r->sfi_json : null;
@@ -805,7 +805,7 @@ function nuLogout(){
 	$i		= $_SESSION['nubuilder_session_data']['SESSION_ID'];
 	$s		= "DELETE FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
 	
-	nuRunQuery($s, [$i]);
+	nuRunQuery($s, array($i));
 	
 }
 
