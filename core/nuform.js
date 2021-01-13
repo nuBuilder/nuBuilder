@@ -75,8 +75,7 @@ function nuBuildForm(f){
 	window.nuBeforeSave			= null;
 	window.nuBeforeDelete		= null;
 	window.nuOnClone			= null;
-	window.nuOnBeforeGetBreadcrumb = null;
-	window.nuBeforeAddActionButtons = null;
+	window.nuOnBeforeGetBreadcrumb = null;	
 	window.nuOnSetSaved			= null;
 	window.nuOnTabSelected		= null;
 	window.nuOnSelectTab		= null;
@@ -149,9 +148,9 @@ function nuBuildForm(f){
 	nuAddBreadcrumbs();
 	nuAddEditTabs('', f);
 	
-	if(window.nuBeforeAddActionButtons){
-		nuBeforeAddActionButtons();
-	}
+	if(typeof window['nuBeforeAddActionButtons'] === 'function'){
+        nuBeforeAddActionButtons();
+    }
 		
 	nuAddActionButtons(f);
 	nuRecordProperties(f, '');

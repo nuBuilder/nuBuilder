@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 12, 2021 at 04:30 PM
+-- Generation Time: Jan 13, 2021 at 02:08 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 8.0.0
 
@@ -525,8 +525,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.01.12.01'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.01.12.00');
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.01.13.00'),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.01.13.00');
 
 -- --------------------------------------------------------
 
@@ -1204,7 +1204,7 @@ CREATE TABLE `zzzzsys_setup` (
 --
 
 INSERT INTO `zzzzsys_setup` (`zzzzsys_setup_id`, `set_time_out_minutes`, `set_zzzzsys_timezone_id`, `set_language`, `set_smtp_username`, `set_smtp_password`, `set_smtp_host`, `set_smtp_from_address`, `set_smtp_from_name`, `set_smtp_port`, `set_smtp_use_authentication`, `set_smtp_use_ssl`, `set_header`, `set_denied`) VALUES
-('1', 480, '5281a1220508372', '', '1', '1', '1', '1', '1', 1, '1', '1', 'function nuHeaderTest() {\n  console.log(\'Functions placed here are available anywhere in nuBuilder Forte.\');\n}\n\n// nuOnLoad() will be run after each Browse and Edit Form loads. \n\nfunction nuOnLoad() {\n\n if(nuFormType() == \'edit\'){\n     // Edit Form loaded\n } else\n if(nuFormType() == \'browse\'){\n     // Browse Form loaded\n }\n \n}\n\nfunction nuBeforeAddActionButtons() {\ndebugger;\n   nuAddBackButton();\n}\n\n</script>\n\n<!-- Define your own styles, override styles from nubuilder4.css -->\n\n<style> \n\n /*.nuActionButton {background-color:#0073aa;} */\n\n\n\n</style>\n\n\n<script>\n\n', '1');
+('1', 480, '5281a1220508372', '', '1', '1', '1', '1', '1', 1, '1', '1', 'function nuHeaderTest() {\n  console.log(\'Functions placed here are available anywhere in nuBuilder Forte.\');\n}\n\n// nuOnLoad() will be run after each Browse and Edit Form loads. \n\nfunction nuOnLoad() {\n\n if(nuFormType() == \'edit\'){\n     // Edit Form loaded\n } else\n if(nuFormType() == \'browse\'){\n     // Browse Form loaded\n }\n \n}\n\n</script>\n\n<!-- Define your own styles, override styles from nubuilder4.css -->\n\n<style> \n\n /*.nuActionButton {background-color:#0073aa;} */\n\n\n\n</style>\n\n\n<script>\n\n', '1');
 
 -- --------------------------------------------------------
 
@@ -4606,7 +4606,6 @@ CREATE TABLE `zzzzsys_user` (
   `sus_login_password` varchar(300) DEFAULT NULL,
   `sus_expires_on` datetime DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
 
 -- --------------------------------------------------------
 
