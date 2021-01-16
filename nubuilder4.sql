@@ -4618,7 +4618,7 @@ CREATE TABLE `zzzzsys_user` (
 --
 DROP TABLE IF EXISTS `zzzzsys_object_list`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`nuadmin`@`%` SQL SECURITY DEFINER VIEW `zzzzsys_object_list`  AS SELECT `information_schema`.`tables`.`TABLE_NAME` AS `zzzzsys_object_list_id` FROM `information_schema`.`tables` WHERE `information_schema`.`tables`.`TABLE_SCHEMA` = database() ;
+CREATE VIEW `zzzzsys_object_list`  AS SELECT `information_schema`.`tables`.`TABLE_NAME` AS `zzzzsys_object_list_id` FROM `information_schema`.`tables` WHERE `information_schema`.`tables`.`TABLE_SCHEMA` = database() ;
 
 -- --------------------------------------------------------
 
@@ -4627,7 +4627,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`nuadmin`@`%` SQL SECURITY DEFINER VIEW `zzzz
 --
 DROP TABLE IF EXISTS `zzzzsys_report_data`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`nuadmin`@`%` SQL SECURITY DEFINER VIEW `zzzzsys_report_data`  AS SELECT concat('PROCEDURE:',`zzzzsys_php`.`zzzzsys_php_id`) AS `id`, `zzzzsys_php`.`sph_code` AS `code`, `zzzzsys_php`.`sph_description` AS `description` FROM `zzzzsys_php` WHERE `zzzzsys_php`.`sph_system` <> '1' AND locate('#TABLE_ID#',`zzzzsys_php`.`sph_php`) > '0' ;
+CREATE VIEW `zzzzsys_report_data`  AS SELECT concat('PROCEDURE:',`zzzzsys_php`.`zzzzsys_php_id`) AS `id`, `zzzzsys_php`.`sph_code` AS `code`, `zzzzsys_php`.`sph_description` AS `description` FROM `zzzzsys_php` WHERE `zzzzsys_php`.`sph_system` <> '1' AND locate('#TABLE_ID#',`zzzzsys_php`.`sph_php`) > '0' ;
 
 -- --------------------------------------------------------
 
@@ -4636,7 +4636,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`nuadmin`@`%` SQL SECURITY DEFINER VIEW `zzzz
 --
 DROP TABLE IF EXISTS `zzzzsys_run_list`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`nuadmin`@`%` SQL SECURITY DEFINER VIEW `zzzzsys_run_list`  AS SELECT `zzzzsys_form`.`zzzzsys_form_id` AS `id`, 'Form' AS `run`, `zzzzsys_form`.`sfo_code` AS `code`, `zzzzsys_form`.`sfo_description` AS `description` FROM `zzzzsys_form` ;
+CREATE VIEW `zzzzsys_run_list`  AS SELECT `zzzzsys_form`.`zzzzsys_form_id` AS `id`, 'Form' AS `run`, `zzzzsys_form`.`sfo_code` AS `code`, `zzzzsys_form`.`sfo_description` AS `description` FROM `zzzzsys_form` ;
 
 --
 -- Indexes for dumped tables
