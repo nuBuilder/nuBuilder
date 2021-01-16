@@ -607,7 +607,7 @@ function nuGetAllLookupList(){
 	$_POST['nuHash']['TABLE_ID'] = nuTT();
 
 	$s				= "SELECT sob_lookup_code, sob_lookup_description, sob_lookup_zzzzsys_form_id, sob_lookup_javascript FROM zzzzsys_object WHERE zzzzsys_object_id = ?";
-	$t				= nuRunQuery($s, array($o));
+	$t				= nuRunQuery($s, array($O));
 	$r				= db_fetch_object($t);
 	$code			= $r->sob_lookup_code;
 	$description	= $r->sob_lookup_description;

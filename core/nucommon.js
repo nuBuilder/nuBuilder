@@ -1174,13 +1174,6 @@ function nuAddSlashes(s){
 	return (s + '').replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
 }
 
-function nuRemoveTabs(t){
-
-	for(var i = 0 ; i < arguments.length ; i++){
-		$('#nuTab' + arguments[i]).remove();
-	}
-
-}
 
 function nuOpenTab(i){
 	$('#nuTab' + i).click();
@@ -1819,8 +1812,8 @@ function nuSetBrowserTabTitle(prefix) {
 
 function nuBrowseTitleMultiLine() {
 		
-	$('#nuActionHolder').css({'height': '40px'});	    
-	$('.nuBrowseTitle').css('top', "-20px");	
+	$('#nuActionHolder').css({'height': '40px'});
+	$('.nuBrowseTitle').css('top', "-20px");
 }
 
 
@@ -2023,8 +2016,8 @@ function nuObjectIdFromId(i) {
  /*
  * Set the column size of a Browse Screen
  *
- * @param  {int}  column     - Column number (first column = 0, second column = 1 etc.)
- * @param  {int}  size       - Size in pixels
+ * @param	{int}	column	- Column number (first column = 0, second column = 1 etc.)
+ * @param	{int}	size		- Size in pixels
  */
 function nuSetBrowseColumnSize(column, size) {
 	

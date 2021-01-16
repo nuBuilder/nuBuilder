@@ -2340,6 +2340,36 @@ function nuSelectTab(tab){
 
 }
 
+function nuSelectTabByTitle(s) {
+	var tabs = JSON.parse(JSON.stringify(nuSERVERRESPONSE)).tabs;
+	var l = tabs.findIndex(data => data.title === s);
+	if (l > -1) nuSelectTab($('#' + 'nuTab' + l)[0]); 
+}
+
+function nuRemoveTabs(t){
+
+	for(var i = 0 ; i < arguments.length ; i++){
+		$('#nuTab' + arguments[i]).remove();
+	}
+
+}
+
+function nuHideTabByTitle(s) {
+	var tabs = JSON.parse(JSON.stringify(nuSERVERRESPONSE)).tabs;
+	var l = tabs.findIndex(data => data.title === s);
+	if (l > -1) nuHide('nuTab' + l);
+}
+
+function nuHideTabs(t) {
+	for (var i = 0; i < arguments.length; i++) {
+		if (arguments[i] == parseInt(arguments[i])) {
+			$('#nuTab' + arguments[i]).hide();
+		} else {
+			nuHideTabByTitle(arguments[i]);
+		}
+	}
+}
+
 function nuAddDataTab(i, t, p){
 
 	var P = String(p);
