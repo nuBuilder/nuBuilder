@@ -1042,14 +1042,10 @@ function nuResizeWindow(e){
 	}
 	
 	if(l == 2){
-
-		if(D.length == 1){
 			
-				d.css(f.nuDialogSize);
-				w.css(f.nuWindowSize);
-						
-		}
-		
+		d.css(f.nuDialogSize);
+		w.css(f.nuWindowSize);
+										
 	}else{
 
 		d.css({top:0, left:2, width:window.innerWidth - 30, height:window.innerHeight});
