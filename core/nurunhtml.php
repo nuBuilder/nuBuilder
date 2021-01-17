@@ -20,10 +20,10 @@ $j					= json_decode($r->json);
 $q					= $j->sql;
 $c					= $j->columns;
 $_POST['nuHash']	= (array) $j->hash;
-
-$_POST['nuHash']['TABLE_ID'] = nuHash()['browse_table_id'];
-
-nuEval(nuHash()['form_id'] . '_BB');
+$__x				= nuHash();
+$_POST['nuHash']['TABLE_ID'] = $__x['browse_table_id'];
+nuEval($__x['form_id'] . '_BB');
+unset($__x);
 
 print "<style>\n";
 
@@ -79,8 +79,9 @@ $h	.= "</TABLE>";
 print $h;
 
 nuRunQuery("DELETE FROM zzzzsys_debug WHERE zzzzsys_debug_id = ? ", array($_GET['i']));
-nuRunQuery("DROP TABLE IF EXISTS " . nuHash()['browse_table_id']);
-
+$__x = nuHash();
+nuRunQuery("DROP TABLE IF EXISTS " . $__x['browse_table_id']);
+unset($__x);
 
 ?>
 

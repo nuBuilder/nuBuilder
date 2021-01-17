@@ -314,7 +314,7 @@ function nuAppendToSystemTables(){
 
 function nuSystemList(){
 	
-	$t	= [];
+	$t	= array();
 		$t[]	= 'zzzzsys_access';
 		$t[]	= 'zzzzsys_access_form';
 		$t[]	= 'zzzzsys_access_php';
@@ -349,7 +349,7 @@ function nuSystemList(){
 function nuSetCollation(){
 		
 	$db		= nuRunQuery("SELECT DATABASE()");
-	$dbname	= db_fetch_row($db)[0];
+	$dbname	= db_fetch_row($db);
 	$dbname	= $dbname[0];
 	nuRunQuery("ALTER DATABASE $dbname CHARACTER SET utf8 COLLATE utf8_general_ci");
 	

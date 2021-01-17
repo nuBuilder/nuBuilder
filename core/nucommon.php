@@ -1457,7 +1457,8 @@ function nuUser(){
 		WHERE zzzzsys_user_id = ?
 	";
 
-	$t	= nuRunQuery($s, array(nuHash()['USER_ID']));
+	$t	= nuHash();
+	$t	= nuRunQuery($s, array($t['USER_ID']));
 
 	return db_fetch_object($t);
 
@@ -1696,14 +1697,14 @@ function nuBuildCurrencyFormats(){
 
 		nuRunQuery($s, array($js, $r->zzzzsys_format_id));
 
-		$a[]		= ['N|'. $r->srm_format, $js];
+		$a[]		= array('N|'. $r->srm_format, $js);
 
 	}
 
 	$t = nuRunQuery("SELECT srm_format, srm_currency FROM zzzzsys_format WHERE srm_type = 'Number'");
 	$a = array();
 	while($r = db_fetch_object($t)){
-		$a[]		= ['N|'. trim($r->srm_format), $r->srm_currency];
+		$a[]		= array('N|'. trim($r->srm_format), $r->srm_currency);
 	}
 
 	return $a;

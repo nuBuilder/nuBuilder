@@ -10,8 +10,8 @@ function nuValidateSubforms(){
 	for($d = 0 ; $d < count($nudata) ; $d++){
 		
 		$sf	= $nudata[$d];
-		$a	= [];
-		$L	= [];
+		$a	= array();
+		$L	= array();
 		$s	= '
 				SELECT 
 					sob_subform_zzzzsys_form_id, 
@@ -158,7 +158,7 @@ function nuUpdateDatabase(){
 	$EFid			= $nudata[0]->object_id;
 	$cts			= nuGetJSONData('clientTableSchema');
 	$user			= $_POST['nuHash']['USER_ID'];
-	$S = [];
+	$S = array();
 	
 	for($d = 0 ; $d < count($nudata) ; $d++){
 	
@@ -213,8 +213,8 @@ function nuUpdateDatabase(){
 					
 				}
 				
-				$V					= [];																//-- primary key id
-				$I					= [];
+				$V					= array();																//-- primary key id
+				$I					= array();
 				
 				if($nv != 'autoid'){
 						
@@ -400,7 +400,8 @@ function nuUpdateDatabase(){
 			if(substr($sql, 0, $length) == $insert and $nuMainID == 'autoid'){
 				
 				$t			= nuRunQuery('SELECT LAST_INSERT_ID()');
-				$nuMainID	= db_fetch_row($t)[0];
+				$nuMainID	= db_fetch_row($t);
+				$nuMainID	= $nuMainID[0];
 				
 			}
 		}
@@ -595,7 +596,7 @@ function nuAutoNumbers($form_id){
 				";
 				
 	$t			= nuRunQuery($s, array($form_id));
-	$a			= [];
+	$a			= array();
 	
 	while($r = db_fetch_object($t)){
 		$a[]	= $r->sob_all_id;
@@ -706,7 +707,8 @@ function nuCloneForm(){
 	
 	return;	
 
-	$f 		= nuHash()['CLONED_RECORD_ID'];
+	$f 		= nuHash();
+	$f 		= $f['CLONED_RECORD_ID'];
 	$TT		= nuTT();
 
 	$s		= "CREATE TABLE p$TT SELECT * FROM zzzzsys_php WHERE zzzzsys_php_id LIKE CONCAT(?,'%') ";

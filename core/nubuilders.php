@@ -16,8 +16,10 @@ function nuBuildFastReport(){
 	$c		= "FR$fr";
 	$d		= "Fast Report $fr";
 	$g		= "Fast Report";
-	$j		= str_replace('\"', '"', nuHash()['fieldlist']);
-	$t		= nuHash()['table'];
+	$j		= nuHash();
+	$j		= str_replace('\"', '"', $j['fieldlist']);
+	$t		= nuHash();
+	$t		= $t['table'];
 	$f		= 'nublank';
 	$s		= "
 				INSERT INTO zzzzsys_report
@@ -389,8 +391,10 @@ function nuBuildNewTable($tab, $array, $newT){
 	$a			= Array();
 	$a[]		= "$id VARCHAR(25) NOT NULL";
 
-	$ff_type	= nuHash()['fastform_type'];
-	$ff_fk		= nuHash()['fastform_fk'];
+	$ff_type	= nuHash();
+	$ff_type	= $ff_type['fastform_type'];
+	$ff_fk		= nuHash();
+	$ff_fk		= $ff_fk['fastform_fk'];
 
 	if($ff_type == 'subform' && $newT){
 		$a[]	= "$ff_fk VARCHAR(25) DEFAULT NULL";

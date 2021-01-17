@@ -155,9 +155,9 @@ function db_fetch_row($o){
 
 function db_field_info($n){
 
-	$fields		= [];
-	$types		= [];
-	$pk			= [];
+	$fields		= array();
+	$types		= array();
+	$pk			= array();
 
 	$s		 = "DESCRIBE $n";
 	$t		= nuRunQuery($s);
@@ -236,7 +236,7 @@ function db_num_rows($o) {
 
 function nuUpdateTables(){
 	
-	$a	= [];
+	$a	= array();
 	$t 	= nuRunQuery("SHOW TABLES");
 	
 	while($r = db_fetch_row($t)){

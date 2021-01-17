@@ -12,7 +12,7 @@ function nuFormProperties($f){
 
 function nuBeforeBrowse($f){
 	
-	$_POST['nuMessages']	= [];
+	$_POST['nuMessages']	= array();
 	$r						= nuFormProperties($f);
 
 	$p	= nuProcedure('nuBeforeBrowse');	
@@ -61,7 +61,8 @@ function nuBeforeEdit($FID, $RID){
 
 				$jd = '';
 				if (db_num_rows($T) == 1) {
-					$J			= db_fetch_row($T)[0];					
+					$J			= db_fetch_row($T);					
+					$J			= $J[0];					
 					$jd	= json_decode($J);
 				}
 				
@@ -119,7 +120,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 	$f->record_id	= $R;
 	
 	if(!isset($f->table) || $f->table == ''){
-		$A 			= [];
+		$A 			= array();
 	}else{
 		
 		$s	= "Select * FROM `$f->table` WHERE `$f->primary_key` = ?";
@@ -364,7 +365,9 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 	$f->browse_rows			= nuObjKey($B,0,0);
 	$f->browse_height		= nuObjKey($B,1,0);
 	$f->browse_sql			= nuObjKey($B,2,0);;
-	$f->browse_table_id		= nuHash()['TABLE_ID'];
+	$__x					= nuHash();
+	$f->browse_table_id		= $__x['TABLE_ID'];
+	unset($__x);
 	
 	$rows 					= isset($f->rows) ? $f->rows : 1;
 	$f->pages				= ceil($f->browse_height/$rows);
@@ -396,7 +399,7 @@ function nuGetSrc($i){
 
 function nuObjectEvents($i){
 
-	$a	= [];
+	$a	= array();
 	$s	= "SELECT sev_event AS event, sev_javascript AS js FROM zzzzsys_event WHERE sev_zzzzsys_object_id = ?";
 	$t	= nuRunQuery($s, array($i));
 	
@@ -767,7 +770,7 @@ function nuGetSubformRecords($R, $A){
 function nuBuildTabList($i){
 
 	$o = 0;
-	$a = [];
+	$a = array();
 	$s = "
 
 		SELECT zzzzsys_tab.*
@@ -916,7 +919,9 @@ function nuBrowseRows($f){
 	}
 
 	$where			= trim(nuBrowseWhereClause($flds, $filter . ' ' . $search));
-	$like 			= isset(nuHash()['like']) ? nuHash()['like'] : '';
+	$__x			= nuHash();
+	$like 			= isset($__x['like']) ? $__x['like'] : '';
+	unset($__x);
 	$like			= str_replace('\\"','"',$like);
 	$haswhere		= $where != '()';
 	$haslike		= $like != '';
@@ -1038,8 +1043,8 @@ function nuBrowseWhereClause($searchFields, $searchString, $returnArray = false)
 
 	for ($i = 0; $i < count($SEARCHES); $i++) {															//-- search for (or exclude) these strings
 	
-		$include = [];
-		$exclude = [];
+		$include = array();
+		$exclude = array();
 		
 		for ($SF = 0; $SF < count($searchFields); $SF++) {												//-- loop through searchable fields
 
@@ -1186,7 +1191,7 @@ function nuGetDataMode($f) {
 
 function nuFormAccessList($j){
 	
-	$a			= [];
+	$a			= array();
 	$t			= nuRunQuery("SELECT zzzzsys_form_id FROM zzzzsys_form WHERE sfo_type = 'subform'");
 	
 	while($r = db_fetch_row($t)){
@@ -1205,7 +1210,9 @@ function nuFormAccessList($j){
 		$a[]	= $j->procedures[$i][1];
 	}
 
-	$a[]		= nuGetUserAccess()['HOME_ID'];
+	$__x		= nuGetUserAccess();
+	$a[]		= $__x['HOME_ID'];
+	unset($__x);
 	
 	return $a;
 	
@@ -1429,9 +1436,9 @@ function nuFormDimensions($f){
 function nuGetBrowseWidth($f){
 
 	$t	= nuRunQuery("SELECT SUM(sbr_width) FROM zzzzsys_browse WHERE sbr_zzzzsys_form_id = ? ", array($f));		
-
-	return db_num_rows($t) > 0 ? db_fetch_row($t)[0] : 0;
-
+	$__x = db_fetch_row($t);
+	return db_num_rows($t) > 0 ? $__x[0] : 0;
+	unset($__x);
 }
 
 function isForm($i){

@@ -95,7 +95,7 @@ function nuLoginSetupGlobeadmin() {
 	$getAllFormsQRY = nuRunQuery("SELECT zzzzsys_form_id AS id FROM zzzzsys_form");
 	$formAccess = array();
 	while ($getAllFormsOBJ = db_fetch_object($getAllFormsQRY)) {
-		$formAccess[] = [$getAllFormsOBJ->id];
+		$formAccess[] = array($getAllFormsOBJ->id);
 	}
 	$storeSessionInTable->forms = $formAccess;
 
@@ -103,7 +103,7 @@ function nuLoginSetupGlobeadmin() {
 	$getAllReportsQRY = nuRunQuery("SELECT zzzzsys_report_id AS id, sre_zzzzsys_form_id AS form_id FROM zzzzsys_report");
 	$reportAccess = array();
 	while ($getAllReportsOBJ = db_fetch_object($getAllReportsQRY)) {
-		$reportAccess[] = [$getAllReportsOBJ->id, $getAllReportsOBJ->form_id];
+		$reportAccess[] = array($getAllReportsOBJ->id, $getAllReportsOBJ->form_id);
 	}
 	$storeSessionInTable->reports = $reportAccess;
 
@@ -111,7 +111,7 @@ function nuLoginSetupGlobeadmin() {
 	$getAllPHPsQRY = nuRunQuery("SELECT zzzzsys_php_id AS id, sph_zzzzsys_form_id AS form_id FROM zzzzsys_php");
 	$phpAccess = array();
 	while ($getAllPHPsOBJ = db_fetch_object($getAllPHPsQRY)) {
-		$phpAccess[] = [$getAllPHPsOBJ->id, $getAllPHPsOBJ->form_id];
+		$phpAccess[] = array($getAllPHPsOBJ->id, $getAllPHPsOBJ->form_id);
 	}
 	$storeSessionInTable->procedures = $phpAccess;
 	$storeSessionInTable->access_level_code = '';
@@ -201,7 +201,7 @@ function nuLoginSetupNOTGlobeadmin($standalone = true) {
 	$getFormsQRY = nuRunQuery($getFormsSQL);
 	$formAccess = array();
 	while ($getFormsOBJ = db_fetch_object($getFormsQRY)) {
-		$formAccess[] = [$getFormsOBJ->id, $getFormsOBJ->a, $getFormsOBJ->p, $getFormsOBJ->s, $getFormsOBJ->c, $getFormsOBJ->d];
+		$formAccess[] = array($getFormsOBJ->id, $getFormsOBJ->a, $getFormsOBJ->p, $getFormsOBJ->s, $getFormsOBJ->c, $getFormsOBJ->d);
 	}
 	$storeSessionInTable->forms = $formAccess;
 
@@ -216,7 +216,7 @@ function nuLoginSetupNOTGlobeadmin($standalone = true) {
 	$getReportsQRY = nuRunQuery($getReportsSQL);
 	$reportAccess = array();
 	while ($getReportsOBJ = db_fetch_object($getReportsQRY)) {
-		$reportAccess[] = [$getReportsOBJ->id, $getReportsOBJ->form_id];
+		$reportAccess[] = array($getReportsOBJ->id, $getReportsOBJ->form_id);
 	}
 	$storeSessionInTable->reports = $reportAccess;
 
@@ -234,7 +234,7 @@ function nuLoginSetupNOTGlobeadmin($standalone = true) {
 	$getPHPsQRY = nuRunQuery($getPHPsSQL);
 	$phpAccess = array();
 	while ($getPHPsOBJ = db_fetch_object($getPHPsQRY)) {
-		$phpAccess[] = [$getPHPsOBJ->id, $getPHPsOBJ->form_id];
+		$phpAccess[] = array($getPHPsOBJ->id, $getPHPsOBJ->form_id);
 	}
 	$storeSessionInTable->procedures = $phpAccess;
 	$storeSessionInTableJSON = json_encode($storeSessionInTable);
@@ -305,11 +305,11 @@ function nuIDTEMP() {
 
 function nuGetTranslation($l) {
 
-	$a = [];
+	$a = array();
 	$s = "SELECT trl_english, trl_translation FROM zzzzsys_translate WHERE trl_language = ? ORDER BY trl_english, IF(zzzzsys_translate_id like 'nu%', 1, 0) ";
 	$t = nuRunQuery($s, array($l));
 	while ($r = db_fetch_object($t)) {
-		$a[] = ['english' => $r->trl_english, 'translation' => $r->trl_translation];
+		$a[] = array('english' => $r->trl_english, 'translation' => $r->trl_translation);
 	}
 
 	return $a;
