@@ -391,7 +391,7 @@ function nuRunPHPHiddenWithParams(i, paramName, paramValue, rbs) {
 
 function nuSystemUpdate(){
 	
-	var msg				= nuTranslate("Update nuBuilder now?");
+	var msg				= nuTranslate("Update system? Be sure to backup first.");
 	if(confirm(msg) == false){return;}
 	
 	if (nuCurrentProperties().form_code == 'nuupdate') {

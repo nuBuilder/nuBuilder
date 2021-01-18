@@ -233,27 +233,6 @@ function db_num_rows($o) {
 	
 }
 
-
-function nuUpdateTables(){
-	
-	$a	= array();
-	$t 	= nuRunQuery("SHOW TABLES");
-	
-	while($r = db_fetch_row($t)){
-		$a[] = $r[0];
-	}
-		
-	nuRunQuery('DELETE FROM zzzzsys_table');
-	
-	for($i = 0 ; $i < count($a) ; $i ++){
-		
-		$s	= "INSERT INTO zzzzsys_table (zzzzsys_table_id) VALUES (?)";
-		nuRunQuery($s, array($a[$i]));
-		
-	}
-		
-}
-
 function nuDebugResult($t){
 	
 	if(is_object($t)){

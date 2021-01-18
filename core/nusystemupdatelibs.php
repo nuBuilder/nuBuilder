@@ -191,10 +191,16 @@ function nuAlterSystemTables(){
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_access_form` ADD `slf_data_mode` varchar(2) DEFAULT NULL AFTER `slf_print_button`;");	
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_php` ADD `sph_global` VARCHAR(1) NOT NULL DEFAULT '0' AFTER `sph_system`;");
 	
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_setup` ADD `set_smtp_use_ssl` VARCHAR(1) NULL DEFAULT NULL AFTER `set_smtp_use_authentication`;");
-		
-}	
+	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_setup` ADD `set_smtp_use_ssl` VARCHAR(1) NOT NULL DEFAULT '1' AFTER `set_smtp_use_authentication`;");	
 	
+	$setupColumns = db_field_names('zzzzsys_setup');
+	if(array_search('set_languages_included', $setupColumns) == false){
+		nuRunQueryNoDebug("ALTER TABLE `zzzzsys_setup` ADD `set_languages_included` VARCHAR(1000) NULL DEFAULT NULL AFTER `set_language`;");		
+		nuRunQuery('UPDATE `zzzzsys_setup` SET set_languages_included = ?', array('["Arabic","Armenian","Chinese","Czech","French","German","Greek","Hindi","Italian","Malay","Russian","Spanish","Tamil","Vietnamese"]'));
+	}
+
+}	
+
 function nuJustNuRecords(){
 
 	$s = "DELETE FROM zzzzsys_event WHERE zzzzsys_event_id NOT LIKE 'nu%'";
@@ -332,8 +338,7 @@ function nuSystemList(){
 		$t[]	= 'zzzzsys_select_clause';
 		$t[]	= 'zzzzsys_session';
 		$t[]	= 'zzzzsys_setup';
-		$t[]	= 'zzzzsys_tab';
-		$t[]	= 'zzzzsys_table';
+		$t[]	= 'zzzzsys_tab';		
 		$t[]	= 'zzzzsys_timezone';
 		$t[]	= 'zzzzsys_translate';
 		$t[]	= 'zzzzsys_user';
@@ -369,6 +374,42 @@ function nuSetCollation(){
 		
 	}
 	
+}
+
+function nuGetIncludedLanguages(){
+
+	$s		= "SELECT `set_languages_included` FROM `zzzzsys_setup`";
+	$t		= nuRunQuery($s);
+	$r		= db_fetch_row($t);
+
+	$v = str_replace('"', '', $r[0]);
+	$v = str_replace(array('[',']') , '' , $v );
+
+	return $v == '' ? array() : explode(",", $v);
+
+}
+
+function nuImportLanguageFiles() {
+	
+	nuRunQuery("DELETE FROM `zzzzsys_translate` WHERE `zzzzsys_translate_id` LIKE 'nu%'");
+	
+	$l = nuGetIncludedLanguages();
+	
+	try{
+		for($i = 0; $i < count($l); $i++) {
+			$file = dirname(__FILE__). '/languages/'. $l[$i].'.sql';
+			$sql = file_get_contents($file);
+			if ($sql) {
+				nuRunQuery($sql);
+			} else {
+				throw new nuInstallException("Error opening the file: $file");
+			}
+		}
+	} catch (Throwable $e) {
+		nuInstallException($e);
+	}catch (Exception $e) {
+		nuInstallException($e);
+	}
 }
 
 function nuMigrateSQL() {

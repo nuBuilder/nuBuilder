@@ -48,6 +48,9 @@ print '<br><span style="font-family:Helvetica;padding:10px;">Removed all ids not
 nuAppendToSystemTables();
 print '<br><span style="font-family:Helvetica;padding:10px;">Inserted TEMP FILES into SYSTEM FILES <br></span>';
 
+nuImportLanguageFiles();
+print '<br><span style="font-family:Helvetica;padding:10px;">Imported the LANGUAGE FILES into the DATABASE <br></span>';
+
 nuSetCollation();
 print '<br><span style="font-family:Helvetica;font-style:italic;font-size:20px;font-weight:bold;padding:10px">You will need to log in again for the changes to take effect.</span><br>';
 
