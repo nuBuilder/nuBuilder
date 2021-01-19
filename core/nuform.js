@@ -1637,7 +1637,7 @@ function nuLabel(w, i, p, prop){
 	
 	$('#' + id).css({'top'		: Number(obj.top),
 		'left'	: Number(obj.left) - lwidth + -17,
-		 'width'	: Number(lwidth + 10)
+		 'width'	: Number(lwidth + 12)
 	})
 	.html(l)
 	.attr('ondblclick','nuPopup("nuobject", "' + obj.object_id + '")');
