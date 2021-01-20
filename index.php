@@ -88,6 +88,7 @@ nuJSIndexInclude('core/nuajax.js');		//-- calls to server
 nuJSChartsInclude();
 nuJSIndexInclude('core/libs/quill/quill.js'); 
 nuJSIndexInclude('core/libs/quill/modules/quill-divider.js'); 
+nuJSIndexInclude('core/libs/select2/select2.min.js'); 
 
 nuCSSIndexInclude('core/css/nubuilder4.css');
 nuCSSIndexInclude('core/libs/quill/themes/quill.snow.css');
@@ -96,6 +97,8 @@ $nuConfigIncludeJS = isset($nuConfigIncludeJS) ? $nuConfigIncludeJS : '';
 nuJSIndexInclude($nuConfigIncludeJS);
 $nuConfigIncludeCSS = isset($nuConfigIncludeCSS) ? $nuConfigIncludeCSS : '';
 nuCSSIndexInclude($nuConfigIncludeCSS);
+
+nuCSSIndexInclude('core/libs/select2/select2.min.css');
 
 ?>
 

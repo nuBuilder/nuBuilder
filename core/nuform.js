@@ -1243,12 +1243,36 @@ function nuSELECT(w, i, l, p, prop){
 	sel.setAttribute('id', id);
 
 	$('#' + ef).append(sel);
+	
 
 	if(w.objects[i].value != '' && window.nuFORM.getCurrent().record_id == '-1'){
 		$('#' + id).addClass('nuEdited');
 	}
 	
 	nuAddDataTab(id, prop.objects[i].tab, p);
+
+	if(prop.objects[i].multiple == 1){
+
+		$('#' + id).attr('multiple', 'multiple');
+
+	}
+
+	if (prop.objects[i].select2 == 1) {
+		$('#' + id).attr('date-nu-select2', 1);
+		let select2Id = "select2_" + $('#' + id).attr('id');
+		$('#' + id).select2({
+			dropdownParent: $('#nuRECORD'),
+			theme: "default " + select2Id
+		});
+		$('.' + select2Id).css({
+			position: 'absolute',
+			width: Number(prop.objects[i].width),
+			top: Number(prop.objects[i].top),
+			left: Number(prop.objects[i].left)
+		}).attr('id', select2Id);
+		nuAddDataTab(select2Id, prop.objects[i].tab, p);
+	};
+	
 
 	$('#' + id).css({'top'		: Number(prop.objects[i].top),
 					'left'		: Number(prop.objects[i].left),
@@ -1265,12 +1289,7 @@ function nuSELECT(w, i, l, p, prop){
 	.attr('data-nu-label', w.objects[i].label)
 	.attr('data-nu-prefix', p);
 
-	if(prop.objects[i].multiple == 1){
-
-		$('#' + id).attr('multiple', 'multiple');
-
-	}
-	
+		
 	$('#' + id).css('height', Number(prop.objects[i].height));
 
 	var s = String(w.objects[i].value);
@@ -1280,8 +1299,7 @@ function nuSELECT(w, i, l, p, prop){
 		a = [s];
 		
 	}
-	
-	
+		
 	if(s.substr(0,1) + s.substr(-1) == '[]'){
 		eval('a = ' + s);
 	}
@@ -1689,8 +1707,8 @@ function nuGetSubformRowSize(o, SF, id){
 
 		var d = Number(o[i].description_width);
 		var T = SF.subform_type 		== 'g'		? 0		: Number(o[i].top);
-		var B = o[i].type          		== 'lookup'	? 26	: 0;					//-- lookup button
-		var D = o[i].type          		== 'lookup'	? d		: 0;					//-- lookup description
+		var B = o[i].type				== 'lookup'	? 26	: 0;					//-- lookup button
+		var D = o[i].type				== 'lookup'	? d		: 0;					//-- lookup description
 		
 		if(o[i].type == 'select'){
 			w = Number(o[i].width) + B + D - 4;

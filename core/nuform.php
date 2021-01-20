@@ -265,6 +265,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 			if($r->sob_all_type == 'select'){
 
 				$o->multiple		= $r->sob_select_multiple;
+				$o->select2			= $r->sob_select_2;
 				$o->options			= nuSelectOptions(nuReplaceHashVariables($r->sob_select_sql));
 				
 			}
@@ -515,18 +516,18 @@ function nuGetOtherLookupValues($o){
 	if(db_num_rows($t) == 1){
 		$_POST['lookup_row']->ID	= $l;
 	}
-	
+
 	if(db_num_rows($t) == 0){
 
 		$_POST['lookup_row']		= new stdClass;
 		$_POST['lookup_row']->ID	= '';
 		
 	}
-	
+
 	$_POST['lookup_values']			= array();
 
 	nuEval($p . '_AB');
-	
+
 	return $_POST['lookup_values'];
 	
 }
@@ -651,7 +652,7 @@ function nuGetAllLookupList(){
 		$t			= nuRunQuery($s, ['%' . $C . '%', '%' . $C . '%']);
 
 	}
-	
+
 	nuRunQuery(nuReplaceHashVariables('DROP TABLE if EXISTS #TABLE_ID#'));
 
 	$_POST['nuHash']['TABLE_ID'] = $was;
@@ -666,14 +667,14 @@ function nuGetAllLookupList(){
 	$f->lookup_javascript	= $js;
 
 	return $f;
-	
+
 }
 
 
 function nuLookupRecord(){
 	
 	return $_POST['lookup_row'];
-	
+
 }
 
 
@@ -682,7 +683,7 @@ function nuSetFormValue($f, $v){
 	$f							= str_replace('#ROW#', $_POST['nuSTATE']['prefix'], $f);
 
 	$_POST['lookup_values'][]	= array($f, $v);
-	
+
 }
 
 
