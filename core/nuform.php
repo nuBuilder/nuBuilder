@@ -693,8 +693,6 @@ function nuSetFormValue($f, $v){
 
 }
 
-
-
 function nuDatalistOptions($sql) {
 	
 	$a 				= array();
@@ -710,8 +708,10 @@ function nuDatalistOptions($sql) {
 			while ($r = db_fetch_row($t)) {
 				$a[]	= $r;
 			}
-    }				
-	
+    } else {
+		$a = json_decode($sql);
+	}		
+
 	return $a;
 		
 }
