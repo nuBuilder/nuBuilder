@@ -210,9 +210,9 @@ $.fn.enterKey = function (fnc) {
 }
 
 jQuery.fn.extend({
-	nuEnable: function() {
+	nuEnable: function(enable) {
 		return this.each(function() {
-		  nuEnable(this.id);
+		  nuEnable(this.id, enable);
 		});
 	},
 	nuDisable: function() {
@@ -842,8 +842,23 @@ function nuGetLookupFields(id){
 	
 }
 
-function nuEnable(i) {            //-- Enable Edit Form Object
+function nuObjectComponents(i) {
 
+	var o	= [i, 'label_' + i];	
+	if ($('#'+ i).attr('data-nu-type') == 'lookup') o.push(i + 'code', i + 'button', i + 'description')
+	if ($('#'+ i).hasClass('select2-hidden-accessible')) o.push(i + 'select2');
+
+	return o;
+
+}
+
+function nuEnable(i, enable) {            //-- Enable Edit Form Object
+
+	if(enable === false){
+		nuDisable(i);
+		return;
+	}
+	
 	a = [];
 	if (!$.isArray(i)) {
 		a.push(i);
@@ -855,7 +870,7 @@ function nuEnable(i) {            //-- Enable Edit Form Object
 
 		i = a[index];
 		
-		var o = [i, i + 'code', i + 'button', i + 'description'];
+		var o =	nuObjectComponents(i);
 	
 		for (var c = 0; c < o.length; c++) {
 
@@ -879,7 +894,7 @@ function nuEnable(i) {            //-- Enable Edit Form Object
 
 function nuReadonly(i){					//-- set Edit Form Object to readonly
 
-	var o	= [i, i + 'code', i + 'button', i + 'description'];
+	var o =	nuObjectComponents(i);
 
 	for(var c = 0 ; c < o.length ; c++){
 
@@ -905,7 +920,7 @@ function nuDisable(i){					//-- Disable Edit Form Object
 
 		i = a[index];
 
-		var o = [i, i + 'code', i + 'button', i + 'description'];
+		var o = nuObjectComponents(i);
 
 		for (var c = 0; c < o.length; c++) {
 
@@ -926,14 +941,14 @@ function nuDisable(i){					//-- Disable Edit Form Object
 
 }
 
-function nuShow(i, visible){ //-- Show Edit Form Object
+function nuShow(i, visible){
 
 	if(visible === false){
 		nuHide(i);
 		return;
 	}
 
-	var o	= [i, i + 'code', i + 'button', i + 'description', 'label_' + i];
+	var o =	nuObjectComponents(i);
 
 	for(var c = 0 ; c < o.length ; c++){
 
@@ -958,9 +973,9 @@ function nuShow(i, visible){ //-- Show Edit Form Object
 
 }
 
-function nuHide(i){				//-- Hide Edit Form Object
+function nuHide(i){
 
-	var o	= [i, i + 'code', i + 'button', i + 'description', 'label_' + i];
+	var o = nuObjectComponents(i);
 
 	for(var c = 0 ; c < o.length ; c++){
 
@@ -982,28 +997,6 @@ function nuHide(i){				//-- Hide Edit Form Object
 	}
 
 }
-
-/*
-function nuAddThousandSpaces(s, c){
-
-	var a	= String(s).split('');
-	var r	= [];
-
-	r		= a.reverse();
-		
-	if(r.length > 3){r.splice(3, 0, c);}
-	if(r.length > 7){r.splice(7, 0, c);}
-	if(r.length > 11){r.splice(11, 0, c);}
-	if(r.length > 15){r.splice(15, 0, c);}
-	if(r.length > 19){r.splice(19, 0, c);}
-	if(r.length > 23){return 'toobig';}
-
-	r		= r.reverse();
-	
-	return r.join('');
-	
-}
-*/
 
 function nuAddThousandSpaces(s, c){
 	return s.replace(/\B(?=(\d{3})+(?!\d))/g, c)
@@ -1345,16 +1338,6 @@ function nuClosePopup(){
 	parent.$('#nuDragDialog').remove();
 
 }
-
-/*
-function nuStopClick(e){
-
-	if(window.nuCLICKER != ''){
-		$(e.target).prop('onclick',null).off('click');
-	}
-
-}
-*/
 
 function nuStopClick(e){
 
@@ -1917,9 +1900,10 @@ function nuAddDatalist(i, a) {
 	datalist.id = "datalist";
 	document.body.appendChild(datalist);
 	a.forEach(function (data) {
-		var option = document.createElement('option');				
+		var option = document.createElement('option');		
+
 		option.value =	$.isArray(data) ? data[0]: data;
-		option.text =	$.isArray(data) ? data[1]: data;
+		if (data.length == 2) option.text =	$.isArray(data) ? data[1]: data;
 		datalist.appendChild(option);
 	});
 	$('#' + i).attr('list', "datalist").attr('autocomplete', 'off');
@@ -1959,7 +1943,7 @@ jQuery.fn.cssNumber = function(prop) {
 	
 };
 
-function nuDisableAllObjects(excludeTypes, excludeIds) {
+function nuEnableDisableAllObjects(v, excludeTypes, excludeIds) {
 
 	if (typeof excludeTypes === 'undefined') {
 		let excludeTypes = [];
@@ -1968,16 +1952,28 @@ function nuDisableAllObjects(excludeTypes, excludeIds) {
 	if (typeof excludeIds === 'undefined') {
 		let excludeIds = [];
 	}
-	
+
 	var r = JSON.parse(JSON.stringify(nuSERVERRESPONSE));
 	for (var i = 0; i < r.objects.length; i++) {
 		let obj = r.objects[i];
 		
 		if ($.inArray(obj.type, excludeTypes) == -1 && $.inArray(obj.id, excludeIds) == -1 ) {
-			nuDisable(obj.id);
+			nuEnable(obj.id, v);
 		}
 	}
+
+}
+
+function nuEnableAllObjects(excludeTypes, excludeIds) {
 	
+	 nuEnableDisableAllObjects(true, excludeTypes, excludeIds);
+	 
+}
+
+function nuDisableAllObjects(excludeTypes, excludeIds) {
+	
+	nuEnableDisableAllObjects(false, excludeTypes, excludeIds);
+
 }
 
 function nuInsertTextAtCaret(i, text) {

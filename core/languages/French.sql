@@ -221,7 +221,7 @@ INSERT INTO `zzzzsys_translate` (`zzzzsys_translate_id`, `trl_language`, `trl_en
 ('nu5bad6cb40164256', 'French', 'Import To (Table)', 'Importer vers (table)'),
 ('nu5bad6cb40164257', 'French', 'Input Type (and class)', 'Type d\'entrée (et classe)'),
 ('nu5bad6cb40164258', 'French', 'Insert Snippet', 'Insérer extrait de code'),
-('nu5bad6cb40164259', 'French', 'Leave blank to create a new from', 'Laissez vide pour créer un nouveau à partir de'),
+('nu5bad6cb40164259', 'French', 'Leave blank to create a new form', 'Laissez vide pour créer un nouveau formulaire'),
 ('nu5bad6cb40164260', 'French', 'Method', 'Méthode'),
 ('nu5bad6cb40164261', 'French', 'Multiple', 'Plusieurs'),
 ('nu5bad6cb40164262', 'French', 'No fields can be left blank', 'Aucun champ ne peut être laissé vide'),

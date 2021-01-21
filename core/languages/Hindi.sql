@@ -127,7 +127,7 @@ REPLACE INTO `zzzzsys_translate` (`zzzzsys_translate_id`, `trl_language`, `trl_e
 ('nu5bad6cb3a999dae', 'Hindi', 'Language', 'भाषा'),
 ('nu5bad6cb3aef3127', 'Hindi', 'Launch Form', 'लॉन्च फॉर्म'),
 ('nu5bad6cb3a9a5e3f', 'Hindi', 'Launch From', 'से लॉन्च करें'),
-('nu5ff1df661a43b48', 'Hindi', 'Leave blank to create a new from', 'से एक नया बनाने के लिए खाली छोड़ दें'),
+('nu5ff1df661a43b48', 'Hindi', 'Leave blank to create a new form', 'से एक नया बनाने के लिए खाली छोड़ दें'),
 ('nu5bad6cb3e92666a', 'Hindi', 'Leave this form without saving?', 'बिना सहेजे इस फॉर्म को छोड़ दें?'),
 ('nu5bad6cb3a9b0225', 'Hindi', 'Left', 'बाएं'),
 ('nu5bad6cb3aef3128', 'Hindi', 'Login Name', 'लॉगिन नाम'),

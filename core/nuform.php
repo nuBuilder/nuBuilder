@@ -179,26 +179,33 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 
 				$o->align 			= $r->sob_all_align;
 				$o->format 			= '';
+				$inputType			= $r->sob_input_type;
 				
-				if($r->sob_input_type == 'nuNumber' || $r->sob_input_type == 'nuDate'){
+				if($inputType== 'nuNumber' || $inputType == 'nuDate'){
 					$o->format 		= $r->sob_input_format;
 				}
 					
-				if($r->sob_input_type == 'nuAutoNumber'){
+				if($inputType == 'nuAutoNumber'){
 					
 					$o->counter 	= $o->value;
 					
 				}
 					
-				$o->input 			= $r->sob_input_type;
+				$o->input 			= $inputType;
 
-				if($r->sob_input_type == 'button' && $r->sob_all_type == 'input'){
+				if($inputType == 'button' && $r->sob_all_type == 'input'){
 					$o->value		= $r->sob_all_label;
 				}
 
-				if($r->sob_input_type == 'nuScroll' && $r->sob_all_type == 'input'){
+				if($inputType == 'nuScroll' && $r->sob_all_type == 'input'){
 					$o->scroll		= $r->sob_input_javascript;
 				}
+				
+				
+				if(($inputType == 'nuDate' || $inputType == 'nuNumber' || $inputType == 'number' || $inputType == 'text' || $inputType == 'email' || $inputType == 'search' || $inputType == 'moneth') && $r->sob_all_type == 'input' && $r->sob_input_datalist != ''){
+					
+					$o->datalist	= json_encode (nuDataListOptions(nuReplaceHashVariables($r->sob_input_datalist))); 
+				}	
 
 				if($r->sob_all_type == 'display'){
 								
@@ -272,14 +279,14 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 
 			if($r->sob_all_type == 'run'){
 				
-				$type				= $r->sob_run_zzzzsys_form_id;
-				$o->form_id			= $type;
+				$fromId				= $r->sob_run_zzzzsys_form_id;
+				$o->form_id			= $fromId;
 				$o->record_id		= nuReplaceHashVariables($r->sob_run_id);
 				$o->parameters		= $r->sob_all_id;
 				
-				if(isProcedure($type)){
+				if(isProcedure($fromId)){
 					
-					$actt			= nuRunQuery('SELECT sph_zzzzsys_form_id, sph_code FROM zzzzsys_php WHERE zzzzsys_php_id = ?', array($type));
+					$actt			= nuRunQuery('SELECT sph_zzzzsys_form_id, sph_code FROM zzzzsys_php WHERE zzzzsys_php_id = ?', array($fromId));
 					$act			= db_fetch_object($actt);
 					$o->form_id		= $act->sph_zzzzsys_form_id;
 					$o->record_id	= $act->sph_code;
@@ -287,9 +294,9 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 					$runtab			= nuRunQuery("SELECT sph_run FROM zzzzsys_php WHERE zzzzsys_php_id = '$r->sob_run_zzzzsys_form_id'");
 					$o->run_hidden	= db_fetch_object($runtab)->sph_run == 'hide';
 					
-				}else if(isReport($type)){
+				}else if(isReport($fromId)){
 					
-					$actt			= nuRunQuery('SELECT sre_zzzzsys_form_id, sre_code  FROM zzzzsys_report WHERE zzzzsys_report_id = ?', array($type));
+					$actt			= nuRunQuery('SELECT sre_zzzzsys_form_id, sre_code  FROM zzzzsys_report WHERE zzzzsys_report_id = ?', array($fromId));
 					$act			= db_fetch_object($actt);
 					$o->form_id		= $act->sre_zzzzsys_form_id;;
 					$o->record_id	= $act->sre_code;
@@ -686,6 +693,28 @@ function nuSetFormValue($f, $v){
 
 }
 
+
+
+function nuDatalistOptions($sql) {
+	
+	$a 				= array();
+	
+	if (substr(strtoupper(trim($sql)), 0, 6) == 'SELECT') {						//-- sql statement
+
+			$t		= nuRunQuery($sql);
+
+			if (nuErrorFound()) {
+				return;
+			}
+
+			while ($r = db_fetch_row($t)) {
+				$a[]	= $r;
+			}
+    }				
+	
+	return $a;
+		
+}
 
 function nuSelectOptions($sql) {
 

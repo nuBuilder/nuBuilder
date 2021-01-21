@@ -127,7 +127,7 @@ REPLACE INTO `zzzzsys_translate` (`zzzzsys_translate_id`, `trl_language`, `trl_e
 ('nu5ec114f258e4e96', 'Tamil', 'Language', 'மொழி'),
 ('nu5ec114f258e4e97', 'Tamil', 'Launch Form', 'படிவத்தைத் தொடங்கவும்'),
 ('nu5ec114f258e4e98', 'Tamil', 'Launch From', 'இருந்து தொடங்க'),
-('nu5ff1df661a43b00', 'Tamil', 'Leave blank to create a new from', 'புதியதை உருவாக்க காலியாக விடவும்'),
+('nu5ff1df661a43b00', 'Tamil', 'Leave blank to create a new form', 'புதியதை உருவாக்க காலியாக விடவும்'),
 ('nu5ec114f258e4e99', 'Tamil', 'Leave this form without saving?', 'சேமிக்காமல் இந்த படிவத்தை விடலாமா?'),
 ('nu5ec114f258e4f00', 'Tamil', 'Left', 'இடது'),
 ('nu5ec114f258e4f01', 'Tamil', 'Login Name', 'உள்நுழைவு பெயர்'),

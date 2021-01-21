@@ -740,6 +740,10 @@ function nuINPUT(w, i, l, p, prop){
 		}else{
 			$('#' + id).addClass('input_' + inputType);
 		}
+		
+		if (prop.objects[i].datalist !== null && prop.objects[i].datalist !== '' && typeof prop.objects[i].datalist !== "undefined") {	
+			nuAddDatalist(id, JSON.parse(prop.objects[i].datalist));
+		}
 
 	}
 
@@ -1259,7 +1263,7 @@ function nuSELECT(w, i, l, p, prop){
 
 	if (prop.objects[i].select2 == 1) {
 		$('#' + id).attr('date-nu-select2', 1);
-		let select2Id = "select2_" + $('#' + id).attr('id');
+		let select2Id = $('#' + id).attr('id') + "select2";
 		$('#' + id).select2({
 			dropdownParent: $('#nuRECORD'),
 			theme: "default " + select2Id
@@ -1707,8 +1711,8 @@ function nuGetSubformRowSize(o, SF, id){
 
 		var d = Number(o[i].description_width);
 		var T = SF.subform_type 		== 'g'		? 0		: Number(o[i].top);
-		var B = o[i].type				== 'lookup'	? 26	: 0;					//-- lookup button
-		var D = o[i].type				== 'lookup'	? d		: 0;					//-- lookup description
+		var B = o[i].type		  		== 'lookup'	? 26	: 0;					//-- lookup button
+		var D = o[i].type		  		== 'lookup'	? d		: 0;					//-- lookup description
 		
 		if(o[i].type == 'select'){
 			w = Number(o[i].width) + B + D - 4;
