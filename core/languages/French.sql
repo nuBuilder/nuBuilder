@@ -11,6 +11,7 @@ INSERT INTO `zzzzsys_translate` (`zzzzsys_translate_id`, `trl_language`, `trl_en
 ('nu5bad6cb3e9f4f83', 'French', 'Adjust All Selected Objects Vertically', 'Ajuster verticalement tous les objets sélectionnés'),
 ('nu5bad6cb3ea0adbc', 'French', 'Adjust Objects', 'Ajuster les objets'),
 ('nu5bad6cb3ea80a7e', 'French', 'Adjust Selected Objects', 'Ajuster les objets sélectionnés'),
+('nu5bad6cb3ea80a7f', 'French', 'Admin Language', 'Admin Langue'),
 ('nu5bad6cb3ea8fb8b', 'French', 'Align', 'Aligner'),
 ('nu5bad6cb3ea9a4ae', 'French', 'Align All Selected Objects To Bottom', 'Aligner tous les objets sélectionnés sur le bas'),
 ('nu5bad6cb3eaa43fd', 'French', 'Align All Selected Objects To Left', 'Aligner tous les objets sélectionnés sur la gauche'),

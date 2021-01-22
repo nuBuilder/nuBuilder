@@ -30,7 +30,7 @@ REPLACE INTO `zzzzsys_translate` (`zzzzsys_translate_id`, `trl_language`, `trl_e
 ('nu5b53758c7def4ec', 'Czech', 'New Password', 'Nové heslo'),
 ('nu5b5432404601b65', 'Czech', 'Objects', 'Objekty'),
 ('nu5b537ec77b418a9', 'Czech', 'Options', 'Možnosti'),
-('nu5b5365e9ad44648', 'Czech', 'Password ', 'Heslo '),
+('nu5b5365e9ad44648', 'Czech', 'Password', 'Heslo'),
 ('nu5b5375ed09d39b0', 'Czech', 'Print', 'Tisk'),
 ('nu5b5377efdba8213', 'Czech', 'Procedure', 'Procedura'),
 ('nu5b53780b8f388b0', 'Czech', 'Procedures', 'Procedury'),
@@ -49,5 +49,5 @@ REPLACE INTO `zzzzsys_translate` (`zzzzsys_translate_id`, `trl_language`, `trl_e
 ('nu5b536494d5bf01e', 'Czech', 'Translation', 'Překlad'),
 ('nu5b5365de685b403', 'Czech', 'User ', 'Uživatel '),
 ('nu5b53647ba4346cc', 'Czech', 'User Home', 'Domácí stránka'),
-('nu5b53645b00b94f0', 'Czech', 'Username ', 'Uživatel '),
+('nu5b53645b00b94f0', 'Czech', 'Username', 'Uživatel'),
 ('nu5b537780e253dba', 'Czech', 'Users', 'Uživatelé');

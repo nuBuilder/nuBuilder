@@ -218,6 +218,17 @@ function nuRunReportSave(f){
 
 }
 
+
+function nuAskLogout() {
+	
+   if (nuFormsUnsaved() > 0) {   
+         if (! confirm(nuTranslate('There are unsaved changes. Do you really want to leave the page?'))) return; 
+   }
+
+   nuLogout();
+
+}
+
 function nuLogout(f, iframe){
 
 	nuFORM.addBreadcrumb();
@@ -597,24 +608,6 @@ function nuGetLookupId(pk, id){
 
 
 function nuGetLookupCode(e){
-
-/*
-	if(e.target.value == ''){			//-- set to blank
-		
-		var id				= e.target.id.substr(0, e.target.id.length - 4);
-		
-		$('#' + id).val('');
-		$('#' + id + 'code').val('');
-		$('#' + id + 'description').val('');
-		
-		$('#' + id).addClass('nuEdited');
-		$('#nuSaveButton').addClass('nuSaveButtonEdited');
-
-		return;
-		
-	}
-
-*/	
 	
 	var last				= window.nuFORM.getCurrent();
 

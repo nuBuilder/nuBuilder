@@ -53,6 +53,7 @@ function nuBuildForm(f){
 		sessionStorage.logout	= 'true';
 		parent.parent.parent.parent.parent.location.reload();
 		
+		nuCursor('default');
 		return;
 		
 	}
@@ -264,8 +265,9 @@ function nuBuildForm(f){
 		
 	nuSetSaved(true);
 	
+	nuCursor('default');
+	
 	nuWindowPosition();
-
 	
 }
 
@@ -300,7 +302,7 @@ function nuAddHomeLogout(){
 		
 		$('#nuBreadcrumbHolder').append('<span id="nulink" style="position:absolute;right:55px;padding:5px"><a href="https://www.nubuilder.com" class="nuBuilderLink" target="_blank">nuBuilder</a></span>');
 	
-		nuAddIconToBreadCrumb('nuLogout', 'Log out', 16, 'nuLogout()', 'fa fa-external-link');
+		nuAddIconToBreadCrumb('nuLogout', 'Log out', 16, 'nuAskLogout()', 'fa fa-external-link');
 		
 		// nuAddIconToBreadCrumb('nuDebug', 'nuDebug Results', 47, "nuForm('nudebug','','','',2);return false;", 'fa fa-bug');
 
@@ -3422,6 +3424,21 @@ function nuSetSaved(v) {
 	window.nuSAVED = v;	
 }
 
+function nuFormsUnsaved() {
+		
+	let c = 0;
+	$.each($('iframe'), function() {
+		let t = $(this)[0];
+		if (typeof t.contentWindow['nuIsSaved'] === 'function') {
+			if (!t.contentWindow.nuIsSaved()) { c++; }		
+		}		
+	})
+	
+	if (! nuIsSaved()) c++;
+	return c;
+	
+}
+
 function nuAddJavascript(o){
 
 	var nuLoadEdit		= null;
@@ -3926,6 +3943,8 @@ function nuRedefine_nuSelectBrowse(){
 		var p				= $('#' + t.id).attr('data-nu-primary-key');
 		var f				= window.nuFORM.getProperty('form_id');
 		var r				= window.nuFORM.getProperty('redirect_form_id');
+		
+		nuCursor('progress');
 
 		if(y == 'browse'){
 
@@ -4438,3 +4457,4 @@ function nuAddBrowseAdditionalNavButtons() {
 	}
 
 }
+

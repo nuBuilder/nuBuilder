@@ -90,6 +90,8 @@ function nuGetBreadcrumb(bc){
 		if (nuOnBeforeGetBreadcrumb(bc) == false) return;
 	}
 	
+	nuCursor('progress');
+	
 	var a			= arguments.length;
 	var e			= nuFORM.edited;
 	
@@ -104,6 +106,7 @@ function nuGetBreadcrumb(bc){
 	if(e && nuFORM.getCurrent().form_type != 'launch'){
 		
 		if(!confirm(nuTranslate('Leave this form without saving?'))){
+			nuCursor('default');
 			return;
 		}
 		
@@ -334,6 +337,7 @@ function nuBuildLookup(t, s, like){
 	
 	if($(t).prop('disabled')){return;}
 
+	nuCursor('progress');
 
 	var f				= $('#' + t.id).attr('data-nu-form-id');
 	var tar				= $('#' + t.id).attr('data-nu-target');
@@ -362,6 +366,8 @@ function nuBuildLookup(t, s, like){
 
 function nuPopup(f, r, filter){
 
+	nuCursor('progress');
+	
 	if(nuSERVERRESPONSE.global_access == '0' && f == 'nuobject'){return;}
 
 	$('#nuCalendar').remove();
@@ -1287,10 +1293,7 @@ function nuGetFontName(font) {
 	return font.toLowerCase().replace(/\s/g, "-");		// Replace whitespaces
 }
 
-function nuQuill(i) {
-
-    // Specify the fonts
-    var fonts = ['Arial', 'Courier', 'Garamond', 'Tahoma', 'Verdana'];
+function nuQuillFonts(fonts) {
 
     var fontNames = fonts.map(font => nuGetFontName(font));
     // add fonts to style
@@ -1309,8 +1312,14 @@ function nuQuill(i) {
     var node = document.createElement('style');
     node.innerHTML = fontStyles;
     document.body.appendChild(node);
+	
+	return fontNames;
+	
+}
 
-    var toolbarOptions = [
+function nuQuillToolbarOptions() {
+	
+	  var toolbarOptions = [
         
             ['bold', 'italic', 'underline', 'strike'], // toggled buttons
             ['blockquote', 'code-block'],
@@ -1334,16 +1343,29 @@ function nuQuill(i) {
             ['clean'] // remove formatting button
                      
     ];
-    
-    
+	
+	
+	return toolbarOptions;
+	
+}
+
+function nuQuill(i, fontNames, toolbarOptions) {
+
+	if (typeof fontNames === 'undefined') {
+		var fontNames = nuQuillFonts(['Arial', 'Courier', 'Garamond', 'Tahoma', 'Verdana']);
+	}
+
+	if (typeof toolbarOptions === 'undefined') {
+		var toolbarOptions = nuQuillToolbarOptions();
+	}
+        
+	nuHide(i);
+		
     var Block = Quill.import('blots/block');
     class DivBlock extends Block {} 
-    DivBlock.tagName = 'DIV';
-    // true means we overwrite  
+    DivBlock.tagName = 'DIV';    
     Quill.register('blots/block', DivBlock, true); 
-
-
-    // Add fonts to whitelist
+    
     var Font = Quill.import('formats/font');
     Font.whitelist = fontNames;
     Quill.register(Font, true);
@@ -1361,18 +1383,13 @@ function nuQuill(i) {
         },
         theme: 'snow'
     });
-	
-	var o = $('#' + i);
-    var notContent = o.val();
-    if (notContent !== '') {
-        quill.clipboard.dangerouslyPasteHTML(notContent);
+		
+    var content = $('#' + i).val();
+    if (content !== '') {
+        quill.clipboard.dangerouslyPasteHTML(content);
     }
-	
-	nuHide(i);
     
     var startDate = new Date();
-//    nuHasNotBeenEdited();
-
     quill.on('text-change', function(delta, oldDelta, source) {
         var endDate = new Date();
         if (endDate.getTime() - startDate.getTime() > 1000) {
@@ -1842,7 +1859,7 @@ function nuIsIframe(){
 
 function nuPreventButtonDblClick () {
 
-	$('.nuActionButton, .nuButton').not(".nuAllowDblClick").click(function() {   
+	$('.nuActionButton, .nuButton, #nuLogout').not(".nuAllowDblClick").click(function() {   
 
 	var id = $(this).attr("id");
 
@@ -2187,3 +2204,7 @@ function nuRefreshDisplayObject(displayId, formId) {
 	nuRunPHPHidden('nurefreshdisplayobject', 0);
 }
 
+function nuCursor(c) {
+	document.body.style.cursor = c;
+	parent.document.body.style.cursor = c;
+}
