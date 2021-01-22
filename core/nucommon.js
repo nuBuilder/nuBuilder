@@ -180,6 +180,7 @@ String.prototype.replaceAll = function(str1, str2, ignore){
 String.prototype.ltrim = function() {
 	return this.replace(/^\s+/,"");
 }
+
 String.prototype.rtrim = function() {
 	return this.replace(/\s+$/,"");
 }
@@ -1279,6 +1280,105 @@ function nuChart(d, t, a, h, x, y, st, is){
 		chart.draw(data, options);
 
 	}
+
+}
+
+function nuGetFontName(font) {
+	return font.toLowerCase().replace(/\s/g, "-");		// Replace whitespaces
+}
+
+function nuQuill(i) {
+
+    // Specify the fonts
+    var fonts = ['Arial', 'Courier', 'Garamond', 'Tahoma', 'Verdana'];
+
+    var fontNames = fonts.map(font => nuGetFontName(font));
+    // add fonts to style
+    var fontStyles = "";
+    fonts.forEach(function(font) {
+        var fontName = nuGetFontName(font);
+        fontStyles += ".ql-snow .ql-picker.ql-font .ql-picker-label[data-value=" + fontName + "]::before, .ql-snow .ql-picker.ql-font .ql-picker-item[data-value=" + fontName + "]::before {" +
+            "content: '" + font + "';" +
+            "font-family: '" + font + "', sans-serif;" +
+            "}" +
+            ".ql-font-" + fontName + "{" +
+            " font-family: '" + font + "', sans-serif;" +
+            "}";
+    });
+
+    var node = document.createElement('style');
+    node.innerHTML = fontStyles;
+    document.body.appendChild(node);
+
+    var toolbarOptions = [
+        
+            ['bold', 'italic', 'underline', 'strike'], // toggled buttons
+            ['blockquote', 'code-block'],
+			
+            [{ 'header': 1 }, { 'header': 2 }], // custom button values
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            [{ 'script': 'sub' }, { 'script': 'super' }], // superscript/subscript
+            [{ 'indent': '-1' }, { 'indent': '+1' }], // outdent/indent
+            [{ 'direction': 'rtl' }], // text direction
+        
+            [{ 'size': ['small', false, 'large', 'huge'] }], // custom dropdown
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+        
+            [{ 'color': [] }, { 'background': [] }], // dropdown with defaults from theme
+            [{ 'font': fontNames }],
+            [{ 'align': [] }],
+            
+            ['divider'],
+            ['link'],
+    
+            ['clean'] // remove formatting button
+                     
+    ];
+    
+    
+    var Block = Quill.import('blots/block');
+    class DivBlock extends Block {} 
+    DivBlock.tagName = 'DIV';
+    // true means we overwrite  
+    Quill.register('blots/block', DivBlock, true); 
+
+
+    // Add fonts to whitelist
+    var Font = Quill.import('formats/font');
+    Font.whitelist = fontNames;
+    Quill.register(Font, true);
+
+    var quill = new Quill('#'+ i + '_container', {
+        modules: {
+            toolbar: toolbarOptions,
+            divider: {
+                cssText: 'border-top: 1px solid #bbb;'
+            },            
+             clipboard: {
+                matchVisual: false
+            }
+
+        },
+        theme: 'snow'
+    });
+	
+	var o = $('#' + i);
+    var notContent = o.val();
+    if (notContent !== '') {
+        quill.clipboard.dangerouslyPasteHTML(notContent);
+    }
+	
+	nuHide(i);
+    
+    var startDate = new Date();
+//    nuHasNotBeenEdited();
+
+    quill.on('text-change', function(delta, oldDelta, source) {
+        var endDate = new Date();
+        if (endDate.getTime() - startDate.getTime() > 1000) {
+            nuHasBeenEdited();
+        }
+    });
 
 }
 
