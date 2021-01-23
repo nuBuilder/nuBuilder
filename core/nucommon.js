@@ -1317,7 +1317,7 @@ function nuQuillFonts(fonts) {
 	
 }
 
-function nuQuillToolbarOptions() {
+function nuQuillToolbarOptions(fontNames) {
 	
 	  var toolbarOptions = [
         
@@ -1356,7 +1356,7 @@ function nuQuill(i, fontNames, toolbarOptions) {
 	}
 
 	if (typeof toolbarOptions === 'undefined') {
-		var toolbarOptions = nuQuillToolbarOptions();
+		var toolbarOptions = nuQuillToolbarOptions(fontNames);
 	}
         
 	nuHide(i);
@@ -2205,6 +2205,8 @@ function nuRefreshDisplayObject(displayId, formId) {
 }
 
 function nuCursor(c) {
-	document.body.style.cursor = c;
-	parent.document.body.style.cursor = c;
+	
+	document.documentElement.style.cursor = c;
+	parent.document.documentElement.style.cursor = c;
+	
 }
