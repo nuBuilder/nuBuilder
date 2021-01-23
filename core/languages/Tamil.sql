@@ -23,7 +23,7 @@ REPLACE INTO `zzzzsys_translate` (`zzzzsys_translate_id`, `trl_language`, `trl_e
 ('nu5ec114f258e5013', 'Tamil', 'Admin Language', 'நிர்வாக மொழி'),
 ('nu5ec114f258e4e15', 'Tamil', 'Align', 'சீரமை'),
 ('nu5ec114f258e4e16', 'Tamil', 'Align All Selected Objects To Bottom', 'தேர்ந்தெடுக்கப்பட்ட அனைத்து பொருட்களையும் கீழே சீரமைக்கவும்'),
-('nu5ec114f258e4e17', 'Tamil', 'Align All Selected OPreview Browse Formbjects To Left', 'தேர்ந்தெடுக்கப்பட்ட அனைத்து பொருட்களையும் இடதுபுறமாக சீரமைக்கவும்'),
+('nu5ec114f258e4e17', 'Tamil', 'Align All Selected Objects To Left', 'தேர்ந்தெடுக்கப்பட்ட அனைத்து பொருட்களையும் இடதுபுறமாக சீரமைக்கவும்'),
 ('nu5ec114f258e4e18', 'Tamil', 'Align All Selected Objects To Right', 'தேர்ந்தெடுக்கப்பட்ட அனைத்து பொருட்களையும் வலதுபுறமாக சீரமைக்கவும்'),
 ('nu5ec114f258e4e19', 'Tamil', 'Align All Selected Objects To Top', 'தேர்ந்தெடுக்கப்பட்ட அனைத்து பொருட்களையும் மேலே சீரமைக்கவும்'),
 ('nu5ec114f258e4e20', 'Tamil', 'Align To Bottom', 'கீழே சீரமைக்கவும்'),
