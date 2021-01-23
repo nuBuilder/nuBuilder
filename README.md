@@ -1,6 +1,7 @@
-# nuBuilder
+# nuBuilder 4
 
-* ***Name:*** nuBuilder Forte 4.5
+* ***Name:*** nuBuilder 4.5
+* ***This Fork:*** https://github.com/smalos/nubuilder4
 * ***Contributors:*** Steven Copley, kev1n, Janusz, Neil, Ap.Muthu
 * ***Donate link:*** https://www.nubuilder.com/#donate
 * ***License:*** [GPLv3](https://www.gnu.org/licenses/old-licenses/gpl-3.0.html)
@@ -18,7 +19,7 @@
 
 nuBuilder enables you to make any application that want or need with the least amount of effort and learning.
 
-nuBuilder Forte is in its 4th version of nuBuilder and is a browser-based tool created by ***nuSoftware*** for developing web-based database applications.
+nuBuilder Forte is in its 4th version of nuBuilder and is a browser-based tool created by Steven Copley for developing web-based database applications.
 
 nuBuilder uses either ***MySQL*** or ***Maria DB*** databases and gives its users the ability to do database operations like: 
 * Search
@@ -61,7 +62,7 @@ nuBuilder is a enterprise level application builder but with no limitations on d
 2. Create a database (e.g. nubuilder4 )
 2. Edit nuconfig.php to set your database and globeadmin credentials
 
-[Detailed installation instructions:](https://github.com/smalos/nuBuilder4-Code-Library/wiki/Installing-nuBuilder)
+[Detailed installation instructions:](https://wiki.nubuilder.net/nubuilderforte/index.php/Main_Page#Documentation)
 
 
 ## Documentation

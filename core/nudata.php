@@ -653,6 +653,7 @@ function nuReturnNewRecord($i = -1){
 
 
 function nuDisplayError($m){
+
 	$_POST['nuErrors'][]	= $m;
 }
 

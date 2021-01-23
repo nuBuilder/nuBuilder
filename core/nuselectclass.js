@@ -241,7 +241,7 @@ class nuSelectObject{
 	}
 	
 	buildFrom(){
-			
+
 		var THIS			= this;
 		this.tempTables		= this.usedTables();
 		this.tempJoins		= this.getJoinObjects();													//-- current visible joins
@@ -249,7 +249,7 @@ class nuSelectObject{
 		for(var i = 0 ; i < this.tempTables.length ; i++){
 
 			if(this.tempTables[i].used != -1){
-		
+
 				var f		= this.tempTables.sort(torder);
 				var more	= true;
 				var t		= this.tempTables[i].table;
@@ -259,41 +259,41 @@ class nuSelectObject{
 				var ob		= {};
 				var s		= '';
 				var F		= [];
-				
+
 				while(more){
 					
 					var q	= this.getJoinObject(defined);
 					ob		= q[1];
 					more	= q[0];
-					
+
 					if(more){
 						
 						var a1		= ob.type == 'LEFT' ? "\n        LEFT JOIN " :  "\n        JOIN ";
 						
 						var a		= this.justAlias(ob.tables[0], ob.aliases[0]);
-						
+
 						if(defined.indexOf(A) == -1 || defined.indexOf(a) == -1){
-							
+
 							var a2	= this.buildAlias(ob.tables[0], ob.aliases[0]);
 							A		= this.justAlias(ob.tables[0], ob.aliases[0]);
-							
+
 						}else{
-							
+
 							var a2	= this.buildAlias(ob.tables[1], ob.aliases[1]);
 							A		= this.justAlias(ob.tables[1], ob.aliases[1]);
-							
+
 						}
 						
 						defined.push(A);
 						defined.push(a);
-							
+
 						this.markTableAsUsed(ob.tables[0], ob.aliases[0]);
 						this.markTableAsUsed(ob.tables[1], ob.aliases[1]);
-						
+
 						var a3		= ob.joins.join(' AND ');
-						
+
 						this.tempTables[i].joins.push(a1 + a2 + ' ON ' + a3);
-						
+
 					}
 					
 				}
@@ -310,12 +310,12 @@ class nuSelectObject{
 		var F			= [];
 		
 		for(var i = 0 ; i < f.length ; i++){
-			
+
 			if(f[i].joins.length > 0 || f[i].used != -1){
-				
+
 				var a	= this.fromAlias(f[i].table, f[i].alias);
 				var j	= f[i].joins.join("");
-				
+
 				F.push("\n    " + a + j);
 				
 			}
@@ -331,11 +331,11 @@ class nuSelectObject{
 		for(var i = 0 ; i < this.tempTables.length ; i++){
 			
 			if(this.tempTables[i].table == t || this.tempTables[i].alias == a){
-				
+
 				this.tempTables[i].used	= -1;
-				
+
 				return;
-				
+
 			}
 			
 		}
@@ -350,29 +350,29 @@ class nuSelectObject{
 		this.tempJoins	= this.getJoinObjects();													//-- current visible joins
 		
 		$('.nuBox').each(function(index){
-			
+
 			var b		= $(this)[0].id;
 			var t		= $('#tablename' + b).html();
 			var a		= $('#alias' + b).val();
 			var u		= 0;
-			
+
 			for (var k in THIS.joins){
-			
+
 				var o	= THIS.joins[k];
-				
+
 				if(o.fromalias == a || o.fromtable == t || o.toalias == a || o.totable == t){u ++;}
-				
+
 			}
 
 			T.push({'table' : t, 'alias' : THIS.justAlias(t,a), 'used' : u, 'joins' : []});
 			
 		});
-		
-		
+
+
 		var uses 		= function(b, a){
 			return (b.used < a.used);
 		}
-		
+
 		T.sort(uses);
 		
 		return T;
@@ -1046,4 +1046,3 @@ function nuChangeJoin(e){
 	nuSQL.buildSQL();
 	
 }
-

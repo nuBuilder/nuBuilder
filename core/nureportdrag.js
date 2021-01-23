@@ -694,7 +694,7 @@ function nuCloneObjects(){
 		var s		= gs[1];
 		var l		= nuREPORT.groups[g].sections[s].objects.length;
 		var d		= nuDragR.newId();
-		var j	 	= JSON.parse(JSON.stringify(o));
+		var j		= JSON.parse(JSON.stringify(o));
 
 		j.id		= d;
 		j.name		= d;
@@ -982,9 +982,9 @@ function nuMoverAdjustHorClick(){
 		
 		o   = new nuOrderedSelectObjects(d[i].id);
 		
-		l   = Math.min(l, Number(o.left));											//-- calculate leftest left
-		b   = Math.max(b, Number(o.left) + Number(o.width));						//-- calculate lowest bottom
-		w   = w + Number(o.width);													//-- total width of objects
+		l   = Math.min(l, Number(o.left));										//-- calculate leftest left
+		b   = Math.max(b, Number(o.left) + Number(o.width));					//-- calculate lowest bottom
+		w   = w + Number(o.width);												//-- total width of objects
 		
 		a.push(o);
 
@@ -996,9 +996,9 @@ function nuMoverAdjustHorClick(){
 	var newGap = (b-l-w) / (a.length-1);
 	var newLeft  = l;
 	
-	for(var i = 0 ; i < s.length - 1 ; i++) {											//-- reposition all Objects ordered by leftest (except the last one)
+	for(var i = 0 ; i < s.length - 1 ; i++) {									//-- reposition all Objects ordered by leftest (except the last one)
 
-		$('#' + s[i].id).css('left', newLeft);											//-- move object
+		$('#' + s[i].id).css('left', newLeft);									//-- move object
 		newLeft = newLeft + newGap + Number(s[i].width);
 	
 	}
@@ -1084,9 +1084,9 @@ function nuResizeShortestClick(){
 	
 	var s = document.getElementsByClassName('nuDragSelected');
 	var h = 10000000;
-	
+
 	for(var i = 0 ; i < s.length ; i ++){
-		
+
 		h = Math.min(h, parseInt(s[i].style.height));
 
 	}
@@ -1094,7 +1094,7 @@ function nuResizeShortestClick(){
 	if(nuDrag.multipleSections()){return;}
 	
 	for(var i = 0 ; i < s.length ; i ++){
-		
+
 		s[i].style.height = String(h) + 'px';
 
 	}
@@ -1307,7 +1307,7 @@ function nuGroupDialog(){
 
 	var top = 120;
 	var left = left + 210;
-	
+
 	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[3], 'nuDoNothing', [['a','Ascending'],['d','Descending']]);
 	$('#sortBy').attr('id', 'sortBy3').css('width',105);
 	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[4], 'nuDoNothing', [['a','Ascending'],['d','Descending']]);
@@ -1324,10 +1324,10 @@ function nuGroupDialog(){
 	$('#sortBy').attr('id', 'sortBy9').css('width',105);
 	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[10], 'nuDoNothing', [['a','Ascending'],['d','Descending']]);
 	$('#sortBy').attr('id', 'sortBy10').css('width',105);
-	
+
 	var top = 430;
 	var left = left - 100;
-	
+
 	top = nuDialogInput('Section Name', 'label', top, left, nuREPORT.groups[nuDIALOG.groupNumber].sections[0], 'nuDoNothing');
 	$('#label').attr('id', 'label0').attr('readonly', true).css('background-color','#DFDFDF');
 	top = nuDialogInput('Section Height', 'height', top-5, left, nuREPORT.groups[nuDIALOG.groupNumber].sections[0], 'nuUpdateSectionProperty');
@@ -1367,14 +1367,14 @@ function nuMoveGroup(){
 		var e = document.createElement('button');
 		e.setAttribute('id', 'grpup');
 		$('#nuDragDialog').append(e);
-		
+
 		$('#' + e.id).css({'font-size':10,'position':'absolute','left':15,'top':150,'width':90,'height':30}).html(opener.nuTranslate('Move Up'));
 		$('#' + e.id).click(function(){	nuMoveReportGroup(nuDIALOG.groupNumber, -1);});
 
 		var e = document.createElement('button');
 		e.setAttribute('id', 'grpdn');
 		$('#nuDragDialog').append(e);
-		
+
 		$('#' + e.id).css({'font-size':10,'position':'absolute','left':15,'top':200,'width':90,'height':30}).html(opener.nuTranslate('Move Down'));
 		$('#' + e.id).click(function(){	nuMoveReportGroup(nuDIALOG.groupNumber, 1);});
 
@@ -1385,7 +1385,7 @@ function nuDialogInput(cap, id, top, left, val, fun, sel){
 		var e = document.createElement('span');
 		e.setAttribute('id', 'caption_' + id + top);
 		$('#nuDragDialog').append(e);
-		
+
 		$('#' + e.id).css({
 						'position'		: 'absolute',
 						'left'			: left-210,
@@ -1394,7 +1394,7 @@ function nuDialogInput(cap, id, top, left, val, fun, sel){
 						'font-family'	: 'helvetica',
 						'text-align'	: 'right'
 						});
-		
+
 		$('#' + e.id).html(opener.nuTranslate(cap));
 	}
 
@@ -1502,19 +1502,19 @@ function nuUpdateReport(t){
 	var p		= $('#paper').val() + $('#orientation').val();
 	var a		= [];
 	
-	a['A4P']		= [['297'],['210']];
-	a['A5P']		= [['210'],['148']];
-	a['LetterP']	= [['279.4'],['215.9']];
-	a['LegalP']		= [['355.6'],['215.9']];
-	a['A4L']		= [['210'],['297']];
-	a['A5L']		= [['148'],['210']];
-	a['LetterL']	= [['215.9'],['279.4']];
-	a['LegalL']		= [['215.9'],['355.6']];
+	a['A4P']			= [['297'],['210']];
+	a['A5P']			= [['210'],['148']];
+	a['LetterP']		= [['279.4'],['215.9']];
+	a['LegalP']			= [['355.6'],['215.9']];
+	a['A4L']			= [['210'],['297']];
+	a['A5L']			= [['148'],['210']];
+	a['LetterL']		= [['215.9'],['279.4']];
+	a['LegalL']			= [['215.9'],['355.6']];
 
 	
 	nuREPORT[$(t).attr('id')] = $(t).val();
-	nuREPORT['height']		= Number(a[p][0][0]);
-	nuREPORT['width']		 = Number(a[p][1][0]);
+	nuREPORT['height']	= Number(a[p][0][0]);
+	nuREPORT['width']	= Number(a[p][1][0]);
 	
 	nuREPORT.setFocus = $(t).attr('id');
 	
@@ -1544,22 +1544,20 @@ function nuClickGroup(t){
 		nuLoadReport(1);
 		return;
 	}
-	
+
 	nuDIALOG.groupNumber = g;
-	
+
 	nuREPORT.groups[g].sections[0].label = $(t).val() + ' Header';
-	
+
 	if(nuREPORT.groups[g].sections.length == 2){
 		nuREPORT.groups[g].sections[1].label = $(t).val() + ' Footer';
 	}
-	
+
 	nuREPORT.setFocus = $(t).attr('id');
-	
+
 	nuLoadReport(1);
 	
 }
-
-
 
 function nuUpdateSectionProperty(t){
 
@@ -1613,4 +1611,3 @@ function nuMoveReportGroup(ele, dir) {
 	nuLoadReport();
 
 }
-

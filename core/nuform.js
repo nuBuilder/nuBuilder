@@ -2103,15 +2103,19 @@ function nuGetOptionsList(f, t, p, a, type){
 		if(a == 1){
 
 			if(nuAllowChanges(f)){
-
-				list.push([nuTranslate('Arrange Objects'), 'nuPopup("' + f + '", "-2")', 'fa-arrows', 'Ctrl+Shft+A']);
+				
+				if (nuSERVERRESPONSE.objects.length > 0) {
+					list.push([nuTranslate('Arrange Objects'), 'nuPopup("' + f + '", "-2")', 'fa-arrows', 'Ctrl+Shft+A']);
+				}
 				list.push([nuTranslate('Form Properties'), 'nuPopup("nuform", "' + f + '")', 'fa-cog', 'Ctrl+Shft+F']);
 				list.push([nuTranslate('Form Object List'), 'nuPopup("nuobject", "", "' + f + '")', 'fa-th-list', 'Ctrl+Shft+O']);				
 			}
 
 		}else{
 
-			list.push([nuTranslate('Change Login'), 'nuPopup("nupassword", "' + u + '", "")', 'fa-lock', 'Ctrl+Shft+L']);
+			if(type != 'subform'){
+				list.push([nuTranslate('Change Login'), 'nuPopup("nupassword", "' + u + '", "")', 'fa-lock', 'Ctrl+Shft+L']);
+			}
 
 		}
 

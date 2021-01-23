@@ -146,10 +146,6 @@ function nuDisplayError(e){
 		return false;
 	}
 
-	var im	= ['<img src="core/graphics/nuerror.png" width="30px" height="30px" style="position:absolute;left:10px;top:10px"><br>'];
-
-	im.concat(e.errors);
-
 	nuMessage(e.errors);
 
 	return e.after_event == false;								//-- errors are really just messages if from after save or after delete.
@@ -368,8 +364,9 @@ function nuPopup(f, r, filter){
 
 	nuCursor('progress');
 	
-	if(nuSERVERRESPONSE.global_access == '0' && f == 'nuobject'){return;}
-
+	if(nuSERVERRESPONSE.global_access == '0' && f == 'nuobject'){return;}	
+	if(nuSERVERRESPONSE.objects.length == 0 && r == '-2'){return;}
+	
 	$('#nuCalendar').remove();
 	
 	window.nuOPENER.push(new nuOpener('F', f, r, filter));
@@ -1295,23 +1292,23 @@ function nuGetFontName(font) {
 
 function nuQuillFonts(fonts) {
 
-    var fontNames = fonts.map(font => nuGetFontName(font));
-    // add fonts to style
-    var fontStyles = "";
-    fonts.forEach(function(font) {
-        var fontName = nuGetFontName(font);
-        fontStyles += ".ql-snow .ql-picker.ql-font .ql-picker-label[data-value=" + fontName + "]::before, .ql-snow .ql-picker.ql-font .ql-picker-item[data-value=" + fontName + "]::before {" +
-            "content: '" + font + "';" +
-            "font-family: '" + font + "', sans-serif;" +
-            "}" +
-            ".ql-font-" + fontName + "{" +
-            " font-family: '" + font + "', sans-serif;" +
-            "}";
-    });
+	var fontNames = fonts.map(font => nuGetFontName(font));
+	// add fonts to style
+	var fontStyles = "";
+	fonts.forEach(function(font) {
+		var fontName = nuGetFontName(font);
+		fontStyles += ".ql-snow .ql-picker.ql-font .ql-picker-label[data-value=" + fontName + "]::before, .ql-snow .ql-picker.ql-font .ql-picker-item[data-value=" + fontName + "]::before {" +
+			"content: '" + font + "';" +
+			"font-family: '" + font + "', sans-serif;" +
+			"}" +
+			".ql-font-" + fontName + "{" +
+			" font-family: '" + font + "', sans-serif;" +
+			"}";
+	});
 
-    var node = document.createElement('style');
-    node.innerHTML = fontStyles;
-    document.body.appendChild(node);
+	var node = document.createElement('style');
+	node.innerHTML = fontStyles;
+	document.body.appendChild(node);
 	
 	return fontNames;
 	
@@ -1320,29 +1317,29 @@ function nuQuillFonts(fonts) {
 function nuQuillToolbarOptions(fontNames) {
 	
 	  var toolbarOptions = [
-        
-            ['bold', 'italic', 'underline', 'strike'], // toggled buttons
-            ['blockquote', 'code-block'],
+
+			['bold', 'italic', 'underline', 'strike'], // toggled buttons
+			['blockquote', 'code-block'],
 			
-            [{ 'header': 1 }, { 'header': 2 }], // custom button values
-            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-            [{ 'script': 'sub' }, { 'script': 'super' }], // superscript/subscript
-            [{ 'indent': '-1' }, { 'indent': '+1' }], // outdent/indent
-            [{ 'direction': 'rtl' }], // text direction
-        
-            [{ 'size': ['small', false, 'large', 'huge'] }], // custom dropdown
-            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-        
-            [{ 'color': [] }, { 'background': [] }], // dropdown with defaults from theme
-            [{ 'font': fontNames }],
-            [{ 'align': [] }],
-            
-            ['divider'],
-            ['link'],
-    
-            ['clean'] // remove formatting button
-                     
-    ];
+			[{ 'header': 1 }, { 'header': 2 }], // custom button values
+			[{ 'list': 'ordered' }, { 'list': 'bullet' }],
+			[{ 'script': 'sub' }, { 'script': 'super' }], // superscript/subscript
+			[{ 'indent': '-1' }, { 'indent': '+1' }], // outdent/indent
+			[{ 'direction': 'rtl' }], // text direction
+
+			[{ 'size': ['small', false, 'large', 'huge'] }], // custom dropdown
+			[{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+			[{ 'color': [] }, { 'background': [] }], // dropdown with defaults from theme
+			[{ 'font': fontNames }],
+			[{ 'align': [] }],
+
+			['divider'],
+			['link'],
+	
+			['clean'] // remove formatting button
+
+	];
 	
 	
 	return toolbarOptions;
@@ -1358,44 +1355,44 @@ function nuQuill(i, fontNames, toolbarOptions) {
 	if (typeof toolbarOptions === 'undefined') {
 		var toolbarOptions = nuQuillToolbarOptions(fontNames);
 	}
-        
+		
 	nuHide(i);
 		
-    var Block = Quill.import('blots/block');
-    class DivBlock extends Block {} 
-    DivBlock.tagName = 'DIV';    
-    Quill.register('blots/block', DivBlock, true); 
-    
-    var Font = Quill.import('formats/font');
-    Font.whitelist = fontNames;
-    Quill.register(Font, true);
+	var Block = Quill.import('blots/block');
+	class DivBlock extends Block {} 
+	DivBlock.tagName = 'DIV';	
+	Quill.register('blots/block', DivBlock, true); 
+	
+	var Font = Quill.import('formats/font');
+	Font.whitelist = fontNames;
+	Quill.register(Font, true);
 
-    var quill = new Quill('#'+ i + '_container', {
-        modules: {
-            toolbar: toolbarOptions,
-            divider: {
-                cssText: 'border-top: 1px solid #bbb;'
-            },            
-             clipboard: {
-                matchVisual: false
-            }
+	var quill = new Quill('#'+ i + '_container', {
+		modules: {
+			toolbar: toolbarOptions,
+			divider: {
+				cssText: 'border-top: 1px solid #bbb;'
+			},
+			 clipboard: {
+				matchVisual: false
+			}
 
-        },
-        theme: 'snow'
-    });
+		},
+		theme: 'snow'
+	});
 		
-    var content = $('#' + i).val();
-    if (content !== '') {
-        quill.clipboard.dangerouslyPasteHTML(content);
-    }
-    
-    var startDate = new Date();
-    quill.on('text-change', function(delta, oldDelta, source) {
-        var endDate = new Date();
-        if (endDate.getTime() - startDate.getTime() > 1000) {
-            nuHasBeenEdited();
-        }
-    });
+	var content = $('#' + i).val();
+	if (content !== '') {
+		quill.clipboard.dangerouslyPasteHTML(content);
+	}
+	
+	var startDate = new Date();
+	quill.on('text-change', function(delta, oldDelta, source) {
+		var endDate = new Date();
+		if (endDate.getTime() - startDate.getTime() > 1000) {
+			nuHasBeenEdited();
+		}
+	});
 
 }
 
@@ -1592,7 +1589,6 @@ function nuEmbedObject(f, d, w, h){
 }
 
 function nuStartDatabaseAdmin() {
-
 	window.open("core/nupmalogin.php?sessid="+window.nuSESSION);
 }
 
@@ -2060,10 +2056,10 @@ jQuery.fn.nuLabelOnTop = function (offsetTop = -18, offsetLeft = 0) {
 };
 
 jQuery.fn.cssNumber = function(prop) {
-	
+
 	var v = parseInt(this.css(prop), 10);
 	return isNaN(v) ? 0 : v;
-	
+
 };
 
 function nuEnableDisableAllObjects(v, excludeTypes, excludeIds) {
@@ -2160,7 +2156,7 @@ function nuSelectMultiWithoutCtrl(i) {
 
 	i = i === undefined ? 'select' : '#' + i;
 	$(i + "[multiple] option").mousedown(function (event) {
-	
+
 	 if (event.shiftKey) return;
 	 event.preventDefault();
 	 this.focus();
@@ -2179,7 +2175,7 @@ function nuPasteText(t) {
 		.then(text => {
 			$('#' + t).val(text);
 		});
-		
+
 }
 
 function nuRefreshSelectObject(selectId, formId) {
@@ -2205,8 +2201,8 @@ function nuRefreshDisplayObject(displayId, formId) {
 }
 
 function nuCursor(c) {
-	
+
 	document.documentElement.style.cursor = c;
 	parent.document.documentElement.style.cursor = c;
-	
+
 }

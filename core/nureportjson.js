@@ -356,4 +356,3 @@ window.nuREPORTdefault = {
 	],
 	"currentGroup":0
 };
-

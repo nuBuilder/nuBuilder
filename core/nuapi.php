@@ -23,7 +23,7 @@
 	$P										= $_POST['nuSTATE'];
 	$CT										= $P['call_type'];
 
-	// 2FA, check authentication Status.		
+	// 2FA, check authentication Status.
 	if ($nuConfig2FAAdmin && $_SESSION['nubuilder_session_data']['SESSION_2FA_STATUS'] == 'PENDING') {
 
 		if ($formAndSessionData->form_id != 'nuauthentication' && $CT != 'runhiddenphp') {

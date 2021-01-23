@@ -88,7 +88,7 @@ class nuResponseForm {
 	setSelect(){
 		
 		if($('#nuResponseTabs').length == 1){return;}
-		
+
 		var sel = document.createElement('select');
 		sel.setAttribute('id', 'nuResponseTabs');
 		$('#nuResponseTabs').remove();
