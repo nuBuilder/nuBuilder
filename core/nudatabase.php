@@ -225,6 +225,13 @@ function db_primary_key($n){
 
 }
 
+function nuDBQuote($s) {
+
+	global $nuDB;
+	return $nuDB->quote($s);
+
+}
+
 function db_num_rows($o) {
 
 	if(!is_object($o)){return 0;}

@@ -1489,12 +1489,10 @@ function db_setup(){
 
 function nuUserLanguage(){
 
-//	if (nuHash() == null) return null;
-
 	$user_id	= nuObjKey(nuHash(),'USER_ID','');
-	$admin		= nuObjKey(nuHash(),'global_access','');
+	$admin		= nuObjKey(nuHash(),'GLOBAL_ACCESS','');
 
-	if ($admin == 1) {
+	if ($admin == '1') {
 		$s = 'SELECT set_language as language FROM zzzzsys_setup WHERE zzzzsys_setup_id = 1';
 	} else {
 		$s = 'SELECT sus_language as language FROM zzzzsys_user WHERE zzzzsys_user_id = ?';
@@ -1522,10 +1520,14 @@ function nuTranslate($e){
 						AND trl_english = ?
 						ORDER BY trl_english, IF(zzzzsys_translate_id like 'nu%', 1, 0)
 
-";
+			";
 
-		$t		= nuRunQuery($s, array($l, $e));		
-		$tr		= db_fetch_object($t)->trl_translation;
+		$t		= nuRunQuery($s, array($l, $e));
+		
+		$tr = '';
+		if (db_num_rows($t) != 0) {
+			$tr		= db_fetch_object($t)->trl_translation;
+		}
 
 		return $tr == '' ? $e : $tr;
 
