@@ -183,7 +183,7 @@ function nuCreateDrag(){
 		if(this.right + (this.moveX-this.lastMoveX) > this.areaWidth())					{return false;}
 		if(this.top + (this.moveY - this.lastMoveY) + this.areaTop() < this.areaTop())	{return false;}
 		if(this.isReport)																{return true;}
-		if(this.bottom + (this.moveY - this.lastMoveY) > this.areaHeight())				return false;}
+		if(this.bottom + (this.moveY - this.lastMoveY) > this.areaHeight())				{return false;}
 
 		return true;
 
