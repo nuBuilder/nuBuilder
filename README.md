@@ -1,7 +1,7 @@
 # nuBuilder 4
 
 * ***Name:*** nuBuilder 4.5
-* ***This Fork:*** https://github.com/smalos/nubuilder4
+* ***Repository link:*** https://github.com/nuBuilder/nuBuilder-4.5
 * ***Contributors:*** Steven Copley, kev1n, Janusz, Neil, Ap.Muthu
 * ***Donate link:*** https://www.nubuilder.com/#donate
 * ***License:*** [GPLv3](https://www.gnu.org/licenses/old-licenses/gpl-3.0.html)
