@@ -19,6 +19,7 @@ $r					= db_fetch_object($t);
 $j					= json_decode($r->json);
 $q					= $j->sql;
 $c					= $j->columns;
+
 $_POST['nuHash']	= (array) $j->hash;
 $__x				= nuHash();
 $_POST['nuHash']['TABLE_ID'] = $__x['browse_table_id'];
@@ -64,8 +65,10 @@ while($r = db_fetch_array($t)){
 
 	for($col = 0 ; $col < count($c) ; $col++){
 		
+		$v = $c[$col]->display == 'null' || $c[$col]->display == '""' ? '' : $r[$c[$col]->display];
 		$st	= $class[$col];
-		$h	.= "<TD $st>" . $r[$c[$col]->display] . "</TD>\n";
+		$h	.= "<TD $st>" . $v . "</TD>\n";
+		
 			
 	}
 
