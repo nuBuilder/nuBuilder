@@ -1396,6 +1396,37 @@ function nuQuill(i, fontNames, toolbarOptions) {
 
 }
 
+function nuQuillGetInstance(i) {
+  
+	var container = document.querySelector('#'+ i + '_container');
+	var quill = new Quill(container);
+	if (Quill.find(container) === quill) {
+		return quill;
+	} else {
+		return null;
+	}
+
+}
+
+function nuQuillSetContents(i, contents) {
+  
+	if (quill !== null) {
+		if ($.isArray(contents)) {
+			quill.setContents(contents);
+		} else {
+			quill.clipboard.dangerouslyPasteHTML(contents);
+		}
+	}
+
+}
+
+function nuQuillGetContents(i) {
+
+	var container = document.querySelector('#'+ i + '_container');
+	return container.children[0].innerHTML;
+
+}
+
 function nuSubformRowId(t){
 	return $(t).parent().attr('data-nu-primary-key');
 }
