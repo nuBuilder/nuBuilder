@@ -2878,41 +2878,6 @@ function nuGetPage(p){
 
 }
 
-/*
-
-function nuSelectBrowse(e, t){
-
-	if(window.nuBROWSECLICKED){return;}
-
-	window.nuBROWSECLICKED	= true;
-	var y 					= window.nuBrowseFunction;					//-- browse, lookup or custom function name
-	var i 					= window.nuTARGET;
-	var p					= $('#' + t.id).attr('data-nu-primary-key');
-	var f					= window.nuFORM.getProperty('form_id');
-	var r					= window.nuFORM.getProperty('redirect_form_id');
-
-	if(y == 'browse'){
-
-		if(r == ''){
-			nuForm(f, p);
-		}else{
-			nuForm(r, p);
-		}
-
-	}else if(y == 'lookup'){
-
-		window.parent.nuGetLookupId(p, i);			//-- called from parent window
-
-	}else{
-
-		window[y](e);
-
-	}
-
-}
-
-*/
-
 function nuPopulateLookup(fm, target){
 
 	var p 		= String($('#' + target).attr('data-nu-prefix'));
