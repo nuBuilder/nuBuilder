@@ -68,7 +68,7 @@ $nuJSOptions = "
 						<table>
 							<tr>
 								<td align='center' style='padding:0px 0px 0px 33px; text-align:center;'>
-								<img src='graphics/logo.png'><br><br>
+								<img src='core/graphics/logo.png'><br><br>
 								</td>
 							</tr>
 							<tr>
