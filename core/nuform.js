@@ -1,7 +1,7 @@
 
 function nuInitJSOptions() {
 	
-	if (window.nuAdminButtons  === undefined) {
+	if (window.nuAdminButtons === undefined) {
 
 		window.nuAdminButtons =
 			{'nuDebug'							: true, 
@@ -9,11 +9,11 @@ function nuInitJSOptions() {
 			 'nuRefresh'						: true, 
 			 'nuObjects'						: true, 
 			 'nuProperties'						: true
-			};    
+			};
 		
 	}
 
-	if (window.nuUXOptions  === undefined) {
+	if (window.nuUXOptions === undefined) {
 		
 		window.nuUXOptions =
 			{'nuEnableBrowserBackButton'		: true,			// Enable the browser's Back button 
@@ -21,9 +21,9 @@ function nuInitJSOptions() {
 			'nuShowPropertiesOnMiddleClick'		: true,			// Show the Object Properties on middle mouse click
 			'nuAutosizeBrowseColumns'			: true,			// Autosize columns to fit the document width
 			'nuShowBackButton'					: false,		// Show a Back Button
-			'nuBrowsePaginationInfo'			: 'default',	// Default Format is: '{StartRow} - {EndRow} ' + nuTranslate('of') + ' ' + '{TotalRows}'  
+			'nuBrowsePaginationInfo'			: 'default',	// Default Format is: '{StartRow} - {EndRow} ' + nuTranslate('of') + ' ' + '{TotalRows}'
 			'nuShowNuBuilderLink'				: true,			// Show the link to nubuilder com
-			'nuShowLoggedInUser'				: false,		// Show the logged in User    
+			'nuShowLoggedInUser'				: false,		// Show the logged in User
 			'nuShowBeforeUnloadMessage'			: true,			// Show or disable "Leave site?" message
 			'nuShowBrowserTabTitle'				: true,			// Show the Form Title in the Browser Tab
 			'nuBrowserTabTitlePrefix'			: 'nuBuilder'	// Prefix in the Browser Tab
@@ -150,8 +150,8 @@ function nuBuildForm(f){
 	nuAddEditTabs('', f);
 	
 	if(typeof window['nuBeforeAddActionButtons'] === 'function'){
-        nuBeforeAddActionButtons();
-    }
+		nuBeforeAddActionButtons();
+	}
 		
 	nuAddActionButtons(f);
 	nuRecordProperties(f, '');
@@ -1388,8 +1388,8 @@ function nuSUBFORM(w, i, l, p, prop){
 
 	if(SF.subform_type == 'f'){
 		
-		var rowHeight		= Number(SF.dimensions.edit.height + 10);
-		var rowWidth		= Number(SF.dimensions.edit.width  + 10);
+		var rowHeight		= Number(SF.dimensions.edit.height	+ 10);
+		var rowWidth		= Number(SF.dimensions.edit.width	+ 10);
 		
 	}else{
 		
@@ -1559,7 +1559,6 @@ function nuRecordHolderObject(t){
 	while ($('#' + this.form + nuPad3(this.intNo + c) + h).length != 0){c++;}
 	
 	this.rows	= this.intNo + c;
-//	this.top	= parseInt(p.css('height')) * this.rows + this.rows; //--  + this.rows adds the border height
 	this.top	= (parseInt(p.css('height')+1) * this.rows);  //-- + this.rows adds the border height
 	var s		= this.form + nuPad3(this.intNo + 1) + h;
 	this.last	= $('#' + s).length == 0;
@@ -3020,6 +3019,8 @@ function nuValidLookupId(id, fld){
 function nuHighlightSearch(){
 
 	var bc		= window.nuFORM.getCurrent();
+	if (bc.search.length == 0) return;
+
 	var exclude	= bc.nosearch_columns;
 
 	var search	= String(bc.search)
@@ -3028,23 +3029,16 @@ function nuHighlightSearch(){
 	.sort(function(a,b) {return (a.length > b.length)});
 
 	$('.nuBrowseTable').each(function(index){
-
-//		var col	= Number(String($(this).attr('id')).substr(11));
+		
 		var col	= Number(String($(this).attr('data-nu-column')));
 
 		if(exclude.indexOf(col) == -1){
-
-			var h	= String($(this).html());
-
+			
 			for(var i = 0 ; i < search.length ; i++){
-				h	= h.replaceAll(search[i],'`````' + search[i] + '````', true);
+
+				$(this).nuHighlight(search[i]);
+			
 			}
-
-//			h		= h.replaceAll('`````', '<span class="nuBrowseSearch" onclick="this.offsetParent.onclick()">', true);
-			h		= h.replaceAll('`````', '<span class="nuBrowseSearch" >', true);
-			h 		= h.replaceAll('````', '</span>', true);
-
-			$(this).html(h);
 
 		}
 
@@ -4426,4 +4420,3 @@ function nuAddBrowseAdditionalNavButtons() {
 	}
 
 }
-

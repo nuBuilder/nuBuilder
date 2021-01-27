@@ -212,12 +212,12 @@ $.fn.enterKey = function (fnc) {
 jQuery.fn.extend({
 	nuEnable: function(enable) {
 		return this.each(function() {
-		  nuEnable(this.id, enable);
+			nuEnable(this.id, enable);
 		});
 	},
 	nuDisable: function() {
 		return this.each(function() {
-		  nuDisable(this.id);
+			nuDisable(this.id);
 		});
 	},
 	nuShow: function(visible) {
@@ -261,7 +261,7 @@ function nuLogin(nuconfigNuWelcomeBodyInnerHTML){
 							<td><div style='width:90px; margin-bottom: 5px;'>Username</div><input class='nuLoginInput' id='nuusername' autocomplete='off' /><br><br></td>
 						</tr>
 						<tr>
-							<td><div style='width:90px; margin-bottom: 5px;'>Password</div><input class='nuLoginInput' id='nupassword' type='password' autocomplete='off'  onkeypress='nuSubmit(event)'/><br></td>
+							<td><div style='width:90px; margin-bottom: 5px;'>Password</div><input class='nuLoginInput' id='nupassword' type='password' autocomplete='off' onkeypress='nuSubmit(event)'/><br></td>
 						</tr>
 						<tr>
 							<td style='text-align:center' colspan='2'><br><br>
@@ -856,7 +856,7 @@ function nuObjectComponents(i) {
 
 }
 
-function nuEnable(i, enable) {            //-- Enable Edit Form Object
+function nuEnable(i, enable) {					//-- Enable Edit Form Object
 
 	if(enable === false){
 		nuDisable(i);
@@ -1316,7 +1316,7 @@ function nuQuillFonts(fonts) {
 
 function nuQuillToolbarOptions(fontNames) {
 	
-	  var toolbarOptions = [
+	var toolbarOptions = [
 
 			['bold', 'italic', 'underline', 'strike'], // toggled buttons
 			['blockquote', 'code-block'],
@@ -1887,7 +1887,7 @@ function nuIsIframe(){
 
 function nuPreventButtonDblClick () {
 
-	$('.nuActionButton, .nuButton, #nuLogout').not(".nuAllowDblClick").click(function() {   
+	$('.nuActionButton, .nuButton, #nuLogout').not(".nuAllowDblClick").click(function() {
 
 	var id = $(this).attr("id");
 
@@ -1990,7 +1990,7 @@ function nuPrintEditForm() {
 	$('#nuTabHolder').hide();
 	$('.nuActionButton').hide();
 
-  window.onafterprint = function(e){
+	window.onafterprint = function(e){
 		$(window).off('mousemove', window.onafterprint);
 
 		$('#nuBreadcrumbHolder').show();
@@ -2238,3 +2238,38 @@ function nuCursor(c) {
 	parent.document.documentElement.style.cursor = c;
 
 }
+
+/*	*** Based on highlight v5: Highlights arbitrary terms.
+	*** Renamed to nuHighlight using the className nuBrowseSearch
+	*** <http://johannburkard.de/blog/programming/javascript/highlight-javascript-text-higlighting-jquery-plugin.html>
+	*** MIT license.
+	*** Johann Burkard <http://johannburkard.de> / <mailto:jb@eaio.com>
+*/
+
+jQuery.fn.nuHighlight = function(pat) {
+	function innerHighlight(node, pat) {
+		var skip = 0;
+		if (node.nodeType == 3) {
+			var pos = node.data.toUpperCase().indexOf(pat);
+			pos -= (node.data.substr(0, pos).toUpperCase().length - node.data.substr(0, pos).length);
+			if (pos >= 0) {
+				var spannode = document.createElement('span');
+				spannode.className = 'nuBrowseSearch';
+				var middlebit = node.splitText(pos);
+				var endbit = middlebit.splitText(pat.length);
+				var middleclone = middlebit.cloneNode(true);
+				spannode.appendChild(middleclone);
+				middlebit.parentNode.replaceChild(spannode, middlebit);
+				skip = 1;
+			}
+		} else if (node.nodeType == 1 && node.childNodes && !/(script|style)/i.test(node.tagName)) {
+			for (var i = 0; i < node.childNodes.length; ++i) {
+				i += innerHighlight(node.childNodes[i], pat);
+			}
+		}
+		return skip;
+	}
+	return this.length && pat && pat.length ? this.each(function() {
+		innerHighlight(this, pat.toUpperCase());
+	}) : this;
+};
