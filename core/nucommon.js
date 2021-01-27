@@ -1397,7 +1397,7 @@ function nuQuill(i, fontNames, toolbarOptions) {
 }
 
 function nuQuillGetInstance(i) {
-  
+
 	var container = document.querySelector('#'+ i + '_container');
 	var quill = new Quill(container);
 	if (Quill.find(container) === quill) {
@@ -1409,7 +1409,8 @@ function nuQuillGetInstance(i) {
 }
 
 function nuQuillSetContents(i, contents) {
-  
+
+	var quill = nuQuillGetInstance(i);
 	if (quill !== null) {
 		if ($.isArray(contents)) {
 			quill.setContents(contents);
