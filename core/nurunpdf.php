@@ -9,7 +9,7 @@ define('FPDF_FONTPATH','libs/tcpdf/font/');
 $GLOBALS['nu_report']		= array();
 $GLOBALS['nu_columns']		= array();
 $GLOBALS['nu_files']		= array();
-$get 						= isset($_GET['i']);
+$get						= isset($_GET['i']);
 
 if($get){
 	$jsonID					= $_GET['i'];
@@ -32,7 +32,7 @@ $PDF->SetAutoPageBreak(true);
 // The report writer makes the header and footer so dont need a print header or footer.
 $PDF->setPrintHeader(false);
 $PDF->setPrintFooter(false);
-$REPORT					 = nuSetPixelsToMM($LAYOUT);
+$REPORT						= nuSetPixelsToMM($LAYOUT);
 
 $PDF->SetMargins(1,1,1);
 
@@ -66,6 +66,7 @@ nuRunQuery("DROP TABLE IF EXISTS $TABLE_ID".'_nu_summary');
 
 
 if($get){
+	ob_end_clean();
 	$PDF->Output('nureport.pdf', 'I');
 }else{
 	nuSavePDF($PDF);
@@ -190,36 +191,36 @@ function nuBuildReport($PDF, $REPORT, $TABLE_ID){
 	$DATA								= nuRunQuery("SELECT * FROM $TABLE_ID");
 	
 	nuMakeSummaryTable($REPORT, $TABLE_ID);
-	$sectionTop								= 0;
-	$ROW									= db_fetch_array($DATA);														 //-- first row
-//======================================================	
+	$sectionTop							= 0;
+	$ROW								= db_fetch_array($DATA);														 //-- first row
+//======================================================
 //	  REPORT HEADER
-//======================================================	
+//======================================================
 	$S									= new nuSECTION($PDF, $ROW, $REPORT, 1, 0, 0);								   //-- report header
 	$sectionTop							= $S->buildSection();
 	$firstRecord						= true;
 
-//======================================================	
+//======================================================
 //	  PAGE HEADER
-//======================================================	
+//======================================================
 	$S									= new nuSECTION($PDF, $ROW, $REPORT, 2, 0, $sectionTop);								   //-- page header
 	$sectionTop							= $S->buildSection();
 	$firstRecord						= true;
 
-//======================================================	
+//======================================================
 //	  FIRST SECTION HEADERS
-//======================================================	
+//======================================================
 	for($g = 0 ; $g < count($groups) ; $g++){
 		
 		$S								= new nuSECTION($PDF, $ROW, $REPORT, 3 + $g, 0, $sectionTop);				   //-- section headers
-		$sectionTop						= $S->buildSection();
+		$sectionTop						= $S->buildSection();		
 		$sectionValue[$groups[$g]]		= $ROW[$groups[$g]];
 
 	}
 
-//======================================================	
+//======================================================
 //	  LOOP THROUGH TABLE
-//======================================================	
+//======================================================
 	$DATA								= nuRunQuery("SELECT * FROM (SELECT * FROM $TABLE_ID $order_by $group_by) AS tmp ");
 	while($ROW = db_fetch_array($DATA)){
 
@@ -227,9 +228,9 @@ function nuBuildReport($PDF, $REPORT, $TABLE_ID){
 
 			$backUpTo					= nuLowestGroupChange($sectionValue, $ROW, $groups);
 
-//======================================================	
+//======================================================
 //	  FOOTERS AND HEADERS AS GROUPS CHANGE
-//======================================================	
+//======================================================
 			for($g = count($groups) - 1 ; $g >= $backUpTo ; $g--){
 
 				$S							= new nuSECTION($PDF, $lastROW, $REPORT, 3 + $g, 1, $sectionTop);				   //-- section footers
@@ -248,18 +249,18 @@ function nuBuildReport($PDF, $REPORT, $TABLE_ID){
 
 		}
 
-//======================================================	
+//======================================================
 //	  DETAIL SECTION
-//======================================================	
+//======================================================
 		$S									= new nuSECTION($PDF, $ROW, $REPORT, 0, 0, $sectionTop);
 		$sectionTop							= $S->buildSection();
 		$lastROW							= $ROW;
 		$firstRecord						= false;
 	}
 
-//======================================================	
+//======================================================
 //	  LAST GROUP FOOTERS
-//======================================================	
+//======================================================
 	for($g = count($groups) - 1 ; $g > -1 ; $g--){
 
 		$S								= new nuSECTION($PDF, $lastROW, $REPORT, 3 + $g, 1, $sectionTop);				   //-- section footers
@@ -267,15 +268,15 @@ function nuBuildReport($PDF, $REPORT, $TABLE_ID){
 		if($g == 0) {
 			nuRemovePageBreak($S);
 		}
-		$sectionTop						 = $S->buildSection();
+		$sectionTop						= $S->buildSection();
 
 	}
 
-//======================================================	
+//======================================================
 //	  REPORT FOOTER
-//======================================================	
+//======================================================
 	$S									= new nuSECTION($PDF, $lastROW, $REPORT, 1, 1, $sectionTop);
-	$sectionTop							 = $S->buildSection();
+	$sectionTop							= $S->buildSection();
 
 }	
 
@@ -947,7 +948,7 @@ function nuReplaceLabelHashVariables($LAY, $hashData){
 	for($i = 0 ; $i < count($GLOBALS['nu_report']) ; $i++){
 
 		for($o = 0 ; $o < count($GLOBALS['nu_report'][$i]->objects) ; $o++){
-
+			
 			$O = nuGetObjectProperties($LAY, $GLOBALS['nu_report'][$i]->objects[$o]->id);
 
 			if($O->objectType == 'label'){
