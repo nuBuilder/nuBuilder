@@ -86,7 +86,7 @@ nuJSIndexInclude('core/nuadmin.js');
 nuJSIndexInclude('core/nureportjson.js');
 nuJSIndexInclude('core/nuajax.js');		//-- calls to server
 nuJSChartsInclude();
-nuJSIndexInclude('core/libs/quill/quill.js'); 
+nuJSIndexInclude('core/libs/quill/quill.min.js'); 
 nuJSIndexInclude('core/libs/quill/modules/quill-divider.js'); 
 nuJSIndexInclude('core/libs/select2/select2.min.js'); 
 
