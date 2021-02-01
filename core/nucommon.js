@@ -496,7 +496,7 @@ function nuCreateDialog(t){
 			'position'			: 'absolute',
 			'visibility'		: 'hidden'
 		})
-		.html('<div id="dialogTitle" class="nuDialogTitle"><div id="dialogTitleWords" style="padding-top: 9px;height:30px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+translation+'</div><img id="dialogClose" src="'+subDir+'graphics/close.png" style="position:absolute; top:2px; left:0px"></div>')
+		.html('<div id="dialogTitle" class="nuDialogTitle"><div id="dialogTitleWords">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+translation+'</div><img id="dialogClose" src="'+subDir+'graphics/close.png" style="position:absolute; top:2px; left:0px"></div>')
 
 		$('body')
 		.on('mousemove.popup',	function(event){nuDialog.move(event);})
