@@ -3,6 +3,7 @@
 class nubuilder_session_data {
 
 	var $nubuilder	= array(
+	'NB_PATH'				=> __DIR__,
 	'GLOBEADMIN'			=> false,
 	'GLOBEADMIN_NAME'		=> '',
 	'GLOBEADMIN_PASS'		=> '',

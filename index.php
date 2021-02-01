@@ -1,4 +1,5 @@
 <?php
+$nb_path = __DIR__;
 
 require_once('core/nuchoosesetup.php');
 require_once('core/nuindexlibs.php');
@@ -9,6 +10,10 @@ nuStandaloneImportNewDB();
 require_once('core/nusystemupdatelibs.php');
 
 nuMigrateSQL();
+
+if ( !isset($_SESSION['nubuilder_session_data']['NB_PATH']) || dirname($_SESSION['nubuilder_session_data']['NB_PATH']) != $nb_path ) {	
+	nuLoadNewSession();
+}
 
 ?>
 <!DOCTYPE html>
