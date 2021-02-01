@@ -223,6 +223,13 @@ input[type=range]::-webkit-slider-runnable-track {
    box-shadow: 5px 5px 5px 0px rgba(150,147,150,1);
 }
 
+#nulink {
+  position:absolute;
+  right:55px;
+  padding:5px;
+  color: #dfdfdf;
+}
+
 .nuCalendarColor {
    background-color	: #BADEEB;
 }

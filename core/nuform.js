@@ -283,10 +283,10 @@ function nuAddHomeLogout(){
 	if(nuMainForm()){
 
 		if(window.nuFORM.breadcrumbs.length > 1){
-				
+
 			var c	= document.createElement('div');
 			c.setAttribute('id', 'nuBreadcrumb0');
-			
+
 			$('#nuBreadcrumbHolder').append(c);
 
 			$('#nuBreadcrumb0')
@@ -298,13 +298,11 @@ function nuAddHomeLogout(){
 			.attr('title', nuTranslate('Home'))
 
 		}
-		
-		
-		$('#nuBreadcrumbHolder').append('<span id="nulink" style="position:absolute;right:55px;padding:5px"><a href="https://www.nubuilder.com" class="nuBuilderLink" target="_blank">nuBuilder</a></span>');
+
+
+		$('#nuBreadcrumbHolder').append('<span id="nulink"><a href="https://www.nubuilder.com" class="nuBuilderLink" target="_blank">nuBuilder</a></span>');
 	
 		nuAddIconToBreadCrumb('nuLogout', 'Log out', 16, 'nuAskLogout()', 'fa fa-external-link');
-		
-		// nuAddIconToBreadCrumb('nuDebug', 'nuDebug Results', 47, "nuForm('nudebug','','','',2);return false;", 'fa fa-bug');
 
 	}
 
