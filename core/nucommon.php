@@ -408,14 +408,15 @@ function nuRunPHPHidden($nuCode){
 
 	$s						= "SELECT zzzzsys_php_id, sph_global FROM zzzzsys_php WHERE sph_code = ? ";
 	$t						= nuRunQuery($s, array($nuCode));
-	$r						= db_fetch_object($t);        
-	$isGlobal				= $r->sph_global == '1';
+	$r						= db_fetch_object($t);
 
 	if (db_num_rows($t) == 0) {
+		$isSystem = substr($nuCode, 0, 2) == 'nu';
 		 if (! $isSystem) {
 			nuDisplayError(nuTranslate("The Procedure does not exist...")." ($nuCode)");
 		 }
 	} else {
+		$isGlobal			= $r->sph_global == '1';
 		if($_SESSION['nubuilder_session_data']['isGlobeadmin'] or $isGlobal or in_array($r->zzzzsys_php_id, $p)){
 			nuEval($r->zzzzsys_php_id);
 		}else{
@@ -455,6 +456,46 @@ function nuGetJSONData($i){
 	$r					= db_fetch_object($t);
 
 	$j					= json_decode($r->sss_access, true);
+
+	return nuObjKey($j,$i,'');
+
+}
+
+function nuSetUserJSONData($i, $nj){
+
+	$u	= nuHash()['USER_ID'];	
+	if (nuHash()['GLOBAL_ACCESS'] == '1' ) {	
+		$u = '';
+		$s = "REPLACE INTO zzzzsys_user (zzzzsys_user_id) VALUES ('')";     
+		nuRunQuery($s);	
+	}
+				
+	$s			= "SELECT sus_json FROM zzzzsys_user WHERE zzzzsys_user_id = ?";
+	$t			= nuRunQuery($s, array($u));			 
+		
+	$r			= db_fetch_row($t);
+	$j			= json_decode($r[0], true);
+
+	$j[$i]		= $nj;
+	$J			= json_encode($j);
+
+	$s			= "UPDATE zzzzsys_user SET sus_json = ? WHERE zzzzsys_user_id = ?";
+	$t			= nuRunQuery($s, array($J, $u));
+
+}
+
+function nuGetUserJSONData($i, $u = ""){
+
+	if ($u == "") {
+		$u			= nuHash()['GLOBAL_ACCESS'] == '1'  ? '' : nuHash()['USER_ID'];
+	}
+	
+	$s			= "SELECT sus_json FROM zzzzsys_user WHERE zzzzsys_user_id = ? ";	
+	
+	$t			= nuRunQuery($s, array($u));		 
+	$r			= db_fetch_row($t);
+
+	$j			= json_decode($r[0], true);
 
 	return nuObjKey($j,$i,'');
 
