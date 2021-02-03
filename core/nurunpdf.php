@@ -17,8 +17,8 @@ if($get){
 	$jsonID					= $_POST['ID'];
 }
 
-
 $J							= nuGetJSONData($jsonID);
+
 $TABLE_ID					= nuTT();
 $JSON						= json_decode($J);
 $LAYOUT						= json_decode($JSON->sre_layout);
@@ -69,7 +69,7 @@ if($get){
 	ob_end_clean();
 	$PDF->Output('nureport.pdf', 'I');
 }else{
-	nuSavePDF($PDF);
+	nuSavePDF($PDF, $JSON->code);
 }
 
 
@@ -77,8 +77,8 @@ nuRemoveFiles();
 
 function nuPrintReport($PDF, $LAY, $DATA, $JSON){
 
-	$lastSectionTop 			= 10000;
-	$pageNumber	 			= 0;
+	$lastSectionTop			= 10000;
+	$pageNumber				= 0;
 
 	for($s = 0 ; $s < count($DATA) ; $s++){
 
@@ -169,7 +169,7 @@ function nuBuildReport($PDF, $REPORT, $TABLE_ID){
 	$group_by							= '';
 	$order['a']							= 'asc ';
 	$order['d']							= 'desc ';
-	$lastROW							= 1; 	
+	$lastROW							= 1;
 
 	for($i = 3 ; $i < 8 ; $i++){
 		if($REPORT->groups[$i]->sortField != ''){			  //-- loop through groups
@@ -624,7 +624,7 @@ class nuSECTION{
 			$lineNoNR		= str_replace ("\n\r", "\r", $text);
 			$lineNoRN		= str_replace ("\r\n", "\r", $lineNoNR);
 			$lineJustR		= str_replace ("\n", "\r", $lineNoRN);
-			$lines		 	= explode("\r", $lineJustR);						//-- add empty array elements for carriage returns
+			$lines			= explode("\r", $lineJustR);						//-- add empty array elements for carriage returns
 
 		}else{
 
@@ -803,7 +803,7 @@ function pdfSection($g, $s, $t, $h){		//-- section
 
 	$c					= new stdClass;
 	$c->objects			= array();
-	$c->group		 	= $g;
+	$c->group			= $g;
 	$c->section			= $s;
 	$c->sectionTop		= $t;
 	$c->sectionHeight	= $h;
@@ -902,11 +902,9 @@ function nuPrintField($PDF, $S, $contents, $O, $LAY){
 	$PDF->SetFont($fontFamily, $fontWeight, $fontSize, '', false);
 	$PDF->SetLineWidth($borderWidth / 5);
 	$PDF->SetXY($left, $top);
-
-	$l = 'Hleď, toť přízračný kůň v mátožné póze šíleně úpí';
+	
 	$t = implode("\n", $contents->lines);
-	$txt = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-
+	
 	if($t == 'KEEP EXACT HEIGHT'){
 		$PDF->Rect($left, $top, $width, $height, 'DF');
 	}else{
@@ -1112,7 +1110,7 @@ function nuRemovePageBreak($S){
 	}
 }
 
-function nuSavePDF($PDF) {
+function nuSavePDF($PDF, $code = '') {
 
 	// save PDF file on the server in the ./temp directory
 	$filename1 = 'nupdf_' . nuID() . '.pdf';
@@ -1130,13 +1128,14 @@ function nuSavePDF($PDF) {
 		$q1 = "CREATE TABLE IF NOT EXISTS pdf_temp (
 			pdf_temp_id VARCHAR(25) PRIMARY KEY,
 			pdf_added_by VARCHAR(25),
+			pdf_code VARCHAR(100),
 			pdf_file_name VARCHAR(255),
 			pdf_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 			); ";
 		nuRunQuery($q1);
 
-		$q1 = "INSERT INTO pdf_temp (pdf_temp_id,pdf_added_by,pdf_file_name)
-					VALUES ('$rid','$usr','$filename');";
+		$q1 = "INSERT INTO pdf_temp (pdf_temp_id,pdf_added_by,pdf_code,pdf_file_name)
+					VALUES ('$rid','$usr','$code','$filename');";
 		nuRunQuery($q1);
 	}
 	else {

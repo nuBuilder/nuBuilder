@@ -177,8 +177,8 @@ function nuAlterSystemTables(){
 	
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` CHANGE `sob_input_count` `sob_input_count` BIGINT(20) NULL DEFAULT '0';");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` CHANGE `sob_all_order` `sob_all_order` INT(11) NULL DEFAULT '0';");	
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_select_2` VARCHAR(1) NULL DEFAULT '0' AFTER `sob_select_multiple`;");		
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_input_datalist` TEXT NULL DEFAULT NULL AFTER `sob_input_javascript`;");		
+	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_select_2` VARCHAR(1) NULL DEFAULT '0' AFTER `sob_select_multiple`;");
+	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_input_datalist` TEXT NULL DEFAULT NULL AFTER `sob_input_javascript`;");
 	
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_session` ADD `sss_hashcookies` MEDIUMTEXT NULL DEFAULT NULL AFTER `sss_access`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_session` ADD COLUMN IF NOT EXISTS sss_login_time timestamp NULL DEFAULT current_timestamp(); AFTER sss_time");
@@ -190,16 +190,19 @@ function nuAlterSystemTables(){
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_additional1` varchar(100) DEFAULT NULL AFTER `sus_email`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_additional2` varchar(100) DEFAULT NULL AFTER `sus_additional1`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_expires_on` datetime DEFAULT NULL AFTER `sus_login_password`;");
+	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_json` MEDIUMTEXT NULL DEFAULT NULL AFTER `sus_expires_on`;");
 
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_access_form` ADD `slf_data_mode` varchar(2) DEFAULT NULL AFTER `slf_print_button`;");	
+	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_access_form` ADD `slf_data_mode` varchar(2) DEFAULT NULL AFTER `slf_print_button`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_php` ADD `sph_global` VARCHAR(1) NOT NULL DEFAULT '0' AFTER `sph_system`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_setup` ADD `set_smtp_use_ssl` VARCHAR(1) NOT NULL DEFAULT '1' AFTER `set_smtp_use_authentication`;");
 
 	$setupColumns = db_field_names('zzzzsys_setup');
 	if(array_search('set_languages_included', $setupColumns) == false){
-		nuRunQueryNoDebug("ALTER TABLE `zzzzsys_setup` ADD `set_languages_included` VARCHAR(1000) NULL DEFAULT NULL AFTER `set_language`;");		
+		nuRunQueryNoDebug("ALTER TABLE `zzzzsys_setup` ADD `set_languages_included` VARCHAR(1000) NULL DEFAULT NULL AFTER `set_language`;");
 		nuRunQuery('UPDATE `zzzzsys_setup` SET set_languages_included = ?', array('["Arabic","Armenian","Chinese","Czech","French","German","Greek","Hindi","Italian","Malay","Russian","Spanish","Tamil","Vietnamese"]'));
 	}
+	
+	nuRunQueryNoDebug("ALTER TABLE `pdf_temp` ADD `pdf_code` VARCHAR(100) NULL DEFAULT NULL AFTER `pdf_added_by`;");
 
 }	
 
