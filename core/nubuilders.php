@@ -44,9 +44,9 @@ function nuBuildFastReport(){
 				)
 
 	";
-	
+
 	nuRunQuery($s, array($i, $c, $d, $g, $t, $f, $j));
-	
+
 
 	$js		= "
 
@@ -54,44 +54,44 @@ function nuBuildFastReport(){
 		var m2	= '<p>(There is now a Report with a Code of <b>$c</b> found in <b>Reports</b>)';
 
 		nuMessage([m1, m2]);
-		
+
 		$('#nunuRunPHPHiddenButton').remove();
 
 	";
 
 	nuJavascriptCallback($js);
-	
+
 }
 
 function nuBuildFastForm($table, $form_type){
 	
 	if($_SESSION['nubuilder_session_data']['IS_DEMO']){
-		
+
 		nuDisplayError('Not available in the Demo...');
 		return;
-	
+
 	}
-	
+
 	$form_id						= nuID();
 	$PK								= $table . '_id';
 	$newT							= $form_type != 'launch';
-	
+
 	if($form_type == 'launch'){
-		$table 						= 'Launch Form ' . nuFastForms();
+		$table						= 'Launch Form ' . nuFastForms();
 	}
-	
+
 	$q								= nuRunQuery("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = DATABASE()");
 
 	while($tableSchemaOBJ = db_fetch_object($q)){
-		
+
 		if($table == $tableSchemaOBJ->table_name){
-			
+
 			$_POST['tableSchema']	= nuBuildTableSchema();
-			$PK 					= $_POST['tableSchema'][$table]['primary_key'][0];
+			$PK						= $_POST['tableSchema'][$table]['primary_key'][0];
 			$newT					= false;
 			
 		}
-		
+
 	}
 
 	$TT				= nuTT();
@@ -147,7 +147,7 @@ function nuBuildFastForm($table, $form_type){
 	nuRunQuery($sql);
 
 	for($i = 0 ; $i < count($SF->rows) ; $i++){
-		
+
 		if($SF->rows[$i][5] == 0){							//-- not ticked as deleted
 			
 			$r					= $SF->rows[$i][3];
@@ -161,7 +161,7 @@ function nuBuildFastForm($table, $form_type){
 			$sql				= "UPDATE $TT SET zzzzsys_object_id = '$newid' WHERE zzzzsys_object_id = '$r'";
 			
 			nuRunQuery($sql);
-		
+
 		}
 
 	}
@@ -285,10 +285,10 @@ function nuBuildFastForm($table, $form_type){
 
 	}
 
-	
-	
+
+
 	if($form_type == 'subform' || $form_type == 'browse'){
-			
+
 		$js	= "
 
 			var m1	= '<h1>A $mess been created!</h1>';
@@ -301,10 +301,10 @@ function nuBuildFastForm($table, $form_type){
 		";
 
 		nuJavascriptCallback($js);
-		
+
 	}else{
 	
-			
+
 		//----------make sure button has a tab--------------------
 		
 
@@ -340,15 +340,14 @@ function nuBuildFastForm($table, $form_type){
 						(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 
 		";
-		
-		$form_count		= nuFastForms() * 50;
+
 		$record_id		= substr($form_type, 0, 6) == 'browse' ? '' : '-1';
-		$array			= Array(nuID(), 'nuuserhome', 'nufastforms', "ff$form_id", ucfirst($table), $table, 11, 50 + $form_count, $form_count, 150, 30, $form_id, $record_id, 'b', 0, 0, 0, 'center', 'run');
+		$array			= Array(nuID(), 'nuuserhome', 'nufastforms', "ff$form_id", ucfirst($table), $table, 11, nuFastFormsMaxTop(), 30, 150, 30, $form_id, $record_id, 'b', 0, 0, 0, 'center', 'run');
 		
 		nuRunQuery($sql, $array);
 
 		$js	= "
-		
+
 			var m1	= '<h1>A $mess been created!</h1>';
 			var m2	= '<p>(There is now a Button called <b>$table</b> on the <b>Fast Forms</b> tab of the <b>User Home</b> Form)</p>';
 
@@ -364,13 +363,21 @@ function nuBuildFastForm($table, $form_type){
 
 	nuRunQuery("INSERT INTO zzzzsys_object SELECT * FROM $TT");
 	nuRunQuery("DROP TABLE $TT");
-		
+
 	nuSetJSONData('clientFormSchema', nuBuildFormSchema());
 
-	
+
 }
 
-
+function nuFastFormsMaxTop(){
+	
+	$s			= 'SELECT MAX(sob_all_top) as max_top FROM zzzzsys_object WHERE sob_all_zzzzsys_tab_id = "nufastforms"';
+	$t			= nuRunQuery($s);
+	$r			= db_fetch_object($t);
+	
+	return $r->max_top + 50;
+	
+}
 
 function nuFastForms(){
 	
@@ -404,7 +411,7 @@ function nuBuildNewTable($tab, $array, $newT){
 
 		$f = $array[$i]['name'];
 		$t = $array[$i]['type'];
-		
+
 		if($t == 'id'){				$a[] = "$f VARCHAR(25) DEFAULT NULL";}
 		if($t == 'varchar'){		$a[] = "$f VARCHAR(1000) DEFAULT NULL";}
 		if($t == 'int'){			$a[] = "$f INT DEFAULT NULL";}
@@ -415,7 +422,7 @@ function nuBuildNewTable($tab, $array, $newT){
 		if($t == 'bigintunsigned'){	$a[] = "$f BIGINT UNSIGNED DEFAULT NULL";}
 		
 	}
-	
+
 	$a[] = "PRIMARY KEY ($id)";
 	$im  = implode(',', $a);
 
