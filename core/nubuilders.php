@@ -342,7 +342,7 @@ function nuBuildFastForm($table, $form_type){
 		";
 
 		$record_id		= substr($form_type, 0, 6) == 'browse' ? '' : '-1';
-		$array			= Array(nuID(), 'nuuserhome', 'nufastforms', "ff$form_id", ucfirst($table), $table, 11, nuFastFormsMaxTop(), 30, 150, 30, $form_id, $record_id, 'b', 0, 0, 0, 'center', 'run');
+		$array			= Array(nuID(), 'nuuserhome', 'nufastforms', "ff$form_id", ucfirst($table), '', 11, nuFastFormsMaxTop(), 30, 150, 30, $form_id, $record_id, 'b', 0, 0, 0, 'center', 'run');
 		
 		nuRunQuery($sql, $array);
 
