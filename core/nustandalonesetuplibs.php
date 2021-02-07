@@ -1,7 +1,9 @@
 <?php
 
+require_once('nusystemupdatelibs.php'); 
+
 function nuStandaloneImportNewDB() {
-	
+
 	$t = nuRunQuery("SHOW TABLES");
 	while($r = db_fetch_row($t)){
 		if($r[0] == 'zzzzsys_object'){return;}
@@ -23,6 +25,8 @@ function nuStandaloneImportNewDB() {
 			}
 		}
 	}
+
+	nuImportLanguageFiles();
 }
 
 ?>
