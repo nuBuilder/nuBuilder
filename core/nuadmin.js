@@ -125,8 +125,7 @@ function nuSetBrowseColumnWidths() {
 
 function nuInitSetBrowseWidthHelper() {
 
-	var p = nuCurrentProperties();
-	if ((p.form_id == 'nuform' && p.form_type == 'browseedit')) {
+	if (! nuMainForm() && nuCurrentProperties().form_id == 'nuform' && window.parent.nuFormType() == 'browse') {
 		if (window.location != window.parent.location) {
 
 			var w = $('#title_zzzzsys_browse_sfsbr_width');
@@ -145,7 +144,6 @@ function nuInitSetBrowseWidthHelper() {
 			}
 		}
 	}
-
 } 
 
 function nuOpenPropertiesOnMiddleClick(e) {
