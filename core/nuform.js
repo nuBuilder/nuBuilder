@@ -75,6 +75,7 @@ function nuBuildForm(f){
 	window.nuSubformRow			= -1;
 	window.nuBeforeSave			= null;
 	window.nuBeforeDelete		= null;
+	window.nuOnSearchAction		= null;
 	window.nuOnClone			= null;
 	window.nuOnBeforeGetBreadcrumb = null;	
 	window.nuOnSetSaved			= null;
@@ -96,7 +97,7 @@ function nuBuildForm(f){
 	window.global_access		= f.global_access == '1';
 	nuFORM.edited				= false;
 	window.nuVerticalTabs 		= false;
-	
+		
 	nuFORM.scroll				= [];
 	nuSetSuffix(1000);
 	nuSetBody(f);
@@ -279,7 +280,7 @@ function nuDisplayLoggedInUser() {
 }
 
 function nuAddHomeLogout(){
-	
+
 	if(nuMainForm()){
 
 		if(window.nuFORM.breadcrumbs.length > 1){
@@ -301,7 +302,7 @@ function nuAddHomeLogout(){
 
 
 		$('#nuBreadcrumbHolder').append('<span id="nulink"><a href="https://www.nubuilder.com" class="nuBuilderLink" target="_blank">nuBuilder</a></span>');
-	
+
 		nuAddIconToBreadCrumb('nuLogout', 'Log out', 16, 'nuAskLogout()', 'fa fa-external-link');
 
 	}
@@ -2801,6 +2802,13 @@ function nuSearchAction(S, F){
 	var s	= String($('#nuSearchField').val()).replaceAll("'","&#39;", true);
 	var f	= String($('#nuFilter').val()).replaceAll("'","&#39;", true);
 	var c 	= arguments.callee.caller === null ? '' : arguments.callee.caller.name;
+
+	if(window.nuOnSearchAction){
+		let o = {search: s, filter: f};
+		nuOnSearchAction(o);
+		s = o.search;
+		f = o.filter;
+	}
 
 	window.nuFORM.setProperty('search', s);
 	window.nuFORM.setProperty('filter', f);
