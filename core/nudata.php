@@ -158,16 +158,18 @@ function nuUpdateDatabase(){
 	$cts			= nuGetJSONData('clientTableSchema');
 	$user			= $_POST['nuHash']['USER_ID'];
 
-	// Global Before Save event
-	$p = nuProcedure('nuBeforeSave');	
-	if($p != '') { eval($p); }
-	if(count($_POST['nuErrors']) > 0){return;}
+	if($nuDelAll !== 'Yes'){
+		// Global Before Save event
+		$p = nuProcedure('nuBeforeSave');	
+		if($p != '') { eval($p); }
+		if(count($_POST['nuErrors']) > 0){return;}
 
-	// Form's Before Save event
-	$_POST['nudata'] = $nudata;
-	nuEval($EFid . '_BS');
-	if(count($_POST['nuErrors']) > 0){return;}
-	$nudata = $_POST['nudata'];
+		// Form's Before Save event
+		$_POST['nudata'] = $nudata;
+		nuEval($EFid . '_BS');
+		if(count($_POST['nuErrors']) > 0){return;}
+		$nudata = $_POST['nudata'];
+	}
 	
 	$S = array();
 
