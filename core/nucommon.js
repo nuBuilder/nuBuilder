@@ -874,10 +874,12 @@ function nuEnable(i, enable) {					//-- Enable Edit Form Object
 	$.each(a, function(index, value) {
 
 		i = a[index];
-		
+
 		var o =	nuObjectComponents(i);
 	
 		for (var c = 0; c < o.length; c++) {
+
+			if (c === 1) { continue; }		// skip label
 
 			$('#' + o[c])
 				.removeClass('nuReadonly')
@@ -902,6 +904,8 @@ function nuReadonly(i){					//-- set Edit Form Object to readonly
 	var o =	nuObjectComponents(i);
 
 	for(var c = 0 ; c < o.length ; c++){
+
+		if (c === 1) { continue; }		// skip label
 
 		$('#' + o[c])
 		.addClass('nuReadonly')
@@ -928,6 +932,8 @@ function nuDisable(i){					//-- Disable Edit Form Object
 		var o = nuObjectComponents(i);
 
 		for (var c = 0; c < o.length; c++) {
+
+			if (c === 1) { continue; }		// skip label
 
 			$('#' + o[c])
 				.addClass('nuReadonly')
