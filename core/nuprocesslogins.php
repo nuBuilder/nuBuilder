@@ -4,14 +4,10 @@ function nuCheckExistingSession() {
 
 	global $nuConfigTitle;	
 	
-	$msg = nuTranslate('You must be logged into ').$nuConfigTitle;
-
-	if (!isset($_SESSION['nubuilder_session_data']['SESSION_ID'])) {
-		nuDie($msg);
+	if (!isset($_SESSION['nubuilder_session_data']['SESSION_ID']) || !isset($_SESSION['nubuilder_session_data'])) {
+		nuDie(nuTranslate('You must be logged into ').$nuConfigTitle);
 	}
-	if (!isset($_SESSION['nubuilder_session_data'])) {
-		nuDie(msg);
-	}
+	
 }
 
 //Check for Standalone Globeadmin login
