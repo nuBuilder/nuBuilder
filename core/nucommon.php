@@ -14,7 +14,7 @@ nuSetTimeLimit(0);
 
 mb_internal_encoding('UTF-8');
 
-$GLOBALS['nuSetup']			= db_setup();
+$GLOBALS['nuSetup']		= db_setup();
 $setup					= $GLOBALS['nuSetup'];			//--setup php code just used for this database
 
 nuClientTimeZone();
@@ -1544,15 +1544,17 @@ function db_setup(){
 }
 
 
-function nuUserLanguage(){
+function nuUserLanguage($e = ''){
 
 	$user_id	= nuObjKey(nuHash(),'USER_ID','');
 	$admin		= nuObjKey(nuHash(),'GLOBAL_ACCESS','');
 
 	if ($admin == '1') {
 		$s = 'SELECT set_language as language FROM zzzzsys_setup WHERE zzzzsys_setup_id = 1';
+		$t		= nuRunQuery($s);
 	} else {
 		$s = 'SELECT sus_language as language FROM zzzzsys_user WHERE zzzzsys_user_id = ?';
+		$t		= nuRunQuery($s, array($user_id));
 	}
 
 	$t			= nuRunQuery($s, array($user_id));
