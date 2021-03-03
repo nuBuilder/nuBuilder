@@ -1557,7 +1557,6 @@ function nuUserLanguage($e = ''){
 		$t		= nuRunQuery($s, array($user_id));
 	}
 
-	$t			= nuRunQuery($s, array($user_id));
 	$r			= db_fetch_object($t);
 
 	$l			= isset($r->language) ? $r->language : '';
