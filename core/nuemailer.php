@@ -80,8 +80,7 @@ function nuEmail($to_list=array(),$from_address='',$from_name='',$content='',$su
 	_nuEmailHelperClean($file_list);
 	$result[3] = ob_get_contents();
 	ob_end_clean();
-
-	nuDebug($result);
+	
 	return $result;
 }
 
