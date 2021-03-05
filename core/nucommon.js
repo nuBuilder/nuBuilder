@@ -126,20 +126,25 @@ function nuGetBreadcrumb(bc){
 	
 }
 
-function nuOpenPreviousBreadcrumb() {
+function nuOpenPreviousBreadcrumb(b) {
 
 	// If a popup is open, close it
 	if (parent.$('#nuModal').length > 0) {
 		nuClosePopup();
 		return;
 	}
+
+	if (b === undefined) {
+		var b = -2; 
+	} else {
+		b = b + 1;
+	}
  
 	var l = window.nuFORM.breadcrumbs.length;
 	if (l > 1) {
-		nuGetBreadcrumb(l - 2);
+		nuGetBreadcrumb(l - b);
 	}
 }
-
 
 function nuDisplayError(e){
 
