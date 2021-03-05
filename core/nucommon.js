@@ -135,7 +135,7 @@ function nuOpenPreviousBreadcrumb(b) {
 	}
 
 	if (b === undefined) {
-		var b = -2; 
+		var b = 2; 
 	} else {
 		b = b + 1;
 	}
