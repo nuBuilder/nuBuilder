@@ -5,7 +5,7 @@ require_once('core/nuchoosesetup.php');
 require_once('core/nuindexlibs.php');
 
 require_once('core/nustandalonesetuplibs.php'); 
-nuStandaloneImportNewDB();
+nuImportNewDB();
 
 require_once('core/nusystemupdatelibs.php');
 
@@ -242,7 +242,7 @@ window.nuHASH				= [];
 	}else{
 		
 		if($opener == ''){
-				$h2 = nuGetJS_standalone_login($nuBrowseFunction, $target, $welcome);
+				$h2 = nuGetJS_login($nuBrowseFunction, $target, $welcome);
 			}else{
 				$h2 = nuGetJS_action_screen($nuBrowseFunction, $target, $welcome, $opener, $search, $like);
 		}
