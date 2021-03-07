@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 07, 2021 at 07:28 PM
+-- Generation Time: Mar 07, 2021 at 08:10 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 8.0.0
 
@@ -528,7 +528,7 @@ CREATE TABLE `zzzzsys_info` (
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
 ('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.03.07.00'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.03.07.00');
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.03.07.01');
 
 -- --------------------------------------------------------
 
@@ -1101,7 +1101,6 @@ INSERT INTO `zzzzsys_php` (`zzzzsys_php_id`, `sph_code`, `sph_description`, `sph
 ('nu5bad6cb32dcbcb4_AB', 'nu5bad6cb32dcbcb4_AB', 'System PHP', 'nubuilder', '\n$s  = \"\n        SELECT * \n        FROM zzzzsys_form\n        WHERE zzzzsys_form_id = \'#LOOKUP_RECORD_ID#\'\n        \n        \";\n\n$t  = nuRunQuery($s);\n$r  = db_fetch_object($t);\n\nnuSetFormValue(\'sob_lookup_table\', $r->sfo_table);\n', NULL, NULL, '1', '0', NULL),
 ('nu5bad6cb32c9102c_AB', 'nu5bad6cb32c9102c_AB', 'System PHP', 'nubuilder', '$s  = \"\n        SELECT * \n        FROM zzzzsys_form\n        WHERE zzzzsys_form_id = \'#LOOKUP_RECORD_ID#\'\n        \n        \";\n\n$t  = nuRunQuery($s);\n$c = db_num_rows($t);\nif ($c == 1) {$r  = db_fetch_object($t); }\n\n\nnuSetFormValue(\'sob_subform_table\', $c == 1 ? $r->sfo_table: \'\');', '', '', '1', '0', ''),
 ('nuphp_AS', 'nuphp_AS', 'System PHP', 'nubuilder', '$justphp = nuObjKey(nuHash(),\'filter\') == \'justphp\';\n\nif (\'#nuDevMode#\' != 1 && substr(\'#RECORD_ID#\', 0, 2) === \'nu\' ) {\n   if ($justphp) {\n        nuDisplayError(nuTranslate(\'<h2>\'.nuTranslate(\'Information\').\'</h2><br>Changes in system forms are overwritten with an update\'));  \n   } \n}\n\n\n  ', NULL, NULL, '1', '0', NULL),
-('6042586eb49764c', 'test', 'test', NULL, '$tt = nuRunQuery(\"SHOW FULL TABLES WHERE Table_type != \'VIEW\'\");\n$A  = [];\n\nwhile($rr = db_fetch_row($tt)){\n\n    $table          = $rr[0];\n\n    if(substr ($table, 0, 7) == \'zzzzsys\'){\n\n        $structure  = [db_field_info(\'zzzzsys_user\')];\n        $rows       = [];\n        $data       = [];\n        $t          = nuRunQuery(\"SELECT * FROM $table\");\n       \n        while($r = db_fetch_row($t)){\n           \n            $row    = [];\n           \n            for($i = 0 ; $i < count($r) ; $i++){\n                $row[]  = $r[$i];\n            }\n           \n            $rows[] = $row;\n\n        }\n\n        $data[]     = $rows;\n        $A[]        = [\'table\' => $table,\'structure\' => $structure,\'data\' => $data];\n   \n    }\n\n}\nprint json_encode($A);', NULL, NULL, '0', '0', ''),
 ('nusession_BB', 'nusession_BB', 'System PHP', 'nubuilder', 'if($_SESSION[\'nubuilder_session_data\'][\'IsDemo\']){		\n	nuDisplayError(nuTranslate(\'Not available in the Demo\').\"..\");\n}', NULL, NULL, '1', '0', NULL);
 
 -- --------------------------------------------------------
@@ -1219,7 +1218,7 @@ CREATE TABLE `zzzzsys_setup` (
 --
 
 INSERT INTO `zzzzsys_setup` (`zzzzsys_setup_id`, `set_time_out_minutes`, `set_zzzzsys_timezone_id`, `set_language`, `set_languages_included`, `set_smtp_username`, `set_smtp_password`, `set_smtp_host`, `set_smtp_from_address`, `set_smtp_from_name`, `set_smtp_port`, `set_smtp_use_authentication`, `set_smtp_use_ssl`, `set_header`, `set_denied`) VALUES
-('1', 480, '5281a1220508372', NULL, '[\"Arabic\",\"Armenian\",\"Chinese\",\"Czech\",\"French\",\"German\",\"Greek\",\"Hindi\",\"Italian\",\"Malay\",\"Russian\",\"Spanish\",\"Tamil\",\"Vietnamese\"]', '1', '1', '1', '1', '1', 1, '1', '1', 'function nuHeaderTest() {\n  console.log(\'Functions placed here are available anywhere in nuBuilder Forte.\');\n}\n\n// nuOnLoad() will be run after each Browse and Edit Form loads. \n\nfunction nuOnLoad() {\n\n if(nuFormType() == \'edit\'){\n     // Edit Form loaded\n } else\n if(nuFormType() == \'browse\'){\n     // Browse Form loaded\n }\n \n}\n\n</script>\n\n<!-- Define your own styles, override styles from nubuilder4.css -->\n\n<style> \n\n /*.nuActionButton {background-color:#0073aa;} */\n\n\n\n</style>\n\n\n<script>\n\n', '1');
+('1', 480, '5281a1220508372', NULL, '[\"Arabic\",\"Armenian\",\"Chinese\",\"Czech\",\"French\",\"German\",\"Greek\",\"Hindi\",\"Italian\",\"Malay\",\"Russian\",\"Spanish\",\"Tamil\",\"Vietnamese\"]', '1', '1', '1', '1', '1', 1, '1', '1', 'function nuHeaderTest() {\n  console.log(\'Functions placed here are available anywhere in nuBuilder Forte.\');\n}\n\n// nuOnLoad() will be run after each Browse and Edit Form loads. \n\nfunction nuOnLoad() {\n\n if(nuFormType() == \'edit\'){\n     // Edit Form loaded\n } else\n if(nuFormType() == \'browse\'){\n     // Browse Form loaded\n }\n \n}\n\nfunction nuBeforeAddActionButtons() {\n   nuAddBackButton();\n}\n\n</script>\n\n<!-- Define your own styles, override styles from nubuilder4.css -->\n\n<style> \n\n /*.nuActionButton {background-color:#0073aa;} */\n\n\n\n</style>\n\n\n<script>\n\n\n', '1');
 
 -- --------------------------------------------------------
 
