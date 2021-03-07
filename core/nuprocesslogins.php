@@ -3,25 +3,39 @@
 function nuCheckExistingSession() {
 
 	global $nuConfigTitle;	
-	
+
 	if (!isset($_SESSION['nubuilder_session_data']['SESSION_ID']) || !isset($_SESSION['nubuilder_session_data'])) {
 		nuDie(nuTranslate('You must be logged into ').$nuConfigTitle);
 	}
-	
+
 }
 
-//Check for Standalone Globeadmin login
-function nuCheckStandaloneGlobeadminLoginRequest() {
+function isDemoGlobadmin() {
+	return $_SESSION['nubuilder_session_data']['IS_DEMO'] == true && $_POST['nuSTATE']['username'] == $_SESSION['nubuilder_session_data']['GLOBEADMIN_DEMO_NAME'] && $_SESSION['nubuilder_session_data']['GLOBEADMIN_DEMO_NAME'] != '';
+}
+
+//Check for Globeadmin login
+function nuCheckGlobeadminLoginRequest() {
 
 	if ($_POST['nuSTATE']['username'] == $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'] && $_POST['nuSTATE']['password'] == $_SESSION['nubuilder_session_data']['GLOBEADMIN_PASS']) {
 		return true;
 	}
+
+	$isDemo = isDemoGlobadmin();
+	if ($isDemo && !isset($_SESSION['nubuilder_session_data']['GLOBEADMIN_DEMO_NAME'])) {
+		return false;
+	}
+
+	if ($isDemo && $_POST['nuSTATE']['password'] == $_SESSION['nubuilder_session_data']['GLOBEADMIN_DEMO_PASS']) {
+		return true;
+	}
+
 	return false;
 }
 
 
 //Check for Standlone User login
-function nuCheckStandaloneUserLoginRequest() {
+function nuCheckUserLoginRequest() {
 
 	$sql = "SELECT * FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id WHERE sus_login_name = ? AND sus_login_password = ? AND (sus_expires_on > CURDATE() OR sus_expires_on IS null )";
 	$rs = nuRunQuery($sql, array(
@@ -65,7 +79,9 @@ function nuLoginSetupGlobeadmin() {
 	
 	$_SESSION['nubuilder_session_data']['SESSION_ID'] = nuIDTEMP();
 	$_SESSION['nubuilder_session_data']['SESSION_TIMESTAMP'] = time();
-	$_SESSION['nubuilder_session_data']['IsDemo'] = $_SESSION['nubuilder_session_data']['IS_DEMO'];
+	
+	$_SESSION['nubuilder_session_data']['IsDemo'] = isDemoGlobadmin() && $_SESSION['nubuilder_session_data']['IS_DEMO'];
+	
 	$_SESSION['nubuilder_session_data']['isGlobeadmin'] = true;
 	$_SESSION['nubuilder_session_data']['translation'] = nuGetTranslation(db_setup()->set_language);
 		
@@ -124,7 +140,7 @@ function nuLoginSetupGlobeadmin() {
 	return true;
 }
 
-function nuLoginSetupNOTGlobeadmin($standalone = true) {
+function nuLoginSetupNOTGlobeadmin() {
 	
 	global $nuConfig2FAUser;
 
@@ -134,15 +150,8 @@ function nuLoginSetupNOTGlobeadmin($standalone = true) {
 	
 	$checkLoginDetailsSQL = "SELECT * FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id WHERE sus_login_name = ? AND sus_login_password = ? ";
 
-	if ($standalone) {
-		$this_username = $_POST['nuSTATE']['username'];
-		$this_password = md5($_POST['nuSTATE']['password']);
-	}
-	else {
-		$this_username = $_SESSION['nubuilder_session_data']['USER_LOGIN'];
-		$this_password = $_SESSION['nubuilder_session_data']['USER_PASS']; // no need to md5 as it is already done
-
-	}
+	$this_username = $_POST['nuSTATE']['username'];
+	$this_password = md5($_POST['nuSTATE']['password']);
 
 	$checkLoginDetailsValues = array(
 		$this_username,

@@ -64,7 +64,7 @@ function nuBuildFastReport(){
 }
 
 function nuBuildFastForm($table, $form_type){
-	
+
 	if($_SESSION['nubuilder_session_data']['IS_DEMO']){
 
 		nuDisplayError('Not available in the Demo...');

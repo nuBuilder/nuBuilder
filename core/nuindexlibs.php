@@ -14,20 +14,8 @@ function nuLoadBody($debug = false) {
 		}
 }
 
-function nuGetJS_plugin_login($nuBrowseFunction, $target) {
 
-	$h2 = "function nuLoad(){
-		nuBindCtrlEvents();
-		window.nuDefaultBrowseFunction	= '$nuBrowseFunction';
-		window.nuBrowseFunction			= '$nuBrowseFunction';
-		window.nuTARGET					= '$target';
-		nuLoginRequest();
-	}";
-	
-	return $h2;
-}
-
-function nuGetJS_standalone_login($nuBrowseFunction, $target, $welcome) {
+function nuGetJS_login($nuBrowseFunction, $target, $welcome) {
 
 	$h2 = "function nuLoad(){
 		nuBindCtrlEvents();

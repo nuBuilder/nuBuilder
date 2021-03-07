@@ -17,15 +17,15 @@ function nuRunLoginProcedure($procedure) {
 
 if ( nuCheckIsLoginRequest() ) {
 
-	if ( nuCheckStandaloneGlobeadminLoginRequest() ) {
+	if ( nuCheckGlobeadminLoginRequest() ) {
 
-		// Check for Standalone Globeadmin login
+		// Check for Globeadmin login
 		if (nuLoginSetupGlobeadmin()) nuRunLoginProcedure('nuStartup');
 
-	} else if ( nuCheckStandaloneUserLoginRequest() ) {
+	} else if ( nuCheckUserLoginRequest() ) {
 
-		// Check for Standlone User login
-		if (nuLoginSetupNOTGlobeadmin(true)) nuRunLoginProcedure('nuStartup');		
+		// Check for User login
+		if (nuLoginSetupNOTGlobeadmin()) nuRunLoginProcedure('nuStartup');		
 
 	} else {
 

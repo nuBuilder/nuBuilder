@@ -2,7 +2,7 @@
 
 require_once('nusystemupdatelibs.php'); 
 
-function nuStandaloneImportNewDB() {
+function nuImportNewDB() {
 
 	$t = nuRunQuery("SHOW TABLES");
 	while($r = db_fetch_row($t)){

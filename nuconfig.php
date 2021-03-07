@@ -15,8 +15,11 @@
 // Settings:
 	$nuConfigTitle						= "nuBuilder 4";			//-- nuBuilder Title
 	$nuConfigTimeOut					= 1440;						//-- Session Timeout. Default: 1440 (24h)
-	$nuConfigIsDemo						= false;					//-- Demo mode. Saving not permitted.
 
+	$nuConfigIsDemo						= false;					//-- Demo mode. Saving not permitted.	
+	$nuConfigDemoDBGlobeadminUsername	= "";						//-- Specify a Demo User Name and Password if $nuConfigIsDemo is set to true
+	$nuConfigDemoDBGlobeadminPassword	= "";
+	
 // Options:
 	$nuConfigIncludeGoogleCharts		= true;						//-- Include external link to www.gstatic.com
 	$nuConfigIncludeApexCharts			= false;					//-- Include apex charts (libs/apexcharts)
@@ -35,17 +38,17 @@
 $nuJSOptions = "
 
 	window.nuUXOptions = [];
-	nuUXOptions['nuEnableBrowserBackButton']	   = true;		 	// Enable the browser's Back button 
-	nuUXOptions['nuPreventButtonDblClick']		 = true;		 	// Disable a button for 1 5 s to prevent a double click
-	nuUXOptions['nuShowPropertiesOnMiddleClick']   = true;		 	// Show the Object Properties on middle mouse click
-	nuUXOptions['nuAutosizeBrowseColumns']		 = true;		 	// Autosize columns to fit the document width
-	nuUXOptions['nuShowBackButton']				= false;			// Show a Back Button
-	nuUXOptions['nuBrowsePaginationInfo']		  = 'default';		// Default Format is= '{StartRow} - {EndRow} ' + nuTranslate('of') + ' ' + '{TotalRows}'.
-	nuUXOptions['nuShowNuBuilderLink']			 = true;		 	// Show the link to nubuilder com
-	nuUXOptions['nuShowLoggedInUser']			  = false;			// Show the logged in User
-	nuUXOptions['nuShowBeforeUnloadMessage']	   = true;		 	// Show or disable 'Leave site?' message
-	nuUXOptions['nuShowBrowserTabTitle']		   = true;		 	// Show the Form Title in the Browser Tab
-	nuUXOptions['nuBrowserTabTitlePrefix']		 = 'nuBuilder'	// Prefix in the Browser Tab
+	nuUXOptions['nuEnableBrowserBackButton']		= true;		 	// Enable the browser's Back button 
+	nuUXOptions['nuPreventButtonDblClick']			= true;		 	// Disable a button for 1 5 s to prevent a double click
+	nuUXOptions['nuShowPropertiesOnMiddleClick']	= true;		 	// Show the Object Properties on middle mouse click
+	nuUXOptions['nuAutosizeBrowseColumns']			= true;		 	// Autosize columns to fit the document width
+	nuUXOptions['nuShowBackButton']					= false;		// Show a Back Button
+	nuUXOptions['nuBrowsePaginationInfo']			= 'default';	// Default Format is= '{StartRow} - {EndRow} ' + nuTranslate('of') + ' ' + '{TotalRows}'.
+	nuUXOptions['nuShowNuBuilderLink']				= true;		 	// Show the link to nubuilder com
+	nuUXOptions['nuShowLoggedInUser']				= false;		// Show the logged in User
+	nuUXOptions['nuShowBeforeUnloadMessage']		= true;		 	// Show or disable 'Leave site?' message
+	nuUXOptions['nuShowBrowserTabTitle']			= true;		 	// Show the Form Title in the Browser Tab
+	nuUXOptions['nuBrowserTabTitlePrefix']			= 'nuBuilder'	// Prefix in the Browser Tab
 
 	window.nuAdminButtons = [];
 	nuAdminButtons['nuDebug']					= false;

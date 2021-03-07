@@ -1450,11 +1450,9 @@ function nuUpdateTableIds($table){
 
 function nuRunSystemUpdate(){
 
-	if(nuObjKey($_SESSION,'IsDemo', false)){
-
-		nuDisplayError('Not available in the Demo...');
-		return;
-
+	if($_SESSION['nubuilder_session_data']['IsDemo']){		
+		nuDisplayError(nuTranslate('Not available in the Demo')."..");
+		return;	
 	}
 
 	$i	= nuID();
