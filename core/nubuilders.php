@@ -142,7 +142,7 @@ function nuBuildFastForm($table, $form_type){
 
 	nuRunQuery($sql, $array);
 
-	$sql			= "CREATE TABLE $TT SELECT * FROM zzzzsys_object WHERE false";
+	$sql			= "CREATE TABLE $TT SELECT * FROM zzzzsys_object WHERE 1=0";
 	
 	nuRunQuery($sql);
 
