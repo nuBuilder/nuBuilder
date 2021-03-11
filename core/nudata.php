@@ -9,8 +9,8 @@ function nuValidateSubforms(){
 	for($d = 0 ; $d < count($nudata) ; $d++){
 
 		$sf	= $nudata[$d];
-		$a	= array();
-		$L	= array();
+		$a			= array();
+		$L			= array();
 		$s	= '
 				SELECT 
 					sob_subform_zzzzsys_form_id, 
@@ -30,8 +30,8 @@ function nuValidateSubforms(){
 			$t	= nuRunQuery($s, array($f));
 
 			while($r = db_fetch_object($t)){
-				$a[$r->id]	= $r->validate;
-				$L[$r->id]	= $r->label;
+				$a[$r->id]			= $r->validate;
+				$L[$r->id]			= $r->label;
 			}
 
 			for($i = 0 ; $i < count($sf->rows) ; $i++){
@@ -47,7 +47,7 @@ function nuValidateSubforms(){
 
 					if($val == 1){																	//-- no blanks
 
-						if($sf->rows[$i][$I] == '' and $notDeleted){
+						if(($sf->rows[$i][$I] == '' or $sf->rows[$i][$I] == '[]') and $notDeleted){
 
 							if($d == 0){
 								nuDisplayError("$label " . nuTranslate('cannot be left blank'));
