@@ -191,8 +191,9 @@ function nuBuildForm(f){
 	nuDragTitleEvents();
 
 	if(window.nuLoginH != ''){
-
-		$('#nuBreadcrumb0')
+		
+		var bc = $('#nuBreadcrumb0').length > 0 ? $('#nuBreadcrumb0') : $('#nuHomeGap')
+		bc
 		.html(nuTranslate('Home'))
 		.attr('onclick', '')
 		.attr('onclick', 'nuForm("' + window.nuLoginH + '", -1, "", "", 1);');
