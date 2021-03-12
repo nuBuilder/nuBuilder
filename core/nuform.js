@@ -191,10 +191,11 @@ function nuBuildForm(f){
 	nuDragTitleEvents();
 
 	if(window.nuLoginH != ''){
-		
+
 		var bc = $('#nuBreadcrumb0').length > 0 ? $('#nuBreadcrumb0') : $('#nuHomeGap')
 		bc
-		.html(nuTranslate('Home'))
+		.html('<i class="fa fa-home" style="font-size:20px;padding:0px 5px 0px 0px"></i>')
+		.attr('title', nuTranslate('Home'))
 		.attr('onclick', '')
 		.attr('onclick', 'nuForm("' + window.nuLoginH + '", -1, "", "", 1);');
 
