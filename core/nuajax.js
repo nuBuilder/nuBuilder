@@ -190,7 +190,7 @@ function nuRunReport(f, iframe){
 	
 }
 
-function nuRunReportSave(f){
+function nuRunReportSave(f, tag = null){
 
 	var current				= nuFORM.getCurrent();
 	var last				= $.extend(true, {}, current);
@@ -206,6 +206,7 @@ function nuRunReportSave(f){
 
 			var fd 			= new FormData();
 			fd.append('ID', fm.id);
+			fd.append('tag', tag);
 			var xhr 		= new XMLHttpRequest();
 			xhr.open('POST', 'core/nurunpdf.php', true);
 			xhr.send(fd);
