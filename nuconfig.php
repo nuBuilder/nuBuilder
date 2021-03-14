@@ -19,7 +19,8 @@
 	$nuConfigIsDemo						= false;					//-- Demo mode. Saving not permitted.	
 	$nuConfigDemoDBGlobeadminUsername	= "";						//-- Specify a Demo User Name and Password if $nuConfigIsDemo is set to true
 	$nuConfigDemoDBGlobeadminPassword	= "";
-	
+	$nuConfigDemoSavingAllowedIds		= "";
+
 // Options:
 	$nuConfigIncludeGoogleCharts		= true;						//-- Include external link to www.gstatic.com
 	$nuConfigIncludeApexCharts			= false;					//-- Include apex charts (libs/apexcharts)

@@ -124,21 +124,20 @@ function nuDuplicate($S, $R, $F){
 
 function nuUpdateDatabase(){
 
-	if($_SESSION['nubuilder_session_data']['IsDemo']){		
-		nuDisplayError(nuTranslate('Not available in the Demo')."..");
-		return;	
-	}
-
-	$form_id		= $_POST['nuHash']['form_id'];		
-	$nudata			= $_POST['nuHash']['nuFORMdata'];
-	$nuMainID		= $_POST['nuHash']['record_id'];
 	$form_id		= $_POST['nuHash']['form_id'];
-
-	$formProp =		nuGetFormProperties($form_id);
-	
-	$form_type		= $formProp->sfo_type;
 	$nuDelAll		= $_POST['nuHash']['deleteAll'];
 
+	if($_SESSION['nubuilder_session_data']['IsDemo']) {
+		if ($nuDelAll == 'Yes' || ($nuDelAll == 'No' && strpos($_SESSION['nubuilder_session_data']['DEMO_SAVING_ALLOWED_IDS'], $form_id) === false  )){		
+			nuDisplayError(nuTranslate('Not available in the Demo')."..");
+			return;	
+		}
+	}
+
+	$nudata			= $_POST['nuHash']['nuFORMdata'];
+	$nuMainID		= $_POST['nuHash']['record_id'];
+	$formProp 		= nuGetFormProperties($form_id);
+	$form_type		= $formProp->sfo_type;
 
 	if ($_POST['nuHash']['GLOBAL_ACCESS'] == '0') {
 		$dm = nuGetDataMode($form_id);
