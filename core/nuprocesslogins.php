@@ -79,16 +79,18 @@ function nuLoginSetupGlobeadmin() {
 	
 	$_SESSION['nubuilder_session_data']['SESSION_ID'] = nuIDTEMP();
 	$_SESSION['nubuilder_session_data']['SESSION_TIMESTAMP'] = time();
-	
-	$_SESSION['nubuilder_session_data']['IsDemo'] = isDemoGlobadmin() && $_SESSION['nubuilder_session_data']['IS_DEMO'];
-	
+
+	$isDemo = isDemoGlobadmin() && $_SESSION['nubuilder_session_data']['IS_DEMO'];
+	$_SESSION['nubuilder_session_data']['IsDemo'] = $isDemo;
+
 	$_SESSION['nubuilder_session_data']['isGlobeadmin'] = true;
 	$_SESSION['nubuilder_session_data']['translation'] = nuGetTranslation(db_setup()->set_language);
-		
+
 	$sessionIds = new stdClass;
 	$sessionIds->zzzzsys_access_id = '';
 	$sessionIds->zzzzsys_user_id = $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'];
-	
+	// $sessionIds->zzzzsys_user_id = !$isDemo ? $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'] : $_SESSION['nubuilder_session_data']['GLOBEADMIN_DEMO_NAME'];
+
 	if ($nuConfig2FAAdmin) {
 		$sessionIds->zzzzsys_form_id = 'nuauthentication';
 		$_SESSION['nubuilder_session_data']['SESSION_2FA_STATUS'] = 'PENDING';
@@ -99,7 +101,7 @@ function nuLoginSetupGlobeadmin() {
 	
 	$sessionIds->global_access = '1';
 	$sessionIds->ip_address = nuGetIPAddress();
-		
+
 	$storeSessionInTable = new stdClass;
 	$storeSessionInTable->session = $sessionIds;
 
@@ -311,7 +313,7 @@ function nuIDTEMP() {
 function nuGetTranslation($l) {
 
 	$a = array();
-	$s = "SELECT trl_english, trl_translation FROM zzzzsys_translate WHERE trl_language = ? ORDER BY trl_english, IF(zzzzsys_translate_id like 'nu%', 1, 0) ";
+	$s = "SELECT trl_english, trl_translation FROM zzzzsys_translate WHERE trl_language = ? ORDER BY trl_english, CASE WHEN zzzzsys_translate_id like 'nu%' THEN 1 ELSE 0 END ";
 	$t = nuRunQuery($s, array($l));
 	while ($r = db_fetch_object($t)) {
 		$a[] = array('english' => $r->trl_english, 'translation' => $r->trl_translation);
@@ -319,5 +321,6 @@ function nuGetTranslation($l) {
 
 	return $a;
 }
+
 
 ?>
