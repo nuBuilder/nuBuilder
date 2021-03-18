@@ -369,7 +369,7 @@ function nuBuildLookup(t, s, like){
 function nuPopup(f, r, filter){
 
 	nuCursor('progress');
-	
+
 	if(nuSERVERRESPONSE.global_access == '0' && f == 'nuobject'){return;}	
 	if(nuSERVERRESPONSE.objects.length == 0 && r == '-2'){return;}
 	
@@ -1484,6 +1484,14 @@ function nuAccessLevelId(){
 
 function nuUserName(){
 	return nuSERVERRESPONSE.user_name;
+}
+
+function nuUserId(){
+	return nuSERVERRESPONSE.user_id;
+}
+
+function nuUserLogin(){
+	return nuSERVERRESPONSE.login_name;
 }
 
 function nuDatabase(){

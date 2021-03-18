@@ -813,6 +813,7 @@ function nuGetUserAccess(){
 	$A['HOME_ID']				= $j->session->zzzzsys_form_id;
 	$A['GLOBAL_ACCESS']			= $j->session->global_access;
 	$A['ACCESS_LEVEL_CODE']		= $j->access_level_code;
+	$A['LOGIN_NAME']            = $j->session->sus_login_name;
 
 	$f							= db_field_names('zzzzsys_session');
 	$s							= time();
