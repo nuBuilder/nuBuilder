@@ -182,7 +182,6 @@ function nuLoginSetupNOTGlobeadmin() {
 
 	$sessionIds->global_access = '0';
 	$sessionIds->ip_address = nuGetIPAddress();
-	$sessionIds->ip_address = nuGetIPAddress();
 	
 	if ($nuConfig2FAUser) {
 		$sessionIds->zzzzsys_form_id = 'nuauthentication';
