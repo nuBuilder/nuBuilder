@@ -26,7 +26,6 @@ function nuRunQueryNoDebug($s, $a = array(), $isInsert = false){
 	try {
 		$object->execute($a);
 	}catch(PDOException $ex){
-		
 	}
 
 	if($isInsert){		
@@ -133,6 +132,16 @@ function db_fetch_array($o){
 
 }
 
+function db_fetch_all_array($o){
+
+	if (is_object($o)) {
+		return $o->fetchAll(PDO::FETCH_ASSOC);
+	} else {		
+		return array();
+	}
+
+}
+
 function db_fetch_object($o){
 
 	if (is_object($o)) {
@@ -143,10 +152,30 @@ function db_fetch_object($o){
 
 }
 
+function db_fetch_all_object($o){
+
+	if (is_object($o)) {
+		return $o->fetchAll(PDO::FETCH_OBJ);
+	} else {
+		return false;
+	}
+
+}
+
 function db_fetch_row($o){
 
 	if (is_object($o)) {
 		return $o->fetch(PDO::FETCH_NUM);
+	} else {
+		return false;
+	}
+
+}
+
+function db_fetch_all_row($o){
+
+	if (is_object($o)) {
+		return $o->fetchAll(PDO::FETCH_NUM);
 	} else {
 		return false;
 	}
