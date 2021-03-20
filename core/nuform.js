@@ -1092,19 +1092,27 @@ function nuIMAGE(w, i, l, p, prop){
 
 	nuAddDataTab(id, prop.objects[i].tab, p);
 
-	$('#' + id).css({'top'		: Number(prop.objects[i].top),
+	let obj = $('#' + id);
+	obj.css({'top'		: Number(prop.objects[i].top),
 					'left'		: Number(prop.objects[i].left),
-					'width'		: Number(prop.objects[i].width),
-					'height'	: Number(prop.objects[i].height),
 					'position'	: 'absolute'
-	})
-	.attr('src', atob(w.objects[i].src));
+	});
+
+	let width = prop.objects[i].width;
+	let height = prop.objects[i].height;
+
+	if (height !== "-1" && width !== "-1") { 
+		obj.css('height', Number(height));
+		obj.css('width', Number(width));
+	}
+
+	obj.attr('src', atob(w.objects[i].src));
 
 	nuSetAccess(id, prop.objects[i].read);
 
 	nuAddJSObjectEvents(id, prop.objects[i].js);
 
-	return Number(prop.objects[i].width);
+	return Number(obj.width());
 
 }
 
