@@ -3632,7 +3632,7 @@ function nuTotal(f){
 	return Number(nuFORM.calc(f));
 }
 
-function nuMessage(o){
+function nuMessage(o, timeout, callback){
 
 	window.nuHideMessage	= false;
 
@@ -3642,18 +3642,20 @@ function nuMessage(o){
 
 	if(o.length == 0){return;}
 
-	var widest	= 5;
+	if (!$.isArray(o)) {
+		let tmp = o;
+		var o = [];
+		o.push(tmp);
+	}
 
+	var widest	= 5;
 	for(var i = 0 ; i < o.length ; i++){
 		widest	= Math.max(widest, nuGetWordWidth(o[i]));
 	}
 
 	widest		= Math.min(widest + 200, 1000);
-//
-//	var l		= ( $(window.top.document).width() - widest) / 2;
 	var w = $(this).innerWidth();
 	var l = Math.max(0, $(this).scrollLeft() + ( w - widest) / 2);
-//	$('body', par).append("<div id='nuMessageDiv' class='nuMessage' style='position:fixed; overflow:hidden;width:" + widest + "px;top:55px; left:10px' ></div>")	
 	$('body', par).append("<div id='nuMessageDiv' class='nuMessage' style='overflow:hidden;width:" + widest + "px;left:" + l + "px' ></div>")
 
 	for(var i = 0 ; i < o.length ; i++){
@@ -3663,6 +3665,17 @@ function nuMessage(o){
 
 	}
 
+	if (timeout !== undefined) {
+		setTimeout(function() {
+			$('#nuMessageDiv', par).fadeOut("slow");
+
+			if (callback !== undefined) {
+				callback();
+			}
+
+		}, timeout);
+	}
+	
 }
 
 function nuWindowPosition(){
