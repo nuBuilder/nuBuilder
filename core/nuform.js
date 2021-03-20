@@ -2356,7 +2356,7 @@ function nuSelectTab(tab){
 	$('#' + tab.id).addClass('nuTabSelected');
 
 	if(window.nuOnTabSelected){
-		nuOnTabSelected();
+		nuOnTabSelected(tab);
 	}
 
 }
