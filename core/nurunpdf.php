@@ -1113,7 +1113,7 @@ function nuRemovePageBreak($S){
 
 function nuSavePDF($PDF, $code = '', $tag = '') {
 
-	if($_SESSION['nubuilder_session_data']['IS_DEMO']){
+	if($_SESSION['nubuilder_session_data']['IsDemo']){
 
 		nuDisplayError('Not available in the Demo...');
 		return;

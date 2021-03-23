@@ -1,5 +1,6 @@
 <?php
 	require_once('nuchoosesetup.php');
+	require_once('nuprocesslogins.php');
 
 	$session_id		= $_REQUEST['sessid'];
 	$values			= array($session_id);
@@ -7,7 +8,7 @@
 	$obj			= nuRunQuery($sql, $values);
 	$result		= db_num_rows($obj);
 	
-	if($_SESSION['nubuilder_session_data']['IsDemo']){		
+	if($_SESSION['nubuilder_session_data']['IsDemo']){
 		echo('Not available in the Demo');
 		$page   = pmaBad();
 		return;	
@@ -21,7 +22,7 @@
 		$_extra_check	= $logon_info->session->global_access;
 
 		if ( $_user == $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'] AND $_extra_check == '1' ) {
-			$page	= pmaGood();		
+			$page	= pmaGood();
 		} else {
 			$page	= pmaBad();
 		}

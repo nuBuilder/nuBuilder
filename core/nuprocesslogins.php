@@ -11,6 +11,7 @@ function nuCheckExistingSession() {
 }
 
 function isDemoGlobadmin() {
+
 	return $_SESSION['nubuilder_session_data']['IS_DEMO'] == true && $_POST['nuSTATE']['username'] == $_SESSION['nubuilder_session_data']['GLOBEADMIN_DEMO_NAME'] && $_SESSION['nubuilder_session_data']['GLOBEADMIN_DEMO_NAME'] != '';
 }
 
@@ -26,7 +27,7 @@ function nuCheckGlobeadminLoginRequest() {
 		return false;
 	}
 
-	if ($isDemo && $_POST['nuSTATE']['password'] == $_SESSION['nubuilder_session_data']['GLOBEADMIN_DEMO_PASS']) {
+	if ($isDemo && $_POST['nuSTATE']['password'] == $_SESSION['nubuilder_session_data']['GLOBEADMIN_DEMO_PASS']) {		
 		return true;
 	}
 
@@ -82,6 +83,7 @@ function nuLoginSetupGlobeadmin() {
 
 	$isDemo = isDemoGlobadmin() && $_SESSION['nubuilder_session_data']['IS_DEMO'];
 	$_SESSION['nubuilder_session_data']['IsDemo'] = $isDemo;
+	$_SESSION['nubuilder_session_data']['IS_DEMO'] = $isDemo;
 
 	$_SESSION['nubuilder_session_data']['isGlobeadmin'] = true;
 	$_SESSION['nubuilder_session_data']['translation'] = nuGetTranslation(db_setup()->set_language);
