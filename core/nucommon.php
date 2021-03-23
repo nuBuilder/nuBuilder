@@ -461,13 +461,17 @@ function nuGetJSONData($i){
 
 }
 
-function nuSetUserJSONData($i, $nj){
+function nuSetUserJSONData($i, $nj, $u = ""){
 
-	$u	= nuHash()['USER_ID'];	
-	if (nuHash()['GLOBAL_ACCESS'] == '1' ) {	
-		$u = '';
-		$s = "REPLACE INTO zzzzsys_user (zzzzsys_user_id) VALUES ('')";     
-		nuRunQuery($s);	
+	$gu = $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'];  //  or  $gu = '';
+
+	if ($u == "") {
+		$u = nuHash()['GLOBAL_ACCESS'] == '1'  ? $gu  : nuHash()['USER_ID'];
+	}
+
+	if (nuHash()['GLOBAL_ACCESS'] == '1' ) {
+		$s = "INSERT IGNORE INTO zzzzsys_user (zzzzsys_user_id) VALUES (?)";     
+		nuRunQuery($s, array($gu));	
 	}
 
 	$s			= "SELECT sus_json FROM zzzzsys_user WHERE zzzzsys_user_id = ?";
@@ -486,8 +490,10 @@ function nuSetUserJSONData($i, $nj){
 
 function nuGetUserJSONData($i, $u = ""){
 
+	$gu = $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'];  //  or  $gu = '';
+
 	if ($u == "") {
-		$u			= nuHash()['GLOBAL_ACCESS'] == '1'  ? '' : nuHash()['USER_ID'];
+		$u 		= nuHash()['GLOBAL_ACCESS'] == '1'  ? $gu  : nuHash()['USER_ID'];
 	}
 
 	$s			= "SELECT sus_json FROM zzzzsys_user WHERE zzzzsys_user_id = ? ";
@@ -813,7 +819,7 @@ function nuGetUserAccess(){
 	$A['HOME_ID']				= $j->session->zzzzsys_form_id;
 	$A['GLOBAL_ACCESS']			= $j->session->global_access;
 	$A['ACCESS_LEVEL_CODE']		= $j->access_level_code;
-	$A['LOGIN_NAME']            = $j->session->sus_login_name;
+	$A['LOGIN_NAME']			= $j->session->sus_login_name;
 
 	$f							= db_field_names('zzzzsys_session');
 	$s							= time();

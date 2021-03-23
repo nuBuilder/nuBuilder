@@ -27,9 +27,12 @@
 	$nuConfigEnableDatabaseUpdate		= true;						//-- Enable updating the database within nuBuilder
 	$nuConfigKeepSessionAlive			= true;						//-- Use a timer to keep the session alive
 	$nuConfigKeepSessionAliveInterval	= 600;						//-- Keep-alive interval. Default 600 s (10 min)
-	
+
 	$nuConfig2FAAdmin					= false;					//-- Use 2FA authentication for admininstrator
 	$nuConfig2FAUser					= false;					//-- Use 2FA authentication for users
+	$nuConfig2FAFormID					= "nuauthentication";		//-- 2FA form ID. Default id: nuauthentication
+	$nuConfig2FATokenValidityTime		= 168;						//-- 2FA Token Validity Time. Default: 7 days (7 * 24 hours)
+	$nuConfig2FAShowRememberMe			= false;					//-- Show a checkbox "Remember me for X days" in the authentication form
 
 // Includes:
 	$nuConfigIncludeJS					= '';						//-- Include one or more JavaScript File(s).  E.g. 'myjsfunctions.js' or ['myjsfunctions1.js','myjsfunctions2.js']

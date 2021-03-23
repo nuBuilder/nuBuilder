@@ -3,31 +3,36 @@
 class nubuilder_session_data {
 
 	var $nubuilder	= array(
-	'NB_PATH'				=> __DIR__,
-	'GLOBEADMIN'			=> false,
-	'GLOBEADMIN_NAME'		=> '',
-	'GLOBEADMIN_PASS'		=> '',
-	'GLOBEADMIN_DEMO_NAME'	=> '',
-	'GLOBEADMIN_DEMO_PASS'	=> '',
-	'DEMO_SAVING_ALLOWED_IDS'=> '',
-	'USER_LOGIN'			=> '',
-	'USER_PASS'				=> '',
-	'USER_EMAIL'			=> '',
-	'USER_DISPLAY_NAME'		=> '',
-	'USER_ROLES'			=> '',
-	'DB_DRIVER'				=> '',
-	'DB_PORT'				=> '',
-	'DB_NAME'				=> '',
-	'DB_USER'				=> '',
-	'DB_PASSWORD'			=> '',
-	'DB_HOST'				=> '',
-	'DB_CHARSET'			=> '',
-	'NU_SITE_URL'			=> '',
-	'IS_DEMO'				=> false,
-	'SESSION_ID'			=> null,
-	'SESSION_TIMESTAMP'		=> null,
-	'IsDemo'				=> false,
-	'translation'			=> null);
+	'NB_PATH'					=> __DIR__,
+	'GLOBEADMIN'				=> false,
+	'GLOBEADMIN_NAME'			=> '',
+	'GLOBEADMIN_PASS'			=> '',
+	'GLOBEADMIN_DEMO_NAME'		=> '',
+	'GLOBEADMIN_DEMO_PASS'		=> '',
+	'DEMO_SAVING_ALLOWED_IDS'	=> '',
+	'USER_LOGIN'				=> '',
+	'USER_PASS'					=> '',
+	'USER_EMAIL'				=> '',
+	'USER_DISPLAY_NAME'			=> '',
+	'USER_ROLES'				=> '',
+	'DB_DRIVER'					=> '',
+	'DB_PORT'					=> '',
+	'DB_NAME'					=> '',
+	'DB_USER'					=> '',
+	'DB_PASSWORD'				=> '',
+	'DB_HOST'					=> '',
+	'DB_CHARSET'				=> '',
+	'NU_SITE_URL'				=> '',
+	'IS_DEMO'					=> false,
+	'2FA_ADMIN'					=> false,
+	'2FA_USER'					=> false,
+	'2FA_FORM_ID'				=> '',
+	'2FA_TOKEN_VALIDITY_TIME'	=> '',
+	'2FA_REMEMBER_ME'			=> false,
+	'SESSION_ID'				=> null,
+	'SESSION_TIMESTAMP'			=> null,
+	'IsDemo'					=> false,
+	'translation'				=> null);
 
 	function __construct() {
 	}
@@ -36,7 +41,7 @@ class nubuilder_session_data {
 
 		return $this->nubuilder;
 	}
-	function construct_standalone($nuConfigDBDriver,$nuConfigDBPort,$nuConfigDBHost,$nuConfigDBName,$nuConfigDBUser,$nuConfigDBPassword,$nuConfigDBGlobeadminUsername,$nuConfigDBGlobeadminPassword, $nuConfigDemoDBGlobeadminUsername, $nuConfigDemoDBGlobeadminPassword, $nuConfigDemoSavingAllowedIds, $nuConfigIsDemo = false) {
+	function construct_standalone($nuConfigDBDriver,$nuConfigDBPort,$nuConfigDBHost,$nuConfigDBName,$nuConfigDBUser,$nuConfigDBPassword,$nuConfigDBGlobeadminUsername,$nuConfigDBGlobeadminPassword, $nuConfigDemoDBGlobeadminUsername, $nuConfigDemoDBGlobeadminPassword, $nuConfigDemoSavingAllowedIds, $nuConfig2FAAdmin, $nuConfig2FAUser, $nuConfig2FAFormID, $nuConfig2FATokenValidityTime, $nuConfig2FAShowRememberMe, $nuConfigIsDemo = false) {
 
 		$this->nubuilder['DB_DRIVER']				= $nuConfigDBDriver;
 		$this->nubuilder['DB_PORT']					= $nuConfigDBPort;
@@ -53,7 +58,15 @@ class nubuilder_session_data {
 		$this->nubuilder['GLOBEADMIN_DEMO_PASS']	= $nuConfigDemoDBGlobeadminPassword;
 
 		$this->nubuilder['IS_DEMO']					= $nuConfigIsDemo;
-		$this->nubuilder['DEMO_SAVING_ALLOWED_IDS']	= $nuConfigDemoSavingAllowedIds;		
+		$this->nubuilder['DEMO_SAVING_ALLOWED_IDS']	= $nuConfigDemoSavingAllowedIds;
+
+		$this->nubuilder['2FA_ADMIN']				= $nuConfig2FAAdmin;
+		$this->nubuilder['2FA_USER']				= $nuConfig2FAUser;
+
+		$this->nubuilder['2FA_FORM_ID']				= $nuConfig2FAFormID == '' ? 'nuauthentication' : $nuConfig2FAFormID;
+		$this->nubuilder['2FA_TOKEN_VALIDITY_TIME']	= $nuConfig2FATokenValidityTime == '' ? 168 : $nuConfig2FATokenValidityTime;
+		$this->nubuilder['2FA_REMEMBER_ME']			= $nuConfig2FAShowRememberMe;		
+
 	}
 }
 

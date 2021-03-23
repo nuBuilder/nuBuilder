@@ -46,7 +46,7 @@ function nuCheckUserLoginRequest() {
 	if (db_num_rows($rs) > 0) {
 		
 		$r = db_fetch_object($rs);
-		return true;		
+		return true;
 	}
 	return false;
 }
@@ -92,13 +92,17 @@ function nuLoginSetupGlobeadmin() {
 	$sessionIds->sus_login_name = $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'];
 
 	if ($nuConfig2FAAdmin) {
-		$sessionIds->zzzzsys_form_id = 'nuauthentication';
-		$_SESSION['nubuilder_session_data']['SESSION_2FA_STATUS'] = 'PENDING';
-		$_SESSION['nubuilder_session_data']['SESSION_2FA_REDIRECT_FORM_ID'] = 'nuhome';
+		if (nu2FALocalTokenOK($sessionIds->sus_login_name)) {
+			$sessionIds->zzzzsys_form_id = 'nuhome';
+		} else {
+			$sessionIds->zzzzsys_form_id = $_SESSION['nubuilder_session_data']['2FA_FORM_ID'];
+			$_SESSION['nubuilder_session_data']['SESSION_2FA_STATUS'] = 'PENDING';
+			$_SESSION['nubuilder_session_data']['SESSION_2FA_REDIRECT_FORM_ID'] = 'nuhome';
+		}
 	} else {
 		$sessionIds->zzzzsys_form_id = 'nuhome';
 	}	
-	
+
 	$sessionIds->global_access = '1';
 	$sessionIds->ip_address = nuGetIPAddress();
 
@@ -183,14 +187,19 @@ function nuLoginSetupNOTGlobeadmin() {
 	$sessionIds->global_access = '0';
 	$sessionIds->ip_address = nuGetIPAddress();
 	
+
 	if ($nuConfig2FAUser) {
-		$sessionIds->zzzzsys_form_id = 'nuauthentication';
+		if (nu2FALocalTokenOK($sessionIds->zzzzsys_user_id)) {
+			$sessionIds->zzzzsys_form_id = $getAccessLevelOBJ->zzzzsys_form_id;
+		} else {
+		$sessionIds->zzzzsys_form_id = $_SESSION['nubuilder_session_data']['2FA_FORM_ID'];
 		$_SESSION['nubuilder_session_data']['SESSION_2FA_STATUS'] = 'PENDING';
 		$_SESSION['nubuilder_session_data']['SESSION_2FA_REDIRECT_FORM_ID'] = $getAccessLevelOBJ->zzzzsys_form_id;
+		}
 	} else {
 		$sessionIds->zzzzsys_form_id = $getAccessLevelOBJ->zzzzsys_form_id;
-	}	
-			
+	}
+
 	$storeSessionInTable = new stdClass;
 	$storeSessionInTable->session = $sessionIds;
 	$storeSessionInTable->access_level_code = nuAccessLevelCode($checkLoginDetailsOBJ->zzzzsys_user_id);

@@ -23,19 +23,21 @@
 	$P										= $_POST['nuSTATE'];
 	$CT										= $P['call_type'];
 
-	// 2FA, check authentication Status.
-	if ($nuConfig2FAAdmin && $_SESSION['nubuilder_session_data']['SESSION_2FA_STATUS'] == 'PENDING') {
-
-		if ($formAndSessionData->form_id != 'nuauthentication' && $CT != 'runhiddenphp') {
-			nuDisplayError(nuTranslate('Access denied. Authentication Pending.'));
-		}
-	}
-
 	$F										= $formAndSessionData->form_id;
 	$R										= $formAndSessionData->record_id;
 
 	$_POST['FORM_ID'] 						= $F;
 	$_POST['nuHash']						= array_merge($U, nuSetHashList($P));
+
+	$g =  $_POST['nuHash']['GLOBAL_ACCESS'] == 1;
+
+	// 2FA, check authentication status.
+	if ((($g && nuObjKey($_SESSION['nubuilder_session_data'],'2FA_ADMIN')) || (!$g && nuObjKey($_SESSION['nubuilder_session_data'],'2FA_USER'))) && nuObjKey($_SESSION['nubuilder_session_data'],'SESSION_2FA_STATUS') == 'PENDING') {
+		if ($formAndSessionData->form_id != $_SESSION['nubuilder_session_data']['2FA_FORM_ID'] && $CT != 'runhiddenphp') {
+			nuDisplayError(nuTranslate('Access denied. Authentication Pending.'));
+		}
+	}
+
 	$_POST['nuHash']['PREVIOUS_RECORD_ID'] 	= $R;
 	$_POST['nuHash']['RECORD_ID'] 			= $R;
 	$_POST['nuHash']['FORM_ID'] 			= $F;
@@ -71,10 +73,11 @@
 
 	if($CT != 'logout')	{
 		$f->forms[0]->after_event				= $_POST['nuAfterEvent'];
+
 		$f->forms[0]->user_id					= nuObjKey($U, 'USER_ID', null);
 		$f->forms[0]->login_name				= nuObjKey($U, 'LOGIN_NAME', null);
+		$f->forms[0]->user_name					= $g ? '' : nuUser($U['USER_ID'])->sus_name;
 
-		$f->forms[0]->user_name					= $_POST['nuHash']['GLOBAL_ACCESS'] == '1' ? '' : nuUser($U['USER_ID'])->sus_name;
 		$f->forms[0]->access_level_id			= $U['USER_GROUP_ID'];
 		$f->forms[0]->access_level_code			= $U['ACCESS_LEVEL_CODE'];
 
@@ -92,6 +95,8 @@
 		$f->forms[0]->global_access				= $_POST['nuHash']['GLOBAL_ACCESS'];
 		$f->forms[0]->data_mode					= $_POST['nuHash']['GLOBAL_ACCESS'] == '1' ? null : nuGetDataMode($F);
 		$f->forms[0]->is_demo					= $_SESSION['nubuilder_session_data']['IsDemo'];
+		$f->forms[0]->remember_me_2fa			= $_SESSION['nubuilder_session_data']['2FA_REMEMBER_ME'];
+		$f->forms[0]->token_validity_time_2fa	= $_SESSION['nubuilder_session_data']['2FA_TOKEN_VALIDITY_TIME'];
 		$f->forms[0]->form_access				= $GLOBALS['nuSetup']->set_denied;
 		$f->forms[0]->javascript				= nuObjKey($GLOBALS,'EXTRAJS');
 		$f->forms[0]->target					= nuObjKey($P,'target');
