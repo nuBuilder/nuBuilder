@@ -382,6 +382,11 @@
 	font-style:italic;
 	font-weight:900 
 }
+
+ .nuDuplicateOrBlank {
+	font-style:italic;
+	font-weight:900 
+}
  .nuBrowseTitle {
 	background-color:white;
 	border-style:none;

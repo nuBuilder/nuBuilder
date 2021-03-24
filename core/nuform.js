@@ -1671,6 +1671,7 @@ function nuLabel(w, i, p, prop){
 
 	if(obj.valid == 1){$('#' + id).addClass('nuBlank');}
 	if(obj.valid == 2){$('#' + id).addClass('nuDuplicate');}
+	if(obj.valid == 3){$('#' + id).addClass('nuDuplicateOrBlank');}
 
 }
 
