@@ -1903,11 +1903,13 @@ function nuIsIframe(){
 		
 }
 
-// After clicking a nuActionButton (Save, Delete, Print, Clone etc.), disable it for 1.5 secs to prevent a user from double-clicking it.
+// After clicking a nuActionButton (Save, Delete, Print, Clone etc.), disable it for 1.3 secs to prevent a user from double-clicking it.
 
 function nuPreventButtonDblClick () {
 
 	$('.nuActionButton, .nuButton, #nuLogout').not(".nuAllowDblClick").click(function() {
+
+	if ($(this).hasClass('nuReadonly')) return;
 
 	var id = $(this).attr("id");
 
