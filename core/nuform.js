@@ -150,6 +150,7 @@ function nuBuildForm(f){
 	$('#nuRECORD').attr('data-nu-primary-key-name', f.primary_key);
 
 	nuAddBreadcrumbs();
+
 	nuAddEditTabs('', f);
 
 	if(typeof window['nuBeforeAddActionButtons'] === 'function'){
@@ -2450,9 +2451,9 @@ function nuBrowseTitle(b, i, l, m){
 	}
 
 	$('#nuRECORD').append(div);
-	debugger;
-	var titleClass = m ? 'nuBrowseTitleMultiline' : 'nuBrowseTitle';
-	
+
+	var titleClass = m == '1' ? 'nuBrowseTitleMultiline' : 'nuBrowseTitle';
+
 	$('#' + id)
 	.html(sp)
 	.addClass(titleClass)
