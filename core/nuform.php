@@ -370,7 +370,8 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 	$f->noclone				= $cloneable;
 	$f->browse_columns		= nuBrowseColumns($f);
 	$B						= nuBrowseRows($f);
-	$f->browse_rows			= nuObjKey($B,0,0);
+	
+	$f->browse_rows			= nuObjKey($B,0,0);			
 	$f->browse_height		= nuObjKey($B,1,0);
 	$f->browse_sql			= nuObjKey($B,2,0);;
 	$__x					= nuHash();
@@ -453,20 +454,21 @@ function nuGetEditForm($F, $R){
 	$f = new stdClass();
 	if ($F == '') return $f;
 
-	$r					= nuFormProperties($F);
-	$SQL				= new nuSqlString(nuReplaceHashVariables($r->sfo_browse_sql));
+	$r							= nuFormProperties($F);
+	$SQL						= new nuSqlString(nuReplaceHashVariables($r->sfo_browse_sql));
 
-	$f->id				= $r->zzzzsys_form_id;
-	$f->form_code		= $r->sfo_code;
-	$f->form_description= $r->sfo_description;
-	$f->form_type		= $r->sfo_type;
-	$f->table			= nuReplaceHashVariables($r->sfo_table);
-	$f->primary_key		= $r->sfo_primary_key;
-	$f->redirect_form_id= $r->sfo_browse_redirect_form_id == '' ? $r->zzzzsys_form_id : $r->sfo_browse_redirect_form_id;
-	$f->order			= $SQL->orderBy;
-	$f->where			= $SQL->where;
-	$f->from			= $SQL->from;
-	$f->javascript		= $r->sfo_javascript;
+	$f->id						= $r->zzzzsys_form_id;
+	$f->form_code				= $r->sfo_code;
+	$f->form_description		= $r->sfo_description;
+	$f->form_type				= $r->sfo_type;
+	$f->browse_title_multiline	= $r->sfo_browse_title_multiline;
+	$f->table					= nuReplaceHashVariables($r->sfo_table);
+	$f->primary_key				= $r->sfo_primary_key;
+	$f->redirect_form_id		= $r->sfo_browse_redirect_form_id	== '' ? $r->zzzzsys_form_id : $r->sfo_browse_redirect_form_id;
+	$f->order					= $SQL->orderBy;
+	$f->where					= $SQL->where;
+	$f->from					= $SQL->from;
+	$f->javascript				= $r->sfo_javascript;
 
 	if(intval($r->sfo_browse_row_height) == 0){
 		$f->row_height	= 18;

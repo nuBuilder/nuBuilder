@@ -397,6 +397,18 @@
 	height:30px;
 	padding:7px 10px 0
 }
+
+ .nuBrowseTitleMultiline {
+	background-color:white;
+	border-style:none;
+	position:absolute;
+	top:3px;
+	font-size:13px;
+	overflow:visible;
+	height:50px;
+	padding:7px 10px 0
+}
+
  .nuBrowseTable {
 	height:70px;
 	border-style:solid;

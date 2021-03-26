@@ -115,26 +115,27 @@ function nuBuildForm(f){
 
 	nuAddedByLookup(f);
 
-	b.form_id 					= f.form_id;
-	b.record_id 				= f.record_id;
-	b.session_id 				= f.session_id;
-	b.user_id 					= f.user_id;
-	b.redirect_form_id			= f.redirect_form_id;
-	b.title						= f.title;
-	b.row_height				= f.row_height;
-	b.rows						= f.rows;
-	b.browse_columns			= f.browse_columns;
-	b.browse_sql				= f.browse_sql;
-	b.browse_rows				= f.browse_rows;
-	b.browse_table_id			= f.browse_table_id;
-	b.browse_filtered_rows		= f.browse_height;
-	b.pages						= f.pages;
-	b.form_code					= f.form_code;
-	b.form_description			= f.form_description;
-	b.form_type					= f.form_type;
-	b.run_code					= f.run_code;
-	b.run_description			= f.run_description;
-	b.data_mode					= f.data_mode;
+	b.form_id 						= f.form_id;
+	b.record_id 					= f.record_id;
+	b.session_id 					= f.session_id;
+	b.user_id 						= f.user_id;
+	b.redirect_form_id				= f.redirect_form_id;
+	b.title							= f.title;
+	b.row_height					= f.row_height;
+	b.rows							= f.rows;
+	b.browse_columns				= f.browse_columns;
+	b.browse_sql					= f.browse_sql;
+	b.browse_rows					= f.browse_rows;
+	b.browse_table_id				= f.browse_table_id;
+	b.browse_filtered_rows			= f.browse_height;
+	b.browse_title_multiline		= f.browse_title_multiline;
+	b.pages							= f.pages;
+	b.form_code						= f.form_code;
+	b.form_description				= f.form_description;
+	b.form_type						= f.form_type;
+	b.run_code						= f.run_code;
+	b.run_description				= f.run_description;
+	b.data_mode						= f.data_mode;
 
 	nuAddHolder('nuBreadcrumbHolder');
 	nuAddHomeLogout();
@@ -1890,7 +1891,7 @@ function nuAddEditTabs(p, w){
 	var l = 7;
 
 	for(var i = 0 ; i < w.browse_columns.length ; i++){
-		l = nuBrowseTitle(w.browse_columns, i, l);
+		l = nuBrowseTitle(w.browse_columns, i, l, w.browse_title_multiline);
 
 		if (w.browse_columns[i].width != '0') {
 			p = i;
@@ -2412,7 +2413,7 @@ function nuAddDataTab(i, t, p){
 
 }
 
-function nuBrowseTitle(b, i, l){
+function nuBrowseTitle(b, i, l, m){
 
 	var bc		= window.nuFORM.getCurrent();
 	var un		= bc.nosearch_columns.indexOf(i);
@@ -2449,14 +2450,16 @@ function nuBrowseTitle(b, i, l){
 	}
 
 	$('#nuRECORD').append(div);
-
+	debugger;
+	var titleClass = m ? 'nuBrowseTitleMultiline' : 'nuBrowseTitle';
+	
 	$('#' + id)
 	.html(sp)
-	.addClass('nuBrowseTitle')
+	.addClass(titleClass)
 	.css({	'text-align'	: ar[a],
 			'overflow'		: 'visible',
 			'width'			: w,
-			'left'			: l,
+			'left'			: l
 	});
 
 	if(w == 0){
