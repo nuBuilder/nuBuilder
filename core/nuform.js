@@ -4064,7 +4064,7 @@ function nuFormWH(){
 
 	var w	= 0;
 	var h	= 0;
-	var s	= '[data-nu-object-id][data-nu-prefix=""]';
+	var s	= '[data-nu-object-id][data-nu-prefix=""], [data-nu-subform=true]';
 
 	if(nuSERVERRESPONSE.record_id == -2){
 		s	= '[data-nu-object-id]';
