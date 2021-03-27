@@ -185,7 +185,7 @@ function nuAlterSystemTables(){
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_select_2` VARCHAR(1) NULL DEFAULT '0' AFTER `sob_select_multiple`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_input_datalist` TEXT NULL DEFAULT NULL AFTER `sob_input_javascript`;");
 
-	nuRunQueryNoDebug("ALTER TABLE zzzzsys_form ADD sfo_browse_multiline_title VARCHAR(1) NULL DEFAULT '0' AFTER sfo_browse_rows_per_page;");
+	nuRunQueryNoDebug("ALTER TABLE zzzzsys_form ADD sfo_browse_title_multiline VARCHAR(1) NULL DEFAULT '0' AFTER sfo_browse_rows_per_page;");
 
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_session` ADD `sss_hashcookies` MEDIUMTEXT NULL DEFAULT NULL AFTER `sss_access`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_session` ADD COLUMN IF NOT EXISTS sss_login_time timestamp NULL DEFAULT current_timestamp(); AFTER sss_time");
