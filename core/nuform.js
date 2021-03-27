@@ -82,6 +82,7 @@ function nuBuildForm(f){
 	window.nuOnSetSaved			= null;
 	window.nuOnTabSelected		= null;
 	window.nuOnSelectTab		= null;
+	window.nuDisplayObjectRefreshed = null;
 	window.nuBrowseFunction		= window.nuDefaultBrowseFunction;
 	window.nuCLONE				= false;
 	window.nuSERVERRESPONSE		= f;
@@ -2452,7 +2453,7 @@ function nuBrowseTitle(b, i, l, m){
 
 	$('#nuRECORD').append(div);
 
-	var titleClass = m == '1' ? 'nuBrowseTitleMultiline' : 'nuBrowseTitle';
+	var titleClass = m == '1' ? 'nuBrowseTitleMultiline nuBrowseTitle' : 'nuBrowseTitle';
 
 	$('#' + id)
 	.html(sp)
