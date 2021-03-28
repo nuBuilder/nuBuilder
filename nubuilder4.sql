@@ -530,7 +530,7 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.03.26.00'),
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.03.27.01'),
 ('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.03.26.00');
 
 -- --------------------------------------------------------
