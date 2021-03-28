@@ -2228,6 +2228,51 @@ function nuSelectMultiWithoutCtrl(i) {
 
 }
 
+function nuSelectRemoveEmpty(i) {
+
+	id = i === undefined ? 'select' : '#' + i;
+
+	$(id + ' option').filter(function() {
+		return ($(this).val().trim() === "" && $(this).text().trim() === "");
+	}).remove();
+
+}
+
+function nuSelectSelectAll(id, value) {
+
+	if(value === undefined) var value = true;
+
+	$("#" + id).find('option:not(:empty)').prop('selected', value);
+	$("#" + id).change();
+
+}
+
+function nuSelectSelectedValueArray(id) {
+
+	var a = [];
+	$('#' + id + ' option:selected').each(function(index) {
+		if ($(this).val() !== '') {
+			a.push($(this).val())
+		}
+	});
+
+	return a;
+
+}
+
+function nuSelectSelectedTextArray(id) {
+
+	var a = [];
+	$('#' + id + ' option:selected').each(function(index) {
+		if ($(this).val() !== '') {
+			a.push($(this).text())
+		}
+	});
+
+	return a;
+
+}
+
 function nuPasteText(t) {
 
 	navigator.clipboard.readText()
@@ -2300,3 +2345,19 @@ jQuery.fn.nuHighlight = function(pat) {
 		innerHighlight(this, pat.toUpperCase());
 	}) : this;
 };
+
+
+function nuInputMaxLength(id, maxLength, label) {
+
+	$('#' +id).attr('maxlength', maxLength);
+
+	if (typeof label !== "undefined") {
+		 $('#' + label).html(maxLength + '/' + maxLength);
+		 $('#' + id).keyup(function () {
+			var textlen = maxLength - $(this).val().length;
+			$('#' + label).html(textlen + '/' + maxLength);
+		});
+	}
+
+}
+
