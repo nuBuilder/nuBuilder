@@ -3411,12 +3411,19 @@ function nuFormsUnsaved() {
 	let c = 0;
 	$.each($('iframe'), function() {
 		let t = $(this)[0];
-		if (typeof t.contentWindow['nuIsSaved'] === 'function') {
-			if (!t.contentWindow.nuIsSaved()) { c++; }
-		}		
+
+		try {
+			if (typeof t.contentWindow['nuIsSaved'] === 'function') {
+				if (!t.contentWindow.nuIsSaved()) {
+					c++;
+				}
+			}
+		} catch (e) {
+			// catch "DOMException: Blocked a frame with origin"
+		}
 	})
 
-	if (! nuIsSaved()) c++;
+	if (!nuIsSaved()) c++;
 	return c;
 
 }
