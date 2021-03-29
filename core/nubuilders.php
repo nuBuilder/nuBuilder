@@ -65,11 +65,10 @@ function nuBuildFastReport(){
 
 function nuBuildFastForm($table, $form_type){
 
-	if(isDemoGlobadmin()){
+	if($_SESSION['nubuilder_session_data']['IsDemo']){
 
 		nuDisplayError('Not available in the Demo...');
 		return;
-
 	}
 
 	$form_id						= nuID();
