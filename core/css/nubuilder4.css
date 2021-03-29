@@ -642,6 +642,12 @@
 
 .nuLabel {}
 
+.nuCloning {
+	background-color:rgba(239,239,239,0.4);
+	border:1px solid #ebebeb;
+	color:red
+}
+
 .nuText {}
  .nuWindow {
 	border:none

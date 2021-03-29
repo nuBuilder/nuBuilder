@@ -3276,6 +3276,9 @@ function nuCloneAction(){
 	nuCLONE	= true;
 	nuEmptyNoClone();
 
+	var b	= $('.nuBreadcrumb').length;
+	$('#nuBreadcrumb' + b).append('&nbsp;<span class="nuCloning">&nbsp;'+ nuTranslate('Cloning') + '&nbsp;</span>');
+
 	if(window.nuOnClone){
 		nuOnClone();
 	}
