@@ -1310,9 +1310,8 @@ function nuSELECT(w, i, l, p, prop){
 	var s = String(w.objects[i].value);
 	var a = [];
 
-	if(w.objects[i].multiple == 0){
+	if(w.objects[i].multiple == 0 || w.objects[i].multiple == null){
 		a = [s];
-
 	}
 
 	if(s.substr(0,1) + s.substr(-1) == '[]'){
