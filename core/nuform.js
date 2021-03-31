@@ -2115,7 +2115,7 @@ function nuGetOptionsList(f, t, p, a, type){
 
 				if(type == 'subform'){
 					let labelId = '#label_' + $('#' + p + 'scrollDiv').parent().attr('id');
-					list.push([nuTranslate('Subform Properties'), '$("'+ labelId +'").dblclick()', 'fa-cog', '']);
+					list.push([nuTranslate('Subform Object'), '$("'+ labelId +'").dblclick()', 'fa-cog', '']);
 				}
 
 				list.push([nuTranslate('Form Object List'), 'nuPopup("nuobject", "", "' + f + '")', 'fa-th-list', 'Ctrl+Shft+O']);		
