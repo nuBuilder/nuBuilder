@@ -1266,6 +1266,8 @@ function nuChart(d, t, a, h, x, y, st, is){
 
 	a				= eval(a);
 
+	if (a.length === 0) {return;}
+
 	try {
 		google.charts.load('current', {'packages':['corechart']});	
 	} catch(error) {
