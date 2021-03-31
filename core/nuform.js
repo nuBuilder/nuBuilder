@@ -2112,7 +2112,14 @@ function nuGetOptionsList(f, t, p, a, type){
 					list.push([nuTranslate('Arrange Objects'), 'nuPopup("' + f + '", "-2")', 'fa-arrows', 'Ctrl+Shft+A']);
 				}
 				list.push([nuTranslate('Form Properties'), 'nuPopup("nuform", "' + f + '")', 'fa-cog', 'Ctrl+Shft+F']);
-				list.push([nuTranslate('Form Object List'), 'nuPopup("nuobject", "", "' + f + '")', 'fa-th-list', 'Ctrl+Shft+O']);				
+
+				if(type == 'subform'){
+					let labelId = '#label_' + $('#' + p + 'scrollDiv').parent().attr('id');
+					list.push([nuTranslate('Subform Properties'), '$("'+ labelId +'").dblclick()', 'fa-cog', '']);
+				}
+
+				list.push([nuTranslate('Form Object List'), 'nuPopup("nuobject", "", "' + f + '")', 'fa-th-list', 'Ctrl+Shft+O']);		
+
 			}
 
 		}else{
@@ -2172,7 +2179,7 @@ function nuGetOptionsList(f, t, p, a, type){
 	$('#' + id)
 	.css({'top'		: 0,
 	'height'		: 20 + (list.length * 20),
-	'width'			: 300,
+	'width'			: 30,
 	'position'		: 'absolute',
 	'z-index'		: 99,
 	'text-align'	: 'left'})
@@ -2313,7 +2320,7 @@ function nuBuildOptionsList(l, p, type){												//-- loop through adding opt
 			'top'		: top + 70
 	});
 
-	$('.nuOptionsItem').css({'width' : width - 73, 'padding' : '0px 0px 0px 3px'});
+	$('.nuOptionsItem').css({'width' : width - 53, 'padding' : '0px 0px 0px 3px'});
 	$('.nuOptionsItem-divider').css({'width' : 35 + width - reduce, 'left' : 0});
 
 }
