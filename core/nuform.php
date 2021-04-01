@@ -309,6 +309,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 
 				$o->filter			= nuReplaceHashVariables($r->sob_run_filter);
 				$o->run_method		= $r->sob_run_method;
+				$o->run_target		= $r->sob_run_target;
 
 			}
 

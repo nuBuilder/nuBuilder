@@ -1195,13 +1195,18 @@ function nuRUN(w, i, l, p, prop){
 
 		var clicker						= '';
 
-		if(O.run_type == 'F'){clicker	= "nuStopClick(event);nuForm('" + O.form_id + "','" + O.record_id + "','" + O.filter + "', '')"}
+		var runTarget = prop.objects[i].run_target;
+		var runTarget = runTarget == '' || runTarget == null ? '0' : runTarget;
+
+		var stopClick = runTarget == '0' ? 'nuStopClick(event);' : ''; 
+
+		if(O.run_type == 'F'){clicker	= stopClick + "nuForm('" + O.form_id + "','" + O.record_id + "','" + O.filter + "', '','" + runTarget + "')"}
 		if(O.run_type == 'R'){clicker	= "nuRunReport('" + O.record_id + "')";}
 		if(O.run_type == 'P'){
 
 			if(O.run_hidden){clicker	= "nuRunPHPHidden('" + O.record_id + "')"}
 			if(!O.run_hidden){clicker	= "nuRunPHP('" + O.record_id + "')"}
-			
+
 		}
 
 		$('#' + id).attr({
