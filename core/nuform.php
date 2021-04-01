@@ -371,10 +371,26 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 	$f->noclone				= $cloneable;
 	$f->browse_columns		= nuBrowseColumns($f);
 	$B						= nuBrowseRows($f);
-	
-	$f->browse_rows			= nuObjKey($B,0,0);			
+
+	$f->browse_rows			= nuObjKey($B,0,0);	
 	$f->browse_height		= nuObjKey($B,1,0);
 	$f->browse_sql			= nuObjKey($B,2,0);;
+	
+	// nuOnProcessBrowseRows
+	if ($f->browse_height > 0) {
+
+		$p	= nuProcedure($F . '_BB');
+		if ($p != '') {
+			if (strpos($p, 'nuOnProcessBrowseRows') !== false) {
+				$count = preg_match_all("/function\s+(?<nuOnProcessBrowseRows>\w+)\s*\((?<param>[^\)]*)\)\s*(?<body>\{(?:[^{}]+|(?&body))*\})/", $p, $matches);
+				if ($count == 1) {
+					eval(implode(', ', $matches['body']));
+				}
+			}
+		}
+
+	}
+
 	$__x					= nuHash();
 	$f->browse_table_id		= $__x['TABLE_ID'];
 	unset($__x);
