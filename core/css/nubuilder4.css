@@ -37,7 +37,7 @@
 	font-size:10px
 }
  .js {
-	background-color:#fffbe2;
+	background-color:#fffced;
 	font-family:"Lucida Console",sans-serif;
 	padding:0 2px;
 	font-size:10px
@@ -350,7 +350,7 @@
 }
  .nuBuilderLink {
 	text-decoration-line:none;
-	color:#606060
+	color:#eeeded
 }
  .nuIcon {
 	color:#606060;
