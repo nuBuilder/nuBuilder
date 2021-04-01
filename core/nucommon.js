@@ -2213,21 +2213,25 @@ function nuCreateAppendHTML(htmlStr) {
 	return df;
 }
 
-function nuSelectMultiWithoutCtrl(i) {
+function nuSelectMultiWithoutCtrl(i, active) {
 
-	i = i === undefined ? 'select' : '#' + i;
-	$(i + "[multiple] option").mousedown(function (event) {
+	var id = i === undefined || i == null ? 'select' : '#' + i;
 
-	 if (event.shiftKey) return;
-	 event.preventDefault();
-	 this.focus();
-	 var scroll = this.scrollTop;
-	 event.target.selected = !event.target.selected;
-	 this.scrollTop = scroll;
-	 $(this).parent().change();
+	if (active == false) {
+		$(id + "[multiple] option").off('mousedown.selectmultinoctrl');
+		return;
+	}
 
+	$(id + "[multiple] option").on('mousedown.selectmultinoctrl', function(event){
+		if (event.shiftKey) return;
+		event.preventDefault();
+		this.focus();
+		var scroll = this.scrollTop;
+		event.target.selected = !event.target.selected;
+		this.scrollTop = scroll;
+		$(this).parent().change();
 	});
-
+	
 }
 
 function nuSelectRemoveEmpty(i) {
