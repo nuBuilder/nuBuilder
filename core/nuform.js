@@ -1199,8 +1199,9 @@ function nuRUN(w, i, l, p, prop){
 		var runTarget = runTarget == '' || runTarget == null ? '0' : runTarget;
 
 		var stopClick = runTarget == '0' ? 'nuStopClick(event);' : ''; 
+		var runAction = runTarget == '3' ? "nuPopup('" + O.form_id + "','" + O.record_id + "','" + O.filter + "')" :  "nuForm('" + O.form_id + "','" + O.record_id + "','" + O.filter + "', '','" + runTarget + "')";
 
-		if(O.run_type == 'F'){clicker	= stopClick + "nuForm('" + O.form_id + "','" + O.record_id + "','" + O.filter + "', '','" + runTarget + "')"}
+		if(O.run_type == 'F'){clicker	= stopClick + runAction;}
 		if(O.run_type == 'R'){clicker	= "nuRunReport('" + O.record_id + "')";}
 		if(O.run_type == 'P'){
 

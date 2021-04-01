@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 01, 2021 at 12:07 PM
+-- Generation Time: Apr 01, 2021 at 12:39 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 8.0.0
 
@@ -531,8 +531,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.04.01.02'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.04.01.00');
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.04.01.03'),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.04.01.01');
 
 -- --------------------------------------------------------
 
@@ -1018,7 +1018,7 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu60510d8a0496fd5', 'nuauthentication', '', 'input', 'send_token_btn', 'Send token', 'nu5fe0547b76e25d6', 50, 197, 74, 117, 23, '1', 'center', '0', '0', '', '', '', '', '', NULL, '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, 'N|$ 1,000.00', 'button', '', '', '', '', '', '', '', '', ''),
 ('nu605b522d65c642a', 'nuobject', 'zzzzsys_object', 'input', 'sob_all_validate_btn_no_duplicates_or_blanks', 'No Duplicates/Blanks', 'nu5bad6cb3686cb0d', 250, 369, 780, 170, 20, '1', 'left', '0', '0', '', '', '', '', '', NULL, '', '', '0', '0', '0|No|1|Yes', 'syt_title', 'sfo_description', '200', NULL, 'nutab', '', NULL, 'zzzzsys_tab', '', '', '', '', '', '', 0, '', 'button', '', '', '', '', '', '', '', '', ''),
 ('nu605dd92cf01da60', 'nuform', 'zzzzsys_form', 'select', 'sfo_browse_title_multiline', 'Multiline Titles', 'nu5bad6cb36757b92', 130, 17, 600, 70, 18, '1', 'right', '0', '0', '', '', '', '', '', NULL, '', '', '0', '0', '0|No|1|Yes', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'number', '', '', '', '', '', '', '', '', ''),
-('nu606585106dffa9d', 'nuobject', 'zzzzsys_object', 'select', 'sob_run_target', 'Target', 'nu5bad6cb368d9c40', 340, 154, 85, 200, 18, '1', 'left', '0', '0', '', '', '', '', '', NULL, '', '', '0', '0', '0|New Breadcrumb|\n1|Current Breadcrumb|\n2|New tab', 'syt_title', 'sfo_description', '200', NULL, 'nutab', '', NULL, 'zzzzsys_tab', '', '', '', '', '', '', 0, '', 'text', '', '', '', '', '', '', '', '', '');
+('nu606585106dffa9d', 'nuobject', 'zzzzsys_object', 'select', 'sob_run_target', 'Target', 'nu5bad6cb368d9c40', 340, 154, 85, 200, 18, '1', 'left', '0', '0', '', '', '', '', '', 'n', '', '', '0', '0', '0|New Breadcrumb|\n1|Current Breadcrumb|\n2|New tab|\n3|Popup', 'syt_title', 'sfo_description', '200', NULL, 'nutab', '', NULL, 'zzzzsys_tab', '', '', '', '', '', '', 0, '', 'text', '', '', '', '', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
