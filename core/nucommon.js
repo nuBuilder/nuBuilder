@@ -392,6 +392,15 @@ function nuPopup(f, r, filter){
 	
 }
 
+function nuOptionsListAction(f, r, filter) {
+
+	if (! window.event.ctrlKey) {
+		nuPopup(f, r, filter)
+	} else {
+		nuForm(f, r, filter, '', '');
+	}
+}
+
 //-- object for dragging dialog --//
 
 function nuCreateDialog(t){

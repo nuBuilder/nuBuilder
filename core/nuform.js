@@ -2091,8 +2091,8 @@ function nuGetOptionsList(f, t, p, a, type){
 
 			if(nuAllowChanges(f)){
 
-				list.push([nuTranslate('Form Properties'), 'nuPopup("nuform", "' + f + '")', 'fa-cog',	'Ctrl+Shft+F']);
-				list.push([nuTranslate('Form Object List'), 'nuPopup("nuobject", "", "' + f + '")', 'fa-th-list', 'Ctrl+Shft+O']);
+				list.push([nuTranslate('Form Properties'), 'nuOptionsListAction("nuform", "' + f + '")', 'fa-cog',	'Ctrl+Shft+F']);
+				list.push([nuTranslate('Form Object List'), 'nuOptionsListAction("nuobject", "", "' + f + '")', 'fa-th-list', 'Ctrl+Shft+O']);
 
 			}
 
@@ -2117,14 +2117,14 @@ function nuGetOptionsList(f, t, p, a, type){
 				if (nuSERVERRESPONSE.objects.length > 0) {
 					list.push([nuTranslate('Arrange Objects'), 'nuPopup("' + f + '", "-2")', 'fa-arrows', 'Ctrl+Shft+A']);
 				}
-				list.push([nuTranslate('Form Properties'), 'nuPopup("nuform", "' + f + '")', 'fa-cog', 'Ctrl+Shft+F']);
+				list.push([nuTranslate('Form Properties'), 'nuOptionsListAction("nuform", "' + f + '")', 'fa-cog', 'Ctrl+Shft+F']);
 
 				if(type == 'subform'){
 					let labelId = '#label_' + $('#' + p + 'scrollDiv').parent().attr('id');
 					list.push([nuTranslate('Subform Object'), '$("'+ labelId +'").dblclick()', 'fa-cog', '']);
 				}
 
-				list.push([nuTranslate('Form Object List'), 'nuPopup("nuobject", "", "' + f + '")', 'fa-th-list', 'Ctrl+Shft+O']);		
+				list.push([nuTranslate('Form Object List'), 'nuOptionsListAction("nuobject", "", "' + f + '")', 'fa-th-list', 'Ctrl+Shft+O']);
 
 			}
 
@@ -2164,7 +2164,7 @@ function nuGetOptionsList(f, t, p, a, type){
 
 			list.push(['', '', '', '']);
 
-			list.push([nuTranslate('nuDebug Results'), 'nuPopup("nudebug", "")', 'fa-bug', 'Ctrl+Shft+D']);					
+			list.push([nuTranslate('nuDebug Results'), 'nuOptionsListAction("nudebug", "")', 'fa-bug', 'Ctrl+Shft+D']);					
 			list.push([nuTranslate('Database'), 'nuStartDatabaseAdmin();', 'fa-database', 'Ctrl+Shft+E']);		
 			list.push([nuTranslate('Setup'), 'nuForm("nusetup","1","", "", 2)', 'fa-cogs', 'Ctrl+Shft+U']);		
 			list.push([nuTranslate('Form Info'), 'nuShowFormInfo();', 'fa-info', 'Ctrl+Shft+I']);					
