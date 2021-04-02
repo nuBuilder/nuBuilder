@@ -2019,27 +2019,30 @@ function nuOptions(p, f, t, access){
 		img.setAttribute('id', id);
 
 		if(t == 'subform') {
+			if(nuAllowChanges(f)){
 
-			$('#' + p).prepend(img);	
+				$('#' + p).prepend(img);	
 
-			$('#' + id)
-			.attr('title', 'Options')
-			.attr('onclick', 'nuGetOptionsList("' + f + '", this, "' + p + '", "' + access + '", "' + t + '")')
-			.css({'top'			: 4, 
-			'left'				: 2, 
-			'position'			: 'relative', 
-			'z-index'			: 1, 
-			'width'				: 15, 
-			'height'			: 15, 
-			'font-size'			: 20,
-			'text-align'		: 'center',
-			'border-style'		: 'none'})
-			.addClass('nuIcon fa fa-ellipsis-v')
-			.hover(function(){
-				$( this ).css('color', 'red');
-			}, function(){
-				$( this ).css('color', '');
-			});
+				$('#' + id)
+				.attr('title', 'Options')
+				.attr('onclick', 'nuGetOptionsList("' + f + '", this, "' + p + '", "' + access + '", "' + t + '")')
+				.css({'top'			: 4, 
+				'left'				: 2, 
+				'position'			: 'relative', 
+				'z-index'			: 1, 
+				'width'				: 15, 
+				'height'			: 15, 
+				'font-size'			: 20,
+				'text-align'		: 'center',
+				'border-style'		: 'none'})
+				.addClass('nuIcon fa fa-ellipsis-v')
+				.hover(function(){
+					$( this ).css('color', 'red');
+				}, function(){
+					$( this ).css('color', '');
+				});
+
+			}
 
 		}else{
 
