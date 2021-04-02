@@ -9,37 +9,32 @@ class nuSearchClass{
 	
 	public function __construct($s){
  
-		$q		= '"';
+
 		$S		= str_split($s);
-		$min	= '-';
-		$dbl	= '"';
 		$o		= array();
 		$isP	= false;
-		$isN	= false;
-		
+
 		for($i = 0 ; $i < count($S) ; $i++){
-		
+
 			$c			= new stdClass;
 			$c->value	= $S[$i];
 			$c->not		= false;
 			$c->phrase	= false;
 			$o[]		= $c;
-			
+
 		}
 		
 		for($i = 0 ; $i < count($o) ; $i++){
 			$isP	= $this->phrase($o, $i, $isP);
 		}
-		
+
 		$isN	= false;
-		
+
 		for($i = 0 ; $i < count($o) ; $i++){
-		
-		
 			if($o[$i]->value == '-'){
 				$isN	= true;
 			}
-			
+
 			if(!$o[$i]->phrase and $o[$i]->value == ' '){
 				$isN	= false;
 			}
@@ -50,45 +45,44 @@ class nuSearchClass{
 		
 		$W = '';
 		$N = '';
-		$where = true;
-		
+
 		for($i = 0 ; $i < count($o) ; $i++){
-		
+
 			$O = $o[$i];
-			
+
 			if($O->value == '"'){
-				
+
 			}else if($O->value == '-' and !$O->phrase){
 			}else if($O->value == ' ' and !$O->phrase){
-			
+
 				if($W != ''){
 					$this->where[]	= $W;
 				}
-				
+
 				if($N != ''){
 					$this->not[]	= $N;
 				}
-				
+
 				$N = '';
 				$W = '';
-				
+
 			}else if($O->not){
 				$N .= $O->value;
 			}else if(!$O->not){
 				$W .= $O->value;
-		
+
 			}
-			
+
 		}
-		
+
 		if($W != ''){
 			$this->where[]	= $W;
 		}
-		
+
 		if($N != ''){
 			$this->not[]	= $N;
 		}
-		
+
 		return this;
 
 	}
@@ -103,18 +97,18 @@ class nuSearchClass{
 
 			$o[$i]->phrase	  = true;
 			return false;
-			
+
 		}else{
-		
+
 			if($this->hasNextQuoted($o, $i)){								 //-- quote with matching quote
-			
+
 				$o[$i]->phrase = true;
 				return true;
-				
+
 			}else{
 				return false;
 			}
-			
+
 		}
 
 	}
@@ -145,7 +139,7 @@ class nuSearchClass{
 	private function addPhraseTag(&$o, $s, $I){
 
 		for($i = $s ; $i < $I ; $i++){
-		
+
 			$o[$i]->phrase = true;
 
 		}
