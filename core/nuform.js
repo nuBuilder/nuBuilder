@@ -26,6 +26,7 @@ function nuInitJSOptions() {
 			'nuShowLoggedInUser'				: false,		// Show the logged in User
 			'nuShowBeforeUnloadMessage'			: true,			// Show or disable "Leave site?" message
 			'nuShowBrowserTabTitle'				: true,			// Show the Form Title in the Browser Tab
+			'nuDebugMode'						: true, 		// Debug Mode
 			'nuBrowserTabTitlePrefix'			: 'nuBuilder'	// Prefix in the Browser Tab
 			};
 
@@ -1676,6 +1677,8 @@ function nuLabel(w, i, p, prop){
 	})
 	.html(l)
 	.attr('ondblclick','nuPopup("nuobject", "' + obj.object_id + '")');
+
+	if (l == ' ') lab.innerHTML  = '&#8199;';
 
 	if(obj.valid == 1){$('#' + id).addClass('nuBlank');}
 	if(obj.valid == 2){$('#' + id).addClass('nuDuplicate');}
