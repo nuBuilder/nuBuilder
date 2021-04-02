@@ -1132,7 +1132,13 @@ function nuWORD(w, i, l, p, prop){
 
 	nuAddDataTab(id, prop.objects[i].tab, p);
 
-	$('#' + id).css({'top'		: Number(prop.objects[i].top),
+	var t = w.objects[i].word;
+	var r = /<n>(.*?)<\/n>/g.exec(t);
+	var t = r == null ? t : r[1];
+
+	var obj = $('#' + id);
+
+	obj.css({'top'				: Number(prop.objects[i].top),
 					'left'		: Number(prop.objects[i].left),
 					'width'		: Number(prop.objects[i].width),
 					'height'	: Number(prop.objects[i].height),
@@ -1140,8 +1146,10 @@ function nuWORD(w, i, l, p, prop){
 					'text-align': prop.objects[i].align
 	})
 	.addClass('nuWord')
-	.html(nuTranslate(w.objects[i].word))
+	.html(nuTranslate(t))
 	.attr('ondblclick','nuPopup("nuobject", "' + prop.objects[i].object_id + '")');
+
+	if (r !== null) obj.css('font-weight','normal');
 
 	nuSetAccess(id, prop.objects[i].read);
 
