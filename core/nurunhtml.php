@@ -17,7 +17,6 @@ if (db_num_rows($t) == 0) {
 
 $r					= db_fetch_object($t);
 $j					= json_decode($r->json);
-$q					= $j->sql;
 $c					= $j->columns;
 
 $_POST['nuHash']	= (array) $j->hash;
@@ -28,17 +27,18 @@ unset($__x);
 
 print "<style>\n";
 
+$class = array();
+
 for($col = 0 ; $col < count($c) ; $col++){
-	
-	
+
 	$wd		= ($c[$col]->width) . 'px';
-	
+
 	if($c[$col]->align == 'l'){$align = 'left';}
 	if($c[$col]->align == 'r'){$align = 'right';}
 	if($c[$col]->align == 'c'){$align = 'center';}
-	
+
 	$class[$col]	= "style='font-size:12px;width:$wd;text-align:$align'";
-		
+
 }
 
 print "</style>\n";
@@ -60,16 +60,15 @@ $h	= "</TR>";
 $t				= nuRunQuery($j->sql);
 
 while($r = db_fetch_array($t)){
-		
+
 	$h	.= "\n<TR>\n";
 
 	for($col = 0 ; $col < count($c) ; $col++){
-		
+
 		$v = $c[$col]->display == 'null' || $c[$col]->display == '""' ? '' : $r[$c[$col]->display];
 		$st	= $class[$col];
 		$h	.= "<TD $st>" . $v . "</TD>\n";
-		
-			
+
 	}
 
 	$h	.= "</TR>";
@@ -87,4 +86,3 @@ nuRunQuery("DROP TABLE IF EXISTS " . $__x['browse_table_id']);
 unset($__x);
 
 ?>
-
