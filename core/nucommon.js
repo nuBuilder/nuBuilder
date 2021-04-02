@@ -2408,3 +2408,65 @@ function nuAddCSSStyle(s) {
 	document.getElementsByTagName('head')[0].appendChild(style);
 
 }
+
+function nuDebugMode() {
+	return nuUXOptions["nuDebugMode"];
+}
+
+function nuDebugOut(obj, i) {
+
+	if (nuDebugMode() && obj.length == 0) {
+		console.warn(nuTranslate('Object does not exist:'), i);
+		return true;
+	}
+
+	return false;
+
+}
+
+function nuGetValue(i, method) {
+
+	var obj = $('#' + i);
+	if (nuDebugOut(obj, i)) return null;
+
+	if (obj.is(':checkbox')) return obj.is(":checked");
+	if (method === undefined && obj.is(':button')) return obj.text();
+
+	switch (method) {
+		case 'html':
+			return obj.html();
+		case 'val':
+			return obj.val();
+		case 'text':
+			return obj.text();
+		default:
+			return obj.val();
+	}
+
+}
+
+function nuSetValue(i, v, method) {
+
+	var obj = $('#' + i);
+
+	if (nuDebugOut(obj, i)) return false;
+
+	if (method === undefined && obj.is(':button')) {
+		obj.text(v);
+	} else if (obj.is(':checkbox')) {
+		obj.prop('checked', v).change();
+	} else {
+
+		switch (method) {
+			case 'html':
+				obj.html(v);
+			case 'text':
+				obj.text(v);
+			default:
+				obj.val(v);
+		}
+	}
+
+	return true;
+
+}

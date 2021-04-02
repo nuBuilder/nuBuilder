@@ -28,7 +28,7 @@
 	$nuConfigKeepSessionAlive			= true;						//-- Use a timer to keep the session alive
 	$nuConfigKeepSessionAliveInterval	= 600;						//-- Keep-alive interval. Default 600 s (10 min)
 
-	$nuConfig2FAAdmin					= false;					//-- Use 2FA authentication for admininstrator
+	$nuConfig2FAAdmin					= false;					//-- Use 2FA authentication for administrator
 	$nuConfig2FAUser					= false;					//-- Use 2FA authentication for users
 	$nuConfig2FAFormID					= "nuauthentication";		//-- 2FA form ID. Default id: nuauthentication
 	$nuConfig2FATokenValidityTime		= 168;						//-- 2FA Token Validity Time. Default: 7 days (7 * 24 hours)
@@ -52,6 +52,7 @@ $nuJSOptions = "
 	nuUXOptions['nuShowLoggedInUser']				= false;		// Show the logged in User
 	nuUXOptions['nuShowBeforeUnloadMessage']		= true;		 	// Show or disable 'Leave site?' message
 	nuUXOptions['nuShowBrowserTabTitle']			= true;		 	// Show the Form Title in the Browser Tab
+	nuUXOptions['nuDebugMode']						= true;		 	// If true, a warning is output in the Developer Console if an element does not exist when using nuGetValue() or nuSetValue()	
 	nuUXOptions['nuBrowserTabTitlePrefix']			= 'nuBuilder'	// Prefix in the Browser Tab
 
 	window.nuAdminButtons = [];
