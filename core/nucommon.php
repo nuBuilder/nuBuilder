@@ -1829,7 +1829,6 @@ function nuTranslateGenerateFile($l) {
 	$total = db_num_rows($t);
 	if ($total > 0) {
 
-		$first = true;
 		$counter = 0;
 
 		$f = fopen(__DIR__ . "./languages/" . $l . '.sql', "w+") or die("Unable to open the file " . $l);
