@@ -54,6 +54,7 @@ function nuRunQuery($s, $a = array(), $isInsert = false){
 		return $a;
 	}
 
+	//nuLog($s, count($a)> 0 ? $a[0] : '');
 	$object = $nuDB->prepare($s);
 
 	try {

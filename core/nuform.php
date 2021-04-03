@@ -113,6 +113,10 @@ function nuRunType($r) {
 	return isset($r->sob_run_type) ? $r->sob_run_type : '';
 }
 
+function nuEvents($r) {
+	return isset($r->sob_all_event) ? $r->sob_all_event : '';
+}
+
 function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 
 	if($tabs == null) {		 
@@ -354,8 +358,13 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 				$o->word				= $r->sob_all_label;
 				$o->align				= $r->sob_all_align;
 			}
-
-			$o->js						= nuObjectEvents($r->zzzzsys_object_id);
+			
+			if (nuEvents($r) == '0') {
+				$o->js 					= [];
+			} else {
+				$o->js					= nuObjectEvents($r->zzzzsys_object_id);
+			}
+			
 			$o->tab_order				= $r->sob_all_order;
 
 			if($OBJS > 0){
