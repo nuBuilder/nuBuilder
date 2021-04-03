@@ -109,6 +109,10 @@ function nuFormCode($f){
 	
 }
 
+function nuRunType($r) {
+	return isset($r->sob_run_type) ? $r->sob_run_type : '';
+}
+
 function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 
 	if($tabs == null) {		 
@@ -284,8 +288,14 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 				$o->form_id			= $fromId;
 				$o->record_id		= nuReplaceHashVariables($r->sob_run_id);
 				$o->parameters		= $r->sob_all_id;
-				
-				if(isProcedure($fromId)){
+
+				$runType			= nuRunType($r);
+
+				if ($runType == 'F') {
+
+					$o->run_type	= 'F';
+
+				}else if($runType == 'P' || isProcedure($fromId)){
 
 					$actt			= nuRunQuery('SELECT sph_zzzzsys_form_id, sph_code FROM zzzzsys_php WHERE zzzzsys_php_id = ?', array($fromId));
 					$act			= db_fetch_object($actt);
@@ -295,7 +305,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 					$runtab			= nuRunQuery("SELECT sph_run FROM zzzzsys_php WHERE zzzzsys_php_id = '$r->sob_run_zzzzsys_form_id'");
 					$o->run_hidden	= db_fetch_object($runtab)->sph_run == 'hide';
 
-				}else if(isReport($fromId)){
+				}else if($runType == 'R' || isReport($fromId)){
 
 					$actt			= nuRunQuery('SELECT sre_zzzzsys_form_id, sre_code  FROM zzzzsys_report WHERE zzzzsys_report_id = ?', array($fromId));
 					$act			= db_fetch_object($actt);
@@ -347,7 +357,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 
 			$o->js						= nuObjectEvents($r->zzzzsys_object_id);
 			$o->tab_order				= $r->sob_all_order;
-			
+
 			if($OBJS > 0){
 
 				unset($o->type);
@@ -364,7 +374,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 			$a[]	= $o;
 
 		}
-		
+
 	}
 
 	$f->tabs				= nuRefineTabList($tabs);
