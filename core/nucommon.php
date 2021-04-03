@@ -1638,7 +1638,7 @@ function nuFromCSV($file, $table, $d){
 	$w = array();
 	$c = array();
 	$h = fopen('../temp/' . $file, "r");
-	$id = $table . '_nuid';
+	$id = $table . '_id';
 
 	if(empty($h) === false) {
 
@@ -1680,9 +1680,9 @@ function nuFromCSV($file, $table, $d){
 		$columns[] = '`' . $name . '`';
 
 		if($size > 3000){
-			$c[] = "`$name` text NOT NULL";
+			$c[] = "`$name` TEXT DEFAULT NULL";
 		}else{
-			$c[] = "`$name` varchar($size) NOT NULL";
+			$c[] = "`$name` VARCHAR($size) DEFAULT NULL";
 		}
 
 	}
