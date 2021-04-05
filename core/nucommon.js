@@ -190,6 +190,11 @@ String.prototype.rtrim = function() {
 	return this.replace(/\s+$/,"");
 }
 
+
+String.prototype.capitalise = function() {
+	return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
 String.prototype.nuFormat = function() {
 	var args;
 	args = arguments;
