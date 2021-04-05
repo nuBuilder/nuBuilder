@@ -3429,7 +3429,7 @@ function nuAbortSave(){
 function nuSetSaved(v) {
 
 	if(window.nuOnSetSaved){
-		nuOnSetSaved();
+		nuOnSetSaved(v);
 	}
 
 	window.nuSAVED = v;	
