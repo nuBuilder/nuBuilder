@@ -1455,6 +1455,18 @@ function nuSubformRowId(t){
 	return $(t).parent().attr('data-nu-primary-key');
 }
 
+function nuSubformRowNumber(id) {
+	return  $('#' + id).attr('data-nu-prefix').slice(-3);
+}
+
+function nuSubformRowObject(id, column) {
+
+	let formCode = $('#' + id).attr('data-nu-form');
+
+	return $('#' + formCode + nuSubformRowNumber(id) + column);
+
+}
+
 function nuSubformValue(t, id){
 
 	var p	= $(t).attr('data-nu-prefix');
