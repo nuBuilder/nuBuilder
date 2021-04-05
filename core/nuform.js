@@ -84,6 +84,7 @@ function nuBuildForm(f){
 	window.nuOnTabSelected		= null;
 	window.nuOnSelectTab		= null;
 	window.nuDisplayObjectRefreshed = null;
+	window.nuCalculated			= null;
 	window.nuBrowseFunction		= window.nuDefaultBrowseFunction;
 	window.nuCLONE				= false;
 	window.nuSERVERRESPONSE		= f;
@@ -3228,6 +3229,10 @@ function nuCalculateForm(setAsEdited){	//-- calculate subform 'calcs' first
 		var fixed		= nuFORM.addFormatting(v, fmt);
 
 		$(this).val(fixed);
+
+		if(window.nuCalculated){
+			nuCalculated(this, v, fixed);
+		}
 
 	});	
 
