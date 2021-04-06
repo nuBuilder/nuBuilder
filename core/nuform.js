@@ -2634,6 +2634,10 @@ function nuBrowseTable(){
 					function() {
 
 						if (window.nuBROWSERESIZE.moving_element == '') {
+							if (this.offsetWidth < this.scrollWidth && ! $(this).is('[title]')) {
+								$(this).attr('title', $(this).html().replace( /(<([^>]+)>)/ig, ''));		// Remove HTML tags
+							}
+
 							$("[data-nu-row]").addClass('nuBrowseTable');
 							$("[data-nu-row]").removeClass('nuSelectBrowse');
 
