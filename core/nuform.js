@@ -4233,12 +4233,17 @@ function nuRecordRun(id, f){
 
 }
 
-function nuGetIframeValue(f, o){
-	return $('#' + f).contents().find('#' + o).val();
+function nuGetIframeValue(f, o, method){
+
+	let obj = $('#' + f).contents().find('#' + o)
+	return (typeof method === 'undefined' || method == 'val') ? obj.val() : obj.html();
 }
 
-function nuSetIframeValue(f, o, v){
-	return $('#' + f).contents().find('#' + o).val(v);
+function nuSetIframeValue(f, o, v, method){
+
+	let obj = $('#' + f).contents().find('#' + o)
+	return (typeof method === 'undefined' || method == 'val') ? obj.val(v) : obj.html(v);
+
 }
 
 function nuLookingUp(){
