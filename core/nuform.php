@@ -734,8 +734,10 @@ function nuSetFormValue($f, $v){
 function nuDatalistOptions($sql) {
 
 	$a				= array();
+	
+	$s = strtoupper(trim($sql));
 
-	if (substr(strtoupper(trim($sql)), 0, 6) == 'SELECT') {						//-- sql statement
+	if (substr($s, 0, 6) == 'SELECT' || substr($s, 0, 4) == 'SHOW') {	//-- sql statement
 
 			$t		= nuRunQuery($sql);
 
