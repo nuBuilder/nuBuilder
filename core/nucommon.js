@@ -2338,7 +2338,7 @@ function nuCopyText(i) {
 	}
 }
 
-function nuRefreshSelectObject(selectId, formId) {
+function nuRefreshSelectObject(selectId, formId, removeBlank) {
 
 	if (typeof formId === 'undefined') {
 		var formId = '';
@@ -2346,7 +2346,10 @@ function nuRefreshSelectObject(selectId, formId) {
 
 	nuSetProperty('nurefreshselectobject_selectid',selectId);
 	nuSetProperty('nurefreshselectobject_formid',formId);
+	nuSetProperty('nurefreshselectobject_removeblank',removeBlank === true ? '1' : '0');
+
 	nuRunPHPHidden('nurefreshselectobject', 0);
+
 }
 
 function nuRefreshDisplayObject(displayId, formId) {
@@ -2358,6 +2361,7 @@ function nuRefreshDisplayObject(displayId, formId) {
 	nuSetProperty('nurefreshdisplayobject_displayid',displayId);
 	nuSetProperty('nurefreshdisplayobject_formid',formId);
 	nuRunPHPHidden('nurefreshdisplayobject', 0);
+
 }
 
 function nuCursor(c) {
