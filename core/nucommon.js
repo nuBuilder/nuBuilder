@@ -190,7 +190,6 @@ String.prototype.rtrim = function() {
 	return this.replace(/\s+$/,"");
 }
 
-
 String.prototype.capitalise = function() {
 	return this.charAt(0).toUpperCase() + this.slice(1);
 }
@@ -2267,6 +2266,13 @@ function nuSelectRemoveEmpty(i) {
 	$(id + ' option').filter(function() {
 		return ($(this).val().trim() === "" && $(this).text().trim() === "");
 	}).remove();
+
+}
+
+function nuSelectRemoveMultiple(i) {
+
+	var id = i === undefined || i == null ? 'select' : '#' + i;
+	$(id + "[multiple]").removeAttr('multiple').attr('size', '5');
 
 }
 
