@@ -194,6 +194,10 @@ String.prototype.capitalise = function() {
 	return this.charAt(0).toUpperCase() + this.slice(1);
 }
 
+String.prototype.toTitleCase = function() {
+	return this.toLowerCase().replace(/^(\w)|\s(\w)/g, (grp) => grp.toUpperCase());
+}
+
 String.prototype.nuFormat = function() {
 	var args;
 	args = arguments;
