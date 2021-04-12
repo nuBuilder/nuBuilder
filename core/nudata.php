@@ -74,6 +74,20 @@ function nuValidateSubforms(){
 						}
 
 					}
+					
+					if($val == 3){																//-- no duplicates or blanks
+						$dupe	= nuDuplicate($sf, $i, $I);
+						$blank	 = ($sf->rows[$i][$I] == '' or $sf->rows[$i][$I] == '[]');
+
+						if(($dupe or $blank) and $notDeleted){
+
+							if($d == 0){
+								nuDisplayError("$label " . nuTranslate('must be both unique and not blank'));
+							}else{
+								nuDisplayError("$label ".nuTranslate('on row'). " " .$noz. " ". nuTranslate('must be both unique and not blank') . " $slabel");
+							}
+						}
+					}
 
 				}
 
@@ -687,7 +701,7 @@ function nuReturnNewRecord($i = -1){
 }
 
 
-function nuDisplayError($m){	
+function nuDisplayError($m){
 	$_POST['nuErrors'][]	= $m;
 }
 
