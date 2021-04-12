@@ -1187,11 +1187,11 @@ function nuUpdateFormSchema(){
 
 }
 
-function nuUpdateTableSchema($call_type){
+function nuUpdateTableSchema($call_type, $force_update = false){
 
 	$j	= nuGetJSONData('clientTableSchema');
 
-	if(($call_type == 'runhiddenphp' && nuObjKey(nuHash(),'form_code') == 'nufflaunch') || is_null($j) || $j == '' ){
+	if(($call_type == 'runhiddenphp' && nuObjKey(nuHash(),'form_code') == 'nufflaunch') || is_null($j) || $j == '' || $force_update == true ){
 
 		$j	= nuBuildTableSchema();
 		nuSetJSONData('clientTableSchema', $j);			//-- force updating Table Schema
