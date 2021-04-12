@@ -281,7 +281,9 @@ class nuFormObject {
 	}
 	
 	scrollList(e, l){
-		
+
+		if (!$(e.target).hasClass('nuScroll')) return false;
+
 		if(this.scroll[e.target.id] === undefined){
 			
 			this.scroll[e.target.id]	= {'list' : l, 'index' : 0};
