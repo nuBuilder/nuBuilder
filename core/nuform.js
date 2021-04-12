@@ -1557,12 +1557,131 @@ function nuNewRowObject(p){
 
 function nuSubformLastRow(t){
 
-	var i					= String($('#' + t.id).parent().attr('id'));
-	var p					= i.substr(0, i.length - 17);
-	var s					= parseInt(i.substr(11,3)) + 1;
-	var n					= $('#' + p + nuPad3(s) + 'nuRECORD').length;
+	var i = String($('#' + t.id).parent().attr('id'));
+	var p = i.substr(0, i.length - 17);
+	var s = parseInt(i.substr(11,3)) + 1;
+	var n = $('#' + p + nuPad3(s) + 'nuRECORD').length;
 
 	return n == 0;
+
+}
+
+function nuSubformFocusLastRow(id, f) {
+
+	var sf = nuSubformObject(id);
+	var c = f === undefined ? sf.fields[1] : sf.fields.indexOf(f);	
+	var r = sf.rows.length - 1;
+
+	$('#' + id + nuPad3(r) + c).focus();
+
+}
+
+function nuGetClipboardText(e) {
+
+	var cb;
+	var clipText = '';
+	if (window.clipboardData && window.clipboardData.getData) {
+		cb = window.clipboardData;
+		clipText = cb.getData('Text');
+	} else if (e.clipboardData && e.clipboardData.getData) {
+		cb = e.clipboardData;
+		clipText = cb.getData('text/plain');
+	} else {
+		cb = e.originalEvent.clipboardData;
+		clipText = cb.getData('text/plain');
+	}
+	return clipText;
+	
+}
+
+function nuSubformUndoPaste(t) {
+
+	if (confirm(nuTranslate("Undo the last paste? (The values before the insertion will be restored)?"))) {
+	$("[data-prevalue]").each(function(index) {
+		var v = $(this).attr("data-prevalue");
+		$(this).val(v).change();
+	});
+	nuHide($(this).attr('id'));
+	}
+}
+
+function nuSubformPaste(e, jsonObj) {
+
+	var id = event.target.id;
+
+	var sfId = $('#'+id).attr('data-nu-form'); 
+	var field = $('#'+id).attr('data-nu-field'); 
+	var dRow =	parseInt($('#' + String(id)).attr('data-nu-prefix').slice(-3));	
+
+	var obj = nuSubformObject(sfId);
+	var dColStart = obj.fields.indexOf(field);
+
+	var sNumRows = jsonObj.length;
+	var sNumCols = Object.keys(jsonObj[0]).length;
+
+	var sc = 0;
+	for (var c = dColStart; c < (dColStart + sNumCols); c++) {
+		var sr = 0;
+		for (var r = dRow; r < parseInt(dRow + sNumRows); r++) {
+				var dest = $('#' + sfId + nuPad3(r) + obj.fields[c]);
+				dest.attr( "data-prevalue", dest.val());
+				dest.val(jsonObj[sr][sc]).change();
+				sr++;
+		}
+		sc ++;
+	}
+}
+
+function nuGetClipboardRows(clipText) {
+	var clipRows = clipText.split('\n');
+	for (i = 0; i < clipRows.length; i++) {
+		clipRows[i] = clipRows[i].split('\t');
+	}
+	return clipRows;
+}
+
+function nuGetClipboardJson(clipRows) {
+
+	var jsonObj = [];
+	for (i = 0; i < clipRows.length - 1; i++) {
+		var item = {};
+		for (j = 0; j < clipRows[i].length; j++) {
+			if (clipRows[i][j] != '\r') {
+					item[j] = clipRows[i][j];
+			}
+		}
+		jsonObj.push(item);
+	}
+	return jsonObj;
+	
+}
+
+function nuSubformEnableMultiPaste(subformId, selector, undoButton) {
+
+	$(selector).not(".nuReadonly").on('paste', function(e){
+		var clipText = nuGetClipboardText(e);	
+
+		if (clipText.indexOf('\t') >=0 || clipText.indexOf('\n') >=0) {
+
+			var clipRows = nuGetClipboardRows(clipText);
+			var jsonObj = nuGetClipboardJson(clipRows);
+
+			e.stopPropagation();
+			e.preventDefault();
+
+			if (confirm(nuTranslate("Paste Data? Existing data might get overwritten"))) {
+				$('[data-nu-form="'+subformId+'"]').removeAttr( "data-prevalue");
+				nuSubformPaste(e, jsonObj); 
+
+				if (typeof undoButton !== 'undefined') {
+					nuShow(undoButton);
+				}
+				window.nuNEW = 0;
+	
+			}
+		}
+
+	});
 
 }
 
@@ -1581,7 +1700,7 @@ function nuRecordHolderObject(t){
 	while ($('#' + this.form + nuPad3(this.intNo + c) + h).length != 0){c++;}
 
 	this.rows	= this.intNo + c;
-	this.top	= (parseInt(p.css('height')+1) * this.rows);  //-- + this.rows adds the border height
+	this.top	= (parseInt(p.css('height')+1) * this.rows);		//-- + this.rows adds the border height
 	var s		= this.form + nuPad3(this.intNo + 1) + h;
 	this.last	= $('#' + s).length == 0;
 	var s		= this.form + nuPad3(this.rows - 1);
@@ -1687,7 +1806,7 @@ function nuLabel(w, i, p, prop){
 	.html(l)
 	.attr('ondblclick','nuPopup("nuobject", "' + obj.object_id + '")');
 
-	if (l == ' ') lab.innerHTML  = '&#8199;';
+	if (l == ' ') lab.innerHTML = '&#8199;';
 
 	if(obj.valid == 1){$('#' + id).addClass('nuBlank');}
 	if(obj.valid == 2){$('#' + id).addClass('nuDuplicate');}
@@ -1700,7 +1819,7 @@ function nuPopulateLookup3(v, p){
 		for(var i = 0 ; i < v.length ; i++){
 
 			var fieldname	= String(v[i][0]).replace('#ROW#', p);
-			
+
 			$('#' + fieldname).val(v[i][1]);
 		}
 
@@ -2953,7 +3072,7 @@ function nuPopulateLookup(fm, target){
 			}
 
 		}else{
-
+			
 			$('#' + id).val(f[i][1]);
 
 			if($('#' + id).attr('data-nu-format') !== undefined){
