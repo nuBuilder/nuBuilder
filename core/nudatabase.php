@@ -117,8 +117,13 @@ function db_is_auto_id($table, $pk){
 
 	$s		= "SHOW COLUMNS FROM `$table` WHERE `Field` = '$pk'";
 	$t		= nuRunQuery($s);									//-- mysql's way of checking if its an auto-incrementing id primary key
+
+	if (db_num_rows($t) == 0) {
+		nuDisplayError(nuTranslate("The Primary Key is invalid"). ": ". $pk);
+		return false;
+	}
+
 	$r		= db_fetch_object($t);
-	
 	return $r->Extra == 'auto_increment';
 
 }
