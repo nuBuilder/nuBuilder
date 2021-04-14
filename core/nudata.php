@@ -8,7 +8,7 @@ function nuValidateSubforms(){
 
 	for($d = 0 ; $d < count($nudata) ; $d++){
 
-		$sf	= $nudata[$d];
+		$sf			= $nudata[$d];
 		$a			= array();
 		$L			= array();
 		$s	= '
@@ -152,11 +152,11 @@ function nuUpdateDatabase(){
 	$nuMainID		= $_POST['nuHash']['record_id'];
 	$formProp 		= nuGetFormProperties($form_id);
 	$form_type		= $formProp->sfo_type;
+	$recordID		= $_POST['nuHash']['RECORD_ID'];
 
 	if ($_POST['nuHash']['GLOBAL_ACCESS'] == '0') {
 		$dm = nuGetDataMode($form_id);
-		$recordID	= $_POST['nuHash']['RECORD_ID'];
-
+	
 		if ($dm == "0" && $recordID != '-1') { // No Edits
 				nuDisplayError(nuTranslate('Changes to existing records are not allowed'));
 				return;
@@ -210,11 +210,17 @@ function nuUpdateDatabase(){
 			$CTSTN = array();
 		}
 
-		$log		= in_array($table . '_nulog', $CTSTN);		
+		$log		= in_array($table . '_nulog', $CTSTN);
 
 		for($r = 0 ; $r < count($rows) ; $r++){
 
-			if(nuEditedRow($edited[$r])){
+			if ($d == 0 && $recordID == '-1') {		// Main form
+				$editedRow = nuEditedRow($edited[$r]) || nuSubFormsEdited($nudata);
+			} else {
+				$editedRow = nuEditedRow($edited[$r]);
+			}
+
+			if($editedRow){
 
 				$F					= array();
 				$I					= array();
@@ -511,8 +517,24 @@ function nuEditedRow($e){
 	
 }
 
+function nuSubFormsEdited($nudata) {
 
+	$c = count($nudata);
 
+	if ($c == 1) return false; // no subforms
+
+	for($d = 1 ; $d < $c ; $d++){
+		$sf			= $nudata[$d];
+		$edited		= $sf->edited;
+		$rows		= $sf->rows;
+		for($r = 0 ; $r < count($rows) ; $r++){
+			if(nuEditedRow($edited[$r])){
+				return true;
+			}
+		}
+	}
+	return false;
+}
 
 function nuDeleteRow($r, $p){
 
