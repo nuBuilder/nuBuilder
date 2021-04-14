@@ -198,6 +198,14 @@ String.prototype.toTitleCase = function() {
 	return this.toLowerCase().replace(/^(\w)|\s(\w)/g, (grp) => grp.toUpperCase());
 }
 
+String.prototype.justNumbers = function() {
+	return this.replace(/[^0-9]/g,'');
+}
+
+String.prototype.withoutNumbers = function() {
+	return this.replace(/\d+/g,'');
+}
+
 String.prototype.nuFormat = function() {
 	var args;
 	args = arguments;
