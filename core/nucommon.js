@@ -243,7 +243,13 @@ jQuery.fn.extend({
 		return this.each(function() {
 			nuHide(this.id);
 		});
+	},
+	nuSelectRemoveEmpty: function(setIndex) {
+		return this.each(function() {
+			nuSelectRemoveEmpty(this.id, setIndex);
+		});
 	}
+
 });
 
 function loginInputKeyup(event){
@@ -2263,13 +2269,15 @@ function nuSelectMultiWithoutCtrl(i, active) {
 	
 }
 
-function nuSelectRemoveEmpty(i) {
+function nuSelectRemoveEmpty(i, setIndex) {
 
 	id = i === undefined ? 'select' : '#' + i;
 
 	$(id + ' option').filter(function() {
 		return ($(this).val().trim() === "" && $(this).text().trim() === "");
 	}).remove();
+	
+	if (setIndex !== undefined) $('#'+ i).prop('selectedIndex', setIndex);
 
 }
 
