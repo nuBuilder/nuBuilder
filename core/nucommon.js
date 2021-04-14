@@ -2509,3 +2509,6 @@ function nuSetValue(i, v, method) {
 	return true;
 
 }
+function nuArrayIsUnique(arr) {
+	return arr.length === new Set(arr).size;
+}
