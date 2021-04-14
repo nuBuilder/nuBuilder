@@ -203,9 +203,11 @@ function nuBuildFastForm($table, $form_type){
 
 	}
 
+/*
 	if($form_type == 'browse'){
 		nuRunQuery("DELETE FROM $TT WHERE 1");
 	}
+*/
 	
 	$t				= nuRunQuery("SELECT * FROM $TT");
 	$a				= Array();
