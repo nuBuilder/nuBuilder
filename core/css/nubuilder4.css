@@ -21,7 +21,6 @@
 .nu_Report					{background-color : #62D3FF !important}
 .nu_Procedure				{background-color : #9FD275 !important}
 
-
 .input_file {
 	background-color: #faf0e1;
 }
@@ -468,6 +467,7 @@
 	cursor:pointer;
 	background-color:#C0E2A5
 }
+
  #nuNext {
 	font-size:18px;
 	color:DimGrey
@@ -552,6 +552,12 @@
  .nuSubformScrollDiv {
 	background-color:white
 }
+
+ .nuSubformDeleteTicked {
+	color: red!important;
+	text-decoration: line-through
+}
+
  .nuButton,.input_button {
 	color:white;
 	background-color:#00ADEF;
