@@ -872,7 +872,6 @@ function nuGetFile(){
 
 }
 
-
 function nuLogout(){
 
 	$i		= $_SESSION['nubuilder_session_data']['SESSION_ID'];
@@ -881,7 +880,5 @@ function nuLogout(){
 	nuRunQuery($s, array($i));
 
 }
-
-
 
 ?>

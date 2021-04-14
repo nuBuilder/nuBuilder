@@ -146,23 +146,25 @@ function nuBuildFastForm($table, $form_type){
 
 	for($i = 0 ; $i < count($SF->rows) ; $i++){
 
-		if($SF->rows[$i][5] == 0){							//-- not ticked as deleted
-			
+
+		if($SF->deleted[$i] == 0){							//-- not ticked as deleted
+
 			$r					= $SF->rows[$i][3];
 			$newid				= nuID();
 			$SF->rows[$i][3]	= $newid;
-			
-			$sql				= "INSERT INTO $TT SELECT * FROM zzzzsys_object WHERE zzzzsys_object_id = '$r'";
-			
-			nuRunQuery($sql);
 
-			$sql				= "UPDATE $TT SET zzzzsys_object_id = '$newid' WHERE zzzzsys_object_id = '$r'";
-			
-			nuRunQuery($sql);
+			$sql				= "INSERT INTO $TT SELECT * FROM zzzzsys_object WHERE zzzzsys_object_id = ?";		// insert sample object
+
+			nuRunQuery($sql, array($r));
+
+			$sql				= "UPDATE $TT SET zzzzsys_object_id = ? WHERE zzzzsys_object_id = ?";
+
+			nuRunQuery($sql, array($newid, $r));
 
 		}
 
 	}
+
 
 	$sql			= "
 
@@ -182,11 +184,12 @@ function nuBuildFastForm($table, $form_type){
 
 	";
 
+
 	$top		= 10;
 
 	for($i = 0 ; $i < count($SF->rows) ; $i++){
-		
-		if($SF->rows[$i][5] == 0){							//-- not ticked as deleted
+
+		if($SF->deleted[$i] == 0){							//-- not ticked as deleted
 			
 			$newid		= nuID();
 			$label		= $SF->rows[$i][1];
@@ -208,7 +211,7 @@ function nuBuildFastForm($table, $form_type){
 		nuRunQuery("DELETE FROM $TT WHERE 1");
 	}
 */
-	
+
 	$t				= nuRunQuery("SELECT * FROM $TT");
 	$a				= Array();
 	
@@ -253,11 +256,10 @@ function nuBuildFastForm($table, $form_type){
 
 	for($i = 0 ; $i < count($SF->rows) ; $i++){
 		
-		if($SF->rows[$i][4] == 1 and $SF->rows[$i][5] == 0){						//-- not ticked as deleted
+		if($SF->rows[$i][5] == 1 and $SF->deleted[$i] == 0){						//-- browse ticked and not set as deleted
 			
 			$lab	= $SF->rows[$i][1];
 			$id		= $SF->rows[$i][2];
-
 
 			$sql			= "
 			
@@ -360,7 +362,10 @@ function nuBuildFastForm($table, $form_type){
 
 	}
 
-	nuRunQuery("INSERT INTO zzzzsys_object SELECT * FROM $TT");
+	if($form_type !== 'browse'){
+		nuRunQuery("INSERT INTO zzzzsys_object SELECT * FROM $TT");
+	}
+
 	nuRunQuery("DROP TABLE $TT");
 
 	nuSetJSONData('clientFormSchema', nuBuildFormSchema());
