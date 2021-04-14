@@ -39,17 +39,17 @@ function nuLoadReport(b){
 	$('body').off('mouseup');
 	$('body').off('mousemove');
 	
-	$('body').on('mousedown.nudrag', function(event){nuDrag.down(event);});
-	$('body').on('keydown.nudrag',   function(event){nuDrag.move(event);});
-	$('body').on('keyup.nudrag',     function(event){nuDrag.up(event);});
-	$('body').on('mouseup.nudrag',   function(event){nuDrag.up(event);});
-	$('body').on('mousemove.nudrag', function(event){nuDrag.move(event);});
+	$('body').on('mousedown.nudrag',	function(event){nuDrag.down(event);});
+	$('body').on('keydown.nudrag',		function(event){nuDrag.move(event);});
+	$('body').on('keyup.nudrag',		function(event){nuDrag.up(event);});
+	$('body').on('mouseup.nudrag',		function(event){nuDrag.up(event);});
+	$('body').on('mousemove.nudrag',	function(event){nuDrag.move(event);});
 	
-	$('body').on('mousedown.nureport', function(event){nuDragR.down(event);});
-	$('body').on('keydown.nureport',   function(event){nuDragR.move(event);});
-	$('body').on('keyup.nureport',     function(event){nuDragR.up(event);});
-	$('body').on('mouseup.nureport',   function(event){nuDragR.up(event);});
-	$('body').on('mousemove.nureport', function(event){nuDragR.move(event);});
+	$('body').on('mousedown.nureport',	function(event){nuDragR.down(event);});
+	$('body').on('keydown.nureport',	function(event){nuDragR.move(event);});
+	$('body').on('keyup.nureport',		function(event){nuDragR.up(event);});
+	$('body').on('mouseup.nureport',	function(event){nuDragR.up(event);});
+	$('body').on('mousemove.nureport',	function(event){nuDragR.move(event);});
 
 	if(arguments.length == 0){
 		
@@ -256,9 +256,9 @@ function nuDragReport(){
 		var i	= this.groups[g][s];
 		var S	= nuREPORT.groups[g].sections[s]
 		
-		var v	= S.height == 0  ? 'hidden'		: 'visible';
-		var b	= S.height == 0  ? 'none'		: 'none none solid none';
-		var w	= S.height == 0  ? 0			: 1;
+		var v	= S.height == 0 ? 'hidden'		: 'visible';
+		var b	= S.height == 0 ? 'none'		: 'none none solid none';
+		var w	= S.height == 0 ? 0				: 1;
 		var t	= 'Detail';
 		
 		this.height = this.height + S.height;
@@ -448,9 +448,9 @@ function nuDragReport(){
 		
 		a.each(function() {
 			
-			t   = parseInt($( this ).css('top')) - T;
-			h   = parseInt($( this ).css('height')) + (parseInt('0'+$( this ).css('border-width')) * 2);
-			b   = Math.max(b, Number(t) + Number(h) + 1);
+			t = parseInt($( this ).css('top')) - T;
+			h = parseInt($( this ).css('height')) + (parseInt('0'+$( this ).css('border-width')) * 2);
+			b = Math.max(b, Number(t) + Number(h) + 1);
 			
 		});
 
@@ -535,7 +535,7 @@ function nuDragReport(){
 			this.moveY	= event.clientY - this.startY;
 			this.startY	= event.clientY;
 			
-			var t = parseInt(o.top)  + this.moveY;
+			var t = parseInt(o.top) + this.moveY;
 			
 			o.top	= t + 'px';
 
@@ -957,13 +957,13 @@ function nuMoverAdjustVerClick(){
 	if(b-t < h){return;}
 	
 	var s = a.sort(function(A, B){return A.top - B.top;});
-	var newGap = (b-t-h) / (a.length-1);
-	var newTop  = t;
+	var newGap	= (b-t-h) / (a.length-1);
+	var newTop	= t;
 	
 	for(var i = 0 ; i < s.length - 1 ; i++) {									//-- reposition all Objects ordered by highest (except the last one)
 
 		$('#' + s[i].id).css('top', newTop);									//-- move object
-		newTop  = newTop + newGap + Number(s[i].height);
+		newTop = newTop + newGap + Number(s[i].height);
 	
 	}
 
@@ -980,11 +980,11 @@ function nuMoverAdjustHorClick(){
 	
 	for(var i = 0 ; i < d.length ; i ++){
 		
-		o   = new nuOrderedSelectObjects(d[i].id);
+		o = new nuOrderedSelectObjects(d[i].id);
 		
-		l   = Math.min(l, Number(o.left));										//-- calculate leftest left
-		b   = Math.max(b, Number(o.left) + Number(o.width));					//-- calculate lowest bottom
-		w   = w + Number(o.width);												//-- total width of objects
+		l = Math.min(l, Number(o.left));										//-- calculate leftest left
+		b = Math.max(b, Number(o.left) + Number(o.width));					//-- calculate lowest bottom
+		w = w + Number(o.width);												//-- total width of objects
 		
 		a.push(o);
 
@@ -993,8 +993,8 @@ function nuMoverAdjustHorClick(){
 	if(b-l < w){return;}
 	
 	var s = a.sort(function(A, B){return A.left - B.left;});
-	var newGap = (b-l-w) / (a.length-1);
-	var newLeft  = l;
+	var newGap	= (b-l-w) / (a.length-1);
+	var newLeft	= l;
 	
 	for(var i = 0 ; i < s.length - 1 ; i++) {									//-- reposition all Objects ordered by leftest (except the last one)
 
@@ -1448,8 +1448,8 @@ function nuUpdateGroup(t){
 		var G = nuREPORT.groups[g];
 		var s = nuREPORT.groups[g].sections.length
 		
-		G.groupBy						= $('#sortBy'     + g).val();
-		G.sortField						= $('#sortField'  + g).val();
+		G.groupBy						= $('#sortBy'		+ g).val();
+		G.sortField						= $('#sortField'	+ g).val();
 		
 		for(var i = 0 ; i < s.length ; i++){
 			G.sections[i].color			= $('#height' + i).val();
