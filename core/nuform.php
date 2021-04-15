@@ -323,7 +323,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 
 				$o->filter			= nuReplaceHashVariables($r->sob_run_filter);
 				$o->run_method		= $r->sob_run_method;
-				$o->run_target		= $r->sob_run_target;
+				$o->run_target		= isset($r->sob_run_target) ? $r->sob_run_target : '0';
 
 			}
 
@@ -497,7 +497,7 @@ function nuGetEditForm($F, $R){
 	$f->form_code				= $r->sfo_code;
 	$f->form_description		= $r->sfo_description;
 	$f->form_type				= $r->sfo_type;
-	$f->browse_title_multiline	= $r->sfo_browse_title_multiline;
+	$f->browse_title_multiline	= isset($r->sfo_browse_title_multiline) ? $r->sfo_browse_title_multiline : false;
 	$f->table					= nuReplaceHashVariables($r->sfo_table);
 	$f->primary_key				= $r->sfo_primary_key;
 	$f->redirect_form_id		= $r->sfo_browse_redirect_form_id	== '' ? $r->zzzzsys_form_id : $r->sfo_browse_redirect_form_id;
