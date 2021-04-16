@@ -525,9 +525,12 @@ function nuAddActionButton(i, v, f, t){
 
 	var nuClass = "";
 	if (i == 'Save' || i == 'Add' || i == 'Clone' || i == 'Delete') { nuClass = " " + "nu" + i + "Button" };
-	
-	$('#nuActionHolder').append("<input id='nu" + i + "Button' type='button' title='" + nuTranslate(t) + "' class='nuActionButton" + nuClass + "' value='" + nuTranslate(v) + "' onclick='" + f + "'>");
 
+	let id =  "nu" + i + "Button";
+
+	$('#nuActionHolder').append("<input id='" +id + "' type='button' title='" + nuTranslate(t) + "' class='nuActionButton" + nuClass + "' value='" + nuTranslate(v) + "' onclick='" + f + "'>");
+
+	return $('#' + id);
 }
 
 
