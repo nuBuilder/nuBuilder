@@ -3265,7 +3265,7 @@ function nuChooseEventList(){
 
 	}else{
 
-		return ['onblur','onclick','onchange','onfocus','onkeydown'];
+		return ['onblur','onclick','onchange','oninput','onfocus','onkeydown'];
 
 	}
 
