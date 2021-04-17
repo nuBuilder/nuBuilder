@@ -256,6 +256,14 @@ jQuery.fn.extend({
 		return this.each(function() {
 			nuSelectRemoveEmpty(this.id, setIndex);
 		});
+	},
+	nuGetValue: function(method) {
+			return nuGetValue(this.attr('id'), method);
+	},
+	nuSetValue: function(v, method) {
+		return this.each(function() {
+			return nuSetValue(this.id, v, method);
+		});
 	}
 
 });
@@ -2145,11 +2153,13 @@ function nuLabelOnTop(f, e) {
 jQuery.fn.nuLabelOnTop = function (offsetTop = -18, offsetLeft = 0) {
 
 	return this.each(function () {
+
 		$('#' + 'label_' + this.id).css({
-			'top': parseInt($(this).css("top")) + offsetTop
-			, 'left': parseInt($(this).css("left")) + offsetLeft
+			'top': $(this).cssNumber("top") + offsetTop
+			, 'left': $(this).cssNumber("left") + offsetLeft
 			, 'text-align': 'left'
 		})
+
 	});
 
 };
@@ -2474,7 +2484,7 @@ function nuDebugOut(obj, i) {
 function nuGetValue(i, method) {
 
 	var obj = $('#' + i);
-	if (nuDebugOut(obj, i)) return null;
+	if (i === undefined || nuDebugOut(obj, i)) return null;
 
 	if (obj.is(':checkbox')) return obj.is(":checked");
 	if (method === undefined && obj.is(':button')) return obj.text();
@@ -2496,7 +2506,7 @@ function nuSetValue(i, v, method) {
 
 	var obj = $('#' + i);
 
-	if (nuDebugOut(obj, i)) return false;
+	if (i === undefined || nuDebugOut(obj, i)) return false;
 
 	if (method === undefined && obj.is(':button')) {
 		obj.text(v);
@@ -2517,6 +2527,7 @@ function nuSetValue(i, v, method) {
 	return true;
 
 }
+
 function nuArrayIsUnique(arr) {
 	return arr.length === new Set(arr).size;
 }
