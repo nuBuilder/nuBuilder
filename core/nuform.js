@@ -3191,6 +3191,8 @@ function nuValidLookupId(id, fld){
 function nuHighlightSearch(){
 
 	var bc		= window.nuFORM.getCurrent();
+
+	if (bc.search === undefined) return;
 	if (bc.search.length == 0) return;
 
 	var exclude	= bc.nosearch_columns;
