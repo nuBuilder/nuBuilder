@@ -2136,18 +2136,20 @@ function nuAddDatalist(i, a) {
 	
 }
 
-function nuLabelOnTop(f, e) {
+function nuLabelOnTop(include, exclude, offsetTop = -18, offsetLeft = 0) {
 
-	for (var i = 0; i < f.length; i++) {
-		if (jQuery.inArray(f[i], e) == -1) {
+	for (var i = 0; i < include.length; i++) {
 
-			$('#' + 'label_' + f[i]).css({
-					'top': parseInt($('#'+f[i]).css("top")) - 18
-				, 'left': parseInt($('#'+f[i]).css("left"))
+		if (jQuery.inArray(include[i], exclude) == -1) {
+
+			$('#' + 'label_' + include[i]).css({
+					'top': $('#'+include[i]).cssNumber('top') + offsetTop
+				, 'left': $('#'+include[i]).cssNumber('left') + offsetLeft
 				, 'text-align': 'left'
 			})
 		}
 	}
+
 }
 
 jQuery.fn.nuLabelOnTop = function (offsetTop = -18, offsetLeft = 0) {
