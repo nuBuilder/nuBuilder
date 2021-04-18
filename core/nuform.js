@@ -490,8 +490,10 @@ function nuAddActionButtons(form){
 
 		if(!draggable){
 
-			if(button.Save == 1 && form.form_type != 'launch' && form.data_mode != 0) {	
-				nuAddActionButton('Save');
+			if(button.Save == 1 && form.form_type != 'launch') {				
+				if ((nuIsNewRecord() && form.data_mode == 0) || form.data_mode != 0) {
+					nuAddActionButton('Save');
+				}
 			}
 
 			if(rid != -1){

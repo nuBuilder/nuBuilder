@@ -157,7 +157,7 @@ function nuUpdateDatabase(){
 	if ($_POST['nuHash']['GLOBAL_ACCESS'] == '0') {
 		$dm = nuGetDataMode($form_id);
 	
-		if ($dm == "0" && $recordID != '-1') { // No Edits
+		if ($nuDelAll == 'No' && $dm == "0" && $recordID != '-1') { // No Edits
 				nuDisplayError(nuTranslate('Changes to existing records are not allowed'));
 				return;
 		}
