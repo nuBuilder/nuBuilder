@@ -153,7 +153,7 @@ function nuPrintReport($PDF, $LAY, $DATA, $JSON){
 				nuPrintField($PDF, $DATA[$s], $DATA[$s]->objects[$o], $O, $LAY);
 			}
 			if($O->objectType == 'image'){
-				nuPrintImage($PDF, $DATA[$s], $DATA[$s]->objects[$o], $O);														   //-- print graphic
+				nuPrintImage($PDF, $DATA[$s], $DATA[$s]->objects[$o], $O);														//-- print graphic
 			}
 		}
 
@@ -173,7 +173,7 @@ function nuBuildReport($PDF, $REPORT, $TABLE_ID){
 	$lastROW							= 1;
 
 	for($i = 3 ; $i < 8 ; $i++){
-		if($REPORT->groups[$i]->sortField != ''){			  //-- loop through groups
+		if($REPORT->groups[$i]->sortField != ''){			//-- loop through groups
 
 			$order_by					= ' ORDER BY ';
 			$groupBy[]					= $REPORT->groups[$i]->sortField . ' ' . $order[$REPORT->groups[$i]->sortBy];
@@ -193,34 +193,34 @@ function nuBuildReport($PDF, $REPORT, $TABLE_ID){
 	
 	nuMakeSummaryTable($REPORT, $TABLE_ID);
 	$sectionTop							= 0;
-	$ROW								= db_fetch_array($DATA);														 //-- first row
+	$ROW								= db_fetch_array($DATA);														//-- first row
 //======================================================
-//	  REPORT HEADER
+//	REPORT HEADER
 //======================================================
-	$S									= new nuSECTION($PDF, $ROW, $REPORT, 1, 0, 0);								   //-- report header
+	$S									= new nuSECTION($PDF, $ROW, $REPORT, 1, 0, 0);									//-- report header
 	$sectionTop							= $S->buildSection();
 	$firstRecord						= true;
 
 //======================================================
-//	  PAGE HEADER
+//	PAGE HEADER
 //======================================================
-	$S									= new nuSECTION($PDF, $ROW, $REPORT, 2, 0, $sectionTop);								   //-- page header
+	$S									= new nuSECTION($PDF, $ROW, $REPORT, 2, 0, $sectionTop);						//-- page header
 	$sectionTop							= $S->buildSection();
 	$firstRecord						= true;
 
 //======================================================
-//	  FIRST SECTION HEADERS
+//	FIRST SECTION HEADERS
 //======================================================
 	for($g = 0 ; $g < count($groups) ; $g++){
 		
-		$S								= new nuSECTION($PDF, $ROW, $REPORT, 3 + $g, 0, $sectionTop);				   //-- section headers
+		$S								= new nuSECTION($PDF, $ROW, $REPORT, 3 + $g, 0, $sectionTop);					//-- section headers
 		$sectionTop						= $S->buildSection();		
 		$sectionValue[$groups[$g]]		= $ROW[$groups[$g]];
 
 	}
 
 //======================================================
-//	  LOOP THROUGH TABLE
+//	LOOP THROUGH TABLE
 //======================================================
 	$DATA								= nuRunQuery("SELECT * FROM (SELECT * FROM $TABLE_ID $order_by $group_by) AS tmp ");
 	while($ROW = db_fetch_array($DATA)){
@@ -230,11 +230,11 @@ function nuBuildReport($PDF, $REPORT, $TABLE_ID){
 			$backUpTo					= nuLowestGroupChange($sectionValue, $ROW, $groups);
 
 //======================================================
-//	  FOOTERS AND HEADERS AS GROUPS CHANGE
+//	FOOTERS AND HEADERS AS GROUPS CHANGE
 //======================================================
 			for($g = count($groups) - 1 ; $g >= $backUpTo ; $g--){
 
-				$S							= new nuSECTION($PDF, $lastROW, $REPORT, 3 + $g, 1, $sectionTop);				   //-- section footers
+				$S							= new nuSECTION($PDF, $lastROW, $REPORT, 3 + $g, 1, $sectionTop);				//-- section footers
 				$sectionTop					= $S->buildSection();
 				$sectionValue[$groups[$g]]	= $ROW[$groups[$g]];
 
@@ -242,7 +242,7 @@ function nuBuildReport($PDF, $REPORT, $TABLE_ID){
 
 			for($g = $backUpTo ; $g < count($groups) ; $g++){
 
-				$S							= new nuSECTION($PDF, $ROW, $REPORT, 3 + $g, 0, $sectionTop);				   //-- section headers
+				$S							= new nuSECTION($PDF, $ROW, $REPORT, 3 + $g, 0, $sectionTop);					//-- section headers
 				$sectionTop					= $S->buildSection();
 				$sectionValue[$groups[$g]]	= $ROW[$groups[$g]];
 
@@ -251,7 +251,7 @@ function nuBuildReport($PDF, $REPORT, $TABLE_ID){
 		}
 
 //======================================================
-//	  DETAIL SECTION
+//	DETAIL SECTION
 //======================================================
 		$S									= new nuSECTION($PDF, $ROW, $REPORT, 0, 0, $sectionTop);
 		$sectionTop							= $S->buildSection();
@@ -260,11 +260,11 @@ function nuBuildReport($PDF, $REPORT, $TABLE_ID){
 	}
 
 //======================================================
-//	  LAST GROUP FOOTERS
+//	LAST GROUP FOOTERS
 //======================================================
 	for($g = count($groups) - 1 ; $g > -1 ; $g--){
 
-		$S								= new nuSECTION($PDF, $lastROW, $REPORT, 3 + $g, 1, $sectionTop);				   //-- section footers
+		$S								= new nuSECTION($PDF, $lastROW, $REPORT, 3 + $g, 1, $sectionTop);					//-- section footers
 		// last group doesn't need a page break
 		if($g == 0) {
 			nuRemovePageBreak($S);
@@ -274,7 +274,7 @@ function nuBuildReport($PDF, $REPORT, $TABLE_ID){
 	}
 
 //======================================================
-//	  REPORT FOOTER
+//	REPORT FOOTER
 //======================================================
 	$S									= new nuSECTION($PDF, $lastROW, $REPORT, 1, 1, $sectionTop);
 	$sectionTop							= $S->buildSection();
@@ -320,7 +320,7 @@ class nuSECTION{
 	public $PDF				= array();
 	public $ROW				= array();
 	public $LAY				= array();
-	public $SECTIONS		= array();											 //-- this Section split over pages
+	public $SECTIONS		= array();											//-- this Section split over pages
 	public $OBJECTS			= array();
 	public $TABLE_ID		= '';
 	
@@ -476,7 +476,7 @@ class nuSECTION{
 				if(isset($this->O[$i]->F)){$o->F = $this->O[$i]->F;$this->O[$i]->F = null;}
 
 				$fittingLines			= array_splice($this->O[$i]->LINES, 0, $fit);				//-- get rows
-				$o->lines				= $fittingLines;											 //-- add rows
+				$o->lines				= $fittingLines;											//-- add rows
 				$o->path				= $this->O[$i]->path;										//-- add path
 
 				if($fit > 0){
@@ -495,8 +495,8 @@ class nuSECTION{
 
 		for($i = 0 ; $i < $pages ; $i++){
 
-			$sectionTop						= $i == 0		   ? $sectionTop			: $this->paperTop();				  //-- first page
-			$sectionHeight					= $i + 1 == $pages  ? $expandedSectionHeight : $this->paperBottom() - $sectionTop; //-- last page
+			$sectionTop						= $i == 0		   ? $sectionTop			: $this->paperTop();					//-- first page
+			$sectionHeight					= $i + 1 == $pages  ? $expandedSectionHeight : $this->paperBottom() - $sectionTop;	//-- last page
 
 			$expandedSectionHeight			= $expandedSectionHeight - $sectionHeight;
 
@@ -512,7 +512,7 @@ class nuSECTION{
 
 			}
 
-			$s->objects						= $os;																		 //-- add objects to section
+			$s->objects						= $os;																		//-- add objects to section
 			$this->SECTIONS[]				 = $s;
 
 			if($expandedSectionHeight > 0){
@@ -520,7 +520,7 @@ class nuSECTION{
 				$s							= pdfSection($this->group, $this->section, $sectionTop, $expandedSectionHeight);
 				$sectionTop					= $sectionTop + $expandedSectionHeight;
 				$os							= array();
-				$s->objects					= $os;																		 //-- add objects to section
+				$s->objects					= $os;																		//-- add objects to section
 				$this->SECTIONS[]			 = $s;
 
 			}
@@ -540,7 +540,7 @@ class nuSECTION{
 			}
 		}
 
-		if("$this->group$this->section" == '11'){																		 //-- the report footer
+		if("$this->group$this->section" == '11'){																		//-- the report footer
 			$this->pageHeaderFooter(1);
 		}
 
@@ -548,7 +548,7 @@ class nuSECTION{
 
 	}
 
-	private function pageHeaderFooter($section){								 //-- 0 = header 1 = footer
+	private function pageHeaderFooter($section){								//-- 0 = header 1 = footer
 
 		$S				 = $this->LAY->groups[2]->sections[$section];
 		$O				 = $this->setObjectLines($S->objects, true);
@@ -556,7 +556,7 @@ class nuSECTION{
 
 		for($i = 0 ; $i < count($O) ; $i ++){
 
-			$newO			= pdfObject($O[$i]->id, $O[$i]->top);				 //-- create Object
+			$newO			= pdfObject($O[$i]->id, $O[$i]->top);				//-- create Object
 			$newO->lines	= $O[$i]->LINES;
 			$newOs[]		= $newO;
 
@@ -905,14 +905,12 @@ function nuPrintField($PDF, $S, $contents, $O, $LAY){
 	$PDF->SetXY($left, $top);
 	
 	$t = implode("\n", $contents->lines);
-	
-	if($t == 'KEEP EXACT HEIGHT'){
+
+	if (str_replace(array("\r\n", "\r", "\n", "\t"), ' ', $t) == 'KEEP EXACT HEIGHT'){
 		$PDF->Rect($left, $top, $width, $height, 'DF');
 	}else{
 		$PDF->MultiCell($width, $height, $t, $hasBorder, $textAlign, 1, 0, '', '', true, 0, false, false); 
 	}
-
-//	$PDF->MultiCell($width, $height, $t, $hasBorder, $textAlign, 1, 0, '', '', true, 0, false, false); 
 
 }
 
