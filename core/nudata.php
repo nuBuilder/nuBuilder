@@ -875,6 +875,8 @@ function nuGetFile(){
 function nuLogout(){
 
 	$i		= $_SESSION['nubuilder_session_data']['SESSION_ID'];
+	unset($_SESSION['nubuilder_session_data']['SESSION_ID']);
+
 	$s		= "DELETE FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
 
 	nuRunQuery($s, array($i));

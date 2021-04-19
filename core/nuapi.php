@@ -77,6 +77,7 @@
 		$f->forms[0]->user_id					= nuObjKey($U, 'USER_ID', null);
 		$f->forms[0]->login_name				= nuObjKey($U, 'LOGIN_NAME', null);
 		$f->forms[0]->user_name					= $g ? '' : nuUser($U['USER_ID'])->sus_name;
+		$f->forms[0]->home_id					= $_SESSION['nubuilder_session_data']['HOME_ID'];
 
 		$f->forms[0]->access_level_id			= $U['USER_GROUP_ID'];
 		$f->forms[0]->access_level_code			= $U['ACCESS_LEVEL_CODE'];

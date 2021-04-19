@@ -22,6 +22,7 @@ function nuCheckGlobeadminLoginRequest() {
 		return true;
 	}
 
+	
 	$isDemo = isDemoGlobadmin();
 	if ($isDemo && !isset($_SESSION['nubuilder_session_data']['GLOBEADMIN_DEMO_NAME'])) {
 		return false;
@@ -87,6 +88,7 @@ function nuLoginSetupGlobeadmin() {
 
 	$_SESSION['nubuilder_session_data']['isGlobeadmin'] = true;
 	$_SESSION['nubuilder_session_data']['translation'] = nuGetTranslation(db_setup()->set_language);
+	$_SESSION['nubuilder_session_data']['HOME_ID'] = 'nuhome';
 
 	$sessionIds = new stdClass;
 	$sessionIds->zzzzsys_access_id = '';
@@ -155,7 +157,8 @@ function nuLoginSetupNOTGlobeadmin() {
 	$_SESSION['nubuilder_session_data']['SESSION_ID'] = nuIDTEMP();
 	$_SESSION['nubuilder_session_data']['SESSION_TIMESTAMP'] = time();
 	$_SESSION['nubuilder_session_data']['IsDemo'] = $_SESSION['nubuilder_session_data']['IS_DEMO'];
-	
+	$_SESSION['nubuilder_session_data']['HOME_ID'] = 'nuhome';
+
 	$checkLoginDetailsSQL = "SELECT * FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id WHERE sus_login_name = ? AND sus_login_password = ? ";
 
 	$this_username = $_POST['nuSTATE']['username'];

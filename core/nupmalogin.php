@@ -6,7 +6,7 @@
 	$values			= array($session_id);
 	$sql			= "SELECT * FROM zzzzsys_session WHERE zzzzsys_session_id = ?";
 	$obj			= nuRunQuery($sql, $values);
-	$result		= db_num_rows($obj);
+	$result			= db_num_rows($obj);
 	
 	if($_SESSION['nubuilder_session_data']['IsDemo']){
 		echo('Not available in the Demo');

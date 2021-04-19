@@ -1165,7 +1165,7 @@ function nuGatherFormAndSessionData($home){
 	
 	$formAndSessionData->record_id			= isset($nuState['record_id']) ? $nuState['record_id'] : "-1";
 
-	if(isset($nuState['form_id'])){
+	if(isset($nuState['form_id']) && !$nuState['form_id'] == ''){
 		$formAndSessionData->form_id		= $nuState['form_id'];
 	} else {
 		$formAndSessionData->form_id		= $home == '' ? 'nuhome' : $home;

@@ -15,18 +15,30 @@ function nuLoadBody($debug = false) {
 }
 
 
-function nuGetJS_login($nuBrowseFunction, $target, $welcome) {
+function nuGetJS_login($nuBrowseFunction, $target, $welcome, $s) {
 
 	$h2 = "function nuLoad(){
 		nuBindCtrlEvents();
 		window.nuDefaultBrowseFunction	= '$nuBrowseFunction';
 		window.nuBrowseFunction			= '$nuBrowseFunction';
-		window.nuTARGET					= '$target';
-		var welcome						= `$welcome`;
-		nuLogin(welcome);
-	}";
-	
-	return $h2;
+		window.nuTARGET					= '$target';	
+		";
+
+	$h3 = "";
+
+	if ($s == true) {
+		$h3 = "nuForm('','-1','','','','');";
+	} else {	
+		$h3 = "
+			var welcome					= `$welcome`;
+			nuLogin(welcome);
+		";
+	}
+
+	$h4 = "}";
+
+	return $h2.$h3.$h4;
+
 }
 
 
