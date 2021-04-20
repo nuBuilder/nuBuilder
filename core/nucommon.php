@@ -1190,8 +1190,9 @@ function nuUpdateFormSchema(){
 function nuUpdateTableSchema($call_type, $force_update = false){
 
 	$j	= nuGetJSONData('clientTableSchema');
+	$formCode = nuObjKey(nuHash(),'form_code');
 
-	if(($call_type == 'runhiddenphp' && nuObjKey(nuHash(),'form_code') == 'nufflaunch') || is_null($j) || $j == '' || $force_update == true ){
+	if(($call_type == 'runhiddenphp' && ($formCode == 'nufflaunch' || $formCode == 'nuadddbcolumn')) || is_null($j) || $j == '' || $force_update == true ){
 
 		$j	= nuBuildTableSchema();
 		nuSetJSONData('clientTableSchema', $j);			//-- force updating Table Schema
