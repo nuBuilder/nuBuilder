@@ -688,12 +688,12 @@ class nuSECTION{
 
 		$this->PDF->SetFont($O->fontFamily, $O->fontWeight, $O->fontSize);
 
-		if($O->width - 2 > $this->PDF->GetStringWidth($text)){						//-- all paragraph fits in 1 line
+		if($O->width - 2 > $this->PDF->GetStringWidth((utf8_encode($text)))){						//-- all paragraph fits in 1 line
 			return array($text, '');
 		}
 
 		$to			 = 1;
-		while($O->width - 2 > $this->PDF->GetStringWidth(substr($text, 0, $to))){	//-- keep getting wider until too wide
+		while($O->width - 2 > $this->PDF->GetStringWidth(utf8_encode(substr(($text), 0, $to)))){	//-- keep getting wider until too wide
 			$to++;
 		}
 
@@ -703,7 +703,7 @@ class nuSECTION{
 		$wordSplit			= $to;
 
 		for($i = strlen($widestLine) - 1 ; $i > 1 ; $i--){
-			if (!$foundLongestWord && $this->PDF->GetStringWidth(substr($widestLine, 0, $i)) < $O->width - 2) {
+			if (!$foundLongestWord && $this->PDF->GetStringWidth(utf8_encode(substr($widestLine, 0, $i))) < $O->width - 2) {
 				$wordSplit			= $i;
 				$foundLongestWord	= true;
 			}
