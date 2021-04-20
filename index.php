@@ -11,9 +11,9 @@ require_once('core/nusystemupdatelibs.php');
 
 nuMigrateSQL();
 
-if ( !isset($_SESSION['nubuilder_session_data']['NB_PATH']) || dirname($_SESSION['nubuilder_session_data']['NB_PATH']) != $nb_path ) {	
+if ( !isset($_SESSION['nubuilder_session_data']['NB_PATH']) || dirname($_SESSION['nubuilder_session_data']['NB_PATH']) != $nb_path ) {
 	nuLoadNewSession();
-}
+} 
 
 ?>
 <!DOCTYPE html>
@@ -24,7 +24,6 @@ if ( !isset($_SESSION['nubuilder_session_data']['NB_PATH']) || dirname($_SESSION
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv='Content-type' content='text/html;charset=UTF-8'>
 <meta name="theme-color" content="##00adef">
-
 
 <?php
 
@@ -234,15 +233,14 @@ window.nuHASH				= [];
 	window.nuImages							= [];
 	";
 
-	
-	$s	= isset($_SESSION['nubuilder_session_data']['SESSION_ID']);
+	$isSession	= isset($_SESSION['nubuilder_session_data']['SESSION_ID']);
 
 	if ( $nuUser != '' && $nuPassword != '' ){
 		$h2 = nuUseUP($nuBrowseFunction, $target, $welcome, $nuUser, $nuPassword);
 	}else{
 		
 		if($opener == ''){
-				$h2 = nuGetJS_login($nuBrowseFunction, $target, $welcome);
+				$h2 = nuGetJS_login($nuBrowseFunction, $target, $welcome, $nuForm, $nuRecord, $isSession);
 			}else{
 				$h2 = nuGetJS_action_screen($nuBrowseFunction, $target, $welcome, $opener, $search, $like);
 		}
@@ -295,7 +293,6 @@ window.nuHASH				= [];
 	</script>
 	<script>
 	";
-
 
 
 	$h = $h1.$h2.$h3.$h4;

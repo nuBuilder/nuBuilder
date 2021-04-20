@@ -15,7 +15,7 @@ function nuLoadBody($debug = false) {
 }
 
 
-function nuGetJS_login($nuBrowseFunction, $target, $welcome, $s) {
+function nuGetJS_login($nuBrowseFunction, $target, $welcome, $formId, $recordId, $isSession) {
 
 	$h2 = "function nuLoad(){
 		nuBindCtrlEvents();
@@ -26,8 +26,8 @@ function nuGetJS_login($nuBrowseFunction, $target, $welcome, $s) {
 
 	$h3 = "";
 
-	if ($s == true) {
-		$h3 = "nuForm('','-1','','','','');";
+	if ($isSession) {
+		$h3 = "nuForm('$formId','$recordId','','','','');";
 	} else {	
 		$h3 = "
 			var welcome					= `$welcome`;
