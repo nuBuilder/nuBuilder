@@ -190,7 +190,7 @@ function nuRunReport(f, iframe){
 	
 }
 
-function nuRunReportSave(f, tag = null){
+function nuRunReportSave(f, tag = null, callback = null){
 
 	var current				= nuFORM.getCurrent();
 	var last				= $.extend(true, {}, current);
@@ -208,9 +208,20 @@ function nuRunReportSave(f, tag = null){
 			fd.append('ID', fm.id);
 			fd.append('tag', tag);
 			var xhr 		= new XMLHttpRequest();
+
+			if (callback !== null) {
+				
+				xhr.onreadystatechange = function() {
+					if (this.readyState == 4 && this.status == 200) {				
+						var data = JSON.parse(xhr.responseText);
+						callback(data.filename, data.id, this);
+					}
+				};
+			}
+ 
 			xhr.open('POST', 'core/nurunpdf.php', true);
 			xhr.send(fd);
-			
+
 		}
 
 	};

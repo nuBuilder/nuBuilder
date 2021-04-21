@@ -1144,9 +1144,13 @@ function nuSavePDF($PDF, $code = '', $tag = '') {
 		$q1 = "INSERT INTO pdf_temp (pdf_temp_id,pdf_added_by,pdf_code,pdf_tag,pdf_file_name)
 					VALUES ('$rid','$usr','$code','$tag','$filename');";
 		nuRunQuery($q1);
+
+		echo json_encode( array( 'filename' => $filename, 'id' => $rid ) );
+  
 	}
 	else {
 		nuDebug('There was an error saving the report','The directory to save PDF files: '. $dir .' does not exist or you do not have permission to write to this folder!');
+		echo json_encode( array( 'filename' => null, 'id' => null ) );
 	}
 
 }
