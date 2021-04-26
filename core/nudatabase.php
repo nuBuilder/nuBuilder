@@ -270,9 +270,17 @@ function nuDBQuote($s) {
 function db_num_rows($o) {
 
 	if(!is_object($o)){return 0;}
-		
+
 	return $o->rowCount();
-	
+
+}
+
+function db_num_columns($o) {
+
+	if(!is_object($o)){return 0;}
+
+	return $o->columnCount();
+
 }
 
 function nuDebugResult($t){
