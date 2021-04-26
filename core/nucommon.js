@@ -2530,6 +2530,25 @@ function nuSetValue(i, v, method) {
 
 }
 
+function nuSetDateValue(i, d) {
+
+	var obj = $('#' + i);
+
+	if (i === undefined || nuDebugOut(obj, i)) return false;
+
+	if (d === undefined) {
+		var d = new Date();
+	}
+
+	var df = d.getFullYear() + '-' + nuPad2(d.getMonth() + 1) + '-' + nuPad2(d.getDate());
+
+	var format = obj.attr('data-nu-format');
+	obj.val(nuFORM.addFormatting(df, format)).change();
+
+	return true;
+
+}
+
 function nuArrayIsUnique(arr) {
 	return arr.length === new Set(arr).size;
 }
