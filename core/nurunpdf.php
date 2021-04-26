@@ -375,8 +375,10 @@ class nuSECTION{
 			$O[$i]->path						= '';
 
 			if($O[$i]->objectType == 'field' or $O[$i]->objectType == 'label'){
-
-				if($O[$i]->objectType == 'field' and substr($this->ROW[$O[$i]->fieldName],0,1) == '#' and substr($this->ROW[$O[$i]->fieldName],2,1) == '#' and substr($this->ROW[$O[$i]->fieldName],9,1) == '|'){		//-- conditional formatting used
+				
+				$fieldName = isset($this->ROW[$O[$i]->fieldName]) ? $this->ROW[$O[$i]->fieldName] : '';
+				
+				if($O[$i]->objectType == 'field' and substr($fieldName,0,1) == '#' and substr($fieldName,2,1) == '#' and substr($fieldName,9,1) == '|'){		//-- conditional formatting used
 
 					$format					 = $this->nuGetFormatting($O[$i]);
 
@@ -771,20 +773,28 @@ class nuSECTION{
 
 			$sql			= "SELECT $count FROM $this->TABLE_ID"."_nu_summary $where " . implode(' AND ',$groups);
 			$t				= nuRunQuery($sql);
-			$r				= db_fetch_row($t);
 
-			if($r[1] == 0 and $type == 'p'){
+			if (db_num_rows($t) > 0) {
 
-				$value	= 0;
+				$r				= db_fetch_row($t);
 
-			}else{
+				$r1  = db_num_columns($t) > 1 ? $r[1] : '';
 
-				if($type == 'p'){
-					$value	= ($r[0] / $r[1]);
+				if($r1 == 0 and $type == 'p'){
+
+					$value	= 0;
+
 				}else{
-					$value	= $r[0];
-				}
 
+					if($type == 'p'){
+						$value	= ($r[0] / $r1);
+					}else{
+						$value	= $r[0];
+					}
+
+				} 
+			} else {
+				$value	= 0;
 			}
 
 		}
