@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 25, 2021 at 03:40 PM
+-- Generation Time: Apr 27, 2021 at 05:56 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 8.0.0
 
@@ -547,8 +547,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.04.21.01'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.04.25.00');
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.04.26.02'),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.04.27.00');
 
 -- --------------------------------------------------------
 
@@ -1045,7 +1045,8 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu606c617681a8478', 'nufflaunch', '', 'word', 'availablecolumnswrd', 'Available Fields', 'nu5bad6cb36f36433', 120, 95, 416, 249, 20, '1', 'center', '0', '0', '0', '', '', '', '', '', '', '', '', '', '0', '0', '0|No|1|Yes', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'button', '', '', '', '', '', '', '', '', ''),
 ('nu60741457ef6f315', 'nufastformobjects', 'zzzzsys_object', 'select', 'ff_type', 'Object Type', 'nu5bad6cb36f72f8e', 40, 98, 23, 150, 18, '1', 'left', '1', '0', '1', '', '', '', '', '', '', '', '', '', '0', '0', 'nu59e446589a370ca|Text|\nnu59e446589adce4d|Button|\nnu59e446589b4c69b|Checkbox|\nnu59e446589bce3d7|nuAutoNumber|\nnu59e446589b61190|nuScroll|\nnu59e446589b0af4c|nuDate|\nnu59e446589b20a14|nuNumber|\nnu59e446589af5d86|Number|\nnu59e446589cf91a2|File|\nnu59e446589ac75be|Word|\nnu59e446589b3714b|Calc|\nnu59e446589a4d76a|Display|\nnu59e446589ab1797|Lookup|\nnu59e446589a1fc46|HTML|\nnu59e446589a6400f|Select|\nnu59e446589a9b145|Multiselect|\nnu59e446589b75a6d|Textarea|\nnu59e446589d1c64d|Image|\nnu59e44658a0c7724|Subform', 'syt_title', 'sfo_description', '200', NULL, 'nutab', '', NULL, 'zzzzsys_tab', '', '', '', '', '', '', 0, '', 'text', '', '', '', '', '', '', '', '', ''),
 ('nu59e44658a0c7724', 'nusample', '', 'subform', 'subformsample', 'Subform', 'nu5bad6cb3732c76e', 110, 53, 260, 300, 250, '1', 'right', '0', '0', NULL, '', '', '', '', '', NULL, NULL, '', 'SELECT COUNT(*) FROM zzzzsys_debug', '', '0', '', '', '', '', '', '', '', '', '', 'nusamplesubformform', 'zzzzsys_debug_id', '1', '1', 'g', '', 89, 'N|$ 1,000.00', 'file', '', NULL, '', '', '', '', '', '', ''),
-('nu59e44658a2b25af', 'nusample', '', 'word', 'labelbutton', 'Button', 'nu5bad6cb373c384f', 100, 42, 114, 40, 18, '1', 'right', '0', '0', NULL, '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', '', '', NULL, '', '', '', '', '', '', '');
+('nu59e44658a2b25af', 'nusample', '', 'word', 'labelbutton', 'Button', 'nu5bad6cb373c384f', 100, 42, 114, 40, 18, '1', 'right', '0', '0', NULL, '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', '', '', NULL, '', '', '', '', '', '', ''),
+('nu5fd3973a43f3930', 'nuhome', '', 'run', 'run_note', 'Notes', 'nu5bad6cb367c5125', 110, 99, 703, 195, 30, '1', 'center', '0', '0', '0', '', '', 'nunotes', '', 'b', '0', 'F', '', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', '', '', NULL, '', '', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -1257,7 +1258,7 @@ CREATE TABLE `zzzzsys_setup` (
 --
 
 INSERT INTO `zzzzsys_setup` (`zzzzsys_setup_id`, `set_time_out_minutes`, `set_zzzzsys_timezone_id`, `set_language`, `set_languages_included`, `set_smtp_username`, `set_smtp_password`, `set_smtp_host`, `set_smtp_from_address`, `set_smtp_from_name`, `set_smtp_port`, `set_smtp_use_authentication`, `set_smtp_use_ssl`, `set_header`, `set_denied`) VALUES
-('1', 480, '5281a1220508372', NULL, '[\"Arabic\",\"Armenian\",\"Chinese\",\"Czech\",\"French\",\"German\",\"Greek\",\"Hindi\",\"Italian\",\"Malay\",\"Russian\",\"Spanish\",\"Tamil\",\"Vietnamese\"]', '1', '1', '1', '1', '1', 1, '1', '1', 'function nuHeaderTest() {\n  console.log(\'Functions placed here are available anywhere in nuBuilder Forte.\');\n}\n\n// nuOnLoad() will be run after each Browse and Edit Form loads. \n\nfunction nuOnLoad() {\n\n if(nuFormType() == \'edit\'){\n     // Edit Form loaded\n } else\n if(nuFormType() == \'browse\'){\n     // Browse Form loaded\n }\n \n}\n\n</script>\n\n<!-- Define your own styles, override styles from nubuilder4.css -->\n\n<style> \n\n /*.nuActionButton {background-color:#0073aa;} */\n\n\n\n</style>\n\n\n<script>\n\n\n', '1');
+('1', 480, '5281a1220508372', '', '[\"Arabic\",\"Armenian\",\"Chinese\",\"Czech\",\"French\",\"German\",\"Greek\",\"Hindi\",\"Italian\",\"Malay\",\"Russian\",\"Spanish\",\"Tamil\",\"Vietnamese\"]', '1', '1', '1', '1', '1', 1, '1', '1', 'function nuHeaderTest() {\n  console.log(\'Functions placed here are available anywhere in nuBuilder Forte.\');\n}\n\n// nuOnLoad() will be run after each Browse and Edit Form loads. \n\nfunction nuOnLoad() {\n\n if(nuFormType() == \'edit\'){\n     // Edit Form loaded\n } else\n if(nuFormType() == \'browse\'){\n     // Browse Form loaded\n }\n \n}\n\n</script>\n\n<!-- Define your own styles, override styles from nubuilder4.css -->\n\n<style> \n\n /*.nuActionButton {background-color:#0073aa;} */\n\n\n\n</style>\n\n\n<script>\n\n\n', '1');
 
 -- --------------------------------------------------------
 
