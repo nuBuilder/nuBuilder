@@ -1683,7 +1683,7 @@ function nuSubformEnableMultiPaste(subformId, selector, undoButton) {
 					nuShow(undoButton);
 				}
 				window.nuNEW = 0;
-	
+
 			}
 		}
 
@@ -1691,6 +1691,99 @@ function nuSubformEnableMultiPaste(subformId, selector, undoButton) {
 
 }
 
+function nuSubformHeaderToSeparatedString(fields, delimiter, includeId) {
+
+	var start = includeId == true ? 0 : 1;
+	var h = '';
+
+	for (var i = start; i < fields.length - 1; i++) {
+		h += fields[i] + delimiter;
+	}
+	return h + '\n';
+}
+
+function nuSubformRowToSeparatedString(rows, delimiter, includeId) {
+
+	var processRow = function (row, includeId) {
+
+		var finalVal = '';
+
+		var start = includeId == true ? 0 : 1;
+		for (var j = start; j < row.length - 1; j++) {
+			var innerValue = row[j] === null ? '' : row[j].toString();
+			if (row[j] instanceof Date) {
+				innerValue = row[j].toLocaleString();
+			};
+			var result = innerValue.replace(/"/g, '""');
+			if (result.search(/("|,|\n)/g) >= 0)
+				result = '"' + result + '"';
+			if (j > start)
+				finalVal += delimiter;
+			finalVal += result;
+		}
+		return finalVal + '\n';
+	};
+
+	var output = "";
+
+	for (var i = 0; i < rows.length - 1; i++) {
+		output += processRow(rows[i], includeId);
+	}
+
+	return output;
+}
+
+
+var nuCopyToClipboard = str => {
+    const el = document.createElement('textarea');
+    el.value = str;
+    el.setAttribute('readonly', '');
+    el.style.position = 'absolute';
+    el.style.left = '-9999px';
+    document.body.appendChild(el);
+    const selected =
+        document.getSelection().rangeCount > 0 ? document.getSelection().getRangeAt(0) : false;
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    if (selected) {
+        document.getSelection().removeAllRanges();
+        document.getSelection().addRange(selected);
+    }
+};
+
+/**
+ * Copy the data of a Subform to the Clipboard
+ *
+ * @param {string}	i				- Subform Object ID
+ * @param {string}	delimiter			- Delimiter for the data. Default: \t  (tabulator)
+ * @param {bool}	[includeHeader]		- true to include the header (titles)
+ * @param {bool}	[includeId]			- true to include the Id (Primary Key)
+ *
+ */
+
+function nuSubformToClipboard(i, delimiter, includeHeader, includeId) {
+
+	var obj = nuSubformObject(i);
+
+	var s = "";
+
+	if (typeof delimiter === "undefined") {
+		var delimiter = '\t';
+	}
+
+	if (typeof includeId === "undefined") {
+		var includeId = false;
+	}
+
+	if (includeHeader === true) {
+		s = nuSubformHeaderToSeparatedString(obj.fields, delimiter, includeId);
+	}
+
+	s += nuSubformRowToSeparatedString(obj.rows, delimiter, includeId);
+
+	nuCopyToClipboard(s);
+}
 
 function nuRecordHolderObject(t){
 
