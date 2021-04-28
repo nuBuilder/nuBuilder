@@ -582,8 +582,9 @@ function nuReformat(t){
 	}
 	
 	if(f[0] == 'N'){
-			
-		var a		= nuFORM.addFormatting(v, f);
+
+		var r		= nuFORM.removeFormatting(v, f);
+		var a		= nuFORM.addFormatting(r, f);
 		o.val(a);
 
 	}
