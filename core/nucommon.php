@@ -1332,6 +1332,22 @@ function nuProcedure($c){
 
 }
 
+function nuSQL($c) {
+
+	$s						= "SELECT sse_sql FROM zzzzsys_select WHERE sse_code = ?";
+	$t						= nuRunQuery($s, array($c));
+
+	if (db_num_rows($t) > 0) {	// SQL description exists
+
+		$r					= db_fetch_object($t);
+		return	nuReplaceHashVariables($r->sse_sql);
+
+	}
+
+	return "";
+
+}
+
 function nuExceptionHandler($e, $code){
 
 	$ce		= nuObjKey($_POST,'nuProcedureEval');
