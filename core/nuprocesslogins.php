@@ -157,7 +157,7 @@ function nuLoginSetupNOTGlobeadmin() {
 	$_SESSION['nubuilder_session_data']['SESSION_ID'] = nuIDTEMP();
 	$_SESSION['nubuilder_session_data']['SESSION_TIMESTAMP'] = time();
 	$_SESSION['nubuilder_session_data']['IsDemo'] = $_SESSION['nubuilder_session_data']['IS_DEMO'];
-	$_SESSION['nubuilder_session_data']['HOME_ID'] = 'nuhome';
+
 
 	$checkLoginDetailsSQL = "SELECT * FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id WHERE sus_login_name = ? AND sus_login_password = ? ";
 
@@ -184,6 +184,9 @@ function nuLoginSetupNOTGlobeadmin() {
 	}
 
 	$getAccessLevelOBJ = db_fetch_object($getAccessLevelQRY);
+
+	$_SESSION['nubuilder_session_data']['HOME_ID'] = $getAccessLevelOBJ->zzzzsys_form_id;
+
 	$sessionIds = new stdClass;
 	$sessionIds->zzzzsys_access_id = $getAccessLevelOBJ->zzzzsys_access_id;
 	$sessionIds->zzzzsys_user_id = $checkLoginDetailsOBJ->zzzzsys_user_id;
