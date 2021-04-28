@@ -1506,6 +1506,20 @@ function nuSubformValue(t, id){
 
 }
 
+function nuSubformColumnArray(id, column, includeDeleted = false) {
+
+	var a = [];
+	var sf = nuSubformObject(id);
+	var c = sf.fields.indexOf(column);
+	for (var i = 0; i < sf.rows.length; i++) {
+		if (sf.deleted[i] == 0 || includeDeleted) {
+			var rv = sf.rows[i][c]
+			a.push(rv);
+		}
+	}
+	return a;
+}
+
 function nuEncode(s){
 	return window.btoa(unescape(encodeURIComponent(s)))
 }
