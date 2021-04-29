@@ -1838,9 +1838,9 @@ function nuTranslateWriteSQL($f, $row, $counter, $total) {
 
 }
 
-function nuTranslateGenerateFile($l) {
+function nuTranslateGenerateFile($l, $table = 'zzzzsys_translate') {
 
-	$s = "SELECT * FROM `zzzzsys_translate` WHERE trl_language = ? ORDER BY `trl_language`, trl_english";
+	$s = "SELECT * FROM `$table` WHERE trl_language = ? ORDER BY `trl_language`, trl_english";
 	$t = nuRunQuery($s, array($l));
 
 	$total = db_num_rows($t);
@@ -1848,7 +1848,7 @@ function nuTranslateGenerateFile($l) {
 
 		$counter = 0;
 
-		$f = fopen(__DIR__ . "./languages/" . $l . '.sql', "w+") or die("Unable to open the file " . $l);
+		$f = fopen(__DIR__ . "/languages/" . $l . '.sql', "w+") or die("Unable to open the file " . $l);
 		while ($row = db_fetch_array($t)) {
 
 			$id = $row['zzzzsys_translate_id'];
@@ -1867,18 +1867,18 @@ function nuTranslateGenerateFile($l) {
 
 }
 
-function nuTranslateExport($l = '') {
+function nuTranslateExport($l = '', $table = 'zzzzsys_translate') {
 	
 	if ($l == '') {
 
-		$s = "SELECT DISTINCT trl_language FROM `zzzzsys_translate` ORDER BY `trl_language`";
+		$s = "SELECT DISTINCT trl_language FROM `$table` ORDER BY `trl_language`";
 		$t = nuRunQuery($s);
 		while ($row = db_fetch_object($t)) {
-			nuTranslateGenerateFile($row->trl_language);
+			nuTranslateGenerateFile($row->trl_language, $table);
 		}
 
 	} else {
-		nuTranslateGenerateFile($l);
+		nuTranslateGenerateFile($l, $table);
 	}
 }
 
