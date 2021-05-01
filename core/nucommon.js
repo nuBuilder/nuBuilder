@@ -1588,9 +1588,12 @@ function nuIsSaved(){
 function nuSortSubform(s, c, e){
 
 	var sf				= [];
-	var so				= nuSubformObject(s).fields[c];;
+	var obj				= nuSubformObject(s);
+	var so				= obj.fields[c];
+	var count			= obj.rows.length;
 	var h				= 0;
 	var t				= false;
+	var noAdd			= $('#'+s).attr('data-nu-add') == '0';
 
 	$("[ID^='" + s + "'][ID$='nuRECORD']").each(function( index ){
 
@@ -1612,7 +1615,7 @@ function nuSortSubform(s, c, e){
 
 		var o = {'form' : i, 'value' : v};
 
-		sf.push(o);
+		if (!(index == count && noAdd)) sf.push(o);
 
 	});
 
