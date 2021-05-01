@@ -2995,9 +2995,13 @@ function nuSearchPressed(e){
 	if(!e){e=window.event;}
 
 	if(e.keyCode == 13 && window.nuBROWSEROW == -1){					//-- enter key
+
+		e.preventDefault();
 		$('#nuSearchButton').click();
+
 	}else if(e.keyCode == 13 && window.nuBROWSEROW != -1){				//-- enter key
 
+		e.preventDefault();
 		var i	= '#nucell_' + window.nuBROWSEROW + '_0';
 
 		nuSelectBrowse('', $(i)[0]);
