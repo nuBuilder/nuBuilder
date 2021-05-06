@@ -288,7 +288,7 @@ function nuUpdateExistingSession() {
 		$_SESSION['nubuilder_session_data']['SESSION_TIMESTAMP'] = time();
 	}
 	else {
-		nuDie('Your nuBuilder session has timed out.');
+		nuDie(nuTranslate('Your session has timed out.'));
 	}
 }
 
