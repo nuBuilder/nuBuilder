@@ -832,7 +832,7 @@ function nuGetUserAccess(){
 	if (in_array("sss_time", $f)){
 
 		nuRunQuery("UPDATE zzzzsys_session SET sss_time = $s WHERE zzzzsys_session_id = ? ", array($_SESSION['nubuilder_session_data']['SESSION_ID']));
-		nuRunQuery("DELETE FROM zzzzsys_session WHERE sss_time < $s - 18000");					//-- 5 hours
+		nuRunQuery("DELETE FROM zzzzsys_session WHERE sss_time < $s - 36000");					//-- 10 hours
 	}
 
 	return $A;
