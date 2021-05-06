@@ -17,7 +17,10 @@
 
 	$_POST['nuCounter']						= rand(0, 999);
 	$_POST['nuErrors']						= array();
+
 	$U										= nuGetUserAccess();
+	if (empty($U)) nuDie(nuTranslate('Your session has timed out.'));
+
 	$formAndSessionData						= nuGatherFormAndSessionData($U['HOME_ID']);
 
 	$P										= $_POST['nuSTATE'];
