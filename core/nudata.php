@@ -283,7 +283,7 @@ function nuUpdateDatabase(){
 						}
 
 						$idx = array_search($fields[$R], $CTSTN);
-						if($idx !== false){																			//-- valid field names
+						if($idx !== false && ! ($log && substr($fields[$R],-strlen("_nulog"))=== "_nulog")){		//-- valid field names and not nulog column
 
 							if($isAN){
 								$v	= nuAutoNumber($sf->object_id, $fields[$R], $row[$R]);
