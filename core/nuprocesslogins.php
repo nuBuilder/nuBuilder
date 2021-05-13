@@ -94,6 +94,7 @@ function nuLoginSetupGlobeadmin() {
 	$sessionIds->zzzzsys_access_id = '';
 	$sessionIds->zzzzsys_user_id = $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'];
 	$sessionIds->sus_login_name = $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'];
+	$sessionIds->sus_name = '';
 
 	if ($nuConfig2FAAdmin) {
 		if (nu2FALocalTokenOK($sessionIds->sus_login_name)) {
@@ -173,7 +174,7 @@ function nuLoginSetupNOTGlobeadmin() {
 	$_SESSION['nubuilder_session_data']['translation'] = nuGetTranslation($checkLoginDetailsOBJ->sus_language);
 	$_SESSION['nubuilder_session_data']['isGlobeadmin'] = false;
 	$translationQRY = nuRunQuery("SELECT * FROM zzzzsys_translate WHERE trl_language = '$checkLoginDetailsOBJ->sus_language' ORDER BY trl_english");
-	$getAccessLevelSQL = "SELECT zzzzsys_access_id, zzzzsys_user_id, sus_login_name, sal_zzzzsys_form_id AS zzzzsys_form_id FROM zzzzsys_user ";
+	$getAccessLevelSQL = "SELECT zzzzsys_access_id, zzzzsys_user_id, sus_login_name, sus_name, sal_zzzzsys_form_id AS zzzzsys_form_id FROM zzzzsys_user ";
 	$getAccessLevelSQL .= "INNER JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id ";
 	$getAccessLevelSQL .= "WHERE zzzzsys_user_id = '$checkLoginDetailsOBJ->zzzzsys_user_id' ";
 	$getAccessLevelSQL .= "GROUP BY sus_zzzzsys_access_id ";
@@ -191,6 +192,7 @@ function nuLoginSetupNOTGlobeadmin() {
 	$sessionIds->zzzzsys_access_id = $getAccessLevelOBJ->zzzzsys_access_id;
 	$sessionIds->zzzzsys_user_id = $checkLoginDetailsOBJ->zzzzsys_user_id;
 	$sessionIds->sus_login_name = $getAccessLevelOBJ->sus_login_name;
+	$sessionIds->sus_name = $getAccessLevelOBJ->sus_name;
 
 	$sessionIds->global_access = '0';
 	$sessionIds->ip_address = nuGetIPAddress();
@@ -288,7 +290,7 @@ function nuUpdateExistingSession() {
 		$_SESSION['nubuilder_session_data']['SESSION_TIMESTAMP'] = time();
 	}
 	else {
-		nuDie(nuTranslate('Your session has timed out.'));
+		nuDie('Your session has timed out.');
 	}
 }
 

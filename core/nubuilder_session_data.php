@@ -11,6 +11,7 @@ class nubuilder_session_data {
 	'GLOBEADMIN_DEMO_PASS'		=> '',
 	'DEMO_SAVING_ALLOWED_IDS'	=> '',
 	'USER_LOGIN'				=> '',
+	'USER_NAME'					=> '',	
 	'USER_PASS'					=> '',
 	'USER_EMAIL'				=> '',
 	'USER_DISPLAY_NAME'			=> '',
