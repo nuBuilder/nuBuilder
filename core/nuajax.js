@@ -5,7 +5,7 @@ function nuAjax(w,successCallback,errorCallback){
 
 	w	= JSON.stringify(w);
 
- 	$.ajax({
+	$.ajax({
 
 		async		: true,  
 		dataType	: "json",
@@ -19,7 +19,7 @@ function nuAjax(w,successCallback,errorCallback){
 		error	: function(jqXHR,textStatus,errorThrown){
 
 			var msg	= String(jqXHR.responseText).split("\n");
- 			nuMessage(msg);
+			nuMessage(msg);
 			window.test = jqXHR.responseText;
 
 			if (errorCallback !== undefined) {
@@ -48,15 +48,15 @@ function nuForm(f, r, filter, search, n, like){
 	}
 
 	if(like==undefined){
-		like 			= '';
+		like			= '';
 	}else{
-		like 			= nuDecode(like);
+		like			= nuDecode(like);
 	}
 
 	if(nuOpenNewBrowserTab('getform', f, r, filter)){return;}
-	
-	var u 				= '';
-	var p 				= '';
+
+	var u				= '';
+	var p				= '';
 	var s				= '';
 
 	if(n != 1){	//-- add a new breadcrumb
@@ -69,24 +69,24 @@ function nuForm(f, r, filter, search, n, like){
 	if(current.filter == ''){
 
 		if(filter != ''){
-			current.filter 		= filter;
+			current.filter		= filter;
 		}else{
-			
+
 			if(window.nuFILTER != ''){
-				current.filter 	= window.nuFILTER;
+				current.filter = window.nuFILTER;
 			}
 
 		}
 
 	}
 
-	var last	 		= $.extend(true, {}, current);
+	var last			= $.extend(true, {}, current);
 
 	last.call_type		= 'getform';
-	last.form_id 		= f;
+	last.form_id		= f;
 	last.record_id		= r;
-	last.filter 		= filter==''?window.nuFILTER:filter;
-	last.search 		= search;
+	last.filter			= filter==''?window.nuFILTER:filter;
+	last.search			= search;
 
 	if(parent['nuHashFromEditForm']===undefined){
 		last.hash		= [];
@@ -94,12 +94,12 @@ function nuForm(f, r, filter, search, n, like){
 		last.hash		= parent.nuHashFromEditForm();
 	}
 
-	last.AAA	 		= 'hw';
-	last.like	 		= like;
+	last.AAA			= 'hw';
+	last.like			= like;
 
 	var successCallback = function(data,textStatus,jqXHR){
 
-		var fm 			= data;
+		var fm			= data;
 
 		if(nuDisplayError(fm)){
 
@@ -109,10 +109,10 @@ function nuForm(f, r, filter, search, n, like){
 			if(fm.log_again == 1){location.reload();}
 		
 		}else{
-			
+
 			var last		= window.nuFORM.getCurrent();
 			last.record_id	= fm.record_id;
-			last.FORM 		= fm.form;
+			last.FORM		= fm.form;
 
 			nuBuildForm(fm);
 			
@@ -130,9 +130,9 @@ function nuGetReport(f, r){
 
 	var last			= window.nuFORM.addBreadcrumb();
 
-	last.session_id 	= window.nuSESSION;
-	last.call_type 		= 'getreport';
-	last.form_id 		= f;
+	last.session_id		= window.nuSESSION;
+	last.call_type		= 'getreport';
+	last.form_id		= f;
 	last.record_id		= r;
 
 	if(parent['nuHashFromEditForm']===undefined){
@@ -141,12 +141,10 @@ function nuGetReport(f, r){
 		last.hash		= parent.nuHashFromEditForm();
 	}
 
-//	last.hash 			= parent.nuHashFromEditForm();
-
 	var successCallback = function(data,textStatus,jqXHR){
 
 		var fm = data;
-		
+
 		if(!nuDisplayError(fm)){
 			nuBuildForm(fm);
 		}
@@ -161,16 +159,16 @@ function nuGetReport(f, r){
 function nuRunReport(f, iframe){
 
 	var current			= nuFORM.getCurrent();
-	var last	 		= $.extend(true, {}, current);
+	var last			= $.extend(true, {}, current);
 
-	last.session_id 	= window.nuSESSION;
+	last.session_id		= window.nuSESSION;
 	last.call_type		= 'runreport';
 	last.form_id		= f;
-	last.hash 			= parent.nuHashFromEditForm();
+	last.hash			= parent.nuHashFromEditForm();
 
 	var successCallback = function(data,textStatus,jqXHR){
 
-		var fm 			= data;
+		var fm			= data;
 		
 		if(!nuDisplayError(fm)){
 			
@@ -204,21 +202,20 @@ function nuRunReportSave(f, tag = null, callback = null){
 
 		if(!nuDisplayError(fm)){
 
-			var fd 			= new FormData();
+			var fd			= new FormData();
 			fd.append('ID', fm.id);
 			fd.append('tag', tag);
-			var xhr 		= new XMLHttpRequest();
+			var xhr			= new XMLHttpRequest();
 
 			if (callback !== null) {
-				
 				xhr.onreadystatechange = function() {
-					if (this.readyState == 4 && this.status == 200) {				
+					if (this.readyState == 4 && this.status == 200) {
 						var data = JSON.parse(xhr.responseText);
 						callback(data.filename, data.id, this);
 					}
-				};
+				}
 			}
- 
+
 			xhr.open('POST', 'core/nurunpdf.php', true);
 			xhr.send(fd);
 
@@ -246,21 +243,21 @@ function nuLogout(f, iframe){
 
 	var last			= nuFORM.getCurrent();
 
-	last.session_id 	= window.nuSESSION;
+	last.session_id		= window.nuSESSION;
 	last.call_type		= 'logout';
-	
+
 	var successCallback = function(data,textStatus,jqXHR){
 
-		var fm 			= data;
+		var fm			= data;
 
 		if(!nuDisplayError(fm)){
 			window.open('index.php', '_self');
 		}
 
 	}
-	
+
 	nuAjax(last,successCallback);
-	
+
 }
 
 function nuGetPHP(f, r){
@@ -270,11 +267,11 @@ function nuGetPHP(f, r){
 	window.nuFORM.addBreadcrumb();
 
 	var current			= nuFORM.getCurrent();
-	var last	 		= $.extend(true, {}, current);
+	var last			= $.extend(true, {}, current);
 
 	last.session_id		= window.nuSESSION;
 	last.call_type		= 'getphp';
-	last.form_id 		= f;
+	last.form_id		= f;
 	last.record_id		= r;
 
 	if(parent['nuHashFromEditForm']===undefined){
@@ -283,11 +280,9 @@ function nuGetPHP(f, r){
 		last.hash		= parent.nuHashFromEditForm();
 	}
 
-//	last.hash 			= parent.nuHashFromEditForm();
-
 	var successCallback = function(data,textStatus,jqXHR){
 
-		var fm  		= data;
+		var fm			= data;
 		
 		if(!nuDisplayError(fm)){
 
@@ -306,23 +301,23 @@ function nuGetPHP(f, r){
 function nuRunPHP(pCode, iframe, rbs){
 
 	if(arguments.length < 3 ){
-		
+
 		if(window.nuBeforeSave){
 			if(nuBeforeSave() === false ){return;}
 		}
-		
+
 	}
 
 	var current				= nuFORM.getCurrent();
 	var last				= $.extend(true, {}, current);
-	
+
 	last.session_id			= nuSESSION;
 	last.call_type			= 'runphp';
 	last.form_id			= pCode;
 	last.nuFORMdata			= nuFORM.data();
-	
+
 	if(nuFORM.getCurrent() === undefined){
-		
+
 		last.record_id		= parent.nuFORM.getCurrent().record_id;
 
 		if(parent['nuHashFromEditForm']===undefined){
@@ -334,26 +329,26 @@ function nuRunPHP(pCode, iframe, rbs){
 	}else{
 
 		last.record_id		= nuFORM.getCurrent().record_id;
-		last.hash 			= nuHashFromEditForm();
+		last.hash			= nuHashFromEditForm();
 
 	}
 
 	var successCallback		= function(data,textStatus,jqXHR){
-		
+
 		var fm				= data;
-		
+
 		if(!nuDisplayError(fm)){
-			
+
 			var pdfUrl		= 'core/nurunphp.php?i=' + fm.id;
-			
+
 			if(iframe === undefined || iframe === ''){
 				window.open(pdfUrl);
 			}else{
 				parent.$('#' + iframe).attr('src', pdfUrl);
 			}
-			
+
 		}
-		
+
 	};
 	
 	nuAjax(last,successCallback);
@@ -364,15 +359,15 @@ function nuRunPHP(pCode, iframe, rbs){
 function nuRunPHPHidden(i, rbs){
 
 	if(arguments.length == 1){
-		
+
 		if(window.nuBeforeSave){
 			if(nuBeforeSave() === false ){return;}
 		}
-		
+
 	}
 
 	var current				= nuFORM.getCurrent();
-	var last		 		= $.extend(true, {}, current);
+	var last				= $.extend(true, {}, current);
 
 	last.session_id			= window.nuSESSION;
 	last.call_type			= 'runhiddenphp';
@@ -382,7 +377,7 @@ function nuRunPHPHidden(i, rbs){
 	last.nuFORMdata			= nuFORM.data();
 	last.hash				= nuHashFromEditForm();
 
-	var successCallback 	= function(data,textStatus,jqXHR){
+	var successCallback		= function(data,textStatus,jqXHR){
 
 		var fm				= data;
 
@@ -419,25 +414,25 @@ function nuSystemUpdate(){
 	}
 
 	var current				= nuFORM.getCurrent();
-	var last		 		= $.extend(true, {}, current);
-	
+	var last				= $.extend(true, {}, current);
+
 	last.session_id			= nuSESSION;
-	last.call_type 			= 'systemupdate';
-	last.form_id 			= 'systemupdate';
+	last.call_type			= 'systemupdate';
+	last.form_id			= 'systemupdate';
 	last.nuFORMdata			= nuFORM.data();
 	last.hash				= nuHashFromEditForm();
 
-	var successCallback 	= function(data,textStatus,jqXHR){
-		
+	var successCallback		= function(data,textStatus,jqXHR){
+
 		var fm				= data;
-		
+
 		if(!nuDisplayError(fm)){
-			
+
 			var updateUrl		= 'core/nusystemupdate.php?i=' + fm.id;
 			window.open(updateUrl);
-			
+
 		}
-		
+
 	};
 
 	nuAjax(last,successCallback);
@@ -461,47 +456,47 @@ function nuAttachImage(i, c){
 		$('#' + imgID).attr('src', "core/graphics/" + c + ".png")
 
 		return;
-		
+
 	}
 
 	var PARENT				= parent.parent.parent.parent.parent.parent.parent.parent.parent;
 
 	if(PARENT.nuImages[c] !== undefined){
-		
+
 		var p				= JSON.parse(PARENT.nuImages[c]);
 		var b				= atob(p.file);
 		
 		$('#' + imgID).attr('src', b)
 
 		return;
-		
+
 	}
 
 	var current				= nuFORM.getCurrent();
-	var last		 		= $.extend(true, {}, current);
+	var last				= $.extend(true, {}, current);
 
 	last.session_id			= window.nuSESSION;
-	last.call_type 			= 'getfile';
+	last.call_type			= 'getfile';
 	last.fileCode			= c;
-	
-	var successCallback 	= function(data,textStatus,jqXHR){
+
+	var successCallback		= function(data,textStatus,jqXHR){
 
 		if(nuDisplayError(data)){return;};
 
 		if(data.JSONfile !== null){
-			
-			PARENT.nuImages[c] 	= data.JSONfile;
-			var p			= JSON.parse(PARENT.nuImages[c]);
-			var b			= atob(p.file);
-			
+
+			PARENT.nuImages[c]	= data.JSONfile;
+			var p				= JSON.parse(PARENT.nuImages[c]);
+			var b				= atob(p.file);
+
 			$('#' + imgID).attr('src', b)
 
 		}
-		
+
 	};
-	
+
 	nuAjax(last,successCallback);
-	
+
 }
 
 function nuAttachButtonImage(i, c){
@@ -526,10 +521,10 @@ function nuAttachButtonImage(i, c){
 	var pi = PARENT.nuImages[c];
 
 	if(pi !== undefined && pi !== ''){
-		
+
 		var p				= JSON.parse(pi);
 		var b				= atob(p.file);
-		
+
 		$('#' + i)
 		.css('background-image', 'url("' + b + '")')
 		.css('background-repeat', 'no-repeat')
@@ -538,25 +533,25 @@ function nuAttachButtonImage(i, c){
 		.css('text-align', 'left')
 
 		return;
-		
+
 	}
 
 	var current				= nuFORM.getCurrent();
-	var last		 		= $.extend(true, {}, current);
+	var last				= $.extend(true, {}, current);
 
 	last.session_id			= window.nuSESSION;
-	last.call_type 			= 'getfile';
+	last.call_type			= 'getfile';
 	last.fileCode			= c;
 	
-	var successCallback 	= function(data,textStatus,jqXHR){
+	var successCallback		= function(data,textStatus,jqXHR){
 
 		if(nuDisplayError(data)){return;};
 
 		if(data.JSONfile !== null){
 
-			PARENT.nuImages[c] 	= data.JSONfile;
-			var p			= JSON.parse(pi);
-			var b			= atob(p.file);
+			PARENT.nuImages[c]	= data.JSONfile;
+			var p				= JSON.parse(pi);
+			var b				= atob(p.file);
 
 			$('#' + i)
 			.css('background-image', 'url("' + b + '")')
@@ -583,34 +578,34 @@ function nuGetLookupId(pk, id){
 	var last			= nuFORM.getCurrent();
 
 	last.session_id		= nuSESSION;
-	last.call_type 		= 'getlookupid';
+	last.call_type		= 'getlookupid';
 	last.object_id		= l.attr('data-nu-object-id');
 	last.target			= l.attr('data-nu-target');
 	last.prefix			= l.attr('data-nu-prefix');
-	last.primary_key 	= pk;
+	last.primary_key	= pk;
 
 	var successCallback = function(data,textStatus,jqXHR){		
 
-		nuSERVERRESPONSELU 	= data;
+		nuSERVERRESPONSELU	= data;
 
 		nuCursor('default');
-		
+
 		if(!nuDisplayError(data)){
-			
+
 			nuPopulateLookup(data, id);
 			$('#' + id).addClass('nuEdited');
 			nuHasBeenEdited();
-			
+
 			var o		= $('#' + id);
 
 			if(o.attr('data-nu-prefix') == ''){return;}
-			
+
 			nuAddSubformRow(o[0], false);
 
 		}
-		
+
 	};
-	
+
 	nuAjax(last,successCallback);
 
 }
@@ -621,17 +616,17 @@ function nuGetLookupCode(e){
 	var last				= window.nuFORM.getCurrent();
 
 	last.session_id			= window.nuSESSION;
-	last.call_type 			= 'getlookupcode';
+	last.call_type			= 'getlookupcode';
 	last.object_id			= e.target.getAttribute('data-nu-object-id');
 	last.target				= e.target.getAttribute('data-nu-target')
-	last.code		 		= e.target.value;
+	last.code				= e.target.value;
 	last.hash				= nuHashFromEditForm();
 	
 	window.nuLOOKUPSTATE[last.object_id] = 'looking';
 
 	var successCallback = function(data,textStatus,jqXHR){		
 		
-		nuSERVERRESPONSELU 	= data;
+		nuSERVERRESPONSELU	= data;
 	
 		if(!nuDisplayError(data)){
 			nuChooseOneLookupRecord(e, data);
@@ -648,23 +643,23 @@ function nuPrintAction(){
 
 	var last			= window.nuFORM.getCurrent();
 
-	last.call_type 		= 'runhtml';
+	last.call_type		= 'runhtml';
 	last.browse_columns	= nuSERVERRESPONSE.browse_columns;
-	last.browse_sql 	= nuSERVERRESPONSE.browse_sql;
-	last.session_id 	= window.nuSESSION;
-	
+	last.browse_sql		= nuSERVERRESPONSE.browse_sql;
+	last.session_id		= window.nuSESSION;
+
 	var successCallback = function(data,textStatus,jqXHR){		
 
-		var fm 					= data;
-		
+		var fm					= data;
+
 		if(!nuDisplayError(fm)){
-			
+
 			var p				= 'core/nurunhtml.php?i=' + fm.id;
-			
+
 			window.open(p);
 
 		}
-		
+
 	};
 
 	nuAjax(last,successCallback);
@@ -678,7 +673,7 @@ function nuUpdateData(action, instruction){
 	if(nuFORM.getCurrent().record_id == -1){nuSetProperty('NEW_RECORD', 1);}
 
 	var current				= window.nuFORM.getCurrent();
-	var last		 		= $.extend(true, {}, current);
+	var last				= $.extend(true, {}, current);
 
 	var f					= last.form_id;
 	var r					= last.record_id;
@@ -688,17 +683,17 @@ function nuUpdateData(action, instruction){
 		last.instruction	= instruction;
 	}
 
-	last.call_type 			= 'update';
-	last.deleteAll 			= $('#nuDelete').is(":checked") ? 'Yes' : 'No';
+	last.call_type			= 'update';
+	last.deleteAll			= $('#nuDelete').is(":checked") ? 'Yes' : 'No';
 	last.nuFORMdata			= nuFORM.data(action);
-	last.hash 				= nuHashFromEditForm();
-	last.session_id 		= window.nuSESSION;
+	last.hash				= nuHashFromEditForm();
+	last.session_id			= window.nuSESSION;
 
 	$('.nuActionButton').hide();
 
-	var successCallback 	= function(data,textStatus,jqXHR){
+	var successCallback		= function(data,textStatus,jqXHR){
 
-		var fm 				= data;
+		var fm				= data;
 
 		if(nuDisplayError(fm)){
 
