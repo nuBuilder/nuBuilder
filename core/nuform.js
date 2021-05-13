@@ -556,6 +556,7 @@ function nuBuildEditObjects(f, p, o, prop){
 			f.objects[i].parent_type	= o == '' ? '' : o.subform_type;
 
 			if(t == 'input' || t == 'display' || t == 'lookup' || t == 'textarea' || t == 'calc'){
+
 				l = l + nuINPUT(f, i, l, p, prop);
 			}else if(t == 'run'){
 				l = l + nuRUN(f, i, l, p, prop);
@@ -790,7 +791,7 @@ function nuINPUT(w, i, l, p, prop){
 	.attr('data-nu-object-id', w.objects[i].object_id)
 	.attr('data-nu-format', '')
 	.attr('data-nu-prefix', p)
-	.attr('data-nu-type', w.objects[i].type)
+	.attr('data-nu-type', objectType)
 	.attr('data-nu-subform-sort', 1)
 	.attr('data-nu-label', w.objects[i].label)
 	.attr('onfocus', 'nuLookupFocus(event)')
