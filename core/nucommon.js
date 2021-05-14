@@ -782,7 +782,9 @@ function nuTranslate(s){
 	if (typeof s === 'undefined' || s === '' || s === null) {
 		return '';
 	}
-
+	
+	if (s.charAt(0) == '|') return s.substring(1);
+	
 	var l = nuLANGUAGE.find(elem => elem.english === s);
 	return !l ? s : l.translation;
 
