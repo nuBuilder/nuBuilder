@@ -212,7 +212,7 @@ function nuAlterSystemTables(){
 	$setupColumns = db_field_names('zzzzsys_setup');
 	if(array_search('set_languages_included', $setupColumns) == false){
 		nuRunQueryNoDebug("ALTER TABLE `zzzzsys_setup` ADD `set_languages_included` VARCHAR(1000) NULL DEFAULT NULL AFTER `set_language`;");
-		nuRunQuery('UPDATE `zzzzsys_setup` SET set_languages_included = ?', array('["Arabic","Armenian","Chinese","Czech","French","German","Greek","Hindi","Italian","Malay","Russian","Spanish","Tamil","Vietnamese"]'));
+		nuRunQuery('UPDATE `zzzzsys_setup` SET set_languages_included = ?', array('["Arabic","Armenian","Chinese","Czech","French","German","Greek","Hindi","Italian","Malay","Polish","Romanian","Russian","Spanish","Tamil","Vietnamese"]'));
 	}
 	
 	nuRunQueryNoDebug("ALTER TABLE `pdf_temp` ADD `pdf_code` VARCHAR(100) NULL DEFAULT NULL AFTER `pdf_added_by`;");
