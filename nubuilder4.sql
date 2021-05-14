@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 29, 2021 at 08:27 PM
+-- Generation Time: May 14, 2021 at 08:39 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 8.0.0
 
@@ -200,7 +200,7 @@ INSERT INTO `zzzzsys_browse` (`zzzzsys_browse_id`, `sbr_zzzzsys_form_id`, `sbr_t
 ('nu5f9aaac971c84e2', 'nucloner', 'Form Destination', 'clo_form_dest', 'l', '', 20, 190),
 ('nu5f9aaac9719b88c', 'nucloner', 'Form Source', 'clo_form_source', 'l', '', 10, 120),
 ('nu5fdb668a2947958', 'nuobject', 'Access', 'REPLACE(REPLACE(REPLACE(sob_all_access, 0,\'Editable\'),1,\'Readonly\'),2,\'Hidden\')', 'l', '', 80, 65),
-('nu5fdb67accbbfa6d', 'nuobject', 'Validation', 'REPLACE(REPLACE(REPLACE(sob_all_validate, 0,\'None\'),1,\'No Blanks\'),2,\'No Duplicates\')', 'l', '', 90, 95),
+('nu5fdb67accbbfa6d', 'nuobject', 'Validation', 'REPLACE(REPLACE(REPLACE(REPLACE(sob_all_validate, 0,\'None\'),1,\'No Blanks\'),2,\'No Duplicates\'),3,\'No Duplicates/Blanks\')', 'l', '', 90, 95),
 ('nu5fdb689731ed0db', 'nuobject', 'Align', 'sob_all_align', 'l', '', 100, 55),
 ('nu5fdcc69ceb26325', 'nucodesnippet', 'Changed On', 'cot_updated_on', 'l', '', 40, 130),
 ('nu5fdfd91ab3a0d63', 'nusession', 'IP Address', 'ip', 'l', '', 40, 120),
@@ -547,8 +547,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.04.29.00'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.04.29.00');
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.05.14.01'),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.05.14.00');
 
 -- --------------------------------------------------------
 
@@ -913,7 +913,7 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu5fd757f9266ea99', 'nuobject', 'zzzzsys_object', 'input', 'sob_all_validate_btn_none', 'None', 'nu5bad6cb3686cb0d', 220, 369, 344, 130, 20, '1', 'left', '0', '0', '1', '', '', '', '', '', NULL, NULL, '', '', '0', '0', '0|No|1|Yes', 'syt_title', 'sfo_description', '200', NULL, 'nutab', '', NULL, 'zzzzsys_tab', '', '', '', '', '', '', 0, '', 'button', '', NULL, '', '', '', '', '', '', ''),
 ('nu5fd6f7819d659bc', 'nuobject', 'zzzzsys_object', 'input', 'sob_all_cloneable_btn_yes', '✔ Yes', 'nu5bad6cb3686cb0d', 260, 402, 344, 60, 20, '1', 'left', '0', '0', '1', '', '', '', '', '', NULL, NULL, '', '', '0', '0', '0|No|1|Yes', 'syt_title', 'sfo_description', '200', NULL, 'nutab', '', NULL, 'zzzzsys_tab', '', '', '', '', '', '', 0, '', 'button', '', NULL, '', '', '', '', '', '', ''),
 ('nu5fd6f828a1e42b1', 'nuobject', 'zzzzsys_object', 'input', 'sob_all_cloneable_btn_no', '✖ No', 'nu5bad6cb3686cb0d', 270, 402, 414, 60, 20, '1', 'left', '0', '0', '1', '', '', '', '', '', NULL, NULL, '', '', '0', '0', '0|No|1|Yes', 'syt_title', 'sfo_description', '200', NULL, 'nutab', '', NULL, 'zzzzsys_tab', '', '', '', '', '', '', 0, '', 'button', '', NULL, '', '', '', '', '', '', ''),
-('nu5fd6fa0428adcd3', 'nuobject', 'zzzzsys_object', 'input', 'sob_all_align_btn_left', 'Left', 'nu5bad6cb3686cb0d', 190, 336, 344, 130, 20, '1', 'left', '0', '0', '1', '', '', '', '', '', NULL, NULL, '', '', '0', '0', '0|No|1|Yes', 'syt_title', 'sfo_description', '200', NULL, 'nutab', '', NULL, 'zzzzsys_tab', '', '', '', '', '', '', 0, '', 'button', '', NULL, '', '', '', '', '', '', ''),
+('nu5fd6fa0428adcd3', 'nuobject', 'zzzzsys_object', 'input', 'sob_all_align_btn_left', '|Left', 'nu5bad6cb3686cb0d', 190, 336, 344, 130, 20, '1', 'left', '0', '0', '1', '', '', '', '', '', NULL, NULL, '', '', '0', '0', '0|No|1|Yes', 'syt_title', 'sfo_description', '200', NULL, 'nutab', '', NULL, 'zzzzsys_tab', '', '', '', '', '', '', 0, '', 'button', '', NULL, '', '', '', '', '', '', ''),
 ('nu5fd6fbe95c2c61d', 'nuobject', 'zzzzsys_object', 'input', 'sob_all_align_btn_right', 'Right', 'nu5bad6cb3686cb0d', 200, 336, 489, 130, 20, '1', 'left', '0', '0', '1', '', '', '', '', '', NULL, NULL, '', '', '0', '0', '0|No|1|Yes', 'syt_title', 'sfo_description', '200', NULL, 'nutab', '', NULL, 'zzzzsys_tab', '', '', '', '', '', '', 0, '', 'button', '', NULL, '', '', '', '', '', '', ''),
 ('nu5fd6fc4a7ccf484', 'nuobject', 'zzzzsys_object', 'input', 'sob_all_align_btn_center', 'Center', 'nu5bad6cb3686cb0d', 210, 336, 635, 130, 20, '1', 'left', '0', '0', '1', '', '', '', '', '', NULL, NULL, '', '', '0', '0', '0|No|1|Yes', 'syt_title', 'sfo_description', '200', NULL, 'nutab', '', NULL, 'zzzzsys_tab', '', '', '', '', '', '', 0, '', 'button', '', NULL, '', '', '', '', '', '', ''),
 ('nu5fd6fdad38e8f5d', 'nuobject', 'zzzzsys_object', 'input', 'sob_all_validate_btn_no_blanks', 'No Blanks', 'nu5bad6cb3686cb0d', 230, 369, 489, 130, 20, '1', 'left', '0', '0', '1', '', '', '', '', '', NULL, NULL, '', '', '0', '0', '0|No|1|Yes', 'syt_title', 'sfo_description', '200', NULL, 'nutab', '', NULL, 'zzzzsys_tab', '', '', '', '', '', '', 0, '', 'button', '', NULL, '', '', '', '', '', '', ''),
@@ -1287,13 +1287,13 @@ INSERT INTO `zzzzsys_tab` (`zzzzsys_tab_id`, `syt_zzzzsys_form_id`, `syt_title`,
 ('nu5bad6cb36804778', 'nubuildreport', 'Report', 10, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Reports\');'),
 ('nu5bad6cb3683fa36', 'nubrowse', 'Browse', 10, ''),
 ('nu5bad6cb3686cb0d', 'nuobject', 'All', 10, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Objects_#Tab_-_All\');'),
-('nu5bad6cb368d9c40', 'nuobject', 'Run', 20, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Objects#Tab_-_Run\');'),
-('nu5bad6cb36974818', 'nuobject', 'Display', 30, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Objects#Tab_-_Display\');'),
-('nu5bad6cb369a6ee3', 'nuobject', 'Select', 40, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Objects_#Tab_-_Select\');'),
-('nu5bad6cb369d0088', 'nuobject', 'Lookup', 50, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Objects#Tab_-_Lookup\');'),
-('nu5bad6cb36a1c024', 'nuobject', 'Subform', 60, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Objects#Tab_-_Subform\');'),
-('nu5bad6cb36a4af06', 'nuobject', 'Input', 80, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Objects#Tab_-_Input\');'),
-('nu5bad6cb36a71012', 'nuobject', 'HTML', 90, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Objects#Tab_-_HTML\');'),
+('nu5bad6cb368d9c40', 'nuobject', '|Run', 20, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Objects#Tab_-_Run\');'),
+('nu5bad6cb36974818', 'nuobject', '|Display', 30, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Objects#Tab_-_Display\');'),
+('nu5bad6cb369a6ee3', 'nuobject', '|Select', 40, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Objects_#Tab_-_Select\');'),
+('nu5bad6cb369d0088', 'nuobject', '|Lookup', 50, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Objects#Tab_-_Lookup\');'),
+('nu5bad6cb36a1c024', 'nuobject', '|Subform', 60, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Objects#Tab_-_Subform\');'),
+('nu5bad6cb36a4af06', 'nuobject', '|Input', 80, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Objects#Tab_-_Input\');'),
+('nu5bad6cb36a71012', 'nuobject', '|HTML', 90, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Objects#Tab_-_HTML\');'),
 ('nu5bad6cb36aaa539', 'nuevent', 'Event', 10, ''),
 ('nu5bad6cb36ac903f', 'nuaccess', 'User', 10, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/User_Access#Creating_an_Access_Level\');'),
 ('nu5bad6cb36af0c58', 'nuaccess', 'Forms', 20, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/User_Access#Creating_an_Access_Level\');'),
@@ -1322,14 +1322,14 @@ INSERT INTO `zzzzsys_tab` (`zzzzsys_tab_id`, `syt_zzzzsys_form_id`, `syt_title`,
 ('nu5bad6cb36efb50c', 'nuhome', 'Builders', 20, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php\');'),
 ('nu5bad6cb36f36433', 'nufflaunch', 'Form', 10, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Form_Builder\');'),
 ('nu5bad6cb36f72f8e', 'nufastformobjects', 'Label', 10, ''),
-('nu5bad6cb36f99a7e', 'nuobject', 'Calc', 100, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Objects#Tab_-_Calc\');'),
+('nu5bad6cb36f99a7e', 'nuobject', '|Calc', 100, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Objects#Tab_-_Calc\');'),
 ('nu5bad6cb36fcbc18', 'nuformat', 'Format', 10, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Format_Builder\');'),
 ('nu5bad6cb36ffc300', 'nuformatcurrency', 'Currency', 10, ''),
 ('nu5bad6cb37026348', 'nuform', 'Custom Code', 30, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Functions\');'),
 ('nu5bad6cb370b409e', 'nuobject', 'Custom Code', 110, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Objects#Tab_-_Custom_Code\');'),
 ('nu5bad6cb370eb06a', 'nusample', 'Other Objects', 30, ''),
 ('nu5bad6cb3719774c', 'nufile', 'Main', 10, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Files\');'),
-('nu5bad6cb371c865e', 'nuobject', 'Image', 70, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Objects#Tab_-_Image\');'),
+('nu5bad6cb371c865e', 'nuobject', '|Image', 70, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Objects#Tab_-_Image\');'),
 ('nu5bad6cb371e2de7', 'nuselect', 'SQL', 10, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/SQL_Builder\');'),
 ('nu5bad6cb3721b534', 'nulaunchable', 'Main', 10, ''),
 ('nu5bad6cb3722f122', 'nulaunchable', 'Browse', 20, ''),
@@ -1340,8 +1340,8 @@ INSERT INTO `zzzzsys_tab` (`zzzzsys_tab_id`, `syt_zzzzsys_form_id`, `syt_title`,
 ('nu5bad6cb3737e773', 'nufrlaunch', 'Main', 10, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Report_Builder\');'),
 ('nu5bad6cb373c384f', 'nusample', 'Inputs', 10, ''),
 ('nu5bad6cb37405d73', 'nusamplesubformform', 'Main', 10, ''),
-('nu5bad6cb374207e3', 'nuuserhome', 'Main', 20, ''),
 ('nufastforms', 'nuuserhome', 'Fast Forms', -1, NULL),
+('nu5bad6cb374207e3', 'nuuserhome', 'Main', 20, ''),
 ('nu5bad6cb37434d3a', 'nulaunchform', 'Forms', 10, ''),
 ('nu5bad6cb374482e8', 'nutablookup', 'Tabs', 10, 'window.open(\'http://wiki.nubuilder.net/nubuilderforte/index.php/Forms#Tabs_.28Subform.29\');'),
 ('nu5f711b9343afdbd', 'nucsvtransfer', 'Transfer', 10, 'window.open(\'https://wiki.nubuilder.net/nubuilderforte/index.php/CSV_Transfer\');'),
