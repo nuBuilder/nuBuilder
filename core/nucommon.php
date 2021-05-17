@@ -1810,12 +1810,13 @@ function nuGetHttpOrigin() {
 	return $origin;
 }
 
-function nuGetRecordURL($origin = '', $subFolder = '', $homepageId = '') {
+function nuGetRecordURL($origin = '', $subFolder = '', $homepageId = '', $formId = '') {
 
 	$homepageId = $homepageId != '' ? '&h='. $homepageId : '';
 	$origin = $origin == '' ? nuGetHttpOrigin() : $origin;
+	$formId = $formId == '' ? nuHash() ['form_id'] : $formId;
 
-	return $origin. $subFolder . '/index.php?f=' . 'xx'. '&r=' . '#RECORD_ID#' . $homepageId;
+	return $origin. $subFolder . '/index.php?f=' . $formId . '&r=' . '#RECORD_ID#' . $homepageId;
 
 }
 
