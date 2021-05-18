@@ -961,7 +961,6 @@ function nuReplaceLabelHashVariables($LAY, $hashData){
 			if($O->objectType == 'label'){
 
 				for($l = 0 ; $l < count($GLOBALS['nu_report'][$i]->objects[$o]->lines) ; $l++){
-//					$GLOBALS['nu_report'][$i]->objects[$o]->lines[$l] = nuReplaceHashes($GLOBALS['nu_report'][$i]->objects[$o]->lines[$l], $hashData);
 					$GLOBALS['nu_report'][$i]->objects[$o]->lines[$l] = nuReplaceHashVariables($GLOBALS['nu_report'][$i]->objects[$o]->lines[$l]);
 				}
 			}
@@ -1121,7 +1120,7 @@ function nuRemovePageBreak($S){
 
 function nuSavePDF($PDF, $code = '', $tag = '') {
 
-	if($_SESSION['nubuilder_session_data']['IsDemo']){
+	if($_SESSION['nubuilder_session_data']['IS_DEMO']){
 
 		nuDisplayError('Not available in the Demo...');
 		return;

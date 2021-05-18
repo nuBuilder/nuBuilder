@@ -2,7 +2,7 @@
 
 function nuDragSave($data){
 
-	if($_SESSION['nubuilder_session_data']['IsDemo']){
+	if($_SESSION['nubuilder_session_data']['IS_DEMO']){
 
 		nuDisplayError('Not available in the Demo...');
 		return;

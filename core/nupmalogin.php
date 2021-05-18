@@ -8,7 +8,7 @@
 	$obj			= nuRunQuery($sql, $values);
 	$result			= db_num_rows($obj);
 	
-	if($_SESSION['nubuilder_session_data']['IsDemo']){
+	if($_SESSION['nubuilder_session_data']['IS_DEMO']){
 		echo('Not available in the Demo');
 		$page   = pmaBad();
 		return;	
