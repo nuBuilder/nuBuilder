@@ -98,7 +98,7 @@
 		$f->forms[0]->log_again					= nuObjKey($_POST,'nuLogAgain');
 		$f->forms[0]->global_access				= $_POST['nuHash']['GLOBAL_ACCESS'];
 		$f->forms[0]->data_mode					= $_POST['nuHash']['GLOBAL_ACCESS'] == '1' ? null : nuGetDataMode($F);
-		$f->forms[0]->is_demo					= $_SESSION['nubuilder_session_data']['IsDemo'];
+		$f->forms[0]->is_demo					= $_SESSION['nubuilder_session_data']['IS_DEMO'];
 		$f->forms[0]->remember_me_2fa			= $_SESSION['nubuilder_session_data']['2FA_REMEMBER_ME'];
 		$f->forms[0]->token_validity_time_2fa	= $_SESSION['nubuilder_session_data']['2FA_TOKEN_VALIDITY_TIME'];
 		$f->forms[0]->form_access				= $GLOBALS['nuSetup']->set_denied;

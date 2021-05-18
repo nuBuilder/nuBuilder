@@ -32,7 +32,6 @@ class nubuilder_session_data {
 	'2FA_REMEMBER_ME'			=> false,
 	'SESSION_ID'				=> null,
 	'SESSION_TIMESTAMP'			=> null,
-	'IsDemo'					=> false,
 	'translation'				=> null);
 
 	function __construct() {

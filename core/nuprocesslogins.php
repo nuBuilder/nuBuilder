@@ -83,7 +83,6 @@ function nuLoginSetupGlobeadmin() {
 	$_SESSION['nubuilder_session_data']['SESSION_TIMESTAMP'] = time();
 
 	$isDemo = isDemoGlobadmin() && $_SESSION['nubuilder_session_data']['IS_DEMO'];
-	$_SESSION['nubuilder_session_data']['IsDemo'] = $isDemo;
 	$_SESSION['nubuilder_session_data']['IS_DEMO'] = $isDemo;
 
 	$_SESSION['nubuilder_session_data']['isGlobeadmin'] = true;
@@ -157,8 +156,6 @@ function nuLoginSetupNOTGlobeadmin() {
 
 	$_SESSION['nubuilder_session_data']['SESSION_ID'] = nuIDTEMP();
 	$_SESSION['nubuilder_session_data']['SESSION_TIMESTAMP'] = time();
-	$_SESSION['nubuilder_session_data']['IsDemo'] = $_SESSION['nubuilder_session_data']['IS_DEMO'];
-
 
 	$checkLoginDetailsSQL = "SELECT * FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id WHERE sus_login_name = ? AND sus_login_password = ? ";
 
