@@ -151,11 +151,12 @@ function nuLoginSetupGlobeadmin() {
 }
 
 function nuLoginSetupNOTGlobeadmin() {
-	
+
 	global $nuConfig2FAUser;
 
 	$_SESSION['nubuilder_session_data']['SESSION_ID'] = nuIDTEMP();
 	$_SESSION['nubuilder_session_data']['SESSION_TIMESTAMP'] = time();
+	$_SESSION['nubuilder_session_data']['IS_DEMO'] = false;
 
 	$checkLoginDetailsSQL = "SELECT * FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id WHERE sus_login_name = ? AND sus_login_password = ? ";
 
