@@ -21,6 +21,7 @@ function nuInitJSOptions() {
 			'nuShowPropertiesOnMiddleClick'		: true,			// Show the Object Properties on middle mouse click
 			'nuAutosizeBrowseColumns'			: true,			// Autosize columns to fit the document width
 			'nuShowBackButton'					: false,		// Show a Back Button
+			'nuMobileView'						: false,		// Optimise view for mobile devices
 			'nuBrowsePaginationInfo'			: 'default',	// Default Format is: '{StartRow} - {EndRow} ' + nuTranslate('of') + ' ' + '{TotalRows}'
 			'nuShowNuBuilderLink'				: true,			// Show the link to nubuilder com
 			'nuShowLoggedInUser'				: false,		// Show the logged in User
@@ -211,6 +212,12 @@ function nuBuildForm(f){
 
 	if(!nuIsMobile()){
 		$('#nuSearchField').focus();
+	} else {
+		
+		if (nuUXOptions["nuMobileView"]) {
+			nuMobileView();
+		}
+		
 	}
 
 	if(window.nuOnLoad){
@@ -4543,7 +4550,8 @@ function nuPortraitScreen(columns){
 
 				$('#'+o[i].id+'code').css({'top' : t , 'left' : lw + 10});
 				$('#'+o[i].id+'button').css({'top' : t , 'left' : lw + w + 15});
-				$('#'+o[i].id+'description').css({'top' : t , 'left' : lw + w + 35});
+				t = t + 25;
+				$('#'+o[i].id+'description').css({'top' : t, 'left' : lw + 35});
 
 			}
 
@@ -4575,6 +4583,17 @@ function nuPortraitScreen(columns){
 	$('html,body').scrollTop(0).scrollLeft(0);
 
 	return scale;
+
+}
+
+function nuMobileView() {
+
+        var f = nuCurrentProperties();
+        if (nuFormType() == 'edit' && (f.form_id == 'nuhome' || f.form_id == 'nuaccess' || f.form_id == 'nuuser')) {
+            nuPortraitScreen();
+			$('#nuActionHolder').hide();
+            $('button').css('text-align', 'left');
+        }
 
 }
 
