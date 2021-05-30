@@ -53,7 +53,8 @@ $nuJSOptions = "
 	nuUXOptions['nuShowBeforeUnloadMessage']		= true;		 	// Show or disable 'Leave site?' message
 	nuUXOptions['nuShowBrowserTabTitle']			= true;		 	// Show the Form Title in the Browser Tab
 	nuUXOptions['nuDebugMode']						= true;		 	// If true, a warning is output in the Developer Console if an element does not exist when using nuGetValue() or nuSetValue()	
-	nuUXOptions['nuBrowserTabTitlePrefix']			= 'nuBuilder'	// Prefix in the Browser Tab
+	nuUXOptions['nuBrowserTabTitlePrefix']			= 'nuBuilder';	// Prefix in the Browser Tab
+	nuUXOptions['nuMobileView']						= true;			// Optimise view for mobile devices
 
 	window.nuAdminButtons = [];
 	nuAdminButtons['nuDebug']					= false;

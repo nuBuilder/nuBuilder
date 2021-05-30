@@ -4588,12 +4588,12 @@ function nuPortraitScreen(columns){
 
 function nuMobileView() {
 
-        var f = nuCurrentProperties();
-        if (nuFormType() == 'edit' && (f.form_id == 'nuhome' || f.form_id == 'nuaccess' || f.form_id == 'nuuser')) {
-            nuPortraitScreen();
+		var f = nuCurrentProperties();
+		if (nuFormType() == 'edit' && (f.form_id == 'nuhome' || f.form_id == 'nuaccess' || f.form_id == 'nuuser')) {
+			nuPortraitScreen();
 			$('#nuActionHolder').hide();
-            $('button').css('text-align', 'left');
-        }
+			$('button').css('text-align', 'left');
+		}
 
 }
 
