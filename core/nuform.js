@@ -1162,7 +1162,7 @@ function nuWORD(w, i, l, p, prop){
 	})
 	.addClass('nuWord')
 	.html(nuTranslate(t))
-	.attr('ondblclick','nuPopup("nuobject", "' + prop.objects[i].object_id + '")');
+	.attr('ondblclick','nuOptionsListAction("nuobject", "' + prop.objects[i].object_id + '")');
 
 	if (r !== null) obj.css('font-weight','normal');
 
@@ -1911,7 +1911,7 @@ function nuLabel(w, i, p, prop){
 		'width'	: Number(lwidth + 12)
 	})
 	.html(l)
-	.attr('ondblclick','nuPopup("nuobject", "' + obj.object_id + '")');
+	.attr('ondblclick','nuOptionsListAction("nuobject", "' + obj.object_id + '")');
 
 	if (l == ' ') lab.innerHTML = '&#8199;';
 
@@ -2010,7 +2010,7 @@ function nuBuildSubformTitle(o, l, w, id, col){
 	.attr('data-nu-subform', id)
 	.attr('onclick', 'nuSortSubform("' + id + '", "' + (col + 1) + '", event)')
 	.attr('data-nu-order', 'asc')
-	.attr('ondblclick', 'nuPopup("nuobject", "' + o.object_id + '")')
+	.attr('ondblclick','nuOptionsListAction("nuobject", "' + o.object_id + '")')
 	.addClass('nuTabHolder')
 	.addClass(o.input=='number'||o.input=='nuNumber'?'number':'text')
 
