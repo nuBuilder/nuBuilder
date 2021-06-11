@@ -2627,9 +2627,11 @@ function nuSelectTab(tab){
 }
 
 function nuSelectTabByTitle(s) {
+
 	var tabs = JSON.parse(JSON.stringify(nuSERVERRESPONSE)).tabs;
-	var l = tabs.findIndex(data => data.title === s);
+	var l = tabs.findIndex(data => data.title.replace(/\|/g, "") === s);
 	if (l > -1) nuSelectTab($('#' + 'nuTab' + l)[0]); 
+
 }
 
 function nuRemoveTabs(t){
