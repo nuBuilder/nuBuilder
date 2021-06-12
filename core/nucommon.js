@@ -705,7 +705,7 @@ function nuBindCtrlEvents(){
 					nuPopup(window.nuFORM.getCurrent().form_id, "-2");
 				} else if(e.keyCode == 70 && window.global_access) {					//-- f		Form Properties
 					nuPopup("nuform", window.nuFORM.getCurrent().form_id);
-				} else if(e.keyCode == 76 && window.global_access) {					//-- L		Change Login
+				} else if(e.keyCode == 76 && window.global_access) {					//-- L		Change Password
 					nuPopup("nupassword", "5b6bb7108a75efc", "");
 				} else if(e.keyCode == 79 && window.global_access) {					//-- O		Object List
 					nuPopup("nuobject", "", window.nuFORM.getCurrent().form_id);

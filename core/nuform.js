@@ -2338,7 +2338,7 @@ function nuGetOptionsList(f, t, p, a, type){
 			}
 
 		}else{
-			list.push([nuTranslate('Change Login'), 'nuPopup("nupassword", "' + u + '", "")','fa-password', 'Ctrl+Shft+L']);
+			list.push([nuTranslate('Change Password'), 'nuPopup("nupassword", "' + u + '", "")','fa-password', 'Ctrl+Shft+L']);
 		}
 
 		list.push([nuTranslate('Refresh'), 'nuGetBreadcrumb()', 'fa-refresh', 'Ctrl+Shft+R']);
@@ -2372,7 +2372,7 @@ function nuGetOptionsList(f, t, p, a, type){
 		}else{
 
 			if(type != 'subform'){
-				list.push([nuTranslate('Change Login'), 'nuPopup("nupassword", "' + u + '", "")', 'fa-lock', 'Ctrl+Shft+L']);
+				list.push([nuTranslate('Change Password'), 'nuPopup("nupassword", "' + u + '", "")', 'fa-lock', 'Ctrl+Shft+L']);
 			}
 
 		}
