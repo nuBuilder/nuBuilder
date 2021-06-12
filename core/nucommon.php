@@ -1521,6 +1521,10 @@ function nuGetFonts(){
 
 }
 
+function nuIsValidEmail($email){ 
+	return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+}
+
 function nuSendEmail($to, $from, $fromname, $content, $subject, $filelist, $html = false, $cc = "", $bcc = "", $reply_to_addresses = array()) {
 
 	// nuSendEmail function is being retired and replaced with nuEmail
