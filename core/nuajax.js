@@ -103,7 +103,15 @@ function nuForm(f, r, filter, search, n, like){
 
 		if(nuDisplayError(fm)){
 
+			nuCursor('default');
+
 			parent.$('#nuModal').remove();
+
+			if (parent.$('#nuDragDialog').css('visibility') == 'hidden') {
+				parent.nuDisplayError(fm);
+				parent.$('#nuDragDialog').remove();
+			}
+
 			nuFORM.breadcrumbs.pop();
 			
 			if(fm.log_again == 1){location.reload();}
