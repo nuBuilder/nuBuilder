@@ -1486,13 +1486,14 @@ function nuFormDimensions($f){
 
 	}
 
-	$h	  = max($h, $r->sob_all_top + $r->sob_all_height);
-	$gh	= max($r->sob_all_height, 25, $gh);
+	$oh		= $r->sob_select_2 == '1' ? $r->sob_all_height + 20 : $r->sob_all_height;
+	$h		= max($h, $r->sob_all_top + $oh);
+	$gh		= max($oh, 25, $gh);
 
 	}
 
-	$bh		 = $bt + ($rs * $rh) + $bb;
-	$bw		 = nuGetBrowseWidth($f);   
+	$bh		= $bt + ($rs * $rh) + $bb;
+	$bw		= nuGetBrowseWidth($f);   
 
 	$grid	= Array('height'=>$gh, 'width'=> $gw);
 	$browse	= Array('height'=>$bh, 'width'=> $bw);
