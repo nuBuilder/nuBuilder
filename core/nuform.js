@@ -1857,6 +1857,36 @@ function nuAddSubformRow(t, e){
 		nuBuildLookup(this,"");
 	})
 
+
+	let objSelect = $('#' + o.form + nuPad3(o.rows) + 'nuRECORD > .select2-hidden-accessible');
+
+	if (objSelect.length > 0) {
+		objSelect.each(function(){
+
+			var select2Id = $( this ).attr("data-select2-id") + 'select2';
+
+			if(select2Id) {
+
+				var objSelect2 = $('#' + select2Id);
+				objSelect2.remove();
+
+					$(this).select2({
+						dropdownParent: $('#nuRECORD'),
+						theme: "default " + select2Id
+					});
+
+					$('.' + select2Id).css({
+						position: 'absolute',
+						width: objSelect2.cssNumber('width'),
+						top: objSelect2.cssNumber('top'),
+						left: objSelect2.cssNumber('left')
+					}).attr('id', select2Id);
+
+			}
+
+		});
+	}
+
 	eval(after);
 
 }
