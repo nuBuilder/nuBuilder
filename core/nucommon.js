@@ -2572,3 +2572,37 @@ function nuSetDateValue(i, d) {
 function nuArrayIsUnique(arr) {
 	return arr.length === new Set(arr).size;
 }
+
+function nuSetSaveButtonPosition(t, l, h, w, fs) {
+
+	var sb = $('#nuSaveButton');
+	sb.appendTo('div#nuRECORD');
+
+	if (typeof w == 'undefined' || w == 0) {
+		w = sb.cssNumber("width");
+	}
+	if (typeof h == 'undefined' || h == 0) {
+		h = sb.cssNumber("height");
+	}
+	sb.css({
+		"top": t + "px",
+		"left": l + "px",
+		"width": w + "px",
+		"position": "absolute",
+		"height": h + "px"
+	});
+
+	sb.attr('data-nu-tab', '0');
+	sb.attr('data-nu-form', '');
+
+	if (typeof fs !== 'undefined') {
+		sb[0].style.fontSize = fs + "px";
+	}
+
+	if (window.nuFORM.getProperty('tab_start')[0].tabNumber !== '0') {
+		sb.css('display', 'none');
+	}
+
+	return sb;
+
+}
