@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 12, 2021 at 07:13 AM
+-- Generation Time: Jun 23, 2021 at 07:39 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 8.0.0
 
@@ -547,8 +547,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.06.11.00'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.06.12.00');
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.06.23.00'),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.06.23.00');
 
 -- --------------------------------------------------------
 
@@ -869,7 +869,7 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu5bad6cb3604269d', 'nufastreportobjects', 'zzzzsys_debug', 'input', 'title', 'Title', 'nu5bad6cb3734c18f', 10, 300, 300, 196, 20, '1', 'left', '0', '0', '0', '', '', '', '', '', NULL, NULL, '', '', '0', '0', '', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', 0, '', 'text', '', NULL, '', '', '', '', '', '', ''),
 ('nu5bad6cb3608c14b', 'nufastreportobjects', 'zzzzsys_debug', 'input', 'sum', 'Sum', 'nu5bad6cb3734c18f', 30, 339, 295, 16, 22, '1', 'center', '0', '0', '0', '', '', '', '', '', NULL, NULL, '', '', '0', '0', 'no|No|yes|Yes', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', 0, '', 'checkbox', '', NULL, '', '', '', '', '', '', ''),
 ('nu5bad6cb3618939f', 'nufastreportobjects', 'zzzzsys_debug', 'input', 'field', 'Field Name', 'nu5bad6cb3734c18f', 20, 210, 289, 205, 20, '1', 'left', '0', '0', '0', '', '', '', '', '', NULL, NULL, '', '', '0', '0', '', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', 0, '', 'text', '', NULL, '', '', '', '', '', '', ''),
-('nu5bad6cb361c6536', 'nusamplesubformform', '', 'input', 'todo', 'To Do List', 'nu5bad6cb37405d73', 50, 50, 150, 242, 22, '1', 'left', '0', '0', '0', '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 'text', '', NULL, '', '', '', '', '', '', ''),
+('nu5bad6cb361c6536', 'nusamplesubformform', '', 'input', 'todo', 'To Do List', 'nu5bad6cb37405d73', 50, 50, 150, 242, 20, '1', 'left', '0', '0', '0', '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 'text', '', NULL, '', '', '', '', '', '', ''),
 ('nu59e446589a1fc46', 'nusample', '', 'html', 'htmlsample', '|HTML', 'nu5bad6cb370eb06a', 120, 224, 261, 176, 31, '1', 'right', '0', '0', NULL, '', '', '', '', '', NULL, NULL, '', 'SELECT COUNT(*) FROM zzzzsys_debug', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, 'N|$ 1,000.00', '', '', NULL, '<div id=\'adiv\' style=\'text-align:center;width:117px;border:1px solid red;\' class=\'nuBreadcrumb\'>\n    Hello World\n</div>', '', '', '', '', '', ''),
 ('nu5bad6cb362370eb', 'nuhome', '', 'run', 'system_update', 'Update', 'nu5fd750667019155', 220, 99, 53, 195, 30, '1', 'center', '0', '0', '0', '', '', 'nuupdate', '', 'b', '0', 'F', '-1', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 'button', '', NULL, '', '', '', '', '', '', ''),
 ('nu5bad6cb3625fd05', 'nuphp', 'zzzzsys_php', 'html', 'icon', ' ', 'nu5bad6cb36b27343', 90, 4, 369, 40, 40, '1', 'left', '1', '0', '1', '', '', '', '', '', NULL, NULL, '', '', '0', '0', '0|No|1|Yes', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 'button', '', NULL, '<div></div>', '', '', '', '', '', ''),
