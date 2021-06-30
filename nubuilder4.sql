@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 23, 2021 at 07:39 PM
+-- Generation Time: Jun 30, 2021 at 03:57 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 8.0.0
 
@@ -548,7 +548,7 @@ CREATE TABLE `zzzzsys_info` (
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
 ('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.06.23.00'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.06.23.00');
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.06.30.00');
 
 -- --------------------------------------------------------
 
@@ -1137,7 +1137,7 @@ INSERT INTO `zzzzsys_php` (`zzzzsys_php_id`, `sph_code`, `sph_description`, `sph
 ('nutranslate_BS', 'nutranslate_BS', 'System PHP', 'nubuilder', 'if (\'#nuDevMode#\' != 1 && substr(\'#RECORD_ID#\', 0, 2) === \'nu\') {\n   nuDisplayError(\"nuBuilder\'s translation strings cannot be modified\");\n}', NULL, NULL, '1', '0', NULL),
 ('nuphp_AS', 'nuphp_AS', 'System PHP', 'nubuilder', '$justphp = nuObjKey(nuHash(),\'filter\') == \'justphp\';\n\nif (\'#nuDevMode#\' != 1 && substr(\'#RECORD_ID#\', 0, 2) === \'nu\' ) {\n   if ($justphp) {\n        nuDisplayError(nuTranslate(\'<h2>\'.nuTranslate(\'Information\').\'</h2><br>Changes in system forms are overwritten with an update\'));  \n   } \n}', NULL, NULL, '1', '0', NULL),
 ('nusession_BB', 'nusession_BB', 'System PHP', 'nubuilder', 'if($_SESSION[\'nubuilder_session_data\'][\'IS_DEMO\']){\n	nuDisplayError(nuTranslate(\'Not available in the Demo\').\"..\");\n}', NULL, NULL, '1', '0', NULL),
-('nu5bad6cb32d22215_AB', 'nu5bad6cb32d22215_AB', 'System PHP', 'nubuilder', '$lu = nuLookupRecord();\n\nnuSetFormValue(\'sob_run_type\',  substr($lu->run, 0, 1));', NULL, NULL, '1', '0', NULL),
+('nu5bad6cb32d22215_AB', 'nu5bad6cb32d22215_AB', 'System PHP', 'nubuilder', '$lu = nuLookupRecord();\n$type = empty($lu->run) ? \'\' : substr($lu->run, 0, 1);\nnuSetFormValue(\'sob_run_type\',  $type);', NULL, NULL, '1', '0', NULL),
 ('nu6068bee1b6c63be', 'RUNADDDBCOLUMN', 'Add a new database column', 'nubuilder', 'if (nuHash() [\'GLOBAL_ACCESS\'] == \'0\') return;\n\n$sql = \'ALTER TABLE `#sob_all_table#` ADD \' . \'#sql_query#\';\n$after = \'#sql_after_column#\';\nif ($after != \'\') {\n    $sql = $sql . \" AFTER \" . $after;\n}\n\nif (preg_match(\'[DELETE |DROP |INSERT |;]\', strtoupper($sql))) {\n    $r = - 2;\n}\nelse {\n    $r = nuRunQuery($sql, array() , true);\n}\n\nif ($r == 0) {\n    $js = \"nuMessage([nuTranslate(\'The column has been created successfully\')]); nuRefreshSelectObject(\'sql_after_column\');\";\n}\nelse if ($r == - 1) {\n    $js = \"nuMessage([nuTranslate(\'An error occured while creating the column\'), nuTranslate(\'Check nuDebug Results for details\')]);\";\n\n}\nelse if ($r == - 2) {\n    $js = \"nuMessage([nuTranslate(\'An error occured while creating the column\'), nuTranslate(\'The query contains invalid keywords\')]);\";\n\n}\n\nnuJavascriptCallback($js);\n', 'hide', '', '1', '0', ''),
 ('nutranslate_BD', 'nutranslate_BD', 'System PHP', 'nubuilder', 'if (\'#nuDevMode#\' != 1 && substr(\'#RECORD_ID#\', 0, 2) === \'nu\') {\n   nuDisplayError(\"nuBuilder\'s translation strings cannot be modified\");\n}', NULL, NULL, '1', '0', NULL),
 ('nutestemail', 'nutestemail', 'Send a test email', 'nubuilder', '$to = \'#ema_to#\';\n$fromAddress = \'#set_smtp_from_address#\';\n$fromName = \'#set_smtp_from_name#\';\n$body = \'#ema_body#\';\n$subject = \'#ema_subject#\';\n$bcc = \'#ema_bcc#\';\n$cc = \'#ema_cc#\';\n\n$recipient = ($to == \'\' && $bcc  ==\'\' && $cc == \'\') ? false : true;\n\nif (! $recipient || $fromAddress == \'\' || $fromName = \'\' || $body == \'\' || $subject == \'\') {\n    showMessage(nuTranslate(\'Error\'), nuTranslate(\'Required fields cannot be blank.\'));\n    return;\n}\n\n$result = nuSendEmail($to, $fromAddress, $fromName, $body, $subject, array(), true, $cc, $bcc);\n\nif ($result == \'1\') {\n    showMessage(nuTranslate(\'Result\'), $result[1]);\n} else {\n    showMessage(nuTranslate(\'Result\'), $result[1].\'<br>\'.$result[2]);  \n}    \n\nfunction showMessage($title, $msg) {\n    nuJavascriptCallback(\"nuMessage([\'<h2>\".$title.\"</h2><br>\" . $msg . \"\']);\");\n}', 'hide', '', '1', '0', ''),
