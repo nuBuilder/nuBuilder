@@ -2542,7 +2542,7 @@ function nuSetValue(i, v, method) {
 			case 'text':
 				obj.text(v);
 			default:
-				obj.val(v);
+				obj.val(v).change();
 		}
 	}
 
