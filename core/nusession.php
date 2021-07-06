@@ -9,34 +9,35 @@ function nuRunLoginProcedure($procedure) {
 	
 	$p		= nuProcedure($procedure);
 	$error	= '';
-	if($p != ''){		
+	if($p != ''){
 		eval($p);
 		if ($error != '') nuDie($error);
 	}
-}	
+}
 
 if ( nuCheckIsLoginRequest() ) {
 
+	$result = "1";
 	if ( nuCheckGlobeadminLoginRequest() ) {
-
-		// Check for Globeadmin login
 		if (nuLoginSetupGlobeadmin()) nuRunLoginProcedure('nuStartup');
+	}	
+	else {
+		$result = nuCheckUserLoginRequest();	
+		if ($result == "1") {
+				if (nuLoginSetupNOTGlobeadmin()) nuRunLoginProcedure('nuStartup');	
+		}
+	}
 
-	} else if ( nuCheckUserLoginRequest() ) {
-
-		// Check for User login
-		if (nuLoginSetupNOTGlobeadmin()) nuRunLoginProcedure('nuStartup');		
-
-	} else {
-
-		// Failed login		
+	if ($result != "1") {
+		// Failed login
 		nuRunLoginProcedure('nuInvalidLogin');
-		nuDie('Invalid login.');
+
+		if ($result == "0") nuDie('Invalid login.');
+		if ($result == "-1") nuDie('This account is disabled.');
 	}
 
 } else {
 
-	// die if $_SESSION['nubuilder_session_data']['SESSION_ID'] AND $_SESSION['nubuilder_session_data'] does not exists
 	nuCheckExistingSession();
 } 
 

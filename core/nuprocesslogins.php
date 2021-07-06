@@ -39,18 +39,25 @@ function nuCheckGlobeadminLoginRequest() {
 //Check for Standlone User login
 function nuCheckUserLoginRequest() {
 
-	$sql = "SELECT * FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id WHERE sus_login_name = ? AND sus_login_password = ? AND (sus_expires_on > CURDATE() OR sus_expires_on IS null )";
+	$sql = "
+				SELECT IF (sus_expires_on < CURDATE() AND NOT sus_expires_on IS NULL, 1, 0) as expired 
+				FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id 
+				WHERE sus_login_name = ? AND sus_login_password = ?
+			";
+
 	$rs = nuRunQuery($sql, array(
 		$_POST['nuSTATE']['username'],
 		md5($_POST['nuSTATE']['password']) 
 	));
 
-	if (db_num_rows($rs) > 0) {
+	if (db_num_rows($rs) == 1) {
 		
 		$r = db_fetch_object($rs);
-		return true;
+
+		return $r->expired == "1" ? "-1" : "1";
 	}
-	return false;
+
+	return "0";
 }
 
 function nuCheckIsLoginRequest() {
