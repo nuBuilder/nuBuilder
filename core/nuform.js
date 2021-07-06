@@ -1350,16 +1350,16 @@ function nuSELECT(w, i, l, p, prop){
 
 	$('#' + id).append('<option value=""></option>');
 
-	if(prop.objects[i].options != null){
+	if(w.objects[i].options != null){
 
-		for(var n = 0 ; n < prop.objects[i].options.length ; n++){
+		for(var n = 0 ; n < w.objects[i].options.length ; n++){
 
-			var opt	= String(prop.objects[i].options[n][1]).replaceAll(' ' ,'&#160;')
+			var opt	= String(w.objects[i].options[n][1]).replaceAll(' ' ,'&#160;')
 
-			if(a.indexOf(prop.objects[i].options[n][0]) == -1){
-				$('#' + id).append('<option value="'+prop.objects[i].options[n][0]+'">' + opt + '</option>');
+			if(a.indexOf(w.objects[i].options[n][0]) == -1){
+				$('#' + id).append('<option value="'+w.objects[i].options[n][0]+'">' + opt + '</option>');
 			}else{
-				$('#' + id).append('<option selected="selected "value="'+prop.objects[i].options[n][0]+'">' + opt + '</option>');
+				$('#' + id).append('<option selected="selected "value="'+w.objects[i].options[n][0]+'">' + opt + '</option>');
 			}
 
 		}
