@@ -2135,25 +2135,33 @@ function nuSetToolTip(i, message, labelHover) {
 }
 
 function nuAddDatalist(i, a) {
-	
+
 	if (!$.isArray(a)) {
 		console.error('Argument #2 is not an array in nuAddDatalist()');
 		return;
 	}
-	
-	var datalist = document.createElement('datalist');
-	datalist.id = "datalist" + i;
-	document.body.appendChild(datalist);
-	a.forEach(function (data) {
-	
-		var option = document.createElement('option');		
 
+	var id = i + "_datalist";
+	var datalist = document.getElementById(id);
+
+	if (!datalist) {
+		var datalist = document.createElement('datalist');
+		datalist.id =  id;
+		document.body.appendChild(datalist);
+	} else {
+		datalist.innerHTML = '';
+	}
+
+	a.forEach(function (data) {
+
+		var option = document.createElement('option');
 		option.value =	$.isArray(data) ? data[0]: data;
 		if (data.length == 2) option.text =	$.isArray(data) ? data[1]: data;
 		datalist.appendChild(option);
 	});
+
 	$('#' + i).attr('list', datalist.id).attr('autocomplete', 'off');
-	
+
 }
 
 function nuLabelOnTop(include, exclude, offsetTop = -18, offsetLeft = 0) {
