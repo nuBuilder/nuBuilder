@@ -1478,7 +1478,7 @@ function nuUpdateTableIds($table){
 
 function nuRunSystemUpdate(){
 
-	if($_SESSION['nubuilder_session_data']['IsDemo']){		
+	if($_SESSION['nubuilder_session_data']['IS_DEMO']){		
 		nuDisplayError(nuTranslate('Not available in the Demo')."..");
 		return;	
 	}
