@@ -679,7 +679,7 @@
 	background-color:#ebebeb 
 }
  .nuCalculatorButton {
-	border:1px solid black;
+	border:1px solid #a0a0a0;
 	text-align:center;
 	width:30px;
 	height:30px;
@@ -694,7 +694,7 @@
 	color:red
 }
  .nuCalculatorCurrency {
-	border:1px solid black;
+	border:1px solid #a0a0a0;
 	text-align:center;
 	width:30px;
 	height:30px;
