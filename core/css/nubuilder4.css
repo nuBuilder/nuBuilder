@@ -178,8 +178,10 @@
 	width:210px;
 	height:213px;
 	color:#000000;
-	border-style:none
+	border-style:none;
+	user-select: none
 }
+
  #nuCalendar {
 	box-shadow:5px 5px 5px 0 rgba(150,147,150,1)
 }
@@ -1073,7 +1075,8 @@
 	padding:10px;
 	font-weight:900;
 	position:absolute;
-	height:40px
+	height:40px;
+	width: max-content
 }
  .nuContentBox .content {
 	height:inherit;
