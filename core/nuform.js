@@ -1031,7 +1031,7 @@ function nuCurrentRow(){
 
 function nuSetAccess(i, r){
 
-	if(r == 2){
+	if(r == 2 || (r == 3 && !window.global_access)){		// hidden
 
 		var o	= [i, i + 'code', i + 'button', i + 'description', 'label_' + i];
 
@@ -1045,9 +1045,11 @@ function nuSetAccess(i, r){
 		
 	}
 
-	if(r == 1){
+	if(r == 1){												// readonly
 		nuReadonly(i);
 	}
+	
+	$('#' + i).attr('data-nu-access', r);
 
 }
 

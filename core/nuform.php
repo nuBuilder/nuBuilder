@@ -42,14 +42,25 @@ function nuBeforeEdit($FID, $RID){
 		/* 
 		To-Do: Check if not Launch Form
 		if ($_POST['nuHash']['GLOBAL_ACCESS'] == '1') {
-			$dm = nuGetDataMode($FID);			
+			$dm = nuGetFormPermission($FID,'slf_data_mode');
 			$recordID	= $_POST['nuHash']['RECORD_ID'];			
 			if ($dm == "2" && RECORD_ID != '-1') {
 					nuDisplayError('Existing Records cannot be viewed.');
-					return:
+					return;
 			}
 		}
 		*/
+
+
+		if ($_POST['nuHash']['GLOBAL_ACCESS'] != '1') {
+			$ft = nuGetFormPermission($FID,'slf_form_type');	
+			$recordID	= $_POST['nuHash']['RECORD_ID'];				
+			if (($recordID == "" && $ft == '1') || ($recordID !== "" && $ft == '0')) {
+					nuDisplayError(nuTranslate('Access Denied'));
+					return;
+			}
+		}
+
 		
 		if(( nuObjKey($cts,$r->sfo_table) != NULL && $_POST['nuSTATE']['record_id'] != '' )){
 				
@@ -1253,9 +1264,9 @@ function nuGatherFormAndSessionData($home){
 
 }
 
-function nuGetDataMode($f) {
+function nuGetFormPermission($f, $field) {
 
-	$s = "SELECT slf_data_mode FROM zzzzsys_access_form WHERE slf_zzzzsys_access_id = ? AND slf_zzzzsys_form_id = ?";	
+	$s = "SELECT $field FROM zzzzsys_access_form WHERE slf_zzzzsys_access_id = ? AND slf_zzzzsys_form_id = ?";	
 	$t	= nuRunQuery($s, array($_POST['nuHash']['USER_GROUP_ID'], $f));	
 
 	if (db_num_rows($t) == 1) {
