@@ -19,12 +19,16 @@ if ( nuCheckIsLoginRequest() ) {
 
 	$result = "1";
 	if ( nuCheckGlobeadminLoginRequest() ) {
-		if (nuLoginSetupGlobeadmin()) nuRunLoginProcedure('nuStartup');
-	}	
+		if (nuLoginSetupGlobeadmin($_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'],'','')) nuRunLoginProcedure('nuStartup');
+	}
 	else {
-		$result = nuCheckUserLoginRequest();	
-		if ($result == "1") {
-				if (nuLoginSetupNOTGlobeadmin()) nuRunLoginProcedure('nuStartup');	
+		$result = nuCheckUserLoginRequest();
+		if ($result['result'] == "1" ) {
+				if (strpos($_SESSION['nubuilder_session_data']['GLOBEADMIN_USERS'], $result['user_id'] ) !== false) {
+					if (nuLoginSetupGlobeadmin($result['login_name'],$result['user_id'], $result['user_name'])) nuRunLoginProcedure('nuStartup');
+				} else {
+					if (nuLoginSetupNOTGlobeadmin()) nuRunLoginProcedure('nuStartup');
+				}
 		}
 	}
 

@@ -41,7 +41,7 @@ class nubuilder_session_data {
 
 		return $this->nubuilder;
 	}
-	function construct_standalone($nuConfigDBDriver,$nuConfigDBPort,$nuConfigDBHost,$nuConfigDBName,$nuConfigDBUser,$nuConfigDBPassword,$nuConfigDBGlobeadminUsername,$nuConfigDBGlobeadminPassword, $nuConfigDemoDBGlobeadminUsername, $nuConfigDemoDBGlobeadminPassword, $nuConfigDemoSavingAllowedIds, $nuConfig2FAAdmin, $nuConfig2FAUser, $nuConfig2FAFormID, $nuConfig2FATokenValidityTime, $nuConfig2FAShowRememberMe, $nuConfigIsDemo = false) {
+	function construct_standalone($nuConfigDBDriver,$nuConfigDBPort,$nuConfigDBHost,$nuConfigDBName,$nuConfigDBUser,$nuConfigDBPassword,$nuConfigDBGlobeadminUsername,$nuConfigDBGlobeadminPassword, $nuConfigDBGlobeadminUsers, $nuConfigDemoDBGlobeadminUsername, $nuConfigDemoDBGlobeadminPassword, $nuConfigDemoSavingAllowedIds, $nuConfig2FAAdmin, $nuConfig2FAUser, $nuConfig2FAFormID, $nuConfig2FATokenValidityTime, $nuConfig2FAShowRememberMe, $nuConfigIsDemo = false) {
 
 		$this->nubuilder['DB_DRIVER']				= $nuConfigDBDriver;
 		$this->nubuilder['DB_PORT']					= $nuConfigDBPort;
@@ -53,6 +53,7 @@ class nubuilder_session_data {
 		$this->nubuilder['DB_CHARSET']				= 'utf8';
 		$this->nubuilder['GLOBEADMIN_NAME']			= $nuConfigDBGlobeadminUsername;
 		$this->nubuilder['GLOBEADMIN_PASS']			= $nuConfigDBGlobeadminPassword;
+		$this->nubuilder['GLOBEADMIN_USERS']		= $nuConfigDBGlobeadminUsers;
 
 		$this->nubuilder['GLOBEADMIN_DEMO_NAME']	= $nuConfigDemoDBGlobeadminUsername;
 		$this->nubuilder['GLOBEADMIN_DEMO_PASS']	= $nuConfigDemoDBGlobeadminPassword;

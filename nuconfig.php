@@ -12,6 +12,8 @@
 	$nuConfigDBGlobeadminUsername	 	= "globeadmin";				//-- globeadmin username. You can choose any username you like.
 	$nuConfigDBGlobeadminPassword		= "nu";						//-- globeadmin password. Please choose a stronger password!
 
+	$nuConfigDBGlobeadminUsers			= "";						//-- User Ids with "globadmin" permission, separated by comma
+
 // Settings:
 	$nuConfigTitle						= "nuBuilder 4";			//-- nuBuilder Title
 	$nuConfigTimeOut					= 1440;						//-- Session Timeout. Default: 1440 (24h)

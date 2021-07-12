@@ -22,7 +22,6 @@ function nuCheckGlobeadminLoginRequest() {
 		return true;
 	}
 
-	
 	$isDemo = isDemoGlobadmin();
 	if ($isDemo && !isset($_SESSION['nubuilder_session_data']['GLOBEADMIN_DEMO_NAME'])) {
 		return false;
@@ -40,24 +39,26 @@ function nuCheckGlobeadminLoginRequest() {
 function nuCheckUserLoginRequest() {
 
 	$sql = "
-				SELECT IF (sus_expires_on < CURDATE() AND NOT sus_expires_on IS NULL, 1, 0) as expired 
+				SELECT IF (sus_expires_on < CURDATE() AND NOT sus_expires_on IS NULL, 1, 0) AS expired, 
+				zzzzsys_user_id AS user_id, sus_login_name AS login_name, sus_name AS user_name
 				FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id 
 				WHERE sus_login_name = ? AND sus_login_password = ?
 			";
 
 	$rs = nuRunQuery($sql, array(
 		$_POST['nuSTATE']['username'],
-		md5($_POST['nuSTATE']['password']) 
+		md5($_POST['nuSTATE']['password'])
 	));
 
 	if (db_num_rows($rs) == 1) {
-		
 		$r = db_fetch_object($rs);
-
-		return $r->expired == "1" ? "-1" : "1";
+		$result = $r->expired == "1" ? "-1" : "1";
+	} else {
+		$result = "0";
 	}
 
-	return "0";
+	return array('result' => $result, 'user_id' => $r->user_id, 'login_name' => $r->login_name, 'user_name' => $r->user_name);
+
 }
 
 function nuCheckIsLoginRequest() {
@@ -82,7 +83,7 @@ function nuGetIPAddress() {
 	return $_SERVER['REMOTE_ADDR']?:($_SERVER['HTTP_X_FORWARDED_FOR']?:$_SERVER['HTTP_CLIENT_IP']);
 }	
 
-function nuLoginSetupGlobeadmin() {
+function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 
 	global $nuConfig2FAAdmin;	
 	
@@ -98,9 +99,9 @@ function nuLoginSetupGlobeadmin() {
 
 	$sessionIds = new stdClass;
 	$sessionIds->zzzzsys_access_id = '';
-	$sessionIds->zzzzsys_user_id = $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'];
-	$sessionIds->sus_login_name = $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'];
-	$sessionIds->sus_name = '';
+	$sessionIds->zzzzsys_user_id = $userId == '' ? $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'] : $userId;
+	$sessionIds->sus_login_name = $loginName;
+	$sessionIds->sus_name =  $userId == '' ? '' : $userName;
 
 	if ($nuConfig2FAAdmin) {
 		if (nu2FALocalTokenOK($sessionIds->sus_login_name)) {

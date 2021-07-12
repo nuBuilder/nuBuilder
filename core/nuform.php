@@ -1442,7 +1442,8 @@ function nuRunDescription($P){
 
 function nuFormAccess($s, $a){
 
-	if( $_POST['session']->zzzzsys_user_id == $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'] ){
+	if($_POST['nuHash']['GLOBAL_ACCESS'] == '1'){
+	// if( $_POST['session']->zzzzsys_user_id == $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'] ){
 		return array('1', '1', '1', '1', '1');
 	}
 
