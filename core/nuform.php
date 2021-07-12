@@ -38,12 +38,13 @@ function nuBeforeEdit($FID, $RID){
 		$logfield					= $r->sfo_table . '_nulog';
 		$cts						= nuGetJSONData('clientTableSchema');
 		$user						= $_POST['nuHash']['USER_ID'];
+		$recordID					= $_POST['nuSTATE']['record_id'];
+		$globalAccess				= $_POST['nuHash']['GLOBAL_ACCESS'] == '1';
 	
 		/* 
 		To-Do: Check if not Launch Form
-		if ($_POST['nuHash']['GLOBAL_ACCESS'] == '1') {
+		if ($globalAccess) {
 			$dm = nuGetFormPermission($FID,'slf_data_mode');
-			$recordID	= $_POST['nuHash']['RECORD_ID'];			
 			if ($dm == "2" && RECORD_ID != '-1') {
 					nuDisplayError('Existing Records cannot be viewed.');
 					return;
@@ -52,9 +53,8 @@ function nuBeforeEdit($FID, $RID){
 		*/
 
 
-		if ($_POST['nuHash']['GLOBAL_ACCESS'] != '1') {
+		if (! $globalAccess) {
 			$ft = nuGetFormPermission($FID,'slf_form_type');	
-			$recordID	= $_POST['nuHash']['RECORD_ID'];				
 			if (($recordID == "" && $ft == '1') || ($recordID !== "" && $ft == '0')) {
 					nuDisplayError(nuTranslate('Access Denied'));
 					return;
@@ -62,7 +62,7 @@ function nuBeforeEdit($FID, $RID){
 		}
 
 		
-		if(( nuObjKey($cts,$r->sfo_table) != NULL && $_POST['nuSTATE']['record_id'] != '' )){
+		if(( nuObjKey($cts,$r->sfo_table) != NULL && $recordID != '' )){
 				
 			if(in_array($logfield, $cts[$r->sfo_table]['names'])){								//-- valid log field name
 
@@ -72,13 +72,14 @@ function nuBeforeEdit($FID, $RID){
 
 				$jd = '';
 				if (db_num_rows($T) == 1) {
-					$J			= db_fetch_row($T);					
-					$J			= $J[0];					
+					$J			= db_fetch_row($T);
+					$J			= $J[0];
+					$_POST['nuLog'] = $J;
 					$jd	= json_decode($J);
 				}
 
 				if(gettype($jd) == 'object'){
-					$jd->viewed	= Array('user' => $user, 'time' => time());								
+					$jd->viewed	= Array('user' => $user, 'time' => time());
 				}else{
 
 					$jd			= new stdClass;
@@ -91,6 +92,8 @@ function nuBeforeEdit($FID, $RID){
 				$S				= "UPDATE `$r->sfo_table` SET $logfield = '$je' WHERE `$r->sfo_primary_key` = ? ";
 				$T				= nuRunQuery($S, array($RID));
 
+			} else {
+				$_POST['nuLog'] = json_encode([]);
 			}
 
 		}
