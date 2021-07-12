@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 10, 2021 at 05:16 PM
+-- Generation Time: Jul 12, 2021 at 07:56 AM
 -- Server version: 10.4.19-MariaDB
 -- PHP Version: 8.0.7
 
@@ -117,7 +117,7 @@ INSERT INTO `zzzzsys_browse` (`zzzzsys_browse_id`, `sbr_zzzzsys_form_id`, `sbr_t
 ('nu5bad6cb375e5588', 'nunonsystemform', 'Type', 'sfo_type', 'l', '', 10, 100),
 ('nu5bad6cb376017c8', 'nuuser', 'Name', 'sus_name', 'l', '', 10, 150),
 ('nu5bad6cb3760ae9a', 'nuuser', 'Email', 'sus_email', 'l', '', 30, 225),
-('nu5bad6cb376141d0', 'nuuser', 'Access Level', 'sal_description', 'l', '', 40, 210),
+('nu5bad6cb376141d0', 'nuuser', 'Access Level', 'CONCAT(sal_code,\' : \',sal_description) ', 'l', '', 40, 260),
 ('nu5bad6cb3761e561', 'nuphp', 'Code', 'sph_code', 'l', '', 10, 245),
 ('nu5bad6cb37627eb1', 'nuphp', 'Description', 'sph_description', 'l', '', 20, 585),
 ('nu5bad6cb37631164', 'nubuildreport', 'Code', 'sre_code', 'l', '', 10, 150),
@@ -179,13 +179,13 @@ INSERT INTO `zzzzsys_browse` (`zzzzsys_browse_id`, `sbr_zzzzsys_form_id`, `sbr_t
 ('nu5bad6cb374ae1fc', 'nutablookup', 'Form', 'sfo_description', 'l', '', 20, 150),
 ('nu5bad6cb374b7c3b', 'nutablookup', 'Code', 'sfo_code', 'l', '', 30, 160),
 ('nu5bad6cb374c102f', 'nutablookup', 'Type', 'sfo_type', 'l', '', 40, 100),
-('nu5bad6cb3747d41c', 'nuuser', 'Username', 'sus_login_name', 'l', '', 20, 140),
+('nu5bad6cb3747d41c', 'nuuser', 'Username', 'sus_login_name', 'l', '', 20, 120),
 ('nu5bad6cb3746cc1b', 'nuuser', 'Language', 'sus_language', 'l', '', 50, 95),
 ('nu5fd29810a628f4f', 'nunotes', 'Notes', 'not_title', 'l', '', 20, 720),
 ('nu5fd29810a62a421', 'nunotes', 'Category', 'noc_name', 'l', '', 10, 150),
 ('nu5fd3b22fa460a12', 'nunotescategroy', 'Category', 'noc_name', 'l', '', 10, 310),
 ('nu5fd3bb4dc0d2841', 'nunotes', 'Updated on', 'not_updated_on', 'l', '', 30, 145),
-('nu5fd5b7fc8c163a3', 'nuuser', 'Code', 'sal_code', 'l', '', 60, 155),
+('nu5fd5b7fc8c163a3', 'nuuser', 'Code', 'sus_code', 'l', '', 60, 55),
 ('nu5fd5b7fc8de0c57', 'nuuser', 'Position', 'sus_position', 'l', '', 70, 125),
 ('nu5fd5b7fc8fad224', 'nuuser', 'Team', 'sus_team', 'l', '', 90, 100),
 ('nu5fd8d2459834722', 'nutranslate', 'Added by User', 'IF(zzzzsys_translate_id like \'nu%\',\'\',\'✔\')', 'l', '', 40, 140),
@@ -564,8 +564,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.07.10.01'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.07.10.03');
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.07.10.02'),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.07.12.00');
 
 -- --------------------------------------------------------
 
