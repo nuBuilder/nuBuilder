@@ -142,7 +142,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 
 	if ($R == '' && $f->form_type == 'launch') $R = '-1';
 	$f->record_id	= $R;
-	
+
 	if(!isset($f->table) || $f->table == '' || $R == ''){
 		$A			= array();
 	}else{
@@ -515,6 +515,7 @@ function nuGetEditForm($F, $R){
 	$f->table					= nuReplaceHashVariables($r->sfo_table);
 	$f->primary_key				= $r->sfo_primary_key;
 	$f->redirect_form_id		= $r->sfo_browse_redirect_form_id	== '' ? $r->zzzzsys_form_id : $r->sfo_browse_redirect_form_id;
+	$f->redirect_other_form_id	= $r->sfo_browse_redirect_form_id	== '' ? '' : $r->sfo_browse_redirect_form_id;	
 	$f->order					= $SQL->orderBy;
 	$f->where					= $SQL->where;
 	$f->from					= $SQL->from;
@@ -963,7 +964,6 @@ function nuBrowseColumns($f){
 	
 }
 
-
 function nuBrowseRows($f){
 
 	if(trim($f->record_id) != ''){return array();}
@@ -994,10 +994,13 @@ function nuBrowseRows($f){
 
 	$S				= new nuSqlString(nuReplaceHashVariables($r->sfo_browse_sql));
 
-	$S->addField($f->primary_key);
-	
+	$S->addField('$'.$f->primary_key.'$');
+
+	$displayContainsPK = false;
 	for($i = 0 ; $i < count($f->browse_columns) ; $i++){
-		$S->addField($f->browse_columns[$i]->display);
+		$d = $f->browse_columns[$i]->display;
+		if ($d == $f->primary_key) $displayContainsPK = true;
+		$S->addField($d);
 	}
 
 	$flds			= array();
@@ -1035,9 +1038,20 @@ function nuBrowseRows($f){
 	$a				= array();
 	$s				= nuReplaceHashVariables($S->SQL);
 
-	$t				= nuRunQuery($s);
-	$rowData		= db_num_rows($t);
+	$S->SQL = str_replace('$'.$f->primary_key.'$',$f->primary_key,$S->SQL);	
+
+	if ($displayContainsPK) {
+		$sCount = str_replace('$'.$f->primary_key.'$,','',$s);
+	} else {
+		$sCount = str_replace('$'.$f->primary_key.'$',$f->primary_key,$s);
+	}
+
+	$t = nuRunQuery('SELECT COUNT(*) FROM ('. $sCount . ') nuTCount');
+	$rowData = db_fetch_row($t)[0];
+	
 	$s				.= " LIMIT " . ($start<0?0:$start) . ", $rows";
+	
+	$s = str_replace('$'.$f->primary_key.'$',$f->primary_key,$s);	
 	$t				= nuRunQuery($s);
 
 	while($r = db_fetch_row($t)){
@@ -1049,8 +1063,6 @@ function nuBrowseRows($f){
 	return array($a, $rowData, $S->SQL);
 
 }
-
-
 
 function nuBrowseWhereClause($searchFields, $searchString, $returnArray = false) {
 
