@@ -2581,6 +2581,10 @@ function nuArrayIsUnique(arr) {
 	return arr.length === new Set(arr).size;
 }
 
+function nuArrayColumn(arr, n) {
+  return arr.map(x=> x[n]);
+}
+
 function nuSetSaveButtonPosition(t, l, h, w, fs) {
 
 	var sb = $('#nuSaveButton');
