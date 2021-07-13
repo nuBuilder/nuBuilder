@@ -249,33 +249,37 @@ function nuSetHashList($p){
 	$rid		= addslashes(nuObjKey($p,'record_id'));
 	$r			= array();
 	$A			= nuGetUserAccess();
-	$s			= "SELECT sfo_table, sfo_primary_key FROM zzzzsys_form WHERE zzzzsys_form_id = '$fid'";
-	$t			= nuRunQuery($s);
 
-	if (db_num_rows($t) > 0) {
+	if ($fid != '' && $fid != 'doesntmatter') {
+		$s			= "SELECT sfo_table, sfo_primary_key FROM zzzzsys_form WHERE zzzzsys_form_id = '$fid'";
 
-		$R			= db_fetch_object($t);
-		$h			= array();
+		$t			= nuRunQuery($s);
 
-		if($p['call_type'] == 'getform'){
+		if (db_num_rows($t) > 0) {
 
-			if(trim($R->sfo_table) != ''){
+			$R			= db_fetch_object($t);
+			$h			= array();
 
-				$s		= "SELECT * FROM $R->sfo_table WHERE $R->sfo_primary_key = '$rid'";
-				$t		= nuRunQuery($s);
-				$f		= db_fetch_object($t);
+			if($p['call_type'] == 'getform'){
 
-				if(is_object($f) ){
+				if(trim($R->sfo_table) != ''){
 
-					foreach ($f as $fld => $value ){									//-- This Edit Form's Object Values
-						$r[$fld] = addslashes($value);
+					$s		= "SELECT * FROM $R->sfo_table WHERE $R->sfo_primary_key = '$rid'";
+					$t		= nuRunQuery($s);
+					$f		= db_fetch_object($t);
+
+					if(is_object($f) ){
+
+						foreach ($f as $fld => $value ){								//-- This Edit Form's Object Values
+							$r[$fld] = addslashes($value);
+						}
+
 					}
-
 				}
+
 			}
 
 		}
-
 	}
 
 	foreach ($p as $key => $value){														//-- The 'opener' Form's properties
