@@ -124,6 +124,7 @@ function nuBuildForm(f){
 	b.session_id 					= f.session_id;
 	b.user_id 						= f.user_id;
 	b.redirect_form_id				= f.redirect_form_id;
+	b.redirect_other_form_id		= f.redirect_other_form_id;	
 	b.title							= f.title;
 	b.row_height					= f.row_height;
 	b.rows							= f.rows;
@@ -4249,7 +4250,14 @@ function nuRedefine_nuSelectBrowse(){
 		var p				= $('#' + t.id).attr('data-nu-primary-key');
 		var f				= window.nuFORM.getProperty('form_id');
 		var r				= window.nuFORM.getProperty('redirect_form_id');
-		
+		var ft				= window.nuFORM.getProperty('form_type');
+		var ro				= window.nuFORM.getProperty('redirect_other_form_id');
+
+		if (ft == 'browse' && ro == '') {
+			nuSelectBrowse = function (e, t) {}
+			return;
+		}
+
 		nuCursor('progress');
 
 		if(y == 'browse'){
