@@ -143,7 +143,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 	if ($R == '' && $f->form_type == 'launch') $R = '-1';
 	$f->record_id	= $R;
 	
-	if(!isset($f->table) || $f->table == '' || $f->form_type == 'browse'){
+	if(!isset($f->table) || $f->table == '' || $R == ''){
 		$A			= array();
 	}else{
 
