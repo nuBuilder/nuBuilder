@@ -696,7 +696,7 @@ function nuDRAG(w, i, l, p, prop){
 
 function getDBColumnLengh(w, id) {
 
-	if (w.tableSchema === undefined) return 0;
+	if (w.tableSchema === undefined || w.table == '' || w.tableSchema[w.table] === undefined) return 0;
 
 	var len = 0;
 	let index = w.tableSchema[w.table]["names"].indexOf(id);
