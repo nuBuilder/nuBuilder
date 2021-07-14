@@ -27,7 +27,7 @@ function nuInitJSOptions() {
 			'nuShowLoggedInUser'				: false,		// Show the logged in User
 			'nuShowBeforeUnloadMessage'			: true,			// Show or disable "Leave site?" message
 			'nuShowBrowserTabTitle'				: true,			// Show the Form Title in the Browser Tab
-			'nuDebugMode'						: true, 		// Debug Mode
+			'nuDebugMode'						: true,			// Debug Mode
 			'nuBrowserTabTitlePrefix'			: 'nuBuilder'	// Prefix in the Browser Tab
 			};
 
@@ -101,7 +101,7 @@ function nuBuildForm(f){
 	window.nuUniqueID			= 'c' + String(Date.now());
 	window.global_access		= f.global_access == '1';
 	nuFORM.edited				= false;
-	window.nuVerticalTabs 		= false;
+	window.nuVerticalTabs		= false;
 
 	nuFORM.scroll				= [];
 	nuSetSuffix(1000);
@@ -115,14 +115,14 @@ function nuBuildForm(f){
 
 	nuSetProperty('refreshed', nuGetProperty('refreshed') + 1);
 
-	var b 						= window.nuFORM.getCurrent();
+	var b						= window.nuFORM.getCurrent();
 
 	nuAddedByLookup(f);
 
-	b.form_id 						= f.form_id;
-	b.record_id 					= f.record_id;
-	b.session_id 					= f.session_id;
-	b.user_id 						= f.user_id;
+	b.form_id						= f.form_id;
+	b.record_id						= f.record_id;
+	b.session_id					= f.session_id;
+	b.user_id						= f.user_id;
 	b.redirect_form_id				= f.redirect_form_id;
 	b.redirect_other_form_id		= f.redirect_other_form_id;	
 	b.title							= f.title;
@@ -694,6 +694,38 @@ function nuDRAG(w, i, l, p, prop){
 
 }
 
+function getDBColumnLengh(w, id) {
+
+	if (w.tableSchema === undefined) return 0;
+
+	var len = 0;
+	let index = w.tableSchema[w.table]["names"].indexOf(id);
+
+	if (index !== -1) {
+
+		let datatype = w.tableSchema[w.table]["types"][index].toUpperCase()
+
+		switch (datatype) {
+			case "TINYTEXT":
+				len = 255;
+				break;
+			case "TEXT":
+				len = 65535;
+				break;
+			case "MEDIUMTEXT":
+				len = 16777215;
+				break;
+			default:
+				if (datatype.includes('CHAR')) {
+					len = parseInt(datatype.replace(/\D/g, ""));
+				}
+		}
+	}
+
+	return len;
+
+}
+
 function nuINPUT(w, i, l, p, prop){
 
 	var obj			= prop.objects[i];
@@ -1005,6 +1037,15 @@ function nuINPUT(w, i, l, p, prop){
 			.val(obj.counter);
 		}
 
+		var maxLengthInputType = ['text', 'url', 'telephone', 'search', 'password','month','email','color',].indexOf(inputType) !== -1;
+		if ((maxLengthInputType && objectType == 'input') || objectType == 'textarea') {
+
+			var len = getDBColumnLengh(w, id);
+			if (len !== 0) $('#' + id).attr('maxlength', len);
+			
+			// Debug: nuSetPlaceholder(id, len + '');
+		}
+		
 		nuSetAccess(ID, obj.read);
 
 		return Number(obj.width) + (obj.read == 2 ? -2 : 4);
@@ -1746,21 +1787,21 @@ function nuSubformRowToSeparatedString(rows, delimiter, includeId) {
 
 
 var nuCopyToClipboard = str => {
-    const el = document.createElement('textarea');
-    el.value = str;
-    el.setAttribute('readonly', '');
-    el.style.position = 'absolute';
-    el.style.left = '-9999px';
-    document.body.appendChild(el);
-    const selected =
-        document.getSelection().rangeCount > 0 ? document.getSelection().getRangeAt(0) : false;
-    el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
-    if (selected) {
-        document.getSelection().removeAllRanges();
-        document.getSelection().addRange(selected);
-    }
+	const el = document.createElement('textarea');
+	el.value = str;
+	el.setAttribute('readonly', '');
+	el.style.position = 'absolute';
+	el.style.left = '-9999px';
+	document.body.appendChild(el);
+	const selected =
+		document.getSelection().rangeCount > 0 ? document.getSelection().getRangeAt(0) : false;
+	el.select();
+	document.execCommand('copy');
+	document.body.removeChild(el);
+	if (selected) {
+		document.getSelection().removeAllRanges();
+		document.getSelection().addRange(selected);
+	}
 };
 
 /**
