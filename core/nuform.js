@@ -696,14 +696,15 @@ function nuDRAG(w, i, l, p, prop){
 
 function getDBColumnLengh(w, id) {
 
-	if (w.tableSchema === undefined || w.table == '' || w.tableSchema[w.table] === undefined) return 0;
+	let tableSchema = nuSERVERRESPONSE.tableSchema;
+	if (tableSchema === undefined || w.table == '' || tableSchema[w.table] === undefined) return 0;
 
 	var len = 0;
-	let index = w.tableSchema[w.table]["names"].indexOf(id);
+	let index = tableSchema[w.table]["names"].indexOf(id);
 
 	if (index !== -1) {
 
-		let datatype = w.tableSchema[w.table]["types"][index].toUpperCase()
+		let datatype = tableSchema[w.table]["types"][index].toUpperCase()
 
 		switch (datatype) {
 			case "TINYTEXT":
@@ -1037,15 +1038,16 @@ function nuINPUT(w, i, l, p, prop){
 			.val(obj.counter);
 		}
 
-		var maxLengthInputType = ['text', 'url', 'telephone', 'search', 'password','month','email','color',].indexOf(inputType) !== -1;
+		var maxLengthInputType = ['text', 'url', 'telephone', 'search', 'password','month','email','color','nuScroll'].indexOf(inputType) !== -1;
 		if ((maxLengthInputType && objectType == 'input') || objectType == 'textarea') {
 
-			var len = getDBColumnLengh(w, id);
+			var field = $('#'+id).attr('data-nu-field'); 
+			var len = getDBColumnLengh(w, field);
 			if (len !== 0) $('#' + id).attr('maxlength', len);
-			
-			// Debug: nuSetPlaceholder(id, len + '');
+
+			nuSetPlaceholder(id, len + '');
 		}
-		
+
 		nuSetAccess(ID, obj.read);
 
 		return Number(obj.width) + (obj.read == 2 ? -2 : 4);
