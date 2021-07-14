@@ -1045,7 +1045,7 @@ function nuINPUT(w, i, l, p, prop){
 			var len = getDBColumnLengh(w, field);
 			if (len !== 0) $('#' + id).attr('maxlength', len);
 
-			nuSetPlaceholder(id, len + '');
+			// nuSetPlaceholder(id, len + '');
 		}
 
 		nuSetAccess(ID, obj.read);
