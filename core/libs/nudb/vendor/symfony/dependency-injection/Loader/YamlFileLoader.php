@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\Argument\ArgumentInterface;
 use Symfony\Component\DependencyInjection\Argument\BoundArgument;
 use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
+use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
 use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\ChildDefinition;
@@ -38,7 +39,7 @@ use Symfony\Component\Yaml\Yaml;
  */
 class YamlFileLoader extends FileLoader
 {
-    private static $serviceKeywords = [
+    private const SERVICE_KEYWORDS = [
         'alias' => 'alias',
         'parent' => 'parent',
         'class' => 'class',
@@ -64,7 +65,7 @@ class YamlFileLoader extends FileLoader
         'bind' => 'bind',
     ];
 
-    private static $prototypeKeywords = [
+    private const PROTOTYPE_KEYWORDS = [
         'resource' => 'resource',
         'namespace' => 'namespace',
         'exclude' => 'exclude',
@@ -85,7 +86,7 @@ class YamlFileLoader extends FileLoader
         'bind' => 'bind',
     ];
 
-    private static $instanceofKeywords = [
+    private const INSTANCEOF_KEYWORDS = [
         'shared' => 'shared',
         'lazy' => 'lazy',
         'public' => 'public',
@@ -97,7 +98,7 @@ class YamlFileLoader extends FileLoader
         'bind' => 'bind',
     ];
 
-    private static $defaultsKeywords = [
+    private const DEFAULTS_KEYWORDS = [
         'public' => 'public',
         'tags' => 'tags',
         'autowire' => 'autowire',
@@ -250,8 +251,8 @@ class YamlFileLoader extends FileLoader
         }
 
         foreach ($defaults as $key => $default) {
-            if (!isset(self::$defaultsKeywords[$key])) {
-                throw new InvalidArgumentException(sprintf('The configuration key "%s" cannot be used to define a default value in "%s". Allowed keys are "%s".', $key, $file, implode('", "', self::$defaultsKeywords)));
+            if (!isset(self::DEFAULTS_KEYWORDS[$key])) {
+                throw new InvalidArgumentException(sprintf('The configuration key "%s" cannot be used to define a default value in "%s". Allowed keys are "%s".', $key, $file, implode('", "', self::DEFAULTS_KEYWORDS)));
             }
         }
 
@@ -310,7 +311,7 @@ class YamlFileLoader extends FileLoader
     /**
      * Parses a definition.
      *
-     * @param array|string $service
+     * @param array|string|null $service
      *
      * @throws InvalidArgumentException When tags are invalid
      */
@@ -471,7 +472,7 @@ class YamlFileLoader extends FileLoader
                     throw new InvalidArgumentException(sprintf('Invalid method call for service "%s", did you forgot a leading dash before "%s: ..." in "%s"?', $id, $k, $file));
                 }
 
-                if (isset($call['method'])) {
+                if (isset($call['method']) && \is_string($call['method'])) {
                     $method = $call['method'];
                     $args = $call['arguments'] ?? [];
                     $returnsClone = $call['returns_clone'] ?? false;
@@ -508,7 +509,7 @@ class YamlFileLoader extends FileLoader
             }
         }
 
-        $tags = isset($service['tags']) ? $service['tags'] : [];
+        $tags = $service['tags'] ?? [];
         if (!\is_array($tags)) {
             throw new InvalidArgumentException(sprintf('Parameter "tags" must be an array for service "%s" in "%s". Check your YAML syntax.', $id, $file));
         }
@@ -559,8 +560,8 @@ class YamlFileLoader extends FileLoader
                 throw new InvalidArgumentException(sprintf('Invalid value "%s" for attribute "decoration_on_invalid" on service "%s". Did you mean "exception", "ignore" or null in "%s"?', $decorationOnInvalid, $id, $file));
             }
 
-            $renameId = isset($service['decoration_inner_name']) ? $service['decoration_inner_name'] : null;
-            $priority = isset($service['decoration_priority']) ? $service['decoration_priority'] : 0;
+            $renameId = $service['decoration_inner_name'] ?? null;
+            $priority = $service['decoration_priority'] ?? 0;
 
             $definition->setDecoratedService($decorates, $renameId, $priority, $invalidBehavior);
         }
@@ -606,8 +607,8 @@ class YamlFileLoader extends FileLoader
             if (!\is_string($service['resource'])) {
                 throw new InvalidArgumentException(sprintf('A "resource" attribute must be of type string for service "%s" in "%s". Check your YAML syntax.', $id, $file));
             }
-            $exclude = isset($service['exclude']) ? $service['exclude'] : null;
-            $namespace = isset($service['namespace']) ? $service['namespace'] : $id;
+            $exclude = $service['exclude'] ?? null;
+            $namespace = $service['namespace'] ?? $id;
             $this->registerClasses($definition, $namespace, $service['resource'], $exclude);
         } else {
             $this->setDefinition($id, $definition);
@@ -671,7 +672,7 @@ class YamlFileLoader extends FileLoader
      */
     protected function loadFile($file)
     {
-        if (!class_exists('Symfony\Component\Yaml\Parser')) {
+        if (!class_exists(\Symfony\Component\Yaml\Parser::class)) {
             throw new RuntimeException('Unable to load YAML config files as the Symfony Yaml Component is not installed.');
         }
 
@@ -745,6 +746,15 @@ class YamlFileLoader extends FileLoader
                     throw new InvalidArgumentException(sprintf('"!iterator" tag only accepts arrays of "@service" references in "%s".', $file));
                 }
             }
+            if ('service_closure' === $value->getTag()) {
+                $argument = $this->resolveServices($argument, $file, $isParameter);
+
+                if (!$argument instanceof Reference) {
+                    throw new InvalidArgumentException(sprintf('"!service_closure" tag only accepts service references in "%s".', $file));
+                }
+
+                return new ServiceClosureArgument($argument);
+            }
             if ('service_locator' === $value->getTag()) {
                 if (!\is_array($argument)) {
                     throw new InvalidArgumentException(sprintf('"!service_locator" tag only accepts maps in "%s".', $file));
@@ -789,7 +799,7 @@ class YamlFileLoader extends FileLoader
                 $instanceof = $this->instanceof;
                 $this->instanceof = [];
 
-                $id = sprintf('.%d_%s', ++$this->anonymousServicesCount, preg_replace('/^.*\\\\/', '', isset($argument['class']) ? $argument['class'] : '').$this->anonymousServicesSuffix);
+                $id = sprintf('.%d_%s', ++$this->anonymousServicesCount, preg_replace('/^.*\\\\/', '', $argument['class'] ?? '').$this->anonymousServicesSuffix);
                 $this->parseDefinition($id, $argument, $file, []);
 
                 if (!$this->container->hasDefinition($id)) {
@@ -813,7 +823,7 @@ class YamlFileLoader extends FileLoader
             }
         } elseif (\is_string($value) && 0 === strpos($value, '@=')) {
             if (!class_exists(Expression::class)) {
-                throw new \LogicException(sprintf('The "@=" expression syntax cannot be used without the ExpressionLanguage component. Try running "composer require symfony/expression-language".'));
+                throw new \LogicException('The "@=" expression syntax cannot be used without the ExpressionLanguage component. Try running "composer require symfony/expression-language".');
             }
 
             return new Expression(substr($value, 2));
@@ -864,11 +874,11 @@ class YamlFileLoader extends FileLoader
     private function checkDefinition(string $id, array $definition, string $file)
     {
         if ($this->isLoadingInstanceof) {
-            $keywords = self::$instanceofKeywords;
+            $keywords = self::INSTANCEOF_KEYWORDS;
         } elseif (isset($definition['resource']) || isset($definition['namespace'])) {
-            $keywords = self::$prototypeKeywords;
+            $keywords = self::PROTOTYPE_KEYWORDS;
         } else {
-            $keywords = self::$serviceKeywords;
+            $keywords = self::SERVICE_KEYWORDS;
         }
 
         foreach ($definition as $key => $value) {

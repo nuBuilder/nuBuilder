@@ -330,7 +330,12 @@ class LoadStatement extends Statement
         --$list->idx;
     }
 
-    public function parseFileOptions(Parser $parser, TokensList $list, $keyword = 'FIELDS')
+    /**
+     * @param Parser     $parser  The parser
+     * @param TokensList $list    A token list
+     * @param string     $keyword The keyword
+     */
+    public function parseFileOptions(Parser $parser, TokensList $list, $keyword = 'FIELDS'): void
     {
         ++$list->idx;
 
@@ -353,6 +358,13 @@ class LoadStatement extends Statement
         }
     }
 
+    /**
+     * @param Parser     $parser
+     * @param TokensList $list
+     * @param int        $state
+     *
+     * @return int
+     */
     public function parseKeywordsAccordingToState($parser, $list, $state)
     {
         $token = $list->tokens[$list->idx];

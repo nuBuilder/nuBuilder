@@ -1,17 +1,24 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
-/**
- * hold Theme class
- *
- * @package PhpMyAdmin
- */
+
 declare(strict_types=1);
 
 namespace PhpMyAdmin;
 
-use PhpMyAdmin\Template;
-use PhpMyAdmin\ThemeManager;
-use PhpMyAdmin\Url;
+use const E_USER_ERROR;
+use function file_exists;
+use function file_get_contents;
+use function filemtime;
+use function filesize;
+use function in_array;
+use function is_array;
+use function is_dir;
+use function is_readable;
+use function json_decode;
+use function sprintf;
+use function trigger_error;
+use function trim;
+use function version_compare;
+use const DIRECTORY_SEPARATOR;
 
 /**
  * handles theme
@@ -19,65 +26,68 @@ use PhpMyAdmin\Url;
  * @todo add the possibility to make a theme depend on another theme
  * and by default on original
  * @todo make all components optional - get missing components from 'parent' theme
- *
- * @package PhpMyAdmin
  */
 class Theme
 {
     /**
      * @var string theme version
-     * @access  protected
+     * @access protected
      */
     public $version = '0.0.0.0';
 
     /**
      * @var string theme name
-     * @access  protected
+     * @access protected
      */
     public $name = '';
 
     /**
      * @var string theme id
-     * @access  protected
+     * @access protected
      */
     public $id = '';
 
     /**
      * @var string theme path
-     * @access  protected
+     * @access protected
      */
     public $path = '';
 
-    /**
-     * @var string file system theme path
-     */
+    /** @var string file system theme path */
     private $fsPath = '';
 
     /**
-     * @var string image path
-     * @access  protected
+     * @var string image path as an URL
+     * @access protected
      */
-    public $img_path = '';
+    public $imgPath = '';
 
     /**
-     * @var integer last modification time for info file
-     * @access  protected
+     * @var string image path on the file-system
+     * @access protected
      */
-    public $mtime_info = 0;
+    public $imgPathFs = '';
+
+    /**
+     * @var int last modification time for info file
+     * @access protected
+     */
+    public $mtimeInfo = 0;
 
     /**
      * needed because sometimes, the mtime for different themes
      * is identical
-     * @var integer filesize for info file
-     * @access  protected
+     *
+     * @var int filesize for info file
+     * @access protected
      */
-    public $filesize_info = 0;
+    public $filesizeInfo = 0;
 
     /**
      * @var array List of css files to load
      * @access private
      */
-    public $_cssFiles = [
+    public $cssFiles = [
         'common',
         'enum_editor',
         'gis',
@@ -90,14 +100,9 @@ class Theme
         'icons',
     ];
 
-    /**
-     * @var Template
-     */
+    /** @var Template */
     public $template;
 
-    /**
-     * Theme constructor.
-     */
     public function __construct()
     {
         $this->template = new Template();
@@ -106,8 +111,9 @@ class Theme
     /**
      * Loads theme information
      *
-     * @return boolean whether loading them info was successful or not
-     * @access  public
+     * @return bool whether loading them info was successful or not
+     *
+     * @access public
      */
     public function loadInfo()
     {
@@ -116,7 +122,7 @@ class Theme
             return false;
         }
 
-        if ($this->mtime_info === filemtime($infofile)) {
+        if ($this->mtimeInfo === filemtime($infofile)) {
             return true;
         }
         $content = @file_get_contents($infofile);
@@ -149,8 +155,8 @@ class Theme
             return false;
         }
 
-        $this->mtime_info = filemtime($infofile);
-        $this->filesize_info = filesize($infofile);
+        $this->mtimeInfo = filemtime($infofile);
+        $this->filesizeInfo = filesize($infofile);
 
         $this->setVersion($data['version']);
         $this->setName($data['name']);
@@ -166,6 +172,7 @@ class Theme
      * @param string $fsPath file-system path to theme
      *
      * @return Theme|false
+     *
      * @static
      * @access public
      */
@@ -188,21 +195,29 @@ class Theme
     /**
      * checks image path for existence - if not found use img from fallback theme
      *
-     * @access public
      * @return bool
+     *
+     * @access public
      */
     public function checkImgPath()
     {
         // try current theme first
-        if (is_dir($this->getFsPath() . 'img/')) {
+        if (is_dir($this->getFsPath() . 'img' . DIRECTORY_SEPARATOR)) {
             $this->setImgPath($this->getPath() . '/img/');
+            $this->setImgPathFs($this->getFsPath() . 'img' . DIRECTORY_SEPARATOR);
+
             return true;
         }
 
         // try fallback theme
-        $fallback = ThemeManager::getThemesDir() . ThemeManager::FALLBACK_THEME . '/img/';
-        if (is_dir(ThemeManager::getThemesFsDir() . ThemeManager::FALLBACK_THEME . '/img/')) {
-            $this->setImgPath($fallback);
+        $fallbackFsPathThemeDir = ThemeManager::getThemesFsDir() . ThemeManager::FALLBACK_THEME
+                                  . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR;
+        if (is_dir($fallbackFsPathThemeDir)) {
+            $fallbackUrl = ThemeManager::getThemesDir() . ThemeManager::FALLBACK_THEME
+                        . '/img/';
+            $this->setImgPath($fallbackUrl);
+            $this->setImgPathFs($fallbackFsPathThemeDir);
+
             return true;
         }
 
@@ -214,14 +229,16 @@ class Theme
             ),
             E_USER_ERROR
         );
+
         return false;
     }
 
     /**
      * returns path to theme
      *
-     * @access public
      * @return string path to theme
+     *
+     * @access public
      */
     public function getPath()
     {
@@ -244,6 +261,7 @@ class Theme
      * @param string $path path to theme
      *
      * @return void
+     *
      * @access public
      */
     public function setPath($path)
@@ -255,8 +273,6 @@ class Theme
      * set file system path to the theme
      *
      * @param string $path path to theme
-     *
-     * @return void
      */
     public function setFsPath(string $path): void
     {
@@ -269,6 +285,7 @@ class Theme
      * @param string $version version to set
      *
      * @return void
+     *
      * @access public
      */
     public function setVersion($version)
@@ -280,6 +297,7 @@ class Theme
      * returns version
      *
      * @return string version
+     *
      * @access public
      */
     public function getVersion()
@@ -293,7 +311,8 @@ class Theme
      *
      * @param string $version version to compare to
      *
-     * @return boolean true if theme version is equal or higher to $version
+     * @return bool true if theme version is equal or higher to $version
+     *
      * @access public
      */
     public function checkVersion($version)
@@ -307,6 +326,7 @@ class Theme
      * @param string $name name to set
      *
      * @return void
+     *
      * @access public
      */
     public function setName($name)
@@ -317,8 +337,9 @@ class Theme
     /**
      * returns name
      *
-     * @access  public
      * @return string name
+     *
+     * @access public
      */
     public function getName()
     {
@@ -331,6 +352,7 @@ class Theme
      * @param string $id new id
      *
      * @return void
+     *
      * @access public
      */
     public function setId($id)
@@ -342,6 +364,7 @@ class Theme
      * returns id
      *
      * @return string id
+     *
      * @access public
      */
     public function getId()
@@ -352,14 +375,25 @@ class Theme
     /**
      * Sets path to images for the theme
      *
-     * @param string $path path to images for this theme
+     * @param string $path path to images for this theme as an URL path
      *
      * @return void
+     *
      * @access public
      */
     public function setImgPath($path)
     {
-        $this->img_path = $path;
+        $this->imgPath = $path;
+    }
+
+    /**
+     * Sets path to images for the theme
+     *
+     * @param string $path file-system path to images for this theme
+     */
+    public function setImgPathFs(string $path): void
+    {
+        $this->imgPathFs = $path;
     }
 
     /**
@@ -370,17 +404,18 @@ class Theme
      * @param string $file     file name for image
      * @param string $fallback fallback image
      *
-     * @access public
      * @return string image path for this theme
+     *
+     * @access public
      */
     public function getImgPath($file = null, $fallback = null)
     {
         if ($file === null) {
-            return $this->img_path;
+            return $this->imgPath;
         }
 
-        if (is_readable($this->img_path . $file)) {
-            return $this->img_path . $file;
+        if (is_readable($this->imgPathFs . $file)) {
+            return $this->imgPath . $file;
         }
 
         if ($fallback !== null) {
@@ -394,6 +429,7 @@ class Theme
      * Renders the preview for this theme
      *
      * @return string
+     *
      * @access public
      */
     public function getPrintPreview()

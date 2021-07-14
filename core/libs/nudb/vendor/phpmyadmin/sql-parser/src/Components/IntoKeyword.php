@@ -239,6 +239,13 @@ class IntoKeyword extends Component
         return $ret;
     }
 
+    /**
+     * @param Parser     $parser  The parser
+     * @param TokensList $list    A token list
+     * @param string     $keyword They keyword
+     *
+     * @return void
+     */
     public function parseFileOptions(Parser $parser, TokensList $list, $keyword = 'FIELDS')
     {
         ++$list->idx;

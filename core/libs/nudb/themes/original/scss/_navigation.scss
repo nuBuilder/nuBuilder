@@ -144,6 +144,10 @@
     z-index: 100;
     vertical-align: sub;
   }
+
+  li.table {
+    background-color: #0000;
+  }
 }
 
 #pma_navigation_tree {
@@ -166,20 +170,21 @@
     }
 
     .dbItemControls {
-      padding-#{$left}: 4px;
+      padding-#{$right}: 4px;
+      float: right;
     }
 
     .navItemControls {
       display: none;
-      padding-#{$left}: 4px;
+      padding-#{$right}: 4px;
+      float: right;
     }
 
     &.activePointer .navItemControls {
-      display: inline;
+      display: block;
       opacity: 0.5;
 
       &:hover {
-        display: inline;
         opacity: 1;
       }
     }

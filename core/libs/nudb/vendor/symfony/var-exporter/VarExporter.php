@@ -43,7 +43,7 @@ final class VarExporter
     {
         $isStaticValue = true;
 
-        if (!\is_object($value) && !(\is_array($value) && $value) && !$value instanceof \__PHP_Incomplete_Class && !\is_resource($value)) {
+        if (!\is_object($value) && !(\is_array($value) && $value) && !$value instanceof \__PHP_Incomplete_Class && !\is_resource($value) || $value instanceof \UnitEnum) {
             return Exporter::export($value);
         }
 
@@ -71,7 +71,7 @@ final class VarExporter
         $values = [];
         $states = [];
         foreach ($objectsPool as $i => $v) {
-            list(, $classes[], $values[], $wakeup) = $objectsPool[$v];
+            [, $classes[], $values[], $wakeup] = $objectsPool[$v];
             if (0 < $wakeup) {
                 $states[$wakeup] = $i;
             } elseif (0 > $wakeup) {

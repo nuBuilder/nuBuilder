@@ -1,33 +1,66 @@
-![image](http://lingtalfi.com/services/pngtext?color=cc0000&size=50&text=WARNING)
+# Google2FA - Google Two-Factor Authentication for PHP
 
-<p style="font-color: red;">
-    Google API for QR generator is turned off. 
-</p>
+Google2FA is a PHP implementation of the Google Two-Factor Authentication Module, supporting the HMAC-Based One-time Password (HOTP) algorithm specified in [RFC 4226](https://tools.ietf.org/html/rfc4226) and the Time-based One-time Password (TOTP) algorithm specified in [RFC 6238](https://tools.ietf.org/html/rfc6238).
 
-All version of that package prior to 5.0.0 are deprecated. Please upgrade and check documentation regarding [QRCode generation](https://github.com/antonioribeiro/google2fa#generating-qrcodes).
-
-# Google2FA
+---
 
 <p align="center">
     <a href="https://packagist.org/packages/pragmarx/google2fa"><img alt="Latest Stable Version" src="https://img.shields.io/packagist/v/pragmarx/google2fa.svg?style=flat-square"></a>
     <a href="LICENSE.md"><img alt="License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square"></a>
     <a href="https://scrutinizer-ci.com/g/antonioribeiro/google2fa/?branch=master"><img alt="Code Quality" src="https://img.shields.io/scrutinizer/g/antonioribeiro/google2fa.svg?style=flat-square"></a>
     <a href="https://travis-ci.org/antonioribeiro/google2fa"><img alt="Build" src="https://img.shields.io/travis/antonioribeiro/google2fa.svg?style=flat-square"></a>
+    <a href="https://packagist.org/packages/pragmarx/google2fa"><img alt="Downloads" src="https://img.shields.io/packagist/dt/pragmarx/google2fa.svg?style=flat-square"></a>
 </p>
 <p align="center">
-    <a href="https://packagist.org/packages/pragmarx/google2fa"><img alt="Downloads" src="https://img.shields.io/packagist/dt/pragmarx/google2fa.svg?style=flat-square"></a>
+    <a href="https://packagist.org/packages/pragmarx/google2fa"><img alt="Monthly Downloads" src="https://poser.pugx.org/pragmarx/google2fa/d/monthly?format=flat-square"></a>
     <a href="https://scrutinizer-ci.com/g/antonioribeiro/google2fa/?branch=master"><img alt="Coverage" src="https://img.shields.io/scrutinizer/coverage/g/antonioribeiro/google2fa.svg?style=flat-square"></a>
-    <a href="https://styleci.io/repos/24296182"><img alt="StyleCI" src="https://styleci.io/repos/24296182/shield"></a>
-    <a href="https://travis-ci.org/antonioribeiro/google2fa"><img alt="PHP" src="https://img.shields.io/badge/PHP-5.4%20--%207.3-brightgreen.svg?style=flat-square"></a>
+    <a href="https://travis-ci.org/antonioribeiro/google2fa"><img alt="PHP" src="https://img.shields.io/badge/PHP-7.1%20--%208.0-brightgreen.svg?style=flat-square"></a>
 </p>
 
-### Google Two-Factor Authentication for PHP Package
+---
 
-Google2FA is a PHP implementation of the Google Two-Factor Authentication Module, supporting the HMAC-Based One-time Password (HOTP) algorithm specified in [RFC 4226](https://tools.ietf.org/html/rfc4226) and the Time-based One-time Password (TOTP) algorithm specified in [RFC 6238](https://tools.ietf.org/html/rfc6238).
+## Menu
+
+  - [Version Compatibility](#version-compatibility)
+  - [Google Two-Factor Authentication for PHP Package](#google-two-factor-authentication-for-php-package)
+  - [Laravel bridge](#laravel-bridge)
+  - [Demos, Example & Playground](#demos--example---playground)
+  - [Requirements](#requirements)
+  - [Installing](#installing)
+  - [Usage](#using-it)
+  - [How To Generate And Use Two Factor Authentication](#how-to-generate-and-use-two-factor-authentication)
+  - [Generating QRCodes](#generating-qrcodes)
+  - [QR Code Packages](#qr-code-packages)
+  - [Examples of Usage](#examples-of-usage)
+  - [HMAC Algorithms](#hmac-algorithms)
+  - [Server Time](#server-time)
+  - [Validation Window](#validation-window)
+  - [Using a Bigger and Prefixing the Secret Key](#using-a-bigger-and-prefixing-the-secret-key)
+  - [Google Authenticator secret key compatibility](#google-authenticator-secret-key-compatibility)
+  - [Google Authenticator Apps:](#google-authenticator-apps-)
+  - [Deprecation Warning](#deprecation-warning)
+  - [Tests](#tests)
+  - [Authors](#authors)
+  - [License](#license)
+  - [Contributing](#contributing)
+
+## Version Compatibility
+
+ PHP    | Google2FA
+:-------|:----------
+ 5.4    | 7.x LTS 
+ 5.5    | 7.x LTS 
+ 5.6    | 7.x LTS 
+ 7.1    | 8.x
+ 7.2    | 8.x
+ 7.3    | 8.x
+ 7.4    | 8.x
+ 
+## Laravel bridge
 
 This package is agnostic, but there's a [Laravel bridge](https://github.com/antonioribeiro/google2fa-laravel).
-
-### QRCode
+  
+## About QRCode generation
 
 This package does not generate QRCodes for 2FA.
 
@@ -45,7 +78,7 @@ You can scan the QR code on [this (old) demo page](https://antoniocarlosribeiro.
 
 ## Requirements
 
-- PHP 5.4+
+- PHP 7.1 or greater
 
 ## Installing
 
@@ -57,7 +90,7 @@ To generate inline QRCodes, you'll need to install a QR code generator, e.g. [Ba
   
     composer require bacon/bacon-qr-code
 
-## Using It
+## Usage
 
 ### Instantiate it directly
 
@@ -123,9 +156,9 @@ Usually you'll need a 2FA URL, so you just have to use the URL generator:
 $google2fa->getQRCodeUrl($companyName, $companyEmail, $secretKey)
 ```
 
-### Examples of Usage
+## Examples of Usage
 
-#### [Google2FA QRCode](https://github.com/antonioribeiro/google2fa-qrcode)
+### [Google2FA QRCode](https://github.com/antonioribeiro/google2fa-qrcode)
 
 Get a QRCode to be used inline:
  
@@ -145,7 +178,7 @@ And use in your template:
 <img src="{{ $inlineUrl }}">
 ```
 
-#### [Simple QrCode](https://www.simplesoftware.io/docs/simple-qrcode)
+### [Simple QrCode](https://www.simplesoftware.io/docs/simple-qrcode)
 
 ```php
 <div class="visible-print text-center">
@@ -154,7 +187,7 @@ And use in your template:
 </div>
 ```
 
-#### [Endroid QR Code Generator](https://github.com/endroid/qr-code)
+### [Endroid QR Code Generator](https://github.com/endroid/qr-code)
 
 Generate the data URL
 
@@ -174,7 +207,7 @@ And in your view
 </div>
 ```
 
-#### [Bacon/QRCode](https://github.com/Bacon/BaconQrCode)
+### [Bacon/QRCode](https://github.com/Bacon/BaconQrCode)
 
 ```php
 <?php
@@ -207,6 +240,14 @@ And show it as an image:
 
 ```php
 <img src="data:image/png;base64, <?php echo $qrcode_image; ?> "/>
+```
+
+## HMAC Algorithms 
+
+To comply with [RFC6238](https://tools.ietf.org/html/rfc6238), this package supports SHA1, SHA256 and SHA512. It defaults to SHA1, so to use a different algorithm you just have to use the method `setAlgorith()`:
+
+``` php
+$google2fa->setAlgorithm(Constants::SHA512);
 ```
 
 ## Server Time
@@ -334,9 +375,25 @@ To use the two factor authentication, your user will have to install a Google Au
 * [LastPass Authenticator for iOS, Android, OS X, Windows](https://lastpass.com/auth/)
 * [1Password for iOS, Android, OS X, Windows](https://1password.com)
 
-## Tests
+## Deprecation Warning
 
-The package tests were written with [PHPUnit](https://phpunit.de/).
+Google API for QR generator is turned off. All version of that package prior to 5.0.0 are deprecated. Please upgrade and check documentation regarding [QRCode generation](https://github.com/antonioribeiro/google2fa#generating-qrcodes).
+
+## Testing
+
+The package tests were written with [PHPUnit](https://phpunit.de/). There are some Composer scripts to help you run tests and analysis:
+
+PHPUnit:
+
+````
+composer test
+````
+
+PHPStan analysis:
+
+````
+composer analyse
+````
 
 ## Authors
 

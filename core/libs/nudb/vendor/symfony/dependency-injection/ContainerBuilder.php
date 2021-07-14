@@ -126,7 +126,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
 
     private $removedBindingIds = [];
 
-    private static $internalTypes = [
+    private const INTERNAL_TYPES = [
         'int' => true,
         'float' => true,
         'string' => true,
@@ -144,7 +144,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     {
         parent::__construct($parameterBag);
 
-        $this->trackResources = interface_exists('Symfony\Component\Config\Resource\ResourceInterface');
+        $this->trackResources = interface_exists(ResourceInterface::class);
         $this->setDefinition('service_container', (new Definition(ContainerInterface::class))->setSynthetic(true)->setPublic(true));
         $this->setAlias(PsrContainerInterface::class, new Alias('service_container', false));
         $this->setAlias(ContainerInterface::class, new Alias('service_container', false));
@@ -339,7 +339,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
             return null;
         }
 
-        if (isset(self::$internalTypes[$class])) {
+        if (isset(self::INTERNAL_TYPES[$class])) {
             return null;
         }
 
@@ -362,7 +362,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
 
         if ($this->trackResources) {
             if (!$classReflector) {
-                $this->addResource($resource ?: new ClassExistenceResource($class, false));
+                $this->addResource($resource ?? new ClassExistenceResource($class, false));
             } elseif (!$classReflector->isInternal()) {
                 $path = $classReflector->getFileName();
 
@@ -1220,7 +1220,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
                 return $this->resolveServices($reference);
             };
         } elseif ($value instanceof IteratorArgument) {
-            $value = new RewindableGenerator(function () use ($value) {
+            $value = new RewindableGenerator(function () use ($value, &$inlineServices) {
                 foreach ($value->getValues() as $k => $v) {
                     foreach (self::getServiceConditionals($v) as $s) {
                         if (!$this->has($s)) {
@@ -1228,12 +1228,12 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
                         }
                     }
                     foreach (self::getInitializedConditionals($v) as $s) {
-                        if (!$this->doGet($s, ContainerInterface::IGNORE_ON_UNINITIALIZED_REFERENCE)) {
+                        if (!$this->doGet($s, ContainerInterface::IGNORE_ON_UNINITIALIZED_REFERENCE, $inlineServices)) {
                             continue 2;
                         }
                     }
 
-                    yield $k => $this->resolveServices($v);
+                    yield $k => $this->doResolveServices($v, $inlineServices);
                 }
             }, function () use ($value): int {
                 $count = 0;
@@ -1511,7 +1511,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     {
         if ($this->hasDefinition($id)) {
             foreach ($this->getDefinition($id)->getBindings() as $key => $binding) {
-                list(, $bindingId) = $binding->getValues();
+                [, $bindingId] = $binding->getValues();
                 $this->removedBindingIds[(int) $bindingId] = true;
             }
         }
@@ -1643,7 +1643,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     private function getExpressionLanguage(): ExpressionLanguage
     {
         if (null === $this->expressionLanguage) {
-            if (!class_exists('Symfony\Component\ExpressionLanguage\ExpressionLanguage')) {
+            if (!class_exists(\Symfony\Component\ExpressionLanguage\ExpressionLanguage::class)) {
                 throw new LogicException('Unable to use expressions as the Symfony ExpressionLanguage component is not installed.');
             }
             $this->expressionLanguage = new ExpressionLanguage(null, $this->expressionLanguageProviders);
@@ -1655,14 +1655,14 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     private function inVendors(string $path): bool
     {
         if (null === $this->vendors) {
-            $resource = new ComposerResource();
-            $this->vendors = $resource->getVendors();
-            $this->addResource($resource);
+            $this->vendors = (new ComposerResource())->getVendors();
         }
         $path = realpath($path) ?: $path;
 
         foreach ($this->vendors as $vendor) {
             if (0 === strpos($path, $vendor) && false !== strpbrk(substr($path, \strlen($vendor), 1), '/'.\DIRECTORY_SEPARATOR)) {
+                $this->addResource(new FileResource($vendor.'/composer/installed.json'));
+
                 return true;
             }
         }

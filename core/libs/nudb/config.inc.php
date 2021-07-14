@@ -1,21 +1,18 @@
 <?php
-declare(strict_types=1);
-
-if ( $_COOKIE["nupmalogin"] != "good" ) {
-        echo "please log into nubuilder";
-        die();
-}
-
-/* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * phpMyAdmin sample configuration, you can use it as base for
  * manual configuration. For easier setup you can use setup/
  *
  * All directives are explained in documentation in the doc/ folder
  * or at <https://docs.phpmyadmin.net/>.
- *
- * @package PhpMyAdmin
  */
+
+declare(strict_types=1);
+
+if (!isset($_COOKIE['nupmalogin']) || $_COOKIE["nupmalogin"] != "good" ) {
+        echo "Please log into nuBuilder";
+        die();
+}
 
 /**
  * This is needed for cookie based authentication to encrypt password in
@@ -49,7 +46,6 @@ $cfg['Servers'][$i]['AllowNoPassword'] 	= true;
 
 $cfg['CheckConfigurationPermissions'] = false;
 $cfg['Servers'][$i]['CheckConfigurationPermissions'] = false;
-
 
 /**
  * phpMyAdmin configuration storage settings.

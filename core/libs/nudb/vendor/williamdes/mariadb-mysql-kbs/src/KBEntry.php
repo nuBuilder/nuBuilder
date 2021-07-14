@@ -130,7 +130,7 @@ class KBEntry extends stdClass implements JsonSerializable
      * Used for json_encode function
      * This can seem useless, do not remove it.
      *
-     * @return array<string,array<KBDocumentation>|bool|string>>
+     * @return array<string,KBDocumentation[]|bool|string>
      */
     public function jsonSerialize(): array
     {

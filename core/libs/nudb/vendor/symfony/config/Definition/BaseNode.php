@@ -24,7 +24,7 @@ use Symfony\Component\Config\Definition\Exception\UnsetKeyException;
  */
 abstract class BaseNode implements NodeInterface
 {
-    const DEFAULT_PATH_SEPARATOR = '.';
+    public const DEFAULT_PATH_SEPARATOR = '.';
 
     private static $placeholderUniquePrefixes = [];
     private static $placeholders = [];
@@ -112,7 +112,7 @@ abstract class BaseNode implements NodeInterface
      */
     public function getAttribute($key, $default = null)
     {
-        return isset($this->attributes[$key]) ? $this->attributes[$key] : $default;
+        return $this->attributes[$key] ?? $default;
     }
 
     /**

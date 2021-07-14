@@ -1,7 +1,7 @@
 {
     "name": "symfony/filesystem",
     "type": "library",
-    "description": "Symfony Filesystem Component",
+    "description": "Provides basic utilities for the filesystem",
     "keywords": [],
     "homepage": "https://symfony.com",
     "license": "MIT",
@@ -25,10 +25,5 @@
             "/Tests/"
         ]
     },
-    "minimum-stability": "dev",
-    "extra": {
-        "branch-alias": {
-            "dev-master": "4.4-dev"
-        }
-    }
+    "minimum-stability": "dev"
 }

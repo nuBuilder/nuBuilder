@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
     Copyright (c) 2005 Steven Armstrong <sa at c-area dot ch>
     Copyright (c) 2009 Danilo Segan <danilo@kvota.net>
@@ -23,23 +26,29 @@
 
 namespace PhpMyAdmin\MoTranslator;
 
+use function array_push;
+use function file_exists;
+use function getenv;
+use function in_array;
+use function preg_match;
+use function sprintf;
+
 class Loader
 {
     /**
      * Loader instance.
      *
      * @static
-     *
      * @var Loader
      */
-    private static $_instance;
+    private static $instance;
 
     /**
      * Default gettext domain to use.
      *
      * @var string
      */
-    private $default_domain = '';
+    private $defaultDomain = '';
 
     /**
      * Configured locale.
@@ -51,35 +60,35 @@ class Loader
     /**
      * Loaded domains.
      *
-     * @var array
+     * @var array<string,array<string,Translator>>
      */
-    private $domains = array();
+    private $domains = [];
 
     /**
      * Bound paths for domains.
      *
-     * @var array
+     * @var array<string,string>
      */
-    private $paths = array('' => './');
+    private $paths = ['' => './'];
 
     /**
      * Returns the singleton Loader object.
      *
      * @return Loader object
      */
-    public static function getInstance()
+    public static function getInstance(): Loader
     {
-        if (empty(self::$_instance)) {
-            self::$_instance = new self();
+        if (empty(self::$instance)) {
+            self::$instance = new self();
         }
 
-        return self::$_instance;
+        return self::$instance;
     }
 
     /**
-     * Loads global localizaton functions.
+     * Loads global localization functions.
      */
-    public static function loadFunctions()
+    public static function loadFunctions(): void
     {
         require_once __DIR__ . '/functions.php';
     }
@@ -91,85 +100,110 @@ class Loader
      *
      * @param string $locale Locale code
      *
-     * @return array list of locales to try for any POSIX-style locale specification
+     * @return string[] list of locales to try for any POSIX-style locale specification
      */
-    public static function listLocales($locale)
+    public static function listLocales(string $locale): array
     {
-        $locale_names = array();
-
-        $lang = null;
-        $country = null;
-        $charset = null;
-        $modifier = null;
+        $localeNames = [];
 
         if ($locale) {
-            if (preg_match('/^(?P<lang>[a-z]{2,3})'      // language code
+            if (preg_match(
+                '/^(?P<lang>[a-z]{2,3})'      // language code
                 . '(?:_(?P<country>[A-Z]{2}))?'           // country code
                 . '(?:\\.(?P<charset>[-A-Za-z0-9_]+))?'   // charset
                 . '(?:@(?P<modifier>[-A-Za-z0-9_]+))?$/', // @ modifier
-                $locale, $matches)) {
-                extract($matches);
+                $locale,
+                $matches
+            )) {
+                $lang = $matches['lang'] ?? null;
+                $country = $matches['country'] ?? null;
+                $charset = $matches['charset'] ?? null;
+                $modifier = $matches['modifier'] ?? null;
 
                 if ($modifier) {
                     if ($country) {
                         if ($charset) {
-                            array_push($locale_names, "${lang}_$country.$charset@$modifier");
+                            array_push(
+                                $localeNames,
+                                sprintf('%s_%s.%s@%s', $lang, $country, $charset, $modifier)
+                            );
                         }
-                        array_push($locale_names, "${lang}_$country@$modifier");
+
+                        array_push(
+                            $localeNames,
+                            sprintf('%s_%s@%s', $lang, $country, $modifier)
+                        );
                     } elseif ($charset) {
-                        array_push($locale_names, "${lang}.$charset@$modifier");
+                        array_push(
+                            $localeNames,
+                            sprintf('%s.%s@%s', $lang, $charset, $modifier)
+                        );
                     }
-                    array_push($locale_names, "$lang@$modifier");
+
+                    array_push(
+                        $localeNames,
+                        sprintf('%s@%s', $lang, $modifier)
+                    );
                 }
+
                 if ($country) {
                     if ($charset) {
-                        array_push($locale_names, "${lang}_$country.$charset");
+                        array_push(
+                            $localeNames,
+                            sprintf('%s_%s.%s', $lang, $country, $charset)
+                        );
                     }
-                    array_push($locale_names, "${lang}_$country");
+
+                    array_push(
+                        $localeNames,
+                        sprintf('%s_%s', $lang, $country)
+                    );
                 } elseif ($charset) {
-                    array_push($locale_names, "${lang}.$charset");
+                    array_push(
+                        $localeNames,
+                        sprintf('%s.%s', $lang, $charset)
+                    );
                 }
-                array_push($locale_names, $lang);
+
+                array_push($localeNames, $lang);
             }
 
             // If the locale name doesn't match POSIX style, just include it as-is.
-            if (!in_array($locale, $locale_names)) {
-                array_push($locale_names, $locale);
+            if (! in_array($locale, $localeNames)) {
+                array_push($localeNames, $locale);
             }
         }
 
-        return $locale_names;
+        return $localeNames;
     }
 
     /**
      * Returns Translator object for domain or for default domain.
      *
      * @param string $domain Translation domain
-     *
-     * @return Translator
      */
-    public function getTranslator($domain = '')
+    public function getTranslator(string $domain = ''): Translator
     {
         if (empty($domain)) {
-            $domain = $this->default_domain;
+            $domain = $this->defaultDomain;
         }
 
-        if (!isset($this->domains[$this->locale])) {
-            $this->domains[$this->locale] = array();
+        if (! isset($this->domains[$this->locale])) {
+            $this->domains[$this->locale] = [];
         }
 
-        if (!isset($this->domains[$this->locale][$domain])) {
+        if (! isset($this->domains[$this->locale][$domain])) {
             if (isset($this->paths[$domain])) {
                 $base = $this->paths[$domain];
             } else {
                 $base = './';
             }
 
-            $locale_names = $this->listLocales($this->locale);
+            $localeNames = $this->listLocales($this->locale);
 
             $filename = '';
-            foreach ($locale_names as $locale) {
-                $filename = "$base/$locale/LC_MESSAGES/$domain.mo";
+            foreach ($localeNames as $locale) {
+                $filename = $base . '/' . $locale . '/LC_MESSAGES/' . $domain . '.mo';
                 if (file_exists($filename)) {
                     break;
                 }
@@ -189,7 +223,7 @@ class Loader
      * @param string $domain Domain name
      * @param string $path   Path where to find locales
      */
-    public function bindtextdomain($domain, $path)
+    public function bindtextdomain(string $domain, string $path): void
     {
         $this->paths[$domain] = $path;
     }
@@ -199,9 +233,9 @@ class Loader
      *
      * @param string $domain Domain name
      */
-    public function textdomain($domain)
+    public function textdomain(string $domain): void
     {
-        $this->default_domain = $domain;
+        $this->defaultDomain = $domain;
     }
 
     /**
@@ -211,9 +245,9 @@ class Loader
      *
      * @return string Set or current locale
      */
-    public function setlocale($locale)
+    public function setlocale(string $locale): string
     {
-        if (!empty($locale)) {
+        if (! empty($locale)) {
             $this->locale = $locale;
         }
 
@@ -230,16 +264,25 @@ class Loader
      *
      * @return string with locale name
      */
-    public function detectlocale()
+    public function detectlocale(): string
     {
         if (isset($GLOBALS['lang'])) {
             return $GLOBALS['lang'];
-        } elseif (getenv('LC_ALL')) {
-            return getenv('LC_ALL');
-        } elseif (getenv('LC_MESSAGES')) {
-            return getenv('LC_MESSAGES');
-        } elseif (getenv('LANG')) {
-            return getenv('LANG');
+        }
+
+        $locale = getenv('LC_ALL');
+        if ($locale !== false) {
+            return $locale;
+        }
+
+        $locale = getenv('LC_MESSAGES');
+        if ($locale !== false) {
+            return $locale;
+        }
+
+        $locale = getenv('LANG');
+        if ($locale !== false) {
+            return $locale;
         }
 
         return 'en';

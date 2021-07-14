@@ -59,7 +59,7 @@ class Filesystem
             }
 
             // Stream context created to allow files overwrite when using FTP stream wrapper - disabled by default
-            if (false === $target = @fopen($targetFile, 'w', null, stream_context_create(['ftp' => ['overwrite' => true]]))) {
+            if (false === $target = @fopen($targetFile, 'w', false, stream_context_create(['ftp' => ['overwrite' => true]]))) {
                 throw new IOException(sprintf('Failed to copy "%s" to "%s" because target file could not be opened for writing.', $originFile, $targetFile), 0, null, $originFile);
             }
 
@@ -180,7 +180,7 @@ class Filesystem
                 if (!self::box('rmdir', $file) && file_exists($file)) {
                     throw new IOException(sprintf('Failed to remove directory "%s": ', $file).self::$lastError);
                 }
-            } elseif (!self::box('unlink', $file) && file_exists($file)) {
+            } elseif (!self::box('unlink', $file) && (false !== strpos(self::$lastError, 'Permission denied') || file_exists($file))) {
                 throw new IOException(sprintf('Failed to remove file "%s": ', $file).self::$lastError);
             }
         }
@@ -416,14 +416,14 @@ class Filesystem
                 return null;
             }
 
-            if ('\\' === \DIRECTORY_SEPARATOR) {
+            if ('\\' === \DIRECTORY_SEPARATOR && \PHP_VERSION_ID < 70410) {
                 $path = readlink($path);
             }
 
             return realpath($path);
         }
 
-        if ('\\' === \DIRECTORY_SEPARATOR) {
+        if ('\\' === \DIRECTORY_SEPARATOR && \PHP_VERSION_ID < 70400) {
             return realpath($path);
         }
 
@@ -474,8 +474,8 @@ class Filesystem
             return $result;
         };
 
-        list($endPath, $endDriveLetter) = $splitDriveLetter($endPath);
-        list($startPath, $startDriveLetter) = $splitDriveLetter($startPath);
+        [$endPath, $endDriveLetter] = $splitDriveLetter($endPath);
+        [$startPath, $startDriveLetter] = $splitDriveLetter($startPath);
 
         $startPathArr = $splitPath($startPath);
         $endPathArr = $splitPath($endPath);
@@ -577,7 +577,7 @@ class Filesystem
             } elseif (is_dir($file)) {
                 $this->mkdir($target);
             } elseif (is_file($file)) {
-                $this->copy($file, $target, isset($options['override']) ? $options['override'] : false);
+                $this->copy($file, $target, $options['override'] ?? false);
             } else {
                 throw new IOException(sprintf('Unable to guess "%s" file type.', $file), 0, null, $file);
             }
@@ -617,7 +617,7 @@ class Filesystem
      */
     public function tempnam($dir, $prefix)
     {
-        list($scheme, $hierarchy) = $this->getSchemeAndHierarchy($dir);
+        [$scheme, $hierarchy] = $this->getSchemeAndHierarchy($dir);
 
         // If no scheme or scheme is "file" or "gs" (Google Cloud) create temp file in local filesystem
         if (null === $scheme || 'file' === $scheme || 'gs' === $scheme) {
@@ -678,21 +678,23 @@ class Filesystem
             $this->mkdir($dir);
         }
 
-        if (!is_writable($dir)) {
-            throw new IOException(sprintf('Unable to write to the "%s" directory.', $dir), 0, null, $dir);
-        }
-
         // Will create a temp file with 0600 access rights
         // when the filesystem supports chmod.
         $tmpFile = $this->tempnam($dir, basename($filename));
 
-        if (false === @file_put_contents($tmpFile, $content)) {
-            throw new IOException(sprintf('Failed to write file "%s".', $filename), 0, null, $filename);
+        try {
+            if (false === @file_put_contents($tmpFile, $content)) {
+                throw new IOException(sprintf('Failed to write file "%s".', $filename), 0, null, $filename);
+            }
+
+            @chmod($tmpFile, file_exists($filename) ? fileperms($filename) : 0666 & ~umask());
+
+            $this->rename($tmpFile, $filename, true);
+        } finally {
+            if (file_exists($tmpFile)) {
+                @unlink($tmpFile);
+            }
         }
-
-        @chmod($tmpFile, file_exists($filename) ? fileperms($filename) : 0666 & ~umask());
-
-        $this->rename($tmpFile, $filename, true);
     }
 
     /**
@@ -713,10 +715,6 @@ class Filesystem
 
         if (!is_dir($dir)) {
             $this->mkdir($dir);
-        }
-
-        if (!is_writable($dir)) {
-            throw new IOException(sprintf('Unable to write to the "%s" directory.', $dir), 0, null, $dir);
         }
 
         if (false === @file_put_contents($filename, $content, \FILE_APPEND)) {
@@ -740,14 +738,16 @@ class Filesystem
     }
 
     /**
+     * @param mixed ...$args
+     *
      * @return mixed
      */
-    private static function box(callable $func)
+    private static function box(callable $func, ...$args)
     {
         self::$lastError = null;
         set_error_handler(__CLASS__.'::handleError');
         try {
-            $result = $func(...\array_slice(\func_get_args(), 1));
+            $result = $func(...$args);
             restore_error_handler();
 
             return $result;

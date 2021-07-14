@@ -1,27 +1,37 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Import and export &#8212; phpMyAdmin 5.0.4 documentation</title>
+    
+    <title>Import and export &#8212; phpMyAdmin 5.1.2-dev documentation</title>
+    
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '5.1.2-dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
-    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="top" title="phpMyAdmin 5.1.2-dev documentation" href="index.html" />
+    <link rel="up" title="User Guide" href="user.html" />
     <link rel="next" title="Custom Themes" href="themes.html" />
     <link rel="prev" title="Charts" href="charts.html" /> 
-  </head><body>
+  </head>
+  <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -34,7 +44,7 @@
         <li class="right" >
           <a href="charts.html" title="Charts"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.0.4 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.1.2-dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="user.html" accesskey="U">User Guide</a> &#187;</li> 
       </ul>
     </div>  
@@ -48,9 +58,9 @@
 <h1>Import and export<a class="headerlink" href="#import-and-export" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="import">
 <h2>Import<a class="headerlink" href="#import" title="Permalink to this headline">¶</a></h2>
-<p>To import data, go to the “Import” tab in phpMyAdmin. To import data into a
+<p>To import data, go to the &#8220;Import&#8221; tab in phpMyAdmin. To import data into a
 specific database or table, open the database or table before going to the
-“Import” tab.</p>
+&#8220;Import&#8221; tab.</p>
 <p>In addition to the standard Import and Export tab, you can also import an SQL
 file directly by dragging and dropping it from your local file manager to the
 phpMyAdmin interface in your web browser.</p>
@@ -64,7 +74,7 @@ phpMyAdmin interface in your web browser.</p>
 <div>Can be used with valid SQL dumps.</div></blockquote>
 <p>Using upload directory</p>
 <blockquote>
-<div>You can specify an upload directory on your web server where phpMyAdmin is installed, after uploading your file into this directory you can select this file in the import dialog of phpMyAdmin, see <span class="target" id="index-0"></span><a class="reference internal" href="config.html#cfg_UploadDir"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['UploadDir']</span></code></a>.</div></blockquote>
+<div>You can specify an upload directory on your web server where phpMyAdmin is installed, after uploading your file into this directory you can select this file in the import dialog of phpMyAdmin, see <span class="target" id="index-0"></span><a class="reference internal" href="config.html#cfg_UploadDir"><code class="xref config config-option docutils literal"><span class="pre">$cfg['UploadDir']</span></code></a>.</div></blockquote>
 <p>phpMyAdmin can import from several various commonly used formats.</p>
 <div class="section" id="csv">
 <h3>CSV<a class="headerlink" href="#csv" title="Permalink to this headline">¶</a></h3>
@@ -72,8 +82,8 @@ phpMyAdmin interface in your web browser.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">When importing data into a table from a CSV file where the table has an
-‘auto_increment’ field, make the ‘auto_increment’ value for each record in
-the CSV field to be ‘0’ (zero). This allows the ‘auto_increment’ field to
+&#8216;auto_increment&#8217; field, make the &#8216;auto_increment&#8217; value for each record in
+the CSV field to be &#8216;0&#8217; (zero). This allows the &#8216;auto_increment&#8217; field to
 populate correctly.</p>
 </div>
 <p>It is now possible to import a CSV file at the server or database level.
@@ -113,7 +123,7 @@ though this is less of a concern since you could quickly rename the new table fr
 <h4>Column names<a class="headerlink" href="#column-names" title="Permalink to this headline">¶</a></h4>
 <p>You should also make the first row of your spreadsheet a header with the names of the columns (this can be
 accomplished by inserting a new row at the top of your spreadsheet). When on the Import screen, select the
-checkbox for “The first line of the file contains the table column names;” this way your newly imported
+checkbox for &#8220;The first line of the file contains the table column names;&#8221; this way your newly imported
 data will go to the proper columns.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -138,7 +148,7 @@ created depending on the contents of the file.</p>
 <div class="section" id="export">
 <h2>Export<a class="headerlink" href="#export" title="Permalink to this headline">¶</a></h2>
 <p>phpMyAdmin can export into text files (even compressed) on your local disk (or
-a special the webserver <span class="target" id="index-1"></span><a class="reference internal" href="config.html#cfg_SaveDir"><code class="xref config config-option docutils literal notranslate"><span class="pre">$cfg['SaveDir']</span></code></a> folder) in various
+a special the webserver <span class="target" id="index-1"></span><a class="reference internal" href="config.html#cfg_SaveDir"><code class="xref config config-option docutils literal"><span class="pre">$cfg['SaveDir']</span></code></a> folder) in various
 commonly used formats:</p>
 <div class="section" id="codegen">
 <h3>CodeGen<a class="headerlink" href="#codegen" title="Permalink to this headline">¶</a></h3>
@@ -155,11 +165,11 @@ other programs for export/import.</p>
 <h3>CSV for Microsoft Excel<a class="headerlink" href="#csv-for-microsoft-excel" title="Permalink to this headline">¶</a></h3>
 <p>This is just preconfigured version of CSV export which can be imported into
 most English versions of Microsoft Excel. Some localised versions (like
-“Danish”) are expecting “;” instead of “,” as field separator.</p>
+&#8220;Danish&#8221;) are expecting &#8221;;&#8221; instead of &#8221;,&#8221; as field separator.</p>
 </div>
 <div class="section" id="microsoft-word-2000">
 <h3>Microsoft Word 2000<a class="headerlink" href="#microsoft-word-2000" title="Permalink to this headline">¶</a></h3>
-<p>If you’re using Microsoft Word 2000 or newer (or compatible such as
+<p>If you&#8217;re using Microsoft Word 2000 or newer (or compatible such as
 OpenOffice.org), you can use this export.</p>
 </div>
 <div class="section" id="json">
@@ -177,11 +187,11 @@ produce valid JSON data.</p>
 <code class="descname">type</code><a class="headerlink" href="#type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Type of given object, can be one of:</p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">header</span></code></dt>
+<dt><code class="docutils literal"><span class="pre">header</span></code></dt>
 <dd>Export header containing comment and phpMyAdmin version.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">database</span></code></dt>
+<dt><code class="docutils literal"><span class="pre">database</span></code></dt>
 <dd>Start of a database marker, containing name of database.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">table</span></code></dt>
+<dt><code class="docutils literal"><span class="pre">table</span></code></dt>
 <dd>Table data export.</dd>
 </dl>
 </dd></dl>
@@ -189,7 +199,7 @@ produce valid JSON data.</p>
 <dl class="data">
 <dt id="version">
 <code class="descname">version</code><a class="headerlink" href="#version" title="Permalink to this definition">¶</a></dt>
-<dd><p>Used in <code class="docutils literal notranslate"><span class="pre">header</span></code> <a class="reference internal" href="#type" title="type"><code class="xref js js-data docutils literal notranslate"><span class="pre">type</span></code></a> and indicates phpMyAdmin version.</p>
+<dd><p>Used in <code class="docutils literal"><span class="pre">header</span></code> <a class="reference internal" href="#type" title="type"><code class="xref js js-data docutils literal"><span class="pre">type</span></code></a> and indicates phpMyAdmin version.</p>
 </dd></dl>
 
 <dl class="data">
@@ -201,23 +211,23 @@ produce valid JSON data.</p>
 <dl class="data">
 <dt id="name">
 <code class="descname">name</code><a class="headerlink" href="#name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Object name - either table or database based on <a class="reference internal" href="#type" title="type"><code class="xref js js-data docutils literal notranslate"><span class="pre">type</span></code></a>.</p>
+<dd><p>Object name - either table or database based on <a class="reference internal" href="#type" title="type"><code class="xref js js-data docutils literal"><span class="pre">type</span></code></a>.</p>
 </dd></dl>
 
 <dl class="data">
 <dt id="database">
 <code class="descname">database</code><a class="headerlink" href="#database" title="Permalink to this definition">¶</a></dt>
-<dd><p>Database name for <code class="docutils literal notranslate"><span class="pre">table</span></code> <a class="reference internal" href="#type" title="type"><code class="xref js js-data docutils literal notranslate"><span class="pre">type</span></code></a>.</p>
+<dd><p>Database name for <code class="docutils literal"><span class="pre">table</span></code> <a class="reference internal" href="#type" title="type"><code class="xref js js-data docutils literal"><span class="pre">type</span></code></a>.</p>
 </dd></dl>
 
 <dl class="data">
 <dt id="data">
 <code class="descname">data</code><a class="headerlink" href="#data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Table content for <code class="docutils literal notranslate"><span class="pre">table</span></code> <a class="reference internal" href="#type" title="type"><code class="xref js js-data docutils literal notranslate"><span class="pre">type</span></code></a>.</p>
+<dd><p>Table content for <code class="docutils literal"><span class="pre">table</span></code> <a class="reference internal" href="#type" title="type"><code class="xref js js-data docutils literal"><span class="pre">type</span></code></a>.</p>
 </dd></dl>
 
 <p>Sample output:</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+<div class="highlight-json"><div class="highlight"><pre><span></span><span class="p">[</span>
     <span class="p">{</span>
         <span class="nt">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;Export to JSON plugin for PHPMyAdmin&quot;</span><span class="p">,</span>
         <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;header&quot;</span><span class="p">,</span>
@@ -269,7 +279,7 @@ LaTeX on <a class="reference external" href="https://www.ctan.org/">the Comprehe
 also see the <a class="reference external" href="https://www.ctan.org/tex/">short description od TeX</a>.</p>
 <p>The output needs to be embedded into a LaTeX document before it can be
 rendered, for example in following document:</p>
-<div class="highlight-latex notranslate"><div class="highlight"><pre><span></span><span class="k">\documentclass</span><span class="nb">{</span>article<span class="nb">}</span>
+<div class="highlight-latex"><div class="highlight"><pre><span></span><span class="k">\documentclass</span><span class="nb">{</span>article<span class="nb">}</span>
 <span class="k">\title</span><span class="nb">{</span>phpMyAdmin SQL output<span class="nb">}</span>
 <span class="k">\author</span><span class="nb">{}</span>
 <span class="k">\usepackage</span><span class="nb">{</span>longtable,lscape<span class="nb">}</span>
@@ -318,11 +328,11 @@ the contents of the selected table or database.</p>
 <h3>SQL<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <p>Export in SQL can be used to restore your database, thus it is useful for
 backing up.</p>
-<p>The option ‘Maximal length of created query’ seems to be undocumented. But
+<p>The option &#8216;Maximal length of created query&#8217; seems to be undocumented. But
 experiments has shown that it splits large extended INSERTS so each one is no
 bigger than the given number of bytes (or characters?). Thus when importing the
-file, for large tables you avoid the error “Got a packet bigger than
-‘max_allowed_packet’ bytes”.</p>
+file, for large tables you avoid the error &#8220;Got a packet bigger than
+&#8216;max_allowed_packet&#8217; bytes&#8221;.</p>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference external" href="https://dev.mysql.com/doc/refman/5.7/en/packet-too-large.html">https://dev.mysql.com/doc/refman/5.7/en/packet-too-large.html</a></p>
@@ -331,15 +341,11 @@ file, for large tables you avoid the error “Got a packet bigger than
 <h4>Data Options<a class="headerlink" href="#data-options" title="Permalink to this headline">¶</a></h4>
 <p><strong>Complete inserts</strong> adds the column names to the SQL dump. This parameter
 improves the readability and reliability of the dump. Adding the column names
-increases the size of the dump, but when combined with Extended inserts it’s
+increases the size of the dump, but when combined with Extended inserts it&#8217;s
 negligible.</p>
 <p><strong>Extended inserts</strong> combines multiple rows of data into a single INSERT query.
 This will significantly decrease filesize for large SQL dumps, increases the
 INSERT speed when imported, and is generally recommended.</p>
-<div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<p class="last"><a class="reference external" href="http://www.scriptalicious.com/blog/2009/04/complete-inserts-or-extended-inserts-in-phpmyadmin/">http://www.scriptalicious.com/blog/2009/04/complete-inserts-or-extended-inserts-in-phpmyadmin/</a></p>
-</div>
 </div>
 </div>
 <div class="section" id="texy">
@@ -367,7 +373,7 @@ computationally powerful ( &lt;<a class="reference external" href="https://yaml.
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
+  <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Import and export</a><ul>
 <li><a class="reference internal" href="#import">Import</a><ul>
@@ -418,20 +424,18 @@ computationally powerful ( &lt;<a class="reference external" href="https://yaml.
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/import_export.rst.txt"
+      <li><a href="_sources/import_export.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
-    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -450,13 +454,13 @@ computationally powerful ( &lt;<a class="reference external" href="https://yaml.
         <li class="right" >
           <a href="charts.html" title="Charts"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.0.4 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.1.2-dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="user.html" >User Guide</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; <a href="copyright.html">Copyright</a> 2012 - 2020, The phpMyAdmin devel team.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.4.
+        &#169; <a href="copyright.html">Copyright</a> 2012 - 2021, The phpMyAdmin devel team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.
     </div>
   </body>
 </html>

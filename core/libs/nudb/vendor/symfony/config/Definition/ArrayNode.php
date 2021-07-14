@@ -68,7 +68,7 @@ class ArrayNode extends BaseNode implements PrototypeNodeInterface
     /**
      * Retrieves the children of this node.
      *
-     * @return array The children
+     * @return array<string, NodeInterface>
      */
     public function getChildren()
     {
@@ -203,11 +203,7 @@ class ArrayNode extends BaseNode implements PrototypeNodeInterface
     }
 
     /**
-     * Finalizes the value of this node.
-     *
-     * @param mixed $value
-     *
-     * @return mixed The finalised value
+     * {@inheritdoc}
      *
      * @throws UnsetKeyException
      * @throws InvalidConfigurationException if the node doesn't have enough children
@@ -249,11 +245,7 @@ class ArrayNode extends BaseNode implements PrototypeNodeInterface
     }
 
     /**
-     * Validates the type of the value.
-     *
-     * @param mixed $value
-     *
-     * @throws InvalidTypeException
+     * {@inheritdoc}
      */
     protected function validateType($value)
     {
@@ -269,11 +261,7 @@ class ArrayNode extends BaseNode implements PrototypeNodeInterface
     }
 
     /**
-     * Normalizes the value.
-     *
-     * @param mixed $value The value to normalize
-     *
-     * @return mixed The normalized value
+     * {@inheritdoc}
      *
      * @throws InvalidConfigurationException
      */
@@ -342,7 +330,7 @@ class ArrayNode extends BaseNode implements PrototypeNodeInterface
      */
     protected function remapXml($value)
     {
-        foreach ($this->xmlRemappings as list($singular, $plural)) {
+        foreach ($this->xmlRemappings as [$singular, $plural]) {
             if (!isset($value[$singular])) {
                 continue;
             }
@@ -355,12 +343,7 @@ class ArrayNode extends BaseNode implements PrototypeNodeInterface
     }
 
     /**
-     * Merges values together.
-     *
-     * @param mixed $leftSide  The left side to merge
-     * @param mixed $rightSide The right side to merge
-     *
-     * @return mixed The merged values
+     * {@inheritdoc}
      *
      * @throws InvalidConfigurationException
      * @throws \RuntimeException

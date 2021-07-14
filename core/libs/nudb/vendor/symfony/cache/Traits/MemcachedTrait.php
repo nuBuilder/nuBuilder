@@ -111,7 +111,7 @@ trait MemcachedTrait
                 }
                 $params = preg_replace_callback('#^memcached:(//)?(?:([^@]*+)@)?#', function ($m) use (&$username, &$password) {
                     if (!empty($m[2])) {
-                        list($username, $password) = explode(':', $m[2], 2) + [1 => null];
+                        [$username, $password] = explode(':', $m[2], 2) + [1 => null];
                     }
 
                     return 'file:'.($m[1] ?? '');
@@ -151,7 +151,7 @@ trait MemcachedTrait
                     $params['path'] = substr($params['path'], 0, -\strlen($m[0]));
                 }
                 $params += [
-                    'host' => isset($params['host']) ? $params['host'] : $params['path'],
+                    'host' => $params['host'] ?? $params['path'],
                     'port' => isset($params['host']) ? 11211 : null,
                     'weight' => 0,
                 ];

@@ -75,9 +75,9 @@ class Search
     public static function getByName(string $name, int $type = Search::ANY): string
     {
         self::loadData();
-        $kbEntrys = self::getVariable($name);
-        if (isset($kbEntrys->a)) {
-            foreach ($kbEntrys->a as $kbEntry) {
+        $kbEntries = self::getVariable($name);
+        if (isset($kbEntries->a)) {
+            foreach ($kbEntries->a as $kbEntry) {
                 if ($type === Search::ANY) {
                     return Search::$data->urls[$kbEntry->u]."#".$kbEntry->a;
                 } elseif ($type === Search::MYSQL) {

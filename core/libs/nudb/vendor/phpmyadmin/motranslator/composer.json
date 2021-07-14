@@ -15,14 +15,25 @@
         "issues": "https://github.com/phpmyadmin/motranslator/issues",
         "source": "https://github.com/phpmyadmin/motranslator"
     },
+    "scripts": {
+        "phpcbf": "./vendor/bin/phpcbf",
+        "phpcs": "./vendor/bin/phpcs",
+        "phpstan": "./vendor/bin/phpstan analyse",
+        "phpunit": "./vendor/bin/phpunit --color=always",
+        "test": [
+            "@phpcs",
+            "@phpstan",
+            "@phpunit"
+        ]
+    },
     "require": {
-        "php": ">=5.3.0",
-        "symfony/expression-language": "^4.0 || ^3.2 || ^2.8"
+        "php": "^7.1 || ^8.0",
+        "symfony/expression-language": "^4.0 || ^5.0"
     },
     "require-dev": {
-        "apigen/apigen": "^4.1",
-        "phpunit/php-code-coverage": "*",
-        "phpunit/phpunit": "~4.8 || ~5.7 || ~6.5"
+        "phpunit/phpunit": "^7.4 || ^8 || ^9",
+        "phpmyadmin/coding-standard": "^2.1.1",
+        "phpstan/phpstan": "^0.12.56"
     },
     "autoload": {
         "psr-4": {
