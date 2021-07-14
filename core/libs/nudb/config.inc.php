@@ -10,8 +10,8 @@
 declare(strict_types=1);
 
 if (!isset($_COOKIE['nupmalogin']) || $_COOKIE["nupmalogin"] != "good" ) {
-        echo "Please log into nuBuilder";
-        die();
+		echo "Please log into nuBuilder";
+		die();
 }
 
 /**
@@ -31,21 +31,26 @@ $i = 0;
 $i++;
 
 /* Authentication type */
-$cfg['Servers'][$i]['auth_type'] 	= 'config';
+$cfg['Servers'][$i]['auth_type']						= 'config';
+
 /* Server parameters */
-$cfg['Servers'][$i]['host'] 		= $_COOKIE["nuConfigDBHost"];
-$cfg['Servers'][$i]['user'] 		= $_COOKIE["nuConfigDBUser"];
-$cfg['Servers'][$i]['password'] 	= $_COOKIE["nuConfigDBPassword"];
+$cfg['Servers'][$i]['host']								= $_COOKIE["nuConfigDBHost"];
+$cfg['Servers'][$i]['user']								= $_COOKIE["nuConfigDBUser"];
+$cfg['Servers'][$i]['password']							= $_COOKIE["nuConfigDBPassword"];
 
 if ( $_COOKIE["nuConfigDBPasswordBlank"] == 'BLANK' ) {
 	$cfg['Servers'][$i]['password'] = '';
 }
 
-$cfg['Servers'][$i]['compress'] 	= false;
-$cfg['Servers'][$i]['AllowNoPassword'] 	= true;
+$cfg['Servers'][$i]['compress']							= false;
+$cfg['Servers'][$i]['AllowNoPassword']					= true;
+$cfg['Servers'][$i]['CheckConfigurationPermissions']	= false;
 
+/* Security parameters */
 $cfg['CheckConfigurationPermissions'] = false;
-$cfg['Servers'][$i]['CheckConfigurationPermissions'] = false;
+
+/* Export parameters */
+$cfg['Export']['sql_view_current_user'] = true;
 
 /**
  * phpMyAdmin configuration storage settings.
