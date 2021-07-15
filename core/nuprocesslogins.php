@@ -50,14 +50,16 @@ function nuCheckUserLoginRequest() {
 		md5($_POST['nuSTATE']['password'])
 	));
 
-	if (db_num_rows($rs) == 1) {
+	$oneRow = db_num_rows($rs) == 1;
+
+	if ($oneRow) {
 		$r = db_fetch_object($rs);
 		$result = $r->expired == "1" ? "-1" : "1";
 	} else {
 		$result = "0";
 	}
 
-	return array('result' => $result, 'user_id' => $r->user_id, 'login_name' => $r->login_name, 'user_name' => $r->user_name);
+	return array('result' => $result, 'user_id' => ($oneRow ? $r->user_id : ''), 'login_name' => ($oneRow ? $r->login_name : ''), 'user_name' => ($oneRow ? $r->user_name : ''));
 
 }
 

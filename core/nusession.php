@@ -6,7 +6,7 @@ require_once('nuprocesslogins.php');
 require_once('nusecurity.php');
 
 function nuRunLoginProcedure($procedure) {
-	
+
 	$p		= nuProcedure($procedure);
 	$error	= '';
 	if($p != ''){
@@ -22,10 +22,11 @@ if ( nuCheckIsLoginRequest() ) {
 		if (nuLoginSetupGlobeadmin($_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'],'','')) nuRunLoginProcedure('nuStartup');
 	}
 	else {
-		$result = nuCheckUserLoginRequest();
-		if ($result['result'] == "1" ) {
-				if (strpos($_SESSION['nubuilder_session_data']['GLOBEADMIN_USERS'], $result['user_id'] ) !== false) {
-					if (nuLoginSetupGlobeadmin($result['login_name'],$result['user_id'], $result['user_name'])) nuRunLoginProcedure('nuStartup');
+		$request = nuCheckUserLoginRequest();
+		$result = $request['result'];
+		if ($result == "1" ) {
+				if (strpos($_SESSION['nubuilder_session_data']['GLOBEADMIN_USERS'], $request['user_id'] ) !== false) {
+					if (nuLoginSetupGlobeadmin($request['login_name'],$request['user_id'], $request['user_name'])) nuRunLoginProcedure('nuStartup');
 				} else {
 					if (nuLoginSetupNOTGlobeadmin()) nuRunLoginProcedure('nuStartup');
 				}
