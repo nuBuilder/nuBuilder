@@ -1142,15 +1142,14 @@ function nuCurrentProperties(){
 
 
 function nuSetProperty(f, v, p){
-	
-	
+
 	nuFORM.setProperty(f, v);
 	if (p === true) {
 		// set the hash cookie to persist
 		nuSetProperty('hcname',f);
 		nuSetProperty('hcvalue',v);
 		nuRunPHPHidden('nusethashcookie', 0);
-	}	
+	}
 }
 
 

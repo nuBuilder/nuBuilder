@@ -66,7 +66,7 @@ class nubuilder_session_data {
 
 		$this->nubuilder['2FA_FORM_ID']				= $nuConfig2FAFormID == '' ? 'nuauthentication' : $nuConfig2FAFormID;
 		$this->nubuilder['2FA_TOKEN_VALIDITY_TIME']	= $nuConfig2FATokenValidityTime == '' ? 168 : $nuConfig2FATokenValidityTime;
-		$this->nubuilder['2FA_REMEMBER_ME']			= $nuConfig2FAShowRememberMe;		
+		$this->nubuilder['2FA_REMEMBER_ME']			= $nuConfig2FAShowRememberMe;
 
 	}
 }

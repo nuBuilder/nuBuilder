@@ -812,9 +812,11 @@ function nuAddToHashList($J, $run){
 function nuGetUserAccess(){
 
 	$A							= array();
-
+	
+	$sessionData				= $_SESSION['nubuilder_session_data'];
+	$sessionId 					= $sessionData['SESSION_ID'];
 	$s							= "SELECT sss_access FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
-	$t							= nuRunQuery($s, array($_SESSION['nubuilder_session_data']['SESSION_ID']));			 
+	$t							= nuRunQuery($s, array($sessionId));
 	$r							= db_fetch_object($t);
 
 	if (db_num_rows($t) == 0) return $A;
@@ -829,15 +831,15 @@ function nuGetUserAccess(){
 	$A['LOGIN_NAME']			= $j->session->sus_login_name;
 	$A['USER_NAME']				= $j->session->sus_name;
 
-	$f							= db_field_names('zzzzsys_session');
-	$s							= time();
-
 	//-- update session time
+	if (!isset($sessionData['SESSION_SSS_TIME_EXISTS'])) {
+		$sessionData['SESSION_SSS_TIME_EXISTS']	= in_array("sss_time", db_field_names('zzzzsys_session'));
+	}
 
-	if (in_array("sss_time", $f)){
-
-		nuRunQuery("UPDATE zzzzsys_session SET sss_time = $s WHERE zzzzsys_session_id = ? ", array($_SESSION['nubuilder_session_data']['SESSION_ID']));
-		nuRunQuery("DELETE FROM zzzzsys_session WHERE sss_time < $s - 36000");					//-- 10 hours
+	if ($sessionData['SESSION_SSS_TIME_EXISTS']){
+		$s = time();
+		nuRunQuery("UPDATE zzzzsys_session SET sss_time = $s WHERE zzzzsys_session_id = ? ", array($sessionId));
+		nuRunQuery("DELETE FROM zzzzsys_session WHERE sss_time < $s - 36000");										//-- 10 hours
 	}
 
 	return $A;
