@@ -1520,14 +1520,14 @@ function nuFormDimensions($f){
 	}
 
 	$bh		= $bt + ($rs * $rh) + $bb;
-	$bw		= nuGetBrowseWidth($f);   
+	$bw		= nuGetBrowseWidth($f);
 
-	$grid	= Array('height'=>$gh, 'width'=> $gw);
-	$browse	= Array('height'=>$bh, 'width'=> $bw);
-	$edit	= Array('height'=>$h,  'width'=> $w);
+	$grid	= Array('height'=>$gh,	'width'=> $gw);
+	$browse	= Array('height'=>$bh,	'width'=> $bw);
+	$edit	= Array('height'=>$h,	'width'=> $w);
 
 	$d[]	= $bt + ($rs * $rh) + $bb;	//-- lookup browse height
-	$d[]	= nuGetBrowseWidth($f);
+	$d[]	= $bw;
 	$d[]	= $h	+ 0;					 //-- lookup form height
 	$d[]	= $w	+ 0;					 //-- lookup form width
 	$d[]	= $h	+ 0;					 //-- form height
@@ -1544,9 +1544,9 @@ function nuFormDimensions($f){
 function nuGetBrowseWidth($f){
 
 	$t	= nuRunQuery("SELECT SUM(sbr_width) FROM zzzzsys_browse WHERE sbr_zzzzsys_form_id = ? ", array($f));		
-	$__x = db_fetch_row($t);
-	return db_num_rows($t) > 0 ? $__x[0] : 0;
-	unset($__x);
+	$r = db_fetch_row($t);
+	return db_num_rows($t) > 0 ? $r[0] : 0;
+
 }
 
 function isForm($i){
