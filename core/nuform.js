@@ -221,6 +221,8 @@ function nuBuildForm(f){
 		
 	}
 
+	nuEvalnuOnLoadEvents();
+
 	if(window.nuOnLoad){
 		nuOnLoad();
 	}
@@ -290,6 +292,28 @@ function nuBuildForm(f){
 	nuCursor('default');
 
 	nuWindowPosition();
+
+}
+
+function nuEvalnuOnLoadEvents() {
+
+	var r = JSON.parse(JSON.stringify(nuSERVERRESPONSE));
+	for (var i = 0; i < r.objects.length; i++) {
+		let obj = r.objects[i];
+		if (obj.js.length > 0) {
+
+			for (let i = 0; i < obj.js.length; i++) {
+
+				if (obj.js[i].event == 'onnuload') {
+					var js = obj.js[i].js;
+					js = js.replace('(this)', '("#' + obj.id + '")');
+					js = js.replace('this.', obj.id + '.');
+					eval(js);
+				}
+			}
+		}
+
+	}
 
 }
 
@@ -3451,7 +3475,7 @@ function nuChooseEventList(){
 
 	}else{
 
-		return ['onblur','onclick','onchange','oninput','onfocus','onkeydown'];
+		return ['onnuload','onblur','onclick','onchange','oninput','onfocus','onkeydown'];
 
 	}
 
@@ -3622,7 +3646,8 @@ function nuCloneAction(){
 	nuEmptyNoClone();
 
 	var b	= $('.nuBreadcrumb').length;
-	$('#nuBreadcrumb' + b).append('&nbsp;<span class="nuCloning">&nbsp;'+ nuTranslate('Cloning') + '&nbsp;</span>');
+	var bc = b == 0 ? $('#nuHomeGap') : $('#nuBreadcrumb' + b);
+	bc.append('&nbsp;<span class="nuCloning">&nbsp;'+ nuTranslate('Cloning') + '&nbsp;</span>');
 
 	if(window.nuOnClone){
 		nuOnClone();
