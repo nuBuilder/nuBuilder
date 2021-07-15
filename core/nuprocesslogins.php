@@ -291,10 +291,16 @@ function nuTempAnonReport() {
 
 function nuUpdateExistingSession() {
 
-	$t = nuRunQuery("SELECT * FROM zzzzsys_setup");
-	$r = db_fetch_object($t);
+	if (! isset($_SESSION['nubuilder_session_data']['SESSION_TIMEOUT_MINUTES'])) {
+		$t = nuRunQuery("SELECT set_time_out_minutes FROM zzzzsys_setup");
+		$r = db_fetch_object($t);
+		$timeout = $r->set_time_out_minutes;
+		$_SESSION['nubuilder_session_data']['SESSION_TIMEOUT_MINUTES'] = $timeout;
+	} else {
+		$timeout = $_SESSION['nubuilder_session_data']['SESSION_TIMEOUT_MINUTES'];
+	}
 
-	if ((($r->set_time_out_minutes * 60) + $_SESSION['nubuilder_session_data']['SESSION_TIMESTAMP']) >= time()) {
+	if ((($timeout * 60) + $_SESSION['nubuilder_session_data']['SESSION_TIMESTAMP']) >= time()) {
 		$_SESSION['nubuilder_session_data']['SESSION_TIMESTAMP'] = time();
 	}
 	else {
