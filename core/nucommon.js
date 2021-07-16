@@ -2650,3 +2650,15 @@ function nuBase64encode(str) {
 function nuOpenWiki(page) {
 	window.open('https://wiki.nubuilder.net/nubuilderforte/index.php' + page);
 }
+
+function nuSetLabelText(i, str, translate) {
+
+	if (translate === true) { str = nuTranslate(str); }
+
+	let label = $('#label_' + i);
+	let lwidth = nuGetWordWidth(str);
+	let left = $('#' + i).cssNumber('left');
+
+	label.css({ 'width': lwidth, 'left': left - lwidth - 5 }).html(str);
+
+}
