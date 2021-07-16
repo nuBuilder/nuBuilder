@@ -306,8 +306,8 @@ function nuEvalnuOnLoadEvents() {
 
 				if (obj.js[i].event == 'onnuload') {
 					var js = obj.js[i].js;
-					js = js.replace('(this)', '("#' + obj.id + '")');
-					js = js.replace('this.', obj.id + '.');
+					js = js.replaceAll('(this)', '("#' + obj.id + '")');
+					js = js.replaceAll('this.', obj.id + '.');
 					eval(js);
 				}
 			}
