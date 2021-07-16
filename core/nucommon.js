@@ -2646,3 +2646,7 @@ function nuBase64encode(str) {
 	return btoa(encode);
 
 }
+
+function nuOpenWiki(page) {
+	window.open('https://wiki.nubuilder.net/nubuilderforte/index.php' + page);
+}
