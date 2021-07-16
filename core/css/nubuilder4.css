@@ -657,9 +657,11 @@
 .nuLabel {}
 
 .nuCloning {
-	background-color:rgba(239,239,239,0.4);
-	border:1px solid #ebebeb;
-	color:red
+	background-color: rgb(226,234,255,0.8);
+	border: 1px solid #ffffff;
+	color: red;
+	border-radius: 5px;
+	padding: 1px;
 }
 
 .nuText {}
