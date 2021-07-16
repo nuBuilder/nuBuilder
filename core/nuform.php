@@ -1512,8 +1512,15 @@ function nuFormDimensions($f){
 			 $gw	= $gw + $r->sob_all_width + 4;
 
 	}
+	
+	if ($r->sob_all_type == 'textarea') {
+		$oh = $r->sob_all_height + 8;
+	} else if ($r->sob_select_2 == '1') {
+		$oh = $r->sob_all_height + 20;
+	} else {
+		$oh = $r->sob_all_height;
+	}
 
-	$oh		= $r->sob_select_2 == '1' ? $r->sob_all_height + 20 : $r->sob_all_height;
 	$h		= max($h, $r->sob_all_top + $oh);
 	$gh		= max($oh, 25, $gh);
 
