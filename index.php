@@ -12,7 +12,12 @@ require_once('core/nusystemupdatelibs.php');
 nuMigrateSQL();
 
 if ( !isset($_SESSION['nubuilder_session_data']['NB_PATH']) || dirname($_SESSION['nubuilder_session_data']['NB_PATH']) != $nb_path ) {
+
+	$_SESSION['nubuilder_session_data']['NB_PATH'] = null;
 	nuLoadNewSession();
+	header('Location: '.$_SERVER['PHP_SELF']);
+	die;
+
 } 
 
 ?>
@@ -279,7 +284,7 @@ window.nuHASH				= [];
 		$('#nuTabHolder').css('width', '100%');
 		$('.nuTabTitleColumn').css('width', '100%');
 		$('body').css('width', '100%');
-		
+
 		if (window.nuVerticalTabs) {
 			nuSetVerticalTabs();
 		}
