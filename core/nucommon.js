@@ -686,9 +686,11 @@ function nuBindCtrlEvents(){
 				} else if(e.keyCode == 73 && g) {					//-- i		Form Info
 					nuShowFormInfo();
 				} else if(e.keyCode == 69 && g) {					//-- t		Database
-					nuStartDatabaseAdmin();		
+					nuStartDatabaseAdmin();
+				} else if(e.keyCode == 66 && g) {					//-- b		Backup
+					nuRunPHPHidden('nubackup', 0);
 				} else if(e.keyCode == 85 && g) {					//-- u		Setup
-					nuForm('nusetup','1','', '', 2);						
+					nuForm('nusetup','1','', '', 2);
 				} else if(e.keyCode == 83) {						//-- s		Search
 					nuSearchAction();
 				} else if(e.keyCode == 65 && g) {					//-- a		Add
@@ -717,11 +719,13 @@ function nuBindCtrlEvents(){
 				} else if(e.keyCode == 68 && g) {					//-- d		nuDebug Results
 					nuPopup("nudebug", "");
 				} else if(e.keyCode == 85 && g) {					//-- u		Setup
-					nuForm('nusetup','1','', '', 2);										
+					nuForm('nusetup','1','', '', 2);
 				} else if(e.keyCode == 73 && g) {					//-- i		Form Info
-					nuShowFormInfo();					
+					nuShowFormInfo();
 				} else if(e.keyCode == 69 && g) {					//-- t		Database
-					nuStartDatabaseAdmin();					
+					nuStartDatabaseAdmin();
+				} else if(e.keyCode == 66 && g) {					//-- b		Backup
+					nuRunPHPHidden('nubackup', 0);
 				} else if (e.keyCode == 82) {						//-- r		Refresh
 					nuGetBreadcrumb();
 				} else if(e.keyCode == 83) {						//-- s		Save
