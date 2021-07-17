@@ -23,6 +23,9 @@
 	$nuConfigDemoDBGlobeadminPassword	= "";
 	$nuConfigDemoSavingAllowedIds		= "";
 
+	$nuConfigUserAdditional1Label		= "";						//-- If not blank, rename the Label of "Additional 1" on the user form
+	$nuConfigUserAdditional2Label		= "";						//-- If not blank, rename the Label of "Additional 2" on the user form
+
 // Options:
 	$nuConfigIncludeGoogleCharts		= true;						//-- Include external link to www.gstatic.com
 	$nuConfigIncludeApexCharts			= false;					//-- Include apex charts (libs/apexcharts)
