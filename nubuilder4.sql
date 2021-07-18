@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 18, 2021 at 03:41 PM
+-- Generation Time: Jul 18, 2021 at 03:49 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.8
 
@@ -415,8 +415,8 @@ INSERT INTO `zzzzsys_event` (`zzzzsys_event_id`, `sev_zzzzsys_object_id`, `sev_e
 ('nu60e97510251557f', 'nu60e975102462aff', 'onclick', '$(\'#sob_all_height\').val(700).change();'),
 ('nu60e9756969dff71', 'nu60e97569692fac5', 'onclick', '$(\'#sob_all_width\').val(1000).change();'),
 ('nu60e975e9337f224', 'nu60e975e932d74ef', 'onclick', 'sob_all_left.value = Number(sob_all_left.value) +50;\n$(\'#sob_all_top\').change();'),
-('nu60f12beaa7107fe', '60f12beaa64b371', 'onclick', 'nuRunPHPHidden(\'nuBackup\',0);'),
-('60f3f95b6727658', '60f3f95b66732d1', 'onclick', 'nuRunPHPHidden(\'nusetrefreshschema\', 0);');
+('nu60f12beaa7107fe', 'nu60f12beaa64b371', 'onclick', 'nuRunPHPHidden(\'nuBackup\',0);'),
+('nu60f3f95b6727658', 'nu60f3f95b66732d1', 'onclick', 'nuRunPHPHidden(\'nusetrefreshschema\', 0);');
 
 -- --------------------------------------------------------
 
@@ -566,8 +566,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.07.18.08'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.07.18.04');
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.07.18.10'),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.07.18.05');
 
 -- --------------------------------------------------------
 
@@ -1084,7 +1084,7 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu60e975e932d74ef', 'nuobject', 'zzzzsys_object', 'input', 'sob_left_btn_increase', '+50', 'nu5bad6cb3686cb0d', 170, 221, 193, 50, 22, '1', 'left', '0', '0', '1', '', '', '', '', '', '', '', '', '', '0', '0', NULL, '', '', '', NULL, '', '', NULL, 'zzzzsys_tab', '', '', '', '', '', '', 0, '', 'button', '', '', '', '', '', '', '', '', ''),
 ('nu60eed5345aa79e5', 'nufflaunch', '', 'input', 'check_nulog', 'Add nulog Column', 'nu5bad6cb36f36433', 20, 583, 1152, 16, 22, '1', 'left', '0', '0', '0', '', '', '', '', '', '', '', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'checkbox', '', '', '', '', '', '', '', '', ''),
 ('nu60f12beaa64b371', 'nuhome', '', 'input', 'run_backup', 'Backup', 'nu5fd750667019155', 200, 99, 53, 195, 30, '0', 'center', '0', '0', '1', '', '', '', '', '', '0', '', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'button', '', '', '', '', '', '', '', '', ''),
-('60f3f95b66732d1', 'nuhome', '', 'input', 'run_refresh_schema', 'Schema', 'nu5fd750667019155', 210, 211, 53, 195, 30, '0', 'center', '0', '0', '1', '', '', '', '', '', '0', '', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'button', '', '', '', '', '', '', '', '', '');
+('nu60f3f95b66732d1', 'nuhome', '', 'input', 'run_refresh_schema', 'Schema', 'nu5fd750667019155', 210, 211, 53, 195, 30, '0', 'center', '0', '0', '1', '', '', '', '', '', '0', '', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'button', '', '', '', '', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
