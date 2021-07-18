@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 18, 2021 at 03:28 PM
+-- Generation Time: Jul 18, 2021 at 03:41 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.8
 
@@ -567,7 +567,7 @@ CREATE TABLE `zzzzsys_info` (
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
 ('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.07.18.08'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.07.18.03');
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.07.18.04');
 
 -- --------------------------------------------------------
 
@@ -1084,7 +1084,7 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu60e975e932d74ef', 'nuobject', 'zzzzsys_object', 'input', 'sob_left_btn_increase', '+50', 'nu5bad6cb3686cb0d', 170, 221, 193, 50, 22, '1', 'left', '0', '0', '1', '', '', '', '', '', '', '', '', '', '0', '0', NULL, '', '', '', NULL, '', '', NULL, 'zzzzsys_tab', '', '', '', '', '', '', 0, '', 'button', '', '', '', '', '', '', '', '', ''),
 ('nu60eed5345aa79e5', 'nufflaunch', '', 'input', 'check_nulog', 'Add nulog Column', 'nu5bad6cb36f36433', 20, 583, 1152, 16, 22, '1', 'left', '0', '0', '0', '', '', '', '', '', '', '', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'checkbox', '', '', '', '', '', '', '', '', ''),
 ('nu60f12beaa64b371', 'nuhome', '', 'input', 'run_backup', 'Backup', 'nu5fd750667019155', 200, 99, 53, 195, 30, '0', 'center', '0', '0', '1', '', '', '', '', '', '0', '', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'button', '', '', '', '', '', '', '', '', ''),
-('60f3f95b66732d1', 'nuhome', '', 'input', 'run_refresh_schema', 'Refresh Schema', 'nu5fd750667019155', 210, 211, 53, 195, 30, '0', 'center', '0', '0', '1', '', '', '', '', '', '0', '', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'button', '', '', '', '', '', '', '', '', '');
+('60f3f95b66732d1', 'nuhome', '', 'input', 'run_refresh_schema', 'Schema', 'nu5fd750667019155', 210, 211, 53, 195, 30, '0', 'center', '0', '0', '1', '', '', '', '', '', '0', '', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'button', '', '', '', '', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
