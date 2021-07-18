@@ -92,8 +92,9 @@ class nuSqlString{
 
 	function __construct($sql){
 
-		$sql				= str_replace(chr(13), ' ', $sql);//----remove carrige returns
-		$sql				= str_replace(chr(10), ' ', $sql);//----remove line feeds
+		$sql				= preg_replace('%(/\*)(.*?)(\*/)%s',"",$sql); 	//-- remove  / * * / style comments
+		$sql				= str_replace(chr(13), ' ', $sql);				//-- remove carrige returns
+		$sql				= str_replace(chr(10), ' ', $sql);				//-- remove line feeds
 
 		$from_string		= stristr($sql, ' from ');
 		$where_string		= stristr($sql, ' where ');
