@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 18, 2021 at 09:12 PM
+-- Generation Time: Jul 18, 2021 at 09:20 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.8
 
@@ -415,7 +415,7 @@ INSERT INTO `zzzzsys_event` (`zzzzsys_event_id`, `sev_zzzzsys_object_id`, `sev_e
 ('nu60e97510251557f', 'nu60e975102462aff', 'onclick', '$(\'#sob_all_height\').val(700).change();'),
 ('nu60e9756969dff71', 'nu60e97569692fac5', 'onclick', '$(\'#sob_all_width\').val(1000).change();'),
 ('nu60e975e9337f224', 'nu60e975e932d74ef', 'onclick', 'sob_all_left.value = Number(sob_all_left.value) +50;\n$(\'#sob_all_top\').change();'),
-('nu60f12beaa7107fe', 'nu60f12beaa64b371', 'onclick', 'nuRunPHPHidden(\'nuBackup\',0);'),
+('nu60f12beaa7107fe', 'nu60f12beaa64b371', 'onclick', 'nuMessage(nuTranslate(\'Running\') + \'...\');\nnuRunPHPHidden(\'nuBackup\',0);'),
 ('nu60f3f95b6727658', 'nu60f3f95b66732d1', 'onclick', 'nuRunPHPHidden(\'nusetrefreshschema\', 0);');
 
 -- --------------------------------------------------------
@@ -566,8 +566,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.07.18.13'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.07.18.07');
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.07.18.14'),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.07.18.08');
 
 -- --------------------------------------------------------
 
