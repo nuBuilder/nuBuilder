@@ -1677,6 +1677,18 @@ function nuSubformColumnArray(id, column) {
 
 }
 
+function nuSubFormColumnUnique(id, column, label) {
+
+    let arr = nuSubformColumnArray(id, column);
+
+    if(arr.includes('') || !nuArrayIsUnique(arr)) {
+		return nuTranslate(label) + ' ' + nuTranslate('must be both unique and not blank');
+    }
+
+	return true;
+
+}	
+
 function nuGetClipboardText(e) {
 
 	var cb;
