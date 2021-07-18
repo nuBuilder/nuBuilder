@@ -439,6 +439,25 @@ function nuJavascriptCallback($js){
 	$_POST['nuCallback']	= $js;
 }
 
+function nuSetJSONDataAll($i, $nj){
+
+	$t						= nuRunQuery("SELECT zzzzsys_session_id, sss_access FROM zzzzsys_session");
+
+	while($r = db_fetch_object($t)){
+
+		$j					= json_decode($r->sss_access, true);
+
+		$j[$i]				= $nj;
+		$J					= json_encode($j);
+
+		$s					= "UPDATE zzzzsys_session SET sss_access = ? WHERE zzzzsys_session_id = ? ";
+		$t					= nuRunQuery($s, array($J, $r->zzzzsys_session_id));
+
+	}	
+
+}
+
+
 function nuSetJSONData($i, $nj){
 
 	$s					= "SELECT sss_access FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
@@ -514,6 +533,7 @@ function nuGetUserJSONData($i, $u = ""){
 	}
 
 }
+
 
 function nuGetProcedure($i){
 
@@ -1178,11 +1198,11 @@ function nuBuildViewSchema(){
 
 }
 
-function nuUpdateFormSchema(){
+function nuUpdateFormSchema($force_update = false){
 
 	$s		= nuGetJSONData('clientFormSchema');
 
-	if(is_null($s)){
+	if(is_null($s) || $force_update){
 
 		$s	= nuBuildFormSchema();
 		nuSetJSONData('clientFormSchema', $s);

@@ -19,6 +19,7 @@
 	$_POST['nuErrors']						= array();
 
 	$U										= nuGetUserAccess();
+
 	if (empty($U)) nuDie(nuTranslate('Your session has timed out.'));
 
 	$formAndSessionData						= nuGatherFormAndSessionData($U['HOME_ID']);
@@ -33,6 +34,7 @@
 	$_POST['nuHash']						= array_merge($U, nuSetHashList($P));
 
 	$g =  $_POST['nuHash']['GLOBAL_ACCESS'] == 1;
+	$forceRefreshSchema						= nuGetJSONData('FORCE_REFRESH_SCHEMA') == '1';
 
 	// 2FA, check authentication status.
 	if ((($g && nuObjKey($_SESSION['nubuilder_session_data'],'2FA_ADMIN')) || (!$g && nuObjKey($_SESSION['nubuilder_session_data'],'2FA_USER'))) && nuObjKey($_SESSION['nubuilder_session_data'],'SESSION_2FA_STATUS') == 'PENDING') {
@@ -88,9 +90,12 @@
 		$f->forms[0]->database					= $nuConfigDBName;
 		$f->forms[0]->dimensions				= isset($formAndSessionData->dimensions) ? $formAndSessionData->dimensions : null;
 		$f->forms[0]->translation				= $formAndSessionData->translation;
-		$f->forms[0]->tableSchema				= nuUpdateTableSchema($CT);
+		$f->forms[0]->tableSchema				= nuUpdateTableSchema($CT, $forceRefreshSchema);
 		$f->forms[0]->viewSchema				= nuBuildViewSchema($CT);
-		$f->forms[0]->formSchema				= nuUpdateFormSchema();
+		$f->forms[0]->formSchema				= nuUpdateFormSchema($forceRefreshSchema);
+
+		if ($forceRefreshSchema) { nuSetJSONData('FORCE_REFRESH_SCHEMA','0'); }
+
 		$f->forms[0]->session_id				= $_SESSION['nubuilder_session_data']['SESSION_ID'];
 
 		$f->forms[0]->callback					= nuObjKey($_POST,'nuCallback');
