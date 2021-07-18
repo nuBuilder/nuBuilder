@@ -1677,7 +1677,7 @@ function nuSubformColumnArray(id, column) {
 
 }
 
-function nuSubFormColumnUnique(id, column, label) {
+function nuSubformColumnUnique(id, column, label) {
 
     let arr = nuSubformColumnArray(id, column);
 
