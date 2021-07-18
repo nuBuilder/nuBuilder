@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 18, 2021 at 03:06 PM
+-- Generation Time: Jul 18, 2021 at 03:28 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.8
 
@@ -566,8 +566,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.07.18.07'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.07.18.02');
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.07.18.08'),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.07.18.03');
 
 -- --------------------------------------------------------
 
@@ -1181,7 +1181,7 @@ INSERT INTO `zzzzsys_php` (`zzzzsys_php_id`, `sph_code`, `sph_description`, `sph
 ('nu5bad6cb32dcbcb4_AB', 'nu5bad6cb32dcbcb4_AB', 'System PHP', 'nubuilder', '\n$s  = \"\n        SELECT * \n        FROM zzzzsys_form\n        WHERE zzzzsys_form_id = \'#LOOKUP_RECORD_ID#\'\n        \n        \";\n\n$t  = nuRunQuery($s);\n$r  = db_fetch_object($t);\n\nnuSetFormValue(\'sob_lookup_table\', $r->sfo_table);\n', NULL, NULL, '1', '0', NULL),
 ('nu5bad6cb32c9102c_AB', 'nu5bad6cb32c9102c_AB', 'System PHP', 'nubuilder', '$s  = \"\n        SELECT * \n        FROM zzzzsys_form\n        WHERE zzzzsys_form_id = \'#LOOKUP_RECORD_ID#\'\n        \n        \";\n\n$t  = nuRunQuery($s);\n$c = db_num_rows($t);\nif ($c == 1) {$r  = db_fetch_object($t); }\n\n\nnuSetFormValue(\'sob_subform_table\', $c == 1 ? $r->sfo_table: \'\');', '', '', '1', '0', ''),
 ('nuuser_BE', 'nuuser_BE', 'System PHP', 'nubuilder', '$add1Label = isset($_SESSION[\'nubuilder_session_data\'][\'USER_ADDITIONAL1_LABEL\']) ? $_SESSION[\'nubuilder_session_data\'][\'USER_ADDITIONAL1_LABEL\'] : \'\';\n$add2Label = isset($_SESSION[\'nubuilder_session_data\'][\'USER_ADDITIONAL2_LABEL\']) ? $_SESSION[\'nubuilder_session_data\'][\'USER_ADDITIONAL2_LABEL\'] : \'\';\n\n$j = \"\n\n    	if (\'$add1Label\' !== \'\') { nuSetLabelText(\'sus_additional1\', \'$add1Label\', true) };\n    	if (\'$add2Label\' !== \'\') { nuSetLabelText(\'sus_additional2\', \'$add2Label\', true) };\n    	\n\";\n\nnuAddJavascript($j);', NULL, NULL, '1', '0', NULL),
-('60f3f621d215470', 'nusetrefreshschema', 'Set marker to Refresh Form, Table schema', 'nubuilder', 'nuSetJSONDataAll(\'FORCE_REFRESH_SCHEMA\',\'1\');\n\nnuJavascriptCallback(\'nuMessage(\"Done\")\');\n', 'hide', NULL, '0', '0', '');
+('60f3f621d215470', 'nusetrefreshschema', 'Set marker to Refresh Form, Table schema', 'nubuilder', 'nuSetJSONDataAll(\'FORCE_REFRESH_SCHEMA\',\'1\');\n\nnuJavascriptCallback(\'nuMessage(nuTranslate(\"Action successfully completed\"))\');', 'hide', NULL, '0', '0', '');
 
 -- --------------------------------------------------------
 
