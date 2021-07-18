@@ -277,7 +277,7 @@ $(document).ready(function() {
 	
 	$(".next").click(function() {
 		
-		if ($(this).attr('id') == 'startupdate') {
+		if ($(this).attr('id') == 'startupdate' || $(this).attr('id') == 'startupdateskip') {
 		
 			parent.nuSystemUpdate();
 			return;
@@ -399,6 +399,7 @@ $(document).ready(function() {
 							</ul>	
 							
 						</div> <input type="button" name="next" class="next action-button" value="Next" />
+						<input type="button" id="startupdateskip" style="width:240px" class="next action-button" value="Skip Wizard / Update now" />
 					</fieldset>
 					
 					<fieldset>
@@ -412,7 +413,7 @@ $(document).ready(function() {
 								</div>
 							</div>  
 							<ul>
-								<li>Pull the latest nuBuilder files from either <a href="https://sourceforge.net/projects/nubuilder/files/latest/download" target="_blank">Sourceforge</a> or <a href="https://github.com/nuBuilder/nuBuilder-4.5/archive/master.zip" target="_blank">Github.</a></li> 
+								<li>Pull the latest nuBuilder 4 files from either <a href="https://sourceforge.net/projects/nubuilder/files/latest/download" target="_blank">Sourceforge</a> or <a href="https://github.com/nuBuilder/nuBuilder-4.5/archive/master.zip" target="_blank">Github.</a></li> 
 								<li>Alternatively, use a subversion client to obtain the latest files.</li>
 							</ul>
 							<ul>
@@ -452,7 +453,7 @@ $(document).ready(function() {
 								</ul>							<br>
 							The recommandation is to have a test environment to test changes before applying them to the production environment.
 								
-						</div></div>  <input type="button" id='startupdate' name="next" class="next action-button" value="Update" /> 
+						</div></div>  <input type="button" id="startupdate" name="next" class="next action-button" value="Update" /> 
 					</fieldset>
 					
 				</form>
