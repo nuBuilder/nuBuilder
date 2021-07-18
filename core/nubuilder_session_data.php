@@ -32,7 +32,10 @@ class nubuilder_session_data {
 	'2FA_REMEMBER_ME'			=> false,
 	'SESSION_ID'				=> null,
 	'SESSION_TIMESTAMP'			=> null,
-	'translation'				=> null);
+	'translation'				=> null,
+	'USER_ADDITIONAL1_LABEL'	=> null,
+	'USER_ADDITIONAL2_LABEL'	=> null
+	);
 
 	function __construct() {
 	}
@@ -41,7 +44,7 @@ class nubuilder_session_data {
 
 		return $this->nubuilder;
 	}
-	function construct_standalone($nuConfigDBDriver,$nuConfigDBPort,$nuConfigDBHost,$nuConfigDBName,$nuConfigDBUser,$nuConfigDBPassword,$nuConfigDBGlobeadminUsername,$nuConfigDBGlobeadminPassword, $nuConfigDBGlobeadminUsers, $nuConfigDemoDBGlobeadminUsername, $nuConfigDemoDBGlobeadminPassword, $nuConfigDemoSavingAllowedIds, $nuConfig2FAAdmin, $nuConfig2FAUser, $nuConfig2FAFormID, $nuConfig2FATokenValidityTime, $nuConfig2FAShowRememberMe, $nuConfigIsDemo = false) {
+	function construct_standalone($nuConfigDBDriver,$nuConfigDBPort,$nuConfigDBHost,$nuConfigDBName,$nuConfigDBUser,$nuConfigDBPassword,$nuConfigDBGlobeadminUsername,$nuConfigDBGlobeadminPassword, $nuConfigDBGlobeadminUsers, $nuConfigDemoDBGlobeadminUsername, $nuConfigDemoDBGlobeadminPassword, $nuConfigDemoSavingAllowedIds, $nuConfig2FAAdmin, $nuConfig2FAUser, $nuConfig2FAFormID, $nuConfig2FATokenValidityTime, $nuConfig2FAShowRememberMe, $nuConfigUserAdditional1Label, $nuConfigUserAdditional2Label, $nuConfigIsDemo = false) {
 
 		$this->nubuilder['DB_DRIVER']				= $nuConfigDBDriver;
 		$this->nubuilder['DB_PORT']					= $nuConfigDBPort;
@@ -67,6 +70,9 @@ class nubuilder_session_data {
 		$this->nubuilder['2FA_FORM_ID']				= $nuConfig2FAFormID == '' ? 'nuauthentication' : $nuConfig2FAFormID;
 		$this->nubuilder['2FA_TOKEN_VALIDITY_TIME']	= $nuConfig2FATokenValidityTime == '' ? 168 : $nuConfig2FATokenValidityTime;
 		$this->nubuilder['2FA_REMEMBER_ME']			= $nuConfig2FAShowRememberMe;
+		
+		$this->nubuilder['USER_ADDITIONAL1_LABEL']	= $nuConfigUserAdditional1Label;
+		$this->nubuilder['USER_ADDITIONAL2_LABEL']	= $nuConfigUserAdditional2Label;
 
 	}
 }
