@@ -1200,7 +1200,7 @@ function nuUpdateTableSchema($call_type, $force_update = false){
 	$j	= nuGetJSONData('clientTableSchema');
 	$formCode = nuObjKey(nuHash(),'form_code');
 
-	if(($call_type == 'runhiddenphp' && ($formCode == 'nufflaunch' || $formCode == 'nuadddbcolumn')) || is_null($j) || $j == '' || $force_update == true ){
+	if($formCode == 'nufflaunch' || ($call_type == 'runhiddenphp' && $formCode == 'nuadddbcolumn') || is_null($j) || $j == '' || $force_update == true ){
 
 		$j	= nuBuildTableSchema();
 		nuSetJSONData('clientTableSchema', $j);			//-- force updating Table Schema
