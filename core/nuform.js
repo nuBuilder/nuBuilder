@@ -1660,6 +1660,23 @@ function nuSubformFocusLastRow(id, f) {
 
 }
 
+function nuSubformColumnArray(id, column) {
+
+	var a = Array();
+	var sf = nuSubformObject(id);
+
+	var c = Number.isInteger(column) ? column : sf.fields.indexOf(column);
+
+	for(var i = 0; i < sf.rows.length; i++) {
+		if(sf.deleted[i] == 0) {
+			var rv = sf.rows[i][c];
+			a.push(rv);
+		}
+	}
+	return a;
+
+}
+
 function nuGetClipboardText(e) {
 
 	var cb;
