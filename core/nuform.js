@@ -2536,7 +2536,7 @@ function nuGetOptionsList(f, t, p, a, type){
 
 			list.push([nuTranslate('nuDebug Results'), 'nuOptionsListAction("nudebug", "")', 'fa-bug', 'Ctrl+Shft+D']);
 			list.push([nuTranslate('Database'), 'nuStartDatabaseAdmin();', 'fa-database', 'Ctrl+Shft+E']);
-			list.push([nuTranslate('Backup'), 'nuMessage(nuTranslate("Running") + "..."); nuRunPHPHidden("nubackup",0)', 'fa fa-hdd-o', 'Ctrl+Shft+B']);
+			list.push([nuTranslate('Backup'), 'nuMessage(nuTranslate("Backup is running") + "..."); nuRunPHPHidden("nubackup",0)', 'fa fa-hdd-o', 'Ctrl+Shft+B']);
 			list.push([nuTranslate('Setup'), 'nuForm("nusetup","1","", "", 2)', 'fa-cogs', 'Ctrl+Shft+U']);
 			list.push([nuTranslate('Form Info'), 'nuShowFormInfo();', 'fa-info', 'Ctrl+Shft+I']);
 
