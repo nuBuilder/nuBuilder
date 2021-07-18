@@ -4353,7 +4353,7 @@ function nuRedefine_nuSelectBrowse(){
 		var ft				= window.nuFORM.getProperty('form_type');
 		var ro				= window.nuFORM.getProperty('redirect_other_form_id');
 
-		if (ft == 'browse' && ro == '') {
+		if (ft == 'browse' && ro == '' && parent.$('#nuDragDialog').length == 0) {
 			nuSelectBrowse = function (e, t) {}
 			return;
 		}
