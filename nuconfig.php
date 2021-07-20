@@ -25,6 +25,7 @@
 
 	$nuConfigUserAdditional1Label		= "";						//-- If not blank, rename the Label of "Additional 1" on the user form
 	$nuConfigUserAdditional2Label		= "";						//-- If not blank, rename the Label of "Additional 2" on the user form
+	$nuConfigUserCodeLabel				= ""; 						//-- If not blank, rename the Label of "Code" on the user form
 
 // Options:
 	$nuConfigIncludeGoogleCharts		= true;						//-- Include external link to www.gstatic.com
