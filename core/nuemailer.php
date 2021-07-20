@@ -53,8 +53,8 @@ function nuEmail($to_list=array(),$from_address='',$from_name='',$content='',$su
 	$mail->IsHTML($nuEmailSettings->html);
 
 	_nuEmailHelperAdd($mail, $to_list, 'AddAddress');
-	_nuEmailHelperAdd($mail, $cc_list, 'AddCC');			
-	_nuEmailHelperAdd($mail, $bcc_list, 'AddBCC');	
+	_nuEmailHelperAdd($mail, $cc_list, 'AddCC');
+	_nuEmailHelperAdd($mail, $bcc_list, 'AddBCC');
 	_nuEmailHelperAdd($mail, $nuEmailSettings->reply_to_list, 'AddReplyTo');
 	_nuEmailHelperAttach($mail, $file_list);
 
@@ -64,14 +64,15 @@ function nuEmail($to_list=array(),$from_address='',$from_name='',$content='',$su
 
 		if ($mail->Send()) {
 			$result[0] = true;
-			$result[1] = "Message sent successfully";			
-		} else {			
+			$result[1] = "Message sent successfully";
+			$result[2] = "";
+		} else {
 			$result[0] = false;
 			$result[1] = "Message sending failed";
 			$result[2] = $mail->ErrorInfo;
 		}
 
-	} catch(Exception $e) {		
+	} catch(Exception $e) {	
 		$result[0] = false;
 		$result[1] = $e->errorMessage();
 		$result[2] = $mail->ErrorInfo;
@@ -90,7 +91,7 @@ function _nuMarshallEmailSettingsHelper($obj, $key, $default = '') {
 		return $default;
 	}
 	if ( !isset($obj->$key) ) { 
-		return $default;	
+		return $default;
 	}
 	$a = trim($obj->$key);
 	if ( empty($a) ) {
