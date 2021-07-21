@@ -551,15 +551,13 @@ function nuBreadcrumbDescriptionPart($bt){
 
 function nuBreadcrumbDescription($r, $R){
 
-	if(!isset($r->sfo_breadcrumb_title) || trim($r->sfo_breadcrumb_title) == '')	{return $r->sfo_description;}			//-- no breadcrumb
+	if($R == '') {return $r->sfo_description;}																			//-- Browse Form, new record
+
+	if(!isset($r->sfo_breadcrumb_title) || trim($r->sfo_breadcrumb_title) == '')	{return $r->sfo_description;}		//-- no breadcrumb
 
 	$bt = $r->sfo_breadcrumb_title;
 
 	$parts = nuStringContains('|', $bt);
-
-	if (! $parts) {
-		if($R == '' || $R == '-1')	{return $r->sfo_description;}				//-- Browse Form, new record
-	}
 
 	if ($parts) {
 		$a = explode("|", $bt);
