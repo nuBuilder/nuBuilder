@@ -1,8 +1,11 @@
 <?php
 
-function nuFormProperties($f){
+function nuFormProperties($f, $columns = ''){
 
-	$s	= "SELECT * FROM zzzzsys_form WHERE zzzzsys_form_id = ? ";
+	$columns = $columns == '' ? '*' : $columns;
+
+	$s	= "SELECT $columns FROM zzzzsys_form WHERE zzzzsys_form_id = ? ";
+
 	$t	= nuRunQuery($s, array($f));
 	$r	= db_fetch_object($t);
 
@@ -13,7 +16,6 @@ function nuFormProperties($f){
 function nuBeforeBrowse($f){
 
 	$_POST['nuMessages']	= array();
-	$r						= nuFormProperties($f);
 
 	$p	= nuProcedure('nuBeforeBrowse');	
 	if($p != '') { eval($p); }	
@@ -25,7 +27,7 @@ function nuBeforeBrowse($f){
 
 function nuBeforeEdit($FID, $RID){
 
-	$r						= nuFormProperties($FID);
+	$r						= nuFormProperties($FID,'sfo_table, sfo_primary_key, sfo_javascript');
 
 	$GLOBALS['EXTRAJS']		= '';
 	$ct						= $_POST['nuSTATE']['call_type'];
@@ -117,10 +119,8 @@ function nuBeforeEdit($FID, $RID){
 
 function nuFormCode($f){
 
-	$r	= nuFormProperties($f);
+	return nuFormProperties($f,'sfo_code')->sfo_code;
 
-	return $r->sfo_code;
-	
 }
 
 function nuRunType($r) {
@@ -358,7 +358,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 				$o->delete				= $r->sob_subform_delete;
 				$f->foreign_key_name	= $r->sob_subform_foreign_key;
 				$o->foreign_key_name	= $r->sob_subform_foreign_key;
-				$o->primary_key_name	= nuFormProperties($r->sob_subform_zzzzsys_form_id)->sfo_primary_key;
+				$o->primary_key_name	= nuFormProperties($r->sob_subform_zzzzsys_form_id,'sfo_primary_key')->sfo_primary_key;
 				$f->primary_key_name	= $o->primary_key_name;
 				$o->add					= $r->sob_subform_add;
 				$o->dimensions			= nuFormDimensions($r->sob_subform_zzzzsys_form_id);
@@ -568,7 +568,7 @@ function nuGetOtherLookupValues($o){
 	$t								= nuRunQuery($s, array($p));
 	$r								= db_fetch_object($t);
 	$i								= $r->form_id;
-	$f								= nuFormProperties($i);
+	$f								= nuFormProperties($i,'sfo_table, sfo_primary_key');
 	$s								= "SELECT * FROM $f->sfo_table WHERE $f->sfo_primary_key = ? ";
 	$t								= nuRunQuery($s, array($l));
 	$_POST['lookup_row']			= db_fetch_object($t);
@@ -972,7 +972,7 @@ function nuBrowseRows($f){
 	$rows			= isset($P['rows']) ? $P['rows'] : 0;
 
 	if($rows == -1){
-		$rows		= nuFormProperties($f->form_id)->sfo_browse_rows_per_page;
+		$rows		= nuFormProperties($f->form_id,'sfo_browse_rows_per_page')->sfo_browse_rows_per_page;
 	}
 
 	if($rows == 0){
@@ -1363,7 +1363,6 @@ function nuButtons($formid, $POST){
 	$C						= '';
 	$D						= '';
 	$a						= nuFormAccess($formid, $nuJ->forms);
-	$f						= nuFormProperties($formid);
 	$c						= $POST['call_type'];
 	$recordID				= nuObjKey($POST,'record_id');
 
@@ -1418,8 +1417,6 @@ function nuButtons($formid, $POST){
 
 function nuRunCode($P){
 
-	$f						= nuFormProperties($formid);
-
 	$s						= 'SELECT sph_code FROM zzzzsys_php WHERE zzzzsys_php_id = ? ';
 	$t						= nuRunQuery($s, array($P['record_id']));
 	$c						= db_fetch_object($t)->sph_code;
@@ -1436,8 +1433,6 @@ function nuRunCode($P){
 }
 
 function nuRunDescription($P){
-
-	$f						= nuFormProperties($formid);
 
 	$s						= 'SELECT sph_description FROM zzzzsys_php WHERE zzzzsys_php_id = ? ';
 	$t						= nuRunQuery($s, array($P['record_id']));
