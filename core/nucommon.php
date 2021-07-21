@@ -1915,4 +1915,16 @@ function nuTranslateExport($l = '', $table = 'zzzzsys_translate') {
 	}
 }
 
+function nuStringContains(string $needle, string $haystack): bool {
+	return strpos($haystack, $needle) !== false;
+}
+
+function nuStringStartsWith(string $needle, string $haystack): bool {
+	return strpos($haystack, $needle) === 0;
+}
+
+function nuStringEndsWith(string $needle, string $haystack): bool {
+	return strpos($haystack, $needle) === strlen($haystack) - strlen($needle);
+}
+
 ?>

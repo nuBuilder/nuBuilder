@@ -541,8 +541,8 @@ function nuGetEditForm($F, $R){
 
 function nuBreadcrumbDescription($r, $R){
 
-	if($R								== '')	{return $r->sfo_description;}		//-- Browse Form
-	if($R								== '-1'){return $r->sfo_description;}		//-- new record
+	if($R == '' || $R == '-1')	{return $r->sfo_description;}		//-- Browse Form, new record
+
 	if(!isset($r->sfo_breadcrumb_title) || trim($r->sfo_breadcrumb_title) == '')	{return $r->sfo_description;}		//-- no breadcrumb
 
 	$b		= nuReplaceHashVariables($r->sfo_breadcrumb_title);
@@ -557,7 +557,7 @@ function nuBreadcrumbDescription($r, $R){
 	}
 
 	return nuReplaceHashVariables($r->sfo_breadcrumb_title);
-	
+
 }
 
 function nuGetOtherLookupValues($o){
