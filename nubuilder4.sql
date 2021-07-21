@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 20, 2021 at 07:02 PM
+-- Generation Time: Jul 21, 2021 at 07:23 AM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.8
 
@@ -567,7 +567,7 @@ CREATE TABLE `zzzzsys_info` (
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
 ('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.07.20.01'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.07.20.01');
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.07.21.00');
 
 -- --------------------------------------------------------
 
@@ -1181,7 +1181,7 @@ INSERT INTO `zzzzsys_php` (`zzzzsys_php_id`, `sph_code`, `sph_description`, `sph
 ('nu5bad6cb32dcbcb4_AB', 'nu5bad6cb32dcbcb4_AB', 'System PHP', 'nubuilder', '\n$s  = \"\n        SELECT * \n        FROM zzzzsys_form\n        WHERE zzzzsys_form_id = \'#LOOKUP_RECORD_ID#\'\n        \n        \";\n\n$t  = nuRunQuery($s);\n$r  = db_fetch_object($t);\n\nnuSetFormValue(\'sob_lookup_table\', $r->sfo_table);\n', NULL, NULL, '1', '0', NULL),
 ('nu5bad6cb32c9102c_AB', 'nu5bad6cb32c9102c_AB', 'System PHP', 'nubuilder', '$s  = \"\n        SELECT * \n        FROM zzzzsys_form\n        WHERE zzzzsys_form_id = \'#LOOKUP_RECORD_ID#\'\n        \n        \";\n\n$t  = nuRunQuery($s);\n$c = db_num_rows($t);\nif ($c == 1) {$r  = db_fetch_object($t); }\n\n\nnuSetFormValue(\'sob_subform_table\', $c == 1 ? $r->sfo_table: \'\');', '', '', '1', '0', ''),
 ('nuuser_BE', 'nuuser_BE', 'System PHP', 'nubuilder', '$add1Label  = isset($_SESSION[\'nubuilder_session_data\'][\'USER_ADDITIONAL1_LABEL\']) ? $_SESSION[\'nubuilder_session_data\'][\'USER_ADDITIONAL1_LABEL\'] : \'\';\n$add2Label  = isset($_SESSION[\'nubuilder_session_data\'][\'USER_ADDITIONAL2_LABEL\']) ? $_SESSION[\'nubuilder_session_data\'][\'USER_ADDITIONAL2_LABEL\'] : \'\';\n$addCode    = isset($_SESSION[\'nubuilder_session_data\'][\'USER_CODE_LABEL\']) ? $_SESSION[\'nubuilder_session_data\'][\'USER_CODE_LABEL\'] : \'\';\n\n$j = \"\n\n    	if (\'$add1Label\'    !== \'\') { nuSetLabelText(\'sus_additional1\', \'$add1Label\', true) };\n    	if (\'$add2Label\'    !== \'\') { nuSetLabelText(\'sus_additional2\', \'$add2Label\', true) };\n    	if (\'$addCode\'      !== \'\') { nuSetLabelText(\'sus_code\', \'$addCode\', true) };    	\n    	\n\";\n\nnuAddJavascript($j);', NULL, NULL, '1', '0', NULL),
-('60f3f621d215470', 'nusetrefreshschema', 'Set marker to Refresh Form, Table schema', 'nubuilder', 'nuSetJSONDataAll(\'FORCE_REFRESH_SCHEMA\',\'1\');\n\nnuJavascriptCallback(\'nuMessage(nuTranslate(\"Action successfully completed\"))\');', 'hide', '', '1', '0', ''),
+('nu60f3f621d215470', 'nusetrefreshschema', 'Set marker to Refresh Form, Table schema', 'nubuilder', 'nuSetJSONDataAll(\'FORCE_REFRESH_SCHEMA\',\'1\');\n\nnuJavascriptCallback(\'nuMessage(nuTranslate(\"Action successfully completed\"))\');', 'hide', '', '1', '0', ''),
 ('nuuser_BB', 'nuuser_BB', 'System PHP', 'nubuilder', '$addCode    = isset($_SESSION[\'nubuilder_session_data\'][\'USER_CODE_LABEL\']) ? $_SESSION[\'nubuilder_session_data\'][\'USER_CODE_LABEL\'] : \'\';\n$j = \" if (\'$addCode\' !== \'\') { $(\'#nuBrowseTitle5\').html(\'$addCode\') };\";\nnuAddJavascript($j);', NULL, NULL, '1', '0', NULL);
 
 -- --------------------------------------------------------
@@ -1380,7 +1380,7 @@ INSERT INTO `zzzzsys_tab` (`zzzzsys_tab_id`, `syt_zzzzsys_form_id`, `syt_title`,
 ('nu5bad6cb3737e773', 'nufrlaunch', 'Main', 10, 'nuOpenWiki(\'/Report_Builder\');'),
 ('nu5bad6cb373c384f', 'nusample', 'Inputs', 10, ''),
 ('nu5bad6cb37405d73', 'nusamplesubformform', 'Main', 10, ''),
-('nufastforms', 'nuuserhome', 'Fast Forms', -1, ''),
+('nufastforms', 'nuuserhome', 'Fast Forms', -1, NULL),
 ('nu5bad6cb374207e3', 'nuuserhome', 'Main', 20, ''),
 ('nu5bad6cb37434d3a', 'nulaunchform', 'Forms', 10, ''),
 ('nu5bad6cb374482e8', 'nutablookup', 'Tabs', 10, 'nuOpenWiki(\'/Forms#Tabs_.28Subform.29\');'),
