@@ -1915,15 +1915,18 @@ function nuTranslateExport($l = '', $table = 'zzzzsys_translate') {
 	}
 }
 
-function nuStringContains(string $needle, string $haystack): bool {
+function nuStringContains($needle, $haystack): bool {
+	if ($haystack == null) return false;
 	return strpos($haystack, $needle) !== false;
 }
 
-function nuStringStartsWith(string $needle, string $haystack): bool {
+function nuStringStartsWith($needle, $haystack): bool {
+	if ($haystack == null) return false;
 	return strpos($haystack, $needle) === 0;
 }
 
-function nuStringEndsWith(string $needle, string $haystack): bool {
+function nuStringEndsWith($needle, $haystack): bool {
+	if ($haystack == null) return false;	
 	return strpos($haystack, $needle) === strlen($haystack) - strlen($needle);
 }
 

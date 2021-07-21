@@ -539,24 +539,36 @@ function nuGetEditForm($F, $R){
 
 }
 
-function nuBreadcrumbDescription($r, $R){
+function nuBreadcrumbDescriptionPart($bt){
 
-	if($R == '' || $R == '-1')	{return $r->sfo_description;}		//-- Browse Form, new record
-
-	if(!isset($r->sfo_breadcrumb_title) || trim($r->sfo_breadcrumb_title) == '')	{return $r->sfo_description;}		//-- no breadcrumb
-
-	$b		= nuReplaceHashVariables($r->sfo_breadcrumb_title);
-	
-	if(strtolower(substr(trim($b), 0, 6)) == 'select'){
-
-		$t	= nuRunQuery($b);
-		$r	= db_fetch_row($t);
-
-		return $r[0];
-	
+	if(strtolower(substr(trim($bt), 0, 6)) == 'select'){
+		$t	= nuRunQuery($bt);
+		return db_fetch_row($t)[0];
 	}
 
-	return nuReplaceHashVariables($r->sfo_breadcrumb_title);
+	return $bt;
+}
+
+function nuBreadcrumbDescription($r, $R){
+
+	if(!isset($r->sfo_breadcrumb_title) || trim($r->sfo_breadcrumb_title) == '')	{return $r->sfo_description;}			//-- no breadcrumb
+
+	$bt = $r->sfo_breadcrumb_title;
+
+	$parts = nuStringContains('|', $bt);
+
+	if (! $parts) {
+		if($R == '' || $R == '-1')	{return $r->sfo_description;}				//-- Browse Form, new record
+	}
+
+	if ($parts) {
+		$a = explode("|", $bt);
+		$b = $R == '-1' ? nuBreadcrumbDescriptionPart($a[1]) : nuBreadcrumbDescriptionPart($a[0]) ;
+	} else {
+		$b = nuBreadcrumbDescriptionPart($bt);
+	}
+
+	return nuReplaceHashVariables($b);
 
 }
 
