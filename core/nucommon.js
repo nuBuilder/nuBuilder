@@ -685,7 +685,7 @@ function nuBindCtrlEvents(){
 					nuPopup("nudebug", "");
 				} else if(e.keyCode == 73 && g) {					//-- i		Form Info
 					nuShowFormInfo();
-				} else if(e.keyCode == 69 && g) {					//-- t		Database
+				} else if(e.keyCode == 69 && g) {					//-- e		Database
 					nuStartDatabaseAdmin();
 				} else if(e.keyCode == 66 && g) {					//-- b		Backup
 					nuRunPHPHidden('nubackup', 0);
@@ -714,6 +714,8 @@ function nuBindCtrlEvents(){
 					nuPopup("nupassword", "5b6bb7108a75efc", "");
 				} else if(e.keyCode == 79 && g) {					//-- O		Object List
 					nuPopup("nuobject", "", formId);
+				} else if(e.keyCode == 72 && g) {					//-- t		Add Object
+					nuPopup('nuobject','-1','')
 				} else if(e.keyCode == 71 && g) {					//-- G		Object Grid
 					nuForm("nuobjectgrid", formId,"", "", 2);
 				} else if(e.keyCode == 68 && g) {					//-- d		nuDebug Results
@@ -722,7 +724,7 @@ function nuBindCtrlEvents(){
 					nuForm('nusetup','1','', '', 2);
 				} else if(e.keyCode == 73 && g) {					//-- i		Form Info
 					nuShowFormInfo();
-				} else if(e.keyCode == 69 && g) {					//-- t		Database
+				} else if(e.keyCode == 69 && g) {					//-- e		Database
 					nuStartDatabaseAdmin();
 				} else if(e.keyCode == 66 && g) {					//-- b		Backup
 					nuRunPHPHidden('nubackup', 0);
@@ -1232,24 +1234,26 @@ function nuOpenTab(i){
 	$('#nuTab' + i).click();
 }
 
-function nuSelectedTabNumber() {
+function nuSelectedTabNumber(parent = null) {
 
-	let t = window.nuFORM.getProperty('tab_start');
+	let t = parent == null ? window.nuFORM.getProperty('tab_start') : window.parent.nuFORM.getProperty('tab_start');
 	return t.length == 0 ? null : t[0].tabNumber;
 
 }
 
-function nuSelectedTabId() {
+function nuSelectedTabId(parent = null) {
 
-	let n = nuSelectedTabNumber() 
-	return n == null ? null : $('#nuTab' + n).attr('data-nu-tab-id');
+	let n = nuSelectedTabNumber(parent);
+	if (n == null) return null;
+	return parent == null ? $('#nuTab' + n).attr('data-nu-tab-id') : parent.$('#nuTab' + n).attr('data-nu-tab-id');
 
 }
 
-function nuSelectedTabTitle() {
+function nuSelectedTabTitle(parent = null) {
 
-	let n = nuSelectedTabNumber() 
-	return n == null ? null : $('#nuTab' + n).html();
+	let n = nuSelectedTabNumber(parent) 
+	if (n == null) return null;
+	return parent == null ? $('#nuTab' + n).html() : parent.$('#nuTab' + n).html();
 
 }
 

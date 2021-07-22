@@ -2501,6 +2501,7 @@ function nuGetOptionsList(f, t, p, a, type){
 			list.push([nuTranslate('Change Password'), 'nuPopup("nupassword", "' + u + '", "")','fa-password', 'Ctrl+Shft+L']);
 		}
 
+		list.push(['', '', '', '']);
 		list.push([nuTranslate('Refresh'), 'nuGetBreadcrumb()', 'fa-refresh', 'Ctrl+Shft+R']);
 		list.push([nuTranslate('Search'), 'nuSearchAction();', 'fa-square', 'Ctrl+Shft+S']);
 
@@ -2518,6 +2519,12 @@ function nuGetOptionsList(f, t, p, a, type){
 				if (nuSERVERRESPONSE.objects.length > 0) {
 					list.push([nuTranslate('Arrange Objects'), 'nuPopup("' + f + '", "-2")', 'fa-arrows', 'Ctrl+Shft+A']);
 				}
+
+				if(type != 'subform'){
+					list.push([nuTranslate('Add Object'), 'nuPopup("nuobject","-1","")', 'fa fa-plus', 'Ctrl+Shft+H']);
+					list.push(['', '', '', '']);
+				}
+
 				list.push([nuTranslate('Form Properties'), 'nuOptionsListAction("nuform", "' + f + '")', 'fa-cog', 'Ctrl+Shft+F']);
 
 				if(type == 'subform'){
@@ -2539,6 +2546,7 @@ function nuGetOptionsList(f, t, p, a, type){
 
 		if(type != 'subform'){
 
+			list.push(['', '', '', '']);
 			list.push([nuTranslate('Refresh'), 'nuGetBreadcrumb()', 'fa-refresh', 'Ctrl+Shft+R']);
 
 			if(nuFORM.getCurrent().form_type != 'launch'){
@@ -2564,8 +2572,8 @@ function nuGetOptionsList(f, t, p, a, type){
 		if(type != 'subform'){
 
 			list.push(['', '', '', '']);
-
 			list.push([nuTranslate('nuDebug Results'), 'nuOptionsListAction("nudebug", "")', 'fa-bug', 'Ctrl+Shft+D']);
+			list.push(['', '', '', '']);
 			list.push([nuTranslate('Database'), 'nuStartDatabaseAdmin();', 'fa-database', 'Ctrl+Shft+E']);
 			list.push([nuTranslate('Backup'), 'nuMessage(nuTranslate("Backup is running") + "..."); nuRunPHPHidden("nubackup",0)', 'fa fa-hdd-o', 'Ctrl+Shft+B']);
 			list.push([nuTranslate('Setup'), 'nuForm("nusetup","1","", "", 2)', 'fa-cogs', 'Ctrl+Shft+U']);
