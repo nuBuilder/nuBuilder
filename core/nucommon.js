@@ -268,6 +268,10 @@ jQuery.fn.extend({
 
 });
 
+function nuGlobalAccess() {
+	return window.global_access;
+}
+
 function loginInputKeyup(event){
 	if(event.keyCode == 13){
 		$('input#submit').click();
@@ -400,7 +404,7 @@ function nuPopup(f, r, filter){
 
 	nuCursor('progress');
 
-	if(nuSERVERRESPONSE.global_access == '0' && f == 'nuobject'){return;}	
+	if(!nuGlobalAccess() && f == 'nuobject'){return;}	
 	if(nuSERVERRESPONSE.objects.length == 0 && r == '-2'){return;}
 	
 	$('#nuCalendar').remove();
@@ -670,7 +674,7 @@ function nuBindCtrlEvents(){
 			
 			e.preventDefault();
 			
-			var g = window.global_access;
+			var g = nuGlobalAccess();
 			var formId = window.nuFORM.getCurrent().form_id;
 
 			if(nuFormType() == 'browse') {

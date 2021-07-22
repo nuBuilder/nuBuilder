@@ -43,7 +43,7 @@ function nuDevMode(m) {
 	}
 
 	var d = localStorage.getItem("nuDevMode");
-	if ((d === '1' || d === true) && window.global_access) {
+	if ((d === '1' || d === true) && nuGlobalAccess()) {
 		nuSetProperty('nuDevMode', '1', true);
 		return true;
 	} 
@@ -56,7 +56,7 @@ function nuDevMode(m) {
 
 function nuAddAdminButtons() {
 
-	if (global_access) {
+	if (nuGlobalAccess()) {
 
 		var ft = nuCurrentProperties().form_type;
 		if (ft === null || typeof ft === 'undefined') return;
@@ -148,7 +148,7 @@ function nuInitSetBrowseWidthHelper() {
 
 function nuOpenPropertiesOnMiddleClick(e) {
 
-	if (window.global_access) {
+	if (nuGlobalAccess()) {
 
 		if (e.button === 1) {
 
@@ -199,7 +199,7 @@ function nuAddIconToBreadcrumbHolder(i, title, oClick, iClass, paddingLeft) {
 
 function nuShowObjectTooltip() {
 
-	if (window.global_access) {
+	if (nuGlobalAccess()) {
 
 		$("*").each(function() {
 			var id = $(this).attr('id');

@@ -318,7 +318,7 @@ function nuEvalnuOnLoadEvents() {
 }
 
 function nuDisplayLoggedInUser() {
-	$('.nuBuilderLink').html(window.global_access ? nuCurrentProperties().user_id : nuUserName()).attr('href', '').css({
+	$('.nuBuilderLink').html(nuGlobalAccess() ? nuCurrentProperties().user_id : nuUserName()).attr('href', '').css({
 		'cursor': 'pointer'
 		, 'pointer-events': 'none'
 	});
@@ -1101,7 +1101,7 @@ function nuCurrentRow(){
 
 function nuSetAccess(i, r){
 
-	if(r == 2 || (r == 3 && !window.global_access)){		// hidden
+	if(r == 2 || (r == 3 && !nuGlobalAccess())){		// hidden
 
 		var o	= [i, i + 'code', i + 'button', i + 'description', 'label_' + i];
 
