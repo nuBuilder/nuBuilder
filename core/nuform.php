@@ -561,7 +561,7 @@ function nuBreadcrumbDescription($r, $R){
 
 	if ($parts) {
 		$a = explode("|", $bt);
-		$b = $R == '-1' ? nuBreadcrumbDescriptionPart($a[1]) : nuBreadcrumbDescriptionPart($a[0]) ;
+		$b = $R == '-1' ? nuTranslate(nuBreadcrumbDescriptionPart($a[1])) : nuBreadcrumbDescriptionPart($a[0]) ;
 	} else {
 		$b = nuBreadcrumbDescriptionPart($bt);
 	}
