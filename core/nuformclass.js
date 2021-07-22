@@ -1055,8 +1055,9 @@ class nuFormObject {
 				}
 				if(l == 'y'){
 					d.y 	= v[i];
+					if (d.y.length == 2) d.y = '20' + d.y;
 				}
-				
+
 				if(l == 'h'){d.h = v[i];}
 				if(l == 'n'){d.n = v[i];}
 				if(l == 's'){d.s = v[i];}
