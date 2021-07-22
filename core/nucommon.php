@@ -490,10 +490,10 @@ function nuSetUserJSONData($i, $nj, $u = ""){
 	$gu = $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'];  //  or  $gu = '';
 
 	if ($u == "") {
-		$u = nuHash()['GLOBAL_ACCESS'] == '1'  ? $gu  : nuHash()['USER_ID'];
+		$u = nuGlobalAccess()  ? $gu  : nuHash()['USER_ID'];
 	}
 
-	if (nuHash()['GLOBAL_ACCESS'] == '1' ) {
+	if (nuGlobalAccess()) {
 		$s = "INSERT IGNORE INTO zzzzsys_user (zzzzsys_user_id) VALUES (?)";     
 		nuRunQuery($s, array($gu));	
 	}
@@ -517,7 +517,7 @@ function nuGetUserJSONData($i, $u = ""){
 	$gu = $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'];  //  or  $gu = '';
 
 	if ($u == "") {
-		$u 		= nuHash()['GLOBAL_ACCESS'] == '1'  ? $gu  : nuHash()['USER_ID'];
+		$u 		= nuGlobalAccess() ? $gu  : nuHash()['USER_ID'];
 	}
 
 	$s			= "SELECT sus_json FROM zzzzsys_user WHERE zzzzsys_user_id = ? ";
@@ -1984,6 +1984,13 @@ function nuStringStartsWith($needle, $haystack): bool {
 function nuStringEndsWith($needle, $haystack): bool {
 	if ($haystack == null) return false;	
 	return strpos($haystack, $needle) === strlen($haystack) - strlen($needle);
+}
+
+function nuGlobalAccess($post = false) {
+
+	if ($post) return $_POST['nuHash']['GLOBAL_ACCESS'] == '1';
+	return nuHash()['GLOBAL_ACCESS'] == '1';
+
 }
 
 ?>

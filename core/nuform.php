@@ -41,7 +41,7 @@ function nuBeforeEdit($FID, $RID){
 		$cts						= nuGetJSONData('clientTableSchema');
 		$user						= $_POST['nuHash']['USER_ID'];
 		$recordID					= $_POST['nuSTATE']['record_id'];
-		$globalAccess				= $_POST['nuHash']['GLOBAL_ACCESS'] == '1';
+		$globalAccess				= nuGlobalAccess(true);
 	
 		/* 
 		To-Do: Check if not Launch Form
@@ -1482,8 +1482,7 @@ function nuRunDescription($P){
 
 function nuFormAccess($s, $a){
 
-	if($_POST['nuHash']['GLOBAL_ACCESS'] == '1'){
-	// if( $_POST['session']->zzzzsys_user_id == $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'] ){
+	if(nuGlobalAccess(true)){
 		return array('1', '1', '1', '1', '1');
 	}
 
