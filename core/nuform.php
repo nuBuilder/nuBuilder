@@ -245,10 +245,30 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 				}
 
 			}
+
+			if($r->sob_all_type == 'contentbox'){
+
+				$cWidth		= $r->sob_all_width."px";
+				$cHeight	= $r->sob_all_height."px";
+				$cLabel		= nuTranslate($r->sob_all_label);
+				$cId		= $r->sob_all_id;
+				$cTitleId	= 'title_'.$cId;
+				$cContentId	= 'content_'.$cId;
+				$cBoxId		= 'box_'.$cId;
+
+				$o->html = nuReplaceHashVariables($r->sob_html_code)."
+					<div class='nuContentBox' id='$cBoxId' style='left: 0px; top: 0px; height: $cHeight; width: $cWidth;'>
+					<div class='title' id='$cTitleId'>$cLabel</div>
+					<div class='content' id='$cContentId'></div>
+					</div>
+				";
+
+			}
+
 			if($r->sob_all_type == 'html'){
 
 				if($r->sob_html_chart_type == ''){
-					$o->html		= nuReplaceHashVariables($r->sob_html_code);					
+					$o->html		= nuReplaceHashVariables($r->sob_html_code);
 				}else{
 
 					$o->html		= '';

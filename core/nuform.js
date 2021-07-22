@@ -594,6 +594,8 @@ function nuBuildEditObjects(f, p, o, prop){
 				l = l + nuRUN(f, i, l, p, prop);
 			}else if(t == 'html'){
 				l = l + nuHTML(f, i, l, p, prop);
+			}else if(t == 'contentbox'){
+				l = l + nuCONTENTBOX(f, i, l, p, prop);
 			}else if(t == 'image'){
 				l = l + nuIMAGE(f, i, l, p, prop);
 			}else if(t == 'select'){
@@ -1157,6 +1159,35 @@ function nuHTML(w, i, l, p, prop){
 	return Number(prop.objects[i].width);
 
 }
+
+function nuCONTENTBOX(w, i, l, p, prop){
+
+	var id	= p + prop.objects[i].id;
+	var ef	= p + 'nuRECORD';							//-- Edit Form Id
+	var inp = document.createElement('div');
+
+	inp.setAttribute('id', id);
+
+	$('#' + ef).append(inp);
+
+	nuAddDataTab(id, prop.objects[i].tab, p);
+
+	$('#' + id).css({'top'		: Number(prop.objects[i].top),
+					'left'		: Number(prop.objects[i].left),
+					'width'		: '15',
+					'height'	: '15',
+					'position'	: 'absolute'
+	})
+	.addClass('nuContentBoxContainer').html(w.objects[i].html)
+
+	$('#title_'+ id).attr('ondblclick','nuOptionsListAction("nuobject", "' + prop.objects[i].object_id + '")');
+
+	nuSetAccess(id, prop.objects[i].read);
+
+	return Number(15);
+
+}
+
 
 function nuIMAGE(w, i, l, p, prop){
 

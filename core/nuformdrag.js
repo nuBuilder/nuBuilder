@@ -597,6 +597,8 @@ function nuCreateDragOptionsBox(form){
 
 	$('body').append(help);
 
+	$('.nu_contentbox').css({'width':'90','height':'20'});
+
 	$('.nuRECORD').css("width", "99.3%");
 
 }
@@ -940,14 +942,19 @@ function nuPutFieldDimensionsIntoState(){
 
 			var field = $('#nuDragDialog iframe')[0].contentWindow.nuDragOptionsState.tabs[tabNo].objects[fieldNo];
 
-			if($('div#'+field.id,$('#nuDragDialog iframe').contents()).length == 1){
+			var contents = $('div#'+field.id,$('#nuDragDialog iframe').contents());
 
-				$('div#'+field.id,$('#nuDragDialog iframe').contents()).show();
+			if(contents.length == 1){
 
-				field.left		= $('div#'+field.id,$('#nuDragDialog iframe').contents()).position().left;
-				field.top		= $('div#'+field.id,$('#nuDragDialog iframe').contents()).position().top;
-				field.width		= $('div#'+field.id,$('#nuDragDialog iframe').contents()).width();
-				field.height	= $('div#'+field.id,$('#nuDragDialog iframe').contents()).height();
+				contents.show();
+
+				field.left		= contents.position().left;
+				field.top		= contents.position().top;
+				
+				if (! $(contents).hasClass('nu_contentbox')) {
+					field.width		= contents.width();
+					field.height	= contents.height();
+				}
 
 				$('div#'+field.id,$('#nuDragDialog iframe').contents()).hide();
 
@@ -981,19 +988,22 @@ function nuUpdateDragSelections(fieldsSelectBox){
 
 function nuCheckIfMovingTabOrderAllowed(fieldsSelectBox){
 
+	var upDownBtn = $('#move_down_btn, #move_up_btn');
+	var upDownBtnParent = $('#move_down_btn, #move_up_btn', window.parent.document.body);
+
 	if($('option:selected', fieldsSelectBox).length == 1){
 
-		$('#move_down_btn, #move_up_btn').removeAttr('disabled');
-		$('#move_down_btn, #move_up_btn').removeClass('nuDragOptionsButtonDisabled');
-		$('#move_down_btn, #move_up_btn', window.parent.document.body).removeAttr('disabled');
-		$('#move_down_btn, #move_up_btn', window.parent.document.body).removeClass('nuDragOptionsButtonDisabled');
+		upDownBtn.removeAttr('disabled');
+		upDownBtn.removeClass('nuDragOptionsButtonDisabled');
+		upDownBtnParent.removeAttr('disabled');
+		upDownBtnParent.removeClass('nuDragOptionsButtonDisabled');
 
 	} else {
 
-		$('#move_down_btn, #move_up_btn').prop('disabled','disabled');
-		$('#move_down_btn, #move_up_btn').addClass('nuDragOptionsButtonDisabled');
-		$('#move_down_btn, #move_up_btn', window.parent.document.body).prop('disabled','disabled');
-		$('#move_down_btn, #move_up_btn', window.parent.document.body).addClass('nuDragOptionsButtonDisabled');
+		upDownBtn.prop('disabled','disabled');
+		upDownBtn.addClass('nuDragOptionsButtonDisabled');
+		upDownBtnParent.prop('disabled','disabled');
+		upDownBtnParent.addClass('nuDragOptionsButtonDisabled');
 
 	}
 
