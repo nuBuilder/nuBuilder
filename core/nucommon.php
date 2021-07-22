@@ -1767,6 +1767,62 @@ function nuFromCSV($file, $table, $d){
 
 }
 
+function nuProcessImportedUsers($pw = true) {
+
+	$s	= "SELECT zzzzsys_user_id as id, sus_login_password as pw FROM  `zzzzsys_user` WHERE `zzzzsys_user_id` REGEXP '^-?[0-9]+$';";
+	$t	= nuRunQuery($s);
+
+	while($r = db_fetch_object($t)){
+		
+		$s	= "UPDATE  `zzzzsys_user` SET `zzzzsys_user_id` = ? WHERE `zzzzsys_user_id` = ?";
+		$newId = nuID();
+		nuRunQuery($s, array($newId, $r->id));
+
+		if ($pw) {
+			$s	= "UPDATE  `zzzzsys_user` SET `sus_login_password` = ? WHERE `zzzzsys_user_id` = ?";
+			nuRunQuery($s, array(md5($r->pw),  $newId));
+		}
+
+	}
+ 
+}
+
+function nuImportUsersFromCSV($csvfile, $fieldseparator, $lineseparator) {
+
+	global $DBCharset;
+
+
+	if(!file_exists($csvfile)) {
+		 echo nuTranslate("File not found") . "($csvfile). ". nuTranslate("Make sure the file exists").".";
+		 return;
+	}
+ 
+	 $db = nuRunQuery('');
+	try {
+
+		$cn = new PDO("mysql:host=$db[0];dbname=$db[1];charset=$DBCharset", $db[2], $db[3], array(
+			PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $DBCharset", PDO::MYSQL_ATTR_LOCAL_INFILE => true
+		));
+
+	$affectedRows = $cn->exec
+	(
+		"LOAD DATA LOCAL INFILE "
+		.$cn->quote($csvfile)
+		." INTO TABLE `zzzzsys_user` FIELDS TERMINATED BY "
+		.$cn->quote($fieldseparator)
+		."LINES TERMINATED BY "
+		.$cn->quote($lineseparator)
+		."IGNORE 1 LINES "
+	);
+	
+	echo nuTranslate("Loaded a total of $affectedRows records from this csv file.\n");
+
+	}
+	catch(PDOException $ex) {
+		echo $ex->getMessage();
+	}
+}
+
 function nuListTables(){
 
 	$a	= array();
