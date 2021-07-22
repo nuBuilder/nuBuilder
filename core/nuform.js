@@ -2546,7 +2546,6 @@ function nuGetOptionsList(f, t, p, a, type){
 
 		if(type != 'subform'){
 
-			list.push(['', '', '', '']);
 			list.push([nuTranslate('Refresh'), 'nuGetBreadcrumb()', 'fa-refresh', 'Ctrl+Shft+R']);
 
 			if(nuFORM.getCurrent().form_type != 'launch'){
