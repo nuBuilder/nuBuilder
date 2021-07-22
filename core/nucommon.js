@@ -1976,6 +1976,18 @@ function nuImportCSV(t, s){
 
 }
 
+function nuImportUsersFromCSV(file) {
+
+	if (typeof file === 'undefined') {
+		var file = 'user_import.csv';
+	}
+
+	nuSetProperty('nuimportusers_file', file);
+
+	nuRunPHP('nuimportusers', '', 0);
+
+}
+
 function nuIsIframe(){
 
 	return parent.window.nuDocumentID != window.nuDocumentID;
