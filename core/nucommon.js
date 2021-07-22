@@ -1232,6 +1232,27 @@ function nuOpenTab(i){
 	$('#nuTab' + i).click();
 }
 
+function nuSelectedTabNumber() {
+
+	let t = window.nuFORM.getProperty('tab_start');
+	return t.length == 0 ? null : t[0].tabNumber;
+
+}
+
+function nuSelectedTabId() {
+
+	let n = nuSelectedTabNumber() 
+	return n == null ? null : $('#nuTab' + n).attr('data-nu-tab-id');
+
+}
+
+function nuSelectedTabTitle() {
+
+	let n = nuSelectedTabNumber() 
+	return n == null ? null : $('#nuTab' + n).html();
+
+}
+
 function nuHideHolders(h){
 
 	for(var i = 0 ; i < arguments.length ; i++){
@@ -2629,7 +2650,7 @@ function nuSetSaveButtonPosition(t, l, h, w, fs) {
 		sb[0].style.fontSize = fs + "px";
 	}
 
-	if (window.nuFORM.getProperty('tab_start')[0].tabNumber !== '0') {
+	if (nuSelectedTabNumber() !== '0') {
 		sb.css('display', 'none');
 	}
 
