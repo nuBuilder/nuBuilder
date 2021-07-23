@@ -597,7 +597,19 @@ function nuCreateDragOptionsBox(form){
 
 	$('body').append(help);
 
-	$('.nu_contentbox').css({'width':'90','height':'20'});
+	// Add ContentBox frame
+	$('.nu_contentbox').each(function() {
+		var w = $(this).cssNumber('width') -4;
+		var t = $(this).cssNumber('top') + 18;
+		var l = $(this).cssNumber('left');
+		var h = $(this).cssNumber('height');
+		var id = 'frame_' + $(this).attr('id');
+		var bg = $(this).css('background-color');
+		var div = '<div id="' + id  + '" style="position: absolute; border:2px double ' + bg + ';width:' + w + 'px;height:' + h + 'px;top:'+ t +'px;left:'+ l +'px"></div>';
+		$(div).insertAfter($(this));  
+	});
+
+	$('.nu_contentbox').css({'height':'16'});
 
 	$('.nuRECORD').css("width", "99.3%");
 
@@ -862,7 +874,7 @@ function nuAlignBottom(){
 }
 
 function nuMoveNuDrag() {
-
+debugger;
 	//find tab we are moving objects to
 	var moveToTab 				= $('#nuDragOptionsTabsDropdown').val().substring($('#nuDragOptionsTabsDropdown').val().length-1);
 	var moveToTab 				= $('#nuDragOptionsTabsDropdown').val().substring(5);
@@ -948,9 +960,9 @@ function nuPutFieldDimensionsIntoState(){
 
 				contents.show();
 
-				field.left		= contents.position().left;
-				field.top		= contents.position().top;
-				
+				field.left			= contents.position().left;
+				field.top			= contents.position().top;
+
 				if (! $(contents).hasClass('nu_contentbox')) {
 					field.width		= contents.width();
 					field.height	= contents.height();
@@ -1102,6 +1114,13 @@ function nuMoveSelected() {
 		t		= parseInt(o.top)  + (window.moveY - window.lastMoveY);
 		o.left	= l + 'px';
 		o.top	= t + 'px';
+		
+		// Move ContentBox too
+		var cb = $('#frame_' + $(s[i]).attr('id'));
+		if (cb.length == 1) {
+			cb.css('left', l);
+			cb.css('top', t + 18);
+		}
 
 	}
 }
