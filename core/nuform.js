@@ -3327,7 +3327,7 @@ function nuGetPage(p){
 
 }
 
-function nuPopulateLookup(fm, target){
+function nuPopulateLookup(fm, target, setFocus){
 
 	var p		= String($('#' + target).attr('data-nu-prefix'));
 	var f		= fm.lookup_values;
@@ -3366,7 +3366,7 @@ function nuPopulateLookup(fm, target){
 
 		}
 
-		if(i == 1){$('#' + id).focus();}
+		if(i == 1 && ! (setFocus == false)){$('#' + id).focus();}
 
 	}
 
