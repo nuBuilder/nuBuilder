@@ -178,6 +178,15 @@ function nuBindDragEvents(){
 
 				$(this).css(prop,val+'px');
 
+				// Move ContentBox too
+				if (prop !== 'height') {
+					var cb = $('#frame_' + $(this).attr('id'));
+					if (cb.length == 1) {
+						if (prop == 'top') val += 18;
+						cb.css(prop,val+'px');
+					}
+				}
+
 			});
 		}
 	}
