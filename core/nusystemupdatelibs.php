@@ -438,12 +438,6 @@ function nuMigrateSQL() {
 	$sql		= "UPDATE `zzzzsys_event` SET `sev_javascript` = ? WHERE `zzzzsys_event_id` = ? ";
 	nuRunQuery($sql, $values);
 
-	$set		= "<iframe id='sqlframe' src='core/nuselect.php' style='height:180px;width:700px'></iframe>";
-	$where		= 'nu5bad6cb359e7a1a';
-	$values		= array($set,$where);
-	$sql		= "UPDATE `zzzzsys_object` SET `sob_html_code` = ? WHERE `zzzzsys_object_id` = ? ";
-	nuRunQuery($sql, $values);
-
 	$set		= 'window.open(\'core/nureportdesigner.php?tt=\' + $("#sre_zzzzsys_php_id").val() + \'&launch=\' + $("#sre_zzzzsys_form_id").val());';
 	$where		= 'nu5bad6cb3797b0a7';
 	$values		= array($set,$where);
