@@ -179,7 +179,7 @@ function nuBindDragEvents(){
 
 				}
 
-				if (prop !== 'height') {
+				if (!(prop == 'height' && $(this).hasClass('nu_contentbox'))) {
 					$(this).css(prop,val+'px');
 				}
 
