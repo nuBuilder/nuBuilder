@@ -28,7 +28,7 @@ function nuBindDragEvents(){
 
 	});
 
-	$(document).on('mousedown.nuformdrag', function(e) {	
+	$(document).on('mousedown.nuformdrag', function(e) {
 
 		window.startX		= e.clientX + window.scrollX;
 		window.startY		= e.clientY + window.scrollY;
@@ -432,7 +432,7 @@ function nuMoveUpOrder(){
 			var previousFieldDOM			= $('select#nuDragOptionsFields option[data-nu-tab-order="'+(Number(currentSelectedFieldOption.attr('data-nu-tab-order'))-10)+'"]');
 			var previousFieldSTATE			= nuFindFieldInState(currentTabNo, previousFieldDOM.prop('id').replace('drag_',''));
 
-			field.tab_order				= Number(previousFieldDOM.attr('data-nu-tab-order'));
+			field.tab_order					= Number(previousFieldDOM.attr('data-nu-tab-order'));
 			previousFieldSTATE.tab_order	= field.tab_order + 10;
 
 			$('option#drag_'+field.id).attr('data-nu-tab-order',field.tab_order);
@@ -493,7 +493,7 @@ function nuMoveDownOrder(){
 function nuFindFieldInState(tabNo, fieldID){
 
 	for(var i=0; i<$('#nuDragDialog iframe')[0].contentWindow.nuDragOptionsState.tabs[tabNo].objects.length; i++){
-		
+
 		if($('#nuDragDialog iframe')[0].contentWindow.nuDragOptionsState.tabs[tabNo].objects[i].id == fieldID){
 			return $('#nuDragDialog iframe')[0].contentWindow.nuDragOptionsState.tabs[tabNo].objects[i];
 		}
@@ -586,6 +586,7 @@ function nuCreateDragOptionsBox(form){
 		nuClearFieldsList();
 		nuUnselectAllDragObjects();
 		nuSelectTab(this);
+		nuShowCntentBoxFrames();
 
 		nuPopulateFieldsList(Number($(this).attr('data-nu-tab-filter')));
 		nuPopulateTabDropdown(Number($(this).attr('data-nu-tab-filter')));
@@ -610,7 +611,31 @@ function nuCreateDragOptionsBox(form){
 
 	$('body').append(help);
 
-	// Add ContentBox frame
+	nuAddContentBoxFrames();
+	nuShowCntentBoxFrames();
+
+	$('.nuRECORD').css("width", "99.3%");
+
+}
+
+function nuShowCntentBoxFrames() {
+
+	$('.nu_contentbox').each(function() {
+
+		var id = 'frame_' + $(this).attr('id');
+		var obj = $("#"+id);
+
+		if ($(this).is(":visible")){
+			obj.css('visibility', 'visible')
+		} else {
+			obj.css('visibility', 'hidden')
+		}
+	})
+
+}
+
+function nuAddContentBoxFrames() {
+
 	$('.nu_contentbox').each(function() {
 		var w = $(this).cssNumber('width') - 4;
 		var t = $(this).cssNumber('top') + 18;
@@ -626,9 +651,7 @@ function nuCreateDragOptionsBox(form){
 		'height': '16'
 	});
 
-	$('.nuRECORD').css("width", "99.3%");
-
-}
+}	
 
 function nuDragSelected() {
 	return $('div.nuDragSelected',$('#nuDragDialog iframe').contents());
@@ -802,7 +825,6 @@ function nuSpaceHorizontally(){
 }
 
 function nuSpaceVertically(){
-	
 
 	if (!nuSpacingNotSupported()) return;
 	
@@ -815,7 +837,7 @@ function nuSpaceVertically(){
 			top: $(this).position().top,
 			height: $(this).height(),
 			id: $(this).prop('id')
-	
+
 		});
 
 	});
