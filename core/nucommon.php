@@ -451,7 +451,8 @@ function nuSetJSONDataAll($i, $nj){
 		$J					= json_encode($j);
 
 		$s					= "UPDATE zzzzsys_session SET sss_access = ? WHERE zzzzsys_session_id = ? ";
-		$t					= nuRunQuery($s, array($J, $r->zzzzsys_session_id));
+
+		nuRunQuery($s, array($J, $r->zzzzsys_session_id));
 
 	}	
 
