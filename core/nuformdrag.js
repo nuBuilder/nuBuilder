@@ -102,11 +102,8 @@ function nuBindDragEvents(){
 	var nuDragKeydownListener = function(e){
 
 		if (e.ctrlKey && e.key === "a") {
-
 			nuSelectAllDragObjects();
 			nuUpdateDragFieldsListbox();
-			nuPopulateFieldsList(Number(nuSelectedTab().attr('data-nu-tab-filter')));
-			nuPopulateTabDropdown(Number(nuSelectedTab().attr('data-nu-tab-filter')));
 			e.preventDefault();
 			return;
 
@@ -625,6 +622,10 @@ function nuCreateDragOptionsBox(form){
 	nuAddContentBoxFrames();
 	nuShowContentBoxFrames();
 
+	if ($('div.nuTab[id^="nuTab"]').length == 1) {
+		$('#move_tab_btn', window.parent.document.body).css('visibility', 'hidden')
+		$('#nuDragOptionsTabsDropdown', window.parent.document.body).css('visibility', 'hidden')
+	}
 	$('.nuRECORD').css("width", "99.3%");
 
 }
