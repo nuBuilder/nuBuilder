@@ -721,7 +721,12 @@ function nuUpdateData(action, instruction){
 				}
 
 				window.nuFORM.removeLast();						//-- return to browse
-				nuGetBreadcrumb();
+
+				if ($('.nuBreadcrumb').length == 0) {
+					window.close();
+				} else {
+					nuGetBreadcrumb();
+				}
 
 				if(nuCurrentProperties() == undefined){
 
