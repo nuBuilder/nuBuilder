@@ -10,7 +10,7 @@
 	
 	if($_SESSION['nubuilder_session_data']['IS_DEMO']){
 		echo('Not available in the Demo');
-		$page	= pmaBad();
+		$page   = pmaBad();
 		return;	
 	}
 		
@@ -28,7 +28,7 @@
 		}
 		
 	} else {
-			$page	= pmaBad();
+			$page   = pmaBad();
 	}
 
 	header("Location: $page");
@@ -36,6 +36,8 @@
 function pmaGood() {
 
 	$time = time();
+
+	// $page = "libs/nudb/db_structure.php?server=1&db=".$_SESSION['nubuilder_session_data']['DB_NAME']."&$time=$time";
 	$page = "libs/nudb/index.php?route=/database/structure&server=1&db=".$_SESSION['nubuilder_session_data']['DB_NAME']."&$time=$time";
 
 	setcookie("nupmalogin",			"good");
@@ -43,7 +45,7 @@ function pmaGood() {
 	setcookie("nuConfigDBUser",		$_SESSION['nubuilder_session_data']['DB_USER']);
 	setcookie("nuConfigDBPassword",	$_SESSION['nubuilder_session_data']['DB_PASSWORD']);
 
-	if ( $_SESSION['nubuilder_session_data']['DB_PASSWORD'] == '') {
+	if ( $_SESSION['nubuilder_session_data']['DB_PASSWORD'] == '' ) {
 		setcookie("nuConfigDBPasswordBlank", 'BLANK');
 	}
 	return $page;
