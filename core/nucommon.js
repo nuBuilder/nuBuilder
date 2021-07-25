@@ -264,9 +264,15 @@ jQuery.fn.extend({
 		return this.each(function() {
 			return nuSetValue(this.id, v, method);
 		});
+	},
+	nuTranslate: function(method) {
+		return this.each(function() {
+			nuSetValue(this.id, nuTranslate(nuGetValue(this.id, method)), method);
+		});
 	}
-
 });
+
+
 
 function nuGlobalAccess() {
 	return window.global_access;
