@@ -822,8 +822,10 @@ function nuINPUT(w, i, l, p, prop){
 			$('#' + id).addClass('input_' + inputType);
 		}
 
-		if (prop.objects[i].datalist !== null && prop.objects[i].datalist !== '' && typeof prop.objects[i].datalist !== "undefined") {	
-			nuAddDatalist(id, JSON.parse(prop.objects[i].datalist));
+		if (prop.objects[i].datalist !== null && prop.objects[i].datalist !== '' && typeof prop.objects[i].datalist !== "undefined") {
+			var dl = prop.objects[i].datalist;
+			if (!$.isArray(dl)) dl = JSON.parse(dl);
+			nuAddDatalist(id, dl);
 		}
 
 	}
