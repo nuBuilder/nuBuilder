@@ -1253,6 +1253,14 @@ function nuSelectedTabId(parent = null) {
 
 }
 
+function nuSelectedTab(parent = null) {
+
+	let n = nuSelectedTabNumber(parent);
+	if (n == null) return null;
+	return parent == null ? $('#nuTab' + n) : parent.$('#nuTab' + n);
+
+}
+
 function nuSelectedTabTitle(parent = null) {
 
 	let n = nuSelectedTabNumber(parent) 
