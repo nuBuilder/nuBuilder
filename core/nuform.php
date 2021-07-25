@@ -225,8 +225,8 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 				}
 
 
-				if(($inputType == 'nuDate' || $inputType == 'nuNumber' || $inputType == 'number' || $inputType == 'text' || $inputType == 'email' || $inputType == 'search' || $inputType == 'moneth') && $r->sob_all_type == 'input' && $r->sob_input_datalist != ''){
-					
+				if(($inputType == 'nuDate' || $inputType == 'nuNumber' || $inputType == 'number' || $inputType == 'text' || $inputType == 'email' || $inputType == 'search' || $inputType == 'month') && $r->sob_all_type == 'input' && $r->sob_input_datalist != ''){
+
 					$o->datalist	= json_encode (nuDataListOptions(nuReplaceHashVariables($r->sob_input_datalist))); 
 				}	
 
