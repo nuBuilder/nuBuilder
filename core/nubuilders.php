@@ -206,12 +206,6 @@ function nuBuildFastForm($table, $form_type){
 
 	}
 
-/*
-	if($form_type == 'browse'){
-		nuRunQuery("DELETE FROM $TT WHERE 1");
-	}
-*/
-
 	$t				= nuRunQuery("SELECT * FROM $TT");
 	$a				= Array();
 	
@@ -402,10 +396,10 @@ function nuBuildNewTable($tab, $array, $newT){
 	$a			= Array();
 	$a[]		= "$id VARCHAR(25) NOT NULL";
 
-	$ff_type	= nuHash();
-	$ff_type	= $ff_type['fastform_type'];
-	$ff_fk		= nuHash();
-	$ff_fk		= $ff_fk['fastform_fk'];
+	$h	= nuHash();
+	$ff_type	= $h['fastform_type'];
+	$ff_fk		= $h['fastform_fk'];
+	$ff_nulog	= $h['check_nulog'];
 
 	if($ff_type == 'subform' && $newT){
 		$a[]	= "$ff_fk VARCHAR(25) DEFAULT NULL";
@@ -425,6 +419,10 @@ function nuBuildNewTable($tab, $array, $newT){
 		if($t == 'longtext'){		$a[] = "$f LONGTEXT DEFAULT NULL";}
 		if($t == 'bigintunsigned'){	$a[] = "$f BIGINT UNSIGNED DEFAULT NULL";}
 		
+	}
+
+	if ($ff_nulog == '1') {
+		$a[] = $tab."_nulog VARCHAR(1000) DEFAULT NULL";
 	}
 
 	$a[] = "PRIMARY KEY ($id)";
