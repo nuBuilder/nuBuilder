@@ -1077,10 +1077,10 @@ function nuBrowseRows($f){
 	}
 
 	$t = nuRunQuery('SELECT COUNT(*) FROM ('. $sCount . ') nuTCount');
-	$rowData = db_fetch_row($t)[0];
-	
+	$rowData = !nuErrorFound() ? db_fetch_row($t)[0] : 0;
+
 	$s				.= " LIMIT " . ($start<0?0:$start) . ", $rows";
-	
+
 	$s = str_replace('$'.$f->primary_key.'$',$f->primary_key,$s);	
 	$t				= nuRunQuery($s);
 
