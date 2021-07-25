@@ -101,6 +101,17 @@ function nuBindDragEvents(){
 
 	var nuDragKeydownListener = function(e){
 
+		if (e.ctrlKey && e.key === "a") {
+
+			nuSelectAllDragObjects();
+			nuUpdateDragFieldsListbox();
+			nuPopulateFieldsList(Number(nuSelectedTab().attr('data-nu-tab-filter')));
+			nuPopulateTabDropdown(Number(nuSelectedTab().attr('data-nu-tab-filter')));
+			e.preventDefault();
+			return;
+
+		}
+	
 		var keyDirection = '';
 
 		if(e.keyCode == 37){
@@ -586,7 +597,7 @@ function nuCreateDragOptionsBox(form){
 		nuClearFieldsList();
 		nuUnselectAllDragObjects();
 		nuSelectTab(this);
-		nuShowCntentBoxFrames();
+		nuShowContentBoxFrames();
 
 		nuPopulateFieldsList(Number($(this).attr('data-nu-tab-filter')));
 		nuPopulateTabDropdown(Number($(this).attr('data-nu-tab-filter')));
@@ -612,13 +623,13 @@ function nuCreateDragOptionsBox(form){
 	$('body').append(help);
 
 	nuAddContentBoxFrames();
-	nuShowCntentBoxFrames();
+	nuShowContentBoxFrames();
 
 	$('.nuRECORD').css("width", "99.3%");
 
 }
 
-function nuShowCntentBoxFrames() {
+function nuShowContentBoxFrames() {
 
 	$('.nu_contentbox').each(function() {
 
@@ -1162,6 +1173,21 @@ function nuUnselectAllDragObjects(){
 
 }
 
+function nuSelectAllDragObjects(){
+
+	$('[data-drag]').each(function(){
+		if ($(this).is(":visible")){
+			$(this).addClass('nuDragSelected');
+		}
+	});
+
+	$('[data-drag]',$('#nuDragDialog iframe').contents()).each(function(){
+		if ($(this).is(":visible")){
+			$(this).addClass('nuDragSelected');
+		}
+	});
+
+}
 
 function nuClearFieldsList(){
 
