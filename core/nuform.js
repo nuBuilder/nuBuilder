@@ -716,7 +716,7 @@ function nuDRAG(w, i, l, p, prop){
 
 	if(prop.objects[i].input != 'button' && nuObjectType != 'run' && nuObjectType != 'contentbox' && prop.title !== 'Insert-Snippet'){		//-- Input Object
 		var lab = nuLabel(w, i, p, prop);
-		$(lab).addClass('nuDragLabel');
+		$(lab).addClass('nuDragLabel').css('visibility','hidden');
 	}
 
 	nuAddDataTab(id, prop.objects[i].tab, p);

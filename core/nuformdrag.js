@@ -645,8 +645,6 @@ function nuCreateDragOptionsBox(form){
 		$('#move_tab_btn', window.parent.document.body).css('visibility', 'hidden')
 		$('#nuDragOptionsTabsDropdown', window.parent.document.body).css('visibility', 'hidden')
 	}
-	
-	nuToggleDragLabels();
 
 	$('#nuRECORD').css('height', window.innerHeight);
 	$('.nuRECORD').css("width", "99.3%");
@@ -656,7 +654,12 @@ function nuCreateDragOptionsBox(form){
 function nuToggleDragLabels() {
 
 	$('.nuDragLabel',$('#nuDragDialog iframe').contents()).each(function(){
-		$(this).toggle();
+		var obj = $(this);
+		if (obj.css('visibility') ==='visible'){			
+			obj.css('visibility', 'hidden')
+		} else {
+			obj.css('visibility', 'visible')
+		}
 	});
 
 }
