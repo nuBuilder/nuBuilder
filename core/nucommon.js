@@ -206,6 +206,12 @@ String.prototype.withoutNumbers = function() {
 	return this.replace(/\d+/g,'');
 }
 
+Date.prototype.addDays = function(days) {
+    var date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
+}
+
 String.prototype.nuFormat = function() {
 	var args;
 	args = arguments;
