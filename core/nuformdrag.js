@@ -693,7 +693,7 @@ function nuResizeToLowest(){
 	selected.each(function(){
 		
 		var cb = nuThisContentBox(this);
-		if (cb == 0) {
+		if (cb.length == 0) {
 			$(this).css('height',lowest+'px');
 		} else {
 			cb.css('height',lowest+'px');
@@ -742,7 +742,7 @@ function nuResizeToHighest(){
 
 	selected.each(function(){	
 		var cb = nuThisContentBox(this);
-		if (cb == 0) {
+		if (cb.length == 0) {
 			$(this).css('height',highest+'px');
 		} else {
 			cb.css('height',highest+'px');
@@ -987,7 +987,7 @@ function nuAlignBottom(){
 	selected.each(function(){
 		
 		var cb = nuThisContentBox(this);
-		if (cb == 0) {
+		if (cb.length == 0) {
 			$(this).css('top',(lowestPoint-$(this).height())+'px');
 		} else {
 			$(this).css('top',(lowestPoint-cb.height()-18)+'px');
