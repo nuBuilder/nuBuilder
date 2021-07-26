@@ -714,6 +714,11 @@ function nuDRAG(w, i, l, p, prop){
 	$('#' + id).attr('data-drag',1);
 	$('#' + id).attr('data-nu-object-id', prop.objects[i].object_id)
 
+	if(nuObjectType != 'button' && nuObjectType != 'run' && prop.title !== 'Insert-Snippet'){		//-- Input Object
+		var lab = nuLabel(w, i, p, prop);
+		$(lab).addClass('nuDragLabel');
+	}
+
 	nuAddDataTab(id, prop.objects[i].tab, p);
 
 	return Number(prop.objects[i].width);
@@ -2083,6 +2088,8 @@ function nuLabel(w, i, p, prop){
 	if(obj.valid == 1){o.addClass('nuBlank');}
 	if(obj.valid == 2){o.addClass('nuDuplicate');}
 	if(obj.valid == 3){o.addClass('nuDuplicateOrBlank');}
+
+	return lab;
 
 }
 

@@ -561,7 +561,7 @@ function nuCreateDragOptionsBox(form){
 							'<td>&nbsp;</td>'+
 						'</tr>'+
 						'<tr>'+
-							'<td></td>'+
+							'<td><input type="checkbox" id="nuShowDragLabels" value="Show Labels" onclick="nuToggleDragLabels();"><label for="nuShowDragLabels">Show Labels</label></td>'+
 							'<td><button id="save_btn" class="nuDragOptionsButton nuButton nuSaveButtonEdited" style="font-weight: bold;" onclick="nuSaveNuDrag();">Save</button></td>'+
 						'</tr>'+
 					'</tbody>'+
@@ -626,7 +626,18 @@ function nuCreateDragOptionsBox(form){
 		$('#move_tab_btn', window.parent.document.body).css('visibility', 'hidden')
 		$('#nuDragOptionsTabsDropdown', window.parent.document.body).css('visibility', 'hidden')
 	}
+	
+	nuToggleDragLabels();
+
 	$('.nuRECORD').css("width", "99.3%");
+
+}
+
+function nuToggleDragLabels() {
+
+	$('.nuDragLabel',$('#nuDragDialog iframe').contents()).each(function(){
+		$(this).toggle();
+	});
 
 }
 
