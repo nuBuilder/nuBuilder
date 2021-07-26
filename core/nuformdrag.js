@@ -127,19 +127,23 @@ function nuBindDragEvents(){
 
 				var prop	= '';
 				var val	= '';
-				var cb = $('#frame_' + $(this).attr('id'));
+				
+				var t = $(this);
+				var tLabel = $('#label_' + t.attr('id'));
+				var cb = $('#frame_' + t.attr('id'));
 
 				if(keyDirection == 'left'){
 
 					if(e.shiftKey){
 
 						prop = 'width';
-						val = $(this).width() - 1;
+						val = t.width() - 1;
 
 					} else {
 
 						prop = 'left';
-						val = $(this).position().left - 1;
+						val = t.position().left - 1;
+						if (tLabel.length !== 0) valLabel = tLabel.position().left - 1;
 
 					}
 
@@ -148,12 +152,13 @@ function nuBindDragEvents(){
 					if(e.shiftKey){
 
 						prop = 'width';
-						val	= $(this).width() + 1;
+						val	= t.width() + 1;
 
 					} else {
 
 						prop = 'left';
-						val = $(this).position().left + 1;
+						val = t.position().left + 1;
+						if (tLabel.length !== 0) valLabel = tLabel.position().left + 1;
 
 					}
 
@@ -162,12 +167,13 @@ function nuBindDragEvents(){
 					if(e.shiftKey){
 
 						prop = 'height';
-						val = cb.length == 0 ? $(this).height() - 1 : cb.height() -1;
+						val = cb.length == 0 ? t.height() - 1 : cb.height() -1;
 
 					} else {
 
 						prop = 'top';
-						val = $(this).position().top - 1;
+						val = t.position().top - 1;
+						if (tLabel.length !== 0) valLabel = tLabel.position().top - 1;
 
 					}
 
@@ -176,23 +182,29 @@ function nuBindDragEvents(){
 					if(e.shiftKey){
 
 						prop = 'height';
-						val = cb.length == 0 ? $(this).height() +1 : cb.height() +1;
+						val = cb.length == 0 ? t.height() +1 : cb.height() +1;
 
 					} else {
 
 						prop = 'top';
-						val = $(this).position().top + 1;
+						val = t.position().top + 1;
+						if (tLabel.length !== 0) valLabel = tLabel.position().top + 1;
 
 					}
 
 				}
 
-				if (!(prop == 'height' && $(this).hasClass('nu_contentbox'))) {
-					$(this).css(prop,val+'px');
+				if (!(prop == 'height' && t.hasClass('nu_contentbox'))) {
+					t.css(prop,val+'px');
 				}
 
+				if ((prop == 'left' || prop == 'top') && (tLabel.length !== 0)) {
+					tLabel.css(prop,valLabel+'px');
+				}
+
+
 				// ContentBox
-				var cb = $('#frame_' + $(this).attr('id'));
+				var cb = $('#frame_' + t.attr('id'));
 				if (cb.length == 1) {
 					if (prop == 'top') val += 18;
 					if (prop == 'width') val -= 4;
@@ -236,7 +248,7 @@ function nuCreateBox(event){
 		'width'				: 1,
 		'height'			: 1,
 		'top'				: event.clientY + window.scrollY,
-		'left'				 : event.clientX,
+		'left'				: event.clientX,
 		'position'			: 'absolute',
 		'border-style'		: 'dashed',
 		'border-width'		: 1,
@@ -268,23 +280,25 @@ function nuDragBox(event) {
 
 function nuResizeDrag(event) {
 
-	var x = parseInt($('#nuSelectBox').css('left'));
-	var y = parseInt($('#nuSelectBox').css('top'));
-	var w = parseInt($('#nuSelectBox').css('width'));
-	var h = parseInt($('#nuSelectBox').css('height'));
+	var selectBox = $('#nuSelectBox');
+	
+	var x = parseInt(selectBox.css('left'));
+	var y = parseInt(selectBox.css('top'));
+	var w = parseInt(selectBox.css('width'));
+	var h = parseInt(selectBox.css('height'));
 
 	var X = event.clientX - window.startX;
 	var Y = event.clientY + window.scrollY - window.startY;
 
 	if(X > 0) {
 
-		$('#nuSelectBox').css({
+		selectBox.css({
 			'width' : X
 		});
 
 	} else {
 
-		$('#nuSelectBox').css({
+		selectBox.css({
 			'width' : -1 * X,
 			'left' : window.startX + X,
 		});
@@ -293,13 +307,13 @@ function nuResizeDrag(event) {
 
 	if(Y > 0) {
 
-		$('#nuSelectBox').css({
+		selectBox.css({
 			'height' : Y
 		});
 
 	} else {
 
-		$('#nuSelectBox').css({
+		selectBox.css({
 			'height' : -1 * Y,
 			'top' : window.startY + Y,
 		});
@@ -308,14 +322,20 @@ function nuResizeDrag(event) {
 
 }
 
+function nuAddDragSelected(t) {
+	t.addClass('nuDragSelected');
+}
+
 function nuRemoveBox(ctrlKey) {
 
-	var L			= parseInt($('#nuSelectBox').css('left'));
-	var T			= parseInt($('#nuSelectBox').css('top')) - nuGetTopArea();
-	var B			= T + parseInt($('#nuSelectBox').css('height'));
-	var R			= L + parseInt($('#nuSelectBox').css('width'));
+	var selectBox	= $('#nuSelectBox');
 
-	$('#nuSelectBox').remove();
+	var L			= parseInt(selectBox.css('left'));
+	var T			= parseInt(selectBox.css('top')) - nuGetTopArea();
+	var B			= T + parseInt(selectBox.css('height'));
+	var R			= L + parseInt(selectBox.css('width'));
+
+	selectBox.remove();
 
 	var o = $('[data-drag]');
 
@@ -335,31 +355,31 @@ function nuRemoveBox(ctrlKey) {
 
 			//drag around selected objects points
 			if(l >= L && l <= R && t >= T && t <= B) {
-				$(this).addClass('nuDragSelected');
+				nuAddDragSelected($(this));
 			} else if(r >= L && r <= R && t >= T && t <= B) {
-				$(this).addClass('nuDragSelected');
+				nuAddDragSelected($(this));
 			} else if(l >= L && l <= R && b >= T && b <= B) {
-				$(this).addClass('nuDragSelected');
+				nuAddDragSelected($(this));
 			} else if(r >= L && r <= R && b >= T && b <= B) {
-				$(this).addClass('nuDragSelected');
+				nuAddDragSelected($(this));
 			}
 
 			//drag within selected objects points
 			if(L >= l && L <= r && T >= t && T <= b) {
-				$(this).addClass('nuDragSelected');
+				nuAddDragSelected($(this));
 			} else if(R >= l && R <= r && T >= t && T <= b) {
-				$(this).addClass('nuDragSelected');
+				nuAddDragSelected($(this));
 			} else if(L >= l && L <= r && B >= t && B <= b) {
-				$(this).addClass('nuDragSelected');
+				nuAddDragSelected($(this));
 			} else if(R >= l && R <= r && B >= t && B <= b) {
-				$(this).addClass('nuDragSelected');
+				nuAddDragSelected($(this));
 			}
 
 			//drag through object but not through any points
 			if(L >= l && L <= r && T <= t && B >= b) {
-				$(this).addClass('nuDragSelected');
+				nuAddDragSelected($(this));
 			} else if(L <= l && R >= r && T >= t && B <= b) {
-				$(this).addClass('nuDragSelected');
+				nuAddDragSelected($(this));
 			}
 
 		}
@@ -684,6 +704,10 @@ function nuThisContentBox(t) {
 	return $('#frame_' + $(t).attr('id'),$('#nuDragDialog iframe').contents());
 }
 
+function nuThisLabel(t) {
+	return $('#label_' + $(t).attr('id'),$('#nuDragDialog iframe').contents());
+}
+
 // Shortest
 function nuResizeToLowest(){
 
@@ -829,7 +853,7 @@ function nuSpaceHorizontally(){
 	}
 
 	var gapAvg				= Math.round(gapTotal/(selectedFields.length-1));
-	var leftAvg			= Math.round(leftTotal/(selectedFields.length-1));
+	var leftAvg				= Math.round(leftTotal/(selectedFields.length-1));
 
 	if(gapAvg < 0){
 
@@ -916,6 +940,10 @@ function nuAlignRight(){
 
 	selected.each(function(){
 		$(this).css('left',(rightestPoint-$(this).width())+'px');
+
+		var tLabel = nuThisLabel(this);
+		if (tLabel.length == 1) tLabel.css('left',rightestPoint - $(this).width() - tLabel.cssNumber('width') - 5  +'px');
+
 	});
 
 }
@@ -941,6 +969,9 @@ function nuAlignLeft(){
 	selected.each(function(){
 		$(this).css('left',leftestPoint+'px');
 		var cb = nuThisContentBox(this);
+
+		var tLabel = nuThisLabel(this);
+		if (tLabel.length == 1) tLabel.css('left',leftestPoint -  tLabel.cssNumber('width') - 5  +'px');
 
 		if (cb.length == 1) {
 			cb.css('left',leftestPoint +'px');
@@ -968,9 +999,14 @@ function nuAlignTop(){
 	});
 
 	selected.each(function(){
+
 		$(this).css('top',highestPoint+'px');
 		var cb = nuThisContentBox(this);
 		if (cb.length == 1) cb.css('top',highestPoint + 18 +'px');
+
+		var tLabel = nuThisLabel(this);
+		if (tLabel.length == 1) tLabel.css('top',highestPoint +'px');
+
 	});
 
 }
@@ -1004,6 +1040,9 @@ function nuAlignBottom(){
 			$(this).css('top',(lowestPoint-cb.height()-18)+'px');
 			cb.css('top', $(this).cssNumber('top')+ 18 + 'px');
 		}
+		
+		var tLabel = nuThisLabel(this);
+		if (tLabel.length == 1) tLabel.css('top',lowestPoint - $(this).height() +'px');		
 
 	});
 }
@@ -1189,13 +1228,13 @@ function nuSelectAllDragObjects(){
 
 	$('[data-drag]').each(function(){
 		if ($(this).is(":visible")){
-			$(this).addClass('nuDragSelected');
+			nuAddDragSelected($(this));
 		}
 	});
 
 	$('[data-drag]',$('#nuDragDialog iframe').contents()).each(function(){
 		if ($(this).is(":visible")){
-			$(this).addClass('nuDragSelected');
+			nuAddDragSelected($(this));
 		}
 	});
 
@@ -1273,6 +1312,12 @@ function nuMoveSelected() {
 		if (cb.length == 1) {
 			cb.css('left', l);
 			cb.css('top', t + 18);
+		}
+		
+		var tLabel = $('#label_' + $(s[i]).attr('id'));
+		if (tLabel.length !== 0) {
+			tLabel.css('left', l-tLabel.cssNumber('width')-5);
+			tLabel.css('top', t);			
 		}
 
 	}
