@@ -714,7 +714,7 @@ function nuDRAG(w, i, l, p, prop){
 	$('#' + id).attr('data-drag',1);
 	$('#' + id).attr('data-nu-object-id', prop.objects[i].object_id)
 
-	if(nuObjectType != 'button' && nuObjectType != 'run' && prop.title !== 'Insert-Snippet'){		//-- Input Object
+	if(prop.objects[i].input != 'button' && nuObjectType != 'run' && nuObjectType != 'contentbox' && prop.title !== 'Insert-Snippet'){		//-- Input Object
 		var lab = nuLabel(w, i, p, prop);
 		$(lab).addClass('nuDragLabel');
 	}

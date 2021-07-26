@@ -17,8 +17,8 @@ function nuBindDragEvents(){
 			if(e.stopPropagation) e.stopPropagation();
 			if(e.preventDefault) e.preventDefault();
 
-			e.cancelBubble	=true;
-			e.returnValue	=false;
+			e.cancelBubble	= true;
+			e.returnValue	= false;
 
 			if(e.buttons) {
 				nuDragBox(e);
@@ -578,7 +578,6 @@ function nuCreateDragOptionsBox(form){
 	.css('width', w + dragOptionsBoxWidth - 15);
 
 	$('#nuBreadcrumbHolder').remove();
-	$('#nuRECORD').css('height', window.innerHeight);
 
 	nuInitialiseDragState();
 	nuPopulateFieldsList(0);
@@ -629,6 +628,7 @@ function nuCreateDragOptionsBox(form){
 	
 	nuToggleDragLabels();
 
+	$('#nuRECORD').css('height', window.innerHeight);
 	$('.nuRECORD').css("width", "99.3%");
 
 }
