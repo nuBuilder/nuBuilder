@@ -269,7 +269,11 @@ jQuery.fn.extend({
 		return this.each(function() {
 			nuSetValue(this.id, nuTranslate(nuGetValue(this.id, method)), method);
 		});
+	},
+	nuRemoveFormatting: function() {
+		return nuFORM.removeFormatting($(this).val(), $(this).attr('data-nu-format'));
 	}
+
 });
 
 
