@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 25, 2021 at 05:17 PM
+-- Generation Time: Jul 26, 2021 at 03:55 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.8
 
@@ -1092,7 +1092,8 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu60f3f95b66732d1', 'nuhome', '', 'input', 'run_refresh_cache', 'Cache', 'nu5fd750667019155', 240, 43, 489, 195, 30, '0', 'center', '0', '0', '1', '', '', '', '', '', '0', '', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'button', '', '', '', '', '', '', '', '', ''),
 ('nu60f8fad0c38561a', 'nuaccess', 'zzzzsys_access', 'display', 'access_id', 'ID', 'nu5bad6cb36ac903f', 40, 165, 115, 110, 22, '1', 'left', '0', '0', '0', '', '', '', '', '', '', '', '', 'SELECT IF(\'#RECORD_ID#\' = \'-1\',\'\',\'#RECORD_ID#\')', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', '', '', '', ''),
 ('nu60f8fd56e325e76', 'nuobject', 'zzzzsys_object', 'input', 'sob_top_btn_increase_50', '+50', 'nu5bad6cb3686cb0d', 170, 192, 253, 50, 22, '1', 'left', '0', '0', '1', '', '', '', '', '', '', '', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, 'zzzzsys_tab', '', '', '', '', '', '', 0, '', 'button', '', '', '', '', '', '', '', '', ''),
-('nu60f84d84220174d', 'nuform', 'zzzzsys_form', 'input', 'sfo_breadcrumb_title', 'Breadcrumb Title', 'nu5bad6cb36791fd5', 40, 113, 142, 377, 22, '1', 'left', '0', '0', '0', '', '', '', '', '', '', '', '', '', '0', '0', 'browse|Browse|edit|Edit|browseedit|Browse and Edit|criteria|Criteria or Home|procedure|Procedure|report|Report', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'text', '', '', '', '', '', '', '', '', '');
+('nu60f84d84220174d', 'nuform', 'zzzzsys_form', 'input', 'sfo_breadcrumb_title', 'Breadcrumb Title', 'nu5bad6cb36791fd5', 40, 113, 142, 377, 22, '1', 'left', '0', '0', '0', '', '', '', '', '', '', '', '', '', '0', '0', 'browse|Browse|edit|Edit|browseedit|Browse and Edit|criteria|Criteria or Home|procedure|Procedure|report|Report', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'text', '', '', '', '', '', '', '', '', ''),
+('nu5fe034cd38a5270', 'nuuser', 'zzzzsys_user', 'input', 'sus_department', 'Department', 'nu5bad6cb36b63cae', 110, 329, 167, 329, 22, '1', 'left', '0', '0', '0', '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'text', '', NULL, '', '', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
