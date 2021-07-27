@@ -1635,8 +1635,10 @@ function nuAddPrintButtons($f, $t, $a){
 
 
 function nuAddJavascript($js){
-
-	$GLOBALS['EXTRAJS'] = $GLOBALS['EXTRAJS'] . "\n\n" . $js;
+	
+	if (isset($GLOBALS['EXTRAJS'])) {
+		$GLOBALS['EXTRAJS'] = $GLOBALS['EXTRAJS'] . "\n\n" . $js;
+	}
 }
 
 function nuPreloadImages($a){
