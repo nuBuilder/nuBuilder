@@ -321,55 +321,58 @@ function nuUpdateDatabase(){
 					$I[]		= "`$table"."_nulog`";
 
 				}
+				
+				if (!empty($F)) {
+					
+					$fs				= implode(', ', $F);																//-- for update statement
+					$vs				= ' VALUES (' . implode(', ', $V) . ')';
+					$is				= ' (' . implode(', ', $I) . ')';
 
-				$fs				= implode(', ', $F);																//-- for update statement
-				$vs				= ' VALUES (' . implode(', ', $V) . ')';
-				$is				= ' (' . implode(', ', $I) . ')';
+					if($action == 'save'){
 
-				if($action == 'save'){
+						if($pv == '-1'){
 
-					if($pv == '-1'){
+							if($deleted[$r] == '0'){
 
-						if($deleted[$r] == '0'){
-
-							$sql	= "INSERT INTO $table $is $vs;";
-							$S[]	= $sql;
-
-						}
-
-					}else{
-
-						$sql		= "UPDATE $table SET $fs WHERE `$pk` = '$pv';";
-
-						$S[]		= $sql;
-
-						if($log){
-
-							$sql	= "SELECT $table" . "_nulog FROM $table WHERE `$pk` = '$pv';";
-							$logt	= nuRunQuery($sql);
-							$logr	= db_fetch_row($logt);
-							$jd		= json_decode($logr[0]);
-
-							if(gettype($jd) == 'object'){
-								$jd->edited	= Array('user' => $user, 'time' => time());								
-							}else{
-
-								$jd			= new stdClass;
-								$jd->added	= Array('user' => 'unknown', 'time' => 0);
-								$jd->edited	= Array('user' => $user, 'time' => time());
+								$sql	= "INSERT INTO $table $is $vs;";
+								$S[]	= $sql;
 
 							}
 
-							$je		= addslashes(json_encode($jd));
-							$sql	= "UPDATE $table SET $table" . "_nulog = '$je' WHERE `$pk` = '$pv';";
-							$S[]	= $sql;
+						}else{
+
+							$sql		= "UPDATE $table SET $fs WHERE `$pk` = '$pv';";
+
+							$S[]		= $sql;
+
+							if($log){
+
+								$sql	= "SELECT $table" . "_nulog FROM $table WHERE `$pk` = '$pv';";
+								$logt	= nuRunQuery($sql);
+								$logr	= db_fetch_row($logt);
+								$jd		= json_decode($logr[0]);
+
+								if(gettype($jd) == 'object'){
+									$jd->edited	= Array('user' => $user, 'time' => time());								
+								}else{
+
+									$jd			= new stdClass;
+									$jd->added	= Array('user' => 'unknown', 'time' => 0);
+									$jd->edited	= Array('user' => $user, 'time' => time());
+
+								}
+
+								$je		= addslashes(json_encode($jd));
+								$sql	= "UPDATE $table SET $table" . "_nulog = '$je' WHERE `$pk` = '$pv';";
+								$S[]	= $sql;
+
+							}
 
 						}
-
+					
 					}
-				
-				}
-				
+
+				}	
 				
 			}
 			
@@ -407,8 +410,8 @@ function nuUpdateDatabase(){
 	}
 
 	if(count($_POST['nuErrors']) > 0){return;}
-
-	if($S != null){
+		
+		if($S != null){
 
 		for($i = 0 ; $i < count($S) ; $i++){
 

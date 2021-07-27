@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 27, 2021 at 06:31 AM
+-- Generation Time: Jul 27, 2021 at 04:50 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.8
 
@@ -569,8 +569,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.07.25.10'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.07.25.00');
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.07.27.00'),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.07.27.00');
 
 -- --------------------------------------------------------
 
