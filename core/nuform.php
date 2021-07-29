@@ -818,7 +818,7 @@ function nuSelectOptions($sql) {
 			
 		}
 
-	} elseif (substr(strtoupper(trim($sql)), 0, 6) == 'SELECT') {						//-- sql statement
+	} elseif (substr(strtoupper(trim($sql)), 0, 6) == 'SELECT' || substr(strtoupper($sql), 0, 5) == 'WITH ') {						//-- sql statement
 
 			$t		= nuRunQuery($sql);
 
