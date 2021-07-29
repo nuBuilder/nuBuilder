@@ -322,7 +322,7 @@ function nuUpdateDatabase(){
 
 				}
 				
-				if (!empty($F)) {
+				if (true) { // !empty($F)
 					
 					$fs				= implode(', ', $F);																//-- for update statement
 					$vs				= ' VALUES (' . implode(', ', $V) . ')';
