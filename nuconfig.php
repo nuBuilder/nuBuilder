@@ -8,20 +8,24 @@
 	$nuConfigDBUser						= "nuadmin";				//-- Database User. Change the user, if desired. The user must exist or must be created.
 	$nuConfigDBPassword					= "YourDBPassword";			//-- Database Password. We recommend you to use any strong password.
 
+	$nuConfigDBEngine					= "InnoDB";					//-- InnoDB or MyISAM
+	$nuConfigDBCollate					= "utf8mb4_unicode_ci";		//-- Or utf8_general_ci etc.
+	$nuConfigDBCharacterSet				= "utf8mb4";				//-- Or utf8 etc.
+
 // Administrator Login:
 	$nuConfigDBGlobeadminUsername	 	= "globeadmin";				//-- globeadmin username. You can choose any username you like.
 	$nuConfigDBGlobeadminPassword		= "nu";						//-- globeadmin password. Please choose a stronger password!
 
-	$nuConfigDBGlobeadminUsers			= "";						//-- User Ids with "globadmin" permission, separated by comma
+	$nuConfigDBGlobeadminUsers			= "";						//-- User Ids with "globeadmin" permission, separated by comma
 
 // Settings:
 	$nuConfigTitle						= "nuBuilder 4";			//-- nuBuilder Title
 	$nuConfigTimeOut					= 1440;						//-- Session Timeout. Default: 1440 (24h)
 
-	$nuConfigIsDemo						= false;					//-- Demo mode. Saving not permitted.	
+	$nuConfigIsDemo						= false;					//-- Demo mode. Saving not permitted.
 	$nuConfigDemoDBGlobeadminUsername	= "";						//-- Specify a Demo User Name and Password if $nuConfigIsDemo is set to true
-	$nuConfigDemoDBGlobeadminPassword	= "";
-	$nuConfigDemoSavingAllowedIds		= "";
+	$nuConfigDemoDBGlobeadminPassword	= "";						//-- Demo User Password
+	$nuConfigDemoSavingAllowedIds		= "";						//-- Saving allowed in the specified form Ids. Separated by comma.
 
 	$nuConfigUserAdditional1Label		= "";						//-- If not blank, rename the Label of "Additional 1" on the user form
 	$nuConfigUserAdditional2Label		= "";						//-- If not blank, rename the Label of "Additional 2" on the user form
@@ -34,6 +38,7 @@
 	$nuConfigKeepSessionAlive			= true;						//-- Use a timer to keep the session alive
 	$nuConfigKeepSessionAliveInterval	= 600;						//-- Keep-alive interval. Default 600 s (10 min)
 
+//	2FA authentication
 	$nuConfig2FAAdmin					= false;					//-- Use 2FA authentication for administrator
 	$nuConfig2FAUser					= false;					//-- Use 2FA authentication for users
 	$nuConfig2FAFormID					= "nuauthentication";		//-- 2FA form ID. Default id: nuauthentication
@@ -63,11 +68,11 @@ $nuJSOptions = "
 	nuUXOptions['nuMobileView']						= true;			// Optimise view for mobile devices
 
 	window.nuAdminButtons = [];
-	nuAdminButtons['nuDebug']					= false;
-	nuAdminButtons['nuPHP']						= true; 
-	nuAdminButtons['nuRefresh']					= true;
-	nuAdminButtons['nuObjects']					= true; 
-	nuAdminButtons['nuProperties']				= true;	
+	nuAdminButtons['nuDebug']						= false;
+	nuAdminButtons['nuPHP']							= true;
+	nuAdminButtons['nuRefresh']						= true;
+	nuAdminButtons['nuObjects']						= true;
+	nuAdminButtons['nuProperties']					= true;
 
 ";
 
