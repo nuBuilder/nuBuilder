@@ -65,6 +65,14 @@ function nuBuildFastReport(){
 
 function nuBuildFastForm($table, $form_type){
 
+	global $nuConfigDBEngine;
+	global $nuConfigDBCollate;
+	global $nuConfigDBCharacterSet;
+
+	if (!isset($nuConfigDBEngine)) 			$nuConfigDBEngine = "MyISAM";
+	if (!isset($nuConfigDBCollate)) 		$nuConfigDBCollate = "utf8_general_ci";
+	if (!isset($nuConfigDBCharacterSet))	$nuConfigDBCharacterSet = "utf8";
+
 	if($_SESSION['nubuilder_session_data']['IS_DEMO']){
 
 		nuDisplayError('Not available in the Demo...');
@@ -234,17 +242,16 @@ function nuBuildFastForm($table, $form_type){
 
 	if($newT){
 		
-		$mess		= 'Table and Form have';
+		$msg		= 'Table and Form have';
 		$create		= nuBuildNewTable($table, $a, $newT);
 
 		nuRunQuery($create);
 
-		nuRunQuery("ALTER TABLE $table ENGINE = MyISAM;");
-		nuRunQuery("ALTER TABLE $table CONVERT TO CHARACTER SET UTF8 COLLATE utf8_general_ci");
-	
+		nuRunQuery("ALTER TABLE $table ENGINE = $nuConfigDBEngine;");
+		nuRunQuery("ALTER TABLE $table CONVERT TO CHARACTER SET $nuConfigDBCharacterSet COLLATE $nuConfigDBCollate");
 
 	}else{
-		$mess		= 'Form has';
+		$msg		= 'Form has';
 	}
 	
 
@@ -286,7 +293,7 @@ function nuBuildFastForm($table, $form_type){
 
 		$js	= "
 
-			var m1	= '<h1>A $mess been created!</h1>';
+			var m1	= '<h1>A $msg been created!</h1>';
 			var m2	= '<p>(There is now a Form with a Code of <b>$form_code</b> found in <b>Forms</b>)';
 
 			nuMessage([m1, m2]);
@@ -343,7 +350,7 @@ function nuBuildFastForm($table, $form_type){
 
 		$js	= "
 
-			var m1	= '<h1>A $mess been created!</h1>';
+			var m1	= '<h1>A $msg been created!</h1>';
 			var m2	= '<p>(There is now a Button called <b>$table</b> on the <b>Fast Forms</b> tab of the <b>User Home</b> Form)</p>';
 
 			nuMessage([m1, m2]);
