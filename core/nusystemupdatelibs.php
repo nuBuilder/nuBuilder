@@ -371,28 +371,36 @@ function nuSystemList(){
 }
 
 function nuSetCollation(){
-		
+
+	global $nuConfigDBEngine;
+	global $nuConfigDBCollate;
+	global $nuConfigDBCharacterSet;
+
+	if (!isset($nuConfigDBEngine))			$nuConfigDBEngine = "MyISAM";
+	if (!isset($nuConfigDBCollate))			$nuConfigDBCollate = "utf8_general_ci";
+	if (!isset($nuConfigDBCharacterSet))	$nuConfigDBCharacterSet = "utf8";
+
 	$db		= nuRunQuery("SELECT DATABASE()");
 	$dbname	= db_fetch_row($db);
 	$dbname	= $dbname[0];
-	nuRunQuery("ALTER DATABASE $dbname CHARACTER SET utf8 COLLATE utf8_general_ci");
-	
+	nuRunQuery("ALTER DATABASE $dbname CHARACTER SET $nuConfigDBCharacterSet COLLATE $nuConfigDBCollate");
+
 	$tbls	= nuRunQuery("SHOW FULL Tables WHERE Table_type = 'BASE TABLE'");
-	
+
 	while($row = db_fetch_row($tbls)){
 
 		$tab 	= $row[0];
-		
+
 		if(substr($tab, 0, 8) == 'zzzzsys_'){
-			
-			nuRunQuery("ALTER TABLE $tab ENGINE = MyISAM");
-			nuRunQuery("ALTER TABLE $tab DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci");
-			nuRunQuery("ALTER TABLE $tab CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci");
-		
+
+			nuRunQuery("ALTER TABLE $tab ENGINE = $nuConfigDBEngine");
+			nuRunQuery("ALTER TABLE $tab DEFAULT CHARACTER SET $nuConfigDBCharacterSet COLLATE $nuConfigDBCollate");
+			nuRunQuery("ALTER TABLE $tab CONVERT TO CHARACTER SET $nuConfigDBCharacterSet COLLATE $nuConfigDBCollate");
+
 		}
-		
+
 	}
-	
+
 }
 
 function nuGetIncludedLanguages(){
