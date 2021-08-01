@@ -95,6 +95,7 @@ class nuSqlString{
 		$sql				= preg_replace('%(/\*)(.*?)(\*/)%s',"",$sql); 	//-- remove  / * * / style comments
 		$sql				= str_replace(chr(13), ' ', $sql);				//-- remove carrige returns
 		$sql				= str_replace(chr(10), ' ', $sql);				//-- remove line feeds
+		$sql				= rtrim($sql,';'); 								//-- strip trailing ;
 
 		$from_string		= stristr($sql, ' from ');
 		$where_string		= stristr($sql, ' where ');
