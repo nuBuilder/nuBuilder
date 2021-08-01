@@ -1995,13 +1995,22 @@ function nuAddSubformRow(t, e){
 		nuBuildLookup(this,"");
 	})
 
+	// Copy Datalist from previous row
+
+	let objlist1 = $('#' + o.form + nuPad3(o.rows-1) + 'nuRECORD').children().filter('[list]');
+	if (objlist1.length !== 0) {
+		let objlist2 = $('#' + o.form + nuPad3(o.rows) + 'nuRECORD').children().filter('[list]');
+		objlist2.each(function(i){
+			$(this).attr('list', objlist1.eq(i).attr('list'))
+		});
+	}
 
 	let objSelect = $('#' + o.form + nuPad3(o.rows) + 'nuRECORD > .select2-hidden-accessible');
 
 	if (objSelect.length > 0) {
 		objSelect.each(function(){
 
-			var select2Id = $( this ).attr("data-select2-id") + 'select2';
+			var select2Id = $(this).attr("data-select2-id") + 'select2';
 
 			if(select2Id) {
 
