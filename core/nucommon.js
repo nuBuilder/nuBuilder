@@ -1055,7 +1055,7 @@ function nuShow(i, visible, openTab){
 
 	}
 
-	if (openTab !=== false) nuOpenTab($('.nuTabSelected')[0].id.substr(5));
+	if (openTab !== false) nuOpenTab($('.nuTabSelected')[0].id.substr(5));
 
 }
 
