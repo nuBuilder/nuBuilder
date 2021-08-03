@@ -36,6 +36,22 @@ function nuRunQueryNoDebug($s, $a = array(), $isInsert = false){
 
 }
 
+function nuRunQueryTest($s, $a = array()){
+
+	global $nuDB;
+
+	$object = $nuDB->prepare($s);
+
+	try {
+		$object->execute($a);
+	}catch(PDOException $ex){
+		return $ex->getMessage();
+	}
+
+	return true;
+
+}
+
 function nuRunQuery($s, $a = array(), $isInsert = false){
 
 	global $DBHost;
