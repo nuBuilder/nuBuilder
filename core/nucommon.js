@@ -248,9 +248,9 @@ jQuery.fn.extend({
 			nuDisable(this.id);
 		});
 	},
-	nuShow: function(visible) {
+	nuShow: function(visible, openTab) {
 		return this.each(function() {
-			nuShow(this.id, visible);
+			nuShow(this.id, visible, openTab);
 		});
 	}, 
 	nuHide: function() {
@@ -1027,7 +1027,7 @@ function nuDisable(i){					//-- Disable Edit Form Object
 
 }
 
-function nuShow(i, visible){
+function nuShow(i, visible, openTab){
 
 	if(visible === false){
 		nuHide(i);
@@ -1055,7 +1055,7 @@ function nuShow(i, visible){
 
 	}
 
-	nuOpenTab($('.nuTabSelected')[0].id.substr(5));
+	if (openTab !=== false) nuOpenTab($('.nuTabSelected')[0].id.substr(5));
 
 }
 
@@ -1579,6 +1579,58 @@ function nuSubformColumnArray(id, column, includeDeleted = false) {
 		}
 	}
 	return a;
+}
+
+function nuSubformDisable(sf, ob) {
+
+	if (ob === undefined || ob === '') {
+		$("[data-nu-form='" + sf + "']").nuDisable();
+		return;
+	}
+	
+	for (let i = 0; i < nuSubformObject(sf).rows.length; i++) {
+		nuDisable(sf + nuPad3(i) + ob);
+	}
+
+}
+
+function nuSubformEnable(sf, ob, enable) {
+
+	if (ob === undefined || ob === '') {
+		$("[data-nu-form='" + sf + "']").nuEnable(enable);
+		return;
+	}
+	
+	for (let i = 0; i < nuSubformObject(sf).rows.length; i++) {
+		nuEnable(sf + nuPad3(i) + ob, enable);
+	}
+
+}
+
+function nuSubformHide(sf, ob) {
+
+	if (ob === undefined || ob === '') {
+		$("[data-nu-form='" + sf + "']").nuHide();
+		return;
+	}
+	
+	for (let i = 0; i < nuSubformObject(sf).rows.length; i++) {
+		nuHide(sf + nuPad3(i) + ob);
+	}
+
+}
+
+function nuSubformShow(sf, ob, show) {
+
+	if (ob === undefined || ob === '') {
+		$("[data-nu-form='" + sf + "']").nuShow(true, false)
+		return;
+	}
+	
+	for (let i = 0; i < nuSubformObject(sf).rows.length; i++) {
+		nuShow(sf + nuPad3(i) + ob, show, false);
+	}
+
 }
 
 function nuEncode(s){
