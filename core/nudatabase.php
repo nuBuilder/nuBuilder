@@ -148,6 +148,16 @@ function db_fetch_all_array($o){
 
 }
 
+function db_fetch_key_pair_array($o){
+
+	if (is_object($o)) {
+		return $o->fetchAll(PDO::FETCH_KEY_PAIR);
+	} else {
+		return array();
+	}
+
+}
+
 function db_fetch_object($o){
 
 	if (is_object($o)) {
