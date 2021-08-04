@@ -1261,6 +1261,7 @@ function nuReportDialog(){
 	top = nuDialogInput('Height', 'height', top, 180, nuREPORT, 'nuDoNothing');
 	top = nuDialogInput('Paper', 'paper', top, 180, nuREPORT, fun, [['A4','A4'],['A5','A5'],['Letter','Letter'],['Legal','Legal']]);
 	top = nuDialogInput('Orientation', 'orientation', top, 180, nuREPORT, fun, [['P','Portrait'],['L','Landscape']]);
+	top = nuDialogInput('Use HTML', 'ishtml', top, 180, nuREPORT, fun, [['Y','Yes'],['N','No']]);
 	
 	$('#width').attr('disabled', true);
 	$('#height').attr('disabled', true);

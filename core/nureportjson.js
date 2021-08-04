@@ -34,6 +34,7 @@ window.nuREPORTdefault = {
 	"height":297,
 	"paper":"A4",
 	"orientation":"P",
+	"ishtml":"N",
 	"groups":[
 		{
 		 "sortField":"Detail",

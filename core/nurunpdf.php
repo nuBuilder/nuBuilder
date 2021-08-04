@@ -68,7 +68,14 @@ function nuRunReportId($jsonID, $tag, $get) {
 	nuBuildReport($PDF, $REPORT, $TABLE_ID);
 	$hashData['nu_pages']		= nuGetTotalPages();
 	nuReplaceLabelHashVariables($REPORT, $hashData);
-	nuPrintReport($PDF, $REPORT, $GLOBALS['nu_report'], $JSON);
+
+	if (isset($LAYOUT->ishtml)) {
+		$isHTML = $LAYOUT->ishtml == 'Y' ? true : false;
+	} else {
+		$isHTML = false;
+	}
+
+	nuPrintReport($PDF, $REPORT, $GLOBALS['nu_report'], $JSON, $isHTML);
 
 	nuRunQuery("DROP TABLE IF EXISTS $TABLE_ID");
 	nuRunQuery("DROP TABLE IF EXISTS $TABLE_ID".'_nu_summary');
@@ -93,7 +100,7 @@ function nuRunReportId($jsonID, $tag, $get) {
 
 }
 
-function nuPrintReport($PDF, $LAY, $DATA, $JSON){
+function nuPrintReport($PDF, $LAY, $DATA, $JSON, $isHTML){
 
 	$lastSectionTop			= 10000;
 	$pageNumber				= 0;
@@ -167,7 +174,7 @@ function nuPrintReport($PDF, $LAY, $DATA, $JSON){
 
 			$O				= nuGetObjectProperties($LAY, $DATA[$s]->objects[$o]->id);
 			if($O->objectType == 'field' or $O->objectType == 'label'){
-				nuPrintField($PDF, $DATA[$s], $DATA[$s]->objects[$o], $O, $LAY);
+				nuPrintField($PDF, $DATA[$s], $DATA[$s]->objects[$o], $O, $LAY, $isHTML);
 			}
 			if($O->objectType == 'image'){
 				nuPrintImage($PDF, $DATA[$s], $DATA[$s]->objects[$o], $O);														//-- print graphic
@@ -900,9 +907,10 @@ function nuGetObjectProperties($REPORT, $id){
 	return '';
 }
 
-function nuPrintField($PDF, $S, $contents, $O, $LAY){
+function nuPrintField($PDF, $S, $contents, $O, $LAY, $isHTML){
 
 	$PROP			= nuGetObjectProperties($LAY, $O->id);
+
 	$fontFamily		= $PROP->fontFamily;
 	$fontWeight		= $PROP->fontWeight;
 	$fontSize		= $PROP->fontSize;
@@ -936,7 +944,7 @@ function nuPrintField($PDF, $S, $contents, $O, $LAY){
 	if (str_replace(array("\r\n", "\r", "\n", "\t"), ' ', $t) == 'KEEP EXACT HEIGHT'){
 		$PDF->Rect($left, $top, $width, $height, 'DF');
 	}else{
-		$PDF->MultiCell($width, $height, $t, $hasBorder, $textAlign, 1, 0, '', '', true, 0, false, false); 
+		$PDF->MultiCell($width, $height, $t, $hasBorder, $textAlign, 1, 0, '', '', true, 0, $isHTML, false); 
 	}
 
 }
