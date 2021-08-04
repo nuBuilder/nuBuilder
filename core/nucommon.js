@@ -190,6 +190,10 @@ String.prototype.rtrim = function() {
 	return this.replace(/\s+$/,"");
 }
 
+String.prototype.fixNbsp = function() {
+	return this.replace(/\xA0/g, " ")
+}
+
 String.prototype.capitalise = function() {
 	return this.charAt(0).toUpperCase() + this.slice(1);
 }
@@ -207,9 +211,9 @@ String.prototype.withoutNumbers = function() {
 }
 
 Date.prototype.addDays = function(days) {
-    var date = new Date(this.valueOf());
-    date.setDate(date.getDate() + days);
-    return date;
+	var date = new Date(this.valueOf());
+	date.setDate(date.getDate() + days);
+	return date;
 }
 
 String.prototype.nuFormat = function() {
@@ -2640,6 +2644,7 @@ function nuGetValue(i, method) {
 	if (i === undefined || nuDebugOut(obj, i)) return null;
 
 	if (obj.is(':checkbox')) return obj.is(":checked");
+	if (obj.is('select') && method === 'text') return $("#" + i + " option:selected").text().fixNbsp();
 	if (method === undefined && obj.is(':button')) return obj.text();
 
 	switch (method) {
@@ -2665,6 +2670,15 @@ function nuSetValue(i, v, method) {
 		obj.text(v);
 	} else if (obj.is(':checkbox')) {
 		obj.prop('checked', v).change();
+	} else if (obj.is('select') && method === 'text') {
+		$('#' + i + ' option').each(function(){
+			if ($(this).text().fixNbsp() === v) {
+				$(this).prop("selected", "selected");
+				obj.change();
+				return true;
+			}
+		});
+
 	} else {
 
 		switch (method) {
