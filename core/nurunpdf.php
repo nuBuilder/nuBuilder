@@ -9,72 +9,89 @@ define('FPDF_FONTPATH','libs/tcpdf/font/');
 $GLOBALS['nu_report']		= array();
 $GLOBALS['nu_columns']		= array();
 $GLOBALS['nu_files']		= array();
+
 $get						= isset($_GET['i']);
-
-if($get){
+	if($get){
 	$jsonID					= $_GET['i'];
+	$tag					= '';
 }else{
-	$jsonID					= $_POST['ID'];
-	$tag					= $_POST['tag'];
+	$jsonID					= isset($_POST['ID']) ? $_POST['ID'] : null	;
+	$tag					= isset($_POST['tag']) ? $_POST['tag'] : null;
 }
 
-$J							= nuGetJSONData($jsonID);
-
-$TABLE_ID					= nuTT();
-$JSON						= json_decode($J);
-$LAYOUT						= json_decode($JSON->sre_layout);
-$hashData					= nuAddToHashList($JSON, 'report');
-$hashData['TABLE_ID']		= $TABLE_ID;
-$GLOBALS['TABLE_ID']		= $TABLE_ID;
-$_POST['nuHash']			= $hashData;
-$PDF						= new TCPDF($LAYOUT->orientation, 'mm', $LAYOUT->paper, true, 'UTF-8', false);
-
-$PDF->SetAutoPageBreak(true);
-// The report writer makes the header and footer so dont need a print header or footer.
-$PDF->setPrintHeader(false);
-$PDF->setPrintFooter(false);
-$REPORT						= nuSetPixelsToMM($LAYOUT);
-
-$PDF->SetMargins(1,1,1);
-
-// Font subsetting to reduce the size of the generated pdf file
-/*
-$fl							= json_decode(nuFontList());
-
-for($i = 0 ; $i < count($fl) ; $i++){
-	
-	$fnt					= $fl[$i][0];
-	$PDF->AddFont($fnt, '', '', true);
-	
-}
-*/
-
-$justID						= strstr($JSON->parentID, ':');
-
-nuBuildTempTable($JSON->parentID, $TABLE_ID);
-
-$GLOBALS['nu_columns']		= nuAddCriteriaValues($hashData, $TABLE_ID);
-
-nuRunQuery("ALTER TABLE $TABLE_ID ADD `nu__id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
-
-nuBuildReport($PDF, $REPORT, $TABLE_ID);
-$hashData['nu_pages']		= nuGetTotalPages();
-nuReplaceLabelHashVariables($REPORT, $hashData);
-nuPrintReport($PDF, $REPORT, $GLOBALS['nu_report'], $JSON);
-
-nuRunQuery("DROP TABLE IF EXISTS $TABLE_ID");
-nuRunQuery("DROP TABLE IF EXISTS $TABLE_ID".'_nu_summary');
-
-
-if($get){
-	ob_end_clean();
-	$PDF->Output('nureport.pdf', 'I');
-}else{
-	nuSavePDF($PDF, $JSON->code, $tag);
+if ($jsonID !== null) {
+	nuRunReportId($jsonID, $tag, $get);
 }
 
+function nuRunReportId($jsonID, $tag, $get) {
 
-nuRemoveFiles();
+	$J							= nuGetJSONData($jsonID);
+
+	$TABLE_ID					= nuTT();
+	$JSON						= json_decode($J);
+	$LAYOUT						= json_decode($JSON->sre_layout);
+	$hashData					= nuAddToHashList($JSON, 'report');
+	$hashData['TABLE_ID']		= $TABLE_ID;
+	$GLOBALS['TABLE_ID']		= $TABLE_ID;
+	$_POST['nuHash']			= $hashData;
+
+	$PDF						= new TCPDF($LAYOUT->orientation, 'mm', $LAYOUT->paper, true, 'UTF-8', false);
+
+	$PDF->SetAutoPageBreak(true);
+	// The report writer makes the header and footer so dont need a print header or footer.
+	$PDF->setPrintHeader(false);
+	$PDF->setPrintFooter(false);
+	$REPORT						= nuSetPixelsToMM($LAYOUT);
+
+	$PDF->SetMargins(1,1,1);
+
+	// Font subsetting to reduce the size of the generated pdf file
+	/*
+	$fl							= json_decode(nuFontList());
+
+	for($i = 0 ; $i < count($fl) ; $i++){
+		
+		$fnt					= $fl[$i][0];
+		$PDF->AddFont($fnt, '', '', true);
+		
+	}
+	*/
+
+	$justID						= strstr($JSON->parentID, ':');
+
+	nuBuildTempTable($JSON->parentID, $TABLE_ID);
+
+	$GLOBALS['nu_columns']		= nuAddCriteriaValues($hashData, $TABLE_ID);
+
+	nuRunQuery("ALTER TABLE $TABLE_ID ADD `nu__id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
+
+	nuBuildReport($PDF, $REPORT, $TABLE_ID);
+	$hashData['nu_pages']		= nuGetTotalPages();
+	nuReplaceLabelHashVariables($REPORT, $hashData);
+	nuPrintReport($PDF, $REPORT, $GLOBALS['nu_report'], $JSON);
+
+	nuRunQuery("DROP TABLE IF EXISTS $TABLE_ID");
+	nuRunQuery("DROP TABLE IF EXISTS $TABLE_ID".'_nu_summary');
+
+
+	if($get){
+		ob_end_clean();
+		$PDF->Output('nureport.pdf', 'I');
+		nuRemoveFiles();
+		return false;
+	}else{
+
+		$result = nuSavePDF($PDF, $JSON->code, $tag);
+		nuRemoveFiles();
+
+		return array(
+			'id' =>  $result['id'],
+			'filename' => $result['filename'],
+		);
+
+	}
+
+}
 
 function nuPrintReport($PDF, $LAY, $DATA, $JSON){
 
@@ -190,7 +207,7 @@ function nuBuildReport($PDF, $REPORT, $TABLE_ID){
 	$DATA								= nuRunQuery("CREATE TABLE $TABLE_ID SELECT * FROM a$TABLE_ID");
 	$DATA								= nuRunQuery("DROP TABLE a$TABLE_ID");
 	$DATA								= nuRunQuery("SELECT * FROM $TABLE_ID");
-	
+
 	nuMakeSummaryTable($REPORT, $TABLE_ID);
 	$sectionTop							= 0;
 	$ROW								= db_fetch_array($DATA);														//-- first row
@@ -323,7 +340,7 @@ class nuSECTION{
 	public $SECTIONS		= array();											//-- this Section split over pages
 	public $OBJECTS			= array();
 	public $TABLE_ID		= '';
-	
+
 	function __construct($PDF, $ROW, $LAY, $group, $section, $sectionTop){
 
 		$this->PDF			= $PDF;
@@ -340,7 +357,7 @@ class nuSECTION{
 	}
 
 	public function buildSection(){
-		
+
 		$this->O			= $this->setObjectLines($this->O);
 		$nextTop			= $this->chopSectionOverPages();
 		$GLOBALS['nu_report'] = array_merge($GLOBALS['nu_report'], $this->SECTIONS);
@@ -1129,14 +1146,16 @@ function nuSavePDF($PDF, $code = '', $tag = '') {
 	
 	// save PDF file on the server in the ./temp directory
 	$filename1 = 'nupdf_' . nuID() . '.pdf';
-	$dir = dirname(getcwd()) . '/temp/';
+	$dir = dirname(getcwd()) . DIRECTORY_SEPARATOR. 'temp' . DIRECTORY_SEPARATOR;
 	$filename = $dir . $filename1;
 	$path = realpath($dir);
+
+	$rid = null;
 
 	if (is_writable($path)) {
 		$PDF->Output($filename, 'F');
 		$s = nuHash();
-		$usr = $s["USER_ID"];
+		$usr = isset($s["USER_ID"]) ? $s["USER_ID"] : null;
 		$rid = nuID();
 
 		// creation of temporary table to store the names of generated files
@@ -1155,12 +1174,18 @@ function nuSavePDF($PDF, $code = '', $tag = '') {
 		nuRunQuery($q1);
 
 		echo json_encode( array( 'filename' => $filename, 'id' => $rid ) );
+	
   
 	}
 	else {
 		nuDebug('There was an error saving the report','The directory to save PDF files: '. $dir .' does not exist or you do not have permission to write to this folder!');
 		echo json_encode( array( 'filename' => null, 'id' => null ) );
 	}
+
+	return array(
+		'id' => $rid,
+		'filename' => $filename
+	);
 
 }
 
