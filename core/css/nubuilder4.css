@@ -588,6 +588,15 @@
 	border-color:#87A96B;
 	border-width:0 0 1px
 }
+
+.nuButtonSelected {
+	background-color: green;
+}
+
+.nuButtonHighlighted {
+	font-weight: bolder;
+}
+
  .nuUserHomeButton:hover {
 	color:#E2EAFF 
 }
