@@ -617,16 +617,16 @@
  .nuActionButton:hover {
 	color:#E2EAFF
 }
-
  .nuQuickButton {
-	background-color:white;
-	color:#595353;
-	text-shadow:none;
-	font-size:13px;
-	border-radius:1px;
-	border:none;
-	padding-left:10px
+    background-color: #fafafa;
+    color: black;
+    border-color: rgb(255 255 255);
+    text-shadow: none;
+    border-width: thin;
+	padding-left:10px;
+	border-radius:3px
 }
+
  .nuQuickButton:hover {
 	background-color:#00ADEF;
 	color:white 
