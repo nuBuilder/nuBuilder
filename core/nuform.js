@@ -2543,7 +2543,7 @@ function nuGetOptionsList(f, t, p, a, type){
 		}
 
 		list.push(['', '', '', '']);
-		list.push([nuTranslate('Refresh'), 'nuGetBreadcrumb()', 'fa-refresh', 'Ctrl+Shft+R']);
+		list.push([nuTranslate('Refresh'), 'if (nuGlobalAccess()) {nuRunPHPHidden("nusetrefreshcache", 0);} else {nuGetBreadcrumb();}', 'fa-refresh', 'Ctrl+Shft+R']);
 		list.push([nuTranslate('Search'), 'nuSearchAction();', 'fa-square', 'Ctrl+Shft+S']);
 
 		if(nuSERVERRESPONSE.buttons.Add == '1'){list.push([nuTranslate('Add'), 'nuAddAction();', 'fa-square', 'Ctrl+Shft+A']);}
@@ -2587,7 +2587,7 @@ function nuGetOptionsList(f, t, p, a, type){
 
 		if(type != 'subform'){
 
-			list.push([nuTranslate('Refresh'), 'nuGetBreadcrumb()', 'fa-refresh', 'Ctrl+Shft+R']);
+			list.push([nuTranslate('Refresh'), 'if (nuGlobalAccess()) {nuRunPHPHidden("nusetrefreshcache", 0);} else {nuGetBreadcrumb();}', 'fa-refresh', 'Ctrl+Shft+R']);
 
 			if(nuFORM.getCurrent().form_type != 'launch'){
 

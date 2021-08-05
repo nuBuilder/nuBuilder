@@ -19,22 +19,28 @@
 	$_POST['nuErrors']						= array();
 
 	$U										= nuGetUserAccess();
+	$P										= $_POST['nuSTATE'];
+
+	$_POST['nuHash']						= array_merge($U, nuSetHashList($P));
+	$CT										= $P['call_type'];
+
+	$globalAccess 							= nuGlobalAccess(false);
+	$refreshCache							= nuGetJSONData('REFRESH_CACHE') == '1';
+
+	if ($refreshCache && !$globalAccess)	{
+		nuLoginSetupNOTGlobeadmin(false);
+		nuUpdateTableSchema($CT, true);
+		nuUpdateFormSchema(true);
+	};
 
 	if (empty($U)) nuDie(nuTranslate('Your session has timed out.'));
 
 	$formAndSessionData						= nuGatherFormAndSessionData($U['HOME_ID']);
 
-	$P										= $_POST['nuSTATE'];
-	$CT										= $P['call_type'];
-
 	$F										= $formAndSessionData->form_id;
 	$R										= $formAndSessionData->record_id;
 
 	$_POST['FORM_ID'] 						= $F;
-	$_POST['nuHash']						= array_merge($U, nuSetHashList($P));
-
-	$globalAccess 							= nuGlobalAccess(true);
-	$refreshCache							= nuGetJSONData('REFRESH_CACHE') == '1';
 
 	// 2FA, check authentication status.
 	if ((($globalAccess && nuObjKey($_SESSION['nubuilder_session_data'],'2FA_ADMIN')) || (!$globalAccess && nuObjKey($_SESSION['nubuilder_session_data'],'2FA_USER'))) && nuObjKey($_SESSION['nubuilder_session_data'],'SESSION_2FA_STATUS') == 'PENDING') {
@@ -90,11 +96,12 @@
 		$f->forms[0]->database					= $nuConfigDBName;
 		$f->forms[0]->dimensions				= isset($formAndSessionData->dimensions) ? $formAndSessionData->dimensions : null;
 		$f->forms[0]->translation				= $formAndSessionData->translation;
-		$f->forms[0]->tableSchema				= nuUpdateTableSchema($CT, $refreshCache);
-		$f->forms[0]->viewSchema				= nuBuildViewSchema($CT);
-		$f->forms[0]->formSchema				= nuUpdateFormSchema($refreshCache);
 
-		if ($refreshCache) 						{ nuSetJSONData('REFRESH_CACHE','0'); }
+		$f->forms[0]->tableSchema				= nuUpdateTableSchema($CT, $refreshCache && $globalAccess);
+		$f->forms[0]->viewSchema				= nuBuildViewSchema($CT);
+		$f->forms[0]->formSchema				= nuUpdateFormSchema($refreshCache  && $globalAccess);
+
+		if ($refreshCache) nuSetJSONData('REFRESH_CACHE','0');
 
 		$f->forms[0]->session_id				= $_SESSION['nubuilder_session_data']['SESSION_ID'];
 

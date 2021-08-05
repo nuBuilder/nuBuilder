@@ -160,31 +160,44 @@ function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 	return true;
 }
 
-function nuLoginSetupNOTGlobeadmin() {
+function nuLoginSetupNOTGlobeadmin($new = true) {
 
 	global $nuConfig2FAUser;
 
-	$_SESSION['nubuilder_session_data']['SESSION_ID'] = nuIDTEMP();
-	$_SESSION['nubuilder_session_data']['SESSION_TIMESTAMP'] = time();
-	$_SESSION['nubuilder_session_data']['IS_DEMO'] = false;
+	if ($new) {
 
-	$checkLoginDetailsSQL = "SELECT * FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id WHERE sus_login_name = ? AND sus_login_password = ? ";
+		$_SESSION['nubuilder_session_data']['SESSION_ID'] = nuIDTEMP();
+		$_SESSION['nubuilder_session_data']['SESSION_TIMESTAMP'] = time();
+		$_SESSION['nubuilder_session_data']['IS_DEMO'] = false;
 
-	$this_username = $_POST['nuSTATE']['username'];
-	$this_password = md5($_POST['nuSTATE']['password']);
+		$checkLoginDetailsSQL = "SELECT * FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id WHERE sus_login_name = ? AND sus_login_password = ? ";
 
-	$checkLoginDetailsValues = array(
-		$this_username,
-		$this_password
-	);
-	$checkLoginDetailsQRY = nuRunQuery($checkLoginDetailsSQL, $checkLoginDetailsValues);
-	$checkLoginDetailsOBJ = db_fetch_object($checkLoginDetailsQRY);
-	$_SESSION['nubuilder_session_data']['translation'] = nuGetTranslation($checkLoginDetailsOBJ->sus_language);
-	$_SESSION['nubuilder_session_data']['isGlobeadmin'] = false;
-	$translationQRY = nuRunQuery("SELECT * FROM zzzzsys_translate WHERE trl_language = '$checkLoginDetailsOBJ->sus_language' ORDER BY trl_english");
+		$this_username = $_POST['nuSTATE']['username'];
+		$this_password = md5($_POST['nuSTATE']['password']);
+
+		$checkLoginDetailsValues = array(
+			$this_username,
+			$this_password
+		);
+		$checkLoginDetailsQRY = nuRunQuery($checkLoginDetailsSQL, $checkLoginDetailsValues);
+		$checkLoginDetailsOBJ = db_fetch_object($checkLoginDetailsQRY);
+	
+	}
+
+	$language = $new ? $checkLoginDetailsOBJ->sus_language : $_SESSION['nubuilder_session_data']['language'];
+	$userId = $new ? $checkLoginDetailsOBJ->zzzzsys_user_id : $_SESSION['nubuilder_session_data']['user_id'];
+
+	if ($new) {
+		$_SESSION['nubuilder_session_data']['user_id'] = $userId;
+		$_SESSION['nubuilder_session_data']['language'] = $language;
+		$_SESSION['nubuilder_session_data']['translation'] = nuGetTranslation($language);
+		$_SESSION['nubuilder_session_data']['isGlobeadmin'] = false;
+	}
+
+	$translationQRY = nuRunQuery("SELECT * FROM zzzzsys_translate WHERE trl_language = ? ORDER BY trl_english", array($language));
 	$getAccessLevelSQL = "SELECT zzzzsys_access_id, zzzzsys_user_id, sus_login_name, sus_name, sal_zzzzsys_form_id AS zzzzsys_form_id FROM zzzzsys_user ";
 	$getAccessLevelSQL .= "INNER JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id ";
-	$getAccessLevelSQL .= "WHERE zzzzsys_user_id = '$checkLoginDetailsOBJ->zzzzsys_user_id' ";
+	$getAccessLevelSQL .= "WHERE zzzzsys_user_id = '$userId' ";
 	$getAccessLevelSQL .= "GROUP BY sus_zzzzsys_access_id ";
 	$getAccessLevelQRY = nuRunQuery($getAccessLevelSQL);
 
@@ -198,7 +211,7 @@ function nuLoginSetupNOTGlobeadmin() {
 
 	$sessionIds = new stdClass;
 	$sessionIds->zzzzsys_access_id = $getAccessLevelOBJ->zzzzsys_access_id;
-	$sessionIds->zzzzsys_user_id = $checkLoginDetailsOBJ->zzzzsys_user_id;
+	$sessionIds->zzzzsys_user_id = $userId;
 	$sessionIds->sus_login_name = $getAccessLevelOBJ->sus_login_name;
 	$sessionIds->sus_name = $getAccessLevelOBJ->sus_name;
 
@@ -206,7 +219,7 @@ function nuLoginSetupNOTGlobeadmin() {
 	$sessionIds->ip_address = nuGetIPAddress();
 	
 
-	if ($nuConfig2FAUser) {
+	if ($nuConfig2FAUser && $new) {
 		if (nu2FALocalTokenOK($sessionIds->zzzzsys_user_id)) {
 			$sessionIds->zzzzsys_form_id = $getAccessLevelOBJ->zzzzsys_form_id;
 		} else {
@@ -220,7 +233,7 @@ function nuLoginSetupNOTGlobeadmin() {
 
 	$storeSessionInTable = new stdClass;
 	$storeSessionInTable->session = $sessionIds;
-	$storeSessionInTable->access_level_code = nuAccessLevelCode($checkLoginDetailsOBJ->zzzzsys_user_id);
+	$storeSessionInTable->access_level_code = nuAccessLevelCode($userId);
 
 	// form ids
 	$getFormsSQL = "SELECT slf_zzzzsys_form_id	AS id, ";
@@ -232,7 +245,7 @@ function nuLoginSetupNOTGlobeadmin() {
 	$getFormsSQL .= "FROM zzzzsys_user ";
 	$getFormsSQL .= "JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id ";
 	$getFormsSQL .= "JOIN zzzzsys_access_form ON zzzzsys_access_id = slf_zzzzsys_access_id ";
-	$getFormsSQL .= "WHERE zzzzsys_user_id = '$checkLoginDetailsOBJ->zzzzsys_user_id' ";
+	$getFormsSQL .= "WHERE zzzzsys_user_id = '$userId' ";
 	$getFormsQRY = nuRunQuery($getFormsSQL);
 	$formAccess = array();
 	while ($getFormsOBJ = db_fetch_object($getFormsQRY)) {
@@ -246,7 +259,7 @@ function nuLoginSetupNOTGlobeadmin() {
 	$getReportsSQL .= "JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id ";
 	$getReportsSQL .= "JOIN zzzzsys_access_report ON zzzzsys_access_id = sre_zzzzsys_access_id ";
 	$getReportsSQL .= "JOIN zzzzsys_report ON zzzzsys_report_id = sre_zzzzsys_report_id ";
-	$getReportsSQL .= "WHERE zzzzsys_user_id = '$checkLoginDetailsOBJ->zzzzsys_user_id' ";
+	$getReportsSQL .= "WHERE zzzzsys_user_id = '$userId' ";
 	$getReportsSQL .= "GROUP BY sre_zzzzsys_report_id ";
 	$getReportsQRY = nuRunQuery($getReportsSQL);
 	$reportAccess = array();
@@ -264,7 +277,7 @@ function nuLoginSetupNOTGlobeadmin() {
 	$getPHPsSQL .= "JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id ";
 	$getPHPsSQL .= "JOIN zzzzsys_access_php ON zzzzsys_access_id = slp_zzzzsys_access_id ";
 	$getPHPsSQL .= "JOIN zzzzsys_php ON zzzzsys_php_id = slp_zzzzsys_php_id ";
-	$getPHPsSQL .= "WHERE zzzzsys_user_id = '$checkLoginDetailsOBJ->zzzzsys_user_id' ";
+	$getPHPsSQL .= "WHERE zzzzsys_user_id = '$userId' ";
 	$getPHPsSQL .= "GROUP BY slp_zzzzsys_php_id ";
 	$getPHPsQRY = nuRunQuery($getPHPsSQL);
 	$phpAccess = array();
@@ -272,9 +285,10 @@ function nuLoginSetupNOTGlobeadmin() {
 		$phpAccess[] = array($getPHPsOBJ->id, $getPHPsOBJ->form_id);
 	}
 	$storeSessionInTable->procedures = $phpAccess;
+
 	$storeSessionInTableJSON = json_encode($storeSessionInTable);
 
-	nuRunQuery("INSERT INTO zzzzsys_session SET sss_access = ?, zzzzsys_session_id = ?", array(
+	nuRunQuery("REPLACE INTO zzzzsys_session SET sss_access = ?, zzzzsys_session_id = ?", array(
 		$storeSessionInTableJSON,
 		$_SESSION['nubuilder_session_data']['SESSION_ID']
 	));
