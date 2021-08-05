@@ -221,6 +221,10 @@ function nuBuildForm(f){
 		
 	}
 
+	$('.nuEditor').each((index, element) => {
+		nuQuill(element.id);
+	});
+
 	nuEvalnuOnLoadEvents();
 
 	if(window.nuOnLoad){
@@ -596,6 +600,8 @@ function nuBuildEditObjects(f, p, o, prop){
 				l = l + nuHTML(f, i, l, p, prop);
 			}else if(t == 'contentbox'){
 				l = l + nuCONTENTBOX(f, i, l, p, prop);
+			}else if(t == 'editor'){
+				l = l + nuEDITOR(f, i, l, p, prop);				
 			}else if(t == 'image'){
 				l = l + nuIMAGE(f, i, l, p, prop);
 			}else if(t == 'select'){
@@ -1130,9 +1136,9 @@ function nuSetAccess(i, r){
 
 }
 
-function nuHTML(w, i, l, p, prop){
+function nuHTML(w, i, l, p, prop, id){
 
-	var id	= p + prop.objects[i].id;
+	var id	= id !== undefined ? id : p + prop.objects[i].id;
 	var ef	= p + 'nuRECORD';							//-- Edit Form Id
 	var inp = document.createElement('div');
 
@@ -1165,6 +1171,18 @@ function nuHTML(w, i, l, p, prop){
 
 	return Number(prop.objects[i].width);
 
+}
+
+function nuEDITOR(w, i, l, p, prop){
+
+	nuINPUT(w, i, l, p, prop);
+	$('#' + prop.objects[i].id).addClass('nuEditor');
+	nuSetAccess(prop.objects[i].id, 2);
+
+	let id = prop.objects[i].id + '_parent_container';
+	nuHTML(w, i, l, p, prop, id);
+	$('#' + id).html('<div id="'+prop.objects[i].id +'_container" class="nuQuiljs"> </div>');
+	
 }
 
 function nuCONTENTBOX(w, i, l, p, prop){

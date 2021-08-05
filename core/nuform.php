@@ -27,13 +27,15 @@ function nuBeforeBrowse($f){
 
 function nuBeforeEdit($FID, $RID){
 
-	$r						= nuFormProperties($FID,'sfo_table, sfo_primary_key, sfo_javascript');
+	$r						= nuFormProperties($FID);
 
 	$GLOBALS['EXTRAJS']		= '';
 	$ct						= $_POST['nuSTATE']['call_type'];
 
 	if($ct == 'getreport' and $r == ''){return;}
 	if($ct == 'getform' and $r == ''){return;}
+
+	$recordID = '';
 
 	if($ct == 'getform'){
 
@@ -111,10 +113,12 @@ function nuBeforeEdit($FID, $RID){
 		nuEval($FID . '_BE');
 
 	}
-	
 
-	$GLOBALS['EXTRAJS']		.= $r->sfo_javascript;
+	$js = $r->sfo_javascript;
+	$js .= $recordID == '' ? ' '.$r->sfo_browse_javascript : ' '.$r->sfo_edit_javascript;
 	
+	$GLOBALS['EXTRAJS']		.= $js;
+
 }
 
 function nuFormCode($f){
@@ -263,6 +267,10 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 					</div>
 				";
 
+			}
+
+			if($r->sob_all_type == 'editor'){
+					$o->html		= nuReplaceHashVariables($r->sob_html_code);
 			}
 
 			if($r->sob_all_type == 'html'){
@@ -540,6 +548,8 @@ function nuGetEditForm($F, $R){
 	$f->where					= $SQL->where;
 	$f->from					= $SQL->from;
 	$f->javascript				= $r->sfo_javascript;
+	$f->javascript_edit			= isset($r->sfo_edit_javascript) ? $r->sfo_edit_javascript : '';
+	$f->javascript_browse		= isset($r->sfo_browse_javascript) ? $r->sfo_browse_javascript : '';
 
 	if(intval($r->sfo_browse_row_height) == 0){
 		$f->row_height	= 18;
