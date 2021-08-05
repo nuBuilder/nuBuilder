@@ -4,6 +4,7 @@
 .nu_dropdown				{background-color : #7bce98 !important}
 .nu_html					{background-color : #dd6eb3 !important}
 .nu_contentbox				{background-color : #e6b0aaa3 !important}
+.nu_editor					{background-color : #918fd4 !important}
 .nu_input					{background-color : #8db3dd !important}
 .nu_image					{background-color : #acc637 !important}
 .nu_word					{background-color : #68c994 !important}
@@ -1090,6 +1091,11 @@
 	height:40px;
 	width: max-content
 }
+
+ .ql-editor {
+	background-color: #fff
+}
+
  .nuContentBox .content {
 	height:inherit;
 	padding:10px;
