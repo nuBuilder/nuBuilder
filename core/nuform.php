@@ -115,8 +115,10 @@ function nuBeforeEdit($FID, $RID){
 	}
 
 	$js = $r->sfo_javascript;
-	$js .= $recordID == '' ? ' '.$r->sfo_browse_javascript : ' '.$r->sfo_edit_javascript;
-	
+	$jb = isset($r->sfo_browse_javascript) ? $r->sfo_browse_javascript : '';
+	$je = isset($r->sfo_edit_javascript) ? $r->sfo_edit_javascript : '';
+	$js .= $recordID == '' ? ' '.$jb : ' '.$je;
+
 	$GLOBALS['EXTRAJS']		.= $js;
 
 }
