@@ -943,7 +943,7 @@ function nuEnable(i, enable) {					//-- Enable Edit Form Object
 		return;
 	}
 	
-	a = [];
+	var a = [];
 	if (!$.isArray(i)) {
 		a.push(i);
 	} else {
@@ -997,7 +997,7 @@ function nuReadonly(i){					//-- set Edit Form Object to readonly
 
 function nuDisable(i){					//-- Disable Edit Form Object
 
-	a = [];
+	var a = [];
 	if (!$.isArray(i)) {
 		a.push(i);
 	} else {
@@ -1031,29 +1031,41 @@ function nuDisable(i){					//-- Disable Edit Form Object
 
 }
 
-function nuShow(i, visible, openTab){
+function nuShow(i, visible, openTab) {
 
-	if(visible === false){
-		nuHide(i);
-		return;
+	var arr = [];
+	if (!$.isArray(i)) {
+		arr.push(i);
+	} else {
+		arr = i;
 	}
 
-	var o =	nuObjectComponents(i);
+	for (var s = 0; s < arr.length; s++) {
 
-	for(var c = 0 ; c < o.length ; c++){
+		if (visible === false) {
+			nuHide(arr[s]);
+		} else {
 
-		var t	=	String($('#' + o[c]).attr('data-nu-tab'));
+			var o = nuObjectComponents(arr[s]);
 
-		if(t[0] == 'x'){
+			for (var c = 0; c < o.length; c++) {
 
-			$('#' + o[c])
-			.attr('data-nu-tab', t.substr(1))
-			.show();
+				var t = String($('#' + o[c]).attr('data-nu-tab'));
 
-		}else{
+				if (t[0] == 'x') {
 
-			$('#' + o[c])
-			.show();
+					$('#' + o[c])
+						.attr('data-nu-tab', t.substr(1))
+						.show();
+
+				} else {
+
+					$('#' + o[c])
+						.show();
+
+				}
+
+			}
 
 		}
 
@@ -1063,27 +1075,37 @@ function nuShow(i, visible, openTab){
 
 }
 
-function nuHide(i){
 
-	var o = nuObjectComponents(i);
+function nuHide(i) {
 
-	for(var c = 0 ; c < o.length ; c++){
+	var arr = [];
+	if (!$.isArray(i)) {
+		arr.push(i);
+	} else {
+		arr = i;
+	}
 
-		var t	=	String($('#' + o[c]).attr('data-nu-tab'));
+	for (var s = 0; s < arr.length; s++) {
+		var o = nuObjectComponents(arr[s]);
 
-		if(t[0] == 'x'){
+		for (var c = 0; c < o.length; c++) {
 
-			$('#' + o[c])
-			.hide();
+			var t = String($('#' + o[c]).attr('data-nu-tab'));
 
-		}else{
+			if (t[0] == 'x') {
 
-			$('#' + o[c])
-			.attr('data-nu-tab', 'x' + t)
-			.hide();
+				$('#' + o[c])
+					.hide();
+
+			} else {
+
+				$('#' + o[c])
+					.attr('data-nu-tab', 'x' + t)
+					.hide();
+
+			}
 
 		}
-
 	}
 
 }
