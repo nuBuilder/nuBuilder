@@ -80,6 +80,7 @@ function nuBuildForm(f){
 	window.nuBeforeDelete		= null;
 	window.nuOnSearchAction		= null;
 	window.nuOnClone			= null;
+	window.nuOnEditorLoad		= null;
 	window.nuOnBeforeGetBreadcrumb = null;	
 	window.nuOnSetSaved			= null;
 	window.nuOnTabSelected		= null;
@@ -221,9 +222,13 @@ function nuBuildForm(f){
 		
 	}
 
-	$('.nuEditor').each((index, element) => {
-		nuQuill(element.id);
-	});
+	if(window.nuOnEditorLoad){
+		nuOnEditorLoad();
+	} else {
+		$('.nuEditor').each((index, element) => {
+			nuQuill(element.id);
+		});
+	}
 
 	nuEvalnuOnLoadEvents();
 
