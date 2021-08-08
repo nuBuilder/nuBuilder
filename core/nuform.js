@@ -284,6 +284,7 @@ function nuBuildForm(f){
 		$('.nuBuilderLink').remove();
 	}
 
+	nuContextMenuUpdate();
 	nuInitSetBrowseWidthHelper();
 	
 	if(window.nuMESSAGES.length > 0){
@@ -4989,7 +4990,7 @@ function nuAddBrowseAdditionalNavButtons() {
 
 function nuPromptModal(){
 
-	this.render = function(text, caption, format, fctn){	
+	this.render = function(text, caption, defaultValue, format, fctn){	
 
 		var winW = window.innerWidth;
 		var winH = window.innerHeight;	
@@ -5005,7 +5006,8 @@ function nuPromptModal(){
 		document.getElementById('nupromptbody').innerHTML +='<br><input id="prompt_value1" style="width: 450px; margin-top: 10px; border: 1px solid #CCC; padding: 10px; border-radius: 4px;"/>';
 		document.getElementById('nupromptfoot').innerHTML = '<button class="nuActionButton" onclick="promot.ok(\''+fctn+'\', true)">OK</button> <button class="nuActionButton" onclick="promot.cancel(\''+fctn+'\', false)">Cancel</button>';
 
-		document.getElementById("prompt_value1").focus()
+		document.getElementById("prompt_value1").value = defaultValue === undefined ? '' : defaultValue;
+		document.getElementById("prompt_value1").focus();
 
 	}
 
@@ -5029,13 +5031,13 @@ function nuPromptModal(){
 function nuOnPromptClose(val, ok) {
 }
 
-function nuPrompt(text, caption, format, fctn) {
+function nuPrompt(text, caption, defaultValue, format, fctn) {
 
 	if (fctn === undefined) {
 		var fctn = 'nuOnPromptClose';
 	}
 
-	promot.render(text, caption, format, fctn);
+	promot.render(text, caption, defaultValue, format, fctn);
 
 
 

@@ -210,3 +210,268 @@ function nuShowObjectTooltip() {
 
 	}
 }
+
+var contextMenuCurrentTarget = null;
+var nuContextMenuDefinition = [
+  { 
+	text: "{Object}",
+	action: function (e) { nuContextMenuCopyIdToClipboard(); }
+  },
+  { isDivider: true },
+  {
+	text: "Rename",
+	action: () => nuContextMenuLabelPrompt(),
+
+  },
+
+  { isDivider: true },
+
+  {
+	text: "Access",
+	subMenu: [
+	  {
+		text: nuContextMenuItemText("Editable", "fa fa-pencil-square-o"),
+		action: () => nuContextMenuSetAccess(0),
+	  },
+	  {
+		text: nuContextMenuItemText("Readonly", "fa fa-lock"),
+		action: () => nuContextMenuSetAccess(1),
+	  },
+	  {
+		text: nuContextMenuItemText("Hidden", "fa fa-eye-slash"),
+		action: () => nuContextMenuSetAccess(2),
+	  },
+	  {
+		text: nuContextMenuItemText("Hidden (User)", "fa fa-eye-slash"),
+		action: () => nuContextMenuSetAccess(3),
+	  },
+	],
+  },
+  {
+	text: "Align",
+	subMenu: [
+	  {
+		text: nuContextMenuItemText("Left", "fa fa-align-left"),
+		action: () => nuContextMenuSetAlign("left"),
+	  },
+	  {
+		text: nuContextMenuItemText("Right", "fa fa-align-right"),
+		action: () => nuContextMenuSetAlign("right"),
+	  },
+	  {
+		text: nuContextMenuItemText("Center", "fa fa-align-center"),
+		action: () => nuContextMenuSetAlign("center"),
+	  },
+	],
+  },
+  {
+	text: "Validation",
+	subMenu: [
+	  {
+		text: nuContextMenuItemText("None", "fa fa-globe"),
+		action: () => nuContextMenuSetValidation(0),
+	  },
+	  {
+		text: nuContextMenuItemText("No Blanks", "fa fa-battery-full"),
+		action: () => nuContextMenuSetValidation(1),
+	  },
+	  {
+		text: nuContextMenuItemText("No Duplicates", "fa fa-diamond"),
+		action: () => nuContextMenuSetValidation(2),
+	  },
+	  {
+		text: nuContextMenuItemText("No Duplicates/Blanks", "fa fa-star"),
+		action: () => nuContextMenuSetValidation(3),
+	  },
+	],
+  },
+
+  { isDivider: true },
+
+  {
+	html: "{Top}",
+  },
+  {
+	html: "{Left}",
+  },
+  {
+	html: "{Width}",
+  },
+  {
+	html: "{Height}",
+  },
+];
+
+function nuContextMenuBeforeRender(menu, event) {
+
+	contextMenuCurrentTarget = event.currentTarget;
+	let id = contextMenuCurrentTarget.id.substring(6);
+
+	for (let i = 0; i < menu.length; i++) {
+		if (menu[i].hasOwnProperty('html')) {
+			if (menu[i].html == '{Top}') menu[i].html = nuContextMenuItemPosition("Top", $('#' + id).cssNumber('Top'));
+			if (menu[i].html == '{Left}') menu[i].html = nuContextMenuItemPosition("Left", $('#' + id).cssNumber('Left'));
+			if (menu[i].html == '{Width}') menu[i].html = nuContextMenuItemPosition("Width", $('#' + id).cssNumber('Width'));
+			if (menu[i].html == '{Height}') menu[i].html = nuContextMenuItemPosition("Height", $('#' + id).cssNumber('Height'));
+		} else if (menu[i].hasOwnProperty('text')) {
+			if (menu[i].text == '{Object}') menu[i].text = "Object: " + id;
+		}
+	}
+
+	$('#' + id).focus();
+	
+	setTimeout(function(){ $('.ctxmenu').css('top', $('.ctxmenu').cssNumber('top') + 20 + 'px');}, 5);
+
+	return menu;
+
+}
+
+
+
+function nuContextMenuItemText(label, iconClass) {
+	return '<i class="' + iconClass + ' fa-fw" aria-hidden="true"></i> <span style="padding-left:8px; white-space:nowrap; display: inline;">' + label + '</span>';
+}
+
+function nuContextMenuGetWordWidth(w){
+
+	var h = "<div id='nuTestWidth' style='font-size:13px;position:absolute;visible:hidden;width:auto'>" + w + "</div>";
+	$('body').append(h);
+	var l = parseInt($('#nuTestWidth').css('width'));
+	$('#nuTestWidth').remove();
+
+	return l + 5;
+
+}	
+
+function nuContextMenuItemPositionChanged(t, update) {
+
+	let id = contextMenuCurrentTarget.id.substring(6);
+	let prop = $(t).attr("data-property").toLowerCase();
+
+	if (update) {
+		nuContextMenuUpdateObject(id, t.value, nuContextMenuGetFormId(id), 'sob_all_' + prop);
+	} else {
+		$('#' + id).css(prop, t.value + 'px');
+	}
+
+}
+
+function nuContextMenuItemPosition(label, v) {
+
+	var lwidth = nuContextMenuGetWordWidth(label);
+	var left = 70 - lwidth + 17;
+	if (label == 'Top') left += 2;
+	if (label == 'Left') left += 1;	
+
+	return '<span style="width: 100px; padding-left:20px; font-family: font-family: Verdana, sans-serif;white-space:nowrap; display: inline;">' + label + '</span>' +
+	' <input data-property="' + label + '" onChange="nuContextMenuItemPositionChanged(this, false)" onBlur="nuContextMenuItemPositionChanged(this, true)" style="margin: 3px 10px 3px ' + left +'px; width: 40px; height: 22px" type="number" min="0" class="input_number" value="' + v + '"> </input>';
+
+}
+
+function nuContextMenuSetAccess(v) {
+
+	let id = contextMenuCurrentTarget.id.substring(6);
+	if (v == 0) { 				//-- editable
+		nuEnable(id);
+		nuShow(id);
+	} else if (v == 1) { 		//-- readonly
+		nuDisable(id);
+	} else if (v == 2) { 		//-- hidden
+		nuHide(id);
+	}
+
+	nuContextMenuUpdateObject(id, v, nuContextMenuGetFormId(id), 'sob_all_access');
+}
+
+function nuContextMenuSetAlign(v) {
+
+	let id = contextMenuCurrentTarget.id.substring(6);
+	$('#' + id).css('text-align', v);
+
+	nuContextMenuUpdateObject(id, v, nuContextMenuGetFormId(id), 'sob_all_align');
+
+}
+
+function nuContextMenuSetValidation(v) {
+
+	let objLabel = $('#' + contextMenuCurrentTarget.id);
+	let id =  label.substring(6);
+
+	if (v == 0) { //-- none
+		objLabel.removeClass('nuBlank nuDuplicate nuDuplicateOrBlank');
+	} else if (v == 1) { 												//-- no blanks
+		objLabel.removeClass('nuDuplicate nuDuplicateOrBlank');
+		objLabel.addClass('nuBlank');
+	} else if (v == 2) { 												//-- no duplicates
+		objLabel.addClass('nuDuplicate');
+		objLabel.removeClass('nuBlank nuDuplicateOrBlank');
+	} else if (v == 3) { 												//-- no duplicates/blanks
+		objLabel.addClass('nuDuplicateOrBlank');
+		objLabel.removeClass('nuBlank');
+	}
+	
+	nuContextMenuUpdateLabelLeftWidth();
+
+	nuContextMenuUpdateObject(id, v, nuContextMenuGetFormId(id), 'sob_all_validate');
+
+}
+
+function nuContextMenuUpdateLabelLeftWidth(id) {
+	
+	var objLabel = $('#label_' + id);
+	var label = objLabel.html();
+	var lwidth = nuGetWordWidth(label);
+
+	objLabel.css({
+            left: $('#' + id).cssNumber('left') - lwidth - 17,
+            width: Number(lwidth + 12)
+        });
+
+}
+	
+function nuContextMenuGetFormId(id) {
+	return $('#' + id).parent().attr('data-nu-form-id');
+}
+
+function nuContextMenuLabelPrompt(value, ok) {
+
+	if (ok) {
+		let id =  label.substring(6);
+		$('#label_' + id).html(value);
+		nuContextMenuUpdateObject(id, value, nuContextMenuGetFormId(id), 'sob_all_label');
+	}
+
+}
+function nuContextMenuLabelPrompt() {
+
+	let label = contextMenuCurrentTarget.id;
+	let id =  label.substring(6);
+
+	nuPrompt(nuTranslate("Label")+ ':', nuTranslate("Object") + ': ' +  $('#'+label).html(),label, '', 'nuContextMenuLabelPrompt');
+
+}
+
+function nuContextMenuCopyIdToClipboard() {
+
+	let id = contextMenuCurrentTarget.id.substring(6);
+	nuCopyToClipboard(id);
+
+}
+
+function nuContextMenuUpdateObject(id, value, formId, column) {
+
+	nuSetProperty('nuupdateobject_id', id);
+	nuSetProperty('nuupdateobject_value', value);
+	nuSetProperty('nuupdateobject_form_id', formId);
+	nuSetProperty('nuupdateobject_column', column);
+	nuRunPHPHidden('nuupdateobject', 0);
+
+}
+
+function nuContextMenuUpdate() {
+
+	$('label').each((index, element) => {
+		ctxmenu.update("#"+element.id, nuContextMenuDefinition, nuContextMenuBeforeRender);
+	});
+
+}
