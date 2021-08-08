@@ -284,7 +284,7 @@ function nuBuildForm(f){
 		$('.nuBuilderLink').remove();
 	}
 
-	nuContextMenuUpdate();
+
 	nuInitSetBrowseWidthHelper();
 	
 	if(window.nuMESSAGES.length > 0){
@@ -298,17 +298,23 @@ function nuBuildForm(f){
 		nuAfterSave();
 	}
 
-	var nuPromptDiv =
-	`<div id="nupromptmodal"></div>
+	if (nuGlobalAccess()) {
+	
+		nuContextMenuUpdate();
 
-	<div id="nuprompt">
-		<div id="nuprompthead"></div>
-		<div id="nupromptbody"></div>
-		<div id="nupromptfoot"></div>
-	</div>`;
+		var nuPromptDiv =
+		`<div id="nupromptmodal"></div>
 
-	$('body').append(nuPromptDiv);
-	promot = new nuPromptModal();
+		<div id="nuprompt">
+			<div id="nuprompthead"></div>
+			<div id="nupromptbody"></div>
+			<div id="nupromptfoot"></div>
+		</div>`;
+
+		$('body').append(nuPromptDiv);
+		promot = new nuPromptModal();
+
+	}
 
 	nuSetSaved(true);
 
@@ -5038,7 +5044,5 @@ function nuPrompt(text, caption, defaultValue, format, fctn) {
 	}
 
 	promot.render(text, caption, defaultValue, format, fctn);
-
-
 
 }
