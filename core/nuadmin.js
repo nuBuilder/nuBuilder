@@ -229,6 +229,7 @@ var nuContextMenuDefinition = [
 
   {
 	text: "Access",
+	tag: "Access",
 	subMenu: [
 	  {
 		text: nuContextMenuItemText("Editable", "fa fa-pencil-square-o"),
@@ -267,6 +268,8 @@ var nuContextMenuDefinition = [
   },
   {
 	text: "Validation",
+	tag: "Validation",	
+	disabled: false,	
 	subMenu: [
 	  {
 		text: nuContextMenuItemText("None", "fa fa-globe"),
@@ -310,7 +313,9 @@ var nuContextMenuDefinition = [
 function nuContextMenuBeforeRender(menu, event) {
 
 	contextMenuCurrentTarget = event.currentTarget;
-	let id = contextMenuCurrentTarget.id.substring(6);
+	let id = contextMenuCurrentTargetId();
+	let isButton = $('#' + contextMenuCurrentTarget.id).is(":button");
+
 	for (let i = 0; i < menu.length; i++) {
 		if (menu[i].hasOwnProperty('tag')) {
 			if (menu[i].tag == 'Top') menu[i].html = nuContextMenuItemPosition("Top", $('#' + id).cssNumber('Top'));
@@ -318,6 +323,7 @@ function nuContextMenuBeforeRender(menu, event) {
 			if (menu[i].tag == 'Width') menu[i].html = nuContextMenuItemPosition("Width", $('#' + id).cssNumber('Width'));
 			if (menu[i].tag == 'Height') menu[i].html = nuContextMenuItemPosition("Height", $('#' + id).cssNumber('Height'));
 			if (menu[i].tag	 == 'Object') menu[i].text = "Object: " + id;
+			if (menu[i].tag	 == 'Validation') menu[i].disabled = isButton;
 		}
 	}
 
@@ -328,8 +334,6 @@ function nuContextMenuBeforeRender(menu, event) {
 	return menu;
 
 }
-
-
 
 function nuContextMenuItemText(label, iconClass) {
 	return '<i class="' + iconClass + ' fa-fw" aria-hidden="true"></i> <span style="padding-left:8px; white-space:nowrap; display: inline;">' + label + '</span>';
@@ -348,7 +352,7 @@ function nuContextMenuGetWordWidth(w){
 
 function nuContextMenuItemPositionChanged(t, update) {
 
-	let id = contextMenuCurrentTarget.id.substring(6);
+	let id = contextMenuCurrentTargetId();
 	let prop = $(t).attr("data-property").toLowerCase();
 
 	if (update) {
@@ -373,7 +377,7 @@ function nuContextMenuItemPosition(label, v) {
 
 function nuContextMenuSetAccess(v) {
 
-	let id = contextMenuCurrentTarget.id.substring(6);
+	let id = contextMenuCurrentTargetId();
 	if (v == 0) { 				//-- editable
 		nuEnable(id);
 		nuShow(id);
@@ -388,7 +392,7 @@ function nuContextMenuSetAccess(v) {
 
 function nuContextMenuSetAlign(v) {
 
-	let id = contextMenuCurrentTarget.id.substring(6);
+	let id = contextMenuCurrentTargetId();
 	$('#' + id).css('text-align', v);
 
 	nuContextMenuUpdateObject(id, v, nuContextMenuGetFormId(id), 'sob_all_align');
@@ -398,7 +402,7 @@ function nuContextMenuSetAlign(v) {
 function nuContextMenuSetValidation(v) {
 
 	let objLabel = $('#' + contextMenuCurrentTarget.id);
-	let id =  label.substring(6);
+	let id =  contextMenuCurrentTarget.id.substring(6);
 
 	if (v == 0) { //-- none
 		objLabel.removeClass('nuBlank nuDuplicate nuDuplicateOrBlank');
@@ -412,9 +416,8 @@ function nuContextMenuSetValidation(v) {
 		objLabel.addClass('nuDuplicateOrBlank');
 		objLabel.removeClass('nuBlank');
 	}
-	
-	nuContextMenuUpdateLabelLeftWidth();
 
+	nuContextMenuUpdateLabelLeftWidth();
 	nuContextMenuUpdateObject(id, v, nuContextMenuGetFormId(id), 'sob_all_validate');
 
 }
@@ -436,29 +439,36 @@ function nuContextMenuGetFormId(id) {
 	return $('#' + id).parent().attr('data-nu-form-id');
 }
 
-function nuContextMenuLabelPrompt(value, ok) {
+function nuContextMenuLabelPromptCallback(value, ok) {
 
-	if (ok) {
-		let id =  label.substring(6);
-		$('#label_' + id).html(value);
+	if (ok) { 
+
+		let objLabel = $('#' + contextMenuCurrentTarget.id);
+		let id =  contextMenuCurrentTargetId();
+
+		objLabel.html(value);
 		nuContextMenuUpdateObject(id, value, nuContextMenuGetFormId(id), 'sob_all_label');
 	}
 
 }
+
 function nuContextMenuLabelPrompt() {
 
 	let label = contextMenuCurrentTarget.id;
-	let id =  label.substring(6);
+	let id =  contextMenuCurrentTargetId();
+	
+	let value =  $('#' + contextMenuCurrentTarget.id).is(":button") ? $('#' + contextMenuCurrentTarget.id).val() : $('#'+label).html();
 
-	nuPrompt(nuTranslate("Label") + ':', nuTranslate("Object") + ': ' +  $('#' + id).val(), $('#'+label).html(), '', 'nuContextMenuLabelPrompt');
+	nuPrompt(nuTranslate("Label") + ':', nuTranslate("Object") + ': ' +  id, value, '', 'nuContextMenuLabelPromptCallback');
 
 }
 
+function contextMenuCurrentTargetId() {
+	return $('#' + contextMenuCurrentTarget.id).is(":button") ? contextMenuCurrentTarget.id : contextMenuCurrentTarget.id.substring(6);
+}
+
 function nuContextMenuCopyIdToClipboard() {
-
-	let id = contextMenuCurrentTarget.id.substring(6);
-	nuCopyToClipboard(id);
-
+	nuCopyToClipboard(contextMenuCurrentTargetId());
 }
 
 function nuContextMenuUpdateObject(id, value, formId, column) {
@@ -473,8 +483,16 @@ function nuContextMenuUpdateObject(id, value, formId, column) {
 
 function nuContextMenuUpdate() {
 
-	$('label').each((index, element) => {
-		ctxmenu.update("#"+element.id, nuContextMenuDefinition, nuContextMenuBeforeRender);
+	$('label, button').each((index, element) => {
+
+		let el = "#"+ element.id;
+		if (el !== '#' && $(el).length > 0) {
+			ctxmenu.update(el, nuContextMenuDefinition, nuContextMenuBeforeRender);
+		}
 	});
 
+}
+
+function nuContextMenuClose() {
+	ctxmenu.closeMenu();
 }

@@ -1247,6 +1247,10 @@ function nuAddEditFieldsToHash(w){
 
 function nuClick(e){
 
+	if ($(e.target).parent().parent().attr('class') !== 'ctxmenu'){
+		nuContextMenuClose();
+	}
+
 	if(!$(e.target).hasClass('nuOptionsItem') && !$(e.target).hasClass('nuSearchCheckbox')){
 		$('#nuSearchList').remove();
 	}
