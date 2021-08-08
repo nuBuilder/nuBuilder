@@ -450,7 +450,7 @@ function nuContextMenuLabelPrompt() {
 	let label = contextMenuCurrentTarget.id;
 	let id =  label.substring(6);
 
-	nuPrompt(nuTranslate("Label")+ ':', nuTranslate("Object") + ': ' +  $('#'+label).html(),label, '', 'nuContextMenuLabelPrompt');
+	nuPrompt(nuTranslate("Label") + ':', nuTranslate("Object") + ': ' +  $('#' + id).val(), $('#'+label).html(), '', 'nuContextMenuLabelPrompt');
 
 }
 
