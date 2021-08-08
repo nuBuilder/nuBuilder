@@ -214,7 +214,8 @@ function nuShowObjectTooltip() {
 var contextMenuCurrentTarget = null;
 var nuContextMenuDefinition = [
   { 
-	text: "{Object}",
+	text: "",
+	tag: "Object",
 	action: function (e) { nuContextMenuCopyIdToClipboard(); }
   },
   { isDivider: true },
@@ -289,16 +290,20 @@ var nuContextMenuDefinition = [
   { isDivider: true },
 
   {
-	html: "{Top}",
+	html: "",
+	tag: "Top"
   },
   {
-	html: "{Left}",
+	html: "",
+	tag: "Left"
   },
   {
-	html: "{Width}",
+	html: "",
+	tag: "Width"
   },
   {
-	html: "{Height}",
+	html: "",
+	tag: "Height"
   },
 ];
 
@@ -306,15 +311,14 @@ function nuContextMenuBeforeRender(menu, event) {
 
 	contextMenuCurrentTarget = event.currentTarget;
 	let id = contextMenuCurrentTarget.id.substring(6);
-
+			debugger;
 	for (let i = 0; i < menu.length; i++) {
-		if (menu[i].hasOwnProperty('html')) {
-			if (menu[i].html == '{Top}') menu[i].html = nuContextMenuItemPosition("Top", $('#' + id).cssNumber('Top'));
-			if (menu[i].html == '{Left}') menu[i].html = nuContextMenuItemPosition("Left", $('#' + id).cssNumber('Left'));
-			if (menu[i].html == '{Width}') menu[i].html = nuContextMenuItemPosition("Width", $('#' + id).cssNumber('Width'));
-			if (menu[i].html == '{Height}') menu[i].html = nuContextMenuItemPosition("Height", $('#' + id).cssNumber('Height'));
-		} else if (menu[i].hasOwnProperty('text')) {
-			if (menu[i].text == '{Object}') menu[i].text = "Object: " + id;
+		if (menu[i].hasOwnProperty('tag')) {
+			if (menu[i].tag == 'Top') menu[i].html = nuContextMenuItemPosition("Top", $('#' + id).cssNumber('Top'));
+			if (menu[i].tag == 'Left') menu[i].html = nuContextMenuItemPosition("Left", $('#' + id).cssNumber('Left'));
+			if (menu[i].tag == 'Width') menu[i].html = nuContextMenuItemPosition("Width", $('#' + id).cssNumber('Width'));
+			if (menu[i].tag == 'Height') menu[i].html = nuContextMenuItemPosition("Height", $('#' + id).cssNumber('Height'));
+			if (menu[i].tag	 == 'Object') menu[i].text = "Object: " + id;
 		}
 	}
 
