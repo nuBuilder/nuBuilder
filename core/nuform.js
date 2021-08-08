@@ -37,6 +37,7 @@ function nuInitJSOptions() {
 
 nuInitJSOptions();
 
+var promot;
 
 function nuBuildForm(f){
 
@@ -295,6 +296,18 @@ function nuBuildForm(f){
 	if(window.nuTimesSaved > 0 && window.nuAfterSave){
 		nuAfterSave();
 	}
+
+	var nuPromptDiv =
+	`<div id="nupromptmodal"></div>
+
+	<div id="nuprompt">
+		<div id="nuprompthead"></div>
+		<div id="nupromptbody"></div>
+		<div id="nupromptfoot"></div>
+	</div>`;
+
+	$('body').append(nuPromptDiv);
+	promot = new nuPromptModal();
 
 	nuSetSaved(true);
 
@@ -2650,6 +2663,7 @@ function nuGetOptionsList(f, t, p, a, type){
 	nuBuildOptionsList(list, p, type);
 	$('[data-nu-option-title]').css('padding', 3);
 	
+
 }
 
 function nuBuildOptionsList(l, p, type){												//-- loop through adding options to menu
@@ -4970,5 +4984,59 @@ function nuAddBrowseAdditionalNavButtons() {
 			$('#nuEnd').css(disabled);
 		}
 	}
+
+}
+
+function nuPromptModal(){
+
+	this.render = function(text, caption, format, fctn){	
+
+		var winW = window.innerWidth;
+		var winH = window.innerHeight;	
+		var modal = document.getElementById('nupromptmodal');
+		var nuprompt = document.getElementById('nuprompt');
+		modal.style.display = "block";
+		modal.style.height = winH+"px";
+		nuprompt.style.left = (winW/2)-(560*.5)+"px";
+		nuprompt.style.top = "5px";
+		nuprompt.style.display = "block";
+		document.getElementById('nuprompthead').innerHTML = caption;
+		document.getElementById('nupromptbody').innerHTML = text;
+		document.getElementById('nupromptbody').innerHTML +='<br><input id="prompt_value1" style="width: 450px; margin-top: 10px; border: 1px solid #CCC; padding: 10px; border-radius: 4px;"/>';
+		document.getElementById('nupromptfoot').innerHTML = '<button class="nuActionButton" onclick="promot.ok(\''+fctn+'\', true)">OK</button> <button class="nuActionButton" onclick="promot.cancel(\''+fctn+'\', false)">Cancel</button>';
+
+		document.getElementById("prompt_value1").focus()
+
+	}
+
+	$('#prompt_value1').focus();
+
+	this.cancel = function(fctn){
+		window[fctn](null, false);
+		document.getElementById('nupromptmodal').style.display = "none";
+		document.getElementById('nuprompt').style.display = "none";
+	}
+
+	this.ok = function(fctn){
+		var prompt_value1 = document.getElementById('prompt_value1').value;
+		window[fctn](prompt_value1, true);
+		document.getElementById('nupromptmodal').style.display = "none";
+		document.getElementById('nuprompt').style.display = "none";
+	}
+
+}
+
+function nuOnPromptClose(val, ok) {
+}
+
+function nuPrompt(text, caption, format, fctn) {
+
+	if (fctn === undefined) {
+		var fctn = 'nuOnPromptClose';
+	}
+
+	promot.render(text, caption, format, fctn);
+
+
 
 }
