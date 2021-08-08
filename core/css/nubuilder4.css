@@ -619,11 +619,11 @@
 	color:#E2EAFF
 }
  .nuQuickButton {
-    background-color: #fafafa;
-    color: black;
-    border-color: rgb(255 255 255);
-    text-shadow: none;
-    border-width: thin;
+	background-color: #fafafa;
+	color: black;
+	border-color: rgb(255 255 255);
+	text-shadow: none;
+	border-width: thin;
 	padding-left:10px;
 	border-radius:3px
 }
@@ -1130,6 +1130,21 @@
 	padding-left:5px
 }
  
+ .ctxmenu li {
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none
+}
+
+.ctxmenu li.submenu::after {
+    color: #655e5e;
+}
+
+.ctxmenu {
+	font-size: 13px;
+}
+
  #nupromptmodal{
 	display:none;
 	background-color:#DEDEDE;
@@ -1177,4 +1192,3 @@
 	 text-align:right;
 	 font-family:sans-serif,"Segoe UI",Helvetica,"Helvetica Neue",Arial,sans-serif 
 }
-
