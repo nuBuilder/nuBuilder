@@ -311,7 +311,6 @@ function nuContextMenuBeforeRender(menu, event) {
 
 	contextMenuCurrentTarget = event.currentTarget;
 	let id = contextMenuCurrentTarget.id.substring(6);
-			debugger;
 	for (let i = 0; i < menu.length; i++) {
 		if (menu[i].hasOwnProperty('tag')) {
 			if (menu[i].tag == 'Top') menu[i].html = nuContextMenuItemPosition("Top", $('#' + id).cssNumber('Top'));
