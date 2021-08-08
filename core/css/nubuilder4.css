@@ -1130,3 +1130,51 @@
 	padding-left:5px
 }
  
+ #nupromptmodal{
+	display:none;
+	background-color:#DEDEDE;
+	opacity:0.7;
+	width:100%;
+	top:0px;
+	left:0px;
+	position:fixed;
+	z-index:4;  
+}
+
+ #nuprompt{
+	 display:none;
+	 position:fixed;
+	 border: 1px solid rgba(0,0,0,.2);
+	 width:510px;
+	 z-index:10;
+	 border-radius:6px
+}
+ #nuprompt div{
+	background:#ffffff;
+	 margin:2px;
+}
+ #nuprompt #nuprompthead{
+	 background: #f9f8f8;
+	 border-top-left-radius: 6px;
+	 border-top-right-radius: 6px;
+	 font-size:19px;
+	 padding:10px;
+	 color:black;
+	 text-align: center;
+	 font-family:sans-serif,"Segoe UI",Helvetica,"Helvetica Neue",Arial,sans-serif 
+}
+ #nuprompt #nupromptbody{
+	 background:#fff;
+	 padding:20px;
+	 color:#000;
+	 font-family:sans-serif,"Segoe UI",Helvetica,"Helvetica Neue",Arial,sans-serif;
+}
+ #nuprompt #nupromptfoot{
+	 background: #fff;
+	 border-bottom-left-radius: 6px;
+	 border-bottom-right-radius: 6px;
+	 padding:10px;
+	 text-align:right;
+	 font-family:sans-serif,"Segoe UI",Helvetica,"Helvetica Neue",Arial,sans-serif 
+}
+
