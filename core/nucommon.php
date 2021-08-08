@@ -1973,18 +1973,18 @@ function nuTranslateExport($l = '', $table = 'zzzzsys_translate') {
 	}
 }
 
-function nuStringContains($needle, $haystack): bool {
+function nuStringContains($needle, $haystack) {
 	if ($haystack == null) return false;
 	return strpos($haystack, $needle) !== false;
 }
 
-function nuStringStartsWith($needle, $haystack): bool {
+function nuStringStartsWith($needle, $haystack) {
 	if ($haystack == null) return false;
 	return strpos($haystack, $needle) === 0;
 }
 
-function nuStringEndsWith($needle, $haystack): bool {
-	if ($haystack == null) return false;	
+function nuStringEndsWith($needle, $haystack) {
+	if ($haystack == null) return false;
 	return strpos($haystack, $needle) === strlen($haystack) - strlen($needle);
 }
 
