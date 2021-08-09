@@ -213,101 +213,100 @@ function nuShowObjectTooltip() {
 
 var contextMenuCurrentTarget = null;
 var nuContextMenuDefinition = [
-  { 
-	text: "",
-	tag: "Object",
-	action: function (e) { nuContextMenuCopyIdToClipboard(); }
-  },
-  { isDivider: true },
-  {
-	text: "Rename",
-	action: () => nuContextMenuLabelPrompt(),
+	{ 
+		text: "",
+		tag: "Object",
+		action: function (e) { nuContextMenuCopyIdToClipboard(); }
+	},
+		{ isDivider: true },
+	{
+		text: "Rename",
+		action: () => nuContextMenuLabelPrompt(),
+	},
 
-  },
+	{ isDivider: true },
 
-  { isDivider: true },
+	{
+		text: "Access",
+		tag: "Access",
+		subMenu: [
+			{
+				text: nuContextMenuItemText("Editable", "fa fa-pencil-square-o"),
+				action: () => nuContextMenuSetAccess(0),
+			},
+			{
+				text: nuContextMenuItemText("Readonly", "fa fa-lock"),
+				action: () => nuContextMenuSetAccess(1),
+			},
+			{
+				text: nuContextMenuItemText("Hidden", "fa fa-eye-slash"),
+				action: () => nuContextMenuSetAccess(2),
+			},
+			{
+				text: nuContextMenuItemText("Hidden (User)", "fa fa-eye-slash"),
+				action: () => nuContextMenuSetAccess(3),
+			},
+		],
+	},
+	{
+		text: "Align",
+		subMenu: [
+			{
+				text: nuContextMenuItemText("Left", "fa fa-align-left"),
+				action: () => nuContextMenuSetAlign("left"),
+			},
+			{
+				text: nuContextMenuItemText("Right", "fa fa-align-right"),
+				action: () => nuContextMenuSetAlign("right"),
+			},
+			{
+				text: nuContextMenuItemText("Center", "fa fa-align-center"),
+				action: () => nuContextMenuSetAlign("center"),
+			},
+		],
+	},
+	{
+		text: "Validation",
+		tag: "Validation",	
+		disabled: false,	
+		subMenu: [
+			{
+				text: nuContextMenuItemText("None", "fa fa-globe"),
+				action: () => nuContextMenuSetValidation(0),
+			},
+			{
+				text: nuContextMenuItemText("No Blanks", "fa fa-battery-full"),
+				action: () => nuContextMenuSetValidation(1),
+			},
+			{
+				text: nuContextMenuItemText("No Duplicates", "fa fa-diamond"),
+				action: () => nuContextMenuSetValidation(2),
+			},
+			{
+				text: nuContextMenuItemText("No Duplicates/Blanks", "fa fa-star"),
+				action: () => nuContextMenuSetValidation(3),
+			},
+		],
+	},
 
-  {
-	text: "Access",
-	tag: "Access",
-	subMenu: [
-	  {
-		text: nuContextMenuItemText("Editable", "fa fa-pencil-square-o"),
-		action: () => nuContextMenuSetAccess(0),
-	  },
-	  {
-		text: nuContextMenuItemText("Readonly", "fa fa-lock"),
-		action: () => nuContextMenuSetAccess(1),
-	  },
-	  {
-		text: nuContextMenuItemText("Hidden", "fa fa-eye-slash"),
-		action: () => nuContextMenuSetAccess(2),
-	  },
-	  {
-		text: nuContextMenuItemText("Hidden (User)", "fa fa-eye-slash"),
-		action: () => nuContextMenuSetAccess(3),
-	  },
-	],
-  },
-  {
-	text: "Align",
-	subMenu: [
-	  {
-		text: nuContextMenuItemText("Left", "fa fa-align-left"),
-		action: () => nuContextMenuSetAlign("left"),
-	  },
-	  {
-		text: nuContextMenuItemText("Right", "fa fa-align-right"),
-		action: () => nuContextMenuSetAlign("right"),
-	  },
-	  {
-		text: nuContextMenuItemText("Center", "fa fa-align-center"),
-		action: () => nuContextMenuSetAlign("center"),
-	  },
-	],
-  },
-  {
-	text: "Validation",
-	tag: "Validation",	
-	disabled: false,	
-	subMenu: [
-	  {
-		text: nuContextMenuItemText("None", "fa fa-globe"),
-		action: () => nuContextMenuSetValidation(0),
-	  },
-	  {
-		text: nuContextMenuItemText("No Blanks", "fa fa-battery-full"),
-		action: () => nuContextMenuSetValidation(1),
-	  },
-	  {
-		text: nuContextMenuItemText("No Duplicates", "fa fa-diamond"),
-		action: () => nuContextMenuSetValidation(2),
-	  },
-	  {
-		text: nuContextMenuItemText("No Duplicates/Blanks", "fa fa-star"),
-		action: () => nuContextMenuSetValidation(3),
-	  },
-	],
-  },
+	{ isDivider: true },
 
-  { isDivider: true },
-
-  {
-	html: "",
-	tag: "Top"
-  },
-  {
-	html: "",
-	tag: "Left"
-  },
-  {
-	html: "",
-	tag: "Width"
-  },
-  {
-	html: "",
-	tag: "Height"
-  },
+	{
+		html: "",
+		tag: "Top"
+	},
+	{
+		html: "",
+		tag: "Left"
+	},
+	{
+		html: "",
+		tag: "Width"
+	},
+	{
+		html: "",
+		tag: "Height"
+	},
 ];
 
 function nuContextMenuBeforeRender(menu, event) {
@@ -322,8 +321,8 @@ function nuContextMenuBeforeRender(menu, event) {
 			if (menu[i].tag == 'Left') menu[i].html = nuContextMenuItemPosition("Left", $('#' + id).cssNumber('Left'));
 			if (menu[i].tag == 'Width') menu[i].html = nuContextMenuItemPosition("Width", $('#' + id).cssNumber('Width'));
 			if (menu[i].tag == 'Height') menu[i].html = nuContextMenuItemPosition("Height", $('#' + id).cssNumber('Height'));
-			if (menu[i].tag	 == 'Object') menu[i].text = "Object: " + id;
-			if (menu[i].tag	 == 'Validation') menu[i].disabled = isButton;
+			if (menu[i].tag == 'Object') menu[i].text = "Object: " + id;
+			if (menu[i].tag == 'Validation') menu[i].disabled = isButton;
 		}
 	}
 
@@ -403,7 +402,7 @@ function nuContextMenuSetAlign(v) {
 function nuContextMenuSetValidation(v) {
 
 	let objLabel = $('#' + contextMenuCurrentTarget.id);
-	let id =  contextMenuCurrentTarget.id.substring(6);
+	let id =	contextMenuCurrentTarget.id.substring(6);
 
 	if (v == 0) { //-- none
 		objLabel.removeClass('nuBlank nuDuplicate nuDuplicateOrBlank');
@@ -424,29 +423,33 @@ function nuContextMenuSetValidation(v) {
 }
 
 function nuContextMenuUpdateLabel(id) {
-	
+
 	var objLabel = $('#label_' + id);
 	var label = objLabel.html();
 	var lwidth = nuGetWordWidth(label);
 
 	objLabel.css({
-            left: $('#' + id).cssNumber('left') - lwidth - 17,
-            top: $('#' + id).cssNumber('top'),
-			width: Number(lwidth + 12)
-        });
+		left: $('#' + id).cssNumber('left') - lwidth - 17,
+		top: $('#' + id).cssNumber('top'),
+		width: Number(lwidth + 12)
+	});
 
 }
-	
+
 function nuContextMenuGetFormId(id) {
-	return $('#' + id).parent().attr('data-nu-form-id');
+
+	let field = $('[data-nu-field="'+ id +'"]');
+	return id == field ? $('#' + id).parent().attr('data-nu-form-id') : field.parent().attr('data-nu-form-id');
+
 }
+
 
 function nuContextMenuLabelPromptCallback(value, ok) {
 
 	if (ok) { 
 
 		let objLabel = $('#' + contextMenuCurrentTarget.id);
-		let id =  contextMenuCurrentTargetId();
+		let id = contextMenuCurrentTargetId();
 
 		objLabel.html(value);
 		nuContextMenuUpdateObject(id, value, nuContextMenuGetFormId(id), 'sob_all_label');
@@ -457,16 +460,16 @@ function nuContextMenuLabelPromptCallback(value, ok) {
 function nuContextMenuLabelPrompt() {
 
 	let label = contextMenuCurrentTarget.id;
-	let id =  contextMenuCurrentTargetId();
+	let id =	contextMenuCurrentTargetId();
 	
-	let value =  $('#' + contextMenuCurrentTarget.id).is(":button") ? $('#' + contextMenuCurrentTarget.id).val() : $('#'+label).html();
+	let value =	$('#' + contextMenuCurrentTarget.id).is(":button") ? $('#' + contextMenuCurrentTarget.id).val() : $('#'+label).html();
 
-	nuPrompt(nuTranslate("Label") + ':', nuTranslate("Object") + ': ' +  id, value, '', 'nuContextMenuLabelPromptCallback');
+	nuPrompt(nuTranslate("Label") + ':', nuTranslate("Object") + ': ' +	id, value, '', 'nuContextMenuLabelPromptCallback');
 
 }
 
 function contextMenuCurrentTargetId() {
-	return $('#' + contextMenuCurrentTarget.id).is(":button") ? contextMenuCurrentTarget.id : contextMenuCurrentTarget.id.substring(6);
+	return $('#' + contextMenuCurrentTarget.id).is(":button") ? contextMenuCurrentTarget.id : $('#' + contextMenuCurrentTarget.id.substring(6)).attr('data-nu-field');
 }
 
 function nuContextMenuCopyIdToClipboard() {
