@@ -359,6 +359,7 @@ function nuContextMenuItemPositionChanged(t, update) {
 		nuContextMenuUpdateObject(id, t.value, nuContextMenuGetFormId(id), 'sob_all_' + prop);
 	} else {
 		$('#' + id).css(prop, t.value + 'px');
+		nuContextMenuUpdateLabel(id);
 	}
 
 }
@@ -417,12 +418,12 @@ function nuContextMenuSetValidation(v) {
 		objLabel.removeClass('nuBlank');
 	}
 
-	nuContextMenuUpdateLabelLeftWidth();
+	nuContextMenuUpdateLabel(id);
 	nuContextMenuUpdateObject(id, v, nuContextMenuGetFormId(id), 'sob_all_validate');
 
 }
 
-function nuContextMenuUpdateLabelLeftWidth(id) {
+function nuContextMenuUpdateLabel(id) {
 	
 	var objLabel = $('#label_' + id);
 	var label = objLabel.html();
@@ -430,7 +431,8 @@ function nuContextMenuUpdateLabelLeftWidth(id) {
 
 	objLabel.css({
             left: $('#' + id).cssNumber('left') - lwidth - 17,
-            width: Number(lwidth + 12)
+            top: $('#' + id).cssNumber('top'),
+			width: Number(lwidth + 12)
         });
 
 }
