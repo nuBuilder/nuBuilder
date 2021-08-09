@@ -499,5 +499,8 @@ function nuContextMenuUpdate() {
 }
 
 function nuContextMenuClose() {
-	ctxmenu.closeMenu();
+
+	if (typeof ctxmenu !== "undefined") {
+		ctxmenu.closeMenu();
+	}
 }

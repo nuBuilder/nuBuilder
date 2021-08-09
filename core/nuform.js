@@ -298,23 +298,19 @@ function nuBuildForm(f){
 		nuAfterSave();
 	}
 
-	if (nuGlobalAccess()) {
-	
-		nuContextMenuUpdate();
+	if (nuGlobalAccess()) nuContextMenuUpdate();
 
-		var nuPromptDiv =
-		`<div id="nupromptmodal"></div>
+	var nuPromptDiv =
+	`<div id="nupromptmodal"></div>
 
-		<div id="nuprompt">
-			<div id="nuprompthead"></div>
-			<div id="nupromptbody"></div>
-			<div id="nupromptfoot"></div>
-		</div>`;
+	<div id="nuprompt">
+		<div id="nuprompthead"></div>
+		<div id="nupromptbody"></div>
+		<div id="nupromptfoot"></div>
+	</div>`;
 
-		$('body').append(nuPromptDiv);
-		promot = new nuPromptModal();
-
-	}
+	$('body').append(nuPromptDiv);
+	promot = new nuPromptModal();
 
 	nuSetSaved(true);
 
@@ -5009,7 +5005,7 @@ function nuPromptModal(){
 		nuprompt.style.display = "block";
 		document.getElementById('nuprompthead').innerHTML = caption;
 		document.getElementById('nupromptbody').innerHTML = text;
-		document.getElementById('nupromptbody').innerHTML +='<br><input id="prompt_value1" style="width: 450px; margin-top: 10px; border: 1px solid #CCC; padding: 10px; border-radius: 4px;"/>';
+		document.getElementById('nupromptbody').innerHTML +='<br><input id="prompt_value1" onkeyup="promot.inputkeyup(event, \''+fctn+'\')" style="width: 450px; margin-top: 10px; border: 1px solid #CCC; padding: 10px; border-radius: 4px;"/>';
 		document.getElementById('nupromptfoot').innerHTML = '<button class="nuActionButton" onclick="promot.ok(\''+fctn+'\', true)">OK</button> <button class="nuActionButton" onclick="promot.cancel(\''+fctn+'\', false)">Cancel</button>';
 
 		document.getElementById("prompt_value1").value = defaultValue === undefined ? '' : defaultValue;
@@ -5018,6 +5014,14 @@ function nuPromptModal(){
 	}
 
 	$('#prompt_value1').focus();
+
+	this.inputkeyup = function(e, fctn){
+		if (e.which == 13) {			//-- Enter
+			this.ok(fctn);
+		} else if (e.which == 27) {		//-- ESC
+			this.cancel(fctn);
+		} 
+	}
 
 	this.cancel = function(fctn){
 		window[fctn](null, false);
