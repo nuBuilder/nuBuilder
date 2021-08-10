@@ -1565,7 +1565,7 @@ function nuSendEmail($to, $from, $fromname, $content, $subject, $filelist, $html
 
 }
 
-function nuUser(){
+function nuUser($id = null){
 
 	$s	= "
 		SELECT *
@@ -1574,7 +1574,7 @@ function nuUser(){
 	";
 
 	$t	= nuHash();
-	$t	= nuRunQuery($s, array($t['USER_ID']));
+	$t	= nuRunQuery($s, array($id == null ? $t['USER_ID'] : $id));
 
 	return db_fetch_object($t);
 
