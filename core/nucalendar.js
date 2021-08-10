@@ -400,7 +400,8 @@ function nuCalChoice(t){
 	var f	= o.attr('data-nu-format');
 
 	var D	= Number(t.innerHTML);
-	var M	= Number(FMT[String($('#nuCalMonth').html()).substr(0,3)]['jsmonth']);
+	var M	= Number(FMT[nuPad2(window.nuCalMonth + 1)]['jsmonth']);
+
 	var Y	= Number($('#nuCalYear').html());
 	
 	var dt	= new Date(Y, M, D, 0, 0, 0, 0);
