@@ -2133,6 +2133,7 @@ function nuLabel(w, i, p, prop){
 
 	if (l == ' ') lab.innerHTML = '&#8199;';
 
+	if(obj.valid == 0){o.addClass('nuNone');}
 	if(obj.valid == 1){o.addClass('nuBlank');}
 	if(obj.valid == 2){o.addClass('nuDuplicate');}
 	if(obj.valid == 3){o.addClass('nuDuplicateOrBlank');}
