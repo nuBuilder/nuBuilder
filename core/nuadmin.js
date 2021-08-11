@@ -11,18 +11,18 @@ function nuOpenCurrentObjectList() {
 }
 
 function nuAddAdminButton(i, v, f, t) {
-	
+
 	if (typeof t === 'undefined') {
 		var t = '';
 	}
 	
 	var button = "<input id='nu" + i + "Button' type='button' type='button' title='" + nuTranslate(t) + "' class='nuActionButton nuAdminButton' value='" + nuTranslate(v) + "' onclick='" + f + "'>";
 	$('#nuActionHolder').prepend(button);
-	
+
 }
 
 function nuShowFormInfo() {
-	
+
 	var cp = nuCurrentProperties();
 	var code = nuCurrentProperties().form_code;
 	var devMode = nuDevMode();
@@ -144,6 +144,7 @@ function nuInitSetBrowseWidthHelper() {
 			}
 		}
 	}
+
 } 
 
 function nuOpenPropertiesOnMiddleClick(e) {
@@ -165,7 +166,7 @@ function nuOpenPropertiesOnMiddleClick(e) {
 				} 
 			}
 		}
-	}	
+	}
 
 }
 
@@ -212,20 +213,47 @@ function nuShowObjectTooltip() {
 }
 
 var contextMenuCurrentTarget = null;
-var nuContextMenuDefinition = [
+
+var menuAlign =
+	{
+		text: "Align",
+		tag: "Align",
+		subMenu: [
+			{
+				text: nuContextMenuItemText("Left", "fa fa-align-left"),
+				tag: "Left",
+				faicon: "fa fa-align-left",
+				action: () => nuContextMenuUpdateAlign("left"),
+			},
+			{
+				text: nuContextMenuItemText("Right", "fa fa-align-right"),
+				tag: "Right",
+				faicon: "fa fa-align-right",
+				action: () => nuContextMenuUpdateAlign("right"),
+			},
+			{
+				text: nuContextMenuItemText("Center", "fa fa-align-center"),
+				tag: "Center",
+				faicon: "fa fa-align-center",
+				action: () => nuContextMenuUpdateAlign("center"),
+			},
+		],
+	};
+
+var menuObject =
 	{ 
 		text: "",
 		tag: "Object",
 		action: function (e) { nuContextMenuCopyIdToClipboard(); }
-	},
-		{ isDivider: true },
+	};
+
+var menuRename =
 	{
 		text: "Rename",
 		action: () => nuContextMenuLabelPrompt(),
-	},
+	};
 
-	{ isDivider: true },
-
+var menuAccess = 
 	{
 		text: "Access",
 		tag: "Access",
@@ -255,31 +283,9 @@ var nuContextMenuDefinition = [
 				action: () => nuContextMenuUpdateAccess(3),
 			},
 		],
-	},
-	{
-		text: "Align",
-		tag: "Align",
-		subMenu: [
-			{
-				text: nuContextMenuItemText("Left", "fa fa-align-left"),
-				tag: "Left",
-				faicon: "fa fa-align-left",
-				action: () => nuContextMenuUpdateAlign("left"),
-			},
-			{
-				text: nuContextMenuItemText("Right", "fa fa-align-right"),
-				tag: "Right",
-				faicon: "fa fa-align-right",
-				action: () => nuContextMenuUpdateAlign("right"),
-			},
-			{
-				text: nuContextMenuItemText("Center", "fa fa-align-center"),
-				tag: "Center",
-				faicon: "fa fa-align-center",
-				action: () => nuContextMenuUpdateAlign("center"),
-			},
-		],
-	},
+	};
+
+var menuValidation =
 	{
 		text: "Validation",
 		tag: "Validation",	
@@ -310,8 +316,17 @@ var nuContextMenuDefinition = [
 				action: () => nuContextMenuUpdateValidation(3),
 			},
 		],
-	},
+	};
+	
+var nuContextMenuDefinitionEdit = [
 
+	menuObject,
+	{ isDivider: true },
+	menuRename,	
+	{ isDivider: true },
+	menuAccess,	
+	menuAlign,
+	menuValidation,	
 	{ isDivider: true },
 
 	{
@@ -329,7 +344,22 @@ var nuContextMenuDefinition = [
 	{
 		html: "",
 		tag: "Height"
-	},
+	}
+];
+
+var nuContextMenuDefinitionBrowse = [
+
+	menuObject,
+	{ isDivider: true },
+	menuRename,	
+	{ isDivider: true },
+	menuAlign,
+	{ isDivider: true },
+	{
+		html: "",
+		tag: "Width"
+	}
+
 ];
 
 function nuContextMenuBold(text) {
@@ -341,7 +371,10 @@ function nuContextLabelHasClass(id, className) {
 }
 
 function nuContextMenuIdHasAlgin(id, align) {
+
+	if (nuFormType() == 'browse') id = nuContextMenuCurrentTargetBrowseId(id);
 	return $('#' + id).css('text-align').toLowerCase() == align.toLowerCase();
+
 }
 
 function nuContextMenuAlignText(id, sub, align) {
@@ -353,7 +386,10 @@ function nuContextMenuAccessText(id, sub, access) {
 }
 
 function nuContextMenuPositionText(id, position) {
+
+	if (nuFormType() == 'browse') id = nuContextMenuCurrentTargetBrowseId(id);
 	return nuContextMenuItemPosition(position, $('#' + id).cssNumber(position));
+
 }
 
 function nuContextMenuValidationText(id, sub, validation) {
@@ -373,7 +409,7 @@ function nuContextMenuBeforeRender(menu, event) {
 			if (menu[i].tag == 'Left') menu[i].html = nuContextMenuPositionText(id, 'Left');
 			if (menu[i].tag == 'Width') menu[i].html = nuContextMenuPositionText(id, 'Width');
 			if (menu[i].tag == 'Height') menu[i].html = nuContextMenuPositionText(id, 'Height');
-			if (menu[i].tag == 'Object') menu[i].text = "Object: " + contextMenuCurrentTargetUpdateId();
+			if (menu[i].tag == 'Object') menu[i].text = "Object: " + (nuFormType == 'edit' ? contextMenuCurrentTargetUpdateId() : nuContextMenuCurrentTargetBrowseId());
 
 			if (menu[i].tag == 'Access') { 
 				for (let j = 0; j <  menu[i].subMenu.length; j++) {
@@ -436,18 +472,25 @@ function nuContextMenuGetWordWidth(w){
 
 	return l + 5;
 
-}	
+}
 
 function nuContextMenuItemPositionChanged(t, update) {
 
+	if (t.value.trim() == '' || Number(t.value) < 0) return;
+
 	let id = contextMenuCurrentTargetId();
 	let prop = $(t).attr("data-property").toLowerCase();
-
+	let typeEdit = nuFormType() == 'edit';
+	
 	if (update) {
-		nuContextMenuUpdateObject(t.value, 'sob_all_' + prop);
+		nuContextMenuUpdateObject(t.value, typeEdit ? 'sob_all_' + prop : 'sbr_' + prop);
 	} else {
-		$('#' + id).css(prop, t.value + 'px');
-		nuContextMenuUpdateLabel(id);
+		if (typeEdit) {
+			$('#' + id).css(prop, t.value + 'px');
+			nuContextMenuUpdateLabel(id);
+		} else {
+			nuSetBrowseColumnSize(Number(contextMenuCurrentTargetUpdateId().justNumbers()), Number(t.value));
+		}
 	}
 
 }
@@ -460,7 +503,7 @@ function nuContextMenuItemPosition(label, v) {
 	if (label == 'Left') left += 1;	
 
 	return '<span style="width: 100px; padding-left:20px; font-family: font-family: Verdana, sans-serif;white-space:nowrap; display: inline;">' + label + '</span>' +
-	' <input data-property="' + label + '" onChange="nuContextMenuItemPositionChanged(this, false)" onBlur="nuContextMenuItemPositionChanged(this, true)" style="margin: 3px 10px 3px ' + left +'px; width: 40px; height: 22px" type="number" min="0" class="input_number" value="' + v + '"> </input>';
+	' <input data-property="' + label + '" onChange="nuContextMenuItemPositionChanged(this, false)" onBlur="nuContextMenuItemPositionChanged(this, true)" style="text-align: right; margin: 3px 10px 3px ' + left +'px; width: 40px; height: 22px" type="number" min="0" class="input_number" value="' + v + '"> </input>';
 
 }
 
@@ -483,10 +526,15 @@ function nuContextMenuUpdateAccess(v) {
 
 function nuContextMenuUpdateAlign(v) {
 
-	let id = contextMenuCurrentTargetId();
+	let id = nuFormType() == 'browse' ? nuContextMenuCurrentTargetBrowseId(contextMenuCurrentTarget.id) : contextMenuCurrentTarget.id;
+
 	$('#' + id).css('text-align', v);
 
-	nuContextMenuUpdateObject(v, 'sob_all_align');
+	if (nuFormType() == 'edit') {
+		nuContextMenuUpdateObject(v, 'sob_all_align');
+	} else {
+		nuContextMenuUpdateObject(v.toLowerCase().charAt(0), 'sbr_align');
+	}
 
 }
 
@@ -495,16 +543,16 @@ function nuContextMenuUpdateValidation(v) {
 	let id = contextMenuCurrentTargetId();
 	let objLabel = $('#label_'+ id);
 
-	if (v == 0) { 														//-- none
+	if (v == 0) {														//-- none
 		objLabel.removeClass('nuBlank nuDuplicate nuDuplicateOrBlank');
 		objLabel.addClass('nuNone');
-	} else if (v == 1) { 												//-- no blanks
+	} else if (v == 1) {												//-- no blanks
 		objLabel.removeClass('nuNone nuDuplicate nuDuplicateOrBlank');
 		objLabel.addClass('nuBlank');
-	} else if (v == 2) { 												//-- no duplicates
+	} else if (v == 2) {												//-- no duplicates
 		objLabel.addClass('nuDuplicate');
 		objLabel.removeClass('nuNone nuBlank nuDuplicateOrBlank');
-	} else if (v == 3) { 												//-- no duplicates/blanks
+	} else if (v == 3) {												//-- no duplicates/blanks
 		objLabel.addClass('nuDuplicateOrBlank');
 		objLabel.removeClass('nuNone nuBlank nuDuplicate');
 	}
@@ -530,8 +578,13 @@ function nuContextMenuUpdateLabel(id) {
 
 function nuContextMenuGetFormId(id) {
 
-	let field = $('[data-nu-field="'+ id +'"]');
-	return id == field || $('#' + id).hasClass('nuWord') ? $('#' + id).parent().attr('data-nu-form-id') : field.parent().attr('data-nu-form-id');
+	if (nuFormType() == 'edit') {
+		let field = $('[data-nu-field="'+ id +'"]');
+		let obj = $('#' + id);
+		return id == field || obj.hasClass('nuWord') ? obj.parent().attr('data-nu-form-id') : field.parent().attr('data-nu-form-id');
+	} else {
+		return nuCurrentProperties().form_id;
+	}
 
 }
 
@@ -540,9 +593,8 @@ function nuContextMenuLabelPromptCallback(value, ok) {
 	if (ok) { 
 
 		let objLabel = $('#' + contextMenuCurrentTarget.id);
-
 		objLabel.html(value);
-		nuContextMenuUpdateObject(value, 'sob_all_label');
+		nuContextMenuUpdateObject(value, nuFormType() == 'edit' ? 'sob_all_label' : 'sbr_title');
 
 	}
 
@@ -554,6 +606,7 @@ function nuContextMenuLabelPrompt() {
 	let id = contextMenuCurrentTargetId();
 	
 	let value =	$('#' + contextMenuCurrentTarget.id).is(":button") ? $('#' + contextMenuCurrentTarget.id).val() : $('#'+label).html();
+	value = nuFormType() == 'edit' ? value : value.trim();
 
 	nuPrompt(nuTranslate("Label") + ':', nuTranslate("Object") + ': ' +	id, value, '', 'nuContextMenuLabelPromptCallback');
 
@@ -562,17 +615,29 @@ function nuContextMenuLabelPrompt() {
 function contextMenuCurrentTargetUpdateId() {
 
 	let t = $('#' + contextMenuCurrentTarget.id);
-	return t.is(":button") || t.hasClass('nuWord') ? contextMenuCurrentTarget.id : $('#' + contextMenuCurrentTarget.id.substring(6)).attr('data-nu-field');
+	if (t.is(":button") || t.hasClass('nuWord') || t.hasClass('nuSort')) {
+		return contextMenuCurrentTarget.id
+	} else {	
+		let id = $('#' + contextMenuCurrentTarget.id.substring(6)).attr('data-nu-field');
+		id = id === undefined ? contextMenuCurrentTarget.id : id;
+		return id;
+	}
 
 }
 
 function contextMenuCurrentTargetId() {
 
 	let t = $('#' + contextMenuCurrentTarget.id);
-	return t.is(":button") || t.hasClass('nuWord') ? contextMenuCurrentTarget.id : contextMenuCurrentTarget.id.substring(6);
+	return t.is(":button") || t.hasClass('nuWord') || t.hasClass('nuSort') ? contextMenuCurrentTarget.id : contextMenuCurrentTarget.id.substring(6);
 
 }
 
+function nuContextMenuCurrentTargetBrowseId() {
+	
+	let id = contextMenuCurrentTarget.id;
+	return $('#' + id).parent().attr('id')
+
+}
 
 function nuContextMenuCopyIdToClipboard() {
 	nuCopyToClipboard(contextMenuCurrentTargetId());
@@ -580,25 +645,31 @@ function nuContextMenuCopyIdToClipboard() {
 
 function nuContextMenuUpdateObject(value, column) {
 
-	let id = contextMenuCurrentTargetUpdateId();
+	let id = nuFormType() == 'edit' ? contextMenuCurrentTargetUpdateId() : nuPad2((Number(contextMenuCurrentTargetUpdateId().justNumbers()) + 1) * 10);
 	let formId = nuContextMenuGetFormId(id);
+	let p = 'nuupdateobject';
 
-	nuSetProperty('nuupdateobject_id', id);
-	nuSetProperty('nuupdateobject_value', value);
-	nuSetProperty('nuupdateobject_form_id', formId);
-	nuSetProperty('nuupdateobject_column', column);
-	nuRunPHPHidden('nuupdateobject', 0);
+	nuSetProperty(p + '_id', id);
+	nuSetProperty(p + '_value', value);
+	nuSetProperty(p + '_form_id', formId);
+	nuSetProperty(p + '_form_type', nuFormType());	
+	nuSetProperty(p + '_column', column);
+	nuRunPHPHidden(p, 0);
 
 }
 
 function nuContextMenuUpdate() {
 
-	$('label, button, .nuWord').each((index, element) => {
+	let typeEdit = nuFormType() == 'edit';
+	let selector =  typeEdit ? 'label, button, .nuWord' : '.nuSort';
+
+	$(selector).each((index, element) => {
 
 		let el = "#"+ element.id;
 		if (el !== '#' && $(el).length > 0) {
-			ctxmenu.update(el, nuContextMenuDefinition, nuContextMenuBeforeRender);
+			ctxmenu.update(el, typeEdit ? nuContextMenuDefinitionEdit : nuContextMenuDefinitionBrowse, nuContextMenuBeforeRender);
 		}
+
 	});
 
 }
@@ -608,4 +679,5 @@ function nuContextMenuClose() {
 	if (typeof ctxmenu !== "undefined") {
 		ctxmenu.closeMenu();
 	}
+
 }
