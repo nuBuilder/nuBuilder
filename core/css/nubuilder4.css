@@ -619,11 +619,11 @@
 	color:#E2EAFF
 }
  .nuQuickButton {
-	background-color: #fafafa;
-	color: black;
-	border-color: rgb(255 255 255);
-	text-shadow: none;
-	border-width: thin;
+    background-color: #fafafa;
+    color: black;
+    border-color: rgb(255 255 255);
+    text-shadow: none;
+    border-width: thin;
 	padding-left:10px;
 	border-radius:3px
 }
@@ -1130,21 +1130,6 @@
 	padding-left:5px
 }
  
- .ctxmenu li {
-	-moz-user-select: none;
-	-webkit-user-select: none;
-	-ms-user-select: none;
-	user-select: none
-}
-
-.ctxmenu li.submenu::after {
-    color: #655e5e;
-}
-
-.ctxmenu {
-	font-size: 13px;
-}
-
  #nupromptmodal{
 	display:none;
 	background-color:#DEDEDE;
@@ -1157,38 +1142,57 @@
 }
 
  #nuprompt{
-	 display:none;
-	 position:fixed;
-	 border: 1px solid rgba(0,0,0,.2);
-	 width:510px;
-	 z-index:10;
-	 border-radius:6px
+	display:none;
+	position:fixed;
+	border: 1px solid rgba(0,0,0,.2);
+	width:510px;
+	z-index:10;
+	border-radius:6px
 }
  #nuprompt div{
 	background:#ffffff;
-	 margin:2px;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none
 }
  #nuprompt #nuprompthead{
-	 background: #f9f8f8;
-	 border-top-left-radius: 6px;
-	 border-top-right-radius: 6px;
-	 font-size:19px;
-	 padding:10px;
-	 color:black;
-	 text-align: center;
-	 font-family:sans-serif,"Segoe UI",Helvetica,"Helvetica Neue",Arial,sans-serif 
+	background: #f9f8f8;
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+	border-bottom: 1px solid rgba(0,0,0,.2);
+	font-size:19px;
+	padding:10px;
+	color:black;
+	text-align: center;
+	font-family:sans-serif,"Segoe UI",Helvetica,"Helvetica Neue",Arial,sans-serif 
 }
  #nuprompt #nupromptbody{
-	 background:#fff;
-	 padding:20px;
-	 color:#000;
-	 font-family:sans-serif,"Segoe UI",Helvetica,"Helvetica Neue",Arial,sans-serif;
+	background:#fff;
+	padding:20px;
+	color:#000;
+	font-family:sans-serif,"Segoe UI",Helvetica,"Helvetica Neue",Arial,sans-serif
 }
  #nuprompt #nupromptfoot{
-	 background: #fff;
-	 border-bottom-left-radius: 6px;
-	 border-bottom-right-radius: 6px;
-	 padding:10px;
-	 text-align:right;
-	 font-family:sans-serif,"Segoe UI",Helvetica,"Helvetica Neue",Arial,sans-serif 
+	background: #fff;
+	border-bottom-left-radius: 6px;
+	border-bottom-right-radius: 6px;
+	padding:10px;
+	text-align:right;
+	font-family:sans-serif,"Segoe UI",Helvetica,"Helvetica Neue",Arial,sans-serif 
+}
+
+ .ctxmenu li {
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none
+}
+
+ .ctxmenu li.submenu::after {
+    color: #655e5e;
+}
+
+ .ctxmenu {
+	font-size: 13px;
 }
