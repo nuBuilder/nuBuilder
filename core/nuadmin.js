@@ -531,7 +531,7 @@ function nuContextMenuUpdateLabel(id) {
 function nuContextMenuGetFormId(id) {
 
 	let field = $('[data-nu-field="'+ id +'"]');
-	return id == field ? $('#' + id).parent().attr('data-nu-form-id') : field.parent().attr('data-nu-form-id');
+	return id == field || $('#' + id).hasClass('nuWord') ? $('#' + id).parent().attr('data-nu-form-id') : field.parent().attr('data-nu-form-id');
 
 }
 
@@ -560,11 +560,17 @@ function nuContextMenuLabelPrompt() {
 }
 
 function contextMenuCurrentTargetUpdateId() {
-	return $('#' + contextMenuCurrentTarget.id).is(":button") ? contextMenuCurrentTarget.id : $('#' + contextMenuCurrentTarget.id.substring(6)).attr('data-nu-field');
+
+	let t = $('#' + contextMenuCurrentTarget.id);
+	return t.is(":button") || t.hasClass('nuWord') ? contextMenuCurrentTarget.id : $('#' + contextMenuCurrentTarget.id.substring(6)).attr('data-nu-field');
+
 }
 
 function contextMenuCurrentTargetId() {
-	return $('#' + contextMenuCurrentTarget.id).is(":button") ? contextMenuCurrentTarget.id : contextMenuCurrentTarget.id.substring(6);
+
+	let t = $('#' + contextMenuCurrentTarget.id);
+	return t.is(":button") || t.hasClass('nuWord') ? contextMenuCurrentTarget.id : contextMenuCurrentTarget.id.substring(6);
+
 }
 
 
@@ -587,7 +593,7 @@ function nuContextMenuUpdateObject(value, column) {
 
 function nuContextMenuUpdate() {
 
-	$('label, button').each((index, element) => {
+	$('label, button, .nuWord').each((index, element) => {
 
 		let el = "#"+ element.id;
 		if (el !== '#' && $(el).length > 0) {
