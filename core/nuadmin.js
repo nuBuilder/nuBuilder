@@ -409,7 +409,7 @@ function nuContextMenuBeforeRender(menu, event) {
 			if (menu[i].tag == 'Left') menu[i].html = nuContextMenuPositionText(id, 'Left');
 			if (menu[i].tag == 'Width') menu[i].html = nuContextMenuPositionText(id, 'Width');
 			if (menu[i].tag == 'Height') menu[i].html = nuContextMenuPositionText(id, 'Height');
-			if (menu[i].tag == 'Object') menu[i].text = "Object: " + (nuFormType == 'edit' ? contextMenuCurrentTargetUpdateId() : nuContextMenuCurrentTargetBrowseId());
+			if (menu[i].tag == 'Object') menu[i].text = "Object: " + (nuFormType() == 'edit' ? contextMenuCurrentTargetUpdateId() : nuContextMenuCurrentTargetBrowseId());
 
 			if (menu[i].tag == 'Access') { 
 				for (let j = 0; j <  menu[i].subMenu.length; j++) {
