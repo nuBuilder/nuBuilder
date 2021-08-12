@@ -581,7 +581,7 @@ function nuContextMenuGetFormId(id) {
 	if (nuFormType() == 'edit') {
 		let field = $('[data-nu-field="'+ id +'"]');
 		let obj = $('#' + id);
-		return id == field || obj.hasClass('nuWord') ? obj.parent().attr('data-nu-form-id') : field.parent().attr('data-nu-form-id');
+		return id == field || obj.hasClass('nuWord') || obj.is(":button") ? obj.parent().attr('data-nu-form-id') : field.parent().attr('data-nu-form-id');
 	} else {
 		return nuCurrentProperties().form_id;
 	}
