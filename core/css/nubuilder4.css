@@ -940,7 +940,7 @@
 	content:" *";
 	color:#f00
 }
- .nuSaveMessageProgress {
+ .nuUpdateMessageProgress {
 	font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
 	width:100px;
 	height:22px;
@@ -954,11 +954,10 @@
 	text-shadow:0 1px 1px rgba(255,255,255,0.75);
 	vertical-align:middle
 }
- .nuSaveMessage {
+ .nuUpdateMessage {
 	font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
-	width:110px;
 	height:20px;
-	top:10px;
+	top:4px;
 	left:0;
 	color:#01A6F5;
 	background-color:#EDEDED;
@@ -974,7 +973,8 @@
 	text-shadow:0 1px 1px #E1E8EA;
 	border-radius:4px;
 	box-shadow:inset 0 1px 0 rgba(255,255,255,0.2),0 1px 2px rgba(0,0,0,0.05);
-	opacity:.7
+	opacity:.7;
+	padding: 0px 5px 0px 5px
 }
  .nuErrorDisplay {
 	color:#555;

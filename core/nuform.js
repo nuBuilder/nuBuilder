@@ -3865,41 +3865,41 @@ function nuSavingProgressMessage(){
 
 	var e = document.createElement('div');
 
-	e.setAttribute('id', 'nuProgressSaved');
+	e.setAttribute('id', 'nuProgressUpdate');
 
 	$('#nuActionHolder').append(e);
 	$('#' + e.id).html('<img src=\'core/ajax-loader.gif\'/>');
-	$('#' + e.id).addClass('nuSaveMessageProgress');
+	$('#' + e.id).addClass('nuUpdateMessageProgress');
 	$('#' + e.id).css('position','absolute');
-	$('#' + e.id).css('left',(($('#nuActionHolder').width() / 2) - ($('#nuProgressSaved').width() / 2))+ 'px');
+	$('#' + e.id).css('left',(($('#nuActionHolder').width() / 2) - ($('#nuProgressUpdate').width() / 2))+ 'px');
 	$('#' + e.id).show();
 
 	$('.nuActionButton').hide();
 
 }
 
-function nuSavingMessage(){
+function nuUpdateMessage(msg){
 
-	$("#nuProgressSaved").hide();
+	$("#nuProgressUpdate").hide();
 
 	var e = document.createElement('div');
 
-	e.setAttribute('id', 'nuNowSaved');
+	e.setAttribute('id', 'nuNowUpdated');
 
 	$('#nuActionHolder').append(e);
-	$('#' + e.id).html('Record Saved');
-	$('#' + e.id).addClass( 'nuSaveMessage');
+	$('#' + e.id).html(nuTranslate(msg));
+	$('#' + e.id).addClass( 'nuUpdateMessage');
 	$('#' + e.id).css('position','absolute');
-	$('#' + e.id).css('left',(($('#nuActionHolder').width() / 2) - ($('#nuNowSaved').width() / 2))+ 'px');
-	$("#nuNowSaved").fadeToggle(3000);
+	$('#' + e.id).css('left',(($('#nuActionHolder').width() / 2) - ($('#nuNowUpdated').width() / 2))+ 'px');
+	$("#nuNowUpdated").fadeToggle(3000);
 
 	$('.nuActionButton').show();
 
-} 
+}
 
 function nuAbortSave(){
 
-	$("#nuProgressSaved").hide();
+	$("#nuProgressUpdate").hide();
 	$('.nuActionButton').show();
 
 }

@@ -745,14 +745,15 @@ function nuUpdateData(action, instruction){
 					parent.$('#nuDragDialog').remove();
 
 				}
+				
+				nuUpdateMessage('Record Deleted');
 
 			}else{
 
 				nuForm(f, fm.record_id, fm.filter, fm.search, 1);		//-- go to saved or created record
+				nuUpdateMessage('Record Saved');
 
 			}
-
-			nuSavingMessage();
 
 		}
 	};
@@ -816,7 +817,7 @@ function nuOpenNewBrowserTab(c, f, r, filter){
 
 function nuAbortSave(){
 
-	$("#nuProgressSaved").hide();
+	$("#nuProgressUpdate").hide();
 	$('.nuActionButton').show();
 
 }
