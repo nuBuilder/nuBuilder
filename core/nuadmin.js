@@ -581,7 +581,7 @@ function nuContextMenuGetFormId(id) {
 	if (nuFormType() == 'edit') {
 		let field = $('[data-nu-field="'+ id +'"]');
 		let obj = $('#' + id);
-		return id == field || obj.hasClass('nuWord') || obj.is(":button") ? obj.parent().attr('data-nu-form-id') : field.parent().attr('data-nu-form-id');
+		return id == field || obj.hasClass('nuWord') || obj.hasClass('nuHtml') || obj.is(":button") ? obj.parent().attr('data-nu-form-id') : field.parent().attr('data-nu-form-id');
 	} else {
 		return nuCurrentProperties().form_id;
 	}
@@ -616,9 +616,16 @@ function contextMenuCurrentTargetUpdateId() {
 
 	let t = $('#' + contextMenuCurrentTarget.id);
 	if (t.is(":button") || t.hasClass('nuWord') || t.hasClass('nuSort')) {
-		return contextMenuCurrentTarget.id
-	} else {	
-		let id = $('#' + contextMenuCurrentTarget.id.substring(6)).attr('data-nu-field');
+		return contextMenuCurrentTarget.id;
+	} else {
+
+		let idNoLabel = $('#' + contextMenuCurrentTarget.id.substring(6));
+		if (idNoLabel.hasClass('nuHtml')) {
+
+			return idNoLabel.attr('id');
+		}
+		
+		let id = idNoLabel.attr('data-nu-field');
 		id = id === undefined ? contextMenuCurrentTarget.id : id;
 		return id;
 	}
