@@ -3722,7 +3722,7 @@ function nuCalculateForm(setAsEdited){	//-- calculate subform 'calcs' first
 
 function nuHasBeenEdited(){
 
-	$('#nuSaveButton').addClass('nuSaveButtonEdited');
+	$('.nuSaveButton').addClass('nuSaveButtonEdited');
 	nuFORM.edited	= true;
 	nuSetSaved(false);
 
@@ -3730,7 +3730,7 @@ function nuHasBeenEdited(){
 
 function nuHasNotBeenEdited(){
 
-	$('#nuSaveButton').removeClass('nuSaveButtonEdited');
+	$('.nuSaveButton').removeClass('nuSaveButtonEdited');
 	nuFORM.edited	= false;
 	nuSetSaved(true);
 
@@ -3782,7 +3782,7 @@ function nuCloneAction(){
 	$('#nuCloneButton').css('visibility','hidden');
 	$('#nuDeleteButton').css('visibility','hidden');
 
-	$('#nuSaveButton')
+	$('.nuSaveButton')
 	.css('background-color', 'red')
 	.css('visibility','visible');
 
