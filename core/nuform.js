@@ -570,7 +570,7 @@ function nuAddActionButtons(form){
 
 }
 
-function nuAddActionButton(i, v, f, t){
+function nuAddActionButton(i, v, f, t, e){
 
 	if(arguments.length == 1){
 
@@ -588,7 +588,13 @@ function nuAddActionButton(i, v, f, t){
 
 	let id =  "nu" + i + "Button";
 
-	$('#nuActionHolder').append("<input id='" +id + "' type='button' title='" + nuTranslate(t) + "' class='nuActionButton" + nuClass + "' value='" + nuTranslate(v) + "' onclick='" + f + "'>");
+	let html = "<input id='" +id + "' type='button' title='" + nuTranslate(t) + "' class='nuActionButton" + nuClass + "' value='" + nuTranslate(v) + "' onclick='" + f + "'>";
+
+	if (typeof e !== 'undefined') {
+		$(html).insertAfter('#' + e);
+	} else {
+		$('#nuActionHolder').append(html);
+	}
 
 	return $('#' + id);
 }
