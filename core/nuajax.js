@@ -678,7 +678,7 @@ function nuSaveEditor() {
 
 }
 
-function nuUpdateData(action, instruction){
+function nuUpdateData(action, instruction, close){
 
 	if(action == 'save' && window.nuBeforeSave){if(nuBeforeSave() === false ){return;}}
 	if(action != 'save' && window.nuBeforeDelete){if(nuBeforeDelete() === false ){return;}}
@@ -753,6 +753,10 @@ function nuUpdateData(action, instruction){
 				nuForm(f, fm.record_id, fm.filter, fm.search, 1);		//-- go to saved or created record
 				nuUpdateMessage('Record Saved');
 
+				if (instruction == 'close') {
+					nuFORM.edited = false;
+					nuOpenPreviousBreadcrumb();
+				}
 			}
 
 		}

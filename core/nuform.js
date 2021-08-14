@@ -599,6 +599,12 @@ function nuAddActionButton(i, v, f, t, e){
 	return $('#' + id);
 }
 
+function nuAddActionButtonSaveClose(caption) {
+
+	nuAddActionButton('SaveClose', nuTranslate(caption === undefined ? 'Save & Close' : caption), "nuSaveAction(true)",'','nuSaveButton');
+	$('#nuSaveCloseButton').addClass('nuSaveButton');
+
+}
 
 function nuBuildEditObjects(f, p, o, prop){
 
@@ -3856,12 +3862,12 @@ function nuIsNewRecord(){
 	return nuFORM.getCurrent().record_id == -1 && !nuCLONE;
 }
 
-function nuSaveAction(){
+function nuSaveAction(close){
 
 	if(!nuLookingUp()){
 
 		if(nuNoDuplicates()){
-			nuUpdateData('save');
+			nuUpdateData('save', close ? 'close' : null);
 		}
 	}
 
