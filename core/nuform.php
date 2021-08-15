@@ -261,10 +261,11 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 				$cTitleId	= 'title_'.$cId;
 				$cContentId	= 'content_'.$cId;
 				$cBoxId		= 'box_'.$cId;
+				$cAlign		= $r->sob_all_align;
 
 				$o->html = nuReplaceHashVariables($r->sob_html_code)."
 					<div class='nuContentBox' id='$cBoxId' style='left: 0px; top: 0px; height: $cHeight; width: $cWidth;'>
-					<div class='title' id='$cTitleId'>$cLabel</div>
+					<div class='title nuContentBoxTitle' style='text-align: $cAlign' id='$cTitleId'>$cLabel</div>
 					<div class='content' id='$cContentId'></div>
 					</div>
 				";
