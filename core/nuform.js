@@ -1232,13 +1232,14 @@ function nuCONTENTBOX(w, i, l, p, prop){
 
 	$('#' + id).css({'top'		: Number(prop.objects[i].top),
 					'left'		: Number(prop.objects[i].left),
-					'width'		: '15',
-					'height'	: '15',
-					'position'	: 'absolute'
+					'width'		: Number(prop.objects[i].width),
+					'height'	: Number(prop.objects[i].height),
+					'position'	: 'absolute',
+					'z-index'	: '3'
 	})
 	.addClass('nuContentBoxContainer').html(w.objects[i].html)
 
-	if (nuGlobalAccess()) $('#title_'+ id).attr('ondblclick','nuOptionsListAction("nuobject", "' + prop.objects[i].object_id + '")');
+	if (nuGlobalAccess()) $('#label_'+ id).attr('ondblclick','nuOptionsListAction("nuobject", "' + prop.objects[i].object_id + '")');
 
 	nuSetAccess(id, prop.objects[i].read);
 

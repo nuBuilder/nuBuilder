@@ -373,6 +373,8 @@ function nuContextLabelHasClass(id, className) {
 function nuContextMenuIdHasAlgin(id, align) {
 
 	if (nuFormType() == 'browse') id = nuContextMenuCurrentTargetBrowseId(id);
+	id = $('#' + id).hasClass('nuContentBoxContainer') ? 'label_' + id : id;
+
 	return $('#' + id).css('text-align').toLowerCase() == align.toLowerCase();
 
 }
@@ -388,6 +390,7 @@ function nuContextMenuAccessText(id, sub, access) {
 function nuContextMenuPositionText(id, position) {
 
 	if (nuFormType() == 'browse') id = nuContextMenuCurrentTargetBrowseId(id);
+
 	return nuContextMenuItemPosition(position, $('#' + id).cssNumber(position));
 
 }
@@ -566,6 +569,9 @@ function nuContextMenuUpdateValidation(v) {
 function nuContextMenuUpdateLabel(id) {
 
 	var objLabel = $('#label_' + id);
+
+	if (objLabel.hasClass('nuContentBoxTitle')) return;
+
 	var label = objLabel.html();
 	var lwidth = nuGetWordWidth(label);
 
@@ -582,7 +588,7 @@ function nuContextMenuGetFormId(id) {
 	if (nuFormType() == 'edit') {
 		let field = $('[data-nu-field="'+ id +'"]');
 		let obj = $('#' + id);
-		return id == field || obj.hasClass('nuWord') || obj.hasClass('nuImage') || obj.hasClass('nuHtml') || obj.is(":button") ? obj.parent().attr('data-nu-form-id') : field.parent().attr('data-nu-form-id');
+		return id == field || obj.hasClass('nuWord') || obj.hasClass('nuImage') || obj.hasClass('nuContentBoxContainer') || obj.hasClass('nuHtml') || obj.is(":button") ? obj.parent().attr('data-nu-form-id') : field.parent().attr('data-nu-form-id');
 	} else {
 		return nuCurrentProperties().form_id;
 	}
@@ -605,8 +611,11 @@ function nuContextMenuLabelPrompt() {
 
 	let label = contextMenuCurrentTarget.id;
 	let id = contextMenuCurrentTargetId();
+	let obj = $('#' + contextMenuCurrentTarget.id);
 	
-	let value =	$('#' + contextMenuCurrentTarget.id).is(":button") ? $('#' + contextMenuCurrentTarget.id).val() : $('#'+label).html();
+	let value =	obj.is(":button") ? obj.val() : $('#'+label).html();
+	value = obj.is(":button") && obj.attr('data-nu-label') ? obj.html() : value;
+
 	value = nuFormType() == 'edit' ? value : value.trim();
 
 	nuPrompt(nuTranslate("Label") + ':', nuTranslate("Object") + ': ' +	id, value, '', 'nuContextMenuLabelPromptCallback');
@@ -621,7 +630,7 @@ function contextMenuCurrentTargetUpdateId() {
 	} else {
 
 		let idNoLabel = $('#' + contextMenuCurrentTarget.id.substring(6));
-		if (idNoLabel.hasClass('nuHtml')) {
+		if (idNoLabel.hasClass('nuHtml') || idNoLabel.hasClass('nuContentBoxContainer')) {
 
 			return idNoLabel.attr('id');
 		}
@@ -669,7 +678,7 @@ function nuContextMenuUpdateObject(value, column) {
 function nuContextMenuUpdate() {
 
 	let typeEdit = nuFormType() == 'edit';
-	let selector =  typeEdit ? 'label, button, .nuWord, .nuImage' : '.nuSort';
+	let selector =  typeEdit ? 'label, button, .nuWord, .nuImage, .nuContentBoxTitle' : '.nuSort';
 
 	$(selector).each((index, element) => {
 

@@ -258,15 +258,15 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 				$cHeight	= $r->sob_all_height."px";
 				$cLabel		= nuTranslate($r->sob_all_label);
 				$cId		= $r->sob_all_id;
-				$cTitleId	= 'title_'.$cId;
+				$cTitleId	= 'label_'.$cId;
 				$cContentId	= 'content_'.$cId;
 				$cBoxId		= 'box_'.$cId;
 				$cAlign		= $r->sob_all_align;
 
 				$o->html = nuReplaceHashVariables($r->sob_html_code)."
 					<div class='nuContentBox' id='$cBoxId' style='left: 0px; top: 0px; height: $cHeight; width: $cWidth;'>
-					<div class='title nuContentBoxTitle' style='text-align: $cAlign' id='$cTitleId'>$cLabel</div>
-					<div class='content' id='$cContentId'></div>
+					<div class='nuContentBoxTitle' style='text-align: $cAlign' id='$cTitleId'>$cLabel</div>
+					<div class='nuContentBoxContent' id='$cContentId'></div>
 					</div>
 				";
 
