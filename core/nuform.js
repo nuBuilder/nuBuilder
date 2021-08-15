@@ -1274,7 +1274,7 @@ function nuIMAGE(w, i, l, p, prop){
 	obj.css({'top'		: Number(prop.objects[i].top),
 					'left'		: Number(prop.objects[i].left),
 					'position'	: 'absolute'
-	});
+	}).addClass('nuImage');
 
 	let width = prop.objects[i].width;
 	let height = prop.objects[i].height;
