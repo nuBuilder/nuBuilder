@@ -1234,8 +1234,7 @@ function nuCONTENTBOX(w, i, l, p, prop){
 					'left'		: Number(prop.objects[i].left),
 					'width'		: Number(prop.objects[i].width),
 					'height'	: Number(prop.objects[i].height),
-					'position'	: 'absolute',
-					'z-index'	: '3'
+					'position'	: 'absolute'
 	})
 	.addClass('nuContentBoxContainer').html(w.objects[i].html)
 
