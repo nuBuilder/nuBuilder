@@ -399,6 +399,10 @@ function nuContextMenuPositionText(id, position) {
 
 	if (nuFormType() == 'browse') id = nuContextMenuCurrentTargetBrowseId(id);
 
+	if ($('#' + id).hasClass('nuContentBoxContainer') && (position == 'Height' || position == 'Width'))	 {
+			id = 'content_' + id;
+	}
+
 	return nuContextMenuItemPosition(position, $('#' + id).cssNumber(position));
 
 }
@@ -492,12 +496,18 @@ function nuContextMenuItemPositionChanged(t, update) {
 	let id = contextMenuCurrentTargetId();
 	let prop = $(t).attr("data-property").toLowerCase();
 	let typeEdit = nuFormType() == 'edit';
-	
+
 	if (update) {
 		nuContextMenuUpdateObject(t.value, typeEdit ? 'sob_all_' + prop : 'sbr_' + prop);
 	} else {
 		if (typeEdit) {
-			$('#' + id).css(prop, t.value + 'px');
+
+			if ((prop == 'width' || prop == 'height') && $('#' + id).hasClass('nuContentBoxContainer')) {
+				$('#content_' + id).css(prop, t.value + 'px');
+			} else {
+				$('#' + id).css(prop, t.value + 'px');
+			}	
+
 			nuContextMenuUpdateLabel(id);
 		} else {
 			nuSetBrowseColumnSize(Number(contextMenuCurrentTargetUpdateId().justNumbers()), Number(t.value));

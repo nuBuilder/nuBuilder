@@ -1232,8 +1232,8 @@ function nuCONTENTBOX(w, i, l, p, prop){
 
 	$('#' + id).css({'top'		: Number(prop.objects[i].top),
 					'left'		: Number(prop.objects[i].left),
-					'width'		: Number(prop.objects[i].width),
-					'height'	: Number(prop.objects[i].height),
+					'width'		: 15,
+					'height'	: 15,
 					'position'	: 'absolute'
 	})
 	.addClass('nuContentBoxContainer').html(w.objects[i].html)
