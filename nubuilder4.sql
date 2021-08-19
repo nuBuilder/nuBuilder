@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 15, 2021 at 11:34 AM
+-- Generation Time: Aug 19, 2021 at 09:18 AM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.8
 
@@ -574,8 +574,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.08.15.03'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.08.15.00');
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.08.19.00'),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.08.19.00');
 
 -- --------------------------------------------------------
 
@@ -749,7 +749,7 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu5bad6cb3399c9cf', 'nuaccessforms', 'zzzzsys_access_form', 'input', 'slf_clone_button', '<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class=\'nuActionButton\'>Clone</span>', 'nu5bad6cb36b994d2', 50, 153, 87, 53, 18, '1', 'center', '0', '0', '0', '', '', '', '', '', NULL, NULL, '', '', '0', '0', NULL, '', '', '', '', '', '', '', 'zzzzsys_form', 'nuform', '', '1', '', '', '', 0, '', 'checkbox', '', NULL, '', '', '', '', '', '', ''),
 ('nu5bad6cb33a00c7d', 'nuaccess', 'zzzzsys_access', 'word', 'button_title', 'Enable Buttons...', 'nu5bad6cb36af0c58', 60, 27, 692, 200, 22, '1', 'center', '1', '0', '0', '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', '', '', NULL, '', '', '', '', '', '', ''),
 ('nu5bad6cb33a4e07f', 'nuaccessforms', 'zzzzsys_access_form', 'input', 'slf_print_button', '<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class=\'nuActionButton\'>Print</span>', 'nu5bad6cb36b994d2', 30, 49, 87, 53, 18, '1', 'left', '0', '0', '0', '', '', '', '', '', NULL, NULL, '', '', '0', '0', NULL, '', '', '', '', '', '', '', 'zzzzsys_form', 'nuform', '', '1', '', '', '', 0, '', 'checkbox', '', NULL, '', '', '', '', '', '', ''),
-('nu5bad6cb33a9d661', 'nuhome', '', 'run', 'run_user', 'Users', 'nu5bad6cb367c5125', 60, 1000, 270, 195, 30, '1', 'center', '0', '0', '0', '', '', 'nuuser', '', 'b', '0', 'F', '', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', '', '', NULL, '', '', '', '', '', '', ''),
+('nu5bad6cb33a9d661', 'nuhome', '', 'run', 'run_user', 'Users', 'nu5bad6cb367c5125', 60, 155, 270, 195, 30, '1', 'center', '0', '0', '0', '', '', 'nuuser', '', 'b', '0', 'F', '', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', '', '', NULL, '', '', '', '', '', '', ''),
 ('nu5bad6cb33ad88b7', 'nuuser', 'zzzzsys_user', 'input', 'sus_name', 'Name', 'nu5bad6cb36b63cae', 10, 34, 167, 329, 22, '0', 'left', '3', '0', '0', '', '', '', '', '', 'n', NULL, '', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 'text', '', NULL, '', '', '', '', '', '', ''),
 ('nu5bad6cb33b1013c', 'nuuser', 'zzzzsys_user', 'input', 'sus_email', 'Email', 'nu5bad6cb36b63cae', 80, 248, 167, 329, 22, '1', 'left', '0', '0', '0', '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 'text', '', NULL, '', '', '', '', '', '', ''),
 ('nu5bad6cb33b42890', 'nuuser', 'zzzzsys_user', 'input', 'sus_login_name', 'Login Name', 'nu5bad6cb36b63cae', 30, 88, 167, 238, 22, '0', 'left', '3', '1', '0', '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 'text', '', NULL, '', '', '', '', '', '', ''),
@@ -1203,7 +1203,7 @@ INSERT INTO `zzzzsys_php` (`zzzzsys_php_id`, `sph_code`, `sph_description`, `sph
 ('nu60f3f621d215470', 'nusetrefreshcache', 'Set marker to Refresh Form, Table schema', 'nubuilder', 'nuSetJSONDataAll(\'REFRESH_CACHE\',\'1\');\n\n$js = \"\n\nnuGetBreadcrumb();\n\nfunction msg() {\n   nuMessage(nuTranslate(\'Cache Refreshed\'));\n}\nsetTimeout(msg, 1000); \n\n\";\n\nnuJavascriptCallback($js);\n\n', 'hide', '', '1', '0', ''),
 ('nuuser_BB', 'nuuser_BB', 'System PHP', 'nubuilder', '$addCode    = isset($_SESSION[\'nubuilder_session_data\'][\'USER_CODE_LABEL\']) ? $_SESSION[\'nubuilder_session_data\'][\'USER_CODE_LABEL\'] : \'\';\n$j = \" if (\'$addCode\' !== \'\') { $(\'#nuBrowseTitle5\').html(\'$addCode\') };\";\nnuAddJavascript($j);', NULL, NULL, '1', '0', NULL),
 ('nu60f8e2ea4d13aff', 'nuimportusers', 'Import users from a CSV file', 'nubuilder', 'nuImportUsersFromCSV(\"../temp/user_import.csv\", \";\", \"\\n\");\r\nnuProcessImportedUsers();', 'window', NULL, '1', '0', ''),
-('nu610fd4ba4e73ede', 'nuupdateobject', 'Update an Object\'s Properties', 'nubuilder', 'if($_SESSION[\'nubuilder_session_data\'][\'IS_DEMO\']){\n\n	nuDisplayError(\'Not available in the Demo...\');\n	return;\n\n}\n\n$id = \"#nuupdateobject_id#\";\n$value = \"#nuupdateobject_value#\";\n$formId = \"#nuupdateobject_form_id#\";\n$type = \"#nuupdateobject_type#\";\n$column = \"#nuupdateobject_column#\";\n\nif ($type == \'tab\') {\n\n    $q = \"\n            UPDATE `zzzzsys_tab` \n            SET syt_title = ? \n            WHERE `zzzzsys_tab_id` = ?\n    \";\n    \n    nuRunQuery($q, array($value, $id));\n\n} else if ($type == \'edit\') {\n\n    $q = \"\n        UPDATE `zzzzsys_object` \n        SET $column = ?\n        WHERE `sob_all_zzzzsys_form_id` = ? AND `sob_all_id` = ?\n    \";\n    \n    nuRunQuery($q, array($value, $formId, $id));\n\n} else {\n    \n    $q = \"\n            UPDATE `zzzzsys_browse` \n            SET `$column` = ? \n            WHERE `sbr_zzzzsys_form_id` = ? AND `sbr_order` = ?\n    \";\n    \n    nuRunQuery($q, array($value, $formId, $id));\n    \n}\n\n', 'hide', NULL, '1', '0', '');
+('nu610fd4ba4e73ede', 'nuupdateobject', 'Update an Object\'s Properties', 'nubuilder', 'if($_SESSION[\'nubuilder_session_data\'][\'IS_DEMO\']){\n\n	nuDisplayError(\'Not available in the Demo...\');\n	return;\n\n}\n\n$id = \"#nuupdateobject_id#\";\n$value = \"#nuupdateobject_value#\";\n$formId = \"#nuupdateobject_form_id#\";\n$type = \"#nuupdateobject_type#\";\n$column = \"#nuupdateobject_column#\";\n\n\n\nif ($type == \'tab\') {\n\n    $q = \"\n            UPDATE `zzzzsys_tab` \n            SET syt_title = ? \n            WHERE `zzzzsys_tab_id` = ?\n    \";\n    \n    nuRunQuery($q, array($value, $id));\n\n} else if ($type == \'edit\') {\n\n    $q = \"\n        UPDATE `zzzzsys_object` \n        SET $column = ?\n        WHERE `sob_all_zzzzsys_form_id` = ? AND `sob_all_id` = ?\n    \";\n\n    nuRunQuery($q, array($value, $formId, $id));\n\n} else {\n    \n    $q = \"\n            UPDATE `zzzzsys_browse` \n            SET `$column` = ? \n            WHERE `sbr_zzzzsys_form_id` = ? AND `sbr_order` = ?\n    \";\n    \n    nuRunQuery($q, array($value, $formId, $id));\n    \n}\n\n', 'hide', NULL, '1', '0', '');
 
 -- --------------------------------------------------------
 
