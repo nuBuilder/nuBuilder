@@ -370,6 +370,24 @@ var nuContextMenuDefinitionTab = [
 
 ];
 
+var nuContextMenuDefinitionSubform = [
+
+	menuObject,
+	{ isDivider: true },
+	menuRename,	
+
+/*	
+	menuAlign
+
+	{ isDivider: true },
+	{
+		html: "",
+		tag: "Width"
+	}
+*/	
+
+];
+
 function nuContextMenuBold(text) {
 	return '<b>' + text + '</b>';
 }
@@ -603,7 +621,10 @@ function nuContextMenuUpdateLabel(id) {
 
 function nuContextMenuGetFormId(id) {
 
-	if (nuFormType() == 'edit') {
+	let subform = $('#' + contextMenuCurrentTargetId()).attr('data-nu-subform');
+	if (subform) {
+		return $('#' + subform + '000nuRECORD').attr('data-nu-form-id');
+	} else if (nuFormType() == 'edit') {
 		let field = $('[data-nu-field="'+ id +'"]');
 		let obj = $('#' + id);
 		return id == field || obj.hasClass('nuWord') || obj.hasClass('nuImage') || obj.hasClass('nuContentBoxContainer') || obj.hasClass('nuHtml') || obj.is(":button") ? obj.parent().attr('data-nu-form-id') : field.parent().attr('data-nu-form-id');
@@ -649,11 +670,10 @@ function contextMenuCurrentTargetUpdateId() {
 
 		let idNoLabel = $('#' + contextMenuCurrentTarget.id.substring(6));
 		if (idNoLabel.hasClass('nuHtml') || idNoLabel.hasClass('nuContentBoxContainer')) {
-
 			return idNoLabel.attr('id');
 		}
-		
-		let id = idNoLabel.attr('data-nu-field');
+
+		let id = t.hasClass('nuSubformTitle') ?  t.attr('data-nu-field') : idNoLabel.attr('data-nu-field');
 		id = id === undefined ? contextMenuCurrentTarget.id : id;
 		return id;
 	}
@@ -663,7 +683,7 @@ function contextMenuCurrentTargetUpdateId() {
 function contextMenuCurrentTargetId() {
 
 	let t = $('#' + contextMenuCurrentTarget.id);
-	return t.is(":button") || t.hasClass('nuWord') || t.hasClass('nuImage') || t.hasClass('nuTab') || t.hasClass('nuSort') ? contextMenuCurrentTarget.id : contextMenuCurrentTarget.id.substring(6);
+	return t.is(":button") || t.hasClass('nuWord') || t.hasClass('nuImage') || t.hasClass('nuTab') || t.hasClass('nuSubformTitle') || t.hasClass('nuSort') || t.hasClass('nuSubformTitle') ? contextMenuCurrentTarget.id : contextMenuCurrentTarget.id.substring(6);
 
 }
 
@@ -680,8 +700,9 @@ function nuContextMenuCopyIdToClipboard() {
 
 function nuContextMenuUpdateObject(value, column) {
 
-	let isTab = $('#' + contextMenuCurrentTargetId()).hasClass('nuTab');	
+	let isTab = $('#' + contextMenuCurrentTargetId()).hasClass('nuTab');
 	let id = nuFormType() == 'edit' && !isTab ? contextMenuCurrentTargetUpdateId() : nuPad2((Number(contextMenuCurrentTargetUpdateId().justNumbers()) + 1) * 10);
+
 	let formId = nuContextMenuGetFormId(id);
 	let p = 'nuupdateobject';
 
@@ -697,7 +718,7 @@ function nuContextMenuUpdateObject(value, column) {
 function nuContextMenuUpdate() {
 
 	let typeEdit = nuFormType() == 'edit';
-	let selector =  typeEdit ? 'label, button, .nuWord, .nuImage, .nuContentBoxTitle, .nuTab' : '.nuSort';
+	let selector =  typeEdit ? 'label, button, .nuWord, .nuImage, .nuContentBoxTitle, .nuTab, .nuSubformTitle' : '.nuSort';
 
 	$(selector).each((index, element) => {
 
@@ -706,6 +727,8 @@ function nuContextMenuUpdate() {
 
 			if ($(el).hasClass('nuTab')) {
 				ctxmenu.update(el, nuContextMenuDefinitionTab, nuContextMenuBeforeRender);
+			} else if ($(el).hasClass('nuSubformTitle')) {
+				ctxmenu.update(el, nuContextMenuDefinitionSubform, nuContextMenuBeforeRender);
 			} else {
 				ctxmenu.update(el, typeEdit ? nuContextMenuDefinitionEdit : nuContextMenuDefinitionBrowse, nuContextMenuBeforeRender);				
 			}
