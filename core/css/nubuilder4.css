@@ -1189,7 +1189,8 @@
 }
 
  .ctxmenu li.submenu::after {
-    color: #655e5e;
+	color: #655e5e;
+	font-size: 11px
 }
 
  .ctxmenu {
