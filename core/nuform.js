@@ -2244,9 +2244,9 @@ function nuBuildSubformTitle(o, l, w, id, col){
 	.attr('data-nu-subform', id)
 	.attr('onclick', 'nuSortSubform("' + id + '", "' + (col + 1) + '", event)')
 	.attr('data-nu-order', 'asc')
-	.addClass('nuTabHolder')
+	.addClass('nuTabHolder nuSubformTitle')
 	.addClass(o.input=='number'||o.input=='nuNumber'?'number':'text');
-	
+
 	if (nuGlobalAccess()) oTitle.attr('ondblclick','nuOptionsListAction("nuobject", "' + o.object_id + '")')
 
 	if(o.valid == 1){oTitle.addClass('nuBlank');}
@@ -2474,7 +2474,12 @@ function nuEditTab(p, t, i){
 	.attr('data-nu-tab-filter', i)
 	.attr('data-nu-form-filter', p)
 	.attr('data-nu-tab-id', t.id)
-	.attr('onclick','nuSelectTab(this)')
+	.attr('onclick','nuSelectTab(this)');
+
+	if (t.access !== undefined) {
+		if (t.access == '2') nuHide('nuTab' + i)
+		if (t.access == '3' && ! nuGlobalAccess()) nuHide('nuTab' + i);
+	}
 
 	window.nuTABHELP[t.id]	= t.help;
 

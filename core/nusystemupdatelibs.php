@@ -196,6 +196,8 @@ function nuAlterSystemTables(){
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_form` ADD `sfo_browse_javascript` MEDIUMTEXT NULL DEFAULT NULL AFTER `sfo_javascript`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_form` ADD `sfo_edit_javascript` MEDIUMTEXT NULL DEFAULT NULL AFTER `sfo_browse_javascript`;");
 
+	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_tab` ADD `syt_access` VARCHAR(1) NULL DEFAULT NULL AFTER `syt_help`;");
+
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_code` varchar(50) DEFAULT NULL AFTER `sus_name`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_position` varchar(50) DEFAULT NULL AFTER `sus_code`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_department` varchar(50) DEFAULT NULL AFTER `sus_position`;");

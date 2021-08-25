@@ -944,7 +944,7 @@ function nuRefineTabList($t){
 
 	for($i = 0 ; $i < count($t) ; $i++){
 				
-		$a[]	= array('title' => $t[$i]->syt_title, 'id' => $t[$i]->zzzzsys_tab_id, 'help' => $t[$i]->syt_help);
+		$a[]	= array('title' => $t[$i]->syt_title, 'id' => $t[$i]->zzzzsys_tab_id, 'help' => $t[$i]->syt_help, 'access' => isset($t[$i]->syt_access) ? $t[$i]->syt_access : null);
 
 	}
 
