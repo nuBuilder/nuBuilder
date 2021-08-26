@@ -15,7 +15,7 @@ function nuAddAdminButton(i, v, f, t) {
 	if (typeof t === 'undefined') {
 		var t = '';
 	}
-	
+
 	var button = "<input id='nu" + i + "Button' type='button' type='button' title='" + nuTranslate(t) + "' class='nuActionButton nuAdminButton' value='" + nuTranslate(v) + "' onclick='" + f + "'>";
 	$('#nuActionHolder').prepend(button);
 
@@ -26,7 +26,7 @@ function nuShowFormInfo() {
 	var cp = nuCurrentProperties();
 	var code = nuCurrentProperties().form_code;
 	var devMode = nuDevMode();
-	
+
 	var recordId = nuFormType() == 'edit' && cp.form_type !== 'launch' ? "<b>Record ID:</b> " + cp.record_id : '';
 	var browseSQL = nuFormType() == 'browse' && (! code.startsWith('nu') || devMode) ? "<b>Browse SQL:</b></br> " + cp.browse_sql : '';
 	var table = nuSERVERRESPONSE.table !== '' && (! code.startsWith('nu') || devMode) ? "<b>Table:</b> " + nuSERVERRESPONSE.table : '';
@@ -85,11 +85,15 @@ function nuAddAdminButtons() {
 
 		if (c > 0) $('#nuActionHolder').css('height', '50px');
 
-		var frame = parent.$('#nuDragDialog iframe')
-		frame.css('height', frame.cssNumber("height") + 50);
+		if ( window.location === window.parent.location ) {
 
-		var dragDialog = parent.$('#nuDragDialog')
-		dragDialog.css('height', dragDialog.cssNumber("height") + 50);
+			var frame = parent.$('#nuDragDialog iframe')
+			frame.css('height', frame.cssNumber("height") + 50);
+
+			var dragDialog = parent.$('#nuDragDialog')
+			dragDialog.css('height', dragDialog.cssNumber("height") + 50);
+
+		}	
 
 		$("<br>").insertAfter($("#nuAdminPropertiesButton"));
 	}
@@ -124,6 +128,8 @@ function nuSetBrowseColumnWidths() {
 }
 
 function nuInitSetBrowseWidthHelper() {
+
+	if (parent.window.nuDocumentID === undefined) return;
 
 	if (! nuMainForm() && nuCurrentProperties().form_id == 'nuform' && window.parent.nuFormType() == 'browse') {
 		if (window.location != window.parent.location) {
@@ -189,11 +195,11 @@ function nuAddIconToBreadcrumbHolder(i, title, oClick, iClass, paddingLeft) {
 
 	var fragment = nuCreateAppendHTML(h);
 	if (window.nuFORM.breadcrumbs.length == 1) { 
-	  var options = $('#nuBreadcrumbHolder').find("[id$=nuOptions]");
-	  $(fragment).insertAfter(options); 
+		var options = $('#nuBreadcrumbHolder').find("[id$=nuOptions]");
+		$(fragment).insertAfter(options); 
 	} else 
 	{
-	  $(fragment).insertBefore("#nuBreadcrumb0");  
+		$(fragment).insertBefore("#nuBreadcrumb0");  
 	}
 
 }
@@ -253,6 +259,24 @@ var menuRename =
 		action: () => nuContextMenuLabelPrompt(),
 	};
 
+var subMenuHidden = 
+
+	{
+		text: nuContextMenuItemText("Hidden", "fa fa-eye-slash"),
+		tag: "Hidden",
+		faicon: "fa fa-eye-slash",
+		action: () => nuContextMenuUpdateAccess(2),
+	};
+
+var subMenuHiddenUser = 
+	
+	{
+		text: nuContextMenuItemText("Hidden (User)", "fa fa-eye-slash"),
+		tag: "Hidden (User)",
+		faicon: "fa fa-eye-slash",
+		action: () => nuContextMenuUpdateAccess(3),
+	};
+
 var menuAccess = 
 	{
 		text: "Access",
@@ -270,19 +294,9 @@ var menuAccess =
 				faicon: "fa fa-lock",
 				action: () => nuContextMenuUpdateAccess(1),
 			},
-			{
-				text: nuContextMenuItemText("Hidden", "fa fa-eye-slash"),
-				tag: "Hidden",
-				faicon: "fa fa-eye-slash",
-				action: () => nuContextMenuUpdateAccess(2),
-			},
-			{
-				text: nuContextMenuItemText("Hidden (User)", "fa fa-eye-slash"),
-				tag: "Hidden (User)",
-				faicon: "fa fa-eye-slash",
-				action: () => nuContextMenuUpdateAccess(3),
-			},
-		],
+			subMenuHidden,
+			subMenuHiddenUser
+		]
 	};
 
 var menuValidation =
@@ -366,7 +380,17 @@ var nuContextMenuDefinitionTab = [
 
 	menuObject,
 	{ isDivider: true },
-	menuRename
+	menuRename,
+	
+	{
+		text: "Access",
+		tag: "Access",
+		subMenu: [
+			subMenuHidden,
+			subMenuHiddenUser
+		]
+
+	}
 
 ];
 
@@ -560,8 +584,9 @@ function nuContextMenuUpdateAccess(v) {
 	}
 
 	$('#' + id).attr('data-nu-access', v);
-
-	nuContextMenuUpdateObject(v, 'sob_all_access');
+	
+	let column = $('#' + id).hasClass('nuTab') ? 'syt_access' : 'sob_all_access';
+	nuContextMenuUpdateObject(v, column);
 }
 
 function nuContextMenuUpdateAlign(v) {
@@ -640,7 +665,11 @@ function nuContextMenuLabelPromptCallback(value, ok) {
 
 		let objLabel = $('#' + contextMenuCurrentTarget.id);
 		objLabel.html(value);
-		nuContextMenuUpdateObject(value, nuFormType() == 'edit' ? 'sob_all_label' : 'sbr_title');
+
+		let column = nuFormType() == 'edit' ? 'sob_all_label' : 'sbr_title';
+		column = objLabel.hasClass('nuTab') ? 'syt_title' : column;
+
+		nuContextMenuUpdateObject(value, column);
 
 	}
 
