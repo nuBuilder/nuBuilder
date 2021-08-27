@@ -591,7 +591,7 @@ function nuContextMenuUpdateAccess(v) {
 
 function nuContextMenuUpdateAlign(v) {
 
-	let id = nuFormType() == 'browse' ? nuContextMenuCurrentTargetBrowseId(contextMenuCurrentTarget.id) : contextMenuCurrentTarget.id;
+	let id = nuFormType() == 'browse' ? nuContextMenuCurrentTargetBrowseId(contextMenuCurrentTarget.id) : contextMenuCurrentTargetUpdateId.id;
 
 	$('#' + id).css('text-align', v);
 
