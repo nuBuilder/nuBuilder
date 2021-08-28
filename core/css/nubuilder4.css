@@ -1001,6 +1001,7 @@
 	background-color:#fdfaeb;
 	box-shadow:5px 5px 5px 0 rgba(150,147,150,1);
 	opacity:1;
+	word-break: break-word;
 	z-index:5000;
 	border-radius:4px
 }
