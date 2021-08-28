@@ -18,15 +18,14 @@ function nuAjax(w,successCallback,errorCallback){
 		},
 		error	: function(jqXHR,textStatus,errorThrown){
 
-			var msg	= String(jqXHR.responseText).split("\n");
-			nuMessage(msg);
 			window.test = jqXHR.responseText;
 
 			if (errorCallback !== undefined) {
 				errorCallback(jqXHR,textStatus,errorThrown);
 			}
 
-			nuFormatAjaxErrorMessage(jqXHR, errorThrown);
+			let err = nuFormatAjaxErrorMessage(jqXHR, errorThrown);
+			nuMessage(err);
 
 		},
 
@@ -521,7 +520,7 @@ function nuAttachButtonImage(i, c){
 
 	var PARENT				= parent.parent.parent.parent.parent.parent.parent.parent.parent;
 
-	var pi = PARENT.nuImages[c];
+	var pi = PARENT.nuImages !== undefined ? PARENT.nuImages[c] : '';
 
 	if(pi !== undefined && pi !== ''){
 

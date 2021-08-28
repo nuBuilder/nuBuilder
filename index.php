@@ -176,11 +176,10 @@ function nuLoginRequest(u, p){
 		},
 		error		: function(jqXHR,textStatus,errorThrown){
 
-			var msg				 = String(jqXHR.responseText).split("\n");
-			nuMessage(msg);
 			window.test = jqXHR.responseText;
 
-			nuFormatAjaxErrorMessage(jqXHR, errorThrown);
+			let err = nuFormatAjaxErrorMessage(jqXHR, errorThrown);
+			nuMessage(err);
 
 		},
 	}); 
@@ -313,7 +312,6 @@ window.nuHASH				= [];
 </head>
 <?php
 	nuLoadBody();
-	//nuLoadBody(true);
 ?>
 </body>
 </html>

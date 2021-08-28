@@ -158,24 +158,26 @@ function nuDisplayError(e){
 	
 }
 
-
 function nuFormatAjaxErrorMessage(jqXHR, exception) {
 
 	if (jqXHR.status === 0) {
-		return ('Not connected.\nPlease verify your network connection.');
+		return nuTranslate('Not connected. Please verify your network connection.') ;
+	} else if (jqXHR.status == 403) {
+		return ['<h3>' + nuTranslate('Access Forbidden.') + '</h3>', jqXHR.responseText];	
 	} else if (jqXHR.status == 404) {
-		return ('The requested page not found. [404]');
+		return nuTranslate('The requested page was not found.') + ' [404]';
 	} else if (jqXHR.status == 500) {
-		return ('Internal Server Error [500].');
+		return nuTranslate('Internal Server Error.') + ' [500]';
 	} else if (exception === 'parsererror') {
-		return ('Requested JSON parse failed.');
+		return nuTranslate('Requested JSON parse failed.') ;
 	} else if (exception === 'timeout') {
-		return ('Time out error.');
+		return nuTranslate('Time out error.');
 	} else if (exception === 'abort') {
-		return ('Ajax request aborted.');
+		return nuTranslate('Ajax request aborted.');
 	} else {
-		return ('Uncaught Error.\n' + jqXHR.responseText);
+		return ['<h3>' + nuTranslate('Uncaught Error.') + '</h3>', jqXHR.responseText];	
 	}
+
 }
 
 String.prototype.replaceAll = function(str1, str2, ignore){
@@ -2125,7 +2127,7 @@ function nuImportUsersFromCSV(file) {
 
 function nuIsIframe(){
 
-	return parent.window.nuDocumentID != window.nuDocumentID;
+	return parent.window.nuDocumentID != window.nuDocumentID && parent.window.nuDocumentID !== undefined;
 		
 }
 
