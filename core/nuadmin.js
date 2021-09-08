@@ -85,7 +85,7 @@ function nuAddAdminButtons() {
 
 		if (c > 0) $('#nuActionHolder').css('height', '50px');
 
-		if ( window.location === window.parent.location ) {
+		// if ( window.location === window.parent.location ) {
 
 			var frame = parent.$('#nuDragDialog iframe')
 			frame.css('height', frame.cssNumber("height") + 50);
@@ -93,7 +93,7 @@ function nuAddAdminButtons() {
 			var dragDialog = parent.$('#nuDragDialog')
 			dragDialog.css('height', dragDialog.cssNumber("height") + 50);
 
-		}	
+		// }	
 
 		$("<br>").insertAfter($("#nuAdminPropertiesButton"));
 	}
