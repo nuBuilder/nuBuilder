@@ -5068,3 +5068,38 @@ function nuPrompt(text, caption, defaultValue, format, fctn) {
 	promot.render(text, caption, defaultValue, format, fctn);
 
 }
+
+function nuAddBrowseTitleSelect(index, data, w) {
+
+	var id = "nuBrowseTitle" + index + "_select";
+	var list = document.createElement('select');
+	list.setAttribute("id", id);
+
+	if (w === undefined) {
+		var w = nuCurrentProperties().column_widths[index] - 3;
+	}
+
+	list.setAttribute('style', 'width:' + w + 'px');
+
+	data.forEach(function (a) {
+		var opt = document.createElement('option');
+		opt.value = a.length == 2 ? a[0]: a;
+		opt.innerHTML = a.length == 2 ? a[1]: a;
+		list.appendChild(opt);
+	});
+
+	var obj = $('#nuBrowseTitle' + index);
+	obj.append('<br/>').append(list);
+
+	$('#' + id).on('change', function(e) {
+		nuSetProperty(this.id, this.value);
+		nuSearchAction();
+	});
+
+	obj.on('mousedown', '> select', function(e) {
+		e.stopPropagation();
+	});
+
+	$("#" + id).val(nuGetProperty(id));
+
+}
