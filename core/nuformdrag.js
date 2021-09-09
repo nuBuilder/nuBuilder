@@ -574,7 +574,7 @@ function nuCreateDragOptionsBox(form){
 						'</tr>'+
 						'<tr>'+
 							'<td><select id="nuDragOptionsTabsDropdown" class="nuDragOptionsButton" style="border: none"></select></td>'+
-							'<td><button id="move_tab_btn" class="nuDragOptionsButton nuButton nuSaveButtonEdited" style="font-weight: bold;" onclick="nuMoveNuDrag();">Move to Tab</button></td>'+
+							'<td><button id="move_tab_btn" class="nuDragOptionsButton nuButton nuSaveButtonEdited" style="font-weight: bold; text-align: center;" onclick="nuMoveNuDrag();">Move to Tab</button></td>'+
 						'</tr>'+
 						'<tr>'+
 							'<td>&nbsp;</td>'+
@@ -582,7 +582,7 @@ function nuCreateDragOptionsBox(form){
 						'</tr>'+
 						'<tr>'+
 							'<td><input type="checkbox" id="nuShowDragLabels" value="Show Labels" onclick="nuToggleDragLabels();"><label for="nuShowDragLabels">Show Labels</label></td>'+
-							'<td><button id="save_btn" class="nuDragOptionsButton nuButton nuSaveButtonEdited" style="font-weight: bold;" onclick="nuSaveNuDrag();">Save</button></td>'+
+							'<td><button id="save_btn" class="nuDragOptionsButton nuButton nuSaveButtonEdited" style="font-weight: bold; text-align: center;" onclick="nuSaveNuDrag();">Save</button></td>'+
 						'</tr>'+
 					'</tbody>'+
 				'</table>'+
