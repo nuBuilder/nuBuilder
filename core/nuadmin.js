@@ -591,13 +591,20 @@ function nuContextMenuUpdateAccess(v) {
 
 function nuContextMenuUpdateAlign(v) {
 
-	let id = nuFormType() == 'browse' ? nuContextMenuCurrentTargetBrowseId(contextMenuCurrentTarget.id) : contextMenuCurrentTargetUpdateId.id;
+	let ftEdit = nuFormType() == 'edit';
+	let id = ftEdit ? contextMenuCurrentTargetUpdateId.id : nuContextMenuCurrentTargetBrowseId(contextMenuCurrentTarget.id);
 
 	$('#' + id).css('text-align', v);
 
-	if (nuFormType() == 'edit') {
+	if (ftEdit) {
 		nuContextMenuUpdateObject(v, 'sob_all_align');
 	} else {
+		
+		let colNumber = id.replace('nuBrowseTitle','');
+		$('[data-nu-column="'+colNumber+'"]').each(function(index) {     
+			$(this).css('text-align', v) 
+		});
+
 		nuContextMenuUpdateObject(v.toLowerCase().charAt(0), 'sbr_align');
 	}
 
