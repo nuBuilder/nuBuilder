@@ -714,7 +714,7 @@ function nuBindCtrlEvents(){
 				} else if(e.keyCode == 69 && g) {					//-- e		Database
 					nuStartDatabaseAdmin();
 				} else if(e.keyCode == 66 && g) {					//-- b		Backup
-					nuRunPHPHidden('nubackup', 0);
+					nuRunBackup();
 				} else if(e.keyCode == 85 && g) {					//-- u		Setup
 					nuForm('nusetup','1','', '', 2);
 				} else if(e.keyCode == 83) {						//-- s		Search
@@ -753,7 +753,7 @@ function nuBindCtrlEvents(){
 				} else if(e.keyCode == 69 && g) {					//-- e		Database
 					nuStartDatabaseAdmin();
 				} else if(e.keyCode == 66 && g) {					//-- b		Backup
-					nuRunPHPHidden('nubackup', 0);
+					nuRunBackup();
 				} else if (e.keyCode == 82) {						//-- r		Refresh
 					nuGetBreadcrumb();
 				} else if(e.keyCode == 83) {						//-- s		Save
@@ -2845,5 +2845,12 @@ function nuSetLabelText(i, str, translate) {
 	let left = $('#' + i).cssNumber('left');
 
 	label.css({ 'width': lwidth, 'left': left - lwidth - 5 }).html(str);
+
+}
+
+function nuRunBackup() {
+
+	nuMessage(nuTranslate("Backup is running") + "..."); 
+	nuRunPHPHidden("nubackup", 0);
 
 }
