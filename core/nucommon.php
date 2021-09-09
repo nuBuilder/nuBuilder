@@ -1995,4 +1995,22 @@ function nuGlobalAccess($post = false) {
 
 }
 
+function nuFormatDate($d, $format){
+
+	if (trim($d) == "") return "";
+
+	$date = DateTime::createFromFormat('Y-m-d', $d);
+	return $date->format($format);
+
+}
+	
+function nuFormatDateTime($d, $format){
+
+	if (trim($d) == "") return "";
+
+	$date = DateTime::createFromFormat('Y-m-d H:i:s', $d);
+	return $date->format($format);
+
+}
+
 ?>
