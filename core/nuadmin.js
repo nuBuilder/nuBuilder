@@ -253,6 +253,20 @@ var menuObject =
 		action: function (e) { nuContextMenuCopyIdToClipboard(); }
 	};
 
+var menuClone =
+	{
+		text: "",
+		tag: "Clone",
+		action: function (e) { nuContextMenuClone(); }
+	};
+
+var menuProperties =
+	{
+		text: "Properties",
+		tag: "Properties",
+		action: function (e) { nuContextMenuObjectPopup(); }
+	};
+
 var menuRename =
 	{
 		text: "Rename",
@@ -336,6 +350,7 @@ var nuContextMenuDefinitionEdit = [
 
 	menuObject,
 	{ isDivider: true },
+	menuProperties,
 	menuRename,	
 	{ isDivider: true },
 	menuAccess,	
@@ -732,6 +747,14 @@ function nuContextMenuCurrentTargetBrowseId() {
 
 function nuContextMenuCopyIdToClipboard() {
 	nuCopyToClipboard(contextMenuCurrentTargetId());
+}
+
+function nuContextMenuClone() {
+
+}
+
+function nuContextMenuObjectPopup() {
+	nuPopup("nuobject", nuObjectIdFromId(contextMenuCurrentTargetUpdateId()) ,"");
 }
 
 function nuContextMenuUpdateObject(value, column) {
