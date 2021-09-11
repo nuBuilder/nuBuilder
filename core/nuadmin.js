@@ -473,6 +473,7 @@ function nuContextMenuBeforeRender(menu, event) {
 	contextMenuCurrentTarget = event.currentTarget;
 	let id = contextMenuCurrentTargetId();
 	let isButton = $('#' + contextMenuCurrentTarget.id).is(":button");
+	let isSelect = $('#' + contextMenuCurrentTargetUpdateId()).is("select");
 
 	for (let i = 0; i < menu.length; i++) {
 		if (menu[i].hasOwnProperty('tag')) {
@@ -496,16 +497,15 @@ function nuContextMenuBeforeRender(menu, event) {
 						sub.text = nuContextMenuAccessText(id, sub, '3');
 					}
 				}
-			}
-
-			if (menu[i].tag == 'Align') { 
-				for (let j = 0; j <  menu[i].subMenu.length; j++) {
-					let sub = menu[i].subMenu[j];
-					sub.text = nuContextMenuAlignText(id, sub, sub.tag)
+			} else	if (menu[i].tag == 'Align') { 
+				menu[i].disabled = isSelect;
+				if (!isSelect) {
+					for (let j = 0; j <  menu[i].subMenu.length; j++) {
+						let sub = menu[i].subMenu[j];
+						sub.text = nuContextMenuAlignText(id, sub, sub.tag)
+					}
 				}
-			}
-
-			if (menu[i].tag == 'Validation') { 
+			} else	if (menu[i].tag == 'Validation') { 
 				menu[i].disabled = isButton;
 				for (let j = 0; j <  menu[i].subMenu.length; j++) {
 					let sub = menu[i].subMenu[j];
@@ -520,6 +520,7 @@ function nuContextMenuBeforeRender(menu, event) {
 					}
 				}
 			}
+
 		}
 	}
 
