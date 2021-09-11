@@ -262,14 +262,14 @@ var menuClone =
 
 var menuProperties =
 	{
-		text: "Properties",
+		text: "Properties...",
 		tag: "Properties",
 		action: function (e) { nuContextMenuObjectPopup(); }
 	};
 
 var menuRename =
 	{
-		text: "Rename",
+		text: "Rename...",
 		action: () => nuContextMenuLabelPrompt(),
 	};
 
