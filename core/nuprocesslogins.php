@@ -104,6 +104,9 @@ function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 	$sessionIds->zzzzsys_user_id = $userId == '' ? $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'] : $userId;
 	$sessionIds->sus_login_name = $loginName;
 	$sessionIds->sus_name =  $userId == '' ? '' : $userName;
+	$sessionIds->sus_position =  '';
+	$sessionIds->sus_department =  '';
+	$sessionIds->sus_team =  '';
 
 	if ($nuConfig2FAAdmin) {
 		if (nu2FALocalTokenOK($sessionIds->sus_login_name)) {
@@ -195,7 +198,7 @@ function nuLoginSetupNOTGlobeadmin($new = true) {
 	}
 
 	$translationQRY = nuRunQuery("SELECT * FROM zzzzsys_translate WHERE trl_language = ? ORDER BY trl_english", array($language));
-	$getAccessLevelSQL = "SELECT zzzzsys_access_id, zzzzsys_user_id, sus_login_name, sus_name, sal_zzzzsys_form_id AS zzzzsys_form_id FROM zzzzsys_user ";
+	$getAccessLevelSQL = "SELECT zzzzsys_access_id, sal_zzzzsys_form_id AS zzzzsys_form_id, zzzzsys_user.* FROM zzzzsys_user ";
 	$getAccessLevelSQL .= "INNER JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id ";
 	$getAccessLevelSQL .= "WHERE zzzzsys_user_id = '$userId' ";
 	$getAccessLevelSQL .= "GROUP BY sus_zzzzsys_access_id ";
@@ -214,6 +217,10 @@ function nuLoginSetupNOTGlobeadmin($new = true) {
 	$sessionIds->zzzzsys_user_id = $userId;
 	$sessionIds->sus_login_name = $getAccessLevelOBJ->sus_login_name;
 	$sessionIds->sus_name = $getAccessLevelOBJ->sus_name;
+
+	$sessionIds->sus_position = isset($getAccessLevelOBJ->sus_position) ? $getAccessLevelOBJ->sus_position : null;
+	$sessionIds->sus_department = isset($getAccessLevelOBJ->sus_department) ? $getAccessLevelOBJ->sus_department : null;
+	$sessionIds->sus_team = isset($getAccessLevelOBJ->sus_team) ? $getAccessLevelOBJ->sus_team : null;
 
 	$sessionIds->global_access = '0';
 	$sessionIds->ip_address = nuGetIPAddress();

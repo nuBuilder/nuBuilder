@@ -581,6 +581,7 @@ function nuReplaceHashVariables($s){
 	}	
 
 	$a	= nuObjKey($_POST,'nuHash', null);
+
 	if ($a != null) {
 
 		$q	= "SELECT sss_hashcookies FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
@@ -853,6 +854,9 @@ function nuGetUserAccess(){
 	$A['ACCESS_LEVEL_CODE']		= $j->access_level_code;
 	$A['LOGIN_NAME']			= $j->session->sus_login_name;
 	$A['USER_NAME']				= $j->session->sus_name;
+	$A['USER_DEPARTMENT']		= $j->session->sus_department;
+	$A['USER_TEAM']				= $j->session->sus_team;
+	$A['USER_POSITION']			= $j->session->sus_position;
 
 	//-- update session time
 	if (!isset($sessionData['SESSION_SSS_TIME_EXISTS'])) {

@@ -1699,6 +1699,18 @@ function nuUserName(){
 	return nuSERVERRESPONSE.user_name;
 }
 
+function nuUserPosition(){
+	return nuSERVERRESPONSE.user_position;
+}
+
+function nuUserDepartment(){
+	return nuSERVERRESPONSE.user_department;
+}
+
+function nuUserTeam(){
+	return nuSERVERRESPONSE.user_team;
+}
+
 function nuUserId(){
 	return nuSERVERRESPONSE.user_id;
 }
