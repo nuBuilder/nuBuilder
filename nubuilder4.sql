@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 21, 2021 at 08:37 AM
+-- Generation Time: Sep 27, 2021 at 04:30 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.8
 
@@ -574,8 +574,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.09.17.00'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.09.21.00');
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.09.27.02'),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.09.27.00');
 
 -- --------------------------------------------------------
 
@@ -1203,7 +1203,7 @@ INSERT INTO `zzzzsys_php` (`zzzzsys_php_id`, `sph_code`, `sph_description`, `sph
 ('nu5bad6cb32c9102c_AB', 'nu5bad6cb32c9102c_AB', 'System PHP', 'nubuilder', '$s  = \"\n        SELECT * \n        FROM zzzzsys_form\n        WHERE zzzzsys_form_id = \'#LOOKUP_RECORD_ID#\'\n        \n        \";\n\n$t  = nuRunQuery($s);\n$c = db_num_rows($t);\nif ($c == 1) {$r  = db_fetch_object($t); }\n\n\nnuSetFormValue(\'sob_subform_table\', $c == 1 ? $r->sfo_table: \'\');', '', '', '1', '0', ''),
 ('nuuser_BE', 'nuuser_BE', 'System PHP', 'nubuilder', '$add1Label  = isset($_SESSION[\'nubuilder_session_data\'][\'USER_ADDITIONAL1_LABEL\']) ? $_SESSION[\'nubuilder_session_data\'][\'USER_ADDITIONAL1_LABEL\'] : \'\';\n$add2Label  = isset($_SESSION[\'nubuilder_session_data\'][\'USER_ADDITIONAL2_LABEL\']) ? $_SESSION[\'nubuilder_session_data\'][\'USER_ADDITIONAL2_LABEL\'] : \'\';\n$addCode    = isset($_SESSION[\'nubuilder_session_data\'][\'USER_CODE_LABEL\']) ? $_SESSION[\'nubuilder_session_data\'][\'USER_CODE_LABEL\'] : \'\';\n\n$j = \"\n\n    	if (\'$add1Label\'    !== \'\') { nuSetLabelText(\'sus_additional1\', \'$add1Label\', true) };\n    	if (\'$add2Label\'    !== \'\') { nuSetLabelText(\'sus_additional2\', \'$add2Label\', true) };\n    	if (\'$addCode\'      !== \'\') { nuSetLabelText(\'sus_code\', \'$addCode\', true) };    	\n    	\n\";\n\nnuAddJavascript($j);', NULL, NULL, '1', '0', NULL),
 ('nu60f3f621d215470', 'nusetrefreshcache', 'Set marker to Refresh Form, Table schema', 'nubuilder', 'nuSetJSONDataAll(\'REFRESH_CACHE\',\'1\');\n\n$js = \"\n\nnuGetBreadcrumb();\n\nfunction msg() {\n   nuMessage(nuTranslate(\'Cache Refreshed\'));\n}\nsetTimeout(msg, 1000); \n\n\";\n\nnuJavascriptCallback($js);\n\n', 'hide', '', '1', '0', ''),
-('nuuser_BB', 'nuuser_BB', 'System PHP', 'nubuilder', '$addCode    = isset($_SESSION[\'nubuilder_session_data\'][\'USER_CODE_LABEL\']) ? $_SESSION[\'nubuilder_session_data\'][\'USER_CODE_LABEL\'] : \'\';\n$j = \" if (\'$addCode\' !== \'\') { $(\'#nuBrowseTitle5\').html(\'$addCode\') };\";\nnuAddJavascript($j);', NULL, NULL, '1', '0', NULL),
+('nuuser_BB', 'nuuser_BB', 'System PHP', 'nubuilder', '$addCode    = isset($_SESSION[\'nubuilder_session_data\'][\'USER_CODE_LABEL\']) ? $_SESSION[\'nubuilder_session_data\'][\'USER_CODE_LABEL\'] : \'\';\n$j = \" if (\'$addCode\' !== \'\') { $(\'#nusort_5\').html(\'$addCode\') };\";\nnuAddJavascript($j);', NULL, NULL, '1', '0', NULL),
 ('nu60f8e2ea4d13aff', 'nuimportusers', 'Import users from a CSV file', 'nubuilder', '$file = \"#csv_from#\";\nnuImportUsersFromCSV(\"../temp/\".$file, \";\", \"\\n\");\nnuProcessImportedUsers();', 'window', NULL, '1', '0', ''),
 ('nu610fd4ba4e73ede', 'nuupdateobject', 'Update an Object\'s Properties', 'nubuilder', 'if($_SESSION[\'nubuilder_session_data\'][\'IS_DEMO\']){\n\n	nuDisplayError(\'Not available in the Demo...\');\n	return;\n\n}\n\n$id = \"#nuupdateobject_id#\";\n$value = \"#nuupdateobject_value#\";\n$formId = \"#nuupdateobject_form_id#\";\n$type = \"#nuupdateobject_type#\";\n$column = \"#nuupdateobject_column#\";\n\nif ($type == \'tab\') {\n\n    $q = \"\n            UPDATE `zzzzsys_tab` \n            SET $column = ?\n            WHERE `zzzzsys_tab_id` = ?\n    \";\n    \n    nuRunQuery($q, array($value, $id));\n\n} else if ($type == \'edit\') {\n\n    $q = \"\n        UPDATE `zzzzsys_object` \n        SET $column = ?\n        WHERE `sob_all_zzzzsys_form_id` = ? AND `sob_all_id` = ?\n    \";\n\n    nuRunQuery($q, array($value, $formId, $id));\n\n} else {\n    \n    $q = \"\n            UPDATE `zzzzsys_browse` \n            SET `$column` = ? \n            WHERE `sbr_zzzzsys_form_id` = ? AND `sbr_order` = ?\n    \";\n    \n    nuRunQuery($q, array($value, $formId, $id));\n    \n}\n\n', 'hide', NULL, '1', '0', '');
 
