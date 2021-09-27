@@ -92,6 +92,7 @@
 		$f->forms[0]->user_position				= $globalAccess ? '' : nuObjKey($U, 'USER_POSITION', null);
 		$f->forms[0]->user_name					= $globalAccess ? '' : nuUser($U['USER_ID'])->sus_name;
 		$f->forms[0]->home_id					= $_SESSION['nubuilder_session_data']['HOME_ID'];
+		$f->forms[0]->language					= $_SESSION['nubuilder_session_data']['language'];
 
 		$f->forms[0]->access_level_id			= $U['USER_GROUP_ID'];
 		$f->forms[0]->access_level_code			= $U['ACCESS_LEVEL_CODE'];

@@ -1719,6 +1719,10 @@ function nuUserLogin(){
 	return nuSERVERRESPONSE.login_name;
 }
 
+function nuUserLanguage(){
+	return nuSERVERRESPONSE.language;
+}
+
 function nuDatabase(){
 	return nuSERVERRESPONSE.database;
 }

@@ -857,6 +857,7 @@ function nuGetUserAccess(){
 	$A['USER_DEPARTMENT']		= $j->session->sus_department;
 	$A['USER_TEAM']				= $j->session->sus_team;
 	$A['USER_POSITION']			= $j->session->sus_position;
+	$A['LANGUAGE']				= $j->session->language;
 
 	//-- update session time
 	if (!isset($sessionData['SESSION_SSS_TIME_EXISTS'])) {
