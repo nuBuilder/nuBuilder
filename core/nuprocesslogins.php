@@ -88,7 +88,7 @@ function nuGetIPAddress() {
 function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 
 	global $nuConfig2FAAdmin;	
-	
+
 	$_SESSION['nubuilder_session_data']['SESSION_ID'] = nuIDTEMP();
 	$_SESSION['nubuilder_session_data']['SESSION_TIMESTAMP'] = time();
 
@@ -97,12 +97,14 @@ function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 
 	$_SESSION['nubuilder_session_data']['isGlobeadmin'] = true;
 	$_SESSION['nubuilder_session_data']['translation'] = nuGetTranslation(db_setup()->set_language);
+	$_SESSION['nubuilder_session_data']['language'] = db_setup()->set_language;
 	$_SESSION['nubuilder_session_data']['HOME_ID'] = 'nuhome';
 
 	$sessionIds = new stdClass;
 	$sessionIds->zzzzsys_access_id = '';
 	$sessionIds->zzzzsys_user_id = $userId == '' ? $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'] : $userId;
 	$sessionIds->sus_login_name = $loginName;
+	$sessionIds->language = db_setup()->set_language;
 	$sessionIds->sus_name =  $userId == '' ? '' : $userName;
 	$sessionIds->sus_position =  '';
 	$sessionIds->sus_department =  '';
@@ -194,6 +196,7 @@ function nuLoginSetupNOTGlobeadmin($new = true) {
 		$_SESSION['nubuilder_session_data']['user_id'] = $userId;
 		$_SESSION['nubuilder_session_data']['language'] = $language;
 		$_SESSION['nubuilder_session_data']['translation'] = nuGetTranslation($language);
+		$_SESSION['nubuilder_session_data']['language'] = $language;
 		$_SESSION['nubuilder_session_data']['isGlobeadmin'] = false;
 	}
 
@@ -217,6 +220,7 @@ function nuLoginSetupNOTGlobeadmin($new = true) {
 	$sessionIds->zzzzsys_user_id = $userId;
 	$sessionIds->sus_login_name = $getAccessLevelOBJ->sus_login_name;
 	$sessionIds->sus_name = $getAccessLevelOBJ->sus_name;
+	$sessionIds->language = $language; 
 
 	$sessionIds->sus_position = isset($getAccessLevelOBJ->sus_position) ? $getAccessLevelOBJ->sus_position : null;
 	$sessionIds->sus_department = isset($getAccessLevelOBJ->sus_department) ? $getAccessLevelOBJ->sus_department : null;

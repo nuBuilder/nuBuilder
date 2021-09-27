@@ -2959,7 +2959,9 @@ function nuBrowseTitle(b, i, l, m){
 
 	var titleClass = m == '1' ? 'nuBrowseTitleMultiline nuBrowseTitle' : 'nuBrowseTitle';
 
-	$('#' + id)
+	var obj = $('#' + id);
+
+	obj
 	.html(sp)
 	.addClass(titleClass)
 	.css({	'text-align'	: ar[a],
@@ -2967,9 +2969,11 @@ function nuBrowseTitle(b, i, l, m){
 			'width'			: w,
 			'left'			: l
 	});
+	
+	obj.attr('data-nu-title-id', b[i].id);
 
 	if(w == 0){
-		$('#' + id).hide();
+		obj.hide();
 	}
 
 	// $('#nusort_' + i)[0].addEventListener('touchstart', function(event) { nuSortBrowse(i);}, { passive: true });

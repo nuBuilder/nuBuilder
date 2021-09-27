@@ -328,7 +328,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 				$o->multiple		= $r->sob_select_multiple;
 				$o->select2			= $r->sob_select_2;
 				$o->options			= nuSelectOptions(nuReplaceHashVariables($r->sob_select_sql));
-				
+
 			}
 
 			if($r->sob_all_type == 'run'){
@@ -988,6 +988,7 @@ function nuBrowseColumns($f){
 		$r->width	= $r->sbr_width;
 		$r->order	= $r->sbr_order;
 		$r->format	= $r->sbr_format;
+		$r->id		= $r->zzzzsys_browse_id;
 
 		unset($r->zzzzsys_browse_id);
 		unset($r->sbr_zzzzsys_form_id);
@@ -1004,7 +1005,7 @@ function nuBrowseColumns($f){
 	}
 
 	return $a;
-	
+
 }
 
 function nuBrowseRows($f){
