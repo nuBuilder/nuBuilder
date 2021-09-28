@@ -201,7 +201,7 @@ function nuLoginSetupNOTGlobeadmin($new = true) {
 	}
 
 	$translationQRY = nuRunQuery("SELECT * FROM zzzzsys_translate WHERE trl_language = ? ORDER BY trl_english", array($language));
-	$getAccessLevelSQL = "SELECT zzzzsys_access_id, sal_zzzzsys_form_id AS zzzzsys_form_id, zzzzsys_user.* FROM zzzzsys_user ";
+	$getAccessLevelSQL = "SELECT zzzzsys_access.*, zzzzsys_user.* FROM zzzzsys_user ";
 	$getAccessLevelSQL .= "INNER JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id ";
 	$getAccessLevelSQL .= "WHERE zzzzsys_user_id = '$userId' ";
 	$getAccessLevelSQL .= "GROUP BY sus_zzzzsys_access_id ";
@@ -213,7 +213,7 @@ function nuLoginSetupNOTGlobeadmin($new = true) {
 
 	$getAccessLevelOBJ = db_fetch_object($getAccessLevelQRY);
 
-	$_SESSION['nubuilder_session_data']['HOME_ID'] = $getAccessLevelOBJ->zzzzsys_form_id;
+	$_SESSION['nubuilder_session_data']['HOME_ID'] = $getAccessLevelOBJ->sal_zzzzsys_form_id;
 
 	$sessionIds = new stdClass;
 	$sessionIds->zzzzsys_access_id = $getAccessLevelOBJ->zzzzsys_access_id;
@@ -228,18 +228,19 @@ function nuLoginSetupNOTGlobeadmin($new = true) {
 
 	$sessionIds->global_access = '0';
 	$sessionIds->ip_address = nuGetIPAddress();
-	
 
-	if ($nuConfig2FAUser && $new) {
+	$salUse2FA = isset($getAccessLevelOBJ->sal_use_2fa) && $getAccessLevelOBJ->sal_use_2fa;
+
+	if ($nuConfig2FAUser && $new && $salUse2FA) {
 		if (nu2FALocalTokenOK($sessionIds->zzzzsys_user_id)) {
-			$sessionIds->zzzzsys_form_id = $getAccessLevelOBJ->zzzzsys_form_id;
+			$sessionIds->zzzzsys_form_id = $getAccessLevelOBJ->sal_zzzzsys_form_id;
 		} else {
-		$sessionIds->zzzzsys_form_id = $_SESSION['nubuilder_session_data']['2FA_FORM_ID'];
-		$_SESSION['nubuilder_session_data']['SESSION_2FA_STATUS'] = 'PENDING';
-		$_SESSION['nubuilder_session_data']['SESSION_2FA_REDIRECT_FORM_ID'] = $getAccessLevelOBJ->zzzzsys_form_id;
+			$sessionIds->zzzzsys_form_id = $_SESSION['nubuilder_session_data']['2FA_FORM_ID'];
+			$_SESSION['nubuilder_session_data']['SESSION_2FA_STATUS'] = 'PENDING';
+			$_SESSION['nubuilder_session_data']['SESSION_2FA_REDIRECT_FORM_ID'] = $getAccessLevelOBJ->sal_zzzzsys_form_id;
 		}
 	} else {
-		$sessionIds->zzzzsys_form_id = $getAccessLevelOBJ->zzzzsys_form_id;
+		$sessionIds->zzzzsys_form_id = $getAccessLevelOBJ->sal_zzzzsys_form_id;
 	}
 
 	$storeSessionInTable = new stdClass;
