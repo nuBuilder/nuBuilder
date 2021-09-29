@@ -246,57 +246,47 @@ function nuObjKey($o, $k, $d = null) {
 }
 
 function nuSetHashList($p){
+	
+	if (! is_null($p)) {
 
-	$fid		= addslashes(nuObjKey($p,'form_id'));
-	$rid		= addslashes(nuObjKey($p,'record_id'));
-	$r			= array();
-	$A			= nuGetUserAccess();
+		$fid		= addslashes(nuObjKey($p,'form_id'));
+		$rid		= addslashes(nuObjKey($p,'record_id'));
+		$r			= array();
+		$A			= nuGetUserAccess();
 
-	if ($fid != '' && $rid != '' && $fid != 'doesntmatter') {
-		
-		$s			= "SELECT sfo_table, sfo_primary_key FROM zzzzsys_form WHERE zzzzsys_form_id = '$fid'";
-		$t			= nuRunQuery($s);
+		if ($fid != '' && $rid != '' && $fid != 'doesntmatter') {
+			
+			$s			= "SELECT sfo_table, sfo_primary_key FROM zzzzsys_form WHERE zzzzsys_form_id = '$fid'";
+			$t			= nuRunQuery($s);
 
-		if (db_num_rows($t) > 0) {
+			if (db_num_rows($t) > 0) {
 
-			$R			= db_fetch_object($t);
-			$h			= array();
+				$R			= db_fetch_object($t);
+				$h			= array();
 
-			if($p['call_type'] == 'getform'){
+				if($p['call_type'] == 'getform'){
 
-				if(trim($R->sfo_table) != ''){
+					if(trim($R->sfo_table) != ''){
 
-					$s		= "SELECT * FROM $R->sfo_table WHERE $R->sfo_primary_key = '$rid'";
-					$t		= nuRunQuery($s);
-					$f		= db_fetch_object($t);
+						$s		= "SELECT * FROM $R->sfo_table WHERE $R->sfo_primary_key = '$rid'";
+						$t		= nuRunQuery($s);
+						$f		= db_fetch_object($t);
 
-					if(is_object($f) ){
+						if(is_object($f) ){
 
-						foreach ($f as $fld => $value ){								//-- This Edit Form's Object Values
-							$r[$fld] = addslashes($value);
+							foreach ($f as $fld => $value ){								//-- This Edit Form's Object Values
+								$r[$fld] = addslashes($value);
+							}
+
 						}
-
 					}
+
 				}
 
 			}
-
-		}
-	}
-
-	foreach ($p as $key => $value){														//-- The 'opener' Form's properties
-
-		if(gettype($value) == 'string' or is_numeric ($value)){
-			$h[$key]			= addslashes($value);
-		}else{
-			$h[$key]			= '';
 		}
 
-	}
-
-	if(isset($p['hash']) && gettype($p['hash']) == 'array'){
-
-		foreach ($p['hash'] as $key => $value){											//-- The 'opener' Form's hash variables
+		foreach ($p as $key => $value){														//-- The 'opener' Form's properties
 
 			if(gettype($value) == 'string' or is_numeric ($value)){
 				$h[$key]			= addslashes($value);
@@ -306,14 +296,28 @@ function nuSetHashList($p){
 
 		}
 
-	}
+		if(isset($p['hash']) && gettype($p['hash']) == 'array'){
 
-	$h['PREVIOUS_RECORD_ID']	= addslashes($rid);
-	$h['RECORD_ID']				= addslashes($rid);
-	$h['FORM_ID']				= addslashes($fid);
-	$h['SUBFORM_ID']			= addslashes(nuObjKey($_POST['nuSTATE'],'object_id')); 
-	$h['ID']					= addslashes(nuObjKey($_POST['nuSTATE'],'primary_key')); 
-	$h['CODE']					= addslashes(nuObjKey($_POST['nuSTATE'],'code')); 
+			foreach ($p['hash'] as $key => $value){											//-- The 'opener' Form's hash variables
+
+				if(gettype($value) == 'string' or is_numeric ($value)){
+					$h[$key]			= addslashes($value);
+				}else{
+					$h[$key]			= '';
+				}
+
+			}
+
+		}
+
+		$h['PREVIOUS_RECORD_ID']	= addslashes($rid);
+		$h['RECORD_ID']				= addslashes($rid);
+		$h['FORM_ID']				= addslashes($fid);
+		$h['SUBFORM_ID']			= addslashes(nuObjKey($_POST['nuSTATE'],'object_id')); 
+		$h['ID']					= addslashes(nuObjKey($_POST['nuSTATE'],'primary_key')); 
+		$h['CODE']					= addslashes(nuObjKey($_POST['nuSTATE'],'code')); 
+
+	}
 
 	$cj = array();
 	$cq = "SELECT sss_hashcookies FROM zzzzsys_session WHERE LENGTH(sss_hashcookies) > 0 AND zzzzsys_session_id = ? ";
@@ -322,6 +326,12 @@ function nuSetHashList($p){
 	));
 	$cr = db_fetch_object($ct);
 
+	if (is_null($p)) {
+		$h = array();
+		$r = array();
+		$A = array();
+	}
+	
 	if (db_num_rows($ct) > 0) {
 		$cj = json_decode($cr->sss_hashcookies, true);
 		return array_merge($cj, $h, $r, $A);
@@ -2015,6 +2025,25 @@ function nuFormatDateTime($d, $format){
 
 	$date = DateTime::createFromFormat('Y-m-d H:i:s', $d);
 	return $date->format($format);
+
+}
+
+function nuAddToHashCookies($i, $nj, $global = false){
+
+	if ($global) {
+		$s = "SELECT sss_hashcookies FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
+		$t = nuRunQuery($s, array($_SESSION['nubuilder_session_data']['SESSION_ID']));
+		$r = db_fetch_object($t);
+		$j = json_decode($r->sss_hashcookies, true);
+
+		$j[$i] = $nj;
+
+		$J = json_encode($j);
+		$s = "UPDATE zzzzsys_session SET sss_hashcookies = ? WHERE zzzzsys_session_id = ? ";
+		$t = nuRunQuery($s, array($J, $_SESSION['nubuilder_session_data']['SESSION_ID']));
+	} else {
+		// not implemented yet
+	}
 
 }
 
