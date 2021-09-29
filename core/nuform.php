@@ -328,7 +328,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 				$o->multiple		= $r->sob_select_multiple;
 				$o->select2			= $r->sob_select_2;
 				$o->options			= nuSelectOptions(nuReplaceHashVariables($r->sob_select_sql));
-
+				
 			}
 
 			if($r->sob_all_type == 'run'){

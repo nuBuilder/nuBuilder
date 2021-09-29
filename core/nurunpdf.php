@@ -33,7 +33,7 @@ function nuRunReportId($jsonID, $tag, $get) {
 	$hashData					= nuAddToHashList($JSON, 'report');
 	$hashData['TABLE_ID']		= $TABLE_ID;
 	$GLOBALS['TABLE_ID']		= $TABLE_ID;
-	$_POST['nuHash']			= $hashData;
+	$_POST['nuHash']			= array_merge($hashData, nuSetHashList(null));
 
 	$PDF						= new TCPDF($LAYOUT->orientation, 'mm', $LAYOUT->paper, true, 'UTF-8', false);
 
