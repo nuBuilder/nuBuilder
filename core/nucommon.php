@@ -1920,7 +1920,9 @@ function nuGetRecordURL($origin = '', $subFolder = '', $homepageId = '', $formId
 	$origin = $origin == '' ? nuGetHttpOrigin() : $origin;
 	$formId = $formId == '' ? nuHash() ['form_id'] : $formId;
 
-	return $origin. $subFolder . '/index.php?f=' . $formId . '&r=' . '#RECORD_ID#' . $homepageId;
+	$recordId = nuReplaceHashVariables('#record_id#');
+
+	return $origin. $subFolder . '/index.php?f=' . $formId . '&r=' . $recordId . $homepageId;
 
 }
 
