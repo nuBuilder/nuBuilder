@@ -1921,6 +1921,7 @@ function nuGetRecordURL($origin = '', $subFolder = '', $homepageId = '', $formId
 	$formId = $formId == '' ? nuHash() ['form_id'] : $formId;
 
 	$recordId = nuReplaceHashVariables('#record_id#');
+	if ($recordId == '-1' && "#RECORD_ID#" != '-1') $recordId = nuReplaceHashVariables('#RECORD_ID#');
 
 	return $origin. $subFolder . '/index.php?f=' . $formId . '&r=' . $recordId . $homepageId;
 
