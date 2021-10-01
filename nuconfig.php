@@ -66,6 +66,7 @@ $nuJSOptions = "
 	nuUXOptions['nuDebugMode']						= true;		 	// If true, a warning is output in the Developer Console if an element does not exist when using nuGetValue() or nuSetValue()	
 	nuUXOptions['nuBrowserTabTitlePrefix']			= 'nuBuilder';	// Prefix in the Browser Tab
 	nuUXOptions['nuMobileView']						= true;			// Optimise view for mobile devices
+	nuUXOptions['nuCalendarStartOfWeek']			= 'Sunday';		// nuCalendar: Start of Week: Sunday (default) or Monday
 
 	window.nuAdminButtons = [];
 	nuAdminButtons['nuDebug']						= false;

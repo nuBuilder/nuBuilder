@@ -28,7 +28,8 @@ function nuInitJSOptions() {
 			'nuShowBeforeUnloadMessage'			: true,			// Show or disable "Leave site?" message
 			'nuShowBrowserTabTitle'				: true,			// Show the Form Title in the Browser Tab
 			'nuDebugMode'						: true,			// Debug Mode
-			'nuBrowserTabTitlePrefix'			: 'nuBuilder'	// Prefix in the Browser Tab
+			'nuBrowserTabTitlePrefix'			: 'nuBuilder',	// Prefix in the Browser Tab
+			'nuCalendarStartOfWeek'				: 'Sunday'		// nuCalendar: Start of Week: Sunday (default) or Monday
 			};
 
 	}

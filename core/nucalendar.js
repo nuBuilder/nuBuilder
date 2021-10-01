@@ -225,7 +225,8 @@ function nuPopupCalendar(pThis, d){
 
 function nuTitleBox(n, l){
 
-	var t					= nuTranslate('SMTWTFS');
+	var t = nuUXOptions["nuCalendarStartOfWeek"] == 'Monday' ? nuTranslate('MTWTFSS') : nuTranslate('SMTWTFS');
+
 	var c					= nuAppendChild('#nuCalendar','div','nuCalTitle' + n);
 
 	c						= $('#nuCalTitle' + n);
@@ -300,12 +301,25 @@ function nuPopulateCalendar(id, y, m, d){
 	var today												= new Date();
 	var day													= 0;
 	var nextmonth											= 0;
-	
+
+	var weekDay = s.getDay();
+
+	if (nuUXOptions["nuCalendarStartOfWeek"] == 'Monday') {
+		var firstDay = 0;
+		if (weekDay == 0) {
+			firstDay = 6;
+		} else {
+			firstDay = weekDay - 1;
+		}
+	} else {
+		firstDay = weekDay;
+	}
+
 	for(var i = 0 ; i < 42 ; i++){
 		document.getElementById('nuCalDay' + i).innerHTML = '';
 	}
 	
-	for(var i = s.getDay() ; i < 42 ; i++){
+	for(var i = firstDay ; i < 42 ; i++){
 		
 		day++;
 		s.setDate(day);
