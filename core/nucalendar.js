@@ -105,9 +105,9 @@ function nuPopupCalendar(pThis, d){
 	c.attr('onclick', "window.nuCalYear--;nuPopulateCalendar('')")
 	.css({'position'			: 'absolute',
 			'top'			: (window.nuCalTop + 55),
-			'left'			: 40,
+			'left'			: 11,
 			'width'			: 30,
-			'height'		: 25,
+			'height'		: 21,
 			'cursor'		: 'pointer',
 			'text-align'	: 'center',
 			'font-size'		: 14,
@@ -125,9 +125,9 @@ function nuPopupCalendar(pThis, d){
 	.attr('onclick', "window.nuCalYear++;nuPopulateCalendar('')")
 	.css({'position'			: 'absolute',
 			'top'			: (window.nuCalTop + 55),
-			'left'			: 140,
+			'left'			: 162,
 			'width'			: 30,
-			'height'		: 25,
+			'height'		: 21,
 			'cursor'		: 'pointer',
 			'text-align'	: 'center',
 			'font-size'		: 14,
@@ -136,15 +136,29 @@ function nuPopupCalendar(pThis, d){
 	.html('&#9658;')
 	.addClass('nuCalendarSelected nuCalendar');
 
-	var c = nuAppendChild('#nuCalendar','div','nuCalMonth');
-	
+	var c = nuAppendChild('#nuCalendar','select','nuCalMonth');
 	c					= $('#nuCalMonth');
 
-	c
-	.css({'position'			: 'absolute',
+	var m = Array();
+	m = nuMonthNames();
+	for (var i=0;i<12;i++) {
+	   c.append('<option value="' + m[i] + '">'+ m[i] +'</option>')
+	}
+
+	c.click(function( event ) {
+	  event.preventDefault();
+	  event.stopPropagation();
+	});
+
+	c.change(function( event ) {
+		window.nuCalMonth = document.getElementById("nuCalMonth").selectedIndex;
+		nuPopulateCalendar(this.id)
+	});
+
+	c.css({'position'		: 'absolute',
 			'top'			: window.nuCalTop + 75,
-			'left'			: 60,
-			'width'			: 90,
+			'left'			: 40,
+			'width'			: 120,
 			'height'		: 25,
 			'text-align'	: 'center',
 			'font-size'		: 14,
@@ -159,10 +173,10 @@ function nuPopupCalendar(pThis, d){
 	c
 	.attr('onclick', "window.nuCalMonth--;nuPopulateCalendar(this.id)")
 	.css({'position'			: 'absolute',
-			'top'			: (window.nuCalTop + 75),
-			'left'			: 40,
+			'top'			: (window.nuCalTop + 78),
+			'left'			: 11,
 			'width'			: 30,
-			'height'		: 25,
+			'height'		: 21,
 			'cursor'		: 'pointer',
 			'text-align'	: 'center',
 			'font-size'		: 14,
@@ -178,10 +192,10 @@ function nuPopupCalendar(pThis, d){
 
 	c.attr('onclick', "window.nuCalMonth++;nuPopulateCalendar(this.id)")
 	.css({'position'			: 'absolute',
-			'top'			: (window.nuCalTop + 75),
-			'left'			: 140,
+			'top'			: (window.nuCalTop + 78),
+			'left'			: 162,
 			'width'			: 30,
-			'height'		: 25,
+			'height'		: 21,
 			'cursor'		: 'pointer',
 			'text-align'	: 'center',
 			'font-size'		: 14,
@@ -190,13 +204,13 @@ function nuPopupCalendar(pThis, d){
 	.html('&#9658;')
 	.addClass('nuCalendarSelected nuCalendar');
 	
-	var t					= 90; 
+	var t					= 100; 
 	var l					= 0;
 
 	for(var i = 0 ; i < 42 ; i++){
 	
-		if(t == 90){nuTitleBox(i, l);}
-		
+		if(t == 100){nuTitleBox(i, l);}
+
 		nuDayBox(i, l, t)
 		
 		if(l == 180){
@@ -233,7 +247,7 @@ function nuTitleBox(n, l){
 
 	c
 	.css({'position'		: 'absolute',
-			'top'			: (window.nuCalTop + 97),
+			'top'			: (window.nuCalTop + 108),
 			'left'			: l,
 			'width'			: 28,
 			'height'		: 18,
@@ -293,10 +307,10 @@ function nuPopulateCalendar(id, y, m, d){
 	if(id == 'nuCalMonthMore' && window.nuCalMonth == 0){
 		window.nuCalYear = window.nuCalYear + 1;
 	}
-	
-	document.getElementById('nuCalYear').innerHTML			= window.nuCalYear;
-	document.getElementById('nuCalMonth').innerHTML			= nuTranslate(nuFullMonth(window.nuCalMonth));
-	
+
+	document.getElementById('nuCalYear').innerHTML				= window.nuCalYear;
+	document.getElementById("nuCalMonth").options.selectedIndex = window.nuCalMonth;
+
 	var s													= new Date(window.nuCalYear, window.nuCalMonth, 1);
 	var today												= new Date();
 	var day													= 0;
@@ -361,9 +375,8 @@ function nuPreviousMonth(y, m, d){
 
 }
 
+function nuMonthNames() {
 
-function nuFullMonth(n){
-	
 	var m = Array();
 	
 	m[0]	= 'January';
@@ -378,9 +391,18 @@ function nuFullMonth(n){
 	m[9]	= 'October';
 	m[10]	= 'November';
 	m[11]	= 'December';
+	
+	return m;
+}
+
+function nuFullMonth(n){
+	
+	var m = Array();
+
+	m = nuMonthNames();
 
 	return String(m[n]);
-	
+
 }
 
 function nu2Month(n){
