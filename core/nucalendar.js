@@ -142,7 +142,7 @@ function nuPopupCalendar(pThis, d){
 	var m = Array();
 	m = nuMonthNames();
 	for (var i=0;i<12;i++) {
-	   c.append('<option value="' + m[i] + '">'+ m[i] +'</option>')
+	   c.append('<option value="' + m[i] + '">'+ nuTranslate(m[i]) +'</option>')
 	}
 
 	c.click(function( event ) {
