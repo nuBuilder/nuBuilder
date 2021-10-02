@@ -5076,6 +5076,8 @@ function nuPrompt(text, caption, defaultValue, format, fctn) {
 
 function nuAddBrowseTitleSelect(index, data, w) {
 
+	if (!$.isArray(data)) return;
+
 	var id = "nuBrowseTitle" + index + "_select";
 	var list = document.createElement('select');
 	list.setAttribute("id", id);
