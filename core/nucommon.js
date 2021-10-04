@@ -2337,15 +2337,19 @@ function nuAddDatalist(i, a) {
 
 function nuLabelOnTop(include, exclude, offsetTop = -18, offsetLeft = 0) {
 
+	if (include === undefined) include = nuSubformObject("").fields;
+	if (exclude === undefined) var exclude = [];
+
 	for (var i = 0; i < include.length; i++) {
 
 		if (jQuery.inArray(include[i], exclude) == -1) {
 
 			$('#' + 'label_' + include[i]).css({
-					'top': $('#'+include[i]).cssNumber('top') + offsetTop
+				'top': $('#'+include[i]).cssNumber('top') + offsetTop
 				, 'left': $('#'+include[i]).cssNumber('left') + offsetLeft
 				, 'text-align': 'left'
 			})
+
 		}
 	}
 
@@ -2357,8 +2361,8 @@ jQuery.fn.nuLabelOnTop = function (offsetTop = -18, offsetLeft = 0) {
 
 		$('#' + 'label_' + this.id).css({
 			'top': $(this).cssNumber("top") + offsetTop
-			, 'left': $(this).cssNumber("left") + offsetLeft
-			, 'text-align': 'left'
+			,'left': $(this).cssNumber("left") + offsetLeft
+			,'text-align': 'left'
 		})
 
 	});
