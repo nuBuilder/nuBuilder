@@ -1493,40 +1493,59 @@ function nuQuillToolbarOptions(fontNames) {
 	
 }
 
-function nuQuill(i, fontNames, toolbarOptions) {
+function nuQuill(i, options) {
 
-	if (typeof fontNames === 'undefined') {
-		var fontNames = nuQuillFonts(['Arial', 'Courier', 'Garamond', 'Tahoma', 'Verdana']);
+	if (typeof options === 'undefined') {
+		var options = {
+			modules: {
+				toolbar: null
+			},
+			fontNames: null,
+			readOnly: false,
+			theme: 'snow'
+		};
 	}
 
-	if (typeof toolbarOptions === 'undefined') {
-		var toolbarOptions = nuQuillToolbarOptions(fontNames);
+	if (options.fontNames === null) {
+		options.fontNames = nuQuillFonts(['Arial', 'Courier', 'Garamond', 'Tahoma', 'Verdana']);
 	}
+
+	if (options.modules.toolbar === null) {
+		options.modules.toolbar = nuQuillToolbarOptions(options.fontNames);
+	}
+
+	if (typeof options.modules === 'undefined' || options.modules === null) {
 		
+		if (options.modules.toolbar === false)  {
+			options.modules.toolbar = false;
+		} else {
+	
+			options.modules = {
+				toolbar: options.toolbar,
+				divider: {
+					cssText: 'border-top: 1px solid #bbb;'
+				},
+				 clipboard: {
+					matchVisual: false
+				}
+
+			}
+		}
+		
+	}
+
 	nuHide(i);
-		
+
 	var Block = Quill.import('blots/block');
 	class DivBlock extends Block {} 
-	DivBlock.tagName = 'DIV';	
+	DivBlock.tagName = 'DIV';
 	Quill.register('blots/block', DivBlock, true); 
-	
+
 	var Font = Quill.import('formats/font');
-	Font.whitelist = fontNames;
+	Font.whitelist = options.fontNames;
 	Quill.register(Font, true);
 
-	var quill = new Quill('#'+ i + '_container', {
-		modules: {
-			toolbar: toolbarOptions,
-			divider: {
-				cssText: 'border-top: 1px solid #bbb;'
-			},
-			 clipboard: {
-				matchVisual: false
-			}
-
-		},
-		theme: 'snow'
-	});
+	var quill = new Quill('#'+ i + '_container', options);
 		
 	var content = $('#' + i).val();
 	if (content !== '') {
