@@ -229,19 +229,19 @@ var menuAlign =
 				text: nuContextMenuItemText("Left", "fa fa-align-left"),
 				tag: "Left",
 				faicon: "fa fa-align-left",
-				action: () => nuContextMenuUpdateAlign("left"),
+				action: () => nuContextMenuUpdateAlign("left")
 			},
 			{
 				text: nuContextMenuItemText("Right", "fa fa-align-right"),
 				tag: "Right",
 				faicon: "fa fa-align-right",
-				action: () => nuContextMenuUpdateAlign("right"),
+				action: () => nuContextMenuUpdateAlign("right")
 			},
 			{
 				text: nuContextMenuItemText("Center", "fa fa-align-center"),
 				tag: "Center",
 				faicon: "fa fa-align-center",
-				action: () => nuContextMenuUpdateAlign("center"),
+				action: () => nuContextMenuUpdateAlign("center")
 			},
 		],
 	};
@@ -279,7 +279,7 @@ var subMenuHidden =
 		text: nuContextMenuItemText("Hidden", "fa fa-eye-slash"),
 		tag: "Hidden",
 		faicon: "fa fa-eye-slash",
-		action: () => nuContextMenuUpdateAccess(2),
+		action: () => nuContextMenuUpdateAccess(2)
 	};
 
 var subMenuHiddenUser = 
@@ -288,7 +288,7 @@ var subMenuHiddenUser =
 		text: nuContextMenuItemText("Hidden (User)", "fa fa-eye-slash"),
 		tag: "Hidden (User)",
 		faicon: "fa fa-eye-slash",
-		action: () => nuContextMenuUpdateAccess(3),
+		action: () => nuContextMenuUpdateAccess(3)
 	};
 
 var menuAccess = 
@@ -306,7 +306,7 @@ var menuAccess =
 				text: nuContextMenuItemText("Readonly", "fa fa-lock"),
 				tag: "Readonly",
 				faicon: "fa fa-lock",
-				action: () => nuContextMenuUpdateAccess(1),
+				action: () => nuContextMenuUpdateAccess(1)
 			},
 			subMenuHidden,
 			subMenuHiddenUser
@@ -323,25 +323,25 @@ var menuValidation =
 				text: nuContextMenuItemText("None", "fa fa-globe"),
 				tag: "None",
 				faicon: "fa fa-globe",
-				action: () => nuContextMenuUpdateValidation(0),
+				action: () => nuContextMenuUpdateValidation(0)
 			},
 			{
 				text: nuContextMenuItemText("No Blanks", "fa fa-battery-full"),
 				tag: "No Blanks",
 				faicon: "fa fa-battery-full",
-				action: () => nuContextMenuUpdateValidation(1),
+				action: () => nuContextMenuUpdateValidation(1)
 			},
 			{
 				text: nuContextMenuItemText("No Duplicates", "fa fa-diamond"),
 				tag: "No Duplicates",
 				faicon: "fa fa-diamond",
-				action: () => nuContextMenuUpdateValidation(2),
+				action: () => nuContextMenuUpdateValidation(2)
 			},
 			{
 				text: nuContextMenuItemText("No Duplicates/Blanks", "fa fa-star"),
 				tag: "No Duplicates/Blanks",
 				faicon: "fa fa-star",
-				action: () => nuContextMenuUpdateValidation(3),
+				action: () => nuContextMenuUpdateValidation(3)
 			},
 		],
 	};
@@ -413,7 +413,7 @@ var nuContextMenuDefinitionSubform = [
 
 	menuObject,
 	{ isDivider: true },
-	menuRename,	
+	menuRename
 
 /*	
 	menuAlign
@@ -498,25 +498,29 @@ function nuContextMenuBeforeRender(menu, event) {
 					}
 				}
 			} else	if (menu[i].tag == 'Align') { 
-				menu[i].disabled = isSelect;
-				if (!isSelect) {
+				if (isSelect) {
+					menu.splice(i, 1);
+				} else {			
 					for (let j = 0; j <  menu[i].subMenu.length; j++) {
 						let sub = menu[i].subMenu[j];
 						sub.text = nuContextMenuAlignText(id, sub, sub.tag)
 					}
 				}
 			} else	if (menu[i].tag == 'Validation') { 
-				menu[i].disabled = isButton;
-				for (let j = 0; j <  menu[i].subMenu.length; j++) {
-					let sub = menu[i].subMenu[j];
-					if (sub.tag == 'No Blanks') { 
-						sub.text = nuContextMenuValidationText(id, sub, 'nuBlank');
-					} else if (sub.tag == 'No Duplicates') {
-						sub.text = nuContextMenuValidationText(id, sub, 'nuDuplicate');
-					} else if (sub.tag == 'No Duplicates/Blanks') {
-						sub.text = nuContextMenuValidationText(id, sub, 'nuDuplicateOrBlank');
-					} else if (sub.tag == 'None') {
-						sub.text = nuContextMenuValidationText(id, sub, 'nuNone');
+				if (isButton) {
+					menu.splice(i, 1);
+				} else {
+					for (let j = 0; j <  menu[i].subMenu.length; j++) {
+						let sub = menu[i].subMenu[j];
+						if (sub.tag == 'No Blanks') {
+							sub.text = nuContextMenuValidationText(id, sub, 'nuBlank');
+						} else if (sub.tag == 'No Duplicates') {
+							sub.text = nuContextMenuValidationText(id, sub, 'nuDuplicate');
+						} else if (sub.tag == 'No Duplicates/Blanks') {
+							sub.text = nuContextMenuValidationText(id, sub, 'nuDuplicateOrBlank');
+						} else if (sub.tag == 'None') {
+							sub.text = nuContextMenuValidationText(id, sub, 'nuNone');
+						}
 					}
 				}
 			}
@@ -761,7 +765,12 @@ function nuContextMenuObjectPopup() {
 function nuContextMenuUpdateObject(value, column) {
 
 	let isTab = $('#' + contextMenuCurrentTargetId()).hasClass('nuTab');
-	let id = nuFormType() == 'edit' && !isTab ? contextMenuCurrentTargetUpdateId() : nuPad2((Number(contextMenuCurrentTargetUpdateId().justNumbers()) + 1) * 10);
+	var id;
+	if (nuFormType() == 'edit' && !isTab) {
+		id = contextMenuCurrentTargetUpdateId();
+	} else {
+		id = (Number(contextMenuCurrentTargetUpdateId().justNumbers()) + 1) * 10;
+	}
 
 	let formId = nuContextMenuGetFormId(id);
 	let p = 'nuupdateobject';
