@@ -810,7 +810,7 @@ function nuContextMenuUpdate() {
 function nuContextMenuClose() {
 
 	if (typeof ctxmenu !== "undefined") {
-		ctxmenu.closeMenu();
+		ctxmenu.hide();
 	}
 
 }
