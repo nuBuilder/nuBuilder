@@ -1730,6 +1730,14 @@ function nuUserTeam(){
 	return nuSERVERRESPONSE.user_team;
 }
 
+function nuUserAdditional1(){
+	return nuSERVERRESPONSE.user_additional1;
+}
+
+function nuUserAdditional2(){
+	return nuSERVERRESPONSE.user_additional2;
+}
+
 function nuUserId(){
 	return nuSERVERRESPONSE.user_id;
 }

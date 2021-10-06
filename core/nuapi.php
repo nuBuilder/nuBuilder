@@ -90,6 +90,8 @@
 		$f->forms[0]->user_team					= $globalAccess ? '' : nuObjKey($U, 'USER_TEAM', null);
 		$f->forms[0]->user_department			= $globalAccess ? '' : nuObjKey($U, 'USER_DEPARTMENT', null);
 		$f->forms[0]->user_position				= $globalAccess ? '' : nuObjKey($U, 'USER_POSITION', null);
+		$f->forms[0]->user_additional1			= $globalAccess ? '' : nuObjKey($U, 'USER_ADDITIONAL1', null);
+		$f->forms[0]->user_additional2			= $globalAccess ? '' : nuObjKey($U, 'USER_ADDITIONAL2', null);		
 		$f->forms[0]->user_name					= $globalAccess ? '' : nuUser($U['USER_ID'])->sus_name;
 		$f->forms[0]->home_id					= $_SESSION['nubuilder_session_data']['HOME_ID'];
 		$f->forms[0]->language					= $_SESSION['nubuilder_session_data']['language'];
