@@ -23,7 +23,7 @@ function nuEmailPHP($sendTo, $fromAddress, $fromName, $content, $subject){
 }
 
 // Send email using PHPMailer
-function nuEmail($to_list=array(),$from_address='',$from_name='',$content='',$subject='',$file_list=array(),$html=false,$cc_list=array(), $bcc_list=array(), $reply_to_list=array(),$debug=0,$method='SMTP'){
+function nuEmail($to_list=array(),$from_address='',$from_name='',$content='',$subject='',$file_list=array(),$html=false,$cc_list=array(),$bcc_list=array(),$reply_to_list=array(),$debug=0,$method='SMTP',$priority=''){
 	ob_start();
 
 	$nuEmailSettings = nuMarshallEmailSettings($from_address, $from_name, $html, $reply_to_list);
@@ -50,6 +50,9 @@ function nuEmail($to_list=array(),$from_address='',$from_name='',$content='',$su
 	$mail->SMTPAuth	 		 			= $nuEmailSettings->smtp_use_authentication;	 	// defaults to false
 	$mail->WordWrap	 		 			= $nuEmailSettings->word_wrap;	 		 		 	// defaults to 120
 	$mail->CharSet	 		 		 	= $nuEmailSettings->charset;	 		 		 	// defaults to UTF-8
+
+	if ($priority != '') $mail->Priority = $priority; 										// Highest priority - Email priority (1 = High, 3 = Normal, 5 = low)
+	
 	$mail->IsHTML($nuEmailSettings->html);
 
 	_nuEmailHelperAdd($mail, $to_list, 'AddAddress');

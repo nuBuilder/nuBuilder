@@ -1571,14 +1571,14 @@ function nuIsValidEmail($email){
 	return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
 }
 
-function nuSendEmail($to, $from, $fromname, $content, $subject, $filelist, $html = false, $cc = "", $bcc = "", $reply_to_addresses = array()) {
+function nuSendEmail($to, $from, $fromname, $content, $subject, $filelist, $html = false, $cc = "", $bcc = "", $reply_to_addresses = array(), $priority = "") {
 
 	// nuSendEmail function is being retired and replaced with nuEmail
 	$to_list	= explode(',',$to);
-	$cc_list	= explode(',',$cc); 
-	$bcc_list	= explode(',',$bcc); 
+	$cc_list	= explode(',',$cc);
+	$bcc_list	= explode(',',$bcc);
 
-	return nuEmail($to_list,$from,$fromname,$content,$subject,$filelist,$html,$cc_list, $bcc_list,$reply_to_addresses); // added
+	return nuEmail($to_list,$from,$fromname,$content,$subject,$filelist,$html,$cc_list, $bcc_list,$reply_to_addresses,"0","SMTP",$priority); 
 
 }
 
