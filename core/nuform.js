@@ -3658,11 +3658,15 @@ function nuChangeFile(e){
 		var o	= {'file' : f, 'name' : a.name, 'size' : a.size, 'type' : a.type};
 		var j	= JSON.stringify(o);
 
-		if(j.length > 600000){
+		if(window.nuOnFileLoad){
+			if(nuOnFileLoad(theFile, o) === false ){return;}
+		} else {
+			if(j.length > 600000){
 
-			nuMessage([nuTranslate('File is too large, cannot be saved. Must be under 300Kb')]);
-			return;
+				nuMessage([nuTranslate('File is too large, cannot be saved. Must be under 300Kb')]);
+				return;
 
+			}
 		}
 
 		$('#' + theTextarea).val(j).addClass('nuEdited');
