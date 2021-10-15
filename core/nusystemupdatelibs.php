@@ -187,6 +187,8 @@ function nuAlterSystemTables(){
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_run_target` VARCHAR(1) NULL DEFAULT NULL AFTER `sob_run_method`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_run_type` VARCHAR(1) NULL DEFAULT NULL AFTER `sob_run_target`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_all_event` VARCHAR(1) NULL DEFAULT NULL AFTER `sob_all_access`;");
+	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_all_style_type` VARCHAR(15) NULL DEFAULT NULL AFTER `sob_all_event`;");
+	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_all_style` VARCHAR(1000) NULL DEFAULT NULL AFTER `sob_all_style_type`;");
 
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_form` ADD `sfo_browse_title_multiline` VARCHAR(1) NULL DEFAULT '0' AFTER `sfo_browse_rows_per_page`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_form` ADD `sfo_breadcrumb_title` VARCHAR(100) NULL DEFAULT NULL AFTER `sfo_description`;");

@@ -626,7 +626,6 @@ function nuBuildEditObjects(f, p, o, prop){
 			f.objects[i].parent_type	= o == '' ? '' : o.subform_type;
 
 			if(t == 'input' || t == 'display' || t == 'lookup' || t == 'textarea' || t == 'calc'){
-
 				l = l + nuINPUT(f, i, l, p, prop);
 			}else if(t == 'run'){
 				l = l + nuRUN(f, i, l, p, prop);
@@ -1099,6 +1098,8 @@ function nuINPUT(w, i, l, p, prop){
 		nuPopulateLookup3(w.objects[i].values, p);
 
 		nuSetAccess(ID, obj.read);
+		
+		nuAddStyle(id, prop.objects[i]);
 
 		return Number(obj.width) + Number(obj.description_width) + 30;
 
@@ -1123,8 +1124,61 @@ function nuINPUT(w, i, l, p, prop){
 
 		nuSetAccess(ID, obj.read);
 
+		nuAddStyle(id, prop.objects[i]);
+
 		return Number(obj.width) + (obj.read == 2 ? -2 : 4);
 
+	}
+
+}
+
+function nuAddStyleFromArray(id, obj) {
+
+	var arr = JSON.parse(obj.style);
+
+	for (var key in arr) {
+
+		var obj2 = $('#' + id + ' .' + key);
+		if (obj2.length === 0) {
+			obj2 = $('#' + id);
+		}
+
+		if (obj.style_type == 'CSS') {
+
+			var css = obj2[0].getAttribute("style");
+			css = css === null ? arr[key] : css += ';' + arr[key];
+			obj2[0].setAttribute("style", css);
+
+		} else if (obj.style_type == 'Class') {
+			obj2.addClass(arr[key]);
+		}
+
+	}
+
+}
+
+function nuAddStyle(id, obj) {
+
+	if (obj.style_type !== '' && obj.style !== '') {
+
+		if (obj.style_type == 'CSS') {
+
+			if (obj.style.startsWith('{')) {
+				nuAddStyleFromArray(id, obj);
+			} else {
+				var css = $('#' + id)[0].getAttribute("style");
+				css = css === null ? obj.style : css += obj.style;
+				$('#' + id)[0].setAttribute("style", css);
+			}
+		} else if (obj.style_type == 'Class') {
+
+			if (obj.style.startsWith('{')) {
+				nuAddStyleFromArray(id, obj);
+			} else {
+				$('#' + id).addClass(obj.style);
+			}
+
+		}
 	}
 
 }
@@ -1203,6 +1257,8 @@ function nuHTML(w, i, l, p, prop, id){
 
 	nuSetAccess(id, prop.objects[i].read);
 
+	nuAddStyle(id, prop.objects[i]);
+
 	return Number(prop.objects[i].width);
 
 }
@@ -1216,6 +1272,8 @@ function nuEDITOR(w, i, l, p, prop){
 	let id = prop.objects[i].id + '_parent_container';
 	nuHTML(w, i, l, p, prop, id);
 	$('#' + id).html('<div id="'+prop.objects[i].id +'_container" class="nuQuiljs"> </div>');
+	
+	nuAddStyle(id, prop.objects[i]);
 	
 }
 
@@ -1242,6 +1300,8 @@ function nuCONTENTBOX(w, i, l, p, prop){
 	if (nuGlobalAccess()) $('#label_'+ id).attr('ondblclick','nuOptionsListAction("nuobject", "' + prop.objects[i].object_id + '")');
 
 	nuSetAccess(id, prop.objects[i].read);
+
+	nuAddStyle(id, prop.objects[i]);
 
 	return Number(15);
 
@@ -1291,6 +1351,8 @@ function nuIMAGE(w, i, l, p, prop){
 
 	nuAddJSObjectEvents(id, prop.objects[i].js);
 
+	nuAddStyle(id, prop.objects[i]);
+
 	return Number(obj.width());
 
 }
@@ -1328,6 +1390,8 @@ function nuWORD(w, i, l, p, prop){
 	if (r !== null) obj.css('font-weight','normal');
 
 	nuSetAccess(id, prop.objects[i].read);
+
+	nuAddStyle(id, prop.objects[i]);
 
 	return Number(prop.objects[i].width);
 
@@ -1425,6 +1489,8 @@ function nuRUN(w, i, l, p, prop){
 	nuAddJSObjectEvents(id, O.js);
 
 	nuSetAccess(id, prop.objects[i].read);
+
+	nuAddStyle(id, prop.objects[i]);
 
 	return Number(O.width);
 	
@@ -1534,6 +1600,8 @@ function nuSELECT(w, i, l, p, prop){
 	if(prop.objects[i].read == 1){
 		nuDisable(id);
 	}
+
+	nuAddStyle(id, prop.objects[i]);
 
 	return Number(prop.objects[i].width);
 
@@ -1710,6 +1778,8 @@ function nuSUBFORM(w, i, l, p, prop){
 	}
 
 	nuSetAccess(id, prop.objects[i].read);
+
+	nuAddStyle(id, prop.objects[i]);
 
 	return Number(SF.width);
 

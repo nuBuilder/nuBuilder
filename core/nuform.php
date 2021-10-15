@@ -411,6 +411,8 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 			}
 			
 			$o->tab_order				= $r->sob_all_order;
+			$o->style_type				= isset($r->sob_all_style_type) ? $r->sob_all_style_type : '';
+			$o->style					= isset($r->sob_all_style) ? $r->sob_all_style : '';
 
 			if($OBJS > 0){
 
