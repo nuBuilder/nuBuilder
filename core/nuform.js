@@ -1202,24 +1202,28 @@ function nuCurrentRow(){
 
 function nuSetAccess(i, r){
 
-	if(r == 2 || (r == 3 && !nuGlobalAccess())){		// hidden
+	if(r == 2 || r == 3){									// hidden
 
 		var o	= [i, i + 'code', i + 'button', i + 'description', 'label_' + i];
 
 		for(var c = 0 ; c < o.length ; c++){
 
-			$('#' + o[c])
-			.attr('data-nu-tab', 'x')
-			.hide();
+			if (r == 2 || (r == 3 && !nuGlobalAccess())) {
+				$('#' + o[c])
+				.attr('data-nu-tab', 'x')
+				.hide();
+			} else if (r == 3 && ! (o[c].startsWith('label_') || o[c].endsWith('button'))) {
+				$('#' + o[c]).addClass('nuAccessHiddenUser');
+			}
 
 		}
-		
+
 	}
 
 	if(r == 1){												// readonly
 		nuReadonly(i);
 	}
-	
+
 	$('#' + i).attr('data-nu-access', r);
 
 }
@@ -2549,7 +2553,14 @@ function nuEditTab(p, t, i){
 
 	if (t.access !== undefined) {
 		if (t.access == '2') nuHide('nuTab' + i)
-		if (t.access == '3' && ! nuGlobalAccess()) nuHide('nuTab' + i);
+		if (t.access == '3') {
+			if (!nuGlobalAccess()) {
+				nuHide('nuTab' + i)
+			} else {	debugger;
+				$('#' + 'nuTab' + i).addClass('nuAccessHiddenUser');
+			}	
+		}
+
 	}
 
 	window.nuTABHELP[t.id]	= t.help;

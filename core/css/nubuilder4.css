@@ -1197,3 +1197,11 @@
  .ctxmenu {
 	font-size: 13px;
 }
+
+ .nuAccessHiddenUser {
+	background-color: #f9f1f1
+}
+
+ .nuTabAccessHiddenUser {
+	background-color: #f9f1f1
+}
