@@ -2556,9 +2556,9 @@ function nuEditTab(p, t, i){
 		if (t.access == '3') {
 			if (!nuGlobalAccess()) {
 				nuHide('nuTab' + i)
-			} else {	debugger;
+			} else {
 				$('#' + 'nuTab' + i).addClass('nuTabAccessHiddenUser');
-			}	
+			}
 		}
 
 	}
