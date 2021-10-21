@@ -1202,7 +1202,7 @@ function nuCurrentRow(){
 
 function nuSetAccess(i, r){
 
-	if(r == 2 || r == 3){									// hidden
+	if(r == 2 || r == 3 || r == 4){									// hidden
 
 		var o	= [i, i + 'code', i + 'button', i + 'description', 'label_' + i];
 
@@ -1212,7 +1212,7 @@ function nuSetAccess(i, r){
 				$('#' + o[c])
 				.attr('data-nu-tab', 'x')
 				.hide();
-			} else if (r == 3 && ! (o[c].startsWith('label_') || o[c].endsWith('button'))) {
+			} else if ((r == 3 || r == 4) && ! (o[c].startsWith('label_') || o[c].endsWith('button'))) {
 				$('#' + o[c]).addClass('nuAccessHiddenUser');
 			}
 
@@ -1220,7 +1220,7 @@ function nuSetAccess(i, r){
 
 	}
 
-	if(r == 1 || r == '4'){									// readonly
+	if(r == 1 || r == 4){											// readonly
 		nuReadonly(i);
 	}
 
