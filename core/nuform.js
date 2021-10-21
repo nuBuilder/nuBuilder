@@ -1208,7 +1208,7 @@ function nuSetAccess(i, r){
 
 		for(var c = 0 ; c < o.length ; c++){
 
-			if (r == 2 || (r == 3 && !nuGlobalAccess())) {
+			if (r == 2 || ((r == 3 || r == 4) && !nuGlobalAccess())) {
 				$('#' + o[c])
 				.attr('data-nu-tab', 'x')
 				.hide();
@@ -1220,7 +1220,7 @@ function nuSetAccess(i, r){
 
 	}
 
-	if(r == 1){												// readonly
+	if(r == 1 || r == '4'){									// readonly
 		nuReadonly(i);
 	}
 
@@ -2557,7 +2557,7 @@ function nuEditTab(p, t, i){
 			if (!nuGlobalAccess()) {
 				nuHide('nuTab' + i)
 			} else {	debugger;
-				$('#' + 'nuTab' + i).addClass('nuAccessHiddenUser');
+				$('#' + 'nuTab' + i).addClass('nuTabAccessHiddenUser');
 			}	
 		}
 
