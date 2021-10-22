@@ -282,14 +282,26 @@ var subMenuHidden =
 		action: () => nuContextMenuUpdateAccess(2)
 	};
 
-var subMenuHiddenUser = 
+var subMenuHiddenUser =
 	
 	{
 		text: nuContextMenuItemText("Hidden (User)", "fa fa-eye-slash"),
 		tag: "Hidden (User)",
 		faicon: "fa fa-eye-slash",
 		action: () => nuContextMenuUpdateAccess(3)
-	};
+	}
+
+
+var subMenuHiddenUserReadonly =
+
+	{
+		text: nuContextMenuItemText("Hidden (User) + Readonly", "fa fa-eye-slash"),
+		tag: "Hidden (User) + Readonly",
+		faicon: "fa fa-eye-slash",
+		action: () => nuContextMenuUpdateAccess(4)
+	}
+
+
 
 var menuAccess = 
 	{
@@ -309,7 +321,8 @@ var menuAccess =
 				action: () => nuContextMenuUpdateAccess(1)
 			},
 			subMenuHidden,
-			subMenuHiddenUser
+			subMenuHiddenUser,
+			subMenuHiddenUserReadonly
 		]
 	};
 
@@ -361,7 +374,8 @@ var nuContextMenuDefinitionEdit = [
 	{
 		html: "",
 		tag: "Top"
-	},
+	}
+	,
 	{
 		html: "",
 		tag: "Left"
@@ -495,6 +509,8 @@ function nuContextMenuBeforeRender(menu, event) {
 						sub.text = nuContextMenuAccessText(id, sub, '2');
 					} else if (sub.tag == 'Hidden (User)') {
 						sub.text = nuContextMenuAccessText(id, sub, '3');
+					} else if (sub.tag == 'Hidden (User) + Readonly') {
+						sub.text = nuContextMenuAccessText(id, sub, '4');
 					}
 				}
 			} else	if (menu[i].tag == 'Align') { 
@@ -601,6 +617,8 @@ function nuContextMenuUpdateAccess(v) {
 		nuDisable(id);
 	} else if (v == 2) { 		//-- hidden
 		nuHide(id);
+	}  else if (v == 4) { 		//-- hidden (user) / readonly
+		nuDisable(id);
 	}
 
 	$('#' + id).attr('data-nu-access', v);
