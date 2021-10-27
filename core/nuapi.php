@@ -12,7 +12,13 @@
 	require_once('nudatabase.php');
 
 	if (isset($nuConfigIncludePHP) && $nuConfigIncludePHP != '') {
-		require_once($nuConfigIncludePHP);
+		if (!is_array($nuConfigIncludePHP)) {
+			require_once($nuConfigIncludePHP);
+		} else {
+			foreach ($nuConfigIncludePHP as $file) {
+				require_once($file);
+			}
+		}
 	}
 
 	$_POST['nuCounter']						= rand(0, 999);
@@ -127,7 +133,7 @@
 
 		$f->forms[0]->buttons					= $b[0];
 		$f->forms[0]->run_code					= $b[1];
-		$f->forms[0]->run_description			= $b[2];		
+		$f->forms[0]->run_description			= $b[2];
 	}
 
 	$j											= json_encode($f->forms[0]);

@@ -2,11 +2,15 @@
 
 // Important Note: You must restart your browser after modifying nuconfig.php in order for changes to be reflected 
 
+// 1) Mandatory Settings:
+// *********************************************************************************************************
+
 // Database Settings:
-	$nuConfigDBHost						= "127.0.0.1";				//-- Database Host / IP
+	$nuConfigDBHost						= "127.0.0.1";				//-- Database Host / IP. You may try localhost if 127.0.0.1 does not work.
 	$nuConfigDBName						= "nubuilder4";				//-- Database Name. You can change the name, if desired. The database must exist or must be created on your server.
 	$nuConfigDBUser						= "nuadmin";				//-- Database User. Change the user, if desired. The user must exist or must be created.
 	$nuConfigDBPassword					= "YourDBPassword";			//-- Database Password. We recommend you to use any strong password.
+																	//-- The default username for a new MySQL installation is root, with a blank password.
 
 	$nuConfigDBEngine					= "InnoDB";					//-- InnoDB or MyISAM
 	$nuConfigDBCollate					= "utf8mb4_unicode_ci";		//-- Or utf8_general_ci etc.
@@ -15,6 +19,9 @@
 // Administrator Login:
 	$nuConfigDBGlobeadminUsername	 	= "globeadmin";				//-- globeadmin username. You can choose any username you like.
 	$nuConfigDBGlobeadminPassword		= "nu";						//-- globeadmin password. Please choose a stronger password!
+
+// 2) Optional Settings:
+// *********************************************************************************************************
 
 	$nuConfigDBGlobeadminUsers			= "";						//-- User Ids with "globeadmin" permission, separated by comma
 
@@ -46,9 +53,9 @@
 	$nuConfig2FAShowRememberMe			= false;					//-- Show a checkbox "Remember me for X days" in the authentication form
 
 // Includes:
-	$nuConfigIncludeJS					= '';						//-- Include one or more JavaScript File(s).  E.g. 'myjsfunctions.js' or ['myjsfunctions1.js','myjsfunctions2.js']
+	$nuConfigIncludeJS					= '';						//-- Include one or more JavaScript File(s).  E.g. 'myjslib.js' or ['myjslib1.js','myjslib2.js']
 	$nuConfigIncludeCSS					= '';						//-- Include one or more CSS File(s). E.g. 'mystyles.css' or ['mystyles1.css','mystyles2.css']
-	$nuConfigIncludePHP					= '';						//-- Include a PHP File. E.g. '..\myphpfunctions.php'
+	$nuConfigIncludePHP					= '';						//-- Include one or more PHP File(s). E.g. '../libs/myphplib.php' or ['../libs/myphplib1.php','../libs/myphplib2.php']
 
 $nuJSOptions = "
 
