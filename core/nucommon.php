@@ -2008,6 +2008,14 @@ function nuStringEndsWith($needle, $haystack) {
 	return strpos($haystack, $needle) === strlen($haystack) - strlen($needle);
 }
 
+function nuStringLeft($str, $length) {
+	 return substr($str, 0, $length);
+}
+ 
+function nuStringRight($str, $length) {
+	 return substr($str, -$length);
+}
+
 function nuGlobalAccess($post = false) {
 
 	if ($post) return $_POST['nuHash']['GLOBAL_ACCESS'] == '1';
