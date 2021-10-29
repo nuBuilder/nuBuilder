@@ -2770,6 +2770,33 @@ function nuSetValue(i, v, method) {
 
 }
 
+function nuCurrentDate() {
+
+	let d = new Date();
+	let
+		yyyy = d.getFullYear(),
+		mm = nuPad2(d.getMonth() + 1),
+		dd = nuPad2(d.getDate());
+
+	return yyyy + '-' + mm + '-' + dd;
+
+};
+
+function nuCurrentDateTime() {
+
+	let d = new Date();
+	let
+		yyyy = d.getFullYear(),
+		mm = nuPad2(d.getMonth() + 1),
+		dd = nuPad2(d.getDate()),
+		hh = nuPad2(d.getHours()),
+		nn = nuPad2(d.getMinutes()),
+		ss = nuPad2(d.getSeconds());
+
+	return yyyy + '-' + mm + '-' + dd + ' ' + hh + ':' + nn + ':' + ss;
+
+};
+
 function nuSetDateValue(i, d) {
 
 	var obj = $('#' + i);
