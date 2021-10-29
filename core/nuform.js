@@ -1034,6 +1034,8 @@ function nuINPUT(w, i, l, p, prop){
 		.addClass('nuLookupCode')
 		.attr('onchange', 'nuGetLookupCode(event)')
 		.attr('onfocus', 'nuLookupFocus(event)');
+		
+		if (Number(obj.width) == 0) nuHide(id);
 
 		$('#' + id).enterKey(function ( ) {
 			if ($(this).val().length == 0) {			
