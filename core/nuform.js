@@ -5170,7 +5170,7 @@ function nuAddBrowseTitleSelect(index, data, w) {
 	list.setAttribute("id", id);
 
 	if (w === undefined) {
-		var w = nuCurrentProperties().column_widths[index] - 3;
+		var w = nuCurrentProperties().column_widths == 0 ? nuCurrentProperties().browse_columns[index].width : nuCurrentProperties().column_widths[index] - 3;
 	}
 
 	list.setAttribute('style', 'width:' + w + 'px');
