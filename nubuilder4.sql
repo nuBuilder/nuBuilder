@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 02, 2021 at 09:42 AM
+-- Generation Time: Nov 03, 2021 at 02:23 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.8
 
@@ -575,8 +575,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.10.21.00'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.11.02.00');
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.11.03.00'),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.11.03.00');
 
 -- --------------------------------------------------------
 
@@ -1203,7 +1203,7 @@ INSERT INTO `zzzzsys_php` (`zzzzsys_php_id`, `sph_code`, `sph_description`, `sph
 ('nu5bad6cb32d22215_AB', 'nu5bad6cb32d22215_AB', 'System PHP', 'nubuilder', '$lu = nuLookupRecord();\n$type = empty($lu->run) ? \'\' : substr($lu->run, 0, 1);\nnuSetFormValue(\'sob_run_type\',  $type);', NULL, NULL, '1', '0', NULL),
 ('nu6068bee1b6c63be', 'RUNADDDBCOLUMN', 'Add a new database column', 'nubuilder', 'if (nuHash() [\'GLOBAL_ACCESS\'] == \'0\') return;\n\n$sql = \'ALTER TABLE `#sob_all_table#` ADD \' . \'#sql_query#\';\n$after = \'#sql_after_column#\';\nif ($after != \'\') {\n    $sql = $sql . \" AFTER \" . $after;\n}\n\nif (preg_match(\'[DELETE |DROP |INSERT |;]\', strtoupper($sql))) {\n    $r = - 2;\n}\nelse {\n    $r = nuRunQuery($sql, array() , true);\n}\n\nif ($r == 0) {\n    $js = \"nuMessage([nuTranslate(\'The column has been created successfully\')]); nuRefreshSelectObject(\'sql_after_column\');\";\n}\nelse if ($r == - 1) {\n    $js = \"nuMessage([nuTranslate(\'An error occured while creating the column\'), nuTranslate(\'Check nuDebug Results for details\')]);\";\n\n}\nelse if ($r == - 2) {\n    $js = \"nuMessage([nuTranslate(\'An error occured while creating the column\'), nuTranslate(\'The query contains invalid keywords\')]);\";\n\n}\n\nnuJavascriptCallback($js);\n', 'hide', '', '1', '0', ''),
 ('nutranslate_BD', 'nutranslate_BD', 'System PHP', 'nubuilder', 'if (\'#nuDevMode#\' != 1 && substr(\'#RECORD_ID#\', 0, 2) === \'nu\') {\n   nuDisplayError(\"nuBuilder\'s translation strings cannot be modified\");\n}', NULL, NULL, '1', '0', NULL),
-('nutestemail', 'nutestemail', 'Send a test email', 'nubuilder', '$to             = \'#ema_to#\';\n$fromAddress    = \'#set_smtp_from_address#\';\n$fromName       = \'#set_smtp_from_name#\';\n$body           = \'#ema_body#\';\n$subject        = \'#ema_subject#\';\n$bcc            = \'#ema_bcc#\';\n$cc             = \'#ema_cc#\';\n$cc             = \'#ema_priority#\';\n\n$recipient = ($to == \'\' && $bcc  ==\'\' && $cc == \'\') ? false : true;\n\nif (! $recipient || $fromAddress == \'\' || $fromName = \'\' || $body == \'\' || $subject == \'\') {\n    showMessage(nuTranslate(\'Error\'), nuTranslate(\'Required fields cannot be blank.\'));\n    return;\n}\n\n$result = nuSendEmail($to, $fromAddress, $fromName, $body, $subject, array(), true, $cc, $bcc, array(), $ema_priority);\n\nif (count($result) == 2) {\n    showMessage(nuTranslate(\'Result\'), $result[1]);\n} else {\n    showMessage(nuTranslate(\'Result\'), $result[1].\'<br>\'.$result[2]);  \n}    \n\nfunction showMessage($title, $msg) {\n    nuJavascriptCallback(\"nuMessage([\'<h2>\".$title.\"</h2><br>\" . $msg . \"\']);\");\n}', 'hide', '', '1', '0', ''),
+('nutestemail', 'nutestemail', 'Send a test email', 'nubuilder', '$to             = \'#ema_to#\';\n$fromAddress    = \'#set_smtp_from_address#\';\n$fromName       = \'#set_smtp_from_name#\';\n$body           = \'#ema_body#\';\n$subject        = \'#ema_subject#\';\n$bcc            = \'#ema_bcc#\';\n$cc             = \'#ema_cc#\';\n$ema_priority   = \'#ema_priority#\';\n\n$recipient = ($to == \'\' && $bcc == \'\' && $cc == \'\') ? false : true;\n\nif (! $recipient || $fromAddress == \'\' || $fromName = \'\' || $body == \'\' || $subject == \'\') {\n    showMessage(nuTranslate(\'Error\'), nuTranslate(\'Required fields cannot be blank.\'));\n    return;\n}\n\n$result = nuSendEmail($to, $fromAddress, $fromName, $body, $subject, array(), true, $cc, $bcc, array(), $ema_priority);\n\nif (count($result) == 2) {\n    showMessage(nuTranslate(\'Result\'), $result[1]);\n} else {\n    showMessage(nuTranslate(\'Result\'), $result[1].\'<br>\'.$result[2]);  \n}    \n\nfunction showMessage($title, $msg) {\n    nuJavascriptCallback(\"nuMessage([\'<h2>\".$title.\"</h2><br>\" . $msg . \"\']);\");\n}', 'hide', '', '1', '0', ''),
 ('nuphp_BS', 'nuphp_BS', 'System PHP', 'nubuilder', '$justphp = nuObjKey(nuHash(),\'filter\') == \'justphp\';\n\nif (\'#nuDevMode#\' != 1 && substr(\'#RECORD_ID#\', 0, 2) === \'nu\' ) {\n   if (! $justphp) {\n        nuDisplayError(nuTranslate(\"Templates cannot be saved. Clone it instead.\"));\n   } \n}', NULL, NULL, '1', '0', NULL),
 ('nu5bad6cb32dcbcb4_AB', 'nu5bad6cb32dcbcb4_AB', 'System PHP', 'nubuilder', '\n$s  = \"\n        SELECT * \n        FROM zzzzsys_form\n        WHERE zzzzsys_form_id = \'#LOOKUP_RECORD_ID#\'\n        \n        \";\n\n$t  = nuRunQuery($s);\n$r  = db_fetch_object($t);\n\nnuSetFormValue(\'sob_lookup_table\', $r->sfo_table);\n', NULL, NULL, '1', '0', NULL),
 ('nu5bad6cb32c9102c_AB', 'nu5bad6cb32c9102c_AB', 'System PHP', 'nubuilder', '$s  = \"\n        SELECT * \n        FROM zzzzsys_form\n        WHERE zzzzsys_form_id = \'#LOOKUP_RECORD_ID#\'\n        \n        \";\n\n$t  = nuRunQuery($s);\n$c = db_num_rows($t);\nif ($c == 1) {$r  = db_fetch_object($t); }\n\n\nnuSetFormValue(\'sob_subform_table\', $c == 1 ? $r->sfo_table: \'\');', '', '', '1', '0', ''),
