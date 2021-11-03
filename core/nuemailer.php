@@ -134,9 +134,10 @@ function nuMarshallEmailSettings( $from_address = '', $from_name = '', $html = f
 		if ( $from_address != '' ) {
 					$nuEmailSettings->reply_to_list = array($from_address => $from_name);
 		}
+	} else {
+		$nuEmailSettings->reply_to_list = $reply_to_list;
 	}
 
-	var_dump($nuEmailSettings);
 	return $nuEmailSettings;
 }
 
