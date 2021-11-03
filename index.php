@@ -151,27 +151,12 @@ function nuLoginRequest(u, p){
 					},
 		dataType : "json",
 		success	: function(data,textStatus,jqXHR){
-			
+
 			if(nuDisplayError(data)){
 				if(data.log_again == 1){location.reload();}
 			} else {
 				window.nuFORM.addBreadcrumb();
-				var last					= window.nuFORM.getCurrent();
-				last.call_type				= 'getform';
-				last.form_id				= data.form_id;
-				
-				last.record_id				= data.record_id;
-				last.filter					= data.filter;
-				last.search					= data.search;
-
-				if(parent['nuHashFromEditForm']===undefined){
-					last.hash				 = [];
-				}else{
-					last.hash				 = parent.nuHashFromEditForm();
-				}
-				
-				last.FORM					 = data.form;
-				nuBuildForm(data);
+				nuForm(data.form_id, data.record_id, data.filter, data.search);
 			}
 		},
 		error		: function(jqXHR,textStatus,errorThrown){
