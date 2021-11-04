@@ -1573,7 +1573,6 @@ function nuIsValidEmail($email){
 
 function nuSendEmail($to, $from, $fromname, $content, $subject, $filelist, $html = false, $cc = "", $bcc = "", $reply_to_addresses = array(), $priority = "") {
 
-	// nuSendEmail function is being retired and replaced with nuEmail
 	$to_list	= explode(',',$to);
 	$cc_list	= explode(',',$cc);
 	$bcc_list	= explode(',',$bcc);

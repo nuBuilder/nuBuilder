@@ -426,10 +426,10 @@
 	white-space:nowrap
 }
  .nuBrowseBorderTop {
-	border-top:solid #9f9e9e 1px
+	border-top:solid #9f9e9e 1px!important
 }
  .nuBrowseBorderBottom {
-	border-bottom:solid #9f9e9e 1px
+	border-bottom:solid #9f9e9e 1px!important
 }
  .nuSelectBrowse {
 	height:70px;
@@ -439,7 +439,7 @@
 	position:absolute;
 	top:75px;
 	background-color:#338ea01c!important;
-	border-color:#ebebeb70!important;
+	border-color:#ebebeb70;
 	font:13px "Helvetica Neue",HelveticaNeue,Helvetica,Arial,sans-serif!important;
 	line-height:150%;
 	white-space:nowrap
