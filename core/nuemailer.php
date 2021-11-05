@@ -81,7 +81,6 @@ function nuEmail($to_list=array(),$from_address='',$from_name='',$content='',$su
 		$result[2] = $mail->ErrorInfo;
 	}
 
-	_nuEmailHelperClean($file_list);
 	$result[3] = ob_get_contents();
 	ob_end_clean();
 	
@@ -142,7 +141,7 @@ function nuMarshallEmailSettings( $from_address = '', $from_name = '', $html = f
 }
 
 function _nuEmailHelperAdd(&$mail, $names_addresses, $method) {
-	if (_is_my_array_associative($names_addresses)) {
+	if (nuIsArrayAssociative($names_addresses)) {
 		_nuEmailHelperAddAssociative($mail, $names_addresses, $method);	
 	} else {
 		_nuEmailHelperAddOrdinal($mail, $names_addresses, $method);
@@ -165,7 +164,7 @@ function _nuEmailHelperAttach(&$mail, $file_list = array() ) {
 	if ( !is_array($file_list) ) {
 		return;
 	}
-	if ( !_is_my_array_associative($file_list) ) {
+	if ( !nuIsArrayAssociative($file_list) ) {
 		return;
 	}
 	
@@ -174,19 +173,4 @@ function _nuEmailHelperAttach(&$mail, $file_list = array() ) {
 	}
 }
 
-function _nuEmailHelperClean($file_list = array() ) {
-	if ( !is_array($file_list) ) {
-			return;
-	}
-	if ( !_is_my_array_associative($file_list) ) {
-			return;
-	}
-	foreach($file_list as $filename=>$filesource) {
-		@unlink($filesource);
-	}
-}
-
-function _is_my_array_associative($arr) {
-	return array_key_exists('0',$arr) ? false : true;
-}
 ?>

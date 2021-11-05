@@ -2059,4 +2059,23 @@ function nuAddToHashCookies($i, $nj, $global = false){
 
 }
 
+function nuDeleteFiles($file_list = array()) {
+	if ( !is_array($file_list) || empty($file_list())) {
+			return;
+	}
+	if ( nuIsArrayAssociative($file_list) ) {
+		foreach($file_list as $filename=>$filesource) {
+			@unlink($filesource);
+		}
+	} else {
+		foreach ($file_list as $file) {
+			@unlink($file);
+		}
+	}
+}
+
+function nuIsArrayAssociative($arr) {
+	return array_key_exists('0',$arr) ? false : true;
+}
+
 ?>
