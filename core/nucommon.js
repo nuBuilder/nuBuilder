@@ -212,6 +212,12 @@ String.prototype.withoutNumbers = function() {
 	return this.replace(/\d+/g,'');
 }
 
+Date.prototype.withoutTime = function () {
+    var d = new Date(this);
+    d.setHours(0, 0, 0, 0);
+    return d;
+}
+
 Date.prototype.addDays = function(days) {
 	var date = new Date(this.valueOf());
 	date.setDate(date.getDate() + days);
@@ -2770,7 +2776,7 @@ function nuSetValue(i, v, method) {
 
 }
 
-function nuCurrentDate() {
+function nuCurrentDate(format) {
 
 	let d = new Date();
 	let
@@ -2778,11 +2784,16 @@ function nuCurrentDate() {
 		mm = nuPad2(d.getMonth() + 1),
 		dd = nuPad2(d.getDate());
 
-	return yyyy + '-' + mm + '-' + dd;
+	let df = yyyy + '-' + mm + '-' + dd;
+	if (format !== undefined) {
+		df = nuFORM.addFormatting(df, 'D|' + format);
+	}
+
+	return df;
 
 };
 
-function nuCurrentDateTime() {
+function nuCurrentDateTime(format) {
 
 	let d = new Date();
 	let
@@ -2793,7 +2804,12 @@ function nuCurrentDateTime() {
 		nn = nuPad2(d.getMinutes()),
 		ss = nuPad2(d.getSeconds());
 
-	return yyyy + '-' + mm + '-' + dd + ' ' + hh + ':' + nn + ':' + ss;
+	let df = yyyy + '-' + mm + '-' + dd + ' ' + hh + ':' + nn + ':' + ss;
+	if (format !== undefined) {
+		df = nuFORM.addFormatting(df, 'D|' + format);
+	}
+
+	return df;
 
 };
 
