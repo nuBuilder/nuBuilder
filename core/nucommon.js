@@ -440,9 +440,9 @@ function nuPopup(f, r, filter){
 	window.nuOPENER.push(new nuOpener('F', f, r, filter));
 
 	var id = window.nuOPENER[window.nuOPENER.length - 1].id;
-	
+
 	if(parent.window==window){
-		window.nuDialog.createDialog(50, 25, 50, 50, '');
+		window.nuDialog.createDialog(50 + window.pageXOffset, 25 + window.pageYOffset, 50, 50, '');
 	}else{
 		window.nuDialog.createDialog(0, 30, 50, 50, '');
 	}
@@ -557,7 +557,13 @@ function nuCreateDialog(t){
 
 		e.setAttribute('id', 'nuDragDialog');
 
-		$('body').append('<div id="nuModal" style="height:' + window.innerHeight + 'px"></div>')
+		let scrollHeight = Math.max(
+			document.body.scrollHeight, document.documentElement.scrollHeight,
+			document.body.offsetHeight, document.documentElement.offsetHeight,
+			document.body.clientHeight, document.documentElement.clientHeight
+		);
+
+		$('body').append('<div id="nuModal" style="height:' + scrollHeight + 'px"></div>')
 		.append(e);
 		
 		var subDir = callerName == 'nuPopup' || callerName == 'nuBuildLookup' ? 'core/' : '';
