@@ -2632,6 +2632,21 @@ function nuRefreshSelectObject(selectId, formId, removeBlank) {
 
 }
 
+function nuSubformRefreshSelectObject(prefix, selectId, formId, removeBlank) {
+
+	if (typeof formId === 'undefined') {
+		var formId = '';
+	}
+
+	nuSetProperty('nurefreshselectobject_prefix',prefix);
+	nuSetProperty('nurefreshselectobject_selectid',selectId);
+	nuSetProperty('nurefreshselectobject_formid',formId);
+	nuSetProperty('nurefreshselectobject_removeblank',removeBlank === true ? '1' : '0');
+
+	nuRunPHPHidden('nurefreshselectobject', 0);
+
+}
+
 function nuRefreshDisplayObject(displayId, formId) {
 
 	if (typeof formId === 'undefined') {
