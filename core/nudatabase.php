@@ -70,7 +70,7 @@ function nuRunQuery($s, $a = array(), $isInsert = false){
 		return $a;
 	}
 
-	//nuLog($s, count($a)> 0 ? $a[0] : '');
+	// nuLog($s, count($a)> 0 ? $a[0] : '');
 	$object = $nuDB->prepare($s);
 
 	try {
@@ -180,6 +180,16 @@ function db_fetch_object($o){
 		return $o->fetch(PDO::FETCH_OBJ);
 	} else {
 		return false;
+	}
+
+}
+
+function db_fetch_all_column($o){
+
+	if (is_object($o)) {
+		return $o->fetchAll(PDO::FETCH_COLUMN);
+	} else {
+		return array();
 	}
 
 }
@@ -369,12 +379,13 @@ function nuDebug($a){
 function nuLog($s1, $s2 = '', $s3 = '') {
 
 	$dataToLog = array(date("Y-m-d H:i:s"), $s1, $s2, $s3);
-	
+
 	$data = implode(" - ", $dataToLog);
 	// $data = print_r($dataToLog, true); 
 
-	file_put_contents('..\nulog.txt', $data.PHP_EOL , FILE_APPEND | LOCK_EX);
-	
+	$dir = dirname(__DIR__, 1) . DIRECTORY_SEPARATOR. 'temp' . DIRECTORY_SEPARATOR;
+	file_put_contents($dir . 'nulog.txt', $data.PHP_EOL , FILE_APPEND | LOCK_EX);
+
 }	
 
 function nuID(){
