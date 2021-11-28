@@ -2620,15 +2620,7 @@ function nuCopyText(i) {
 
 function nuRefreshSelectObject(selectId, formId, removeBlank) {
 
-	if (typeof formId === 'undefined') {
-		var formId = '';
-	}
-
-	nuSetProperty('nurefreshselectobject_selectid',selectId);
-	nuSetProperty('nurefreshselectobject_formid',formId);
-	nuSetProperty('nurefreshselectobject_removeblank',removeBlank === true ? '1' : '0');
-
-	nuRunPHPHidden('nurefreshselectobject', 0);
+	nuSubformRefreshSelectObject('', selectId, formId, removeBlank)
 
 }
 
