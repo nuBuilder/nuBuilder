@@ -2988,6 +2988,14 @@ function nuHideTabByTitle(s) {
 
 }
 
+function nuShowTabByTitle(s, visible) {
+
+	var tabs = JSON.parse(JSON.stringify(nuSERVERRESPONSE)).tabs;
+	var l = tabs.findIndex(data => data.title.replace(/\|/g, "") === s);
+	if (l > -1) nuShow('nuTab' + l, visible);
+
+}
+
 function nuHideTabs(t) {
 
 	for (var i = 0; i < arguments.length; i++) {
