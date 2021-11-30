@@ -678,14 +678,7 @@ function nuContextMenuUpdateLabel(id) {
 
 	if (objLabel.hasClass('nuContentBoxTitle')) return;
 
-	var label = objLabel.html();
-	var lwidth = nuGetWordWidth(label);
-
-	objLabel.css({
-		left: $('#' + id).cssNumber('left') - lwidth - 17,
-		top: $('#' + id).cssNumber('top'),
-		width: Number(lwidth + 12)
-	});
+	nuSetLabelText(id, objLabel.html(), true);
 
 }
 
@@ -709,7 +702,12 @@ function nuContextMenuLabelPromptCallback(value, ok) {
 	if (ok) { 
 
 		let objLabel = $('#' + contextMenuCurrentTarget.id);
-		objLabel.html(value);
+
+		if (contextMenuCurrentTarget.id.startsWith('label_')) {
+			nuSetLabelText(contextMenuCurrentTarget.id.substring(6), value, true);
+		} else {
+			objLabel.html(value);
+		}
 
 		let column = nuFormType() == 'edit' ? 'sob_all_label' : 'sbr_title';
 		column = objLabel.hasClass('nuTab') ? 'syt_title' : column;
