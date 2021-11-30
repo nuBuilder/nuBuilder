@@ -144,6 +144,7 @@ function nuPrintReport($PDF, $LAY, $DATA, $JSON, $isHTML){
 				$label		= str_replace('#month#',		date('m'), $label);
 				$label		= str_replace('#day#',			date('d'), $label);
 				$label		= str_replace('#hour#',			date('h'), $label);
+				$label		= str_replace('#hour24#',		date('H'), $label);
 				$label		= str_replace('#minute#',		date('i'), $label);
 				$label		= str_replace('#second#',		date('s'), $label);
 
