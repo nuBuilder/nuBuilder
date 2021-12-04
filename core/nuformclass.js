@@ -1154,9 +1154,14 @@ function nuSetProperty(f, v, p){
 	}
 }
 
-function nuGetProperty(f){
-	return nuFORM.getProperty(f);
-	if (v === undefined) {
+function nuGetProperty(f, p){
+
+	let v = nuFORM.getProperty(f);
+	
+	if (p !== false && v === undefined) {
 		v = sessionStorage['nuHashGlobal_' + f];
 	}
+	
+	return v;
+
 }
