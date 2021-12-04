@@ -212,6 +212,10 @@ String.prototype.withoutNumbers = function() {
 	return this.replace(/\d+/g,'');
 }
 
+String.prototype.isEmpty = function() {
+	return (this == null || this.length === 0);
+}
+
 Date.prototype.withoutTime = function () {
     var d = new Date(this);
     d.setHours(0, 0, 0, 0);
