@@ -1146,14 +1146,17 @@ function nuSetProperty(f, v, p){
 
 	nuFORM.setProperty(f, v);
 	if (p === true) {
-		// set the hash cookie to persist
+		// set the hash cookie to persist / global scope
 		nuSetProperty('hcname',f);
 		nuSetProperty('hcvalue',v);
 		nuRunPHPHidden('nusethashcookie', 0);
+		sessionStorage['nuHashGlobal_' + f] = v;
 	}
 }
 
-
 function nuGetProperty(f){
 	return nuFORM.getProperty(f);
+	if (v === undefined) {
+		v = sessionStorage['nuHashGlobal_' + f];
+	}
 }
