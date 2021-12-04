@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 04, 2021 at 11:27 AM
+-- Generation Time: Dec 04, 2021 at 04:36 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.8
 
@@ -575,8 +575,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.12.04.01'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.12.04.00');
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.12.04.03'),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.12.04.01');
 
 -- --------------------------------------------------------
 
@@ -866,8 +866,8 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu5bad6cb3599e41f', 'nuselect', 'zzzzsys_select', 'input', 'sse_description', 'Description', 'nu5bad6cb371e2de7', 20, 10, 469, 313, 22, '1', 'left', '3', '0', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 'text', '', NULL, '', '', '', '', '', '', ''),
 ('nu5bad6cb359c1b05', 'nuhome', '', 'run', 'run_sql', 'SQL', 'nu5bad6cb36efb50c', 150, 99, 270, 195, 30, '1', 'center', '0', '0', '0', NULL, NULL, '', '', 'nuselect', '', 'b', '0', 'F', '', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', '', '', NULL, '', '', '', '', '', '', ''),
 ('nu5bad6cb359e7a1a', 'nuselect', 'zzzzsys_select', 'html', 'nusvg', 'Fields and Relationships', 'nu5bad6cb371e2de7', 90, 68, 801, 500, 200, '1', 'left', '0', '0', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', '', '', NULL, '<iframe id=\'sqlframe\' src=\'core/nuselect.php\' style=\'height:460px;width:700px\'></iframe>', '', '', '', '', '', ''),
-('nu5bad6cb35a0a29e', 'nuselect', 'zzzzsys_select', 'input', 'sse_resize', ' ', 'nu5bad6cb371e2de7', 60, 36, 1470, 29, 26, '1', 'center', '0', '0', '1', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 'button', '', NULL, '', '', '', '', '', '', ''),
-('nu5bad6cb35a52325', 'nuselect', 'zzzzsys_select', 'select', 'addtable', 'Add Table', 'nu5bad6cb371e2de7', 50, 38, 1163, 294, 22, '1', 'left', '0', '0', '1', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '0', '0', 'SELECT table_name as a, table_name as b \nFROM INFORMATION_SCHEMA.TABLES \nWHERE table_schema = DATABASE()\nORDER BY table_name', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', '', '', NULL, '', '', '', '', '', '', ''),
+('nu5bad6cb35a0a29e', 'nuselect', 'zzzzsys_select', 'input', 'sse_resize', ' ', 'nu5bad6cb371e2de7', 60, 32, 1470, 29, 26, '1', 'center', '0', '0', '1', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 'button', '', NULL, '', '', '', '', '', '', ''),
+('nu5bad6cb35a52325', 'nuselect', 'zzzzsys_select', 'select', 'addtable', 'Add Table', 'nu5bad6cb371e2de7', 50, 34, 1163, 294, 22, '1', 'left', '0', '0', '1', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '0', '1', 'SELECT table_name as a, table_name as b \nFROM INFORMATION_SCHEMA.TABLES \nWHERE table_schema = DATABASE()\nORDER BY table_name', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', '', '', NULL, '', '', '', '', '', '', ''),
 ('nu5bad6cb35a8885a', 'nuclause', 'zzzzsys_select_clause', 'input', 'ssc_order', 'Order', 'nu5bad6cb37296979', 50, 154, 122, 45, 20, '1', 'right', '0', '0', '1', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '', '0', 'browse|Browse|edit|Edit|browseedit|Browse and Edit|criteria|Criteria or Home|procedure|Procedure|report|Report', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 'number', '', NULL, '', '', '', '', '', '', ''),
 ('nu5bad6cb35ab1f0a', 'nuclause', 'zzzzsys_select_clause', 'select', 'ssc_type', 'Type', 'nu5bad6cb37296979', 10, 58, 122, 100, 20, '1', 'right', '1', '0', '1', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '0', '0', '1|WHERE|\n2|GROUP BY|\n3|ORDER BY|\n4|HAVING\n', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', '', '', NULL, '', '', '', '', '', '', ''),
 ('nu5bad6cb35ad7f0a', 'nuclause', 'zzzzsys_select_clause', 'input', 'ssc_clause', 'Clause', 'nu5bad6cb37296979', 30, 122, 122, 189, 20, '1', 'left', '0', '0', '1', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '0', '0', '10|WHERE|\n20|ORDER BY|\n30|GROUP BY|\n40|HAVING', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 'text', '', NULL, '', '', '', '', '', '', ''),
