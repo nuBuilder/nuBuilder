@@ -230,7 +230,7 @@ function db_field_info($n){
 	$types		= array();
 	$pk			= array();
 
-	$s		 = "DESCRIBE $n";
+	$s		 = "DESCRIBE `$n`";
 	$t		= nuRunQuery($s);
 
 	while($r = db_fetch_row($t)){
@@ -251,7 +251,7 @@ function db_field_info($n){
 function db_field_names($n){
 
 	$a	= array();
-	$s	= "DESCRIBE $n";
+	$s	= "DESCRIBE `$n`";
 	$t	= nuRunQuery($s);
 
 	while($r = db_fetch_row($t)){
@@ -266,7 +266,7 @@ function db_field_names($n){
 function db_field_types($n){
 
 	$a		= array();
-	$s		= "DESCRIBE $n";
+	$s		= "DESCRIBE `$n`";
 	$t		= nuRunQuery($s);
 
 	while($r = db_fetch_row($t)){
@@ -281,7 +281,7 @@ function db_field_types($n){
 function db_primary_key($n){
 
 	$a		= array();
-	$s		= "DESCRIBE $n";
+	$s		= "DESCRIBE `$n`";
 	$t		= nuRunQuery($s);
 
 	while($r = db_fetch_row($t)){
