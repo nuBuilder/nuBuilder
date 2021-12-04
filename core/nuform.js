@@ -29,7 +29,8 @@ function nuInitJSOptions() {
 			'nuShowBrowserTabTitle'				: true,			// Show the Form Title in the Browser Tab
 			'nuDebugMode'						: true,			// Debug Mode
 			'nuBrowserTabTitlePrefix'			: 'nuBuilder',	// Prefix in the Browser Tab
-			'nuCalendarStartOfWeek'				: 'Sunday'		// nuCalendar: Start of Week: Sunday (default) or Monday
+			'nuCalendarStartOfWeek'				: 'Sunday',		// nuCalendar: Start of Week: Sunday (default) or Monday
+			'nuSelect2Theme'					: 'default'		// select2 theme (default, classic) Default: default
 			};
 
 	}
@@ -1545,17 +1546,19 @@ function nuSELECT(w, i, l, p, prop){
 		let select2Id = $('#' + id).attr('id') + "select2";
 		$('#' + id).select2({
 			dropdownParent: $('#nuRECORD'),
-			theme: "default " + select2Id
+			selectionCssClass : select2Id,
+			theme: nuUXOptions["nuSelect2Theme"] ? nuUXOptions["nuSelect2Theme"] : 'default'
 		});
-		$('.' + select2Id).css({
+
+		$('.' + select2Id).parent().parent().css({
 			position: 'absolute',
 			width: Number(prop.objects[i].width),
 			top: Number(prop.objects[i].top),
 			left: Number(prop.objects[i].left)
 		}).attr('id', select2Id);
+
 		nuAddDataTab(select2Id, prop.objects[i].tab, p);
 	};
-
 
 	$('#' + id).css({'top'		: Number(prop.objects[i].top),
 					'left'		: Number(prop.objects[i].left),
@@ -2152,10 +2155,11 @@ function nuAddSubformRow(t, e){
 
 					$(this).select2({
 						dropdownParent: $('#nuRECORD'),
-						theme: "default " + select2Id
+						selectionCssClass : select2Id,
+						theme: nuUXOptions["nuSelect2Theme"] ? nuUXOptions["nuSelect2Theme"] : 'default'
 					});
 
-					$('.' + select2Id).css({
+					$('.' + select2Id).parent().parent().css({
 						position: 'absolute',
 						width: objSelect2.cssNumber('width'),
 						top: objSelect2.cssNumber('top'),

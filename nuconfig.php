@@ -74,6 +74,7 @@ $nuJSOptions = "
 	nuUXOptions['nuBrowserTabTitlePrefix']			= 'nuBuilder';	// Prefix in the Browser Tab
 	nuUXOptions['nuMobileView']						= true;			// Optimise view for mobile devices
 	nuUXOptions['nuCalendarStartOfWeek']			= 'Sunday';		// nuCalendar: Start of Week: Sunday (default) or Monday
+	nuUXOptions['nuSelect2Theme']					= 'default';	// select2 theme (default, classic) Default: default
 
 	window.nuAdminButtons = [];
 	nuAdminButtons['nuDebug']						= false;

@@ -276,6 +276,11 @@ window.nuHASH				= [];
 
 	}
 
+	// focus select2 search field when clicked
+	$(document).on('select2:open', () => {
+		document.querySelector('.select2-search__field').focus();
+	});
+
 	</script>
 	<script id='nuheader'>
 		$nuHeader

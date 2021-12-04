@@ -1205,3 +1205,7 @@
  .nuTabAccessHiddenUser {
 	background-color: #f9f1f1
 }
+
+ .select2-results__option:empty {
+	height: 10px;
+}
