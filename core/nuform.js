@@ -138,6 +138,7 @@ function nuBuildForm(f){
 	b.browse_table_id				= f.browse_table_id;
 	b.browse_filtered_rows			= f.browse_height;
 	b.browse_title_multiline		= f.browse_title_multiline;
+	b.browse_autoresize_columns		= f.browse_autoresize_columns;	
 	b.pages							= f.pages;
 	b.form_code						= f.form_code;
 	b.form_description				= f.form_description;
@@ -241,9 +242,14 @@ function nuBuildForm(f){
 
 	if(nuFormType() == 'edit'){
 		window.nuRESPONSIVE.getStartPositions();
-	}else{	
-		if (nuUXOptions["nuAutosizeBrowseColumns"] || nuDocumentID !== parent.nuDocumentID) {
-			nuResizeBrowseColumns();
+	}else{
+
+		if (b.browse_autoresize_columns !== '0' || nuDocumentID !== parent.nuDocumentID) {
+
+			if (nuUXOptions["nuAutosizeBrowseColumns"] || b.browse_autoresize_columns === '1' || nuDocumentID !== parent.nuDocumentID) {
+				nuResizeBrowseColumns();
+			}
+
 		}
 	}
 
@@ -1543,7 +1549,7 @@ function nuSELECT(w, i, l, p, prop){
 
 	if (prop.objects[i].select2 == 1) {
 		$('#' + id).attr('date-nu-select2', 1);
-		let select2Id = $('#' + id).attr('id') + "select2";
+		let select2Id = $('#' + id).attr('id') + "_select2";
 		$('#' + id).select2({
 			dropdownParent: $('#nuRECORD'),
 			selectionCssClass : select2Id,
@@ -2146,7 +2152,7 @@ function nuAddSubformRow(t, e){
 	if (objSelect.length > 0) {
 		objSelect.each(function(){
 
-			var select2Id = $(this).attr("data-select2-id") + 'select2';
+			var select2Id = $(this).attr("data-select2-id") + '_select2';
 
 			if(select2Id) {
 

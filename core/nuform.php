@@ -537,24 +537,25 @@ function nuGetEditForm($F, $R){
 	$f = new stdClass();
 	if ($F == '') return $f;
 
-	$r							= nuFormProperties($F);
-	$SQL						= new nuSqlString(nuReplaceHashVariables($r->sfo_browse_sql));
+	$r								= nuFormProperties($F);
+	$SQL							= new nuSqlString(nuReplaceHashVariables($r->sfo_browse_sql));
 
-	$f->id						= $r->zzzzsys_form_id;
-	$f->form_code				= $r->sfo_code;
-	$f->form_description		= $r->sfo_description;
-	$f->form_type				= $r->sfo_type;
-	$f->browse_title_multiline	= isset($r->sfo_browse_title_multiline) ? $r->sfo_browse_title_multiline : false;
-	$f->table					= nuReplaceHashVariables($r->sfo_table);
-	$f->primary_key				= $r->sfo_primary_key;
-	$f->redirect_form_id		= $r->sfo_browse_redirect_form_id	== '' ? $r->zzzzsys_form_id : $r->sfo_browse_redirect_form_id;
-	$f->redirect_other_form_id	= $r->sfo_browse_redirect_form_id	== '' ? '' : $r->sfo_browse_redirect_form_id;	
-	$f->order					= $SQL->orderBy;
-	$f->where					= $SQL->where;
-	$f->from					= $SQL->from;
-	$f->javascript				= $r->sfo_javascript;
-	$f->javascript_edit			= isset($r->sfo_edit_javascript) ? $r->sfo_edit_javascript : '';
-	$f->javascript_browse		= isset($r->sfo_browse_javascript) ? $r->sfo_browse_javascript : '';
+	$f->id							= $r->zzzzsys_form_id;
+	$f->form_code					= $r->sfo_code;
+	$f->form_description			= $r->sfo_description;
+	$f->form_type					= $r->sfo_type;
+	$f->browse_title_multiline		= isset($r->sfo_browse_title_multiline) ? $r->sfo_browse_title_multiline : false;
+	$f->browse_autoresize_columns	= isset($r->sfo_browse_autoresize_columns) ? $r->sfo_browse_autoresize_columns : null;
+	$f->table						= nuReplaceHashVariables($r->sfo_table);
+	$f->primary_key					= $r->sfo_primary_key;
+	$f->redirect_form_id			= $r->sfo_browse_redirect_form_id	== '' ? $r->zzzzsys_form_id : $r->sfo_browse_redirect_form_id;
+	$f->redirect_other_form_id		= $r->sfo_browse_redirect_form_id	== '' ? '' : $r->sfo_browse_redirect_form_id;	
+	$f->order						= $SQL->orderBy;
+	$f->where						= $SQL->where;
+	$f->from						= $SQL->from;
+	$f->javascript					= $r->sfo_javascript;
+	$f->javascript_edit				= isset($r->sfo_edit_javascript) ? $r->sfo_edit_javascript : '';
+	$f->javascript_browse			= isset($r->sfo_browse_javascript) ? $r->sfo_browse_javascript : '';
 
 	if(intval($r->sfo_browse_row_height) == 0){
 		$f->row_height	= 18;
