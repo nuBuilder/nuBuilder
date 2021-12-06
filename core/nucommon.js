@@ -832,14 +832,26 @@ function nuTranslate(s){
 	if (typeof s === 'undefined' || s === '' || s === null) {
 		return '';
 	}
-	
+
 	if (s.charAt(0) == '|') return s.substring(1);
-	
-	var l = nuLANGUAGE.find(elem => elem.english === s);
+
+	let l = nuLANGUAGE.find(elem => elem.english === s);
 	return !l ? s : l.translation;
 
 }
 
+function nuTranslateToEnglish(s){
+
+	if (typeof s === 'undefined' || s === '' || s === null) {
+		return '';
+	}
+
+	if (s.charAt(0) == '|') return s.substring(1);
+
+	let l = nuLANGUAGE.find(elem => elem.translation === s);
+	return !l ? s : l.english;
+
+}
 
 function nuIsOpener() {
 	
@@ -948,7 +960,7 @@ function nuObjectComponents(i) {
 
 	var o	= [i, 'label_' + i];	
 	if ($('#'+ i).attr('data-nu-type') == 'lookup') o.push(i + 'code', i + 'button', i + 'description')
-	if ($('#'+ i).hasClass('select2-hidden-accessible')) o.push(i + 'select2');
+	if ($('#'+ i).hasClass('select2-hidden-accessible')) o.push(i + '_select2');
 
 	return o;
 
