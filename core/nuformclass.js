@@ -915,13 +915,11 @@ class nuFormObject {
 		
 		if(f[0] == 'N'){													//-- number '456.789','N|€ 1,000.00'
 
-			//var F		= nuNumberFormat(f);
 			var CF		= nuGetNumberFormat(f);								//-- CF[0]=sign, CF[1]=separator, CF[2]=decimal, CF[3]=places
 			v			= Number(v.replace(CF.decimal, '.')).toFixed(CF[3]);
 			
 			if(isNaN(Number(v))){return '';}
 			var splitNumber		= v.split('.');
-		//	return String(CF[0] + ' ' + nuAddThousandSpaces(splitNumber[0], CF[1]) + CF[2] + splitNumber[1]).trim();
 			var decimals = splitNumber.length == 1 ? '' : splitNumber[1];
 			return String(CF[0] + ' ' + nuAddThousandSpaces(splitNumber[0], CF[1]) + CF[2] + decimals).trim();		
 			
@@ -968,8 +966,8 @@ class nuFormObject {
 			
 			s			= s.replaceAll('yyyy',		yea);
 			s			= s.replaceAll('yy',		String(yea).substr(2));
-			s			= s.replaceAll('mmmm',		FMT[mth]['mmmm']);
-			s			= s.replaceAll('mmm',		FMT[mth]['mmm']);
+			s			= s.replaceAll('mmmm',		nuTranslate(FMT[mth]['mmmm']));
+			s			= s.replaceAll('mmm',		nuTranslate(FMT[mth]['mmm']));
 			s			= s.replaceAll('mm',		FMT[mth]['mm']);
 			s			= s.replaceAll('dddd',		FMT[wee]['dddd']);
 			s			= s.replaceAll('ddd',		FMT[wee]['ddd']);
@@ -1040,16 +1038,16 @@ class nuFormObject {
 			var o 		= Date().toString().split(' ', 6)								//-- Tue Sep 07 2004 11:11:12 GMT+0930 (Cen. Australia Standard Time)
 			var time	= String(o[4]).split(':');
 			
-			var d		= {'y' : o[3], 'm' : FMT[o[1]].jsmonth, 'd' : o[2], 'h' : time[0], 'n' : time[1], 's' : time[2]};	//-- today's date
+			var d		= {'y' : o[3], 'm' : FMT[nuTranslateToEnglish(o[1])].jsmonth, 'd' : o[2], 'h' : time[0], 'n' : time[1], 's' : time[2]};	//-- today's date time[2]};	//-- today's date
 			for(var i = 0 ; i < f.length ; i++){
 				
 				var fmt	= String(f[i]);
 				var l	= fmt[0];
 				
-				if(l == 'm' && FMT[v[i]] !== undefined){
-					d.m		= FMT[v[i]]['mm'];					//-- javascript month
+				if(l == 'm' && FMT[nuTranslateToEnglish(v[i])] !== undefined){
+					d.m		= FMT[nuTranslateToEnglish(v[i])]['mm'];					//-- javascript month
 				}
-				
+
 				if(fmt == 'dd'){
 					d.d		= v[i];
 				}
