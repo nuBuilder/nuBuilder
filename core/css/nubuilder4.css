@@ -619,13 +619,14 @@
 	color:#E2EAFF
 }
  .nuQuickButton {
-    background-color: #fafafa;
+    background-color: #f7f7f7;
     color: black;
-    border-color: rgb(255 255 255);
+    border-color: #ffffff;
+	border-style: solid;
     text-shadow: none;
     border-width: thin;
 	padding-left:10px;
-	border-radius:3px
+	border-radius:9px
 }
 
  .nuQuickButton:hover {
