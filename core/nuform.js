@@ -1128,12 +1128,28 @@ function nuINPUT(w, i, l, p, prop){
 			var len = getDBColumnLengh(w, field);
 			if (len !== 0) $('#' + id).attr('maxlength', len);
 
-			// nuSetPlaceholder(id, len + '');
 		}
 
 		nuSetAccess(ID, obj.read);
-
 		nuAddStyle(id, prop.objects[i]);
+
+		if((objectType == 'input' || objectType == 'textarea') && prop.objects[i].attributes !== undefined && prop.objects[i].attributes !== null && prop.objects[i].attributes !== '') {
+
+			prop.objects[i].attributes .trim().replace(/\"/g,"").replaceAll(' ','').split(",").forEach(attr => {
+
+				let arr = attr.split('=');
+				if (arr.length == 2) {
+					var [key,value] = arr;
+				} else if (arr.length == 1) {
+					var key = attr;
+					var value = '';
+				}
+
+				if (arr.length == 1 || arr.length == 2) $('#' + id)[0].setAttribute(key,value);
+
+			})
+
+		}
 
 		return Number(obj.width) + (obj.read == 2 ? -2 : 4);
 
