@@ -1133,7 +1133,7 @@ function nuINPUT(w, i, l, p, prop){
 		nuSetAccess(ID, obj.read);
 		nuAddStyle(id, prop.objects[i]);
 
-		if((objectType == 'input' || objectType == 'textarea') && prop.objects[i].attributes !== undefined && prop.objects[i].attributes !== null && prop.objects[i].attributes !== '') {
+		if(prop.objects[i].attributes !== undefined && prop.objects[i].attributes !== null && prop.objects[i].attributes !== '') {
 
 			prop.objects[i].attributes .trim().replace(/\"/g,"").split(",").forEach(attr => {
 

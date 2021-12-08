@@ -412,7 +412,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 			$o->style_type				= isset($r->sob_all_style_type) ? $r->sob_all_style_type : '';
 			$o->style					= isset($r->sob_all_style) ? $r->sob_all_style : '';
 
-			if (($r->sob_all_type == 'input' || $r->sob_all_type == 'textarea') && $r->sob_input_attribute != ''){
+			if ($r->sob_input_attribute != ''){
 				$o->attributes	= $r->sob_input_attribute;
 			}
 
