@@ -651,6 +651,8 @@ function nuBuildEditObjects(f, p, o, prop){
 			}else if(t == 'word'){
 				l = l + nuWORD(f, i, l, p, prop);
 			}
+			
+			nuAddAttributes(p + prop.objects[i].id, prop.objects[i].attributes);
 
 			l	= l + 2;
 
@@ -1133,25 +1135,29 @@ function nuINPUT(w, i, l, p, prop){
 		nuSetAccess(ID, obj.read);
 		nuAddStyle(id, prop.objects[i]);
 
-		if(prop.objects[i].attributes !== undefined && prop.objects[i].attributes !== null && prop.objects[i].attributes !== '') {
-
-			prop.objects[i].attributes .trim().replace(/\"/g,"").split(",").forEach(attr => {
-
-				let arr = attr.split('=');
-				if (arr.length == 2) {
-					var [key,value] = arr;
-				} else if (arr.length == 1) {
-					var key = attr;
-					var value = '';
-				}
-
-				if (arr.length == 1 || arr.length == 2) $('#' + id)[0].setAttribute(key.trim(),value);
-
-			})
-
-		}
-
 		return Number(obj.width) + (obj.read == 2 ? -2 : 4);
+
+	}
+
+}
+
+function nuAddAttributes(id, attr) {
+
+	if(attr !== undefined && attr !== null && attr !== '') {
+
+		attr.trim().replace(/\"/g,"").split(",").forEach(attr => {
+
+			let arr = attr.split('=');
+			if (arr.length == 2) {
+				var [key,value] = arr;
+			} else if (arr.length == 1) {
+				var key = attr;
+				var value = '';
+			}
+
+			if (arr.length == 1 || arr.length == 2) $('#' + id)[0].setAttribute(key.trim(),value);
+
+		})
 
 	}
 
