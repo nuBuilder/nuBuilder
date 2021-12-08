@@ -1135,7 +1135,7 @@ function nuINPUT(w, i, l, p, prop){
 
 		if((objectType == 'input' || objectType == 'textarea') && prop.objects[i].attributes !== undefined && prop.objects[i].attributes !== null && prop.objects[i].attributes !== '') {
 
-			prop.objects[i].attributes .trim().replace(/\"/g,"").replaceAll(' ','').split(",").forEach(attr => {
+			prop.objects[i].attributes .trim().replace(/\"/g,"").split(",").forEach(attr => {
 
 				let arr = attr.split('=');
 				if (arr.length == 2) {
@@ -1145,7 +1145,7 @@ function nuINPUT(w, i, l, p, prop){
 					var value = '';
 				}
 
-				if (arr.length == 1 || arr.length == 2) $('#' + id)[0].setAttribute(key,value);
+				if (arr.length == 1 || arr.length == 2) $('#' + id)[0].setAttribute(key.trim(),value);
 
 			})
 
