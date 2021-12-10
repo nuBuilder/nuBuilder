@@ -85,15 +85,11 @@ function nuAddAdminButtons() {
 
 		if (c > 0) $('#nuActionHolder').css('height', '50px');
 
-		// if ( window.location === window.parent.location ) {
-
 			var frame = parent.$('#nuDragDialog iframe')
 			frame.css('height', frame.cssNumber("height") + 50);
 
 			var dragDialog = parent.$('#nuDragDialog')
 			dragDialog.css('height', dragDialog.cssNumber("height") + 50);
-
-		// }	
 
 		$("<br>").insertAfter($("#nuAdminPropertiesButton"));
 	}
@@ -373,20 +369,24 @@ var nuContextMenuDefinitionEdit = [
 
 	{
 		html: "",
-		tag: "Top"
+		tag: "Top",
+		action: function (e) { e.stopImmediatePropagation(); }
 	}
 	,
 	{
 		html: "",
-		tag: "Left"
+		tag: "Left",
+		action: function (e) { e.stopImmediatePropagation(); }
 	},
 	{
 		html: "",
-		tag: "Width"
+		tag: "Width",
+		action: function (e) { e.stopImmediatePropagation(); }
 	},
 	{
 		html: "",
-		tag: "Height"
+		tag: "Height",
+		action: function (e) { e.stopImmediatePropagation(); }
 	}
 ];
 
@@ -546,7 +546,7 @@ function nuContextMenuBeforeRender(menu, event) {
 
 	$('#' + id).focus();
 	
-	setTimeout(function(){ $('.ctxmenu').css('top', $('.ctxmenu').cssNumber('top') + 20 + 'px');}, 5);
+//	setTimeout(function(){ $('.ctxmenu').css('top', $('.ctxmenu').cssNumber('top') + 20 + 'px');}, 5);
 
 	return menu;
 
@@ -740,9 +740,12 @@ function contextMenuCurrentTargetUpdateId() {
 		return contextMenuCurrentTarget.id;
 	} else {
 
-		let idNoLabel = $('#' + contextMenuCurrentTarget.id.substring(6));
+		let strIdNoLabel = contextMenuCurrentTarget.id.substring(6);
+		let idNoLabel = $('#' + strIdNoLabel);
 		if (idNoLabel.hasClass('nuHtml') || idNoLabel.hasClass('nuContentBoxContainer')) {
 			return idNoLabel.attr('id');
+		} else if (idNoLabel.hasClass('select2-hidden-accessible')) {
+			return strIdNoLabel + '_select2';
 		}
 
 		let id = t.hasClass('nuSubformTitle') ?  t.attr('data-nu-field') : idNoLabel.attr('data-nu-field');
