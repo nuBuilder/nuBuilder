@@ -294,6 +294,12 @@ jQuery.fn.extend({
 	},
 	nuRemoveFormatting: function() {
 		return nuFORM.removeFormatting($(this).val(), $(this).attr('data-nu-format'));
+	}, 	
+	nuIsVisible: function() {
+		return nuIsVisible(this.attr('id'));
+	},
+	nuIsHidden: function() {
+		return nuIsHidden(this.attr('id'));
 	}
 
 });
@@ -1138,6 +1144,14 @@ function nuHide(i) {
 		}
 	}
 
+}
+
+function nuIsVisible(i) {
+	return $('#' + i).is(':visible');
+}
+
+function nuIsHidden(i) {
+	return !$('#' + i).is(':visible');
 }
 
 function nuAddThousandSpaces(s, c){
