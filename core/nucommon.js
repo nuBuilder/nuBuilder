@@ -310,8 +310,6 @@ jQuery.fn.extend({
 
 });
 
-
-
 function nuGlobalAccess() {
 	return window.global_access;
 }
@@ -1161,11 +1159,13 @@ function nuIsHidden(i) {
 }
 
 function nuIsEnabled(i) {
-	return !$('#' + i).is(':disabled');
+	let o = $('#' + i);
+	return !o.is(':disabled') && !o.hasClass('nuReadonly');
 }
 
 function nuIsDisabled(i) {
-	return $('#' + i).is(':disabled');
+	let o = $('#' + i);
+	return o.is(':disabled') || o.hasClass('nuReadonly');
 }
 
 function nuAddThousandSpaces(s, c){

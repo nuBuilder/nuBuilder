@@ -170,6 +170,8 @@ function nuBuildForm(f){
 	nuAddActionButtons(f);
 	nuRecordProperties(f, '');
 
+	let obj0Id = null;
+
 	if(nuFormType() == 'edit'){
 
 		nuOptions('', f.form_id, 'form', f.global_access);
@@ -179,10 +181,25 @@ function nuBuildForm(f){
 
 		if(f.objects.length > 0){
 
-			if($('#' + f.objects[0].id).attr('data-nu-type') == 'lookup'){
-				var obj0	= $('#' + f.objects[0].id + 'code');
-			}else{
-				var obj0	= $('#' + f.objects[0].id);
+			for (let i = 0; i < f.objects.length; i++) {
+
+				let id = f.objects[i].id;
+				let objId = $('#' + id);
+				if (nuIsEnabled(id) && (nuIsVisible(id) || nuIsVisible(id + 'code')) &&
+					! (objId.hasClass('nuContentBoxContainer') || objId.hasClass('nuImage') || objId.hasClass('nuWord') || objId.hasClass('nuCalculator'))) {
+					obj0Id = f.objects[i].id;
+					break;
+				}
+			}
+
+			if (obj0Id !== null) {
+
+				let obj0Code = $('#' + obj0Id + 'code');
+				if(obj0Code.length !== 0){
+					var obj0 = obj0Code;
+				}else{
+					var obj0 = $('#' + obj0Id);
+				}
 			}
 
 		}
@@ -191,7 +208,7 @@ function nuBuildForm(f){
 
 	nuGetStartingTab();
 
-	if(nuFormType() == 'edit' && nuIsNewRecord() && f.objects.length > 0){
+	if(nuFormType() == 'edit' && nuIsNewRecord() && (obj0Id !== null)){
 		obj0.focus();
 	}
 
