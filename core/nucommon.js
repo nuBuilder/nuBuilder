@@ -2976,9 +2976,11 @@ function nuSetLabelText(i, str, translate) {
 	let label = $('#label_' + i);
 	let lwidth = nuGetWordWidth(str);
 	let left = $('#' + i).cssNumber('left');
+	let top = $('#' + i).cssNumber('top');
 
 	var obj = $('#' + i);
 	label.css({
+		'top'		: Number(top),
 		'left'		: Number(left) - lwidth -17,
 		'width'		: Number(lwidth + 12)
 	}).html(str);
