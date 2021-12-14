@@ -300,6 +300,12 @@ jQuery.fn.extend({
 	},
 	nuIsHidden: function() {
 		return nuIsHidden(this.attr('id'));
+	},
+	nuIsDisabled: function() {
+		return nuIsDisabled(this.attr('id'));
+	},
+	nuIsEnabled: function() {
+		return nuIsEnabled(this.attr('id'));
 	}
 
 });
@@ -1152,6 +1158,14 @@ function nuIsVisible(i) {
 
 function nuIsHidden(i) {
 	return !$('#' + i).is(':visible');
+}
+
+function nuIsEnabled(i) {
+	return !$('#' + i).is(':disabled');
+}
+
+function nuIsDisabled(i) {
+	return $('#' + i).is(':disabled');
 }
 
 function nuAddThousandSpaces(s, c){
