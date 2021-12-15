@@ -95,16 +95,17 @@ function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 	$isDemo = isDemoGlobadmin() && $_SESSION['nubuilder_session_data']['IS_DEMO'];
 	$_SESSION['nubuilder_session_data']['IS_DEMO'] = $isDemo;
 
+	$lang = db_setup()->set_language;
 	$_SESSION['nubuilder_session_data']['isGlobeadmin'] = true;
-	$_SESSION['nubuilder_session_data']['translation'] = nuGetTranslation(db_setup()->set_language);
-	$_SESSION['nubuilder_session_data']['language'] = db_setup()->set_language;
+	$_SESSION['nubuilder_session_data']['translation'] = nuGetTranslation($lang);
+	$_SESSION['nubuilder_session_data']['language'] = $lang;
 	$_SESSION['nubuilder_session_data']['HOME_ID'] = 'nuhome';
 
 	$sessionIds = new stdClass;
 	$sessionIds->zzzzsys_access_id = '';
 	$sessionIds->zzzzsys_user_id = $userId == '' ? $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'] : $userId;
 	$sessionIds->sus_login_name = $loginName;
-	$sessionIds->language = db_setup()->set_language;
+	$sessionIds->language = $lang;
 	$sessionIds->sus_name =  $userId == '' ? '' : $userName;
 	$sessionIds->sus_position =  '';
 	$sessionIds->sus_department =  '';
