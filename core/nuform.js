@@ -2807,11 +2807,14 @@ function nuGetOptionsList(f, t, p, a, type){
 	if(list.length == 0){return;}
 
 	var id		= 'nuOptionsListBox';
-	var div		= document.createElement('div');
 
-	div.setAttribute('id', id);
-
-	$('body').append(div);
+	if ($('#' + id).length === 0) {
+		var div		= document.createElement('div');
+		div.setAttribute('id', id);
+		$('body').append(div);
+	} else {
+		$('#nuOptionsListBox').empty();
+	}
 
 	$('#' + id)
 	.css({'top'		: 0,
