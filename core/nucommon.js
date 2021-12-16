@@ -706,16 +706,33 @@ function nuBindCtrlEvents(){
 		if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) { // exclude Ctrl + f
 			window.nuNEW = 0;
 		} else {
-			if (e.keyCode == 17) { //Ctrl
+			if (e.keyCode == 17) { 									//-- Ctrl
 				window.nuNEW = 1;
 			}
 
 		}
 
 	}
-	
+
 	$(document).keydown(function(e) {
-		
+
+		if (e.keyCode == 27) {										//-- ESC
+
+			if (nuIsVisible('nuMessageDiv')) {
+				$('#nuMessageDiv').remove();
+			} else if (nuIsVisible('nuOptionsListBox')) {
+				$('#nuOptionsListBox').remove();
+			} else if ($('.ctxmenu').is(':visible')) {
+				$('.ctxmenu').remove();	
+			} else if (parent.$('#nuModal').length == 1) {
+				let ae = document.activeElement;
+				$(ae).blur();
+				$(ae).focus();
+				if (nuFormsUnsaved() == 0) nuClosePopup();
+			}
+
+		}
+
 		if (e.ctrlKey && e.shiftKey) {
 
 			window.nuNEW = 0;
