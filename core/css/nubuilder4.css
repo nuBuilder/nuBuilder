@@ -75,16 +75,16 @@
 	padding:0;
 	margin:0;
 	font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
-	border:1px solid rgba(0,0,0,0.2);
-	box-sizing:initial;
-	border-radius:4px
+	border: 1px solid #ddd;
+	border-radius: 0.25rem;
+	box-sizing:initial
 }
  textarea {
 	margin:0;
 	font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
-	border:1px solid rgba(0,0,0,0.2);
-	font-size:13.3333px;
-	border-radius:4px
+	border: 1px solid #ddd;
+	border-radius: 0.25rem;
+	font-size:13.3333px
 }
  body {
 	background-color:#fdfdfd;
@@ -95,9 +95,9 @@
 	font-size:13px
 }
  input {
-	border:1px solid rgba(0,0,0,0.2);
-	padding:0 2px;
-	border-radius:2px
+	border: 1px solid #ddd;
+	border-radius: 0.25rem;
+	padding:0 2px
 }
  button {
 	border-radius:4px 
@@ -571,7 +571,7 @@
 	height:40px;
 	padding:0 6px;
 	text-shadow:0 1px 2px rgba(0,0,0,0.25);
-	border-color:#2a8bcc;
+	border-color: #0b456c;
 	border-width:0 0 1px
 }
  .nuButton:hover {
@@ -619,12 +619,12 @@
 	color:#E2EAFF
 }
  .nuQuickButton {
-    background-color: #f7f7f7;
-    color: black;
-    border-color: #ffffff;
+	background-color: #f7f7f7;
+	color: black;
+	border-color: #ffffff;
 	border-style: solid;
-    text-shadow: none;
-    border-width: thin;
+	text-shadow: none;
+	border-width: thin;
 	padding-left:10px;
 	border-radius:9px
 }
@@ -654,8 +654,8 @@
 	color:white 
 }
  .nuSaveButtonEdited {
-	background-color:red;
-	border-color:#CC2A2A
+	background-color: #f44336;
+	border-color: #dc3545
 }
 
 .nuSaveButton {}
@@ -1140,7 +1140,7 @@
 	top:0px;
 	left:0px;
 	position:fixed;
-	z-index:4;  
+	z-index:4;
 }
 
  #nuprompt{
