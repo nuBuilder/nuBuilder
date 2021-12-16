@@ -247,7 +247,7 @@
 	border:none;
 	display:block;
 	height:1px;
-	margin:.5rem 0;
+	margin:.5rem .4rem 0;
 	padding:0 0 1px 1px;
 	background-color:#ccc
 }
@@ -1083,6 +1083,7 @@
 	position:relative
 }
  span.nuActionButton {
+	border-radius: 3px;
 	margin:5px 0 0
 }
  .nuPortraitTab {

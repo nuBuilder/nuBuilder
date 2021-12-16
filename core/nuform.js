@@ -1002,7 +1002,11 @@ function nuINPUT(w, i, l, p, prop){
 	if(w.objects[i].input == 'checkbox'){
 
 		document.getElementById(id).checked	= (w.objects[i].value == '1');
-		
+
+		if(obj.parent_type == 'g'){
+			$('#' + id).css('margin-top', '1px');
+		}
+
 	}
 
 
@@ -2955,7 +2959,7 @@ function nuBuildOptionsList(l, p, type){												//-- loop through adding opt
 	});
 
 	$('.nuOptionsItem').css({'width' : width - 53, 'padding' : '0px 0px 0px 3px'});
-	$('.nuOptionsItem-divider').css({'width' : 35 + width - reduce, 'left' : 0});
+	$('.nuOptionsItem-divider').css({'width' : 35 + width - reduce - 7, 'left' : 0});
 
 }
 
