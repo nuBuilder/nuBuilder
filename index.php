@@ -155,7 +155,6 @@ function nuLoginRequest(u, p){
 			if(nuDisplayError(data)){
 				if(data.log_again == 1){location.reload();}
 			} else {
-				window.nuFORM.addBreadcrumb();
 				nuForm(data.form_id, data.record_id, data.filter, data.search);
 			}
 		},
