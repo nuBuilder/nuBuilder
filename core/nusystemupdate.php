@@ -67,11 +67,11 @@ nuPrintLastUpdateMessage($i, 'You will need to log in again for the changes to t
 nuMigrateSQL();
 
 function nuPrintUpdateMessage($i, $msg) {
-	print '<br>' . $i . '. <span style="font-family:Helvetica;padding:10px;">' . nuTranslate($msg) . '<br></span>';
+	print '<br>' . $i . '. <span style="font-family:Helvetica;padding:10px;">' . $msg . '<br></span>';
 }
 
 function nuPrintLastUpdateMessage($i, $msg) {
-	print '<br>' . $i . '. <span style="font-family:Helvetica;font-style:italic;font-size:20px;font-weight:bold;padding:10px">' . nuTranslate($msg) . '</span><br>';
+	print '<br>' . $i . '. <span style="font-family:Helvetica;font-style:italic;font-size:20px;font-weight:bold;padding:10px">' . $msg . '</span><br>';
 }
 
 ?>

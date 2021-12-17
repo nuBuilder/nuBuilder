@@ -221,6 +221,8 @@ function nuAlterSystemTables(){
 
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_select` ADD `sse_code` VARCHAR(50) NULL DEFAULT NULL AFTER `zzzzsys_select_id`;");
 
+	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_debug` ADD `deb_user_id` VARCHAR(25) NULL DEFAULT NULL AFTER `deb_added`;");
+
 	$setupColumns = db_field_names('zzzzsys_setup');
 	if(array_search('set_languages_included', $setupColumns) == false){
 		nuRunQueryNoDebug("ALTER TABLE `zzzzsys_setup` ADD `set_languages_included` VARCHAR(1000) NULL DEFAULT NULL AFTER `set_language`;");
@@ -339,7 +341,7 @@ function nuAppendToSystemTables(){
 		dropObject('sys_zzzzsys_object_list', 'VIEW'); 
 
 		// $s		= "UPDATE zzzzsys_setup SET set_denied = '1'";
-		nuRunQuery($s);
+		// nuRunQuery($s);
 			
 	}catch (Throwable $e) {
 		nuInstallException($e);
@@ -434,12 +436,15 @@ function nuImportLanguageFiles() {
 	$l = nuGetIncludedLanguages();
 	try{
 		for($i = 0; $i < count($l); $i++) {
-			$file = dirname(__FILE__). '/languages/'. $l[$i].'.sql';
-			$sql = file_get_contents($file);
-			if ($sql) {
-				nuRunQuery($sql);
-			} else {
-				throw new nuInstallException("Error opening the file: $file");
+			
+			if (trim($l[$i]) != '') {
+				$file = dirname(__FILE__). '/languages/'. $l[$i].'.sql';
+				$sql = file_get_contents($file);
+				if ($sql) {
+					nuRunQuery($sql);
+				} else {
+					throw new nuInstallException("Error opening the file: $file");
+				}
 			}
 		}
 	} catch (Throwable $e) {

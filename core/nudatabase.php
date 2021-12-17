@@ -326,10 +326,20 @@ function nuDebugResult($t){
 	}
 
 	$i		= nuID();
+
+	$j = nuGetJSONData('clientTableSchema');
+	if (! (is_null($j) || $j == '')) {
+		if (in_array('deb_user_id',$j['zzzzsys_debug']['names'])) {
+			$s		= "INSERT INTO zzzzsys_debug (zzzzsys_debug_id, deb_message, deb_added, deb_user_id) VALUES (? , ?, ?, ?)";	
+			nuRunQuery($s, array($i, $t, time(), nuHash()['USER_ID']));
+			return $i;
+		}
+	}
+
 	$s		= "INSERT INTO zzzzsys_debug (zzzzsys_debug_id, deb_message, deb_added) VALUES (? , ?, ?)";
 
 	nuRunQuery($s, array($i, $t, time()));
-	
+
 	return $i;
 }
 
