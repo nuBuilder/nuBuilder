@@ -2646,16 +2646,7 @@ function nuOptions(p, f, t, access){
 				$('#' + id)
 				.attr('title', 'Options')
 				.attr('onclick', 'nuGetOptionsList("' + f + '", this, "' + p + '", "' + access + '", "' + t + '")')
-				.css({'top'			: 4, 
-				'left'				: 2, 
-				'position'			: 'relative', 
-				'z-index'			: 1, 
-				'width'				: 15, 
-				'height'			: 15, 
-				'font-size'			: 20,
-				'text-align'		: 'center',
-				'border-style'		: 'none'})
-				.addClass('nuIcon fa fa-ellipsis-v')
+				.addClass('nuIcon fa fa-ellipsis-v nuOptionsSubform')
 				.hover(function(){
 					$( this ).css('color', 'red');
 				}, function(){
@@ -2672,15 +2663,7 @@ function nuOptions(p, f, t, access){
 			$('#' + id)
 			.attr('title', 'Options')
 			.attr('onclick', 'nuGetOptionsList("' + f + '", this, "' + p + '", "' + access + '", "' + t + '")')
-			.css({'top'			: 5, 
-			'right'				: 5, 
-			'width'				: 15, 
-			'height'			: 15, 
-			'font-size'			: 20,
-			'padding-right'		: 10,
-			'text-align'		: 'right',
-			'border-style'		: 'none'})
-			.addClass('nuIcon fa fa-ellipsis-v')
+			.addClass('nuIcon fa fa-ellipsis-v nuOptions')
 			.hover(function(){
 				$( this ).css('color', 'red');
 			}, function(){

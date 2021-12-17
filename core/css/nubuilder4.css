@@ -217,6 +217,30 @@
 	display:inline-block;
 	font-size:12px
 }
+ .nuOptions {
+	border-style: none;
+	font-size: 20px!important;
+	height: 15px;
+	padding-right: 10px;
+	right: 5px;
+	text-align: right;
+	top: 5px;
+	width: 15px
+ }
+ .nuOptionsSubform {
+	border-style: none;
+	font-size: 20px!important;
+	height: 15px;
+	left: 2px;
+	padding-right: 10px;
+	position: : relative;
+	right: 5px;
+	text-align: center;
+	top: 4px;
+	width: 15px;
+	z-index : 1
+ }
+  
  .nuOptionsBox {
 	background-color:orange;
 	box-shadow:5px 5px 5px 0 rgba(150,147,150,1);
@@ -356,7 +380,7 @@
 	color:#eeeded
 }
  .nuIcon {
-	color:#606060;
+	color:white;
 	width:12px;
 	height:12px
 }
