@@ -43,6 +43,12 @@ var promot;
 
 function nuBuildForm(f){
 
+	window.nuOnSetSelect2Options = null;
+
+	if(f.record_id != '-2'){
+		nuAddJavascript(f.javascript_bc);
+	}
+
 	$('#nubody').off('.nuresizecolumn')
 				.css('transform', 'scale(1)');
 	$('html,body').scrollTop(0).scrollLeft(0);
@@ -83,7 +89,7 @@ function nuBuildForm(f){
 	window.nuOnSearchAction		= null;
 	window.nuOnClone			= null;
 	window.nuOnEditorLoad		= null;
-	window.nuOnBeforeGetBreadcrumb = null;	
+	window.nuOnBeforeGetBreadcrumb = null;
 	window.nuOnSetSaved			= null;
 	window.nuOnTabSelected		= null;
 	window.nuOnSelectTab		= null;
@@ -215,8 +221,9 @@ function nuBuildForm(f){
 	if(f.record_id == '-2'){			// Arrange Objects
 		nuCreateDragOptionsBox(f);
 	}else{
-		nuAddJavascript(f);
+		nuAddJavascript(f.javascript);
 	}
+
 	nuDragTitleEvents();
 
 	if(window.nuLoginH != ''){
@@ -4093,13 +4100,13 @@ function nuFormsUnsaved() {
 
 }
 
-function nuAddJavascript(o){
+function nuAddJavascript(js){
 
 	var nuLoadEdit		= null;
 	var nuLoadBrowse	= null;
 
 	var s				= document.createElement('script');
-	s.innerHTML			= "\n\n" + o.javascript + "\n\n";
+	s.innerHTML			= "\n\n" + js + "\n\n";
 
 	$('body').append(s);
 

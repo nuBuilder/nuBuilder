@@ -128,6 +128,7 @@
 		$f->forms[0]->token_validity_time_2fa	= $_SESSION['nubuilder_session_data']['2FA_TOKEN_VALIDITY_TIME'];
 		$f->forms[0]->form_access				= $GLOBALS['nuSetup']->set_denied;
 		$f->forms[0]->javascript				= nuObjKey($GLOBALS,'EXTRAJS');
+		$f->forms[0]->javascript_bc				= nuObjKey($GLOBALS,'EXTRAJS_BC');
 		$f->forms[0]->target					= nuObjKey($P,'target');
 		$b										= nuButtons($F, $P);
 

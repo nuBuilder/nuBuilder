@@ -30,6 +30,8 @@ function nuBeforeEdit($FID, $RID){
 	$r						= nuFormProperties($FID);
 
 	$GLOBALS['EXTRAJS']		= '';
+	$GLOBALS['EXTRAJS_BC']		= '';
+
 	$ct						= $_POST['nuSTATE']['call_type'];
 
 	if($ct == 'getreport' and $r == ''){return;}
@@ -1654,12 +1656,16 @@ function nuAddPrintButtons($f, $t, $a){
 
 }
 
+function nuAddJavascript($js, $bc = false){
 
-function nuAddJavascript($js){
-	
-	if (isset($GLOBALS['EXTRAJS'])) {
+	if ($bc == true) {
+		if (isset($GLOBALS['EXTRAJS_BC'])) {
+			$GLOBALS['EXTRAJS_BC'] = $GLOBALS['EXTRAJS_BC'] . "\n\n" . $js;
+		}
+	} else if (isset($GLOBALS['EXTRAJS'])) {
 		$GLOBALS['EXTRAJS'] = $GLOBALS['EXTRAJS'] . "\n\n" . $js;
 	}
+
 }
 
 function nuPreloadImages($a){
