@@ -1606,12 +1606,25 @@ function nuSELECT(w, i, l, p, prop){
 
 	if (prop.objects[i].select2 == 1) {
 		$('#' + id).attr('date-nu-select2', 1);
+
 		let select2Id = $('#' + id).attr('id') + "_select2";
-		$('#' + id).select2({
+
+		var select2OptionsDefault = {
 			dropdownParent: $('#nuRECORD'),
 			selectionCssClass : select2Id,
 			theme: nuUXOptions["nuSelect2Theme"] ? nuUXOptions["nuSelect2Theme"] : 'default'
-		});
+		}
+
+		var objSelect2OptionsDefault = { options: select2OptionsDefault };
+		var select2UserOptions = [];
+
+		if(typeof window['nuOnSetSelect2Options'] === 'function'){
+			select2UserOptions = window.nuOnSetSelect2Options(id, objSelect2OptionsDefault);
+		}
+
+		select2Options = {...objSelect2OptionsDefault.options, ...select2UserOptions};
+
+		$('#' + id).select2(select2Options);
 
 		$('.' + select2Id).parent().parent().css({
 			position: 'absolute',
