@@ -106,15 +106,11 @@ function nuBeforeEdit($FID, $RID){
 		
 	}
 
-	if($RID != ''){
+	$p = nuProcedure('nuBeforeEdit');	
+	if($p != '') { eval($p); }
+	if(count($_POST['nuErrors']) > 0){return;}
 
-		$p = nuProcedure('nuBeforeEdit');	
-		if($p != '') { eval($p); }
-		if(count($_POST['nuErrors']) > 0){return;}
-
-		nuEval($FID . '_BE');
-
-	}
+	nuEval($FID . '_BE');
 
 	$js = $r->sfo_javascript;
 	$jb = isset($r->sfo_browse_javascript) ? $r->sfo_browse_javascript : '';
