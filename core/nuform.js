@@ -658,7 +658,8 @@ function nuBuildEditObjects(f, p, o, prop){
 
 		if(!draggable) {
 
-			var t						= prop.objects[i].type;
+			var obj						= prop.objects[i];
+			var t						= obj.type;
 			f.objects[i].parent_type	= o == '' ? '' : o.subform_type;
 
 			if(t == 'input' || t == 'display' || t == 'lookup' || t == 'textarea' || t == 'calc'){
@@ -681,7 +682,7 @@ function nuBuildEditObjects(f, p, o, prop){
 				l = l + nuWORD(f, i, l, p, prop);
 			}
 			
-			nuAddAttributes(p + prop.objects[i].id, prop.objects[i].attributes);
+			nuAddAttributes(p + obj.id, obj.attributes);
 
 			l	= l + 2;
 
@@ -771,37 +772,38 @@ function nuRecordProperties(w, p, l){
 
 function nuDRAG(w, i, l, p, prop){
 
-	var id				= p + prop.objects[i].id;
-	var ef				= p + 'nuRECORD';
-	var nuObjectType	= p + prop.objects[i].type;
-	var drg				= document.createElement('div');
+	let obj				= prop.objects[i];
+	let id				= p + obj.id;
+	let ef				= p + 'nuRECORD';
+	let nuObjectType	= p + obj.type;
+	let drg				= document.createElement('div');
 	drg.setAttribute('id', id);
 
 	$('#' + ef).append(drg);
 	
-	var objId = $('#' + id);
+	let objId = $('#' + id);
 
-	objId.css({'top'		: Number(prop.objects[i].top),
-				'left'		: Number(prop.objects[i].left),
-				'width'		: Number(prop.objects[i].width),
-				'height'	: Number(prop.objects[i].height),
-				'text-align': prop.objects[i].align,
+	objId.css({'top'		: Number(obj.top),
+				'left'		: Number(obj.left),
+				'width'		: Number(obj.width),
+				'height'	: Number(obj.height),
+				'text-align': obj.align,
 				'position'	: 'absolute',
-				'overflow': 'hidden'
+				'overflow'	: 'hidden'
 	}).addClass('nu_'+ nuObjectType);
 
 	objId.text(id);
 	objId.attr('data-drag',1);
-	objId.attr('data-nu-object-id', prop.objects[i].object_id)
+	objId.attr('data-nu-object-id', obj.object_id)
 
-	if(prop.objects[i].input != 'button' && nuObjectType != 'run' && nuObjectType != 'contentbox' && prop.title !== 'Insert-Snippet'){		//-- Input Object
-		var lab = nuLabel(w, i, p, prop);
+	if(obj.input != 'button' && nuObjectType != 'run' && nuObjectType != 'contentbox' && prop.title !== 'Insert-Snippet'){		//-- Input Object
+		let lab = nuLabel(w, i, p, prop);
 		$(lab).addClass('nuDragLabel').css('visibility','hidden');
 	}
 
-	nuAddDataTab(id, prop.objects[i].tab, p);
+	nuAddDataTab(id, obj.tab, p);
 
-	return Number(prop.objects[i].width);
+	return Number(obj.width);
 
 }
 
@@ -907,8 +909,8 @@ function nuINPUT(w, i, l, p, prop){
 			$('#' + id).addClass('input_' + inputType);
 		}
 
-		if (prop.objects[i].datalist !== null && prop.objects[i].datalist !== '' && typeof prop.objects[i].datalist !== "undefined") {
-			var dl = prop.objects[i].datalist;
+		if (obj.datalist !== null && obj.datalist !== '' && typeof obj.datalist !== "undefined") {
+			var dl = obj.datalist;
 			if (!$.isArray(dl)) dl = JSON.parse(dl);
 			nuAddDatalist(id, dl);
 		}
@@ -1146,7 +1148,7 @@ function nuINPUT(w, i, l, p, prop){
 
 		nuSetAccess(ID, obj.read);
 		
-		nuAddStyle(id, prop.objects[i]);
+		nuAddStyle(id, obj);
 
 		return Number(obj.width) + Number(obj.description_width) + 30;
 
@@ -1169,7 +1171,7 @@ function nuINPUT(w, i, l, p, prop){
 		}
 
 		nuSetAccess(ID, obj.read);
-		nuAddStyle(id, prop.objects[i]);
+		nuAddStyle(id, obj);
 
 		return Number(obj.width) + (obj.read == 2 ? -2 : 4);
 
@@ -1302,16 +1304,17 @@ function nuSetAccess(i, r){
 
 function nuHTML(w, i, l, p, prop, id){
 
-	var id	= id !== undefined ? id : p + prop.objects[i].id;
+	var obj = prop.objects[i];
+	var id	= id !== undefined ? id : p + obj.id;
 	var ef	= p + 'nuRECORD';							//-- Edit Form Id
 	var inp = document.createElement('div');
 
 	inp.setAttribute('id', id);
 	
-	if(prop.objects[i].parent_type == 'g'){
+	if(obj.parent_type == 'g'){
 
-		prop.objects[i].left = l;
-		prop.objects[i].top = 3;
+		obj.left = l;
+		obj.top = 3;
 
 	}else{
 
@@ -1321,41 +1324,43 @@ function nuHTML(w, i, l, p, prop, id){
 
 	$('#' + ef).append(inp);
 
-	nuAddDataTab(id, prop.objects[i].tab, p);
+	nuAddDataTab(id, obj.tab, p);
 	
-	$('#' + id).css({'top'		: Number(prop.objects[i].top),
-					'left'		: Number(prop.objects[i].left),
-					'width'		: Number(prop.objects[i].width),
-					'height'	: Number(prop.objects[i].height),
+	$('#' + id).css({'top'		: Number(obj.top),
+					'left'		: Number(obj.left),
+					'width'		: Number(obj.width),
+					'height'	: Number(obj.height),
 					'position'	: 'absolute'
 	})
 	.addClass('nuHtml').html(w.objects[i].html);
 
-	nuSetAccess(id, prop.objects[i].read);
+	nuSetAccess(id, obj.read);
 
-	nuAddStyle(id, prop.objects[i]);
+	nuAddStyle(id, obj);
 
-	return Number(prop.objects[i].width);
+	return Number(obj.width);
 
 }
 
 function nuEDITOR(w, i, l, p, prop){
 
+	var obj = prop.objects[i];
 	nuINPUT(w, i, l, p, prop);
-	$('#' + prop.objects[i].id).addClass('nuEditor');
-	nuSetAccess(prop.objects[i].id, 2);
+	$('#' + obj.id).addClass('nuEditor');
+	nuSetAccess(obj.id, 2);
 
-	let id = prop.objects[i].id + '_parent_container';
+	let id = obj.id + '_parent_container';
 	nuHTML(w, i, l, p, prop, id);
-	$('#' + id).html('<div id="'+prop.objects[i].id +'_container" class="nuQuiljs"> </div>');
+	$('#' + id).html('<div id="'+obj.id +'_container" class="nuQuiljs"> </div>');
 	
-	nuAddStyle(id, prop.objects[i]);
+	nuAddStyle(id, obj);
 	
 }
 
 function nuCONTENTBOX(w, i, l, p, prop){
 
-	var id	= p + prop.objects[i].id;
+	var obj = prop.objects[i];
+	var id	= p + obj.id;
 	var ef	= p + 'nuRECORD';							//-- Edit Form Id
 	var inp = document.createElement('div');
 
@@ -1363,39 +1368,39 @@ function nuCONTENTBOX(w, i, l, p, prop){
 
 	$('#' + ef).append(inp);
 
-	nuAddDataTab(id, prop.objects[i].tab, p);
+	nuAddDataTab(id, obj.tab, p);
 
-	$('#' + id).css({'top'		: Number(prop.objects[i].top),
-					'left'		: Number(prop.objects[i].left),
+	$('#' + id).css({'top'		: Number(obj.top),
+					'left'		: Number(obj.left),
 					'width'		: 15,
 					'height'	: 15,
 					'position'	: 'absolute'
 	})
 	.addClass('nuContentBoxContainer').html(w.objects[i].html)
 
-	if (nuGlobalAccess()) $('#label_'+ id).attr('ondblclick','nuOptionsListAction("nuobject", "' + prop.objects[i].object_id + '")');
+	if (nuGlobalAccess()) $('#label_'+ id).attr('ondblclick','nuOptionsListAction("nuobject", "' + obj.object_id + '")');
 
-	nuSetAccess(id, prop.objects[i].read);
+	nuSetAccess(id, obj.read);
 
-	nuAddStyle(id, prop.objects[i]);
+	nuAddStyle(id, obj);
 
 	return Number(15);
 
 }
 
-
 function nuIMAGE(w, i, l, p, prop){
 
-	var id	= p + prop.objects[i].id;
+	var obj = prop.objects[i];
+	var id	= p + obj.id;
 	var ef	= p + 'nuRECORD';						//-- Edit Form Id
 	var inp = document.createElement('img');
 
 	inp.setAttribute('id', id);
 
-	if(prop.objects[i].parent_type == 'g'){
+	if(obj.parent_type == 'g'){
 
-		prop.objects[i].left = l;
-		prop.objects[i].top = 3;
+		obj.left = l;
+		obj.top = 3;
 
 	}else{
 
@@ -1405,37 +1410,38 @@ function nuIMAGE(w, i, l, p, prop){
 
 	$('#' + ef).append(inp);
 
-	nuAddDataTab(id, prop.objects[i].tab, p);
+	nuAddDataTab(id, obj.tab, p);
 
-	let obj = $('#' + id);
-	obj.css({'top'		: Number(prop.objects[i].top),
-					'left'		: Number(prop.objects[i].left),
-					'position'	: 'absolute'
+	let objId = $('#' + id);
+	objId.css({'top'	: Number(obj.top),
+			'left'		: Number(obj.left),
+			'position'	: 'absolute'
 	}).addClass('nuImage');
 
-	let width = prop.objects[i].width;
-	let height = prop.objects[i].height;
+	let width = obj.width;
+	let height = obj.height;
 
 	if (height !== "-1" && width !== "-1") { 
-		obj.css('height', Number(height));
-		obj.css('width', Number(width));
+		objId.css('height', Number(height));
+		objId.css('width', Number(width));
 	}
 
-	obj.attr('src', atob(w.objects[i].src));
+	objId.attr('src', atob(w.objects[i].src));
 
-	nuSetAccess(id, prop.objects[i].read);
+	nuSetAccess(id, obj.read);
 
-	nuAddJSObjectEvents(id, prop.objects[i].js);
+	nuAddJSObjectEvents(id, obj.js);
 
-	nuAddStyle(id, prop.objects[i]);
+	nuAddStyle(id, obj);
 
-	return Number(obj.width());
+	return Number(objId.width());
 
 }
 
 function nuWORD(w, i, l, p, prop){
 
-	var id	= p + prop.objects[i].id;
+	var obj = prop.objects[i];
+	var id	= p + obj.id;
 	var ef	= p + 'nuRECORD';							//-- Edit Form Id
 	var inp = document.createElement('div');
 
@@ -1443,54 +1449,55 @@ function nuWORD(w, i, l, p, prop){
 
 	$('#' + ef).append(inp);
 
-	nuAddDataTab(id, prop.objects[i].tab, p);
+	nuAddDataTab(id, obj.tab, p);
 
 	var t = w.objects[i].word;
 	var r = /<n>(.*?)<\/n>/g.exec(t);
 	var t = r == null ? t : r[1];
 
-	var obj = $('#' + id);
+	var objId = $('#' + id);
 
-	obj.css({'top'				: Number(prop.objects[i].top),
-					'left'		: Number(prop.objects[i].left),
-					'width'		: Number(prop.objects[i].width),
-					'height'	: Number(prop.objects[i].height),
-					'position'	: 'absolute',
-					'text-align': prop.objects[i].align
+	objId.css({'top'	: Number(obj.top),
+			'left'		: Number(obj.left),
+			'width'		: Number(obj.width),
+			'height'	: Number(obj.height),
+			'position'	: 'absolute',
+			'text-align': obj.align
 	})
 	.addClass('nuWord')
 	.html(nuTranslate(t));
 	
-	if (nuGlobalAccess()) obj.attr('ondblclick','nuOptionsListAction("nuobject", "' + prop.objects[i].object_id + '")');
+	if (nuGlobalAccess()) objId.attr('ondblclick','nuOptionsListAction("nuobject", "' + obj.object_id + '")');
 
-	if (r !== null) obj.css('font-weight','normal');
+	if (r !== null) objId.css('font-weight','normal');
 
-	nuSetAccess(id, prop.objects[i].read);
+	nuSetAccess(id, obj.read);
 
-	nuAddStyle(id, prop.objects[i]);
+	nuAddStyle(id, obj);
 
-	return Number(prop.objects[i].width);
+	return Number(obj.width);
 
 }
 
 function nuRUN(w, i, l, p, prop){
 
-	var id = p + prop.objects[i].id;
+	var obj = prop.objects[i];
+	var id = p + obj.id;
 	var ef = p + 'nuRECORD';					//-- Edit Form Id
 	var ele = 'button';
 
-	if(prop.objects[i].parent_type == 'g'){
+	if(obj.parent_type == 'g'){
 
-		prop.objects[i].left	= l;
-		prop.objects[i].top		= 3;
+		obj.left	= l;
+		obj.top		= 3;
 		
 	}
 
-	if(prop.objects[i].run_method != 'b'){
+	if(obj.run_method != 'b'){
 
 		ele = 'iframe';
 
-		if(!prop.objects[i].parent_type == 'g'){
+		if(!obj.parent_type == 'g'){
 
 			nuLabel(w, i, p, prop);
 
@@ -1504,83 +1511,82 @@ function nuRUN(w, i, l, p, prop){
 	
 	$('#' + ef).append(inp);
 
-	nuAddDataTab(id, prop.objects[i].tab, p);
+	nuAddDataTab(id, obj.tab, p);
 
-	var O			= prop.objects[i];
-
-	$('#' + id).css({'top'			: Number(O.top),
-					'left'			: Number(O.left),
-					'width'			: Number(O.width),
-					'height'		: Number(O.height),
+	$('#' + id).css({'top'			: Number(obj.top),
+					'left'			: Number(obj.left),
+					'width'			: Number(obj.width),
+					'height'		: Number(obj.height),
 					'position'		: 'absolute',
-					'text-align'	: prop.objects[i].align
+					'text-align'	: obj.align
 	});
 
-	if(O.run_method == 'b'){
+	if(obj.run_method == 'b'){
 
 		var clicker						= '';
 
-		var runTarget = prop.objects[i].run_target;
+		var runTarget = obj.run_target;
 		var runTarget = runTarget == '' || runTarget == null ? '0' : runTarget;
 
 		var stopClick = runTarget == '0' ? 'nuStopClick(event);' : ''; 
-		var runAction = runTarget == '3' ? "nuPopup('" + O.form_id + "','" + O.record_id + "','" + O.filter + "')" :  "nuForm('" + O.form_id + "','" + O.record_id + "','" + O.filter + "', '','" + runTarget + "')";
+		var runAction = runTarget == '3' ? "nuPopup('" + obj.form_id + "','" + obj.record_id + "','" + obj.filter + "')" :  "nuForm('" + obj.form_id + "','" + obj.record_id + "','" + obj.filter + "', '','" + runTarget + "')";
 
-		if(O.run_type == 'F'){clicker	= stopClick + runAction;}
-		if(O.run_type == 'R'){clicker	= "nuRunReport('" + O.record_id + "')";}
-		if(O.run_type == 'P'){
+		if(obj.run_type == 'F'){clicker	= stopClick + runAction;}
+		if(obj.run_type == 'R'){clicker	= "nuRunReport('" + obj.record_id + "')";}
+		if(obj.run_type == 'P'){
 
-			if(O.run_hidden){clicker	= "nuRunPHPHidden('" + O.record_id + "')"}
-			if(!O.run_hidden){clicker	= "nuRunPHP('" + O.record_id + "')"}
+			if(obj.run_hidden){clicker	= "nuRunPHPHidden('" + obj.record_id + "')"}
+			if(!obj.run_hidden){clicker	= "nuRunPHP('" + obj.record_id + "')"}
 
 		}
 
 		$('#' + id).attr({
 					'type'		: 'button',
-					'value'		: nuTranslate(O.label),
+					'value'		: nuTranslate(obj.label),
 					'onclick'	: clicker
 		})
-		.html(nuTranslate(O.label))
+		.html(nuTranslate(obj.label))
 		.addClass('nuButton');
 
 	}else{
 
-		var F		= O.form_id;
-		var R		= O.record_id;
-		var L		= O.filter;
-		var PA		= O.parameters;
+		var F		= obj.form_id;
+		var R		= obj.record_id;
+		var L		= obj.filter;
+		var PA		= obj.parameters;
 		var P		= window.location.pathname;
 		var f		= P.substring(0,P.lastIndexOf('/') + 1)
 
-		window.nuOPENER.push(new nuOpener(O.run_type, F, R, L, PA));
+		window.nuOPENER.push(new nuOpener(obj.run_type, F, R, L, PA));
 
 		var open	= window.nuOPENER[window.nuOPENER.length - 1];
-		var u		= window.location.origin + f + O.src + '&opener=' + open.id;
+		var u		= window.location.origin + f + obj.src + '&opener=' + open.id;
 		var u		= P + '?i=2&opener=' + open.id;
 
 		$('#' + id).attr('src', u).removeClass('').addClass('nuIframe');
 
 	}
 
-	nuAddJSObjectEvents(id, O.js);
+	nuAddJSObjectEvents(id, obj.js);
 
-	nuSetAccess(id, prop.objects[i].read);
+	nuSetAccess(id, obj.read);
 
-	nuAddStyle(id, prop.objects[i]);
+	nuAddStyle(id, obj);
 
-	return Number(O.width);
+	return Number(obj.width);
 	
 }
 
 function nuSELECT(w, i, l, p, prop){
 
-	var id = p + prop.objects[i].id;
+	var obj = prop.objects[i];
+	var id = p + obj.id;
 	var ef = p + 'nuRECORD';					//-- Edit Form Id
 
-	if(prop.objects[i].parent_type == 'g'){
+	if(obj.parent_type == 'g'){
 		
-		prop.objects[i].left = l;
-		prop.objects[i].top = 3;
+		obj.left = l;
+		obj.top = 3;
 
 	}else{
 		nuLabel(w, i, p, prop);
@@ -1597,15 +1603,15 @@ function nuSELECT(w, i, l, p, prop){
 		$('#' + id).addClass('nuEdited');
 	}
 
-	nuAddDataTab(id, prop.objects[i].tab, p);
+	nuAddDataTab(id, obj.tab, p);
 
-	if(prop.objects[i].multiple == 1){
+	if(obj.multiple == 1){
 
 		$('#' + id).attr('multiple', 'multiple');
 
 	}
 
-	if (prop.objects[i].select2 == 1) {
+	if (obj.select2 == 1) {
 		$('#' + id).attr('date-nu-select2', 1);
 
 		let select2Id = $('#' + id).attr('id') + "_select2";
@@ -1629,22 +1635,22 @@ function nuSELECT(w, i, l, p, prop){
 
 		$('.' + select2Id).parent().parent().css({
 			position: 'absolute',
-			width: Number(prop.objects[i].width),
-			top: Number(prop.objects[i].top),
-			left: Number(prop.objects[i].left)
+			width: Number(obj.width),
+			top: Number(obj.top),
+			left: Number(obj.left)
 		}).attr('id', select2Id);
 
-		nuAddDataTab(select2Id, prop.objects[i].tab, p);
+		nuAddDataTab(select2Id, obj.tab, p);
 	};
 
-	$('#' + id).css({'top'		: Number(prop.objects[i].top),
-					'left'		: Number(prop.objects[i].left),
-					'width'		: Number(prop.objects[i].width),
+	$('#' + id).css({'top'		: Number(obj.top),
+					'left'		: Number(obj.left),
+					'width'		: Number(obj.width),
 					'position'	: 'absolute'
 	})
 	.attr('onfocus', 'nuLookupFocus(event)')
 	.attr('onchange', 'nuChange(event)')
-	.attr('data-nu-field', prop.objects[i].id)
+	.attr('data-nu-field', obj.id)
 	.attr('data-nu-object-id', w.objects[i].object_id)
 	.attr('data-nu-format', '')
 	.attr('data-nu-subform-sort', 1)
@@ -1653,7 +1659,7 @@ function nuSELECT(w, i, l, p, prop){
 	.attr('data-nu-prefix', p);
 
 
-	$('#' + id).css('height', Number(prop.objects[i].height));
+	$('#' + id).css('height', Number(obj.height));
 
 	var s = String(w.objects[i].value);
 	var a = [];
@@ -1668,33 +1674,33 @@ function nuSELECT(w, i, l, p, prop){
 
 	$('#' + id).append('<option value=""></option>');
 
-	if(prop.objects[i].options != null){
+	if(obj.options != null){
 
-		for(var n = 0 ; n < prop.objects[i].options.length ; n++){
+		for(var n = 0 ; n < obj.options.length ; n++){
 
-			var opt	= String(prop.objects[i].options[n][1]).replaceAll(' ' ,'&#160;')
+			var opt	= String(obj.options[n][1]).replaceAll(' ' ,'&#160;')
 
-			if(a.indexOf(prop.objects[i].options[n][0]) == -1){
-				$('#' + id).append('<option value="'+prop.objects[i].options[n][0]+'">' + opt + '</option>');
+			if(a.indexOf(obj.options[n][0]) == -1){
+				$('#' + id).append('<option value="'+obj.options[n][0]+'">' + opt + '</option>');
 			}else{
-				$('#' + id).append('<option selected="selected "value="'+prop.objects[i].options[n][0]+'">' + opt + '</option>');
+				$('#' + id).append('<option selected="selected "value="'+obj.options[n][0]+'">' + opt + '</option>');
 			}
 
 		}
 
 	}
 
-	nuAddJSObjectEvents(id, prop.objects[i].js);
+	nuAddJSObjectEvents(id, obj.js);
 
-	nuSetAccess(id, prop.objects[i].read);
+	nuSetAccess(id, obj.read);
 
-	if(prop.objects[i].read == 1){
+	if(obj.read == 1){
 		nuDisable(id);
 	}
 
-	nuAddStyle(id, prop.objects[i]);
+	nuAddStyle(id, obj);
 
-	return Number(prop.objects[i].width);
+	return Number(obj.width);
 
 }
 
@@ -1720,7 +1726,7 @@ function nuSUBFORM(w, i, l, p, prop){
 
 	$('#' + ef).append(inp);
 
-	nuAddDataTab(id, prop.objects[i].tab, p);
+	nuAddDataTab(id, SF.tab, p);
 
 	$('#' + id).css({'top'			: Number(SF.top),
 					'left'			: Number(SF.left),
@@ -1791,7 +1797,7 @@ function nuSUBFORM(w, i, l, p, prop){
 		if(SFR.forms.length > 0){
 
 			nuTABHELP[SFR.forms[0].tabs[0].id]	= SFR.forms[0].tabs[0].help;
-			nuFORMHELP[prop.objects[i].id]		= SFR.forms[0].tabs[0].help;
+			nuFORMHELP[SF.id]		= SFR.forms[0].tabs[0].help;
 
 		}
 
@@ -1868,9 +1874,9 @@ function nuSUBFORM(w, i, l, p, prop){
 
 	}
 
-	nuSetAccess(id, prop.objects[i].read);
+	nuSetAccess(id, SF.read);
 
-	nuAddStyle(id, prop.objects[i]);
+	nuAddStyle(id, SF);
 
 	return Number(SF.width);
 
