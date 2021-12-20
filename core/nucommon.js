@@ -742,63 +742,51 @@ function nuBindCtrlEvents(){
 			var g = nuGlobalAccess();
 			var formId = window.nuFORM.getCurrent().form_id;
 
-			if(nuFormType() == 'browse') {
-			
-				if(e.keyCode == 67 && g) {							//-- c		Searchable Columns
-					nuGetSearchList();
-				} else if(e.keyCode == 70 && g) {					//-- f		Form Properties
+			if(nuFormType() == 'browse' || nuFormType() == 'edit') {
+
+				if(e.keyCode == 70 && g) {							//-- f		Form Properties
 					nuPopup("nuform", formId);
 				} else if(e.keyCode == 79 && g) {					//-- O		Object List
 					nuPopup("nuobject", "", formId);
-				} else if(e.keyCode == 68 && g) {					//-- d		nuDebug Results
-					nuPopup("nudebug", "");
 				} else if(e.keyCode == 73 && g) {					//-- i		Form Info
 					nuShowFormInfo();
 				} else if(e.keyCode == 69 && g) {					//-- e		Database
 					nuStartDatabaseAdmin();
 				} else if(e.keyCode == 66 && g) {					//-- b		Backup
-					nuRunBackup();
+					nuRunBackup();	
+				} else if (e.keyCode == 82) {						//-- r		Refresh
+					nuGetBreadcrumb();
 				} else if(e.keyCode == 85 && g) {					//-- u		Setup
 					nuForm('nusetup','1','', '', 2);
+				} else if(e.keyCode == 68 && g) {					//-- d		nuDebug Results
+					nuPopup("nudebug", "");	
+				}										
+			}
+
+			if(nuFormType() == 'browse') {
+
+				if(e.keyCode == 67 && g) {							//-- c		Searchable Columns
+					nuGetSearchList();
 				} else if(e.keyCode == 83) {						//-- s		Search
 					nuSearchAction();
 				} else if(e.keyCode == 65 && g) {					//-- a		Add
 					nuAddAction();
 				} else if(e.keyCode == 80 && g) {					//-- p		Print
 					nuPrintAction();
-				} else if (e.keyCode == 82) {						//-- r		Refresh
-					nuGetBreadcrumb();
 				}
 
 			}
-
 
 			if(nuFormType() == 'edit') {
 			
 				if(e.keyCode == 65 && g) {							//-- a		Arrange
 					nuPopup(formId, "-2");
-				} else if(e.keyCode == 70 && g) {					//-- f		Form Properties
-					nuPopup("nuform", formId);
-				} else if(e.keyCode == 76 && g) {					//-- L		Change Password
+				} else if(e.keyCode == 76 && g) {					//-- l		Change Password
 					nuPopup("nupassword", "5b6bb7108a75efc", "");
-				} else if(e.keyCode == 79 && g) {					//-- O		Object List
-					nuPopup("nuobject", "", formId);
 				} else if(e.keyCode == 72 && g) {					//-- t		Add Object
 					nuPopup('nuobject','-1','')
 				} else if(e.keyCode == 71 && g) {					//-- G		Object Grid
 					nuForm("nuobjectgrid", formId,"", "", 2);
-				} else if(e.keyCode == 68 && g) {					//-- d		nuDebug Results
-					nuPopup("nudebug", "");
-				} else if(e.keyCode == 85 && g) {					//-- u		Setup
-					nuForm('nusetup','1','', '', 2);
-				} else if(e.keyCode == 73 && g) {					//-- i		Form Info
-					nuShowFormInfo();
-				} else if(e.keyCode == 69 && g) {					//-- e		Database
-					nuStartDatabaseAdmin();
-				} else if(e.keyCode == 66 && g) {					//-- b		Backup
-					nuRunBackup();
-				} else if (e.keyCode == 82) {						//-- r		Refresh
-					nuGetBreadcrumb();
 				} else if(e.keyCode == 83) {						//-- s		Save
 					$(":focus").blur();
 					nuSaveAction();
@@ -1737,7 +1725,7 @@ function nuSubformHide(sf, ob) {
 		$("[data-nu-form='" + sf + "']").nuHide();
 		return;
 	}
-	
+
 	for (let i = 0; i < nuSubformObject(sf).rows.length; i++) {
 		nuHide(sf + nuPad3(i) + ob);
 	}
