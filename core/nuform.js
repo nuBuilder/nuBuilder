@@ -1616,10 +1616,12 @@ function nuSELECT(w, i, l, p, prop){
 
 		let select2Id = $('#' + id).attr('id') + "_select2";
 
+		let lang = (nuSERVERRESPONSE.language === null ? 'en' : nuSERVERRESPONSE.language.toLowerCase());
 		var select2OptionsDefault = {
 			dropdownParent: $('#nuRECORD'),
 			selectionCssClass : select2Id,
-			theme: nuUXOptions["nuSelect2Theme"] ? nuUXOptions["nuSelect2Theme"] : 'default'
+			theme: nuUXOptions["nuSelect2Theme"] ? nuUXOptions["nuSelect2Theme"] : 'default',
+			language: lang
 		}
 
 		var objSelect2OptionsDefault = { options: select2OptionsDefault };
