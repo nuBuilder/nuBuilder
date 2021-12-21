@@ -869,8 +869,11 @@ function nuINPUT(w, i, l, p, prop){
 		.attr('data-nu-field', id)
 		.attr('data-nu-prefix', p)
 		.attr('data-nu-data', '')
-		.attr('onchange', 'this.className = "nuEdited"')
-		.val(obj.value);
+		.attr('onchange', 'this.className = "nuEdited"');
+
+		if (! nuIsNewRecord()) {
+			$('#' + id).val(obj.value);
+		}
 
 		id	= id + '_file';
 
@@ -1009,7 +1012,10 @@ function nuINPUT(w, i, l, p, prop){
 				w.objects[i].value = w.objects[i].value == null ? null : w.objects[i].value.replace(' ','T');
 			}
 
-			$('#' + id).val(nuFORM.addFormatting(w.objects[i].value, w.objects[i].format));
+			if (! nuIsNewRecord()) {
+				$('#' + id).val(nuFORM.addFormatting(w.objects[i].value, w.objects[i].format));
+			}
+
 		}
 
 	}
@@ -1054,7 +1060,10 @@ function nuINPUT(w, i, l, p, prop){
 
 		$('#' + id).hide();
 		$('#' + id).attr('data-nu-lookup-id','');
-		$('#' + id).val(w.objects[i].values[0][1]);
+
+		if (! nuIsNewRecord()) {
+			$('#' + id).val(w.objects[i].values[0][1]);
+		}
 
 		var target			= id;
 		id					= target + 'code';
@@ -1155,10 +1164,15 @@ function nuINPUT(w, i, l, p, prop){
 	}else{
 
 		if(objectType == 'input' && inputType == 'nuAutoNumber'){
+
 			$('#' + id)
 			.prop('readonly', true)
-			.addClass('nuReadonly')
-			.val(obj.counter);
+			.addClass('nuReadonly');
+
+			if (! nuIsNewRecord()) {
+				$('#' + id).val(obj.counter);
+			}
+
 		}
 
 		var maxLengthInputType = ['text', 'url', 'telephone', 'search', 'password','month','email','color','nuScroll'].indexOf(inputType) !== -1;
@@ -1606,9 +1620,7 @@ function nuSELECT(w, i, l, p, prop){
 	nuAddDataTab(id, obj.tab, p);
 
 	if(obj.multiple == 1){
-
 		$('#' + id).attr('multiple', 'multiple');
-
 	}
 
 	if (obj.select2 == 1) {
