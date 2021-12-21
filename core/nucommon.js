@@ -2594,12 +2594,18 @@ function nuSelectRemoveEmpty(i, setIndex) {
 
 function nuSelectRemoveOption(i, value) {
 
-	let o = $('#' + i);
+	var o;
+	if (typeof i !== 'object') {
+		o = $('#' + i) || i;
+	} else {
+		o = i;
+	}
+
 	o.find('[value="'+value+'"]').remove();
 	return o;
 
 }
-
+ 
 function nuSelectRemoveMultiple(i) {
 
 	var id = i === undefined || i == null ? 'select' : '#' + i;
