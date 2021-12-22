@@ -1012,7 +1012,7 @@ function nuINPUT(w, i, l, p, prop){
 				w.objects[i].value = w.objects[i].value == null ? null : w.objects[i].value.replace(' ','T');
 			}
 
-			if (! nuIsNewRecord()) {
+			if (! nuIsNewRecord() || w.objects[i].value !== '') {
 				$('#' + id).val(nuFORM.addFormatting(w.objects[i].value, w.objects[i].format));
 			}
 
@@ -1061,8 +1061,9 @@ function nuINPUT(w, i, l, p, prop){
 		$('#' + id).hide();
 		$('#' + id).attr('data-nu-lookup-id','');
 
-		if (! nuIsNewRecord()) {
-			$('#' + id).val(w.objects[i].values[0][1]);
+		let luv = w.objects[i].values[0][1];
+		if (! nuIsNewRecord() || luv !== '') {	
+			$('#' + id).val(luv);
 		}
 
 		var target			= id;
