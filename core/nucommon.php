@@ -1523,14 +1523,10 @@ function nuUpdateTableIds($table){
 }
 
 function nuRunSystemUpdate(){
-
-	if($_SESSION['nubuilder_session_data']['IS_DEMO']){		
-		nuDisplayError(nuTranslate('Not available in the Demo')."..");
-		return;	
-	}
+	
+	if (nuDemo()) return;
 
 	$i	= nuID();
-
 	nuSetJSONData($i, 'valid');
 
 	return $i;
@@ -2076,6 +2072,17 @@ function nuDeleteFiles($file_list = array()) {
 
 function nuIsArrayAssociative($arr) {
 	return array_key_exists('0',$arr) ? false : true;
+}
+
+function nuDemo($showError = true) {
+
+	if($_SESSION['nubuilder_session_data']['IS_DEMO']){		
+		if ($showError) nuDisplayError(nuTranslate('Not available in the Demo')."..");
+		return true;
+	}	
+
+	return false;
+
 }
 
 ?>

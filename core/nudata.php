@@ -141,7 +141,7 @@ function nuUpdateDatabase(){
 	$form_id		= $_POST['nuHash']['form_id'];
 	$nuDelAll		= $_POST['nuHash']['deleteAll'];
 
-	if($_SESSION['nubuilder_session_data']['IS_DEMO']){
+	if(nuDemo(false)){
 		if ($nuDelAll == 'Yes' || ($nuDelAll == 'No' && strpos($_SESSION['nubuilder_session_data']['DEMO_SAVING_ALLOWED_IDS'], $form_id) === false  )){		
 			nuDisplayError(nuTranslate('Not available in the Demo')."..");
 			return;	

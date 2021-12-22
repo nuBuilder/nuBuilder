@@ -2,12 +2,7 @@
 
 function nuDragSave($data){
 
-	if($_SESSION['nubuilder_session_data']['IS_DEMO']){
-
-		nuDisplayError('Not available in the Demo...');
-		return;
-
-	}
+	if (nuDemo()) return;
 
 	foreach($data['nuDragState']['tabs'] as $tab){
 

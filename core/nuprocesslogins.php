@@ -12,7 +12,7 @@ function nuCheckExistingSession() {
 
 function isDemoGlobadmin() {
 
-	return $_SESSION['nubuilder_session_data']['IS_DEMO'] == true && $_POST['nuSTATE']['username'] == $_SESSION['nubuilder_session_data']['GLOBEADMIN_DEMO_NAME'] && $_SESSION['nubuilder_session_data']['GLOBEADMIN_DEMO_NAME'] != '';
+	return nuDemo(false) && $_POST['nuSTATE']['username'] == $_SESSION['nubuilder_session_data']['GLOBEADMIN_DEMO_NAME'] && $_SESSION['nubuilder_session_data']['GLOBEADMIN_DEMO_NAME'] != '';
 }
 
 //Check for Globeadmin login
@@ -92,7 +92,7 @@ function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 	$_SESSION['nubuilder_session_data']['SESSION_ID'] = nuIDTEMP();
 	$_SESSION['nubuilder_session_data']['SESSION_TIMESTAMP'] = time();
 
-	$isDemo = isDemoGlobadmin() && $_SESSION['nubuilder_session_data']['IS_DEMO'];
+	$isDemo = isDemoGlobadmin() && nuDemo(false);
 	$_SESSION['nubuilder_session_data']['IS_DEMO'] = $isDemo;
 
 	$lang = db_setup()->set_language;

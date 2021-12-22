@@ -1146,13 +1146,8 @@ function nuRemovePageBreak($S){
 
 function nuSavePDF($PDF, $code = '', $tag = '') {
 
-	if($_SESSION['nubuilder_session_data']['IS_DEMO']){
+	if (nuDemo()) return;
 
-		nuDisplayError('Not available in the Demo...');
-		return;
-
-	}
-	
 	// save PDF file on the server in the ./temp directory
 	$filename1 = 'nupdf_' . nuID() . '.pdf';
 	$dir = dirname(getcwd()) . DIRECTORY_SEPARATOR. 'temp' . DIRECTORY_SEPARATOR;
