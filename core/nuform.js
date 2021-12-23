@@ -4052,11 +4052,11 @@ function nuIsNewRecord(){
 
 function nuSaveAction(close){
 
-	if(!nuLookingUp()){
+	if (nuCurrentProperties().form_type == 'launch' || nuLookingUp()) return;
 
-		if(nuNoDuplicates()){
-			nuUpdateData('save', close ? 'close' : null);
-		}
+	if(nuNoDuplicates()){
+		nuUpdateData('save', close ? 'close' : null);
+
 	}
 
 }
