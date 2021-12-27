@@ -322,7 +322,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 			if($r->sob_all_type == 'select'){
 
 				$o->multiple		= $r->sob_select_multiple;
-				$o->select2			= $r->sob_select_2;
+				$o->select2			= isset($r->sob_select_2) ? $r->sob_select_2 : null;
 				$o->options			= nuSelectOptions(nuReplaceHashVariables($r->sob_select_sql));
 				
 			}
@@ -1558,7 +1558,7 @@ function nuFormDimensions($f){
 	
 	if ($r->sob_all_type == 'textarea') {
 		$oh = $r->sob_all_height + 8;
-	} else if ($r->sob_select_2 == '1') {
+	} else if (isset($r->sob_select_2) && $r->sob_select_2 == '1') {
 		$oh = $r->sob_all_height + 20;
 	} else {
 		$oh = $r->sob_all_height;
