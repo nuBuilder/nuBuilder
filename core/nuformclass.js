@@ -73,7 +73,7 @@ class nuResponseForm {
 			if(o[i].lleft > 0){
 
 				var w	= $('#label_' + o.id).html();
-				var ww	= nuGetWordWidth(w);
+				var ww	= nuGetWordWidth(w, 'label');
 				this.label_length = Math.max(this.label_length, ww);
 
 			}
