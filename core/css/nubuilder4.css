@@ -1235,3 +1235,7 @@
  .select2-results__option:empty {
 	height: 10px;
 }
+
+ .select2-container--default .select2-selection--single {
+    border: 1px solid #ddd;
+}
