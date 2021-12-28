@@ -1933,6 +1933,44 @@ function nuSubformFocusLastRow(id, f) {
 
 }
 
+function nuSubformSetHeight(i, height, minHeight, maxHeight) {
+
+	let div	= $('#' + i + 'scrollDiv');
+	let sf	= $('#' + i);
+
+	let h = sf.data('nu-org-height');
+	if (h === undefined || h === null) {
+
+		div.data('nu-org-height', div.height());
+		sf.data('nu-org-height', sf.height());
+		sf.data('nu-org-z-index', sf.css('z-index'));
+
+		if (height === undefined || height === null) {
+			h = window.innerHeight - sf.cssNumber('Top') - nuDialogHeadersHeight() - 50;
+		} else {
+			h = height;
+		}
+
+		if (maxHeight !== undefined && h > maxHeight) h = maxHeight;
+		if (minHeight !== undefined && h < minHeight) h = minHeight;
+
+		sf.height(h);
+		let hh = $('#' + i + 'nuTabHolder').height() + 1;
+		div.height(h - hh);
+
+		sf.css('z-index', 1)
+
+	} else {
+
+		sf.height(h);
+		div.height(div.data('nu-org-height'));
+		sf.data('nu-org-height', null);
+		sf.css('z-index', div.data('nu-org-z-index'))
+
+	}
+
+}
+
 function nuSubformColumnArray(id, column) {
 
 	var a = Array();
