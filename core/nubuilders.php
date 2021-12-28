@@ -30,6 +30,13 @@ function nuBuildFastForm($table, $formType){
 
 	//--------- Test table creation -----------------------
 
+	if (!$isNew && $PK == null) {
+		nuDisplayError('<h2>' . nuTranslate('Error') . '</h2>' . nuTranslate('The table has no primary key'));
+		return;
+	}
+
+	//--------- Test table creation -----------------------
+
 	$test = nuFFCreateTable($SF, $formType, $table, $isNew, true);
 
 	if ($test != '') { 
@@ -266,7 +273,7 @@ function nuFFIsNewTable($table, &$PK, $formType) {
 		if($s->table_name == $table){
 
 			$_POST['tableSchema']	= nuBuildTableSchema();
-			$PK						= $_POST['tableSchema'][$table]['primary_key'][0];
+			$PK						= isset($_POST['tableSchema'][$table]['primary_key'][0]) ? $_POST['tableSchema'][$table]['primary_key'][0] : null;
 
 			return false;
 
