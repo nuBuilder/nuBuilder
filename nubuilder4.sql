@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 28, 2021 at 10:05 AM
+-- Generation Time: Dec 28, 2021 at 10:08 AM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.8
 
@@ -431,7 +431,7 @@ INSERT INTO `zzzzsys_event` (`zzzzsys_event_id`, `sev_zzzzsys_object_id`, `sev_e
 ('nu6106cb38a3b8fd9', 'nu6106cb38a30a9b5', 'onclick', 'nuSubformSetHeight(\'obj_sf\');'),
 ('nu6105ea043106d4b', 'nu5bad6cb34ebf5bd', 'onchange', 'nuOnChangeFFField(this,event);'),
 ('nu61ca74b0dc425d6', 'nu5bad6cb326a4367', 'onchange', 'sfo_primary_key.value = \'\';\nnuRefreshDisplayObject(\'sfo_primary_key\');'),
-('nu61cac33aabe71c9', '61cac33aab3fc06', 'onclick', 'nuSubformSetHeight(\'zzzzsys_browse_sf\');'),
+('nu61cac33aabe71c9', 'nu61cac33aab3fc06', 'onclick', 'nuSubformSetHeight(\'zzzzsys_browse_sf\');'),
 ('nu61c81c6a559567c', 'nu606f399ea7b558f', 'onblur', 'if(this.value.length == 1){\n    nuMessage(\'The Prefix must be at least 2 characters long.\'); \n    this.focus();\n}');
 
 -- --------------------------------------------------------
@@ -588,7 +588,7 @@ CREATE TABLE `zzzzsys_info` (
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
 ('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2021.12.28.04'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.12.28.01');
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2021.12.28.02');
 
 -- --------------------------------------------------------
 
