@@ -913,9 +913,10 @@ function nuINPUT(w, i, l, p, prop){
 		}
 
 		if (obj.datalist !== null && obj.datalist !== '' && typeof obj.datalist !== "undefined") {
-			var dl = obj.datalist;
+			let dl = obj.datalist;
 			if (!$.isArray(dl)) dl = JSON.parse(dl);
 			nuAddDatalist(id, dl);
+			nuDatalistShowAllOnArrowClick(id);
 		}
 
 	}
@@ -5335,5 +5336,50 @@ function nuAddBrowseTitleSelect(index, data, w) {
 	});
 
 	$("#" + id).val(nuGetProperty(id));
+
+}
+
+function nuDatalistValueRestoreValue(i) {
+
+	let t = $('#' + i);
+	if (t.val() === '') {
+
+		if (t.attr('org-placeholder') !== t.attr('placeholder')) {
+			t.val(t.attr('placeholder'));
+		}
+
+		t.attr('placeholder', '');
+		if (t.val() === '') {
+			t.attr('placeholder', t.attr('org-placeholder'));
+		}
+	  
+	}
+
+}
+
+// Show all dropdown items when clicking on the datalist arrow down button
+function nuDatalistShowAllOnArrowClick(i) {
+
+	$('#' + i)
+		.on('click', function(e) {
+			let t = $(this);
+			if ((t.width() - (e.clientX - t.offset().left)) < 14) {
+				if (t.val() !== "") {
+					t.attr('placeholder', t.val());
+					t.val('');
+				}
+			} else {
+				nuDatalistValueRestoreValue(i)
+			}
+		})
+
+	.on('mouseleave', function() {
+		nuDatalistValueRestoreValue(this.id);
+	})
+
+
+	.on('mouseenter', function() {
+		if (!$(this).is("[org-placeholder]")) $(this).attr('org-placeholder', $(this).attr('placeholder'));
+	})
 
 }
