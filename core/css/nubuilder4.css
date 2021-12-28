@@ -1244,3 +1244,7 @@
  .select2-container .select2-selection--single .select2-selection__rendered {
 	padding-left: 1px!important;
 }
+
+ .select2-container--default .select2-selection--single .select2-selection__rendered {
+	color: black!important;
+}
