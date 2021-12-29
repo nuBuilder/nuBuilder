@@ -783,13 +783,16 @@ function nuDRAG(w, i, l, p, prop){
 	
 	let objId = $('#' + id);
 
-	objId.css({'top'		: Number(obj.top),
-				'left'		: Number(obj.left),
-				'width'		: Number(obj.width),
-				'height'	: Number(obj.height),
-				'text-align': obj.align,
-				'position'	: 'absolute',
-				'overflow'	: 'hidden'
+	objId.css({'top'				: Number(obj.top),
+				'left'				: Number(obj.left),
+				'width'				: Number(obj.width),
+				'height'			: Number(obj.height),
+				'text-align'		: obj.align,
+				'position'			: 'absolute',
+				'overflow'			: 'hidden',
+				'display'			: 'flex',
+				'align-items'		: 'center',
+				'padding-left'		: '4px'
 	}).addClass('nu_'+ nuObjectType);
 
 	objId.text(id);
