@@ -686,7 +686,7 @@ function nuAddContentBoxFrames() {
 		var w = $(this).cssNumber('width') - 4;
 		var t = $(this).cssNumber('top') + 18;
 		var l = $(this).cssNumber('left');
-		var h = $(this).cssNumber('height') + 18;
+		var h = $(this).cssNumber('height');
 		var id = 'frame_' + $(this).attr('id');
 		var bg = $(this).css('background-color');
 		var div = '<div class="nuContentBoxFrame" id="' + id + '" style="position: absolute; border:2px double ' + bg + ';width:' + w + 'px;height:' + h + 'px;top:' + t + 'px;left:' + l + 'px"></div>';
@@ -1145,7 +1145,7 @@ function nuPutFieldDimensionsIntoState(){
 				if (cb.length == 0) {
 					field.height	= contents.height();
 				} else {
-					field.height	= cb.height() - 18;
+					field.height	= cb.height();
 				}
 
 				contents.hide();
