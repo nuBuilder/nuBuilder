@@ -797,7 +797,9 @@ function nuDRAG(w, i, l, p, prop){
 
 	objId.text(id);
 	objId.attr('data-drag',1);
-	objId.attr('data-nu-object-id', obj.object_id)
+	objId.attr('data-nu-object-id', obj.object_id);
+
+	if (obj.input == 'button' || nuObjectType == 'run' ) objId.attr('data-drag-button-label', obj.label);
 
 	if(obj.input != 'button' && nuObjectType != 'run' && nuObjectType != 'contentbox' && prop.title !== 'Insert-Snippet'){		//-- Input Object
 		let lab = nuLabel(w, i, p, prop);

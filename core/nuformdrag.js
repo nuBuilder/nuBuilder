@@ -654,11 +654,22 @@ function nuCreateDragOptionsBox(form){
 function nuToggleDragLabels() {
 
 	$('.nuDragLabel',$('#nuDragDialog iframe').contents()).each(function(){
-		var obj = $(this);
+		let obj = $(this);
 		if (obj.css('visibility') ==='visible'){			
 			obj.css('visibility', 'hidden')
 		} else {
 			obj.css('visibility', 'visible')
+		}
+	});
+
+	$("[data-drag-button-label]",$('#nuDragDialog iframe').contents()).each(function(){
+		let obj = $(this);
+		if (obj.is("[data-drag-value-visible]")) {
+			obj.text(this.id);
+			obj.removeAttr('data-drag-value-visible');
+		} else {		
+			obj.text(obj.attr('data-drag-button-label'));
+			obj.attr('data-drag-value-visible','');
 		}
 	});
 
