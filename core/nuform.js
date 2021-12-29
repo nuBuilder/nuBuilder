@@ -1631,37 +1631,10 @@ function nuSELECT(w, i, l, p, prop){
 	}
 
 	if (obj.select2 == 1) {
-		$('#' + id).attr('date-nu-select2', 1);
 
-		let select2Id = $('#' + id).attr('id') + "_select2";
-
-		let lang = (nuSERVERRESPONSE.language === null ? 'en' : nuSERVERRESPONSE.language.toLowerCase());
-		var select2OptionsDefault = {
-			dropdownParent: $('#nuRECORD'),
-			selectionCssClass : select2Id,
-			theme: nuUXOptions["nuSelect2Theme"] ? nuUXOptions["nuSelect2Theme"] : 'default',
-			language: lang
-		}
-
-		var objSelect2OptionsDefault = { options: select2OptionsDefault };
-		var select2UserOptions = [];
-
-		if(typeof window['nuOnSetSelect2Options'] === 'function'){
-			select2UserOptions = window.nuOnSetSelect2Options(id, objSelect2OptionsDefault);
-		}
-
-		select2Options = {...objSelect2OptionsDefault.options, ...select2UserOptions};
-
-		$('#' + id).select2(select2Options);
-
-		$('.' + select2Id).parent().parent().css({
-			position: 'absolute',
-			width: Number(obj.width),
-			top: Number(obj.top),
-			left: Number(obj.left)
-		}).attr('id', select2Id);
-
+		let select2Id = nuSetSelect2(id, obj);
 		nuAddDataTab(select2Id, obj.tab, p);
+
 	};
 
 	$('#' + id).css({'top'		: Number(obj.top),
@@ -2289,27 +2262,17 @@ function nuAddSubformRow(t, e){
 	if (objSelect.length > 0) {
 		objSelect.each(function(){
 
-			var select2Id = $(this).attr("data-select2-id") + '_select2';
+			let objSelect2 = $('#' + this.id + '_select2');
+			let pos = objSelect2.position();
+			let obj = {
+				width: objSelect2.width(), 
+				top: pos.top,
+				left: pos.left
+			};
 
-			if(select2Id) {
+			objSelect2.remove();
 
-				var objSelect2 = $('#' + select2Id);
-				objSelect2.remove();
-
-					$(this).select2({
-						dropdownParent: $('#nuRECORD'),
-						selectionCssClass : select2Id,
-						theme: nuUXOptions["nuSelect2Theme"] ? nuUXOptions["nuSelect2Theme"] : 'default'
-					});
-
-					$('.' + select2Id).parent().parent().css({
-						position: 'absolute',
-						width: objSelect2.cssNumber('width'),
-						top: objSelect2.cssNumber('top'),
-						left: objSelect2.cssNumber('left')
-					}).attr('id', select2Id);
-
-			}
+			nuSetSelect2(this.id, obj);
 
 		});
 	}
@@ -5383,5 +5346,41 @@ function nuDatalistShowAllOnArrowClick(i) {
 	.on('mouseenter', function() {
 		if (!$(this).is("[org-placeholder]")) $(this).attr('org-placeholder', $(this).attr('placeholder'));
 	})
+
+}
+
+function nuSetSelect2(id, obj){
+
+	$('#' + id).attr('date-nu-select2', 1);
+
+	let select2Id = $('#' + id).attr('id') + "_select2";
+
+	let lang = (nuSERVERRESPONSE.language === null ? 'en' : nuSERVERRESPONSE.language.toLowerCase());
+	let select2OptionsDefault = {
+		dropdownParent: $('#nuRECORD'),
+		selectionCssClass : select2Id,
+		theme: nuUXOptions["nuSelect2Theme"] ? nuUXOptions["nuSelect2Theme"] : 'default',
+		language: lang
+	}
+
+	let objSelect2OptionsDefault = { options: select2OptionsDefault };
+	let select2UserOptions = [];
+
+	if(typeof window['nuOnSetSelect2Options'] === 'function'){
+		select2UserOptions = window.nuOnSetSelect2Options(id, objSelect2OptionsDefault);
+	}
+
+	select2Options = {...objSelect2OptionsDefault.options, ...select2UserOptions};
+
+	$('#' + id).select2(select2Options);
+
+	$('.' + select2Id).parent().parent().css({
+		position: 'absolute',
+		width: Number(obj.width),
+		top: Number(obj.top),
+		left: Number(obj.left)
+	}).attr('id', select2Id);
+	
+	return select2Id;
 
 }
