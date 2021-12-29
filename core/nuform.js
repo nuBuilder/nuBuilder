@@ -2657,17 +2657,14 @@ function nuSetStartingTab(p, w){
 
 function nuGetStartingTab(){
 
-	var t = window.nuFORM.getProperty('tab_start');
+	let w = window.nuFORM.getProperty('record_id') == -2 ? parent.window : window;
+	let t = w.nuFORM.getProperty('tab_start');
 
-	for(var i = 0 ; i < t.length ; i++){
-
-		$('#' + t[i].prefix + 'nuTab' + t[i].tabNumber).addClass('nuTabSelected');
-		$('#' + t[i].prefix + 'nuTab' + t[i].tabNumber).click();
-
+	for(let i = 0 ; i < t.length ; i++){
+		$('#' + t[i].prefix + 'nuTab' + t[i].tabNumber).addClass('nuTabSelected').click();
 	}
 
 }
-
 
 function nuSetTab(pthis){
 
