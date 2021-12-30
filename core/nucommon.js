@@ -1456,9 +1456,9 @@ function nuButtonIcon(j){
 
 }
 
-function nuChart(d, t, a, h, x, y, st, is) {
+function nuChart(i, t, a, h, x, y, st, is) {
 
-	let obj = document.getElementById(d);
+	let obj = document.getElementById(i);
 	if (obj == null) return;
 
 	a = eval(a);
@@ -1484,7 +1484,7 @@ function nuChart(d, t, a, h, x, y, st, is) {
 
 			chartType: t,
 			dataTable: data,
-			containerId: d,
+			containerId: i,
 
 			options: {
 				title: h,
@@ -1496,9 +1496,16 @@ function nuChart(d, t, a, h, x, y, st, is) {
 
 		});
 
+		var readyListener = google.visualization.events.addListener(wrapper, 'ready', function () {
+			if (window.nuChartOnReady) {
+				google.visualization.events.removeListener(readyListener);
+				nuChartOnReady(i, wrapper);
+			}	
+		});
+
 		wrapper.draw();
 
-		window[d + '_wrapper'] = wrapper;
+		window[i + '_wrapper'] = wrapper;
 
 	}
 
