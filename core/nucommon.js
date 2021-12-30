@@ -1456,39 +1456,49 @@ function nuButtonIcon(j){
 
 }
 
-function nuChart(d, t, a, h, x, y, st, is){
+function nuChart(d, t, a, h, x, y, st, is) {
 
-	a				= eval(a);
+	let obj = document.getElementById(d);
+	if (obj == null) return;
 
-	if (a.length === 0) {return;}
+	a = eval(a);
+
+	if (a.length === 0) { return; }
 
 	try {
-		google.charts.load('current', {'packages':['corechart']});	
-	} catch(error) {
+		google.charts.load('current', { 'packages': ['corechart'] });
+	} catch (error) {
 		return;
-	}	
+	}
 
 	google.charts.setOnLoadCallback(drawVisualization);
 
-	if(a == ''){return;}
+	if (a == '') { return; }
 
 	function drawVisualization() {
 
-		if(a === undefined){return;}
+		if (a === undefined) { return; }
 
-		var data		= google.visualization.arrayToDataTable(a);
+		let data = google.visualization.arrayToDataTable(a);
+		let wrapper = new google.visualization.ChartWrapper({
 
-		var options = {
-			title		: h,
-			vAxis		: {title: y},
-			hAxis		: {title: x},
-			seriesType	: st,
-			isStacked	: is,
-		};
+			chartType: t,
+			dataTable: data,
+			containerId: d,
 
-		var chart		= new google.visualization[t](document.getElementById(d));
+			options: {
+				title: h,
+				vAxis: { title: y },
+				hAxis: { title: x },
+				seriesType: st,
+				isStacked: is,
+			}
 
-		chart.draw(data, options);
+		});
+
+		wrapper.draw();
+
+		window[d + '_wrapper'] = wrapper;
 
 	}
 
