@@ -1890,7 +1890,6 @@ function nuNewRowObject(p){
 
 }
 
-
 function nuSubformLastRow(t){
 
 	var i = String($('#' + t.id).parent().attr('id'));
@@ -1947,6 +1946,70 @@ function nuSubformSetHeight(i, height, minHeight, maxHeight) {
 		sf.css('z-index', div.data('nu-org-z-index'))
 
 	}
+
+}
+
+function nuSubformRearrangeColumns(sf, fields, row, maintainWidth) {
+
+	function obj(p) {
+		return $("[id$='" + p + "']")
+	}
+
+	let width = 3;	
+	let totalwidth = $('#sub_dates').cssNumber('width');
+
+	if (row !== '') row = nuPad3(row);
+
+	nuHide(sf);
+
+	for (let i = 1; i < fields.length; i++) {
+
+		let p = row + fields[i][0];
+		let p0 = '000' + fields[i][0];
+	
+		if (fields[i][1] == '0') {
+			let h0 = obj(p0);
+			if (! h0.is('[nu-subform-column-hidden]')) {
+				h0.attr('nu-subform-column-hidden','');
+				let h = obj(p);
+				totalwidth -= h.cssNumber('width');
+				h.nuHide();
+			}
+		} else {
+
+			if (obj(p0).attr('data-nu-type') == 'lookup') {
+				obj(p + 'code').css('left', width);
+				width = obj('code').cssNumber('width') + width + 6;
+				obj(p + 'button').css('left', width);
+				width += 19;
+				obj(p + 'description').css('left', width);
+				width = obj('description').cssNumber('width') + width + 6;
+			} else {
+				obj(p).css('left', width);
+				width = obj(p0).cssNumber('width') + width + 6;
+			}
+
+		}
+	}
+
+	if (maintainWidth !== false) {
+		$('#' + sf + 'scrollDiv').css('width', totalwidth-1);
+		$('#' + sf).css('width', totalwidth);
+	}
+
+	nuShow(sf);
+
+}
+
+function nuSubformHideColumns(sfId, columns, maintainWidth) {
+
+	let fields = [];
+	sff = nuSubformObject(sfId).fields;
+	sff.forEach(function (col, index) {
+		fields.push([col, columns.indexOf(col) !== -1 ? '0' : '1']);
+	});
+
+	nuSubformRearrangeColumns(sfId, fields,'', maintainWidth);
 
 }
 
