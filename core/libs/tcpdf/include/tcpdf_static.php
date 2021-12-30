@@ -55,7 +55,7 @@ class TCPDF_STATIC {
 	 * Current TCPDF version.
 	 * @private static
 	 */
-	private static $tcpdf_version = '6.3.5';
+	private static $tcpdf_version = '6.4.3';
 
 	/**
 	 * String alias for total number of pages.
@@ -164,12 +164,15 @@ class TCPDF_STATIC {
 	/**
 	 * Check if the URL exist.
 	 * @param string $url URL to check.
-	 * @return Boolean true if the URl exist, false otherwise.
+	 * @return boolean true if the URl exist, false otherwise.
 	 * @since 5.9.204 (2013-01-28)
 	 * @public static
 	 */
 	public static function isValidURL($url) {
 		$headers = @get_headers($url);
+		if ($headers === false) {
+			return false;
+		}
     	return (strpos($headers[0], '200') !== false);
 	}
 
@@ -446,8 +449,12 @@ class TCPDF_STATIC {
 		$padding = 16 - (strlen($text) % 16);
 		$text .= str_repeat(chr($padding), $padding);
 		if (extension_loaded('openssl')) {
-			$iv = openssl_random_pseudo_bytes (openssl_cipher_iv_length('aes-256-cbc'));
-			$text = openssl_encrypt($text, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
+			$algo = 'aes-256-cbc';
+			if (strlen($key) == 16) {
+				$algo = 'aes-128-cbc';
+			}
+			$iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($algo));
+			$text = openssl_encrypt($text, $algo, $key, OPENSSL_RAW_DATA, $iv);
 			return $iv.substr($text, 0, -16);
 		}
 		$iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC), MCRYPT_RAND);
@@ -468,8 +475,12 @@ class TCPDF_STATIC {
 	 */
 	public static function _AESnopad($key, $text) {
 		if (extension_loaded('openssl')) {
-			$iv = str_repeat("\x00", openssl_cipher_iv_length('aes-256-cbc'));
-			$text = openssl_encrypt($text, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
+			$algo = 'aes-256-cbc';
+			if (strlen($key) == 16) {
+				$algo = 'aes-128-cbc';
+			}
+			$iv = str_repeat("\x00", openssl_cipher_iv_length($algo));
+			$text = openssl_encrypt($text, $algo, $key, OPENSSL_RAW_DATA, $iv);
 			return substr($text, 0, -16);
 		}
 		$iv = str_repeat("\x00", mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC));
@@ -1129,8 +1140,8 @@ class TCPDF_STATIC {
 	 * Cleanup HTML code (requires HTML Tidy library).
 	 * @param string $html htmlcode to fix
 	 * @param string $default_css CSS commands to add
-	 * @param array $tagvs parameters for setHtmlVSpace method
-	 * @param array $tidy_options options for tidy_parse_string function
+	 * @param array|null $tagvs parameters for setHtmlVSpace method
+	 * @param array|null $tidy_options options for tidy_parse_string function
 	 * @param array $tagvspaces Array of vertical spaces for tags.
 	 * @return string XHTML code cleaned up
 	 * @author Nicola Asuni
@@ -1140,7 +1151,7 @@ class TCPDF_STATIC {
 	 */
 	public static function fixHTMLCode($html, $default_css, $tagvs, $tidy_options, &$tagvspaces) {
 		// configure parameters for HTML Tidy
-		if ($tidy_options === '') {
+		if (TCPDF_STATIC::empty_string($tidy_options)) {
 			$tidy_options = array (
 				'clean' => 1,
 				'drop-empty-paras' => 0,
@@ -1187,7 +1198,7 @@ class TCPDF_STATIC {
 		// remove some empty tag blocks
 		$html = preg_replace('/<div([^\>]*)><\/div>/', '', $html);
 		$html = preg_replace('/<p([^\>]*)><\/p>/', '', $html);
-		if ($tagvs !== '') {
+		if (!TCPDF_STATIC::empty_string($tagvs)) {
 			// set vertical space for some XHTML tags
 			$tagvspaces = $tagvs;
 		}
@@ -1795,6 +1806,9 @@ class TCPDF_STATIC {
 	 * @public static
 	 */
 	public static function pregSplit($pattern, $modifiers, $subject, $limit=NULL, $flags=NULL) {
+		// PHP 8.1 deprecates nulls for $limit and $flags
+		$limit = $limit === null ? -1 : $limit;
+		$flags = $flags === null ? 0 : $flags;
 		// the bug only happens on PHP 5.2 when using the u modifier
 		if ((strpos($modifiers, 'u') === FALSE) OR (count(preg_split('//u', "\n\t", -1, PREG_SPLIT_NO_EMPTY)) == 2)) {
 			return preg_split($pattern.$modifiers, $subject, $limit, $flags);
@@ -2127,7 +2141,7 @@ class TCPDF_STATIC {
 
 	/**
 	 * Read a 4-byte (32 bit) integer from file.
-	 * @param string $f file name.
+	 * @param resource $f file resource.
 	 * @return int 4-byte integer
 	 * @public static
 	 */
