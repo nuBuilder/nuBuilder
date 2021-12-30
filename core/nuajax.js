@@ -22,7 +22,7 @@ function nuAjax(w,successCallback,errorCallback){
 
 			if (errorCallback !== undefined) {
 				errorCallback(jqXHR,textStatus,errorThrown);
-			}
+			};
 
 			let err = nuFormatAjaxErrorMessage(jqXHR, errorThrown);
 			nuMessage(err);
@@ -46,7 +46,7 @@ function nuForm(f, r, filter, search, n, like){
 
 	}
 
-	if(like==undefined){
+	if(like == undefined){
 		like			= '';
 	}else{
 		like			= nuDecode(like);
@@ -441,21 +441,19 @@ function nuSystemUpdate(){
 
 }
 
+function nuAttachImage(i, code, fit){
 
-
-function nuAttachImage(i, c){
-
-	c						= String(c).toLowerCase();
+	code					= String(code).toLowerCase();
 	var imgID				= 'image_' + i;
 	var w					= $('#' + i).css('width');
 	var h					= $('#' + i).css('height');
 
+	let size = fit === false ? '' : ' width="' + w + '" height="' + h;
+	$('#' + i).html('<img id="' + imgID + '" class="nuBrowseImage"' + size + '" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D">');
 
-	$('#' + i).html('<img id="' + imgID + '" class="nuBrowseImage" width="' + w + '" height="' + h + '" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D">');
+	if(window.nuGraphics.indexOf(code + '.png') != -1){						//-- check filenames in graphics dir.
 
-	if(window.nuGraphics.indexOf(c + '.png') != -1){						//-- check filenames in graphics dir.
-
-		$('#' + imgID).attr('src', "core/graphics/" + c + ".png")
+		$('#' + imgID).attr('src', "core/graphics/" + code + ".png")
 
 		return;
 
@@ -463,9 +461,9 @@ function nuAttachImage(i, c){
 
 	var PARENT				= parent.parent.parent.parent.parent.parent.parent.parent.parent;
 
-	if(PARENT.nuImages[c] !== undefined){
+	if(PARENT.nuImages[code] !== undefined){
 
-		var p				= JSON.parse(PARENT.nuImages[c]);
+		var p				= JSON.parse(PARENT.nuImages[code]);
 		var b				= atob(p.file);
 		
 		$('#' + imgID).attr('src', b)
@@ -479,7 +477,7 @@ function nuAttachImage(i, c){
 
 	last.session_id			= window.nuSESSION;
 	last.call_type			= 'getfile';
-	last.fileCode			= c;
+	last.fileCode			= code;
 
 	var successCallback		= function(data,textStatus,jqXHR){
 
@@ -487,8 +485,8 @@ function nuAttachImage(i, c){
 
 		if(data.JSONfile !== null){
 
-			PARENT.nuImages[c]	= data.JSONfile;
-			var p				= JSON.parse(PARENT.nuImages[c]);
+			PARENT.nuImages[code]	= data.JSONfile;
+			var p				= JSON.parse(PARENT.nuImages[code]);
 			var b				= atob(p.file);
 
 			$('#' + imgID).attr('src', b)
