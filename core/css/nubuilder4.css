@@ -230,14 +230,10 @@
  .nuOptionsSubform {
 	border-style: none;
 	font-size: 20px!important;
-	height: 15px;
-	left: 2px;
-	padding-right: 10px;
-	position: : relative;
-	right: 5px;
+	left: 3px;
+	position: relative !important;
 	text-align: center;
 	top: 4px;
-	width: 15px;
 	z-index : 1
  }
   
