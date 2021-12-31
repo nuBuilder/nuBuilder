@@ -1956,7 +1956,7 @@ function nuSubformRearrangeColumns(sf, fields, row, maintainWidth) {
 	}
 
 	let width = 3;	
-	let totalwidth = $('#sub_dates').cssNumber('width');
+	let totalwidth = $('#' + sf).cssNumber('width');
 
 	if (row !== '') row = nuPad3(row);
 
