@@ -591,14 +591,15 @@
  .nuButton,.input_button {
 	color:white;
 	background-color:#00ADEF;
-	display:inline;
+	border-color: #0b456c;
+	border-width:0 0 1px;
 	border-style:solid;
+	display:inline;
 	font-size:14px;
 	height:40px;
+	outline-color: #237ab5;
 	padding:0 6px;
-	text-shadow:0 1px 2px rgba(0,0,0,0.25);
-	border-color: #0b456c;
-	border-width:0 0 1px
+	text-shadow:0 1px 2px rgba(0,0,0,0.25)
 }
  .nuButton:hover {
 	color:#E2EAFF
