@@ -77,12 +77,13 @@ function nuJSChartsInclude(){
 
 function nuHeader(){
 
-	$getHTMLHeaderSQL	= "SELECT set_header FROM zzzzsys_setup WHERE zzzzsys_setup_id = 1 ";
-	$rs 				= nuRunQuery($getHTMLHeaderSQL);
+	$sql				= "SELECT * FROM zzzzsys_setup WHERE zzzzsys_setup_id = 1 ";
+	$rs 				= nuRunQuery($sql);
 	$obj 				= db_fetch_object($rs);
-	$HTMLHeader 		= $obj->set_header;
+	$HTMLHeader 		= $obj->set_header. (isset($obj->set_style) ? '</script>'. $obj->set_style. '<script>' : '');
 	$j					= "\n\n" . $HTMLHeader . "\n\n";
 	return $j;
+
 }
 
 nuJSIndexInclude('core/libs/jquery/jquery.js');

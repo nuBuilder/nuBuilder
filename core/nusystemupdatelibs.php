@@ -228,9 +228,16 @@ function nuAlterSystemTables(){
 		nuRunQueryNoDebug("ALTER TABLE `zzzzsys_setup` ADD `set_languages_included` VARCHAR(1000) NULL DEFAULT NULL AFTER `set_language`;");
 		nuRunQuery('UPDATE `zzzzsys_setup` SET set_languages_included = ?', array('["Arabic","Armenian","Chinese","Czech","French","German","Greek","Hindi","Italian","Malay","Polish","Romanian","Russian","Spanish","Tamil","Vietnamese"]'));
 	}
-	
+
+	if(array_search('set_style', $setupColumns) == false){
+		nuRunQueryNoDebug("ALTER TABLE `zzzzsys_setup` ADD `set_style` LONGTEXT NULL DEFAULT NULL AFTER `set_header`;");
+		$style = "<!-- Define your own styles, override styles from nubuilder4.css -->\r\n\r\n<style> \r\n\r\n/*\r\n .nuActionButton {\r\n	background-color: #579cb7\r\n}\r\n\r\n*/\r\n\r\n</style>";
+		nuRunQuery('UPDATE `zzzzsys_setup` SET set_style = ?', array($style));
+	}
+
 	nuRunQueryNoDebug("ALTER TABLE `pdf_temp` ADD `pdf_code` VARCHAR(100) NULL DEFAULT NULL AFTER `pdf_added_by`;");
 	nuRunQueryNoDebug("ALTER TABLE `pdf_temp` ADD `pdf_tag` VARCHAR(100) NULL DEFAULT NULL AFTER `pdf_code`;");
+
 }	
 
 function nuJustNuRecords(){

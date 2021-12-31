@@ -3052,7 +3052,9 @@ function nuAddCSSStyle(styleString, id) {
 
 	let regex = /( |<([^>]+)>)/ig;
     styleString = styleString.replace(regex, "");
-			
+
+	if (styleString.trim() === '') return;
+
 	let css = document.createElement('style');
 	css.id = i;
 	css.type = 'text/css';
