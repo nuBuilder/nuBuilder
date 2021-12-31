@@ -3044,3 +3044,19 @@ function nuRunBackup() {
 	nuRunPHPHidden("nubackup", 0);
 
 }
+
+function nuAddCSSStyle(styleString, id) {
+
+	let i = id === undefined ? 'nucssstyle' : id;
+	$('#'+ i).remove();	
+
+	let regex = /( |<([^>]+)>)/ig;
+    styleString = styleString.replace(regex, "");
+			
+	let css = document.createElement('style');
+	css.id = i;
+	css.type = 'text/css';
+	css.appendChild(document.createTextNode(styleString));
+	document.getElementsByTagName("head")[0].appendChild(css);
+
+}
