@@ -54,12 +54,18 @@
 	font-family:"Lucida Console",sans-serif;
 	padding:2px
 }
- .css {
+ textarea.css {
 	background-color:#f4f7f4;
 	font-family:"Lucida Console",sans-serif;
 	padding:5px;
 	font-size:10px
 }
+
+ input.css {
+	background-color:#f4f7f4;
+	font-family:"Lucida Console",sans-serif;
+}
+
  div {
 	padding:0;
 	margin:0
@@ -162,10 +168,13 @@
 	text-align:left
 }
  .nuBreadcrumbHolder {
-	padding:5px 0;
+    border-bottom-color: #393b4ab3;
+    border-bottom-style: solid;
+    border-bottom-width: thin;
 	background-color:#00adef;
 	color:white;
-	font-size:12px
+	font-size:12px;
+	padding:5px 0;
 }
  .nuBreadcrumb {
 	color:white;
