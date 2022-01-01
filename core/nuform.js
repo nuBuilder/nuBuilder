@@ -2707,7 +2707,7 @@ function nuEditTab(p, t, i){
 	.attr('data-nu-tab-filter', i)
 	.attr('data-nu-form-filter', p)
 	.attr('data-nu-tab-id', t.id)
-	.attr('onclick','nuSelectTab(this)');
+	.attr('onclick','nuSelectTab(this, true)');
 
 	if (t.access !== undefined) {
 		if (t.access == '2') nuHide('nuTab' + i)
@@ -3058,7 +3058,7 @@ function nuSelectAllTabs(pthis){
 
 }
 
-function nuSelectTab(tab){
+function nuSelectTab(tab, byuser){
 
 	if(window.nuOnSelectTab){
 		if (nuOnSelectTab(tab) == false) return;
@@ -3093,8 +3093,10 @@ function nuSelectTab(tab){
 	$(".nuHtml[data-nu-form='" + form + "'][data-nu-tab='" + filt + "']").css('visibility','visible');
 	$('#' + tab.id).addClass('nuTabSelected');
 
-	let obj0 = nuGetFirstObject(nuSERVERRESPONSE.objects, tab.id.replace('nuTab',''));
-	if (obj0 !== null) obj0.focus();
+	if (byuser === true) {
+		let obj0 = nuGetFirstObject(nuSERVERRESPONSE.objects, tab.id.replace('nuTab',''));
+		if (obj0 !== null) obj0.focus();
+	}
 
 	if(window.nuOnTabSelected){
 		nuOnTabSelected(tab);
