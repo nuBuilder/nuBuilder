@@ -600,8 +600,10 @@ function nuCreateDragOptionsBox(form){
 	$('#nuBreadcrumbHolder').remove();
 
 	nuInitialiseDragState();
-	nuPopulateFieldsList(0);
-	nuPopulateTabDropdown(0);
+	
+	let t = $('.nuTabSelected').attr('id').replace('nuTab','');
+	nuPopulateFieldsList(t);
+	nuPopulateTabDropdown(t);
 
 	$('.nuTab[id^="nuTab"]').prop('onclick','');
 	$('.nuTab[id^="nuTab"]').click(function(){
