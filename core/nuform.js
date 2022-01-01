@@ -2279,7 +2279,9 @@ function nuAddSubformRow(t, e){
 
 	$("[id^='" + o.form + nuPad3(o.rows) + "']").addClass('nuEdited')
 
-	$('.nuTabSelected').click();
+	let ts = $('.nuTabSelected');
+	ts.attr('nu-data-clicked-by-system', '');
+	ts.click();
 
 	$('#' + o.form + nuPad3(o.rows) + 'nuRECORD > .nuLookupButton')
 	.on( "click", function() {
@@ -2663,7 +2665,13 @@ function nuGetStartingTab(){
 	let t = w.nuFORM.getProperty('tab_start');
 
 	for(let i = 0 ; i < t.length ; i++){
-		$('#' + t[i].prefix + 'nuTab' + t[i].tabNumber).addClass('nuTabSelected').click();
+
+		let ts = $('#' + t[i].prefix + 'nuTab' + t[i].tabNumber);
+		ts.addClass('nuTabSelected')
+		ts.attr('nu-data-clicked-by-system', '');
+
+		ts.click();
+
 	}
 
 }
@@ -2676,10 +2684,13 @@ function nuSetTab(pthis){
 
 		if(t[i].prefix == $('#' + pthis.id).attr('data-nu-form-filter')){
 			
-			$('#' + t[i].prefix + 'nuTab' + t[i].tabNumber).addClass('nuTabSelected');
-			t[i].
-			$('#' + t[i].prefix + 'nuTab' + t[i].tabNumber).click();
+			let ts = $('#' + t[i].prefix + 'nuTab' + t[i].tabNumber);
+			
+			ts.addClass('nuTabSelected')
+			ts.attr('nu-data-clicked-by-system');
 
+			ts.click();
+		
 		}
 
 	}
@@ -3058,11 +3069,15 @@ function nuSelectAllTabs(pthis){
 
 }
 
-function nuSelectTab(tab, byuser){
+function nuSelectTab(tab, byUser){
 
 	if(window.nuOnSelectTab){
 		if (nuOnSelectTab(tab) == false) return;
 	}
+
+	var byUser = byUser === true && ! $('#' + tab.id).is('[nu-data-clicked-by-system]') ? true :false;
+
+	$('#' + tab.id).removeAttr('nu-data-clicked-by-system');
 
 	$('.nuTabTitleColumn').remove();
 
@@ -3093,8 +3108,18 @@ function nuSelectTab(tab, byuser){
 	$(".nuHtml[data-nu-form='" + form + "'][data-nu-tab='" + filt + "']").css('visibility','visible');
 	$('#' + tab.id).addClass('nuTabSelected');
 
-	if (byuser === true) {
-		let obj0 = nuGetFirstObject(nuSERVERRESPONSE.objects, tab.id.replace('nuTab',''));
+	if (byUser === true) {
+
+		let s = $('.nuTabSelected');
+		let obj0 = null;
+
+		if (s.is("[nu-data-active-element]")) {
+			let id = s.attr('nu-data-active-element');
+			obj0 = id == '' ? null : $('#' + id);
+		} else {	
+			obj0 = nuGetFirstObject(nuSERVERRESPONSE.objects, tab.id.replace('nuTab',''));
+		}
+
 		if (obj0 !== null) obj0.focus();
 	}
 

@@ -75,6 +75,7 @@ function nuJSChartsInclude(){
 	}
 }
 
+
 function nuHeader(){
 
 	$sql				= "SELECT * FROM zzzzsys_setup WHERE zzzzsys_setup_id = 1 ";
@@ -280,6 +281,8 @@ window.nuHASH				= [];
 	$(document).on('select2:open', () => {
 		document.querySelector('.select2-search__field').focus();
 	});
+	
+	document.addEventListener('focus', nuFocus, true);
 
 	</script>
 	<script id='nuheader'>

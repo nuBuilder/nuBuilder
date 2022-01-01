@@ -1322,6 +1322,10 @@ function nuAddEditFieldsToHash(w){
 
 }
 
+function nuFocus(e){
+	$('.nuTabSelected').attr('nu-data-active-element', document.activeElement.id);
+}
+
 function nuClick(e){
 
 	if ($(e.target).parent().parent().attr('class') !== 'ctxmenu'){
