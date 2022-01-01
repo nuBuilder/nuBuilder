@@ -398,6 +398,18 @@
  .nuIcon:hover {
 	cursor:pointer
 }
+ .nuButtonImage {
+	background-repeat:no-repeat;
+	background-size:42px;
+	padding:0px 0px 0px 33px;
+	text-align:left
+}
+ .nuButtonImageSmall {
+	background-repeat:no-repeat;
+	background-size:29px;
+	padding:0px 0px 0px 33px;
+	text-align:left
+}
  .nuLanding {
 	border:1px solid red;
 	cursor:pointer

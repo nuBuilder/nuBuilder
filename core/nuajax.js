@@ -499,7 +499,9 @@ function nuAttachImage(i, code, fit){
 
 }
 
-function nuAttachButtonImage(i, c){
+function nuAttachButtonImage(i, c, cssClass){
+
+	var cssClass = cssClass === undefined ? 'nuButtonImage' : cssClass;
 
 	c						= String(c).toLowerCase();
 
@@ -507,10 +509,7 @@ function nuAttachButtonImage(i, c){
 
 		$('#' + i)
 		.css('background-image', 'url("core/graphics/' + c + '.png')
-		.css('background-repeat', 'no-repeat')
-		.css('background-size', '30px')
-		.css('padding', '0px 0px 0px 33px')
-		.css('text-align', 'left')
+		.addClass(cssClass);
 
 		return;
 		
@@ -527,10 +526,7 @@ function nuAttachButtonImage(i, c){
 
 		$('#' + i)
 		.css('background-image', 'url("' + b + '")')
-		.css('background-repeat', 'no-repeat')
-		.css('background-size', '30px')
-		.css('padding', '0px 0px 0px 33px')
-		.css('text-align', 'left')
+		.addClass(cssClass);
 
 		return;
 
@@ -555,10 +551,7 @@ function nuAttachButtonImage(i, c){
 
 			$('#' + i)
 			.css('background-image', 'url("' + b + '")')
-			.css('background-repeat', 'no-repeat')
-			.css('background-size', '30px')
-			.css('padding', '0px 0px 0px 30px')
-			.css('text-align', 'left')
+			.addClass(cssClass);
 
 		}
 
