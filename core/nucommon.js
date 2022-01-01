@@ -1096,6 +1096,7 @@ function nuShow(i, visible, openTab) {
 		arr = i;
 	}
 
+	let counter = 0;
 	for (var s = 0; s < arr.length; s++) {
 
 		if (visible === false) {
@@ -1108,26 +1109,28 @@ function nuShow(i, visible, openTab) {
 
 				var t = String($('#' + o[c]).attr('data-nu-tab'));
 
-				if (t[0] == 'x') {
+				if (nuIsHidden(o[c])) {
+					if (t[0] == 'x') {
 
-					$('#' + o[c])
-						.attr('data-nu-tab', t.substr(1))
-						.show();
+							$('#' + o[c])
+								.attr('data-nu-tab', t.substr(1))
+								.show();
 
-				} else {
+					} else {
 
-					$('#' + o[c])
-						.show();
+						$('#' + o[c]).show();
 
+					}
+					counter++;
 				}
 
 			}
 
 		}
 
-	}
+		if (openTab !== false && counter > 0) nuOpenTab($('.nuTabSelected')[0].id.substr(5));
 
-	if (openTab !== false) nuOpenTab($('.nuTabSelected')[0].id.substr(5));
+	}
 
 }
 
