@@ -192,6 +192,17 @@ String.prototype.rtrim = function() {
 	return this.replace(/\s+$/,"");
 }
 
+String.prototype.containsAny = String.prototype.containsAny || function(arr) {
+
+ for (var i = 0; i < arr.length; i++) {
+	if (this.indexOf(arr[i]) > -1) {
+	  return true;
+	}
+  }
+  return false;
+
+};
+
 String.prototype.fixNbsp = function() {
 	return this.replace(/\xA0/g, " ")
 }
@@ -217,9 +228,9 @@ String.prototype.isEmpty = function() {
 }
 
 Date.prototype.withoutTime = function () {
-    var d = new Date(this);
-    d.setHours(0, 0, 0, 0);
-    return d;
+	var d = new Date(this);
+	d.setHours(0, 0, 0, 0);
+	return d;
 }
 
 Date.prototype.addDays = function(days) {
@@ -3051,7 +3062,7 @@ function nuAddCSSStyle(styleString, id) {
 	$('#'+ i).remove();	
 
 	let regex = /( |<([^>]+)>)/ig;
-    styleString = styleString.replace(regex, "");
+	styleString = styleString.replace(regex, "");
 
 	if (styleString.trim() === '') return;
 
