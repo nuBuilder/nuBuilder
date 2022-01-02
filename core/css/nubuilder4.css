@@ -808,7 +808,8 @@
 	 z-index:1 
 }
  .nuDragDialog {
-	 border-radius: 4px box-shadow:5px 5px 5px 0 rgba(150,147,150,1);
+	 border-radius: 4px;
+	 box-shadow:5px 5px 5px 0 rgba(150,147,150,1);
 	 background-color:white 
 }
  #dialogTitleWords {
