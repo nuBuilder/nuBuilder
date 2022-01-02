@@ -627,7 +627,7 @@ function nuCreateDragOptionsBox(form){
 	nuCheckIfMovingTabOrderAllowed($('#nuDragOptionsFields'));
 	nuCheckIfMovingFieldToOtherTabAllowed($('#nuDragOptionsFields'));
 
-	var help	= "<input id='run_sam' type='button' class='input_button nuButton' value='?' ";
+	let help	= "<input id='run_sam' type='button' class='input_button nuButton' value='?' ";
 	help		+= "onclick='nuMessage([";
 
 	help		+= "\"Use arrow keys to move selected Objects.\", ";

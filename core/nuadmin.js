@@ -45,6 +45,7 @@ function nuDevMode(m) {
 	var d = localStorage.getItem("nuDevMode");
 	if ((d === '1' || d === true) && nuGlobalAccess()) {
 		nuSetProperty('nuDevMode', '1', true);
+		nuConsoleErrorsToMessage();
 		return true;
 	} 
 	if (m === false) {
@@ -68,7 +69,7 @@ function nuAddAdminButtons() {
 		var l = ft.indexOf("launch") >= 0;
 
 		if ((nuAdminButtons["nuDebug"] || devMode) && nuMainForm()) nuAddIconToBreadcrumbHolder('nuDebugButton','nuDebug Results','nuOpenNuDebug(2)','fa fa-bug','0px');
-		if (nuFormType() !== 'browse' && nuAdminButtons["nuRefresh"]) nuAddIconToBreadcrumbHolder('nuRefreshButton','Refresh','nuGetBreadcrumb()','fa fa-refresh', '7px');
+		if (nuFormType() !== 'browse' && nuAdminButtons["nuRefresh"]) nuAddIconToBreadcrumbHolder('nuRefreshButton','Refresh','nuGetBreadcrumb()','fas fa-sync-alt', '7px');
 
 		var c = 0;
 		var code = nuCurrentProperties().form_code;
@@ -212,6 +213,20 @@ function nuShowObjectTooltip() {
 		});
 
 	}
+}
+
+function nuConsoleErrorsToMessage() {
+
+	window.addEventListener("error", handleError, true);
+
+	function handleError(evt) {
+		if (evt.message) {
+			alert("error: "+evt.message +" at linenumber: "+evt.lineno+" of file: "+evt.filename);
+		} else {
+			alert("error: "+evt.type+" from element: "+(evt.srcElement || evt.target));
+		}
+	}
+
 }
 
 var contextMenuCurrentTarget = null;

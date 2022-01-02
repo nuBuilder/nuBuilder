@@ -114,7 +114,7 @@ nuCSSIndexInclude('core/libs/select2/select2.min.css');
 
 ?>
 
-<link href="core/css/font-awesome.min.css" rel="stylesheet">
+<link href="core/libs/fontawesome/css/all.min.css" rel="stylesheet">
 
 <script>
 
