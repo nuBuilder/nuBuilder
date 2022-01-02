@@ -184,7 +184,7 @@ function nuBuildForm(f){
 		nuResizeFormDialogCoordinates();
 		nuCalculateForm(false);
 
-		obj0 = nuGetFirstObject(f.objects);
+		obj0 = nuGetFirstObject(f.objects, -1);
 
 	}
 
@@ -384,7 +384,7 @@ function nuAddHomeLogout(){
 
 		$('#nuBreadcrumbHolder').append('<span id="nulink"><a href="https://www.nubuilder.com" class="nuBuilderLink" target="_blank">nuBuilder</a></span>');
 
-		nuAddIconToBreadCrumb('nuLogout', 'Log out', 16, 'nuAskLogout()', 'fa fa-external-link');
+		nuAddIconToBreadCrumb('nuLogout', 'Log out', 16, 'nuAskLogout()', 'fa fa-sign-out');
 
 	}
 
