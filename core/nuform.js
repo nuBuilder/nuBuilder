@@ -3111,16 +3111,17 @@ function nuSelectTab(tab, byUser){
 	if (byUser === true) {
 
 		let s = $('.nuTabSelected');
-		let obj0 = null;
+		let obj = null;
 
 		if (s.is("[nu-data-active-element]")) {
 			let id = s.attr('nu-data-active-element');
-			obj0 = id == '' ? null : $('#' + id);
-		} else {	
-			obj0 = nuGetFirstObject(nuSERVERRESPONSE.objects, tab.id.replace('nuTab',''));
+			if (id !== '') $('#' + id).focus();
+		} else {
+			obj = nuGetFirstObject(nuSERVERRESPONSE.objects, tab.id.replace('nuTab',''));
+			if (obj.is("textarea")) obj.prop({'selectionStart': 0,'selectionEnd': 0});
+			obj.focus();
 		}
 
-		if (obj0 !== null) obj0.focus();
 	}
 
 	if(window.nuOnTabSelected){
