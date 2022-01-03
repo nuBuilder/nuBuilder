@@ -3108,6 +3108,7 @@ function nuSelectTab(tab, byUser){
 	$(".nuHtml[data-nu-form='" + form + "'][data-nu-tab='" + filt + "']").css('visibility','visible');
 	$('#' + tab.id).addClass('nuTabSelected');
 
+/*
 	if (byUser === true) {
 
 		let s = $('.nuTabSelected');
@@ -3123,6 +3124,7 @@ function nuSelectTab(tab, byUser){
 		}
 
 	}
+*/
 
 	if(window.nuOnTabSelected){
 		nuOnTabSelected(tab);
