@@ -237,6 +237,13 @@
 	 top: 5px;
 	 width: 15px 
 }
+
+ .nuOptions::before {
+	content: "\f0c9";
+	font-family: "Font Awesome 5 Free";
+	font-weight: 900;
+	margin-left: 5px
+}
  .nuOptionsSubform {
 	 border-style: none;
 	 font-size: 20px!important;
@@ -245,6 +252,12 @@
 	 text-align: center;
 	 top: 4px;
 	 z-index : 1 
+}
+ .nuOptionsSubform::before {
+	content: "\f0c9";
+	font-family: "Font Awesome 5 Free";
+	font-weight: 600;
+	margin-left: 0px
 }
  .nuOptionsBox {
 	 background-color:orange;

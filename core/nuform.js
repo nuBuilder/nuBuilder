@@ -2755,7 +2755,7 @@ function nuOptions(p, f, t, access){
 				$('#' + id)
 				.attr('title', 'Options')
 				.attr('onclick', 'nuGetOptionsList("' + f + '", this, "' + p + '", "' + access + '", "' + t + '")')
-				.addClass('nuIcon fa fa-ellipsis-v nuOptionsSubform')
+				.addClass('nuIcon nuOptionsSubform')
 				.hover(function(){
 					$( this ).css('color', 'red');
 				}, function(){
@@ -2771,7 +2771,7 @@ function nuOptions(p, f, t, access){
 			$('#' + id)
 			.attr('title', 'Options')
 			.attr('onclick', 'nuGetOptionsList("' + f + '", this, "' + p + '", "' + access + '", "' + t + '")')
-			.addClass('nuIcon fa fa-ellipsis-v nuOptions')
+			.addClass('nuIcon nuOptions')
 			.hover(function(){
 				$( this ).css('color', 'red');
 			}, function(){
@@ -3117,9 +3117,9 @@ function nuSelectTab(tab, byUser){
 			let id = s.attr('nu-data-active-element');
 			if (id !== '') $('#' + id).focus();
 		} else {
-			obj = nuGetFirstObject(nuSERVERRESPONSE.objects, tab.id.replace('nuTab',''));
-			if (obj.is("textarea")) obj.prop({'selectionStart': 0,'selectionEnd': 0});
+			obj = nuGetFirstObject(nuSERVERRESPONSE.objects, tab.id.replace('nuTab',''));			
 			obj.focus();
+			obj.prop({'selectionStart': 0,'selectionEnd': 0});
 		}
 
 	}
