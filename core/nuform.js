@@ -3108,23 +3108,25 @@ function nuSelectTab(tab, byUser){
 	$(".nuHtml[data-nu-form='" + form + "'][data-nu-tab='" + filt + "']").css('visibility','visible');
 	$('#' + tab.id).addClass('nuTabSelected');
 
-/*
+
 	if (byUser === true) {
 
 		let s = $('.nuTabSelected');
 		let obj = null;
+		let ae = document.activeElement;
 
 		if (s.is("[nu-data-active-element]")) {
 			let id = s.attr('nu-data-active-element');
-			if (id !== '') $('#' + id).focus();
+			if (id !== '' && ae.id !== id) $('#' + id).focus();
 		} else {
-			obj = nuGetFirstObject(nuSERVERRESPONSE.objects, tab.id.replace('nuTab',''));			
-			obj.focus();
-			obj.prop({'selectionStart': 0,'selectionEnd': 0});
+			obj = nuGetFirstObject(nuSERVERRESPONSE.objects, tab.id.replace('nuTab',''));
+			if (ae.id  !== obj.attr('id')) {
+				obj.focus();
+				obj.prop({'selectionStart': 0,'selectionEnd': 0});
+			}
 		}
 
 	}
-*/
 
 	if(window.nuOnTabSelected){
 		nuOnTabSelected(tab);
