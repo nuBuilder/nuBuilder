@@ -3120,7 +3120,7 @@ function nuSelectTab(tab, byUser){
 			if (id !== '' && ae.id !== id) $('#' + id).focus();
 		} else {
 			obj = nuGetFirstObject(nuSERVERRESPONSE.objects, tab.id.replace('nuTab',''));
-			if (ae.id  !== obj.attr('id')) {
+			if (obj !== null && ae.id  !== obj.attr('id')) {
 				obj.focus();
 				obj.prop({'selectionStart': 0,'selectionEnd': 0});
 			}
