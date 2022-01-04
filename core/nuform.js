@@ -2793,9 +2793,15 @@ function nuGetOptionsList(f, t, p, a, type){
 	// f: form ID
 	// a: global_access
 
-	var u		= nuFORM.getProperty('user_id');
-	var list	= [];
-	var ul		= '<ul>';
+	let id		= 'nuOptionsListBox';
+	if ($('#' + id).length !== 0) {
+		$('#nuOptionsListBox').remove();
+		return;
+	}
+
+	let u		= nuFORM.getProperty('user_id');
+	let list	= [];
+	let ul		= '<ul>';
 
 	if(nuFormType() == 'browse'){
 
@@ -2897,15 +2903,9 @@ function nuGetOptionsList(f, t, p, a, type){
 
 	if(list.length == 0){return;}
 
-	var id		= 'nuOptionsListBox';
-
-	if ($('#' + id).length === 0) {
-		var div		= document.createElement('div');
-		div.setAttribute('id', id);
-		$('body').append(div);
-	} else {
-		$('#nuOptionsListBox').empty();
-	}
+	let div		= document.createElement('div');
+	div.setAttribute('id', id);
+	$('body').append(div);
 
 	$('#' + id)
 	.css({'top'		: 0,
