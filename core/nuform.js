@@ -3122,7 +3122,13 @@ function nuSelectTab(tab, byUser){
 			obj = nuGetFirstObject(nuSERVERRESPONSE.objects, tab.id.replace('nuTab',''));
 			if (obj !== null && ae.id  !== obj.attr('id')) {
 				obj.focus();
-				obj.prop({'selectionStart': 0,'selectionEnd': 0});
+				try {
+					if ((obj.is('textarea') || obj.is('input')) && !obj.is(':checkbox')) {
+						obj.prop({'selectionStart': 0,'selectionEnd': 0});
+					}
+				} catch (e) {
+					console.log('Failed to set selectionStart', obj);
+				}
 			}
 		}
 
