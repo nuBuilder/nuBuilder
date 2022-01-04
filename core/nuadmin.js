@@ -217,9 +217,13 @@ function nuShowObjectTooltip() {
 
 function nuConsoleErrorsToMessage() {
 
-	window.addEventListener("error", handleError, true);
+	const element = document.getElementById('nuhtml');
+	if (element && !element.hasAttribute('listenerErrorHandler')) {
+		window.addEventListener("error", listenerErrorHandler, true);
+		element.setAttribute('listenerErrorHandler', '');
+	}
 
-	function handleError(evt) {
+	function listenerErrorHandler(evt) {
 		if (evt.message) {
 			alert("error: "+evt.message +" at linenumber: "+evt.lineno+" of file: "+evt.filename);
 		} else {
