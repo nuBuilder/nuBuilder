@@ -92,7 +92,7 @@ function nuAddAdminButtons() {
 			var dragDialog = parent.$('#nuDragDialog')
 			dragDialog.css('height', dragDialog.cssNumber("height") + 50);
 
-		$("<br>").insertAfter($("#nuAdminPropertiesButton"));
+		$('<br style="user-select:none">').insertAfter($("#nuAdminPropertiesButton"));
 	}
 
 }
@@ -188,7 +188,7 @@ function nuOpenNuDebug(w) {
 
 function nuAddIconToBreadcrumbHolder(i, title, oClick, iClass, paddingLeft) {
 
-	var h = "<div id='"+i+"' title='"+title+"' style='font-size: 16px; display: inline-block; cursor : pointer; padding-right:8px; padding-left:"+paddingLeft+"' onclick='"+oClick+"'><i class='"+iClass+"'></i>&nbsp;" + '' + "</div>";
+	var h = "<div id='"+i+"' title='"+title+"' style='font-size: 17px; display: inline-block; cursor : pointer; padding-right:12px; padding-left:"+paddingLeft+"' onclick='"+oClick+"'><i class='"+iClass+"'></i>" + '' + "</div>";
 
 	var fragment = nuCreateAppendHTML(h);
 	if (window.nuFORM.breadcrumbs.length == 1) { 
