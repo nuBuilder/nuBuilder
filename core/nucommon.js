@@ -1322,7 +1322,7 @@ function nuAddEditFieldsToHash(w){
 
 }
 
-function nuFocus(e){
+function nuOnFocus(e){
 	$('.nuTabSelected').attr('nu-data-active-element', document.activeElement.id);
 }
 
@@ -1481,7 +1481,7 @@ function nuChart(i, t, a, h, x, y, st, is) {
 
 	a = eval(a);
 
-	if (a.length === 0) { return; }
+	if (a === undefined || a === '' || a.length === 0) { return; }
 
 	try {
 		google.charts.load('current', { 'packages': ['corechart'] });
@@ -1494,8 +1494,6 @@ function nuChart(i, t, a, h, x, y, st, is) {
 	if (a == '') { return; }
 
 	function drawVisualization() {
-
-		if (a === undefined) { return; }
 
 		let data = google.visualization.arrayToDataTable(a);
 		let wrapper = new google.visualization.ChartWrapper({
