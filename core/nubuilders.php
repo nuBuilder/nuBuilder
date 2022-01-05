@@ -186,8 +186,12 @@ function nuFFCreateTable($SF, $formType, $table, $isNew, $drop) {
 
 	if ($drop) {
 		$test	= nuRunQueryTest($sql);
-		nuRunQuery("DROP TABLE IF EXISTS `$table`;"); 
-		return is_bool($test) ? '' : nuFFError($test, $sql);
+		if (is_bool($test)) {
+			nuRunQuery("DROP TABLE IF EXISTS `$table`;");
+			return '';
+		} else {
+			return nuFFError($test, $sql);
+		}
 	} else {
 		nuRunQuery($sql);	
 		return '';
@@ -267,7 +271,7 @@ function nuFFIsNewTable($table, &$PK, $formType) {
 
 	if ($formType == 'launch') return false;
 
-	$t								= nuRunQuery("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = DATABASE()");
+	$t								= nuRunQuery("SELECT table_name AS 'table_name' FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = DATABASE()");
 	while($s = db_fetch_object($t)){
 
 		if($s->table_name == $table){
