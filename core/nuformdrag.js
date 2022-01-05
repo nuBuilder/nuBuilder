@@ -207,7 +207,6 @@ function nuBindDragEvents(){
 				var cb = $('#frame_' + t.attr('id'));
 				if (cb.length == 1) {
 					if (prop == 'top') val += 18;
-					if (prop == 'width') val -= 4;
 					cb.css(prop,val+'px');
 				}
 
@@ -696,7 +695,7 @@ function nuShowContentBoxFrames() {
 function nuAddContentBoxFrames() {
 
 	$('.nu_contentbox').each(function() {
-		var w = $(this).cssNumber('width') - 4;
+		var w = $(this).cssNumber('width');
 		var t = $(this).cssNumber('top') + 18;
 		var l = $(this).cssNumber('left');
 		var h = $(this).cssNumber('height');
@@ -769,7 +768,7 @@ function nuResizeToThinnest(){
 	selected.each(function(){
 		$(this).css('width',thinnest+'px');
 		var cb = nuThisContentBox(this);
-		if (cb.length == 1) cb.css('width', thinnest -4 +'px');
+		if (cb.length == 1) cb.css('width', thinnest +'px');
 	});
 
 }
@@ -818,7 +817,7 @@ function nuResizeToWidest(){
 	selected.each(function(){
 		$(this).css('width',widest+'px');
 		var cb = nuThisContentBox(this);
-		if (cb.length == 1) cb.css('width',widest-4 +'px');			
+		if (cb.length == 1) cb.css('width',widest +'px');			
 	});
 
 }
