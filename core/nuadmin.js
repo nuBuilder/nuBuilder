@@ -827,7 +827,7 @@ function nuContextMenuUpdate() {
 	let typeEdit = nuFormType() == 'edit';
 	let selector =  typeEdit ? 'label, button, .nuWord, .nuImage, .nuContentBoxTitle, .nuTab, .nuSubformTitle' : '.nuSort';
 
-	$(selector).each((index, element) => {
+	$(selector).not('.nuDragLabel').each((index, element) => {
 
 		let el = "#"+ element.id;
 		if (el !== '#' && $(el).length > 0) {
