@@ -282,7 +282,7 @@ window.nuHASH				= [];
 		document.querySelector('.select2-search__field').focus();
 	});
 	
-	document.addEventListener('focus', nuFocus, true);
+	document.addEventListener('focus', nuOnFocus, true);
 
 	</script>
 	<script id='nuheader'>
