@@ -69,7 +69,7 @@ function nuAddAdminButtons() {
 		var l = ft.indexOf("launch") >= 0;
 
 		if ((nuAdminButtons["nuDebug"] || devMode) && nuMainForm()) nuAddIconToBreadcrumbHolder('nuDebugButton','nuDebug Results','nuOpenNuDebug(2)','fa fa-bug','0px');
-		if (nuFormType() !== 'browse' && nuAdminButtons["nuRefresh"]) nuAddIconToBreadcrumbHolder('nuRefreshButton','Refresh','nuGetBreadcrumb()','fas fa-sync-alt', '7px');
+		if (nuAdminButtons["nuRefresh"]) nuAddIconToBreadcrumbHolder('nuRefreshButton','Refresh','nuGetBreadcrumb()','fas fa-sync-alt', '7px');
 
 		var c = 0;
 		var code = nuCurrentProperties().form_code;
@@ -82,6 +82,7 @@ function nuAddAdminButtons() {
 			if (b) {c++; nuAddAdminButton("AdminBB", "BB", 'nuEditPHP("BB");','Before Browse'); }
 			if (e) {c++; nuAddAdminButton("AdminBS", "BS", 'nuEditPHP("BS");','Before Save'); }
 			if (e) {c++; nuAddAdminButton("AdminAS", "AS", 'nuEditPHP("AS");','After Save'); }
+
 		}
 
 		if (c > 0) $('#nuActionHolder').css('height', '50px');
@@ -188,16 +189,12 @@ function nuOpenNuDebug(w) {
 
 function nuAddIconToBreadcrumbHolder(i, title, oClick, iClass, paddingLeft) {
 
-	var h = "<div id='"+i+"' title='"+title+"' style='font-size: 17px; display: inline-block; cursor : pointer; padding-right:12px; padding-left:"+paddingLeft+"' onclick='"+oClick+"'><i class='"+iClass+"'></i>" + '' + "</div>";
+	let h = "<div id='"+i+"' title='"+title+"' style='font-size: 17px; display: inline-block; cursor : pointer; padding-right:12px; padding-left:"+paddingLeft+"' onclick='"+oClick+"'><i class='"+iClass+"'></i>" + '' + "</div>";
 
-	var fragment = nuCreateAppendHTML(h);
-	if (window.nuFORM.breadcrumbs.length == 1) { 
-		var options = $('#nuBreadcrumbHolder').find("[id$=nuOptions]");
-		$(fragment).insertAfter(options); 
-	} else 
-	{
-		$(fragment).insertBefore("#nuBreadcrumb0");  
-	}
+	let fragment = nuCreateAppendHTML(h);
+	let options = $('#nuBreadcrumbHolder').find("[id$=nuOptions]");
+	
+	$(fragment).insertAfter(options); 
 
 }
 
@@ -206,7 +203,7 @@ function nuShowObjectTooltip() {
 	if (nuGlobalAccess()) {
 
 		$("*").each(function() {
-			var id = $(this).attr('id');
+			let id = $(this).attr('id');
 			if (id !== undefined) {
 				$(this).attr('title', 'ID: ' + id);
 			}
