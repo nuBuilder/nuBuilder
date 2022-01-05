@@ -101,25 +101,25 @@ function nuFFObjectMaxTop(){
 }
 
 function nuFFNumber(){
-	
+
 	$s = "
 
 		SELECT 
-			MAX(CAST(SUBSTRING(`sfo_code`, 3) as INT)) + 1
+			COALESCE(MAX(CAST(SUBSTRING(`sfo_code`, 3) as UNSIGNED)),1) as num
+		FROM (    
+		SELECT 
+			`sfo_code`
 		FROM `zzzzsys_form` 
-			WHERE `sfo_code` LIKE 'FF%'
-			AND SUBSTRING(`sfo_code`, 3) REGEXP '^-?[0-9]+$'
-	
+		WHERE `sfo_code` LIKE 'FF%'
+		AND SUBSTRING(`sfo_code`, 3) REGEXP '^-?[0-9]+$'
+		) T
+
 	";
 
 	$t = nuRunQuery($s);
-	if (db_num_rows($t) == 0) {
-		return "0";
-	} else {
-		$r = db_fetch_row($t);
-		return $r[0] == null ? '0' : $r[0];
-	}	
-	
+	$r = db_fetch_row($t);
+	return $r[0];
+
 }
 
 function nuFFNewTableSQL($tab, $columns, $isNew){
