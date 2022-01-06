@@ -276,7 +276,7 @@ var menuProperties =
 	{
 		text: "Properties...",
 		tag: "Properties",
-		action: function (e) { nuContextMenuObjectPopup(); }
+		action: function (e) { nuContextMenuObjectPopup(e); }
 	};
 
 var menuRename =
@@ -793,8 +793,16 @@ function nuContextMenuClone() {
 
 }
 
-function nuContextMenuObjectPopup() {
-	nuPopup("nuobject", nuObjectIdFromId(contextMenuCurrentTargetUpdateId()) ,"");
+function nuContextMenuObjectPopup(e) {
+
+	let objId = nuObjectIdFromId(contextMenuCurrentTargetUpdateId());
+
+	if (e.ctrlKey === true) {
+		nuForm('nuobject', objId, '', '', '2');
+	} else {
+		nuPopup("nuobject", objId, '');
+	}
+
 }
 
 function nuContextMenuUpdateObject(value, column) {
