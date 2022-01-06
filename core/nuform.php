@@ -811,12 +811,14 @@ function nuDatalistOptions($sql) {
 			while ($r = db_fetch_row($t)) {
 				$a[]	= $r;
 			}
-	} else {
+	} if (substr(trim($s), 0, 1) == '[') {
 		$a = json_decode($sql);
-	}		
+	} else {
+		return $sql;
+	}
 
 	return $a;
-		
+
 }
 
 function nuSelectOptions($sql) {

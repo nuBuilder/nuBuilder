@@ -894,8 +894,10 @@ function nuINPUT(w, i, l, p, prop){
 		}
 
 		if (obj.datalist !== null && obj.datalist !== '' && typeof obj.datalist !== "undefined") {
+			debugger;
 			let dl = obj.datalist;
 			if (!$.isArray(dl)) dl = JSON.parse(dl);
+			if (!$.isArray(dl)) dl = eval(dl);
 			nuAddDatalist(id, dl);
 			nuDatalistShowAllOnArrowClick(id);
 		}
@@ -3891,7 +3893,7 @@ function nuChooseEventList(){
 
 	}else{
 
-		return ['onnuload','onblur','onclick','onchange','oninput','onfocus','onkeydown'];
+		return ['onchange','oninput','onclick','onblur','onnuload','onfocus','onkeydown'];
 
 	}
 
