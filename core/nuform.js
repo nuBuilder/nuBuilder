@@ -2753,7 +2753,7 @@ function nuOptions(p, f, t, access){
 				$('#' + p).prepend(img);	
 
 				$('#' + id)
-				.attr('title', 'Options')
+				.attr('title', nuTranslate('Options'))
 				.attr('onclick', 'nuGetOptionsList("' + f + '", this, "' + p + '", "' + access + '", "' + t + '")')
 				.addClass('nuIcon nuOptionsSubform')
 				.hover(function(){
