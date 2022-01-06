@@ -894,7 +894,6 @@ function nuINPUT(w, i, l, p, prop){
 		}
 
 		if (obj.datalist !== null && obj.datalist !== '' && typeof obj.datalist !== "undefined") {
-			debugger;
 			let dl = obj.datalist;
 			if (!$.isArray(dl)) dl = JSON.parse(dl);
 			if (!$.isArray(dl)) dl = eval(dl);
