@@ -50,7 +50,7 @@ for($col = 0 ; $col < count($c) ; $col++){
 	
 	$st	= $class[$col];
 	print "<TH $st>";
-	print $c[$col]->title;
+	print nuTranslate($c[$col]->title);
 	print "</TH>\n";
 	
 }
