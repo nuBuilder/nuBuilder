@@ -259,32 +259,32 @@ function nuDragReport(){
 		var v	= S.height == 0 ? 'hidden'		: 'visible';
 		var b	= S.height == 0 ? 'none'		: 'none none solid none';
 		var w	= S.height == 0 ? 0				: 1;
-		var t	= 'Detail';
-		
+		var t	= opener.nuTranslate('Detail');
+
 		this.height = this.height + S.height;
 
 		if(i < 10){t = nuREPORT.groups[g].sortField + ' Header';}
 		if(i > 10){t = nuREPORT.groups[g].sortField + ' Footer';}
-		
+
 		if(S.height < 20){t = '';}
-		
+
 		var e = document.createElement('div');
-		
+
 		e.setAttribute('id', 'nuSectionLeft' + i);
-		
+
 		$('#nuSectionHolder').append(e);
 		$('#nuSectionLeft' + i).css({'position':'absolute', 'top': this.sectionTop, 'width':140, 'height':S.height - 3, 'background-color':S.color, 'border-style':b, 'visibility':v});
 		$('#nuSectionLeft' + i).addClass('nuSection');
 		$('#nuSectionLeft' + i).html(t);
-		
+
 		if(S.height > 2){
 			$('#nuSectionLeft' + i).append('<div id="nuLeftMove'+i+'" data-group="'+g+'" data-section="'+s+'" class="nuDragLine" title="Resize ' + S.label + ' " style="left:0px; bottom:0px; width:139px;">');
 		}
 
 		var e = document.createElement('div');
-		
+
 		e.setAttribute('id', 'nuSection' + i);
-		
+
 		$('#nuDragArea').append(e);
 		$('#nuSection' + i).css({'position':'absolute', 'top': this.sectionTop, 'width':nuDrag.areaWidth(), 'height':S.height - 3, 'background-color':S.color, 'border-style':b, 'visibility':v});
 		$('#nuSection' + i).attr({'data-group': g, 'data-section':s, 'data-order':i});
@@ -714,7 +714,7 @@ function nuSelectDialog(){
 
 	nuDIALOG.dialog = 'nuSelectDialog';
 
-	nuDragD.createDialog(200, window.scrollY + 50, 700, 600, 'Select Objects');
+	nuDragD.createDialog(200, window.scrollY + 50, 700, 600, opener.nuTranslate('Select Objects'));
 	
 	var e			= document.createElement('select');
 	e.multiple		= 'multiple';
@@ -1130,7 +1130,7 @@ function nuObjectDialog(){
 	
 	nuDIALOG.dialog = 'nuObjectDialog';
 	
-	nuDragD.createDialog(400, window.scrollY + 50, 450, 450, 'Object Properties');
+	nuDragD.createDialog(400, window.scrollY + 50, 450, 450, opener.nuTranslate('Object Properties'));
 
 	var D	= nuDragR.getObject(S[0].id);
 	var top	= 60;
@@ -1168,7 +1168,7 @@ function nuObjectDialog(){
 	.css('top','7px')
 	.css('right','5px');
 
-	var t	= 'Field Name';
+	var t	= opener.nuTranslate('Field Name');
 	
 	if(D['objectType'] == 'image'){t	= 'Source';}
 	if(D['objectType'] == 'label'){t	= 'Title';}
@@ -1248,7 +1248,7 @@ function nuBlankMultipleValues(S){
 
 function nuReportDialog(){
 
-	nuDragD.createDialog(400, window.scrollY + 50, 450, 450, 'Report Properties');
+	nuDragD.createDialog(400, window.scrollY + 50, 450, 450, opener.nuTranslate('Report Properties'));
 
 
 	var top = 60;
@@ -1256,7 +1256,6 @@ function nuReportDialog(){
 	
 	nuDIALOG.dialog = 'nuReportDialog';
 	
-
 	top = nuDialogInput('Width', 'width', top, 180, nuREPORT, 'nuDoNothing');
 	top = nuDialogInput('Height', 'height', top, 180, nuREPORT, 'nuDoNothing');
 	top = nuDialogInput('Paper', 'paper', top, 180, nuREPORT, fun, [['A4','A4'],['A5','A5'],['Letter','Letter'],['Legal','Legal']]);
@@ -1276,7 +1275,7 @@ function nuGroupDialog(){
 
 	nuDIALOG.dialog = 'nuGroupDialog';
 	
-	nuDragD.createDialog(400, window.scrollY + 50, 650, 750, 'Group Properties');
+	nuDragD.createDialog(400, window.scrollY + 50, 650, 750, opener.nuTranslate('Group Properties'));
 
 
 	var top = 60;
