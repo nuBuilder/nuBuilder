@@ -3078,3 +3078,10 @@ function nuAddCSSStyle(styleString, id) {
 	document.getElementsByTagName("head")[0].appendChild(css);
 
 }
+
+function nuObjectClassList(i) {
+
+	let c = $('#' + i).attr('class');
+	return c === undefined ? '' : c.split(/\s+/).join(' ');
+
+}
