@@ -4453,7 +4453,7 @@ function nuMessage(o, timeout, callback){
 
 	window.nuHideMessage	= false;
 
-	var par		= window.document;
+	let par		= window.document;
 
 	$('#nuMessageDiv', par).remove();
 
@@ -4465,21 +4465,20 @@ function nuMessage(o, timeout, callback){
 		o.push(tmp);
 	}
 
-	var widest	= 5;
+	let widest	= 5;
 	for(var i = 0 ; i < o.length ; i++){
 		widest	= Math.max(widest, nuGetWordWidth(o[i]));
 	}
 
-	widest		= Math.min(widest + 200, 1000);
-	var w = $(this).innerWidth();
-	var l = Math.max(0, $(this).scrollLeft() + ( w - widest) / 2);
-	$('body', par).append("<div id='nuMessageDiv' class='nuMessage' style='overflow:hidden;width:" + widest + "px;left:" + l + "px' ></div>")
+	widest	= Math.min(widest + 200, 1000);
+	let w	= $(this).innerWidth()- 42; 								//-- subtract padding, border
+	let l	= Math.max(0, $(this).scrollLeft() + ( w - widest) / 2);
+	w 		= Math.min(w, widest);
 
-	for(var i = 0 ; i < o.length ; i++){
+	$('body', par).append("<div id='nuMessageDiv' class='nuMessage' style='overflow:hidden;width:" + w + "px;left:" + l + "px' ></div>")
 
-		$('#nuMessageDiv', par).append(o[i]);
-		$('#nuMessageDiv', par).append('<br>');
-
+	for(let i = 0 ; i < o.length ; i++){
+		$('#nuMessageDiv', par).append(o[i]).append('<br>');
 	}
 
 	if (timeout !== undefined) {
