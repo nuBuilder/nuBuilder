@@ -47,7 +47,11 @@ function nuBindDragEvents(){
 
 		if(draggable) {
 
-			isCb = $('#'+e.target.id).hasClass('nuContentBoxFrame');
+			let id = e.target.id;
+			
+			if (id === '') return;
+
+			isCb = $('#'+ id).hasClass('nuContentBoxFrame');
 			
 			if(e.target === document.body || isCb || e.target === $('#nuRECORD')[0]) {
 
@@ -59,12 +63,12 @@ function nuBindDragEvents(){
 				
 			} else {
 
-				if(!e.ctrlKey && !$('#'+e.target.id).hasClass('nuDragSelected')) {
+				if(!e.ctrlKey && !$('#'+ id).hasClass('nuDragSelected')) {
 					$('.nuDragSelected').removeClass('nuDragSelected');
 				}
 
-				if($('#'+e.target.id).attr('data-drag')) {
-					$('#'+e.target.id).addClass('nuDragSelected');
+				if($('#'+ id).attr('data-drag')) {
+					$('#'+ id).addClass('nuDragSelected');
 				}
 
 			}
