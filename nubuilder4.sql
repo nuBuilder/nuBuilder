@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 07, 2022 at 06:21 AM
+-- Generation Time: Jan 07, 2022 at 07:05 AM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.8
 
@@ -211,9 +211,10 @@ INSERT INTO `zzzzsys_browse` (`zzzzsys_browse_id`, `sbr_zzzzsys_form_id`, `sbr_t
 ('nu5fe035b0d058339', 'nuuser', 'Department', 'sus_department', 'l', '', 80, 100),
 ('nu5fe179294648601', 'nuform', ' ', 'null', 'l', '', 10, 50),
 ('nu5fed7ae8d82586a', 'nuobjectgrid', 'Code', 'sfo_code', 'l', '', 10, 250),
-('nu5ff0df492665285', 'nuaccess', 'Home', 'sfo_code', 'l', '', 30, 300),
+('nu5ff0df492665285', 'nuaccess', 'Home', 'sfo_code', 'l', '', 40, 300),
 ('nu60fd004179b7f95', 'nuselect', 'Code', 'sse_code', 'l', '', 10, 150),
-('nu61bb9991f1c4d45', 'nudebug', 'User', 'IFNULL(sus_name, deb_user_id)', 'l', '', 30, 170);
+('nu61bb9991f1c4d45', 'nudebug', 'User', 'IFNULL(sus_name, deb_user_id)', 'l', '', 30, 170),
+('nu61d7d0231fff5c5', 'nuaccess', 'Group', 'sal_group', 'l', NULL, 30, 205);
 
 -- --------------------------------------------------------
 
@@ -589,8 +590,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2022.01.07.04'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2022.01.07.02');
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2022.01.07.05'),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2022.01.07.03');
 
 -- --------------------------------------------------------
 
