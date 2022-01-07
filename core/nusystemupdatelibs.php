@@ -179,7 +179,7 @@ function nuAddNewSystemTables(){
 
 
 function nuAlterSystemTables(){
-	
+
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` CHANGE `sob_input_count` `sob_input_count` BIGINT(20) NULL DEFAULT '0';");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` CHANGE `sob_all_order` `sob_all_order` INT(11) NULL DEFAULT '0';");	
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_select_2` VARCHAR(1) NULL DEFAULT '0' AFTER `sob_select_multiple`;");
@@ -196,7 +196,7 @@ function nuAlterSystemTables(){
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_form` ADD `sfo_breadcrumb_title` VARCHAR(100) NULL DEFAULT NULL AFTER `sfo_description`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_form` ADD `sfo_browse_javascript` MEDIUMTEXT NULL DEFAULT NULL AFTER `sfo_javascript`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_form` ADD `sfo_edit_javascript` MEDIUMTEXT NULL DEFAULT NULL AFTER `sfo_browse_javascript`;");
-	
+
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_session` ADD `sss_hashcookies` MEDIUMTEXT NULL DEFAULT NULL AFTER `sss_access`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_session` ADD COLUMN IF NOT EXISTS sss_login_time timestamp NULL DEFAULT current_timestamp(); AFTER sss_time;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_tab` ADD `syt_access` VARCHAR(1) NULL DEFAULT NULL AFTER `syt_help`;");
@@ -211,6 +211,7 @@ function nuAlterSystemTables(){
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_json` MEDIUMTEXT NULL DEFAULT NULL AFTER `sus_expires_on`;");
 
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_access` ADD `sal_use_2fa` VARCHAR(1) NULL DEFAULT NULL AFTER `sal_zzzzsys_form_id`;");
+	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_access` ADD `sal_group` VARCHAR(100) NULL DEFAULT NULL AFTER `sal_description`;");
 
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_access_form` ADD `slf_data_mode` varchar(2) DEFAULT NULL AFTER `slf_print_button`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_access_form` ADD `slf_form_type` varchar(2) DEFAULT NULL AFTER `slf_data_mode`;");
