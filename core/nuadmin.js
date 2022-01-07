@@ -323,7 +323,7 @@ var menuAccess =
 			{
 				text: nuContextMenuItemText("Editable", "fa fa-pencil-square-o"),
 				tag: "Editable",
-				faicon: "fa fa-pencil-square-o",
+				faicon: "far fa-edit",
 				action: () => nuContextMenuUpdateAccess(0),
 			},
 			{
@@ -357,7 +357,7 @@ var menuValidation =
 				action: () => nuContextMenuUpdateValidation(1)
 			},
 			{
-				text: nuContextMenuItemText("No Duplicates", "fa fa-diamond"),
+				text: nuContextMenuItemText("No Duplicates", "far fa-gem"),
 				tag: "No Duplicates",
 				faicon: "fa fa-diamond",
 				action: () => nuContextMenuUpdateValidation(2)
