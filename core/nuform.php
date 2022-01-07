@@ -17,7 +17,7 @@ function nuBeforeBrowse($f){
 
 	$_POST['nuMessages']	= array();
 
-	$p	= nuProcedure('nuBeforeBrowse');	
+	$p	= nuProcedure('nuBeforeBrowse');
 	if($p != '') { eval($p); }	
 	if(count($_POST['nuErrors']) > 0){return;}
 
@@ -30,7 +30,7 @@ function nuBeforeEdit($FID, $RID){
 	$r						= nuFormProperties($FID);
 
 	$GLOBALS['EXTRAJS']		= '';
-	$GLOBALS['EXTRAJS_BC']		= '';
+	$GLOBALS['EXTRAJS_BC']	= '';
 
 	$ct						= $_POST['nuSTATE']['call_type'];
 
@@ -137,7 +137,7 @@ function nuEvents($r) {
 
 function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 
-	if($tabs == null) {		 
+	if($tabs == null) {
 		$tabs = nuBuildTabList($F);
 	}
 
@@ -238,8 +238,8 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 					$disT			= nuRunQuery($disS);
 
 					if (db_num_rows($disT) >= 1) {
-						$disR			= db_fetch_row($disT);
-						$o->value		= $disR[0];
+						$disR		= db_fetch_row($disT);
+						$o->value	= $disR[0];
 					} else {
 						$o->value	= null;
 					}
@@ -811,7 +811,7 @@ function nuDatalistOptions($sql) {
 			while ($r = db_fetch_row($t)) {
 				$a[]	= $r;
 			}
-	} if (substr(trim($s), 0, 1) == '[') {
+	} else if (substr(trim($s), 0, 1) == '[') {
 		$a = json_decode($sql);
 	} else {
 		return $sql;
