@@ -152,10 +152,14 @@ function nuDisplayError(e){
 		return false;
 	}
 
-	nuMessage(e.errors);
+	let msgDiv = nuMessage(e.errors);
+
+	if(window.nuOnMessage){
+		nuOnMessage(msgDiv, e.errors);
+	}
 
 	return e.after_event == false;								//-- errors are really just messages if from after save or after delete.
-	
+
 }
 
 function nuFormatAjaxErrorMessage(jqXHR, exception) {

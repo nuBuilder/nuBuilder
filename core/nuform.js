@@ -93,6 +93,7 @@ function nuBuildForm(f){
 	window.nuOnSetSaved			= null;
 	window.nuOnTabSelected		= null;
 	window.nuOnSelectTab		= null;
+	window.nuOnMessage			= null;
 	window.nuDisplayObjectRefreshed = null;
 	window.nuCalculated			= null;
 	window.nuBrowseFunction		= window.nuDefaultBrowseFunction;
@@ -292,12 +293,16 @@ function nuBuildForm(f){
 		$('.nuBuilderLink').remove();
 	}
 
-
 	nuInitSetBrowseWidthHelper();
 	
 	if(window.nuMESSAGES.length > 0){
 
-		nuMessage(window.nuMESSAGES);
+		let msgDiv = nuMessage(window.nuMESSAGES);
+
+		if(window.nuOnMessage){
+			nuOnMessage(msgDiv, window.nuMESSAGES);
+		}
+
 		window.nuMESSAGES	= [];
 
 	}

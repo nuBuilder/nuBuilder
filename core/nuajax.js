@@ -25,7 +25,12 @@ function nuAjax(w,successCallback,errorCallback){
 			};
 
 			let err = nuFormatAjaxErrorMessage(jqXHR, errorThrown);
-			nuMessage(err);
+
+			let msgDiv = nuMessage(err);
+
+			if(window.nuOnMessage){
+				nuOnMessage(msgDiv, err);
+			}			
 
 		},
 
