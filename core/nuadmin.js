@@ -704,9 +704,13 @@ function nuContextMenuGetFormId(id) {
 	if (subform) {
 		return $('#' + subform + '000nuRECORD').attr('data-nu-form-id');
 	} else if (nuFormType() == 'edit') {
+
 		let field = $('[data-nu-field="'+ id +'"]');
 		let obj = $('#' + id);
-		return id == field || obj.hasClass('nuWord') || obj.hasClass('nuImage') || obj.hasClass('nuContentBoxContainer') || obj.hasClass('nuHtml') || obj.is(":button") ? obj.parent().attr('data-nu-form-id') : field.parent().attr('data-nu-form-id');
+		let hasClass = nuObjectClassList(id).containsAny(['nuWord', 'nuImage', 'nuContentBoxContainer', 'nuHtml']);
+
+		return id == field || hasClass || obj.is(":button") ? obj.parent().attr('data-nu-form-id') : field.parent().attr('data-nu-form-id');
+
 	} else {
 		return nuCurrentProperties().form_id;
 	}
@@ -752,7 +756,9 @@ function nuContextMenuLabelPrompt() {
 function contextMenuCurrentTargetUpdateId() {
 
 	let t = $('#' + contextMenuCurrentTarget.id);
-	if (t.is(":button") || t.hasClass('nuWord') || t.hasClass('nuImage') || t.hasClass('nuSort') || t.hasClass('nuTab')) {
+	let hasClass = nuObjectClassList(contextMenuCurrentTarget.id).containsAny(['nuWord', 'nuImage', 'nuSort', 'nuTab']);
+	
+	if (t.is(":button") || hasClass) {
 		return contextMenuCurrentTarget.id;
 	} else {
 
@@ -774,7 +780,9 @@ function contextMenuCurrentTargetUpdateId() {
 function contextMenuCurrentTargetId() {
 
 	let t = $('#' + contextMenuCurrentTarget.id);
-	return t.is(":button") || t.hasClass('nuWord') || t.hasClass('nuImage') || t.hasClass('nuTab') || t.hasClass('nuSubformTitle') || t.hasClass('nuSort') || t.hasClass('nuSubformTitle') ? contextMenuCurrentTarget.id : contextMenuCurrentTarget.id.substring(6);
+	let hasClass = nuObjectClassList(contextMenuCurrentTarget.id).containsAny(['nuWord', 'nuImage', 'nuTab', 'nuSubformTitle','nuSort']);
+
+	return t.is(":button") || hasClass ? contextMenuCurrentTarget.id : contextMenuCurrentTarget.id.substring(6);
 
 }
 
