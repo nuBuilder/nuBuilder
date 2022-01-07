@@ -155,6 +155,7 @@ function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 	}
 	$storeSessionInTable->procedures = $phpAccess;
 	$storeSessionInTable->access_level_code = '';
+	$storeSessionInTable->access_level_group = '';
 	$storeSessionInTableJSON = json_encode($storeSessionInTable);
 
 	$sql = "INSERT INTO zzzzsys_session SET sss_access = ?, zzzzsys_session_id = ?";
@@ -250,7 +251,10 @@ function nuLoginSetupNOTGlobeadmin($new = true) {
 
 	$storeSessionInTable = new stdClass;
 	$storeSessionInTable->session = $sessionIds;
-	$storeSessionInTable->access_level_code = nuAccessLevelCode($userId);
+
+	$aclInfo = nuAccessLevelInfo($userId);
+	$storeSessionInTable->access_level_code = $aclInfo['code'];
+	$storeSessionInTable->access_level_group = $aclInfo['group'];
 
 	// form ids
 	$getFormsSQL = "SELECT slf_zzzzsys_form_id	AS id, ";
@@ -348,11 +352,17 @@ function nuDie($msg = 'Invalid login!') {
 	die($msg);
 }
 
-function nuAccessLevelCode($u) {
+function nuAccessLevelInfo($u) {
 
-	$s = "SELECT sal_code FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id WHERE zzzzsys_user_id = ? ";
+	$s = "SELECT * FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id WHERE zzzzsys_user_id = ? ";
 	$t = nuRunQuery($s,  array($u));
-	return db_fetch_row($t) [0];
+	$r = db_fetch_object($t);
+
+    return array(
+        'group' => isset($r->sal_group) ? $r->sal_group : '',
+        'code' => $r->sal_code
+    );
+
 }
 
 function nuIDTEMP() {

@@ -1800,6 +1800,10 @@ function nuAddRow(s){
 
 }
 
+function nuAccessLevelGroup(){
+	return nuSERVERRESPONSE.access_level_group;
+}
+
 function nuAccessLevelCode(){
 	return nuSERVERRESPONSE.access_level_code;
 }

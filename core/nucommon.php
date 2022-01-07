@@ -862,6 +862,7 @@ function nuGetUserAccess(){
 	$A['HOME_ID']				= $j->session->zzzzsys_form_id;
 	$A['GLOBAL_ACCESS']			= $j->session->global_access;
 	$A['ACCESS_LEVEL_CODE']		= $j->access_level_code;
+	$A['ACCESS_LEVEL_GROUP']	= $j->access_level_group;
 	$A['LOGIN_NAME']			= $j->session->sus_login_name;
 	$A['USER_NAME']				= $j->session->sus_name;
 	$A['USER_DEPARTMENT']		= $j->session->sus_department;

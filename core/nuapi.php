@@ -104,6 +104,7 @@
 
 		$f->forms[0]->access_level_id			= $U['USER_GROUP_ID'];
 		$f->forms[0]->access_level_code			= $U['ACCESS_LEVEL_CODE'];
+		$f->forms[0]->access_level_group		= $U['ACCESS_LEVEL_GROUP'];
 
 		$f->forms[0]->database					= $nuConfigDBName;
 		$f->forms[0]->dimensions				= isset($formAndSessionData->dimensions) ? $formAndSessionData->dimensions : null;
