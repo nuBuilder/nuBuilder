@@ -4477,8 +4477,10 @@ function nuMessage(o, timeout, callback){
 
 	$('body', par).append("<div id='nuMessageDiv' class='nuMessage' style='overflow:hidden;width:" + w + "px;left:" + l + "px' ></div>")
 
+	let msgDiv = $('#nuMessageDiv', par);
+
 	for(let i = 0 ; i < o.length ; i++){
-		$('#nuMessageDiv', par).append(o[i]).append('<br>');
+		msgDiv.append(o[i]).append('<br>');
 	}
 
 	if (timeout !== undefined) {
@@ -4491,7 +4493,9 @@ function nuMessage(o, timeout, callback){
 
 		}, timeout);
 	}
-	
+
+	return msgDiv;
+
 }
 
 function nuWindowPosition(){
