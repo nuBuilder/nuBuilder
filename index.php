@@ -198,7 +198,11 @@ window.nuHASH				= [];
 	$nuRecord				= '';
 	$nuHome					= '';
 
-//-- $_GETS are sanitized in nuchoosesetup.php
+	function nuSanitize(&$item) {
+		$item = htmlspecialchars($item);
+	}
+
+	array_walk($_GET, 'nuSanitize');
 
 	if(isset($_GET['u']))				{$nuUser 		= $_GET['u'];}
 	if(isset($_GET['p']))				{$nuPassword 	= $_GET['p'];}
