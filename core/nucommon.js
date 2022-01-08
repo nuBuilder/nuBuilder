@@ -1617,7 +1617,7 @@ function nuQuill(i, options) {
 		if (options.modules.toolbar === false)  {
 			options.modules.toolbar = false;
 		} else {
-	
+
 			options.modules = {
 				toolbar: options.toolbar,
 				divider: {
@@ -1629,7 +1629,7 @@ function nuQuill(i, options) {
 
 			}
 		}
-		
+
 	}
 
 	nuHide(i);
@@ -1649,7 +1649,7 @@ function nuQuill(i, options) {
 	if (content !== '') {
 		quill.clipboard.dangerouslyPasteHTML(content);
 	}
-	
+
 	var startDate = new Date();
 	quill.on('text-change', function(delta, oldDelta, source) {
 		var endDate = new Date();

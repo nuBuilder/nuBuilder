@@ -1795,7 +1795,7 @@ function nuProcessImportedUsers($pw = true) {
 
 		if ($pw) {
 			$s	= "UPDATE  `zzzzsys_user` SET `sus_login_password` = ? WHERE `zzzzsys_user_id` = ?";
-			nuRunQuery($s, array(md5($r->pw),  $newId));
+			nuRunQuery($s, array(nuPasswordHash($r->pw),  $newId));
 		}
 
 	}

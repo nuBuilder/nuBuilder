@@ -28,6 +28,10 @@ function nuCryptoRandSecure($min, $max) {
 
 }
 
+function nuPasswordHash($pw) {
+	return password_hash($pw, PASSWORD_DEFAULT);
+}
+
 function nuOutput2FATokenToConsole($code) {
 	$js = "nuMessage(['<h2>' + nuTranslate('Info')+'</h2>Your 2FA Code: ' + nuTranslate('$code') + '<br><br><b>TEST MODE<b></br>']); ";
 	nuJavascriptCallback($js);
@@ -71,7 +75,7 @@ function nuShow2FAAuthenticationError($js = null) {
 	if (is_null($js)) {
 		$js = "nuMessage(['<h2>' + nuTranslate('Error')+'</h2>' + nuTranslate('Your Authentication token is invalid or has expired') ]); ";
 	}
-	
+
 	nuJavascriptCallback($js);
 	
 }
@@ -127,8 +131,8 @@ function nuRedirectToForm($token) {
 
 	$dtk = $_SESSION['nubuilder_session_data']['2FA_TOKEN_VALIDITY_TIME'];										// number of hours to retain a valid token as a cookie. 
 	$expts = (int)date_timestamp_get(date_create()) + ($dtk*60*60); 											// time stamp when the token expires
-	$cname = md5($_SESSION['nubuilder_session_data']['DB_NAME'].nuObjKey(nuHash(),'USER_ID','')); 				// database name and user ID creates a unique name for the cookie
-	$cvalue = $expts.'_'.md5($token);
+	$cname = nuPasswordHash($_SESSION['nubuilder_session_data']['DB_NAME'].nuObjKey(nuHash(),'USER_ID','')); 				// database name and user ID creates a unique name for the cookie
+	$cvalue = $expts.'_'.nuPasswordHash($token);
 
 	nu2FAStoreToken($cvalue);																					// store the cookie in the user record
 	// save a cookie with the verified token and expiry time. This will be checked during subsequent logins
@@ -188,9 +192,9 @@ function nu2FARemoveOldTokens($arrtokens) {
 }
 
 function nu2FALocalTokenOK($uid) {
-	
+
 	$alltokens = nu2FAGetStoredTokens($uid);
-	$cn = md5($_SESSION['nubuilder_session_data']['DB_NAME'].$uid);
+	$cn = nuPasswordHash($_SESSION['nubuilder_session_data']['DB_NAME'].$uid);
 	if (isset($_COOKIE[$cn])) {
 		$token = $_COOKIE[$cn];		 														// get the cookie value for the stored token
 		$tokenOK = (in_array($token, nu2FARemoveOldTokens($alltokens))	? true : false);	// now check to see if the token from the cookie is in the updated array
@@ -198,7 +202,7 @@ function nu2FALocalTokenOK($uid) {
 	} else {
 		return false;
 	}
-	
+
 }
 
 ?>

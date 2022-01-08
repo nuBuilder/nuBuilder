@@ -40,26 +40,49 @@ function nuCheckUserLoginRequest() {
 
 	$sql = "
 				SELECT IF (sus_expires_on < CURDATE() AND NOT sus_expires_on IS NULL, 1, 0) AS expired, 
-				zzzzsys_user_id AS user_id, sus_login_name AS login_name, sus_name AS user_name
+				zzzzsys_user_id AS user_id, sus_login_name AS login_name, sus_name AS user_name, sus_login_password as user_password
 				FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id 
-				WHERE sus_login_name = ? AND sus_login_password = ?
+				WHERE sus_login_name = ?
 			";
+	
+	$sqlMd5 = $sql." AND sus_login_password = ?";
 
-	$rs = nuRunQuery($sql, array(
+	$rs = nuRunQuery($sqlMd5, array(
 		$_POST['nuSTATE']['username'],
 		md5($_POST['nuSTATE']['password'])
 	));
 
-	$oneRow = db_num_rows($rs) == 1;
+	$check = db_num_rows($rs) == 1;
 
-	if ($oneRow) {
+	if ($check == true) {
+
 		$r = db_fetch_object($rs);
+		$sql = 'UPDATE zzzzsys_user SET sus_login_password = ? WHERE sus_login_name = ?';
+		nuRunQuery($sql, array(
+					nuPasswordHash($_POST['nuSTATE']['password']),
+					$_POST['nuSTATE']['username']
+				)
+		);
+
+	} else {
+
+		$rs = nuRunQuery($sql, array($_POST['nuSTATE']['username']));
+		$check = db_num_rows($rs) == 1;
+
+		$r = db_fetch_object($rs);
+		if ($check == true) {
+			$check = password_verify($_POST['nuSTATE']['password'], $r->user_password);
+		}
+
+	}
+
+	if ($check == true) {
 		$result = $r->expired == "1" ? "-1" : "1";
 	} else {
 		$result = "0";
 	}
 
-	return array('result' => $result, 'user_id' => ($oneRow ? $r->user_id : ''), 'login_name' => ($oneRow ? $r->login_name : ''), 'user_name' => ($oneRow ? $r->user_name : ''));
+	return array('result' => $result, 'user_id' => ($check ? $r->user_id : ''), 'login_name' => ($check ? $r->login_name : ''), 'user_name' => ($check ? $r->user_name : ''));
 
 }
 
@@ -179,18 +202,17 @@ function nuLoginSetupNOTGlobeadmin($new = true) {
 		$_SESSION['nubuilder_session_data']['SESSION_TIMESTAMP'] = time();
 		$_SESSION['nubuilder_session_data']['IS_DEMO'] = false;
 
-		$checkLoginDetailsSQL = "SELECT * FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id WHERE sus_login_name = ? AND sus_login_password = ? ";
+		$sql = "SELECT * FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id WHERE sus_login_name = ?";
 
 		$this_username = $_POST['nuSTATE']['username'];
-		$this_password = md5($_POST['nuSTATE']['password']);
+		$this_password = $_POST['nuSTATE']['password'];
 
-		$checkLoginDetailsValues = array(
-			$this_username,
-			$this_password
-		);
-		$checkLoginDetailsQRY = nuRunQuery($checkLoginDetailsSQL, $checkLoginDetailsValues);
-		$checkLoginDetailsOBJ = db_fetch_object($checkLoginDetailsQRY);
-	
+		$rs = nuRunQuery($sql, array($this_username));
+		$checkLoginDetailsOBJ = db_fetch_object($rs);
+
+		$check = password_verify($this_password, $checkLoginDetailsOBJ->sus_login_password);
+		if ($check == false) nuDie();
+
 	}
 
 	$language = $new ? $checkLoginDetailsOBJ->sus_language : $_SESSION['nubuilder_session_data']['language'];
