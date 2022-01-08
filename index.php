@@ -134,6 +134,8 @@ function nuHomeWarning(){
 
 function nuLoginRequest(u, p){
 
+	$(":submit").nuDisable();
+
 	var w = {
 				call_type		: 'login', 
 				username		: arguments.length == 0 ? $('#nuusername').val() : u, 
@@ -162,6 +164,7 @@ function nuLoginRequest(u, p){
 		},
 		error		: function(jqXHR,textStatus,errorThrown){
 
+			$(":submit").nuEnable();
 			window.test = jqXHR.responseText;
 
 			let err = nuFormatAjaxErrorMessage(jqXHR, errorThrown);
