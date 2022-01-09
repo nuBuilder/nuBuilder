@@ -237,9 +237,23 @@ function nuPopupCalendar(pThis, d){
 	
 }
 
-function nuTitleBox(n, l){
+function nuWeekDayFromString(n) {
 
-	var t = nuUXOptions["nuCalendarStartOfWeek"] == 'Monday' ? nuTranslate('MTWTFSS') : nuTranslate('SMTWTFS');
+	//-- legacy
+	const wd = 'MTWTFSS'; 
+
+	if (wd != nuTranslate(wd)) {
+		let t = nuUXOptions["nuCalendarStartOfWeek"] == 'Monday' ? nuTranslate('MTWTFSS') : nuTranslate('SMTWTFS');
+		return t.substr(n, 1);
+	} else {
+		let t2 = nuUXOptions["nuCalendarStartOfWeek"] == 'Monday' ? nuTranslate('M,T,W,T,F,S,S') : nuTranslate('S,M,T,W,T,F,S');
+     //   alert(n + '--> ' + t2.split(',')[n]);
+		return t2.split(',')[n];
+	}
+
+}
+
+function nuTitleBox(n, l){
 
 	var c					= nuAppendChild('#nuCalendar','div','nuCalTitle' + n);
 
@@ -260,7 +274,7 @@ function nuTitleBox(n, l){
 			'font-style'	: 'bold',
 			'font-size'		: 14,
 	})
-	.html(t.substr(n, 1))
+	.html(nuWeekDayFromString(n))
 	.addClass('nuCalendar nuCalendarColor');
 
 }
