@@ -247,7 +247,7 @@ function nuWeekDayFromString(n) {
 		return t.substr(n, 1);
 	} else {
 		let t2 = nuUXOptions["nuCalendarStartOfWeek"] == 'Monday' ? nuTranslate('M,T,W,T,F,S,S') : nuTranslate('S,M,T,W,T,F,S');
-     //   alert(n + '--> ' + t2.split(',')[n]);
+
 		return t2.split(',')[n];
 	}
 
