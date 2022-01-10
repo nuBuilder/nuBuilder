@@ -9,8 +9,6 @@ nuImportNewDB();
 
 require_once('core/nusystemupdatelibs.php');
 
-nuMigrateSQL();
-
 if ( !isset($_SESSION['nubuilder_session_data']['NB_PATH']) || dirname($_SESSION['nubuilder_session_data']['NB_PATH']) != $nb_path ) {
 
 	$_SESSION['nubuilder_session_data']['NB_PATH'] = null;
@@ -288,7 +286,7 @@ window.nuHASH				= [];
 	$(document).on('select2:open', () => {
 		document.querySelector('.select2-search__field').focus();
 	});
-	
+
 	document.addEventListener('focus', nuOnFocus, true);
 
 	</script>

@@ -64,8 +64,6 @@ $i++;
 nuSetCollation();
 nuPrintLastUpdateMessage($i, 'You will need to log in again for the changes to take effect');
 
-nuMigrateSQL();
-
 function nuPrintUpdateMessage($i, $msg) {
 	print '<br>' . $i . '. <span style="font-family:Helvetica;padding:10px;">' . $msg . '<br></span>';
 }
