@@ -30,6 +30,7 @@ class nubuilder_session_data {
 	'2FA_FORM_ID'				=> '',
 	'2FA_TOKEN_VALIDITY_TIME'	=> '',
 	'2FA_REMEMBER_ME'			=> false,
+	'USE_MD5_PASSWORD_HASH'		=> false,	
 	'SESSION_ID'				=> null,
 	'SESSION_TIMESTAMP'			=> null,
 	'translation'				=> null,
@@ -45,7 +46,7 @@ class nubuilder_session_data {
 
 		return $this->nubuilder;
 	}
-	function construct_session($nuConfigDBDriver,$nuConfigDBPort,$nuConfigDBHost,$nuConfigDBName,$nuConfigDBUser,$nuConfigDBPassword,$nuConfigDBGlobeadminUsername,$nuConfigDBGlobeadminPassword, $nuConfigDBGlobeadminUsers, $nuConfigDemoDBGlobeadminUsername, $nuConfigDemoDBGlobeadminPassword, $nuConfigDemoSavingAllowedIds, $nuConfig2FAAdmin, $nuConfig2FAUser, $nuConfig2FAFormID, $nuConfig2FATokenValidityTime, $nuConfig2FAShowRememberMe, $nuConfigUserAdditional1Label, $nuConfigUserAdditional2Label, $nuConfigUserCodeLabel, $nuConfigIsDemo = false) {
+	function construct_session($nuConfigDBDriver,$nuConfigDBPort,$nuConfigDBHost,$nuConfigDBName,$nuConfigDBUser,$nuConfigDBPassword,$nuConfigDBGlobeadminUsername,$nuConfigDBGlobeadminPassword, $nuConfigDBGlobeadminUsers, $nuConfigDemoDBGlobeadminUsername, $nuConfigDemoDBGlobeadminPassword, $nuConfigDemoSavingAllowedIds, $nuConfig2FAAdmin, $nuConfig2FAUser, $nuConfig2FAFormID, $nuConfig2FATokenValidityTime, $nuConfig2FAShowRememberMe, $nuConfigUserAdditional1Label, $nuConfigUserAdditional2Label, $nuConfigUserCodeLabel, $nuUseMd5PasswordHash, $nuConfigIsDemo = false) {
 
 		$this->nubuilder['DB_DRIVER']				= $nuConfigDBDriver;
 		$this->nubuilder['DB_PORT']					= $nuConfigDBPort;
@@ -72,6 +73,8 @@ class nubuilder_session_data {
 		$this->nubuilder['2FA_TOKEN_VALIDITY_TIME']	= $nuConfig2FATokenValidityTime == '' ? 168 : $nuConfig2FATokenValidityTime;
 		$this->nubuilder['2FA_REMEMBER_ME']			= $nuConfig2FAShowRememberMe;
 		
+		$this->nubuilder['USE_MD5_PASSWORD_HASH']	= $nuUseMd5PasswordHash;
+	
 		$this->nubuilder['USER_ADDITIONAL1_LABEL']	= $nuConfigUserAdditional1Label;
 		$this->nubuilder['USER_ADDITIONAL2_LABEL']	= $nuConfigUserAdditional2Label;
 		$this->nubuilder['USER_CODE_LABEL']			= $nuConfigUserCodeLabel;

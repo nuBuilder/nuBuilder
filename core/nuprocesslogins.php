@@ -57,12 +57,16 @@ function nuCheckUserLoginRequest() {
 	if ($check == true) {
 
 		$r = db_fetch_object($rs);
-		$sql = 'UPDATE zzzzsys_user SET sus_login_password = ? WHERE sus_login_name = ?';
-		nuRunQuery($sql, array(
-					nuPasswordHash($_POST['nuSTATE']['password']),
-					$_POST['nuSTATE']['username']
-				)
-		);
+
+		if ($_SESSION['nubuilder_session_data']['USE_MD5_PASSWORD_HASH'] != true) {
+
+			$sql = 'UPDATE zzzzsys_user SET sus_login_password = ? WHERE sus_login_name = ?';
+			nuRunQuery($sql, array(
+						nuPasswordHash($_POST['nuSTATE']['password']),
+						$_POST['nuSTATE']['username']
+					)
+			);
+		}
 
 	} else {
 
@@ -210,7 +214,11 @@ function nuLoginSetupNOTGlobeadmin($new = true) {
 		$rs = nuRunQuery($sql, array($this_username));
 		$checkLoginDetailsOBJ = db_fetch_object($rs);
 
-		$check = password_verify($this_password, $checkLoginDetailsOBJ->sus_login_password);
+		if ($_SESSION['nubuilder_session_data']['USE_MD5_PASSWORD_HASH'] != true) {
+			$check = password_verify($this_password, $checkLoginDetailsOBJ->sus_login_password);
+		} else {
+			$check = md5($this_password) == $checkLoginDetailsOBJ->sus_login_password;
+		}	
 		if ($check == false) nuDie();
 
 	}

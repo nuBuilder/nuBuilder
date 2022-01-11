@@ -47,6 +47,7 @@
 	$nuConfigEnableDatabaseUpdate		= true;						//-- Enable updating the database within nuBuilder
 	$nuConfigKeepSessionAlive			= true;						//-- Use a timer to keep the session alive
 	$nuConfigKeepSessionAliveInterval	= 600;						//-- Keep-alive interval. Default 600 s (10 min)
+	$nuUseMd5PasswordHash				= false; 					//-- If set to true, MD5 is used to hash passwords, otherwise password_hash(), which is recommended.
 
 //	2FA authentication
 	$nuConfig2FAAdmin					= false;					//-- Use 2FA authentication for administrator
