@@ -4428,21 +4428,26 @@ function nuGetSearchList(){
 			nuSetSearchColumn();
 
 		});
+		
+		if (i < 10) {
 
-		var shortcut_key	= document.createElement('div');
-		var shortcut_key_id	= 'nuSearchTextShortcutKey' + i.toString();
+			var shortcut_key	= document.createElement('div');
+			var shortcut_key_id	= 'nuSearchTextShortcutKey' + i.toString();
 
-		shortcut_key.setAttribute('id', shortcut_key_id);
+			shortcut_key.setAttribute('id', shortcut_key_id);
 
-		$('#nuSearchList').append(shortcut_key);
+			$('#nuSearchList').append(shortcut_key);
 
-		var	prop			= {'position' : 'absolute', 'text-align' : 'left', 'height' : 15, 'width' : 50};
+			var	prop			= {'position' : 'absolute', 'text-align' : 'left', 'height' : 15, 'width' : 50};
 
-		$('#' + shortcut_key.id)
-		.css(prop)
-		.css({'top'	: 37 + (i * 25), 'right' : 10})
-		.html('Ctrl+Shift+' + i)
-		.addClass('nuOptionsItemShortcutKey');
+			$('#' + shortcut_key.id)
+			.css(prop)
+			.css({'top'	: 37 + (i * 25), 'right' : 10})
+			.html('Ctrl+Shift+' + i)
+			.addClass('nuOptionsItemShortcutKey');
+
+		}
+
 	}
 
 	$('.nuOptionsItem').css({'width' : widest - 90, 'padding' : '3px 0px 0px 3px'});
