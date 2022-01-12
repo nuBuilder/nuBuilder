@@ -23,6 +23,44 @@
 .nu_Report					{background-color : #62D3FF !important}
 .nu_Procedure				{background-color : #9FD275 !important}
 
+
+/* noto-sans-regular - latin */
+@font-face {
+	 font-family: 'Noto Sans';
+	 font-style: normal;
+	 font-weight: 400;
+	 src: local(''),
+		 url('../fonts/noto-sans-v21-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+		 url('../fonts/noto-sans-v21-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* noto-sans-italic - latin */
+@font-face {
+	 font-family: 'Noto Sans';
+	 font-style: italic;
+	 font-weight: 400;
+	 src: local(''),
+		 url('../fonts/noto-sans-v21-latin-italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+		 url('../fonts/noto-sans-v21-latin-italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* noto-sans-700italic - latin */
+@font-face {
+	 font-family: 'Noto Sans';
+	 font-style: italic;
+	 font-weight: 700;
+	 src: local(''),
+		  url('../fonts/noto-sans-v21-latin-700italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+		  url('../fonts/noto-sans-v21-latin-700italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* noto-sans-700 - latin */
+@font-face {
+	 font-family: 'Noto Sans';
+	 font-style: normal;
+	 font-weight: 700;
+	 src: local(''),
+		  url('../fonts/noto-sans-v21-latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+		  url('../fonts/noto-sans-v21-latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
 .input_file {
 	 background-color: #faf0e1;
 }
@@ -82,16 +120,16 @@
  select {
 	 padding:0;
 	 margin:0;
-	 font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+	 font-family:"Noto Sans", "Helvetica Neue",Helvetica,Arial,sans-serif;
 	 border: 1px solid #ddd;
 	 border-radius: 0.25rem;
 	 box-sizing:initial 
 }
  textarea {
 	 margin:0;
-	 font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
 	 border: 1px solid #ddd;
 	 border-radius: 0.25rem;
+	 font-family:"Noto Sans", "Helvetica Neue",Helvetica,Arial,sans-serif;	 
 	 font-size:13.3333px 
 }
  body {
@@ -99,16 +137,18 @@
 	 transform-origin:top left;
 	 padding:0;
 	 margin:0;
-	 font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+	 font-family:"Noto Sans", "Helvetica Neue",Helvetica,Arial,sans-serif;
 	 font-size:13px 
 }
  input {
 	 border: 1px solid #ddd;
 	 border-radius: 0.25rem;
+	 font-family:"Noto Sans", "Helvetica Neue",Helvetica,Arial,sans-serif;
 	 padding:0 2px 
 }
  button {
-	 border-radius:4px 
+	 border-radius:4px;
+	 font-family:"Noto Sans", "Helvetica Neue",Helvetica,Arial,sans-serif
 }
  input[type=range]::-webkit-slider-runnable-track {
 	 background:darkgrey;
@@ -472,7 +512,7 @@
 	 padding:6px 10px 3px;
 	 position:absolute;
 	 top:75px;
-	 font:13px "Helvetica Neue",HelveticaNeue,Helvetica,Arial,sans-serif!important;
+	 font:13px "Noto Sans", "Helvetica Neue",HelveticaNeue,Helvetica,Arial,sans-serif!important;
 	 line-height:150%;
 	 white-space:nowrap 
 }
@@ -491,7 +531,7 @@
 	 top:75px;
 	 background-color:#338ea01c!important;
 	 border-color:#ebebeb70;
-	 font:13px "Helvetica Neue",HelveticaNeue,Helvetica,Arial,sans-serif!important;
+	 font:13px "Noto Sans", "Helvetica Neue",Helvetica,Arial,sans-serif!important;
 	 line-height:150%;
 	 white-space:nowrap 
 }
@@ -835,7 +875,7 @@
  .nuSection {
 	 border-width:1px;
 	 font-size:12px;
-	 font-family:Helvetica,sans-serif;
+	 font-family:"Noto Sans",Helvetica,sans-serif;
 	 user-select: none 
 }
  .nuDragLine {
@@ -984,7 +1024,7 @@
 	 color:#f00 
 }
  .nuUpdateMessageProgress {
-	 font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+	 font-family:"Noto Sans","Helvetica Neue",Helvetica, "Segoe UI", Arial,sans-serif;
 	 width:100px;
 	 height:22px;
 	 top:10px;
@@ -998,7 +1038,7 @@
 	 vertical-align:middle 
 }
  .nuUpdateMessage {
-	 font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+	 font-family:"Noto Sans","Helvetica Neue",Helvetica, "Segoe UI", Arial,sans-serif;
 	 height:20px;
 	 top:4px;
 	 left:0;
@@ -1155,7 +1195,7 @@
 	 color:#333;
 	 font-size:14px;
 	 font-weight:700;
-	 font-family:sans-serif,"Segoe UI",Helvetica,"Helvetica Neue",Arial,sans-serif;
+	 font-family:"Noto Sans","Helvetica Neue",Helvetica, "Segoe UI", Arial,sans-serif;
 	 display:block;
 	 padding:9px;
 	 letter-spacing:1px 
@@ -1205,13 +1245,13 @@
 	 padding:10px;
 	 color:black;
 	 text-align: center;
-	 font-family:sans-serif,"Segoe UI",Helvetica,"Helvetica Neue",Arial,sans-serif 
+	 font-family:"Noto Sans","Helvetica Neue",Helvetica, "Segoe UI", Arial,sans-serif
 }
  #nuprompt #nupromptbody{
 	 background:#fff;
 	 padding:20px;
 	 color:#000;
-	 font-family:sans-serif,"Segoe UI",Helvetica,"Helvetica Neue",Arial,sans-serif 
+	 font-family:"Noto Sans","Helvetica Neue",Helvetica, "Segoe UI", Arial,sans-serif
 }
  #nuprompt #nupromptfoot{
 	 background: #fff;
@@ -1219,7 +1259,7 @@
 	 border-bottom-right-radius: 6px;
 	 padding:10px;
 	 text-align:right;
-	 font-family:sans-serif,"Segoe UI",Helvetica,"Helvetica Neue",Arial,sans-serif 
+	 font-family:"Noto Sans","Helvetica Neue",Helvetica, "Segoe UI", Arial,sans-serif
 }
  .ctxmenu li {
 	 -moz-user-select: none;
