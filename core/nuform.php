@@ -1557,11 +1557,11 @@ function nuFormDimensions($f){
 			 $gw	= $gw + $r->sob_all_width + 4;
 
 	}
-	
+
 	if ($r->sob_all_type == 'textarea') {
 		$oh = $r->sob_all_height + 8;
 	} else if (isset($r->sob_select_2) && $r->sob_select_2 == '1') {
-		$oh = $r->sob_all_height + 20;
+		$oh = $r->sob_all_height + 13;
 	} else {
 		$oh = $r->sob_all_height;
 	}
