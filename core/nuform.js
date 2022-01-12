@@ -678,8 +678,6 @@ function nuBuildEditObjects(f, p, o, prop){
 
 }
 
-
-
 function nuAddJSObjectEvents(i, j){
 
 	var o			= document.getElementById(i);
@@ -688,13 +686,25 @@ function nuAddJSObjectEvents(i, j){
 
 		var code	= o.getAttribute(j[J].event);
 		var ev		= j[J].event;
+
+
 		code		= code === null ? '' : code + ';' ;
 
 		if(ev == 'beforeinsertrow')		{ev	= 'data-nu-' + ev;}
 		if(ev == 'afterinsertrow')		{ev	= 'data-nu-' + ev;}
 		if(ev == 'clickdelete')			{ev	= 'data-nu-' + ev;}
 
-		o.setAttribute(ev, code + j[J].js);
+		if (o.classList.contains('nuLookupButton')) {
+
+			if (ev == 'onclick') {
+				o.setAttribute(ev, code + j[J].js);
+			} else {
+				$('#' + o.id.slice(0, -6) + 'code')[0].setAttribute(ev, code + j[J].js);
+			}	
+
+		} else {
+			o.setAttribute(ev, code + j[J].js);
+		}	
 
 	}
 
@@ -992,7 +1002,6 @@ function nuINPUT(w, i, l, p, prop){
 	if(inputType != 'file'){
 
 		if(inputType == 'button'){
-			
 			$('#' + id).html(nuTranslate(w.objects[i].value))
 		}else{
 
@@ -1008,8 +1017,6 @@ function nuINPUT(w, i, l, p, prop){
 
 	}
 
-	nuAddJSObjectEvents(id, obj.js);
-
 	if(w.objects[i].input == 'checkbox'){
 
 		document.getElementById(id).checked	= (w.objects[i].value == '1');
@@ -1020,11 +1027,11 @@ function nuINPUT(w, i, l, p, prop){
 
 	}
 
-
 	if(objectType == 'display'){
 
-		$('#' + id).addClass('nuReadonly');
-		$('#' + id).prop('readonly', true);
+		$('#' + id)
+			.addClass('nuReadonly')
+			.prop('readonly', true);
 
 	}
 
@@ -1125,6 +1132,8 @@ function nuINPUT(w, i, l, p, prop){
 
 		if (obj.label === 'Insert-Snippet') $('#' + id).css('font-size','18px');
 
+		nuAddJSObjectEvents(id, obj.js);
+
 		id = p + obj.id + 'description';
 		var inp = document.createElement('input');
 		inp.setAttribute('id', id);
@@ -1149,7 +1158,7 @@ function nuINPUT(w, i, l, p, prop){
 		nuAddStyle(id, obj);
 
 		return Number(obj.width) + Number(obj.description_width) + 30;
-
+		
 	}else{
 
 		if(objectType == 'input' && inputType == 'nuAutoNumber'){
@@ -1173,7 +1182,10 @@ function nuINPUT(w, i, l, p, prop){
 
 		}
 
+		nuAddJSObjectEvents(id, obj.js);
+
 		nuSetAccess(ID, obj.read);
+
 		nuAddStyle(id, obj);
 
 		return Number(obj.width) + (obj.read == 2 ? -2 : 4);
