@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 12, 2022 at 01:28 PM
+-- Generation Time: Jan 12, 2022 at 02:09 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.8
 
@@ -591,8 +591,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2022.01.12.03'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2022.01.12.00');
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2022.01.12.04'),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2022.01.12.01');
 
 -- --------------------------------------------------------
 
@@ -1034,7 +1034,7 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu5feb9ff762770', 'nubuildreport', 'zzzzsys_access', 'subform', 'accrept', ' ', 'nu5fdf7fc6680a0b2', 100, 34, 56, 460, 489, '1', 'left', '0', '0', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', '', '', '', '', '', 'nu5feb9ffd45efe', 'sre_zzzzsys_report_id', '1', '1', 'g', '', 0, '', '', '', NULL, NULL, '', '', '', '', '', '', ''),
 ('nu5feb9ffe0330e', 'nu5feb9ffd45efe', '', 'select', 'sre_zzzzsys_access_id', 'Access levels that can use this report', 'nu5feb9ffd6fbca', 10, 300, 250, 400, 20, '1', 'left', '1', '0', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '0', '0', 'SELECT `zzzzsys_access_id`, CONCAT(`sal_code`,\" : \",`sal_description`) FROM `zzzzsys_access` ORDER BY 2', '', '', '', '', '', '', '', 'zzzzsys_form', '', '', '1', '', '', '', 0, '', '', '', NULL, NULL, '', '', '', '', '', '', ''),
 ('nu5fee9ff762770', 'nuphp', 'zzzzsys_access', 'subform', 'accphp', ' ', 'nu5fdf7df2d873dd1', 140, 100, 56, 459, 459, '1', 'left', '0', '0', '1', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', '', '', '', '', '', 'nu5fee9ffd45efe', 'slp_zzzzsys_php_id', '1', '1', 'g', 'zzzzsys_access_php', 0, '', '', '', NULL, NULL, '', '', '', '', '', '', ''),
-('nu5fee9ffe0330e', 'nu5fee9ffd45efe', '', 'select', 'slp_zzzzsys_access_id', 'Access Level', 'nu5fee9ffd6fbca', 10, 300, 250, 400, 20, '1', 'left', '1', '0', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '0', '0', 'SELECT zzzzsys_access_id, CONCAT(sal_code, \' : \', sal_description) FROM zzzzsys_access ORDER BY 2', '', '', '', '', '', '', '', 'zzzzsys_form', '', '', '1', '', '', '', 0, '', '', '', NULL, NULL, '', '', '', '', '', '', ''),
+('nu5fee9ffe0330e', 'nu5fee9ffd45efe', '', 'select', 'slp_zzzzsys_access_id', 'Access Level', 'nu5fee9ffd6fbca', 10, 300, 250, 400, 20, '1', 'left', '1', '0', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '0', '1', 'SELECT zzzzsys_access_id, CONCAT(sal_code, \' : \', sal_description) FROM zzzzsys_access ORDER BY 2', '', '', '', '', '', '', '', 'zzzzsys_form', '', '', '1', '', '', '', 0, '', '', '', NULL, NULL, '', '', '', '', '', '', ''),
 ('nu5fdfbfcaeea14a6', 'nuuser', 'zzzzsys_user', 'input', 'sus_expires_on', 'Expires On', 'nu5bad6cb36b63cae', 170, 521, 192, 84, 22, '1', 'left', '0', '0', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, 'D|yyyy-mm-dd', 'nuDate', '', NULL, NULL, '', '', '', '', '', '', ''),
 ('nu5fe038d847fbb70', 'nuuser', 'zzzzsys_user', 'input', 'sus_password_show_btn', 'Show', 'nu5bad6cb36b63cae', 80, 196, 414, 16, 22, '1', 'left', '0', '0', '1', 'CSS', '{\"label\" : \"font-size: smaller\"}', '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'checkbox', '', NULL, NULL, '', '', '', '', '', '', ''),
 ('nu5fe0547b82db3de', 'nuauthentication', '', 'input', 'auth_code', 'Code', 'nu5fe0547b76e25d6', 20, 269, 167, 150, 22, '1', 'left', '0', '0', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 'text', '', NULL, NULL, '', '', '', '', '', '', ''),
