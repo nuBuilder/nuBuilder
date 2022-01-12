@@ -502,30 +502,30 @@ function nuCreateDialog(t){
 	this.moveY		= 0;
 	this.title		= t;
 	this.pos		= {};
-	
+
 	this.move = function(event) {
-			
+
 		this.moveX	= event.clientX - this.startX ;
 		this.moveY	= event.clientY - this.startY;
 		this.startX	= event.clientX;
 		this.startY	= event.clientY;
-		
+
 		if(event.buttons == 1){	
 			this.moveDialog(event);
 		}
-		
+
 		var dir = event.target.parentElement.baseURI.includes('nureportdesigner') ? '' : 'core/';
 		
 		if(event.target.id == 'dialogClose'){
-			$('#dialogClose').attr("src",dir + "graphics/close_red.png"); 
+			$('#dialogClose').attr("src",dir + "graphics/close_red.png");
 		}else{
-			$('#dialogClose').attr("src",dir + "graphics/close.png"); 
+			$('#dialogClose').attr("src",dir + "graphics/close.png");
 		}
-		
+
 	}
-	
+
 	this.click = function(event) {
-	
+
 		if(event.target.id == 'dialogClose'){
 
 			if($('#nuWindow').contents().find('#nuSaveButton.nuSaveButtonEdited').length > 0){
@@ -533,17 +533,17 @@ function nuCreateDialog(t){
 				if(!confirm(nuTranslate('Leave this form without saving?'))){
 					return false;
 				}
-				
+
 			}
 			$('#nuDragDialog').remove();
 			$('#nuModal').remove();
 			$('body').off('.popup');
-			
+
 		}
-		
+
 	}
 
-	
+
 	this.down = function(event) {
 	
 		window.nuCurrentID	= event.target.id;

@@ -3347,7 +3347,7 @@ function nuBrowseTable(){
 	var row				= bc.browse_rows;
 	var rows			= bc.rows;
 	var h				= bc.row_height;
-	var t				= parseInt($('#nuBrowseTitle0').css('height'))- h - 10;
+	var t				= parseInt($('#nuBrowseTitle0').css('height'))- h - 6;
 	var l				= 7;
 
 	for(r = 0 ; r < rows ; r++){
