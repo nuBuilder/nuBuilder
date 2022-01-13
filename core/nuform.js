@@ -4380,7 +4380,7 @@ function nuGetSearchList(){
 		'width'				: widest + 20,
 		'height'			: 10 + (c.length * 30),
 		'top'				: 138,
-		'left'				: (window.nuBrowseWidth - widest) / 2,
+		'left'				: (window.innerWidth - widest) < 0 ? 0 : 50,
 		'position'			: 'absolute',
 		'text-align'		: 'left'
 	})
