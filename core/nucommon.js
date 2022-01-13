@@ -1650,6 +1650,8 @@ function nuQuill(i, options) {
 		quill.clipboard.dangerouslyPasteHTML(content);
 	}
 
+	window[i + '_object'] = quill;
+
 	var startDate = new Date();
 	quill.on('text-change', function(delta, oldDelta, source) {
 		var endDate = new Date();
