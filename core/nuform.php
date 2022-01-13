@@ -833,9 +833,9 @@ function nuSelectOptions($sql) {
 
 			$r		= array();
 			$r[0]	= $f;
-			$r[1]	= $f;	
-			$a[]	= $r;			
-			
+			$r[1]	= $f;
+			$a[]	= $r;
+
 		}
 
 	} elseif (substr(strtoupper(trim($sql)), 0, 6) == 'SELECT' || substr(strtoupper($sql), 0, 5) == 'WITH ') {						//-- sql statement

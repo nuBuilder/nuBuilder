@@ -6,7 +6,6 @@ require_once('nuchoosesetup.php');
 require_once('nubuilders.php'); 
 require_once('nuemailer.php');
 require_once dirname(__FILE__) . '/nusqlclass.php';
-require_once dirname(__FILE__) . '/nusearchclass.php';
 
 //set_time_limit(0);
 
