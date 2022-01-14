@@ -2061,13 +2061,13 @@ function nuDisableBrowseResize() {
 
 }
 
-function nuResizeBrowseColumns(){
+function nuResizeBrowseColumns(force){
 
 	var w	= nuFORM.getCurrent().column_widths;
 	var t	= 0;
 	var p	= nuTotalWidth('nucell_0_0') - $('#nucell_0_0').width();	//-- padding
 
-	if(nuFORM.getCurrent().refreshed != 0 && nuMainForm()){return;}
+	if((nuFORM.getCurrent().refreshed != 0 && force !== true)  && nuMainForm()){return;}
 
 	if(nuMainForm()){
 
@@ -2086,11 +2086,12 @@ function nuResizeBrowseColumns(){
 		$('#nuDragDialog',	window.parent.document).css('width', W + 14);
 		$('#nuWindow',		window.parent.document).css('width', W);
 
-		$('body').css('width', W);//.css('padding', '0px 0px 0px 7px');
+		$('body').css('width', W);
 
 	}
 
-	if(nuFORM.getCurrent().refreshed != 0){return;}
+	if(nuFORM.getCurrent().refreshed != 0 && force !== true){return;}
+	console.log('nuResizeBrowseColumns 2')
 
 	nuSetBrowserColumns(w);
 
