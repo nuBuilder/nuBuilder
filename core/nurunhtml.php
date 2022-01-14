@@ -6,7 +6,6 @@ require_once('nudata.php');
 
 print "<meta charset='utf-8'>";
 
-$table_id			= nuTT();
 $s					= "SELECT deb_message AS json FROM zzzzsys_debug WHERE zzzzsys_debug_id = ? ";		//-- created by nuRunHTML()
 $t					= nuRunQuery($s, array($_GET['i']));
 
