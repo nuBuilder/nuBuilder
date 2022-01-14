@@ -2091,7 +2091,6 @@ function nuResizeBrowseColumns(force){
 	}
 
 	if(nuFORM.getCurrent().refreshed != 0 && force !== true){return;}
-	console.log('nuResizeBrowseColumns 2')
 
 	nuSetBrowserColumns(w);
 
