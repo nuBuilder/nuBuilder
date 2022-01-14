@@ -35,7 +35,7 @@
             'class': 'nav-link dropdown-toggle',
             'id': 'navbarDropdown',
             'role': 'button',
-            'data-toggle': 'dropdown',
+            'data-bs-toggle': 'dropdown',
             'aria-haspopup': 'true',
             'aria-expanded': 'false'
         }).text(Messages.strMore);
@@ -47,7 +47,7 @@
         var $submenu = $('<li></li>', { 'class': 'nav-item dropdown d-none' })
             .append(link)
             .append($('<ul></ul>', {
-                'class': 'dropdown-menu dropdown-menu-right',
+                'class': 'dropdown-menu dropdown-menu-end',
                 'aria-labelledby': 'navbarDropdown'
             }));
         $container.append($submenu);
@@ -72,6 +72,7 @@
             totalLen += $($li[i]).outerWidth(true);
         }
 
+        // eslint-disable-next-line compat/compat
         var hasVScroll = document.body.scrollHeight > document.body.clientHeight;
         if (hasVScroll) {
             windowWidth += 15;
@@ -167,7 +168,13 @@
         }
     };
 
-    /** Extend jQuery */
+    /**
+     * Extend jQuery
+     *
+     * @param {string} method
+     *
+     * @return {any}
+     */
     $.fn.menuResizer = function (method) {
         if (methods[method]) {
             return methods[method].call(this);

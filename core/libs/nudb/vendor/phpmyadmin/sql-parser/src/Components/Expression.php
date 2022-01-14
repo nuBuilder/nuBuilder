@@ -14,6 +14,7 @@ use PhpMyAdmin\SqlParser\Exceptions\ParserException;
 use PhpMyAdmin\SqlParser\Parser;
 use PhpMyAdmin\SqlParser\Token;
 use PhpMyAdmin\SqlParser\TokensList;
+
 use function implode;
 use function is_array;
 use function strlen;
@@ -22,6 +23,8 @@ use function trim;
 /**
  * Parses a reference to an expression (column, table or database name, function
  * call, mathematical expression, etc.).
+ *
+ * @final
  */
 class Expression extends Component
 {
@@ -42,6 +45,8 @@ class Expression extends Component
         'XOR' => 1,
         'NOT' => 1,
         'MOD' => 1,
+
+        'OVER' => 2,
     ];
 
     /**
@@ -219,9 +224,7 @@ class Expression extends Component
             }
 
             // Skipping whitespaces and comments.
-            if (($token->type === Token::TYPE_WHITESPACE)
-                || ($token->type === Token::TYPE_COMMENT)
-            ) {
+            if (($token->type === Token::TYPE_WHITESPACE) || ($token->type === Token::TYPE_COMMENT)) {
                 if ($isExpr) {
                     $ret->expr .= $token->token;
                 }
@@ -230,20 +233,17 @@ class Expression extends Component
             }
 
             if ($token->type === Token::TYPE_KEYWORD) {
-                if (($brackets > 0) && empty($ret->subquery)
-                    && ! empty(Parser::$STATEMENT_PARSERS[$token->keyword])
-                ) {
+                if (($brackets > 0) && empty($ret->subquery) && ! empty(Parser::$STATEMENT_PARSERS[$token->keyword])) {
                     // A `(` was previously found and this keyword is the
                     // beginning of a statement, so this is a subquery.
                     $ret->subquery = $token->keyword;
-                } elseif (($token->flags & Token::FLAG_KEYWORD_FUNCTION)
+                } elseif (
+                    ($token->flags & Token::FLAG_KEYWORD_FUNCTION)
                     && (empty($options['parseField'])
                     && ! $alias)
                 ) {
                     $isExpr = true;
-                } elseif (($token->flags & Token::FLAG_KEYWORD_RESERVED)
-                    && ($brackets === 0)
-                ) {
+                } elseif (($token->flags & Token::FLAG_KEYWORD_RESERVED) && ($brackets === 0)) {
                     if (empty(self::$ALLOWED_KEYWORDS[$token->keyword])) {
                         // A reserved keyword that is not allowed in the
                         // expression was found so the expression must have
@@ -257,16 +257,15 @@ class Expression extends Component
                         }
 
                         if ($alias) {
-                            $parser->error(
-                                'An alias was expected.',
-                                $token
-                            );
+                            $parser->error('An alias was expected.', $token);
                             break;
                         }
 
                         $alias = true;
                         continue;
-                    } elseif ($token->keyword === 'CASE') {
+                    }
+
+                    if ($token->keyword === 'CASE') {
                         // For a use of CASE like
                         // 'SELECT a = CASE .... END, b=1, `id`, ... FROM ...'
                         $tempCaseExpr = CaseExpression::parse($parser, $list);
@@ -282,7 +281,8 @@ class Expression extends Component
                 }
             }
 
-            if (($token->type === Token::TYPE_NUMBER)
+            if (
+                ($token->type === Token::TYPE_NUMBER)
                 || ($token->type === Token::TYPE_BOOL)
                 || (($token->type === Token::TYPE_SYMBOL)
                 && ($token->flags & Token::FLAG_SYMBOL_VARIABLE))
@@ -301,16 +301,15 @@ class Expression extends Component
             }
 
             if ($token->type === Token::TYPE_OPERATOR) {
-                if (! empty($options['breakOnParentheses'])
-                    && (($token->value === '(') || ($token->value === ')'))
-                ) {
+                if (! empty($options['breakOnParentheses']) && (($token->value === '(') || ($token->value === ')'))) {
                     // No brackets were expected.
                     break;
                 }
 
                 if ($token->value === '(') {
                     ++$brackets;
-                    if (empty($ret->function) && ($prev[1] !== null)
+                    if (
+                        empty($ret->function) && ($prev[1] !== null)
                         && (($prev[1]->type === Token::TYPE_NONE)
                         || ($prev[1]->type === Token::TYPE_SYMBOL)
                         || (($prev[1]->type === Token::TYPE_KEYWORD)
@@ -322,21 +321,21 @@ class Expression extends Component
                     if ($brackets === 0) {
                         // Not our bracket
                         break;
-                    } else {
-                        --$brackets;
-                        if ($brackets === 0) {
-                            if (! empty($options['parenthesesDelimited'])) {
-                                // The current token is the last bracket, the next
-                                // one will be outside the expression.
-                                $ret->expr .= $token->token;
-                                ++$list->idx;
-                                break;
-                            }
-                        } elseif ($brackets < 0) {
-                            // $parser->error('Unexpected closing bracket.', $token);
-                            // $brackets = 0;
+                    }
+
+                    --$brackets;
+                    if ($brackets === 0) {
+                        if (! empty($options['parenthesesDelimited'])) {
+                            // The current token is the last bracket, the next
+                            // one will be outside the expression.
+                            $ret->expr .= $token->token;
+                            ++$list->idx;
                             break;
                         }
+                    } elseif ($brackets < 0) {
+                        // $parser->error('Unexpected closing bracket.', $token);
+                        // $brackets = 0;
+                        break;
                     }
                 } elseif ($token->value === ',') {
                     // Expressions are comma-delimited.
@@ -361,7 +360,8 @@ class Expression extends Component
                 $alias = false;
             } elseif ($isExpr) {
                 // Handling aliases.
-                if ($brackets === 0
+                if (
+                    $brackets === 0
                     && ($prev[0] === null
                         || (($prev[0]->type !== Token::TYPE_OPERATOR || $prev[0]->token === ')')
                             && ($prev[0]->type !== Token::TYPE_KEYWORD
@@ -418,10 +418,7 @@ class Expression extends Component
         }
 
         if ($alias) {
-            $parser->error(
-                'An alias was expected.',
-                $list->tokens[$list->idx - 1]
-            );
+            $parser->error('An alias was expected.', $list->tokens[$list->idx - 1]);
         }
 
         // White-spaces might be added at the end.

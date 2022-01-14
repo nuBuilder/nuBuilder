@@ -11,11 +11,14 @@ use PhpMyAdmin\SqlParser\Component;
 use PhpMyAdmin\SqlParser\Parser;
 use PhpMyAdmin\SqlParser\Token;
 use PhpMyAdmin\SqlParser\TokensList;
+
 use function implode;
 use function is_array;
 
 /**
  * Parses an Index hint.
+ *
+ * @final
  */
 class IndexHint extends Component
 {
@@ -119,12 +122,12 @@ class IndexHint extends Component
             switch ($state) {
                 case 0:
                     if ($token->type === Token::TYPE_KEYWORD) {
-                        if ($token->keyword === 'USE' || $token->keyword === 'IGNORE' || $token->keyword === 'FORCE') {
-                            $expr->type = $token->keyword;
-                            $state = 1;
-                        } else {
+                        if ($token->keyword !== 'USE' && $token->keyword !== 'IGNORE' && $token->keyword !== 'FORCE') {
                             break 2;
                         }
+
+                        $expr->type = $token->keyword;
+                        $state = 1;
                     }
 
                     break;
@@ -156,7 +159,8 @@ class IndexHint extends Component
                     break;
                 case 3:
                     if ($token->type === Token::TYPE_KEYWORD) {
-                        if ($token->keyword === 'JOIN'
+                        if (
+                            $token->keyword === 'JOIN'
                             || $token->keyword === 'GROUP BY'
                             || $token->keyword === 'ORDER BY'
                         ) {

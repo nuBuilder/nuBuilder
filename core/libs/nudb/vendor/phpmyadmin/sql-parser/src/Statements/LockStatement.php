@@ -12,6 +12,7 @@ use PhpMyAdmin\SqlParser\Parser;
 use PhpMyAdmin\SqlParser\Statement;
 use PhpMyAdmin\SqlParser\Token;
 use PhpMyAdmin\SqlParser\TokensList;
+
 use function trim;
 
 /**
@@ -92,11 +93,13 @@ class LockStatement extends Statement
 
                     $state = 1;
                     continue;
-                } else {
-                    $parser->error('Unexpected token.', $token);
-                    break;
                 }
-            } elseif ($state === 1) {
+
+                $parser->error('Unexpected token.', $token);
+                break;
+            }
+
+            if ($state === 1) {
                 if (! $this->isLock) {
                     // UNLOCK statement should not have any more tokens
                     $parser->error('Unexpected token.', $token);
@@ -115,9 +118,11 @@ class LockStatement extends Statement
             $prevToken = $token;
         }
 
-        if ($state !== 2 && $prevToken !== null) {
-            $parser->error('Unexpected end of LOCK statement.', $prevToken);
+        if ($state === 2 || $prevToken === null) {
+            return;
         }
+
+        $parser->error('Unexpected end of LOCK statement.', $prevToken);
     }
 
     /**

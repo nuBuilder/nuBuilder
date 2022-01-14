@@ -87,7 +87,6 @@ AJAX.registerOnload('server/status/monitor.js', function () {
 
 AJAX.registerTeardown('server/status/monitor.js', function () {
   $('#emptyDialog').remove();
-  $('#addChartDialog').remove();
   $('a.popupLink').off('click');
   $('body').off('click');
 });
@@ -97,7 +96,6 @@ AJAX.registerTeardown('server/status/monitor.js', function () {
 
 AJAX.registerOnload('server/status/monitor.js', function () {
   $('<div></div>').attr('id', 'emptyDialog').appendTo('#page_content');
-  $('#addChartDialog').appendTo('#page_content');
   $('a.popupLink').on('click', function () {
     var $link = $(this);
     $('div.' + $link.attr('href').substr(1)).show().offset({
@@ -601,7 +599,7 @@ AJAX.registerOnload('server/status/monitor.js', function () {
     var numColumns;
     var $tr = $('#chartGrid').find('tr').first();
 
-    var tempManageCols = function tempManageCols() {
+    var tempManageCols = function () {
       if (numColumns > monitorSettings.columns) {
         if ($tr.next().length === 0) {
           $tr.after('<tr></tr>');
@@ -613,7 +611,7 @@ AJAX.registerOnload('server/status/monitor.js', function () {
       numColumns++;
     };
 
-    var tempAddCol = function tempAddCol() {
+    var tempAddCol = function () {
       if ($(this).next().length !== 0) {
         $(this).append($(this).next().find('td').first());
       }
@@ -667,13 +665,11 @@ AJAX.registerOnload('server/status/monitor.js', function () {
   });
   $('a[href="#addNewChart"]').on('click', function (event) {
     event.preventDefault();
-    var dlgButtons = {};
-
-    dlgButtons[Messages.strAddChart] = function () {
+    $('#addChartButton').on('click', function () {
       var type = $('input[name="chartType"]:checked').val();
 
       if (type === 'preset') {
-        newChart = presetCharts[$('#addChartDialog').find('select[name="presetCharts"]').prop('value')];
+        newChart = presetCharts[$('#addChartModal').find('select[name="presetCharts"]').prop('value')];
       } else {
         // If user builds their own chart, it's being set/updated
         // each time they add a series
@@ -690,17 +686,15 @@ AJAX.registerOnload('server/status/monitor.js', function () {
       newChart = null;
       saveMonitor(); // Save settings
 
-      $(this).dialog('close');
-    };
-
-    dlgButtons[Messages.strClose] = function () {
+      $('#closeModalButton').off('click');
+    });
+    $('#closeModalButton').on('click', function () {
       newChart = null;
       $('span#clearSeriesLink').hide();
       $('#seriesPreview').html('');
-      $(this).dialog('close');
-    };
-
-    var $presetList = $('#addChartDialog').find('select[name="presetCharts"]');
+      $('#closeModalButton').off('click');
+    });
+    var $presetList = $('#addChartModal').find('select[name="presetCharts"]');
 
     if ($presetList.html().length === 0) {
       $.each(presetCharts, function (key, value) {
@@ -721,11 +715,7 @@ AJAX.registerOnload('server/status/monitor.js', function () {
       });
     }
 
-    $('#addChartDialog').dialog({
-      width: 'auto',
-      height: 'auto',
-      buttons: dlgButtons
-    });
+    $('#addChartModal').modal('show');
     $('#seriesPreview').html('<i>' + Messages.strNone + '</i>');
     return false;
   });
@@ -881,7 +871,7 @@ AJAX.registerOnload('server/status/monitor.js', function () {
       buttons: dlgBtns
     }).find('img.ajaxIcon').show();
 
-    var loadLogVars = function loadLogVars(getvars) {
+    var loadLogVars = function (getvars) {
       var vars = {
         'ajax_request': true,
         'server': CommonParams.get('server')
@@ -1308,7 +1298,7 @@ AJAX.registerOnload('server/status/monitor.js', function () {
       };
     } else if (settings.title === Messages.strQuestions || settings.title === Messages.strConnections) {
       settings.axes.yaxis.tickOptions = {
-        formatter: function formatter(format, val) {
+        formatter: function (format, val) {
           if (Math.abs(val) >= 1000000) {
             return $.jqplot.sprintf('%.3g M', val / 1000000);
           } else if (Math.abs(val) >= 1000) {
@@ -1344,7 +1334,7 @@ AJAX.registerOnload('server/status/monitor.js', function () {
       series.push([[0, 0]]);
     }
 
-    var tempTooltipContentEditor = function tempTooltipContentEditor(str, seriesIndex, pointIndex, plot) {
+    var tempTooltipContentEditor = function (str, seriesIndex, pointIndex, plot) {
       var j; // TODO: move style to theme CSS
 
       var tooltipHtml = '<div id="tooltip_editor">'; // x value i.e. time
@@ -1405,7 +1395,7 @@ AJAX.registerOnload('server/status/monitor.js', function () {
         width: '1em',
         height: '1em',
         background: chartObj.chart.seriesColors[i]
-      }).addClass('floatleft')).append($('<div>').text(chartObj.chart.series[i].label).addClass('floatleft')).append($('<div class="clearfloat">')).addClass('floatleft'));
+      }).addClass('float-start')).append($('<div>').text(chartObj.chart.series[i].label).addClass('float-start')).append($('<div class="clearfloat">')).addClass('float-start'));
     }
 
     $('#gridchart' + runtime.chartAI).parent().append($legend);
@@ -1424,7 +1414,8 @@ AJAX.registerOnload('server/status/monitor.js', function () {
         $('#selection_box').remove();
       }
 
-      var selectionBox = $('<div id="selection_box" >');
+      var selectionBox = $('<div id="selection_box" >'); // eslint-disable-next-line compat/compat
+
       $(document.body).append(selectionBox);
       selectionStartX = ev.pageX;
       selectionStartY = ev.pageY;
@@ -1467,7 +1458,8 @@ AJAX.registerOnload('server/status/monitor.js', function () {
     });
     $('#gridchart' + runtime.chartAI).on('jqplotMouseLeave', function () {
       drawTimeSpan = false;
-    });
+    }); // eslint-disable-next-line compat/compat
+
     $(document.body).on('mouseup', function () {
       if ($('#selection_box').length) {
         $('#selection_box').remove();
@@ -1816,7 +1808,7 @@ AJAX.registerOnload('server/status/monitor.js', function () {
       /* Add filter options if more than a bunch of rows there to filter */
 
       if (logData.numRows > 12) {
-        $('#logTable').prepend('<fieldset id="logDataFilter">' + '    <legend>' + Messages.strFiltersForLogTable + '</legend>' + '    <div class="formelement">' + '        <label for="filterQueryText">' + Messages.strFilterByWordRegexp + '</label>' + '        <input name="filterQueryText" type="text" id="filterQueryText">' + '    </div>' + (logData.numRows > 250 ? ' <div class="formelement"><button class="btn btn-secondary" name="startFilterQueryText" id="startFilterQueryText">' + Messages.strFilter + '</button></div>' : '') + '    <div class="formelement">' + '       <input type="checkbox" id="noWHEREData" name="noWHEREData" value="1"> ' + '       <label for="noWHEREData"> ' + Messages.strIgnoreWhereAndGroup + '</label>' + '   </div' + '</fieldset>');
+        $('#logTable').prepend('<fieldset class="pma-fieldset" id="logDataFilter">' + '    <legend>' + Messages.strFiltersForLogTable + '</legend>' + '    <div class="formelement">' + '        <label for="filterQueryText">' + Messages.strFilterByWordRegexp + '</label>' + '        <input name="filterQueryText" type="text" id="filterQueryText">' + '    </div>' + (logData.numRows > 250 ? ' <div class="formelement"><button class="btn btn-secondary" name="startFilterQueryText" id="startFilterQueryText">' + Messages.strFilter + '</button></div>' : '') + '    <div class="formelement">' + '       <input type="checkbox" id="noWHEREData" name="noWHEREData" value="1"> ' + '       <label for="noWHEREData"> ' + Messages.strIgnoreWhereAndGroup + '</label>' + '   </div' + '</fieldset>');
         $('#noWHEREData').on('change', function () {
           filterQueries(true);
         });
@@ -1835,13 +1827,14 @@ AJAX.registerOnload('server/status/monitor.js', function () {
 
       $('#emptyDialog').dialog('option', 'buttons', dlgBtns);
     });
-    /* Handles the actions performed when the user uses any of the
+    /**
+     * Handles the actions performed when the user uses any of the
      * log table filters which are the filter by name and grouping
      * with ignoring data in WHERE clauses
      *
-     * @param boolean Should be true when the users enabled or disabled
+     * @param {boolean} varFilterChange Should be true when the users enabled or disabled
      *                to group queries ignoring data in WHERE clauses
-    */
+     */
 
     function filterQueries(varFilterChange) {
       var textFilter;
@@ -1877,7 +1870,7 @@ AJAX.registerOnload('server/status/monitor.js', function () {
       var isSlowLog = opts.src === 'slow';
       var columnSums = {}; // For the slow log we have to count many columns (query_time, lock_time, rows_examined, rows_sent, etc.)
 
-      var countRow = function countRow(query, row) {
+      var countRow = function (query, row) {
         var cells = row.match(/<td>(.*?)<\/td>/gi);
 
         if (!columnSums[query]) {
@@ -1984,7 +1977,7 @@ AJAX.registerOnload('server/status/monitor.js', function () {
       } // Display some stats at the bottom of the table
 
 
-      $('#logTable').find('table tfoot tr').html('<th colspan="' + (runtime.logDataCols.length - 1) + '">' + Messages.strSumRows + ' ' + rowSum + '<span class="floatright">' + Messages.strTotal + '</span></th><th class="right">' + totalSum + '</th>');
+      $('#logTable').find('table tfoot tr').html('<th colspan="' + (runtime.logDataCols.length - 1) + '">' + Messages.strSumRows + ' ' + rowSum + '<span class="float-end">' + Messages.strTotal + '</span></th><th class="text-end">' + totalSum + '</th>');
     }
   }
   /* Turns a timespan (12:12:12) into a number */
@@ -2024,17 +2017,17 @@ AJAX.registerOnload('server/status/monitor.js', function () {
   function buildLogTable(data, groupInserts) {
     var rows = data.rows;
     var cols = [];
-    var $table = $('<table class="pma-table sortable"></table>');
+    var $table = $('<table class="table table-light table-striped table-hover align-middle sortable"></table>');
     var $tBody;
     var $tRow;
     var $tCell;
     $('#logTable').html($table);
 
-    var tempPushKey = function tempPushKey(key) {
+    var tempPushKey = function (key) {
       cols.push(key);
     };
 
-    var formatValue = function formatValue(name, value) {
+    var formatValue = function (name, value) {
       if (name === 'user_host') {
         return value.replace(/(\[.*?\])+/g, '');
       }
@@ -2045,7 +2038,7 @@ AJAX.registerOnload('server/status/monitor.js', function () {
     for (var i = 0, l = rows.length; i < l; i++) {
       if (i === 0) {
         $.each(rows[0], tempPushKey);
-        $table.append('<thead>' + '<tr><th class="nowrap">' + cols.join('</th><th class="nowrap">') + '</th></tr>' + '</thead>');
+        $table.append('<thead>' + '<tr><th class="text-nowrap">' + cols.join('</th><th class="text-nowrap">') + '</th></tr>' + '</thead>');
         $table.append($tBody = $('<tbody></tbody>'));
       }
 
@@ -2064,7 +2057,7 @@ AJAX.registerOnload('server/status/monitor.js', function () {
       }
     }
 
-    $table.append('<tfoot>' + '<tr><th colspan="' + (cols.length - 1) + '">' + Messages.strSumRows + ' ' + data.numRows + '<span class="floatright">' + Messages.strTotal + '</span></th><th class="right">' + data.sum.TOTAL + '</th></tr></tfoot>'); // Append a tooltip to the count column, if there exist one
+    $table.append('<tfoot>' + '<tr><th colspan="' + (cols.length - 1) + '">' + Messages.strSumRows + ' ' + data.numRows + '<span class="float-end">' + Messages.strTotal + '</span></th><th class="text-end">' + data.sum.TOTAL + '</th></tr></tfoot>'); // Append a tooltip to the count column, if there exist one
 
     if ($('#logTable').find('tr').first().find('th').last().text().indexOf('#') > -1) {
       $('#logTable').find('tr').first().find('th').last().append('&nbsp;' + Functions.getImage('b_help', '', {
@@ -2122,7 +2115,7 @@ AJAX.registerOnload('server/status/monitor.js', function () {
       height: 'auto',
       resizable: false,
       buttons: dlgBtns,
-      close: function close() {
+      close: function () {
         if (profilingChart !== null) {
           profilingChart.destroy();
         }
@@ -2169,7 +2162,7 @@ AJAX.registerOnload('server/status/monitor.js', function () {
 
       var totalTime = 0; // Float sux, I'll use table :(
 
-      $('#queryAnalyzerDialog').find('div.placeHolder').html('<table class="pma-table" width="100%" border="0"><tr><td class="explain"></td><td class="chart"></td></tr></table>');
+      $('#queryAnalyzerDialog').find('div.placeHolder').html('<table class="table table-borderless"><tr><td class="explain"></td><td class="chart"></td></tr></table>');
       var explain = '<b>' + Messages.strExplainOutput + '</b> ' + $('#explain_docu').html();
 
       if (data.explain.length > 1) {
@@ -2188,15 +2181,15 @@ AJAX.registerOnload('server/status/monitor.js', function () {
 
       explain += '<p></p>';
 
-      var tempExplain = function tempExplain(key, value) {
+      var tempExplain = function (key, value) {
         var newValue = value === null ? 'null' : Functions.escapeHtml(value);
 
         if (key === 'type' && newValue.toLowerCase() === 'all') {
-          newValue = '<span class="attention">' + newValue + '</span>';
+          newValue = '<span class="text-danger">' + newValue + '</span>';
         }
 
         if (key === 'Extra') {
-          newValue = newValue.replace(/(using (temporary|filesort))/gi, '<span class="attention">$1</span>');
+          newValue = newValue.replace(/(using (temporary|filesort))/gi, '<span class="text-danger">$1</span>');
         }
 
         explain += key + ': ' + newValue + '<br>';
@@ -2218,7 +2211,7 @@ AJAX.registerOnload('server/status/monitor.js', function () {
 
       if (data.profiling) {
         var chartData = [];
-        var numberTable = '<table class="pma-table queryNums"><thead><tr><th>' + Messages.strStatus + '</th><th>' + Messages.strTime + '</th></tr></thead><tbody>';
+        var numberTable = '<table class="table table-sm table-light table-striped table-hover w-auto queryNums"><thead><tr><th>' + Messages.strStatus + '</th><th>' + Messages.strTime + '</th></tr></thead><tbody>';
         var duration;
         var otherTime = 0;
 

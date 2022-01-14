@@ -11,6 +11,7 @@ use PhpMyAdmin\SqlParser\Component;
 use PhpMyAdmin\SqlParser\Parser;
 use PhpMyAdmin\SqlParser\Token;
 use PhpMyAdmin\SqlParser\TokensList;
+
 use function implode;
 use function in_array;
 use function is_array;
@@ -18,6 +19,8 @@ use function trim;
 
 /**
  * `WHERE` keyword parser.
+ *
+ * @final
  */
 class Condition extends Component
 {
@@ -57,6 +60,7 @@ class Condition extends Component
         'OR' => 1,
         'REGEXP' => 1,
         'RLIKE' => 1,
+        'SOUNDS' => 1,
         'XOR' => 1,
     ];
 
@@ -168,7 +172,8 @@ class Condition extends Component
                 }
             }
 
-            if (($token->type === Token::TYPE_KEYWORD)
+            if (
+                ($token->type === Token::TYPE_KEYWORD)
                 && ($token->flags & Token::FLAG_KEYWORD_RESERVED)
                 && ! ($token->flags & Token::FLAG_KEYWORD_FUNCTION)
             ) {
@@ -194,16 +199,21 @@ class Condition extends Component
             }
 
             $expr->expr .= $token->token;
-            if (($token->type === Token::TYPE_NONE)
-                || (($token->type === Token::TYPE_KEYWORD)
-                && (! ($token->flags & Token::FLAG_KEYWORD_RESERVED)))
-                || ($token->type === Token::TYPE_STRING)
-                || ($token->type === Token::TYPE_SYMBOL)
+            if (
+                ($token->type !== Token::TYPE_NONE)
+                && (($token->type !== Token::TYPE_KEYWORD)
+                || ($token->flags & Token::FLAG_KEYWORD_RESERVED))
+                && ($token->type !== Token::TYPE_STRING)
+                && ($token->type !== Token::TYPE_SYMBOL)
             ) {
-                if (! in_array($token->value, $expr->identifiers)) {
-                    $expr->identifiers[] = $token->value;
-                }
+                continue;
             }
+
+            if (in_array($token->value, $expr->identifiers)) {
+                continue;
+            }
+
+            $expr->identifiers[] = $token->value;
         }
 
         // Last iteration was not processed.

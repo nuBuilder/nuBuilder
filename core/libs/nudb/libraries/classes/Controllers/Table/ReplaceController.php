@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Table;
 
+use PhpMyAdmin\ConfigStorage\Relation;
 use PhpMyAdmin\Controllers\Database\SqlController as DatabaseSqlController;
-use PhpMyAdmin\Controllers\SqlController;
+use PhpMyAdmin\Controllers\Sql\SqlController;
 use PhpMyAdmin\Controllers\Table\SqlController as TableSqlController;
 use PhpMyAdmin\Core;
 use PhpMyAdmin\DatabaseInterface;
@@ -14,18 +15,21 @@ use PhpMyAdmin\Html\Generator;
 use PhpMyAdmin\InsertEdit;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\Plugins\IOTransformationsPlugin;
-use PhpMyAdmin\Relation;
-use PhpMyAdmin\Response;
+use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Table;
 use PhpMyAdmin\Template;
 use PhpMyAdmin\Transformations;
 use PhpMyAdmin\Util;
+
+use function __;
+use function array_keys;
 use function array_values;
 use function class_exists;
 use function count;
 use function implode;
 use function in_array;
 use function is_file;
+use function is_numeric;
 use function method_exists;
 use function parse_str;
 use function sprintf;
@@ -47,21 +51,15 @@ final class ReplaceController extends AbstractController
     /** @var DatabaseInterface */
     private $dbi;
 
-    /**
-     * @param Response          $response
-     * @param string            $db       Database name.
-     * @param string            $table    Table name.
-     * @param DatabaseInterface $dbi
-     */
     public function __construct(
-        $response,
+        ResponseRenderer $response,
         Template $template,
-        $db,
-        $table,
+        string $db,
+        string $table,
         InsertEdit $insertEdit,
         Transformations $transformations,
         Relation $relation,
-        $dbi
+        DatabaseInterface $dbi
     ) {
         parent::__construct($response, $template, $db, $table);
         $this->insertEdit = $insertEdit;
@@ -70,10 +68,10 @@ final class ReplaceController extends AbstractController
         $this->dbi = $dbi;
     }
 
-    public function index(): void
+    public function __invoke(): void
     {
-        global $containerBuilder, $db, $table, $url_params, $message;
-        global $err_url, $mime_map, $unsaved_values, $active_page, $disp_query, $disp_message;
+        global $containerBuilder, $db, $table, $urlParams, $message;
+        global $errorUrl, $mime_map, $unsaved_values, $active_page, $disp_query, $disp_message;
         global $goto_include, $loop_array, $using_key, $is_insert, $is_insertignore, $query;
         global $value_sets, $func_no_param, $func_optional_param, $gis_from_text_functions, $gis_from_wkb_functions;
         global $query_fields, $insert_errors, $row_skipped, $query_values;
@@ -96,33 +94,44 @@ final class ReplaceController extends AbstractController
             'gis_data_editor.js',
         ]);
 
-        // check whether insert row mode, if so include /table/change
-        $this->insertEdit->isInsertRow();
+        $insertRows = $_POST['insert_rows'] ?? null;
+        if (is_numeric($insertRows) && $insertRows != $GLOBALS['cfg']['InsertRows']) {
+            // check whether insert row mode, if so include /table/change
+            $this->addScriptFiles([
+                'vendor/jquery/additional-methods.js',
+                'table/change.js',
+            ]);
+            $GLOBALS['cfg']['InsertRows'] = $_POST['insert_rows'];
+            /** @var ChangeController $controller */
+            $controller = $containerBuilder->get(ChangeController::class);
+            $controller();
+
+            return;
+        }
 
         $after_insert_actions = [
             'new_insert',
             'same_insert',
             'edit_next',
         ];
-        if (isset($_POST['after_insert'])
-            && in_array($_POST['after_insert'], $after_insert_actions)
-        ) {
-            $url_params['after_insert'] = $_POST['after_insert'];
+        if (isset($_POST['after_insert']) && in_array($_POST['after_insert'], $after_insert_actions)) {
+            $urlParams['after_insert'] = $_POST['after_insert'];
             if (isset($_POST['where_clause'])) {
                 foreach ($_POST['where_clause'] as $one_where_clause) {
                     if ($_POST['after_insert'] === 'same_insert') {
-                        $url_params['where_clause'][] = $one_where_clause;
+                        $urlParams['where_clause'][] = $one_where_clause;
                     } elseif ($_POST['after_insert'] === 'edit_next') {
                         $this->insertEdit->setSessionForEditNext($one_where_clause);
                     }
                 }
             }
         }
+
         //get $goto_include for different cases
         $goto_include = $this->insertEdit->getGotoInclude($goto_include);
 
         // Defines the url to return in case of failure of the query
-        $err_url = $this->insertEdit->getErrorUrl($url_params);
+        $errorUrl = $this->insertEdit->getErrorUrl($urlParams);
 
         /**
          * Prepares the update/insert of a row
@@ -173,10 +182,18 @@ final class ReplaceController extends AbstractController
             'PolyFromText',
             'MPolyFromText',
         ];
-
-        $gis_from_wkb_functions = [];
+        $gis_from_wkb_functions = [
+            'GeomFromWKB',
+            'GeomCollFromWKB',
+            'LineFromWKB',
+            'MLineFromWKB',
+            'PointFromWKB',
+            'MPointFromWKB',
+            'PolyFromWKB',
+            'MPolyFromWKB',
+        ];
         if ($this->dbi->getVersion() >= 50600) {
-            $gis_from_wkb_functions = [
+            $gis_from_text_functions = [
                 'ST_GeomFromText',
                 'ST_GeomCollFromText',
                 'ST_LineFromText',
@@ -185,6 +202,16 @@ final class ReplaceController extends AbstractController
                 'ST_MPointFromText',
                 'ST_PolyFromText',
                 'ST_MPolyFromText',
+            ];
+            $gis_from_wkb_functions = [
+                'ST_GeomFromWKB',
+                'ST_GeomCollFromWKB',
+                'ST_LineFromWKB',
+                'ST_MLineFromWKB',
+                'ST_PointFromWKB',
+                'ST_MPointFromWKB',
+                'ST_PolyFromWKB',
+                'ST_MPolyFromWKB',
             ];
         }
 
@@ -207,30 +234,20 @@ final class ReplaceController extends AbstractController
             $query_values = [];
 
             // Map multi-edit keys to single-level arrays, dependent on how we got the fields
-            $multi_edit_columns
-                = $_POST['fields']['multi_edit'][$rownumber] ?? [];
-            $multi_edit_columns_name
-                = $_POST['fields_name']['multi_edit'][$rownumber] ?? [];
-            $multi_edit_columns_prev
-                = $_POST['fields_prev']['multi_edit'][$rownumber] ?? null;
-            $multi_edit_funcs
-                = $_POST['funcs']['multi_edit'][$rownumber] ?? null;
-            $multi_edit_salt
-                = $_POST['salt']['multi_edit'][$rownumber] ?? null;
-            $multi_edit_columns_type
-                = $_POST['fields_type']['multi_edit'][$rownumber] ?? null;
-            $multi_edit_columns_null
-                = $_POST['fields_null']['multi_edit'][$rownumber] ?? null;
-            $multi_edit_columns_null_prev
-                = $_POST['fields_null_prev']['multi_edit'][$rownumber] ?? null;
-            $multi_edit_auto_increment
-                = $_POST['auto_increment']['multi_edit'][$rownumber] ?? null;
-            $multi_edit_virtual
-                = $_POST['virtual']['multi_edit'][$rownumber] ?? null;
+            $multi_edit_columns = $_POST['fields']['multi_edit'][$rownumber] ?? [];
+            $multi_edit_columns_name = $_POST['fields_name']['multi_edit'][$rownumber] ?? [];
+            $multi_edit_columns_prev = $_POST['fields_prev']['multi_edit'][$rownumber] ?? null;
+            $multi_edit_funcs = $_POST['funcs']['multi_edit'][$rownumber] ?? null;
+            $multi_edit_salt = $_POST['salt']['multi_edit'][$rownumber] ?? null;
+            $multi_edit_columns_type = $_POST['fields_type']['multi_edit'][$rownumber] ?? null;
+            $multi_edit_columns_null = $_POST['fields_null']['multi_edit'][$rownumber] ?? null;
+            $multi_edit_columns_null_prev = $_POST['fields_null_prev']['multi_edit'][$rownumber] ?? null;
+            $multi_edit_auto_increment = $_POST['auto_increment']['multi_edit'][$rownumber] ?? null;
+            $multi_edit_virtual = $_POST['virtual']['multi_edit'][$rownumber] ?? null;
 
             // When a select field is nullified, it's not present in $_POST
             // so initialize it; this way, the foreach($multi_edit_columns) will process it
-            foreach ($multi_edit_columns_name as $key => $val) {
+            foreach (array_keys($multi_edit_columns_name) as $key) {
                 if (isset($multi_edit_columns[$key])) {
                     continue;
                 }
@@ -254,10 +271,9 @@ final class ReplaceController extends AbstractController
                 if ($possibly_uploaded_val !== false) {
                     $current_value = $possibly_uploaded_val;
                 }
+
                 // Apply Input Transformation if defined
-                if (! empty($mime_map[$column_name])
-                    && ! empty($mime_map[$column_name]['input_transformation'])
-                ) {
+                if (! empty($mime_map[$column_name]) && ! empty($mime_map[$column_name]['input_transformation'])) {
                     $filename = 'libraries/classes/Plugins/Transformations/'
                         . $mime_map[$column_name]['input_transformation'];
                     if (is_file(ROOT_PATH . $filename)) {
@@ -274,7 +290,8 @@ final class ReplaceController extends AbstractController
                             );
                             // check if transformation was successful or not
                             // and accordingly set error messages & insert_fail
-                            if (method_exists($transformation_plugin, 'isSuccess')
+                            if (
+                                method_exists($transformation_plugin, 'isSuccess')
                                 && ! $transformation_plugin->isSuccess()
                             ) {
                                 $insert_fail = true;
@@ -293,6 +310,7 @@ final class ReplaceController extends AbstractController
                 if ($file_to_insert->isError()) {
                     $insert_errors[] = $file_to_insert->getError();
                 }
+
                 // delete $file_to_insert temporary variable
                 $file_to_insert->cleanUp();
 
@@ -343,6 +361,7 @@ final class ReplaceController extends AbstractController
                         $multi_edit_columns_null_prev
                     );
                 }
+
                 if (! isset($multi_edit_columns_null[$key])) {
                     continue;
                 }
@@ -355,6 +374,7 @@ final class ReplaceController extends AbstractController
             if ($insert_fail) {
                 $unsaved_values[$rownumber] = $multi_edit_columns;
             }
+
             if ($insert_fail || count($query_values) <= 0) {
                 continue;
             }
@@ -370,6 +390,7 @@ final class ReplaceController extends AbstractController
                     . ($clauseIsUnique ? '' : ' LIMIT 1');
             }
         }
+
         unset(
             $multi_edit_columns_name,
             $multi_edit_columns_prev,
@@ -400,12 +421,13 @@ final class ReplaceController extends AbstractController
             if ($goto_include === '/table/replace') {
                 $goto_include = '/table/change';
             }
+
             $active_page = $goto_include;
 
             if ($goto_include === '/sql') {
                 /** @var SqlController $controller */
                 $controller = $containerBuilder->get(SqlController::class);
-                $controller->index();
+                $controller();
 
                 return;
             }
@@ -413,7 +435,7 @@ final class ReplaceController extends AbstractController
             if ($goto_include === '/database/sql') {
                 /** @var DatabaseSqlController $controller */
                 $controller = $containerBuilder->get(DatabaseSqlController::class);
-                $controller->index();
+                $controller();
 
                 return;
             }
@@ -421,7 +443,7 @@ final class ReplaceController extends AbstractController
             if ($goto_include === '/table/change') {
                 /** @var ChangeController $controller */
                 $controller = $containerBuilder->get(ChangeController::class);
-                $controller->index();
+                $controller();
 
                 return;
             }
@@ -429,15 +451,17 @@ final class ReplaceController extends AbstractController
             if ($goto_include === '/table/sql') {
                 /** @var TableSqlController $controller */
                 $controller = $containerBuilder->get(TableSqlController::class);
-                $controller->index();
+                $controller();
 
                 return;
             }
 
-            include ROOT_PATH . Core::securePath((string) $goto_include);
+            /** @psalm-suppress UnresolvableInclude */
+            include ROOT_PATH . Core::securePath($goto_include);
 
             return;
         }
+
         unset($multi_edit_columns, $is_insertignore);
 
         // If there is a request for SQL previewing.
@@ -452,24 +476,21 @@ final class ReplaceController extends AbstractController
          * page
          */
         [
-            $url_params,
+            $urlParams,
             $total_affected_rows,
             $last_messages,
             $warning_messages,
             $error_messages,
             $return_to_sql_query,
-        ] = $this->insertEdit->executeSqlQuery($url_params, $query);
+        ] = $this->insertEdit->executeSqlQuery($urlParams, $query);
 
         if ($is_insert && (count($value_sets) > 0 || $row_skipped)) {
-            $message = Message::getMessageForInsertedRows(
-                $total_affected_rows
-            );
+            $message = Message::getMessageForInsertedRows($total_affected_rows);
             $unsaved_values = array_values($unsaved_values);
         } else {
-            $message = Message::getMessageForAffectedRows(
-                $total_affected_rows
-            );
+            $message = Message::getMessageForAffectedRows($total_affected_rows);
         }
+
         if ($row_skipped) {
             $goto_include = '/table/change';
             $message->addMessagesString($insert_errors, '<br>');
@@ -482,10 +503,12 @@ final class ReplaceController extends AbstractController
             $message->addMessagesString($warning_messages, '<br>');
             $message->isError(true);
         }
+
         if (! empty($error_messages)) {
             $message->addMessagesString($error_messages);
             $message->isError(true);
         }
+
         unset(
             $error_messages,
             $warning_messages,
@@ -534,15 +557,15 @@ final class ReplaceController extends AbstractController
                     }
                 }
             }
-            if (isset($_POST['do_transformations'])
-                && $_POST['do_transformations'] == true
-            ) {
+
+            if (isset($_POST['do_transformations']) && $_POST['do_transformations'] == true) {
                 $edited_values = [];
                 parse_str($_POST['transform_fields_list'], $edited_values);
 
                 if (! isset($extra_data)) {
                     $extra_data = [];
                 }
+
                 $transformation_types = [
                     'input_transformation',
                     'transformation',
@@ -580,10 +603,7 @@ final class ReplaceController extends AbstractController
             $_table = new Table($_POST['table'], $_POST['db']);
             $extra_data['row_count'] = $_table->countRecords();
 
-            $extra_data['sql_query'] = Generator::getMessage(
-                $message,
-                $GLOBALS['display_query']
-            );
+            $extra_data['sql_query'] = Generator::getMessage($message, $GLOBALS['display_query']);
 
             $this->response->setRequestStatus($message->isSuccess());
             $this->response->addJSON('message', $message);
@@ -615,7 +635,7 @@ final class ReplaceController extends AbstractController
         if ($goto_include === '/sql') {
             /** @var SqlController $controller */
             $controller = $containerBuilder->get(SqlController::class);
-            $controller->index();
+            $controller();
 
             return;
         }
@@ -623,7 +643,7 @@ final class ReplaceController extends AbstractController
         if ($goto_include === '/database/sql') {
             /** @var DatabaseSqlController $controller */
             $controller = $containerBuilder->get(DatabaseSqlController::class);
-            $controller->index();
+            $controller();
 
             return;
         }
@@ -631,7 +651,7 @@ final class ReplaceController extends AbstractController
         if ($goto_include === '/table/change') {
             /** @var ChangeController $controller */
             $controller = $containerBuilder->get(ChangeController::class);
-            $controller->index();
+            $controller();
 
             return;
         }
@@ -639,7 +659,7 @@ final class ReplaceController extends AbstractController
         if ($goto_include === '/table/sql') {
             /** @var TableSqlController $controller */
             $controller = $containerBuilder->get(TableSqlController::class);
-            $controller->index();
+            $controller();
 
             return;
         }
@@ -647,6 +667,7 @@ final class ReplaceController extends AbstractController
         /**
          * Load target page.
          */
-        require ROOT_PATH . Core::securePath((string) $goto_include);
+        /** @psalm-suppress UnresolvableInclude */
+        require ROOT_PATH . Core::securePath($goto_include);
     }
 }

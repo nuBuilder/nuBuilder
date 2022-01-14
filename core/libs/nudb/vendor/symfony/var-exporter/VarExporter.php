@@ -34,16 +34,15 @@ final class VarExporter
      *
      * @param mixed $value          The value to export
      * @param bool  &$isStaticValue Set to true after execution if the provided value is static, false otherwise
-     *
-     * @return string The value exported as PHP code
+     * @param bool  &$classes       Classes found in the value are added to this list as both keys and values
      *
      * @throws ExceptionInterface When the provided value cannot be serialized
      */
-    public static function export($value, bool &$isStaticValue = null): string
+    public static function export($value, bool &$isStaticValue = null, array &$foundClasses = []): string
     {
         $isStaticValue = true;
 
-        if (!\is_object($value) && !(\is_array($value) && $value) && !$value instanceof \__PHP_Incomplete_Class && !\is_resource($value) || $value instanceof \UnitEnum) {
+        if (!\is_object($value) && !(\is_array($value) && $value) && !\is_resource($value) || $value instanceof \UnitEnum) {
             return Exporter::export($value);
         }
 
@@ -71,7 +70,9 @@ final class VarExporter
         $values = [];
         $states = [];
         foreach ($objectsPool as $i => $v) {
-            [, $classes[], $values[], $wakeup] = $objectsPool[$v];
+            [, $class, $values[], $wakeup] = $objectsPool[$v];
+            $foundClasses[$class] = $classes[] = $class;
+
             if (0 < $wakeup) {
                 $states[$wakeup] = $i;
             } elseif (0 > $wakeup) {

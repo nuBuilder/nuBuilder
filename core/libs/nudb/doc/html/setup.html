@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Installation &#8212; phpMyAdmin 5.1.2-dev documentation</title>
+    <title>Installation &#8212; phpMyAdmin 5.2.0-dev documentation</title>
     
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '5.1.2-dev',
+        VERSION:     '5.2.0-dev',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="copyright" title="Copyright" href="copyright.html" />
-    <link rel="top" title="phpMyAdmin 5.1.2-dev documentation" href="index.html" />
+    <link rel="top" title="phpMyAdmin 5.2.0-dev documentation" href="index.html" />
     <link rel="next" title="Configuration" href="config.html" />
     <link rel="prev" title="Requirements" href="require.html" /> 
   </head>
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="require.html" title="Requirements"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.1.2-dev documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.2.0-dev documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -540,7 +540,7 @@ some advanced features.</li>
 file <code class="file docutils literal"><span class="pre">config.inc.php</span></code> (you can copy <code class="file docutils literal"><span class="pre">config.sample.inc.php</span></code> to get
 a minimal configuration file) in the main (top-level) phpMyAdmin
 directory (the one that contains <code class="file docutils literal"><span class="pre">index.php</span></code>). phpMyAdmin first
-loads <code class="file docutils literal"><span class="pre">libraries/config.default.php</span></code> and then overrides those values
+loads the default configuration values and then overrides those values
 with anything found in <code class="file docutils literal"><span class="pre">config.inc.php</span></code>. If the default value is
 okay for a particular setting, there is no need to include it in
 <code class="file docutils literal"><span class="pre">config.inc.php</span></code>. You&#8217;ll probably need only a few directives to get going; a
@@ -803,9 +803,6 @@ require some tweaking as some options have been changed or removed.
 For compatibility with PHP 5.3 and later, remove a
 <code class="docutils literal"><span class="pre">set_magic_quotes_runtime(0);</span></code> statement that you might find near
 the end of your configuration file.</p>
-<p>You should <strong>not</strong> copy <code class="file docutils literal"><span class="pre">libraries/config.default.php</span></code> over
-<code class="file docutils literal"><span class="pre">config.inc.php</span></code> because the default configuration file is version-
-specific.</p>
 <p>The complete upgrade can be performed in a few simple steps:</p>
 <ol class="arabic simple">
 <li>Download the latest phpMyAdmin version from &lt;<a class="reference external" href="https://www.phpmyadmin.net/downloads/">https://www.phpmyadmin.net/downloads/</a>&gt;.</li>
@@ -956,7 +953,7 @@ the login process.</li>
     <span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;PMA_single_signon_port&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;port&#39;</span><span class="p">];</span>
     <span class="cm">/* Update another field of server configuration */</span>
     <span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;PMA_single_signon_cfgupdate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;verbose&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Signon test&#39;</span><span class="p">];</span>
-    <span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;PMA_single_signon_HMAC_secret&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">(</span><span class="s1">&#39;sha1&#39;</span><span class="p">,</span> <span class="nb">uniqid</span><span class="p">(</span><span class="nb">strval</span><span class="p">(</span><span class="nb">rand</span><span class="p">()),</span> <span class="k">true</span><span class="p">));</span>
+    <span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;PMA_single_signon_HMAC_secret&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">(</span><span class="s1">&#39;sha1&#39;</span><span class="p">,</span> <span class="nb">uniqid</span><span class="p">(</span><span class="nb">strval</span><span class="p">(</span><span class="nx">random_int</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">mt_getrandmax</span><span class="p">())),</span> <span class="k">true</span><span class="p">));</span>
     <span class="nv">$id</span> <span class="o">=</span> <span class="nb">session_id</span><span class="p">();</span>
     <span class="cm">/* Close that session */</span>
     <span class="o">@</span><span class="nb">session_write_close</span><span class="p">();</span>
@@ -1038,10 +1035,8 @@ in <code class="file docutils literal"><span class="pre">examples/openid.php</sp
 <span class="sd"> * Simple function to show HTML page with given content.</span>
 <span class="sd"> *</span>
 <span class="sd"> * @param string $contents Content to include in page</span>
-<span class="sd"> *</span>
-<span class="sd"> * @return void</span>
 <span class="sd"> */</span>
-<span class="k">function</span> <span class="nf">Show_page</span><span class="p">(</span><span class="nv">$contents</span><span class="p">)</span>
+<span class="k">function</span> <span class="nf">Show_page</span><span class="p">(</span><span class="nv">$contents</span><span class="p">)</span><span class="o">:</span> <span class="nx">void</span>
 <span class="p">{</span>
     <span class="nb">header</span><span class="p">(</span><span class="s1">&#39;Content-Type: text/html; charset=utf-8&#39;</span><span class="p">);</span>
 
@@ -1069,10 +1064,8 @@ in <code class="file docutils literal"><span class="pre">examples/openid.php</sp
 <span class="sd"> * Display error and exit</span>
 <span class="sd"> *</span>
 <span class="sd"> * @param Exception $e Exception object</span>
-<span class="sd"> *</span>
-<span class="sd"> * @return void</span>
 <span class="sd"> */</span>
-<span class="k">function</span> <span class="nf">Die_error</span><span class="p">(</span><span class="nv">$e</span><span class="p">)</span>
+<span class="k">function</span> <span class="nf">Die_error</span><span class="p">(</span><span class="nv">$e</span><span class="p">)</span><span class="o">:</span> <span class="nx">void</span>
 <span class="p">{</span>
     <span class="nv">$contents</span> <span class="o">=</span> <span class="s2">&quot;&lt;div class=&#39;relyingparty_results&#39;&gt;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
     <span class="nv">$contents</span> <span class="o">.=</span> <span class="s1">&#39;&lt;pre&gt;&#39;</span> <span class="o">.</span> <span class="nb">htmlspecialchars</span><span class="p">(</span><span class="nv">$e</span><span class="o">-&gt;</span><span class="na">getMessage</span><span class="p">())</span> <span class="o">.</span> <span class="s2">&quot;&lt;/pre&gt;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
@@ -1095,6 +1088,7 @@ in <code class="file docutils literal"><span class="pre">examples/openid.php</sp
 <span class="k">if</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;HTTPS&#39;</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;HTTPS&#39;</span><span class="p">]</span> <span class="o">===</span> <span class="s1">&#39;on&#39;</span><span class="p">)</span> <span class="p">{</span>
     <span class="nv">$base</span> <span class="o">.=</span> <span class="s1">&#39;s&#39;</span><span class="p">;</span>
 <span class="p">}</span>
+
 <span class="nv">$base</span> <span class="o">.=</span> <span class="s1">&#39;://&#39;</span> <span class="o">.</span> <span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;SERVER_NAME&#39;</span><span class="p">]</span> <span class="o">.</span> <span class="s1">&#39;:&#39;</span> <span class="o">.</span> <span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;SERVER_PORT&#39;</span><span class="p">];</span>
 
 <span class="nv">$realm</span> <span class="o">=</span> <span class="nv">$base</span> <span class="o">.</span> <span class="s1">&#39;/&#39;</span><span class="p">;</span>
@@ -1102,6 +1096,7 @@ in <code class="file docutils literal"><span class="pre">examples/openid.php</sp
 <span class="k">if</span> <span class="p">(</span><span class="nv">$returnTo</span><span class="p">[</span><span class="nb">strlen</span><span class="p">(</span><span class="nv">$returnTo</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">!==</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span> <span class="p">{</span>
     <span class="nv">$returnTo</span> <span class="o">.=</span> <span class="s1">&#39;/&#39;</span><span class="p">;</span>
 <span class="p">}</span>
+
 <span class="nv">$returnTo</span> <span class="o">.=</span> <span class="s1">&#39;openid.php&#39;</span><span class="p">;</span>
 
 <span class="cm">/* Display form */</span>
@@ -1116,12 +1111,11 @@ in <code class="file docutils literal"><span class="pre">examples/openid.php</sp
 <span class="p">}</span>
 
 <span class="cm">/* Grab identifier */</span>
+<span class="nv">$identifier</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span>
 <span class="k">if</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;identifier&#39;</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nb">is_string</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;identifier&#39;</span><span class="p">]))</span> <span class="p">{</span>
     <span class="nv">$identifier</span> <span class="o">=</span> <span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;identifier&#39;</span><span class="p">];</span>
 <span class="p">}</span> <span class="k">elseif</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;identifier&#39;</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nb">is_string</span><span class="p">(</span><span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;identifier&#39;</span><span class="p">]))</span> <span class="p">{</span>
     <span class="nv">$identifier</span> <span class="o">=</span> <span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;identifier&#39;</span><span class="p">];</span>
-<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="nv">$identifier</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="cm">/* Create OpenID object */</span>
@@ -1149,7 +1143,7 @@ in <code class="file docutils literal"><span class="pre">examples/openid.php</sp
 <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">))</span> <span class="p">{</span>
     <span class="p">[,</span> <span class="nv">$queryString</span><span class="p">]</span> <span class="o">=</span> <span class="nb">explode</span><span class="p">(</span><span class="s1">&#39;?&#39;</span><span class="p">,</span> <span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;REQUEST_URI&#39;</span><span class="p">]);</span>
 <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="c1">// I hate php sometimes</span>
+    <span class="c1">// Fetch the raw query body</span>
     <span class="nv">$queryString</span> <span class="o">=</span> <span class="nb">file_get_contents</span><span class="p">(</span><span class="s1">&#39;php://input&#39;</span><span class="p">);</span>
 <span class="p">}</span>
 
@@ -1169,7 +1163,7 @@ in <code class="file docutils literal"><span class="pre">examples/openid.php</sp
 
 <span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;PMA_single_signon_user&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$AUTH_MAP</span><span class="p">[</span><span class="nv">$id</span><span class="p">][</span><span class="s1">&#39;user&#39;</span><span class="p">];</span>
 <span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;PMA_single_signon_password&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$AUTH_MAP</span><span class="p">[</span><span class="nv">$id</span><span class="p">][</span><span class="s1">&#39;password&#39;</span><span class="p">];</span>
-<span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;PMA_single_signon_HMAC_secret&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">(</span><span class="s1">&#39;sha1&#39;</span><span class="p">,</span> <span class="nb">uniqid</span><span class="p">(</span><span class="nb">strval</span><span class="p">(</span><span class="nb">rand</span><span class="p">()),</span> <span class="k">true</span><span class="p">));</span>
+<span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;PMA_single_signon_HMAC_secret&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">(</span><span class="s1">&#39;sha1&#39;</span><span class="p">,</span> <span class="nb">uniqid</span><span class="p">(</span><span class="nb">strval</span><span class="p">(</span><span class="nx">random_int</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">mt_getrandmax</span><span class="p">())),</span> <span class="k">true</span><span class="p">));</span>
 <span class="nb">session_write_close</span><span class="p">();</span>
 <span class="cm">/* Redirect to phpMyAdmin (should use absolute URL here!) */</span>
 <span class="nb">header</span><span class="p">(</span><span class="s1">&#39;Location: ../index.php&#39;</span><span class="p">);</span>
@@ -1482,7 +1476,7 @@ manually or after a period of inactivity). <a class="reference external" href="h
         <li class="right" >
           <a href="require.html" title="Requirements"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.1.2-dev documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.2.0-dev documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

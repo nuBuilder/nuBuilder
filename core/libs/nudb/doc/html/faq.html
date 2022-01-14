@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>FAQ - Frequently Asked Questions &#8212; phpMyAdmin 5.1.2-dev documentation</title>
+    <title>FAQ - Frequently Asked Questions &#8212; phpMyAdmin 5.2.0-dev documentation</title>
     
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '5.1.2-dev',
+        VERSION:     '5.2.0-dev',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="copyright" title="Copyright" href="copyright.html" />
-    <link rel="top" title="phpMyAdmin 5.1.2-dev documentation" href="index.html" />
+    <link rel="top" title="phpMyAdmin 5.2.0-dev documentation" href="index.html" />
     <link rel="next" title="Developers Information" href="developers.html" />
     <link rel="prev" title="Other sources of information" href="other.html" /> 
   </head>
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="other.html" title="Other sources of information"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.1.2-dev documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.2.0-dev documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -226,8 +226,8 @@ dynamically. Its name is probably <em>mysqli.so</em> or <em>php_mysqli.dll</em>.
 phpMyAdmin tried to load the extension but failed. Usually, the
 problem is solved by installing a software package called &#8220;PHP-MySQL&#8221;
 or something similar.</p>
-<p>There are currently two interfaces PHP provides as MySQL extensions - <code class="docutils literal"><span class="pre">mysql</span></code>
-and <code class="docutils literal"><span class="pre">mysqli</span></code>. The <code class="docutils literal"><span class="pre">mysqli</span></code> is tried first, because it&#8217;s the best one.</p>
+<p>There was two interfaces PHP provided as MySQL extensions - <code class="docutils literal"><span class="pre">mysql</span></code>
+and <code class="docutils literal"><span class="pre">mysqli</span></code>. The <code class="docutils literal"><span class="pre">mysql</span></code> interface was removed in PHP 7.0.</p>
 <p>This problem can be also caused by wrong paths in the <code class="file docutils literal"><span class="pre">php.ini</span></code> or using
 wrong <code class="file docutils literal"><span class="pre">php.ini</span></code>.</p>
 <p>Make sure that the extension files do exist in the folder which the
@@ -243,10 +243,9 @@ current setup):</p>
 <p>The <code class="file docutils literal"><span class="pre">php.ini</span></code> can be loaded from several locations (especially on
 Windows), so please check you&#8217;re updating the correct one. If using Apache, you
 can tell it to use specific path for this file using <code class="docutils literal"><span class="pre">PHPIniDir</span></code> directive:</p>
-<div class="highlight-apache"><div class="highlight"><pre><span></span><span class="nb">LoadFile</span> <span class="s2">&quot;C:/php/php5ts.dll&quot;</span>
-<span class="nb">LoadModule</span> php5_module <span class="s2">&quot;C:/php/php5apache2_2.dll&quot;</span>
-<span class="nt">&lt;IfModule</span> <span class="s">php5_module</span><span class="nt">&gt;</span>
-    <span class="nb">PHPIniDir</span> <span class="s2">&quot;C:/PHP&quot;</span>
+<div class="highlight-apache"><div class="highlight"><pre><span></span><span class="nb">LoadModule</span> php7_module <span class="s2">&quot;C:/php7/php7apache2_4.dll&quot;</span>
+<span class="nt">&lt;IfModule</span> <span class="s">php7_module</span><span class="nt">&gt;</span>
+    <span class="nb">PHPIniDir</span> <span class="s2">&quot;C:/php7&quot;</span>
     <span class="nt">&lt;Location&gt;</span>
        <span class="nb">AddType</span> text/html .php
        <span class="nb">AddHandler</span> application/x-httpd-php .php
@@ -367,7 +366,8 @@ releases.</p>
 <p>PHP 7 is supported since phpMyAdmin 4.6, PHP 7.1 is supported since 4.6.5,
 PHP 7.2 is supported since 4.7.4.</p>
 <p>HHVM is supported up to phpMyAdmin 4.8.</p>
-<p>Since release 5.0, phpMyAdmin supports only PHP 7.1 and newer.</p>
+<p>Since release 5.0, phpMyAdmin supports only PHP 7.1 and newer.
+Since release 5.2, phpMyAdmin supports only PHP 7.2 and newer.</p>
 </div>
 <div class="section" id="can-i-use-http-authentication-with-iis">
 <span id="faq1-32"></span><h3>1.32 Can I use HTTP authentication with IIS?<a class="headerlink" href="#can-i-use-http-authentication-with-iis" title="Permalink to this headline">¶</a></h3>
@@ -940,13 +940,13 @@ just add those updated lines into the
 network <a class="reference internal" href="glossary.html#term-ip"><span class="xref std std-term">IP</span></a> blocks.</p>
 <div class="highlight-php"><div class="highlight"><pre><span></span><span class="c1">//block root from logging in except from the private networks</span>
 <span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;Servers&#39;</span><span class="p">][</span><span class="nv">$i</span><span class="p">][</span><span class="s1">&#39;AllowDeny&#39;</span><span class="p">][</span><span class="s1">&#39;order&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;deny,allow&#39;</span><span class="p">;</span>
-<span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;Servers&#39;</span><span class="p">][</span><span class="nv">$i</span><span class="p">][</span><span class="s1">&#39;AllowDeny&#39;</span><span class="p">][</span><span class="s1">&#39;rules&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+<span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;Servers&#39;</span><span class="p">][</span><span class="nv">$i</span><span class="p">][</span><span class="s1">&#39;AllowDeny&#39;</span><span class="p">][</span><span class="s1">&#39;rules&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;deny root from all&#39;</span><span class="p">,</span>
     <span class="s1">&#39;allow root from localhost&#39;</span><span class="p">,</span>
     <span class="s1">&#39;allow root from 10.0.0.0/8&#39;</span><span class="p">,</span>
     <span class="s1">&#39;allow root from 192.168.0.0/16&#39;</span><span class="p">,</span>
     <span class="s1">&#39;allow root from 172.16.0.0/12&#39;</span><span class="p">,</span>
-<span class="p">);</span>
+<span class="p">];</span>
 </pre></div>
 </div>
 </div>
@@ -1206,7 +1206,7 @@ create the example tables:</p>
 <p>To setup appropriate links and display information:</p>
 <ul class="simple">
 <li>on table &#8220;REL_persons&#8221; click Structure, then Relation view</li>
-<li>for &#8220;town_code&#8221;, choose from dropdowns, &#8220;mydb&#8221;, &#8220;REL_towns&#8221;, &#8220;code&#8221;
+<li>for &#8220;town_code&#8221;, choose from dropdowns, &#8220;mydb&#8221;, &#8220;REL_towns&#8221;, &#8220;town_code&#8221;
 for foreign database, table and column respectively</li>
 <li>for &#8220;country_code&#8221;, choose  from dropdowns, &#8220;mydb&#8221;, &#8220;REL_countries&#8221;,
 &#8220;country_code&#8221; for foreign database, table and column respectively</li>
@@ -1240,33 +1240,15 @@ enables: drop-down list of possible values.</p>
 <div class="section" id="how-can-i-produce-a-pdf-schema-of-my-database">
 <span id="faqpdf"></span><h3>6.8 How can I produce a PDF schema of my database?<a class="headerlink" href="#how-can-i-produce-a-pdf-schema-of-my-database" title="Permalink to this headline">¶</a></h3>
 <p>First the configuration variables &#8220;relation&#8221;, &#8220;table_coords&#8221; and
-&#8220;pdf_pages&#8221; have to be filled in.  Then you need to think about your
-schema layout. Which tables will go on which pages?</p>
+&#8220;pdf_pages&#8221; have to be filled in.</p>
 <ul class="simple">
 <li>Select your database in the navigation panel.</li>
-<li>Choose &#8220;Operations&#8221; in the navigation bar at the top.</li>
-<li>Choose &#8220;Edit <a class="reference internal" href="glossary.html#term-pdf"><span class="xref std std-term">PDF</span></a> Pages&#8221; near the
-bottom of the page.</li>
-<li>Enter a name for the first <a class="reference internal" href="glossary.html#term-pdf"><span class="xref std std-term">PDF</span></a> page
-and click Go. If you like, you can use the &#8220;automatic layout,&#8221; which
-will put all your linked tables onto the new page.</li>
-<li>Select the name of the new page (making sure the Edit radio button is
-selected) and click Go.</li>
-<li>Select a table from the list, enter its coordinates and click Save.
-Coordinates are relative; your diagram will be automatically scaled to
-fit the page. When initially placing tables on the page, just pick any
-coordinates &#8211; say, 50x50. After clicking Save, you can then use the
-<a class="reference internal" href="#wysiwyg"><span class="std std-ref">6.28 How can I easily edit relational schema for export?</span></a> to position the element correctly.</li>
-<li>When you&#8217;d like to look at your <a class="reference internal" href="glossary.html#term-pdf"><span class="xref std std-term">PDF</span></a>, first be sure to click the Save
-button beneath the list of tables and coordinates, to save any changes you
-made there. Then scroll all the way down, select the <a class="reference internal" href="glossary.html#term-pdf"><span class="xref std std-term">PDF</span></a> options you
-want, and click Go.</li>
-<li>Internet Explorer for Windows may suggest an incorrect filename when
-you try to save a generated <a class="reference internal" href="glossary.html#term-pdf"><span class="xref std std-term">PDF</span></a>.
-When saving a generated <a class="reference internal" href="glossary.html#term-pdf"><span class="xref std std-term">PDF</span></a>, be
-sure that the filename ends in &#8221;.pdf&#8221;, for example &#8220;schema.pdf&#8221;.
-Browsers on other operating systems, and other browsers on Windows, do
-not have this problem.</li>
+<li>Choose &#8220;<span class="guilabel">Designer</span>&#8221; in the navigation bar at the top.</li>
+<li>Move the tables the way you want them.</li>
+<li>Choose &#8220;<span class="guilabel">Export schema</span>&#8221; in the left menu.</li>
+<li>The export modal will open.</li>
+<li>Select the type of export to <a class="reference internal" href="glossary.html#term-pdf"><span class="xref std std-term">PDF</span></a>, you may adjust the other settings.</li>
+<li>Submit the form and the file will start downloading.</li>
 </ul>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
@@ -1459,25 +1441,8 @@ name), but the following variables can be used:</p>
 <dd>phpMyAdmin with version</dd>
 </dl>
 </div>
-<div class="section" id="how-can-i-easily-edit-relational-schema-for-export">
-<span id="wysiwyg"></span><h3>6.28 How can I easily edit relational schema for export?<a class="headerlink" href="#how-can-i-easily-edit-relational-schema-for-export" title="Permalink to this headline">¶</a></h3>
-<p>By clicking on the button &#8216;toggle scratchboard&#8217; on the page where you
-edit x/y coordinates of those elements you can activate a scratchboard
-where all your elements are placed. By clicking on an element, you can
-move them around in the pre-defined area and the x/y coordinates will
-get updated dynamically. Likewise, when entering a new position
-directly into the input field, the new position in the scratchboard
-changes after your cursor leaves the input field.</p>
-<p>You have to click on the &#8216;OK&#8217;-button below the tables to save the new
-positions. If you want to place a new element, first add it to the
-table of elements and then you can drag the new element around.</p>
-<p>By changing the paper size and the orientation you can change the size
-of the scratchboard as well. You can do so by just changing the
-dropdown field below, and the scratchboard will resize automatically,
-without interfering with the current placement of the elements.</p>
-<p>If ever an element gets out of range you can either enlarge the paper
-size or click on the &#8216;reset&#8217; button to place all elements below each
-other.</p>
+<div class="section" id="faq6-28">
+<span id="id22"></span><h3>6.28 (withdrawn).<a class="headerlink" href="#faq6-28" title="Permalink to this headline">¶</a></h3>
 </div>
 <div class="section" id="why-can-t-i-get-a-chart-from-my-query-result-table">
 <span id="faq6-29"></span><h3>6.29 Why can&#8217;t I get a chart from my query result table?<a class="headerlink" href="#why-can-t-i-get-a-chart-from-my-query-result-table" title="Permalink to this headline">¶</a></h3>
@@ -1790,10 +1755,10 @@ spreadsheet program to properly parse and sanitize such data on input instead.</
 <div class="section" id="synchronization">
 <span id="faqsynchronization"></span><h2>Synchronization<a class="headerlink" href="#synchronization" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="faq9-1">
-<span id="id22"></span><h3>9.1 (withdrawn).<a class="headerlink" href="#faq9-1" title="Permalink to this headline">¶</a></h3>
+<span id="id23"></span><h3>9.1 (withdrawn).<a class="headerlink" href="#faq9-1" title="Permalink to this headline">¶</a></h3>
 </div>
 <div class="section" id="faq9-2">
-<span id="id23"></span><h3>9.2 (withdrawn).<a class="headerlink" href="#faq9-2" title="Permalink to this headline">¶</a></h3>
+<span id="id24"></span><h3>9.2 (withdrawn).<a class="headerlink" href="#faq9-2" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
 </div>
@@ -1955,7 +1920,7 @@ spreadsheet program to properly parse and sanitize such data on input instead.</
 <li><a class="reference internal" href="#faq6-25">6.25 (withdrawn).</a></li>
 <li><a class="reference internal" href="#how-can-i-select-a-range-of-rows">6.26 How can I select a range of rows?</a></li>
 <li><a class="reference internal" href="#what-format-strings-can-i-use">6.27 What format strings can I use?</a></li>
-<li><a class="reference internal" href="#how-can-i-easily-edit-relational-schema-for-export">6.28 How can I easily edit relational schema for export?</a></li>
+<li><a class="reference internal" href="#faq6-28">6.28 (withdrawn).</a></li>
 <li><a class="reference internal" href="#why-can-t-i-get-a-chart-from-my-query-result-table">6.29 Why can&#8217;t I get a chart from my query result table?</a></li>
 <li><a class="reference internal" href="#import-how-can-i-import-esri-shapefiles">6.30 Import: How can I import ESRI Shapefiles?</a></li>
 <li><a class="reference internal" href="#how-do-i-create-a-relation-in-designer">6.31 How do I create a relation in designer?</a></li>
@@ -2032,7 +1997,7 @@ spreadsheet program to properly parse and sanitize such data on input instead.</
         <li class="right" >
           <a href="other.html" title="Other sources of information"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.1.2-dev documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.2.0-dev documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

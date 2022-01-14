@@ -18,12 +18,12 @@
 /**
  * Modify form controls when the "NULL" checkbox is checked
  *
- * @param theType     string   the MySQL field type
- * @param urlField    string   the urlencoded field name - OBSOLETE
- * @param md5Field    string   the md5 hashed field name
- * @param multiEdit  string   the multi_edit row sequence number
+ * @param {string} theType   the MySQL field type
+ * @param {string} urlField  the urlencoded field name - OBSOLETE
+ * @param {string} md5Field  the md5 hashed field name
+ * @param {string} multiEdit the multi_edit row sequence number
  *
- * @return boolean  always true
+ * @return {boolean} always true
  */
 function nullify(theType, urlField, md5Field, multiEdit) {
   var rowForm = document.forms.insertForm;
@@ -161,6 +161,8 @@ function isTime(val) {
 }
 /**
  * To check whether insert section is ignored or not
+ * @param {string} multiEdit
+ * @return {boolean}
  */
 
 
@@ -191,7 +193,7 @@ function verifyAfterSearchFieldChange(index, searchFormId) {
     if (hasMultiple) {
       $(searchFormId).validate({
         // update errors as we write
-        onkeyup: function onkeyup(element) {
+        onkeyup: function (element) {
           $(element).valid();
         }
       }); // validator method for IN(...), NOT IN(...)
@@ -204,7 +206,7 @@ function verifyAfterSearchFieldChange(index, searchFormId) {
     } else {
       $(searchFormId).validate({
         // update errors as we write
-        onkeyup: function onkeyup(element) {
+        onkeyup: function (element) {
           $(element).valid();
         }
       });
@@ -219,7 +221,7 @@ function verifyAfterSearchFieldChange(index, searchFormId) {
  * Validate the an input contains multiple int values
  * @param {jQuery} jqueryInput the Jquery object
  * @param {boolean} returnValueIfFine the value to return if the validator passes
- * @returns {void}
+ * @return {void}
  */
 
 
@@ -229,7 +231,7 @@ function validateMultipleIntField(jqueryInput, returnValueIfFine) {
   jqueryInput.rules('add', {
     validationFunctionForMultipleInt: {
       param: jqueryInput.value,
-      depends: function depends() {
+      depends: function () {
         return returnValueIfFine;
       }
     }
@@ -239,7 +241,7 @@ function validateMultipleIntField(jqueryInput, returnValueIfFine) {
  * Validate the an input contains an int value
  * @param {jQuery} jqueryInput the Jquery object
  * @param {boolean} returnValueIfIsNumber the value to return if the validator passes
- * @returns {void}
+ * @return {void}
  */
 
 
@@ -251,13 +253,13 @@ function validateIntField(jqueryInput, returnValueIfIsNumber) {
   jqueryInput.rules('add', {
     number: {
       param: true,
-      depends: function depends() {
+      depends: function () {
         return returnValueIfIsNumber;
       }
     },
     min: {
       param: mini,
-      depends: function depends() {
+      depends: function () {
         if (isNaN(jqueryInput.val())) {
           return false;
         } else {
@@ -267,7 +269,7 @@ function validateIntField(jqueryInput, returnValueIfIsNumber) {
     },
     max: {
       param: maxi,
-      depends: function depends() {
+      depends: function () {
         if (isNaN(jqueryInput.val())) {
           return false;
         } else {
@@ -311,7 +313,7 @@ function verificationsAfterFieldChange(urlField, multiEdit, theType) {
     $('#' + target.id).rules('add', {
       validationFunctionForMd5: {
         param: $thisInput,
-        depends: function depends() {
+        depends: function () {
           return checkForCheckbox(multiEdit);
         }
       }
@@ -322,7 +324,7 @@ function verificationsAfterFieldChange(urlField, multiEdit, theType) {
     $('#' + target.id).rules('add', {
       validationFunctionForAesDesEncrypt: {
         param: $thisInput,
-        depends: function depends() {
+        depends: function () {
           return checkForCheckbox(multiEdit);
         }
       }
@@ -366,7 +368,7 @@ function verificationsAfterFieldChange(urlField, multiEdit, theType) {
       $thisInput.rules('add', {
         validationFunctionForDateTime: {
           param: theType,
-          depends: function depends() {
+          depends: function () {
             return checkForCheckbox(multiEdit);
           }
         }
@@ -387,7 +389,7 @@ function verificationsAfterFieldChange(urlField, multiEdit, theType) {
         $thisInput.rules('add', {
           maxlength: {
             param: maxlen,
-            depends: function depends() {
+            depends: function () {
               return checkForCheckbox(multiEdit);
             }
           }
@@ -398,7 +400,7 @@ function verificationsAfterFieldChange(urlField, multiEdit, theType) {
       $thisInput.rules('add', {
         validationFunctionForHex: {
           param: true,
-          depends: function depends() {
+          depends: function () {
             return checkForCheckbox(multiEdit);
           }
         }
@@ -537,8 +539,12 @@ AJAX.registerOnload('table/change.js', function () {
 
   $(document).on('click', 'input[name=\'gis_data[save]\']', function () {
     var inputName = $('form#gis_data_editor_form').find('input[name=\'input_name\']').val();
-    var $nullCheckbox = $('input[name=\'' + inputName + '\']').parents('tr').find('.checkbox_null');
+    var currentRow = $('input[name=\'' + inputName + '\']').parents('tr');
+    var $nullCheckbox = currentRow.find('.checkbox_null');
     $nullCheckbox.prop('checked', false);
+    var rowId = currentRow.find('.open_gis_editor').data('row-id'); // Unchecks the Ignore checkbox for the current row
+
+    $('input[name=\'insert_ignore_' + rowId + '\']').prop('checked', false);
   });
   /**
    * Handles all current checkboxes for Null; this only takes care of the
@@ -619,7 +625,7 @@ function addNewContinueInsertionFields(event) {
   });
 
   if (currRows < targetRows) {
-    var tempIncrementIndex = function tempIncrementIndex() {
+    var tempIncrementIndex = function () {
       var $thisElement = $(this);
       /**
        * Extract the index from the name attribute for all input/select fields and increment it
@@ -699,7 +705,7 @@ function addNewContinueInsertionFields(event) {
       }
     };
 
-    var tempReplaceAnchor = function tempReplaceAnchor() {
+    var tempReplaceAnchor = function () {
       var $anchor = $(this);
       var newValue = 'rownumber=' + newRowIndex; // needs improvement in case something else inside
       // the href contains this pattern
@@ -708,7 +714,7 @@ function addNewContinueInsertionFields(event) {
       $anchor.attr('href', newHref);
     };
 
-    var restoreValue = function restoreValue() {
+    var restoreValue = function () {
       if ($(this).closest('tr').find('span.column_type').html() === 'enum') {
         if ($(this).val() === $checkedValue) {
           $(this).prop('checked', true);
@@ -817,7 +823,7 @@ function changeValueFieldType(elem, searchIndex) {
 
   var type = $(elem).val();
 
-  if ('LIKE' === type || 'LIKE %...%' === type || 'NOT LIKE' === type) {
+  if ('LIKE' === type || 'LIKE %...%' === type || 'NOT LIKE' === type || 'NOT LIKE %...%' === type) {
     $('#fieldID_' + searchIndex).data('data-skip-validators', true);
     return;
   } else {

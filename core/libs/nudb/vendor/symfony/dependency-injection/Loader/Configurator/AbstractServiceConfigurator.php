@@ -32,8 +32,8 @@ abstract class AbstractServiceConfigurator extends AbstractConfigurator
     {
         // default tags should be added last
         foreach ($this->defaultTags as $name => $attributes) {
-            foreach ($attributes as $attributes) {
-                $this->definition->addTag($name, $attributes);
+            foreach ($attributes as $attribute) {
+                $this->definition->addTag($name, $attribute);
             }
         }
         $this->defaultTags = [];
@@ -79,6 +79,28 @@ abstract class AbstractServiceConfigurator extends AbstractConfigurator
         $this->__destruct();
 
         return $this->parent->get($id);
+    }
+
+    /**
+     * Removes an already defined service definition or alias.
+     */
+    final public function remove(string $id): ServicesConfigurator
+    {
+        $this->__destruct();
+
+        return $this->parent->remove($id);
+    }
+
+    /**
+     * Registers a stack of decorator services.
+     *
+     * @param InlineServiceConfigurator[]|ReferenceConfigurator[] $services
+     */
+    final public function stack(string $id, array $services): AliasConfigurator
+    {
+        $this->__destruct();
+
+        return $this->parent->stack($id, $services);
     }
 
     /**

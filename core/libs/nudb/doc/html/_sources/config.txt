@@ -196,7 +196,7 @@ Basic settings
     :default: false
 
     Setting this to ``true`` allows the user to execute queries by pressing Enter
-    instead of Ctrl+Enter. A new line can be inserted by pressing Shift + Enter.
+    instead of Ctrl+Enter. A new line can be inserted by pressing Shift+Enter.
 
     The behaviour of the console can be temporarily changed using console's
     settings interface.
@@ -673,7 +673,7 @@ Server connection settings
 
     .. code-block:: php
 
-        $cfg['Servers'][$i]['only_db'] = array('db1', 'db2');
+        $cfg['Servers'][$i]['only_db'] = ['db1', 'db2'];
 
     .. versionchanged:: 4.0.0
         Previous versions permitted to specify the display order of
@@ -862,6 +862,24 @@ Server connection settings
     This feature can be disabled by setting either of the configurations to ``false``.
 
     .. seealso:: :ref:`faqpdf`.
+
+.. _designer_coords:
+.. config:option:: $cfg['Servers'][$i]['designer_coords']
+
+    :type: string
+    :default: ``''``
+
+    .. versionadded:: 2.10.0
+
+        Since release 2.10.0 a Designer interface is available; it permits to
+        visually manage the relations.
+
+    .. deprecated:: 4.3.0
+
+        This setting was removed and the Designer table positioning data is now stored into :config:option:`$cfg['Servers'][$i]['table\_coords']`.
+
+    .. note::
+        You can now delete the table `pma__designer_coords` from your phpMyAdmin configuration storage database and remove :config:option:`$cfg['Servers'][$i]['designer\_coords']` from your configuration file.
 
 .. _col_com:
 .. config:option:: $cfg['Servers'][$i]['column_info']
@@ -1383,19 +1401,19 @@ Server connection settings
     .. code-block:: none
 
         $cfg['Servers'][$i]['AllowDeny']['order'] = 'allow,deny';
-        $cfg['Servers'][$i]['AllowDeny']['rules'] = array('allow bob from all');
+        $cfg['Servers'][$i]['AllowDeny']['rules'] = ['allow bob from all'];
         // Allow only 'bob' to connect from any host
 
         $cfg['Servers'][$i]['AllowDeny']['order'] = 'allow,deny';
-        $cfg['Servers'][$i]['AllowDeny']['rules'] = array('allow mary from 192.168.100.[50-100]');
+        $cfg['Servers'][$i]['AllowDeny']['rules'] = ['allow mary from 192.168.100.[50-100]'];
         // Allow only 'mary' to connect from host 192.168.100.50 through 192.168.100.100
 
         $cfg['Servers'][$i]['AllowDeny']['order'] = 'allow,deny';
-        $cfg['Servers'][$i]['AllowDeny']['rules'] = array('allow % from 192.168.[5-6].10');
+        $cfg['Servers'][$i]['AllowDeny']['rules'] = ['allow % from 192.168.[5-6].10'];
         // Allow any user to connect from host 192.168.5.10 or 192.168.6.10
 
         $cfg['Servers'][$i]['AllowDeny']['order'] = 'allow,deny';
-        $cfg['Servers'][$i]['AllowDeny']['rules'] = array('allow root from 192.168.5.50','allow % from 192.168.6.10');
+        $cfg['Servers'][$i]['AllowDeny']['rules'] = ['allow root from 192.168.5.50','allow % from 192.168.6.10'];
         // Allow any user to connect from 192.168.6.10, and additionally allow root to connect from 192.168.5.50
 
 .. config:option:: $cfg['Servers'][$i]['DisableIS']
@@ -2815,7 +2833,7 @@ Web server settings
 
     .. code-block:: php
 
-        $cfg['TrustedProxies'] = array('1.2.3.4' => 'HTTP_X_FORWARDED_FOR');
+        $cfg['TrustedProxies'] = ['1.2.3.4' => 'HTTP_X_FORWARDED_FOR'];
 
     The :config:option:`$cfg['Servers'][$i]['AllowDeny']['rules']` directive uses the
     client's IP address as usual.
@@ -3415,12 +3433,25 @@ MySQL settings
 .. config:option:: $cfg['DefaultFunctions']
 
     :type: array
-    :default: array(...)
+    :default: ``array('FUNC_CHAR' => '', 'FUNC_DATE' => '', 'FUNC_NUMBER' => '', 'FUNC_SPATIAL' => 'GeomFromText', 'FUNC_UUID' => 'UUID', 'first_timestamp' => 'NOW')``
 
     Functions selected by default when inserting/changing row, Functions
-    are defined for meta types as (FUNC\_NUMBER, FUNC\_DATE, FUNC\_CHAR,
-    FUNC\_SPATIAL, FUNC\_UUID) and for ``first_timestamp``, which is used
+    are defined for meta types as (``FUNC_NUMBER``, ``FUNC_DATE``, ``FUNC_CHAR``,
+    ``FUNC_SPATIAL``, ``FUNC_UUID``) and for ``first_timestamp``, which is used
     for first timestamp column in table.
+
+    Example configuration
+
+    .. code-block:: php
+
+        $cfg['DefaultFunctions'] = [
+            'FUNC_CHAR' => '',
+            'FUNC_DATE' => '',
+            'FUNC_NUMBER' => '',
+            'FUNC_SPATIAL' => 'ST_GeomFromText',
+            'FUNC_UUID' => 'UUID',
+            'first_timestamp' => 'UTC_TIMESTAMP',
+        ];
 
 Default options for Transformations
 -----------------------------------
@@ -3508,7 +3539,7 @@ Console settings
     :type: boolean
     :default: false
 
-    Execute queries on Enter and insert new line with Shift + Enter
+    Execute queries on Enter and insert new line with Shift+Enter
 
 .. config:option:: $cfg['Console']['DarkTheme']
 
@@ -3553,7 +3584,7 @@ Developer
 .. config:option:: $cfg['DBG']
 
     :type: array
-    :default: array(...)
+    :default: []
 
 .. config:option:: $cfg['DBG']['sql']
 

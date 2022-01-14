@@ -8,7 +8,7 @@
 (function ($) {
   'use strict';
 
-  var formatByte = function formatByte(value, index) {
+  var formatByte = function (value, index) {
     var val = value;
     var i = index;
     var units = [Messages.strB, Messages.strKiB, Messages.strMiB, Messages.strGiB, Messages.strTiB, Messages.strPiB, Messages.strEiB];
@@ -29,6 +29,10 @@
   /**
    * The index indicates what unit the incoming data will be in.
    * 0 for bytes, 1 for kilobytes and so on...
+   *
+   * @param index
+   *
+   * @return {String}
    */
 
 

@@ -29,7 +29,7 @@ Export.enableDumpSomeRowsSubOptions = function () {
 /**
  * Return template data as a json object
  *
- * @returns template data
+ * @return {object} template data
  */
 
 
@@ -232,25 +232,11 @@ AJAX.registerTeardown('export.js', function () {
 AJAX.registerOnload('export.js', function () {
   $('#showsqlquery').on('click', function () {
     // Creating a dialog box similar to preview sql container to show sql query
-    var modalOptions = {};
-
-    modalOptions[Messages.strClose] = function () {
-      $(this).dialog('close');
-    };
-
-    $('#export_sql_modal_content').clone().dialog({
-      minWidth: 550,
-      maxHeight: 400,
-      modal: true,
-      buttons: modalOptions,
-      title: Messages.strQuery,
-      close: function close() {
-        $(this).remove();
-      },
-      open: function open() {
-        // Pretty SQL printing.
-        Functions.highlightSql($(this));
-      }
+    var modal = $('#showSqlQueryModal');
+    modal.modal('show');
+    modal.on('shown.bs.modal', function () {
+      $('#showSqlQueryModalLabel').first().html(Messages.strQuery);
+      Functions.highlightSql(modal);
     });
   });
   /**
@@ -299,9 +285,9 @@ AJAX.registerOnload('export.js', function () {
    */
 
   $('#plugins').on('change', function () {
-    $('#format_specific_opts').find('div.format_specific_options').hide();
+    $('#format_specific_opts').find('div.format_specific_options').addClass('d-none');
     var selectedPluginName = $('#plugins').find('option:selected').val();
-    $('#' + selectedPluginName + '_options').show();
+    $('#' + selectedPluginName + '_options').removeClass('d-none');
   });
   /**
    * Toggles the enabling and disabling of the SQL plugin's comment options that apply only when exporting structure
@@ -499,18 +485,10 @@ Export.checkTableSelectAll = function () {
 };
 
 Export.checkTableSelectStructureOrData = function () {
-  var strChecked = $('input[name="table_structure[]"]:checked').length;
   var dataChecked = $('input[name="table_data[]"]:checked').length;
   var autoIncrement = $('#checkbox_sql_auto_increment');
   var pluginName = $('select#plugins').val();
   var dataDiv = '#' + pluginName + '_data';
-  var structureDiv = '#' + pluginName + '_structure';
-
-  if (strChecked === 0) {
-    $(structureDiv).slideUp('slow');
-  } else {
-    $(structureDiv).slideDown('slow');
-  }
 
   if (dataChecked === 0) {
     $(dataDiv).slideUp('slow');
@@ -702,20 +680,20 @@ Export.toggleQuickOrCustom = function () {
   if ($('input[name=\'quick_or_custom\']').length === 0 // custom_no_form option
   || $('#radio_custom_export').prop('checked') // custom
   ) {
-      $('#databases_and_tables').show();
-      $('#rows').show();
-      $('#output').show();
-      $('#format_specific_opts').show();
-      $('#output_quick_export').hide();
-      var selectedPluginName = $('#plugins').find('option:selected').val();
-      $('#' + selectedPluginName + '_options').show();
-    } else {
+    $('#databases_and_tables').show();
+    $('#rows').show();
+    $('#output').show();
+    $('#format_specific_opts').show();
+    $('#output_quick_export').addClass('d-none');
+    var selectedPluginName = $('#plugins').find('option:selected').val();
+    $('#' + selectedPluginName + '_options').removeClass('d-none');
+  } else {
     // quick
     $('#databases_and_tables').hide();
     $('#rows').hide();
     $('#output').hide();
     $('#format_specific_opts').hide();
-    $('#output_quick_export').show();
+    $('#output_quick_export').removeClass('d-none');
   }
 };
 
@@ -742,116 +720,61 @@ Export.checkTimeOut = function (timeLimit) {
   }, limit * 1000);
 };
 /**
- * Handler for Database/table alias select
- *
- * @param event object the event object
- *
- * @return void
- */
-
-
-Export.aliasSelectHandler = function (event) {
-  var sel = event.data.sel;
-  var type = event.data.type;
-  var inputId = $(this).val();
-  var $label = $(this).next('label');
-  $('input#' + $label.attr('for')).addClass('hide');
-  $('input#' + inputId).removeClass('hide');
-  $label.attr('for', inputId);
-  $('#alias_modal ' + sel + '[id$=' + type + ']:visible').addClass('hide');
-  var $inputWrapper = $('#alias_modal ' + sel + '#' + inputId + type);
-  $inputWrapper.removeClass('hide');
-
-  if (type === '_cols' && $inputWrapper.length > 0) {
-    var outer = $inputWrapper[0].outerHTML; // Replace opening tags
-
-    var regex = /<dummy_inp/gi;
-
-    if (outer.match(regex)) {
-      var newTag = outer.replace(regex, '<input'); // Replace closing tags
-
-      regex = /<\/dummy_inp/gi;
-      newTag = newTag.replace(regex, '</input'); // Assign replacement
-
-      $inputWrapper.replaceWith(newTag);
-    }
-  } else if (type === '_tables') {
-    $('.table_alias_select:visible').trigger('change');
-  }
-
-  $('#alias_modal').dialog('option', 'position', 'center');
-};
-/**
  * Handler for Alias dialog box
  *
  * @param event object the event object
  *
- * @return void
+ * @return {void}
  */
 
 
 Export.createAliasModal = function (event) {
   event.preventDefault();
-  var dlgButtons = {};
+  var modal = $('#renameExportModal');
+  modal.modal('show');
+  modal.on('shown.bs.modal', function () {
+    modal.closest('.ui-dialog').find('.ui-button').addClass('btn btn-secondary');
+    var db = CommonParams.get('db');
 
-  dlgButtons[Messages.strSaveAndClose] = function () {
-    $(this).dialog('close');
-    $('#alias_modal').parent().appendTo($('form[name="dump"]'));
-  };
-
-  $('#alias_modal').dialog({
-    width: Math.min($(window).width() - 100, 700),
-    maxHeight: $(window).height(),
-    modal: true,
-    dialogClass: 'alias-dialog',
-    buttons: dlgButtons,
-    create: function create() {
-      $(this).closest('.ui-dialog').find('.ui-button').addClass('btn btn-secondary');
-      $(this).css('maxHeight', $(window).height() - 150);
-      var db = CommonParams.get('db');
-
-      if (db) {
-        var option = $('<option></option>');
-        option.text(db);
-        option.attr('value', db);
-        $('#db_alias_select').append(option).val(db).trigger('change');
-      } else {
-        var params = {
-          'ajax_request': true,
-          'server': CommonParams.get('server')
-        };
-        $.post('index.php?route=/databases', params, function (response) {
-          if (response.success === true) {
-            $.each(response.databases, function (idx, value) {
-              var option = $('<option></option>');
-              option.text(value);
-              option.attr('value', value);
-              $('#db_alias_select').append(option);
-            });
-          } else {
-            Functions.ajaxShowMessage(response.error, false);
-          }
-        });
-      }
-    },
-    close: function close() {
-      var isEmpty = true;
-      $(this).find('input[type="text"]').each(function () {
-        // trim empty input fields on close
-        if ($(this).val()) {
-          isEmpty = false;
+    if (db) {
+      var option = $('<option></option>');
+      option.text(db);
+      option.attr('value', db);
+      $('#db_alias_select').append(option).val(db).trigger('change');
+    } else {
+      var params = {
+        'ajax_request': true,
+        'server': CommonParams.get('server')
+      };
+      $.post('index.php?route=/databases', params, function (response) {
+        if (response.success === true) {
+          $.each(response.databases, function (idx, value) {
+            var option = $('<option></option>');
+            option.text(value);
+            option.attr('value', value);
+            $('#db_alias_select').append(option);
+          });
         } else {
-          $(this).parents('tr').remove();
+          Functions.ajaxShowMessage(response.error, false);
         }
-      }); // Toggle checkbox based on aliases
-
-      $('input#btn_alias_config').prop('checked', !isEmpty);
-    },
-    position: {
-      my: 'center top',
-      at: 'center top',
-      of: window
+      });
     }
+  });
+  modal.on('hidden.bs.modal', function () {
+    var isEmpty = true;
+    $(this).find('input[type="text"]').each(function () {
+      // trim empty input fields on close
+      if ($(this).val()) {
+        isEmpty = false;
+      } else {
+        $(this).parents('tr').remove();
+      }
+    }); // Toggle checkbox based on aliases
+
+    $('input#btn_alias_config').prop('checked', !isEmpty);
+  });
+  $('#saveAndCloseBtn').on('click', function () {
+    $('#alias_modal').parent().appendTo($('form[name="dump"]'));
   });
 };
 
@@ -895,12 +818,7 @@ Export.addAlias = function (type, name, field, value) {
 
 AJAX.registerOnload('export.js', function () {
   $('input[type=\'radio\'][name=\'quick_or_custom\']').on('change', Export.toggleQuickOrCustom);
-  $('#scroll_to_options_msg').hide();
-  $('#format_specific_opts').find('div.format_specific_options').hide().css({
-    'border': 0,
-    'margin': 0,
-    'padding': 0
-  }).find('h3').remove();
+  $('#format_specific_opts').find('div.format_specific_options').addClass('d-none').find('h3').remove();
   Export.toggleQuickOrCustom();
   Export.toggleStructureDataOpts();
   Export.toggleSqlIncludeComments();
@@ -916,7 +834,7 @@ AJAX.registerOnload('export.js', function () {
    */
 
   $('input[type=\'radio\'][name=\'allrows\']').on('change', function () {
-    if ($('input[type=\'radio\'][name=\'allrows\']').prop('checked')) {
+    if ($('#radio_allrows_0').prop('checked')) {
       Export.enableDumpSomeRowsSubOptions();
     } else {
       Export.disableDumpSomeRowsSubOptions();
@@ -1007,7 +925,7 @@ AJAX.registerOnload('export.js', function () {
     $('#column_alias_name').val('');
   });
 
-  var setSelectOptions = function setSelectOptions(doCheck) {
+  var setSelectOptions = function (doCheck) {
     Functions.setSelectOptions('dump', 'db_select[]', doCheck);
   };
 

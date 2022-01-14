@@ -12,7 +12,7 @@ use function htmlspecialchars;
 use function http_build_query;
 use function ini_get;
 use function is_array;
-use function mb_strpos;
+use function str_contains;
 use function strlen;
 
 /**
@@ -33,8 +33,6 @@ class Url
      *                             (can be an array of strings)
      *
      * @return string   string with input fields
-     *
-     * @access public
      */
     public static function getHiddenInputs(
         $db = '',
@@ -42,26 +40,26 @@ class Url
         $indent = 0,
         $skip = []
     ) {
-        global $PMA_Config;
+        global $config;
 
         if (is_array($db)) {
-            $params  =& $db;
+            $params =& $db;
         } else {
             $params = [];
             if (strlen((string) $db) > 0) {
                 $params['db'] = $db;
             }
+
             if (strlen((string) $table) > 0) {
                 $params['table'] = $table;
             }
         }
 
-        if (! empty($GLOBALS['server'])
-            && $GLOBALS['server'] != $GLOBALS['cfg']['ServerDefault']
-        ) {
+        if (! empty($GLOBALS['server']) && $GLOBALS['server'] != $GLOBALS['cfg']['ServerDefault']) {
             $params['server'] = $GLOBALS['server'];
         }
-        if (empty($PMA_Config->getCookie('pma_lang')) && ! empty($GLOBALS['lang'])) {
+
+        if (empty($config->getCookie('pma_lang')) && ! empty($GLOBALS['lang'])) {
             $params['lang'] = $GLOBALS['lang'];
         }
 
@@ -118,7 +116,7 @@ class Url
         $fields = '';
 
         /* Always include token in plain forms */
-        if ($is_token === false) {
+        if ($is_token === false && isset($_SESSION[' PMA_token '])) {
             $values['token'] = $_SESSION[' PMA_token '];
         }
 
@@ -168,8 +166,6 @@ class Url
      * @param string                        $divider optional character to use instead of '?'
      *
      * @return string   string with URL parameters
-     *
-     * @access public
      */
     public static function getCommon(array $params = [], $divider = '?')
     {
@@ -203,27 +199,25 @@ class Url
      * @param string                            $divider optional character to use instead of '?'
      *
      * @return string   string with URL parameters
-     *
-     * @access public
      */
     public static function getCommonRaw(array $params = [], $divider = '?')
     {
-        global $PMA_Config;
+        global $config;
 
         $separator = self::getArgSeparator();
 
         // avoid overwriting when creating navigation panel links to servers
-        if (isset($GLOBALS['server'])
+        if (
+            isset($GLOBALS['server'])
             && $GLOBALS['server'] != $GLOBALS['cfg']['ServerDefault']
             && ! isset($params['server'])
-            && ! $PMA_Config->get('is_setup')
+            && ! $config->get('is_setup')
         ) {
             $params['server'] = $GLOBALS['server'];
         }
 
         // Can be null when the user is missing an extension.
-        // See: Core::checkExtensions()
-        if ($PMA_Config !== null && empty($PMA_Config->getCookie('pma_lang')) && ! empty($GLOBALS['lang'])) {
+        if ($config !== null && empty($config->getCookie('pma_lang')) && ! empty($GLOBALS['lang'])) {
             $params['lang'] = $GLOBALS['lang'];
         }
 
@@ -246,8 +240,6 @@ class Url
      *                       currently 'none' or 'html'
      *
      * @return string  character used for separating url parts usually ; or &
-     *
-     * @access public
      */
     public static function getArgSeparator($encode = 'none')
     {
@@ -260,19 +252,21 @@ class Url
             // (see https://www.w3.org/TR/1999/REC-html401-19991224/appendix
             // /notes.html#h-B.2.2)
             $arg_separator = (string) ini_get('arg_separator.input');
-            if (mb_strpos($arg_separator, ';') !== false) {
+            if (str_contains($arg_separator, ';')) {
                 $separator = ';';
             } elseif (strlen($arg_separator) > 0) {
                 $separator = $arg_separator[0];
             } else {
                 $separator = '&';
             }
+
             $html_separator = htmlentities($separator);
         }
 
         switch ($encode) {
             case 'html':
                 return $html_separator;
+
             case 'text':
             case 'none':
             default:

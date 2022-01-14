@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
  * @author Aaron Scherer <aequasi@gmail.com>
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  *
- * @final since Symfony 4.4
+ * @final
  */
 class CacheDataCollector extends DataCollector implements LateDataCollectorInterface
 {
@@ -31,20 +31,15 @@ class CacheDataCollector extends DataCollector implements LateDataCollectorInter
      */
     private $instances = [];
 
-    /**
-     * @param string $name
-     */
-    public function addInstance($name, TraceableAdapter $instance)
+    public function addInstance(string $name, TraceableAdapter $instance)
     {
         $this->instances[$name] = $instance;
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @param \Throwable|null $exception
      */
-    public function collect(Request $request, Response $response/*, \Throwable $exception = null*/)
+    public function collect(Request $request, Response $response, \Throwable $exception = null)
     {
         $empty = ['calls' => [], 'config' => [], 'options' => [], 'statistics' => []];
         $this->data = ['instances' => $empty, 'total' => $empty];
@@ -72,27 +67,23 @@ class CacheDataCollector extends DataCollector implements LateDataCollectorInter
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'cache';
     }
 
     /**
      * Method returns amount of logged Cache reads: "get" calls.
-     *
-     * @return array
      */
-    public function getStatistics()
+    public function getStatistics(): array
     {
         return $this->data['instances']['statistics'];
     }
 
     /**
      * Method returns the statistic totals.
-     *
-     * @return array
      */
-    public function getTotals()
+    public function getTotals(): array
     {
         return $this->data['total']['statistics'];
     }

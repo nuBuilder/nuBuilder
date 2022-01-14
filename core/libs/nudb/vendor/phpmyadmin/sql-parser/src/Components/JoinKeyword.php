@@ -11,11 +11,14 @@ use PhpMyAdmin\SqlParser\Component;
 use PhpMyAdmin\SqlParser\Parser;
 use PhpMyAdmin\SqlParser\Token;
 use PhpMyAdmin\SqlParser\TokensList;
+
 use function array_search;
 use function implode;
 
 /**
  * `JOIN` keyword parser.
+ *
+ * @final
  */
 class JoinKeyword extends Component
 {
@@ -147,14 +150,12 @@ class JoinKeyword extends Component
             }
 
             if ($state === 0) {
-                if (($token->type === Token::TYPE_KEYWORD)
-                    && ! empty(static::$JOINS[$token->keyword])
-                ) {
-                    $expr->type = static::$JOINS[$token->keyword];
-                    $state = 1;
-                } else {
+                if (($token->type !== Token::TYPE_KEYWORD) || empty(static::$JOINS[$token->keyword])) {
                     break;
                 }
+
+                $expr->type = static::$JOINS[$token->keyword];
+                $state = 1;
             } elseif ($state === 1) {
                 $expr->expr = Expression::parse($parser, $list, ['field' => 'table']);
                 $state = 2;
@@ -168,16 +169,15 @@ class JoinKeyword extends Component
                             $state = 4;
                             break;
                         default:
-                            if (! empty(static::$JOINS[$token->keyword])
-                            ) {
-                                $ret[] = $expr;
-                                $expr = new static();
-                                $expr->type = static::$JOINS[$token->keyword];
-                                $state = 1;
-                            } else {
+                            if (empty(static::$JOINS[$token->keyword])) {
                                 /* Next clause is starting */
                                 break 2;
                             }
+
+                            $ret[] = $expr;
+                            $expr = new static();
+                            $expr->type = static::$JOINS[$token->keyword];
+                            $state = 1;
 
                             break;
                     }

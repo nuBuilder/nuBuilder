@@ -1,19 +1,20 @@
 <?php
+
 declare(strict_types = 1);
+
 namespace Williamdes\MariaDBMySQLKBS;
 
-use \stdClass;
-use \JsonSerializable;
+use stdClass;
+use JsonSerializable;
 
 class SlimData extends stdClass implements JsonSerializable
 {
-
     /**
      * Variables
      *
      * @var KBEntry[]
      */
-    private $vars = array();
+    private $vars = [];
 
     /**
      * File revision
@@ -27,31 +28,31 @@ class SlimData extends stdClass implements JsonSerializable
      *
      * @var string[]
      */
-    private $urls = array();
+    private $urls = [];
 
     /**
      * Types of documentation
      *
      * @var array<string,int>
      */
-    private $types = array("MYSQL" => 1, "MARIADB" => 2);
+    private $types = ['MYSQL' => 1, 'MARIADB' => 2];
 
     /**
      * Types of variables
      *
      * @var array<string,int>
      */
-    private $varTypes = array(
-        "string" => 1,
-        "boolean" => 2,
-        "integer" => 3,
-        "numeric" => 4,
-        "enumeration" => 5,
-        "set" => 6,
-        "directory name" => 7,
-        "file name" => 8,
-        "byte" => 9
-    );
+    private $varTypes = [
+        'string' => 1,
+        'boolean' => 2,
+        'integer' => 3,
+        'numeric' => 4,
+        'enumeration' => 5,
+        'set' => 6,
+        'directory name' => 7,
+        'file name' => 8,
+        'byte' => 9
+    ];
 
     /**
      * Create a slimData object
@@ -97,11 +98,12 @@ class SlimData extends stdClass implements JsonSerializable
      * Used for json_encode function
      * This can seem useless, do not remove it.
      *
+     * @phpstan-ignore-next-line
      * @return array<string,array|float|stdClass>
      */
     public function jsonSerialize(): array
     {
-        $outObj = array();
+        $outObj = [];
         if (count($this->vars) > 0) {
             $vars = new stdClass();
             foreach ($this->vars as $var) {
@@ -120,17 +122,17 @@ class SlimData extends stdClass implements JsonSerializable
                 }
 
                 if ($var->hasDocumentations()) {
-                    $variable->a = array();
+                    $variable->a = [];
                     foreach ($var->getDocumentations() as $kbd) {
                         $entry    = new stdClass();
                         $entry->a = $kbd->getAnchor();
                         if ($entry->a === null) {
                             unset($entry->a);
                         }
-                        if (preg_match("!^(https|http)://mariadb.com!", $kbd->getUrl())) {
-                            $entry->t = $this->types["MARIADB"];
-                        } elseif (preg_match("!^(https|http)://dev.mysql.com!", $kbd->getUrl())) {
-                            $entry->t = $this->types["MYSQL"];
+                        if (preg_match('!^(https|http)://mariadb.com!', $kbd->getUrl())) {
+                            $entry->t = $this->types['MARIADB'];
+                        } elseif (preg_match('!^(https|http)://dev.mysql.com!', $kbd->getUrl())) {
+                            $entry->t = $this->types['MYSQL'];
                         }
                         if (isset($entry->t)) {// If has no valid type, skip.
                             //Do not allow other urls.

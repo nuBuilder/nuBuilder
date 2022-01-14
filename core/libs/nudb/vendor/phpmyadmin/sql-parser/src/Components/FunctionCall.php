@@ -11,10 +11,13 @@ use PhpMyAdmin\SqlParser\Component;
 use PhpMyAdmin\SqlParser\Parser;
 use PhpMyAdmin\SqlParser\Token;
 use PhpMyAdmin\SqlParser\TokensList;
+
 use function is_array;
 
 /**
  * Parses a function call.
+ *
+ * @final
  */
 class FunctionCall extends Component
 {

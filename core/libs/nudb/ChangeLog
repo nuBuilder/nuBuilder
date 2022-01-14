@@ -1,6 +1,33 @@
 phpMyAdmin - ChangeLog
 ======================
 
+5.2.0 (not yet released)
+- issue #16521 Upgrade Bootstrap to version 5
+- issue #16521 Drop support for Internet Explorer and others
+- issue        Upgrade to shapefile 3
+- issue #16555 Bump minimum PHP version to 7.2
+- issue        Upgrade phpseclib to version 3
+- issue        Upgrade Symfony components to version 5.2
+- issue        Upgrade to Motranslator 4
+- issue #16005 Improve the performance of the Export logic
+- issue #16829 Add "NOT LIKE %...%" operator to Table search
+- issue #16845 Fixed some links not passing through url.php
+- issue #16382 Remove apc upload progress method (all upload progress code was removed from the PHP extension)
+- issue #16974 Replace zxcvbn by zxcvbn-ts
+- issue #15691 Disable the last column checkbox in the column list dropdown instead of not allowing un-check
+- issue #16138 Ignore the length of integer types and show a warning on MySQL >= 8.0.18
+- issue        Add suport for the Mroonga engine
+- issue        Double click column name to directly copy to clipboard
+- issue #16425 Add "DELETE FROM" table on table operations page
+- issue #16482 Add a select all link for table-specific privileges
+- issue #14276 Add support for account locking
+- issue #17143 Use composer/ca-bundle to manage the CA cert file
+- issue #17143 Require the openssl PHP extension
+- issue #17171 Remove the printview.css file from themes
+- issue #17203 Redesign the export and the import pages
+- issue #16197 Replace the master/slave terminology
+- issue #17257 Replace libraries/vendor_config.php constants with an array
+
 5.1.2 (not yet released)
 - issue        Replaced MySQL documentation redirected links
 - issue #16960 Fix JS error on Designer visual builder on some modal buttons
@@ -31,6 +58,92 @@ phpMyAdmin - ChangeLog
 - issue        Fixed table width on Query by example page for large screens
 - issue #16975 Fixed NULL default had a value on insert with datatime fields
 - issue #16994 Fixed missing privilege escaping when assigning multiple databases with '_' to an user
+- issue #16864 Fixed the margin on the last database of the tree on all themes when scrollbars are displayed
+- issue #17011 Fixed the database tree line that was not continuous on database groups
+- issue        Build more syntax correct URLs on JS internal redirects
+- issue #16976 Fix wrong link when a table is moved from a database to another
+- issue #16985 Fix case-sensitive issue of innodb_file_format=barracuda vs innodb_file_format=Barracuda
+- issue        Fixed duplicate quote in navigation nodes
+- issue #17006 Disable the URL limit for the MariaDB analyser feature
+- issue        Fix calls to fetchRow using two parameters but the function has only one parameter
+- issue #17020 Fixed "Notice Undefined index: sql_query" on Insert page
+- issue        Fix reported "Undefined index: FirstDayOfCalendar"
+- issue        Fix reported "Undefined index: environment"
+- issue        Fix "TypeError: strlen() expects parameter 1 to be string, null given" on databases listing
+- issue #16973 Fix "Undefined array key "n0_pos2_name"" on databases listing
+- issue        Use the correct min MySQL version for axis-order (8.0.1) instead of (8.0.11)
+- issue        Use the queries we asked the user confirmation for on DELETE and TRUNCATE table actions
+- issue #16994 Fixed editing specific privileges for a database covered by a wildcard privilege
+- issue #16994 Fixed escaping of the database name for databases containing '_' on users edit
+- issue #16994 Only escape once on grant/revoke privileges for databases containing '_' or '%'
+- issue #16994 Only show databases without a privilege on multi select for user grant databases
+- issue        Removed un-expected query success message from the Table export page
+- issue #17026 Handle possible invalid boolean values injected in SaveDir or UploadDir causing "TypeError: mb_substr()"
+- issue #16981 Enable cookie parameter "SameSite" on "phpMyAdmin" cookie for PHP >= 7.3
+- issue #16966 Encode "#" to have the anchor part of the destination URL on SQL highlight terms URLs
+- issue #17004 Fix PHP errors due to removed variable "innodb_file_format" on MariaDB >= 10.6.0 and MySQL >= 8.0.0
+- issue #16842 Fixed missing password modes on PerconaDB
+- issue #16947 Fix "Change login information" form not working
+- issue #17004 Fix Advisor for MariaDB >= 10.5 because of removed "innodb_log_files_in_group" variable
+- issue #17037 Fix change structure does not surface errors
+- issue #17016 Fixed online Transaction, errors not reported on structure edit
+- issue #17042 Fix SQL escaping bug on DB name with special chars on submit query with rollback option
+- issue #17027 Better handle the display of sorted binary columns in results summary
+- issue #16398 Quote non numeric values on parameterized queries
+- issue        Fixed duplicate HTML escaping on foreign keys select value modal
+- issue #15370 Fixed edit routine UI incorrectly removes too many escape slashes
+- issue #14631 Fix enum with comma produces incorrect search dropdown on search pages
+- issue        Fix gis visualization position and limit parameters have no effect
+- issue #16995 Fix edit binary foreign key adds a 1 to the value on the selected value
+- issue #13614 Fixed escaping the database names when granting privileges on tables
+- issue #11834 Fixed adding a new user on "privileges" tab of a table with a database name using a "_" character
+- issue #17033 Fixed scaling of line width and point size in GIS visualization
+- issue #17054 Removed "DEL" character from generated random strings for Blowfish secret auto-generated by setup
+- issue #17019 Fixed "Browse" button visible when creating a table from the database structure view
+- issue #16804 Fixed numbers where left-aligned rather than right-aligned
+- issue        Fixed Metro theme text color for buttons in the browse table navigation bar
+- issue #14796 Fix export Database page, UI prevents from exporting procedures only
+- issue #15225 Fix Command+click on macOS opens links in same tab
+- issue #17014 Fix column names in first row when importing from CSV where the first line contains column names
+- issue        Fix prevent scrolling the page when scrolling in GIS visualization
+- issue        Fix GIS visualization save file with a different label or column
+- issue        Fixed GIS saving image as png with a label
+- issue        Fixed if label is just the number zero, it was treated as no label in the OpenLayers map
+- issue #17039 Fix unable to have 2FA working with a "pmadb" config value != phpmyadmin
+- issue #17079 Fixed missing spatial functions in Insert/Edit page
+- issue        Fixed broken docs link after a FK data type mismatch error
+- issue        Fix don't add multiple OpenLayers maps, remove listeners on dispose on GIS visualization
+- issue #14502 Uncheck the "ignore" checkbox when the user chooses a value in the foreign key list on Insert page
+- issue #14502 Uncheck the "ignore" checkbox when the user saves the GIS value on Insert page
+- issue #17018 Fixed cannot save data from GIS editor for spatial column on Insert page
+- issue #17084 Fixed ErrorHandler not showing errors when phpMyAdmin session does not work at all
+- issue #17062 Fixed pagination issues when working with identically named tables in separate databases
+- issue #17046 Fix "Uncaught TypeError: htmlspecialchars() expects parameter 1 to be string, null given"
+- issue #16942 Fix table Import with CSV using LOAD DATA LOCAL causes error "LOAD DATA LOCAL INFILE is forbidden"
+- issue #16942 Fix auto-detection for "LOAD DATA LOCAL INFILE" LOCAL option
+- issue #16067 Make select elements with multiple items resizable
+- issue        Fix the display of Indexes that use Expressions and not column names
+- issue        Allow to create the phpMyAdmin storage database using a different name than "phpmyadmin" using the interface
+- issue #17092 Document that "$cfg['Servers'][$i]['designer_coords']" was removed in version 4.3.0
+- issue #16906 Support special table names for pmadb storage table names
+- issue #16906 Fix a caching effect on the feature list after creating the tables
+- issue #16906 Better report errors when creating the pmadb or it's tables
+- issue #16906 Create the pmadb tables using the names configured and not the default names
+- issue #16906 Create the phpMyAdmin storage database using the configured "['pmadb']" name and not always "phpmyadmin"
+- issue #16906 Prevent incorrect overriding of configured values after a pmadb fix
+- issue #16906 Use the control connection to create the storage database and tables and not the user connection
+- issue #16693 Fix can't see SQL after adding a new column
+- issue #12753 Show table structure after adding a new column
+- issue        Fix a PHP notice when logging out
+- issue #17090 Fix bbcode not rendered for error messages on setup
+- issue #17198 Fix the database selection when the navigation tree is disabled
+- issue #17228 Fixed copy to clipboard with NULL values gives non usable text
+- issue #16746 Replace samyoul/u2f-php-server by code-lts/u2f-php-server
+- issue #16005 Performance improvement on the Import and Export pages
+- issue #17247 Fix triple HTML encoding
+- issue #17259 Fix broken link in the Simulate DML query modal
+- issue #16746 Update tcpdf dependency to ^6.4.4 for PHP 8.1 compatibility
+- issue #16746 Update twig dependency to "^2.14.9 || ^3.3.5" for PHP 8.1 compatibility
 
 5.1.1 (2021-06-04)
 - issue #13325 Fixed created procedure shows up in triggers and events and vice-versa
@@ -453,6 +566,10 @@ phpMyAdmin - ChangeLog
 - issue #14732 Fixed can't rename primary key with auto increment
 - issue #15677 Fix show process-list triggers a php exception
 - issue #15697 Fix uncaught php error: "Call to a member function get() on null" in db_export.php when exporting a table from the list
+
+4.9.8 (not yet released)
+- issue #14321 Display a correct error page when "$cfg['Servers'][$i]['SignonURL']" is empty for auth_type=signon
+- issue #14321 [security] Remove leaked HTML on signon page redirect before login for auth_type=signon
 
 4.9.7 (2020-10-15)
 - issue #16397 Fix compatibility problems with older PHP versions (also issue #16399)

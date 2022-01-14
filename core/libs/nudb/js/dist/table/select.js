@@ -18,7 +18,7 @@ var TableSelect = {};
  *
  * @param {string} dataType Column data-type
  *
- * @return {(boolean|string)}
+ * @return {boolean | string}
  */
 
 TableSelect.checkIfDataTypeNumericOrDate = function (dataType) {
@@ -150,9 +150,7 @@ AJAX.registerOnload('table/select.js', function () {
         $('#togglesearchformlink') // always start with the Show message
         .text(Messages.strShowSearchCriteria);
         $('#togglesearchformdiv') // now it's time to show the div containing the link
-        .show(); // needed for the display options slider in the results
-
-        Functions.initSlider();
+        .show();
         $('html, body').animate({
           scrollTop: 0
         }, 'fast');
@@ -247,7 +245,7 @@ AJAX.registerOnload('table/select.js', function () {
           'column': columnName,
           'range_search': 1
         },
-        success: function success(response) {
+        success: function (response) {
           Functions.ajaxRemoveMessage($msgbox);
 
           if (response.success) {
@@ -255,9 +253,17 @@ AJAX.registerOnload('table/select.js', function () {
             var min = response.column_data.min ? '(' + Messages.strColumnMin + ' ' + response.column_data.min + ')' : ''; // Get the column max value.
 
             var max = response.column_data.max ? '(' + Messages.strColumnMax + ' ' + response.column_data.max + ')' : '';
-            var buttonOptions = {};
+            $('#rangeSearchModal').modal('show');
+            $('#rangeSearchLegend').first().html(operator);
+            $('#rangeSearchMin').first().text(min);
+            $('#rangeSearchMax').first().text(max); // Reset input values on reuse
 
-            buttonOptions[Messages.strGo] = function () {
+            $('#min_value').first().val('');
+            $('#max_value').first().val(''); // Add datepicker wherever required.
+
+            Functions.addDatepicker($('#min_value'), dataType);
+            Functions.addDatepicker($('#max_value'), dataType);
+            $('#rangeSearchModalGo').on('click', function () {
               var minValue = $('#min_value').val();
               var maxValue = $('#max_value').val();
               var finalValue = '';
@@ -289,34 +295,13 @@ AJAX.registerOnload('table/select.js', function () {
                 $targetField.val(finalValue);
               }
 
-              $(this).dialog('close');
-            };
-
-            buttonOptions[Messages.strCancel] = function () {
-              $(this).dialog('close');
-            }; // Display dialog box.
-
-
-            $('<div></div>').append('<fieldset>' + '<legend>' + operator + '</legend>' + '<label for="min_value">' + Messages.strMinValue + '</label>' + '<input type="text" id="min_value">' + '<br>' + '<span class="small_font">' + min + '</span>' + '<br>' + '<label for="max_value">' + Messages.strMaxValue + '</label>' + '<input type="text" id="max_value">' + '<br>' + '<span class="small_font">' + max + '</span>' + '</fieldset>').dialog({
-              width: 'auto',
-              maxHeight: 400,
-              modal: true,
-              buttons: buttonOptions,
-              title: Messages.strRangeSearch,
-              open: function open() {
-                // Add datepicker wherever required.
-                Functions.addDatepicker($('#min_value'), dataType);
-                Functions.addDatepicker($('#max_value'), dataType);
-              },
-              close: function close() {
-                $(this).remove();
-              }
+              $('#rangeSearchModal').modal('hide');
             });
           } else {
             Functions.ajaxShowMessage(response.error);
           }
         },
-        error: function error() {
+        error: function () {
           Functions.ajaxShowMessage(Messages.strErrorProcessingRequest);
         }
       });

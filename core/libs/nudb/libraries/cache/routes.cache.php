@@ -3,1249 +3,261 @@
   array (
     'GET' => 
     array (
-      '' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\HomeController',
-        1 => 'index',
-      ),
-      '/' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\HomeController',
-        1 => 'index',
-      ),
-      '/recent-table' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\HomeController',
-        1 => 'reloadRecentTablesList',
-      ),
-      '/git-revision' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\HomeController',
-        1 => 'gitRevision',
-      ),
-      '/browse-foreigners' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\BrowseForeignersController',
-        1 => 'index',
-      ),
-      '/changelog' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\ChangeLogController',
-        1 => 'index',
-      ),
-      '/check-relations' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\CheckRelationsController',
-        1 => 'index',
-      ),
-      '/database/central-columns' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\CentralColumnsController',
-        1 => 'index',
-      ),
-      '/database/data-dictionary' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\DataDictionaryController',
-        1 => 'index',
-      ),
-      '/database/designer' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\DesignerController',
-        1 => 'index',
-      ),
-      '/database/events' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\EventsController',
-        1 => 'index',
-      ),
-      '/database/export' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\ExportController',
-        1 => 'index',
-      ),
-      '/database/import' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\ImportController',
-        1 => 'index',
-      ),
-      '/database/multi-table-query' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\MultiTableQueryController',
-        1 => 'index',
-      ),
-      '/database/multi-table-query/tables' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\MultiTableQueryController',
-        1 => 'table',
-      ),
-      '/database/operations' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\OperationsController',
-        1 => 'index',
-      ),
-      '/database/qbe' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\QueryByExampleController',
-        1 => 'index',
-      ),
-      '/database/routines' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\RoutinesController',
-        1 => 'index',
-      ),
-      '/database/search' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\SearchController',
-        1 => 'index',
-      ),
-      '/database/sql' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\SqlController',
-        1 => 'index',
-      ),
-      '/database/structure' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\StructureController',
-        1 => 'index',
-      ),
-      '/database/structure/favorite-table' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\StructureController',
-        1 => 'addRemoveFavoriteTablesAction',
-      ),
-      '/database/structure/real-row-count' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\StructureController',
-        1 => 'handleRealRowCountRequestAction',
-      ),
-      '/database/tracking' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\TrackingController',
-        1 => 'index',
-      ),
-      '/database/triggers' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\TriggersController',
-        1 => 'index',
-      ),
-      '/error-report' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\ErrorReportController',
-        1 => 'index',
-      ),
-      '/export' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\ExportController',
-        1 => 'index',
-      ),
-      '/export/check-time-out' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\ExportController',
-        1 => 'checkTimeOut',
-      ),
-      '/gis-data-editor' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\GisDataEditorController',
-        1 => 'index',
-      ),
-      '/import' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\ImportController',
-        1 => 'index',
-      ),
-      '/import-status' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\ImportStatusController',
-        1 => 'index',
-      ),
-      '/license' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\LicenseController',
-        1 => 'index',
-      ),
-      '/lint' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\LintController',
-        1 => 'index',
-      ),
-      '/logout' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\LogoutController',
-        1 => 'index',
-      ),
-      '/navigation' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\NavigationController',
-        1 => 'index',
-      ),
-      '/normalization' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\NormalizationController',
-        1 => 'index',
-      ),
-      '/phpinfo' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\PhpInfoController',
-        1 => 'index',
-      ),
-      '/preferences/export' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Preferences\\ExportController',
-        1 => 'index',
-      ),
-      '/preferences/features' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Preferences\\FeaturesController',
-        1 => 'index',
-      ),
-      '/preferences/import' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Preferences\\ImportController',
-        1 => 'index',
-      ),
-      '/preferences/main-panel' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Preferences\\MainPanelController',
-        1 => 'index',
-      ),
-      '/preferences/manage' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Preferences\\ManageController',
-        1 => 'index',
-      ),
-      '/preferences/navigation' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Preferences\\NavigationController',
-        1 => 'index',
-      ),
-      '/preferences/sql' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Preferences\\SqlController',
-        1 => 'index',
-      ),
-      '/preferences/two-factor' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Preferences\\TwoFactorController',
-        1 => 'index',
-      ),
-      '/schema-export' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\SchemaExportController',
-        1 => 'index',
-      ),
-      '/server/binlog' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\BinlogController',
-        1 => 'index',
-      ),
-      '/server/collations' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\CollationsController',
-        1 => 'index',
-      ),
-      '/server/databases' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\DatabasesController',
-        1 => 'index',
-      ),
-      '/server/engines' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\EnginesController',
-        1 => 'index',
-      ),
-      '/server/export' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\ExportController',
-        1 => 'index',
-      ),
-      '/server/import' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\ImportController',
-        1 => 'index',
-      ),
-      '/server/plugins' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\PluginsController',
-        1 => 'index',
-      ),
-      '/server/privileges' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\PrivilegesController',
-        1 => 'index',
-      ),
-      '/server/replication' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\ReplicationController',
-        1 => 'index',
-      ),
-      '/server/sql' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\SqlController',
-        1 => 'index',
-      ),
-      '/server/status' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\Status\\StatusController',
-        1 => 'index',
-      ),
-      '/server/status/advisor' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\Status\\AdvisorController',
-        1 => 'index',
-      ),
-      '/server/status/monitor' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\Status\\MonitorController',
-        1 => 'index',
-      ),
-      '/server/status/processes' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\Status\\ProcessesController',
-        1 => 'index',
-      ),
-      '/server/status/queries' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\Status\\QueriesController',
-        1 => 'index',
-      ),
-      '/server/status/variables' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\Status\\VariablesController',
-        1 => 'index',
-      ),
-      '/server/user-groups' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\UserGroupsController',
-        1 => 'index',
-      ),
-      '/server/variables' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\VariablesController',
-        1 => 'index',
-      ),
-      '/sql' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\SqlController',
-        1 => 'index',
-      ),
-      '/sql/get-default-fk-check-value' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\SqlController',
-        1 => 'getDefaultForeignKeyCheckValue',
-      ),
-      '/table/add-field' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\AddFieldController',
-        1 => 'index',
-      ),
-      '/table/change' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\ChangeController',
-        1 => 'index',
-      ),
-      '/table/chart' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\ChartController',
-        1 => 'index',
-      ),
-      '/table/create' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\CreateController',
-        1 => 'index',
-      ),
-      '/table/export' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\ExportController',
-        1 => 'index',
-      ),
-      '/table/find-replace' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\FindReplaceController',
-        1 => 'index',
-      ),
-      '/table/get-field' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\GetFieldController',
-        1 => 'index',
-      ),
-      '/table/gis-visualization' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\GisVisualizationController',
-        1 => 'index',
-      ),
-      '/table/import' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\ImportController',
-        1 => 'index',
-      ),
-      '/table/indexes' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\IndexesController',
-        1 => 'index',
-      ),
-      '/table/indexes/rename' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\IndexesController',
-        1 => 'indexRename',
-      ),
-      '/table/operations' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\OperationsController',
-        1 => 'index',
-      ),
-      '/table/recent-favorite' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\RecentFavoriteController',
-        1 => 'index',
-      ),
-      '/table/relation' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\RelationController',
-        1 => 'index',
-      ),
-      '/table/replace' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\ReplaceController',
-        1 => 'index',
-      ),
-      '/table/search' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\SearchController',
-        1 => 'index',
-      ),
-      '/table/sql' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\SqlController',
-        1 => 'index',
-      ),
-      '/table/structure' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\StructureController',
-        1 => 'index',
-      ),
-      '/table/structure/change' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\StructureController',
-        1 => 'change',
-      ),
-      '/table/tracking' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\TrackingController',
-        1 => 'index',
-      ),
-      '/table/triggers' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\TriggersController',
-        1 => 'index',
-      ),
-      '/table/zoom-search' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\ZoomSearchController',
-        1 => 'index',
-      ),
-      '/themes' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\ThemesController',
-        1 => 'index',
-      ),
-      '/transformation/overview' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\TransformationOverviewController',
-        1 => 'index',
-      ),
-      '/transformation/wrapper' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\TransformationWrapperController',
-        1 => 'index',
-      ),
-      '/user-password' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\UserPasswordController',
-        1 => 'index',
-      ),
-      '/version-check' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\VersionCheckController',
-        1 => 'index',
-      ),
-      '/view/create' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\ViewCreateController',
-        1 => 'index',
-      ),
-      '/view/operations' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\ViewOperationsController',
-        1 => 'index',
-      ),
+      '' => 'PhpMyAdmin\\Controllers\\HomeController',
+      '/' => 'PhpMyAdmin\\Controllers\\HomeController',
+      '/browse-foreigners' => 'PhpMyAdmin\\Controllers\\BrowseForeignersController',
+      '/changelog' => 'PhpMyAdmin\\Controllers\\ChangeLogController',
+      '/check-relations' => 'PhpMyAdmin\\Controllers\\CheckRelationsController',
+      '/database/central-columns' => 'PhpMyAdmin\\Controllers\\Database\\CentralColumnsController',
+      '/database/data-dictionary' => 'PhpMyAdmin\\Controllers\\Database\\DataDictionaryController',
+      '/database/designer' => 'PhpMyAdmin\\Controllers\\Database\\DesignerController',
+      '/database/events' => 'PhpMyAdmin\\Controllers\\Database\\EventsController',
+      '/database/export' => 'PhpMyAdmin\\Controllers\\Database\\ExportController',
+      '/database/import' => 'PhpMyAdmin\\Controllers\\Database\\ImportController',
+      '/database/multi-table-query' => 'PhpMyAdmin\\Controllers\\Database\\MultiTableQueryController',
+      '/database/multi-table-query/tables' => 'PhpMyAdmin\\Controllers\\Database\\MultiTableQuery\\TablesController',
+      '/database/operations' => 'PhpMyAdmin\\Controllers\\Database\\OperationsController',
+      '/database/qbe' => 'PhpMyAdmin\\Controllers\\Database\\QueryByExampleController',
+      '/database/routines' => 'PhpMyAdmin\\Controllers\\Database\\RoutinesController',
+      '/database/search' => 'PhpMyAdmin\\Controllers\\Database\\SearchController',
+      '/database/sql' => 'PhpMyAdmin\\Controllers\\Database\\SqlController',
+      '/database/structure' => 'PhpMyAdmin\\Controllers\\Database\\StructureController',
+      '/database/structure/favorite-table' => 'PhpMyAdmin\\Controllers\\Database\\Structure\\FavoriteTableController',
+      '/database/structure/real-row-count' => 'PhpMyAdmin\\Controllers\\Database\\Structure\\RealRowCountController',
+      '/database/tracking' => 'PhpMyAdmin\\Controllers\\Database\\TrackingController',
+      '/database/triggers' => 'PhpMyAdmin\\Controllers\\Database\\TriggersController',
+      '/error-report' => 'PhpMyAdmin\\Controllers\\ErrorReportController',
+      '/export' => 'PhpMyAdmin\\Controllers\\Export\\ExportController',
+      '/export/check-time-out' => 'PhpMyAdmin\\Controllers\\Export\\CheckTimeOutController',
+      '/gis-data-editor' => 'PhpMyAdmin\\Controllers\\GisDataEditorController',
+      '/git-revision' => 'PhpMyAdmin\\Controllers\\GitInfoController',
+      '/import' => 'PhpMyAdmin\\Controllers\\Import\\ImportController',
+      '/import-status' => 'PhpMyAdmin\\Controllers\\Import\\StatusController',
+      '/license' => 'PhpMyAdmin\\Controllers\\LicenseController',
+      '/lint' => 'PhpMyAdmin\\Controllers\\LintController',
+      '/logout' => 'PhpMyAdmin\\Controllers\\LogoutController',
+      '/navigation' => 'PhpMyAdmin\\Controllers\\NavigationController',
+      '/normalization' => 'PhpMyAdmin\\Controllers\\NormalizationController',
+      '/phpinfo' => 'PhpMyAdmin\\Controllers\\PhpInfoController',
+      '/preferences/export' => 'PhpMyAdmin\\Controllers\\Preferences\\ExportController',
+      '/preferences/features' => 'PhpMyAdmin\\Controllers\\Preferences\\FeaturesController',
+      '/preferences/import' => 'PhpMyAdmin\\Controllers\\Preferences\\ImportController',
+      '/preferences/main-panel' => 'PhpMyAdmin\\Controllers\\Preferences\\MainPanelController',
+      '/preferences/manage' => 'PhpMyAdmin\\Controllers\\Preferences\\ManageController',
+      '/preferences/navigation' => 'PhpMyAdmin\\Controllers\\Preferences\\NavigationController',
+      '/preferences/sql' => 'PhpMyAdmin\\Controllers\\Preferences\\SqlController',
+      '/preferences/two-factor' => 'PhpMyAdmin\\Controllers\\Preferences\\TwoFactorController',
+      '/recent-table' => 'PhpMyAdmin\\Controllers\\RecentTablesListController',
+      '/schema-export' => 'PhpMyAdmin\\Controllers\\SchemaExportController',
+      '/server/binlog' => 'PhpMyAdmin\\Controllers\\Server\\BinlogController',
+      '/server/collations' => 'PhpMyAdmin\\Controllers\\Server\\CollationsController',
+      '/server/databases' => 'PhpMyAdmin\\Controllers\\Server\\DatabasesController',
+      '/server/engines' => 'PhpMyAdmin\\Controllers\\Server\\EnginesController',
+      '/server/export' => 'PhpMyAdmin\\Controllers\\Server\\ExportController',
+      '/server/import' => 'PhpMyAdmin\\Controllers\\Server\\ImportController',
+      '/server/plugins' => 'PhpMyAdmin\\Controllers\\Server\\PluginsController',
+      '/server/privileges' => 'PhpMyAdmin\\Controllers\\Server\\PrivilegesController',
+      '/server/replication' => 'PhpMyAdmin\\Controllers\\Server\\ReplicationController',
+      '/server/sql' => 'PhpMyAdmin\\Controllers\\Server\\SqlController',
+      '/server/status' => 'PhpMyAdmin\\Controllers\\Server\\Status\\StatusController',
+      '/server/status/advisor' => 'PhpMyAdmin\\Controllers\\Server\\Status\\AdvisorController',
+      '/server/status/monitor' => 'PhpMyAdmin\\Controllers\\Server\\Status\\MonitorController',
+      '/server/status/processes' => 'PhpMyAdmin\\Controllers\\Server\\Status\\ProcessesController',
+      '/server/status/queries' => 'PhpMyAdmin\\Controllers\\Server\\Status\\QueriesController',
+      '/server/status/variables' => 'PhpMyAdmin\\Controllers\\Server\\Status\\VariablesController',
+      '/server/user-groups' => 'PhpMyAdmin\\Controllers\\Server\\UserGroupsController',
+      '/server/user-groups/edit-form' => 'PhpMyAdmin\\Controllers\\Server\\UserGroupsFormController',
+      '/server/variables' => 'PhpMyAdmin\\Controllers\\Server\\VariablesController',
+      '/sql' => 'PhpMyAdmin\\Controllers\\Sql\\SqlController',
+      '/sql/get-default-fk-check-value' => 'PhpMyAdmin\\Controllers\\Sql\\DefaultForeignKeyCheckValueController',
+      '/table/add-field' => 'PhpMyAdmin\\Controllers\\Table\\AddFieldController',
+      '/table/change' => 'PhpMyAdmin\\Controllers\\Table\\ChangeController',
+      '/table/chart' => 'PhpMyAdmin\\Controllers\\Table\\ChartController',
+      '/table/create' => 'PhpMyAdmin\\Controllers\\Table\\CreateController',
+      '/table/export' => 'PhpMyAdmin\\Controllers\\Table\\ExportController',
+      '/table/find-replace' => 'PhpMyAdmin\\Controllers\\Table\\FindReplaceController',
+      '/table/get-field' => 'PhpMyAdmin\\Controllers\\Table\\GetFieldController',
+      '/table/gis-visualization' => 'PhpMyAdmin\\Controllers\\Table\\GisVisualizationController',
+      '/table/import' => 'PhpMyAdmin\\Controllers\\Table\\ImportController',
+      '/table/indexes' => 'PhpMyAdmin\\Controllers\\Table\\IndexesController',
+      '/table/indexes/rename' => 'PhpMyAdmin\\Controllers\\Table\\IndexRenameController',
+      '/table/operations' => 'PhpMyAdmin\\Controllers\\Table\\OperationsController',
+      '/table/recent-favorite' => 'PhpMyAdmin\\Controllers\\Table\\RecentFavoriteController',
+      '/table/relation' => 'PhpMyAdmin\\Controllers\\Table\\RelationController',
+      '/table/replace' => 'PhpMyAdmin\\Controllers\\Table\\ReplaceController',
+      '/table/search' => 'PhpMyAdmin\\Controllers\\Table\\SearchController',
+      '/table/sql' => 'PhpMyAdmin\\Controllers\\Table\\SqlController',
+      '/table/structure' => 'PhpMyAdmin\\Controllers\\Table\\StructureController',
+      '/table/structure/change' => 'PhpMyAdmin\\Controllers\\Table\\Structure\\ChangeController',
+      '/table/tracking' => 'PhpMyAdmin\\Controllers\\Table\\TrackingController',
+      '/table/triggers' => 'PhpMyAdmin\\Controllers\\Table\\TriggersController',
+      '/table/zoom-search' => 'PhpMyAdmin\\Controllers\\Table\\ZoomSearchController',
+      '/themes' => 'PhpMyAdmin\\Controllers\\ThemesController',
+      '/transformation/overview' => 'PhpMyAdmin\\Controllers\\Transformation\\OverviewController',
+      '/transformation/wrapper' => 'PhpMyAdmin\\Controllers\\Transformation\\WrapperController',
+      '/user-password' => 'PhpMyAdmin\\Controllers\\UserPasswordController',
+      '/version-check' => 'PhpMyAdmin\\Controllers\\VersionCheckController',
+      '/view/create' => 'PhpMyAdmin\\Controllers\\View\\CreateController',
+      '/view/operations' => 'PhpMyAdmin\\Controllers\\View\\OperationsController',
     ),
     'POST' => 
     array (
-      '' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\HomeController',
-        1 => 'index',
-      ),
-      '/' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\HomeController',
-        1 => 'index',
-      ),
-      '/set-theme' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\HomeController',
-        1 => 'setTheme',
-      ),
-      '/collation-connection' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\HomeController',
-        1 => 'setCollationConnection',
-      ),
-      '/recent-table' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\HomeController',
-        1 => 'reloadRecentTablesList',
-      ),
-      '/git-revision' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\HomeController',
-        1 => 'gitRevision',
-      ),
-      '/browse-foreigners' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\BrowseForeignersController',
-        1 => 'index',
-      ),
-      '/check-relations' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\CheckRelationsController',
-        1 => 'index',
-      ),
-      '/columns' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\ColumnController',
-        1 => 'all',
-      ),
-      '/config/get' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\ConfigController',
-        1 => 'get',
-      ),
-      '/config/set' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\ConfigController',
-        1 => 'set',
-      ),
-      '/database/central-columns' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\CentralColumnsController',
-        1 => 'index',
-      ),
-      '/database/central-columns/populate' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\CentralColumnsController',
-        1 => 'populateColumns',
-      ),
-      '/database/designer' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\DesignerController',
-        1 => 'index',
-      ),
-      '/database/events' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\EventsController',
-        1 => 'index',
-      ),
-      '/database/export' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\ExportController',
-        1 => 'index',
-      ),
-      '/database/import' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\ImportController',
-        1 => 'index',
-      ),
-      '/database/multi-table-query/query' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\MultiTableQueryController',
-        1 => 'displayResults',
-      ),
-      '/database/operations' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\OperationsController',
-        1 => 'index',
-      ),
-      '/database/operations/collation' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\OperationsController',
-        1 => 'collation',
-      ),
-      '/database/qbe' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\QueryByExampleController',
-        1 => 'index',
-      ),
-      '/database/routines' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\RoutinesController',
-        1 => 'index',
-      ),
-      '/database/search' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\SearchController',
-        1 => 'index',
-      ),
-      '/database/sql' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\SqlController',
-        1 => 'index',
-      ),
-      '/database/sql/autocomplete' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\SqlAutoCompleteController',
-        1 => 'index',
-      ),
-      '/database/sql/format' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\SqlFormatController',
-        1 => 'index',
-      ),
-      '/database/structure' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\StructureController',
-        1 => 'index',
-      ),
-      '/database/structure/add-prefix' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\StructureController',
-        1 => 'addPrefix',
-      ),
-      '/database/structure/add-prefix-table' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\StructureController',
-        1 => 'addPrefixTable',
-      ),
-      '/database/structure/central-columns-add' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\StructureController',
-        1 => 'centralColumnsAdd',
-      ),
-      '/database/structure/central-columns-make-consistent' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\StructureController',
-        1 => 'centralColumnsMakeConsistent',
-      ),
-      '/database/structure/central-columns-remove' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\StructureController',
-        1 => 'centralColumnsRemove',
-      ),
-      '/database/structure/change-prefix-form' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\StructureController',
-        1 => 'changePrefixForm',
-      ),
-      '/database/structure/copy-form' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\StructureController',
-        1 => 'copyForm',
-      ),
-      '/database/structure/copy-table' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\StructureController',
-        1 => 'copyTable',
-      ),
-      '/database/structure/copy-table-with-prefix' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\StructureController',
-        1 => 'copyTableWithPrefix',
-      ),
-      '/database/structure/drop-form' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\StructureController',
-        1 => 'dropForm',
-      ),
-      '/database/structure/drop-table' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\StructureController',
-        1 => 'dropTable',
-      ),
-      '/database/structure/empty-form' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\StructureController',
-        1 => 'emptyForm',
-      ),
-      '/database/structure/empty-table' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\StructureController',
-        1 => 'emptyTable',
-      ),
-      '/database/structure/favorite-table' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\StructureController',
-        1 => 'addRemoveFavoriteTablesAction',
-      ),
-      '/database/structure/real-row-count' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\StructureController',
-        1 => 'handleRealRowCountRequestAction',
-      ),
-      '/database/structure/replace-prefix' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\StructureController',
-        1 => 'replacePrefix',
-      ),
-      '/database/structure/show-create' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\StructureController',
-        1 => 'showCreate',
-      ),
-      '/database/tracking' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\TrackingController',
-        1 => 'index',
-      ),
-      '/database/triggers' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\TriggersController',
-        1 => 'index',
-      ),
-      '/databases' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\DatabaseController',
-        1 => 'all',
-      ),
-      '/error-report' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\ErrorReportController',
-        1 => 'index',
-      ),
-      '/export' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\ExportController',
-        1 => 'index',
-      ),
-      '/export/tables' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Database\\ExportController',
-        1 => 'tables',
-      ),
-      '/export/template/create' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\ExportTemplateController',
-        1 => 'create',
-      ),
-      '/export/template/delete' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\ExportTemplateController',
-        1 => 'delete',
-      ),
-      '/export/template/load' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\ExportTemplateController',
-        1 => 'load',
-      ),
-      '/export/template/update' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\ExportTemplateController',
-        1 => 'update',
-      ),
-      '/gis-data-editor' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\GisDataEditorController',
-        1 => 'index',
-      ),
-      '/import' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\ImportController',
-        1 => 'index',
-      ),
-      '/import-status' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\ImportStatusController',
-        1 => 'index',
-      ),
-      '/lint' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\LintController',
-        1 => 'index',
-      ),
-      '/logout' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\LogoutController',
-        1 => 'index',
-      ),
-      '/navigation' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\NavigationController',
-        1 => 'index',
-      ),
-      '/normalization' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\NormalizationController',
-        1 => 'index',
-      ),
-      '/preferences/export' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Preferences\\ExportController',
-        1 => 'index',
-      ),
-      '/preferences/features' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Preferences\\FeaturesController',
-        1 => 'index',
-      ),
-      '/preferences/import' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Preferences\\ImportController',
-        1 => 'index',
-      ),
-      '/preferences/main-panel' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Preferences\\MainPanelController',
-        1 => 'index',
-      ),
-      '/preferences/manage' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Preferences\\ManageController',
-        1 => 'index',
-      ),
-      '/preferences/navigation' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Preferences\\NavigationController',
-        1 => 'index',
-      ),
-      '/preferences/sql' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Preferences\\SqlController',
-        1 => 'index',
-      ),
-      '/preferences/two-factor' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Preferences\\TwoFactorController',
-        1 => 'index',
-      ),
-      '/schema-export' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\SchemaExportController',
-        1 => 'index',
-      ),
-      '/server/binlog' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\BinlogController',
-        1 => 'index',
-      ),
-      '/server/databases' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\DatabasesController',
-        1 => 'index',
-      ),
-      '/server/databases/create' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\DatabasesController',
-        1 => 'create',
-      ),
-      '/server/databases/destroy' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\DatabasesController',
-        1 => 'destroy',
-      ),
-      '/server/export' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\ExportController',
-        1 => 'index',
-      ),
-      '/server/import' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\ImportController',
-        1 => 'index',
-      ),
-      '/server/privileges' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\PrivilegesController',
-        1 => 'index',
-      ),
-      '/server/replication' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\ReplicationController',
-        1 => 'index',
-      ),
-      '/server/sql' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\SqlController',
-        1 => 'index',
-      ),
-      '/server/status/monitor/chart' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\Status\\MonitorController',
-        1 => 'chartingData',
-      ),
-      '/server/status/monitor/slow-log' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\Status\\MonitorController',
-        1 => 'logDataTypeSlow',
-      ),
-      '/server/status/monitor/general-log' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\Status\\MonitorController',
-        1 => 'logDataTypeGeneral',
-      ),
-      '/server/status/monitor/log-vars' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\Status\\MonitorController',
-        1 => 'loggingVars',
-      ),
-      '/server/status/monitor/query' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\Status\\MonitorController',
-        1 => 'queryAnalyzer',
-      ),
-      '/server/status/processes' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\Status\\ProcessesController',
-        1 => 'index',
-      ),
-      '/server/status/processes/refresh' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\Status\\ProcessesController',
-        1 => 'refresh',
-      ),
-      '/server/status/variables' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\Status\\VariablesController',
-        1 => 'index',
-      ),
-      '/server/user-groups' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Server\\UserGroupsController',
-        1 => 'index',
-      ),
-      '/sql' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\SqlController',
-        1 => 'index',
-      ),
-      '/sql/get-relational-values' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\SqlController',
-        1 => 'getRelationalValues',
-      ),
-      '/sql/get-enum-values' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\SqlController',
-        1 => 'getEnumValues',
-      ),
-      '/sql/get-set-values' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\SqlController',
-        1 => 'getSetValues',
-      ),
-      '/sql/set-column-preferences' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\SqlController',
-        1 => 'setColumnOrderOrVisibility',
-      ),
-      '/table/add-field' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\AddFieldController',
-        1 => 'index',
-      ),
-      '/table/change' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\ChangeController',
-        1 => 'index',
-      ),
-      '/table/change/rows' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\ChangeController',
-        1 => 'rows',
-      ),
-      '/table/chart' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\ChartController',
-        1 => 'index',
-      ),
-      '/table/create' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\CreateController',
-        1 => 'index',
-      ),
-      '/table/delete/confirm' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\DeleteController',
-        1 => 'confirm',
-      ),
-      '/table/delete/rows' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\DeleteController',
-        1 => 'rows',
-      ),
-      '/table/export' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\ExportController',
-        1 => 'index',
-      ),
-      '/table/export/rows' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\ExportController',
-        1 => 'rows',
-      ),
-      '/table/find-replace' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\FindReplaceController',
-        1 => 'index',
-      ),
-      '/table/get-field' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\GetFieldController',
-        1 => 'index',
-      ),
-      '/table/gis-visualization' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\GisVisualizationController',
-        1 => 'index',
-      ),
-      '/table/import' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\ImportController',
-        1 => 'index',
-      ),
-      '/table/indexes' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\IndexesController',
-        1 => 'index',
-      ),
-      '/table/indexes/rename' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\IndexesController',
-        1 => 'indexRename',
-      ),
-      '/table/maintenance/analyze' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\MaintenanceController',
-        1 => 'analyze',
-      ),
-      '/table/maintenance/check' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\MaintenanceController',
-        1 => 'check',
-      ),
-      '/table/maintenance/checksum' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\MaintenanceController',
-        1 => 'checksum',
-      ),
-      '/table/maintenance/optimize' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\MaintenanceController',
-        1 => 'optimize',
-      ),
-      '/table/maintenance/repair' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\MaintenanceController',
-        1 => 'repair',
-      ),
-      '/table/partition/analyze' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\PartitionController',
-        1 => 'analyze',
-      ),
-      '/table/partition/check' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\PartitionController',
-        1 => 'check',
-      ),
-      '/table/partition/drop' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\PartitionController',
-        1 => 'drop',
-      ),
-      '/table/partition/optimize' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\PartitionController',
-        1 => 'optimize',
-      ),
-      '/table/partition/rebuild' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\PartitionController',
-        1 => 'rebuild',
-      ),
-      '/table/partition/repair' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\PartitionController',
-        1 => 'repair',
-      ),
-      '/table/partition/truncate' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\PartitionController',
-        1 => 'truncate',
-      ),
-      '/table/operations' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\OperationsController',
-        1 => 'index',
-      ),
-      '/table/recent-favorite' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\RecentFavoriteController',
-        1 => 'index',
-      ),
-      '/table/relation' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\RelationController',
-        1 => 'index',
-      ),
-      '/table/replace' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\ReplaceController',
-        1 => 'index',
-      ),
-      '/table/search' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\SearchController',
-        1 => 'index',
-      ),
-      '/table/sql' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\SqlController',
-        1 => 'index',
-      ),
-      '/table/structure' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\StructureController',
-        1 => 'index',
-      ),
-      '/table/structure/add-key' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\StructureController',
-        1 => 'addKey',
-      ),
-      '/table/structure/browse' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\StructureController',
-        1 => 'browse',
-      ),
-      '/table/structure/central-columns-add' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\StructureController',
-        1 => 'addToCentralColumns',
-      ),
-      '/table/structure/central-columns-remove' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\StructureController',
-        1 => 'removeFromCentralColumns',
-      ),
-      '/table/structure/change' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\StructureController',
-        1 => 'change',
-      ),
-      '/table/structure/drop' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\StructureController',
-        1 => 'drop',
-      ),
-      '/table/structure/drop-confirm' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\StructureController',
-        1 => 'dropConfirm',
-      ),
-      '/table/structure/fulltext' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\StructureController',
-        1 => 'fulltext',
-      ),
-      '/table/structure/index' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\StructureController',
-        1 => 'addIndex',
-      ),
-      '/table/structure/move-columns' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\StructureController',
-        1 => 'moveColumns',
-      ),
-      '/table/structure/partitioning' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\StructureController',
-        1 => 'partitioning',
-      ),
-      '/table/structure/primary' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\StructureController',
-        1 => 'primary',
-      ),
-      '/table/structure/reserved-word-check' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\StructureController',
-        1 => 'reservedWordCheck',
-      ),
-      '/table/structure/save' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\StructureController',
-        1 => 'save',
-      ),
-      '/table/structure/spatial' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\StructureController',
-        1 => 'spatial',
-      ),
-      '/table/structure/unique' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\StructureController',
-        1 => 'unique',
-      ),
-      '/table/tracking' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\TrackingController',
-        1 => 'index',
-      ),
-      '/table/triggers' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\TriggersController',
-        1 => 'index',
-      ),
-      '/table/zoom-search' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\Table\\ZoomSearchController',
-        1 => 'index',
-      ),
-      '/tables' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\TableController',
-        1 => 'all',
-      ),
-      '/transformation/overview' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\TransformationOverviewController',
-        1 => 'index',
-      ),
-      '/transformation/wrapper' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\TransformationWrapperController',
-        1 => 'index',
-      ),
-      '/user-password' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\UserPasswordController',
-        1 => 'index',
-      ),
-      '/version-check' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\VersionCheckController',
-        1 => 'index',
-      ),
-      '/view/create' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\ViewCreateController',
-        1 => 'index',
-      ),
-      '/view/operations' => 
-      array (
-        0 => 'PhpMyAdmin\\Controllers\\ViewOperationsController',
-        1 => 'index',
-      ),
+      '' => 'PhpMyAdmin\\Controllers\\HomeController',
+      '/' => 'PhpMyAdmin\\Controllers\\HomeController',
+      '/browse-foreigners' => 'PhpMyAdmin\\Controllers\\BrowseForeignersController',
+      '/check-relations' => 'PhpMyAdmin\\Controllers\\CheckRelationsController',
+      '/collation-connection' => 'PhpMyAdmin\\Controllers\\CollationConnectionController',
+      '/columns' => 'PhpMyAdmin\\Controllers\\ColumnController',
+      '/config/get' => 'PhpMyAdmin\\Controllers\\Config\\GetConfigController',
+      '/config/set' => 'PhpMyAdmin\\Controllers\\Config\\SetConfigController',
+      '/database/central-columns' => 'PhpMyAdmin\\Controllers\\Database\\CentralColumnsController',
+      '/database/central-columns/populate' => 'PhpMyAdmin\\Controllers\\Database\\CentralColumns\\PopulateColumnsController',
+      '/database/designer' => 'PhpMyAdmin\\Controllers\\Database\\DesignerController',
+      '/database/events' => 'PhpMyAdmin\\Controllers\\Database\\EventsController',
+      '/database/export' => 'PhpMyAdmin\\Controllers\\Database\\ExportController',
+      '/database/import' => 'PhpMyAdmin\\Controllers\\Database\\ImportController',
+      '/database/multi-table-query/query' => 'PhpMyAdmin\\Controllers\\Database\\MultiTableQuery\\QueryController',
+      '/database/operations' => 'PhpMyAdmin\\Controllers\\Database\\OperationsController',
+      '/database/operations/collation' => 'PhpMyAdmin\\Controllers\\Database\\Operations\\CollationController',
+      '/database/qbe' => 'PhpMyAdmin\\Controllers\\Database\\QueryByExampleController',
+      '/database/routines' => 'PhpMyAdmin\\Controllers\\Database\\RoutinesController',
+      '/database/search' => 'PhpMyAdmin\\Controllers\\Database\\SearchController',
+      '/database/sql' => 'PhpMyAdmin\\Controllers\\Database\\SqlController',
+      '/database/sql/autocomplete' => 'PhpMyAdmin\\Controllers\\Database\\SqlAutoCompleteController',
+      '/database/sql/format' => 'PhpMyAdmin\\Controllers\\Database\\SqlFormatController',
+      '/database/structure' => 'PhpMyAdmin\\Controllers\\Database\\StructureController',
+      '/database/structure/add-prefix' => 'PhpMyAdmin\\Controllers\\Database\\Structure\\AddPrefixController',
+      '/database/structure/add-prefix-table' => 'PhpMyAdmin\\Controllers\\Database\\Structure\\AddPrefixTableController',
+      '/database/structure/central-columns/add' => 'PhpMyAdmin\\Controllers\\Database\\Structure\\CentralColumns\\AddController',
+      '/database/structure/central-columns/make-consistent' => 'PhpMyAdmin\\Controllers\\Database\\Structure\\CentralColumns\\MakeConsistentController',
+      '/database/structure/central-columns/remove' => 'PhpMyAdmin\\Controllers\\Database\\Structure\\CentralColumns\\RemoveController',
+      '/database/structure/change-prefix-form' => 'PhpMyAdmin\\Controllers\\Database\\Structure\\ChangePrefixFormController',
+      '/database/structure/copy-form' => 'PhpMyAdmin\\Controllers\\Database\\Structure\\CopyFormController',
+      '/database/structure/copy-table' => 'PhpMyAdmin\\Controllers\\Database\\Structure\\CopyTableController',
+      '/database/structure/copy-table-with-prefix' => 'PhpMyAdmin\\Controllers\\Database\\Structure\\CopyTableWithPrefixController',
+      '/database/structure/drop-form' => 'PhpMyAdmin\\Controllers\\Database\\Structure\\DropFormController',
+      '/database/structure/drop-table' => 'PhpMyAdmin\\Controllers\\Database\\Structure\\DropTableController',
+      '/database/structure/empty-form' => 'PhpMyAdmin\\Controllers\\Database\\Structure\\EmptyFormController',
+      '/database/structure/empty-table' => 'PhpMyAdmin\\Controllers\\Database\\Structure\\EmptyTableController',
+      '/database/structure/favorite-table' => 'PhpMyAdmin\\Controllers\\Database\\Structure\\FavoriteTableController',
+      '/database/structure/real-row-count' => 'PhpMyAdmin\\Controllers\\Database\\Structure\\RealRowCountController',
+      '/database/structure/replace-prefix' => 'PhpMyAdmin\\Controllers\\Database\\Structure\\ReplacePrefixController',
+      '/database/structure/show-create' => 'PhpMyAdmin\\Controllers\\Database\\Structure\\ShowCreateController',
+      '/database/tracking' => 'PhpMyAdmin\\Controllers\\Database\\TrackingController',
+      '/database/triggers' => 'PhpMyAdmin\\Controllers\\Database\\TriggersController',
+      '/databases' => 'PhpMyAdmin\\Controllers\\DatabaseController',
+      '/error-report' => 'PhpMyAdmin\\Controllers\\ErrorReportController',
+      '/export' => 'PhpMyAdmin\\Controllers\\Export\\ExportController',
+      '/export/tables' => 'PhpMyAdmin\\Controllers\\Export\\TablesController',
+      '/export/template/create' => 'PhpMyAdmin\\Controllers\\Export\\Template\\CreateController',
+      '/export/template/delete' => 'PhpMyAdmin\\Controllers\\Export\\Template\\DeleteController',
+      '/export/template/load' => 'PhpMyAdmin\\Controllers\\Export\\Template\\LoadController',
+      '/export/template/update' => 'PhpMyAdmin\\Controllers\\Export\\Template\\UpdateController',
+      '/gis-data-editor' => 'PhpMyAdmin\\Controllers\\GisDataEditorController',
+      '/git-revision' => 'PhpMyAdmin\\Controllers\\GitInfoController',
+      '/import' => 'PhpMyAdmin\\Controllers\\Import\\ImportController',
+      '/import/simulate-dml' => 'PhpMyAdmin\\Controllers\\Import\\SimulateDmlController',
+      '/import-status' => 'PhpMyAdmin\\Controllers\\Import\\StatusController',
+      '/lint' => 'PhpMyAdmin\\Controllers\\LintController',
+      '/logout' => 'PhpMyAdmin\\Controllers\\LogoutController',
+      '/navigation' => 'PhpMyAdmin\\Controllers\\NavigationController',
+      '/normalization' => 'PhpMyAdmin\\Controllers\\NormalizationController',
+      '/preferences/export' => 'PhpMyAdmin\\Controllers\\Preferences\\ExportController',
+      '/preferences/features' => 'PhpMyAdmin\\Controllers\\Preferences\\FeaturesController',
+      '/preferences/import' => 'PhpMyAdmin\\Controllers\\Preferences\\ImportController',
+      '/preferences/main-panel' => 'PhpMyAdmin\\Controllers\\Preferences\\MainPanelController',
+      '/preferences/manage' => 'PhpMyAdmin\\Controllers\\Preferences\\ManageController',
+      '/preferences/navigation' => 'PhpMyAdmin\\Controllers\\Preferences\\NavigationController',
+      '/preferences/sql' => 'PhpMyAdmin\\Controllers\\Preferences\\SqlController',
+      '/preferences/two-factor' => 'PhpMyAdmin\\Controllers\\Preferences\\TwoFactorController',
+      '/recent-table' => 'PhpMyAdmin\\Controllers\\RecentTablesListController',
+      '/schema-export' => 'PhpMyAdmin\\Controllers\\SchemaExportController',
+      '/server/binlog' => 'PhpMyAdmin\\Controllers\\Server\\BinlogController',
+      '/server/databases' => 'PhpMyAdmin\\Controllers\\Server\\DatabasesController',
+      '/server/databases/create' => 'PhpMyAdmin\\Controllers\\Server\\Databases\\CreateController',
+      '/server/databases/destroy' => 'PhpMyAdmin\\Controllers\\Server\\Databases\\DestroyController',
+      '/server/export' => 'PhpMyAdmin\\Controllers\\Server\\ExportController',
+      '/server/import' => 'PhpMyAdmin\\Controllers\\Server\\ImportController',
+      '/server/privileges' => 'PhpMyAdmin\\Controllers\\Server\\PrivilegesController',
+      '/server/privileges/account-lock' => 'PhpMyAdmin\\Controllers\\Server\\Privileges\\AccountLockController',
+      '/server/privileges/account-unlock' => 'PhpMyAdmin\\Controllers\\Server\\Privileges\\AccountUnlockController',
+      '/server/replication' => 'PhpMyAdmin\\Controllers\\Server\\ReplicationController',
+      '/server/sql' => 'PhpMyAdmin\\Controllers\\Server\\SqlController',
+      '/server/status/monitor/chart' => 'PhpMyAdmin\\Controllers\\Server\\Status\\Monitor\\ChartingDataController',
+      '/server/status/monitor/slow-log' => 'PhpMyAdmin\\Controllers\\Server\\Status\\Monitor\\SlowLogController',
+      '/server/status/monitor/general-log' => 'PhpMyAdmin\\Controllers\\Server\\Status\\Monitor\\GeneralLogController',
+      '/server/status/monitor/log-vars' => 'PhpMyAdmin\\Controllers\\Server\\Status\\Monitor\\LogVarsController',
+      '/server/status/monitor/query' => 'PhpMyAdmin\\Controllers\\Server\\Status\\Monitor\\QueryAnalyzerController',
+      '/server/status/processes' => 'PhpMyAdmin\\Controllers\\Server\\Status\\ProcessesController',
+      '/server/status/processes/refresh' => 'PhpMyAdmin\\Controllers\\Server\\Status\\Processes\\RefreshController',
+      '/server/status/variables' => 'PhpMyAdmin\\Controllers\\Server\\Status\\VariablesController',
+      '/server/user-groups' => 'PhpMyAdmin\\Controllers\\Server\\UserGroupsController',
+      '/sql' => 'PhpMyAdmin\\Controllers\\Sql\\SqlController',
+      '/sql/get-relational-values' => 'PhpMyAdmin\\Controllers\\Sql\\RelationalValuesController',
+      '/sql/get-enum-values' => 'PhpMyAdmin\\Controllers\\Sql\\EnumValuesController',
+      '/sql/get-set-values' => 'PhpMyAdmin\\Controllers\\Sql\\SetValuesController',
+      '/sql/set-column-preferences' => 'PhpMyAdmin\\Controllers\\Sql\\ColumnPreferencesController',
+      '/table/add-field' => 'PhpMyAdmin\\Controllers\\Table\\AddFieldController',
+      '/table/change' => 'PhpMyAdmin\\Controllers\\Table\\ChangeController',
+      '/table/change/rows' => 'PhpMyAdmin\\Controllers\\Table\\ChangeRowsController',
+      '/table/chart' => 'PhpMyAdmin\\Controllers\\Table\\ChartController',
+      '/table/create' => 'PhpMyAdmin\\Controllers\\Table\\CreateController',
+      '/table/delete/confirm' => 'PhpMyAdmin\\Controllers\\Table\\DeleteConfirmController',
+      '/table/delete/rows' => 'PhpMyAdmin\\Controllers\\Table\\DeleteRowsController',
+      '/table/export' => 'PhpMyAdmin\\Controllers\\Table\\ExportController',
+      '/table/export/rows' => 'PhpMyAdmin\\Controllers\\Table\\ExportRowsController',
+      '/table/find-replace' => 'PhpMyAdmin\\Controllers\\Table\\FindReplaceController',
+      '/table/get-field' => 'PhpMyAdmin\\Controllers\\Table\\GetFieldController',
+      '/table/gis-visualization' => 'PhpMyAdmin\\Controllers\\Table\\GisVisualizationController',
+      '/table/import' => 'PhpMyAdmin\\Controllers\\Table\\ImportController',
+      '/table/indexes' => 'PhpMyAdmin\\Controllers\\Table\\IndexesController',
+      '/table/indexes/rename' => 'PhpMyAdmin\\Controllers\\Table\\IndexRenameController',
+      '/table/maintenance/analyze' => 'PhpMyAdmin\\Controllers\\Table\\Maintenance\\AnalyzeController',
+      '/table/maintenance/check' => 'PhpMyAdmin\\Controllers\\Table\\Maintenance\\CheckController',
+      '/table/maintenance/checksum' => 'PhpMyAdmin\\Controllers\\Table\\Maintenance\\ChecksumController',
+      '/table/maintenance/optimize' => 'PhpMyAdmin\\Controllers\\Table\\Maintenance\\OptimizeController',
+      '/table/maintenance/repair' => 'PhpMyAdmin\\Controllers\\Table\\Maintenance\\RepairController',
+      '/table/partition/analyze' => 'PhpMyAdmin\\Controllers\\Table\\Partition\\AnalyzeController',
+      '/table/partition/check' => 'PhpMyAdmin\\Controllers\\Table\\Partition\\CheckController',
+      '/table/partition/drop' => 'PhpMyAdmin\\Controllers\\Table\\Partition\\DropController',
+      '/table/partition/optimize' => 'PhpMyAdmin\\Controllers\\Table\\Partition\\OptimizeController',
+      '/table/partition/rebuild' => 'PhpMyAdmin\\Controllers\\Table\\Partition\\RebuildController',
+      '/table/partition/repair' => 'PhpMyAdmin\\Controllers\\Table\\Partition\\RepairController',
+      '/table/partition/truncate' => 'PhpMyAdmin\\Controllers\\Table\\Partition\\TruncateController',
+      '/table/operations' => 'PhpMyAdmin\\Controllers\\Table\\OperationsController',
+      '/table/recent-favorite' => 'PhpMyAdmin\\Controllers\\Table\\RecentFavoriteController',
+      '/table/relation' => 'PhpMyAdmin\\Controllers\\Table\\RelationController',
+      '/table/replace' => 'PhpMyAdmin\\Controllers\\Table\\ReplaceController',
+      '/table/search' => 'PhpMyAdmin\\Controllers\\Table\\SearchController',
+      '/table/sql' => 'PhpMyAdmin\\Controllers\\Table\\SqlController',
+      '/table/structure' => 'PhpMyAdmin\\Controllers\\Table\\StructureController',
+      '/table/structure/add-key' => 'PhpMyAdmin\\Controllers\\Table\\Structure\\AddKeyController',
+      '/table/structure/browse' => 'PhpMyAdmin\\Controllers\\Table\\Structure\\BrowseController',
+      '/table/structure/central-columns-add' => 'PhpMyAdmin\\Controllers\\Table\\Structure\\CentralColumnsAddController',
+      '/table/structure/central-columns-remove' => 'PhpMyAdmin\\Controllers\\Table\\Structure\\CentralColumnsRemoveController',
+      '/table/structure/change' => 'PhpMyAdmin\\Controllers\\Table\\Structure\\ChangeController',
+      '/table/structure/drop' => 'PhpMyAdmin\\Controllers\\Table\\DropColumnController',
+      '/table/structure/drop-confirm' => 'PhpMyAdmin\\Controllers\\Table\\DropColumnConfirmationController',
+      '/table/structure/fulltext' => 'PhpMyAdmin\\Controllers\\Table\\Structure\\FulltextController',
+      '/table/structure/index' => 'PhpMyAdmin\\Controllers\\Table\\Structure\\AddIndexController',
+      '/table/structure/move-columns' => 'PhpMyAdmin\\Controllers\\Table\\Structure\\MoveColumnsController',
+      '/table/structure/partitioning' => 'PhpMyAdmin\\Controllers\\Table\\Structure\\PartitioningController',
+      '/table/structure/primary' => 'PhpMyAdmin\\Controllers\\Table\\Structure\\PrimaryController',
+      '/table/structure/reserved-word-check' => 'PhpMyAdmin\\Controllers\\Table\\Structure\\ReservedWordCheckController',
+      '/table/structure/save' => 'PhpMyAdmin\\Controllers\\Table\\Structure\\SaveController',
+      '/table/structure/spatial' => 'PhpMyAdmin\\Controllers\\Table\\Structure\\SpatialController',
+      '/table/structure/unique' => 'PhpMyAdmin\\Controllers\\Table\\Structure\\UniqueController',
+      '/table/tracking' => 'PhpMyAdmin\\Controllers\\Table\\TrackingController',
+      '/table/triggers' => 'PhpMyAdmin\\Controllers\\Table\\TriggersController',
+      '/table/zoom-search' => 'PhpMyAdmin\\Controllers\\Table\\ZoomSearchController',
+      '/tables' => 'PhpMyAdmin\\Controllers\\TableController',
+      '/themes/set' => 'PhpMyAdmin\\Controllers\\ThemeSetController',
+      '/transformation/overview' => 'PhpMyAdmin\\Controllers\\Transformation\\OverviewController',
+      '/transformation/wrapper' => 'PhpMyAdmin\\Controllers\\Transformation\\WrapperController',
+      '/user-password' => 'PhpMyAdmin\\Controllers\\UserPasswordController',
+      '/version-check' => 'PhpMyAdmin\\Controllers\\VersionCheckController',
+      '/view/create' => 'PhpMyAdmin\\Controllers\\View\\CreateController',
+      '/view/operations' => 'PhpMyAdmin\\Controllers\\View\\OperationsController',
     ),
   ),
   1 => 
@@ -1259,11 +271,7 @@
         array (
           2 => 
           array (
-            0 => 
-            array (
-              0 => 'PhpMyAdmin\\Controllers\\Server\\EnginesController',
-              1 => 'show',
-            ),
+            0 => 'PhpMyAdmin\\Controllers\\Server\\ShowEngineController',
             1 => 
             array (
               'engine' => 'engine',
@@ -1271,11 +279,7 @@
           ),
           3 => 
           array (
-            0 => 
-            array (
-              0 => 'PhpMyAdmin\\Controllers\\Server\\EnginesController',
-              1 => 'show',
-            ),
+            0 => 'PhpMyAdmin\\Controllers\\Server\\ShowEngineController',
             1 => 
             array (
               'engine' => 'engine',
@@ -1284,11 +288,7 @@
           ),
           4 => 
           array (
-            0 => 
-            array (
-              0 => 'PhpMyAdmin\\Controllers\\Server\\VariablesController',
-              1 => 'getValue',
-            ),
+            0 => 'PhpMyAdmin\\Controllers\\Server\\Variables\\GetVariableController',
             1 => 
             array (
               'name' => 'name',
@@ -1306,11 +306,7 @@
         array (
           2 => 
           array (
-            0 => 
-            array (
-              0 => 'PhpMyAdmin\\Controllers\\Server\\Status\\ProcessesController',
-              1 => 'kill',
-            ),
+            0 => 'PhpMyAdmin\\Controllers\\Server\\Status\\Processes\\KillController',
             1 => 
             array (
               'id' => 'id',
@@ -1318,11 +314,7 @@
           ),
           3 => 
           array (
-            0 => 
-            array (
-              0 => 'PhpMyAdmin\\Controllers\\Server\\VariablesController',
-              1 => 'setValue',
-            ),
+            0 => 'PhpMyAdmin\\Controllers\\Server\\Variables\\SetVariableController',
             1 => 
             array (
               'name' => 'name',

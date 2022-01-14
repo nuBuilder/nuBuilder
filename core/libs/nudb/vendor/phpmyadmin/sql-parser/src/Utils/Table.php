@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace PhpMyAdmin\SqlParser\Utils;
 
 use PhpMyAdmin\SqlParser\Statements\CreateStatement;
+
 use function is_array;
 use function str_replace;
 
@@ -25,10 +26,7 @@ class Table
      */
     public static function getForeignKeys($statement)
     {
-        if (empty($statement->fields)
-            || (! is_array($statement->fields))
-            || (! $statement->options->has('TABLE'))
-        ) {
+        if (empty($statement->fields) || (! is_array($statement->fields)) || (! $statement->options->has('TABLE'))) {
             return [];
         }
 
@@ -41,6 +39,10 @@ class Table
 
             $columns = [];
             foreach ($field->key->columns as $column) {
+                if (! isset($column['name'])) {
+                    continue;
+                }
+
                 $columns[] = $column['name'];
             }
 
@@ -82,10 +84,7 @@ class Table
      */
     public static function getFields($statement)
     {
-        if (empty($statement->fields)
-            || (! is_array($statement->fields))
-            || (! $statement->options->has('TABLE'))
-        ) {
+        if (empty($statement->fields) || (! is_array($statement->fields)) || (! $statement->options->has('TABLE'))) {
             return [];
         }
 
@@ -102,35 +101,39 @@ class Table
                 'timestamp_not_null' => false,
             ];
 
-            if ($field->options) {
-                if ($field->type->name === 'TIMESTAMP') {
-                    if ($field->options->has('NOT NULL')) {
-                        $ret[$field->name]['timestamp_not_null'] = true;
-                    }
-                }
+            if (! $field->options) {
+                continue;
+            }
 
-                $option = $field->options->has('DEFAULT');
-
-                if ($option) {
-                    $ret[$field->name]['default_value'] = $option;
-                    if ($option === 'CURRENT_TIMESTAMP') {
-                        $ret[$field->name]['default_current_timestamp'] = true;
-                    }
-                }
-
-                $option = $field->options->has('ON UPDATE');
-
-                if ($option === 'CURRENT_TIMESTAMP') {
-                    $ret[$field->name]['on_update_current_timestamp'] = true;
-                }
-
-                $option = $field->options->has('AS');
-
-                if ($option) {
-                    $ret[$field->name]['generated'] = true;
-                    $ret[$field->name]['expr'] = $option;
+            if ($field->type->name === 'TIMESTAMP') {
+                if ($field->options->has('NOT NULL')) {
+                    $ret[$field->name]['timestamp_not_null'] = true;
                 }
             }
+
+            $option = $field->options->has('DEFAULT');
+
+            if ($option) {
+                $ret[$field->name]['default_value'] = $option;
+                if ($option === 'CURRENT_TIMESTAMP') {
+                    $ret[$field->name]['default_current_timestamp'] = true;
+                }
+            }
+
+            $option = $field->options->has('ON UPDATE');
+
+            if ($option === 'CURRENT_TIMESTAMP') {
+                $ret[$field->name]['on_update_current_timestamp'] = true;
+            }
+
+            $option = $field->options->has('AS');
+
+            if (! $option) {
+                continue;
+            }
+
+            $ret[$field->name]['generated'] = true;
+            $ret[$field->name]['expr'] = $option;
         }
 
         return $ret;

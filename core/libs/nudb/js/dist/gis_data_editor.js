@@ -7,11 +7,12 @@
  *
  */
 
-/* global addZoomPanControllers, loadSVG, selectVisualization, styleOSM, zoomAndPan */
+/* global addZoomPanControllers, storeGisSvgRef, selectVisualization, styleOSM, zoomAndPan */
 // js/table/gis_visualization.js
 
 /* global themeImagePath */
 // templates/javascript/variables.twig
+// eslint-disable-next-line no-unused-vars
 var gisEditorLoaded = false;
 /**
  * Closes the GIS data editor and perform necessary clean up work.
@@ -47,9 +48,9 @@ function prepareJSVersion() {
 /**
  * Returns the HTML for a data point.
  *
- * @param pointNumber point number
- * @param prefix      prefix of the name
- * @returns the HTML for a data point
+ * @param {number} pointNumber point number
+ * @param {string} prefix      prefix of the name
+ * @return {string} the HTML for a data point
  */
 
 
@@ -62,12 +63,11 @@ function addDataPoint(pointNumber, prefix) {
 
 
 function initGISEditorVisualization() {
-  // Loads either SVG or OSM visualization based on the choice
+  storeGisSvgRef(); // Loads either SVG or OSM visualization based on the choice
+
   selectVisualization(); // Adds necessary styles to the div that contains the openStreetMap
 
-  styleOSM(); // Loads the SVG element and make a reference to it
-
-  loadSVG(); // Adds controllers for zooming and panning
+  styleOSM(); // Adds controllers for zooming and panning
 
   addZoomPanControllers();
   zoomAndPan();
@@ -117,8 +117,7 @@ function loadJSAndGISEditor(value, field, type, inputName) {
   };
 
   script.src = 'js/vendor/openlayers/OpenLayers.js';
-  head.appendChild(script); // eslint-disable-next-line no-unused-vars
-
+  head.appendChild(script);
   gisEditorLoaded = true;
 }
 /**

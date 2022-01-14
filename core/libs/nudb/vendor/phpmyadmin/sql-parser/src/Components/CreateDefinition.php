@@ -14,6 +14,7 @@ use PhpMyAdmin\SqlParser\Context;
 use PhpMyAdmin\SqlParser\Parser;
 use PhpMyAdmin\SqlParser\Token;
 use PhpMyAdmin\SqlParser\TokensList;
+
 use function implode;
 use function is_array;
 use function trim;
@@ -22,6 +23,8 @@ use function trim;
  * Parses the create definition of a column or a key.
  *
  * Used for parsing `CREATE TABLE` statement.
+ *
+ * @final
  */
 class CreateDefinition extends Component
 {
@@ -85,8 +88,9 @@ class CreateDefinition extends Component
             'expr',
             ['parenthesesDelimited' => true],
         ],
-
         'INVISIBLE' => 13,
+        'ENFORCED' => 14,
+        'NOT' => 15,
         // Common entries.
         //
         // NOTE: Some of the common options are not in the same order which
@@ -226,16 +230,13 @@ class CreateDefinition extends Component
             }
 
             if ($state === 0) {
-                if (($token->type === Token::TYPE_OPERATOR) && ($token->value === '(')) {
-                    $state = 1;
-                } else {
-                    $parser->error(
-                        'An opening bracket was expected.',
-                        $token
-                    );
+                if (($token->type !== Token::TYPE_OPERATOR) || ($token->value !== '(')) {
+                    $parser->error('An opening bracket was expected.', $token);
 
                     break;
                 }
+
+                $state = 1;
             } elseif ($state === 1) {
                 if ($token->type === Token::TYPE_KEYWORD && $token->keyword === 'CONSTRAINT') {
                     $expr->isConstraint = true;
@@ -265,10 +266,7 @@ class CreateDefinition extends Component
                     $expr->name = $token->value;
                     $state = 2;
                 } else {
-                    $parser->error(
-                        'A symbol name was expected!',
-                        $token
-                    );
+                    $parser->error('A symbol name was expected!', $token);
 
                     return $ret;
                 }
@@ -300,10 +298,7 @@ class CreateDefinition extends Component
                     ++$list->idx;
                     break;
                 } else {
-                    $parser->error(
-                        'A comma or a closing bracket was expected.',
-                        $token
-                    );
+                    $parser->error('A comma or a closing bracket was expected.', $token);
                     $state = 0;
                     break;
                 }
@@ -316,10 +311,7 @@ class CreateDefinition extends Component
         }
 
         if (($state !== 0) && ($state !== 6)) {
-            $parser->error(
-                'A closing bracket was expected.',
-                $list->tokens[$list->idx - 1]
-            );
+            $parser->error('A closing bracket was expected.', $list->tokens[$list->idx - 1]);
         }
 
         --$list->idx;

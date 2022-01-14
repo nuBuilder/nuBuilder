@@ -28,7 +28,6 @@ AJAX.registerTeardown('database/structure.js', function () {
   $(document).off('click', 'a.drop_table_anchor.ajax');
   $(document).off('click', '#real_end_input');
   $(document).off('click', 'a.favorite_table_anchor.ajax');
-  $(document).off('click', '#printView');
   $('a.real_row_count').off('click');
   $('a.row_count_sum').off('click');
   $('select[name=submit_mult]').off('change');
@@ -144,7 +143,7 @@ DatabaseStructure.adjustTotals = function () {
 };
 /**
  * Gets the real row count for a table or DB.
- * @param object $target Target for appending the real count value.
+ * @param {object} $target Target for appending the real count value.
  */
 
 
@@ -159,7 +158,7 @@ DatabaseStructure.fetchRealRowCount = function ($target) {
     url: $target.attr('href'),
     cache: false,
     dataType: 'json',
-    success: function success(response) {
+    success: function (response) {
       if (response.success) {
         // If to update all row counts for a DB.
         if (response.real_row_count_all) {
@@ -181,7 +180,7 @@ DatabaseStructure.fetchRealRowCount = function ($target) {
         Functions.ajaxShowMessage(Messages.strErrorRealRowCount);
       }
     },
-    error: function error() {
+    error: function () {
       Functions.ajaxShowMessage(Messages.strErrorRealRowCount);
     }
   });
@@ -189,39 +188,8 @@ DatabaseStructure.fetchRealRowCount = function ($target) {
 
 AJAX.registerOnload('database/structure.js', function () {
   /**
-   * function to open the confirmation dialog for making table consistent with central list
-   *
-   * @param string   msg     message text to be displayed to user
-   * @param function success function to be called on success
-   *
+   * Event handler on select of "Make consistent with central list"
    */
-  var jqConfirm = function jqConfirm(msg, success) {
-    var dialogObj = $('<div class=\'hide\'>' + msg + '</div>');
-    $('body').append(dialogObj);
-    var buttonOptions = {};
-
-    buttonOptions[Messages.strContinue] = function () {
-      success();
-      $(this).dialog('close');
-    };
-
-    buttonOptions[Messages.strCancel] = function () {
-      $(this).dialog('close');
-      $('#tablesForm')[0].reset();
-    };
-
-    $(dialogObj).dialog({
-      resizable: false,
-      modal: true,
-      title: Messages.confirmTitle,
-      buttons: buttonOptions
-    });
-  };
-  /**
-  *  Event handler on select of "Make consistent with central list"
-  */
-
-
   $('select[name=submit_mult]').on('change', function (event) {
     var url = 'index.php?route=/database/structure';
     var action = $(this).val();
@@ -229,15 +197,18 @@ AJAX.registerOnload('database/structure.js', function () {
     if (action === 'make_consistent_with_central_list') {
       event.preventDefault();
       event.stopPropagation();
-      jqConfirm(Messages.makeConsistentMessage, function () {
-        var $form = $('#tablesForm');
-        var argsep = CommonParams.get('arg_separator');
-        var data = $form.serialize() + argsep + 'ajax_request=true' + argsep + 'ajax_page_request=true';
-        Functions.ajaxShowMessage();
-        AJAX.source = $form;
-        $.post('index.php?route=/database/structure/central-columns-make-consistent', data, AJAX.responseHandler);
+      $('#makeConsistentWithCentralListModal').modal('show').on('shown.bs.modal', function () {
+        $('#makeConsistentWithCentralListContinue').on('click', function () {
+          const $form = $('#tablesForm');
+          const argSep = CommonParams.get('arg_separator');
+          const data = $form.serialize() + argSep + 'ajax_request=true' + argSep + 'ajax_page_request=true';
+          Functions.ajaxShowMessage();
+          AJAX.source = $form;
+          $.post('index.php?route=/database/structure/central-columns/make-consistent', data, AJAX.responseHandler);
+          $('#makeConsistentWithCentralListModal').modal('hide');
+        });
       });
-      return false;
+      return;
     }
 
     if (action === 'copy_tbl' || action === 'add_prefix_tbl' || action === 'replace_prefix_tbl' || action === 'copy_tbl_change_prefix') {
@@ -270,27 +241,17 @@ AJAX.registerOnload('database/structure.js', function () {
         url: url,
         dataType: 'html',
         data: formData
-      }).done(function (data) {
-        var dialogObj = $('<div class=\'hide\'>' + data + '</div>');
-        $('body').append(dialogObj);
-        var buttonOptions = {};
-
-        buttonOptions[Messages.strContinue] = function () {
-          $('#ajax_form').trigger('submit');
-          $(this).dialog('close');
-        };
-
-        buttonOptions[Messages.strCancel] = function () {
-          $(this).dialog('close');
-          $('#tablesForm')[0].reset();
-        };
-
-        $(dialogObj).dialog({
-          minWidth: 500,
-          resizable: false,
-          modal: true,
-          title: modalTitle,
-          buttons: buttonOptions
+      }).done(function (modalBody) {
+        const bulkActionModal = $('#bulkActionModal');
+        bulkActionModal.on('show.bs.modal', function () {
+          this.querySelector('.modal-title').innerText = modalTitle;
+          this.querySelector('.modal-body').innerHTML = modalBody;
+        });
+        bulkActionModal.modal('show').on('shown.bs.modal', function () {
+          $('#bulkActionContinue').on('click', function () {
+            $('#ajax_form').trigger('submit');
+            $('#bulkActionModal').modal('hide');
+          });
         });
       });
       return;
@@ -299,9 +260,9 @@ AJAX.registerOnload('database/structure.js', function () {
     if (action === 'analyze_tbl') {
       url = 'index.php?route=/table/maintenance/analyze';
     } else if (action === 'sync_unique_columns_central_list') {
-      url = 'index.php?route=/database/structure/central-columns-add';
+      url = 'index.php?route=/database/structure/central-columns/add';
     } else if (action === 'delete_unique_columns_central_list') {
-      url = 'index.php?route=/database/structure/central-columns-remove';
+      url = 'index.php?route=/database/structure/central-columns/remove';
     } else if (action === 'check_tbl') {
       url = 'index.php?route=/table/maintenance/check';
     } else if (action === 'checksum_tbl') {
@@ -422,16 +383,6 @@ AJAX.registerOnload('database/structure.js', function () {
       }); // end $.post()
     }, Functions.loadForeignKeyCheckbox);
   }); // end of Drop Table Ajax action
-
-  /**
-   * Attach Event Handler for 'Print' link
-   */
-
-  $(document).on('click', '#printView', function (event) {
-    event.preventDefault(); // Take to preview mode
-
-    Functions.printPreview();
-  }); // end of Print View action
   // Calculate Real End for InnoDB
 
   /**

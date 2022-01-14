@@ -16,6 +16,7 @@ use PhpMyAdmin\SqlParser\Parser;
 use PhpMyAdmin\SqlParser\Statement;
 use PhpMyAdmin\SqlParser\Token;
 use PhpMyAdmin\SqlParser\TokensList;
+
 use function count;
 use function strlen;
 use function trim;
@@ -137,11 +138,7 @@ class InsertStatement extends Statement
         ++$list->idx; // Skipping `INSERT`.
 
         // parse any options if provided
-        $this->options = OptionsArray::parse(
-            $parser,
-            $list,
-            static::$OPTIONS
-        );
+        $this->options = OptionsArray::parse($parser, $list, static::$OPTIONS);
         ++$list->idx;
 
         /**
@@ -184,9 +181,7 @@ class InsertStatement extends Statement
             }
 
             if ($state === 0) {
-                if ($token->type === Token::TYPE_KEYWORD
-                    && $token->keyword !== 'INTO'
-                ) {
+                if ($token->type === Token::TYPE_KEYWORD && $token->keyword !== 'INTO') {
                     $parser->error('Unexpected keyword.', $token);
                     break;
                 }
@@ -200,36 +195,28 @@ class InsertStatement extends Statement
 
                 $state = 1;
             } elseif ($state === 1) {
-                if ($token->type === Token::TYPE_KEYWORD) {
-                    if ($token->keyword === 'VALUE'
-                        || $token->keyword === 'VALUES'
-                    ) {
-                        ++$list->idx; // skip VALUES
-
-                        $this->values = Array2d::parse($parser, $list);
-                    } elseif ($token->keyword === 'SET') {
-                        ++$list->idx; // skip SET
-
-                        $this->set = SetOperation::parse($parser, $list);
-                    } elseif ($token->keyword === 'SELECT') {
-                        $this->select = new SelectStatement($parser, $list);
-                    } else {
-                        $parser->error(
-                            'Unexpected keyword.',
-                            $token
-                        );
-                        break;
-                    }
-
-                    $state = 2;
-                    $miniState = 1;
-                } else {
-                    $parser->error(
-                        'Unexpected token.',
-                        $token
-                    );
+                if ($token->type !== Token::TYPE_KEYWORD) {
+                    $parser->error('Unexpected token.', $token);
                     break;
                 }
+
+                if ($token->keyword === 'VALUE' || $token->keyword === 'VALUES') {
+                    ++$list->idx; // skip VALUES
+
+                    $this->values = Array2d::parse($parser, $list);
+                } elseif ($token->keyword === 'SET') {
+                    ++$list->idx; // skip SET
+
+                    $this->set = SetOperation::parse($parser, $list);
+                } elseif ($token->keyword === 'SELECT') {
+                    $this->select = new SelectStatement($parser, $list);
+                } else {
+                    $parser->error('Unexpected keyword.', $token);
+                    break;
+                }
+
+                $state = 2;
+                $miniState = 1;
             } elseif ($state === 2) {
                 $lastCount = $miniState;
 
@@ -244,10 +231,7 @@ class InsertStatement extends Statement
                 }
 
                 if ($lastCount === $miniState) {
-                    $parser->error(
-                        'Unexpected token.',
-                        $token
-                    );
+                    $parser->error('Unexpected token.', $token);
                     break;
                 }
 

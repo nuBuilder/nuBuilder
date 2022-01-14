@@ -23,7 +23,7 @@ var _style = require("ol/style.js");
 
 var _ol = require("ol");
 
-var ol = {
+const ol = {
   control: {
     Attribution: _control.Attribution,
     MousePosition: _control.MousePosition,

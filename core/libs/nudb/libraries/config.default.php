@@ -34,6 +34,7 @@ declare(strict_types=1);
  * an error message if phpMyAdmin cannot auto-detect the correct value.
  *
  * @global string $cfg['PmaAbsoluteUri']
+ * @psalm-suppress PossiblyUndefinedGlobalVariable
  */
 $cfg['PmaAbsoluteUri'] = '';
 
@@ -577,8 +578,7 @@ $cfg['Servers'][$i]['tracking_version_auto_create'] = false;
  *
  * @global string $cfg['Servers'][$i]['tracking_default_statements']
  */
-$cfg['Servers'][$i]['tracking_default_statements']
-    = 'CREATE TABLE,ALTER TABLE,DROP TABLE,RENAME TABLE,CREATE INDEX,' .
+$cfg['Servers'][$i]['tracking_default_statements'] = 'CREATE TABLE,ALTER TABLE,DROP TABLE,RENAME TABLE,CREATE INDEX,' .
       'DROP INDEX,INSERT,UPDATE,DELETE,TRUNCATE,REPLACE,CREATE VIEW,' .
       'ALTER VIEW,DROP VIEW,CREATE DATABASE,ALTER DATABASE,DROP DATABASE';
 
@@ -619,7 +619,7 @@ $cfg['Servers'][$i]['tracking_add_drop_database'] = true;
  */
 $cfg['ServerDefault'] = 1;
 
-/*
+/**
  * Other core phpMyAdmin settings
  */
 
@@ -786,7 +786,12 @@ $cfg['Confirm'] = true;
 /**
  * sets SameSite attribute of the Set-Cookie HTTP response header
  *
- * @global boolean $cfg['CookieSameSite']
+ * Valid values are:
+ *    - Lax
+ *    - Strict
+ *    - None
+ *
+ * @global string $cfg['CookieSameSite']
  */
  $cfg['CookieSameSite'] = 'Strict';
 
@@ -1173,7 +1178,8 @@ $cfg['ShowCreateDb'] = true;
  * Database structure
  */
 
-/** show charset column in database structure (true|false)?
+/**
+ * show charset column in database structure (true|false)?
  *
  * @global boolean $cfg['ShowDbStructureCharset']
  */
@@ -1758,8 +1764,7 @@ $cfg['Export']['latex_structure_caption'] = 'strLatexStructure';
 /**
  * @global string $cfg['Export']['latex_structure_continued_caption']
  */
-$cfg['Export']['latex_structure_continued_caption']
-    = 'strLatexStructure strLatexContinued';
+$cfg['Export']['latex_structure_continued_caption'] = 'strLatexStructure strLatexContinued';
 
 /**
  * @global string $cfg['Export']['latex_data_caption']
@@ -2793,7 +2798,6 @@ if (defined('TEMP_DIR')) {
 } else {
     $cfg['TempDir'] = ROOT_PATH . 'tmp' . DIRECTORY_SEPARATOR;
 }
-
 
 /**
  * Misc. settings

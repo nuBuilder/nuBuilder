@@ -11,12 +11,15 @@ use PhpMyAdmin\SqlParser\Component;
 use PhpMyAdmin\SqlParser\Parser;
 use PhpMyAdmin\SqlParser\Token;
 use PhpMyAdmin\SqlParser\TokensList;
+
 use function implode;
 use function is_array;
 use function trim;
 
 /**
  * `SET` keyword parser.
+ *
+ * @final
  */
 class SetOperation extends Component
 {
@@ -97,7 +100,8 @@ class SetOperation extends Component
             }
 
             // No keyword is expected.
-            if (($token->type === Token::TYPE_KEYWORD)
+            if (
+                ($token->type === Token::TYPE_KEYWORD)
                 && ($token->flags & Token::FLAG_KEYWORD_RESERVED)
                 && ($state === 0)
             ) {

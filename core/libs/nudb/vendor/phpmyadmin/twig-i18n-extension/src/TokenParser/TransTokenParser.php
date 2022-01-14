@@ -1,14 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 /*
- * This file is part of Twig.
+ * This file is part of Twig I18n extension.
  *
  * (c) 2010-2019 Fabien Potencier
- * (c) 2019 phpMyAdmin contributors
+ * (c) 2019-2021 phpMyAdmin contributors
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace PhpMyAdmin\Twig\Extensions\TokenParser;
 
 use PhpMyAdmin\Twig\Extensions\Node\TransNode;
@@ -19,7 +22,6 @@ use Twig\Node\PrintNode;
 use Twig\Node\TextNode;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
-use function sprintf;
 
 class TransTokenParser extends AbstractTokenParser
 {
@@ -28,11 +30,35 @@ class TransTokenParser extends AbstractTokenParser
      */
     public function parse(Token $token)
     {
+        [
+            $body,
+            $plural,
+            $count,
+            $context,
+            $notes,
+            $domain,
+            $lineno,
+            $tag,
+        ] = $this->preParse($token);
+
+        return new TransNode($body, $plural, $count, $context, $notes, $domain, $lineno, $tag);
+    }
+
+    protected function preParse(Token $token): array
+    {
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();
+        $domain = null;
         $count = null;
         $plural = null;
         $notes = null;
+        $context = null;
+
+        /* If we aren't closing the block, do we have a domain? */
+        if ($stream->test(Token::NAME_TYPE)) {
+            $stream->expect(Token::NAME_TYPE, 'from');
+            $domain = $this->parser->getExpressionParser()->parseExpression();
+        }
 
         if (! $stream->test(Token::BLOCK_END_TYPE)) {
             $body = $this->parser->getExpressionParser()->parseExpression();
@@ -45,11 +71,17 @@ class TransTokenParser extends AbstractTokenParser
                 $count = $this->parser->getExpressionParser()->parseExpression();
                 $stream->expect(Token::BLOCK_END_TYPE);
                 $plural = $this->parser->subparse([$this, 'decideForFork']);
-
-                if ($stream->next()->getValue() === 'notes') {
+                $next = $stream->next()->getValue();
+                if ($next === 'notes') {
                     $stream->expect(Token::BLOCK_END_TYPE);
                     $notes = $this->parser->subparse([$this, 'decideForEnd'], true);
+                } elseif ($next === 'context') {
+                    $stream->expect(Token::BLOCK_END_TYPE);
+                    $context = $this->parser->subparse([$this, 'decideForEnd'], true);
                 }
+            } elseif ($next === 'context') {
+                $stream->expect(Token::BLOCK_END_TYPE);
+                $context = $this->parser->subparse([$this, 'decideForEnd'], true);
             } elseif ($next === 'notes') {
                 $stream->expect(Token::BLOCK_END_TYPE);
                 $notes = $this->parser->subparse([$this, 'decideForEnd'], true);
@@ -60,7 +92,7 @@ class TransTokenParser extends AbstractTokenParser
 
         $this->checkTransString($body, $lineno);
 
-        return new TransNode($body, $plural, $count, $notes, $lineno, $this->getTag());
+        return [$body, $plural, $count, $context, $notes, $domain, $lineno, $this->getTag()];
     }
 
     /**
@@ -68,7 +100,7 @@ class TransTokenParser extends AbstractTokenParser
      */
     public function decideForFork(Token $token)
     {
-        return $token->test(['plural', 'notes', 'endtrans']);
+        return $token->test(['plural', 'context', 'notes', 'endtrans']);
     }
 
     /**
@@ -92,17 +124,21 @@ class TransTokenParser extends AbstractTokenParser
      *
      * @throws SyntaxError
      */
-    protected function checkTransString(Node $body, $lineno)
+    protected function checkTransString(Node $body, int $lineno)
     {
         foreach ($body as $i => $node) {
-            if ($node instanceof TextNode
+            if (
+                $node instanceof TextNode
                 ||
                 ($node instanceof PrintNode && $node->getNode('expr') instanceof NameExpression)
             ) {
                 continue;
             }
 
-            throw new SyntaxError(sprintf('The text to be translated with "trans" can only contain references to simple variables'), $lineno);
+            throw new SyntaxError(
+                'The text to be translated with "trans" can only contain references to simple variables.',
+                $lineno
+            );
         }
     }
 }

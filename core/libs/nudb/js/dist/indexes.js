@@ -15,7 +15,9 @@ var Indexes = {};
 /**
  * Returns the array of indexes based on the index choice
  *
- * @param indexChoice index choice
+ * @param {string} indexChoice index choice
+ *
+ * @return {null|object}
  */
 
 Indexes.getIndexArray = function (indexChoice) {
@@ -56,31 +58,31 @@ Indexes.getIndexArray = function (indexChoice) {
 
 Indexes.checkIndexType = function () {
   /**
-   * @var Object Dropdown to select the index choice.
+   * @var {JQuery<HTMLElement}, Dropdown to select the index choice.
    */
   var $selectIndexChoice = $('#select_index_choice');
   /**
-   * @var Object Dropdown to select the index type.
+   * @var {JQuery<HTMLElement}, Dropdown to select the index type.
    */
 
   var $selectIndexType = $('#select_index_type');
   /**
-   * @var Object Table header for the size column.
+   * @var {JQuery<HTMLElement}, Table header for the size column.
    */
 
   var $sizeHeader = $('#index_columns').find('thead tr').children('th').eq(1);
   /**
-   * @var Object Inputs to specify the columns for the index.
+   * @var {JQuery<HTMLElement}, Inputs to specify the columns for the index.
    */
 
   var $columnInputs = $('select[name="index[columns][names][]"]');
   /**
-   * @var Object Inputs to specify sizes for columns of the index.
+   * @var {JQuery<HTMLElement}, Inputs to specify sizes for columns of the index.
    */
 
   var $sizeInputs = $('input[name="index[columns][sub_parts][]"]');
   /**
-   * @var Object Footer containing the controllers to add more columns
+   * @var {JQuery<HTMLElement}, Footer containing the controllers to add more columns
    */
 
   var $addMore = $('#index_frm').find('.add_more');
@@ -127,10 +129,10 @@ Indexes.checkIndexType = function () {
 /**
  * Sets current index information into form parameters.
  *
- * @param array  source_array Array containing index columns
- * @param string index_choice Choice of index
+ * @param {any[]}  sourceArray Array containing index columns
+ * @param {string} indexChoice Choice of index
  *
- * @return void
+ * @return {void}
  */
 
 
@@ -144,9 +146,9 @@ Indexes.setIndexFormParameters = function (sourceArray, indexChoice) {
 /**
  * Removes a column from an Index.
  *
- * @param string col_index Index of column in form
+ * @param {string} colIndex Index of column in form
  *
- * @return void
+ * @return {void}
  */
 
 
@@ -185,12 +187,12 @@ Indexes.removeColumnFromIndex = function (colIndex) {
 /**
  * Adds a column to an Index.
  *
- * @param array  source_array Array holding corresponding indexes
- * @param string array_index  Index of an INDEX in array
- * @param string index_choice Choice of Index
- * @param string col_index    Index of column on form
+ * @param {any[]}  sourceArray Array holding corresponding indexes
+ * @param {string} arrayIndex  Index of an INDEX in array
+ * @param {string} indexChoice Choice of Index
+ * @param {string} colIndex    Index of column on form
  *
- * @return void
+ * @return {void}
  */
 
 
@@ -259,10 +261,10 @@ Indexes.addColumnToIndex = function (sourceArray, arrayIndex, indexChoice, colIn
 /**
  * Get choices list for a column to create a composite index with.
  *
- * @param string index_choice Choice of index
- * @param array  source_array Array hodling columns for particular index
+ * @param {any[]} sourceArray Array hodling columns for particular index
+ * @param {string} colIndex Choice of index
  *
- * @return jQuery Object
+ * @return {JQuery} jQuery Object
  */
 
 
@@ -298,14 +300,14 @@ Indexes.getCompositeIndexList = function (sourceArray, colIndex) {
 /**
  * Shows 'Add Index' dialog.
  *
- * @param array  source_array   Array holding particular index
- * @param string array_index    Index of an INDEX in array
- * @param array  target_columns Columns for an INDEX
- * @param string col_index      Index of column on form
- * @param object index          Index detail object
- * @param bool showDialog       Whether to show index creation dialog or not
+ * @param {any[]}  sourceArray   Array holding particular index
+ * @param {string} arrayIndex    Index of an INDEX in array
+ * @param {any[]}  targetColumns Columns for an INDEX
+ * @param {string} colIndex      Index of column on form
+ * @param {object} index         Index detail object
+ * @param {boolean} showDialog   Whether to show index creation dialog or not
  *
- * @return void
+ * @return {void}
  */
 
 
@@ -386,7 +388,7 @@ Indexes.showAddIndexDialog = function (sourceArray, arrayIndex, targetColumns, c
           title: Messages.strAddIndex,
           width: 450,
           minHeight: 250,
-          create: function create() {
+          create: function () {
             $(this).on('keypress', function (e) {
               if (e.which === 13 || e.keyCode === 13 || window.event.keyCode === 13) {
                 e.preventDefault();
@@ -395,10 +397,9 @@ Indexes.showAddIndexDialog = function (sourceArray, arrayIndex, targetColumns, c
               }
             });
           },
-          open: function open() {
+          open: function () {
             Functions.checkIndexName('index_frm');
             Functions.showHints($div);
-            Functions.initSlider();
             $('#index_columns').find('td').each(function () {
               $(this).css('width', $(this).width() + 'px');
             });
@@ -410,7 +411,7 @@ Indexes.showAddIndexDialog = function (sourceArray, arrayIndex, targetColumns, c
           },
           modal: true,
           buttons: buttonOptions,
-          close: function close() {
+          close: function () {
             $(this).remove();
           }
         });
@@ -443,18 +444,18 @@ Indexes.showAddIndexDialog = function (sourceArray, arrayIndex, targetColumns, c
 /**
  * Creates a advanced index type selection dialog.
  *
- * @param array  source_array Array holding a particular type of indexes
- * @param string index_choice Choice of index
- * @param string col_index    Index of new column on form
+ * @param {any[]}  sourceArray Array holding a particular type of indexes
+ * @param {string} indexChoice Choice of index
+ * @param {string} colIndex    Index of new column on form
  *
- * @return void
+ * @return {void}
  */
 
 
 Indexes.indexTypeSelectionDialog = function (sourceArray, indexChoice, colIndex) {
   var $singleColumnRadio = $('<input type="radio" id="single_column" name="index_choice"' + ' checked="checked">' + '<label for="single_column">' + Messages.strCreateSingleColumnIndex + '</label>');
   var $compositeIndexRadio = $('<input type="radio" id="composite_index"' + ' name="index_choice">' + '<label for="composite_index">' + Messages.strCreateCompositeIndex + '</label>');
-  var $dialogContent = $('<fieldset id="advance_index_creator"></fieldset>');
+  var $dialogContent = $('<fieldset class="pma-fieldset" id="advance_index_creator"></fieldset>');
   $dialogContent.append('<legend>' + indexChoice.toUpperCase() + '</legend>'); // For UNIQUE/INDEX type, show choice for single-column and composite index.
 
   $dialogContent.append($singleColumnRadio);
@@ -512,7 +513,7 @@ Indexes.indexTypeSelectionDialog = function (sourceArray, indexChoice, colIndex)
     title: Messages.strAddIndex,
     resizable: false,
     buttons: buttonOptions,
-    open: function open() {
+    open: function () {
       $('#composite_index').on('change', function () {
         if ($(this).is(':checked')) {
           $dialogContent.append(Indexes.getCompositeIndexList(sourceArray, colIndex));
@@ -526,7 +527,7 @@ Indexes.indexTypeSelectionDialog = function (sourceArray, indexChoice, colIndex)
         }
       });
     },
-    close: function close() {
+    close: function () {
       $('#composite_index').off('change');
       $('#single_column').off('change');
       $(this).remove();
@@ -620,7 +621,7 @@ AJAX.registerOnload('indexes.js', function () {
       $rowsToHide = $rowsToHide.add($lastRow);
     }
 
-    var question = Functions.escapeHtml($currRow.children('td').children('.drop_primary_key_index_msg').val());
+    var question = $currRow.children('td').children('.drop_primary_key_index_msg').val();
     Functions.confirmPreviewSql(question, $anchor.attr('href'), function (url) {
       var $msg = Functions.ajaxShowMessage(Messages.strDroppingPrimaryKeyIndex, false);
       var params = Functions.getJsConfirmCommonParam(this, $anchor.getPostData());

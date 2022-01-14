@@ -15,13 +15,13 @@ manually; the typical way of doing so is with the command:
 
 .. code-block:: sh
 
-    composer require pragmarx/google2fa-qrcode
+    composer require pragmarx/google2fa-qrcode bacon/bacon-qr-code
 
 Or when using a hardware security key with FIDO U2F:
 
 .. code-block:: sh
 
-    composer require samyoul/u2f-php-server
+    composer require code-lts/u2f-php-server
 
 Authentication Application (2FA)
 --------------------------------

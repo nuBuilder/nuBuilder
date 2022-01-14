@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin;
 
-use function strftime;
+use function date;
 
 /**
  * Simplfied OpenDocument creator class
@@ -30,8 +30,6 @@ EOT;
      * @param string $data document content
      *
      * @return string  OASIS OpenDocument data
-     *
-     * @access public
      */
     public static function create($mime, $data)
     {
@@ -44,10 +42,10 @@ EOT;
             . 'xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" '
             . 'office:version="1.0">'
             . '<office:meta>'
-            . '<meta:generator>phpMyAdmin ' . PMA_VERSION . '</meta:generator>'
-            . '<meta:initial-creator>phpMyAdmin ' . PMA_VERSION
+            . '<meta:generator>phpMyAdmin ' . Version::VERSION . '</meta:generator>'
+            . '<meta:initial-creator>phpMyAdmin ' . Version::VERSION
             . '</meta:initial-creator>'
-            . '<meta:creation-date>' . strftime('%Y-%m-%dT%H:%M:%S')
+            . '<meta:creation-date>' . date('Y-m-d\TH:i:s')
             . '</meta:creation-date>'
             . '</office:meta>'
             . '</office:document-meta>',

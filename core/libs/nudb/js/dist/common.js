@@ -14,7 +14,7 @@ $(function () {
 
 var CommonParams = function () {
   /**
-   * @var hash params An associative array of key value pairs
+   * @var {Object} params An associative array of key value pairs
    * @access private
    */
   var params = {}; // The returned object is the public part of the module
@@ -26,9 +26,9 @@ var CommonParams = function () {
      *
      * @param obj hash The input array
      *
-     * @return void
+     * @return {void}
      */
-    setAll: function setAll(obj) {
+    setAll: function (obj) {
       var updateNavigation = false;
 
       for (var i in obj) {
@@ -50,23 +50,23 @@ var CommonParams = function () {
      * Retrieves a value given its key
      * Returns empty string for undefined values
      *
-     * @param name string The key
+     * @param {string} name The key
      *
-     * @return string
+     * @return {string}
      */
-    get: function get(name) {
+    get: function (name) {
       return params[name];
     },
 
     /**
      * Saves a single key value pair
      *
-     * @param name  string The key
-     * @param value string The value
+     * @param {string} name  The key
+     * @param {string} value The value
      *
-     * @return self For chainability
+     * @return {CommonParams} For chainability
      */
-    set: function set(name, value) {
+    set: function (name, value) {
       var updateNavigation = false;
 
       if (name === 'db' || name === 'table' && params[name] !== value) {
@@ -87,14 +87,14 @@ var CommonParams = function () {
      *
      * @param {string} separator New separator
      *
-     * @return string
+     * @return {string}
      */
-    getUrlQuery: function getUrlQuery(separator) {
+    getUrlQuery: function (separator) {
       var sep = typeof separator !== 'undefined' ? separator : '?';
       var common = this.get('common_query');
       var argsep = CommonParams.get('arg_separator');
 
-      if (typeof common === 'string') {
+      if (typeof common === 'string' && common.length > 0) {
         // If the last char is the separator, do not add it
         // Else add it
         common = common.substr(common.length - 1, common.length) === argsep ? common : common + argsep;
@@ -118,11 +118,11 @@ var CommonActions = {
    * Saves the database name when it's changed
    * and reloads the query window, if necessary
    *
-   * @param newDb string new_db The name of the new database
+   * @param {string} newDb new_db The name of the new database
    *
-   * @return void
+   * @return {void}
    */
-  setDb: function setDb(newDb) {
+  setDb: function (newDb) {
     if (newDb !== CommonParams.get('db')) {
       CommonParams.setAll({
         'db': newDb,
@@ -134,11 +134,11 @@ var CommonActions = {
   /**
    * Opens a database in the main part of the page
    *
-   * @param newDb string The name of the new database
+   * @param {string} newDb The name of the new database
    *
-   * @return void
+   * @return {void}
    */
-  openDb: function openDb(newDb) {
+  openDb: function (newDb) {
     CommonParams.set('db', newDb).set('table', '');
     this.refreshMain(CommonParams.get('opendb_url'));
   },
@@ -146,12 +146,14 @@ var CommonActions = {
   /**
    * Refreshes the main frame
    *
-   * @param mixed url Undefined to refresh to the same page
+   * @param {any} url Undefined to refresh to the same page
    *                  String to go to a different page, e.g: 'index.php'
+   * @param {function | undefined} callback
    *
-   * @return void
+   * @return {void}
    */
-  refreshMain: function refreshMain(url, callback) {
+  refreshMain: function (url) {
+    let callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
     var newUrl = url;
 
     if (!newUrl) {
@@ -168,6 +170,9 @@ var CommonActions = {
     $('<a></a>', {
       href: newUrl
     }).appendTo('body').trigger('click').remove();
-    AJAX.callback = callback;
+
+    if (typeof callback !== 'undefined') {
+      AJAX.callback = callback;
+    }
   }
 };

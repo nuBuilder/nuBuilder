@@ -11,7 +11,6 @@
 
 namespace Symfony\Component\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\Exception\BadMethodCallException;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Exception\OutOfBoundsException;
 
@@ -30,7 +29,6 @@ class ChildDefinition extends Definition
     public function __construct(string $parent)
     {
         $this->parent = $parent;
-        $this->setPrivate(false);
     }
 
     /**
@@ -46,11 +44,9 @@ class ChildDefinition extends Definition
     /**
      * Sets the Definition to inherit from.
      *
-     * @param string $parent
-     *
      * @return $this
      */
-    public function setParent($parent)
+    public function setParent(string $parent)
     {
         $this->parent = $parent;
 
@@ -65,7 +61,7 @@ class ChildDefinition extends Definition
      *
      * @param int|string $index
      *
-     * @return mixed The argument value
+     * @return mixed
      *
      * @throws OutOfBoundsException When the argument does not exist
      */
@@ -97,28 +93,12 @@ class ChildDefinition extends Definition
     {
         if (\is_int($index)) {
             $this->arguments['index_'.$index] = $value;
-        } elseif (0 === strpos($index, '$')) {
+        } elseif (str_starts_with($index, '$')) {
             $this->arguments[$index] = $value;
         } else {
             throw new InvalidArgumentException('The argument must be an existing index or the name of a constructor\'s parameter.');
         }
 
         return $this;
-    }
-
-    /**
-     * @internal
-     */
-    public function setAutoconfigured($autoconfigured): self
-    {
-        throw new BadMethodCallException('A ChildDefinition cannot be autoconfigured.');
-    }
-
-    /**
-     * @internal
-     */
-    public function setInstanceofConditionals(array $instanceof): self
-    {
-        throw new BadMethodCallException('A ChildDefinition cannot have instanceof conditionals set on it.');
     }
 }

@@ -83,7 +83,7 @@ final class CacheItem implements ItemInterface
         } elseif ($expiration instanceof \DateTimeInterface) {
             $this->expiry = (float) $expiration->format('U.u');
         } else {
-            throw new InvalidArgumentException(sprintf('Expiration date must implement DateTimeInterface or be null, "%s" given.', \is_object($expiration) ? \get_class($expiration) : \gettype($expiration)));
+            throw new InvalidArgumentException(sprintf('Expiration date must implement DateTimeInterface or be null, "%s" given.', get_debug_type($expiration)));
         }
 
         return $this;
@@ -103,7 +103,7 @@ final class CacheItem implements ItemInterface
         } elseif (\is_int($time)) {
             $this->expiry = $time + microtime(true);
         } else {
-            throw new InvalidArgumentException(sprintf('Expiration date must be an integer, a DateInterval or null, "%s" given.', \is_object($time) ? \get_class($time) : \gettype($time)));
+            throw new InvalidArgumentException(sprintf('Expiration date must be an integer, a DateInterval or null, "%s" given.', get_debug_type($time)));
         }
 
         return $this;
@@ -149,28 +149,16 @@ final class CacheItem implements ItemInterface
     }
 
     /**
-     * Returns the list of tags bound to the value coming from the pool storage if any.
-     *
-     * @deprecated since Symfony 4.2, use the "getMetadata()" method instead.
-     */
-    public function getPreviousTags(): array
-    {
-        @trigger_error(sprintf('The "%s()" method is deprecated since Symfony 4.2, use the "getMetadata()" method instead.', __METHOD__), \E_USER_DEPRECATED);
-
-        return $this->metadata[self::METADATA_TAGS] ?? [];
-    }
-
-    /**
      * Validates a cache key according to PSR-6.
      *
-     * @param string $key The key to validate
+     * @param mixed $key The key to validate
      *
      * @throws InvalidArgumentException When $key is not valid
      */
     public static function validateKey($key): string
     {
         if (!\is_string($key)) {
-            throw new InvalidArgumentException(sprintf('Cache key must be string, "%s" given.', \is_object($key) ? \get_class($key) : \gettype($key)));
+            throw new InvalidArgumentException(sprintf('Cache key must be string, "%s" given.', get_debug_type($key)));
         }
         if ('' === $key) {
             throw new InvalidArgumentException('Cache key length must be greater than zero.');

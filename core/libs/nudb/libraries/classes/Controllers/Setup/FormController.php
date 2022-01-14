@@ -8,6 +8,9 @@ use PhpMyAdmin\Config\Forms\BaseForm;
 use PhpMyAdmin\Config\Forms\Setup\SetupFormList;
 use PhpMyAdmin\Core;
 use PhpMyAdmin\Setup\FormProcessing;
+
+use function __;
+use function is_scalar;
 use function ob_get_clean;
 use function ob_start;
 
@@ -18,11 +21,11 @@ class FormController extends AbstractController
      *
      * @return string HTML
      */
-    public function index(array $params): string
+    public function __invoke(array $params): string
     {
         $pages = $this->getPages();
 
-        $formset = Core::isValid($params['formset'], 'scalar') ? $params['formset'] : null;
+        $formset = isset($params['formset']) && is_scalar($params['formset']) ? (string) $params['formset'] : '';
 
         $formClass = SetupFormList::get($formset);
         if ($formClass === null) {
