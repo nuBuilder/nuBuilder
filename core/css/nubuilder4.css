@@ -285,6 +285,7 @@
 	font-weight: 900;
 	margin-left: 5px
 }
+
  .nuOptionsSubform {
 	 border-style: none;
 	 font-size: 20px!important;
@@ -320,9 +321,15 @@
 	 height:25px;
 	 width:25px 
 }
+
+ .nuOptionsItem {
+	 color: #00223e
+}
+
  .nuOptionsItem:hover {
 	 background-color:#f6f8fa;
 	 border-width:0;
+	 border-radius:3px;
 	 border-style:none;
 	 cursor:pointer 
 }
@@ -334,9 +341,20 @@
 	 padding:0 0 1px 1px;
 	 background-color:#ccc 
 }
+
+ .nuOptionList {
+	 color: #00223e
+}
+
  .nuShadow {
 	 box-shadow:5px 5px 5px 0 rgba(150,147,150,1) 
 }
+
+ .nuOptionsListTitle {
+	 color: #00223e;
+	 font-weight:bold 
+}
+
  .nuOptionsList {
 	 background-color:white;
 	 box-shadow:2px 2px 8px 0 rgba(150,147,150,1);

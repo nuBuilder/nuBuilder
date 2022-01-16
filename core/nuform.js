@@ -2932,7 +2932,7 @@ function nuGetOptionsList(f, t, p, a, type){
 	'position'		: 'absolute',
 	'z-index'		: 99,
 	'text-align'	: 'left'})
-	.html('<span style="font-weight:bold">&nbsp;&nbsp;'+nuTranslate('Options')+'<\span>')
+	.html('<span class="nuOptionsListTitle">&nbsp;&nbsp;'+nuTranslate('Options')+'<\span>')
 	.addClass('nuOptionsList');
 
 	nuBuildOptionsList(list, p, type);
@@ -3071,7 +3071,7 @@ function nuBuildOptionsList(l, p, type){												//-- loop through adding opt
 			'top'		: top + 70
 	});
 
-	$('.nuOptionsItem').css({'width' : width - 53, 'padding' : '0px 0px 0px 3px'});
+	$('.nuOptionsItem').css({'width' : width - 57, 'padding' : '0px 0px 0px 3px'});
 	$('.nuOptionsItem-divider').css({'width' : 35 + width - reduce - 7, 'left' : 0});
 
 }
