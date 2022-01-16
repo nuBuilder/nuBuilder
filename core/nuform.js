@@ -2932,7 +2932,7 @@ function nuGetOptionsList(f, t, p, a, type){
 	'position'		: 'absolute',
 	'z-index'		: 99,
 	'text-align'	: 'left'})
-	.html('<span style="font-weight:bold">&nbsp;&nbsp;Options<\span>')
+	.html('<span style="font-weight:bold">&nbsp;&nbsp;'+nuTranslate('Options')+'<\span>')
 	.addClass('nuOptionsList');
 
 	nuBuildOptionsList(list, p, type);
@@ -2978,6 +2978,7 @@ function nuBuildOptionsList(l, p, type){												//-- loop through adding opt
 			.css({'top'	: itemtop, 'left' : 9})
 			.addClass('fa')
 			.addClass(c)
+			.addClass('nuOptionList');
 		}
 
 		// Add Option Text 
