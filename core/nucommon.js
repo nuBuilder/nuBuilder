@@ -2063,7 +2063,7 @@ function nuDisableBrowseResize() {
 
 function nuResizeBrowseColumns(force){
 
-	var w	= nuFORM.getCurrent().column_widths;
+	var w	= nuArrayColumn(nuSERVERRESPONSE.browse_columns,'width').map(Number);
 	var t	= 0;
 	var p	= nuTotalWidth('nucell_0_0') - $('#nucell_0_0').width();	//-- padding
 
