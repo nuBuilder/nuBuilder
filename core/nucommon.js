@@ -1441,9 +1441,9 @@ function nuAttachFontAwesome(i, c, s, after) {
 	let nbsp	= h.length == 0 ? '' : '&nbsp';
 	
 	if (after === true) {
-		obj.css('padding','0px').append(nbsp + html);
+		obj.append(nbsp + html);
 	} else {
-		obj.css('padding','0px').prepend(html + nbsp);
+		obj.prepend(html + nbsp);
 	}	
 
 }
