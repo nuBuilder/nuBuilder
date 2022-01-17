@@ -1433,12 +1433,17 @@ function nuAttachFontAwesome(i, c, s, after) {
 		o = i; 
 	}
 
-	let html = '<i style="font-size:' + size + '" class="' + c + '"></i>';
-
+	let html	= '<i style="font-size:' + size + '" class="' + c + '"></i>';
+	let obj		= $(o);
+	if (obj.length === 0) return;
+	
+	let h		= obj.html().trim();
+	let nbsp	= h.length == 0 ? '' : '&nbsp';
+	
 	if (after === true) {
-		$(o).append('&nbsp' + html);		
+		obj.css('padding','0px').append(nbsp + html);
 	} else {
-		$(o).prepend(html + '&nbsp;');
+		obj.css('padding','0px').prepend(html + nbsp);
 	}	
 
 }

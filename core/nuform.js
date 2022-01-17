@@ -1224,7 +1224,7 @@ function nuAddInputIcon(id, icon) {
 
 	function addIcon (id, string, after) {
 		if (string.startsWith('fa')) {
-			nuAttachFontAwesome(id, string, undefined, after);
+			nuAttachFontAwesome(id, string, 'normal', after);
 		} else {
 			nuAttachHTML(id, string, after);
 		}
