@@ -1222,14 +1222,22 @@ function nuAddAttributes(id, attr) {
 
 function nuAddInputIcon(id, icon) {
 
+	function addIcon (id, string, after) {
+		if (string.startsWith('fa')) {
+			nuAttachFontAwesome(id, string, undefined, after);
+		} else {
+			nuAttachHTML(id, string, after);
+		}
+	}
+
 	if(icon !== undefined && icon !== null && icon !== '') {
 		
 		if (! icon.includes('|')) {
-			nuAttachFontAwesome(id, icon); 
+			addIcon(id, icon, false);
 		} else {
 			let icons = icon.split('|');
-			if (icons[0].trim() !== '') nuAttachFontAwesome(id, icons[0]);
-			if (icons[1].trim() !== '') nuAttachFontAwesome(id, icons[1], undefined, true);
+			if (icons[0].trim() !== '') addIcon(id, icons[0], false);
+			if (icons[1].trim() !== '') addIcon(id, icons[1], true);
 		}
 
 	}

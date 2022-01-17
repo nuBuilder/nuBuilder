@@ -1443,6 +1443,21 @@ function nuAttachFontAwesome(i, c, s, after) {
 
 }
 
+function nuAttachHTML(i, text, after) {
+
+	let o = '#' + i;
+	if (i instanceof jQuery){
+		o = i; 
+	}
+
+	if (after === true) {
+		$(o).append('&nbsp;' + text);		
+	} else {
+		$(o).prepend(text + '&nbsp;');
+	}	
+
+}
+
 function nuAttachFile(j, c){
 
 	if(window.nuGraphics.indexOf(c + '.png') != -1){						//-- check filenames in graphics dir.
