@@ -112,7 +112,6 @@ function nuAuthCheck($vars, $validityPeriod) {
 
 };
 
-
 function nuGet2FAToken($uid) {
 	return nuGetUserJSONData('2FA_TOKEN',$uid);
 }
@@ -124,15 +123,14 @@ function nuTokenMatches($token, $uid) {
 	
 };
 
-
 function nuRedirectToForm($token) {
 
 	$formId = $_SESSION['nubuilder_session_data']['SESSION_2FA_REDIRECT_FORM_ID'];
 
 	$dtk = $_SESSION['nubuilder_session_data']['2FA_TOKEN_VALIDITY_TIME'];										// number of hours to retain a valid token as a cookie. 
 	$expts = (int)date_timestamp_get(date_create()) + ($dtk*60*60); 											// time stamp when the token expires
-	$cname = nuPasswordHash($_SESSION['nubuilder_session_data']['DB_NAME'].nuObjKey(nuHash(),'USER_ID','')); 				// database name and user ID creates a unique name for the cookie
-	$cvalue = $expts.'_'.nuPasswordHash($token);
+	$cname = md5($_SESSION['nubuilder_session_data']['DB_NAME'].nuObjKey(nuHash(),'USER_ID','')); 				// database name and user ID creates a unique name for the cookie
+	$cvalue = $expts.'_'.md5($token);
 
 	nu2FAStoreToken($cvalue);																					// store the cookie in the user record
 	// save a cookie with the verified token and expiry time. This will be checked during subsequent logins
@@ -150,7 +148,6 @@ function nuRedirectToForm($token) {
 	}
 	nuJavascriptCallback($js);
 }
-
 
 function nu2FAGetStoredTokens($uid) { 		// retrieve the array of valid 2FA tokens for this user
 
@@ -194,7 +191,7 @@ function nu2FARemoveOldTokens($arrtokens) {
 function nu2FALocalTokenOK($uid) {
 
 	$alltokens = nu2FAGetStoredTokens($uid);
-	$cn = nuPasswordHash($_SESSION['nubuilder_session_data']['DB_NAME'].$uid);
+	$cn = md5($_SESSION['nubuilder_session_data']['DB_NAME'].$uid);
 	if (isset($_COOKIE[$cn])) {
 		$token = $_COOKIE[$cn];		 														// get the cookie value for the stored token
 		$tokenOK = (in_array($token, nu2FARemoveOldTokens($alltokens))	? true : false);	// now check to see if the token from the cookie is in the updated array
