@@ -1186,6 +1186,10 @@ function nuINPUT(w, i, l, p, prop){
 
 		nuSetAccess(ID, obj.read);
 
+		if(inputType == 'button' && objectType == 'input'){
+			nuAddInputIcon(id, obj.input_icon);
+		}
+
 		nuAddStyle(id, obj);
 
 		return Number(obj.width) + (obj.read == 2 ? -2 : 4);
@@ -1211,6 +1215,22 @@ function nuAddAttributes(id, attr) {
 			if (arr.length == 1 || arr.length == 2) $('#' + id)[0].setAttribute(key.trim(),value);
 
 		})
+
+	}
+
+}
+
+function nuAddInputIcon(id, icon) {
+
+	if(icon !== undefined && icon !== null && icon !== '') {
+		
+		if (! icon.includes('|')) {
+			nuAttachFontAwesome(id, icon); 
+		} else {
+			let icons = icon.split('|');
+			if (icons[0].trim() !== '') nuAttachFontAwesome(id, icons[0]);
+			if (icons[1].trim() !== '') nuAttachFontAwesome(id, icons[1], undefined, true);
+		}
 
 	}
 
@@ -1562,6 +1582,8 @@ function nuRUN(w, i, l, p, prop){
 		})
 		.html(nuTranslate(obj.label))
 		.addClass('nuButton');
+
+		nuAddInputIcon(id, obj.input_icon);
 
 	}else{
 

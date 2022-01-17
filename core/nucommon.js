@@ -1424,16 +1424,22 @@ function nuRemoveHolders(h){
 
 }
 
-function nuAttachFontAwesome(i, c, s) {
+function nuAttachFontAwesome(i, c, s, after) {
 
-	var size = s === undefined ? 'medium' : s;
+	let size = s === undefined ? 'medium' : s;
 
-	var o = '#' + i;
+	let o = '#' + i;
 	if (i instanceof jQuery){
 		o = i; 
 	}
 
-	$(o).prepend('<i style="font-size:' + size + '" class="' + c + '"></i>&nbsp;');
+	let html = '<i style="font-size:' + size + '" class="' + c + '"></i>';
+
+	if (after === true) {
+		$(o).append('&nbsp' + html);		
+	} else {
+		$(o).prepend(html + '&nbsp;');
+	}	
 
 }
 

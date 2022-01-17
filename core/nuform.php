@@ -399,13 +399,13 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 				$o->word				= $r->sob_all_label;
 				$o->align				= $r->sob_all_align;
 			}
-			
+
 			if (nuEvents($r) == '0') {
 				$o->js 					= [];
 			} else {
 				$o->js					= nuObjectEvents($r->zzzzsys_object_id);
 			}
-			
+
 			$o->tab_order				= $r->sob_all_order;
 			$o->style_type				= isset($r->sob_all_style_type) ? $r->sob_all_style_type : '';
 			$o->style					= isset($r->sob_all_style) ? $r->sob_all_style : '';
@@ -414,6 +414,12 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 				$o->attributes	= $r->sob_input_attribute;
 			} else {
 				$o->attributes	= '';
+			}
+
+			if (isset($r->sob_input_icon) && $r->sob_input_icon != ''){
+				$o->input_icon	= $r->sob_input_icon;
+			} else {
+				$o->input_icon	= '';
 			}
 
 			if($OBJS > 0){
