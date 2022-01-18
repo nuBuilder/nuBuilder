@@ -5563,3 +5563,17 @@ function nuGetFirstObject(objects, tabNr) {
 	return null;
 
 }
+
+function nuAccessFormSetButtonIcons(force) {
+
+	var l = nuUserLanguage();
+
+	if (l !== '' || force === true) {
+		title_accformslf_add_button.innerHTML = `<br>&nbsp<span style='padding: 1px 10px 1px 10px;' class='nuActionButton'><i class="fas fa-plus"></i></span>`;
+		title_accformslf_print_button.innerHTML = `<br>&nbsp<span style='padding: 1px 10px 1px 10px;' class='nuActionButton'><i class="fas fa-print"></i></span>`;
+		title_accformslf_save_button.innerHTML = `<br>&nbsp<span style='padding: 1px 10px 1px 10px;' class='nuActionButton'><i class='fas fa-save'></i></span>`;
+		title_accformslf_clone_button.innerHTML = `<br>&nbsp<span style='padding: 1px 10px 1px 10px;' class='nuActionButton'><i class='fas fa-clone'></i></span>`;
+		title_accformslf_delete_button.innerHTML = `<br>&nbsp<span style='padding: 1px 10px 1px 10px;' class='nuActionButton'><i class='fas fa-trash-alt'></i></span>`;
+	}
+}
+
