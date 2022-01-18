@@ -1877,7 +1877,8 @@ function nuUserLogin(){
 }
 
 function nuUserLanguage(){
-	return nuSERVERRESPONSE.language;
+	let l = nuSERVERRESPONSE.language;
+	return l === null ? '' : l; 
 }
 
 function nuDatabase(){
