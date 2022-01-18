@@ -664,15 +664,6 @@ function nuPrintAction(){
 
 }
 
-function nuSaveEditor() {
-
-	$('.nuQuiljs').each((index, element) => {
-		let html = element.children[0].innerHTML;
-		$('#' + element.id.slice(0,-10)).val(html).change();
-	});
-
-}
-
 function nuUpdateData(action, instruction, close){
 
 	if(action == 'save' && window.nuBeforeSave){if(nuBeforeSave() === false ){return;}}

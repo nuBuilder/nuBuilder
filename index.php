@@ -86,6 +86,7 @@ function nuHeader(){
 }
 
 nuJSIndexInclude('core/libs/jquery/jquery.js');
+nuJSIndexInclude('core/nuwysiwyg.js');
 nuJSIndexInclude('core/nuformclass.js');
 nuJSIndexInclude('core/nuform.js');
 nuJSIndexInclude('core/nuformdrag.js');
@@ -99,6 +100,7 @@ nuJSIndexInclude('core/libs/ctxmenu/ctxmenu.min.js');
 nuJSIndexInclude('core/libs/quill/quill.min.js'); 
 nuJSIndexInclude('core/libs/quill/modules/quill-divider.js'); 
 nuJSIndexInclude('core/libs/select2/select2.min.js'); 
+nuJSIndexInclude('core/libs/tinymce/tinymce.min.js'); 
 
 nuCSSIndexInclude('core/css/nubuilder4.css');
 nuCSSIndexInclude('core/libs/quill/themes/quill.snow.css');

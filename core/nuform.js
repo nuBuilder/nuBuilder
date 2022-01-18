@@ -231,7 +231,13 @@ function nuBuildForm(f){
 		nuOnEditorLoad();
 	} else {
 		$('.nuEditor').each((index, element) => {
-			nuQuill(element.id);
+
+			if (nuUXOptions["nuDevUseTinyMCE"]) {
+				nuInitTinyMCE(element.id);
+			} else {
+				nuQuill(element.id);
+			}
+
 		});
 	}
 
@@ -1387,17 +1393,20 @@ function nuHTML(w, i, l, p, prop, id){
 
 function nuEDITOR(w, i, l, p, prop){
 
-	var obj = prop.objects[i];
+	let obj = prop.objects[i];
 	nuINPUT(w, i, l, p, prop);
 	$('#' + obj.id).addClass('nuEditor');
-	nuSetAccess(obj.id, 2);
 
+	let mce = nuUXOptions["nuDevUseTinyMCE"]; 
+
+	if (!mce) nuSetAccess(obj.id, 2);
 	let id = obj.id + '_parent_container';
 	nuHTML(w, i, l, p, prop, id);
-	$('#' + id).html('<div id="'+obj.id +'_container" class="nuQuiljs"> </div>');
-	
+
+	let nuClass = mce ? "nuTinyMCE" : "nuQuiljs";
+	$('#' + id).html('<div id="'+obj.id +'_container" class="'+nuClass+'"> </div>');
 	nuAddStyle(id, obj);
-	
+
 }
 
 function nuCONTENTBOX(w, i, l, p, prop){
