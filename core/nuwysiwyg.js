@@ -1,26 +1,82 @@
-function nuInitTinyMCE(id) {
+function nuInitTinyMCE(id, plugins, mobile, toolbar, toolbar_groups, menubar, contextmenu) {
 
-	nuHide(id + '_parent_container');
+	nuHide(id);
 
-	document.querySelector('#'+id).style.visibility = 'hidden';
+	let idContainer = id + '_container';
 
-	var useDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-	var obj = document.getElementById(id);
-	
-	tinymce.init({
-		selector: "#" + id,
-		plugins: 'print preview importcss searchreplace autolink autosave save directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor insertdatetime advlist lists wordcount textpattern noneditable help charmap emoticons',
-		mobile: {
-		plugins: 'print preview importcss searchreplace autolink autosave save directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor insertdatetime advlist lists wordcount textpattern noneditable help charmap emoticons'
-		}, 
-		menu: {
-		tc: {
-			title: 'Comments',
-			items: 'addcomment showcomments deleteallconversations'
+	let useDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+	let obj = document.getElementById(idContainer);
+
+	var _plugins;
+	if (typeof plugins == "undefined") {
+		_plugins = 'print preview importcss searchreplace autolink autosave save directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor insertdatetime advlist lists textpattern noneditable help charmap emoticons';
+	} else {
+		_plugins = plugins;
+	}
+
+	var _mobile;
+	if (typeof mobile == "undefined") {
+		_mobile = {
+			plugins: 'print preview importcss searchreplace autolink autosave save directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor insertdatetime advlist lists textpattern noneditable help charmap emoticons'
 		}
+	} else {
+		_mobile = mobile;
+	}
+
+	var _toolbar;
+	if (typeof toolbar == "undefined") { 
+		_toolbar = 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |	numlist bullist checklist | forecolor backcolor casechange	formatpainter removeformat | pagebreak | charmap emoticons | fullscreen	preview save print | insertfile image media pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments addcomment';
+	} else {
+
+		if (toolbar == 'minimal') {
+			_toolbar = 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent | image link | forecolor backcolor | fullscreen';
+		} else {
+			_toolbar = toolbar;
+		}
+	}
+
+	var _toolbar_groups;
+	if (typeof toolbar_groups == "undefined") {
+		_toolbar_groups = {};
+	} else {
+		_toolbar_groups = toolbar_groups;
+	}
+
+	var _menubar;
+	if (typeof menubar == "undefined") {
+		_menubar = 'file edit view insert format tools table tc help';
+	} else {
+		_menubar = menubar;
+	}
+
+	var _contextmenu;
+	if (typeof contextmenu == "undefined") {
+		_contextmenu = 'link image table configurepermanentpen';
+	} else {
+		_contextmenu = contextmenu;
+	}	
+	
+
+	var _quickbars;
+	if (typeof quickbars == "undefined") {
+		_quickbars = 'bold italic | quicklink h2 h3 blockquote quickimage quicktable';
+	} else {
+		_quickbars = quickbars;
+	}	
+
+	tinymce.init({
+		selector: "#" + idContainer,
+		plugins: _plugins,
+		mobile: _mobile, 
+		menu: {
+			tc: {
+				title: 'Comments',
+				items: 'addcomment showcomments deleteallconversations'
+			}
 		},
-		menubar: 'file edit view insert format tools table tc help',
-		toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |	numlist bullist checklist | forecolor backcolor casechange	formatpainter removeformat | pagebreak | charmap emoticons | fullscreen	preview save print | insertfile image media pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments addcomment',
+		menubar: _menubar,
+		toolbar: _toolbar,
+		toolbar_groups: _toolbar_groups,
 		autosave_ask_before_unload: true,
 		autosave_interval: '30s',
 		autosave_prefix: '{path}{query}-{id}-',
@@ -31,38 +87,27 @@ function nuInitTinyMCE(id) {
 		height: obj.clientHeight,
 		width: obj.clientWidth,
 		image_caption: true,
-		quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+		quickbars_selection_toolbar: _quickbars,
 		noneditable_noneditable_class: 'mceNonEditable',
 		toolbar_mode: 'sliding',
 		content_style: "p { margin: 0; }",
-		contextmenu: 'link image table configurepermanentpen',
+		contextmenu: _contextmenu,
 		skin: useDarkMode ? 'oxide-dark' : 'oxide',
 		content_css: useDarkMode ? 'dark' : 'default',
 
 		setup: function (editor) {
-		editor.on('init', function (e) {
-
-			let container =	tinymce.get(id).getContainer();
-
-			container.style.left = obj.style.left;
-			container.style.top = obj.style.top;
-
-			e.target.setContent(nuGetValue(id)); 
-			
-			document.querySelector('#'+id).style.visibility = 'visible';
-			
-		});
+			editor.on('init', function (e) {
+				e.target.setContent(nuGetValue(id)); 
+			});
 		}
 
 	});
 
-	nuHide(id);
-	
 	if (tinymce.editors.length > 0) {
 
-		tinymce.execCommand('mceFocus', true, id );
-		tinymce.execCommand('mceRemoveEditor',true, id);
-		tinymce.execCommand('mceAddEditor',true, id);		
+		tinymce.execCommand('mceFocus', true, idContainer);
+		tinymce.execCommand('mceRemoveEditor',true, idContainer);
+		tinymce.execCommand('mceAddEditor',true, idContainer);
 
 	}
 
@@ -76,8 +121,8 @@ function nuSaveEditor() {
 	});
 
 	$('.nuTinyMCE').each((index, element) => {
+		let myContent = tinymce.get(element.id).getContent();
 		let id = element.id.slice(0,-10);
-		let myContent = tinymce.get(id).getContent();
 		nuSetValue(id, myContent);		
 	});
 

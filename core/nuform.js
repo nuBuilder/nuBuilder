@@ -1394,6 +1394,8 @@ function nuHTML(w, i, l, p, prop, id){
 function nuEDITOR(w, i, l, p, prop){
 
 	let obj = prop.objects[i];
+	
+	prop.objects[i].type = 'textarea';
 	nuINPUT(w, i, l, p, prop);
 	$('#' + obj.id).addClass('nuEditor');
 
@@ -1404,7 +1406,7 @@ function nuEDITOR(w, i, l, p, prop){
 	nuHTML(w, i, l, p, prop, id);
 
 	let nuClass = mce ? "nuTinyMCE" : "nuQuiljs";
-	$('#' + id).html('<div id="'+obj.id +'_container" class="'+nuClass+'"> </div>');
+	$('#' + id).html('<div style="width:'+obj.width+'px;height:'+ obj.height+'px" id="'+obj.id +'_container" class="'+nuClass+'"> </div>');
 	nuAddStyle(id, obj);
 
 }
