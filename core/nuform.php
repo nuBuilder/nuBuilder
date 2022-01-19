@@ -640,6 +640,7 @@ function nuGetOtherLookupValues($o){
 
 	$_POST['lookup_values']			= array();
 
+	$GLOBALS['EXTRAJS']		= '';
 	nuEval($p . '_AB');
 
 	return $_POST['lookup_values'];
@@ -666,7 +667,7 @@ function nuGetAllLookupValues(){
 
 	$f						= new stdClass;
 	$f->lookup_values		= array_merge($l, $e);
-	$f->lookup_javascript	= $r->sob_lookup_javascript;
+	$f->lookup_javascript	= nuObjKey($GLOBALS,'EXTRAJS', '') . ";$r->sob_lookup_javascript";
 
 	return $f;
 
