@@ -29,7 +29,7 @@ function nuInitTinyMCE(id, plugins, mobile, toolbar, toolbar_groups, menubar, co
 	} else {
 
 		if (toolbar == 'minimal') {
-			_toolbar = 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent | image link | forecolor backcolor | fullscreen';
+			_toolbar = 'undo redo | bold italic underline strikethrough | image link | bullist | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent | forecolor backcolor | fullscreen';
 		} else {
 			_toolbar = toolbar;
 		}
