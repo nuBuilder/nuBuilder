@@ -738,7 +738,7 @@ function nuBindCtrlEvents(){
 			} else if (nuIsVisible('nuOptionsListBox')) {
 				$('#nuOptionsListBox').remove();
 			} else if ($('.ctxmenu').is(':visible')) {
-				$('.ctxmenu').remove();	
+				nuContextMenuClose();	
 			} else if (parent.$('#nuModal').length == 1) {
 				let ae = document.activeElement;
 				$(ae).blur();
@@ -2030,9 +2030,11 @@ function nuEndBrowseResize(e){
 
 function nuDragBrowseColumn(e, p){
 
+	if (e.target.id === '') return; 	//  not on ctxmenu
+
 	e.preventDefault();
 
-//	if (window.nuBROWSERESIZE.mouse_down && window.nuBROWSERESIZE.moving_element == e.target.id){
+	// if (window.nuBROWSERESIZE.mouse_down && window.nuBROWSERESIZE.moving_element == e.target.id){
 	if (window.nuBROWSERESIZE.mouse_down){
 
 		window.nuBROWSERESIZE.pointer = p; // added
