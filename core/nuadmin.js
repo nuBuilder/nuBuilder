@@ -1,13 +1,13 @@
 function nuEditPHP(type) {
-	nuForm('nuphp', nuCurrentProperties().form_id + '_' + type, 'justphp', '', 2);	
+	nuForm('nuphp', nuFormId() + '_' + type, 'justphp', '', 2);	
 }
 
 function nuOpenCurrentFormProperties() {
-	nuForm('nuform', window.nuFORM.getCurrent().form_id, '', '', 2);
+	nuForm('nuform', nuFormId(), '', '', 2);
 }
 
 function nuOpenCurrentObjectList() {
-	nuForm('nuobject','',window.nuFORM.getCurrent().form_id,'',2);
+	nuForm('nuobject','',nuFormId(),'',2);
 }
 
 function nuAddAdminButton(i, v, f, t) {
@@ -129,7 +129,7 @@ function nuInitSetBrowseWidthHelper() {
 
 	if (parent.window.nuDocumentID === undefined) return;
 
-	if (! nuMainForm() && nuCurrentProperties().form_id == 'nuform' && window.parent.nuFormType() == 'browse') {
+	if (! nuMainForm() && nuFormId() == 'nuform' && window.parent.nuFormType() == 'browse') {
 		if (window.location != window.parent.location) {
 
 			var w = $('#title_zzzzsys_browse_sfsbr_width');
@@ -161,7 +161,7 @@ function nuOpenPropertiesOnMiddleClick(e) {
 
 			if (id == "nubody" || id == "nuRECORD" || id == "nuhtml") {
 				// Form Properties
-				nuForm('nuform', window.nuFORM.getCurrent().form_id, '', '', 2);
+				nuForm('nuform', nuFormId(), '', '', 2);
 			} else {
 				var objId = nuObjectIdFromId(e.target.id);
 				if (objId !== null) {
@@ -416,7 +416,8 @@ var nuContextMenuDefinitionBrowse = [
 	{ isDivider: true },
 	{
 		html: "",
-		tag: "Width"
+		tag: "Width",
+		action: function (e) { e.stopImmediatePropagation(); }
 	}
 
 ];
@@ -712,7 +713,7 @@ function nuContextMenuGetFormId(id) {
 		return id == field || hasClass || obj.is(":button") ? obj.parent().attr('data-nu-form-id') : field.parent().attr('data-nu-form-id');
 
 	} else {
-		return nuCurrentProperties().form_id;
+		return nuFormId();
 	}
 
 }
