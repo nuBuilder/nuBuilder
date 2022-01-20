@@ -24,8 +24,8 @@ function nuCopySystemTables() {
 		dropObject("sys_".$table, 'TABLE');
 
 		$sql = "CREATE TABLE sys_$table SELECT * FROM $table";
-		nuRunQuery($sql);
-		
+		nuRunQueryNoDebug($sql);
+
 		if($table != 'zzzzsys_debug'){
 			dropObject($table, 'TABLE');
 		}
