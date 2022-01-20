@@ -4635,6 +4635,13 @@ function nuFormType(){
 
 }
 
+function nuFormId(){
+
+	if(nuFORM.getCurrent() == undefined){return '';}
+	return nuFORM.getCurrent().form_id;
+
+}
+
 function nuBuildFastReport(){
 
 	var sf				= nuSubformObject('fast_report_sf');
