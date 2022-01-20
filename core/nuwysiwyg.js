@@ -51,7 +51,7 @@ function nuInitTinyMCE(id, plugins, mobile, toolbar, toolbar_groups, menubar, co
 
 	var _contextmenu;
 	if (typeof contextmenu == "undefined") {
-		_contextmenu = 'link image table configurepermanentpen';
+		_contextmenu = 'image table configurepermanentpen';
 	} else {
 		_contextmenu = contextmenu;
 	}	
@@ -93,12 +93,18 @@ function nuInitTinyMCE(id, plugins, mobile, toolbar, toolbar_groups, menubar, co
 		content_style: "p { margin: 0; }",
 		contextmenu: _contextmenu,
 		skin: useDarkMode ? 'oxide-dark' : 'oxide',
-		content_css: useDarkMode ? 'dark' : 'default',
+		content_css: useDarkMode ? 'dark' : 'default',	
 
 		setup: function (editor) {
+
 			editor.on('init', function (e) {
 				e.target.setContent(nuGetValue(id)); 
 			});
+
+			editor.on("change", function () {
+				nuTinyeMCEOnChangeHandler(editor);
+			});
+
 		}
 
 	});
@@ -111,6 +117,10 @@ function nuInitTinyMCE(id, plugins, mobile, toolbar, toolbar_groups, menubar, co
 
 	}
 
+}
+
+function nuTinyeMCEOnChangeHandler(editor) {
+	nuHasBeenEdited();
 }
 
 function nuSaveEditor() {
