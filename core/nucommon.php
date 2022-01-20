@@ -488,9 +488,13 @@ function nuGetJSONData($i){
 
 	$s					= "SELECT sss_access FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
 	$t					= nuRunQuery($s, array($_SESSION['nubuilder_session_data']['SESSION_ID']));
-	$r					= db_fetch_object($t);
 
-	$j					= json_decode($r->sss_access, true);
+	if (db_num_rows($t) > 0) {
+		$r				= db_fetch_object($t);
+		$j				= json_decode($r->sss_access, true);
+	} else {
+		return '';
+	}
 
 	return nuObjKey($j,$i,'');
 
