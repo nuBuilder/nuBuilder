@@ -571,18 +571,22 @@ function nuGetEditForm($F, $R){
 		$f->row_height	= intval($r->sfo_browse_row_height);
 	}
 
-	if($r->sfo_browse_rows_per_page == 0){
-		$f->rows	= 20;
-	}else{
-		$f->rows	= $r->sfo_browse_rows_per_page;
-	}
-
-	$f->title		= nuBreadcrumbDescription($r, $R);
+	$f->rows	= nuRowsPerPage($r->sfo_browse_rows_per_page);
+	$f->title	= nuBreadcrumbDescription($r, $R);
 
 	return $f;
 
 }
+function nuRowsPerPage($rows) {
 
+	$hk = nuReplaceHashVariables('#ROWS_PER_PAGE#');
+	if (!hashCookieNotSetOrEmpty($hk)) {
+		return intval($hk);
+	} else {
+		return ($rows == 0 || $rows == null) ? 20 : $rows;
+	}
+
+}
 function nuBreadcrumbDescriptionPart($bt){
 
 	if(strtolower(substr(trim($bt), 0, 6)) == 'select'){
@@ -1026,16 +1030,13 @@ function nuBrowseRows($f){
 
 	if(trim($f->record_id) != ''){return array();}
 
-	$P				= $_POST['nuSTATE'];	
-	$rows			= isset($P['rows']) ? $P['rows'] : 0;
+	$P				= $_POST['nuSTATE'];
 
+	$rows			= isset($P['rows']) ? $P['rows'] : 0;
 	if($rows == -1){
 		$rows		= nuFormProperties($f->form_id,'sfo_browse_rows_per_page')->sfo_browse_rows_per_page;
 	}
-
-	if($rows == 0){
-		$rows		= 20;
-	}
+	$rows			= nuRowsPerPage($rows);
 
 	$page_number	= isset($P['page_number']) ? $P['page_number'] : 0;
 	$nosearch_columns = isset($_POST['nuSTATE']['nosearch_columns']) ? $_POST['nuSTATE']['nosearch_columns'] : null;
