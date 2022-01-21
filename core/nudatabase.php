@@ -331,7 +331,7 @@ function nuDebugResult($t){
 	if (! (is_null($j) || $j == '')) {
 		if (in_array('deb_user_id',$j['zzzzsys_debug']['names'])) {
 			$s		= "INSERT INTO zzzzsys_debug (zzzzsys_debug_id, deb_message, deb_added, deb_user_id) VALUES (? , ?, ?, ?)";	
-			nuRunQuery($s, array($i, $t, time(), nuHash()['USER_ID']));
+			nuRunQuery($s, array($i, $t, time(), isset(nuHash()['USER_ID']) ? nuHash()['USER_ID'] : ''));
 			return $i;
 		}
 	}
@@ -341,6 +341,7 @@ function nuDebugResult($t){
 	nuRunQuery($s, array($i, $t, time()));
 
 	return $i;
+
 }
 
 function nuDebug($a){
