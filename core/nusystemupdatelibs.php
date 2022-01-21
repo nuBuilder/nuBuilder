@@ -2,8 +2,9 @@
 
 function dropObject($name, $type) {
 
-		$sql = 'DROP '.$type.' IF EXISTS `'.$name.'`';
-		nuRunQuery($sql);
+	foreach ($type as $value) {
+		nuRunQuery('DROP '.$value.' IF EXISTS `'.$name.'`');	  
+	}
 
 }
 
@@ -13,21 +14,21 @@ function dropObject($name, $type) {
 
 function nuCopySystemTables() {
 
-	dropObject('zzzzsys_report_data', 'VIEW');
-	dropObject('zzzzsys_run_list', 'VIEW');
-	dropObject('zzzzsys_object_list', 'VIEW');
+	dropObject('zzzzsys_report_data', ['VIEW', 'TABLE']);
+	dropObject('zzzzsys_run_list', ['VIEW', 'TABLE']);
+	dropObject('zzzzsys_object_list', ['VIEW', 'TABLE']);
 
 	$t	= nuSystemList();
 	for($i = 0 ; $i < count($t) ; $i++){
 
 		$table = $t[$i];
-		dropObject("sys_".$table, 'TABLE');
+		dropObject("sys_".$table, ['TABLE']);
 
 		$sql = "CREATE TABLE sys_$table SELECT * FROM $table";
 		nuRunQueryNoDebug($sql);
 
 		if($table != 'zzzzsys_debug'){
-			dropObject($table, 'TABLE');
+			dropObject($table, ['TABLE']);
 		}
 	}
 }
@@ -42,7 +43,7 @@ function nuImportSystemFiles() {
 		$temp						= "";
 		if ( $handle ) {
 
-			dropObject('zzzzsys_debug', 'TABLE');
+			dropObject('zzzzsys_debug', ['TABLE']);
 
 			while(($line = fgets($handle)) !== false){
 
@@ -326,6 +327,7 @@ function nuRemoveNuRecords(){
 	//-- delete all timezones
 	$s = "DELETE FROM sys_zzzzsys_timezone";
 	nuRunQuery($s);
+
 }
 
 function nuAppendToSystemTables(){
@@ -342,12 +344,12 @@ function nuAppendToSystemTables(){
 			}
 			nuRunQuery("REPLACE INTO $table SELECT * FROM sys_$table");
 			
-			dropObject("sys_".$table, 'TABLE');
+			dropObject("sys_".$table, ['TABLE']);
 		}
 
-		dropObject('sys_zzzzsys_report_data', 'VIEW');
-		dropObject('sys_zzzzsys_run_list', 'VIEW');
-		dropObject('sys_zzzzsys_object_list', 'VIEW'); 
+		dropObject('sys_zzzzsys_report_data', ['VIEW']);
+		dropObject('sys_zzzzsys_run_list', ['VIEW']);
+		dropObject('sys_zzzzsys_object_list', ['VIEW']); 
 
 		// $s		= "UPDATE zzzzsys_setup SET set_denied = '1'";
 		// nuRunQuery($s);
