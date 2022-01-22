@@ -56,8 +56,8 @@
 
 // Includes:
 
-	$nuConfigIncludeTinyMCE				= false;					//-- Include TinyMCE WYSIWYG
-	$nuConfigIncludeQuill				= true;						//-- Include Quill WYSIWYG
+	$nuConfigIncludeTinyMCE				= true;						//-- Include TinyMCE WYSIWYG
+	$nuConfigIncludeQuill				= false;					//-- Include Quill WYSIWYG
 	$nuConfigIncludeGoogleCharts		= true;						//-- Include external link to www.gstatic.com
 	$nuConfigIncludeApexCharts			= false;					//-- Include apex charts (libs/apexcharts)
 
