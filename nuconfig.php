@@ -42,8 +42,6 @@
 	$nuConfigUserCodeLabel				= ""; 						//-- If not blank, rename the Label of "Code" on the user form
 
 // Options:
-	$nuConfigIncludeGoogleCharts		= true;						//-- Include external link to www.gstatic.com
-	$nuConfigIncludeApexCharts			= false;					//-- Include apex charts (libs/apexcharts)
 	$nuConfigEnableDatabaseUpdate		= true;						//-- Enable updating the database within nuBuilder
 	$nuConfigKeepSessionAlive			= true;						//-- Use a timer to keep the session alive
 	$nuConfigKeepSessionAliveInterval	= 600;						//-- Keep-alive interval. Default 600 s (10 min)
@@ -57,9 +55,16 @@
 	$nuConfig2FAShowRememberMe			= false;					//-- Show a checkbox "Remember me for X days" in the authentication form
 
 // Includes:
+
+	$nuConfigIncludeTinyMCE				= false;					//-- Include TinyMCE WYSIWYG
+	$nuConfigIncludeQuill				= true;						//-- Include Quill WYSIWYG
+	$nuConfigIncludeGoogleCharts		= true;						//-- Include external link to www.gstatic.com
+	$nuConfigIncludeApexCharts			= false;					//-- Include apex charts (libs/apexcharts)
+
 	$nuConfigIncludeJS					= '';						//-- Include one or more JavaScript File(s).  E.g. 'myjslib.js' or ['myjslib1.js','myjslib2.js']
 	$nuConfigIncludeCSS					= '';						//-- Include one or more CSS File(s). E.g. 'mystyles.css' or ['mystyles1.css','mystyles2.css']
 	$nuConfigIncludePHP					= '';						//-- Include one or more PHP File(s). E.g. '../libs/myphplib.php' or ['../libs/myphplib1.php','../libs/myphplib2.php']
+	
 
 $nuJSOptions = "
 
@@ -79,6 +84,7 @@ $nuJSOptions = "
 	nuUXOptions['nuMobileView']						= true;			// Optimise view for mobile devices
 	nuUXOptions['nuCalendarStartOfWeek']			= 'Sunday';		// nuCalendar: Start of Week: Sunday (default) or Monday
 	nuUXOptions['nuSelect2Theme']					= 'default';	// select2 theme (default, classic) Default: default
+	nuUXOptions['nuDefaultUseQuill']				= false;		// Use quill as default WYSIWYG editor
 
 	window.nuAdminButtons = [];
 	nuAdminButtons['nuDebug']						= false;

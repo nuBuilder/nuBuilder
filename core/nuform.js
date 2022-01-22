@@ -232,10 +232,10 @@ function nuBuildForm(f){
 	} else {
 		$('.nuEditor').each((index, element) => {
 
-			if (nuUXOptions["nuDevUseTinyMCE"]) {
-				nuInitTinyMCE(element.id);
-			} else {
+			if (nuUXOptions["nuDefaultUseQuill"]) {
 				nuQuill(element.id);
+			} else {
+				nuInitTinyMCE(element.id);
 			}
 
 		});

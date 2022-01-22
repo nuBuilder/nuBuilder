@@ -2,6 +2,11 @@ function nuInitTinyMCE(id, plugins, mobile, toolbar, toolbar_groups, menubar, co
 
 	nuHide(id);
 
+	if (typeof tinymce === "undefined") {
+		nuMessage(["<h2>TinyMCE is not included</h2>","Set $nuConfigIncludeTinyMCE = true in nuconfig.php"]);
+		return;
+	}
+
 	let idContainer = id + '_container';
 
 	let useDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -201,6 +206,13 @@ function nuQuillToolbarOptions(fontNames) {
 
 function nuQuill(i, options) {
 
+	nuHide(i);
+
+	if (typeof Quill === "undefined") {
+		nuMessage(["<h2>Quill is not included</h2>","Set $nuConfigIncludeQuill = true in nuconfig.php"]);
+		return;
+	}
+
 	if (typeof options === 'undefined') {
 		var options = {
 			modules: {
@@ -239,8 +251,6 @@ function nuQuill(i, options) {
 		}
 
 	}
-
-	nuHide(i);
 
 	var Block = Quill.import('blots/block');
 	class DivBlock extends Block {} 
