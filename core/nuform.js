@@ -658,7 +658,7 @@ function nuBuildEditObjects(f, p, o, prop){
 			}else if(t == 'contentbox'){
 				l = l + nuCONTENTBOX(f, i, l, p, prop);
 			}else if(t == 'editor'){
-				l = l + nuEDITOR(f, i, l, p, prop);				
+				l = l + nuEDITOR(f, i, l, p, prop);
 			}else if(t == 'image'){
 				l = l + nuIMAGE(f, i, l, p, prop);
 			}else if(t == 'select'){
@@ -668,7 +668,14 @@ function nuBuildEditObjects(f, p, o, prop){
 			}else if(t == 'word'){
 				l = l + nuWORD(f, i, l, p, prop);
 			}
-			
+
+			if (obj.labelOnTop) { 
+				$('#' + obj.id).nuLabelOnTop();
+			}
+
+			if(obj.visible === false) {
+				nuHide(obj.id);
+			}
 			nuAddAttributes(p + obj.id, obj.attributes);
 
 			l	= l + 2;
@@ -1146,9 +1153,9 @@ function nuINPUT(w, i, l, p, prop){
 		
 		$('#' + ef).append(inp);
 		nuAddDataTab(id, obj.tab, p);
-		$('#' + id).css({'top'		: Number(obj.top),
-						'left'		: Number(obj.left) + Number(obj.width) + 25,
-						'width'		: obj.description_width,
+		$('#' + id).css({'top'		: obj.mobile ? Number(obj.top) + Number(obj.height) + 5 : Number(obj.top),
+						'left'		: obj.mobile ? Number(obj.left) : Number(obj.left) + Number(obj.width) + 25,
+						'width'		: obj.mobile ? Number(obj.width) : obj.description_width,
 						'visibility': obj.description_width == 0 || obj.display == 0 ? 'hidden' : 'visible',
 						'height'	: Number(obj.height)
 		})
@@ -3222,8 +3229,8 @@ function nuHideTabByTitle(s) {
 
 function nuShowTabByTitle(s, visible) {
 
-	var tabs = JSON.parse(JSON.stringify(nuSERVERRESPONSE)).tabs;
-	var l = tabs.findIndex(data => data.title.replace(/\|/g, "") === s);
+	let tabs = JSON.parse(JSON.stringify(nuSERVERRESPONSE)).tabs;
+	let l = tabs.findIndex(data => data.title.replace(/\|/g, "") === s);
 	if (l > -1) nuShow('nuTab' + l, visible);
 
 }
