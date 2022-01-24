@@ -3228,6 +3228,14 @@ function nuShowTabByTitle(s, visible) {
 
 }
 
+function nuShowTabById(id, visible) {
+	$('div[data-nu-tab-id='+ id +']').filter('.nuTab').nuShow(visible);
+}
+
+function nuHideTabById(id) {
+	nuShowTabById(id, false);
+}
+
 function nuHideTabs(t) {
 
 	for (var i = 0; i < arguments.length; i++) {
