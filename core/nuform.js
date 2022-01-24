@@ -3217,11 +3217,7 @@ function nuRemoveTabs(t){
 }
 
 function nuHideTabByTitle(s) {
-
-	var tabs = JSON.parse(JSON.stringify(nuSERVERRESPONSE)).tabs;
-	var l = tabs.findIndex(data => data.title.replace(/\|/g, "") === s);
-	if (l > -1) nuHide('nuTab' + l);
-
+	nuShowTabByTitle(s, false);
 }
 
 function nuShowTabByTitle(s, visible) {
