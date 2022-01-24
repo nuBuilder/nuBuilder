@@ -250,8 +250,8 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 
 			if($r->sob_all_type == 'contentbox'){
 
-				$cWidth		= $r->sob_all_width."px";
-				$cHeight	= $r->sob_all_height."px";
+				$cWidth		= $o->sob_all_width."px";
+				$cHeight	= $o->sob_all_height."px";
 				$cLabel		= nuTranslate($r->sob_all_label);
 				$cId		= $r->sob_all_id;
 				$cTitleId	= 'label_'.$cId;
