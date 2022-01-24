@@ -250,8 +250,8 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 
 			if($r->sob_all_type == 'contentbox'){
 
-				$cWidth		= $o->sob_all_width."px";
-				$cHeight	= $o->sob_all_height."px";
+				$cWidth		= $o->width."px";
+				$cHeight	= $o->height."px";
 				$cLabel		= nuTranslate($r->sob_all_label);
 				$cId		= $r->sob_all_id;
 				$cTitleId	= 'label_'.$cId;
@@ -520,10 +520,66 @@ function nuDefaultObject($r, $t){
 	$o->object_id		= $r->zzzzsys_object_id;
 	$o->id				= $r->sob_all_id;
 	$o->label			= $r->sob_all_label;
-	$o->top				= $r->sob_all_top;
-	$o->left			= $r->sob_all_left;
-	$o->width			= $r->sob_all_width;
-	$o->height			= $r->sob_all_height;
+
+	$top				= null;
+	$left				= null;
+	$width				= null;
+	$height				= null;
+	$mobile				= null;
+	$visible			= null;	
+	$labelOnTop			= null;
+
+	/*
+	if (nuIsMobile() && isset($r->sob_all_json)) {
+		
+		$json = $r->sob_all_json;
+		if ($json != '') {
+
+			$obj	= json_decode($json, true);
+
+			$type		= nuObjKey($obj,'type', null);
+
+			if ($type != null) {
+
+				$mobile		= nuObjKey($type,'mobile', null);
+
+				if ($mobile == true) {
+
+					$visible	= nuObjKey($mobile,'visible', null);
+					$name		= nuObjKey($mobile,'name', null);
+					$labelOnTop	= nuObjKey($mobile,'labelontop', null);
+					$labelOnTop	= $labelOnTop == null || $labelOnTop == true;
+
+					$size		= nuObjKey($mobile,'size');
+					if ($size != null) {
+						$width		= nuObjKey($size, 'width', null);	
+						$height		= nuObjKey($size, 'height', null);
+					}
+
+					$location		= nuObjKey($mobile,'location');
+					if ($location != null) {
+						$top		= nuObjKey($location, 'top', null);	
+						$left		= nuObjKey($location, 'left', null);
+					}
+
+				}
+
+			}
+
+		}
+
+	}
+	*/
+
+	$o->mobile			= $mobile;
+	$o->labelOnTop		= $labelOnTop;
+	$o->visible			= $visible;
+
+	$o->top				= $top		== null ? $r->sob_all_top : $top;
+	$o->left			= $left		== null ? $r->sob_all_left : $left;
+	$o->width			= $width	== null ? $r->sob_all_width : $width;
+	$o->height			= $height	== null ? $r->sob_all_height : $height;
+
 	$o->valid			= $r->sob_all_validate;
 	$o->read			= $r->sob_all_access;
 	$o->format			= '';
@@ -577,9 +633,10 @@ function nuGetEditForm($F, $R){
 	return $f;
 
 }
+
 function nuRowsPerPage($rows) {
 
-	$hk = nuReplaceHashVariables('#ROWS_PER_PAGE#');
+	$hk = nuReplaceHashVariables('#ROWS_PER_PAGE#');	
 	if (!hashCookieNotSetOrEmpty($hk)) {
 		return intval($hk);
 	} else {
@@ -587,6 +644,7 @@ function nuRowsPerPage($rows) {
 	}
 
 }
+
 function nuBreadcrumbDescriptionPart($bt){
 
 	if(strtolower(substr(trim($bt), 0, 6)) == 'select'){

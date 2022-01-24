@@ -2865,7 +2865,6 @@ function nuGetOptionsList(f, t, p, a, type){
 		return;
 	}
 
-	let u		= nuFORM.getProperty('user_id');
 	let list	= [];
 	let ul		= '<ul>';
 
@@ -2883,7 +2882,7 @@ function nuGetOptionsList(f, t, p, a, type){
 			}
 
 		}else{
-			list.push([nuTranslate('Change Password'), 'nuPopup("nupassword", "' + u + '", "")','fa-password', 'Ctrl+Shft+L']);
+			list.push([nuTranslate('Change Password'), 'nuPopup("nupassword", "", "")','fa-password', 'Ctrl+Shft+L']);
 		}
 
 		list.push(['', '', '', '']);
@@ -2924,7 +2923,7 @@ function nuGetOptionsList(f, t, p, a, type){
 		}else{
 
 			if(type != 'subform'){
-				list.push([nuTranslate('Change Password'), 'nuPopup("nupassword", "' + u + '", "")', 'fa-lock', 'Ctrl+Shft+L']);
+				list.push([nuTranslate('Change Password'), 'nuPopup("nupassword", "", "")', 'fa-lock', 'Ctrl+Shft+L']);
 			}
 
 		}
