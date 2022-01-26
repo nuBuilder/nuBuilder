@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 24, 2022 at 06:42 AM
+-- Generation Time: Jan 26, 2022 at 09:04 AM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.8
 
@@ -593,8 +593,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2022.01.24.05'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2022.01.24.01');
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2022.01.25.00'),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2022.01.26.00');
 
 -- --------------------------------------------------------
 
@@ -1009,7 +1009,7 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu5fa959f97244564', 'nucloner', 'zzzzsys_cloner', 'input', 'clo_iframe_forms_include', ' ', 'nu5f9aaac95bc52e7', 80, 118, 503, 14, 14, '1', 'right', '0', '0', '1', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'checkbox', NULL, '', NULL, NULL, '', '', '', '', '', '', '', NULL),
 ('nu5fdbdaee571fbb3', 'nuobject', 'zzzzsys_object', 'lookup', 'sob_code_snippet_select_lookup', 'Insert-Snippet', 'nu5bad6cb369a6ee3', 720, 79, 628, 5, 22, '1', 'right', '0', '0', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '0', '0', 'SELECT zzzzsys_form_id, CONCAT(sfo_code, \' - \', sfo_description)\nFROM zzzzsys_form\nORDER BY sfo_code', 'cot_code', 'cot_source_code', '0', NULL, 'nucodesnippet', '\nvar c = $(\'#sob_code_snippet_paste\').val();\n\nif (c !== \'\') {\n   nuInsertTextAtCaret(\'sob_select_sql\', c);\n   $(\'#sob_code_snippet_select_lookupcode\').val(\'\');\n}\n\n\n', NULL, 'zzzzsys_code_snippet', '', '', '', '', '', '', 0, '', '', NULL, '', NULL, NULL, '', '', '', '', '', '', '', NULL),
 ('nu5fdbd8ea4333ed2', 'nuobject', 'zzzzsys_object', 'textarea', 'sob_code_snippet_paste', ' ', 'nu5bad6cb36974818', 640, 69, 652, 5, 22, '1', 'right', '0', '2', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '0', '0', 'SELECT zzzzsys_form_id, CONCAT(sfo_code, \' - \', sfo_description)\nFROM zzzzsys_form\nORDER BY sfo_code', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', '', NULL, '', NULL, 'spellcheck=false', '', '', '', '', '', '', '', NULL),
-('nu5fdb9ff762770', 'nuform', 'zzzzsys_access', 'subform', 'accform', ' ', 'nu5fdb9ff026348', 440, 31, 20, 1168, 465, '1', 'left', '0', '0', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', '', '', '', '', '', 'nu5fdb9ffd45efe', 'slf_zzzzsys_access_id', '1', '1', 'g', 'zzzzsys_access_form', 0, '', '', '', '', NULL, NULL, '', '', '', '', '', '', '', NULL),
+('nu5fdb9ff762770', 'nuform', 'zzzzsys_access', 'subform', 'accform', ' ', 'nu5fdb9ff026348', 440, 31, 20, 1168, 465, '1', 'left', '0', '0', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', '', '', '', '', '', 'nu5fdb9ffd45efe', 'slf_zzzzsys_form_id', '1', '1', 'g', 'zzzzsys_access_form', 0, '', '', '', '', NULL, NULL, '', '', '', '', '', '', '', NULL),
 ('nu5fed8c73e475b16', 'nuform', 'zzzzsys_form', 'input', 'run_sfo_objects', 'Objects', 'nu5bad6cb36791fd5', 110, 42, 870, 181, 30, '1', 'center', '1', '0', '1', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '0', '0', 'browse|Browse|\nedit|Edit|browseedit|\nBrowse and Edit|\nlaunch|Launch|\nsubform|Subform', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'button', NULL, '', NULL, NULL, '', '', '', '', '', '', '', NULL),
 ('nu5fdb9ffe0330e', 'nu5fdb9ffd45efe', '', 'lookup', 'slf_zzzzsys_access_id', 'Access Level', 'nu5fdb9ffd6fbca', 10, 20, 250, 280, 20, '1', 'left', '1', '0', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '0', '0', '', 'sal_code', 'sal_description', '300', '', 'nuaccess', '', '', 'zzzzsys_access', '', '', '1', '', '', '', 0, '', '', NULL, '', NULL, NULL, '', '', '', '', '', '', '', NULL),
 ('nu6137704e8c4f3d8', 'nu5fdb9ffd45efe', '', 'select', 'slf_form_type', 'Form Type', 'nu5fdb9ffd6fbca', 80, 196, 88, 100, 17, '1', 'left', '0', '0', '0', NULL, NULL, '', '', '', '', '', '', '', '', '', '0', '0', '0|Browse Only|1|Edit Only', '', '', '', NULL, '', '', NULL, 'zzzzsys_form', 'nuform', '', '1', '', '', '', 0, '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', NULL),
