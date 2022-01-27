@@ -87,6 +87,7 @@ function nuInitTinyMCE(id, plugins, mobile, toolbar, toolbar_groups, menubar, co
 		autosave_prefix: '{path}{query}-{id}-',
 		autosave_restore_when_empty: false,
 		autosave_retention: '2m',
+		elementpath: false,
 		image_advtab: true,
 		importcss_append: true,
 		height: obj.clientHeight,
