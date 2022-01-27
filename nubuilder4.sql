@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 26, 2022 at 09:04 AM
+-- Generation Time: Jan 27, 2022 at 07:29 AM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.8
 
@@ -594,7 +594,7 @@ CREATE TABLE `zzzzsys_info` (
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
 ('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2022.01.25.00'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2022.01.26.00');
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2022.01.27.00');
 
 -- --------------------------------------------------------
 
@@ -793,7 +793,7 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu5bad6cb3416c803', 'nudebug', 'zzzzsys_debug', 'textarea', 'deb_message', ' ', 'nu5bad6cb36bf8d38', 10, 16, 30, 786, 432, '0', 'left', '0', '0', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', '', NULL, '', NULL, 'spellcheck=false', '', '', '', '', '', '', '', NULL),
 ('nu5bad6cb341ba4c3', 'nuphp', 'zzzzsys_php', 'select', 'sph_run', 'Run', 'nu5bad6cb36b27343', 80, 145, 142, 136, 22, '1', 'left', '0', '0', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '0', '0', 'hide|Hidden|\r\nwindow|In a new window', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', '', NULL, '', NULL, NULL, '', '', '', '', '', '', '', NULL),
 ('nu5bad6cb341fdfc3', 'nuaccessreport', 'zzzzsys_access_php', 'lookup', 'slp_zzzzsys_php_id', 'Procedure', 'nu5bad6cb36c55179', 0, 20, 100, 280, 20, '1', 'left', '1', '0', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '0', '0', '', 'sph_code', 'sph_description', '300', '', 'nuphp', '', '', 'zzzzsys_php', '', '', '1', '', '', '', 0, '', '', NULL, '', NULL, NULL, '', '', '', '', '', '', '', NULL),
-('nu5bad6cb34231992', 'nuaccess', 'zzzzsys_access', 'subform', 'accphp', ' ', 'nu5bad6cb36c16b42', 100, 20, 30, 675, 540, '1', 'left', '0', '0', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', '', '', '', '', '', 'nuaccessreport', 'slp_zzzzsys_php_id', '1', '1', 'g', 'zzzzsys_access_php', 0, '', '', '', '', NULL, NULL, '', '', '', '', '', '', '', NULL),
+('nu5bad6cb34231992', 'nuaccess', 'zzzzsys_access', 'subform', 'accphp', ' ', 'nu5bad6cb36c16b42', 100, 20, 30, 675, 540, '1', 'left', '0', '0', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', '', '', '', '', '', 'nuaccessreport', 'slp_zzzzsys_access_id', '1', '1', 'g', 'zzzzsys_access_php', 0, '', '', '', '', NULL, NULL, '', '', '', '', '', '', '', NULL),
 ('nu5bad6cb342620ba', 'nuaccess', 'zzzzsys_access', 'subform', 'accreport', ' ', 'nu5bad6cb36c39fc8', 110, 20, 30, 675, 540, '1', 'left', '0', '0', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', '', '', '', '', '', 'nuaccesslevelreport', 'sre_zzzzsys_access_id', '1', '1', 'g', 'zzzzsys_access_report', 0, '', '', '', '', NULL, NULL, '', '', '', '', '', '', '', NULL),
 ('nu5bad6cb342de027', 'nuaccesslevelreport', 'zzzzsys_access_report', 'lookup', 'sre_zzzzsys_report_id', 'Report', 'nu5bad6cb36c75655', 30, 47, 163, 280, 20, '1', 'left', '1', '0', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '', '0', '', 'sre_code', 'sre_description', '300', '0', 'nubuildreport', '', '', 'zzzzsys_report', '', '', '', '', '', '', 0, '', '', NULL, '', NULL, NULL, '', '', '', '', '', '', '', NULL),
 ('nu5bad6cb343a3176', 'nubuildreport', 'zzzzsys_report', 'input', 'sre_group', 'Group', 'nu5bad6cb36804778', 40, 110, 236, 186, 22, '1', 'left', '1', '0', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '', '0', 'browse|Browse|edit|Edit|browseedit|Browse and Edit|criteria|Criteria or Home|procedure|Procedure|report|Report', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 'text', NULL, '', NULL, NULL, '', '', '', '', '', '', '', NULL),
