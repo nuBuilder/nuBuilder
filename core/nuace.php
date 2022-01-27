@@ -1,6 +1,6 @@
 <?php
 	require_once('nuchoosesetup.php');
-	$jquery = "libs/jquery/jquery.js"; 	
+	$jquery = "libs/jquery/jquery.js";
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -8,11 +8,14 @@
 <title>Ace Editor</title>
 
 <script src="<?php echo $jquery; ?>" type="text/javascript"></script>
+<script src="<?php echo $fontawesome; ?>" type="text/javascript"></script>
 
 <script src="libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="libs/ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="libs/ace/src-min-noconflict/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
+<script src="libs/ace/src-min-noconflict/ext-beautify.js" type="text/javascript" charset="utf-8"></script>
 <link rel="stylesheet" href="css/nubuilder4.css">
+<link rel="stylesheet" href="libs/fontawesome/css/all.min.css">
 
 <script>
 
@@ -27,6 +30,7 @@ function nuLoad(){
 
 	ace.require("ace/ext/language_tools");
 
+	window.beautify = ace.require("ace/ext/beautify");
 	window.editor = ace.edit("nu_editor");
 
 	editor.setTheme("ace/theme/monokai");
@@ -85,6 +89,22 @@ function nuResize(){
 	document.getElementById('nu_editor_pad').style.width	= String(Number(window.innerWidth)) 		+ 'px';
 	document.getElementById('nu_editor').style.width		= String(Number(window.innerWidth)) 		+ 'px';
 	document.getElementById('nu_editor').style.height		= String(Number(window.innerHeight) - 75) 	+ 'px';
+
+}
+
+function nuAceBeautify() {
+	beautify.beautify(editor.session);
+}
+
+function nuAceShowInvisibles() {
+
+	if (typeof window.showInvisibles === 'undefined') {
+		window.showInvisibles = true;
+		editor.setShowInvisibles(true);
+	} else {
+		window.showInvisibles = !window.showInvisibles;
+		editor.setShowInvisibles(window.showInvisibles);	
+	}
 
 }
 
@@ -155,10 +175,63 @@ window.onbeforeunload = nuWarning;
 </script>
 
 </head>
+
+  <style>
+		button.btn.beautify::before {
+			content: "\f0d0";
+			font-family: "Font Awesome 5 Free";
+			font-weight: 900;
+			margin-left: 1px
+		}
+
+		button.btn.commentout::before {
+			content: "\f7a5";
+			font-family: "Font Awesome 5 Free";
+			font-weight: 900;
+			margin-left: 1px
+		}	
+
+		button.btn.undo::before {
+			content: "\f2ea";
+			font-family: "Font Awesome 5 Free";
+			font-weight: 900;
+			margin-left: 1px
+		}	
+
+		button.btn.showinvisibles::before {
+			content: "\f06e";
+			font-family: "Font Awesome 5 Free";
+			font-weight: 900;
+			margin-left: 1px
+		}	
+
+		button.btn.find::before {
+			content: "\f002";
+			font-family: "Font Awesome 5 Free";
+			font-weight: 900;
+			margin-left: 1px
+		}
+
+		button.btn.searchreplace::before {
+			content: "\f362";
+			font-family: "Font Awesome 5 Free";
+			font-weight: 900;
+			margin-left: 1px
+		}			
+		
+  </style>
+  
 <body onload='nuLoad()' onresize='nuResize()'>
 
 	<input type='button' id='copy_to_nubuilder' class='nuActionButton' style='top:8px;left:8px;position:absolute' onclick='nuAceSave(true)'>
 	<input type='button' id='copy_to_nubuilder_no_close' class='nuActionButton' style='top:8px;left:230px;position:absolute' onclick='nuAceSave(false)'>
+
+	<button class="btn undo nuActionButton" title='Undo' style='top:8px;left:370px;width:30px;position:absolute' onclick='editor.undo()' ></button>
+	<button class="btn find nuActionButton" title='Find' style='top:8px;left:410px;width:30px;position:absolute' onclick='editor.execCommand("find");' ></button>		
+	<button class="btn searchreplace nuActionButton" title='Search and Replace' style='top:8px;left:450px;width:30px;position:absolute' onclick='editor.execCommand("replace");' ></button>		
+	<button class="btn commentout nuActionButton" title='Toggle Comment Lines' style='top:8px;left:500px;width:30px;position:absolute' onclick='editor.toggleCommentLines()' ></button>
+	<button class="btn beautify nuActionButton" title='Beautify' style='top:8px;left:540px;width:30px;position:absolute' onclick='nuAceBeautify()' ></button>
+	<button class="btn showinvisibles nuActionButton" title='Show invisible characters' style='top:8px;left:580px;width:30px;position:absolute' onclick='nuAceShowInvisibles();' ></button>	
 
 	<span id='nu_language' 	 class="nuNotBreadcrumb" style='top:35px;left:18px;position:absolute;font-weight:500;color:black'></span>
 	<div  id='nu_editor_pad' style='width:1000px;height:10px;top:55px;left:0px;text-align:left;position:absolute;background-color:#272822;' ></div>
