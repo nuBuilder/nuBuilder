@@ -2908,7 +2908,7 @@ function nuBase64encode(str) {
 }
 
 function nuOpenWiki(page) {
-	window.open('https://wiki.nubuilder.net/nubuilderforte/index.php' + page);
+	window.open('https://wiki.nubuilder.cloud/index.php' + page);
 }
 
 function nuSetLabelText(i, str, translate) {
