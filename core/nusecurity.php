@@ -1,5 +1,9 @@
 <?php
 
+function nuRandomHexBytes(int $length = 64){
+	return bin2hex(random_bytes(($length-($length%2))/2));
+}
+
 function nuGenerateToken($length=32){ 
 
 	$code = "";
