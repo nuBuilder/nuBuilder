@@ -41,6 +41,8 @@
 	$nuConfigUserAdditional2Label		= "";						//-- If not blank, rename the Label of "Additional 2" on the user form
 	$nuConfigUserCodeLabel				= ""; 						//-- If not blank, rename the Label of "Code" on the user form
 
+	$nuConfigBackupLocation				= ''; 						//-- Default: If left blank, backups are stored in /core/libs/mysqldump/dumps. Make sure to turn off directory listing!
+
 // Options:
 	$nuConfigEnableDatabaseUpdate		= true;						//-- Enable updating the database within nuBuilder
 	$nuConfigKeepSessionAlive			= true;						//-- Use a timer to keep the session alive
