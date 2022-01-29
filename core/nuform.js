@@ -1433,11 +1433,13 @@ function nuCONTENTBOX(w, i, l, p, prop){
 
 	$('#' + id).css({'top'		: Number(obj.top),
 					'left'		: Number(obj.left),
-					'width'		: 15,
-					'height'	: 15,
-					'position'	: 'absolute'
-	})
-	.addClass('nuContentBoxContainer').html(w.objects[i].html)
+					'width'		: Number(obj.width),
+					'height'	: Number(obj.height),
+					'position'	: 'absolute',
+					'z-index'	: '-1'
+	}).attr('data-nu-object-id', w.objects[i].object_id)
+	.attr('data-nu-prefix', p)
+	.addClass('nuContentBoxContainer').html(w.objects[i].html);
 
 	if (nuGlobalAccess()) $('#label_'+ id).attr('ondblclick','nuOptionsListAction("nuobject", "' + obj.object_id + '")');
 
@@ -1580,7 +1582,9 @@ function nuRUN(w, i, l, p, prop){
 					'height'		: Number(obj.height),
 					'position'		: 'absolute',
 					'text-align'	: obj.align
-	});
+	})
+	.attr('data-nu-object-id', w.objects[i].object_id)
+	.attr('data-nu-prefix', p);							
 
 	if(obj.run_method == 'b'){
 
