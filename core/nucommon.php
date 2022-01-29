@@ -2015,6 +2015,16 @@ function nuStringRight($str, $length) {
 	 return substr($str, -$length);
 }
 
+function nuStringAddTrailingCharacter($str, $char = "/") {
+
+	if(substr($str, -1) != $char) {
+		$str .= $char;
+	}
+
+	return $str;
+
+}
+
 function nuGlobalAccess($post = false) {
 
 	if ($post) return $_POST['nuHash']['GLOBAL_ACCESS'] == '1';
