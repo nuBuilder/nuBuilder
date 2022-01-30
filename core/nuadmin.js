@@ -595,15 +595,39 @@ function nuContextMenuItemPositionChanged(t, update) {
 	if (update) {
 		nuContextMenuUpdateObject(t.value, typeEdit ? 'sob_all_' + prop : 'sbr_' + prop);
 	} else {
+
 		if (typeEdit) {
 
-			if ((prop == 'width' || prop == 'height') && $('#' + id).hasClass('nuContentBoxContainer')) {
+			let obj = $('#' + id);
+			if ((prop == 'width' || prop == 'height') && obj.hasClass('nuContentBoxContainer')) {
 				$('#content_' + id).css(prop, t.value + 'px');
 			} else {
-				$('#' + id).css(prop, t.value + 'px');
-			}	
+
+				if (obj.hasClass('nuHiddenLookup')) {
+
+					$('#' + id + 'code').css(prop, t.value + 'px');
+
+					if (prop == 'left') {
+						$('#' + id + 'button').css(prop, Number(t.value) + obj.cssNumber('width') + 6 + 'px');
+						$('#' + id + 'description').css(prop, Number(t.value) + obj.cssNumber('width') + 25 + 'px');
+					} else if (prop == 'top') {
+						$('#' + id + 'button').css(prop, t.value + 'px');
+						$('#' + id + 'description').css(prop, t.value + 'px');
+					} else if (prop == 'height') {
+						$('#' + id + 'description').css(prop, t.value + 'px');
+					}  else if (prop == 'width') {
+						$('#' + id + 'button').css('left', Number(t.value) + obj.cssNumber('left') + 6 + 'px');
+						$('#' + id + 'description').css('left', Number(t.value) + obj.cssNumber('left') + 25 + 'px');
+					}
+
+				} 
+
+				obj.css(prop, t.value + 'px');
+
+			}
 
 			nuContextMenuUpdateLabel(id);
+
 		} else {
 			nuSetBrowseColumnSize(Number(contextMenuCurrentTargetUpdateId().justNumbers()), Number(t.value));
 		}
