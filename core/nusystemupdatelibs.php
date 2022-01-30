@@ -235,7 +235,7 @@ function nuAlterSystemTables(){
 
 	if(array_search('set_style', $setupColumns) == false){
 		nuRunQueryNoDebug("ALTER TABLE `zzzzsys_setup` ADD `set_style` LONGTEXT NULL DEFAULT NULL AFTER `set_header`;");
-		$style = "<!-- Define your own styles, override styles from nubuilder4.css -->\r\n\r\n<style> \r\n\r\n/*\r\n .nuActionButton {\r\n	background-color: #579cb7\r\n}\r\n\r\n*/\r\n\r\n</style>";
+		$style = "/* Define your own styles, override styles from nubuilder4.css */\r\n\r\n/*\r\n .nuActionButton {\r\n background-color: #579cb7\r\n}\r\n\r\n*/";
 		nuRunQuery('UPDATE `zzzzsys_setup` SET set_style = ?', array($style));
 	}
 

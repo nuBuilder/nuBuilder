@@ -73,14 +73,24 @@ function nuJSChartsInclude(){
 	}
 }
 
+function nuEndsWithStyleTag($style) {
+
+	$tag = '</style>';
+	$style = trim($style);
+	return strpos($style, $tag) === strlen($style) - strlen($tag);
+
+}
 
 function nuHeader(){
 
 	$sql				= "SELECT * FROM zzzzsys_setup WHERE zzzzsys_setup_id = 1 ";
 	$rs 				= nuRunQuery($sql);
-	$obj 				= db_fetch_object($rs);
-	$HTMLHeader 		= $obj->set_header. (isset($obj->set_style) ? '</script>'. $obj->set_style. '<script>' : '');
+	$obj 				= db_fetch_object($rs);	
+	$style				= isset($obj->set_style) ? $obj->set_style : '';	
+	$style				= '</script>'. (nuEndsWithStyleTag($style) ? $style :  '<style>'.$style.'</style>') . '<script>';
+	$HTMLHeader 		= $obj->set_header . $style;
 	$j					= "\n\n" . $HTMLHeader . "\n\n";
+
 	return $j;
 
 }
@@ -94,16 +104,24 @@ nuJSIndexInclude('core/nucalendar.js');
 nuJSIndexInclude('core/nucommon.js');
 nuJSIndexInclude('core/nuadmin.js');
 nuJSIndexInclude('core/nureportjson.js');
-nuJSIndexInclude('core/nuajax.js');		//-- calls to server
+nuJSIndexInclude('core/nuajax.js');
 nuJSChartsInclude();
 nuJSIndexInclude('core/libs/ctxmenu/ctxmenu.min.js');
-nuJSIndexInclude('core/libs/quill/quill.min.js'); 
-nuJSIndexInclude('core/libs/quill/modules/quill-divider.js'); 
+
+if ($nuConfigIncludeQuill == true) {
+	nuJSIndexInclude('core/libs/quill/quill.min.js'); 
+	nuJSIndexInclude('core/libs/quill/modules/quill-divider.js');
+	nuCSSIndexInclude('core/libs/quill/themes/quill.snow.css');
+}
+
 nuJSIndexInclude('core/libs/select2/select2.min.js'); 
-nuJSIndexInclude('core/libs/tinymce/tinymce.min.js'); 
+
+if ($nuConfigIncludeTinyMCE != false) {
+	nuJSIndexInclude('core/libs/tinymce/tinymce.min.js'); 
+}
 
 nuCSSIndexInclude('core/css/nubuilder4.css');
-nuCSSIndexInclude('core/libs/quill/themes/quill.snow.css');
+
 
 $nuConfigIncludeJS = isset($nuConfigIncludeJS) ? $nuConfigIncludeJS : '';
 nuJSIndexInclude($nuConfigIncludeJS);
