@@ -56,6 +56,7 @@ function nuLoad(){
 	if ( language == 'MYSQL' ){editor.getSession().setMode({path:"ace/mode/mysql", inline:true});cl='sql';}
 	if ( language == 'PHP' ) {editor.getSession().setMode({path:"ace/mode/php", inline:true});cl='php';}
 	if ( language == 'SQL' ) {editor.getSession().setMode({path:"ace/mode/sql", inline:true});cl='sql';}
+	if ( language == 'CSS' ) {editor.getSession().setMode({path:"ace/mode/css", inline:true});cl='css';}
 
 	document.getElementById('nu_language').innerHTML	= window.l + " (" + c  + ")";
 
