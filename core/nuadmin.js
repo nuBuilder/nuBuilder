@@ -725,14 +725,14 @@ function nuContextMenuUpdateLabel(id) {
 
 function nuContextMenuGetFormId(id) {
 
-	let subform = $('#' + contextMenuCurrentTargetId()).attr('data-nu-subform');
-	if (subform) {
-		return $('#' + subform + '000nuRECORD').attr('data-nu-form-id');
-	} else if (nuFormType() == 'edit') {
+																			 
+			   
+																  
+	if (nuFormType() == 'edit') {
 
 		let field = $('[data-nu-field="'+ id +'"]');
 		let obj = $('#' + id);
-		let hasClass = nuObjectClassList(id).containsAny(['nuWord', 'nuImage', 'nuContentBoxContainer', 'nuHtml']);
+		let hasClass = nuObjectClassList(contextMenuCurrentTargetId()).containsAny(['nuWord', 'nuImage', 'nuContentBoxContainer', 'nuHtml', 'nuSubform']);
 
 		return id == field || hasClass || obj.is(":button") ? obj.parent().attr('data-nu-form-id') : field.parent().attr('data-nu-form-id');
 
@@ -789,7 +789,7 @@ function contextMenuCurrentTargetUpdateId() {
 
 		let strIdNoLabel = contextMenuCurrentTarget.id.substring(6);
 		let idNoLabel = $('#' + strIdNoLabel);
-		if (nuObjectClassList(strIdNoLabel).containsAny(['nuHtml', 'nuImage', 'nuContentBoxContainer'])) {
+		if (nuObjectClassList(strIdNoLabel).containsAny(['nuHtml', 'nuImage', 'nuContentBoxContainer','nuSubform'])) {
 			return idNoLabel.attr('id');
 		} else if (idNoLabel.hasClass('select2-hidden-accessible')) {
 			return strIdNoLabel + '_select2';
