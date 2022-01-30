@@ -758,14 +758,14 @@ function contextMenuCurrentTargetUpdateId() {
 
 	let t = $('#' + contextMenuCurrentTarget.id);
 	let hasClass = nuObjectClassList(contextMenuCurrentTarget.id).containsAny(['nuWord', 'nuImage', 'nuSort', 'nuTab']);
-	
+
 	if (t.is(":button") || hasClass) {
 		return contextMenuCurrentTarget.id;
 	} else {
 
 		let strIdNoLabel = contextMenuCurrentTarget.id.substring(6);
 		let idNoLabel = $('#' + strIdNoLabel);
-		if (idNoLabel.hasClass('nuHtml') || idNoLabel.hasClass('nuContentBoxContainer')) {
+		if (nuObjectClassList(strIdNoLabel).containsAny(['nuHtml', 'nuImage', 'nuContentBoxContainer'])) {
 			return idNoLabel.attr('id');
 		} else if (idNoLabel.hasClass('select2-hidden-accessible')) {
 			return strIdNoLabel + '_select2';
