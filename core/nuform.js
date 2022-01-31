@@ -3239,7 +3239,14 @@ function nuShowTabByTitle(s, visible) {
 }
 
 function nuShowTabById(id, visible) {
-	$('div[data-nu-tab-id='+ id +']').filter('.nuTab').nuShow(visible);
+
+	let obj =  $('div#' + id);
+	if (obj.length == 1) {
+		obj.nuShow(visible)
+	} else {
+		$('div[data-nu-tab-id='+ id +']').filter('.nuTab').nuShow(visible);
+	}
+
 }
 
 function nuHideTabById(id) {
