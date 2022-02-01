@@ -1160,6 +1160,7 @@ function nuINPUT(w, i, l, p, prop){
 						'height'	: Number(obj.height)
 		})
 		.attr('tabindex','-1')
+		.attr ("data-nu-prefix", p)
 		.addClass('nuLookupDescription')
 		.addClass('nuReadonly')
 		.prop('readonly', true);
@@ -1406,7 +1407,7 @@ function nuEDITOR(w, i, l, p, prop){
 	nuINPUT(w, i, l, p, prop);
 	$('#' + obj.id).addClass('nuEditor');
 
-	let mce = nuUXOptions["nuDevUseTinyMCE"]; 
+	let mce = ! prop.objects[i].attributes.includes('nuquiljs')
 
 	if (!mce) nuSetAccess(obj.id, 2);
 	let id = obj.id + '_parent_container';
