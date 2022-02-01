@@ -2334,7 +2334,13 @@ function nuAddDatalist(i, a) {
 
 function nuLabelOnTop(include, exclude, offsetTop = -18, offsetLeft = 0) {
 
-	if (include === undefined) include = nuSubformObject("").fields;
+	if (include === undefined){
+		include = [];
+		for(var i = 0 ; i < nuSERVERRESPONSE.objects.length ; i++){
+			include.push(nuSERVERRESPONSE.objects[i].id);
+		}
+	}
+
 	if (exclude === undefined) var exclude = [];
 
 	for (var i = 0; i < include.length; i++) {
