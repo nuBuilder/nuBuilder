@@ -3,7 +3,7 @@
 ------------
 
 * ***Home Page:*** https://www.nubuilder.com
-* ***Wiki:*** https://wiki.nubuilder.net/
+* ***Wiki:*** https://wiki.nubuilder.cloud/
 * ***Forum:*** https://forums.nubuilder.com/
 * ***Requires PHP:*** 5.4.0 (phpMyAdmin that is shipped with nuBuilder will require PHP 7.1+)
 * ***Requires MySQL:*** 5.5. (or MariaDB)
@@ -59,7 +59,7 @@ Further customisation that can be done with JavaScript and PHP.
 - Open the URL that will look something like: http://yoursitename.com/nubuilder4/index.php
 - Done - you can now login as 'globeadmin'
 
-[Detailed installation instructions](https://wiki.nubuilder.net/nubuilderforte/index.php/Main_Page#Documentation)
+[Detailed installation instructions](https://wiki.nubuilder.cloud/index.php?title=Documentation)
 
 
 ## Documentation
@@ -68,7 +68,7 @@ Further customisation that can be done with JavaScript and PHP.
 
 * [nuBuilder-Forte-User-Guide 1](https://sourceforge.net/projects/nubuilder/files/nuBuilderForte_UserGuide_OLD.pdf/download)
 * [nuBuilder-Forte-User-Guide 2](https://sourceforge.net/projects/nubuilder/files/nuBuilderForte_UserGuide.pdf/download)
-* [nuBuilder-Forte-Wiki-Documentation](https://wiki.nubuilder.net/nubuilderforte/index.php/Main_Page)
+* [nuBuilder-Forte-Wiki-Documentation](https://wiki.nubuilder.cloud)
 
 ------------
 
