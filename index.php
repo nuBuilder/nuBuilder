@@ -108,7 +108,7 @@ nuJSIndexInclude('core/nuajax.js');
 nuJSChartsInclude();
 nuJSIndexInclude('core/libs/ctxmenu/ctxmenu.min.js');
 
-if ($nuConfigIncludeQuill == true) {
+if (isset($nuConfigIncludeQuill) && $nuConfigIncludeQuill == true) {
 	nuJSIndexInclude('core/libs/quill/quill.min.js'); 
 	nuJSIndexInclude('core/libs/quill/modules/quill-divider.js');
 	nuCSSIndexInclude('core/libs/quill/themes/quill.snow.css');
@@ -116,7 +116,7 @@ if ($nuConfigIncludeQuill == true) {
 
 nuJSIndexInclude('core/libs/select2/select2.min.js'); 
 
-if ($nuConfigIncludeTinyMCE != false) {
+if (isset($nuConfigIncludeTinyMCE) && $nuConfigIncludeTinyMCE != false) {
 	nuJSIndexInclude('core/libs/tinymce/tinymce.min.js'); 
 }
 
