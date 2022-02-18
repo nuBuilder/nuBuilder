@@ -19,6 +19,8 @@
 	$nuConfigDBCollate					= "utf8mb4_unicode_ci";		//-- Or utf8_general_ci etc.
 	$nuConfigDBCharacterSet				= "utf8mb4";				//-- Or utf8 etc.
 
+	$nuConfigDBOptions					= array();					//-- PDO Options: E.g. array(PDO::ATTR_PERSISTENT => true);
+
 // Administrator Login:
 	$nuConfigDBGlobeadminUsername	 	= "globeadmin";				//-- Administrator username. You can choose any username you like.
 	$nuConfigDBGlobeadminPassword		= "nu";						//-- Administrator password. Please choose a stronger password!
