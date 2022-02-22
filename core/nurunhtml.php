@@ -19,10 +19,13 @@ $j					= json_decode($r->json);
 $c					= $j->columns;
 
 $_POST['nuHash']	= (array) $j->hash;
-$__x				= nuHash();
-$_POST['nuHash']['TABLE_ID'] = $__x['browse_table_id'];
-nuEval($__x['form_id'] . '_BB');
-unset($__x);
+$hash				= nuHash();
+$_POST['nuHash']['TABLE_ID'] = $hash['browse_table_id'];
+nuEval($hash['form_id'] . '_BB');
+
+$includeHiddenColumns = nuObjKey($hash, 'nuPrintincludeHiddenColumns', null) == '1' ? true : false;
+
+unset($hash);
 
 print "<style>\n";
 
@@ -46,12 +49,14 @@ print "<TABLE border=1; style='border-collapse: collapse'>\n";
 print "\n<TR>";
 
 for($col = 0 ; $col < count($c) ; $col++){
-	
-	$st	= $class[$col];
-	print "<TH $st>";
-	print nuTranslate($c[$col]->title);
-	print "</TH>\n";
-	
+
+	if(!($c[$col]->width == 0 && $includeHiddenColumns != true)) {
+		$st	= $class[$col];
+		print "<TH $st>";
+		print nuTranslate($c[$col]->title);
+		print "</TH>\n";
+	}
+
 }
 
 $h	= "</TR>";
@@ -63,10 +68,12 @@ while($r = db_fetch_array($t)){
 	$h	.= "\n<TR>\n";
 
 	for($col = 0 ; $col < count($c) ; $col++){
-
-		$v = $c[$col]->display == 'null' || $c[$col]->display == '""' ? '' : $r[$c[$col]->display];
-		$st	= $class[$col];
-		$h	.= "<TD $st>" . $v . "</TD>\n";
+		
+		if(!($c[$col]->width == 0 && $includeHiddenColumns != true)) {
+			$v = $c[$col]->display == 'null' || $c[$col]->display == '""' ? '' : $r[$c[$col]->display];
+			$st	= $class[$col];
+			$h	.= "<TD $st>" . $v . "</TD>\n";
+		}
 
 	}
 
@@ -80,8 +87,8 @@ $h	.= "</TABLE>";
 print $h;
 
 nuRunQuery("DELETE FROM zzzzsys_debug WHERE zzzzsys_debug_id = ? ", array($_GET['i']));
-$__x = nuHash();
-nuRunQuery("DROP TABLE IF EXISTS " . $__x['browse_table_id']);
-unset($__x);
+$hash = nuHash();
+nuRunQuery("DROP TABLE IF EXISTS " . $hash['browse_table_id']);
+unset($hash);
 
 ?>
