@@ -658,7 +658,7 @@ class nuFormObject {
 			var sf		= 'nuRECORD';
 
 			if(table === undefined){
-				oi		= parent.nuFORM.getCurrent().form_id;
+				oi		= parent.nuFORM === undefined ? undefined : parent.nuFORM.getCurrent().form_id;
 			}else{
 				oi		= nuFORM.getCurrent().form_id;
 			}

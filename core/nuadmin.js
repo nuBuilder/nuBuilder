@@ -87,13 +87,18 @@ function nuAddAdminButtons() {
 
 		if (c > 0) $('#nuActionHolder').css('height', '50px');
 
-			var frame = parent.$('#nuDragDialog iframe')
-			frame.css('height', frame.cssNumber("height") + 50);
+			let frame = parent.$('#nuDragDialog iframe');
+			if (frame.length !== 0) {
+				frame.css('height', frame.cssNumber("height") + 50);
+			}
 
-			var dragDialog = parent.$('#nuDragDialog')
-			dragDialog.css('height', dragDialog.cssNumber("height") + 50);
+			let dragDialog = parent.$('#nuDragDialog');
+			if (dragDialog.length !== 0) {
+				dragDialog.css('height', dragDialog.cssNumber("height") + 50);
+			}
 
 		$('<br style="user-select:none">').insertAfter($("#nuAdminPropertiesButton"));
+
 	}
 
 }
@@ -105,6 +110,7 @@ function nuRoundNearest(n, v) {
 	n = n / v;
 	n = Math.round(n) * v;
 	return n;
+
 }
 
 function nuSetBrowseColumnWidths() {
