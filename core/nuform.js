@@ -5546,7 +5546,8 @@ function nuSetSelect2(id, obj){
 		select2UserOptions = window.nuOnSetSelect2Options(id, objSelect2OptionsDefault);
 	}
 
-	select2Options = {...objSelect2OptionsDefault.options, ...select2UserOptions};
+	let select2Options = Object.assign(select2UserOptions, objSelect2OptionsDefault.options);
+	// select2Options = {...objSelect2OptionsDefault.options, ...select2UserOptions};
 
 	$('#' + id).select2(select2Options);
 
