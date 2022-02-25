@@ -30,7 +30,7 @@
     "kbwood-jquery-svg": "https://github.com/kbwood/svg/archive/1.5.0.tar.gz",
     "locutus.sprintf": "^2.0.14-code-lts.2",
     "ol": "6.9.0",
-    "postcss": "^8.3.8",
+    "postcss": "^8.4.6",
     "postcss-cli": "^9.0.1",
     "rtlcss": "^3.3.0",
     "sass": "^1.42.1",
