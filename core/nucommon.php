@@ -425,18 +425,23 @@ function nuRunPHPHidden($nuCode){
 	$t						= nuRunQuery($s, array($nuCode));
 	$r						= db_fetch_object($t);
 
+	if ($nuCode != 'nukeepalive') {
+
 	if (db_num_rows($t) == 0) {
-		$isSystem = substr($nuCode, 0, 2) == 'nu';
-		 if (! $isSystem) {
-			nuDisplayError(nuTranslate("The Procedure does not exist...")." ($nuCode)");
-		 }
-	} else {
-		$isGlobal			= $r->sph_global == '1';
-		if($_SESSION['nubuilder_session_data']['isGlobeadmin'] or $isGlobal or in_array($r->zzzzsys_php_id, $p)){
-			nuEval($r->zzzzsys_php_id);
-		}else{
-			nuDisplayError(nuTranslate("Access To Procedure Denied...")." ($nuCode)");
+
+			$isSystem = substr($nuCode, 0, 2) == 'nu';
+			 if (! $isSystem) {
+				nuDisplayError(nuTranslate("The Procedure does not exist...")." ($nuCode)");
+			 }
+		} else {
+			$isGlobal			= $r->sph_global == '1';
+			if($_SESSION['nubuilder_session_data']['isGlobeadmin'] or $isGlobal or in_array($r->zzzzsys_php_id, $p)){
+				nuEval($r->zzzzsys_php_id);
+			}else{
+				nuDisplayError(nuTranslate("Access To Procedure Denied...")." ($nuCode)");
+			}
 		}
+
 	}
 
 	$f			= new stdClass;

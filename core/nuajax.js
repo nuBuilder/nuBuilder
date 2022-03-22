@@ -263,6 +263,7 @@ function nuLogout(f, iframe){
 		var fm			= data;
 
 		if(!nuDisplayError(fm)){
+			sessionStorage.removeItem('nukeepalive');
 			window.open('index.php', '_self');
 		}
 

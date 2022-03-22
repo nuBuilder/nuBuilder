@@ -257,16 +257,17 @@ window.nuHASH				= [];
 		$nuConfigKeepSessionAliveInterval = !isset($nuConfigKeepSessionAliveInterval) ? 600 : $nuConfigKeepSessionAliveInterval;
 		$sessionAlive = "
 		if (nuMainForm()) {
-			var refreshTime = 1000 * $nuConfigKeepSessionAliveInterval; // refresh interval in milliseconds
-			window.setInterval( function() {
-				$.ajax({
-					cache: false,
-					type: 'GET',
-					url: 'core/nukeepsessionalive.php',
-					success: function(data) {
-					}
-				});
-			}, refreshTime );
+
+			function nuRunKeepAlive() {
+				nuRunPHPHidden('nukeepalive', 0);
+			}
+
+			if (sessionStorage.getItem('nukeepalive') === null) {
+				var refreshTime = 1000 * $nuConfigKeepSessionAliveInterval; // refresh interval in milliseconds
+				var intervalID = setInterval(() => nuRunKeepAlive(), refreshTime);
+				sessionStorage.setItem('nukeepalive', intervalID);
+			}
+
 		}
 		";
 	}
