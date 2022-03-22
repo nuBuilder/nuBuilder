@@ -142,14 +142,6 @@ function nuValidCaller(o){
 	return o.hasOwnProperty('nuVersion');
 }
 
-function nuHomeWarning(){
-
-	if(window.nuEDITED){
-		return nuTranslate('Leave this form without saving ?')+'  '+nuTranslate('Doing this will return you to the login screen.');
-	}
-	return nuTranslate('Doing this will return you to the login screen.');
-}
-
 function nuLoginRequest(u, p){
 
 	$(":submit").nuDisable();
@@ -194,10 +186,6 @@ function nuLoginRequest(u, p){
 
 window.nuVersion 		= 'nuBuilder4.5';
 window.nuDocumentID		= Date.now();
-
-if(parent.window.nuDocumentID == window.nuDocumentID){
-	window.onbeforeunload	= nuHomeWarning;
-}
 
 window.nuHASH				= [];
 

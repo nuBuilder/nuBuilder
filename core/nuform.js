@@ -25,7 +25,6 @@ function nuInitJSOptions() {
 			'nuBrowsePaginationInfo'			: 'default',	// Default Format is: '{StartRow} - {EndRow} ' + nuTranslate('of') + ' ' + '{TotalRows}'
 			'nuShowNuBuilderLink'				: true,			// Show the link to nubuilder com
 			'nuShowLoggedInUser'				: false,		// Show the logged in User
-			'nuShowBeforeUnloadMessage'			: true,			// Show or disable "Leave site?" message
 			'nuShowBrowserTabTitle'				: true,			// Show the Form Title in the Browser Tab
 			'nuDebugMode'						: true,			// Debug Mode
 			'nuBrowserTabTitlePrefix'			: 'nuBuilder',	// Prefix in the Browser Tab
@@ -286,10 +285,6 @@ function nuBuildForm(f){
 
 	if ((nuUXOptions["nuBrowsePaginationInfo"]) !== '') {
 		nuShowBrowsePaginationInfo((nuUXOptions["nuBrowsePaginationInfo"]));
-	}
-
-	if (nuUXOptions["nuShowBeforeUnloadMessage"] == false) {
-		window.onbeforeunload = () => {}
 	}
 
 	if (nuUXOptions["nuShowLoggedInUser"]) {
