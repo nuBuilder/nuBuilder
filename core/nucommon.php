@@ -1059,7 +1059,7 @@ function nuTTList($id, $l){
 	$f										= db_field_names($tt);
 	$f[]									= 'KEEP EXACT HEIGHT';
 
-	nuRunQuery("DROP TABLE $tt");
+	nuRunQuery("DROP TABLE IF EXISTS $tt");
 
 	return json_encode($f);
 
