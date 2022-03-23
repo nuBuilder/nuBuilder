@@ -2343,7 +2343,7 @@ function nuAddSubformRow(t, e){
 	$('#' + o.form + nuPad3(o.rows) + 'nuDelete').prop('checked', true);
 	$('#' + o.form + nuPad3(o.rows-1) + 'nuDelete').prop('checked', false);
 
-	$("[id^='" + o.form + nuPad3(o.rows) + "']").addClass('nuEdited')
+	$("[id^='" + o.form + nuPad3(o.rows) + "']").removeClass('nuEdited')
 
 	let ts = $('.nuTabSelected');
 	ts.attr('nu-data-clicked-by-system', '');
