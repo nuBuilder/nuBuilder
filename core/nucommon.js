@@ -302,6 +302,14 @@ jQuery.fn.extend({
 			return nuSetValue(this.id, v, method);
 		});
 	},
+	nuGetText: function() {
+			return nuGetValue(this.attr('id'), 'text');
+	},
+	nuSetText: function(v) {
+		return this.each(function() {
+			return nuSetValue(this.id, v, 'text');
+		});
+	},
 	nuTranslate: function(method) {
 		return this.each(function() {
 			nuSetValue(this.id, nuTranslate(nuGetValue(this.id, method)), method);
@@ -2732,6 +2740,10 @@ function nuGetValue(i, method) {
 
 }
 
+function nuGetText(i, method) {
+	return nuGetValue(i, 'text');
+}
+
 function nuSetValue(i, v, method) {
 
 	var obj = $('#' + i);
@@ -2765,6 +2777,10 @@ function nuSetValue(i, v, method) {
 
 	return true;
 
+}
+
+function nuSetText(i, v) {
+	return nuSetValue(i, v, 'text');
 }
 
 function nuCurrentDate(format) {
