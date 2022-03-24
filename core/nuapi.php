@@ -96,6 +96,7 @@
 		$f->forms[0]->user_team					= $globalAccess ? '' : nuObjKey($U, 'USER_TEAM', null);
 		$f->forms[0]->user_department			= $globalAccess ? '' : nuObjKey($U, 'USER_DEPARTMENT', null);
 		$f->forms[0]->user_position				= $globalAccess ? '' : nuObjKey($U, 'USER_POSITION', null);
+		$f->forms[0]->user_code					= $globalAccess ? '' : nuObjKey($U, 'USER_CODE', null);		
 		$f->forms[0]->user_additional1			= $globalAccess ? '' : nuObjKey($U, 'USER_ADDITIONAL1', null);
 		$f->forms[0]->user_additional2			= $globalAccess ? '' : nuObjKey($U, 'USER_ADDITIONAL2', null);		
 		$f->forms[0]->user_name					= $globalAccess ? '' : nuUser($U['USER_ID'])->sus_name;

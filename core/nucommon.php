@@ -875,9 +875,10 @@ function nuGetUserAccess(){
 	$A['USER_NAME']				= $j->session->sus_name;
 	$A['USER_DEPARTMENT']		= $j->session->sus_department;
 	$A['USER_TEAM']				= $j->session->sus_team;
+	$A['USER_CODE']				= $j->session->sus_code;
 	$A['USER_POSITION']			= $j->session->sus_position;
 	$A['USER_ADDITIONAL1']		= $j->session->sus_additional1;
-	$A['USER_ADDITIONAL2']		= $j->session->sus_additional2;	
+	$A['USER_ADDITIONAL2']		= $j->session->sus_additional2;
 	$A['LANGUAGE']				= $j->session->language;
 
 	//-- update session time
