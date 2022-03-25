@@ -26,7 +26,13 @@ function nuAjax(w,successCallback,errorCallback){
 
 			let err = nuFormatAjaxErrorMessage(jqXHR, errorThrown);
 
-			let msgDiv = nuMessage(err);
+			if (parent.$('#nuModal').length > 0 && parent.$('#nuModal').siblings(".nuDragDialog").css("visibility") == "hidden") {
+				let msgDiv = parent.nuMessage(err);
+				nuClosePopup();
+				return;
+			} else {
+				let msgDiv = nuMessage(err);	
+			}
 
 			if(window.nuOnMessage){
 				nuOnMessage(msgDiv, err);

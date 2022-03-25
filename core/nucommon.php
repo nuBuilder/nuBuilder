@@ -2034,7 +2034,7 @@ function nuStringAddTrailingCharacter($str, $char = "/") {
 function nuGlobalAccess($post = false) {
 
 	if ($post) return $_POST['nuHash']['GLOBAL_ACCESS'] == '1';
-	return nuHash()['GLOBAL_ACCESS'] == '1';
+	return nuObjKey(nuHash(),'GLOBAL_ACCESS','') == '1';
 
 }
 
