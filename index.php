@@ -278,7 +278,10 @@ window.nuHASH				= [];
 
 	function nuResize(){
 
-		var w = window.innerWidth;
+		if(typeof window['nuOnBeforeResize'] === 'function'){
+			if (nuOnBeforeResize() == false) return;
+		}
+
 		$('#nuActionHolder').css('width', '100%');
 		$('#nuBreadcrumbHolder').css('width', '100%');
 		$('#nuTabHolder').css('width', '100%');
@@ -287,6 +290,10 @@ window.nuHASH				= [];
 
 		if (window.nuVerticalTabs) {
 			nuSetVerticalTabs();
+		}
+
+		if(typeof window['nuOnResize'] === 'function'){
+			nuOnResize();
 		}
 
 	}
