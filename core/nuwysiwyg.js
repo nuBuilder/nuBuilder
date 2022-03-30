@@ -105,10 +105,13 @@ function nuInitTinyMCE(id, plugins, mobile, toolbar, toolbar_groups, menubar, co
 
 			editor.on('init', function (e) {
 				e.target.setContent(nuGetValue(id)); 
+				if (window.nuTinyMCEOnInit) {
+					nuTinyMCEOnInit(e, editor);
+				}	
 			});
 
 			editor.on("change", function () {
-				nuTinyeMCEOnChangeHandler(editor);
+				nuTinyMCEOnChangeHandler(editor);
 			});
 
 		}
@@ -125,7 +128,7 @@ function nuInitTinyMCE(id, plugins, mobile, toolbar, toolbar_groups, menubar, co
 
 }
 
-function nuTinyeMCEOnChangeHandler(editor) {
+function nuTinyMCEOnChangeHandler(editor) {
 	nuHasBeenEdited();
 }
 
