@@ -239,8 +239,8 @@ function db_field_info($n){
 	$types		= array();
 	$pk			= array();
 
-	$s		 = "DESCRIBE `$n`";
-	$t		= nuRunQuery($s);
+	$s			= "DESCRIBE `$n`";
+	$t			= nuRunQueryNoDebug($s);
 
 	while($r = db_fetch_row($t)){
 
