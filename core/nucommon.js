@@ -1705,6 +1705,10 @@ function nuUserTeam(){
 	return nuSERVERRESPONSE.user_team;
 }
 
+function nuUserCode(){
+	return nuSERVERRESPONSE.user_code;
+}
+
 function nuUserAdditional1(){
 	return nuSERVERRESPONSE.user_additional1;
 }
