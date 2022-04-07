@@ -268,6 +268,17 @@ $.fn.enterKey = function (fnc) {
 	})
 }
 
+$.fn.nuFocusWithoutScrolling = function(){
+
+	let t = $(this)[0];
+	let x = t.scrollX, y = t.scrollY;
+
+	this.focus();
+	t.scrollTo(x, y);
+	return this;
+
+};
+
 jQuery.fn.extend({
 	nuEnable: function(enable) {
 		return this.each(function() {
@@ -1708,7 +1719,6 @@ function nuUserTeam(){
 function nuUserCode(){
 	return nuSERVERRESPONSE.user_code;
 }
-
 function nuUserAdditional1(){
 	return nuSERVERRESPONSE.user_additional1;
 }

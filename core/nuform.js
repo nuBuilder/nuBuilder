@@ -191,7 +191,7 @@ function nuBuildForm(f){
 	nuGetStartingTab();
 
 	if(nuFormType() == 'edit' && nuIsNewRecord() && (obj0 !== null)){
-		obj0.focus();
+		obj0.nuFocusWithoutScrolling();
 	}
 
 	if(f.record_id == '-2'){			// Arrange Objects
@@ -331,7 +331,29 @@ function nuBuildForm(f){
 	nuCursor('default');
 
 	nuWindowPosition();
+	
+	nuRestoreScrollPositions();
 
+}
+
+function nuRestoreScrollPositions() {
+	
+	$(function() {
+
+		$('textarea').each(function() {
+			$(this).scrollTop(window['nuScrollTop_' + this.id]);
+		});    
+
+	});
+	
+}
+
+function nuSaveScrollPositions() {
+	
+	$('textarea:visible').each(function() {
+		window['nuScrollTop_'+this.id] = $(this).scrollTop();
+	});    
+	
 }
 
 function nuEvalnuOnLoadEvents() {
@@ -3141,7 +3163,10 @@ function nuSelectTab(tab, byUser){
 		if (nuOnSelectTab(tab) == false) return;
 	}
 
+	
 	var byUser = byUser === true && ! $('#' + tab.id).is('[nu-data-clicked-by-system]') ? true :false;
+	
+	if (byUser) nuSaveScrollPositions();
 
 	$('#' + tab.id).removeAttr('nu-data-clicked-by-system');
 
@@ -3174,6 +3199,7 @@ function nuSelectTab(tab, byUser){
 	$(".nuHtml[data-nu-form='" + form + "'][data-nu-tab='" + filt + "']").css('visibility','visible');
 	$('#' + tab.id).addClass('nuTabSelected');
 
+	if (byUser) nuRestoreScrollPositions();
 
 	if (byUser === true) {
 
@@ -3183,11 +3209,11 @@ function nuSelectTab(tab, byUser){
 
 		if (s.is("[nu-data-active-element]")) {
 			let id = s.attr('nu-data-active-element');
-			if (id !== '' && ae.id !== id) $('#' + id).focus();
+			if (id !== '' && ae.id !== id) $('#' + id).nuFocusWithoutScrolling();
 		} else {
 			obj = nuGetFirstObject(nuSERVERRESPONSE.objects, tab.id.replace('nuTab',''));
 			if (obj !== null && ae.id  !== obj.attr('id')) {
-				obj.focus();
+				obj.nuFocusWithoutScrolling();
 				try {
 					if ((obj.is('textarea') || obj.is('input')) && !obj.is(':checkbox')) {
 						obj.prop({'selectionStart': 0,'selectionEnd': 0});
@@ -3197,6 +3223,7 @@ function nuSelectTab(tab, byUser){
 				}
 			}
 		}
+
 
 	}
 
@@ -4220,6 +4247,8 @@ function nuSaveAction(close){
 	if (nuCurrentProperties().form_type == 'launch' || nuLookingUp()) return;
 
 	if(nuNoDuplicates()){
+		
+		nuSaveScrollPositions();
 		nuUpdateData('save', close ? 'close' : null);
 
 	}
