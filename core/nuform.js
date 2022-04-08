@@ -1552,6 +1552,8 @@ function nuWORD(w, i, l, p, prop){
 
 	if (r !== null) objId.css('font-weight','normal');
 
+	nuAddInputIcon(id, obj.input_icon);
+
 	nuSetAccess(id, obj.read);
 
 	nuAddStyle(id, obj);
