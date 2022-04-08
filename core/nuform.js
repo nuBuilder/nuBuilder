@@ -3720,6 +3720,7 @@ function nuSearchAction(S, F){
 		window.nuFORM.setProperty('page_number', 0);
 	}
 
+    nuDisable('nuSearchField');
 	nuGetBreadcrumb();
 
 }
