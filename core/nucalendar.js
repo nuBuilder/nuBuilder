@@ -38,12 +38,17 @@ function nuPopupCalendar(pThis, d){
 
 	var i					= pThis.id; 					//-- Object ID;
 	var tar					= $('#' + i);
+	var h					= parseInt(tar.css('height'));
 	var off					= $('#' + i).offset();
 	var top					= off.top;
 	var left				= off.left;
-	var h					= parseInt(tar.css('height'));
 
-	
+	var bottomPos = $(window).scrollTop() + $(window).height();
+	if ((off.top + h + 223) > bottomPos) {
+		top = off.top - h - 233;
+	}
+
+
 	window.nuOnCalendar		= 0;							//-- cursor not in calendar
 	
 	var c					= nuAppendChild('body','div','nuCalendar');
