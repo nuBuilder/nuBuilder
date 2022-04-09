@@ -187,7 +187,7 @@
 	 background-color:white 
 }
  .nuEditBody {
-	 background-color:#fdfdfd 
+	 background-color:#f5f7fa73 
 }
  .nuTabHolder {
 	 background-color:white;
@@ -207,7 +207,7 @@
 	 border-bottom-color: #393b4ab3;
 	 border-bottom-style: solid;
 	 border-bottom-width: thin;
-	 background-color:#00adef;
+	 background-color:#2d84d1;
 	 color:white;
 	 font-size:12px;
 	 padding:5px 0;
@@ -527,7 +527,7 @@
 	 border-color:#ebebeb70;
 	 border-top:1px solid #ddd;
 	 border-width:1px;
-	 padding:6px 10px 3px;
+	 padding: 1px 10px 5px 10px;
 	 position:absolute;
 	 top:75px;
 	 font:13px "Noto Sans", "Helvetica Neue",HelveticaNeue,Helvetica,Arial,sans-serif!important;
@@ -544,10 +544,10 @@
 	 height:70px;
 	 border-style:solid;
 	 border-width:1px;
-	 padding:6px 10px 3px;
+	 padding: 1px 10px 5px 10px;
 	 position:absolute;
 	 top:75px;
-	 background-color:#338ea01c!important;
+	 background-color:#edf7ff!important;
 	 border-color:#ebebeb70;
 	 font:13px "Noto Sans", "Helvetica Neue",Helvetica,Arial,sans-serif!important;
 	 line-height:150%;
@@ -670,14 +670,14 @@
 }
  .nuButton,.input_button {
 	 color:white;
-	 background-color:#00ADEF;
+	 background-color:#378bd5;
 	 border-color: #0b456c;
 	 border-width:0 0 1px;
 	 border-style:solid;
 	 display:inline;
 	 font-size:14px;
 	 height:40px;
-	 outline-color: #237ab5;
+	 outline-color: #163446;
 	 padding:0 6px;
 	 text-shadow:0 1px 2px rgba(0,0,0,0.25) 
 }
@@ -693,7 +693,7 @@
 	 height:40px;
 	 padding:0 6px;
 	 text-shadow:0 1px 2px rgba(0,0,0,0.25);
-	 border-color:#87A96B;
+	 border-color:#0a1005;
 	 border-width:0 0 1px 
 }
  .nuButtonSelected {
@@ -707,7 +707,7 @@
 }
  .nuActionButton {
 	 color:white;
-	 background-color:#00ADEF;
+	 background-color:#378bd5;
 	 display:inline;
 	 border-style:solid;
 	 font-size:12px;
@@ -732,7 +732,7 @@
 	 border-radius:9px 
 }
  .nuQuickButton:hover {
-	 background-color:#00ADEF;
+	 background-color:#3c92de;
 	 color:white 
 }
  .nuAdminButton {
