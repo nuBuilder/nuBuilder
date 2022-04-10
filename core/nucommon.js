@@ -773,6 +773,8 @@ function nuBindCtrlEvents(){
 				$(ae).blur();
 				$(ae).focus();
 				if (nuFormsUnsaved() == 0) nuClosePopup();
+                        } else if (nuFormType() == 'browse') {
+                                nuSearchAction("");
 			}
 
 		}
