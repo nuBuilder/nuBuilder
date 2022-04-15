@@ -520,7 +520,7 @@ function nuAttachButtonImage(i, c, cssClass){
 	if(window.nuGraphics.indexOf(c + '.png') != -1){						//-- check filenames in graphics dir.
 
 		$('#' + i)
-		.css('background-image', 'url("core/graphics/' + c + '.png')
+		.css({'background-image' : 'url("core/graphics/' + c + '.png','background-position' : '3px 0'})
 		.addClass(cssClass);
 
 		return;
