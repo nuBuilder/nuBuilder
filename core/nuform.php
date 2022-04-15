@@ -31,6 +31,7 @@ function nuBeforeEdit($FID, $RID){
 
 	$GLOBALS['EXTRAJS']		= '';
 	$GLOBALS['EXTRAJS_BC']	= '';
+	$GLOBALS['STYLE']		= '';
 
 	$ct						= $_POST['nuSTATE']['call_type'];
 
@@ -117,6 +118,7 @@ function nuBeforeEdit($FID, $RID){
 	$je = isset($r->sfo_edit_javascript) ? $r->sfo_edit_javascript : '';
 	$js .= $recordID == '' ? ' '.$jb : ' '.$je;
 
+	$GLOBALS['STYLE']		= isset($r->sfo_style) ? $r->sfo_style : '';
 	$GLOBALS['EXTRAJS']		.= $js;
 
 }
