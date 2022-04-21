@@ -1829,7 +1829,7 @@ function nuSUBFORM(w, i, l, p, prop){
 		rowWidth			= rowWidth - 25;
 	}
 
-	var rowTop		= 50;
+	var rowTop		= 52;
 
 	if(SF.subform_type == 'f'){
 		rowTop		= 33;
