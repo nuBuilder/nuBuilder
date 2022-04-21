@@ -794,7 +794,7 @@ function nuBindCtrlEvents(){
 					nuPopup("nuform", formId);
 				} else if(e.keyCode == 79 && g) {					//-- O		Object List
 					nuPopup("nuobject", "", formId);
-				} else if(e.keyCode == 73 && g) {					//-- i		Form Info
+				} else if(e.keyCode == 77 && g) {					//-- m		Form Info
 					nuShowFormInfo();
 				} else if(e.keyCode == 69 && g) {					//-- e		Database
 					nuStartDatabaseAdmin();
