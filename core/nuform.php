@@ -38,14 +38,13 @@ function nuBeforeEdit($FID, $RID){
 	if($ct == 'getreport' and $r == ''){return;}
 	if($ct == 'getform' and $r == ''){return;}
 
-	$recordID = '';
+	$recordID				= isset($_POST['nuSTATE']['record_id']) ? $_POST['nuSTATE']['record_id'] : '';
 
 	if($ct == 'getform'){
 
 		$logfield					= $r->sfo_table . '_nulog';
 		$cts						= nuGetJSONData('clientTableSchema');
 		$user						= $_POST['nuHash']['USER_ID'];
-		$recordID					= $_POST['nuSTATE']['record_id'];
 		$globalAccess				= nuGlobalAccess(true);
 	
 		/* 
@@ -106,12 +105,15 @@ function nuBeforeEdit($FID, $RID){
 		}
 		
 	}
+	
+	
+	if ($recordID != '') {
+		$p = nuProcedure('nuBeforeEdit');	
+		if($p != '') { eval($p); }
+		if(count($_POST['nuErrors']) > 0){return;}
 
-	$p = nuProcedure('nuBeforeEdit');	
-	if($p != '') { eval($p); }
-	if(count($_POST['nuErrors']) > 0){return;}
-
-	nuEval($FID . '_BE');
+		nuEval($FID . '_BE');
+	}
 
 	$js = $r->sfo_javascript;
 	$jb = isset($r->sfo_browse_javascript) ? $r->sfo_browse_javascript : '';
