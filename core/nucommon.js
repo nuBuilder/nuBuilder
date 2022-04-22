@@ -2385,7 +2385,9 @@ function nuLabelOnTop(include, exclude, offsetTop = -18, offsetLeft = 0) {
 				'top': $('#'+include[i]).cssNumber('top') + offsetTop
 				, 'left': $('#'+include[i]).cssNumber('left') + offsetLeft
 				, 'text-align': 'left'
-			})
+			});
+
+			$('#' + include[i]).attr('data-nu-label-position','top');
 
 		}
 	}
@@ -2400,7 +2402,9 @@ jQuery.fn.nuLabelOnTop = function (offsetTop = -18, offsetLeft = 0) {
 			'top': $(this).cssNumber("top") + offsetTop
 			,'left': $(this).cssNumber("left") + offsetLeft
 			,'text-align': 'left'
-		})
+		});
+
+		$(this).attr('data-nu-label-position','top');
 
 	});
 
@@ -2975,6 +2979,10 @@ function nuSetLabelText(i, str, translate) {
 		'left'		: Number(left) - lwidth -17,
 		'width'		: Number(lwidth + 12)
 	}).html(str);
+
+	if (obj.attr('data-nu-label-position') == 'top') {
+		obj.nuLabelOnTop();
+	}
 
 }
 
