@@ -806,7 +806,11 @@ function nuBindCtrlEvents(){
 					nuForm('nusetup','1','', '', 2);
 				} else if(e.keyCode == 68 && g) {					//-- d		nuDebug Results
 					nuPopup("nudebug", "");	
-				}										
+				} else if(e.keyCode == 39) {						//-- ->		Select next tab
+					nuSelectNextTab(1);
+				} else if(e.keyCode == 37) {					//-- <-		Select next tab
+					nuSelectNextTab(-1);
+				}
 			}
 
 			if(nuFormType() == 'browse') {
@@ -1428,6 +1432,17 @@ function nuSelectedTabTitle(parent = null) {
 	let n = nuSelectedTabNumber(parent) 
 	if (n == null) return null;
 	return parent == null ? $('#nuTab' + n).html() : parent.$('#nuTab' + n).html();
+
+}
+
+function nuSelectNextTab(i) {
+
+	let selectedTab = $('.nuTabSelected')[0].id.substring(5);
+	let nextTab = parseInt(selectedTab) + i;
+	let e = document.getElementById('nuTab' + nextTab);
+	if (e !== null) {
+		nuSelectTab(e);
+	}
 
 }
 
