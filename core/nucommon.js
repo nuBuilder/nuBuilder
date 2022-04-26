@@ -806,10 +806,6 @@ function nuBindCtrlEvents(){
 					nuForm('nusetup','1','', '', 2);
 				} else if(e.keyCode == 68 && g) {					//-- d		nuDebug Results
 					nuPopup("nudebug", "");	
-				} else if(e.keyCode == 39) {						//-- ->		Select next tab
-					nuSelectNextTab(1);
-				} else if(e.keyCode == 37) {					//-- <-		Select next tab
-					nuSelectNextTab(-1);
 				}
 			}
 
@@ -844,6 +840,10 @@ function nuBindCtrlEvents(){
 					nuCloneAction();
 				} else if(e.keyCode == 98) {						//-- y		Delete
 					nuDeleteAction();
+				} else if(e.keyCode == 39) {						//-- ->		Select next tab
+					nuSelectNextTab(1);
+				} else if(e.keyCode == 37) {						//-- <-		Select previous tab
+					nuSelectNextTab(-1);
 				}
 
 			}
