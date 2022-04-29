@@ -328,33 +328,33 @@ function db_num_columns($o) {
 
 }
 
-function nuDebugResult($t){
-	
-	if(is_object($t)){
-		$t	= print_r($t,1);
+function nuDebugResult($msg){
+
+	if(is_object($msg)){
+		$msg = print_r($msg,1);
 	}
 
-	$i		= nuID();
+	$u = isset(nuHash()['USER_ID']) ? nuHash()['USER_ID'] : null;
+	$u = $u == null && isset($_POST['nuSTATE']['username']) ? $_POST['nuSTATE']['username'] : $u;
+	$id = nuID();
 
-	$j = nuGetJSONData('clientTableSchema');
-	if (! (is_null($j) || $j == '')) {
-		if (in_array('deb_user_id',$j['zzzzsys_debug']['names'])) {
-			$s		= "INSERT INTO zzzzsys_debug (zzzzsys_debug_id, deb_message, deb_added, deb_user_id) VALUES (? , ?, ?, ?)";	
-			nuRunQuery($s, array($i, $t, time(), isset(nuHash()['USER_ID']) ? nuHash()['USER_ID'] : ''));
-			return $i;
-		}
-	}
+	$s = "INSERT INTO zzzzsys_debug (zzzzsys_debug_id, deb_message, deb_added, deb_user_id) VALUES (:id , :message, :added, :user_id)";
 
-	$s		= "INSERT INTO zzzzsys_debug (zzzzsys_debug_id, deb_message, deb_added) VALUES (? , ?, ?)";
+	$params = array(
+		"id"		=> $id,
+		"message"	=> $msg,
+		"added"		=> time(),
+		"user_id"	=> $u 
+	);
 
-	nuRunQuery($s, array($i, $t, time()));
+	nuRunQuery($s, $params);
 
-	return $i;
+	return $id;
 
 }
 
 function nuDebug($a){
-	
+
 	$date				= date("Y-m-d H:i:s");
 	$b					= debug_backtrace();
 	$f					= $b[0]['file'];
@@ -391,7 +391,7 @@ function nuDebug($a){
 		$m				.= "\n";
 
 	}
-	
+
 	nuDebugResult($m);
 
 }
