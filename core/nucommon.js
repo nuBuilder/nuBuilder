@@ -1792,6 +1792,8 @@ function nuIsSaved(){
 
 function nuSortSubform(s, c, e){
 
+	if (! e.target.classList.contains('nuSubformTitle')) return;
+
 	var sf				= [];
 	var obj				= nuSubformObject(s);
 	var so				= obj.fields[c];
