@@ -2572,12 +2572,19 @@ function nuBuildSubformTitle(o, l, w, id, col){
 	.html(label)
 	.attr('data-nu-field', o.id)
 	.attr('data-nu-subform', id)
-	.attr('onclick', 'nuSortSubform("' + id + '", "' + (col + 1) + '", event)')
 	.attr('data-nu-order', 'asc')
 	.addClass('nuTabHolder nuSubformTitle')
 	.addClass(o.input=='number'||o.input=='nuNumber'?'number':'text');
 
-	if (nuGlobalAccess()) oTitle.attr('ondblclick','nuOptionsListAction("nuobject", "' + o.object_id + '")')
+	oTitle.on('click', e => {
+		nuSortSubform(id, col + 1, event);
+	});
+
+	if (nuGlobalAccess())  {
+		oTitle.on('ondblclick', e => {
+			nuOptionsListAction("nuobject", o.object_id);
+		});
+	}
 
 	if(o.valid == 1){oTitle.addClass('nuBlank');}
 	if(o.valid == 2){oTitle.addClass('nuDuplicate');}
