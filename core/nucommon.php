@@ -1698,7 +1698,7 @@ function nuToCSV($table, $file, $d){
 
 }
 
-function nuFromCSV($file, $table, $d){
+function nuFromCSV($file, $table, $d, $delete){
 
 	if(in_array($table,nuListTables())){
 		print '<br>&nbsp;&nbsp;<br>' . nuTranslate("This tablename has already been used") . " (<b>$table</b>)";
@@ -1786,6 +1786,8 @@ function nuFromCSV($file, $table, $d){
 	nuRunQuery($s1 . implode(',',$rows));
 
 	nuRunQuery("ALTER TABLE `$table` ADD PRIMARY KEY(`$id`);");
+
+	if ($delete == '1') unlink('../temp/' . $file);
 
 	print "<br>" . "&nbsp;&nbsp;" . nuTranslate("A table called") . "&nbsp;<b>$table</b>&nbsp;" . nuTranslate("has been created in the database");
 

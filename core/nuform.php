@@ -478,6 +478,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 	$f->objects				= $a;
 	$f->number_formats		= nuBuildCurrencyFormats();
 	$O						= new stdClass();
+
 	$O->forms[]				= $f;
 
 	return $O->forms[0];
