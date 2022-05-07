@@ -2381,7 +2381,7 @@ function nuAddDatalist(i, arr, showAllOnArrowClick) {
 
 	$('#' + i).attr('list', datalist.id).attr('autocomplete', 'off');
 
-	if (showAllOnArrowClick !== false) nuDatalistShowAllOnArrowClick(id);
+	if (showAllOnArrowClick !== false) nuDatalistShowAllOnArrowClick(i);
 
 }
 
