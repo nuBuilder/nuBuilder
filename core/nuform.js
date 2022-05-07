@@ -946,7 +946,6 @@ function nuINPUT(w, i, l, p, prop){
 			if (!$.isArray(dl)) dl = JSON.parse(dl);
 			if (!$.isArray(dl)) dl = eval(dl);
 			nuAddDatalist(id, dl);
-			nuDatalistShowAllOnArrowClick(id);
 		}
 
 	}

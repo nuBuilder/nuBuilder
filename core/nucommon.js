@@ -2353,10 +2353,10 @@ function nuSetToolTip(i, message, labelHover) {
 	}
 }
 
-function nuAddDatalist(i, a) {
+function nuAddDatalist(i, arr, showAllOnArrowClick) {
 
-	if (!$.isArray(a)) {
-		console.error('Argument #2 is not an array in nuAddDatalist()');
+	if (!$.isArray(arr)) {
+		console.error('Argument #2 is not an array in nuAddDatalist() for object ' + i);
 		return;
 	}
 
@@ -2371,7 +2371,7 @@ function nuAddDatalist(i, a) {
 		datalist.innerHTML = '';
 	}
 
-	a.forEach(function (data) {
+	arr.forEach(function (data) {
 
 		var option = document.createElement('option');
 		option.value =	$.isArray(data) ? data[0]: data;
@@ -2380,6 +2380,8 @@ function nuAddDatalist(i, a) {
 	});
 
 	$('#' + i).attr('list', datalist.id).attr('autocomplete', 'off');
+
+	if (showAllOnArrowClick !== false) nuDatalistShowAllOnArrowClick(id);
 
 }
 
