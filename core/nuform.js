@@ -92,6 +92,7 @@ function nuBuildForm(f){
 	window.nuOnSetSaved			= null;
 	window.nuOnTabSelected		= null;
 	window.nuOnSelectTab		= null;
+	window.onSubformTitleClick	= null;
 	window.nuOnMessage			= null;
 	window.nuDisplayObjectRefreshed = null;
 	window.nuCalculated			= null;
@@ -2582,7 +2583,13 @@ function nuBuildSubformTitle(o, l, w, id, col){
 
 	if (nuGlobalAccess())  {
 		oTitle.on('dblclick', e => {
-			nuOptionsListAction("nuobject", o.object_id);
+			if(window.onSubformTitleClick){
+				if (onSubformTitleClick(e.target.parentElement.id, e) !== false) {
+					nuOptionsListAction("nuobject", o.object_id);
+				}
+			} else {
+				nuOptionsListAction("nuobject", o.object_id);
+			}
 		});
 	}
 
@@ -3174,9 +3181,8 @@ function nuSelectTab(tab, byUser){
 		if (nuOnSelectTab(tab) == false) return;
 	}
 
-	
 	var byUser = byUser === true && ! $('#' + tab.id).is('[nu-data-clicked-by-system]') ? true :false;
-	
+
 	if (byUser) nuSaveScrollPositions();
 
 	$('#' + tab.id).removeAttr('nu-data-clicked-by-system');
