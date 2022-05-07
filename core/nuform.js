@@ -2581,7 +2581,7 @@ function nuBuildSubformTitle(o, l, w, id, col){
 	});
 
 	if (nuGlobalAccess())  {
-		oTitle.on('ondblclick', e => {
+		oTitle.on('dblclick', e => {
 			nuOptionsListAction("nuobject", o.object_id);
 		});
 	}
