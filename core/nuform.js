@@ -2578,18 +2578,18 @@ function nuBuildSubformTitle(o, l, w, id, col){
 	.addClass(o.input=='number'||o.input=='nuNumber'?'number':'text');
 
 	oTitle.on('click', e => {
-		nuSortSubform(id, col + 1, event);
+			if(window.onSubformTitleClick){
+				if (onSubformTitleClick(e.target.parentElement.id, e) !== false) {
+					nuSortSubform(id, col + 1, event);
+				}
+			} else {
+				nuSortSubform(id, col + 1, event);
+			}
 	});
 
 	if (nuGlobalAccess())  {
 		oTitle.on('dblclick', e => {
-			if(window.onSubformTitleClick){
-				if (onSubformTitleClick(e.target.parentElement.id, e) !== false) {
-					nuOptionsListAction("nuobject", o.object_id);
-				}
-			} else {
-				nuOptionsListAction("nuobject", o.object_id);
-			}
+			nuOptionsListAction("nuobject", o.object_id);
 		});
 	}
 
