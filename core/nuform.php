@@ -452,22 +452,9 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 
 	$f->browse_rows			= nuObjKey($B,0,0);	
 	$f->browse_height		= nuObjKey($B,1,0);
-	$f->browse_sql			= nuObjKey($B,2,0);;
-	
-	// nuOnProcessBrowseRows
-	if ($f->browse_height > 0) {
+	$f->browse_sql			= nuObjKey($B,2,0);
 
-		$p	= nuProcedure($F . '_BB');
-		if ($p != '') {
-			if (strpos($p, 'nuOnProcessBrowseRows') !== false) {
-				$count = preg_match_all("/function\s+(?<nuOnProcessBrowseRows>\w+)\s*\((?<param>[^\)]*)\)\s*(?<body>\{(?:[^{}]+|(?&body))*\})/", $p, $matches);
-				if ($count == 1) {
-					eval(implode(', ', $matches['body']));
-				}
-			}
-		}
-
-	}
+	if ($f->browse_height > 0) nuOnProcess($F, $f, 'BB', 'nuOnProcessBrowseRows');
 
 	$__x					= nuHash();
 	$f->browse_table_id		= $__x['TABLE_ID'];
@@ -479,9 +466,25 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 	$f->number_formats		= nuBuildCurrencyFormats();
 	$O						= new stdClass();
 
+	if ($f->browse_height == 0) nuOnProcess($F, $f, 'BE', 'nuOnProcessObjects');
+
 	$O->forms[]				= $f;
 
 	return $O->forms[0];
+
+}
+
+function nuOnProcess($F, &$f, $eventCode, $function){
+
+	$p	= nuProcedure($F . '_'.$eventCode);
+	if ($p != '') {
+		if (strpos($p, $function) !== false) {
+			$count = preg_match_all("/function\s+(?<".$function.">\w+)\s*\((?<param>[^\)]*)\)\s*(?<body>\{(?:[^{}]+|(?&body))*\})/", $p, $matches);
+			if ($count == 1) { 
+				eval(implode(', ', $matches['body']));
+			}
+		}
+	}
 
 }
 
