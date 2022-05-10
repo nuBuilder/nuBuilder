@@ -1282,10 +1282,6 @@ function nuResizeWindow(e){
 		
 }
 
-function nuSubformObject(id){
-	return nuFORM.subform(id);
-}
-
 function nuGetFunctionList(){
 
 	var f				= '';
@@ -1599,96 +1595,6 @@ function nuChart(i, t, a, h, x, y, st, is) {
 
 		window[i + '_wrapper'] = wrapper;
 
-	}
-
-}
-
-function nuSubformRowId(t){
-	return $(t).parent().attr('data-nu-primary-key');
-}
-
-function nuSubformRowNumber(id) {
-	return  $('#' + id).attr('data-nu-prefix').slice(-3);
-}
-
-function nuSubformRowObject(id, column) {
-
-	let formCode = $('#' + id).attr('data-nu-form');
-
-	return $('#' + formCode + nuSubformRowNumber(id) + column);
-
-}
-
-function nuSubformValue(t, id){
-
-	var p	= $(t).attr('data-nu-prefix');
-
-	return $('#' + p + id).val();
-
-}
-
-function nuSubformColumnArray(id, column, includeDeleted = false) {
-
-	var a = [];
-	var sf = nuSubformObject(id);
-	var c = sf.fields.indexOf(column);
-	for (var i = 0; i < sf.rows.length; i++) {
-		if (sf.deleted[i] == 0 || includeDeleted) {
-			var rv = sf.rows[i][c]
-			a.push(rv);
-		}
-	}
-	return a;
-}
-
-function nuSubformDisable(sf, ob) {
-
-	if (ob === undefined || ob === '') {
-		$("[data-nu-form='" + sf + "']").nuDisable();
-		return;
-	}
-	
-	for (let i = 0; i < nuSubformObject(sf).rows.length; i++) {
-		nuDisable(sf + nuPad3(i) + ob);
-	}
-
-}
-
-function nuSubformEnable(sf, ob, enable) {
-
-	if (ob === undefined || ob === '') {
-		$("[data-nu-form='" + sf + "']").nuEnable(enable);
-		return;
-	}
-	
-	for (let i = 0; i < nuSubformObject(sf).rows.length; i++) {
-		nuEnable(sf + nuPad3(i) + ob, enable);
-	}
-
-}
-
-function nuSubformHide(sf, ob) {
-
-	if (ob === undefined || ob === '') {
-		$("[data-nu-form='" + sf + "']").nuHide();
-		return;
-	}
-
-	for (let i = 0; i < nuSubformObject(sf).rows.length; i++) {
-		nuHide(sf + nuPad3(i) + ob);
-	}
-
-}
-
-function nuSubformShow(sf, ob, show) {
-
-	if (ob === undefined || ob === '') {
-		$("[data-nu-form='" + sf + "']").nuShow(true, false)
-		return;
-	}
-	
-	for (let i = 0; i < nuSubformObject(sf).rows.length; i++) {
-		nuShow(sf + nuPad3(i) + ob, show, false);
 	}
 
 }
@@ -2650,39 +2556,6 @@ function nuCopyText(i) {
 			document.body.removeChild(textarea);
 		}
 	}
-}
-
-function nuRefreshSelectObject(selectId, formId, removeBlank) {
-
-	nuSubformRefreshSelectObject('', selectId, formId, removeBlank)
-
-}
-
-function nuSubformRefreshSelectObject(prefix, selectId, formId, removeBlank) {
-
-	if (typeof formId === 'undefined') {
-		var formId = '';
-	}
-
-	nuSetProperty('nurefreshselectobject_prefix',prefix);
-	nuSetProperty('nurefreshselectobject_selectid',selectId);
-	nuSetProperty('nurefreshselectobject_formid',formId);
-	nuSetProperty('nurefreshselectobject_removeblank',removeBlank === true ? '1' : '0');
-
-	nuRunPHPHidden('nurefreshselectobject', 0);
-
-}
-
-function nuRefreshDisplayObject(displayId, formId) {
-
-	if (typeof formId === 'undefined') {
-		var formId = '';
-	}
-
-	nuSetProperty('nurefreshdisplayobject_displayid',displayId);
-	nuSetProperty('nurefreshdisplayobject_formid',formId);
-	nuRunPHPHidden('nurefreshdisplayobject', 0);
-
 }
 
 function nuCursor(c) {
