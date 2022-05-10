@@ -767,8 +767,8 @@ function nuGetLookupValues($R, $O){
 			`$r->sfo_primary_key` = ?
 	";
 
-	$s			= nuReplaceHashVariables($s, array($O->value));
-	$t			= nuRunQuery($s);	
+	$s			= nuReplaceHashVariables($s);
+	$t			= nuRunQuery($s, array($O->value));
 	$l			= db_fetch_row($t);
 	
 	$f			= nuObjKey($_POST['nuSTATE'],'prefix','') . $O->id;
