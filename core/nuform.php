@@ -351,7 +351,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 					$o->form_id		= $act->sph_zzzzsys_form_id;
 					$o->record_id	= $act->sph_code;
 					$o->run_type	= 'P';
-					$runtab			= nuRunQuery("SELECT sph_run FROM zzzzsys_php WHERE zzzzsys_php_id = '$r->sob_run_zzzzsys_form_id'");
+					$runtab			= nuRunQuery("SELECT sph_run FROM zzzzsys_php WHERE zzzzsys_php_id = ?", array($r->sob_run_zzzzsys_form_id));
 					$o->run_hidden	= db_fetch_object($runtab)->sph_run == 'hide';
 
 				}else if($runType == 'R' || isReport($fromId)){
@@ -752,8 +752,8 @@ function nuGetLookupValues($R, $O){
 
 	nuBeforeBrowse($O->form_id);
 	
-	$s			= "SELECT sfo_primary_key, sfo_browse_sql FROM zzzzsys_form WHERE zzzzsys_form_id = '$O->form_id'";
-	$t			= nuRunQuery($s);
+	$s			= "SELECT sfo_primary_key, sfo_browse_sql FROM zzzzsys_form WHERE zzzzsys_form_id = ?";
+	$t			= nuRunQuery($s, array($O->form_id));
 	$r			= db_fetch_object($t);
 	$S			= new nuSqlString(nuReplaceHashVariables($r->sfo_browse_sql));
 	
@@ -764,10 +764,10 @@ function nuGetLookupValues($R, $O){
 			$R->sob_lookup_description
 			$S->from
 		WHERE 
-			`$r->sfo_primary_key` = '$O->value'
+			`$r->sfo_primary_key` = ?
 	";
 
-	$s			= nuReplaceHashVariables($s);
+	$s			= nuReplaceHashVariables($s, array($O->value));
 	$t			= nuRunQuery($s);	
 	$l			= db_fetch_row($t);
 	
@@ -1060,8 +1060,8 @@ function nuBrowseColumns($f){
 
 	nuBeforeBrowse($f->id);
 
-	$s				= "SELECT * FROM zzzzsys_browse WHERE sbr_zzzzsys_form_id = '$f->id' ORDER BY sbr_order";
-	$t				= nuRunQuery($s);
+	$s				= "SELECT * FROM zzzzsys_browse WHERE sbr_zzzzsys_form_id = ? ORDER BY sbr_order";
+	$t				= nuRunQuery($s, array($f->id));
 	$a				= array();
 
 	while($r = db_fetch_object($t)){
@@ -1109,8 +1109,8 @@ function nuBrowseRows($f){
 	$start			= $page_number * $rows;
 	$search			= str_replace('&#39;', "'", nuObjKey($P,'search'));
 	$filter			= str_replace('&#39;', "'", nuObjKey($P,'filter'));
-	$s				= "SELECT sfo_browse_sql FROM zzzzsys_form WHERE zzzzsys_form_id = '$f->id'";
-	$t				= nuRunQuery($s);
+	$s				= "SELECT sfo_browse_sql FROM zzzzsys_form WHERE zzzzsys_form_id = ?";
+	$t				= nuRunQuery($s, array($f->id));
 	$r				= db_fetch_object($t);
 	
 	if(trim($r->sfo_browse_sql) == ''){
@@ -1362,8 +1362,8 @@ function nuGatherFormAndSessionData($home){
 
 			
 
-				$nuT					= nuRunQuery("SELECT sph_code FROM zzzzsys_report WHERE zzzzsys_report_id = '$formAndSessionData->record_id'");
-				$nuR					= db_fetch_object($nuT);
+				$nuT					= nuRunQuery("SELECT sph_code FROM zzzzsys_report WHERE zzzzsys_report_id = ?");
+				$nuR					= db_fetch_object($nuT, array($formAndSessionData->record_id));
 
 				nuDisplayError("Access To Report Denied... ($nuR->sre_code)");
 
@@ -1377,8 +1377,8 @@ function nuGatherFormAndSessionData($home){
 
 			if(!in_array($formAndSessionData->record_id, $p)) { //form_id is record_id for getphp
 
-				$nuT					= nuRunQuery("SELECT sph_code FROM zzzzsys_php WHERE zzzzsys_php_id = '$formAndSessionData->record_id'");
-				$nuR					= db_fetch_object($nuT);
+				$nuT					= nuRunQuery("SELECT sph_code FROM zzzzsys_php WHERE zzzzsys_php_id = ?");
+				$nuR					= db_fetch_object($nuT, array($formAndSessionData->record_id));
 
 				nuDisplayError("Access To Procedure Denied... ($nuR->sph_code)");
 			}
@@ -1389,8 +1389,8 @@ function nuGatherFormAndSessionData($home){
 		
 		if(!in_array($formAndSessionData->form_id, $f) && ($formAndSessionData->call_type == 'getform' || $formAndSessionData->call_type == 'login')){
 
-			$nuT						= nuRunQuery("SELECT sfo_code FROM zzzzsys_form WHERE zzzzsys_form_id = '$formAndSessionData->form_id'");
-			$nuR						= db_fetch_object($nuT);
+			$nuT						= nuRunQuery("SELECT sfo_code FROM zzzzsys_form WHERE zzzzsys_form_id = ?");
+			$nuR						= db_fetch_object($nuT, array($formAndSessionData->form_id));
 
 			nuDisplayError("Access To Form Denied... ($nuR->sfo_code)");
 
@@ -1612,7 +1612,7 @@ function nuFormDimensions($f){
 	$rh		 = intval($brh)	== 0 ? 25 : $brh;
 	$rs		 = intval($brp) == 0 ? 25 : $brp;
 	$bb		 = 25;	//-- browse footer
-	$t		 = nuRunQuery("SELECT * FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = '$f'");
+	$t		 = nuRunQuery("SELECT * FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = ?", array($f));
 	$h		 = 0;
 	$w		 = 0;
 	$gh		 = 0;
