@@ -2367,6 +2367,7 @@ function nuAddDatalist(i, arr, showAllOnArrowClick) {
 		var datalist = document.createElement('datalist');
 		datalist.id =  id;
 		document.body.appendChild(datalist);
+		if (showAllOnArrowClick !== false) nuDatalistShowAllOnArrowClick(i);
 	} else {
 		datalist.innerHTML = '';
 	}
@@ -2380,8 +2381,6 @@ function nuAddDatalist(i, arr, showAllOnArrowClick) {
 	});
 
 	$('#' + i).attr('list', datalist.id).attr('autocomplete', 'off');
-
-	if (showAllOnArrowClick !== false) nuDatalistShowAllOnArrowClick(i);
 
 }
 
