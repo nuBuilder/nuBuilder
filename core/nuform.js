@@ -2204,6 +2204,297 @@ function nuSubformColumnUnique(id, column, label) {
 
 }
 
+// Subform filtering
+
+function nuSubformFilterId(sfName, columnId) {
+	return sfName + columnId + '_filter';
+}
+
+function nuSubformFilterValue(sfName, columnId) {
+	return nuGetValue(nuSubformFilterId(sfName, columnId));
+}
+
+function nuSubformFilterOptionAll(sfName, columnId) {
+	let filterId = nuSubformFilterId(sfName, columnId);
+	return $("#" + filterId + " option:selected").attr('data-nu-all') === 'true';
+}
+
+function nuSubformFilters(sfName, arrColumns) {
+
+	let arr = {};
+	let isArray = Array.isArray(arrColumns);
+
+	for (var columnId in arrColumns) {
+		if (isArray) columnId	= arrColumns[columnId];
+		arr[columnId]			= {};
+		arr[columnId].value		= nuSubformFilterValue(sfName, columnId);
+		arr[columnId].all		= nuSubformFilterOptionAll(sfName, columnId);
+		arr[columnId].type		= isArray ? 'select' : arrColumns[columnId].type;
+	}
+
+	return arr;
+
+}
+
+function nuSubformFilterSortOptions(sfName, columnId) {
+
+	let filterId = nuSubformFilterId(sfName, columnId);
+	$(filterId).html($(filterId + " option:not('[data-nu-persistent]')").sort(function(a, b) {
+		return a.text == b.text ? 0 : a.text < b.text ? -1 : 1;
+	}));
+
+}
+
+function nuSubformFiltersAdd(sfName, arrColumns) {
+
+	let isArray = Array.isArray(arrColumns);
+	for (let columnId in arrColumns) {
+
+		if (isArray)
+			columnId	= arrColumns[columnId];
+
+		let style = {
+			'width': $('#' + sfName + '000' + columnId).width() - 3 + 'px'
+		};
+
+		let prop		= arrColumns[columnId];
+		let columnTitle	= '#title_' + sfName + columnId;
+		let filterId	= nuSubformFilterId(sfName, columnId);
+		let type		= prop === undefined || prop.type === undefined ? 'select' : prop.type;
+		let obj			= nuSubformFilterAddObject(type, sfName, columnId, columnTitle, filterId, prop);
+		obj.appendTo(columnTitle).css(style);
+	
+	}
+
+}
+
+function nuSubformFilterAddObject(type, sfName, columnId, columnTitle, filterId, prop) {
+
+	var obj;
+	if (type == 'select') {
+		obj = nuSubformFilterAddSelect(sfName, columnId, columnTitle, filterId, prop);
+	} else if (type === 'search') {
+		obj = nuSubformFilterAddSearch(sfName, columnId, columnTitle, filterId, prop);
+	}
+
+	return obj;
+
+}
+	
+function nuSubformFilterAddSelect(sfName, columnId, columnTitle, filterId, prop) {
+
+	let propAll = prop === undefined || prop.all === undefined ? '(' + nuTranslate('All') + ')' : prop.all;
+	let optionAll = [];
+	if (propAll !== false)
+		optionAll = nuSubformFilterCreateSelectOption('', propAll, true, true, true);
+
+	let propBlank = prop === undefined || prop.blank === undefined ? true : prop.blank;
+	let optionBlank = [];
+	if (propBlank !== false)
+		optionBlank = nuSubformFilterCreateSelectOption('', '', true, false, false);
+
+	return $('<select />', {
+		id: filterId,
+		class: 'nuSubformFilter',
+		on: {
+			change: function () {
+				nuSubformFilterRows(sfName, nuSubformFilters(sfName, subformFilterColumns));
+			},
+			focus: function () {
+				nuSubformFilterAddValues(sfName, 'select', columnId);
+				nuSubformFilterSortOptions(sfName, columnId);
+			},
+		},
+		append: [
+			optionAll,
+			optionBlank
+		]
+
+	});
+
+
+}
+
+function nuSubformFilterAddSearch(sfName, columnId, columnTitle, filterId, prop) {
+
+	let propDatalist = prop === undefined || prop.datalist === undefined ? true: prop.datalist;
+
+	return $("<input/>", {
+		type: "search",
+		class: "nuSubformFilter",
+		on: {
+			input: function () {
+				nuSubformFilterRows(sfName, nuSubformFilters(sfName, subformFilterColumns));
+			},
+			focus: function () { 
+				if (propDatalist === true) 
+					nuSubformFilterAddValues(sfName, 'search', columnId);
+			},
+		},
+		id: filterId
+	});
+
+}
+
+function nuSubformFilterCreateSelectOption(_value, _text, persistent, all, _selected) {
+
+	return $('<option />', {
+		value: _value,
+		text: _text,
+		'data-nu-persistent': persistent,
+		'data-nu-all': all,
+		selected: _selected === true ? 'selected' : false
+	});
+
+}
+
+function nuSubformFilterAddValues(sfName, type, columnId) {
+
+	let sf				= nuSubformObject(sfName);
+	let columnIndex		= sf.fields.indexOf(columnId);
+	let filterId		= nuSubformFilterId(sfName, columnId);
+	let filterObj		= $('#' + filterId);
+	let selectedIndex	= filterObj.prop('selectedIndex');
+	let arr = [];
+
+	filterObj.find('option').not('[data-nu-persistent]').remove();
+
+	for (let row = 0; row < sf.rows.length - 1; row++) {
+
+		let value = sf.rows[row][columnIndex];
+
+		if (type === 'select') {
+			if ($("#" + filterId + " option[value='" + value + "']").length == 0) {
+				let obj = $('#' + sfName + nuPad3(row) + columnId);
+				let text = obj.nuGetValue(obj.is("select") ? 'text': 'value');
+
+				let add = true;
+				if (window.nuSubformFilterOnAddValue) {
+					let result	= nuSubformFilterOnAddValue(sfName, add, text, value);
+					value		= result.value;
+					text		= result.text;
+					add			= result.add;
+				}
+
+				if (add) $("#" + filterId).append(new Option(text, value));
+
+			}
+		} else if (type === 'search') {
+			if (arr.indexOf(value) === -1) {
+				arr.push(value);
+			}
+		}
+	}
+	
+	if (window.nuSubformFilterOnAddValues) {
+        nuSubformFilterOnAddValues(sfName, filterId)
+	}
+
+	if (type === 'select') {
+		filterObj.prop('selectedIndex', selectedIndex);
+	} else if (type === 'search') { 
+		arr.sort(nuAscendingSortColumn); 
+		nuAddDatalist(filterId, arr);
+	}
+
+}
+
+function nuSubformSortTop(a, b) {
+
+	if (a.top < b.top) {
+		return -1;
+	}
+	if (a.top > b.top) {
+		return 1;
+	}
+
+	return 0;
+
+}
+
+function nuSubformFilterRows(sfName, arrFilter) {
+
+	let arr = [];
+
+	let lastRow = nuSubformObject(sfName).rows.length ;
+	let nuNoAdd = $('#'+sfName).attr('data-nu-add') == '0' ? 1 : 0;
+
+	let r = 0;
+	$("[ID^='" + sfName + "'][ID$='nuRECORD']").each(function(index) {
+		let rec = $(this);
+
+		// restore positions:
+		let top = rec.data('nu-top-position');
+		if (typeof top !== "undefined") {
+			rec.css("top", top);
+			if (nuNoAdd == '1' && lastRow !== r) rec.show();
+		}
+
+		// get positions
+		top = rec.cssNumber('top');
+		let o = {'obj': rec.attr('id'),'top': top};
+		rec.data('nu-top-position', top); // save top position
+
+		arr.push(o);
+		r++;
+	});
+
+	let rows = arr.sort(nuSubformSortTop); 
+
+	let rowHeight = $('#' + sfName + '000nuRECORD').cssNumber('height');
+	let rowTop = 0;
+	let hideCount = 0;
+
+	for (let r = 0; r < rows.length - nuNoAdd ; r++) {
+
+		let hide = false;
+		let rec = $('#' + rows[r].obj);
+
+		if (arrFilter !== null) {
+
+			for (let colName in arrFilter) {
+
+				let data			= [];
+				data.cell			= $('#' + rows[r].obj.slice(0, -8) + colName);
+				data.val			= data.cell.val();
+				data.filter			= arrFilter[colName].value;
+				data.type			= arrFilter[colName].type;
+				data.optionAll		= arrFilter[colName].all;
+				data.optionBlank	= data.filter == '' && data.type == 'search';
+				data.isMatch		= (data.type == 'search' && data.val.includes(data.filter)) || (data.type == 'select' && (data.val == data.filter || data.optionAll));
+
+				if (window.nuSubformOnFilterRows) {
+					hide = nuSubformOnFilterRows(sfName, data, r, rows.length);
+				} else {
+
+					if (!data.isMatch && !data.optionBlank && rows.length -1 !== r) {
+						hide = true;
+						break;
+					} else {
+						hide = false;
+					}
+
+				}
+
+			}
+		}
+
+		if (hide === false) {
+			rec.css("top", rowTop).show();
+			rowTop = rowTop + rowHeight;
+		} else {
+			hideCount ++;
+			rec.hide();
+		}
+
+	}
+	
+	$('#' + sfName).data('nu-filtered', hideCount > 0);
+
+}
+
+// END Subform filtering
+
 function nuRefreshSelectObject(selectId, formId, removeBlank) {
 
 	nuSubformRefreshSelectObject('', selectId, formId, removeBlank)

@@ -285,7 +285,12 @@
 	font-weight: 900;
 	margin-left: 5px
 }
-
+.nuSubformFilter {
+	top: 1px;
+	left: 0px;
+	background-color: #afe9ff;
+	position: relative
+}
  .nuOptionsSubform {
 	 border-style: none;
 	 font-size: 20px!important;

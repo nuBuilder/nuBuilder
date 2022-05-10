@@ -1696,39 +1696,51 @@ function nuIsSaved(){
 	return window.nuSAVED;
 }
 
-function nuSortSubform(s, c, e){
+function nuSortSubform(sfName, c, e){
 
 	if (! e.target.classList.contains('nuSubformTitle')) return;
 
 	var sf				= [];
-	var obj				= nuSubformObject(s);
+	var obj				= nuSubformObject(sfName);
 	var so				= obj.fields[c];
 	var count			= obj.rows.length;
 	var h				= 0;
 	var t				= false;
-	var noAdd			= $('#'+s).attr('data-nu-add') == '0';
+	let objSf			= $('#' + sfName);
+	var noAdd			= objSf.attr('data-nu-add') == '0';
+	
+	let records			= $("[ID^='" + sfName + "'][ID$='nuRECORD']");
+	
+	let newRecord = records.last();
+	let newRecordId = newRecord.attr('id');
 
-	$("[ID^='" + s + "'][ID$='nuRECORD']").each(function( index ){
+	records.each(function( index ){
 
 		var i = this.id;
-		var f = this.id.replaceAll('nuRECORD', '');
-		h	= parseInt($(this).css('height'));
-		t	= $('#' + f + so).hasClass('input_number') || $('#' + f + so).hasClass('input_nuNumber') || $('#' + f + so).hasClass('nuCalculator');
-		var v = $('#' + f + so).val();
-		var m = $('#' + f + so).attr('data-nu-format')
-		var l = $('#' + f + so).hasClass('nuHiddenLookup');
-
-		if(m != ''){
-			v = nuFORM.removeFormatting(v, m);
+		
+		if (i !== newRecordId) { // exclude new record
+		
+			var f = this.id.replaceAll('nuRECORD', '');
+			h	= parseInt($(this).css('height'));
+	
+			t	= $('#' + f + so).hasClass('input_number') || $('#' + f + so).hasClass('input_nuNumber') || $('#' + f + so).hasClass('nuCalculator');
+			var v = $('#' + f + so).val();
+			var m = $('#' + f + so).attr('data-nu-format')
+			var l = $('#' + f + so).hasClass('nuHiddenLookup');
+	
+			if(m != ''){
+				v = nuFORM.removeFormatting(v, m);
+			}
+	
+			if(l){
+				v = $('#' + f + so + 'code').val();
+			}
+	
+			var o = {'form' : i, 'value' : v};
+	
+			if (!(index == count && noAdd)) sf.push(o);
+			
 		}
-
-		if(l){
-			v = $('#' + f + so + 'code').val();
-		}
-
-		var o = {'form' : i, 'value' : v};
-
-		if (!(index == count && noAdd)) sf.push(o);
 
 	});
 
@@ -1758,10 +1770,17 @@ function nuSortSubform(s, c, e){
 
 	for(var i = 0 ; i < rows.length ; i++){
 
-		$('#' + rows[i].form).css('top', top);
+		$('#' + rows[i].form).css('top', top).data('nu-top-position', top); // save top position
+				
 		top	= top + h;
 
 	}
+	
+	newRecord.css('top', top).data('nu-top-position', top);
+	
+	 if (objSf.data('nu-filtered') === true) {
+		objSf.find('.nuSubformFilter').first().change();
+	 }
 
 }
 
