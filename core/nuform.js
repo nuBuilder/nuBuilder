@@ -2258,23 +2258,34 @@ function nuSubformFilterSortOptions(sfName, columnId) {
 
 function nuSubformFiltersAdd(sfName, arrColumns) {
 
+	if (arrColumns === undefined) {
+        arrColumns = nuSubformTitleArray(sfName);
+	}
+
 	let isArray = Array.isArray(arrColumns);
 	for (let columnId in arrColumns) {
 
 		if (isArray)
 			columnId	= arrColumns[columnId];
 
-		let style = {
-			'width': $('#' + sfName + '000' + columnId).width() - 3 + 'px'
-		};
-
 		let prop		= arrColumns[columnId];
+		let width       = $('#' + sfName + '000' + columnId).width() - 3;
+		width			= prop === undefined || prop.width === undefined ? width : prop.width;
+		let float       = prop === undefined || prop.float === undefined ? 'center' : prop.float;
+
+		let style = {
+			'width': width + 'px',
+			'float' : float
+		};
+		
 		let columnTitle	= '#title_' + sfName + columnId;
 		let filterId	= nuSubformFilterId(sfName, columnId);
 		let type		= prop === undefined || prop.type === undefined ? 'select' : prop.type;
 		let obj			= nuSubformFilterAddObject(type, sfName, columnId, columnTitle, filterId, prop);
+
+		$(columnTitle).append("<br />");
 		obj.appendTo(columnTitle).css(style);
-	
+
 	}
 
 }
@@ -2322,7 +2333,6 @@ function nuSubformFilterAddSelect(sfName, columnId, columnTitle, filterId, prop)
 		]
 
 	});
-
 
 }
 
@@ -2376,10 +2386,11 @@ function nuSubformFilterAddValues(sfName, type, columnId) {
 
 		if (type === 'select') {
 			if ($("#" + filterId + " option[value='" + value + "']").length == 0) {
+
 				let obj = $('#' + sfName + nuPad3(row) + columnId);
 				let text = obj.nuGetValue(obj.is("select") ? 'text': 'value');
-
 				let add = true;
+
 				if (window.nuSubformFilterOnAddValue) {
 					let result	= nuSubformFilterOnAddValue(sfName, add, text, value);
 					value		= result.value;
