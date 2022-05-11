@@ -2206,10 +2206,13 @@ function nuSubformColumnUnique(id, column, label) {
 
 function nuSubformTitleArray(sfName) {
 
-	return
+	let arr =
 	$('#' + sfName).children().filter('.nuSubformTitle').map(function (){
 		return this.getAttribute("data-nu-field");
 	}).get();
+
+	return arr;
+
 }
 
 // Subform filtering
