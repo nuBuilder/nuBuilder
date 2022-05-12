@@ -2889,7 +2889,7 @@ function nuLabel(w, i, p, prop){
 	}
 
 	var lab = document.createElement('label');
-	var lwidth = nuGetWordWidth(nuTranslate(obj.label),'label');
+	var lwidth = nuGetWordWidth(nuTranslate(obj.label));
 
 	lab.setAttribute('id', id);
 	lab.setAttribute('for', p + obj.id);
@@ -2944,13 +2944,13 @@ function nuAddHolder(t){
 
 function nuGetWordWidth(w, objClass){
 
-	if (typeof objClass === 'undefined') var objClass = 'div';
+	if (typeof objClass === 'undefined') var objClass = 'nuSection';
 	
 	const W = 'nuTestWidth';
-	let h = "<" + objClass + " id='"+W+"' style='position:absolute;visible:hidden;width:auto'>" + w + "</" + objClass + ">";
+	let h = "<" + 'div' + " id='"+W+"' style='position:absolute;visible:hidden;width:auto'>" + w + "</" + 'div' + ">";
 	$('body').append(h);
 	let obj = $('#'+ W);
-	obj.addClass('label');
+	obj.addClass(objClass);
 	let l = parseInt(obj.css('width'));
 	obj.remove();
 
