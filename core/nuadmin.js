@@ -23,16 +23,16 @@ function nuAddAdminButton(i, v, f, t) {
 
 function nuShowFormInfo() {
 
-	var cp = nuCurrentProperties();
-	var code = nuCurrentProperties().form_code;
-	var devMode = nuDevMode();
+	let cp = nuCurrentProperties();
+	let code = nuCurrentProperties().form_code;
+	let devMode = nuDevMode();
 
-	var recordId = nuFormType() == 'edit' && cp.form_type !== 'launch' ? "<b>Record ID:</b> " + cp.record_id : '';
-	var browseSQL = nuFormType() == 'browse' && (! code.startsWith('nu') || devMode) ? "<b>Browse SQL:</b></br> " + cp.browse_sql : '';
-	var table = nuSERVERRESPONSE.table !== '' && (! code.startsWith('nu') || devMode) ? "<b>Table:</b> " + nuSERVERRESPONSE.table : '';
+	let recordId	= nuFormType() == 'edit' && cp.form_type !== 'launch' ? "<b>Record ID:</b> " + cp.record_id : '';
+	let browseSQL	= nuFormType() == 'browse' && (! code.startsWith('nu') || devMode) ? "<b>Browse SQL:</b></br> " + cp.browse_sql : '';
+	let table		= nuSERVERRESPONSE.table !== '' && (! code.startsWith('nu') || devMode) ? "<b>Table:</b> " + nuSERVERRESPONSE.table : '';
 
 	nuMessage(["<h2><u>" + cp.form_description + "</u></h2>", "<b>Form ID:</b> " + cp.form_id, "<b>Form Code:</b> " + cp.form_code, table, recordId, browseSQL]);
-	
+
 }
 
 function nuDevMode(m) {
@@ -827,7 +827,11 @@ function nuContextMenuCurrentTargetBrowseId() {
 }
 
 function nuContextMenuCopyIdToClipboard() {
-	nuCopyToClipboard(contextMenuCurrentTargetId());
+
+	let t = $('#' + contextMenuCurrentTarget.id);
+	let id = t.hasClass('nuSubformTitle') ? contextMenuCurrentTargetUpdateId() : contextMenuCurrentTargetId();
+	nuCopyToClipboard(id);
+
 }
 
 function nuContextMenuClone() {
