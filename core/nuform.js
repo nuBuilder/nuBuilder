@@ -162,8 +162,9 @@ function nuBuildForm(f){
 	}
 
 	nuAddHolder('nuRECORD');
-	$('#nuRECORD').attr('data-nu-table', f.table)
-				  .attr('data-nu-primary-key-name', f.primary_key);
+	$('#nuRECORD')
+		.attr('data-nu-table', f.table)
+		.attr('data-nu-primary-key-name', f.primary_key);
 
 	nuAddBreadcrumbs();
 
@@ -345,7 +346,7 @@ function nuRestoreScrollPositions() {
 
 		$('textarea').each(function() {
 			$(this).scrollTop(window['nuScrollTop_' + this.id]);
-		});    
+		});
 
 	});
 	
@@ -355,7 +356,7 @@ function nuSaveScrollPositions() {
 	
 	$('textarea:visible').each(function() {
 		window['nuScrollTop_'+this.id] = $(this).scrollTop();
-	});    
+	});
 	
 }
 
@@ -630,7 +631,7 @@ function nuAddActionButton(i, v, f, t, e){
 		nuClass = " " + "nu" + i + "Button" 
 	};
 
-	let id =  "nu" + i + "Button";
+	let id = "nu" + i + "Button";
 
 	let html = "<input id='" +id + "' type='button' title='" + nuTranslate(t) + "' class='nuActionButton" + nuClass + "' value='" + nuTranslate(v) + "' onclick='" + f + "'>";
 
@@ -2230,7 +2231,7 @@ function nuSubformFilterOptionAll(sfName, columnId) {
 	return $("#" + filterId + " option:selected").attr('data-nu-all') === 'true';
 }
 
-function nuSubformFilters(sfName, arrColumns) {
+function nuSubformFilterArray(sfName, arrColumns) {
 
 	let arr = {};
 	let isArray = Array.isArray(arrColumns);
@@ -2256,10 +2257,10 @@ function nuSubformFilterSortOptions(sfName, columnId) {
 
 }
 
-function nuSubformFiltersAdd(sfName, arrColumns) {
+function nuSubformAddFilter(sfName, arrColumns) {
 
 	if (arrColumns === undefined) {
-        arrColumns = nuSubformTitleArray(sfName);
+		arrColumns = nuSubformTitleArray(sfName);
 	}
 
 	let isArray = Array.isArray(arrColumns);
@@ -2277,7 +2278,7 @@ function nuSubformFiltersAdd(sfName, arrColumns) {
 			'width': width + 'px',
 			'float' : float
 		};
-		
+
 		let columnTitle	= '#title_' + sfName + columnId;
 		let filterId	= nuSubformFilterId(sfName, columnId);
 		let type		= prop === undefined || prop.type === undefined ? 'select' : prop.type;
@@ -2320,7 +2321,7 @@ function nuSubformFilterAddSelect(sfName, columnId, columnTitle, filterId, prop)
 		class: 'nuSubformFilter',
 		on: {
 			change: function () {
-				nuSubformFilterRows(sfName, nuSubformFilters(sfName, subformFilterColumns));
+				nuSubformFilterRows(sfName, nuSubformFilterArray(sfName, subformFilterColumns));
 			},
 			focus: function () {
 				nuSubformFilterAddValues(sfName, 'select', columnId);
@@ -2345,7 +2346,7 @@ function nuSubformFilterAddSearch(sfName, columnId, columnTitle, filterId, prop)
 		class: "nuSubformFilter",
 		on: {
 			input: function () {
-				nuSubformFilterRows(sfName, nuSubformFilters(sfName, subformFilterColumns));
+				nuSubformFilterRows(sfName, nuSubformFilterArray(sfName, subformFilterColumns));
 			},
 			focus: function () { 
 				if (propDatalist === true) 
