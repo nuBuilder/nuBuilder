@@ -14,7 +14,7 @@ function nuInitTinyMCE(id, plugins, mobile, toolbar, toolbar_groups, menubar, co
 
 	var _plugins;
 	if (typeof plugins == "undefined") {
-		_plugins = 'print preview importcss searchreplace autolink autosave save directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor insertdatetime advlist lists textpattern noneditable help charmap emoticons';
+		_plugins = 'code print preview importcss searchreplace autolink autosave save directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor insertdatetime advlist lists textpattern noneditable help charmap emoticons';
 	} else {
 		_plugins = plugins;
 	}
