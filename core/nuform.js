@@ -1617,7 +1617,7 @@ function nuRUN(w, i, l, p, prop){
 		var runTarget = runTarget == '' || runTarget == null ? '0' : runTarget;
 
 		var stopClick = runTarget == '0' ? 'nuStopClick(event);' : ''; 
-		var runAction = runTarget == '3' ? "nuPopup('" + obj.form_id + "','" + obj.record_id + "','" + obj.filter + "')" :  "nuForm('" + obj.form_id + "','" + obj.record_id + "','" + obj.filter + "', '','" + runTarget + "')";
+		var runAction = runTarget == '3' ? "nuPopup('" + obj.form_id + "','" + obj.record_id + "','" + obj.filter + "')" : "nuForm('" + obj.form_id + "','" + obj.record_id + "','" + obj.filter + "', '','" + runTarget + "')";
 
 		if(obj.run_type == 'F'){clicker	= stopClick + runAction;}
 		if(obj.run_type == 'R'){clicker	= "nuRunReport('" + obj.record_id + "')";}
@@ -1968,7 +1968,7 @@ function nuSubformRowId(t){
 }
 
 function nuSubformRowNumber(id) {
-	return  $('#' + id).attr('data-nu-prefix').slice(-3);
+	return $('#' + id).attr('data-nu-prefix').slice(-3);
 }
 
 function nuSubformRowObject(id, column) {
@@ -2238,7 +2238,7 @@ function nuSubformAddFilter(filter) {
 		return $("#" + filterId + " option:selected").attr('data-nu-all') === 'true';
 	}
 
-	function nuSubformFilters(sfName, arrColumns) {
+	function nuSubformFilterArray(sfName, arrColumns) {
 
 		let arr = {};
 		let isArray = Array.isArray(arrColumns);
@@ -2272,15 +2272,23 @@ function nuSubformAddFilter(filter) {
 			if (isArray)
 				columnId	= arrColumns[columnId];
 
+			let prop		= arrColumns[columnId];
+			let float		= prop === undefined || prop.float === undefined ? 'center' : prop.float;
+			let width		= $('#' + sfName + '000' + columnId).width() - 3;
+			width			= prop === undefined || prop.width === undefined ? width : prop.width;
+
 			let style = {
-				'width': $('#' + sfName + '000' + columnId).width() - 3 + 'px'
+				'width': width + 'px',
+				'float' : float
 			};
 
-			let prop		= arrColumns[columnId];
+
 			let columnTitle	= '#title_' + sfName + columnId;
 			let filterId	= nuSubformFilterId(sfName, columnId);
 			let type		= prop === undefined || prop.type === undefined ? 'select' : prop.type;
 			let obj			= nuSubformFilterAddObject(type, sfName, columnId, columnTitle, filterId, prop);
+
+			$(columnTitle).append("<br />");
 			obj.appendTo(columnTitle).css(style);
 
 		}
@@ -2317,7 +2325,7 @@ function nuSubformAddFilter(filter) {
 			class: 'nuSubformFilter',
 			on: {
 				change: function () {
-					nuSubformFilterRows(sfName, nuSubformFilters(sfName, filter[sfName]));
+					nuSubformFilterRows(sfName, nuSubformFilterArray(sfName, filter[sfName]));
 				},
 				focus: function () {
 					nuSubformFilterAddValues(sfName, 'select', columnId);
@@ -2342,7 +2350,7 @@ function nuSubformAddFilter(filter) {
 			class: "nuSubformFilter",
 			on: {
 				input: function () {
-					nuSubformFilterRows(sfName, nuSubformFilters(sfName, filter[sfName]));
+					nuSubformFilterRows(sfName, nuSubformFilterArray(sfName, filter[sfName]));
 				},
 				focus: function () { 
 					if (propDatalist === true) 
@@ -3024,7 +3032,7 @@ function nuBuildSubformTitle(o, l, w, id, col){
 			}
 	});
 
-	if (nuGlobalAccess())  {
+	if (nuGlobalAccess()) {
 		oTitle.on('dblclick', e => {
 			nuOptionsListAction("nuobject", o.object_id);
 		});
@@ -3666,7 +3674,7 @@ function nuSelectTab(tab, byUser){
 			if (id !== '' && ae.id !== id) $('#' + id).nuFocusWithoutScrolling();
 		} else {
 			obj = nuGetFirstObject(nuSERVERRESPONSE.objects, tab.id.replace('nuTab',''));
-			if (obj !== null && ae.id  !== obj.attr('id')) {
+			if (obj !== null && ae.id !== obj.attr('id')) {
 				obj.nuFocusWithoutScrolling();
 				try {
 					if ((obj.is('textarea') || obj.is('input')) && !obj.is(':checkbox')) {
@@ -3717,7 +3725,7 @@ function nuShowTabByTitle(s, visible) {
 
 function nuShowTabById(id, visible) {
 
-	let obj =  $('div#' + id);
+	let obj = $('div#' + id);
 	if (obj.length == 1) {
 		obj.nuShow(visible)
 	} else {
@@ -5994,7 +6002,7 @@ function nuDatalistValueRestoreValue(i) {
 		if (t.val() === '') {
 			t.attr('placeholder', t.attr('org-placeholder'));
 		}
-	  
+
 	}
 
 }
