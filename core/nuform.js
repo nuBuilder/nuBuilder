@@ -2374,6 +2374,20 @@ function nuSubformAddFilter(filter) {
 
 	}
 
+	function nuSubformFilterCellValue(sfName, columnId, row) {
+
+		let id		= sfName + nuPad3(row) + columnId;
+		let obj		= $('#' + id);
+		let text	= obj.nuGetValue(obj.is("select") ? 'text': 'value');
+
+		if (obj.hasClass('nuHiddenLookup')) {
+			text = $('#' + id + 'code').nuGetValue();
+		}
+
+		return text;
+
+	}
+	
 	function nuSubformFilterAddValues(sfName, type, columnId) {
 
 		let sf				= nuSubformObject(sfName);
@@ -2388,13 +2402,13 @@ function nuSubformAddFilter(filter) {
 		for (let row = 0; row < sf.rows.length - 1; row++) {
 
 			let value = sf.rows[row][columnIndex];
-
+			let text = nuSubformFilterCellValue(sfName, columnId, row);
+		
 			if (type === 'select') {
 				if ($("#" + filterId + " option[value='" + value + "']").length == 0) {
-					let obj = $('#' + sfName + nuPad3(row) + columnId);
-					let text = obj.nuGetValue(obj.is("select") ? 'text': 'value');
 
 					let add = true;
+
 					if (window.nuSubformFilterOnAddValue) {
 						let result	= nuSubformFilterOnAddValue(sfName, add, text, value);
 						value		= result.value;
@@ -2406,8 +2420,8 @@ function nuSubformAddFilter(filter) {
 
 				}
 			} else if (type === 'search') {
-				if (arr.indexOf(value) === -1) {
-					arr.push(value);
+				if (arr.indexOf(text) === -1) {
+					arr.push(text);
 				}
 			}
 		}
@@ -2471,29 +2485,28 @@ function nuSubformAddFilter(filter) {
 		let rowTop = 0;
 		let hideCount = 0;
 
-		for (let r = 0; r < rows.length - nuNoAdd ; r++) {
+		for (let row = 0; row < rows.length - nuNoAdd ; row++) {
 
 			let hide = false;
-			let rec = $('#' + rows[r].obj);
+			let rec = $('#' + rows[row].obj);
 
 			if (arrFilter !== null) {
 
-				for (let colName in arrFilter) {
+				for (let columnId in arrFilter) {
 
 					let data			= [];
-					data.cell			= $('#' + rows[r].obj.slice(0, -8) + colName);
-					data.val			= data.cell.val();
-					data.filter			= arrFilter[colName].value;
-					data.type			= arrFilter[colName].type;
-					data.optionAll		= arrFilter[colName].all;
+					data.val			= nuSubformFilterCellValue(sfName, columnId, row);
+					data.filter			= arrFilter[columnId].value;
+					data.type			= arrFilter[columnId].type;
+					data.optionAll		= arrFilter[columnId].all;
 					data.optionBlank	= data.filter == '' && data.type == 'search';
-					data.isMatch		= (data.type == 'search' && data.val.includes(data.filter)) || (data.type == 'select' && (data.val == data.filter || data.optionAll));
+					data.isMatch		= (data.type == 'search' && data.val.toLowerCase().includes(data.filter.toLowerCase())) || (data.type == 'select' && (data.val.toLowerCase() == data.filter.toLowerCase() || data.optionAll));
 
 					if (window.nuSubformOnFilterRows) {
-						hide = nuSubformOnFilterRows(sfName, data, r, rows.length);
+						hide = nuSubformOnFilterRows(sfName, data, row, rows.length);
 					} else {
 
-						if (!data.isMatch && !data.optionBlank && rows.length -1 !== r) {
+						if (!data.isMatch && !data.optionBlank && rows.length -1 !== row) {
 							hide = true;
 							break;
 						} else {
