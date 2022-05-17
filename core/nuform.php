@@ -1389,8 +1389,8 @@ function nuGatherFormAndSessionData($home){
 		
 		if(!in_array($formAndSessionData->form_id, $f) && ($formAndSessionData->call_type == 'getform' || $formAndSessionData->call_type == 'login')){
 
-			$nuT						= nuRunQuery("SELECT sfo_code FROM zzzzsys_form WHERE zzzzsys_form_id = ?");
-			$nuR						= db_fetch_object($nuT, array($formAndSessionData->form_id));
+			$nuT						= nuRunQuery("SELECT sfo_code FROM zzzzsys_form WHERE zzzzsys_form_id = ?", array($formAndSessionData->form_id));
+			$nuR						= db_fetch_object($nuT);
 
 			nuDisplayError("Access To Form Denied... ($nuR->sfo_code)");
 
