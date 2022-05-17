@@ -2907,7 +2907,7 @@ function nuLabel(w, i, p, prop){
 	}
 
 	var lab = document.createElement('label');
-	var lwidth = nuGetWordWidth(nuTranslate(obj.label));
+	var lwidth = nuGetWordWidth(nuTranslate(obj.label), 'label');
 
 	lab.setAttribute('id', id);
 	lab.setAttribute('for', p + obj.id);
