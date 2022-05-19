@@ -2927,3 +2927,37 @@ function nuObjectClassList(i) {
 	return c === undefined ? '' : c.split(/\s+/).join(' ');
 
 }
+
+function nuGetStorageItem(key, storage) {
+	
+	var storage = storage === undefined || storage === 'session' ? window.sessionStorage : window.localStorage;
+
+	const itemStr = storage.getItem(key)
+
+	if (!itemStr) {
+		return null
+	}
+
+	const item = JSON.parse(itemStr)
+	const now = new Date()
+
+	if (now.getTime() > item.expiry && item.expiry !== null) {
+		storage.removeItem(key)
+		return null
+	}
+	return item.value;
+
+}
+
+function nuSetStorageItem(key, value, storage, ttl) {
+
+	var storage = storage === undefined || storage === 'session' ? window.sessionStorage : window.localStorage;
+	
+	const now = new Date()
+	const item = {
+		value: value,
+		expiry: ttl === undefined ? null : now.getTime() + ttl * 1000,
+	}
+	storage.setItem(key, JSON.stringify(item));
+
+}
