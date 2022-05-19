@@ -1,13 +1,7 @@
 <?php
-/**
- * phpMyAdmin sample configuration, you can use it as base for
- * manual configuration. For easier setup you can use setup/
- *
- * All directives are explained in documentation in the doc/ folder
- * or at <https://docs.phpmyadmin.net/>.
- */
-
 declare(strict_types=1);
+
+require_once(dirname(__FILE__). '/../../../nuconfig.php');
 
 if (!isset($_COOKIE['nupmalogin']) || $_COOKIE["nupmalogin"] != "good" ) {
 		echo "Please log into nuBuilder";
@@ -34,9 +28,11 @@ $i++;
 $cfg['Servers'][$i]['auth_type']						= 'config';
 
 /* Server parameters */
-$cfg['Servers'][$i]['host']								= $_COOKIE["nuConfigDBHost"];
-$cfg['Servers'][$i]['user']								= $_COOKIE["nuConfigDBUser"];
-$cfg['Servers'][$i]['password']							= $_COOKIE["nuConfigDBPassword"];
+$cfg['Servers'][$i]['host']								= $nuConfigDBHost;
+$cfg['Servers'][$i]['user']								= $nuConfigDBUser;
+$cfg['Servers'][$i]['password']							= $nuConfigDBPassword;
+
+
 
 if ( $_COOKIE["nuConfigDBPasswordBlank"] == 'BLANK' ) {
 	$cfg['Servers'][$i]['password'] = '';
