@@ -3,6 +3,10 @@ function nuAjax(w,successCallback,errorCallback){
 
 	w	= nuAddEditFieldsToHash(w);
 
+	// Avoid modsecurity blocking
+	w.browse_sql = null; 
+	if (w.hash !== undefined) w.hash.browse_sql = null;
+
 	w	= JSON.stringify(w);
 
 	$.ajax({
