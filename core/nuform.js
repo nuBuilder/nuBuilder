@@ -4817,26 +4817,14 @@ function nuAddJavascript(js){
 
 }
 
-window.nuInjectCSS = (function(doc){
-
-	var wrap = doc.createElement('div');
-	var temp = doc.createElement('div');
-	
-	return function (cssRules) {
-		if (!wrap.id) {
-			wrap.id = 'injected_css';
-			wrap.style.display = 'none';
-		}
-
-		doc.body.appendChild(wrap);					
-		temp.innerHTML = '<br><style>'+ cssRules +'</style>';
-		wrap.appendChild( temp.children[1] );
-	};
-
-})(document);
-
 function nuAddFormStyle(style){
-	if (style !== '') nuInjectCSS(style);
+
+	if (style !== '') {
+		style = style.replace(/((<style>)|(<style type=.+)|(<\/style>))/gi, '');
+		const span = '<span id="nufromcss" style="display:none"><style>' + style +  '</style></span>';
+		$('#nuRECORD').append(span);
+	}
+
 }
 
 function nuHashFromEditForm(){
