@@ -220,19 +220,25 @@ function nuShowObjectTooltip() {
 
 function nuConsoleErrorsToMessage() {
 
-	const element = document.getElementById('nuhtml');
-	if (element && !element.hasAttribute('listenerErrorHandler')) {
-		window.addEventListener("error", listenerErrorHandler, true);
-		element.setAttribute('listenerErrorHandler', '');
-	}
-
-	function listenerErrorHandler(evt) {
-		if (evt.message) {
-			alert("error: "+evt.message +" at linenumber: "+evt.lineno+" of file: "+evt.filename);
+	window.onerror = function (msg, url, lineNo, columnNo, error) {
+		var string = msg.toLowerCase();
+		var substring = 'script error';
+		if (string.indexOf(substring) > -1){
+			alert('Script Error: See Browser Console for Details');
 		} else {
-			alert("error: "+evt.type+" from element: "+(evt.srcElement || evt.target));
+		var message = [
+			'Message: ' + msg,
+			'URL: ' + url,
+			'Line: ' + lineNo,
+			'Column: ' + columnNo,
+			'Error object: ' + JSON.stringify(error)
+		].join(' - ');
+
+		alert(message);
 		}
-	}
+
+		return false;
+	};
 
 }
 
@@ -522,7 +528,7 @@ function nuContextMenuBeforeRender(menu, event) {
 			if (menu[i].tag == 'Object') menu[i].text = "Object: " + (nuFormType() == 'edit' ? contextMenuCurrentTargetUpdateId() : nuContextMenuCurrentTargetBrowseId());
 
 			if (menu[i].tag == 'Access') { 
-				for (let j = 0; j <  menu[i].subMenu.length; j++) {
+				for (let j = 0; j <	menu[i].subMenu.length; j++) {
 					let sub = menu[i].subMenu[j];
 					if (sub.tag == 'Editable') { 
 						sub.text = nuContextMenuAccessText(id, sub, '0');
@@ -540,7 +546,7 @@ function nuContextMenuBeforeRender(menu, event) {
 				if (isSelect) {
 					menu.splice(i, 1);
 				} else {			
-					for (let j = 0; j <  menu[i].subMenu.length; j++) {
+					for (let j = 0; j <	menu[i].subMenu.length; j++) {
 						let sub = menu[i].subMenu[j];
 						sub.text = nuContextMenuAlignText(id, sub, sub.tag)
 					}
@@ -549,7 +555,7 @@ function nuContextMenuBeforeRender(menu, event) {
 				if (isButton) {
 					menu.splice(i, 1);
 				} else {
-					for (let j = 0; j <  menu[i].subMenu.length; j++) {
+					for (let j = 0; j <	menu[i].subMenu.length; j++) {
 						let sub = menu[i].subMenu[j];
 						if (sub.tag == 'No Blanks') {
 							sub.text = nuContextMenuValidationText(id, sub, 'nuBlank');
@@ -621,7 +627,7 @@ function nuContextMenuItemPositionChanged(t, update) {
 						$('#' + id + 'description').css(prop, t.value + 'px');
 					} else if (prop == 'height') {
 						$('#' + id + 'description').css(prop, t.value + 'px');
-					}  else if (prop == 'width') {
+					}	else if (prop == 'width') {
 						$('#' + id + 'button').css('left', Number(t.value) + obj.cssNumber('left') + 6 + 'px');
 						$('#' + id + 'description').css('left', Number(t.value) + obj.cssNumber('left') + 25 + 'px');
 					}
@@ -664,7 +670,7 @@ function nuContextMenuUpdateAccess(v) {
 		nuDisable(id);
 	} else if (v == 2) { 		//-- hidden
 		nuHide(id);
-	}  else if (v == 4) { 		//-- hidden (user) / readonly
+	}	else if (v == 4) { 		//-- hidden (user) / readonly
 		nuDisable(id);
 	}
 
@@ -686,7 +692,7 @@ function nuContextMenuUpdateAlign(v) {
 	} else {
 		
 		let colNumber = id.replace('nuBrowseTitle','');
-		$('[data-nu-column="'+colNumber+'"]').each(function(index) {     
+		$('[data-nu-column="'+colNumber+'"]').each(function(index) {		 
 			$(this).css('text-align', v) 
 		});
 
@@ -803,7 +809,7 @@ function contextMenuCurrentTargetUpdateId() {
 			return strIdNoLabel + '_select2';
 		}
 
-		let id = t.hasClass('nuSubformTitle') ?  t.attr('data-nu-field') : idNoLabel.attr('data-nu-field');
+		let id = t.hasClass('nuSubformTitle') ?	t.attr('data-nu-field') : idNoLabel.attr('data-nu-field');
 		id = id === undefined ? contextMenuCurrentTarget.id : id;
 		return id;
 	}
@@ -862,10 +868,10 @@ function nuContextMenuUpdateObject(value, column) {
 		id = (Number(contextMenuCurrentTargetUpdateId().justNumbers()) + 1) * 10;
 	}
 
-	let formId = isSfTitle ? nuContextMenuGetFormId('title_'  + contextMenuCurrentTargetId()) : nuContextMenuGetFormId(id);
+	let formId = isSfTitle ? nuContextMenuGetFormId('title_'	+ contextMenuCurrentTargetId()) : nuContextMenuGetFormId(id);
 	let p = 'nuupdateobject';
 
-	nuSetProperty(p + '_id', isTab ?  $('#' + contextMenuCurrentTargetId()).attr('data-nu-tab-id') : id);
+	nuSetProperty(p + '_id', isTab ?	$('#' + contextMenuCurrentTargetId()).attr('data-nu-tab-id') : id);
 	nuSetProperty(p + '_value', value);
 	nuSetProperty(p + '_form_id', formId);
 	nuSetProperty(p + '_type', isTab ? 'tab' : nuFormType());	
@@ -877,7 +883,7 @@ function nuContextMenuUpdateObject(value, column) {
 function nuContextMenuUpdate() {
 
 	let typeEdit = nuFormType() == 'edit';
-	let selector =  typeEdit ? 'label, button, .nu_run, .nuWord, .nuImage, .nuContentBoxTitle, .nuTab, .nuSubformTitle' : '.nuSort';
+	let selector =	typeEdit ? 'label, button, .nu_run, .nuWord, .nuImage, .nuContentBoxTitle, .nuTab, .nuSubformTitle' : '.nuSort';
 //not('.nuDragLabel')
 	$(selector).each((index, element) => {
 
