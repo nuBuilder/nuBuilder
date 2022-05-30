@@ -1630,18 +1630,18 @@ function nuFormDimensions($f){
 			 $w		= max($w, $r->sob_all_left + $r->sob_all_width + 40);
 			 $gw	= $gw + $r->sob_all_width + 4;
 
-	}
+		}
 
-	if ($r->sob_all_type == 'textarea') {
-		$oh = $r->sob_all_height + 8;
-	} else if (isset($r->sob_select_2) && $r->sob_select_2 == '1') {
-		$oh = $r->sob_all_height + 13;
-	} else {
-		$oh = $r->sob_all_height;
-	}
+		if ($r->sob_all_type == 'textarea') {
+			$oh = $r->sob_all_height + 8;
+		} else if (isset($r->sob_select_2) && $r->sob_select_2 == '1') {
+			$oh = $r->sob_all_height + 13;
+		} else {
+			$oh = $r->sob_all_height;
+		}
 
-	$h		= max($h, $r->sob_all_top + $oh);
-	$gh		= max($oh, 25, $gh);
+		$h		= max($h, $r->sob_all_top + $oh);
+		$gh		= max($oh, 27, $gh);
 
 	}
 
@@ -1735,7 +1735,7 @@ function nuAddJavascript($js, $bc = false){
 			$GLOBALS['EXTRAJS_BC'] = $GLOBALS['EXTRAJS_BC'] . "\n\n" . $js;
 		}
 	} else if (isset($GLOBALS['EXTRAJS'])) {
-		$GLOBALS['EXTRAJS'] = $GLOBALS['EXTRAJS'] . "\n\n" . $js;
+		$GLOBALS['EXTRAJS'] = $GLOBALS['EXTRAJS'] . "\n\n" . $js;					
 	}
 
 }
