@@ -35,154 +35,6 @@ window.nuBROWSERESIZE			= {
 									last_moved_element		: ''
 								};
 
-function nuOpener(t, f, r, filter, parameters){
-	
-	nuSetSuffix();
-	
-	this.id					= String(Date.now()) + String(window.nuSuffix);
-	this.form_id			= f;
-	this.record_id			= r;
-	this.type				= t;
-	
-	if(arguments.length		= 3){
-		this.filter			= filter;
-	}else{
-		this.filter			= '';
-	}
-	
-	if(arguments.length		= 4){
-		this.parameters		= parameters;
-	}else{
-		this.parameters		= '';
-	}
-	
-}
-
-function nuOpenerAppend(t, k) {
-	window.nuOPENER[window.nuOPENER.length - 1][t] = k;
-}
-
-function nuGetOpenerById(pOPENER, pid) {
-	
-	for (var i = 0; i < pOPENER.length; i++) {
-		if(pOPENER[i].id == pid) {
-			return pOPENER[i];
-		}
-	}
-	
-	return;
-}
-
-function nuRemoveOpenerById(o, pid) {
-
-	for (var i = 0; i < o.length; i++) {
-		
-		if(o[i].id == pid) {
-			o.splice(i,1);
-		}
-		
-	}
-
-}
-
-function nuGetBreadcrumb(bc){
-
-	if(window.nuOnBeforeGetBreadcrumb){
-		if (nuOnBeforeGetBreadcrumb(bc) == false) return;
-	}
-	
-	nuCursor('progress');
-	
-	var a			= arguments.length;
-	var e			= nuFORM.edited;
-	
-	if(a == 0){
-		var b		= nuFORM.breadcrumbs.length -1;
-	}else{
-		var b		= bc;
-	}
-	
-	window.nuTimesSaved		= -1;
-	
-	if(e && nuFORM.getCurrent().form_type != 'launch'){
-		
-		if(!confirm(nuTranslate('Leave this form without saving?'))){
-			nuCursor('default');
-			return;
-		}
-		
-	}
-
-	window.nuFORM.removeAfter(b);
-	
-	var c					= window.nuFORM.getCurrent();
-	
-	if(c === undefined){
-		$('#nuDragDialog iframe').remove();
-	}else{
-		nuForm(c.form_id, c.record_id, c.filter, c.search, 1);
-	}
-
-	
-}
-
-function nuOpenPreviousBreadcrumb(b) {
-
-	// If a popup is open, close it
-	if (parent.$('#nuModal').length > 0) {
-		nuClosePopup();
-		return;
-	}
-
-	if (b === undefined) {
-		var b = 2; 
-	} else {
-		b = b + 1;
-	}
- 
-	var l = window.nuFORM.breadcrumbs.length;
-	if (l > 1) {
-		nuGetBreadcrumb(l - b);
-	}
-}
-
-function nuDisplayError(e){
-
-	if(e.errors === undefined || e.errors.length == 0){			//-- no error messages
-		return false;
-	}
-
-	let msgDiv = nuMessage(e.errors);
-
-	if(window.nuOnMessage){
-		nuOnMessage(msgDiv, e.errors);
-	}
-
-	return e.after_event == false;								//-- errors are really just messages if from after save or after delete.
-
-}
-
-function nuFormatAjaxErrorMessage(jqXHR, exception) {
-
-	if (jqXHR.status === 0) {
-		return nuTranslate('Not connected. Please verify your network connection.') ;
-	} else if (jqXHR.status == 403) {
-		return ['<h3>' + nuTranslate('Access Forbidden.') + '</h3>', jqXHR.responseText];	
-	} else if (jqXHR.status == 404) {
-		return nuTranslate('The requested page was not found.') + ' [404]';
-	} else if (jqXHR.status == 500) {
-		return nuTranslate('Internal Server Error.') + ' [500]';
-	} else if (exception === 'parsererror') {
-		return nuTranslate('Requested JSON parse failed.') ;
-	} else if (exception === 'timeout') {
-		return nuTranslate('Time out error.');
-	} else if (exception === 'abort') {
-		return nuTranslate('Ajax request aborted.');
-	} else {
-		return ['<h3>' + nuTranslate('Uncaught Error.') + '</h3>', jqXHR.responseText];	
-	}
-
-}
 
 String.prototype.replaceAll = function(str1, str2, ignore){
 	return this.replace(new RegExp(str1.replace(/([\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g, function(c){return "\\" + c;}), "g"+(ignore?"i":"")), str2);
@@ -381,6 +233,155 @@ function loginInputKeyup(event){
 	if(event.keyCode == 13){
 		$('input#submit').click();
 	}
+}
+
+function nuOpener(t, f, r, filter, parameters){
+	
+	nuSetSuffix();
+	
+	this.id					= String(Date.now()) + String(window.nuSuffix);
+	this.form_id			= f;
+	this.record_id			= r;
+	this.type				= t;
+	
+	if(arguments.length		= 3){
+		this.filter			= filter;
+	}else{
+		this.filter			= '';
+	}
+	
+	if(arguments.length		= 4){
+		this.parameters		= parameters;
+	}else{
+		this.parameters		= '';
+	}
+	
+}
+
+function nuOpenerAppend(t, k) {
+	window.nuOPENER[window.nuOPENER.length - 1][t] = k;
+}
+
+function nuGetOpenerById(pOPENER, pid) {
+	
+	for (var i = 0; i < pOPENER.length; i++) {
+		if(pOPENER[i].id == pid) {
+			return pOPENER[i];
+		}
+	}
+	
+	return;
+}
+
+function nuRemoveOpenerById(o, pid) {
+
+	for (var i = 0; i < o.length; i++) {
+		
+		if(o[i].id == pid) {
+			o.splice(i,1);
+		}
+		
+	}
+
+}
+
+function nuGetBreadcrumb(bc){
+
+	if(window.nuOnBeforeGetBreadcrumb){
+		if (nuOnBeforeGetBreadcrumb(bc) == false) return;
+	}
+	
+	nuCursor('progress');
+	
+	var a			= arguments.length;
+	var e			= nuFORM.edited;
+	
+	if(a == 0){
+		var b		= nuFORM.breadcrumbs.length -1;
+	}else{
+		var b		= bc;
+	}
+	
+	window.nuTimesSaved		= -1;
+	
+	if(e && nuFORM.getCurrent().form_type != 'launch'){
+		
+		if(!confirm(nuTranslate('Leave this form without saving?'))){
+			nuCursor('default');
+			return;
+		}
+		
+	}
+
+	window.nuFORM.removeAfter(b);
+	
+	var c					= window.nuFORM.getCurrent();
+	
+	if(c === undefined){
+		$('#nuDragDialog iframe').remove();
+	}else{
+		nuForm(c.form_id, c.record_id, c.filter, c.search, 1);
+	}
+
+	
+}
+
+function nuOpenPreviousBreadcrumb(b) {
+
+	// If a popup is open, close it
+	if (parent.$('#nuModal').length > 0) {
+		nuClosePopup();
+		return;
+	}
+
+	if (b === undefined) {
+		var b = 2; 
+	} else {
+		b = b + 1;
+	}
+ 
+	var l = window.nuFORM.breadcrumbs.length;
+	if (l > 1) {
+		nuGetBreadcrumb(l - b);
+	}
+}
+
+function nuDisplayError(e){
+
+	if(e.errors === undefined || e.errors.length == 0){			//-- no error messages
+		return false;
+	}
+
+	let msgDiv = nuMessage(e.errors);
+
+	if(window.nuOnMessage){
+		nuOnMessage(msgDiv, e.errors);
+	}
+
+	return e.after_event == false;								//-- errors are really just messages if from after save or after delete.
+
+}
+
+function nuFormatAjaxErrorMessage(jqXHR, exception) {
+
+	if (jqXHR.status === 0) {
+		return nuTranslate('Not connected. Please verify your network connection.') ;
+	} else if (jqXHR.status == 403) {
+		return ['<h3>' + nuTranslate('Access Forbidden.') + '</h3>', jqXHR.responseText];	
+	} else if (jqXHR.status == 404) {
+		return nuTranslate('The requested page was not found.') + ' [404]';
+	} else if (jqXHR.status == 500) {
+		return nuTranslate('Internal Server Error.') + ' [500]';
+	} else if (exception === 'parsererror') {
+		return nuTranslate('Requested JSON parse failed.') ;
+	} else if (exception === 'timeout') {
+		return nuTranslate('Time out error.');
+	} else if (exception === 'abort') {
+		return nuTranslate('Ajax request aborted.');
+	} else {
+		return ['<h3>' + nuTranslate('Uncaught Error.') + '</h3>', jqXHR.responseText];	
+	}
+
 }
 
 function nuLogin(nuconfigNuWelcomeBodyInnerHTML){
