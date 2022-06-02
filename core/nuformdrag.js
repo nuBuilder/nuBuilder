@@ -346,7 +346,7 @@ function nuRemoveBox(ctrlKey) {
 		$('.nuDragSelected').removeClass('nuDragSelected');
 	}
 
-	var selectedTab = $('.nuTabSelected')[0].id.substring(5);
+	var selectedTab = $('.nuTabSelected').length > 0 ? $('.nuTabSelected')[0].id.substring(5): 0;
 
 	o.each(function(index) {
 
@@ -434,6 +434,7 @@ function nuInitialiseDragState(){
 function nuSetTabOrderDataAttrs(){
 
 	var currentTabNo	= $('div.nuTabSelected[id^="nuTab"]').attr('data-nu-tab-filter');
+	if (currentTabNo === undefined) currentTabNo = 0;
 
 	for(var i=0; i<window.nuDragOptionsState.tabs[currentTabNo].objects.length; i++){
 
@@ -604,7 +605,8 @@ function nuCreateDragOptionsBox(form){
 
 	nuInitialiseDragState();
 	
-	let t = $('.nuTabSelected').attr('id').replace('nuTab','');
+	let tabSelected = $('.nuTabSelected');
+	let t = tabSelected.length > 0 ? tabSelected.attr('id').replace('nuTab','') : 0;
 	nuPopulateFieldsList(t);
 	nuPopulateTabDropdown(t);
 
