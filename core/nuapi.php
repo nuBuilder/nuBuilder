@@ -70,21 +70,23 @@
 
 	if(count($formAndSessionData->errors) == 0){
 
-		if($CT == 'logout')					{nuLogout(); }
-		if($CT == 'login')					{nuBeforeEdit($F, $R);$f->forms[0] 	= nuGetFormObject($F, $R, 0);}
-		if($CT == 'getform')				{nuBeforeEdit($F, $R);$f->forms[0] 	= nuGetFormObject($F, $R, 0);}
-		if($CT == 'getphp')					{nuBeforeEdit($F, $R);$f->forms[0] 	= nuGetFormObject($F, $R, 0);}
-		if($CT == 'getreport')				{nuBeforeEdit($F, $R);$f->forms[0] 	= nuGetFormObject($F, $R, 0);}
-		if($CT == 'getlookupid')			{$f->forms[0]				 		= nuGetAllLookupValues();}
-		if($CT == 'getlookupcode')			{$f->forms[0]				 		= nuGetAllLookupList();}
-		if($CT == 'getfile')				{$f->forms[0]->JSONfile		 		= nuGetFile();}
-		if($CT == 'runhiddenphp')			{$f->forms[0]						= nuRunPHPHidden($R);}
-		if($CT == 'runphp')					{$f->forms[0]->id					= nuRunPHP($F);}
-		if($CT == 'runreport')				{$f->forms[0]->id					= nuRunReport($F);}
-		if($CT == 'runhtml')				{$f->forms[0]->id					= nuRunHTML();}
-		if($CT == 'update')					{$f->forms[0]->record_id			= nuUpdateDatabase();}
-		if($CT == 'nudragsave')				{$f->forms[0]						= nuDragSave($P);}
-		if($CT == 'systemupdate')			{$f->forms[0]->id					= nuRunSystemUpdate();}
+		if($CT == 'logout')																	nuLogout();
+		if($CT == 'login')																	nuRunLoginProcedure('nuStartup');
+
+		if($CT == 'getform' || $CT == 'getphp' || $CT == 'login' || $CT == 'getreport') {
+			nuBeforeEdit($F, $R);$f->forms[0] =												nuGetFormObject($F, $R, 0);
+		}
+
+		if($CT == 'getlookupid')			{$f->forms[0]				 					= nuGetAllLookupValues();}
+		if($CT == 'getlookupcode')			{$f->forms[0]				 					= nuGetAllLookupList();}
+		if($CT == 'getfile')				{$f->forms[0]->JSONfile		 					= nuGetFile();}
+		if($CT == 'runhiddenphp')			{$f->forms[0]									= nuRunPHPHidden($R);}
+		if($CT == 'runphp')					{$f->forms[0]->id								= nuRunPHP($F);}
+		if($CT == 'runreport')				{$f->forms[0]->id								= nuRunReport($F);}
+		if($CT == 'runhtml')				{$f->forms[0]->id								= nuRunHTML();}
+		if($CT == 'update')					{$f->forms[0]->record_id						= nuUpdateDatabase();}
+		if($CT == 'nudragsave')				{$f->forms[0]									= nuDragSave($P);}
+		if($CT == 'systemupdate')			{$f->forms[0]->id								= nuRunSystemUpdate();}
 
 	}
 
