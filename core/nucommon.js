@@ -664,38 +664,39 @@ function nuCreateDialog(t){
 	
 }
 
-
-
-
 function nuReformat(t){
 
-	var o		= $('#' + t.id);
-	var f		= o.attr('data-nu-format');
-	var v		= o.val();
-	
+	function nuReapplyFormat(v, f){
+
+		let r = nuFORM.removeFormatting(v, f);
+		return nuFORM.addFormatting(r, f);
+
+	}
+
+	let o = $('#' + t.id);
+	let f = o.attr('data-nu-format');
+	let v = o.val();
+
 	if(f == '' || v == ''){
 		return v;
 	}
 	
 	if(f[0] == 'D'){
-			
-		var r		= nuFORM.removeFormatting(v, f);
-		var a		= nuFORM.addFormatting(r, f);
-		
+
+		let a = nuReapplyFormat(v, f);
 		if(v != a){
 			o.val('');
 		}
 
 	}
-	
+
 	if(f[0] == 'N'){
 
-		var r		= nuFORM.removeFormatting(v, f);
-		var a		= nuFORM.addFormatting(r, f);
+		let a = nuReapplyFormat(v, f);
 		o.val(a);
 
 	}
-	
+
 }
 
 
