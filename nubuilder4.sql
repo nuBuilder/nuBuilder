@@ -596,8 +596,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2022.05.28.00'),
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2022.06.02.00');
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2022.06.02.01'),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2022.06.02.03');
 
 -- --------------------------------------------------------
 
@@ -1313,7 +1313,7 @@ CREATE TABLE `zzzzsys_report` (
   `sre_code` varchar(300) DEFAULT NULL,
   `sre_description` varchar(300) DEFAULT NULL,
   `sre_group` varchar(100) DEFAULT NULL,
-  `sre_zzzzsys_php_id` varchar(25) DEFAULT NULL,
+  `sre_zzzzsys_php_id` varchar(200) DEFAULT NULL,
   `sre_zzzzsys_form_id` varchar(25) DEFAULT NULL,
   `sre_layout` longtext DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
