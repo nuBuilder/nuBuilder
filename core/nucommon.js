@@ -354,6 +354,25 @@ jQuery.fn.extend({
 
 });
 
+function nuPad4(i){
+	return nuPad(i, 4);
+}
+
+function nuPad3(i){
+	return nuPad(i, 3);
+}
+
+function nuPad2(i){
+	return nuPad(i, 2);
+}
+
+function nuPad(i, length, pad){
+
+	if (typeof(pad) == "undefined") { var pad = 0; }
+	return i.toString().padStart(length, pad).toString();
+
+}
+
 function nuGlobalAccess() {
 	return window.global_access;
 }

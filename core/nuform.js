@@ -2873,25 +2873,6 @@ function nuAddSubformRow(t, e){
 
 }
 
-function nuPad4(i){
-
-	return String('000' + Number(i)).substr(-4);
-
-}
-
-function nuPad3(i){
-
-	return String('00' + Number(i)).substr(-3);
-
-}
-
-
-function nuPad2(i){
-	
-	return String('0' + Number(i)).substr(-2);
-
-}
-
 function nuLabel(w, i, p, prop){
 
 	let obj = prop.objects[i];
