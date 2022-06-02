@@ -842,7 +842,7 @@ function nuBindCtrlEvents(){
 				} else if(e.keyCode == 76 && g) {					//-- l		Change Password
 					nuPopup("nupassword", "5b6bb7108a75efc", "");
 				} else if(e.keyCode == 72 && g) {					//-- t		Add Object
-					nuPopup('nuobject','-1','')
+					nuPopup('nuobject','-1','');
 				} else if(e.keyCode == 71 && g) {					//-- G		Object Grid
 					nuForm("nuobjectgrid", formId,"", "", 2);
 				} else if(e.keyCode == 83) {						//-- s		Save
@@ -2073,7 +2073,7 @@ function nuRemovePX(s){
 function nuImportCSV(t, s){
 
 	var csv		= String(s).split('\n');
-	var	header	= String(c[0]).split(',');
+	var	header	= String(s[0]).split(',');
 	var inserts	= [];
 
 	for(var i = 1 ; i < c.length ; i++){
