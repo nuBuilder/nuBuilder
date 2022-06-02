@@ -236,26 +236,17 @@ function loginInputKeyup(event){
 }
 
 function nuOpener(t, f, r, filter, parameters){
-	
+
 	nuSetSuffix();
-	
-	this.id					= String(Date.now()) + String(window.nuSuffix);
-	this.form_id			= f;
-	this.record_id			= r;
-	this.type				= t;
-	
-	if(arguments.length		= 3){
-		this.filter			= filter;
-	}else{
-		this.filter			= '';
-	}
-	
-	if(arguments.length		= 4){
-		this.parameters		= parameters;
-	}else{
-		this.parameters		= '';
-	}
-	
+
+	this.id			= String(Date.now()) + String(window.nuSuffix);
+	this.form_id	= f;
+	this.record_id	= r;
+	this.type		= t;
+
+	this.filter = typeof(filter) == "undefined" ? '' : filter;
+	this.parameters = typeof(parameters) == "undefined" ? '' : parameters;
+
 }
 
 function nuOpenerAppend(t, k) {
