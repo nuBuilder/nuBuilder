@@ -27,18 +27,14 @@ function nuShowFormInfo() {
 	let code = nuCurrentProperties().form_code;
 	let devMode = nuDevMode();
 
-	var url			= window.location.href.split('?')[0] + '?f=' + cp.form_code + '&r='+cp.record_id+'&h='+nuSERVERRESPONSE.home_id;
-	let recordId	= nuFormType() == 'edit' && cp.form_type !== 'launch' ? cp.record_id : '';
-	if (recordId != '') {
-		recordId 	= "<b>Record ID:</b> " + '<a href="'+url+'" target="_blank">'+recordId+'</a>';
-	}
+	var href		= window.location.href.split('?')[0] + '?f=' + cp.form_code + '&r='+cp.record_id+'&h='+nuSERVERRESPONSE.home_id;
+	var url			= '<a href="'+href+'" target="_blank">Permalink</a></b></br>';
 
+	let recordId	= nuFormType() == 'edit' && cp.form_type !== 'launch' ? "<b>Record ID:</b> " + cp.record_id : '';
 	let browseSQL	= nuFormType() == 'browse' && (! code.startsWith('nu') || devMode) ? "<b>Browse SQL:</b></br> " + cp.browse_sql : '';
 	let table		= nuSERVERRESPONSE.table !== '' && (! code.startsWith('nu') || devMode) ? "<b>Table:</b> " + nuSERVERRESPONSE.table : '';
-	
-	
 
-	nuMessage(["<h2><u>" + cp.form_description + "</u></h2>", cp.form_id, "<b>Form Code:</b> " + cp.form_code, table, recordId, browseSQL]);
+	nuMessage(["<h2><u>" + cp.form_description + "</u></h2>", "<b>Form ID:</b> " + cp.form_id, "<b>Form Code:</b> " + cp.form_code, table, recordId, url, browseSQL]);
 
 }
 
