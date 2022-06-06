@@ -456,7 +456,6 @@ function nuLogin(nuconfigNuWelcomeBodyInnerHTML){
 		
 }
 
-
 function nuSubmit(e){
 
 	if(e.keyCode == 13){
@@ -465,16 +464,16 @@ function nuSubmit(e){
 	
 }
 
-
 function nuBuildLookup(t, s, like){
 
 	if($(t).prop('disabled')){return;}
 
 	nuCursor('progress');
 
-	var f				= $('#' + t.id).attr('data-nu-form-id');
-	var tar				= $('#' + t.id).attr('data-nu-target');
-	var p				= $('#' + t.id).attr('data-nu-prefix');
+	let obj				= $('#' + t.id);
+	var f				= obj.attr('data-nu-form-id');
+	var tar				= obj.attr('data-nu-target');
+	var p				= obj.attr('data-nu-prefix');
 	window.nuSubformRow	= Number(p.substr(p.length - 3));
 
 	if(arguments.length < 3){
@@ -484,9 +483,10 @@ function nuBuildLookup(t, s, like){
 	window.nuOPENER.push(new nuOpener('F', f, ''));
 
 	var open			= window.nuOPENER[window.nuOPENER.length - 1];
-	
+
 	if(parent.window == window){
-		window.nuDialog.createDialog(50, 25, 50, 50, '');
+		let left = nuIsMobile() ? 0 : 50;
+		window.nuDialog.createDialog(left, 25, 50, 50, '');
 	}else{
 		window.nuDialog.createDialog(0, 30, 50, 50, '');
 	}
@@ -511,7 +511,8 @@ function nuPopup(f, r, filter){
 	var id = window.nuOPENER[window.nuOPENER.length - 1].id;
 
 	if(parent.window==window){
-		window.nuDialog.createDialog(50 + window.pageXOffset, 25 + window.pageYOffset, 50, 50, '');
+		let left = nuIsMobile() ? 0 : 50;
+		window.nuDialog.createDialog(left + window.pageXOffset, 25 + window.pageYOffset, 50, 50, '');
 	}else{
 		window.nuDialog.createDialog(0, 30, 50, 50, '');
 	}
@@ -1361,7 +1362,7 @@ function nuAddEditFieldsToHash(w){
 	var f	= d.fields;
 	var r	= d.rows[0];
 
-	for(i = 2 ; i < f.length ; i++){
+	for(let i = 2 ; i < f.length ; i++){
 		w[f[i]] = r[i];
 	}
 
@@ -2134,22 +2135,20 @@ function nuIsIframe(){
 
 // After clicking a nuActionButton (Save, Delete, Print, Clone etc.), disable it for 1.3 secs to prevent a user from double-clicking it.
 
-function nuPreventButtonDblClick () {
+function nuPreventButtonDblClick() {
 
 	$('.nuActionButton, .nuButton, #nuLogout').not(".nuAllowDblClick").click(function() {
 
-	if ($(this).hasClass('nuReadonly') || $(this).hasClass('nuAllowDblClick')) return;
+		if ($(this).hasClass('nuReadonly') || $(this).hasClass('nuAllowDblClick')) return;
 
-	var id = $(this).attr("id");
+		var id = $(this).attr("id");
 
-	$('#'+id).prop('disabled', true);
+		$('#' + id).prop('disabled', true);
 
-	setTimeout(
-
-		function() {
-			$('#'+id).prop('disabled', false);
-		}
-		, 1300);
+		setTimeout(
+			function() {
+				$('#' + id).prop('disabled', false);
+			}, 1300);
 	});
 
 }
@@ -2490,7 +2489,7 @@ function nuSelectMultiWithoutCtrl(i, active) {
 
 function nuSelectRemoveEmpty(i, setIndex) {
 
-	id = i === undefined ? 'select' : '#' + i;
+	let id = i === undefined ? 'select' : '#' + i;
 
 	$(id + ' option').filter(function() {
 		return ($(this).val().trim() === "" && $(this).text().trim() === "");
