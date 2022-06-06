@@ -782,7 +782,7 @@ function nuRecordProperties(w, p, l){
 			'visibility'	: 'visible'})
 
 		if(w.deletable == '0'){
-			objDel.css({'width' : 0, 'height' : 0, 'left' : -10, 'top' : 10})			//-- allows tabbing when there is no checkbox.
+			objDel.css({'width' : 0, 'height' : 0, 'left' : -10, 'top' : 10, 'tabindex' : '-1'})			//-- allows tabbing when there is no checkbox.
 		}
 
 	}else{
