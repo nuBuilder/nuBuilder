@@ -2547,25 +2547,35 @@ function nuSubformRefreshSelectObject(prefix, selectId, formId, removeBlank) {
 	if (typeof formId === 'undefined') {
 		var formId = '';
 	}
+	
+	let p = 'nurefreshselectobject';
+	nuSetProperty(p +'_prefix',prefix);
+	nuSetProperty(p +'_selectid',selectId);
+	nuSetProperty(p +'_formid',formId);
+	nuSetProperty(p + '_removeblank',removeBlank === true ? '1' : '0');
 
-	nuSetProperty('nurefreshselectobject_prefix',prefix);
-	nuSetProperty('nurefreshselectobject_selectid',selectId);
-	nuSetProperty('nurefreshselectobject_formid',formId);
-	nuSetProperty('nurefreshselectobject_removeblank',removeBlank === true ? '1' : '0');
-
-	nuRunPHPHidden('nurefreshselectobject', 0);
+	nuRunPHPHidden(p, 0);
 
 }
 
 function nuRefreshDisplayObject(displayId, formId) {
 
+	nuSubformRefreshDisplayObject(displayId, formId)
+
+}
+
+function nuSubformRefreshDisplayObject(prefix, displayId, formId) {
+
 	if (typeof formId === 'undefined') {
 		var formId = '';
 	}
 
-	nuSetProperty('nurefreshdisplayobject_displayid',displayId);
-	nuSetProperty('nurefreshdisplayobject_formid',formId);
-	nuRunPHPHidden('nurefreshdisplayobject', 0);
+	let p = 'nurefreshdisplayobject';
+	nuSetProperty(p + '_prefix',prefix);
+	nuSetProperty(p + '_displayid',displayId);
+	nuSetProperty(p + '_formid',formId);
+
+	nuRunPHPHidden(p, 0);
 
 }
 
@@ -3121,20 +3131,26 @@ function nuMainForm(){
 
 }
 
-function nuSetTitle(t){
+function nuSetTitle(t) {
 
-	if(nuFormType() == 'browse'){return;}
+	if (nuFormType() == 'browse') {
+		return;
+	}
 
 	nuFORM.setProperty('title', t);
 
-	var b	= $('.nuBreadcrumb').length;
-	var h	= '<div id="nuarrow' + (b-1) + '" class="nuBreadcrumbArrow">&nbsp;<i class="fa fa-caret-right"></i>&nbsp;</div>';
-	
-	if(nuFORM.breadcrumbs.length == 1){
-		h	= '';
-	}
+	let b = $('.nuBreadcrumb').length;
+	if (b === 0) {
+		$('#nuHomeGap').append(t)
+	} else {
+		let h = '<div id="nuarrow' + (b - 1) + '" class="nuBreadcrumbArrow">&nbsp;<i class="fa fa-caret-right"></i>&nbsp;</div>';
 
-	$('#nuBreadcrumb' + b).html(h + t);
+		if (nuFORM.breadcrumbs.length == 1) {
+			h = '';
+		}
+
+		$('#nuBreadcrumb' + b).html(h + t);
+	}
 
 }
 
