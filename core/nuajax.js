@@ -678,7 +678,13 @@ function nuPrintAction(){
 function nuUpdateData(action, instruction, close){
 
 	if(action == 'save' && window.nuBeforeSave){if(nuBeforeSave() === false ){return;}}
-	if(action != 'save' && window.nuBeforeDelete){if(nuBeforeDelete() === false ){return;}}
+	if(action != 'save' && window.nuBeforeDelete){
+		if(nuBeforeDelete() === false ){
+			$('#nuDelete').prop('checked', false);
+			return;
+		}
+	}
+
 	if(action == 'save') nuSaveEditor();
 
 	if(nuFORM.getCurrent().record_id == -1){nuSetProperty('NEW_RECORD', 1);}
