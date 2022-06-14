@@ -454,7 +454,9 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 	$f->browse_height		= nuObjKey($B,1,0);
 	$f->browse_sql			= nuObjKey($B,2,0);
 
-	if ($f->browse_height > 0) nuOnProcess($F, $f, 'BB', 'nuOnProcessBrowseRows');
+	if ($f->browse_height > 0) { 
+		nuOnProcess($F, $f, 'BB', 'nuOnProcessBrowseRows');
+	}	
 
 	$__x					= nuHash();
 	$f->browse_table_id		= $__x['TABLE_ID'];
@@ -466,22 +468,37 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 	$f->number_formats		= nuBuildCurrencyFormats();
 	$O						= new stdClass();
 
-	if ($f->browse_height == 0) nuOnProcess($F, $f, 'BE', 'nuOnProcessObjects');
+																			 
 
+	if ($f->browse_height == 0) {
+		nuOnProcess($F, $f, 'BE', 'nuOnProcessObjects');
+	}
+	
 	$O->forms[]				= $f;
 
 	return $O->forms[0];
 
 }
 
-function nuOnProcess($F, &$f, $eventCode, $function){
+function nuExtractFunctionBody($functionName, $data) {
+
+	$c = preg_match("/function\s+".$functionName."\s*\((?<param>[^\)]*)\)\s*(?<body>\{(?:[^{}]+|(?&body))*\})/", $data, $matches);
+	if ($c == 0) {
+		$c = preg_match("/\\$".$functionName."\s+=\s+function\s*\((?<param>[^\)]*)\)\s*(?<body>\{(?:[^{}]+|(?&body))*\})/", $data, $matches);
+	}
+
+	return $c > 0 ? $matches['body'] : null;
+
+}
+
+function nuOnProcess($F, &$f, $eventCode, $functionName){
 
 	$p	= nuProcedure($F . '_'.$eventCode);
 	if ($p != '') {
-		if (strpos($p, $function) !== false) {
-			$count = preg_match_all("/function\s+(?<".$function.">\w+)\s*\((?<param>[^\)]*)\)\s*(?<body>\{(?:[^{}]+|(?&body))*\})/", $p, $matches);
-			if ($count == 1) { 
-				eval(implode(', ', $matches['body']));
+		if (strpos($p, $functionName) !== false) {
+			$body = nuExtractFunctionBody($functionName, $p);
+			if ($body != null) { 
+				eval($body);
 			}
 		}
 	}
