@@ -779,8 +779,6 @@ function nuBindCtrlEvents(){
 				$('#nuMessageDiv').remove();
 			} else if (nuIsVisible('nuOptionsListBox')) {
 				$('#nuOptionsListBox').remove();
-			} else if ($('.ctxmenu').is(':visible')) {
-				nuContextMenuClose();	
 			} else if (parent.$('#nuModal').length == 1) {
 				let ae = document.activeElement;
 				$(ae).blur();
