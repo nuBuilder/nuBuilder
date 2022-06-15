@@ -1,6 +1,13 @@
-function nuInitTinyMCE(id, plugins, mobile, toolbar, toolbar_groups, menubar, contextmenu) {
+function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, contextmenu) {
 
 	nuHide(id);
+
+	if (typeof options !== "undefined") {
+		if ($.type(options) !== 'object') {
+			var plugins = options;
+			options = undefined;
+		}
+	}
 
 	if (typeof tinymce === "undefined") {
 		nuMessage(["<h2>TinyMCE is not included</h2>","Set $nuConfigIncludeTinyMCE = true in nuconfig.php"]);
@@ -67,9 +74,10 @@ function nuInitTinyMCE(id, plugins, mobile, toolbar, toolbar_groups, menubar, co
 		_quickbars = 'bold italic | quicklink h2 h3 blockquote quickimage quicktable';
 	} else {
 		_quickbars = quickbars;
-	}	
+	}
 
-	tinymce.init({
+	let defaultOptions =
+	{
 		selector: "#" + idContainer,
 		plugins: _plugins,
 		mobile: _mobile, 
@@ -99,15 +107,14 @@ function nuInitTinyMCE(id, plugins, mobile, toolbar, toolbar_groups, menubar, co
 		content_style: "p { margin: 0; }",
 		contextmenu: _contextmenu,
 		skin: useDarkMode ? 'oxide-dark' : 'oxide',
-		content_css: useDarkMode ? 'dark' : 'default',	
-
+		content_css: useDarkMode ? 'dark' : 'default',
 		setup: function (editor) {
 
-			editor.on('init', function (e) {
+			editor.on('init', function (e) { 
 				e.target.setContent(nuGetValue(id)); 
 				if (window.nuTinyMCEOnInit) {
 					nuTinyMCEOnInit(e, editor);
-				}	
+				}
 			});
 
 			editor.on("change", function () {
@@ -115,8 +122,15 @@ function nuInitTinyMCE(id, plugins, mobile, toolbar, toolbar_groups, menubar, co
 			});
 
 		}
+	};
 
-	});
+	let mergedOptions = defaultOptions;
+
+	if (typeof options !== "undefined") {
+		mergedOptions = $.extend(defaultOptions, options) 	
+	}
+
+	tinymce.init( mergedOptions );
 
 	if (tinymce.editors.length > 0) {
 
@@ -177,7 +191,7 @@ function nuQuillFonts(fonts) {
 }
 
 function nuQuillToolbarOptions(fontNames) {
-	
+
 	var toolbarOptions = [
 
 			['bold', 'italic', 'underline', 'strike'], // toggled buttons
@@ -198,12 +212,11 @@ function nuQuillToolbarOptions(fontNames) {
 
 			['divider'],
 			['link'],
-	
+
 			['clean'] // remove formatting button
 
 	];
-	
-	
+
 	return toolbarOptions;
 	
 }
@@ -266,7 +279,7 @@ function nuQuill(i, options) {
 	Quill.register(Font, true);
 
 	var quill = new Quill('#'+ i + '_container', options);
-		
+
 	var content = $('#' + i).val();
 	if (content !== '') {
 		quill.clipboard.dangerouslyPasteHTML(content);
