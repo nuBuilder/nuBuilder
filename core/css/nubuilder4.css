@@ -71,19 +71,19 @@
 	 background-color:#f3f0f7;
 	 font-family:"Lucida Console",sans-serif;
 	 padding:2px;
-	 font-size:10px 
+	 font-size:12px 
 }
  .js {
 	 background-color:#fffced;
 	 font-family:"Lucida Console",sans-serif;
 	 padding:0 2px;
-	 font-size:10px 
+	 font-size:12px 
 }
  .html {
 	 background-color:#faf3ef;
 	 font-family:"Lucida Console",sans-serif;
 	 padding:5px;
-	 font-size:10px 
+	 font-size:12px 
 }
  .sql {
 	 background-color:#eaf6ff;
@@ -94,7 +94,7 @@
 	 background-color:#f4f7f4;
 	 font-family:"Lucida Console",sans-serif;
 	 padding:5px;
-	 font-size:10px 
+	 font-size:12px 
 }
  input.css {
 	 background-color:#f4f7f4;
@@ -1289,7 +1289,7 @@
 	 max-height: 100vh;
 	 border: 1px solid #DADCE0;
 	 padding: 2px 0;
-	 box-shadow: #aaa 3px 3px 3px;
+	 box-shadow: 2px 2px 8px 0 rgb(150 147 150);
 	 background: #fff;
 	 font-size: 13px;
 	 margin: 0;
