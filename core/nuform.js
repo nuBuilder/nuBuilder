@@ -2560,7 +2560,7 @@ function nuSubformRefreshSelectObject(prefix, selectId, formId, removeBlank) {
 
 function nuRefreshDisplayObject(displayId, formId) {
 
-	nuSubformRefreshDisplayObject(displayId, formId)
+	nuSubformRefreshDisplayObject('', displayId, formId)
 
 }
 
@@ -4592,8 +4592,8 @@ function nuHasNotBeenEdited(){
 function nuDeleteAction(){
 
 	if (confirm(nuTranslate("Delete This Record?"))){
-		$('#nuDelete').prop('checked', true);
 
+		$('#nuDelete').prop('checked', true);
 		nuUpdateData('delete');
 
 	}
@@ -4602,9 +4602,9 @@ function nuDeleteAction(){
 
 function nuDeleteAllAction(){
 
-if (confirm(nuTranslate("Delete This Record?"))){
-		$('#nuDelete').prop('checked', true);
+	if (confirm(nuTranslate("Delete This Record?"))){
 
+		$('#nuDelete').prop('checked', true);
 		nuUpdateData('delete', 'all');
 
 	}
