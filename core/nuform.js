@@ -2228,9 +2228,9 @@ function nuSubformAddFilter(filter) {
 		return sfName + columnId + '_filter';
 	}
 
-	function nuSubformFilterValue(sfName, columnId) {
+	function nuSubformFilterValue(sfName, columnId, type) {
 		let filterId = nuSubformFilterId(sfName, columnId);
-		return nuGetValue(filterId);
+		return nuGetValue(filterId, type === 'select' ? 'text' : 'value');
 	}
 
 	function nuSubformFilterOptionAll(sfName, columnId) {
@@ -2246,9 +2246,9 @@ function nuSubformAddFilter(filter) {
 		for (var columnId in arrColumns) {
 			if (isArray) columnId	= arrColumns[columnId];
 			arr[columnId]			= {};
-			arr[columnId].value		= nuSubformFilterValue(sfName, columnId);
-			arr[columnId].all		= nuSubformFilterOptionAll(sfName, columnId);
 			arr[columnId].type		= isArray ? 'select' : arrColumns[columnId].type;
+			arr[columnId].value		= nuSubformFilterValue(sfName, columnId, arr[columnId].type);
+			arr[columnId].all		= nuSubformFilterOptionAll(sfName, columnId);
 		}
 
 		return arr;
@@ -2500,7 +2500,7 @@ function nuSubformAddFilter(filter) {
 					data.type			= arrFilter[columnId].type;
 					data.optionAll		= arrFilter[columnId].all;
 					data.optionBlank	= data.filter == '' && data.type == 'search';
-					data.isMatch		= (data.type == 'search' && data.val.toLowerCase().includes(data.filter.toLowerCase())) || (data.type == 'select' && (data.val.toLowerCase() == data.filter.toLowerCase() || data.optionAll));
+					data.isMatch		= data.val.toLowerCase().includes(data.filter.toLowerCase()) || (data.type == 'select' && data.optionAll);
 
 					if (window.nuSubformOnFilterRows) {
 						hide = nuSubformOnFilterRows(sfName, data, row, rows.length);
