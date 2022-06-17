@@ -29,7 +29,7 @@ function nuShowFormInfo() {
 
 	let href		= window.location.href.split('?')[0] + '?f=' + cp.form_code + '&r='+cp.record_id+'&h='+nuSERVERRESPONSE.home_id;
 	let url			= '<br><a href="'+href+'" target="_blank">Permalink</a></b>';
-	let currentProp	= '<br><a href="#" onclick="nuPrettyPrintMessage(nuCurrentProperties())">Current Properties</a>';
+	let currentProp	= '<br><a href="javascript:;" onclick="nuPrettyPrintMessage(event, nuCurrentProperties())">Current Properties</a>';
 
 	let recordId	= nuFormType() == 'edit' && cp.form_type !== 'launch' ? "<b>Record ID:</b> " + cp.record_id : '';
 	let browseSQL	= nuFormType() == 'browse' && (! code.startsWith('nu') || devMode) ? "<b>Browse SQL:</b></br> " + cp.browse_sql : '';
@@ -1332,7 +1332,7 @@ var nuPrettyPrint = (function(){
 	var nuPrettyPrintThis = function(obj, options) {
 		
 		 /*
-		 *	  obj :: Object to be printed					
+		 *	  obj :: Object to be printed
 		 *  options :: Options (merged with config)
 		 */
 		
@@ -1697,15 +1697,17 @@ function nuClosePropertiesMsgDiv() {
 	$("#nuPropertiesMsgDiv").remove();
 }
 
-function nuPrettyPrintMessage(obj) {
-	
-	var ppTable = nuPrettyPrint(obj);
-	var btnClose = '<button onclick=" nuClosePropertiesMsgDiv() " style="height:25px">&#10006;</button><br>';
+function nuPrettyPrintMessage(event, obj) {
 
-	var msg = nuMessage([btnClose,  ppTable]);
-	msg.css({'width': 700, 'text-align': 'left'}).attr("id","nuPropertiesMsgDiv");
+	let ppTable = nuPrettyPrint(obj);
+	let btnClose = '<button onclick=" nuClosePropertiesMsgDiv() " style="height:25px">&#10006;</button><br>';
+
+	if (event.ctrlKey) {
+		let w = window.open();
+		$(w.document.body).html(ppTable);
+	} else {
+		let msg = nuMessage([btnClose,  ppTable]);
+		msg.css({'width': 700, 'text-align': 'left'}).attr("id","nuPropertiesMsgDiv");
+	}
 
 }
-
-
-// document.getElementById('debug').appendChild(ppTable);
