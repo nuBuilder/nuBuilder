@@ -88,6 +88,7 @@ $nuJSOptions = "
 	nuUXOptions['nuCalendarStartOfWeek']			= 'Sunday';		// nuCalendar: Start of Week: Sunday (default) or Monday
 	nuUXOptions['nuSelect2Theme']					= 'default';	// select2 theme (default, classic) Default: default
 	nuUXOptions['nuDefaultUseQuill']				= false;		// Use quill as default WYSIWYG editor
+	nuUXOptions['nuCalendarVanillaJS']				= false;		// Use Vanilla JS Datepicker
 
 	window.nuAdminButtons = [];
 	nuAdminButtons['nuDebug']						= false;

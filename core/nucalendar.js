@@ -16,12 +16,59 @@ function nuAppendChild(p,t,i){
 	
 }
 
+function nuPopupCalendarVanillaJs(pThis, d) {
+	
+	let id = pThis.id;
+	let datepicker = window[id + '_datepicker'];
+
+	if (! datepicker) {
+		let optionWeekStart = {};
+		let _weekStart = nuUXOptions['nuCalendarStartOfWeek'];
+		if (_weekStart !== undefined) {
+				_weekStart = _weekStart.length == 1 ? _weekStart : _weekStart.replace('Sunday', 0).replace('Monday', 1);
+				optionWeekStart = {
+					weekStart: _weekStart
+				}
+		}
+
+		let calendarOptionsDefault = {
+			autohide: true,
+			calendarWeeks: true,
+			defaultViewDate: d,
+			format: $(pThis).attr('data-nu-format').replace('D|', ''),
+			optionWeekStart
+		}
+
+		let objCalendarOptionsDefault = { options: calendarOptionsDefault };
+		let calendarUserOptions = [];
+
+		if(typeof window['nuOnSetCalendarOptions'] === 'function'){
+			calendarUserOptions = window.nuOnSetCalendarOptions(id, objCalendarOptionsDefault);
+		}
+
+		let calendarOptions = Object.assign(calendarUserOptions, objCalendarOptionsDefault.options);
+
+		datepicker = new Datepicker(pThis, calendarOptions);
+		window[id + '_datepicker'] = datepicker;
+	}
+
+	datepicker.setOptions({defaultViewDate: d});
+	datepicker.show();
+
+}
+
+
 function nuPopupCalendar(pThis, d){
 
 	if(pThis === null){return;}
 
 	$('#nuCalendar').remove();
 	$('#nuLookupList').remove();
+	
+	if (nuUXOptions['nuCalendarVanillaJS']) {
+		nuPopupCalendarVanillaJs(pThis, d);
+		return;
+	}
 
 	window.nuCalendarCaller	= pThis.id;
 	
