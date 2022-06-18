@@ -1,3 +1,17 @@
+:root {
+  --nu-black: rgba(0, 0, 0, 0.8);
+  --nu-php: #f3f0f7;
+  --nu-js: #fffced;
+  --nu-html: #faf3ef;
+  --nu-sql: #eaf6ff;
+  --nu-css: #f4f7f4;
+  --nu-border: #ddd;
+  --nu-body: #fdfdfd;
+  --nu-edit-body: rgb(245 247 250 / 45%);
+  --nu-font-sans-serif: "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+  --nu-font-code: "Lucida Console", sans-serif;
+}
+
 .nu_browse					{background-color : #8de2e2 !important}
 .nu_button					{background-color : #98AFC7 !important}
 .nu_display					{background-color : #c79a63 !important}
@@ -68,37 +82,37 @@
 	 color: red;
 }
  .php {
-	 background-color:#f3f0f7;
-	 font-family:"Lucida Console",sans-serif;
+	 background-color:var(--nu-php);
+	 font-family:var(--nu-font-code);
 	 padding:2px;
 	 font-size:12px 
 }
  .js {
-	 background-color:#fffced;
-	 font-family:"Lucida Console",sans-serif;
+	 background-color:var(--nu-js);
+	 font-family:var(--nu-font-code);
 	 padding:0 2px;
 	 font-size:12px 
 }
  .html {
-	 background-color:#faf3ef;
-	 font-family:"Lucida Console",sans-serif;
+	 background-color:var(--nu-html);
+	 font-family:var(--nu-font-code);
 	 padding:5px;
 	 font-size:12px 
 }
  .sql {
-	 background-color:#eaf6ff;
-	 font-family:"Lucida Console",sans-serif;
+	 background-color:var(--nu-sql);
+	 font-family:var(--nu-font-code);
 	 padding:2px 
 }
  textarea.css {
-	 background-color:#f4f7f4;
-	 font-family:"Lucida Console",sans-serif;
+	 background-color:var(--nu-css);
+	 font-family:var(--nu-font-code);
 	 padding:5px;
 	 font-size:12px 
 }
  input.css {
-	 background-color:#f4f7f4;
-	 font-family:"Lucida Console",sans-serif;
+	 background-color:var(--nu-css);
+	 font-family:var(--nu-font-code);
 }
  div {
 	 padding:0;
@@ -120,35 +134,35 @@
  select {
 	 padding:0;
 	 margin:0;
-	 font-family:"Noto Sans", "Helvetica Neue",Helvetica,Arial,sans-serif;
-	 border: 1px solid #ddd;
+	 font-family:var(--nu-font-sans-serif);
+	 border: 1px solid var(--nu-border);
 	 border-radius: 0.25rem;
 	 box-sizing:initial 
 }
  textarea {
 	 margin:0;
-	 border: 1px solid #ddd;
+	 border: 1px solid var(--nu-border);
 	 border-radius: 0.25rem;
-	 font-family:"Noto Sans", "Helvetica Neue",Helvetica,Arial,sans-serif;	 
+	 font-family:var(--nu-font-sans-serif);
 	 font-size:13.3333px 
 }
  body {
-	 background-color:#fdfdfd;
+	 background-color:var(--nu-body);
 	 transform-origin:top left;
 	 padding:0;
 	 margin:0;
-	 font-family:"Noto Sans", "Helvetica Neue",Helvetica,Arial,sans-serif;
+	 font-family:var(--nu-font-sans-serif);
 	 font-size:13px 
 }
  input {
-	 border: 1px solid #ddd;
+	 border: 1px solid var(--nu-border);
 	 border-radius: 0.25rem;
-	 font-family:"Noto Sans", "Helvetica Neue",Helvetica,Arial,sans-serif;
+	 font-family:var(--nu-font-sans-serif);
 	 padding:0 2px 
 }
  button {
 	 border-radius:4px;
-	 font-family:"Noto Sans", "Helvetica Neue",Helvetica,Arial,sans-serif
+	 font-family:var(--nu-font-sans-serif);
 }
  input[type=range]::-webkit-slider-runnable-track {
 	 background:darkgrey;
@@ -188,7 +202,7 @@
 	 background-color:white 
 }
  .nuEditBody {
-	 background-color:#f5f7fa73 
+	 background-color:var(--nu-edit-body)
 }
  .nuTabHolder {
 	 background-color:white;
@@ -531,12 +545,12 @@
 	 height:70px;
 	 border-style:solid;
 	 border-color:#ebebeb70;
-	 border-top:1px solid #ddd;
+	 border-top:1px solid var(--nu-border);
 	 border-width:1px;
 	 padding: 1px 10px 5px 10px;
 	 position:absolute;
 	 top:75px;
-	 font:13px "Noto Sans", "Helvetica Neue",HelveticaNeue,Helvetica,Arial,sans-serif!important;
+	 font:13px var(--nu-font-sans-serif)!important;
 	 line-height:150%;
 	 white-space:nowrap 
 }
@@ -555,7 +569,7 @@
 	 top:75px;
 	 background-color:#edf7ff!important;
 	 border-color:#ebebeb70;
-	 font:13px "Noto Sans", "Helvetica Neue",Helvetica,Arial,sans-serif!important;
+	 font:13px var(--nu-font-sans-serif)!important;
 	 line-height:150%;
 	 white-space:nowrap 
 }
@@ -728,12 +742,12 @@
 	 color:#E2EAFF 
 }
  .nuQuickButton {
-	 background-color: #f7f7f7;
-	 color: black;
-	 border-color: #ffffff;
-	 border-style: solid;
-	 text-shadow: none;
-	 border-width: thin;
+	 background-color:#f7f7f7;
+	 color:var(--nu-black);
+	 border-color:#ffffff;
+	 border-style:solid;
+	 text-shadow:none;
+	 border-width:thin;
 	 padding-left:10px;
 	 border-radius:9px 
 }
@@ -745,7 +759,7 @@
 	 margin-bottom:10px;
 	 background-color:#fafafa;
 	 background-image:none;
-	 color:black;
+	 color:var(--nu-black);
 	 border-color:rgb(159,165,169);
 	 text-shadow:none;
 	 border-radius:3px 
@@ -806,7 +820,7 @@
 	 font:20px bold;
 	 font-family:monospace,sans-serif;
 	 background-color:#f6f4f4;
-	 color:black 
+	 color:var(--nu-black)
 }
  .nuCalculatorButton:hover {
 	 background-color:darkgray;
@@ -877,7 +891,7 @@
 	 left:0;
 	 border-style:solid;
 	 border-width:1px;
-	 border-color:black;
+	 border-color:var(--nu-black);
 	 user-select: none;
 	 overflow:visible;
 	 background-color:white;
@@ -898,7 +912,7 @@
  .nuSection {
 	 border-width:1px;
 	 font-size:12px;
-	 font-family:"Noto Sans",Helvetica,sans-serif;
+	 font-family:var(--nu-font-sans-serif);
 	 user-select: none 
 }
  .nuDragLine {
@@ -1047,7 +1061,7 @@
 	 color:#f00 
 }
  .nuUpdateMessageProgress {
-	 font-family:"Noto Sans","Helvetica Neue",Helvetica, "Segoe UI", Arial,sans-serif;
+	 font-family:var(--nu-font-sans-serif);
 	 width:100px;
 	 height:22px;
 	 top:10px;
@@ -1061,7 +1075,7 @@
 	 vertical-align:middle 
 }
  .nuUpdateMessage {
-	 font-family:"Noto Sans","Helvetica Neue",Helvetica, "Segoe UI", Arial,sans-serif;
+	 font-family:var(--nu-font-sans-serif);
 	 height:20px;
 	 top:4px;
 	 left:0;
@@ -1114,7 +1128,7 @@
  #nuErrorCode {
 	 position:relative;
 	 height:50px;
-	 background-color:black;
+	 background-color:var(--nu-black);
 	 color:white;
 	 overflow:scroll;
 	 overflow-x:hidden 
@@ -1129,7 +1143,7 @@
 	 color:#66A334 
 }
  .nuErrorValidate {
-	 color:black 
+	 color:var(--nu-black) 
 }
  #close_error {
 	 position:relative;
@@ -1163,7 +1177,7 @@
 	 box-shadow:5px 5px 5px 0 rgba(150,147,150,1) 
 }
  .nuBoxTitle {
-	 color:black 
+	 color:var(--nu-black) 
 }
  .nuBoxTitle:hover {
 	 color:red;
@@ -1207,7 +1221,7 @@
 	 font-size:15px;
 	 border-bottom-left-radius:7px;
 	 border-bottom-right-radius:7px;
-	 border:1px solid #dddddd;
+	 border:1px solid var(--nu-border);
 	 background-color:#fff 
 }
  .nuContentBoxTitle {
@@ -1218,7 +1232,7 @@
 	 color:#333;
 	 font-size:14px;
 	 font-weight:700;
-	 font-family:"Noto Sans","Helvetica Neue",Helvetica, "Segoe UI", Arial,sans-serif;
+	 font-family:var(--nu-font-sans-serif);
 	 display:block;
 	 padding:9px;
 	 letter-spacing:1px 
@@ -1266,15 +1280,15 @@
 	 border-bottom: 1px solid rgba(0,0,0,.2);
 	 font-size:19px;
 	 padding:10px;
-	 color:black;
+	 color:var(--nu-black);
 	 text-align: center;
-	 font-family:"Noto Sans","Helvetica Neue",Helvetica, "Segoe UI", Arial,sans-serif
+	 font-family:var(--nu-font-sans-serif);
 }
  #nuprompt #nupromptbody{
 	 background:#fff;
 	 padding:20px;
 	 color:#000;
-	 font-family:"Noto Sans","Helvetica Neue",Helvetica, "Segoe UI", Arial,sans-serif
+	 font-family:var(--nu-font-sans-serif);
 }
  #nuprompt #nupromptfoot{
 	 background: #fff;
@@ -1282,7 +1296,7 @@
 	 border-bottom-right-radius: 6px;
 	 padding:10px;
 	 text-align:right;
-	 font-family:"Noto Sans","Helvetica Neue",Helvetica, "Segoe UI", Arial,sans-serif
+	 font-family:var(--nu-font-sans-serif);
 }
  .ctxmenu {
 	 position: fixed;
@@ -1368,7 +1382,7 @@
 	 height: 10px;
 }
  .select2-container--default .select2-selection--single {
-	 border: 1px solid #ddd!important;
+	 border: 1px solid var(--nu-border)!important;
 	 padding-left: 2px;
 }
  .select2-container .select2-selection--single .select2-selection__rendered {
