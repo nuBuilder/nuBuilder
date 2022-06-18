@@ -3,12 +3,14 @@
 mb_internal_encoding('UTF-8');
 
 $_POST['RunQuery']		= 0;
-$DBHost					= $_SESSION['nubuilder_session_data']['DB_HOST'];
-$DBName					= $_SESSION['nubuilder_session_data']['DB_NAME'];
-$DBUser					= $_SESSION['nubuilder_session_data']['DB_USER'];
-$DBPassword				= $_SESSION['nubuilder_session_data']['DB_PASSWORD'];
-$DBCharset				= $_SESSION['nubuilder_session_data']['DB_CHARSET'];
-$DBOptions				= $_SESSION['nubuilder_session_data']['DB_OPTIONS'];
+
+$sessionData			= $_SESSION['nubuilder_session_data'];
+$DBHost					= $sessionData['DB_HOST'];
+$DBName					= $sessionData['DB_NAME'];
+$DBUser					= $sessionData['DB_USER'];
+$DBPassword				= $sessionData['DB_PASSWORD'];
+$DBCharset				= $sessionData['DB_CHARSET'];
+$DBOptions				= $sessionData['DB_OPTIONS'];
 
 $charSet				= array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $DBCharset");
 
