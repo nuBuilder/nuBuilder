@@ -19,10 +19,11 @@ if ( !isset($_SESSION['nubuilder_session_data']['NB_PATH']) || dirname($_SESSION
 } 
 
 ?>
+
 <!DOCTYPE html>
 <html id="nuhtml" onclick="nuClick(event)">
 <head>
-<title><?php echo $nuConfigTitle;?></title>
+<title><?php echo isset($nuConfigTitle) ? $nuConfigTitle : "nuBuilder 4.5";?></title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv='Content-type' content='text/html;charset=UTF-8'>
@@ -42,7 +43,7 @@ function nuInclude($pfile, $type){
 	}
 	
 	foreach ($a as $value) { 
-		$timestamp = date("YmdHis"); //-- Add timestamp so javascript changes are effective immediately		
+		$timestamp = date("YmdHis"); //-- Add timestamp so JavaScript changes are effective immediately		
 		if ($type == 'script') print "<script src='$value?ts=$timestamp' type='text/javascript'></script>\n";
 		if ($type == 'stylesheet') print "<link rel='stylesheet' href='$value?ts=$timestamp' />\n";
 	}
@@ -255,7 +256,7 @@ window.nuHASH				= [];
 
 	$sessionAlive = '';
 	
-	if ($nuConfigKeepSessionAlive) {
+	if (isset($nuConfigKeepSessionAlive) && $nuConfigKeepSessionAlive) {
 		$nuConfigKeepSessionAliveInterval = !isset($nuConfigKeepSessionAliveInterval) ? 600 : $nuConfigKeepSessionAliveInterval;
 		$sessionAlive = "
 		if (nuMainForm()) {
