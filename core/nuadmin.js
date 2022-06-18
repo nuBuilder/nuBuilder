@@ -1491,20 +1491,20 @@ var nuPrettyPrint = (function(){
 				/* Accepts a table and modifies it */
 				var me = jquery ? 'jQuery' : 'Array', table = util.table([me + '(' + arr.length + ')', null], jquery ? 'jquery' : me.toLowerCase()),
 					isEmpty = true,
-                    count = 0;
+					count = 0;
 				
 				if (jquery){
 					table.addRow(['selector',arr.selector]);
 				}
 
 				util.forEach(arr, function(item,i){
-                    if (settings.maxArray >= 0 && ++count > settings.maxArray) {
-                        table.addRow([
-                            i + '..' + (arr.length-1),
-                            typeDealer[ util.type(item) ]('...', depth+1, i)
-                        ]);
-                        return false;
-                    }
+					if (settings.maxArray >= 0 && ++count > settings.maxArray) {
+						table.addRow([
+							i + '..' + (arr.length-1),
+							typeDealer[ util.type(item) ]('...', depth+1, i)
+						]);
+						return false;
+					}
 					isEmpty = false;
 					table.addRow([i, typeDealer[ util.type(item) ](item, depth+1, i)]);
 				});
@@ -1600,7 +1600,7 @@ var nuPrettyPrint = (function(){
 		expanded: true,
 		
 		forceObject: false,
-		maxDepth: 1,
+		maxDepth: 3,
 		maxArray: -1,  // default is unlimited
 		styles: {
 			array: {
@@ -1699,8 +1699,21 @@ function nuClosePropertiesMsgDiv() {
 
 function nuPrettyPrintMessage(event, obj) {
 
-	let ppTable = nuPrettyPrint(obj);
-	let btnClose = '<button class="nuClose" onclick=" nuClosePropertiesMsgDiv() " style="height:25px">&#10006;</button><br>';
+	let ppTable = nuPrettyPrint(obj, {
+		// Config
+		maxArray: 20,
+		expanded: false,
+		maxDepth: 1,
+		styles: {
+			colHeader: {
+				th: {
+					display: 'none' // not working?
+				}
+			}
+		}
+	})
+
+	let btnClose = '<button class="nuClose" onclick=" nuClosePropertiesMsgDiv() " style="height:25px;float:right;">&#10006;</button><br>';
 
 	if (event.ctrlKey) {
 		let w = window.open();
@@ -1708,6 +1721,7 @@ function nuPrettyPrintMessage(event, obj) {
 	} else {
 		let msg = nuMessage([btnClose,  ppTable]);
 		msg.css({'width': 700, 'text-align': 'left', 'background-color' : 'white'}).attr("id","nuPropertiesMsgDiv");
+		nuDragElement(document.getElementById('nuPropertiesMsgDiv'), 40);
 	}
 
 }
