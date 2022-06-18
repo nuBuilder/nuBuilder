@@ -817,6 +817,8 @@ function nuBindCtrlEvents(){
 					nuForm('nusetup','1','', '', 2);
 				} else if(e.keyCode == 68 && g) {					//-- d		nuDebug Results
 					nuPopup("nudebug", "");	
+				} else if(e.keyCode == 89 && g) {					//-- y		Current Properties
+					nuPrettyPrintMessage(e, nuCurrentProperties());	
 				}
 			}
 
