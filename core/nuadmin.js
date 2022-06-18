@@ -923,12 +923,12 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
 are met:
 
-	1. Redistributions of source code must retain the above copyright
-	   notice, this list of conditions and the following disclaimer.
+   1. Redistributions of source code must retain the above copyright
+	  notice, this list of conditions and the following disclaimer.
 
-	2. Redistributions in binary form must reproduce the above copyright
-	   notice, this list of conditions and the following disclaimer in the
-	   documentation and/or other materials provided with the distribution.
+   2. Redistributions in binary form must reproduce the above copyright
+	  notice, this list of conditions and the following disclaimer in the
+	  documentation and/or other materials provided with the distribution.
 
 THIS SOFTWARE IS PROVIDED BY James Padolsey ``AS IS'' AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -947,8 +947,8 @@ those of the authors and should not be interpreted as representing official
 policies, either expressed or implied, of James Padolsey.
 
  AUTHOR James Padolsey (http://james.padolsey.com)
- VERSION 1.03.0 / nuBuilder - "nuPrettyPrint"
- UPDATED 17-06-2022
+ VERSION 1.03.0
+ UPDATED 29-10-2011
  CONTRIBUTORS
 	David Waller
     Benjamin Drucker
@@ -958,7 +958,7 @@ policies, either expressed or implied, of James Padolsey.
 var nuPrettyPrint = (function(){
 	
 	/* These "util" functions are not part of the core
-	functionality but are  all necessary - mostly DOM helpers */
+	   functionality but are  all necessary - mostly DOM helpers */
 	
 	var util = {
 		
@@ -990,10 +990,7 @@ var nuPrettyPrint = (function(){
 			/* Applies CSS to a single element */
 			for (var prop in styles) {
 				if (styles.hasOwnProperty(prop)) {
-					try{
-						/* Yes, IE6 SUCKS! */
 						el.style[prop] = styles[prop];
-					}catch(e){}
 				}
 			}
 		},
@@ -1098,7 +1095,7 @@ var nuPrettyPrint = (function(){
 		},
 		
 		shorten: function(str) {
-			var max = 40;
+			var max = prettyPrintThis.maxStringLength;
 			str = str.replace(/^\s\s*|\s\s*$|\n/g,'');
 			return str.length > max ? (str.substring(0, max-1) + '...') : str;
 		},
@@ -1133,7 +1130,7 @@ var nuPrettyPrint = (function(){
 				
 			}
 			
-			for (var a = 2, l = arguments.length; a < l; a++) {
+			for (var a = 2; a < arguments.length; a++) {
 				util.merge(target, arguments[a]);
 			}
 			
@@ -1142,7 +1139,7 @@ var nuPrettyPrint = (function(){
 		
 		count: function(arr, item) {
 			var count = 0;
-			for (var i = 0, l = arr.length; i< l; i++) {
+			for (var i = 0; i< arr.length; i++) {
 				if (arr[i] === item) {
 					count++;
 				}
@@ -1189,8 +1186,11 @@ var nuPrettyPrint = (function(){
 				if (/^(string|number|array|regexp|function|date|boolean)$/.test(oType)) {
 					return oType;
 				}
+				if (/^(u?int(8(clamped)?|16|32)|float(32|64))array$/.test(oType)) {
+					return 'array';
+				}
 				if (typeof v === 'object') {
-					return v.jquery && typeof v.jquery === 'string' ? 'jquery' : 'object';
+					return typeof v.jquery === 'string' ? 'jquery' : 'object';
 				}
 				if (v === window || v === document) {
 					return 'object';
@@ -1222,17 +1222,17 @@ var nuPrettyPrint = (function(){
 					'[POINTS BACK TO <strong>' + (key) + '</strong>]',
 					'Click to show this item anyway',
 					function() {
-						this.parentNode.appendChild( nuPrettyPrintThis(obj,{maxDepth:1}) );
+						this.parentNode.appendChild( prettyPrintThis(obj,{maxDepth:1}) );
 					}
 				);
 			},
 			depthReached: function(obj, settings) {
 				return util.expander(
-					'[DEPTH REACHED]',
+					'[EXPAND]',
 					'Click to show this item anyway',
 					function() {
 						try {
-							this.parentNode.appendChild( nuPrettyPrintThis(obj,{maxDepth:1}) );
+							this.parentNode.appendChild( prettyPrintThis(obj,{maxDepth:1}) );
 						} catch(e) {
 							this.parentNode.appendChild(
 								util.table(['ERROR OCCURED DURING OBJECT RETRIEVAL'],'error').addRow([e.message]).node   
@@ -1244,9 +1244,9 @@ var nuPrettyPrint = (function(){
 		},
 		
 		getStyles: function(el, type) {
-			type = nuPrettyPrintThis.settings.styles[type] || {};
+			type = prettyPrintThis.settings.styles[type] || {};
 			return util.merge(
-				{}, nuPrettyPrintThis.settings.styles['default'][el], type[el]
+				{}, prettyPrintThis.settings.styles['default'][el], type[el]
 			);
 		},
 		
@@ -1329,18 +1329,18 @@ var nuPrettyPrint = (function(){
 	};
 	
 	// Main..
-	var nuPrettyPrintThis = function(obj, options) {
+	var prettyPrintThis = function(obj, options) {
 		
 		 /*
-		 *	  obj :: Object to be printed
+		 *	  obj :: Object to be printed					
 		 *  options :: Options (merged with config)
 		 */
 		
 		options = options || {};
 		
-		var settings = util.merge( {}, nuPrettyPrintThis.config, options ),
+		var settings = util.merge( {}, prettyPrintThis.config, options ),
 			container = util.el('div'),
-			config = nuPrettyPrintThis.config,
+			config = prettyPrintThis.config,
 			currentDepth = 0,
 			stack = {},
 			hasRunOnce = false;
@@ -1348,7 +1348,7 @@ var nuPrettyPrint = (function(){
 		/* Expose per-call settings.
 		   Note: "config" is overwritten (where necessary) by options/"settings"
 		   So, if you need to access/change *DEFAULT* settings then go via ".config" */
-		nuPrettyPrintThis.settings = settings;
+		prettyPrintThis.settings = settings;
 		
 		var typeDealer = {
 			string : function(item){
@@ -1435,25 +1435,47 @@ var nuPrettyPrint = (function(){
 					return util.common.depthReached(obj, settings);
 				}
 				
-				var table = util.table(['Object', null],'object'),
+				var table = util.table([(obj.constructor && obj.constructor.name) || 'Object', null],'object'),
 					isEmpty = true;
-				
+
+				var keys = [];
 				for (var i in obj) {
-					if (!obj.hasOwnProperty || obj.hasOwnProperty(i)) {
-						var item = obj[i],
-							type = util.type(item);
-						isEmpty = false;
-						try {
-							table.addRow([i, typeDealer[ type ](item, depth+1, i)], type);
-						} catch(e) {
-							/* Security errors are thrown on certain Window/DOM properties */
-							if (window.console && window.console.log) {
-								console.log(e.message);
-							}
+					if (!settings.filter || settings.filter.call(obj, i)) {
+						keys.push(i);
+					}
+				}
+
+				if (settings.sortKeys) {
+					keys.sort();
+				}
+
+				var len = keys.length;
+
+				for (var j = 0; j < len; j++) {
+					var i = keys[j],
+						item = obj[i],
+						type = util.type(item);
+
+					isEmpty = false;
+					try {
+						table.addRow([i, typeDealer[ type ](item, depth+1, i)], type);
+					} catch(e) {
+						/* Security errors are thrown on certain Window/DOM properties */
+						if (window.console && window.console.log) {
+							console.log(e.message);
+		
 						}
 					}
 				}
-				
+
+				if (obj instanceof Error)
+				{
+					table.thead.appendChild(
+						util.hRow(['key','value'], 'colHeader')
+					);
+					table.addRow(['name',obj.name]);
+					table.addRow(['message',obj.message]);
+				} else				
 				if (isEmpty) {
 					table.addRow(['<small>[empty]</small>']);
 				} else {
@@ -1461,8 +1483,8 @@ var nuPrettyPrint = (function(){
 						util.hRow(['key','value'], 'colHeader')
 					);
 				}
-				
-				var ret = (settings.expanded || hasRunOnce) ? table.node : util.expander(
+
+				var ret = (settings.expanded || !hasRunOnce) ? table.node : util.expander(
 					util.stringify(obj),
 					'Click to show more',
 					function() {
@@ -1489,7 +1511,7 @@ var nuPrettyPrint = (function(){
 				}
 				
 				/* Accepts a table and modifies it */
-				var me = jquery ? 'jQuery' : 'Array', table = util.table([me + '(' + arr.length + ')', null], jquery ? 'jquery' : me.toLowerCase()),
+				var me = jquery ? 'jQuery' : 'Array', table = util.table([((arr.constructor && arr.constructor.name) || me) + '(' + arr.length + ')', null], jquery ? 'jquery' : me.toLowerCase()),
 					isEmpty = true,
 					count = 0;
 				
@@ -1497,17 +1519,40 @@ var nuPrettyPrint = (function(){
 					table.addRow(['selector',arr.selector]);
 				}
 
-				util.forEach(arr, function(item,i){
-					if (settings.maxArray >= 0 && ++count > settings.maxArray) {
+				if (arr.length > settings.maxArray) {
+					for (var i = 0, length = arr.length; i < length; i += settings.maxArray)
+					(function (i) {
+						var until = Math.min(i + settings.maxArray, length);
 						table.addRow([
-							i + '..' + (arr.length-1),
-							typeDealer[ util.type(item) ]('...', depth+1, i)
+							i + '..' + (until - 1),
+							util.expander(
+								'[EXPAND]',
+								'Click to show items from this slice',
+								function() {
+									var obj = {};
+									for (var j = i; j < until; j++) {
+										obj[j] = arr[j];
+									}
+									try {
+										var child = prettyPrintThis(obj,{maxDepth:1});
+										child.getElementsByTagName('th')[0].style.display = 'none';
+										this.parentNode.appendChild(child);
+									} catch(e) {
+										this.parentNode.appendChild(
+											util.table(['ERROR OCCURED DURING OBJECT RETRIEVAL'],'error').addRow([e.message]).node   
+										);
+									}
+								}
+							)
 						]);
-						return false;
-					}
-					isEmpty = false;
-					table.addRow([i, typeDealer[ util.type(item) ](item, depth+1, i)]);
-				});
+						isEmpty = false;
+					})(i);
+				} else {
+					util.forEach(arr, function(item,i){
+						isEmpty = false;
+						table.addRow([i, typeDealer[ util.type(item) ](item, depth+1, i)]);
+					});
+				}
 
 				if (!jquery){
 					if (isEmpty) {
@@ -1580,7 +1625,7 @@ var nuPrettyPrint = (function(){
 			},
 			'default' : function() {
 				/* When a type cannot be found */
-				return util.txt('nuPrettyPrint: TypeNotFound Error');
+				return util.txt('prettyPrint: TypeNotFound Error');
 			}
 		};
 		
@@ -1592,16 +1637,19 @@ var nuPrettyPrint = (function(){
 	
 	/* Configuration */
 	
-	/* All items can be overwridden by passing an
-		"options" object when calling nuPrettyPrint */
-	nuPrettyPrintThis.config = {
+	/* All items can be overridden by passing an
+	   "options" object when calling prettyPrint */
+	prettyPrintThis.config = {
 		
 		/* Try setting this to false to save space */
 		expanded: true,
-		
+		sortKeys: false,  // if true, will sort object keys
 		forceObject: false,
 		maxDepth: 3,
-		maxArray: -1,  // default is unlimited
+		maxStringLength: 40,
+		maxArray: Infinity,  // default is unlimited
+		filter: Object.prototype.hasOwnProperty,
+		maxTextLen: 40,
 		styles: {
 			array: {
 				th: {
@@ -1688,10 +1736,9 @@ var nuPrettyPrint = (function(){
 		}
 	};
 	
-	return nuPrettyPrintThis;
+	return prettyPrintThis;
 	
 })();
-
 
 function nuClosePropertiesMsgDiv() {
 	$("#nuPropertiesMsgDiv").remove();
@@ -1699,20 +1746,16 @@ function nuClosePropertiesMsgDiv() {
 
 function nuPrettyPrintMessage(event, obj) {
 
+	obj = Object.fromEntries(Object.entries(obj).sort())
+
 	let ppTable = nuPrettyPrint(obj, {
 		// Config
 		maxArray: 20,
 		expanded: false,
-		maxDepth: 5,
-		styles: {
-			colHeader: {
-				th: {
-					display: 'none' // not working?
-				}
-			}
-		}
+		maxDepth: 1,		
 	})
 
+	
 	let btnClose = '<button class="nuClose" onclick=" nuClosePropertiesMsgDiv() " style="height:25px;float:right;">&#10006;</button><br>';
 
 	if (event.ctrlKey) {
