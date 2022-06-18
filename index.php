@@ -245,17 +245,17 @@ window.nuHASH				= [];
 	if ( $nuUser != '' && $nuPassword != '' ){
 		$h2 = nuUseUP($nuBrowseFunction, $target, $welcome, $nuUser, $nuPassword);
 	}else{
-		
+
 		if($opener == ''){
 				$h2 = nuGetJS_login($nuBrowseFunction, $target, $welcome, $nuForm, $nuRecord, $isSession);
 			}else{
 				$h2 = nuGetJS_action_screen($nuBrowseFunction, $target, $welcome, $opener, $search, $like);
 		}
-		
+
 	}
 
 	$sessionAlive = '';
-	
+
 	if (isset($nuConfigKeepSessionAlive) && $nuConfigKeepSessionAlive) {
 		$nuConfigKeepSessionAliveInterval = !isset($nuConfigKeepSessionAliveInterval) ? 600 : $nuConfigKeepSessionAliveInterval;
 		$sessionAlive = "
@@ -274,9 +274,9 @@ window.nuHASH				= [];
 		}
 		";
 	}
-	
-	$h3 = $nuJSOptions;
-	
+
+	$h3 = isset($nuJSOptions) ? $nuJSOptions : '';
+
 	$h4 = "
 
 	function nuResize(){
