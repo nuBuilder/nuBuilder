@@ -1408,3 +1408,64 @@ function nuPopulateTabDropdown(currentlySelectedTabNo){
 	$('#nuDragOptionsTabsDropdown').find('option:first').prop('selected', 'selected');
 
 }
+
+function nuDragElement(element, dragHeaderOffset) {
+	var startX = 0, startY = 0, endX = 0, endY = 0;
+	element.onmousedown = dragStart;
+	element.ontouchstart = dragStart;
+
+	function dragStart(e) {
+		e = e || window.event;
+		if (dragHeaderOffset !== undefined) {
+			if  (e.clientY - e.currentTarget.offsetTop > dragHeaderOffset) {
+				return;
+			}
+		}
+
+		e.preventDefault();
+		// mouse cursor position at start 
+		
+		if (e.clientX) {  // mousemove
+			startX = e.clientX;
+			startY = e.clientY;
+		} else { // touchmove - assuming a single touchpoint
+			startX = e.touches[0].clientX
+			startY = e.touches[0].clientY
+		}
+		document.onmouseup = dragStop;
+		document.ontouchend = dragStop;
+		document.onmousemove = elementDrag;  // call whenever the cursor moves
+		document.ontouchmove = elementDrag;
+	}
+
+	function elementDrag(e) {
+		e = e || window.event;
+		e.preventDefault();
+
+		// calculate new cursor position
+		if (e.clientX) {
+			endX = startX - e.clientX;
+			endY = startY - e.clientY;
+			startX = e.clientX;
+			startY = e.clientY;
+		} else {
+			endX = startX - e.touches[0].clientX;
+			endY = startY - e.touches[0].clientY;
+			startX = e.touches[0].clientX;
+			startY = e.touches[0].clientY;
+		}
+		
+		// set the new position
+		element.style.left = (element.offsetLeft - endX) + "px";
+		element.style.top = (element.offsetTop - endY) + "px";
+	}
+
+	function dragStop() {
+		// stop moving on touch end / mouse btn is released 
+		document.onmouseup = null;
+		document.onmousemove = null;
+		document.ontouchend = null;
+		document.ontouchmove = null;
+	}
+}
+
