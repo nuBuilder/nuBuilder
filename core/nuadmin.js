@@ -32,7 +32,7 @@ function nuShowFormInfo() {
 	let currentProp	= '<br><a href="javascript:;" onclick="nuPrettyPrintMessage(event, nuCurrentProperties())">Current Properties</a>';
 
 	let recordId	= nuFormType() == 'edit' && cp.form_type !== 'launch' ? "<b>Record ID:</b> " + cp.record_id : '';
-	let browseSQL	= nuFormType() == 'browse' && (! code.startsWith('nu') || devMode) ? "<b>Browse SQL:</b></br> " + cp.browse_sql : '';
+	let browseSQL	= nuFormType() == 'browse' && (! code.startsWith('nu') || devMode) ? "<br><b>Browse SQL:</b></br> " + cp.browse_sql : '';
 	let table		= nuSERVERRESPONSE.table !== '' && (! code.startsWith('nu') || devMode) ? "<b>Table:</b> " + nuSERVERRESPONSE.table : '';
 
 	nuMessage(["<h2><u>" + cp.form_description + "</u></h2>", "<b>Form ID:</b> " + cp.form_id, "<b>Form Code:</b> " + cp.form_code, table, recordId, currentProp, url, browseSQL]);
@@ -1700,14 +1700,14 @@ function nuClosePropertiesMsgDiv() {
 function nuPrettyPrintMessage(event, obj) {
 
 	let ppTable = nuPrettyPrint(obj);
-	let btnClose = '<button onclick=" nuClosePropertiesMsgDiv() " style="height:25px">&#10006;</button><br>';
+	let btnClose = '<button class="nuClose" onclick=" nuClosePropertiesMsgDiv() " style="height:25px">&#10006;</button><br>';
 
 	if (event.ctrlKey) {
 		let w = window.open();
 		$(w.document.body).html(ppTable);
 	} else {
 		let msg = nuMessage([btnClose,  ppTable]);
-		msg.css({'width': 700, 'text-align': 'left'}).attr("id","nuPropertiesMsgDiv");
+		msg.css({'width': 700, 'text-align': 'left', 'background-color' : 'white'}).attr("id","nuPropertiesMsgDiv");
 	}
 
 }
