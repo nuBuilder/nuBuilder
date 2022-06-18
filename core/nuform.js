@@ -5087,6 +5087,8 @@ function nuMessage(o, timeout, callback){
 		}, timeout);
 	}
 
+	nuDragElement(msgDiv[0], 30);
+
 	return msgDiv;
 
 }
