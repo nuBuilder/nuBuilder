@@ -1703,7 +1703,7 @@ function nuPrettyPrintMessage(event, obj) {
 		// Config
 		maxArray: 20,
 		expanded: false,
-		maxDepth: 1,
+		maxDepth: 5,
 		styles: {
 			colHeader: {
 				th: {
@@ -1717,6 +1717,7 @@ function nuPrettyPrintMessage(event, obj) {
 
 	if (event.ctrlKey) {
 		let w = window.open();
+		w.document.title = nuTranslate('Current Properties') + ' : '  + nuGetProperty('form_code')
 		$(w.document.body).html(ppTable);
 	} else {
 		let msg = nuMessage([btnClose,  ppTable]);
