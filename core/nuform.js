@@ -79,41 +79,42 @@ function nuBuildForm(f){
 
 	}
 
-	window.nuLastForm			= f.form_id;
-	window.nuLastRecordId		= f.record_id;
-	window.nuSubformRow			= -1;
-	window.nuBeforeSave			= null;
-	window.nuAfterSave			= null;
-	window.nuBeforeDelete		= null;
-	window.nuOnSearchAction		= null;
-	window.nuOnClone			= null;
-	window.nuOnEditorLoad		= null;
-	window.nuOnBeforeGetBreadcrumb = null;
-	window.nuOnSetSaved			= null;
-	window.nuOnTabSelected		= null;
-	window.nuOnSelectTab		= null;
-	window.onSubformTitleClick	= null;
-	window.nuOnMessage			= null;
+	window.nuLastForm				= f.form_id;
+	window.nuLastRecordId			= f.record_id;
+	window.nuSubformRow				= -1;
+	window.nuBeforeSave				= null;
+	window.nuAfterSave				= null;
+	window.nuBeforeDelete			= null;
+	window.nuOnSearchAction			= null;
+	window.nuOnClone				= null;
+	window.nuOnEditorLoad			= null;
+	window.nuOnBeforeGetBreadcrumb 	= null;
+	window.nuOnSetSaved				= null;
+	window.nuOnTabSelected			= null;
+	window.nuOnSelectTab			= null;
+	window.onSubformTitleClick		= null;
+	window.nuOnMessage				= null;
 	window.nuDisplayObjectRefreshed = null;
-	window.nuCalculated			= null;
-	window.nuBrowseFunction		= window.nuDefaultBrowseFunction;
-	window.nuCLONE				= false;
-	window.nuSERVERRESPONSE		= f;
-	window.nuSERVERRESPONSELU	= [];
-	window.nuSESSION			= f.session_id;
-	window.nuSUBFORMROW			= [];
-	window.nuHASH				= [];					//-- remove any hash variables previously set.
-	window.nuTABHELP			= [];
-	window.nuFORMHELP			= [];
-	window.nuLOOKUPSTATE		= [];
-	window.nuBROWSEROW			= -1;
-	window.nuBROWSECLICKED		= false;
-	window.nuUniqueID			= 'c' + String(Date.now());
-	window.global_access		= f.global_access == '1';
-	nuFORM.edited				= false;
-	window.nuVerticalTabs		= false;
+	window.nuOnSetCalendarOptions 	= null;
+	window.nuCalculated				= null;
+	window.nuBrowseFunction			= window.nuDefaultBrowseFunction;
+	window.nuCLONE					= false;
+	window.nuSERVERRESPONSE			= f;
+	window.nuSERVERRESPONSELU		= [];
+	window.nuSESSION				= f.session_id;
+	window.nuSUBFORMROW				= [];
+	window.nuHASH					= [];					//-- remove any hash variables previously set.
+	window.nuTABHELP				= [];
+	window.nuFORMHELP				= [];
+	window.nuLOOKUPSTATE			= [];
+	window.nuBROWSEROW				= -1;
+	window.nuBROWSECLICKED			= false;
+	window.nuUniqueID				= 'c' + String(Date.now());
+	window.global_access			= f.global_access == '1';
+	nuFORM.edited					= false;
+	window.nuVerticalTabs			= false;
 
-	nuFORM.scroll				= [];
+	nuFORM.scroll					= [];
 	nuSetSuffix(1000);
 	nuSetBody(f);
 
@@ -317,18 +318,6 @@ function nuBuildForm(f){
 	nuAddFormStyle(f.style);
 
 	if (nuGlobalAccess()) nuContextMenuUpdate();
-
-	var nuPromptDiv =
-	`<div id="nupromptmodal"></div>
-
-	<div id="nuprompt">
-		<div id="nuprompthead"></div>
-		<div id="nupromptbody"></div>
-		<div id="nupromptfoot"></div>
-	</div>`;
-
-	$('body').append(nuPromptDiv);
-	promot = new nuPromptModal();
 
 	nuSetSaved(true);
 
@@ -5942,6 +5931,22 @@ function nuOnPromptClose(val, ok) {
 }
 
 function nuPrompt(text, caption, defaultValue, format, fctn) {
+
+	if (promot === undefined) {
+
+		let nuPromptDiv =
+		`<div id="nupromptmodal"></div>
+
+		<div id="nuprompt">
+			<div id="nuprompthead"></div>
+			<div id="nupromptbody"></div>
+			<div id="nupromptfoot"></div>
+		</div>`;
+
+		$('body').append(nuPromptDiv);
+		promot = new nuPromptModal();
+
+	}
 
 	if (fctn === undefined) {
 		var fctn = 'nuOnPromptClose';

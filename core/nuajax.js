@@ -685,7 +685,10 @@ function nuUpdateData(action, instruction, close){
 		}
 	}
 
-	if(action == 'save') nuSaveEditor();
+	if(action == 'save') {
+		nuSavingProgressMessage();
+		nuSaveEditor();
+	}
 
 	if(nuFORM.getCurrent().record_id == -1){nuSetProperty('NEW_RECORD', 1);}
 
