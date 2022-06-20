@@ -38,7 +38,7 @@ function nuInitJSOptions() {
 
 nuInitJSOptions();
 
-var nuprompt;
+var promot;
 
 function nuBuildForm(f){
 
@@ -5884,17 +5884,17 @@ function nuPromptModal(){
 		let winW = window.innerWidth;
 		let winH = window.innerHeight;	
 		let modal = document.getElementById('nupromptmodal');
-		let prompt = document.getElementById('nuprompt');
+		let nuprompt = document.getElementById('nuprompt');
 		modal.style.display = "block";
 		modal.style.height = winH+"px";
-		prompt.style.left = (winW/2)-(560*.5)+"px";
-		prompt.style.top = "5px";
-		prompt.style.display = "block";
+		nuprompt.style.left = (winW/2)-(560*.5)+"px";
+		nuprompt.style.top = "5px";
+		nuprompt.style.display = "block";
 		document.getElementById('nuprompthead').innerHTML = caption;
 		let body = document.getElementById('nupromptbody');
 		body.innerHTML = text;
-		body.innerHTML +='<br><input id="prompt_value1" onkeyup="nuprompt.inputkeyup(event, \''+fctn+'\')" style="width: 450px; margin-top: 10px; border: 1px solid #CCC; padding: 10px; border-radius: 4px;"/>';
-		document.getElementById('nupromptfoot').innerHTML = '<button class="nuActionButton" onclick="nuprompt.ok(\''+fctn+'\', true)">OK</button> <button class="nuActionButton" onclick="nuprompt.cancel(\''+fctn+'\', false)">Cancel</button>';
+		body.innerHTML +='<br><input id="prompt_value1" onkeyup="promot.inputkeyup(event, \''+fctn+'\')" style="width: 450px; margin-top: 10px; border: 1px solid #CCC; padding: 10px; border-radius: 4px;"/>';
+		document.getElementById('nupromptfoot').innerHTML = '<button class="nuActionButton" onclick="promot.ok(\''+fctn+'\', true)">OK</button> <button class="nuActionButton" onclick="promot.cancel(\''+fctn+'\', false)">Cancel</button>';
 
 		let value1 = document.getElementById("prompt_value1");
 		value1.value = defaultValue === undefined ? '' : defaultValue;
@@ -5932,7 +5932,7 @@ function nuOnPromptClose(val, ok) {
 
 function nuPrompt(text, caption, defaultValue, format, fctn) {
 
-	if (nuprompt === undefined) {
+	if (promot === undefined) {
 
 		let nuPromptDiv =
 		`<div id="nupromptmodal"></div>
@@ -5944,7 +5944,7 @@ function nuPrompt(text, caption, defaultValue, format, fctn) {
 		</div>`;
 
 		$('body').append(nuPromptDiv);
-		nuprompt = new nuPromptModal();
+		promot = new nuPromptModal();
 
 	}
 
@@ -5952,7 +5952,7 @@ function nuPrompt(text, caption, defaultValue, format, fctn) {
 		var fctn = 'nuOnPromptClose';
 	}
 
-	nuprompt.render(text, caption, defaultValue, format, fctn);
+	promot.render(text, caption, defaultValue, format, fctn);
 
 }
 
