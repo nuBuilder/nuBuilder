@@ -2491,7 +2491,8 @@ function nuSubformAddFilter(filter) {
 					data.type			= arrFilter[columnId].type;
 					data.optionAll		= arrFilter[columnId].all;
 					data.optionBlank	= data.filter == '' && data.type == 'search';
-					data.isMatch		= data.val.toLowerCase().includes(data.filter.toLowerCase()) || (data.type == 'select' && data.optionAll);
+					data.isMatch		= (data.type == 'search' && data.val.toLowerCase().includes(data.filter.toLowerCase())) || 
+											(data.type == 'select' && (data.val.toLowerCase() == data.filter.toLowerCase() || data.optionAll));
 
 					if (window.nuSubformOnFilterRows) {
 						hide = nuSubformOnFilterRows(sfName, data, row, rows.length);
