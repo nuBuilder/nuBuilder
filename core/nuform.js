@@ -264,6 +264,8 @@ function nuBuildForm(f){
 
 	if (nuUXOptions["nuShowBrowserTabTitle"]) {
 		nuSetBrowserTabTitle(nuUXOptions["nuBrowserTabTitlePrefix"]);
+	} else {
+		document.title = nuUXOptions["nuBrowserTabTitlePrefix"];
 	}
 
 	if (Object.keys(window.nuAdminButtons).length) {
