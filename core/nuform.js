@@ -2790,7 +2790,7 @@ function nuRecordHolderObject(t){
 	while ($('#' + this.form + nuPad3(this.intNo + c) + h).length != 0){c++;}
 
 	this.rows	= this.intNo + c;
-	this.top	= (parseInt(p.css('height')+1) * this.rows);		//-- + this.rows adds the border height
+	this.top	= (p.outerHeight() * this.rows);
 	var s		= this.form + nuPad3(this.intNo + 1) + h;
 	this.last	= $('#' + s).length == 0;
 	var s		= this.form + nuPad3(this.rows - 1);
@@ -2798,7 +2798,6 @@ function nuRecordHolderObject(t){
 	this.even	= parseInt(this.rows/2) == this.rows/2 ? '0' : '1';
 
 }
-
 
 function nuAddSubformRow(t, e){
 
