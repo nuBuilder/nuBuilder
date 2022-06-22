@@ -43,6 +43,7 @@ var promot;
 function nuBuildForm(f){
 
 	window.nuOnSetSelect2Options = null;
+	window.nuSERVERRESPONSE			= f;						// can be overwritten by nuAddJavascript()
 
 	if(f.record_id != '-2'){
 		nuAddJavascript(f.javascript_bc);
@@ -99,7 +100,6 @@ function nuBuildForm(f){
 	window.nuCalculated				= null;
 	window.nuBrowseFunction			= window.nuDefaultBrowseFunction;
 	window.nuCLONE					= false;
-	window.nuSERVERRESPONSE			= f;
 	window.nuSERVERRESPONSELU		= [];
 	window.nuSESSION				= f.session_id;
 	window.nuSUBFORMROW				= [];
