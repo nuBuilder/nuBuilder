@@ -62,7 +62,7 @@ function nuCreateDrag(){
 		
 		var c = event.target.className;
 
-		if(event.ctrlKey){
+		if((nuIsMacintosh() ? event.metaKey : event.ctrlKey)){
 			if(c.indexOf('nuDragObject') != -1){
 				$('#'+event.target.id).toggleClass('nuDragSelected');
 			}

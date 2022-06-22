@@ -497,7 +497,7 @@ function nuDragReport(){
 
 		}
 		
-		if(event.ctrlKey && event.keyCode == 90){
+		if((nuIsMacintosh() ? event.metaKey : event.ctrlKey) && event.keyCode == 90){
 			
 			nuUndo();
 			

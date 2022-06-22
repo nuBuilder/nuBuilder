@@ -55,7 +55,7 @@ function nuBindDragEvents(){
 			
 			if(e.target === document.body || isCb || e.target === $('#nuRECORD')[0]) {
 
-				if(!e.ctrlKey) {
+				if(!(nuIsMacintosh() ? e.metaKey : e.ctrlKey)) {
 					$('.nuDragSelected').removeClass('nuDragSelected');
 				}
 
@@ -63,7 +63,7 @@ function nuBindDragEvents(){
 				
 			} else {
 
-				if(!e.ctrlKey && !$('#'+ id).hasClass('nuDragSelected')) {
+				if(!(nuIsMacintosh() ? e.metaKey : e.ctrlKey) && !$('#'+ id).hasClass('nuDragSelected')) {
 					$('.nuDragSelected').removeClass('nuDragSelected');
 				}
 
@@ -94,7 +94,7 @@ function nuBindDragEvents(){
 		if(draggable) {
 
 			if($('#nuSelectBox').length > 0) {
-				nuRemoveBox(e.ctrlKey);
+				nuRemoveBox((nuIsMacintosh() ? e.metaKey : e.ctrlKey));
 			}
 
 		}
@@ -105,7 +105,7 @@ function nuBindDragEvents(){
 
 	var nuDragKeydownListener = function(e){
 
-		if (e.ctrlKey && e.key === "a") {
+		if ((nuIsMacintosh() ? e.metaKey : e.ctrlKey) && e.key === "a") {
 			nuSelectAllDragObjects();
 			nuUpdateDragFieldsListbox();
 			e.preventDefault();

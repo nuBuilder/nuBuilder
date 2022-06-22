@@ -852,7 +852,7 @@ function nuContextMenuObjectPopup(e) {
 
 	let objId = nuObjectIdFromId(contextMenuCurrentTargetUpdateId());
 
-	if (e.ctrlKey === true) {
+	if ((nuIsMacintosh() ? e.metaKey : e.ctrlKey) === true) {
 		nuForm('nuobject', objId, '', '', '2');
 	} else {
 		nuPopup("nuobject", objId, '');
@@ -1744,7 +1744,7 @@ function nuClosePropertiesMsgDiv() {
 	$("#nuPropertiesMsgDiv").remove();
 }
 
-function nuPrettyPrintMessage(event, obj) {
+function nuPrettyPrintMessage(e, obj) {
 
 	obj = Object.fromEntries(Object.entries(obj).sort())
 
@@ -1758,7 +1758,7 @@ function nuPrettyPrintMessage(event, obj) {
 	
 	let btnClose = '<button class="nuClose" onclick=" nuClosePropertiesMsgDiv() " style="height:25px;float:right;">&#10006;</button><br>';
 
-	if (event.ctrlKey) {
+	if (nuIsMacintosh() ? e.metaKey : e.ctrlKey) {
 		let w = window.open();
 		w.document.title = nuTranslate('Current Properties') + ' : '  + nuGetProperty('form_code')
 		$(w.document.body).html(ppTable);

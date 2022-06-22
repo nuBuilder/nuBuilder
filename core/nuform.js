@@ -3357,27 +3357,27 @@ function nuGetOptionsList(f, t, p, a, type){
 
 	if(nuFormType() == 'browse'){
 
-		list.push([nuTranslate('Searchable Columns'), 'nuGetSearchList()', 'fa-columns', 'Ctrl+Shft+C']);
+		list.push([nuTranslate('Searchable Columns'), 'nuGetSearchList()', 'fa-columns', nuCtrlCmdShiftName('C')]);
 
 		if(a == 1 || f == 'nuuserhome'){ 
 
 			if(nuAllowChanges(f)){
 
-				list.push([nuTranslate('Form Properties'), 'nuOptionsListAction("nuform", "' + f + '")', 'fa-cog',	'Ctrl+Shft+F']);
-				list.push([nuTranslate('Form Object List'), 'nuOptionsListAction("nuobject", "", "' + f + '")', 'fa-th-list', 'Ctrl+Shft+O']);
+				list.push([nuTranslate('Form Properties'), 'nuOptionsListAction("nuform", "' + f + '")', 'fa-cog',	nuCtrlCmdShiftName('F')]);
+				list.push([nuTranslate('Form Object List'), 'nuOptionsListAction("nuobject", "", "' + f + '")', 'fa-th-list', nuCtrlCmdShiftName('O')]);
 
 			}
 
 		}else{
-			list.push([nuTranslate('Change Password'), 'nuPopup("nupassword", "", "")','fa-password', 'Ctrl+Shft+L']);
+			list.push([nuTranslate('Change Password'), 'nuPopup("nupassword", "", "")','fa-password', nuCtrlCmdShiftName('L')]);
 		}
 
 		list.push(['', '', '', '']);
-		list.push([nuTranslate('Refresh'), 'if (nuGlobalAccess()) {nuRunPHPHidden("nusetrefreshcache", 0);} else {nuGetBreadcrumb();}', 'fas fa-sync-alt', 'Ctrl+Shft+R']);
-		list.push([nuTranslate('Search'), 'nuSearchAction();', 'fas fa-search', 'Ctrl+Shft+S']);
+		list.push([nuTranslate('Refresh'), 'if (nuGlobalAccess()) {nuRunPHPHidden("nusetrefreshcache", 0);} else {nuGetBreadcrumb();}', 'fas fa-sync-alt', nuCtrlCmdShiftName('R')]);
+		list.push([nuTranslate('Search'), 'nuSearchAction();', 'fas fa-search', nuCtrlCmdShiftName('S')]);
 
-		if(nuSERVERRESPONSE.buttons.Add == '1'){list.push([nuTranslate('Add'), 'nuAddAction();', 'fas fa-plus', 'Ctrl+Shft+A']);}
-		if(nuSERVERRESPONSE.buttons.Print == '1'){list.push([nuTranslate('Print'), 'nuPrintAction();', 'fas fa-table', 'Ctrl+Shft+P']);}
+		if(nuSERVERRESPONSE.buttons.Add == '1'){list.push([nuTranslate('Add'), 'nuAddAction();', 'fas fa-plus', nuCtrlCmdShiftName('A')]);}
+		if(nuSERVERRESPONSE.buttons.Print == '1'){list.push([nuTranslate('Print'), 'nuPrintAction();', 'fas fa-table', nuCtrlCmdShiftName('P')]);}
 
 	}
 
@@ -3388,51 +3388,51 @@ function nuGetOptionsList(f, t, p, a, type){
 			if(nuAllowChanges(f)){
 
 				if (nuSERVERRESPONSE.objects.length > 0) {
-					list.push([nuTranslate('Arrange Objects'), 'nuPopup("' + f + '", "-2")', 'fas fa-arrows-alt', 'Ctrl+Shft+A']);
+					list.push([nuTranslate('Arrange Objects'), 'nuPopup("' + f + '", "-2")', 'fas fa-arrows-alt', nuCtrlCmdShiftName('A')]);
 				}
 
 				if(type != 'subform'){
-					list.push([nuTranslate('Add Object'), 'nuPopup("nuobject","-1","")', 'fa fa-plus', 'Ctrl+Shft+H']);
+					list.push([nuTranslate('Add Object'), 'nuPopup("nuobject","-1","")', 'fa fa-plus', nuCtrlCmdShiftName('H')]);
 					list.push(['', '', '', '']);
 				}
 
-				list.push([nuTranslate('Form Properties'), 'nuOptionsListAction("nuform", "' + f + '")', 'fa-cog', 'Ctrl+Shft+F']);
+				list.push([nuTranslate('Form Properties'), 'nuOptionsListAction("nuform", "' + f + '")', 'fa-cog', nuCtrlCmdShiftName('F')]);
 
 				if(type == 'subform'){
 					let labelId = '#label_' + $('#' + p + 'scrollDiv').parent().attr('id');
 					list.push([nuTranslate('Subform Object'), '$("'+ labelId +'").dblclick()', 'fa-cog', '']);
 				}
 
-				list.push([nuTranslate('Form Object List'), 'nuOptionsListAction("nuobject", "", "' + f + '")', 'fa-th-list', 'Ctrl+Shft+O']);
+				list.push([nuTranslate('Form Object List'), 'nuOptionsListAction("nuobject", "", "' + f + '")', 'fa-th-list', nuCtrlCmdShiftName('O')]);
 
 			}
 
 		}else{
 
 			if(type != 'subform'){
-				list.push([nuTranslate('Change Password'), 'nuPopup("nupassword", "", "")', 'fa-lock', 'Ctrl+Shft+L']);
+				list.push([nuTranslate('Change Password'), 'nuPopup("nupassword", "", "")', 'fa-lock', nuCtrlCmdShiftName('L')]);
 			}
 
 		}
 
 		if(type != 'subform'){
 
-			list.push([nuTranslate('Refresh'), 'if (nuGlobalAccess()) {nuRunPHPHidden("nusetrefreshcache", 0);} else {nuGetBreadcrumb();}', 'fas fa-sync-alt', 'Ctrl+Shft+R']);
+			list.push([nuTranslate('Refresh'), 'if (nuGlobalAccess()) {nuRunPHPHidden("nusetrefreshcache", 0);} else {nuGetBreadcrumb();}', 'fas fa-sync-alt', nuCtrlCmdShiftName('R')]);
 
 			if(nuFORM.getCurrent().form_type != 'launch'){
 
 				var data_mode = nuFORM.getCurrent().data_mode;
 
-				if(nuSERVERRESPONSE.buttons.Save == '1' && data_mode !== 0){list.push([nuTranslate('Save'), 'nuSaveAction();', 'far fa-save', 'Ctrl+Shft+S']);}
-				if(nuSERVERRESPONSE.buttons.Delete == '1'){list.push([nuTranslate('Delete'), 'nuDeleteAction();', 'far fa-trash-alt', 'Ctrl+Shft+Y']);}
-				if(nuSERVERRESPONSE.buttons.Clone == '1'){list.push([nuTranslate('Clone'), 'nuCloneAction();', 'far fa-clone', 'Ctrl+Shft+C']);}
+				if(nuSERVERRESPONSE.buttons.Save == '1' && data_mode !== 0){list.push([nuTranslate('Save'), 'nuSaveAction();', 'far fa-save', nuCtrlCmdShiftName('S')]);}
+				if(nuSERVERRESPONSE.buttons.Delete == '1'){list.push([nuTranslate('Delete'), 'nuDeleteAction();', 'far fa-trash-alt', nuCtrlCmdShiftName('Y')]);}
+				if(nuSERVERRESPONSE.buttons.Clone == '1'){list.push([nuTranslate('Clone'), 'nuCloneAction();', 'far fa-clone', nuCtrlCmdShiftName('C')]);}
 
 			}
 
 		}
 
 		if(nuFORMHELP[p] != ''){
-			list.push([nuTranslate('Help'), nuFORMHELP[p], 'fa-question-circle', 'Ctrl+Shft+?']);
+			list.push([nuTranslate('Help'), nuFORMHELP[p], 'fa-question-circle', nuCtrlCmdShiftName('?')]);
 		}
 
 	}
@@ -3442,12 +3442,12 @@ function nuGetOptionsList(f, t, p, a, type){
 		if(type != 'subform'){
 
 			list.push(['', '', '', '']);
-			list.push([nuTranslate('nuDebug Results'), 'nuOptionsListAction("nudebug", "")', 'fa-bug', 'Ctrl+Shft+D']);
+			list.push([nuTranslate('nuDebug Results'), 'nuOptionsListAction("nudebug", "")', 'fa-bug', nuCtrlCmdShiftName('D')]);
 			list.push(['', '', '', '']);
-			list.push([nuTranslate('Database'), 'nuStartDatabaseAdmin();', 'fa-database', 'Ctrl+Shft+E']);
-			list.push([nuTranslate('Backup'), 'nuRunBackup();', 'far fa-hdd', 'Ctrl+Shft+B']);
-			list.push([nuTranslate('Setup'), 'nuForm("nusetup","1","", "", 2)', 'fa-cogs', 'Ctrl+Shft+U']);
-			list.push([nuTranslate('Form Info'), 'nuShowFormInfo();', 'fa-info', 'Ctrl+Shft+M']);
+			list.push([nuTranslate('Database'), 'nuStartDatabaseAdmin();', 'fa-database', nuCtrlCmdShiftName('E')]);
+			list.push([nuTranslate('Backup'), 'nuRunBackup();', 'far fa-hdd', nuCtrlCmdShiftName('B')]);
+			list.push([nuTranslate('Setup'), 'nuForm("nusetup","1","", "", 2)', 'fa-cogs', nuCtrlCmdShiftName('U')]);
+			list.push([nuTranslate('Form Info'), 'nuShowFormInfo();', 'fa-info', nuCtrlCmdShiftName('M')]);
 
 		}
 
@@ -5018,7 +5018,7 @@ function nuGetSearchList(){
 			$('#' + shortcut_key.id)
 			.css(prop)
 			.css({'top'	: 37 + (i * 25), 'right' : 10})
-			.html('Ctrl+Shift+' + i)
+			.html(nuCtrlCmdShiftName(i))
 			.addClass('nuOptionsItemShortcutKey');
 
 		}
@@ -5366,7 +5366,7 @@ function nuRedefine_nuSelectBrowse(){
 
 		}
 
-		if (e.ctrlKey == false) {
+		if ((nuIsMacintosh() ? e.metaKey : e.ctrlKey) == false) {
 			nuSelectBrowse = function (e, t) {} //-- so that it doesn't run twice.
 		}
 

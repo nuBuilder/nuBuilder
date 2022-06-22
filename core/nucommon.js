@@ -526,7 +526,7 @@ function nuPopup(f, r, filter){
 
 function nuOptionsListAction(f, r, filter) {
 
-	if (! window.event.ctrlKey) {
+	if (! (nuIsMacintosh() ? event.metaKey : event.ctrlKey)) {
 		nuPopup(f, r, filter)
 	} else {
 		nuForm(f, r, filter, '', '');
@@ -760,7 +760,7 @@ function nuBindCtrlEvents(){
 
 	var nuCtrlKeydownListener = function(e) {
 
-		if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) { // exclude Ctrl + f
+		if (e.keyCode === 114 || ((nuIsMacintosh() ? e.metaKey : e.ctrlKey) && e.keyCode === 70)) { // exclude Ctrl + f
 			window.nuNEW = 0;
 		} else {
 			if (e.keyCode == 17) { 									//-- Ctrl
@@ -790,7 +790,8 @@ function nuBindCtrlEvents(){
 
 		}
 
-		if (e.ctrlKey && e.shiftKey) {
+
+		if ((nuIsMacintosh() ? e.metaKey : e.ctrlKey) && e.shiftKey) {
 
 			window.nuNEW = 0;
 			
@@ -1699,7 +1700,7 @@ function nuClosePopup(){
 
 function nuStopClick(e){
 
-	if(window.nuCLICKER != '' && e.ctrlKey == false ){
+	if(window.nuCLICKER != '' && ((nuIsMacintosh() ? e.metaKey : e.ctrlKey) == false) ){
 		$(e.target).prop('onclick',null).off('click');
 	}
 }
@@ -2974,5 +2975,12 @@ function nuSetStorageItem(key, value, storage, ttl) {
 		expiry: ttl === undefined ? null : now.getTime() + ttl * 1000,
 	}
 	storage.setItem(key, JSON.stringify(item));
+
+}
+
+function nuCtrlCmdShiftName(keyName) {
+
+	const modifier = nuIsMacintosh() ? 'Cmd' : 'Ctrl';
+	return modifier + '+Shift+' + keyName;
 
 }
