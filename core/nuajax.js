@@ -2,11 +2,6 @@
 function nuAjax(w,successCallback,errorCallback){
 
 	w	= nuAddEditFieldsToHash(w);
-
-	// Avoid modsecurity blocking: Disabled for now, print requires the sql
-	// w.browse_sql = null; 
-	// if (w.hash !== undefined) w.hash.browse_sql = null;
-
 	w	= JSON.stringify(w);
 
 	$.ajax({
@@ -686,7 +681,7 @@ function nuUpdateData(action, instruction, close){
 	}
 
 	if(action == 'save') {
-		nuSavingProgressMessage();
+		// nuSavingProgressMessage();
 		nuSaveEditor();
 	}
 
