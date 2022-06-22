@@ -2512,7 +2512,7 @@ function nuSubformAddFilter(filter) {
 
 			if (hide === false) {
 				rec.css("top", rowTop).show();
-				rowTop = rowTop + rowHeight;
+				rowTop = rowTop + rowHeight + 1;
 			} else {
 				hideCount ++;
 				rec.hide();
