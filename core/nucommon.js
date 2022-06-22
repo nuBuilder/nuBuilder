@@ -1864,6 +1864,10 @@ function nuIsMobile(){
 	return navigator.userAgent.toLowerCase().split('mobile').length > 1
 }
 
+function nuIsMacintosh() {
+	return /mac/i.test(navigator.userAgentData ? navigator.userAgentData.platform : navigator.platform);
+}
+
 function nuTransformScale(){
 
 		if($('body').css('transform') == 'none'){
