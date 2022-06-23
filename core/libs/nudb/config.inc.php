@@ -3,38 +3,39 @@ declare(strict_types=1);
 
 require_once(dirname(__FILE__). '/../../../nuconfig.php');
 
+if (! isset($nuPmaNotAuth)) {
+	$sessionId = isset($_COOKIE['nupmalogin']) ? $_COOKIE["nupmalogin"] : '';
 
-$sessionId = isset($_COOKIE['nupmalogin']) ? $_COOKIE["nupmalogin"] : '';
+	$DBHost		=  $nuConfigDBHost;
+	$DBName		=  $nuConfigDBName;
+	$DBUser		=  $nuConfigDBUser;
+	$DBPassword	=  $nuConfigDBPassword;
+	$DBCharset	= 'utf8';
 
-$DBHost		=  $nuConfigDBHost;
-$DBName		=  $nuConfigDBName;
-$DBUser		=  $nuConfigDBUser;
-$DBPassword	=  $nuConfigDBPassword;
-$DBCharset	= 'utf8';
+	try {
+		$pdo 				= new PDO("mysql:host=$DBHost;dbname=$DBName;charset=$DBCharset", $DBUser, $DBPassword);
+		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	} catch (PDOException $e) {
+		echo 'Connection failed: ' . $e->getMessage();
+		die();
+	}
 
-try {
-	$pdo 				= new PDO("mysql:host=$DBHost;dbname=$DBName;charset=$DBCharset", $DBUser, $DBPassword);
-	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-	echo 'Connection failed: ' . $e->getMessage();
-	die();
-}
+	$stmt = $pdo->prepare("SELECT sss_access FROM `zzzzsys_session` WHERE zzzzsys_session_id = ?");
+	$stmt->execute([$sessionId]); 
+	$result = $stmt->fetch(PDO::FETCH_OBJ);
 
-$stmt = $pdo->prepare("SELECT sss_access FROM `zzzzsys_session` WHERE zzzzsys_session_id = ?");
-$stmt->execute([$sessionId]); 
-$result = $stmt->fetch(PDO::FETCH_OBJ);
+	if ($result) {
+		$json = json_decode($result->sss_access, true);
 
-if ($result) {
-	$json = json_decode($result->sss_access, true);
+		if ($json['session']['global_access'] != 1) {
+			nuAuthFailed();
+		}
 
-	if ($json['session']['global_access'] != 1) {
+	} else {
 		nuAuthFailed();
 	}
 
-} else {
-	nuAuthFailed();
 }
-
 
 function nuAuthFailed() {
 	echo "Please log into nuBuilder ";
