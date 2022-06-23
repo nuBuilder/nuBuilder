@@ -5933,7 +5933,7 @@ function nuOnPromptClose(val, ok) {
 
 function nuPrompt(text, caption, defaultValue, format, fctn) {
 
-	if (promot === undefined) {
+	if ($('#nupromptmodal').length == 0) {
 
 		let nuPromptDiv =
 		`<div id="nupromptmodal"></div>
