@@ -40,14 +40,8 @@ function pmaGood() {
 	// $page = "libs/nudb/db_structure.php?server=1&db=".$_SESSION['nubuilder_session_data']['DB_NAME']."&$time=$time";
 	$page = "libs/nudb/index.php?route=/database/structure&server=1&db=".$_SESSION['nubuilder_session_data']['DB_NAME']."&$time=$time";
 
-	setcookie("nupmalogin",			"good");
-	setcookie("nuConfigDBHost",		$_SESSION['nubuilder_session_data']['DB_HOST']);
-	setcookie("nuConfigDBUser",		$_SESSION['nubuilder_session_data']['DB_USER']);
-	setcookie("nuConfigDBPassword",	$_SESSION['nubuilder_session_data']['DB_PASSWORD']);
+	setcookie("nupmalogin",	 $_SESSION['nubuilder_session_data']['SESSION_ID']);
 
-	if ( $_SESSION['nubuilder_session_data']['DB_PASSWORD'] == '' ) {
-		setcookie("nuConfigDBPasswordBlank", 'BLANK');
-	}
 	return $page;
 }
 
@@ -56,9 +50,7 @@ function pmaBad() {
 	$time = time();
 	$page							= "nupmalogout.php?$time=$time";
 	setcookie("nupmalogin",			"bad");
-	setcookie("nuConfigDBHost",		null);
-	setcookie("nuConfigDBUser",		null);
-	setcookie("nuConfigDBPassword",	null);
+
 	return $page;
 }	
 
