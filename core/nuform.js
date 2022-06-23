@@ -3131,7 +3131,7 @@ function nuSetTitle(t) {
 	nuFORM.setProperty('title', t);
 
 	let b = $('.nuBreadcrumb').length;
-	if (b === 0) {
+	if (b === 0 && ! nuIsIframe()) {
 		$('#nuHomeGap').append(t)
 	} else {
 		let h = '<div id="nuarrow' + (b - 1) + '" class="nuBreadcrumbArrow">&nbsp;<i class="fa fa-caret-right"></i>&nbsp;</div>';
@@ -3144,7 +3144,6 @@ function nuSetTitle(t) {
 	}
 
 }
-
 
 function nuAddEditTabs(p, w){
 
