@@ -3122,6 +3122,10 @@ function nuMainForm(){
 
 }
 
+function nuSetBrowseTitle(t) {
+	nuSetTitle(t, true);
+}
+
 function nuSetTitle(t, browse) {
 
 	if (nuFormType() == 'browse' && !browse == true) {
