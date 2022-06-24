@@ -1345,7 +1345,7 @@ function nuEval($phpid){
 
 	$r						= nuGetPHP($phpid);	
 	if($r == ''){return;}
-	
+
 	$code					= $r->sph_code;
 	$php					= nuReplaceHashVariables($r->sph_php);
 	if($php == ''){return;}
@@ -1354,7 +1354,7 @@ function nuEval($phpid){
 
 	$nuDataSet = isset($_POST['nudata']);	
 	$nudata = $nuDataSet ? $_POST['nudata'] : '';
-	
+
 	try{
 		eval($php); 
 	}catch(Throwable $e){
@@ -2058,7 +2058,28 @@ function nuFormatDateTime($d, $format){
 
 }
 
-function nuAddToHashCookies($i, $nj, $global = false){
+function nuGetProperty($p) {
+
+	$a = nuObjKey($_POST, 'nuHash', null);
+	if ($a != null) {
+
+		$q = "SELECT sss_hashcookies FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
+		$t = nuRunQuery($q, array($_SESSION['nubuilder_session_data']['SESSION_ID']));
+		$r = db_fetch_object($t);
+
+		if (isset($r->sss_hashcookies)) {
+			$j = json_decode($r->sss_hashcookies, true);
+			if (is_array($j)) {
+				$a = array_merge($j, $a);
+			}
+		}
+	}
+
+	return array_key_exists($p, $a) ? $a[$p] : null;
+	
+}
+
+function nuSetProperty($i, $nj, $global = false) {
 
 	if ($global) {
 		$s = "SELECT sss_hashcookies FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
@@ -2072,9 +2093,44 @@ function nuAddToHashCookies($i, $nj, $global = false){
 		$s = "UPDATE zzzzsys_session SET sss_hashcookies = ? WHERE zzzzsys_session_id = ? ";
 		$t = nuRunQuery($s, array($J, $_SESSION['nubuilder_session_data']['SESSION_ID']));
 	} else {
-		// not implemented yet
+		$_POST['nuHash'][$i] = $nj;
 	}
 
+}
+
+function nuGetGlobalProperties() {
+
+	$a = array();
+	$q = "SELECT sss_hashcookies FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
+	$t = nuRunQuery($q, array($_SESSION['nubuilder_session_data']['SESSION_ID']));
+	$r = db_fetch_object($t);
+
+	if (isset($r->sss_hashcookies)) {
+		$j = json_decode($r->sss_hashcookies, true);
+		if (is_array($j)) {
+			$a = array_merge($j, $a);
+		}
+	}
+
+	return $a;
+
+}
+
+function nuSetGlobalPropertiesJS() {
+
+	$a = nuGetGlobalProperties();
+    $js = "";
+    foreach ($a as $p => $v) {
+        $js .= "nuSetProperty('". $p ."','" . addslashes($v) ."');\n";
+    }
+	
+    if ($js != '') nuAddJavascript($js);
+
+}
+
+// nuAddToHashCookies: replaced by nuSetProperty. May be removed in the future
+function nuAddToHashCookies($i, $nj, $global = false){
+	nuSetProperty($i, $nj, $global);
 }
 
 function nuDeleteFiles($file_list = array()) {

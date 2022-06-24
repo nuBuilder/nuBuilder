@@ -121,7 +121,7 @@
 
 		$f->forms[0]->session_id				= $_SESSION['nubuilder_session_data']['SESSION_ID'];
 
-		$f->forms[0]->callback					= nuObjKey($_POST,'nuCallback');
+		$f->forms[0]->callback					= nuSetGlobalPropertiesJS()."\n".nuObjKey($_POST,'nuCallback');
 		$f->forms[0]->errors					= nuObjKey($_POST,'nuErrors');
 		$f->forms[0]->log_again					= nuObjKey($_POST,'nuLogAgain');
 		$f->forms[0]->global_access				= $globalAccess ? '1' : '0';
