@@ -2217,7 +2217,7 @@ function nuSubformMoveFocus(activeElement, d) {
 
 }
 
-function nuSubformHandleArrowKeys(e) {
+function nuSubformHandleArrowKeyEvent(e) {
 
 	let keyCode = e.keyCode || e.which,
 		keys = {
