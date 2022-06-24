@@ -3122,9 +3122,9 @@ function nuMainForm(){
 
 }
 
-function nuSetTitle(t) {
+function nuSetTitle(t, browse) {
 
-	if (nuFormType() == 'browse') {
+	if (nuFormType() == 'browse' && !browse == true) {
 		return;
 	}
 
