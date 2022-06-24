@@ -4,16 +4,17 @@ declare(strict_types=1);
 require_once(dirname(__FILE__). '/../../../nuconfig.php');
 
 if (! isset($nuPmaNotAuth)) {
-	$sessionId = isset($_COOKIE['nupmalogin']) ? $_COOKIE["nupmalogin"] : '';
 
-	$DBHost		=  $nuConfigDBHost;
-	$DBName		=  $nuConfigDBName;
-	$DBUser		=  $nuConfigDBUser;
-	$DBPassword	=  $nuConfigDBPassword;
+	$sessionId = isset($_COOKIE['nupmalogin']) ? $_COOKIE["nupmalogin"] : '';
+	
+	if ($sessionId == '') {
+		nuAuthFailed();
+	}
+
 	$DBCharset	= 'utf8';
 
 	try {
-		$pdo 				= new PDO("mysql:host=$DBHost;dbname=$DBName;charset=$DBCharset", $DBUser, $DBPassword);
+		$pdo 				= new PDO("mysql:host=$nuConfigDBHost;dbname=$nuConfigDBName;charset=$DBCharset", $nuConfigDBUser, $nuConfigDBPassword);
 		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	} catch (PDOException $e) {
 		echo 'Connection failed: ' . $e->getMessage();
@@ -38,7 +39,7 @@ if (! isset($nuPmaNotAuth)) {
 }
 
 function nuAuthFailed() {
-	echo "Please log into nuBuilder ";
+	echo "Please log into nuBuilder";
 	die();
 }
 
