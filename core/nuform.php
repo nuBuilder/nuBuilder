@@ -468,8 +468,6 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 	$f->number_formats		= nuBuildCurrencyFormats();
 	$O						= new stdClass();
 
-																			 
-
 	if ($f->browse_height == 0) {
 		nuOnProcess($F, $f, 'BE', 'nuOnProcessObjects');
 	}
@@ -621,24 +619,6 @@ function nuDefaultObject($r, $t){
 
 }
 
-function nuGetGlobalProperties() {
-
-	$a = array();
-	$q = "SELECT sss_hashcookies FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
-	$t = nuRunQuery($q, array($_SESSION['nubuilder_session_data']['SESSION_ID']));
-	$r = db_fetch_object($t);
-
-	if (isset($r->sss_hashcookies)) {
-		$j = json_decode($r->sss_hashcookies, true);
-		if (is_array($j)) {
-			$a = array_merge($j, $a);
-		}
-	}
-
-	return $a;
-
-}
-
 function nuGetEditForm($F, $R){
 
 	$f = new stdClass();
@@ -672,15 +652,6 @@ function nuGetEditForm($F, $R){
 
 	$f->rows	= nuRowsPerPage($r->sfo_browse_rows_per_page);
 	$f->title	= nuBreadcrumbDescription($r, $R);
-
-
-	// Add global hash cookies
-	$a = nuGetGlobalProperties();
-	foreach ($a as $p => $v) {
-		$f->{$p} = $v;
-	}
-	
-	
 
 	return $f;
 
