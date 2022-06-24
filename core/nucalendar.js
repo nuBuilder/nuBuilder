@@ -16,6 +16,17 @@ function nuAppendChild(p,t,i){
 	
 }
 
+function nuCalendarWeekStartNumber() {
+
+	let ws = nuUXOptions['nuCalendarStartOfWeek'];
+	if (ws !== undefined) {
+		ws = ws.length == 1 ? ws : ws.replace('Sunday', 0).replace('Monday', 1);
+	}
+
+	return ws;
+
+}
+
 function nuPopupCalendarVanillaJs(pThis, d) {
 	
 	let id = pThis.id;
@@ -23,11 +34,11 @@ function nuPopupCalendarVanillaJs(pThis, d) {
 
 	if (! datepicker) {
 		let optionWeekStart = {};
-		let _weekStart = nuUXOptions['nuCalendarStartOfWeek'];
-		if (_weekStart !== undefined) {
-				_weekStart = _weekStart.length == 1 ? _weekStart : _weekStart.replace('Sunday', 0).replace('Monday', 1);
+		let weekStartNumber = nuCalendarWeekStartNumber();
+
+		if (weekStartNumber !== undefined) {
 				optionWeekStart = {
-					weekStart: _weekStart
+					weekStart: weekStartNumber
 				}
 		}
 
@@ -295,10 +306,10 @@ function nuWeekDayFromString(n) {
 	const wd = 'MTWTFSS'; 
 
 	if (wd != nuTranslate(wd)) {
-		let t = nuUXOptions["nuCalendarStartOfWeek"] == 'Monday' ? nuTranslate('MTWTFSS') : nuTranslate('SMTWTFS');
+		let t = nuCalendarWeekStartNumber() == '1' ? nuTranslate('MTWTFSS') : nuTranslate('SMTWTFS');
 		return t.substr(n, 1);
 	} else {
-		let t2 = nuUXOptions["nuCalendarStartOfWeek"] == 'Monday' ? nuTranslate('M,T,W,T,F,S,S') : nuTranslate('S,M,T,W,T,F,S');
+		let t2 = nuCalendarWeekStartNumber() == '1' ? nuTranslate('M,T,W,T,F,S,S') : nuTranslate('S,M,T,W,T,F,S');
 
 		return t2.split(',')[n];
 	}
@@ -384,7 +395,7 @@ function nuPopulateCalendar(id, y, m, d){
 
 	var weekDay = s.getDay();
 
-	if (nuUXOptions["nuCalendarStartOfWeek"] == 'Monday') {
+	if (nuCalendarWeekStartNumber() == '1') { // Monday
 		var firstDay = 0;
 		if (weekDay == 0) {
 			firstDay = 6;
