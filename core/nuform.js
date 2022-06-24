@@ -2240,8 +2240,10 @@ function nuSubformHandleArrowKeyEvent(e) {
 			result = !nuScroll && nuSubformMoveFocus(activeElement, 1);
 			break;
 		default:
-			return false;
+			result = false;
 	}
+
+	return result;
 
 }
 
