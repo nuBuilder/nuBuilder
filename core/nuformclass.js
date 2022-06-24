@@ -1117,7 +1117,6 @@ function nuCurrentProperties(){
 	return nuFORM.getCurrent();
 }
 
-
 function nuSetProperty(f, v, p){
 
 	nuFORM.setProperty(f, v);
@@ -1126,19 +1125,15 @@ function nuSetProperty(f, v, p){
 		nuSetProperty('hcname',f);
 		nuSetProperty('hcvalue',v);
 		nuRunPHPHidden('nusethashcookie', 0);
-		sessionStorage['nuHashGlobal_' + f] = v;
 	}
 
 }
 
-function nuGetProperty(f, p){
+// All global properties are now reset in every form with  nuGetGlobalProperties() and so no need to store them in the browser session storage
+
+function nuGetProperty(f){
 
 	let v = nuFORM.getProperty(f);
-	
-	if (p !== false && v === undefined) {
-		v = sessionStorage['nuHashGlobal_' + f];
-	}
-	
 	return v;
 
 }
