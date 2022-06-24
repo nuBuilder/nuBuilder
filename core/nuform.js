@@ -2207,6 +2207,45 @@ function nuSubformTitleArray(sfName) {
 
 }
 
+function nuSubformMoveFocus(activeElement, d) {
+
+	let row = activeElement.attr('data-nu-prefix').slice(-3);
+	let nextRow = $('#' + activeElement.attr('data-nu-form') + nuPad3(Number(row) + d) + activeElement.attr('id').substr(activeElement.attr('data-nu-form').length + 3));
+	if (nextRow.length == 1 && !nextRow.prop('disabled')) nextRow.focus();
+
+	return true;
+
+}
+
+function nuSubformHandleArrowKeys(e) {
+
+	let keyCode = e.keyCode || e.which,
+		keys = {
+			up: 38,
+			down: 40,
+			enter: 13
+		};
+
+	let activeElement = $(document.activeElement);
+	let nuScroll = activeElement.hasClass('nuScroll');
+
+	switch (keyCode) {
+		case keys.up:
+			result = !nuScroll && nuSubformMoveFocus(activeElement, -1);
+			break;
+		case keys.enter:
+			result = nuSubformMoveFocus(activeElement, 1);
+			break;
+		case keys.down:
+			result = !nuScroll && nuSubformMoveFocus(activeElement, 1);
+			break;
+		default:
+			return false;
+	}
+
+}
+
+
 // Subform filtering
 
 function nuSubformAddFilter(filter) {
