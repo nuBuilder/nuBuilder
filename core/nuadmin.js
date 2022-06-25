@@ -21,19 +21,25 @@ function nuAddAdminButton(i, v, f, t) {
 
 }
 
+function nuFormInfoCopyBrowseSQL() {
+	nuCopyToClipboard(nuFormInfoBrowseSQL.innerText);
+}
+
 function nuShowFormInfo() {
 
-	let cp = nuCurrentProperties();
-	let code = nuCurrentProperties().form_code;
-	let devMode = nuDevMode();
+	const cp = nuCurrentProperties();
+	const code = nuCurrentProperties().form_code;
+	const devMode = nuDevMode();
 
-	let href		= window.location.href.split('?')[0] + '?f=' + cp.form_id + '&r='+cp.record_id+'&h='+nuSERVERRESPONSE.home_id;
-	let url			= '<br><a href="'+href+'" target="_blank">Permalink</a></b>';
-	let currentProp	= '<br><a href="javascript:;" onclick="nuPrettyPrintMessage(event, nuCurrentProperties())">Current Properties</a>';
+	const href		= window.location.href.split('?')[0] + '?f=' + cp.form_id + '&r='+cp.record_id+'&h='+nuSERVERRESPONSE.home_id;
+	const url			= '<br><a href="'+href+'" target="_blank">Permalink</a></b>';
+	const currentProp	= '<br><a href="javascript:;" onclick="nuPrettyPrintMessage(event, nuCurrentProperties())">Current Properties</a>';
 
-	let recordId	= nuFormType() == 'edit' && cp.form_type !== 'launch' ? "<b>Record ID:</b> " + cp.record_id : '';
-	let browseSQL	= nuFormType() == 'browse' && (! code.startsWith('nu') || devMode) ? "<br><b>Browse SQL:</b></br> " + cp.browse_sql : '';
-	let table		= nuSERVERRESPONSE.table !== '' && (! code.startsWith('nu') || devMode) ? "<b>Table:</b> " + nuSERVERRESPONSE.table : '';
+	const recordId	= nuFormType() == 'edit' && cp.form_type !== 'launch' ? "<b>Record ID:</b> " + cp.record_id : '';
+	const browseCopyButton = '<button type="button" onclick="nuFormInfoCopyBrowseSQL()">Copy SQL</button><br>';
+
+	const browseSQL	= nuFormType() == 'browse' && (! code.startsWith('nu') || devMode) ? '<br><b>Browse SQL:</b><br>' + '<pre class="nuFormInfoBrowseSQL"><code id="nuFormInfoBrowseSQL">' + cp.browse_sql + "</pre></code><br>" + browseCopyButton : '';
+	const table		= nuSERVERRESPONSE.table !== '' && (! code.startsWith('nu') || devMode) ? "<b>Table:</b> " + nuSERVERRESPONSE.table : '';
 
 	nuMessage(["<h2><u>" + cp.form_description + "</u></h2>", "<b>Form ID:</b> " + cp.form_id, "<b>Form Code:</b> " + cp.form_code, table, recordId, currentProp, url, browseSQL]);
 

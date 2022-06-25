@@ -1234,6 +1234,21 @@
 	 line-height:25px;
 	 padding-left:5px 
 }
+ pre.nuFormInfoBrowseSQL {
+	background: #f4f4f4;
+	border: 1px solid #ddd;
+	border-left: 3px solid #f36d33;
+	color: #666;
+	page-break-inside: avoid;
+	font-family: monospace;
+	font-size: 15px;
+	line-height: 1.4;
+	max-width: 100%;
+	overflow: auto;
+	display: block;
+	word-wrap: break-word;
+	white-space: pre-wrap
+}
  #nupromptmodal{
 	 display:none;
 	 background-color:#DEDEDE;
