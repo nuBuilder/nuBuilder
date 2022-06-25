@@ -20,6 +20,7 @@ function nuCalendarWeekStartNumber() {
 
 	let ws = nuUXOptions['nuCalendarStartOfWeek'];
 	if (ws !== undefined) {
+		ws = String(ws);
 		ws = ws.length == 1 ? ws : ws.replace('Sunday', 0).replace('Monday', 1);
 	}
 
