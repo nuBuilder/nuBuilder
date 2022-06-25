@@ -7,7 +7,7 @@ function nuOpenCurrentFormProperties() {
 }
 
 function nuOpenCurrentObjectList() {
-	nuForm('nuobject','',nuFormId(),'',2);
+	nuForm('nuobject','',nuFormId(),'', 2);
 }
 
 function nuAddAdminButton(i, v, f, t) {
@@ -25,23 +25,33 @@ function nuFormInfoCopyBrowseSQL() {
 	nuCopyToClipboard(nuFormInfoBrowseSQL.innerText);
 }
 
+function nuFormInfoCopyPermalink() {
+
+	const cp = nuCurrentProperties();
+	const href = window.location.href.split('?')[0] + '?f=' + cp.form_id + '&r='+cp.record_id+'&h='+nuSERVERRESPONSE.home_id;
+	nuCopyToClipboard(href);
+
+}
+
+function nuFormInfoCurrentProperties() {
+	nuPrettyPrintMessage(undefined, nuCurrentProperties());
+}
+
 function nuShowFormInfo() {
 
 	const cp = nuCurrentProperties();
 	const code = nuCurrentProperties().form_code;
 	const devMode = nuDevMode();
 
-	const href		= window.location.href.split('?')[0] + '?f=' + cp.form_id + '&r='+cp.record_id+'&h='+nuSERVERRESPONSE.home_id;
-	const url			= '<br><a href="'+href+'" target="_blank">Permalink</a></b>';
-	const currentProp	= '<br><a href="javascript:;" onclick="nuPrettyPrintMessage(event, nuCurrentProperties())">Current Properties</a>';
-
+	const permalink = '<br><button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCopyPermalink()">Copy Permalink</button>';
+	const currentProp	= '<button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCurrentProperties()">Current Properties</button>';
 	const recordId	= nuFormType() == 'edit' && cp.form_type !== 'launch' ? "<b>Record ID:</b> " + cp.record_id : '';
-	const browseCopyButton = '<button type="button" onclick="nuFormInfoCopyBrowseSQL()">Copy SQL</button><br>';
+	const browseCopyButton = '<button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCopyBrowseSQL()">Copy SQL</button><br>';
 
 	const browseSQL	= nuFormType() == 'browse' && (! code.startsWith('nu') || devMode) ? '<br><b>Browse SQL:</b><br>' + '<pre class="nuFormInfoBrowseSQL"><code id="nuFormInfoBrowseSQL">' + cp.browse_sql + "</pre></code><br>" + browseCopyButton : '';
 	const table		= nuSERVERRESPONSE.table !== '' && (! code.startsWith('nu') || devMode) ? "<b>Table:</b> " + nuSERVERRESPONSE.table : '';
 
-	nuMessage(["<h2><u>" + cp.form_description + "</u></h2>", "<b>Form ID:</b> " + cp.form_id, "<b>Form Code:</b> " + cp.form_code, table, recordId, currentProp, url, browseSQL]);
+	nuMessage(["<h2><u>" + cp.form_description + "</u></h2>", "<b>Form ID:</b> " + cp.form_id, "<b>Form Code:</b> " + cp.form_code, table, recordId, currentProp, permalink, browseSQL]);
 
 }
 
@@ -69,20 +79,20 @@ function nuAddAdminButtons() {
 
 	if (nuGlobalAccess()) {
 
-		var ft = nuCurrentProperties().form_type;
+		const ft = nuCurrentProperties().form_type;
 		if (ft === null || typeof ft === 'undefined') return;
 
-		var devMode = nuDevMode();
+		const devMode = nuDevMode();
 
-		var b = ft.indexOf("browse") >= 0;
-		var e = ft.indexOf("edit") >= 0;
-		var l = ft.indexOf("launch") >= 0;
+		const b = ft.indexOf("browse") >= 0;
+		const e = ft.indexOf("edit") >= 0;
+		const l = ft.indexOf("launch") >= 0;
 
 		if ((nuAdminButtons["nuDebug"] || devMode) && nuMainForm()) nuAddIconToBreadcrumbHolder('nuDebugButton','nuDebug Results','nuOpenNuDebug(2)','fa fa-bug','0px');
 		if (nuAdminButtons["nuRefresh"]) nuAddIconToBreadcrumbHolder('nuRefreshButton','Refresh','nuGetBreadcrumb()','fas fa-sync-alt', '7px');
 
 		var c = 0;
-		var code = nuCurrentProperties().form_code;
+		const code = nuCurrentProperties().form_code;
 		if (! code.startsWith('nu') || devMode) {
 
 			if (nuAdminButtons["nuProperties"]) {c++; nuAddAdminButton("AdminProperties", "Prop", 'nuOpenCurrentFormProperties();',nuTranslate('Form Properties'));}
@@ -1764,7 +1774,7 @@ function nuPrettyPrintMessage(e, obj) {
 	
 	let btnClose = '<button class="nuClose" onclick=" nuClosePropertiesMsgDiv() " style="height:25px;float:right;">&#10006;</button><br>';
 
-	if (nuIsMacintosh() ? e.metaKey : e.ctrlKey) {
+	if (e !== undefined && (nuIsMacintosh() ? e.metaKey : e.ctrlKey)) {
 		let w = window.open();
 		w.document.title = nuTranslate('Current Properties') + ' : '  + nuGetProperty('form_code')
 		$(w.document.body).html(ppTable);
