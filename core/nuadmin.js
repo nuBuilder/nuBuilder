@@ -27,7 +27,7 @@ function nuShowFormInfo() {
 	let code = nuCurrentProperties().form_code;
 	let devMode = nuDevMode();
 
-	let href		= window.location.href.split('?')[0] + '?f=' + cp.form_code + '&r='+cp.record_id+'&h='+nuSERVERRESPONSE.home_id;
+	let href		= window.location.href.split('?')[0] + '?f=' + cp.form_id + '&r='+cp.record_id+'&h='+nuSERVERRESPONSE.home_id;
 	let url			= '<br><a href="'+href+'" target="_blank">Permalink</a></b>';
 	let currentProp	= '<br><a href="javascript:;" onclick="nuPrettyPrintMessage(event, nuCurrentProperties())">Current Properties</a>';
 
