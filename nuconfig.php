@@ -1,13 +1,10 @@
 <?php
 
-// !! Important Note: You must restart your browser after modifying nuconfig.php in order for changes to be reflected !!
+// !! Important Note: You will need to restart your browser after modifying nuconfig.php in order for changes to be reflected !!
 
-
-
-// 1) Mandatory Settings:
-// *********************************************************************************************************
 
 // Database Settings:
+
 	$nuConfigDBHost						= "127.0.0.1";				//-- Database Host / IP. You may try localhost if 127.0.0.1 does not work.
 	$nuConfigDBName						= "nubuilder4";				//-- Database Name. You can change the name, if desired. The database must exist or must be created on your server.
 
@@ -18,86 +15,22 @@
 	$nuConfigDBEngine					= "InnoDB";					//-- InnoDB or MyISAM
 	$nuConfigDBCollate					= "utf8mb4_unicode_ci";		//-- Or utf8_general_ci etc.
 	$nuConfigDBCharacterSet				= "utf8mb4";				//-- Or utf8 etc.
-
 	$nuConfigDBOptions					= array();					//-- PDO Options: E.g. array(PDO::ATTR_PERSISTENT => true);
 
 // Administrator Login:
+
 	$nuConfigDBGlobeadminUsername	 	= "globeadmin";				//-- Administrator username. You can choose any username you like.
 	$nuConfigDBGlobeadminPassword		= "nu";						//-- Administrator password. Please choose a stronger password!
 
-// 2) Optional Settings:
-// *********************************************************************************************************
-
-	$nuConfigDBGlobeadminUsers			= "";						//-- User Ids with "globeadmin" permission, separated by comma
-
-// Settings:
-	$nuConfigTitle						= "nuBuilder 4";			//-- nuBuilder Title
-	$nuConfigTimeOut					= 1440;						//-- Session Timeout. Default: 1440 (24h)
-
-	$nuConfigIsDemo						= false;					//-- Demo mode. Saving not permitted.
-	$nuConfigDemoDBGlobeadminUsername	= "";						//-- Specify a Demo User Name and Password if $nuConfigIsDemo is set to true
-	$nuConfigDemoDBGlobeadminPassword	= "";						//-- Demo User Password
-	$nuConfigDemoSavingAllowedIds		= "";						//-- Saving allowed in the specified form Ids. Separated by comma.
-
-	$nuConfigUserAdditional1Label		= "";						//-- If not blank, rename the Label of "Additional 1" on the user form
-	$nuConfigUserAdditional2Label		= "";						//-- If not blank, rename the Label of "Additional 2" on the user form
-	$nuConfigUserCodeLabel				= ""; 						//-- If not blank, rename the Label of "Code" on the user form
-
-	$nuConfigBackupLocation				= ''; 						//-- Default: If left blank, backups are stored in /core/libs/mysqldump/dumps. Make sure to turn off directory listing!
-
-// Options:
-	$nuConfigEnableDatabaseUpdate		= true;						//-- Enable updating the database within nuBuilder
-	$nuConfigKeepSessionAlive			= true;						//-- Use a timer to keep the session alive
-	$nuConfigKeepSessionAliveInterval	= 600;						//-- Keep-alive interval. Default 600 s (10 min)
-	$nuUseMd5PasswordHash				= false; 					//-- If set to true, MD5 is used to hash passwords, otherwise password_hash(), which is recommended.
-
-//	2FA authentication
-	$nuConfig2FAAdmin					= false;					//-- Use 2FA authentication for administrator
-	$nuConfig2FAUser					= false;					//-- Use 2FA authentication for users
-	$nuConfig2FAFormID					= "nuauthentication";		//-- 2FA form ID. Default id: nuauthentication
-	$nuConfig2FATokenValidityTime		= 168;						//-- 2FA Token Validity Time. Default: 7 days (7 * 24 hours)
-	$nuConfig2FAShowRememberMe			= false;					//-- Show a checkbox "Remember me for X days" in the authentication form
-
 // Includes:
-
-	$nuConfigIncludeTinyMCE				= true;						//-- Include TinyMCE WYSIWYG
-	$nuConfigIncludeQuill				= false;					//-- Include Quill WYSIWYG
-	$nuConfigIncludeGoogleCharts		= true;						//-- Include external link to www.gstatic.com
-	$nuConfigIncludeApexCharts			= false;					//-- Include apex charts (libs/apexcharts)
 
 	$nuConfigIncludeJS					= '';						//-- Include one or more JavaScript File(s).  E.g. 'myjslib.js' or ['myjslib1.js','myjslib2.js']
 	$nuConfigIncludeCSS					= '';						//-- Include one or more CSS File(s). E.g. 'mystyles.css' or ['mystyles1.css','mystyles2.css']
 	$nuConfigIncludePHP					= '';						//-- Include one or more PHP File(s). E.g. '../libs/myphplib.php' or ['../libs/myphplib1.php','../libs/myphplib2.php']
-	
 
-$nuJSOptions = "
+// Settings
 
-	window.nuUXOptions = [];
-	nuUXOptions['nuEnableBrowserBackButton']		= true;		 	// Enable the browser's Back button 
-	nuUXOptions['nuPreventButtonDblClick']			= true;		 	// Disable a button for 1 5 s to prevent a double click
-	nuUXOptions['nuShowPropertiesOnMiddleClick']	= true;		 	// Show the Object Properties on middle mouse click
-	nuUXOptions['nuAutosizeBrowseColumns']			= true;		 	// Autosize columns to fit the document width
-	nuUXOptions['nuShowBackButton']					= false;		// Show a Back Button
-	nuUXOptions['nuBrowsePaginationInfo']			= 'default';	// Default Format is= '{StartRow} - {EndRow} ' + nuTranslate('of') + ' ' + '{TotalRows}'.
-	nuUXOptions['nuShowNuBuilderLink']				= true;		 	// Show the link to nubuilder com
-	nuUXOptions['nuShowLoggedInUser']				= false;		// Show the logged in User
-	nuUXOptions['nuShowBrowserTabTitle']			= true;		 	// Show the Form Title in the Browser Tab
-	nuUXOptions['nuDebugMode']						= true;		 	// If true, a warning is output in the Developer Console if an element does not exist when using nuGetValue() or nuSetValue()	
-	nuUXOptions['nuBrowserTabTitlePrefix']			= 'nuBuilder';	// Prefix in the Browser Tab
-	nuUXOptions['nuMobileView']						= true;			// Optimise view for mobile devices
-	nuUXOptions['nuCalendarStartOfWeek']			= 'Sunday';		// nuCalendar: Start of Week: Sunday (default) or Monday
-	nuUXOptions['nuSelect2Theme']					= 'default';	// select2 theme (default, classic) Default: default
-	nuUXOptions['nuDefaultUseQuill']				= false;		// Use quill as default WYSIWYG editor
-	nuUXOptions['nuCalendarVanillaJS']				= false;		// Use Vanilla JS Datepicker
-
-	window.nuAdminButtons = [];
-	nuAdminButtons['nuDebug']						= false;
-	nuAdminButtons['nuPHP']							= true;
-	nuAdminButtons['nuRefresh']						= true;
-	nuAdminButtons['nuObjects']						= true;
-	nuAdminButtons['nuProperties']					= true;
-
-";
+	$nuConfigSettingsFromDB				= true;						//-- Use settings from setup->settings if set to true (default)	
 
 
 // Uncomment this block to customise the login form:
@@ -132,8 +65,6 @@ $nuJSOptions = "
 
 	";
 */
-
-
 
 
 	if(array_key_exists('REQUEST_URI', $_SERVER)){
