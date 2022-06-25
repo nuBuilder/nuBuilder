@@ -1746,7 +1746,8 @@ var nuPrettyPrint = (function(){
 					verticalAlign: 'top',
 					fontFamily: '"Consolas","Lucida Console",Courier,mono',
 					backgroundImage: util.headerGradient,
-					backgroundRepeat: 'repeat-x'
+					backgroundRepeat: 'repeat-x',
+					display: 'none'
 				}
 			}
 		}
