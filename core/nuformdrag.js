@@ -641,7 +641,7 @@ function nuCreateDragOptionsBox(form){
 	help		+= "\"Hold CTRL to add Objects to the current selection.\", ";
 
 	help		+= "])' ";
-	help		+= "style='top: 2px; right: 10px; width: 21px; height: 21px; text-align: center; position: absolute;'>";
+	help		+= "style='top: 2px; right: 15px; width: 21px; height: 21px; text-align: center; padding-left: 5px; position: absolute;'>";
 
 	$('body').append(help);
 
