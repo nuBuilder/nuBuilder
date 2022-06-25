@@ -27,7 +27,9 @@ try {
 	$nuDB 				= new PDO("mysql:host=$DBHost;dbname=$DBName;charset=$DBCharset", $DBUser, $DBPassword, $DBOptions);
 	$nuDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-	echo 'Connection failed: ' . $e->getMessage();
+	echo 'Connection to the nuBuilder database failed: ' . $e->getMessage();
+	echo '<br><br>Verify and update the settings in nuconfig.php';
+	echo '<br><br>Restart your browser after modifying nuconfig.php in order for changes to be reflected';
 	die();
 }
 
