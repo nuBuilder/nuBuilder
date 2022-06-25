@@ -1,6 +1,10 @@
 <?php
 $nb_path = __DIR__;
 
+$nuconfig = "nuconfig.php";
+if(! is_file($nuconfig)){
+    die('nuconfig.php not found. Rename nuconfig-sample.php to nuconfig.php');
+}
 require_once('nuconfig.php');
 require_once('core/nudatabase.php'); 
 require_once('core/nusetuplibs.php'); 
