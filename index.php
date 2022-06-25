@@ -1,10 +1,16 @@
 <?php
 $nb_path = __DIR__;
 
+require_once('nuconfig.php');
+require_once('core/nudatabase.php'); 
+require_once('core/nusetuplibs.php'); 
+
+$config = nuConfigScript();
+eval($config['code']);
+
 require_once('core/nuchoosesetup.php');
 require_once('core/nuindexlibs.php');
 
-require_once('core/nusetuplibs.php'); 
 nuImportNewDB();
 
 require_once('core/nusystemupdatelibs.php');
@@ -23,7 +29,7 @@ if ( !isset($_SESSION['nubuilder_session_data']['NB_PATH']) || dirname($_SESSION
 <!DOCTYPE html>
 <html id="nuhtml" onclick="nuClick(event)">
 <head>
-<title><?php echo isset($nuConfigTitle) ? $nuConfigTitle : "nuBuilder 4.5";?></title>
+<title><?php echo isset($nuConfigTitle) ? $nuConfigTitle : ''?></title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv='Content-type' content='text/html;charset=UTF-8'>
@@ -245,17 +251,17 @@ window.nuHASH				= [];
 	if ( $nuUser != '' && $nuPassword != '' ){
 		$h2 = nuUseUP($nuBrowseFunction, $target, $welcome, $nuUser, $nuPassword);
 	}else{
-
+		
 		if($opener == ''){
 				$h2 = nuGetJS_login($nuBrowseFunction, $target, $welcome, $nuForm, $nuRecord, $isSession);
 			}else{
 				$h2 = nuGetJS_action_screen($nuBrowseFunction, $target, $welcome, $opener, $search, $like);
 		}
-
+		
 	}
 
 	$sessionAlive = '';
-
+	
 	if (isset($nuConfigKeepSessionAlive) && $nuConfigKeepSessionAlive) {
 		$nuConfigKeepSessionAliveInterval = !isset($nuConfigKeepSessionAliveInterval) ? 600 : $nuConfigKeepSessionAliveInterval;
 		$sessionAlive = "
@@ -274,9 +280,9 @@ window.nuHASH				= [];
 		}
 		";
 	}
-
+	
 	$h3 = isset($nuJSOptions) ? $nuJSOptions : '';
-
+	
 	$h4 = "
 
 	function nuResize(){

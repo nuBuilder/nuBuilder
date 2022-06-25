@@ -1,5 +1,11 @@
 <?php
 
+require_once('nusetuplibs.php');
+require_once('nudatabase.php');
+
+$config = nuConfigScript();
+eval($config['code']);
+
 class nubuilder_session_data {
 
 	var $nubuilder	= array(
@@ -31,7 +37,7 @@ class nubuilder_session_data {
 	'2FA_FORM_ID'				=> '',
 	'2FA_TOKEN_VALIDITY_TIME'	=> '',
 	'2FA_REMEMBER_ME'			=> false,
-	'USE_MD5_PASSWORD_HASH'		=> false,	
+	'USE_MD5_PASSWORD_HASH'		=> false,
 	'SESSION_ID'				=> null,
 	'SESSION_TIMESTAMP'			=> null,
 	'translation'				=> null,
@@ -88,6 +94,7 @@ class nubuilder_session_data {
 		$this->nubuilder['USER_ADDITIONAL1_LABEL']	= $nuConfigUserAdditional1Label;
 		$this->nubuilder['USER_ADDITIONAL2_LABEL']	= $nuConfigUserAdditional2Label;
 		$this->nubuilder['USER_CODE_LABEL']			= $nuConfigUserCodeLabel;
+
 	}
 }
 

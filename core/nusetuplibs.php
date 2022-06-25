@@ -1,6 +1,7 @@
 <?php
 
 require_once('nusystemupdatelibs.php'); 
+require_once(dirname(__FILE__). '/../nuconfig.php'); // nuconfig must be loaded before using nubuilder_session_dat
 
 function nuImportNewDB() {
 
@@ -32,6 +33,66 @@ function nuImportNewDB() {
 	}
 
 	nuImportLanguageFiles();
+}
+
+function nuConfigScript() {
+
+	global $nuConfigSettingsFromDB;
+
+	$loadDBConfig = isset($nuConfigSettingsFromDB) && $nuConfigSettingsFromDB == true;
+	$code = null;
+	$js = null;
+
+	if ($loadDBConfig) {
+
+		$t = nuRunQueryNoDebug("SELECT cfg_setting, cfg_value, cfg_category FROM zzzzsys_config ORDER BY cfg_setting, cfg_order");
+		if (db_num_rows($t) > 0) {
+
+			$code = "";
+			$js = "";
+
+			while ($r = db_fetch_array($t)) {
+
+				$cat		= $r['cfg_category'];
+				$setting	= $r['cfg_setting'];
+				$php		= $setting[0] == '$';
+				
+				if ($php) {
+					$code .= $r['cfg_setting'] . " = " . nuCleanConfigValue($r['cfg_value']) .";\n";
+				} else {	
+
+					if ($js == "") $code .= "\$nuJSOptions = \"\n";
+					$js .= $r['cfg_category']. "['". $r['cfg_setting'] . "']"	. " = " . nuCleanConfigValue($r['cfg_value']) ."; \n";
+
+				}
+
+			}
+
+			$code .= $js."\";\n";
+
+		}
+
+	}
+
+    return array(
+        'code' => $code,
+        'js' => $js
+    );
+
+}
+
+function nuCleanConfigValue($v) {
+
+    if (in_array(strtolower($v), array("true", "false"))) {
+        return strtolower($v);
+    } else {
+        if (is_numeric($v)) {
+            return $v;
+        } else {
+            return "'". addslashes($v)."'";
+        }
+    }
+
 }
 
 ?>

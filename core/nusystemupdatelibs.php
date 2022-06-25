@@ -219,7 +219,9 @@ function nuAlterSystemTables(){
 
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_access_form` ADD `slf_data_mode` varchar(2) DEFAULT NULL AFTER `slf_print_button`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_access_form` ADD `slf_form_type` varchar(2) DEFAULT NULL AFTER `slf_data_mode`;");
+
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_php` ADD `sph_global` VARCHAR(1) NOT NULL DEFAULT '0' AFTER `sph_system`;");
+
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_setup` ADD `set_smtp_use_ssl` VARCHAR(1) NOT NULL DEFAULT '1' AFTER `set_smtp_use_authentication`;");
 
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_report` CHANGE `sre_zzzzsys_php_id` `sre_zzzzsys_php_id` VARCHAR(200) NULL DEFAULT NULL;");
@@ -272,7 +274,6 @@ function nuRemoveNuRecords(){
 
 	$O	= nuTT();
 
-	//-- delete if attached to objects on forms with ids starting with 'nu'
 	$s = "DELETE FROM sys_zzzzsys_event WHERE zzzzsys_event_id LIKE 'nu%'";
 	nuRunQuery($s);
 
@@ -282,47 +283,39 @@ function nuRemoveNuRecords(){
 	$s = "DELETE FROM sys_zzzzsys_format WHERE zzzzsys_format_id LIKE 'nu%'";
 	nuRunQuery($s);
 
-	//-- delete all objects on forms with ids that start with 'nu'
 	$s = "DELETE FROM sys_zzzzsys_object WHERE sob_all_zzzzsys_form_id LIKE 'nu%' AND sob_all_zzzzsys_form_id != 'nuuserhome'";
 	nuRunQuery($s);
 
-	//-- delete all objects on forms with ids that start with 'nu'
 	$s = "DELETE FROM sys_zzzzsys_tab WHERE syt_zzzzsys_form_id LIKE 'nu%' AND syt_zzzzsys_form_id != 'nuuserhome'";
 	nuRunQuery($s);
 
-	//-- delete all objects on forms with ids that start with 'nu'
 	$s = "DELETE FROM sys_zzzzsys_form WHERE zzzzsys_form_id LIKE 'nu%' ";
 	nuRunQuery($s);
 
-	//-- delete records that start with ids starting with 'nu' or linked to forms starting with 'nu'
 	$s = "DELETE FROM sys_zzzzsys_php WHERE zzzzsys_php_id LIKE 'nu%' AND zzzzsys_php_id != 'nuuserhome_BE'";
 	nuRunQuery($s);
 
-	//-- delete all browse on forms with ids that start with 'nu'
 	$s = "DELETE FROM sys_zzzzsys_browse WHERE sbr_zzzzsys_form_id LIKE 'nu%'";
 	nuRunQuery($s);
 
-	//-- delete all translate on forms with ids that start with 'nu'
 	$s = "DELETE FROM sys_zzzzsys_translate WHERE zzzzsys_translate_id LIKE 'nu%'";
 	nuRunQuery($s);
 
-	//-- delete all note with ids that start with 'nu'
 	$s = "DELETE FROM sys_zzzzsys_note WHERE zzzzsys_note_id LIKE 'nu%'";
 	nuRunQuery($s);
-	
-	//-- delete all note categories with ids that start with 'nu'
+
+	$s = "DELETE FROM sys_zzzzsys_config WHERE zzzzsys_config_id LIKE 'nu%'";
+	nuRunQuery($s);
+
 	$s = "DELETE FROM sys_zzzzsys_note_category WHERE zzzzsys_note_category_id LIKE 'nu%'";
 	nuRunQuery($s);
 
-	//-- delete all snippets with ids that start with 'nu'
 	$s = "DELETE FROM sys_zzzzsys_code_snippet WHERE zzzzsys_code_snippet_id LIKE 'nu%'";
 	nuRunQuery($s);
-	
-	//-- delete all cloner rows with ids that start with 'nu'
+
 	$s = "DELETE FROM sys_zzzzsys_cloner WHERE zzzzsys_cloner_id LIKE 'nu%'";
 	nuRunQuery($s);	
-	
-	//-- delete all info rows with ids that start with 'nu'
+
 	$s = "DELETE FROM sys_zzzzsys_info WHERE zzzzsys_info_id LIKE 'nu%'";
 	nuRunQuery($s);	
 
@@ -392,6 +385,7 @@ function nuSystemList(){
 		$t[]	= 'zzzzsys_note';
 		$t[]	= 'zzzzsys_note_category';
 		$t[]	= 'zzzzsys_info';
+		$t[]	= 'zzzzsys_config';
 
 	return $t;
 }
