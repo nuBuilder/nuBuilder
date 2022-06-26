@@ -1338,10 +1338,9 @@ function nuSetSuffix(a) {
 
 function nuWhen(w) {
 
-	var nunow = Date.now();
-	var numax = (Date.now() / 1000) - Number(w);
-	var numin = numax;
-	var nusec = String(Math.ceil(numin));
+	const numax = (Date.now() / 1000) - Number(w);
+	const numin = numax;
+	const nusec = String(Math.ceil(numin));
 	var nuhtm = nusec + (nusec == 1 ? ' second ago' : ' seconds ago');
 
 	return nuhtm;
