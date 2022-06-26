@@ -99,7 +99,7 @@ class nuResponseForm {
 
 		for (var n = 0; n < tabs.length; n++) {
 
-			var t = tabs[n].title.replaceAll(' ', '&#160;')
+			var t = tabs[n].title.nuReplaceAll(' ', '&#160;')
 
 			$('#nuResponseTabs').append('<option value="nuTab' + n + '">' + t + '</option>');
 
@@ -982,9 +982,9 @@ class nuFormObject {
 			var CF = nuGetNumberFormat(f);								//-- CF[0]=sign, CF[1]=separator, CF[2]=decimal, CF[3]=places
 
 			if (CF[2] == '') {
-				return v.replace(CF[0], '').replace(' ', '').replaceAll(CF[1], '');
+				return v.replace(CF[0], '').replace(' ', '').nuReplaceAll(CF[1], '');
 			} else {
-				return v.replace(CF[0], '').replace(' ', '').replaceAll(CF[1], '').replace(CF[2], '.');
+				return v.replace(CF[0], '').replace(' ', '').nuReplaceAll(CF[1], '').replace(CF[2], '.');
 			}
 
 		}
@@ -999,20 +999,20 @@ class nuFormObject {
 			var hasTime = f.indexOf('hh') != -1 || f.indexOf('nn') != -1 || f.indexOf('ss') != -1;		//-- looking for the time
 
 			v = String(v)
-				.replaceAll(':', ' ')
-				.replaceAll('/', ' ')
-				.replaceAll('.', ' ')
-				.replaceAll('-', ' ')
-				.replaceAll(',', ' ')
+				.nuReplaceAll(':', ' ')
+				.nuReplaceAll('/', ' ')
+				.nuReplaceAll('.', ' ')
+				.nuReplaceAll('-', ' ')
+				.nuReplaceAll(',', ' ')
 				.split(' ');
 
 			f = String(f)
 				.substr(2)
-				.replaceAll(':', ' ')
-				.replaceAll('/', ' ')
-				.replaceAll('.', ' ')
-				.replaceAll('-', ' ')
-				.replaceAll(',', ' ')
+				.nuReplaceAll(':', ' ')
+				.nuReplaceAll('/', ' ')
+				.nuReplaceAll('.', ' ')
+				.nuReplaceAll('-', ' ')
+				.nuReplaceAll(',', ' ')
 				.split(' ');
 
 			var o = Date().toString().split(' ', 6)								//-- Tue Sep 07 2004 11:11:12 GMT+0930 (Cen. Australia Standard Time)
@@ -1068,12 +1068,12 @@ function nuNumberFormat(f) {
 
 	if (f[0] == 'N') {										//-- number
 
-		var spl = f.substr(2).split(' ');			//-- array [sign, number]
-		var n = spl[spl.length - 1];				//-- number format
+		var spl = f.substr(2).split(' ');					//-- array [sign, number]
+		var n = spl[spl.length - 1];						//-- number format
 
 		o.type = 'Number';
-		o.separator = n.substr(1, 3).replaceAll('0', '');
-		o.decimal = n.substr(3).replaceAll('0', '');
+		o.separator = n.substr(1, 3).nuReplaceAll('0', '');
+		o.decimal = n.substr(3).nuReplaceAll('0', '');
 		o.sign = spl[0];
 		o.places = 0;
 		o.format = f;

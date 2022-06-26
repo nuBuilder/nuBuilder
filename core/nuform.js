@@ -365,7 +365,7 @@ function nuEvalnuOnLoadEvents() {
 				if (obj.js[i].event == 'onnuload') {
 					var js = obj.js[i].js;
 					js = js.replaceAll('(this)', '("#' + obj.id + '")');
-					js = js.replaceAll('this.', obj.id + '.');
+					js = js.neplaceAll('this.', obj.id + '.');
 					eval(js);
 				}
 			}
@@ -712,7 +712,6 @@ function nuAddJSObjectEvents(i, j) {
 
 		var code = o.getAttribute(j[J].event);
 		var ev = j[J].event;
-
 
 		code = code === null ? '' : code + ';';
 
@@ -1062,7 +1061,7 @@ function nuINPUT(w, i, l, p, prop) {
 
 	if (objectType == 'calc') {
 
-		var TOT = String(w.objects[i].formula).replaceAll("al('", "al('" + p);
+		var TOT = String(w.objects[i].formula).nuReplaceAll("al('", "al('" + p);
 
 		$('#' + id).addClass('nuCalculator')
 			.attr('data-nu-format', w.objects[i].format)
@@ -1330,13 +1329,14 @@ function nuAddStyle(id, obj) {
 
 function nuLookupFocus(e) {
 
-	var p = $(e.target).attr('data-nu-prefix');
-	var t = $(e.target).attr('data-nu-type');
+	const objT = $(e.target);
+	const p = objT.attr('data-nu-prefix');
+	const t = objT.attr('data-nu-type');
 
 	window.nuSubformRow = Number(p.substr(p.length - 3));
 
 	if (t != 'textarea') {
-		$(e.target).select();
+		objT.select();
 	}
 
 }
@@ -1957,7 +1957,7 @@ function nuNewRowObject(p) {
 
 	var h = document.getElementById(p + 'nuRECORD').outerHTML;
 
-	window.nuSUBFORMROW[sf] = String(h.replaceAll(p, '#nuSubformRowNumber#', true));
+	window.nuSUBFORMROW[sf] = String(h.nuReplaceAll(p, '#nuSubformRowNumber#', true));
 
 	$("[id^='" + p + "']").addClass('nuEdit')
 
@@ -2863,7 +2863,7 @@ function nuAddSubformRow(t, e) {
 
 	if (!o.last) { return; }
 
-	var h = window.nuSUBFORMROW[o.form].replaceAll('#nuSubformRowNumber#', o.form + nuPad3(o.rows), true);
+	var h = window.nuSUBFORMROW[o.form].nuReplaceAll('#nuSubformRowNumber#', o.form + nuPad3(o.rows), true);
 
 	$('#' + o.form + 'scrollDiv').append(h);
 
@@ -3005,7 +3005,6 @@ function nuGetSubformRowSize(o, SF, id) {
 	for (var i = 0; i < o.length; i++) {
 
 		var d = Number(o[i].description_width);
-		var T = SF.subform_type == 'g' ? 0 : Number(o[i].top);
 		var B = o[i].type == 'lookup' ? 26 : 0;					//-- lookup button
 		var D = o[i].type == 'lookup' ? d : 0;					//-- lookup description
 
@@ -3015,11 +3014,10 @@ function nuGetSubformRowSize(o, SF, id) {
 			w = Number(o[i].width) + B + D;
 		}
 
-		if (SF.subform_type == 'g') {													//-- grid
+		if (SF.subform_type == 'g') {							//-- grid
 
 			nuBuildSubformTitle(o[i], l, w, id, i);
-			//l = l + w + 6;
-			l = l + w + (o[i].read == 2 ? 0 : 6);									//-- kev1n
+			l = l + w + (o[i].read == 2 ? 0 : 6);
 
 		}
 
@@ -4207,8 +4205,8 @@ function nuSearchAction(S, F) {
 		$('#nuFilter').val(F);
 	}
 
-	var s = String($('#nuSearchField').val()).replaceAll("'", "&#39;", true);
-	var f = String($('#nuFilter').val()).replaceAll("'", "&#39;", true);
+	var s = String($('#nuSearchField').val()).nuReplaceAll("'", "&#39;", true);
+	var f = String($('#nuFilter').val()).nuReplaceAll("'", "&#39;", true);
 	var c = arguments.callee.caller === null ? '' : arguments.callee.caller.name;
 
 	if (window.nuOnSearchAction) {
@@ -5026,7 +5024,7 @@ function nuGetSearchList() {
 			.addClass('nuSearchCheckbox');
 
 		var t = document.createElement('div');
-		var nobr = String(c[i].title).replaceAll('<br>', ' ').replaceAll('<p>', ' ');;
+		var nobr = String(c[i].title).nuReplaceAll('<br>', ' ').nuReplaceAll('<p>', ' ');;
 
 		t.setAttribute('id', 'nuSearchText' + i);
 
