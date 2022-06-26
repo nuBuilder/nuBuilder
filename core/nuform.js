@@ -956,17 +956,13 @@ function nuINPUT(w, i, l, p, prop) {
 		onChange = 'nuGetLookupId(this.value, this.id)';
 	}
 
-	var bump = 0;
-
-	if (inputType == 'button' && p != '') {
-		var bump = 3;
-	}
-
 	nuAddDataTab(id, obj.tab, p);
+
+	const leftInc = inputType == 'button' && p != '' ? 3 : 0;
 
 	$('#' + id).css({
 		'top': Number(obj.top),
-		'left': Number(obj.left) + bump,
+		'left': Number(obj.left) + leftInc,
 		'width': Number(obj.width),
 		'height': Number(obj.height),
 		'text-align': obj.align,
@@ -1121,8 +1117,7 @@ function nuINPUT(w, i, l, p, prop) {
 
 		$('#' + id).enterKey(function () {
 			if ($(this).val().length == 0) {
-				var element = $('#' + target + 'button');
-				var element = element[0];
+				let element = $('#' + target + 'button')[0];
 				nuBuildLookup(element, "");
 			}
 		})
@@ -1586,7 +1581,7 @@ function nuRUN(w, i, l, p, prop) {
 
 		ele = 'iframe';
 
-		if (!obj.parent_type == 'g') {
+		if (obj.parent_type !== 'g') {
 
 			nuLabel(w, i, p, prop);
 
@@ -2322,8 +2317,9 @@ function nuSubformAddFilter(filter) {
 			if (isArray)
 				columnId = arrColumns[columnId];
 
-			let prop = arrColumns[columnId];
-			let float = prop === undefined || prop.float === undefined ? 'center' : prop.float;
+			const prop = arrColumns[columnId];
+			const float = prop === undefined || prop.float === undefined ? 'center' : prop.float;
+			const placeholder = prop === undefined || prop.placeholder === undefined ? '' : prop.placeholder;
 			let width = $('#' + sfName + '000' + columnId).width() - 3;
 			width = prop === undefined || prop.width === undefined ? width : prop.width;
 
@@ -2332,14 +2328,13 @@ function nuSubformAddFilter(filter) {
 				'float': float
 			};
 
-
-			let columnTitle = '#title_' + sfName + columnId;
-			let filterId = nuSubformFilterId(sfName, columnId);
-			let type = prop === undefined || prop.type === undefined ? 'select' : prop.type;
+			const columnTitle = '#title_' + sfName + columnId;
+			const filterId = nuSubformFilterId(sfName, columnId);
+			const type = prop === undefined || prop.type === undefined ? 'select' : prop.type;
 			let obj = nuSubformFilterAddObject(type, sfName, columnId, columnTitle, filterId, prop);
 
 			$(columnTitle).append("<br />");
-			obj.appendTo(columnTitle).css(style);
+			obj.appendTo(columnTitle).css(style).nuSetPlaceholder(placeholder);
 
 		}
 
@@ -2687,8 +2682,8 @@ function nuSubformPaste(e, jsonObj) {
 }
 
 function nuGetClipboardRows(clipText) {
-	var clipRows = clipText.split('\n');
-	for (i = 0; i < clipRows.length; i++) {
+	let clipRows = clipText.split('\n');
+	for (let i = 0; i < clipRows.length; i++) {
 		clipRows[i] = clipRows[i].split('\t');
 	}
 	return clipRows;
@@ -2930,12 +2925,6 @@ function nuLabel(w, i, p, prop) {
 
 	var id = 'label_' + p + obj.id;
 	var ef = p + 'nuRECORD';						//-- Edit Form Id
-
-	if (obj.input == 'file') {
-		var lab = document.createElement('div');
-	} else {
-		var lab = document.createElement('label');
-	}
 
 	var lab = document.createElement('label');
 	var lwidth = nuGetWordWidth(nuTranslate(obj.label), 'label');
