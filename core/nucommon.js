@@ -2635,15 +2635,6 @@ function nuInputMaxLength(id, maxLength, label) {
 
 }
 
-function nuAddCSSStyle(s) {
-
-	let style = document.createElement('style');
-	style.type = 'text/css';
-	style.innerHTML = s;
-	document.getElementsByTagName('head')[0].appendChild(style);
-
-}
-
 function nuDebugMode() {
 	return nuUXOptions["nuDebugMode"];
 }
