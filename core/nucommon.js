@@ -202,6 +202,9 @@ jQuery.fn.extend({
 	},
 	nuIsEnabled: function () {
 		return nuIsEnabled(this.attr('id'));
+	},
+	nuSetPlaceholder: function(placeholder, translate) {
+		return nuSetPlaceholder(this.attr('id'), placeholder, translate);
 	}
 
 });
