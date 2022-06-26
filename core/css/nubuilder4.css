@@ -1109,7 +1109,11 @@
 	 opacity:1;
 	 word-break: break-word;
 	 z-index:5000;
-	 border-radius:4px 
+	 border-radius:4px;
+	 border: #f3eed4 solid 30px;
+	 border-left: none;
+	 border-right: none;
+	 border-bottom: none
 }
  #nuErrorCode {
 	 position:relative;
