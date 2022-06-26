@@ -1709,32 +1709,32 @@ function nuSortSubform(sfName, c, e) {
 	if (!e.target.classList.contains('nuSubformTitle')) return;
 
 	var sf = [];
-	var obj = nuSubformObject(sfName);
-	var so = obj.fields[c];
-	var count = obj.rows.length;
+	const obj = nuSubformObject(sfName);
+	const so = obj.fields[c];
+	const count = obj.rows.length;
 	var h = 0;
 	var t = false;
-	let objSf = $('#' + sfName);
+	const objSf = $('#' + sfName);
 	var noAdd = objSf.attr('data-nu-add') == '0';
 
-	let records = $("[ID^='" + sfName + "'][ID$='nuRECORD']");
-
-	let newRecord = records.last();
-	let newRecordId = newRecord.attr('id');
+	const records = $("[ID^='" + sfName + "'][ID$='nuRECORD']");
+	const newRecord = records.last();
+	const newRecordId = newRecord.attr('id');
 
 	records.each(function (index) {
 
-		var i = this.id;
+		var id = this.id;
 
-		if (i !== newRecordId) { // exclude new record
+		if (id !== newRecordId) { // exclude new record
 
-			var f = this.id.replaceAll('nuRECORD', '');
+			const f = this.id.replaceAll('nuRECORD', '');
 			h = parseInt($(this).css('height'));
 
-			t = $('#' + f + so).hasClass('input_number') || $('#' + f + so).hasClass('input_nuNumber') || $('#' + f + so).hasClass('nuCalculator');
-			var v = $('#' + f + so).val();
-			var m = $('#' + f + so).attr('data-nu-format')
-			var l = $('#' + f + so).hasClass('nuHiddenLookup');
+			const objF = $('#' + f + so);
+			t = objF.hasClass('input_number') || objF.hasClass('input_nuNumber') || objF.hasClass('nuCalculator');
+			let v = objF.val();
+			let m = objF.attr('data-nu-format')
+			const l = objF.hasClass('nuHiddenLookup');
 
 			if (m != '') {
 				v = nuFORM.removeFormatting(v, m);
@@ -1744,42 +1744,31 @@ function nuSortSubform(sfName, c, e) {
 				v = $('#' + f + so + 'code').val();
 			}
 
-			var o = { 'form': i, 'value': v };
-
+			const o = { 'form': id, 'value': v };
 			if (!(index == count && noAdd)) sf.push(o);
 
 		}
 
 	});
 
+	let rows;
 	if ($(e.target).attr('data-nu-order') == 'asc') {
 
-		if (t) {
-			var rows = sf.sort(nuDecendingSortNumberColumn);
-		} else {
-			var rows = sf.sort(nuDecendingSortColumn);
-		}
-
+		rows = t ? sf.sort(nuDecendingSortNumberColumn) : sf.sort(nuDecendingSortColumn);
 		$(e.target).attr('data-nu-order', 'desc');
 
 	} else {
 
-		if (t) {
-			var rows = sf.sort(nuAscendingSortNumberColumn);
-		} else {
-			var rows = sf.sort(nuAscendingSortColumn);
-		}
-
+		rows = t ? sf.sort(nuAscendingSortNumberColumn) : sf.sort(nuAscendingSortColumn);
 		$(e.target).attr('data-nu-order', 'asc');
 
 	}
 
-	var top = 0;
+	let top = 0;
 
-	for (var i = 0; i < rows.length; i++) {
+	for (let i = 0; i < rows.length; i++) {
 
 		$('#' + rows[i].form).css('top', top).data('nu-top-position', top); // save top position
-
 		top = top + h;
 
 	}
