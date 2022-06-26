@@ -1875,8 +1875,7 @@ function nuTransformScale() {
 
 function nuSetBrowserColumns(c) {
 
-	var r = $('[data-nu-column="0"]').length;
-	var p = nuTotalWidth('nucell_0_0') - $('#nucell_0_0').width();	//-- padding
+	const p = nuTotalWidth('nucell_0_0') - $('#nucell_0_0').width();	//-- padding
 	var l = 7;
 
 	for (var i = 0; i < c.length; i++) {
