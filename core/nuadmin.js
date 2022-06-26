@@ -7,7 +7,7 @@ function nuOpenCurrentFormProperties() {
 }
 
 function nuOpenCurrentObjectList() {
-	nuForm('nuobject','',nuFormId(),'', 2);
+	nuForm('nuobject', '', nuFormId(), '', 2);
 }
 
 function nuAddAdminButton(i, v, f, t) {
@@ -28,7 +28,7 @@ function nuFormInfoCopyBrowseSQL() {
 function nuFormInfoCopyPermalink() {
 
 	const cp = nuCurrentProperties();
-	const href = window.location.href.split('?')[0] + '?f=' + cp.form_id + '&r='+cp.record_id+'&h='+nuSERVERRESPONSE.home_id;
+	const href = window.location.href.split('?')[0] + '?f=' + cp.form_id + '&r=' + cp.record_id + '&h=' + nuSERVERRESPONSE.home_id;
 	nuCopyToClipboard(href);
 
 }
@@ -44,12 +44,12 @@ function nuShowFormInfo() {
 	const devMode = nuDevMode();
 
 	const permalink = '<br><button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCopyPermalink()">Copy Permalink</button>';
-	const currentProp	= '<button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCurrentProperties()">Current Properties</button>';
-	const recordId	= nuFormType() == 'edit' && cp.form_type !== 'launch' ? "<b>Record ID:</b> " + cp.record_id : '';
+	const currentProp = '<button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCurrentProperties()">Current Properties</button>';
+	const recordId = nuFormType() == 'edit' && cp.form_type !== 'launch' ? "<b>Record ID:</b> " + cp.record_id : '';
 	const browseCopyButton = '<button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCopyBrowseSQL()">Copy SQL</button><br>';
 
-	const browseSQL	= nuFormType() == 'browse' && (! code.startsWith('nu') || devMode) ? '<br><b>Browse SQL:</b><br>' + '<pre class="nuFormInfoBrowseSQL"><code id="nuFormInfoBrowseSQL">' + cp.browse_sql + "</pre></code><br>" + browseCopyButton : '';
-	const table		= nuSERVERRESPONSE.table !== '' && (! code.startsWith('nu') || devMode) ? "<b>Table:</b> " + nuSERVERRESPONSE.table : '';
+	const browseSQL = nuFormType() == 'browse' && (!code.startsWith('nu') || devMode) ? '<br><b>Browse SQL:</b><br>' + '<pre class="nuFormInfoBrowseSQL"><code id="nuFormInfoBrowseSQL">' + cp.browse_sql + "</pre></code><br>" + browseCopyButton : '';
+	const table = nuSERVERRESPONSE.table !== '' && (!code.startsWith('nu') || devMode) ? "<b>Table:</b> " + nuSERVERRESPONSE.table : '';
 
 	nuMessage(["<h2><u>" + cp.form_description + "</u></h2>", "<b>Form ID:</b> " + cp.form_id, "<b>Form Code:</b> " + cp.form_code, table, recordId, currentProp, permalink, browseSQL]);
 
@@ -88,34 +88,34 @@ function nuAddAdminButtons() {
 		const e = ft.indexOf("edit") >= 0;
 		const l = ft.indexOf("launch") >= 0;
 
-		if ((nuAdminButtons["nuDebug"] || devMode) && nuMainForm()) nuAddIconToBreadcrumbHolder('nuDebugButton','nuDebug Results','nuOpenNuDebug(2)','fa fa-bug','0px');
-		if (nuAdminButtons["nuRefresh"]) nuAddIconToBreadcrumbHolder('nuRefreshButton','Refresh','nuGetBreadcrumb()','fas fa-sync-alt', '7px');
+		if ((nuAdminButtons["nuDebug"] || devMode) && nuMainForm()) nuAddIconToBreadcrumbHolder('nuDebugButton', 'nuDebug Results', 'nuOpenNuDebug(2)', 'fa fa-bug', '0px');
+		if (nuAdminButtons["nuRefresh"]) nuAddIconToBreadcrumbHolder('nuRefreshButton', 'Refresh', 'nuGetBreadcrumb()', 'fas fa-sync-alt', '7px');
 
 		var c = 0;
 		const code = nuCurrentProperties().form_code;
-		if (! code.startsWith('nu') || devMode) {
+		if (!code.startsWith('nu') || devMode) {
 
-			if (nuAdminButtons["nuProperties"]) {c++; nuAddAdminButton("AdminProperties", "Prop", 'nuOpenCurrentFormProperties();',nuTranslate('Form Properties'));}
-			if (nuAdminButtons["nuObjects"]) {c++; nuAddAdminButton("AdminObjectList", "Obj", 'nuOpenCurrentObjectList();',nuTranslate('Object List'));}
+			if (nuAdminButtons["nuProperties"]) { c++; nuAddAdminButton("AdminProperties", "Prop", 'nuOpenCurrentFormProperties();', nuTranslate('Form Properties')); }
+			if (nuAdminButtons["nuObjects"]) { c++; nuAddAdminButton("AdminObjectList", "Obj", 'nuOpenCurrentObjectList();', nuTranslate('Object List')); }
 
-			if (e || l) {c++; nuAddAdminButton("AdminBE", "BE", 'nuEditPHP("BE");','Before Edit'); }
-			if (b) {c++; nuAddAdminButton("AdminBB", "BB", 'nuEditPHP("BB");','Before Browse'); }
-			if (e) {c++; nuAddAdminButton("AdminBS", "BS", 'nuEditPHP("BS");','Before Save'); }
-			if (e) {c++; nuAddAdminButton("AdminAS", "AS", 'nuEditPHP("AS");','After Save'); }
+			if (e || l) { c++; nuAddAdminButton("AdminBE", "BE", 'nuEditPHP("BE");', 'Before Edit'); }
+			if (b) { c++; nuAddAdminButton("AdminBB", "BB", 'nuEditPHP("BB");', 'Before Browse'); }
+			if (e) { c++; nuAddAdminButton("AdminBS", "BS", 'nuEditPHP("BS");', 'Before Save'); }
+			if (e) { c++; nuAddAdminButton("AdminAS", "AS", 'nuEditPHP("AS");', 'After Save'); }
 
 		}
 
 		if (c > 0) $('#nuActionHolder').css('height', '50px');
 
-			let frame = parent.$('#nuDragDialog iframe');
-			if (frame.length !== 0) {
-				frame.css('height', frame.cssNumber("height") + 50);
-			}
+		let frame = parent.$('#nuDragDialog iframe');
+		if (frame.length !== 0) {
+			frame.css('height', frame.cssNumber("height") + 50);
+		}
 
-			let dragDialog = parent.$('#nuDragDialog');
-			if (dragDialog.length !== 0) {
-				dragDialog.css('height', dragDialog.cssNumber("height") + 50);
-			}
+		let dragDialog = parent.$('#nuDragDialog');
+		if (dragDialog.length !== 0) {
+			dragDialog.css('height', dragDialog.cssNumber("height") + 50);
+		}
 
 		$('<br style="user-select:none">').insertAfter($("#nuAdminPropertiesButton"));
 
@@ -155,7 +155,7 @@ function nuInitSetBrowseWidthHelper() {
 
 	if (parent.window.nuDocumentID === undefined) return;
 
-	if (! nuMainForm() && nuFormId() == 'nuform' && window.parent.nuFormType() == 'browse') {
+	if (!nuMainForm() && nuFormId() == 'nuform' && window.parent.nuFormType() == 'browse') {
 		if (window.location != window.parent.location) {
 
 			var w = $('#title_zzzzsys_browse_sfsbr_width');
@@ -202,20 +202,20 @@ function nuOpenPropertiesOnMiddleClick(e) {
 
 function nuSetSnippetFormFilter(custom, setup, sql, php) {
 
-	nuSetProperty('IS_CUSTOM_CODE',custom);
-	nuSetProperty('IS_SETUP_HEADER',setup);
-	nuSetProperty('IS_SQL',sql);
-	nuSetProperty('IS_PHP',php);
+	nuSetProperty('IS_CUSTOM_CODE', custom);
+	nuSetProperty('IS_SETUP_HEADER', setup);
+	nuSetProperty('IS_SQL', sql);
+	nuSetProperty('IS_PHP', php);
 
 }
 
 function nuOpenNuDebug(w) {
-	nuForm('nudebug','','','',w);
+	nuForm('nudebug', '', '', '', w);
 }
 
 function nuAddIconToBreadcrumbHolder(i, title, oClick, iClass, paddingLeft) {
 
-	let h = "<div id='"+i+"' title='"+title+"' style='font-size: 17px; display: inline-block; cursor : pointer; padding-right:12px; padding-left:"+paddingLeft+"' onclick='"+oClick+"'><i class='"+iClass+"'></i>" + '' + "</div>";
+	let h = "<div id='" + i + "' title='" + title + "' style='font-size: 17px; display: inline-block; cursor : pointer; padding-right:12px; padding-left:" + paddingLeft + "' onclick='" + oClick + "'><i class='" + iClass + "'></i>" + '' + "</div>";
 
 	let fragment = nuCreateAppendHTML(h);
 	let options = $('#nuBreadcrumbHolder').find("[id$=nuOptions]");
@@ -228,7 +228,7 @@ function nuShowObjectTooltip() {
 
 	if (nuGlobalAccess()) {
 
-		$("*").each(function() {
+		$("*").each(function () {
 			let id = $(this).attr('id');
 			if (id !== undefined) {
 				$(this).attr('title', 'ID: ' + id);
@@ -243,18 +243,18 @@ function nuConsoleErrorsToMessage() {
 	window.onerror = function (msg, url, lineNo, columnNo, error) {
 		var string = msg.toLowerCase();
 		var substring = 'script error';
-		if (string.indexOf(substring) > -1){
+		if (string.indexOf(substring) > -1) {
 			alert('Script Error: See Browser Console for Details');
 		} else {
-		var message = [
-			'Message: ' + msg,
-			'URL: ' + url,
-			'Line: ' + lineNo,
-			'Column: ' + columnNo,
-			'Error object: ' + JSON.stringify(error)
-		].join(' - ');
+			var message = [
+				'Message: ' + msg,
+				'URL: ' + url,
+				'Line: ' + lineNo,
+				'Column: ' + columnNo,
+				'Error object: ' + JSON.stringify(error)
+			].join(' - ');
 
-		alert(message);
+			alert(message);
 		}
 
 		return false;
@@ -265,143 +265,143 @@ function nuConsoleErrorsToMessage() {
 var contextMenuCurrentTarget = null;
 
 var menuAlign =
-	{
-		text: "Align",
-		tag: "Align",
-		subMenu: [
-			{
-				text: nuContextMenuItemText("Left", "fa fa-align-left"),
-				tag: "Left",
-				faicon: "fa fa-align-left",
-				action: () => nuContextMenuUpdateAlign("left")
-			},
-			{
-				text: nuContextMenuItemText("Right", "fa fa-align-right"),
-				tag: "Right",
-				faicon: "fa fa-align-right",
-				action: () => nuContextMenuUpdateAlign("right")
-			},
-			{
-				text: nuContextMenuItemText("Center", "fa fa-align-center"),
-				tag: "Center",
-				faicon: "fa fa-align-center",
-				action: () => nuContextMenuUpdateAlign("center")
-			},
-		],
-	};
+{
+	text: "Align",
+	tag: "Align",
+	subMenu: [
+		{
+			text: nuContextMenuItemText("Left", "fa fa-align-left"),
+			tag: "Left",
+			faicon: "fa fa-align-left",
+			action: () => nuContextMenuUpdateAlign("left")
+		},
+		{
+			text: nuContextMenuItemText("Right", "fa fa-align-right"),
+			tag: "Right",
+			faicon: "fa fa-align-right",
+			action: () => nuContextMenuUpdateAlign("right")
+		},
+		{
+			text: nuContextMenuItemText("Center", "fa fa-align-center"),
+			tag: "Center",
+			faicon: "fa fa-align-center",
+			action: () => nuContextMenuUpdateAlign("center")
+		},
+	],
+};
 
 var menuObject =
-	{
-		text: "",
-		tag: "Object",
-		action: function (e) { nuContextMenuCopyIdToClipboard(); }
-	};
+{
+	text: "",
+	tag: "Object",
+	action: function (e) { nuContextMenuCopyIdToClipboard(); }
+};
 
 var menuClone =
-	{
-		text: "",
-		tag: "Clone",
-		action: function (e) { nuContextMenuClone(); }
-	};
+{
+	text: "",
+	tag: "Clone",
+	action: function (e) { nuContextMenuClone(); }
+};
 
 var menuProperties =
-	{
-		text: "Properties...",
-		tag: "Properties",
-		action: function (e) { nuContextMenuObjectPopup(e); }
-	};
+{
+	text: "Properties...",
+	tag: "Properties",
+	action: function (e) { nuContextMenuObjectPopup(e); }
+};
 
 var menuRename =
-	{
-		text: "Rename...",
-		action: () => nuContextMenuLabelPrompt(),
-	};
+{
+	text: "Rename...",
+	action: () => nuContextMenuLabelPrompt(),
+};
 
 var subMenuHidden =
 
-	{
-		text: nuContextMenuItemText("Hidden", "fa fa-eye-slash"),
-		tag: "Hidden",
-		faicon: "fa fa-eye-slash",
-		action: () => nuContextMenuUpdateAccess(2)
-	};
+{
+	text: nuContextMenuItemText("Hidden", "fa fa-eye-slash"),
+	tag: "Hidden",
+	faicon: "fa fa-eye-slash",
+	action: () => nuContextMenuUpdateAccess(2)
+};
 
 var subMenuHiddenUser =
 
-	{
-		text: nuContextMenuItemText("Hidden (User)", "fa fa-eye-slash"),
-		tag: "Hidden (User)",
-		faicon: "fa fa-eye-slash",
-		action: () => nuContextMenuUpdateAccess(3)
-	}
+{
+	text: nuContextMenuItemText("Hidden (User)", "fa fa-eye-slash"),
+	tag: "Hidden (User)",
+	faicon: "fa fa-eye-slash",
+	action: () => nuContextMenuUpdateAccess(3)
+}
 
 
 var subMenuHiddenUserReadonly =
 
-	{
-		text: nuContextMenuItemText("Hidden (User) + Readonly", "fa fa-eye-slash"),
-		tag: "Hidden (User) + Readonly",
-		faicon: "fa fa-eye-slash",
-		action: () => nuContextMenuUpdateAccess(4)
-	}
+{
+	text: nuContextMenuItemText("Hidden (User) + Readonly", "fa fa-eye-slash"),
+	tag: "Hidden (User) + Readonly",
+	faicon: "fa fa-eye-slash",
+	action: () => nuContextMenuUpdateAccess(4)
+}
 
 
 
 var menuAccess =
-	{
-		text: "Access",
-		tag: "Access",
-		subMenu: [
-			{
-				text: nuContextMenuItemText("Editable", "fa fa-pencil-square-o"),
-				tag: "Editable",
-				faicon: "far fa-edit",
-				action: () => nuContextMenuUpdateAccess(0),
-			},
-			{
-				text: nuContextMenuItemText("Readonly", "fa fa-lock"),
-				tag: "Readonly",
-				faicon: "fa fa-lock",
-				action: () => nuContextMenuUpdateAccess(1)
-			},
-			subMenuHidden,
-			subMenuHiddenUser,
-			subMenuHiddenUserReadonly
-		]
-	};
+{
+	text: "Access",
+	tag: "Access",
+	subMenu: [
+		{
+			text: nuContextMenuItemText("Editable", "fa fa-pencil-square-o"),
+			tag: "Editable",
+			faicon: "far fa-edit",
+			action: () => nuContextMenuUpdateAccess(0),
+		},
+		{
+			text: nuContextMenuItemText("Readonly", "fa fa-lock"),
+			tag: "Readonly",
+			faicon: "fa fa-lock",
+			action: () => nuContextMenuUpdateAccess(1)
+		},
+		subMenuHidden,
+		subMenuHiddenUser,
+		subMenuHiddenUserReadonly
+	]
+};
 
 var menuValidation =
-	{
-		text: "Validation",
-		tag: "Validation",
-		disabled: false,
-		subMenu: [
-			{
-				text: nuContextMenuItemText("None", "fa fa-globe"),
-				tag: "None",
-				faicon: "fa fa-globe",
-				action: () => nuContextMenuUpdateValidation(0)
-			},
-			{
-				text: nuContextMenuItemText("No Blanks", "fa fa-battery-full"),
-				tag: "No Blanks",
-				faicon: "fa fa-battery-full",
-				action: () => nuContextMenuUpdateValidation(1)
-			},
-			{
-				text: nuContextMenuItemText("No Duplicates", "far fa-gem"),
-				tag: "No Duplicates",
-				faicon: "fa fa-diamond",
-				action: () => nuContextMenuUpdateValidation(2)
-			},
-			{
-				text: nuContextMenuItemText("No Duplicates/Blanks", "fa fa-star"),
-				tag: "No Duplicates/Blanks",
-				faicon: "fa fa-star",
-				action: () => nuContextMenuUpdateValidation(3)
-			},
-		],
-	};
+{
+	text: "Validation",
+	tag: "Validation",
+	disabled: false,
+	subMenu: [
+		{
+			text: nuContextMenuItemText("None", "fa fa-globe"),
+			tag: "None",
+			faicon: "fa fa-globe",
+			action: () => nuContextMenuUpdateValidation(0)
+		},
+		{
+			text: nuContextMenuItemText("No Blanks", "fa fa-battery-full"),
+			tag: "No Blanks",
+			faicon: "fa fa-battery-full",
+			action: () => nuContextMenuUpdateValidation(1)
+		},
+		{
+			text: nuContextMenuItemText("No Duplicates", "far fa-gem"),
+			tag: "No Duplicates",
+			faicon: "fa fa-diamond",
+			action: () => nuContextMenuUpdateValidation(2)
+		},
+		{
+			text: nuContextMenuItemText("No Duplicates/Blanks", "fa fa-star"),
+			tag: "No Duplicates/Blanks",
+			faicon: "fa fa-star",
+			action: () => nuContextMenuUpdateValidation(3)
+		},
+	],
+};
 
 var nuContextMenuDefinitionEdit = [
 
@@ -478,15 +478,15 @@ var nuContextMenuDefinitionSubform = [
 	{ isDivider: true },
 	menuRename
 
-/*
-	menuAlign
+	/*
+		menuAlign
 
-	{ isDivider: true },
-	{
-		html: "",
-		tag: "Width"
-	}
-*/
+		{ isDivider: true },
+		{
+			html: "",
+			tag: "Width"
+		}
+	*/
 
 ];
 
@@ -519,8 +519,8 @@ function nuContextMenuPositionText(id, position) {
 
 	if (nuFormType() == 'browse') id = nuContextMenuCurrentTargetBrowseId(id);
 
-	if ($('#' + id).hasClass('nuContentBoxContainer') && (position == 'Height' || position == 'Width'))	 {
-			id = 'content_' + id;
+	if ($('#' + id).hasClass('nuContentBoxContainer') && (position == 'Height' || position == 'Width')) {
+		id = 'content_' + id;
 	}
 
 	return nuContextMenuItemPosition(position, $('#' + id).cssNumber(position));
@@ -548,7 +548,7 @@ function nuContextMenuBeforeRender(menu, event) {
 			if (menu[i].tag == 'Object') menu[i].text = "Object: " + (nuFormType() == 'edit' ? contextMenuCurrentTargetUpdateId() : nuContextMenuCurrentTargetBrowseId());
 
 			if (menu[i].tag == 'Access') {
-				for (let j = 0; j <	menu[i].subMenu.length; j++) {
+				for (let j = 0; j < menu[i].subMenu.length; j++) {
 					let sub = menu[i].subMenu[j];
 					if (sub.tag == 'Editable') {
 						sub.text = nuContextMenuAccessText(id, sub, '0');
@@ -562,20 +562,20 @@ function nuContextMenuBeforeRender(menu, event) {
 						sub.text = nuContextMenuAccessText(id, sub, '4');
 					}
 				}
-			} else	if (menu[i].tag == 'Align') {
+			} else if (menu[i].tag == 'Align') {
 				if (isSelect) {
 					menu.splice(i, 1);
 				} else {
-					for (let j = 0; j <	menu[i].subMenu.length; j++) {
+					for (let j = 0; j < menu[i].subMenu.length; j++) {
 						let sub = menu[i].subMenu[j];
 						sub.text = nuContextMenuAlignText(id, sub, sub.tag)
 					}
 				}
-			} else	if (menu[i].tag == 'Validation') {
+			} else if (menu[i].tag == 'Validation') {
 				if (isButton) {
 					menu.splice(i, 1);
 				} else {
-					for (let j = 0; j <	menu[i].subMenu.length; j++) {
+					for (let j = 0; j < menu[i].subMenu.length; j++) {
 						let sub = menu[i].subMenu[j];
 						if (sub.tag == 'No Blanks') {
 							sub.text = nuContextMenuValidationText(id, sub, 'nuBlank');
@@ -595,7 +595,7 @@ function nuContextMenuBeforeRender(menu, event) {
 
 	$('#' + id).focus();
 
-//	setTimeout(function(){ $('.ctxmenu').css('top', $('.ctxmenu').cssNumber('top') + 20 + 'px');}, 5);
+	//	setTimeout(function(){ $('.ctxmenu').css('top', $('.ctxmenu').cssNumber('top') + 20 + 'px');}, 5);
 
 	return menu;
 
@@ -605,7 +605,7 @@ function nuContextMenuItemText(label, iconClass) {
 	return '<i class="' + iconClass + ' fa-fw" aria-hidden="true"></i> <span style="padding-left:8px; white-space:nowrap; display: inline;">' + label + '</span>';
 }
 
-function nuContextMenuGetWordWidth(w){
+function nuContextMenuGetWordWidth(w) {
 
 	var h = "<div id='nuTestWidth' style='font-size:13px;position:absolute;visible:hidden;width:auto'>" + w + "</div>";
 	$('body').append(h);
@@ -647,7 +647,7 @@ function nuContextMenuItemPositionChanged(t, update) {
 						$('#' + id + 'description').css(prop, t.value + 'px');
 					} else if (prop == 'height') {
 						$('#' + id + 'description').css(prop, t.value + 'px');
-					}	else if (prop == 'width') {
+					} else if (prop == 'width') {
 						$('#' + id + 'button').css('left', Number(t.value) + obj.cssNumber('left') + 6 + 'px');
 						$('#' + id + 'description').css('left', Number(t.value) + obj.cssNumber('left') + 25 + 'px');
 					}
@@ -676,7 +676,7 @@ function nuContextMenuItemPosition(label, v) {
 	if (label == 'Height') left -= 1;
 
 	return '<span style="width: 100px; padding-left:20px; font-family: font-family: Verdana, sans-serif;white-space:nowrap; display: inline;">' + label + '</span>' +
-	' <input data-property="' + label + '" onChange="nuContextMenuItemPositionChanged(this, false)" onBlur="nuContextMenuItemPositionChanged(this, true)" style="text-align: right; margin: 3px 10px 3px ' + left +'px; width: 50px; height: 22px" type="number" min="0" class="input_number" value="' + v + '"> </input>';
+		' <input data-property="' + label + '" onChange="nuContextMenuItemPositionChanged(this, false)" onBlur="nuContextMenuItemPositionChanged(this, true)" style="text-align: right; margin: 3px 10px 3px ' + left + 'px; width: 50px; height: 22px" type="number" min="0" class="input_number" value="' + v + '"> </input>';
 
 }
 
@@ -690,7 +690,7 @@ function nuContextMenuUpdateAccess(v) {
 		nuDisable(id);
 	} else if (v == 2) { 		//-- hidden
 		nuHide(id);
-	}	else if (v == 4) { 		//-- hidden (user) / readonly
+	} else if (v == 4) { 		//-- hidden (user) / readonly
 		nuDisable(id);
 	}
 
@@ -711,8 +711,8 @@ function nuContextMenuUpdateAlign(v) {
 		nuContextMenuUpdateObject(v, 'sob_all_align');
 	} else {
 
-		let colNumber = id.replace('nuBrowseTitle','');
-		$('[data-nu-column="'+colNumber+'"]').each(function(index) {
+		let colNumber = id.replace('nuBrowseTitle', '');
+		$('[data-nu-column="' + colNumber + '"]').each(function (index) {
 			$(this).css('text-align', v)
 		});
 
@@ -724,7 +724,7 @@ function nuContextMenuUpdateAlign(v) {
 function nuContextMenuUpdateValidation(v) {
 
 	let id = contextMenuCurrentTargetId();
-	let objLabel = $('#label_'+ id);
+	let objLabel = $('#label_' + id);
 
 	if (v == 0) {														//-- none
 		objLabel.removeClass('nuBlank nuDuplicate nuDuplicateOrBlank');
@@ -763,7 +763,7 @@ function nuContextMenuGetFormId(id) {
 		return $('#' + subform + '000nuRECORD').attr('data-nu-form-id');
 	} else if (nuFormType() == 'edit') {
 
-		let field = $('[data-nu-field="'+ id +'"]');
+		let field = $('[data-nu-field="' + id + '"]');
 		let obj = $('#' + id);
 		let hasClass = nuObjectClassList(id).containsAny(['nuWord', 'nuImage', 'nuContentBoxContainer', 'nuHtml', 'nuSubform']);
 
@@ -803,19 +803,19 @@ function nuContextMenuLabelPrompt() {
 	let id = contextMenuCurrentTargetId();
 	let obj = $('#' + contextMenuCurrentTarget.id);
 
-	let value =	obj.is(":button") ? obj.val() : $('#'+label).html();
+	let value = obj.is(":button") ? obj.val() : $('#' + label).html();
 	value = obj.is(":button") && obj.attr('data-nu-label') ? obj.html() : value;
 
 	value = nuFormType() == 'edit' ? value : value.trim();
 
-	nuPrompt(nuTranslate("Label") + ':', nuTranslate("Object") + ': ' +	id, value, '', 'nuContextMenuLabelPromptCallback');
+	nuPrompt(nuTranslate("Label") + ':', nuTranslate("Object") + ': ' + id, value, '', 'nuContextMenuLabelPromptCallback');
 
 }
 
 function contextMenuCurrentTargetUpdateId() {
 
 	let t = $('#' + contextMenuCurrentTarget.id);
-	let hasClass = nuObjectClassList(contextMenuCurrentTarget.id).containsAny(['nuWord', 'nuImage', 'nuSort', 'nuTab']) && ! t.hasClass('nuTabHolder');
+	let hasClass = nuObjectClassList(contextMenuCurrentTarget.id).containsAny(['nuWord', 'nuImage', 'nuSort', 'nuTab']) && !t.hasClass('nuTabHolder');
 
 	if (t.is(":button") || hasClass) {
 		return contextMenuCurrentTarget.id;
@@ -823,13 +823,13 @@ function contextMenuCurrentTargetUpdateId() {
 
 		let strIdNoLabel = contextMenuCurrentTarget.id.substring(6);
 		let idNoLabel = $('#' + strIdNoLabel);
-		if (nuObjectClassList(strIdNoLabel).containsAny(['nuHtml', 'nuImage', 'nuContentBoxContainer','nuSubform'])) {
+		if (nuObjectClassList(strIdNoLabel).containsAny(['nuHtml', 'nuImage', 'nuContentBoxContainer', 'nuSubform'])) {
 			return idNoLabel.attr('id');
 		} else if (idNoLabel.hasClass('select2-hidden-accessible')) {
 			return strIdNoLabel + '_select2';
 		}
 
-		let id = t.hasClass('nuSubformTitle') ?	t.attr('data-nu-field') : idNoLabel.attr('data-nu-field');
+		let id = t.hasClass('nuSubformTitle') ? t.attr('data-nu-field') : idNoLabel.attr('data-nu-field');
 		id = id === undefined ? contextMenuCurrentTarget.id : id;
 		return id;
 	}
@@ -839,7 +839,7 @@ function contextMenuCurrentTargetUpdateId() {
 function contextMenuCurrentTargetId() {
 
 	let t = $('#' + contextMenuCurrentTarget.id);
-	let hasClass = nuObjectClassList(contextMenuCurrentTarget.id).containsAny(['nuWord', 'nu_run', 'nuImage', 'nuTab', 'nuSubformTitle', 'nuSort']) && ! t.hasClass('nuTabHolder')
+	let hasClass = nuObjectClassList(contextMenuCurrentTarget.id).containsAny(['nuWord', 'nu_run', 'nuImage', 'nuTab', 'nuSubformTitle', 'nuSort']) && !t.hasClass('nuTabHolder')
 
 	return t.is(":button") || hasClass ? contextMenuCurrentTarget.id : contextMenuCurrentTarget.id.substring(6);
 
@@ -878,8 +878,8 @@ function nuContextMenuObjectPopup(e) {
 
 function nuContextMenuUpdateObject(value, column) {
 
-	let isSfTitle	= $('#title_' + contextMenuCurrentTargetId()).hasClass('nuSubformTitle');
-	let isTab		= $('#' + contextMenuCurrentTargetId()).hasClass('nuTab');
+	let isSfTitle = $('#title_' + contextMenuCurrentTargetId()).hasClass('nuSubformTitle');
+	let isTab = $('#' + contextMenuCurrentTargetId()).hasClass('nuTab');
 
 	var id;
 	if (nuFormType() == 'edit' && !isTab) {
@@ -888,10 +888,10 @@ function nuContextMenuUpdateObject(value, column) {
 		id = (Number(contextMenuCurrentTargetUpdateId().justNumbers()) + 1) * 10;
 	}
 
-	let formId = isSfTitle ? nuContextMenuGetFormId('title_'	+ contextMenuCurrentTargetId()) : nuContextMenuGetFormId(id);
+	let formId = isSfTitle ? nuContextMenuGetFormId('title_' + contextMenuCurrentTargetId()) : nuContextMenuGetFormId(id);
 	let p = 'nuupdateobject';
 
-	nuSetProperty(p + '_id', isTab ?	$('#' + contextMenuCurrentTargetId()).attr('data-nu-tab-id') : id);
+	nuSetProperty(p + '_id', isTab ? $('#' + contextMenuCurrentTargetId()).attr('data-nu-tab-id') : id);
 	nuSetProperty(p + '_value', value);
 	nuSetProperty(p + '_form_id', formId);
 	nuSetProperty(p + '_type', isTab ? 'tab' : nuFormType());
@@ -903,11 +903,11 @@ function nuContextMenuUpdateObject(value, column) {
 function nuContextMenuUpdate() {
 
 	let typeEdit = nuFormType() == 'edit';
-	let selector =	typeEdit ? 'label, button, .nu_run, .nuWord, .nuImage, .nuContentBoxTitle, .nuTab, .nuSubformTitle' : '.nuSort';
-//not('.nuDragLabel')
+	let selector = typeEdit ? 'label, button, .nu_run, .nuWord, .nuImage, .nuContentBoxTitle, .nuTab, .nuSubformTitle' : '.nuSort';
+	//not('.nuDragLabel')
 	$(selector).each((index, element) => {
 
-		let el = "#"+ element.id;
+		let el = "#" + element.id;
 		if (el !== '#' && $(el).length > 0) {
 
 			if ($(el).hasClass('nuTab')) {
@@ -967,18 +967,18 @@ policies, either expressed or implied, of James Padolsey.
  UPDATED 29-10-2011
  CONTRIBUTORS
 	David Waller
-    Benjamin Drucker
+	Benjamin Drucker
 
 */
 
-var nuPrettyPrint = (function(){
+var nuPrettyPrint = (function () {
 
 	/* These "util" functions are not part of the core
 	   functionality but are  all necessary - mostly DOM helpers */
 
 	var util = {
 
-		el: function(type, attrs) {
+		el: function (type, attrs) {
 
 			/* Create new element */
 			var el = document.createElement(type), attr;
@@ -989,7 +989,7 @@ var nuPrettyPrint = (function(){
 			/* Add attributes to el */
 			if (attrs && attrs.style) {
 				var styles = attrs.style;
-				util.applyCSS( el, attrs.style );
+				util.applyCSS(el, attrs.style);
 				delete attrs.style;
 			}
 			for (attr in attrs) {
@@ -1002,21 +1002,21 @@ var nuPrettyPrint = (function(){
 
 		},
 
-		applyCSS: function(el, styles) {
+		applyCSS: function (el, styles) {
 			/* Applies CSS to a single element */
 			for (var prop in styles) {
 				if (styles.hasOwnProperty(prop)) {
-						el.style[prop] = styles[prop];
+					el.style[prop] = styles[prop];
 				}
 			}
 		},
 
-		txt: function(t) {
+		txt: function (t) {
 			/* Create text node */
 			return document.createTextNode(t);
 		},
 
-		row: function(cells, type, cellType) {
+		row: function (cells, type, cellType) {
 
 			/* Creates new <tr> */
 			cellType = cellType || 'td';
@@ -1027,23 +1027,23 @@ var nuPrettyPrint = (function(){
 				attrs = {
 					style: util.getStyles(cellType, type),
 					colSpan: colSpan,
-					onmouseover: function() {
+					onmouseover: function () {
 						var tds = this.parentNode.childNodes;
-						util.forEach(tds, function(cell){
+						util.forEach(tds, function (cell) {
 							if (cell.nodeName.toLowerCase() !== 'td') { return; }
 							util.applyCSS(cell, util.getStyles('td_hover', type));
 						});
 					},
-					onmouseout: function() {
+					onmouseout: function () {
 						var tds = this.parentNode.childNodes;
-						util.forEach(tds, function(cell){
+						util.forEach(tds, function (cell) {
 							if (cell.nodeName.toLowerCase() !== 'td') { return; }
 							util.applyCSS(cell, util.getStyles('td', type));
 						});
 					}
 				};
 
-			util.forEach(cells, function(cell){
+			util.forEach(cells, function (cell) {
 
 				if (cell === null) { return; }
 				/* Default cell type is <td> */
@@ -1063,34 +1063,34 @@ var nuPrettyPrint = (function(){
 			return tr;
 		},
 
-		hRow: function(cells, type){
+		hRow: function (cells, type) {
 			/* Return new <th> */
 			return util.row(cells, type, 'th');
 		},
 
-		table: function(headings, type){
+		table: function (headings, type) {
 
 			headings = headings || [];
 
 			/* Creates new table: */
 			var attrs = {
-					thead: {
-						style:util.getStyles('thead',type)
-					},
-					tbody: {
-						style:util.getStyles('tbody',type)
-					},
-					table: {
-						style:util.getStyles('table',type)
-					}
+				thead: {
+					style: util.getStyles('thead', type)
 				},
+				tbody: {
+					style: util.getStyles('tbody', type)
+				},
+				table: {
+					style: util.getStyles('table', type)
+				}
+			},
 				tbl = util.el('table', attrs.table),
 				thead = util.el('thead', attrs.thead),
 				tbody = util.el('tbody', attrs.tbody);
 
 			if (headings.length) {
 				tbl.appendChild(thead);
-				thead.appendChild( util.hRow(headings, type) );
+				thead.appendChild(util.hRow(headings, type));
 			}
 			tbl.appendChild(tbody);
 
@@ -1100,47 +1100,47 @@ var nuPrettyPrint = (function(){
 				node: tbl,
 				tbody: tbody,
 				thead: thead,
-				appendChild: function(node) {
+				appendChild: function (node) {
 					this.tbody.appendChild(node);
 				},
-				addRow: function(cells, _type, cellType){
+				addRow: function (cells, _type, cellType) {
 					this.appendChild(util.row.call(util, cells, (_type || type), cellType));
 					return this;
 				}
 			};
 		},
 
-		shorten: function(str) {
+		shorten: function (str) {
 			var max = prettyPrintThis.maxStringLength;
-			str = str.replace(/^\s\s*|\s\s*$|\n/g,'');
-			return str.length > max ? (str.substring(0, max-1) + '...') : str;
+			str = str.replace(/^\s\s*|\s\s*$|\n/g, '');
+			return str.length > max ? (str.substring(0, max - 1) + '...') : str;
 		},
 
-		htmlentities: function(str) {
+		htmlentities: function (str) {
 			return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 		},
 
-		merge: function(target, source) {
+		merge: function (target, source) {
 
 			/* Merges two (or more) objects,
 			   giving the last one precedence */
 
-			if ( typeof target !== 'object' ) {
+			if (typeof target !== 'object') {
 				target = {};
 			}
 
 			for (var property in source) {
 
-				if ( source.hasOwnProperty(property) ) {
+				if (source.hasOwnProperty(property)) {
 
-					var sourceProperty = source[ property ];
+					var sourceProperty = source[property];
 
-					if ( typeof sourceProperty === 'object' ) {
-						target[ property ] = util.merge( target[ property ], sourceProperty );
+					if (typeof sourceProperty === 'object') {
+						target[property] = util.merge(target[property], sourceProperty);
 						continue;
 					}
 
-					target[ property ] = sourceProperty;
+					target[property] = sourceProperty;
 
 				}
 
@@ -1153,9 +1153,9 @@ var nuPrettyPrint = (function(){
 			return target;
 		},
 
-		count: function(arr, item) {
+		count: function (arr, item) {
 			var count = 0;
-			for (var i = 0; i< arr.length; i++) {
+			for (var i = 0; i < arr.length; i++) {
 				if (arr[i] === item) {
 					count++;
 				}
@@ -1163,11 +1163,11 @@ var nuPrettyPrint = (function(){
 			return count;
 		},
 
-		thead: function(tbl) {
+		thead: function (tbl) {
 			return tbl.getElementsByTagName('thead')[0];
 		},
 
-		forEach: function(arr, max, fn) {
+		forEach: function (arr, max, fn) {
 
 			if (!fn) {
 				fn = max;
@@ -1178,7 +1178,7 @@ var nuPrettyPrint = (function(){
 				index = -1;
 
 			while (++index < len) {
-				if(fn( arr[index], index, arr ) === false) {
+				if (fn(arr[index], index, arr) === false) {
 					break;
 				}
 			}
@@ -1186,7 +1186,7 @@ var nuPrettyPrint = (function(){
 			return true;
 		},
 
-		type: function(v){
+		type: function (v) {
 			try {
 				/* Returns type, e.g. "string", "number", "array" etc.
 				   Note, this is only used for precise typing. */
@@ -1212,16 +1212,16 @@ var nuPrettyPrint = (function(){
 					return 'object';
 				}
 				return 'default';
-			} catch(e) {
+			} catch (e) {
 				return 'default';
 			}
 		},
 
-		within: function(ref) {
+		within: function (ref) {
 			/* Check existence of a val within an object
 			   RETURNS KEY */
 			return {
-				is: function(o) {
+				is: function (o) {
 					for (var i in ref) {
 						if (ref[i] === o) {
 							return i;
@@ -1233,25 +1233,25 @@ var nuPrettyPrint = (function(){
 		},
 
 		common: {
-			circRef: function(obj, key, settings) {
+			circRef: function (obj, key, settings) {
 				return util.expander(
 					'[POINTS BACK TO <strong>' + (key) + '</strong>]',
 					'Click to show this item anyway',
-					function() {
-						this.parentNode.appendChild( prettyPrintThis(obj,{maxDepth:1}) );
+					function () {
+						this.parentNode.appendChild(prettyPrintThis(obj, { maxDepth: 1 }));
 					}
 				);
 			},
-			depthReached: function(obj, settings) {
+			depthReached: function (obj, settings) {
 				return util.expander(
 					'[EXPAND]',
 					'Click to show this item anyway',
-					function() {
+					function () {
 						try {
-							this.parentNode.appendChild( prettyPrintThis(obj,{maxDepth:1}) );
-						} catch(e) {
+							this.parentNode.appendChild(prettyPrintThis(obj, { maxDepth: 1 }));
+						} catch (e) {
 							this.parentNode.appendChild(
-								util.table(['ERROR OCCURED DURING OBJECT RETRIEVAL'],'error').addRow([e.message]).node
+								util.table(['ERROR OCCURED DURING OBJECT RETRIEVAL'], 'error').addRow([e.message]).node
 							);
 						}
 					}
@@ -1259,24 +1259,24 @@ var nuPrettyPrint = (function(){
 			}
 		},
 
-		getStyles: function(el, type) {
+		getStyles: function (el, type) {
 			type = prettyPrintThis.settings.styles[type] || {};
 			return util.merge(
 				{}, prettyPrintThis.settings.styles['default'][el], type[el]
 			);
 		},
 
-		expander: function(text, title, clickFn) {
+		expander: function (text, title, clickFn) {
 			return util.el('a', {
-				innerHTML:  util.shorten(text) + ' <b style="visibility:hidden;">[+]</b>',
+				innerHTML: util.shorten(text) + ' <b style="visibility:hidden;">[+]</b>',
 				title: title,
-				onmouseover: function() {
+				onmouseover: function () {
 					this.getElementsByTagName('b')[0].style.visibility = 'visible';
 				},
-				onmouseout: function() {
+				onmouseout: function () {
 					this.getElementsByTagName('b')[0].style.visibility = 'hidden';
 				},
-				onclick: function() {
+				onclick: function () {
 					this.style.display = 'none';
 					clickFn.call(this);
 					return false;
@@ -1287,7 +1287,7 @@ var nuPrettyPrint = (function(){
 			});
 		},
 
-		stringify: function(obj) {
+		stringify: function (obj) {
 
 			/* Bit of an ugly duckling!
 			   - This fn returns an ATTEMPT at converting an object/array/anyType
@@ -1296,18 +1296,18 @@ var nuPrettyPrint = (function(){
 
 			var type = util.type(obj),
 				str, first = true;
-			if ( type === 'array' ) {
+			if (type === 'array') {
 				str = '[';
-				util.forEach(obj, function(item,i){
-					str += (i===0?'':', ') + util.stringify(item);
+				util.forEach(obj, function (item, i) {
+					str += (i === 0 ? '' : ', ') + util.stringify(item);
 				});
 				return str + ']';
 			}
 			if (typeof obj === 'object') {
 				str = '{';
-				for (var i in obj){
+				for (var i in obj) {
 					if (obj.hasOwnProperty(i)) {
-						str += (first?'':', ') + i + ':' + util.stringify(obj[i]);
+						str += (first ? '' : ', ') + i + ':' + util.stringify(obj[i]);
 						first = false;
 					}
 				}
@@ -1317,12 +1317,12 @@ var nuPrettyPrint = (function(){
 				return '/' + obj.source + '/';
 			}
 			if (type === 'string') {
-				return '"' + obj.replace(/"/g,'\\"') + '"';
+				return '"' + obj.replace(/"/g, '\\"') + '"';
 			}
 			return obj.toString();
 		},
 
-		headerGradient: (function(){
+		headerGradient: (function () {
 
 			var canvas = document.createElement('canvas');
 			if (!canvas.getContext) { return ''; }
@@ -1330,12 +1330,12 @@ var nuPrettyPrint = (function(){
 			canvas.height = 30;
 			canvas.width = 1;
 
-			var linearGrad = cx.createLinearGradient(0,0,0,30);
-			linearGrad.addColorStop(0,'rgba(0,0,0,0)');
-			linearGrad.addColorStop(1,'rgba(0,0,0,0.25)');
+			var linearGrad = cx.createLinearGradient(0, 0, 0, 30);
+			linearGrad.addColorStop(0, 'rgba(0,0,0,0)');
+			linearGrad.addColorStop(1, 'rgba(0,0,0,0.25)');
 
 			cx.fillStyle = linearGrad;
-			cx.fillRect(0,0,1,30);
+			cx.fillRect(0, 0, 1, 30);
 
 			var dataURL = canvas.toDataURL && canvas.toDataURL();
 			return 'url(' + (dataURL || '') + ')';
@@ -1345,16 +1345,16 @@ var nuPrettyPrint = (function(){
 	};
 
 	// Main..
-	var prettyPrintThis = function(obj, options) {
+	var prettyPrintThis = function (obj, options) {
 
-		 /*
-		 *	  obj :: Object to be printed
-		 *  options :: Options (merged with config)
-		 */
+		/*
+		*	  obj :: Object to be printed
+		*  options :: Options (merged with config)
+		*/
 
 		options = options || {};
 
-		var settings = util.merge( {}, prettyPrintThis.config, options ),
+		var settings = util.merge({}, prettyPrintThis.config, options),
 			container = util.el('div'),
 			config = prettyPrintThis.config,
 			currentDepth = 0,
@@ -1367,20 +1367,20 @@ var nuPrettyPrint = (function(){
 		prettyPrintThis.settings = settings;
 
 		var typeDealer = {
-			string : function(item){
-				return util.txt('"' + util.shorten(item.replace(/"/g,'\\"')) + '"');
+			string: function (item) {
+				return util.txt('"' + util.shorten(item.replace(/"/g, '\\"')) + '"');
 			},
-			number : function(item) {
+			number: function (item) {
 				return util.txt(item);
 			},
-			regexp : function(item) {
+			regexp: function (item) {
 
-				var miniTable = util.table(['RegExp',null], 'regexp');
+				var miniTable = util.table(['RegExp', null], 'regexp');
 				var flags = util.table();
 				var span = util.expander(
 					'/' + item.source + '/',
 					'Click to show more',
-					function() {
+					function () {
 						this.parentNode.appendChild(miniTable.node);
 					}
 				);
@@ -1397,32 +1397,32 @@ var nuPrettyPrint = (function(){
 
 				return settings.expanded ? miniTable.node : span;
 			},
-			domelement : function(element, depth) {
+			domelement: function (element, depth) {
 
-				var miniTable = util.table(['DOMElement',null], 'domelement'),
+				var miniTable = util.table(['DOMElement', null], 'domelement'),
 					props = ['id', 'className', 'innerHTML', 'src', 'href'], elname = element.nodeName || '';
 
 				miniTable.addRow(['tag', '&lt;' + elname.toLowerCase() + '&gt;']);
 
-				util.forEach(props, function(prop){
-					if ( element[prop] ) {
-						miniTable.addRow([ prop, util.htmlentities(element[prop]) ]);
+				util.forEach(props, function (prop) {
+					if (element[prop]) {
+						miniTable.addRow([prop, util.htmlentities(element[prop])]);
 					}
 				});
 
 				return settings.expanded ? miniTable.node : util.expander(
 					'DOMElement (' + elname.toLowerCase() + ')',
 					'Click to show more',
-					function() {
+					function () {
 						this.parentNode.appendChild(miniTable.node);
 					}
 				);
 			},
-			domnode : function(node){
+			domnode: function (node) {
 
 				/* Deals with all DOMNodes that aren't elements (nodeType !== 1) */
-				var miniTable = util.table(['DOMNode',null], 'domelement'),
-					data =  util.htmlentities( (node.data || 'UNDEFINED').replace(/\n/g,'\\n') );
+				var miniTable = util.table(['DOMNode', null], 'domelement'),
+					data = util.htmlentities((node.data || 'UNDEFINED').replace(/\n/g, '\\n'));
 				miniTable
 					.addRow(['nodeType', node.nodeType + ' (' + node.nodeName + ')'])
 					.addRow(['data', data]);
@@ -1430,28 +1430,28 @@ var nuPrettyPrint = (function(){
 				return settings.expanded ? miniTable.node : util.expander(
 					'DOMNode',
 					'Click to show more',
-					function() {
+					function () {
 						this.parentNode.appendChild(miniTable.node);
 					}
 				);
 			},
-			jquery : function(obj, depth, key) {
+			jquery: function (obj, depth, key) {
 				return typeDealer['array'](obj, depth, key, true);
 			},
-			object : function(obj, depth, key) {
+			object: function (obj, depth, key) {
 
 				/* Checking depth + circular refs */
 				/* Note, check for circular refs before depth; just makes more sense */
 				var stackKey = util.within(stack).is(obj);
-				if ( stackKey ) {
+				if (stackKey) {
 					return util.common.circRef(obj, stackKey, settings);
 				}
-				stack[key||'TOP'] = obj;
+				stack[key || 'TOP'] = obj;
 				if (depth === settings.maxDepth) {
 					return util.common.depthReached(obj, settings);
 				}
 
-				var table = util.table([(obj.constructor && obj.constructor.name) || 'Object', null],'object'),
+				var table = util.table([(obj.constructor && obj.constructor.name) || 'Object', null], 'object'),
 					isEmpty = true;
 
 				var keys = [];
@@ -1474,8 +1474,8 @@ var nuPrettyPrint = (function(){
 
 					isEmpty = false;
 					try {
-						table.addRow([i, typeDealer[ type ](item, depth+1, i)], type);
-					} catch(e) {
+						table.addRow([i, typeDealer[type](item, depth + 1, i)], type);
+					} catch (e) {
 						/* Security errors are thrown on certain Window/DOM properties */
 						if (window.console && window.console.log) {
 							console.log(e.message);
@@ -1484,26 +1484,25 @@ var nuPrettyPrint = (function(){
 					}
 				}
 
-				if (obj instanceof Error)
-				{
+				if (obj instanceof Error) {
 					table.thead.appendChild(
-						util.hRow(['key','value'], 'colHeader')
+						util.hRow(['key', 'value'], 'colHeader')
 					);
-					table.addRow(['name',obj.name]);
-					table.addRow(['message',obj.message]);
+					table.addRow(['name', obj.name]);
+					table.addRow(['message', obj.message]);
 				} else
-				if (isEmpty) {
-					table.addRow(['<small>[empty]</small>']);
-				} else {
-					table.thead.appendChild(
-						util.hRow(['key','value'], 'colHeader')
-					);
-				}
+					if (isEmpty) {
+						table.addRow(['<small>[empty]</small>']);
+					} else {
+						table.thead.appendChild(
+							util.hRow(['key', 'value'], 'colHeader')
+						);
+					}
 
 				var ret = (settings.expanded || !hasRunOnce) ? table.node : util.expander(
 					util.stringify(obj),
 					'Click to show more',
-					function() {
+					function () {
 						this.parentNode.appendChild(table.node);
 					}
 				);
@@ -1513,15 +1512,15 @@ var nuPrettyPrint = (function(){
 				return ret;
 
 			},
-			array : function(arr, depth, key, jquery) {
+			array: function (arr, depth, key, jquery) {
 
 				/* Checking depth + circular refs */
 				/* Note, check for circular refs before depth; just makes more sense */
 				var stackKey = util.within(stack).is(arr);
-				if ( stackKey ) {
+				if (stackKey) {
 					return util.common.circRef(arr, stackKey);
 				}
-				stack[key||'TOP'] = arr;
+				stack[key || 'TOP'] = arr;
 				if (depth === settings.maxDepth) {
 					return util.common.depthReached(arr);
 				}
@@ -1531,121 +1530,121 @@ var nuPrettyPrint = (function(){
 					isEmpty = true,
 					count = 0;
 
-				if (jquery){
-					table.addRow(['selector',arr.selector]);
+				if (jquery) {
+					table.addRow(['selector', arr.selector]);
 				}
 
 				if (arr.length > settings.maxArray) {
 					for (var i = 0, length = arr.length; i < length; i += settings.maxArray)
-					(function (i) {
-						var until = Math.min(i + settings.maxArray, length);
-						table.addRow([
-							i + '..' + (until - 1),
-							util.expander(
-								'[EXPAND]',
-								'Click to show items from this slice',
-								function() {
-									var obj = {};
-									for (var j = i; j < until; j++) {
-										obj[j] = arr[j];
+						(function (i) {
+							var until = Math.min(i + settings.maxArray, length);
+							table.addRow([
+								i + '..' + (until - 1),
+								util.expander(
+									'[EXPAND]',
+									'Click to show items from this slice',
+									function () {
+										var obj = {};
+										for (var j = i; j < until; j++) {
+											obj[j] = arr[j];
+										}
+										try {
+											var child = prettyPrintThis(obj, { maxDepth: 1 });
+											child.getElementsByTagName('th')[0].style.display = 'none';
+											this.parentNode.appendChild(child);
+										} catch (e) {
+											this.parentNode.appendChild(
+												util.table(['ERROR OCCURED DURING OBJECT RETRIEVAL'], 'error').addRow([e.message]).node
+											);
+										}
 									}
-									try {
-										var child = prettyPrintThis(obj,{maxDepth:1});
-										child.getElementsByTagName('th')[0].style.display = 'none';
-										this.parentNode.appendChild(child);
-									} catch(e) {
-										this.parentNode.appendChild(
-											util.table(['ERROR OCCURED DURING OBJECT RETRIEVAL'],'error').addRow([e.message]).node
-										);
-									}
-								}
-							)
-						]);
-						isEmpty = false;
-					})(i);
+								)
+							]);
+							isEmpty = false;
+						})(i);
 				} else {
-					util.forEach(arr, function(item,i){
+					util.forEach(arr, function (item, i) {
 						isEmpty = false;
-						table.addRow([i, typeDealer[ util.type(item) ](item, depth+1, i)]);
+						table.addRow([i, typeDealer[util.type(item)](item, depth + 1, i)]);
 					});
 				}
 
-				if (!jquery){
+				if (!jquery) {
 					if (isEmpty) {
 						table.addRow(['<small>[empty]</small>']);
 					} else {
-						table.thead.appendChild( util.hRow(['index','value'], 'colHeader') );
+						table.thead.appendChild(util.hRow(['index', 'value'], 'colHeader'));
 					}
 				}
 
 				return settings.expanded ? table.node : util.expander(
 					util.stringify(arr),
 					'Click to show more',
-					function() {
+					function () {
 						this.parentNode.appendChild(table.node);
 					}
 				);
 
 			},
-			'function' : function(fn, depth, key) {
+			'function': function (fn, depth, key) {
 
 				/* Checking JUST circular refs */
 				var stackKey = util.within(stack).is(fn);
-				if ( stackKey ) { return util.common.circRef(fn, stackKey); }
-				stack[key||'TOP'] = fn;
+				if (stackKey) { return util.common.circRef(fn, stackKey); }
+				stack[key || 'TOP'] = fn;
 
-				var miniTable = util.table(['Function',null], 'function'),
+				var miniTable = util.table(['Function', null], 'function'),
 					argsTable = util.table(['Arguments']),
 					args = fn.toString().match(/\((.+?)\)/),
-					body = fn.toString().match(/\(.*?\)\s+?\{?([\S\s]+)/)[1].replace(/\}?$/,'');
+					body = fn.toString().match(/\(.*?\)\s+?\{?([\S\s]+)/)[1].replace(/\}?$/, '');
 
 				miniTable
-					.addRow(['arguments', args ? args[1].replace(/[^\w_,\s]/g,'') : '<small>[none/native]</small>'])
+					.addRow(['arguments', args ? args[1].replace(/[^\w_,\s]/g, '') : '<small>[none/native]</small>'])
 					.addRow(['body', body]);
 
 				return settings.expanded ? miniTable.node : util.expander(
 					'function(){...}',
 					'Click to see more about this function.',
-					function(){
+					function () {
 						this.parentNode.appendChild(miniTable.node);
 					}
 				);
 			},
-			'date' : function(date) {
+			'date': function (date) {
 
-				var miniTable = util.table(['Date',null], 'date'),
+				var miniTable = util.table(['Date', null], 'date'),
 					sDate = date.toString().split(/\s/);
 
 				/* TODO: Make this work well in IE! */
 				miniTable
 					.addRow(['Time', sDate[4]])
-					.addRow(['Date', sDate.slice(0,4).join('-')]);
+					.addRow(['Date', sDate.slice(0, 4).join('-')]);
 
 				return settings.expanded ? miniTable.node : util.expander(
 					'Date (timestamp): ' + (+date),
 					'Click to see a little more info about this date',
-					function() {
+					function () {
 						this.parentNode.appendChild(miniTable.node);
 					}
 				);
 
 			},
-			'boolean' : function(bool) {
-				return util.txt( bool.toString().toUpperCase() );
+			'boolean': function (bool) {
+				return util.txt(bool.toString().toUpperCase());
 			},
-			'undefined' : function() {
+			'undefined': function () {
 				return util.txt('UNDEFINED');
 			},
-			'null' : function() {
+			'null': function () {
 				return util.txt('NULL');
 			},
-			'default' : function() {
+			'default': function () {
 				/* When a type cannot be found */
 				return util.txt('prettyPrint: TypeNotFound Error');
 			}
 		};
 
-		container.appendChild( typeDealer[ (settings.forceObject) ? 'object' : util.type(obj) ](obj, currentDepth) );
+		container.appendChild(typeDealer[(settings.forceObject) ? 'object' : util.type(obj)](obj, currentDepth));
 
 		return container;
 
@@ -1689,7 +1688,7 @@ var nuPrettyPrint = (function(){
 					backgroundColor: '#1F96CF'
 				}
 			},
-			jquery : {
+			jquery: {
 				th: {
 					backgroundColor: '#FBF315'
 				}
@@ -1777,11 +1776,11 @@ function nuPrettyPrintMessage(e, obj) {
 
 	if (e !== undefined && (nuIsMacintosh() ? e.metaKey : e.ctrlKey)) {
 		let w = window.open();
-		w.document.title = nuTranslate('Current Properties') + ' : '  + nuGetProperty('form_code')
+		w.document.title = nuTranslate('Current Properties') + ' : ' + nuGetProperty('form_code')
 		$(w.document.body).html(ppTable);
 	} else {
-		let msg = nuMessage([btnClose,  ppTable]);
-		msg.css({'width': 700, 'text-align': 'left', 'background-color' : 'white'}).attr("id","nuPropertiesMsgDiv");
+		let msg = nuMessage([btnClose, ppTable]);
+		msg.css({ 'width': 700, 'text-align': 'left', 'background-color': 'white' }).attr("id", "nuPropertiesMsgDiv");
 		nuDragElement(document.getElementById('nuPropertiesMsgDiv'), 40);
 	}
 
