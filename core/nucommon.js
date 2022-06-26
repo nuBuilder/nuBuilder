@@ -1031,9 +1031,10 @@ function nuGetLookupFields(id) {
 
 function nuObjectComponents(i) {
 
-	var o = [i, 'label_' + i];
-	if ($('#' + i).attr('data-nu-type') == 'lookup') o.push(i + 'code', i + 'button', i + 'description')
-	if ($('#' + i).hasClass('select2-hidden-accessible')) o.push(i + '_select2');
+	let o = [i, 'label_' + i];
+	const obj = $('#' + i);
+	if (obj.attr('data-nu-type') == 'lookup') o.push(i + 'code', i + 'button', i + 'description')
+	if (obj.hasClass('select2-hidden-accessible')) o.push(i + '_select2');
 
 	return o;
 
