@@ -1,7 +1,7 @@
-<?php 
+<?php
 session_start();
-require_once('nucommon.php'); 
-require_once('nudata.php'); 
+require_once('nucommon.php');
+require_once('nudata.php');
 
 $jsonID					= $_GET['i'];
 $J						= nuGetJSONData($jsonID);

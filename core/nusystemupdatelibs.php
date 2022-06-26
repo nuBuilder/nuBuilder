@@ -1,9 +1,9 @@
-<?php 
+<?php
 
 function dropObject($name, $type) {
 
 	foreach ($type as $value) {
-		nuRunQuery('DROP '.$value.' IF EXISTS `'.$name.'`');	  
+		nuRunQuery('DROP '.$value.' IF EXISTS `'.$name.'`');
 	}
 
 }
@@ -98,9 +98,9 @@ function nuUpdateSystemRecords(){
 
 		$table		= $t[$i];
 		$new		= $ts["$table"]['names'];
-		
+
 		$old = nuObjKey($ts, "sys_$table", false) ? $ts["sys_$table"]['names'] : null;
-		
+
 		if (is_array($old)) {
 		//-- remove unused fields from old
 		for($c = 0 ; $c < count($old) ; $c++){
@@ -114,42 +114,42 @@ function nuUpdateSystemRecords(){
 			// print "Names does not exist in sys_$table" . '<br>';
 		}
 	}
-	
+
 	$ts 			= nuBuildTableSchema();
 	for($i = 0 ; $i < count($t) ; $i++){
 
 		$table		= $t[$i];
 		$lfield		= 'FIRST';
-	
+
 		//-- insert extra new fields into old
 		for($c = 0 ; $c < count($new) ; $c++){
 
 			$new	= $ts["$table"]['names'];
-			$newt	= $ts["$table"]['types'];			
-			$old = nuObjKey($ts, "sys_$table", false) ? $ts["sys_$table"]['names'] : null;						
-			$oldt = nuObjKey($ts, "sys_$table", false) ? $ts["sys_$table"]['types'] : null;			
-			
+			$newt	= $ts["$table"]['types'];
+			$old = nuObjKey($ts, "sys_$table", false) ? $ts["sys_$table"]['names'] : null;
+			$oldt = nuObjKey($ts, "sys_$table", false) ? $ts["sys_$table"]['types'] : null;
+
 			if($old != null && (nuObjKey($old,$c, false) && nuObjKey($new,$c, false))){
-				
+
 				$ofield	= $old[$c];
 				$nfield	= $new[$c];
 				$otype	= $oldt[$c];
 				$ntype	= $newt[$c];
 
 				if($ofield != $nfield){
-					
+
 					$sql= "ALTER TABLE sys_$table ADD COLUMN $nfield $ntype $lfield";
 					nuRunQuery($sql);
 					$ts	= nuBuildTableSchema();
 					//-- start from the beginning again
 					$c	= -1;
-					
+
 				}else if($otype != $ntype){
-					
+
 					$sql= "ALTER TABLE sys_$table MODIFY COLUMN $nfield $ntype";
 					nuRunQuery($sql);
 				}
-				
+
 				if($ofield == ''){
 					$lfield	= '';
 				}else{
@@ -161,11 +161,11 @@ function nuUpdateSystemRecords(){
 }
 
 function nuAddNewSystemTables(){
-	
+
 	$ts			= nuBuildTableSchema();
 	foreach ($ts as $k => $v) {
 		if(substr($k,0,8) == 'zzzzsys_'){
-			
+
 			if(nuObjKey($ts,"sys_$k", false)){
 				$v	= $ts["sys_$k"]['valid'];
 				if($v == ''){
@@ -182,7 +182,7 @@ function nuAddNewSystemTables(){
 function nuAlterSystemTables(){
 
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` CHANGE `sob_input_count` `sob_input_count` BIGINT(20) NULL DEFAULT '0';");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` CHANGE `sob_all_order` `sob_all_order` INT(11) NULL DEFAULT '0';");	
+	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` CHANGE `sob_all_order` `sob_all_order` INT(11) NULL DEFAULT '0';");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_select_2` VARCHAR(1) NULL DEFAULT '0' AFTER `sob_select_multiple`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_input_datalist` TEXT NULL DEFAULT NULL AFTER `sob_input_javascript`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_input_attribute` VARCHAR(1000) NULL DEFAULT NULL AFTER `sob_input_datalist`;");
@@ -245,14 +245,14 @@ function nuAlterSystemTables(){
 	nuRunQueryNoDebug("ALTER TABLE `pdf_temp` ADD `pdf_code` VARCHAR(100) NULL DEFAULT NULL AFTER `pdf_added_by`;");
 	nuRunQueryNoDebug("ALTER TABLE `pdf_temp` ADD `pdf_tag` VARCHAR(100) NULL DEFAULT NULL AFTER `pdf_code`;");
 
-}	
+}
 
 function nuJustNuRecords(){
 
 	$s = "DELETE FROM zzzzsys_event WHERE zzzzsys_event_id NOT LIKE 'nu%'";
 	nuRunQuery($s);
 
-	$s = "DELETE FROM zzzzsys_file WHERE zzzzsys_file_id NOT LIKE 'nu%'"; 
+	$s = "DELETE FROM zzzzsys_file WHERE zzzzsys_file_id NOT LIKE 'nu%'";
 	nuRunQuery($s);
 
 	$s = "DELETE FROM zzzzsys_format WHERE zzzzsys_format_id NOT LIKE 'nu%'";
@@ -314,10 +314,10 @@ function nuRemoveNuRecords(){
 	nuRunQuery($s);
 
 	$s = "DELETE FROM sys_zzzzsys_cloner WHERE zzzzsys_cloner_id LIKE 'nu%'";
-	nuRunQuery($s);	
+	nuRunQuery($s);
 
 	$s = "DELETE FROM sys_zzzzsys_info WHERE zzzzsys_info_id LIKE 'nu%'";
-	nuRunQuery($s);	
+	nuRunQuery($s);
 
 	//-- delete all timezones
 	$s = "DELETE FROM sys_zzzzsys_timezone";
@@ -338,17 +338,17 @@ function nuAppendToSystemTables(){
 				nuRunQuery("DELETE FROM zzzzsys_object");
 			}
 			nuRunQuery("REPLACE INTO $table SELECT * FROM sys_$table");
-			
+
 			dropObject("sys_".$table, ['TABLE']);
 		}
 
 		dropObject('sys_zzzzsys_report_data', ['VIEW']);
 		dropObject('sys_zzzzsys_run_list', ['VIEW']);
-		dropObject('sys_zzzzsys_object_list', ['VIEW']); 
+		dropObject('sys_zzzzsys_object_list', ['VIEW']);
 
 		// $s		= "UPDATE zzzzsys_setup SET set_denied = '1'";
 		// nuRunQuery($s);
-			
+
 	}catch (Throwable $e) {
 		nuInstallException($e);
 	}catch (Exception $e) {
@@ -357,7 +357,7 @@ function nuAppendToSystemTables(){
 }
 
 function nuSystemList(){
-	
+
 	$t	= array();
 		$t[]	= 'zzzzsys_access';
 		$t[]	= 'zzzzsys_access_form';
@@ -376,7 +376,7 @@ function nuSystemList(){
 		$t[]	= 'zzzzsys_select_clause';
 		$t[]	= 'zzzzsys_session';
 		$t[]	= 'zzzzsys_setup';
-		$t[]	= 'zzzzsys_tab';		
+		$t[]	= 'zzzzsys_tab';
 		$t[]	= 'zzzzsys_timezone';
 		$t[]	= 'zzzzsys_translate';
 		$t[]	= 'zzzzsys_user';
@@ -437,13 +437,13 @@ function nuGetIncludedLanguages(){
 }
 
 function nuImportLanguageFiles() {
-	
+
 	nuRunQuery("DELETE FROM `zzzzsys_translate` WHERE `zzzzsys_translate_id` LIKE 'nu%'");
-	
+
 	$l = nuGetIncludedLanguages();
 	try{
 		for($i = 0; $i < count($l); $i++) {
-			
+
 			if (trim($l[$i]) != '') {
 				$file = dirname(__FILE__). '/languages/'. $l[$i].'.sql';
 				$sql = file_get_contents($file);

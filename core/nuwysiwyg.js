@@ -36,7 +36,7 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 	}
 
 	var _toolbar;
-	if (typeof toolbar == "undefined") { 
+	if (typeof toolbar == "undefined") {
 		_toolbar = 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |	numlist bullist checklist | forecolor backcolor casechange	formatpainter removeformat | pagebreak | charmap emoticons | fullscreen	preview save print | insertfile image media pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments addcomment';
 	} else {
 
@@ -66,8 +66,8 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 		_contextmenu = 'image table configurepermanentpen';
 	} else {
 		_contextmenu = contextmenu;
-	}	
-	
+	}
+
 
 	var _quickbars;
 	if (typeof quickbars == "undefined") {
@@ -80,7 +80,7 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 	{
 		selector: "#" + idContainer,
 		plugins: _plugins,
-		mobile: _mobile, 
+		mobile: _mobile,
 		menu: {
 			tc: {
 				title: 'Comments',
@@ -110,8 +110,8 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 		content_css: useDarkMode ? 'dark' : 'default',
 		setup: function (editor) {
 
-			editor.on('init', function (e) { 
-				e.target.setContent(nuGetValue(id)); 
+			editor.on('init', function (e) {
+				e.target.setContent(nuGetValue(id));
 				if (window.nuTinyMCEOnInit) {
 					nuTinyMCEOnInit(e, editor);
 				}
@@ -127,7 +127,7 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 	let mergedOptions = defaultOptions;
 
 	if (typeof options !== "undefined") {
-		mergedOptions = $.extend(defaultOptions, options) 	
+		mergedOptions = $.extend(defaultOptions, options)
 	}
 
 	tinymce.init( mergedOptions );
@@ -156,7 +156,7 @@ function nuSaveEditor() {
 	$('.nuTinyMCE').each((index, element) => {
 		let myContent = tinymce.get(element.id).getContent();
 		let id = element.id.slice(0,-10);
-		nuSetValue(id, myContent);		
+		nuSetValue(id, myContent);
 	});
 
 }
@@ -185,9 +185,9 @@ function nuQuillFonts(fonts) {
 	var node = document.createElement('style');
 	node.innerHTML = fontStyles;
 	document.body.appendChild(node);
-	
+
 	return fontNames;
-	
+
 }
 
 function nuQuillToolbarOptions(fontNames) {
@@ -196,7 +196,7 @@ function nuQuillToolbarOptions(fontNames) {
 
 			['bold', 'italic', 'underline', 'strike'], // toggled buttons
 			['blockquote', 'code-block'],
-			
+
 			[{ 'header': 1 }, { 'header': 2 }], // custom button values
 			[{ 'list': 'ordered' }, { 'list': 'bullet' }],
 			[{ 'script': 'sub' }, { 'script': 'super' }], // superscript/subscript
@@ -218,7 +218,7 @@ function nuQuillToolbarOptions(fontNames) {
 	];
 
 	return toolbarOptions;
-	
+
 }
 
 function nuQuill(i, options) {
@@ -250,7 +250,7 @@ function nuQuill(i, options) {
 	}
 
 	if (typeof options.modules === 'undefined' || options.modules === null) {
-		
+
 		if (options.modules.toolbar === false)	{
 			options.modules.toolbar = false;
 		} else {
@@ -270,9 +270,9 @@ function nuQuill(i, options) {
 	}
 
 	var Block = Quill.import('blots/block');
-	class DivBlock extends Block {} 
+	class DivBlock extends Block {}
 	DivBlock.tagName = 'DIV';
-	Quill.register('blots/block', DivBlock, true); 
+	Quill.register('blots/block', DivBlock, true);
 
 	var Font = Quill.import('formats/font');
 	Font.whitelist = options.fontNames;

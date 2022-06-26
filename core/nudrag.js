@@ -26,7 +26,7 @@ function nuCreateDrag(){
 	this.type				= '';
 	this.classList	 = [];
 	this.isReport		= false;
-	
+
 
 	this.setSelected = function() {
 
@@ -35,7 +35,7 @@ function nuCreateDrag(){
 		}
 
 		for(var i = 0 ; i < nuREPORT.selected.length ; i ++){
-			
+
 			$('#' + nuREPORT.selected[i]).addClass('nuDragSelected');
 
 		}
@@ -48,9 +48,9 @@ function nuCreateDrag(){
 
 		var s						 = document.getElementsByClassName('nuDragSelected');
 		nuREPORT.selected = [];
-		
+
 		for(var i = 0 ; i < s.length ; i ++){
-		
+
 			nuREPORT.selected.push(s[i].id);
 
 		}
@@ -59,7 +59,7 @@ function nuCreateDrag(){
 
 
 	this.down = function(event) {
-		
+
 		var c = event.target.className;
 
 		if((nuIsMacintosh() ? event.metaKey : event.ctrlKey)){
@@ -76,7 +76,7 @@ function nuCreateDrag(){
 			if(c.indexOf('nuDragArea') != -1){
 				$('.nuDragSelected').removeClass('nuDragSelected');
 			}
-			
+
 		}
 
 		this.getSelected();
@@ -88,36 +88,36 @@ function nuCreateDrag(){
 
 
 		this.setSelectedCoordinates();
-		
+
 		this.selectBox(event);
-		
+
 	}
-	
+
 	this.up = function(event) {
-	
+
 		this.classList	 = [];
 		this.removeBox();
 
 	}
-	
-	
+
+
 	this.move = function(event) {
-		
+
 		this.lastMoveX = this.moveX;
 		this.lastMoveY = this.moveY;
-		
+
 		if(event.clientX) {
 			this.moveX	= event.clientX - this.startX ;
 		}
 		if(event.clientY) {
 			this.moveY	= event.clientY - this.startY;
 		}
-		
+
 		var k			 = event.keyCode;
 		var m			 = (event.buttons == 1 && this.classList.indexOf('nuDragSelected') != -1);
 
 		if(m || k == 37 || k == 38 || k == 39 || k == 40){
-			
+
 			if($('#nuDragDialog').is(":visible") == false){
 
 				if(k == 38){
@@ -138,7 +138,7 @@ function nuCreateDrag(){
 				}
 
 				nuDragR.dragging	= true;
-				
+
 			}
 
 			if(event.shiftKey){
@@ -154,23 +154,23 @@ function nuCreateDrag(){
 				}
 
 			}
-			
+
 		}
-		
+
 		this.resizeBox(event);
-		
+
 	}
-	
+
 	this.multipleSections = function() {
 
 		var s		 = $(".nuDragSelected").attr('data-order');
 		var a		 = $(".nuDragSelected");
 		var b		 = false;
-		
+
 		a.each(function() {
-			
+
 			if(s != $(this).attr('data-order')){b = true;}
-			
+
 		});
 
 		return b;
@@ -190,11 +190,11 @@ function nuCreateDrag(){
 	}
 
 	this.canResize = function(event) {
-	
+
 		if(this.right + (this.moveX-this.lastMoveX) > this.areaWidth())					{return false;}
 		if(this.isReport)																{return true;}
 		if(this.bottom + (this.moveY - this.lastMoveY) > this.areaHeight())				{return false;}
-		
+
 		return true;
 
 	}
@@ -209,7 +209,7 @@ function nuCreateDrag(){
 		var m = this.multipleSections();
 
 		for(var i = 0 ; i < s.length ; i ++){
-			
+
 			o			 = s[i].style;
 			l			 = parseInt(o.left) + (this.moveX - this.lastMoveX);
 			t			 = parseInt(o.top)	+ (m ? 0 : (this.moveY - this.lastMoveY));
@@ -220,8 +220,8 @@ function nuCreateDrag(){
 		this.setSelectedCoordinates();
 
 	}
-	
-	
+
+
 	this.resizeSelected = function() {
 
 		var s					= document.getElementsByClassName('nuDragSelected');
@@ -229,13 +229,13 @@ function nuCreateDrag(){
 		var h = 0;
 		var o = {};
 		var m = this.multipleSections();
-		
+
 		for(var i = 0 ; i < s.length ; i ++){
-		
+
 			o				= s[i].style;
 			w				= parseInt(o.width) + (this.moveX - this.lastMoveX);
 			h				= parseInt(o.height)	+ (m ? 0 : (this.moveY - this.lastMoveY));
-			
+
 			if(w == 0) {
 				w = 1;
 			}
@@ -244,20 +244,20 @@ function nuCreateDrag(){
 				h = 1;
 			}
 			o.width	= w + 'px';
-			o.height = h + 'px';	
+			o.height = h + 'px';
 		}
-		
+
 		this.setSelectedCoordinates();
 
 	}
-	
-	
+
+
 	this.setSelectedCoordinates = function() {
 
 		var s					= document.getElementsByClassName('nuDragSelected');
-		
+
 		if(s.length == 0){return;}
-		
+
 		var o				= s[0].style;
 		this.left			= parseInt(o.left);
 		this.top			= parseInt(o.top);
@@ -265,9 +265,9 @@ function nuCreateDrag(){
 		this.bottom			= parseInt(o.top)	+	(parseInt(o.borderWidth)	* 2);
 		this.width			= parseInt(o.width);
 		this.height			= parseInt(o.height);
-		
+
 		for(var i = 0 ; i < s.length ; i ++){
-			
+
 			o				= s[i].style;
 			this.left		= Math.min(this.left,	parseInt(o.left));
 			this.right		= Math.max(this.right,	parseInt(o.left) + parseInt(o.width) + (parseInt(o.borderWidth) * 2))
@@ -277,10 +277,10 @@ function nuCreateDrag(){
 			this.height		= Math.min(this.height,	parseInt(o.height));
 
 		}
-		
+
 	}
-		
-	
+
+
 	this.selectBox = function(event) {
 
 		if(this.classList.indexOf('nuDragArea') != -1){
@@ -302,11 +302,11 @@ function nuCreateDrag(){
 			});
 
 			return true;
-		}	
-		
+		}
+
 		return false;
 	}
-	
+
 
 	this.resizeBox = function(event) {
 
@@ -330,7 +330,7 @@ function nuCreateDrag(){
 				'left'						: this.startX + X,
 			});
 		}
-		
+
 		if(Y > 0) {
 			$('#nuSelectBox').css({
 				'height'					: Y
@@ -343,8 +343,8 @@ function nuCreateDrag(){
 		}
 
 	}
-	
-		
+
+
 
 	this.removeBox = function() {
 
@@ -440,7 +440,7 @@ function nuCreateDrag(){
 	this.createArea = function(l, t, w, h) {
 
 		var e = document.createElement('div');
-		
+
 		e.setAttribute('id', 'nuDragArea');
 
 		$('body').append(e);
@@ -466,5 +466,5 @@ function nuCreateDrag(){
 		$('#' + id).attr('data-x', 0);
 
 	}
-	
+
 }

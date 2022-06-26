@@ -7,13 +7,13 @@
 	$sql			= "SELECT * FROM zzzzsys_session WHERE zzzzsys_session_id = ?";
 	$obj			= nuRunQuery($sql, $values);
 	$result			= db_num_rows($obj);
-	
+
 	if($_SESSION['nubuilder_session_data']['IS_DEMO']){
 		echo('Not available in the Demo');
 		$page   = pmaBad();
-		return;	
+		return;
 	}
-		
+
 	if ( $result == 1 ) {
 
 		$recordObj		= db_fetch_object($obj);
@@ -26,7 +26,7 @@
 		} else {
 			$page	= pmaBad();
 		}
-		
+
 	} else {
 			$page   = pmaBad();
 	}
@@ -52,6 +52,6 @@ function pmaBad() {
 	setcookie("nupmalogin",			"bad");
 
 	return $page;
-}	
+}
 
 ?>

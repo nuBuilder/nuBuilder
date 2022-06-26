@@ -12,11 +12,11 @@ class nuResponseForm {
 		$('body').css('transform', 'scale(1)');
 
 		for (var i = 0 ; i < SR.objects.length ; i++){
-			
+
 			var sp			= this.setStartPosition(SR.objects[i]);
 
 			this.StartPositions.push(sp);
-			
+
 		}
 
 		this.getLongestLabel(this.StartPositions);
@@ -36,12 +36,12 @@ class nuResponseForm {
 		var d		= $('#' + id + 'description');
 
 		if(O.input == 'file'){
-			
+
 			id		= id + '_file';
 			O.type	= 'file';
 
 		}
-		
+
 
 		var sp		= {
 			id			: id,
@@ -196,7 +196,7 @@ class nuResponseForm {
 		d.css({top:t, left:left + ll + O.cwidth + 26});
 
 		return t;
-		
+
 	}
 
 	resetDefault(){
@@ -225,14 +225,14 @@ class nuResponseForm {
 		$('.nuTabSelected').click();
 
 	}
-	
+
 
 
 	unsetSelect(){
 
 		$('#nuResponseTabs').remove()
 		$('.nuTab').show();
-		
+
 	}
 
 }
@@ -257,7 +257,7 @@ class nuFormObject {
 		return this.breadcrumbs[this.breadcrumbs.length - 1];
 
 	}
-	
+
 	removeLast(){
 
 		this.breadcrumbs.pop();
@@ -453,7 +453,7 @@ class nuFormObject {
 		}
 
 		return fld;
-	
+
 	}
 
 	selectFields(){									//-- from SELECT builder
@@ -518,7 +518,7 @@ class nuFormObject {
 		for (var key in nuFORM.formSchema) {
 
 			if (nuFORM.formSchema.hasOwnProperty(key)) {
-				forms.push(key) 
+				forms.push(key)
 			}
 
 		}
@@ -534,7 +534,7 @@ class nuFormObject {
 		for (var key in nuFORM.tableSchema) {
 
 			if (nuFORM.tableSchema.hasOwnProperty(key)) {
-				tables.push(key) 
+				tables.push(key)
 			}
 
 		}
@@ -587,7 +587,7 @@ class nuFormObject {
 
 			var SF			= d[i];
 			if(SF.id == subform_name){												//-- i've got the right subform
-				var fmt		= $("[id$='" + field_name + "']input[id^='" + subform_name + "']").attr('data-nu-format')			
+				var fmt		= $("[id$='" + field_name + "']input[id^='" + subform_name + "']").attr('data-nu-format')
 				var f		= SF.fields.indexOf(field_name);						//-- check for valid field(column)
 				if(f == -1){return 0;}
 				for(var c = 0 ; c < SF.rows.length ; c++){
@@ -606,7 +606,7 @@ class nuFormObject {
 		}
 
 		return 0;
-	
+
 	}
 
 	data(action = 'save'){
@@ -629,7 +629,7 @@ class nuFormObject {
 		return d;
 
 	}
-	
+
 	subforms(){
 
 		var s	= [''];
@@ -741,7 +741,7 @@ class nuFormObject {
 
 		var titles				= [];
 
-		
+
 		for(var f = 0 ; f < o.fields.length - 1 ; f++){
 
 			var c				= [];
@@ -809,7 +809,7 @@ class nuFormObject {
 			}
 
 		}
-		
+
 		return o;
 
 	}
@@ -897,7 +897,7 @@ class nuFormObject {
 			if(isNaN(Number(v))){return '';}
 			var splitNumber		= v.split('.');
 			var decimals = splitNumber.length == 1 ? '' : splitNumber[1];
-			return String(CF[0] + ' ' + nuAddThousandSpaces(splitNumber[0], CF[1]) + CF[2] + decimals).trim();		
+			return String(CF[0] + ' ' + nuAddThousandSpaces(splitNumber[0], CF[1]) + CF[2] + decimals).trim();
 
 		}
 
@@ -1093,7 +1093,7 @@ function nuNumberFormat(f){
 	}
 
 	return o;
-	
+
 }
 
 function nuGetNumberFormat(f){

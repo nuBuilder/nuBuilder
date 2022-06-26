@@ -15,14 +15,14 @@ if (!isset($acc)) {
 
 $qry = "
 	SELECT
-		 zzzzsys_php.sph_php AS sph_php    
-	FROM zzzzsys_access 
+		 zzzzsys_php.sph_php AS sph_php
+	FROM zzzzsys_access
 	JOIN zzzzsys_access_php ON zzzzsys_access_id = slp_zzzzsys_access_id
-	JOIN zzzzsys_php ON zzzzsys_php_id = slp_zzzzsys_php_id	
+	JOIN zzzzsys_php ON zzzzsys_php_id = slp_zzzzsys_php_id
 	LEFT JOIN zzzzsys_user ON zzzzsys_user.sus_zzzzsys_access_id = zzzzsys_access.zzzzsys_access_id
-	WHERE  
+	WHERE
 		zzzzsys_user_id is NULL AND
-		zzzzsys_php.sph_code = ? AND 
+		zzzzsys_php.sph_code = ? AND
 		zzzzsys_access.sal_code = ?
 ";
 

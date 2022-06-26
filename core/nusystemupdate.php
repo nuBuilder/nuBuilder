@@ -4,7 +4,7 @@ require_once ('nuchoosesetup.php');
 require_once ('nucommon.php');
 require_once ('nudata.php');
 require_once ('nusystemupdatelibs.php');
-require_once('nusetuplibs.php'); 
+require_once('nusetuplibs.php');
 
 $config = nuConfigScript();
 eval($config['code']);

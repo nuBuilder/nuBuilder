@@ -21,14 +21,14 @@ function nuGetJS_login($nuBrowseFunction, $target, $welcome, $formId, $recordId,
 		nuBindCtrlEvents();
 		window.nuDefaultBrowseFunction	= '$nuBrowseFunction';
 		window.nuBrowseFunction			= '$nuBrowseFunction';
-		window.nuTARGET					= '$target';	
+		window.nuTARGET					= '$target';
 		";
 
 	$h3 = "";
 
 	if ($isSession) {
 		$h3 = "nuForm('$formId','$recordId','','','','');";
-	} else {	
+	} else {
 		$h3 = "
 			var welcome					= `$welcome`;
 			nuLogin(welcome);
@@ -52,7 +52,7 @@ function nuUseUP($nuBrowseFunction, $target, $welcome, $u, $p) {
 		var welcome						= `$welcome`;
 		nuLoginRequest('$u', '$p');
 	}";
-	
+
 	return $h2;
 }
 
@@ -79,7 +79,7 @@ function nuGetJS_action_screen($nuBrowseFunction, $target, $welcome, $opener, $s
 		} else {
 			var p			= from.nuOPENER[from.nuOPENER.length -1];
 			nuRemoveOpenerById(from.nuOPENER, from.nuOPENER[from.nuOPENER.length -1]);
-				
+
 		}
 		nuBindCtrlEvents();
 
@@ -93,11 +93,11 @@ function nuGetJS_action_screen($nuBrowseFunction, $target, $welcome, $opener, $s
 			nuForm(p.form_id, p.record_id, p.filter, '$search', 0, '$like');
 		}
 		if(p.record_id == '-2'){
-			nuBindDragEvents();		
+			nuBindDragEvents();
 		}
 	}";
-	
+
 	return $h2;
-} 
+}
 
 ?>

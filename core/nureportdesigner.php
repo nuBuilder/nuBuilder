@@ -6,9 +6,9 @@
 <head>
 <?php
 
-require_once('nucommon.php');	
+require_once('nucommon.php');
 
-$jquery = "libs/jquery/jquery.js"; 
+$jquery = "libs/jquery/jquery.js";
 
 nuJSInclude($jquery);
 nuJSInclude('nuformclass.js');
@@ -52,21 +52,21 @@ print $h;
 
 
 $(document).ready(function() {
-	
+
 	if(window.opener){
-		
+
 		if(String(window.opener.document.getElementById('sre_layout').value) == '') {
 			window.nuREPORT = window.nuREPORTdefault;
 		}else{
 			window.nuREPORT = $.parseJSON(window.opener.sre_layout.value);
 		}
-		
+
 	}else{
 		window.nuREPORT 	= window.nuREPORTdefault;
 	}
-	 
+
 	nuLoadReport();
-	
+
 });
 
 function nuStringify(){
@@ -76,7 +76,7 @@ function nuStringify(){
 		window.opener.$('#sre_layout')
 		.val(JSON.stringify(window.nuREPORT))
 		.change();
-		
+
 		alert('Copied to Report Successfully..');
 
 		window.close();
@@ -84,7 +84,7 @@ function nuStringify(){
 	}else{
 
 		alert('Cannot be saved to Report Form');
-		
+
 	}
 }
 

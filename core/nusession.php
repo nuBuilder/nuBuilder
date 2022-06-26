@@ -44,7 +44,7 @@ if ( nuCheckIsLoginRequest() ) {
 } else {
 
 	nuCheckExistingSession();
-} 
+}
 
 
 if ( $_SESSION['nubuilder_session_data']['SESSION_ID'] == 'tempanonreport' ) {

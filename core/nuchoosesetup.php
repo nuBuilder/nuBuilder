@@ -21,30 +21,30 @@
 
 function nuIsHTTPS() {
 
-	$isHttps = 
+	$isHttps =
 		$_SERVER['HTTPS']
 		?? $_SERVER['REQUEST_SCHEME']
 		?? $_SERVER['HTTP_X_FORWARDED_PROTO']
 		?? null
 	;
 
-	$isHttps = 
+	$isHttps =
 		$isHttps && (
 			strcasecmp('on', $isHttps) == 0
 			|| strcasecmp('https', $isHttps) == 0
 		)
-	;	
+	;
 
 }
 
 function nuLoadNewSession() {
 
-	global 
-		$nuConfigDBDriver, $nuConfigDBPort, $nuConfigDBHost, $nuConfigDBName, $nuConfigDBUser, $nuConfigDBPassword, 
-		$nuConfigDBGlobeadminUsername, $nuConfigDBGlobeadminPassword, $nuConfigDBGlobeadminUsers, 
-		$nuConfigDemoDBGlobeadminUsername, $nuConfigDemoDBGlobeadminPassword, $nuConfigDemoSavingAllowedIds, 
-		$nuConfig2FAAdmin, $nuConfig2FAUser, $nuConfig2FAFormID, $nuConfig2FATokenValidityTime, $nuConfig2FAShowRememberMe, 
-		$nuConfigUserAdditional1Label, $nuConfigUserAdditional2Label, $nuConfigUserCodeLabel, 
+	global
+		$nuConfigDBDriver, $nuConfigDBPort, $nuConfigDBHost, $nuConfigDBName, $nuConfigDBUser, $nuConfigDBPassword,
+		$nuConfigDBGlobeadminUsername, $nuConfigDBGlobeadminPassword, $nuConfigDBGlobeadminUsers,
+		$nuConfigDemoDBGlobeadminUsername, $nuConfigDemoDBGlobeadminPassword, $nuConfigDemoSavingAllowedIds,
+		$nuConfig2FAAdmin, $nuConfig2FAUser, $nuConfig2FAFormID, $nuConfig2FATokenValidityTime, $nuConfig2FAShowRememberMe,
+		$nuConfigUserAdditional1Label, $nuConfigUserAdditional2Label, $nuConfigUserCodeLabel,
 		$nuConfigIsDemo, $nuConfigDBOptions, $nuUseMd5PasswordHash;
 
 	$nubuilder_session_data = new nubuilder_session_data();

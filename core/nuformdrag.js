@@ -48,11 +48,11 @@ function nuBindDragEvents(){
 		if(draggable) {
 
 			let id = e.target.id;
-			
+
 			if (id === '') return;
 
 			isCb = $('#'+ id).hasClass('nuContentBoxFrame');
-			
+
 			if(e.target === document.body || isCb || e.target === $('#nuRECORD')[0]) {
 
 				if(!(nuIsMacintosh() ? e.metaKey : e.ctrlKey)) {
@@ -60,7 +60,7 @@ function nuBindDragEvents(){
 				}
 
 				nuCreateBox(e);
-				
+
 			} else {
 
 				if(!(nuIsMacintosh() ? e.metaKey : e.ctrlKey) && !$('#'+ id).hasClass('nuDragSelected')) {
@@ -112,7 +112,7 @@ function nuBindDragEvents(){
 			return;
 
 		}
-	
+
 		var keyDirection = '';
 
 		if(e.keyCode == 37){
@@ -131,7 +131,7 @@ function nuBindDragEvents(){
 
 				var prop	= '';
 				var val	= '';
-				
+
 				var t = $(this);
 				var tLabel = $('#label_' + t.attr('id'));
 				var cb = $('#frame_' + t.attr('id'));
@@ -262,7 +262,7 @@ function nuCreateBox(event){
 
 }
 
-function nuDragBox(event) {	
+function nuDragBox(event) {
 
 	window.lastMoveX	= window.moveX;
 	window.lastMoveY	= window.moveY;
@@ -273,7 +273,7 @@ function nuDragBox(event) {
 		nuResizeDrag(event);
 	} else {
 
-		if($('#nuSelectBox').length == 0 && nuCanMove()){ 
+		if($('#nuSelectBox').length == 0 && nuCanMove()){
 			nuMoveSelected();
 		}
 
@@ -284,7 +284,7 @@ function nuDragBox(event) {
 function nuResizeDrag(event) {
 
 	var selectBox = $('#nuSelectBox');
-	
+
 	var x = parseInt(selectBox.css('left'));
 	var y = parseInt(selectBox.css('top'));
 	var w = parseInt(selectBox.css('width'));
@@ -388,7 +388,7 @@ function nuRemoveBox(ctrlKey) {
 		}
 
 	});
-	
+
 }
 
 function nuInitialiseDragState(){
@@ -604,7 +604,7 @@ function nuCreateDragOptionsBox(form){
 	$('#nuBreadcrumbHolder').remove();
 
 	nuInitialiseDragState();
-	
+
 	let tabSelected = $('.nuTabSelected');
 	let t = tabSelected.length > 0 ? tabSelected.attr('id').replace('nuTab','') : 0;
 	nuPopulateFieldsList(t);
@@ -662,7 +662,7 @@ function nuToggleDragLabels() {
 
 	$('.nuDragLabel',$('#nuDragDialog iframe').contents()).each(function(){
 		let obj = $(this);
-		if (obj.css('visibility') ==='visible'){			
+		if (obj.css('visibility') ==='visible'){
 			obj.css('visibility', 'hidden')
 		} else {
 			obj.css('visibility', 'visible')
@@ -674,7 +674,7 @@ function nuToggleDragLabels() {
 		if (obj.is("[data-drag-value-visible]")) {
 			obj.text(this.id);
 			obj.removeAttr('data-drag-value-visible');
-		} else {		
+		} else {
 			obj.text(obj.attr('data-drag-button-label'));
 			obj.attr('data-drag-value-visible','');
 		}
@@ -715,7 +715,7 @@ function nuAddContentBoxFrames() {
 		'height': '16'
 	});
 
-}	
+}
 
 function nuDragSelected() {
 	return $('div.nuDragSelected',$('#nuDragDialog iframe').contents());
@@ -747,7 +747,7 @@ function nuResizeToLowest(){
 	});
 
 	selected.each(function(){
-		
+
 		var cb = nuThisContentBox(this);
 		if (cb.length == 0) {
 			$(this).css('height',lowest+'px');
@@ -796,7 +796,7 @@ function nuResizeToHighest(){
 
 	});
 
-	selected.each(function(){	
+	selected.each(function(){
 		var cb = nuThisContentBox(this);
 		if (cb.length == 0) {
 			$(this).css('height',highest+'px');
@@ -823,7 +823,7 @@ function nuResizeToWidest(){
 	selected.each(function(){
 		$(this).css('width',widest+'px');
 		var cb = nuThisContentBox(this);
-		if (cb.length == 1) cb.css('width',widest +'px');			
+		if (cb.length == 1) cb.css('width',widest +'px');
 	});
 
 }
@@ -895,7 +895,7 @@ function nuSpaceHorizontally(){
 function nuSpaceVertically(){
 
 	if (!nuSpacingNotSupported()) return;
-	
+
 	var selectedFields	= [];
 
 	$('div.nuDragSelected',$('#nuDragDialog iframe').contents()).each(function(){
@@ -996,7 +996,7 @@ function nuAlignLeft(){
 
 		if (cb.length == 1) {
 			cb.css('left',leftestPoint +'px');
-		}	
+		}
 	});
 
 }
@@ -1038,7 +1038,7 @@ function nuAlignBottom(){
 	var lowestPoint			= 0;
 
 	var selected	= nuDragSelected();
-	
+
 	selected.each(function(){
 
 		if($(this).position().top + $(this).height() > lowestPoint){
@@ -1053,7 +1053,7 @@ function nuAlignBottom(){
 	});
 
 	selected.each(function(){
-		
+
 		var cb = nuThisContentBox(this);
 		if (cb.length == 0) {
 			$(this).css('top',(lowestPoint-$(this).height())+'px');
@@ -1061,9 +1061,9 @@ function nuAlignBottom(){
 			$(this).css('top',(lowestPoint-cb.height()-18)+'px');
 			cb.css('top', $(this).cssNumber('top')+ 18 + 'px');
 		}
-		
+
 		var tLabel = nuThisLabel(this);
-		if (tLabel.length == 1) tLabel.css('top',lowestPoint - $(this).height() +'px');		
+		if (tLabel.length == 1) tLabel.css('top',lowestPoint - $(this).height() +'px');
 
 	});
 }
@@ -1139,7 +1139,7 @@ function nuAbortSaveDrag(){
 
 	 $("#overlay").remove();
 
-} 
+}
 
 function nuPutFieldDimensionsIntoState(){
 
@@ -1334,11 +1334,11 @@ function nuMoveSelected() {
 			cb.css('left', l);
 			cb.css('top', t + 18);
 		}
-		
+
 		var tLabel = $('#label_' + $(s[i]).attr('id'));
 		if (tLabel.length !== 0) {
 			tLabel.css('left', l-tLabel.cssNumber('width')-5);
-			tLabel.css('top', t);			
+			tLabel.css('top', t);
 		}
 
 	}
@@ -1386,7 +1386,7 @@ function nuGetTopArea() {
 		var nuBreadcrumbHolder	= 0;
 	}
 
-	return nuActionHolder + nuBreadcrumbHolder + nuTabHolder + dialogTitle;	
+	return nuActionHolder + nuBreadcrumbHolder + nuTabHolder + dialogTitle;
 
 }
 
@@ -1423,8 +1423,8 @@ function nuDragElement(element, dragHeaderOffset) {
 		}
 
 		e.preventDefault();
-		// mouse cursor position at start 
-		
+		// mouse cursor position at start
+
 		if (e.clientX) {  // mousemove
 			startX = e.clientX;
 			startY = e.clientY;
@@ -1454,14 +1454,14 @@ function nuDragElement(element, dragHeaderOffset) {
 			startX = e.touches[0].clientX;
 			startY = e.touches[0].clientY;
 		}
-		
+
 		// set the new position
 		element.style.left = (element.offsetLeft - endX) + "px";
 		element.style.top = (element.offsetTop - endY) + "px";
 	}
 
 	function dragStop() {
-		// stop moving on touch end / mouse btn is released 
+		// stop moving on touch end / mouse btn is released
 		document.onmouseup = null;
 		document.onmousemove = null;
 		document.ontouchend = null;

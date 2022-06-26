@@ -1,8 +1,8 @@
-<?php 
+<?php
 
 require_once('nuchoosesetup.php');
-require_once('nucommon.php'); 
-require_once('nudata.php'); 
+require_once('nucommon.php');
+require_once('nudata.php');
 
 print "<meta charset='utf-8'>";
 
@@ -68,7 +68,7 @@ while($r = db_fetch_array($t)){
 	$h	.= "\n<TR>\n";
 
 	for($col = 0 ; $col < count($c) ; $col++){
-		
+
 		if(!($c[$col]->width == 0 && $includeHiddenColumns != true)) {
 			$v = $c[$col]->display == 'null' || $c[$col]->display == '""' ? '' : $r[$c[$col]->display];
 			$st	= $class[$col];

@@ -1,28 +1,28 @@
 //-- object for dragging sections --//
 
 function nuLoadReport(b){
-	
+
 	window.addEventListener("keydown", function(e) {
 
 		if([38, 40].indexOf(e.keyCode) > -1) {					// space and arrow keys
 			e.preventDefault();
 		}
-		
+
 	}, false);
 
 	if($('#nuDragDialog').length == 0){
-		
+
 		nuDIALOG.dialog = '';
 		nuDIALOG.dialogX = 0;
 		nuDIALOG.dialogY = 0;
-		
+
 	}else{
-		
+
 		nuDIALOG.dialogX = parseInt($('#nuDragDialog').css('left'));
 		nuDIALOG.dialogY = parseInt($('#nuDragDialog').css('top'));
-		
+
 	}
-	
+
 	$('body').children().remove();
 
 	window.nuDrag	= new nuCreateDrag();
@@ -32,19 +32,19 @@ function nuLoadReport(b){
 	if(nuDragID == 1000){
 		nuDragR.setIds();
 	}
-	
+
 	$('body').off('keydown');
 	$('body').off('keyup');
 	$('body').off('mousedown');
 	$('body').off('mouseup');
 	$('body').off('mousemove');
-	
+
 	$('body').on('mousedown.nudrag',	function(event){nuDrag.down(event);});
 	$('body').on('keydown.nudrag',		function(event){nuDrag.move(event);});
 	$('body').on('keyup.nudrag',		function(event){nuDrag.up(event);});
 	$('body').on('mouseup.nudrag',		function(event){nuDrag.up(event);});
 	$('body').on('mousemove.nudrag',	function(event){nuDrag.move(event);});
-	
+
 	$('body').on('mousedown.nureport',	function(event){nuDragR.down(event);});
 	$('body').on('keydown.nureport',	function(event){nuDragR.move(event);});
 	$('body').on('keyup.nureport',		function(event){nuDragR.up(event);});
@@ -52,32 +52,32 @@ function nuLoadReport(b){
 	$('body').on('mousemove.nureport',	function(event){nuDragR.move(event);});
 
 	if(arguments.length == 0){
-		
+
 		var r 		= JSON.stringify(nuREPORT);
 		nuBACKUP.push(JSON.parse(r));
-		
+
 	}
-	
+
 	nuDrag.createArea(150, 50, nuREPORT.width * 4, 600);
 	nuDrag.isReport = true;
 	nuDragR.createSectionHolder();
 	nuDrag.setSelected();
-	nuSetTools();	
+	nuSetTools();
 	nuSetDialog();
-	
+
 }
 
 function nuSetnuScroll(l){
 
 	var flds = ['#fieldName', "[id^='sortField']"]
-	
+
 	for(var i = 0 ; i < flds.length ; i++){
 
 		$( flds[i] )
 		.addClass('nuScroll')
 		.keydown(function() {
 			nuFORM.scrollList(event, l);
-		});	
+		});
 
 	}
 
@@ -97,108 +97,108 @@ function nuDragReport(){
 	this.sectionTop	= 0;
 	this.dragging	= false;
 
-	
+
 	this.getObject = function(id) {
 
 		for(var g = 0 ; g < nuREPORT.groups.length ; g++){
-			
+
 			for(var s = 0 ; s < nuREPORT.groups[g].sections.length ; s++){
-				
+
 				for(var o = 0 ; o < nuREPORT.groups[g].sections[s].objects.length ; o++){
-					
+
 					if(nuREPORT.groups[g].sections[s].objects[o].id == id){return nuREPORT.groups[g].sections[s].objects[o];}
-					
+
 				}
-			
+
 			}
-			
+
 		}
-			
+
 	}
 
-	
+
 	this.getGroupAndSection = function(id) {
 
 		for(var g = 0 ; g < nuREPORT.groups.length ; g++){
-			
+
 			for(var s = 0 ; s < nuREPORT.groups[g].sections.length ; s++){
-				
+
 				for(var o = 0 ; o < nuREPORT.groups[g].sections[s].objects.length ; o++){
-					
+
 					if(nuREPORT.groups[g].sections[s].objects[o].id == id){return [g,s];}
-					
+
 				}
-			
+
 			}
-			
+
 		}
-			
+
 	}
 
 
 	this.setObject = function(O) {
 
 		for(var g = 0 ; g < nuREPORT.groups.length ; g++){
-			
+
 			for(var s = 0 ; s < nuREPORT.groups[g].sections.length ; s++){
-				
+
 				for(var o = 0 ; o < nuREPORT.groups[g].sections[s].objects.length ; o++){
-					
-					
+
+
 					if(nuREPORT.groups[g].sections[s].objects[o].id == O.id){
-						
+
 						nuREPORT.groups[g].sections[s].objects.splice(o, 1);
 						nuREPORT.groups[g].sections[s].objects.push(O);
-						
+
 						return;
-						
+
 					}
 				}
 			}
 		}
-			
+
 	}
 
 	this.addObject = function(g, s, O) {
 
 		nuREPORT.groups[g].sections[s].objects.push(O);
-		
+
 	}
 
 	this.removeObject = function(i) {
-		
+
 		for(var g = 0 ; g < nuREPORT.groups.length ; g++){
-			
+
 			for(var s = 0 ; s < nuREPORT.groups[g].sections.length ; s++){
-				
+
 				for(var o = 0 ; o < nuREPORT.groups[g].sections[s].objects.length ; o++){
-					
+
 					if(nuREPORT.groups[g].sections[s].objects[o].id == i){
-						
+
 						nuREPORT.groups[g].sections[s].objects.splice(o, 1);
 						return;
-						
+
 					}
 				}
 			}
 		}
 	}
 
-	
+
 
 	this.setIds = function() {
 
 		for(var g = 0 ; g < nuREPORT.groups.length ; g++){
-			
+
 			for(var s = 0 ; s < nuREPORT.groups[g].sections.length ; s++){
-				
+
 				for(var o = 0 ; o < nuREPORT.groups[g].sections[s].objects.length ; o++){
-					
+
 					var i = this.newId();
-					
+
 					nuREPORT.groups[g].sections[s].objects[o].id	= i;
 					nuREPORT.groups[g].sections[s].objects[o].name	= i;
-					
+
 				}
 			}
 		}
@@ -215,25 +215,25 @@ function nuDragReport(){
 	this.createSectionHolder = function() {
 
 		this.height = 0;
-		
+
 		var e = document.createElement('div');
 
 		e.setAttribute('id', 'nuSectionHolder');
 
 		$('body').append(e);
-		
+
 		$('#nuSectionHolder').css({'position':'absolute', 'left':10, 'top':0, 'width':nuDrag.areaWidth(), 'top':nuDrag.areaTop(), 'background-color':'yellow', 'border-width':1,'border-style':'solid none none solid'});
 
 		for(i = 1 ; i < this.groups.length ; i++){
 			this.createSection(i, 0);
 		}
-		
+
 		this.createSection(0, 0);
-			
+
 		for(i = this.groups.length - 1 ; i > 0 ; i--){
 			this.createSection(i, 1);
 		}
-		
+
 		nuDrag.areaHeight(this.height);
 		nuDragR.areaHeight(this.height);
 
@@ -250,12 +250,12 @@ function nuDragReport(){
 		return parseInt($('#nuSectionHolder').css('height'));
 
 	}
-	
+
 	this.createSection = function(g, s) {
-		
+
 		var i	= this.groups[g][s];
 		var S	= nuREPORT.groups[g].sections[s]
-		
+
 		var v	= S.height == 0 ? 'hidden'		: 'visible';
 		var b	= S.height == 0 ? 'none'		: 'none none solid none';
 		var w	= S.height == 0 ? 0				: 1;
@@ -289,35 +289,35 @@ function nuDragReport(){
 		$('#nuSection' + i).css({'position':'absolute', 'top': this.sectionTop, 'width':nuDrag.areaWidth(), 'height':S.height - 3, 'background-color':S.color, 'border-style':b, 'visibility':v});
 		$('#nuSection' + i).attr({'data-group': g, 'data-section':s, 'data-order':i});
 		$('#nuSection' + i).addClass('nuSection nuDragArea nuRight');
-		
+
 		for(var I = 0 ; I < S.objects.length ; I++){
 
 			this.createObject(this.sectionTop, S.objects[I], i);
-			
+
 		}
 
 		this.sectionTop = this.sectionTop + S.height;
 
 	}
-	
+
 	this.createObject = function(t, o, i) {
 
 		var w = {B:'bold', N:'normal', I:'italic'};
 		var id = o.id;
 		var e = document.createElement('div');
-		
+
 		e.setAttribute('id', id);
 
 		$('#nuDragArea').append(e);
 
 		$('#' + id).css({
-						'position':'absolute', 
-						'left':Number(o.left), 
-						'top':Number(o.top) + Number(t), 
-						'width':o.width, 
-						'height':o.height, 
-						'background-color':o.backgroundColor, 
-						'z-index':o.zIndex, 
+						'position':'absolute',
+						'left':Number(o.left),
+						'top':Number(o.top) + Number(t),
+						'width':o.width,
+						'height':o.height,
+						'background-color':o.backgroundColor,
+						'z-index':o.zIndex,
 						'border-color':o.borderColor,
 						'border-width':o.borderWidth,
 						'border-style':'solid',
@@ -327,11 +327,11 @@ function nuDragReport(){
 						'font-size':o.fontSize + 'px',
 						'color':o.fontColor
 						});
-						
+
 		$('#' + id).addClass('nuDragObject');
 		$('#' + id).html(o.fieldName);
 		$('#' + id).attr('data-order', i);
-		
+
 	}
 
 	this.adjustObjectsForMovedSection = function(event) {
@@ -339,7 +339,7 @@ function nuDragReport(){
 			var m = event.clientY - this.moveFrom;
 			var g = $(this.beingMoved).attr('data-group');
 			var s = $(this.beingMoved).attr('data-section');
-			
+
 			this.resizeSection(g, s, m);
 
 			nuLoadReport();
@@ -355,21 +355,21 @@ function nuDragReport(){
 		var min = 30;
 		var grp = 0;
 		var sec = 0;
-		
+
 		var o,S,g,s,T;
-		
-		
+
+
 		for(var i = 0 ; i < sel.length ; i ++){
-			
+
 			min 	= Math.min(min, this.sectionOfObject(sel[i].id));
-			
+
 		}
-		
+
 		grp			= $('#nuSection'+min).attr('data-group');
 		sec			= $('#nuSection'+min).attr('data-section');
-		
+
 		for(var i = 0 ; i < sel.length ; i ++){
-			
+
 			o			= this.getObject(sel[i].id);
 			S			= this.sectionOfObject(sel[i].id);
 			g			= $('#nuSection'+S).attr('data-group');
@@ -377,14 +377,14 @@ function nuDragReport(){
 			o.width	= nuRemovePX($('#' + o.id).css('width'));
 			o.height	= nuRemovePX($('#' + o.id).css('height'));
 			o.left		= nuRemovePX($('#' + o.id).css('left'));
-			
+
 			this.removeObject(o.id);
 
 			if(m){
 
 				T		= nuRemovePX($('#nuSection'+S).css('top'));
 				o.top	= nuRemovePX($('#' + o.id).css('top')) - T;
-				
+
 				$('#' + o.id).attr('data-order', S);
 				this.addObject(g, s, o);
 				this.resizeSection(g, s, 0);
@@ -398,11 +398,11 @@ function nuDragReport(){
 				this.resizeSection(grp, sec, 0);
 
 			}
-			
+
 		}
-		
+
 		nuLoadReport();
-		
+
 	}
 
 
@@ -413,15 +413,15 @@ function nuDragReport(){
 		var sel = document.getElementsByClassName('nuDragSelected');
 
 		for(var i = 0 ; i < sel.length ; i ++){
-			
+
 			var o = this.getObject(sel[i].id);
 			o[p] = v;
 			this.setObject(o)
-			
+
 		}
-		
+
 		nuLoadReport();
-		
+
 	}
 
 
@@ -433,7 +433,7 @@ function nuDragReport(){
 		var m = Math.max(c, l - h);
 
 		nuREPORT.groups[g].sections[s].height = h + m + 3;
-		
+
 	}
 
 
@@ -445,17 +445,17 @@ function nuDragReport(){
 		var t		= 0;
 		var h		= 0;
 		var b		= 0;
-		
+
 		a.each(function() {
-			
+
 			t = parseInt($( this ).css('top')) - T;
 			h = parseInt($( this ).css('height')) + (parseInt('0'+$( this ).css('border-width')) * 2);
 			b = Math.max(b, Number(t) + Number(h) + 1);
-			
+
 		});
 
 		return b;
-		
+
 	}
 
 
@@ -463,19 +463,19 @@ function nuDragReport(){
 	this.sectionOfObject = function(o) {
 
 		var t = parseInt($('#'+o).css('top'));
-		
+
 		for(i = 0 ; i < 21 ; i++){
-			
+
 			T = parseInt($('#nuSection'+i).css('top'));
-			
+
 			if(T > t){
 				return i-1;
 			}
-			
+
 		}
 
 		return 20;
-		
+
 	}
 
 
@@ -484,69 +484,69 @@ function nuDragReport(){
 	this.move = function(event) {
 
 		if($('#nuDragLine').length == 1){
-			
+
 			var s = document.getElementById('nuDragLine');
 			var o = s.style;
 
 			this.moveY = event.clientY - this.startY;
 			this.startY = event.clientY;
-			
+
 			var t = parseInt(o.top) + this.moveY;
-			
+
 			o.top = t + 'px';
 
 		}
-		
+
 		if((nuIsMacintosh() ? event.metaKey : event.ctrlKey) && event.keyCode == 90){
-			
+
 			nuUndo();
-			
+
 		}
-		
+
 		if(event.keyCode == 46){
 
 			if($('#nuDragDialog').length == 1){return;}
-			
+
 			var sel 			= document.getElementsByClassName('nuDragSelected');
-			
+
 			for(var i = 0 ; i < sel.length ; i ++){
-				
+
 				this.removeObject(sel[i].id);
 
 			}
-			
+
 			nuREPORT.selected 	= [];
-			
+
 			nuLoadReport();
-			
+
 		}
-		
+
 	}
 
 
 
 	this.inSection = function() {
-	
+
 		if($('#nuDragLine').length == 1){
-			
+
 			var s = document.getElementById('nuDragLine');
 			var o = s.style;
 
 			this.moveY	= event.clientY - this.startY;
 			this.startY	= event.clientY;
-			
+
 			var t = parseInt(o.top) + this.moveY;
-			
+
 			o.top	= t + 'px';
 
 		}
-		
+
 	}
 
 	this.down = function(event) {
 
 		var lc = window.nuLastClick[event.target.id];
-		
+
 		if(lc == undefined){
 			window.nuLastClick[event.target.id] = Date.now();
 		}else{
@@ -557,22 +557,22 @@ function nuDragReport(){
 				return;
 			}
 		}
-		
+
 
 		if(event.buttons == 1 && (String(event.target.className).split(' ')[1]) == 'nuDragSelected'){
-			
+
 			this.dragging	= true;
-			
+
 		}
-		
+
 		if(String(event.target.id).substr(0,10) == 'nuLeftMove'){
-			
+
 			this.beingMoved		= '#' + event.target.id;
 			this.moveFrom		= event.clientY;
 			this.startY			= event.clientY;
 			var e				= document.createElement('div');
 			var t				= $(this.beingMoved).offset().top
-			
+
 			$(this.beingMoved).css('background-color','red');
 
 			e.setAttribute('id', 'nuDragLine');
@@ -580,9 +580,9 @@ function nuDragReport(){
 			$('body').append(e);
 			$('#nuDragLine').css({'left':10, 'top':t, 'width':140 + nuDrag.areaWidth()});
 			$('#nuDragLine').addClass('nuDragLine');
-			
+
 		}
-		
+
 	}
 
 	this.up = function(event) {
@@ -590,18 +590,18 @@ function nuDragReport(){
 		if(event.target.id == 'nuSelectBox' && String($('#dialogTitleWords').html()).substr(12) == 'Object Properties'){
 			nuLoadReport();
 		}
-		
+
 		if($('#nuDragLine').length == 1){
-			
+
 			this.adjustObjectsForMovedSection(event);
-			
+
 		}
 
 		if(this.dragging){
-	
+
 			this.adjustSectionForMovedObjects(event);
 			this.dragging = false;
-			
+
 		}
 
 	}
@@ -611,19 +611,19 @@ function nuDragReport(){
 function nuSetDialog(){ //-- reopen Dialog at set to last position
 
 	if(nuDIALOG.dialog != ''){
-		
+
 		window[nuDIALOG.dialog]();
 		$('#nuDragDialog').css('left', nuDIALOG.dialogX);
 		$('#nuDragDialog').css('top', nuDIALOG.dialogY);
 		$('#' + nuREPORT.setFocus).focus();
-		
+
 	}
 
-	
+
 }
 
 function nuSetTools(){
-	
+
 		var e = document.createElement('div');
 		var h = '';
 		h = h + '<img id="nuItema" onclick="nuUndo()" src="graphics/nu_undo.png" title="Undo" style="position:absolute;top:5px;left:5px;height:15px;width:15px">';
@@ -635,59 +635,59 @@ function nuSetTools(){
 		h = h + '<div id="nuItem3" onclick="nuGroupDialog()" class="nuToolbar">' 		+ opener.nuTranslate('Group Properties') + '</div>';
 		h = h + '<div id="nuItem5" onclick="nuReportDialog()" class="nuToolbar">' 		+ opener.nuTranslate('Report Properties') + '</div>';
 		h = h + '<div id="nuItem6" onclick="nuStringify()" class="nuToolbar">' 			+ opener.nuTranslate('Copy Changes') + '</div>';
-		
+
 		e.setAttribute('id', 'nuToolBar');
 		$('body').prepend(e);
 
 		$('#nuToolBar').css({
-						'position'			: 'absolute', 
-						'left'				: 10, 
-						'top'				: 10, 
-						'width'				: 1200, 
-						'height'			: 25, 
-						'background-color'	: 'lightgrey', 
+						'position'			: 'absolute',
+						'left'				: 10,
+						'top'				: 10,
+						'width'				: 1200,
+						'height'			: 25,
+						'background-color'	: 'lightgrey',
 						'font-size'			: 16
 						});
 
 		$('#nuToolBar').html(h);
 		$('#nuToolBar').addClass('nuSection nuDragToolbar nuDragDialog');
 		moveToolbar();
-	
-	
+
+
 }
 
 function moveToolbar(){
-	
+
 		$('#nuToolBar').css('top', window.scrollY + 10);
-		
+
 }
 
 function nuNewObject(){
-	
+
 	nuREPORT.selected 	= [];
 	var o				= JSON.parse(JSON.stringify(nuOBJECT));
 	var i				= nuDragR.newId();
 	var l				= nuREPORT.groups[0].sections[0].objects.length;
-	
+
 	o.id				= i;
 	o.name 				= i;
-	
+
 	nuREPORT.groups[0].sections[0].objects[l] = o;
 	nuREPORT.selected.push(i);
 
 	nuLoadReport();
 
 }
-	
+
 
 function nuCloneObjects(){
 
 	nuREPORT.selected = [];
 
 	var sel = document.getElementsByClassName('nuDragSelected');
-	
+
 	for(var i = 0 ; i < sel.length ; i ++){
-		
+
 		var o		= nuDragR.getObject(sel[i].id);
 		var gs		= nuDragR.getGroupAndSection(sel[i].id);
 		var g		= gs[0];
@@ -699,29 +699,29 @@ function nuCloneObjects(){
 		j.id		= d;
 		j.name		= d;
 		j.left		= Number(j.left) + 2;
-		
+
 		nuREPORT.groups[g].sections[s].objects[l] = j;
 		nuREPORT.selected.push(d);
-		
+
 	}
-	
+
 	nuLoadReport();
-		
+
 }
-	
+
 
 function nuSelectDialog(){
 
 	nuDIALOG.dialog = 'nuSelectDialog';
 
 	nuDragD.createDialog(200, window.scrollY + 50, 700, 600, opener.nuTranslate('Select Objects'));
-	
+
 	var e			= document.createElement('select');
 	e.multiple		= 'multiple';
 	e.setAttribute('id', 'nuObjectList');
 
 	$('#nuDragDialog').append(e);
-	
+
 	$('#nuObjectList').css({
 		'width'			: '620px',
 		'height'		: '500px',
@@ -731,15 +731,15 @@ function nuSelectDialog(){
 		'font-family'	: 'Lucida Console',
 		'z-index'		: 5000
 	})
-	
+
 	.change(function() {
-		
+
 		$('.nuDragObject').removeClass('nuDragSelected');
-		
+
 		$("#nuObjectList > option:selected").each(function() {
-			
+
 			$('#' + this.value).addClass('nuDragSelected');
-			
+
 		});
 	});
 
@@ -748,34 +748,34 @@ function nuSelectDialog(){
 	var sel		= document.getElementsByClassName('nuDragObject');
 
 	for(var o = 0 ; o < sel.length ; o ++){
-			
+
 		a[a.length] = new nuOrderedSelectObjects(sel[o].id);
-			
+
 	}
-	
+
 	a.sort(nuSortObjects);
-	
+
 	for(var i = 0 ; i < a.length ; i ++){
-			
+
 		var o	= $('#' + a[i].id);
 		var sec	= $('#nuSectionLeft' + o.attr('data-order')).html();
 		var val	= o.html();
 		var sel	= o.hasClass('nuDragSelected') ? ' selected ' : '';
-		
+
 		$("#nuObjectList").append("<option "+ sel +" value='"+ a[i].id +"'>"+sec + " : " + a[i].id + " : " + val +"</option>") ;
-		
+
 	}
 
 	$('#nuDragDialog').css('visibility','visible');
 	$('#nuModal').remove();
-		
+
 
 }
 
 function nuAdjustDialog(){
 
 	nuDIALOG.dialog = 'nuAdjustDialog';
-	
+
 	nuDragD.createDialog(400, window.scrollY + 50, 400, 350, opener.nuTranslate('Adjust Selected Objects'));
 	nuAdjustButton(80, 10, 'nuMoverAlignLeftClick()', 		opener.nuTranslate('Align To Left'), 		opener.nuTranslate('Align All Selected Objects To Left'));
 	nuAdjustButton(80, 270, 'nuMoverAlignRightClick()', 	opener.nuTranslate('Align To Right'), 		opener.nuTranslate('Align All Selected Objects To Right'));
@@ -790,19 +790,19 @@ function nuAdjustDialog(){
 
 	$('#nuDragDialog').css('visibility','visible');
 	$('#nuModal').remove();
-	
+
 }
 
 function nuAdjustButton(top, left, funct, value, title){
 
 	var e = document.createElement('input');			//-- create button
-	
+
 	e.setAttribute('id', 'bt_' + String(title).split(' ').join('_'));
 	e.setAttribute('type', 'button');
 	e.setAttribute('value', value);
 	e.setAttribute('title', title);
 	e.setAttribute('onclick', funct );
-	
+
 	$('#nuDragDialog').append(e);
 	$('#' + e.id).addClass('nuButton');
 	$('#nuDrag').append(e);
@@ -819,115 +819,115 @@ function nuAdjustButton(top, left, funct, value, title){
 }
 
 function nuREPORTUpdate(p, v){
-	
+
 	var s = document.getElementsByClassName('nuDragSelected');
-	
+
 	for(var i = 0 ; i < s.length ; i ++){
-		
+
 	}
-	
+
 }
 
 function nuMoverAlignLeftClick(){
-	
+
 	var s = document.getElementsByClassName('nuDragSelected');
 	var l = 100000;
-	
+
 	for(var i = 0 ; i < s.length ; i ++){
-		
+
 		l = Math.min(l, parseInt(s[i].style.left));
 
 	}
-	
+
 	$('.nuDragSelected').css('left', l);
 	nuDragR.resetObjectProperties('left', l);
 
 }
 
 function nuMoverAlignRightClick(){
-	
+
 	var s 				= document.getElementsByClassName('nuDragSelected');
 	var r 				= 0;
 	nuDragR.dragging	= true;
 	var gs				= nuDragR.getGroupAndSection(s[0].id);
-	
+
 	for(var i = 0 ; i < s.length ; i ++){
-		
+
 		var o 			= nuDragR.getObject(s[i].id);
 		r				= Math.max(r, o.left + o.width - (o.borderWidth * 2));
-		
+
 	}
-	
+
 	for(var i = 0 ; i < s.length ; i ++){
-		
+
 		var o 			= nuDragR.getObject(s[i].id);
 		o.left			= r - o.width - (o.borderWidth * 2);
-		
+
 		nuDragR.setObject(o);
-		
+
 	}
-	
+
 	nuLoadReport();
 
 }
 
 function nuMoverAlignTopClick(){
-	
+
 	var s 				= document.getElementsByClassName('nuDragSelected');
 	var t 				= 100000;
 	nuDragR.dragging	= true;
 	var gs				= nuDragR.getGroupAndSection(s[0].id);
-	
+
 	for(var i = 0 ; i < s.length ; i ++){
-		
+
 		if(JSON.stringify(nuDragR.getGroupAndSection(s[i].id)) != JSON.stringify(gs)){
 			return;
 		}
-		
+
 		var o 			= nuDragR.getObject(s[i].id);
 		t				= Math.min(t, o.top);
-		
+
 	}
-	
+
 	for(var i = 0 ; i < s.length ; i ++){
-		
+
 		var o 			= nuDragR.getObject(s[i]);
 		s[i].top		= t;
-		
+
 		nuDragR.getObject(s[i]);
-		
+
 	}
-	
+
 	nuDragR.resetObjectProperties('top', t);
-	
+
 }
 function nuMoverAlignBottomClick(){
-	
+
 	var s 				= document.getElementsByClassName('nuDragSelected');
 	var b 				= 0;
 	nuDragR.dragging	= true;
 	var gs				= nuDragR.getGroupAndSection(s[0].id);
-	
+
 	for(var i = 0 ; i < s.length ; i ++){
-		
+
 		if(JSON.stringify(nuDragR.getGroupAndSection(s[i].id)) != JSON.stringify(gs)){
 			return;
 		}
-		
+
 		var o 			= nuDragR.getObject(s[i].id);
 		b				= Math.max(b, o.top + o.height - (o.borderWidth * 2));
-		
+
 	}
-	
+
 	for(var i = 0 ; i < s.length ; i ++){
-		
+
 		var o 			= nuDragR.getObject(s[i].id);
 		o.top			= b - o.height - (o.borderWidth * 2);
-		
+
 		nuDragR.setObject(o);
-		
+
 	}
-	
+
 	nuLoadReport();
 
 }
@@ -941,30 +941,30 @@ function nuMoverAdjustVerClick(){
 	var o = {};
 	var d = document.getElementsByClassName('nuDragSelected');
 	nuDragR.dragging	= true;
-	
+
 	for(var i = 0 ; i < d.length ; i ++){
-		
+
 		o	= new nuOrderedSelectObjects(d[i].id);
-		
+
 		t	= Math.min(t, Number(o.top));										//-- calculate highest top
 		b	= Math.max(b, Number(o.top) + Number(o.height));					//-- calculate lowest bottom
 		h	= h + Number(o.height);												//-- total height of objects
-		
+
 		a.push(o);
 
 	}
 
 	if(b-t < h){return;}
-	
+
 	var s = a.sort(function(A, B){return A.top - B.top;});
 	var newGap	= (b-t-h) / (a.length-1);
 	var newTop	= t;
-	
+
 	for(var i = 0 ; i < s.length - 1 ; i++) {									//-- reposition all Objects ordered by highest (except the last one)
 
 		$('#' + s[i].id).css('top', newTop);									//-- move object
 		newTop = newTop + newGap + Number(s[i].height);
-	
+
 	}
 
 }
@@ -977,111 +977,111 @@ function nuMoverAdjustHorClick(){
 	var o 				= {};
 	var d 				= document.getElementsByClassName('nuDragSelected');
 	nuDragR.dragging	= true;
-	
+
 	for(var i = 0 ; i < d.length ; i ++){
-		
+
 		o = new nuOrderedSelectObjects(d[i].id);
-		
+
 		l = Math.min(l, Number(o.left));										//-- calculate leftest left
 		b = Math.max(b, Number(o.left) + Number(o.width));					//-- calculate lowest bottom
 		w = w + Number(o.width);												//-- total width of objects
-		
+
 		a.push(o);
 
 	}
-	
+
 	if(b-l < w){return;}
-	
+
 	var s = a.sort(function(A, B){return A.left - B.left;});
 	var newGap	= (b-l-w) / (a.length-1);
 	var newLeft	= l;
-	
+
 	for(var i = 0 ; i < s.length - 1 ; i++) {									//-- reposition all Objects ordered by leftest (except the last one)
 
 		$('#' + s[i].id).css('left', newLeft);									//-- move object
 		newLeft = newLeft + newGap + Number(s[i].width);
-	
+
 	}
-	
+
 
 }
 
 function nuResizeWidestClick(){
-	
+
 	var s = document.getElementsByClassName('nuDragSelected');
 	var w = 0;
-	
+
 	for(var i = 0 ; i < s.length ; i ++){
-		
+
 		w = Math.max(w, parseInt(s[i].style.width));
 
 	}
-	
-	
+
+
 	for(var i = 0 ; i < s.length ; i ++){
-		
+
 		if(parseInt(s[i].style.left) + w < nuDrag.areaWidth()){
 			s[i].style.width = String(w) + 'px';
-			
+
 		}else{
 			s[i].style.width = (nuDrag.areaWidth() - parseInt(s[i].style.left)) + 'px';
 		}
 
 	}
-	
+
 	nuDragR.resetObjectProperties('width', w);
 	nuDragR.dragging	= true;
 
 }
 function nuResizeTallestClick(){
-	
+
 	var s = document.getElementsByClassName('nuDragSelected');
 	var h = 0;
-	
+
 	for(var i = 0 ; i < s.length ; i ++){
-		
+
 		h = Math.max(h, parseInt(s[i].style.height));
 
 	}
 
 	if(nuDrag.multipleSections()){return;}
-	
+
 	for(var i = 0 ; i < s.length ; i ++){
-		
+
 		s[i].style.height = String(h) + 'px';
 
 	}
-	
+
 	nuDragR.resetObjectProperties('height', h);
 	nuDragR.dragging	= true;
 
 }
 function nuResizeThinestClick(){
-	
+
 	var s = document.getElementsByClassName('nuDragSelected');
 	var w = 10000000;
-	
+
 	for(var i = 0 ; i < s.length ; i ++){
-		
+
 		w = Math.min(w, parseInt(s[i].style.width));
 
 	}
 
 	if(nuDrag.multipleSections()){return;}
-	
+
 	for(var i = 0 ; i < s.length ; i ++){
-		
+
 		s[i].style.width = String(w) + 'px';
 
 	}
-	
+
 	nuDragR.resetObjectProperties('width', w);
 	nuDragR.dragging	= true;
 
 }
 
 function nuResizeShortestClick(){
-	
+
 	var s = document.getElementsByClassName('nuDragSelected');
 	var h = 10000000;
 
@@ -1092,13 +1092,13 @@ function nuResizeShortestClick(){
 	}
 
 	if(nuDrag.multipleSections()){return;}
-	
+
 	for(var i = 0 ; i < s.length ; i ++){
 
 		s[i].style.height = String(h) + 'px';
 
 	}
-	
+
 	nuDragR.resetObjectProperties('height', h);
 	nuDragR.dragging	= true;
 
@@ -1108,16 +1108,16 @@ function nuSortObjects(a,b){
 	return ((a.order * 10000) + Number(a.top)) - ((b.order * 10000) + Number(b.top))
 
 }
-	
+
 function nuOrderedSelectObjects(i){
-	
+
 	this.id			= i;
 	this.order		= parseInt($('#' + i).attr('data-order'));
 	this.top		= parseInt($('#' + i).css('top'));
 	this.height		= parseInt($('#' + i).css('height'));
 	this.left		= parseInt($('#' + i).css('left'));
 	this.width		= parseInt($('#' + i).css('width'));
-	
+
 	return this;
 
 }
@@ -1125,17 +1125,17 @@ function nuOrderedSelectObjects(i){
 function nuObjectDialog(){
 
 	var S = document.getElementsByClassName('nuDragSelected');
-	
+
 	if(S.length == 0){return;}
-	
+
 	nuDIALOG.dialog = 'nuObjectDialog';
-	
+
 	nuDragD.createDialog(400, window.scrollY + 50, 450, 450, opener.nuTranslate('Object Properties'));
 
 	var D	= nuDragR.getObject(S[0].id);
 	var top	= 60;
 	var fun	= 'nuUpdateProperties';
-	
+
 	top = nuDialogInput('ID', 'id', top, 200, D, fun);
 	$('#id').attr('disabled', true);
 	top = nuDialogInput('Object Type', 'objectType', top, 200, D, fun, [['field','Field'],['label','Label'],['image','Image']]);
@@ -1158,23 +1158,23 @@ function nuObjectDialog(){
 	top = nuDialogInput('Minimum Rows', 'minRows', top, 200, D, fun);
 	top = nuDialogInput('Maximum Rows', 'maxRows', top, 200, D, fun);
 	top = nuDialogInput('Z Index', 'zIndex', top, 200, D, fun);
-	
+
 	nuBlankMultipleValues(S);
 	$('#nuDragDialog').css('height', top + 20);
 
-	
+
 	$("#deleteObject")
 	.css('position','absolute')
 	.css('top','7px')
 	.css('right','5px');
 
 	var t	= opener.nuTranslate('Field Name');
-	
+
 	if(D['objectType'] == 'image'){t	= 'Source';}
 	if(D['objectType'] == 'label'){t	= 'Title';}
 
 	$('#caption_fieldName330').html(t);
-/*	
+/*
 	if(D['objectType'] == 'image'){
 		nuSetnuScroll(window.nuImages);
 	}else{
@@ -1183,19 +1183,19 @@ function nuObjectDialog(){
 
 */
 
-	
+
 	if(D['objectType'] == 'image'){
 		nuSetnuScroll(window.nuImages);
 	}
-	
+
 	if(D['objectType'] == 'field'){
 		nuSetnuScroll(window.nuTT);
 	}
-	
+
 	if(D['objectType'] == 'label'){
 		nuSetnuScroll([["KEEP EXACT HEIGHT"]]);
 	}
-	
+
 
 	$('#nuDragDialog').css('visibility','visible');
 	$('#nuModal').remove();
@@ -1203,18 +1203,18 @@ function nuObjectDialog(){
 }
 
 function deleteSelectedObjects(){
-	
+
 	var sel 			= document.getElementsByClassName('nuDragSelected');
-			
+
 	for(var i = 0 ; i < sel.length ; i ++){
-		
+
 		window.nuDragR.removeObject(sel[i].id);
 
 	}
-	
+
 	nuREPORT.selected	= [];
 	nuLoadReport();
-	
+
 }
 
 function findWithAttr(array, attr, value) {
@@ -1226,24 +1226,24 @@ function findWithAttr(array, attr, value) {
 }
 
 function nuBlankMultipleValues(S){
-	
+
 	var f = nuDragR.getObject(S[0].id); //-- first Object
 	var k = Object.keys(f);
-	
+
 	for(var i = 0 ; i < k.length ; i ++){
-		
+
 		var v = f[k[i]];
-		
+
 		for(I = 1 ; I < S.length ; I++){
 
 			var o = nuDragR.getObject(S[I].id);
-			
+
 			if(f[k[i]] != o[k[i]]){$('#' + k[i]).val('');}
-			
+
 		}
-		
+
 	}
-	
+
 }
 
 function nuReportDialog(){
@@ -1253,15 +1253,15 @@ function nuReportDialog(){
 
 	var top = 60;
 	var fun = 'nuUpdateReport';
-	
+
 	nuDIALOG.dialog = 'nuReportDialog';
-	
+
 	top = nuDialogInput('Width', 'width', top, 180, nuREPORT, 'nuDoNothing');
 	top = nuDialogInput('Height', 'height', top, 180, nuREPORT, 'nuDoNothing');
 	top = nuDialogInput('Paper', 'paper', top, 180, nuREPORT, fun, [['A4','A4'],['A5','A5'],['Letter','Letter'],['Legal','Legal']]);
 	top = nuDialogInput('Orientation', 'orientation', top, 180, nuREPORT, fun, [['P','Portrait'],['L','Landscape']]);
 	top = nuDialogInput('Use HTML', 'ishtml', top, 180, nuREPORT, fun, [['Y','Yes'],['N','No']]);
-	
+
 	$('#width').attr('disabled', true);
 	$('#height').attr('disabled', true);
 
@@ -1274,7 +1274,7 @@ function nuReportDialog(){
 function nuGroupDialog(){
 
 	nuDIALOG.dialog = 'nuGroupDialog';
-	
+
 	nuDragD.createDialog(400, window.scrollY + 50, 650, 750, opener.nuTranslate('Group Properties'));
 
 
@@ -1338,7 +1338,7 @@ function nuGroupDialog(){
 	$('#page_break').attr({'id' : 'page_break0', 'data-property' : 'page_break', 'data-section' : '0'});
 
 	var top = 550;
-	
+
 	if(nuREPORT.groups[nuDIALOG.groupNumber].sections.length == 2){
 
 		top = nuDialogInput('Section Name', 'label', top, left, nuREPORT.groups[nuDIALOG.groupNumber].sections[1], 'nuDoNothing');
@@ -1351,16 +1351,16 @@ function nuGroupDialog(){
 		$('#page_break').attr({'id' : 'page_break0', 'data-property' : 'page_break', 'data-section' : '1'});
 
 	}
-	
+
 	nuMoveGroup();
-	
+
 	$('#nuDragDialog').css('height', top + 20);
 	$('#nuDragDialog').css('visibility','visible');
 
 	nuSetnuScroll(window.nuTT);
 
 	$('#nuModal').remove();
-	
+
 }
 function nuMoveGroup(){
 
@@ -1408,7 +1408,7 @@ function nuDialogInput(cap, id, top, left, val, fun, sel){
 	e.setAttribute('id', id);
 
 	$('#nuDragDialog').append(e);
-	
+
 	$('#' + e.id).css({
 					'position'		: 'absolute',
 					'left'			: left,
@@ -1421,55 +1421,55 @@ function nuDialogInput(cap, id, top, left, val, fun, sel){
 	$('#' + e.id).change(function(){
 		window[fun](this);
 	});
-		
+
 	if(arguments.length == 7){
 
 		for(var i = 0 ; i < sel.length ; i++){
-			
+
 			if(String(sel[i][0]).includes("'")){
 				$('#' + id).append('<option value="'+ sel[i][0] +'">' + sel[i][1] + "</option>") ;
 			}else{
 				$('#' + id).append("<option value='"+ sel[i][0] +"'>" + sel[i][1] + "</option>") ;
 			}
-			
+
 		}
-		
+
 	}
 
 	$('#' + e.id).val( val[id]);
-	
+
 	return top + 30;
 
 }
 
 function nuUpdateGroup(t){
-	
+
 		var g = $('#' + t.id).attr('data-group');
 		var G = nuREPORT.groups[g];
 		var s = nuREPORT.groups[g].sections.length
-		
+
 		G.groupBy						= $('#sortBy'		+ g).val();
 		G.sortField						= $('#sortField'	+ g).val();
-		
+
 		for(var i = 0 ; i < s.length ; i++){
 			G.sections[i].color			= $('#height' + i).val();
 			G.sections[i].height		= $('#color' + i).val();
 			G.sections[i].label			= 'Header ' + $('#label' + i).val();
 			G.sections[i].page_break	= $('#page_break' + i).val();
-			
+
 			if(g == 0){G.sections[i].label = 'Detail';}
 			if(g == 1 && s == 0){G.sections[i].label = $('#label' + i).val() + ' Header';}
 			if(s == 1){G.sections[i].label = $('#label' + i).val() + ' Footer';}
-			
+
 		}
-		
+
 	nuREPORT.setFocus = t.id;
-	
+
 	nuLoadReport();
 
-	
+
 }
-	
+
 function nuUpdateProperties(t){
 
 	var sel 		= document.getElementsByClassName('nuDragSelected');
@@ -1479,16 +1479,16 @@ function nuUpdateProperties(t){
 	for(var i = 0 ; i < sel.length ; i ++){
 
 		var o 		= nuDragR.getObject(sel[i].id);
-		
+
 		o[$(t).attr('id')] = $(t).val();
 		nuDragR.setObject(o);
-		
+
 	}
 
 	nuREPORT.setFocus = $(t).attr('id');
 
 	nuLoadReport();
-	
+
 }
 
 function nuDoNothing(t){
@@ -1501,7 +1501,7 @@ function nuUpdateReport(t){
 
 	var p		= $('#paper').val() + $('#orientation').val();
 	var a		= [];
-	
+
 	a['A4P']			= [['297'],['210']];
 	a['A5P']			= [['210'],['148']];
 	a['LetterP']		= [['279.4'],['215.9']];
@@ -1511,13 +1511,13 @@ function nuUpdateReport(t){
 	a['LetterL']		= [['215.9'],['279.4']];
 	a['LegalL']			= [['215.9'],['355.6']];
 
-	
+
 	nuREPORT[$(t).attr('id')] = $(t).val();
 	nuREPORT['height']	= Number(a[p][0][0]);
 	nuREPORT['width']	= Number(a[p][1][0]);
-	
+
 	nuREPORT.setFocus = $(t).attr('id');
-	
+
 	nuLoadReport();
 
 }
@@ -1525,21 +1525,21 @@ function nuUpdateReport(t){
 function nuUndo(){
 
 	if(nuBACKUP.length > 1){
-		
+
 		nuBACKUP.splice(nuBACKUP.length - 1, 1);
 		nuREPORT = nuBACKUP[nuBACKUP.length - 1]
-		
+
 		nuLoadReport(1);
-		
+
 	}
-	
+
 }
 
 
 function nuClickGroup(t){
-	
+
 	var g = $(t).attr('data-group');
-	
+
 	if(g > 0 && $('#sortField' + (g - 1)).val() == ''){
 		nuLoadReport(1);
 		return;
@@ -1556,7 +1556,7 @@ function nuClickGroup(t){
 	nuREPORT.setFocus = $(t).attr('id');
 
 	nuLoadReport(1);
-	
+
 }
 
 function nuUpdateSectionProperty(t){
@@ -1566,17 +1566,17 @@ function nuUpdateSectionProperty(t){
 	var p = $(t).attr('data-property');
 	var v = $(t).val();
 	var o = {};
-	
+
 	if(p == 'height'){
-		
+
 		v = Math.max(v, nuDragR.lowestSectionObject(g, s));
-		
+
 	}
-	
+
 	nuREPORT.groups[g].sections[s][p] = v;
-	
+
 	nuREPORT.setFocus = $(t).attr('id');
-	
+
 	nuLoadReport();
 
 }
@@ -1584,7 +1584,7 @@ function nuUpdateSectionProperty(t){
 
 
 function nuMoveReportGroup(ele, dir) {
-	
+
 	var groupNumber = Number(ele);
 	if(dir == 1) {
 		if(groupNumber >= 10 || nuREPORT.groups[groupNumber + 1].sortField == '') {
@@ -1607,7 +1607,7 @@ function nuMoveReportGroup(ele, dir) {
 			nuDIALOG.groupNumber = groupNumber - 1;
 		}
 	}
-	
+
 	nuLoadReport();
 
 }

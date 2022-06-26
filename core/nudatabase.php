@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 mb_internal_encoding('UTF-8');
 
@@ -44,10 +44,10 @@ function nuRunQueryNoDebug($s, $a = array(), $isInsert = false){
 	}catch(PDOException $ex){
 	}
 
-	if($isInsert){		
+	if($isInsert){
 		return $nuDB->lastInsertId();
-	}else{		
-		return $object;	
+	}else{
+		return $object;
 	}
 
 }
@@ -75,7 +75,7 @@ function nuRunQuery($s, $a = array(), $isInsert = false){
 	global $DBUser;
 	global $DBPassword;
 	global $nuDB;
-	global $DBCharset;	
+	global $DBCharset;
 
 	if($s == ''){
 		$a			= array();
@@ -107,11 +107,11 @@ function nuRunQuery($s, $a = array(), $isInsert = false){
 
 $user
 
-===PDO MESSAGE=== 
+===PDO MESSAGE===
 
 $message
 
-===SQL=========== 
+===SQL===========
 
 $s
 
@@ -164,7 +164,7 @@ function db_fetch_array($o){
 
 	if (is_object($o)) {
 		return $o->fetch(PDO::FETCH_ASSOC);
-	} else {		
+	} else {
 		return array();
 	}
 
@@ -174,7 +174,7 @@ function db_fetch_all_array($o){
 
 	if (is_object($o)) {
 		return $o->fetchAll(PDO::FETCH_ASSOC);
-	} else {		
+	} else {
 		return array();
 	}
 
@@ -262,7 +262,7 @@ function db_field_info($n){
 
 	return array($fields, $types, $pk);
 
-}	
+}
 
 function db_field_names($n){
 
@@ -301,11 +301,11 @@ function db_primary_key($n){
 	$t		= nuRunQuery($s);
 
 	while($r = db_fetch_row($t)){
-		
+
 		if($r[3] == 'PRI'){
 			$a[] = $r[0];
 		}
-		
+
 	}
 
 	return $a;
@@ -356,7 +356,7 @@ function nuDebugResult($msg){
 		"id"		=> $id,
 		"message"	=> $msg,
 		"added"		=> time(),
-		"user_id"	=> $u 
+		"user_id"	=> $u
 	);
 
 	nuRunQuery($s, $params);
@@ -378,7 +378,7 @@ function nuDebug($a){
 		$nuSystemEval			= $_POST['nuSystemEval'];
 	}
 	$nuProcedureEval			= '';
-	if ( isset($_POST['nuProcedureEval']) ) { 
+	if ( isset($_POST['nuProcedureEval']) ) {
 		$nuProcedureEval		= $_POST['nuProcedureEval'];
 	}
 
@@ -413,15 +413,15 @@ function nuLog($s1, $s2 = '', $s3 = '') {
 	$dataToLog = array(date("Y-m-d H:i:s"), $s1, $s2, $s3);
 
 	$data = implode(" - ", $dataToLog);
-	// $data = print_r($dataToLog, true); 
+	// $data = print_r($dataToLog, true);
 
 	$dir = dirname(__DIR__, 1) . DIRECTORY_SEPARATOR. 'temp' . DIRECTORY_SEPARATOR;
 	file_put_contents($dir . 'nulog.txt', $data.PHP_EOL , FILE_APPEND | LOCK_EX);
 
-}	
+}
 
 function nuID(){
-	
+
 	global $DBUser;
 	$i	= uniqid();
 	$s	= md5($i);

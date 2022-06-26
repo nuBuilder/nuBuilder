@@ -3,7 +3,7 @@
 <head>
 <?php
 
-require_once('nucommon.php');	
+require_once('nucommon.php');
 
 nuJSInclude('libs/jquery/jquery.js');
 nuJSInclude('nuselectclass.js');
@@ -31,7 +31,7 @@ nuCSSInclude('css/nudrag.css');
 </style>
 
 <script>
-	
+
 	window.nuSuffix				= 1000;
 	window.nuSQL				= new nuSelectObject();
 	window.nuCurrentID			= '';

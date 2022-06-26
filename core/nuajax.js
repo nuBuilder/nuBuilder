@@ -6,7 +6,7 @@ function nuAjax(w,successCallback,errorCallback){
 
 	$.ajax({
 
-		async		: true,  
+		async		: true,
 		dataType	: "json",
 		url			: "core/nuapi.php",
 		method		: "POST",
@@ -30,12 +30,12 @@ function nuAjax(w,successCallback,errorCallback){
 				nuClosePopup();
 				return;
 			} else {
-				let msgDiv = nuMessage(err);	
+				let msgDiv = nuMessage(err);
 			}
 
 			if(window.nuOnMessage){
 				nuOnMessage(msgDiv, err);
-			}			
+			}
 
 		},
 
@@ -122,9 +122,9 @@ function nuForm(f, r, filter, search, n, like){
 			}
 
 			nuFORM.breadcrumbs.pop();
-			
+
 			if(fm.log_again == 1){location.reload();}
-		
+
 		}else{
 
 			var last		= window.nuFORM.getCurrent();
@@ -132,12 +132,12 @@ function nuForm(f, r, filter, search, n, like){
 			last.FORM		= fm.form;
 
 			nuBuildForm(fm);
-			
+
 		}
 	};
 
 	nuAjax(last,successCallback);
-	
+
 }
 
 
@@ -186,23 +186,23 @@ function nuRunReport(f, iframe){
 	var successCallback = function(data,textStatus,jqXHR){
 
 		var fm			= data;
-		
+
 		if(!nuDisplayError(fm)){
-			
+
 			var pdfUrl	= 'core/nurunpdf.php?i=' + fm.id;
-			
+
 			if(iframe === undefined){
 				window.open(pdfUrl);
 			}else{
 				parent.$('#'+ iframe).attr('src', pdfUrl);
 			}
-			
+
 		}
 
 	}
-	
+
 	nuAjax(last,successCallback);
-	
+
 }
 
 function nuRunReportSave(f, tag = null, callback = null){
@@ -246,8 +246,8 @@ function nuRunReportSave(f, tag = null, callback = null){
 
 function nuAskLogout() {
 
-	if (nuFormsUnsaved() > 0) {   
-		if (! confirm(nuTranslate('There are unsaved changes. Do you really want to leave the page?'))) return; 
+	if (nuFormsUnsaved() > 0) {
+		if (! confirm(nuTranslate('There are unsaved changes. Do you really want to leave the page?'))) return;
 	}
 
 	nuLogout();
@@ -301,7 +301,7 @@ function nuGetPHP(f, r){
 	var successCallback = function(data,textStatus,jqXHR){
 
 		var fm			= data;
-		
+
 		if(!nuDisplayError(fm)){
 
 			nuFORM.setProperty('record_id', fm.record_id);
@@ -311,9 +311,9 @@ function nuGetPHP(f, r){
 			window.nuFORM.breadcrumbs.pop();
 		}
 	}
-	
+
 	nuAjax(last, successCallback);
-	
+
 }
 
 function nuRunPHP(pCode, iframe, rbs){
@@ -368,9 +368,9 @@ function nuRunPHP(pCode, iframe, rbs){
 		}
 
 	};
-	
+
 	nuAjax(last,successCallback);
-	
+
 }
 
 
@@ -417,7 +417,7 @@ function nuRunPHPHiddenWithParams(i, paramName, paramValue, rbs) {
 
 
 function nuSystemUpdate(){
-	
+
 	var msg				= nuTranslate("Update system? Be sure to backup first.");
 	if(confirm(msg) == false){return;}
 
@@ -476,7 +476,7 @@ function nuAttachImage(i, code, fit){
 
 		var p				= JSON.parse(PARENT.nuImages[code]);
 		var b				= atob(p.file);
-		
+
 		$('#' + imgID).attr('src', b)
 
 		return;
@@ -523,7 +523,7 @@ function nuAttachButtonImage(i, c, cssClass){
 		.addClass(cssClass);
 
 		return;
-		
+
 	}
 
 	var PARENT				= parent.parent.parent.parent.parent.parent.parent.parent.parent;
@@ -549,7 +549,7 @@ function nuAttachButtonImage(i, c, cssClass){
 	last.session_id			= window.nuSESSION;
 	last.call_type			= 'getfile';
 	last.fileCode			= c;
-	
+
 	var successCallback		= function(data,textStatus,jqXHR){
 
 		if(nuDisplayError(data)){return;};
@@ -567,18 +567,18 @@ function nuAttachButtonImage(i, c, cssClass){
 		}
 
 	};
-	
+
 	nuAjax(last,successCallback);
-	
+
 }
 
 
 function nuGetLookupId(pk, id, setFocus){
 
 	$('#nuLookupList').remove();
-	
+
 	var l				= $('#' + id);
-	
+
 	var last			= nuFORM.getCurrent();
 
 	last.session_id		= nuSESSION;
@@ -588,7 +588,7 @@ function nuGetLookupId(pk, id, setFocus){
 	last.prefix			= l.attr('data-nu-prefix');
 	last.primary_key	= pk;
 
-	var successCallback = function(data,textStatus,jqXHR){		
+	var successCallback = function(data,textStatus,jqXHR){
 
 		nuSERVERRESPONSELU	= data;
 
@@ -625,13 +625,13 @@ function nuGetLookupCode(e){
 	last.target				= e.target.getAttribute('data-nu-target')
 	last.code				= e.target.value;
 	last.hash				= nuHashFromEditForm();
-	
+
 	window.nuLOOKUPSTATE[last.object_id] = 'looking';
 
-	var successCallback = function(data,textStatus,jqXHR){		
-		
+	var successCallback = function(data,textStatus,jqXHR){
+
 		nuSERVERRESPONSELU	= data;
-	
+
 		if(!nuDisplayError(data)){
 			nuChooseOneLookupRecord(e, data);
 		}
@@ -652,7 +652,7 @@ function nuPrintAction(){
 	last.browse_sql		= nuSERVERRESPONSE.browse_sql;
 	last.session_id		= window.nuSESSION;
 
-	var successCallback = function(data,textStatus,jqXHR){		
+	var successCallback = function(data,textStatus,jqXHR){
 
 		var fm					= data;
 
@@ -746,7 +746,7 @@ function nuUpdateData(action, instruction, close){
 					parent.$('#nuDragDialog').remove();
 
 				}
-				
+
 				nuUpdateMessage('Record Deleted');
 
 			}else{

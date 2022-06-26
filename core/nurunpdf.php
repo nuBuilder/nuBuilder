@@ -1,8 +1,8 @@
 <?php
 
 require_once('nusession.php');
-require_once('nucommon.php'); 
-require_once('nudata.php'); 
+require_once('nucommon.php');
+require_once('nudata.php');
 require_once('libs/tcpdf/tcpdf.php');
 define('FPDF_FONTPATH','libs/tcpdf/font/');
 
@@ -50,10 +50,10 @@ function nuRunReportId($jsonID, $tag, $get) {
 	$fl							= json_decode(nuFontList());
 
 	for($i = 0 ; $i < count($fl) ; $i++){
-		
+
 		$fnt					= $fl[$i][0];
 		$PDF->AddFont($fnt, '', '', true);
-		
+
 	}
 	*/
 
@@ -237,9 +237,9 @@ function nuBuildReport($PDF, $REPORT, $TABLE_ID){
 //	FIRST SECTION HEADERS
 //======================================================
 	for($g = 0 ; $g < count($groups) ; $g++){
-		
+
 		$S								= new nuSECTION($PDF, $ROW, $REPORT, 3 + $g, 0, $sectionTop);					//-- section headers
-		$sectionTop						= $S->buildSection();		
+		$sectionTop						= $S->buildSection();
 		$sectionValue[$groups[$g]]		= $ROW[$groups[$g]];
 
 	}
@@ -304,7 +304,7 @@ function nuBuildReport($PDF, $REPORT, $TABLE_ID){
 	$S									= new nuSECTION($PDF, $lastROW, $REPORT, 1, 1, $sectionTop);
 	$sectionTop							= $S->buildSection();
 
-}	
+}
 
 
 
@@ -400,9 +400,9 @@ class nuSECTION{
 			$O[$i]->path						= '';
 
 			if($O[$i]->objectType == 'field' or $O[$i]->objectType == 'label'){
-				
+
 				$fieldName = isset($this->ROW[$O[$i]->fieldName]) ? $this->ROW[$O[$i]->fieldName] : '';
-				
+
 				if($O[$i]->objectType == 'field' and substr($fieldName,0,1) == '#' and substr($fieldName,2,1) == '#' and substr($fieldName,9,1) == '|'){		//-- conditional formatting used
 
 					$format					 = $this->nuGetFormatting($O[$i]);
@@ -699,7 +699,7 @@ class nuSECTION{
 			$rows	= array_splice($rows, 0, $O->maxRows);
 		}
 
-		if($O->minRows == -1 and $rows[0] == '' ){								//-- reduce height to zero 
+		if($O->minRows == -1 and $rows[0] == '' ){								//-- reduce height to zero
 			$rows = array();
 		}
 
@@ -709,8 +709,8 @@ class nuSECTION{
 
 	private function getOneRow($text, $O){
 
-//-- return an array 
-//-- 0 = a line that fits within the width of the Object		
+//-- return an array
+//-- 0 = a line that fits within the width of the Object
 //-- 1 = remaining part of the paragraph
 
 		$this->PDF->SetFont($O->fontFamily, $O->fontWeight, $O->fontSize);
@@ -769,11 +769,11 @@ class nuSECTION{
 		}
 		if($type == ''){																//-- normal value
 
-		//Add the 'is_array' check by SG 8th May 2015	
-		if ( is_array($this->ROW) ) {		
+		//Add the 'is_array' check by SG 8th May 2015
+		if ( is_array($this->ROW) ) {
 
 			if(array_key_exists($O->fieldName, $this->ROW)) {
-				
+
 				$v = $this->nuGetFormatting($O);
 				$value = $v['V'];
 			}
@@ -817,7 +817,7 @@ class nuSECTION{
 						$value	= $r[0];
 					}
 
-				} 
+				}
 			} else {
 				$value	= 0;
 			}
@@ -939,13 +939,13 @@ function nuPrintField($PDF, $S, $contents, $O, $LAY, $isHTML){
 	$PDF->SetFont($fontFamily, $fontWeight, $fontSize, '', false);
 	$PDF->SetLineWidth($borderWidth / 5);
 	$PDF->SetXY($left, $top);
-	
+
 	$t = implode("\n", $contents->lines);
 
 	if (str_replace(array("\r\n", "\r", "\n", "\t"), ' ', $t) == 'KEEP EXACT HEIGHT'){
 		$PDF->Rect($left, $top, $width, $height, 'DF');
 	}else{
-		$PDF->MultiCell($width, $height, $t, $hasBorder, $textAlign, 1, 0, '', '', true, 0, $isHTML, false); 
+		$PDF->MultiCell($width, $height, $t, $hasBorder, $textAlign, 1, 0, '', '', true, 0, $isHTML, false);
 	}
 
 }
@@ -981,7 +981,7 @@ function nuReplaceLabelHashVariables($LAY, $hashData){
 	for($i = 0 ; $i < count($GLOBALS['nu_report']) ; $i++){
 
 		for($o = 0 ; $o < count($GLOBALS['nu_report'][$i]->objects) ; $o++){
-			
+
 			$O = nuGetObjectProperties($LAY, $GLOBALS['nu_report'][$i]->objects[$o]->id);
 
 			if($O->objectType == 'label'){
@@ -1085,7 +1085,7 @@ function nuAddCriteriaValues($hashData, $T){
 
 		if(count($a) > 0){
 
-			nuRunQuery("ALTER TABLE $T " . implode(',', $a)); 
+			nuRunQuery("ALTER TABLE $T " . implode(',', $a));
 
 		}
 
@@ -1126,7 +1126,7 @@ function nuIsFile($i){
 		return false;
 	} else {
 		return true;
-	}	
+	}
 }
 
 function nuRemoveFiles(){
@@ -1178,8 +1178,8 @@ function nuSavePDF($PDF, $code = '', $tag = '') {
 		nuRunQuery($q1);
 
 		echo json_encode( array( 'filename' => $filename, 'id' => $rid ) );
-	
-  
+
+
 	}
 	else {
 		nuDebug('There was an error saving the report','The directory to save PDF files: '. $dir .' does not exist or you do not have permission to write to this folder!');
