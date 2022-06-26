@@ -730,7 +730,7 @@ function nuRunIt(t, email, type) {
 	}
 
 	var f = $('#' + t.id).attr('data-nu-primary-key');
-	var i = window.nuFORM.getProperty('record_id');
+	var i = nuRecordId();
 
 	if (email == 1) {
 
@@ -943,10 +943,7 @@ function nuIsOpener() {
 
 function nuPreview(a) {
 
-	var t = String($('#sfo_type').val());
-	var b = t.indexOf('browse') != -1;
-	var f = nuFORM.getProperty('redirect_form_id');
-	var r = nuFORM.getProperty('record_id');
+	const r = nuRecordId();
 
 	if (r == '-1') {
 
@@ -955,17 +952,14 @@ function nuPreview(a) {
 
 	}
 
-	if (arguments.length == 1) {
-		nuPopup(r, '');
-	} else {
-		nuPopup(r, '-3');
-	}
+	const arg = a === undefined ? '-3' : '';
+	nuPopup(r, arg);
 
 }
 
 function nuPopPHP(e, nuE) {			//-- used in database
 
-	var i = nuFORM.getProperty('record_id');
+	var i = nuRecordId();
 
 	if (i == '') {
 
@@ -981,7 +975,7 @@ function nuPopPHP(e, nuE) {			//-- used in database
 
 function nuPopSQL(e, nuE) {			//-- used in database
 
-	var i = nuFORM.getProperty('record_id');
+	var i = nuRecordId();
 
 	if (i == '') {
 

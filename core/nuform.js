@@ -5222,6 +5222,13 @@ function nuFormId() {
 
 }
 
+function nuRecordId() {
+
+	if (nuFORM.getCurrent() == undefined) { return ''; }
+	return nuFORM.getCurrent().record_id;
+
+}
+
 function nuBuildFastReport() {
 
 	var sf = nuSubformObject('fast_report_sf');
