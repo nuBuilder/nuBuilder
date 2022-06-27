@@ -11,7 +11,6 @@ function nuAjax(w, successCallback, errorCallback) {
 		url: "core/nuapi.php",
 		method: "POST",
 		data: { nuSTATE: w },
-		dataType: "json",
 		success: function (data, textStatus, jqXHR) {
 			successCallback(data, textStatus, jqXHR);
 		},
@@ -691,7 +690,6 @@ function nuUpdateData(action, instruction, close) {
 	var last = $.extend(true, {}, current);
 
 	var f = last.form_id;
-	var r = last.record_id;
 	window.nuLASTRECORD = last.record_id;
 
 	if (arguments.length == 2) {
