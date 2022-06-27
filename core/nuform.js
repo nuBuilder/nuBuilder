@@ -671,7 +671,6 @@ function nuBuildEditObjects(f, p, o, prop) {
 			} else if (t == 'contentbox') {
 				l = l + nuCONTENTBOX(f, i, l, p, prop);
 			} else if (t == 'editor') {
-				debugger;
 				l = l + nuEDITOR(f, i, l, p, prop);
 			} else if (t == 'image') {
 				l = l + nuIMAGE(f, i, l, p, prop);
