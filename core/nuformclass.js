@@ -957,7 +957,7 @@ class nuFormObject {
 			s = s.replaceAll('nn', min);
 			s = s.replaceAll('ss', sec);
 
-			return s.substr(2);
+			return s.slice(2);
 
 		}
 
