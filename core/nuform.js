@@ -440,7 +440,7 @@ function nuAddedByLookup(f) {
 	var isLookup = window.nuTARGET != '';
 
 	if (isEdit && isNewRecord && isLookup) {
-		window.parent.nuGetLookupId(nuFORM.getCurrent().record_id, window.nuTARGET);			//-- called from parent window
+		window.parent.nuGetLookupId(nuRecordId(), window.nuTARGET);			//-- called from parent window
 	}
 
 }
@@ -557,7 +557,7 @@ function nuSearchFieldSetSearchType() {
 function nuAddActionButtons(form) {
 
 	var draggable = 0;
-	var rid = window.nuFORM.getProperty('record_id');
+	var rid = nuRecordId();
 
 	if (rid == '-2') {
 		draggable = 1;
@@ -650,7 +650,7 @@ function nuBuildEditObjects(f, p, o, prop) {
 	var l = 3;
 	var draggable = 0;
 
-	if (window.nuFORM.getProperty('record_id') == '-2') {
+	if (nuRecordId() == '-2') {
 		draggable = 1;
 	}
 
@@ -671,6 +671,7 @@ function nuBuildEditObjects(f, p, o, prop) {
 			} else if (t == 'contentbox') {
 				l = l + nuCONTENTBOX(f, i, l, p, prop);
 			} else if (t == 'editor') {
+				debugger;
 				l = l + nuEDITOR(f, i, l, p, prop);
 			} else if (t == 'image') {
 				l = l + nuIMAGE(f, i, l, p, prop);
@@ -1015,7 +1016,7 @@ function nuINPUT(w, i, l, p, prop) {
 
 	}
 
-	if (w.objects[i].value != '' && window.nuFORM.getCurrent().record_id == '-1') {				//== check for Cannot be left blank
+	if (w.objects[i].value != '' && nuRecordId() == '-1') {				//== check for Cannot be left blank
 		$('#' + id).addClass('nuEdited');
 	}
 
@@ -1432,6 +1433,8 @@ function nuEDITOR(w, i, l, p, prop) {
 	$('#' + id).html('<div style="width:' + obj.width + 'px;height:' + obj.height + 'px" id="' + obj.id + '_container" class="' + nuClass + '"> </div>');
 	nuAddStyle(id, obj);
 
+	return Number(obj.width);
+
 }
 
 function nuCONTENTBOX(w, i, l, p, prop) {
@@ -1464,7 +1467,7 @@ function nuCONTENTBOX(w, i, l, p, prop) {
 
 	nuAddStyle(id, obj);
 
-	return Number(15);
+	return Number($('#' + id).width());
 
 }
 
@@ -1613,7 +1616,7 @@ function nuRUN(w, i, l, p, prop) {
 		var clicker = '';
 
 		var runTarget = obj.run_target;
-		var runTarget = runTarget == '' || runTarget == null ? '0' : runTarget;
+		runTarget = runTarget == '' || runTarget == null ? '0' : runTarget;
 
 		var stopClick = runTarget == '0' ? 'nuStopClick(event);' : '';
 		var runAction = runTarget == '3' ? "nuPopup('" + obj.form_id + "','" + obj.record_id + "','" + obj.filter + "')" : "nuForm('" + obj.form_id + "','" + obj.record_id + "','" + obj.filter + "', '','" + runTarget + "')";
@@ -1649,7 +1652,7 @@ function nuRUN(w, i, l, p, prop) {
 		window.nuOPENER.push(new nuOpener(obj.run_type, F, R, L, PA));
 
 		var open = window.nuOPENER[window.nuOPENER.length - 1];
-		var u = window.location.origin + f + obj.src + '&opener=' + open.id;
+		// var u = window.location.origin + f + obj.src + '&opener=' + open.id;
 		var u = P + '?i=2&opener=' + open.id;
 
 		$('#' + id).attr('src', u).removeClass('').addClass('nuIframe');
@@ -1688,7 +1691,7 @@ function nuSELECT(w, i, l, p, prop) {
 	$('#' + ef).append(sel);
 
 
-	if (w.objects[i].value != '' && window.nuFORM.getCurrent().record_id == '-1') {
+	if (w.objects[i].value != '' && nuRecordId() == '-1') {
 		$('#' + id).addClass('nuEdited');
 	}
 
@@ -1995,8 +1998,9 @@ function nuSubformColumnArray(id, column, includeDeleted = false) {
 
 	var a = [];
 	var sf = nuSubformObject(id);
-	var c = sf.fields.indexOf(column);
-	for (var i = 0; i < sf.rows.length; i++) {
+	var c = Number.isInteger(column) ? column : sf.fields.indexOf(column);
+
+	for (let i = 0; i < sf.rows.length; i++) {
 		if (sf.deleted[i] == 0 || includeDeleted) {
 			var rv = sf.rows[i][c]
 			a.push(rv);
@@ -2177,23 +2181,6 @@ function nuSubformHideColumns(sfId, columns, maintainWidth) {
 	});
 
 	nuSubformRearrangeColumns(sfId, fields, '', maintainWidth);
-
-}
-
-function nuSubformColumnArray(id, column) {
-
-	var a = Array();
-	var sf = nuSubformObject(id);
-
-	var c = Number.isInteger(column) ? column : sf.fields.indexOf(column);
-
-	for (var i = 0; i < sf.rows.length; i++) {
-		if (sf.deleted[i] == 0) {
-			var rv = sf.rows[i][c];
-			a.push(rv);
-		}
-	}
-	return a;
 
 }
 
@@ -3255,7 +3242,7 @@ function nuSetStartingTab(p, w) {
 
 function nuGetStartingTab() {
 
-	let w = window.nuFORM.getProperty('record_id') == -2 ? parent.window : window;
+	let w = nuRecordId() == -2 ? parent.window : window;
 	let t = w.nuFORM.getProperty('tab_start');
 
 	for (let i = 0; i < t.length; i++) {
@@ -3332,7 +3319,7 @@ function nuEditTab(p, t, i) {
 
 function nuOptions(p, f, t, access) {
 
-	var R = window.nuFORM.getProperty('record_id');
+	var R = nuRecordId();
 
 	if (R != '-2') {
 
@@ -4652,7 +4639,7 @@ function nuDeleteAllAction() {
 function nuCloneAction() {
 
 	nuSetProperty('CLONED_RECORD', 1);
-	nuSetProperty('CLONED_RECORD_ID', nuFORM.getCurrent().record_id);
+	nuSetProperty('CLONED_RECORD_ID', nuRecordId());
 
 	window.nuTimesSaved = 0;
 
@@ -4750,7 +4737,7 @@ function nuIsClone() {
 }
 
 function nuIsNewRecord() {
-	return nuFORM.getCurrent().record_id == -1 && !nuCLONE;
+	return nuRecordId() == -1 && !nuCLONE;
 }
 
 function nuSaveAction(close) {
@@ -5193,12 +5180,7 @@ function nuNoDuplicates() {
 function nuFormType() {
 
 	if (nuFORM.getCurrent() == undefined) { return ''; }
-
-	if (nuFORM.getCurrent().record_id == '') {
-		return 'browse';
-	} else {
-		return 'edit';
-	}
+	return nuRecordId() == '' ? 'browse' : 'edit';
 
 }
 
