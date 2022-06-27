@@ -246,6 +246,10 @@ class nuSelectObject {
 		this.tempTables = this.usedTables();
 		this.tempJoins = this.getJoinObjects();													//-- current visible joins
 
+		var torder = function (b, a) {
+			return (a.joins.length < b.joins.length);
+		}
+
 		for (var i = 0; i < this.tempTables.length; i++) {
 
 			if (this.tempTables[i].used != -1) {
@@ -301,10 +305,6 @@ class nuSelectObject {
 
 		}
 
-
-		var torder = function (b, a) {
-			return (a.joins.length < b.joins.length);
-		}
 
 		var f = this.tempTables.sort(torder);
 		var F = [];
@@ -593,8 +593,8 @@ class nuSelectObject {
 
 	boxWidth(s, t) {
 
-		var s = parent.nuFORM.tableSchema
-		var n = s[t].names;
+		var s = parent.nuFORM.tableSchema;
+		// var n = s[t].names;
 		var w = nuGetWordWidth(t) + 130;
 
 		for (var i = 0; i < s[t].names.length; i++) {
@@ -617,12 +617,8 @@ class nuSelectObject {
 	boxColumn(c, t, l, w, v, title) {
 
 		var suf = '_' + t + '_' + this.boxID;
-
-		if (c == 'select') {
-			var col = document.createElement('input');
-		} else {
-			var col = document.createElement('span');
-		}
+		
+		const col = document.createElement(c == 'select' ? 'input' : 'span');
 
 		col.setAttribute('id', c + suf);
 
@@ -956,7 +952,7 @@ function nuAngle() {
 
 	nuSQL.refreshJoins(ok);
 
-	for (var key in nuSQL.joins) {
+	for (let key in nuSQL.joins) {
 
 		var F = $('#' + nuSQL.joins[key].from);
 		var T = $('#' + nuSQL.joins[key].to);
