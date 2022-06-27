@@ -429,7 +429,7 @@ function nuAddIconToBreadCrumb(id, title, right, handler, _class) {
 		.css('right', right)
 		.attr('onclick', handler)
 		.html('<i class="' + _class + '" style="font-size:20px;"></i>')
-		.attr('title', nuTranslate(title))
+		.attr('title', nuTranslate(title));
 
 }
 
@@ -451,13 +451,13 @@ function nuSetBody(f) {
 	$('body').removeClass('nuBrowseBody nuEditBody');
 
 	if (nuFormType() == 'browse') {
-		$('body').addClass('nuBrowseBody')
+		$('body').addClass('nuBrowseBody');
 	} else {
 
 		var height = f.dimensions == null ? 0 : f.dimensions.edit.height;
 		$('body').addClass('nuEditBody')
 			.css('width', window.innerWidth - 1)
-			.css('height', height)
+			.css('height', height);
 
 	}
 
@@ -620,7 +620,7 @@ function nuAddActionButton(i, v, f, t, e) {
 
 	var nuClass = "";
 	if (i == 'Save' || i == 'Add' || i == 'Clone' || i == 'Delete') {
-		nuClass = " " + "nu" + i + "Button"
+		nuClass = " " + "nu" + i + "Button";
 	};
 
 	let id = "nu" + i + "Button";
@@ -760,7 +760,7 @@ function nuRecordProperties(w, p, l) {
 	objDel
 		.attr('data-nu-data', '')
 		.addClass('nuSubformCheckbox')
-		.addClass(w.table)
+		.addClass(w.table);
 
 	if (arguments.length == 3) {
 
@@ -772,10 +772,10 @@ function nuRecordProperties(w, p, l) {
 				'left': Number(l) + 2,
 				'position': 'absolute',
 				'visibility': 'visible'
-			})
+			});
 
 		if (w.deletable == '0') {
-			objDel.css({ 'width': 0, 'height': 0, 'left': -10, 'top': 10, 'tabindex': '-1' })			//-- allows tabbing when there is no checkbox.
+			objDel.css({ 'width': 0, 'height': 0, 'left': -10, 'top': 10, 'tabindex': '-1' });			//-- allows tabbing when there is no checkbox.
 		}
 
 	} else {
@@ -1853,7 +1853,7 @@ function nuSUBFORM(w, i, l, p, prop) {
 	})
 		.addClass('nuTabHolder')
 		.attr('data-nu-subform', tabId)
-		.prepend('&nbsp;&nbsp;&nbsp;')
+		.prepend('&nbsp;&nbsp;&nbsp;');
 
 	if (SF.subform_type == 'f') {
 		nuAddEditTabs(id, SF.forms[0]);
@@ -1926,7 +1926,7 @@ function nuSUBFORM(w, i, l, p, prop) {
 		nuRecordProperties(SF.forms[c], prefix, rowWidth - 40);
 
 		rowTop = Number(rowTop) + Number(rowHeight);
-		even = even == '0' ? '1' : '0'
+		even = even == '0' ? '1' : '0';
 
 	}
 
