@@ -1647,11 +1647,11 @@ function nuRUN(w, i, l, p, prop) {
 		var L = obj.filter;
 		var PA = obj.parameters;
 		var P = window.location.pathname;
-		var f = P.substring(0, P.lastIndexOf('/') + 1)
 
 		window.nuOPENER.push(new nuOpener(obj.run_type, F, R, L, PA));
 
 		var open = window.nuOPENER[window.nuOPENER.length - 1];
+		// var f = P.substring(0, P.lastIndexOf('/') + 1)
 		// var u = window.location.origin + f + obj.src + '&opener=' + open.id;
 		var u = P + '?i=2&opener=' + open.id;
 
@@ -1816,15 +1816,18 @@ function nuSUBFORM(w, i, l, p, prop) {
 		nuGetSubformRowSize(SF.forms[0].objects, SF, id);
 	}
 
+	let rowHeight;
+	let rowWidth;
+
 	if (SF.subform_type == 'f') {
 
-		var rowHeight = Number(SF.dimensions.edit.height + 10);
-		var rowWidth = Number(SF.dimensions.edit.width + 10);
+		rowHeight = Number(SF.dimensions.edit.height + 10);
+		rowWidth = Number(SF.dimensions.edit.width + 10);
 
 	} else {
 
-		var rowHeight = Number(SF.dimensions.grid.height);
-		var rowWidth = Number(SF.dimensions.grid.width + 55);
+		rowHeight = Number(SF.dimensions.grid.height);
+		rowWidth = Number(SF.dimensions.grid.width + 55);
 
 	}
 
@@ -2318,7 +2321,7 @@ function nuSubformAddFilter(filter) {
 			const columnTitle = '#title_' + sfName + columnId;
 			const filterId = nuSubformFilterId(sfName, columnId);
 			const type = prop === undefined || prop.type === undefined ? 'select' : prop.type;
-			let obj = nuSubformFilterAddObject(type, sfName, columnId, columnTitle, filterId, prop);
+			let obj = nuSubformFilterAddObject(type, sfName, columnId, filterId, prop);
 
 			$(columnTitle).append("<br />");
 			obj.appendTo(columnTitle).css(style).nuSetPlaceholder(placeholder);
@@ -2327,20 +2330,20 @@ function nuSubformAddFilter(filter) {
 
 	}
 
-	function nuSubformFilterAddObject(type, sfName, columnId, columnTitle, filterId, prop) {
+	function nuSubformFilterAddObject(type, sfName, columnId, filterId, prop) {
 
 		var obj;
 		if (type == 'select') {
-			obj = nuSubformFilterAddSelect(sfName, columnId, columnTitle, filterId, prop);
+			obj = nuSubformFilterAddSelect(sfName, columnId, filterId, prop);
 		} else if (type === 'search') {
-			obj = nuSubformFilterAddSearch(sfName, columnId, columnTitle, filterId, prop);
+			obj = nuSubformFilterAddSearch(sfName, columnId, filterId, prop);
 		}
 
 		return obj;
 
 	}
 
-	function nuSubformFilterAddSelect(sfName, columnId, columnTitle, filterId, prop) {
+	function nuSubformFilterAddSelect(sfName, columnId, filterId, prop) {
 
 		let propAll = prop === undefined || prop.all === undefined ? '(' + nuTranslate('All') + ')' : prop.all;
 		let optionAll = [];
@@ -2373,7 +2376,7 @@ function nuSubformAddFilter(filter) {
 
 	}
 
-	function nuSubformFilterAddSearch(sfName, columnId, columnTitle, filterId, prop) {
+	function nuSubformFilterAddSearch(sfName, columnId, filterId, prop) {
 
 		let propDatalist = prop === undefined || prop.datalist === undefined ? true : prop.datalist;
 
@@ -2679,9 +2682,9 @@ function nuGetClipboardRows(clipText) {
 function nuGetClipboardJson(clipRows) {
 
 	var jsonObj = [];
-	for (i = 0; i < clipRows.length - 1; i++) {
+	for (let i = 0; i < clipRows.length - 1; i++) {
 		var item = {};
-		for (j = 0; j < clipRows[i].length; j++) {
+		for (let j = 0; j < clipRows[i].length; j++) {
 			if (clipRows[i][j] != '\r') {
 				item[j] = clipRows[i][j];
 			}
@@ -3381,7 +3384,6 @@ function nuGetOptionsList(f, t, p, a, type) {
 	}
 
 	let list = [];
-	let ul = '<ul>';
 
 	if (nuFormType() == 'browse') {
 
@@ -3507,17 +3509,12 @@ function nuGetOptionsList(f, t, p, a, type) {
 
 function nuBuildOptionsList(l, p, type) {												//-- loop through adding options to menu
 
-	var icon = $('#' + p + 'nuOptions');
-	var off = icon.offset();
-	var top = off.top;
-	var left = off.left < 240 ? 240 : off.left;
-	var ul = '';
+	var off = $('#' + p + 'nuOptions').offset();
 	var iprop = { 'position': 'absolute', 'text-align': 'left', 'width': 15, 'height': 15 };
 	var width = 0;
-	var height = 30 + (l.length * 30);
 
 	for (var i = 0; i < l.length; i++) {
-		var width = Math.max((nuGetWordWidth(l[i][0]) + nuGetWordWidth(l[i][3])), width);
+		width = Math.max((nuGetWordWidth(l[i][0]) + nuGetWordWidth(l[i][3])), width);
 	}
 
 	for (var i = 0; i < l.length; i++) {
@@ -3529,25 +3526,24 @@ function nuBuildOptionsList(l, p, type) {												//-- loop through adding op
 		var itemtop = 30 + (i * 20);
 
 		// Add Icon
-		if (icon_id !== '') {
-			var icon = document.createElement('i');
-			var icon_id = 'nuOptionList' + i.toString();
 
-			icon.setAttribute('id', icon_id);
+		var icon = document.createElement('i');
+		var icon_id = 'nuOptionList' + i.toString();
 
-			$('#nuOptionsListBox').append(icon);
+		icon.setAttribute('id', icon_id);
 
-			$('#' + icon.id)
-				.css(iprop)
-				.css({ 'top': itemtop, 'left': 9 })
-				.addClass('fa')
-				.addClass(c)
-				.addClass('nuOptionList');
-		}
+		$('#nuOptionsListBox').append(icon);
+
+		$('#' + icon.id)
+			.css(iprop)
+			.css({ 'top': itemtop, 'left': 9 })
+			.addClass('fa')
+			.addClass(c)
+			.addClass('nuOptionList');
 
 		// Add Option Text
 
-		isDivider = t == '' ? true : false;
+		const isDivider = t == '' ? true : false;
 
 		var desc = document.createElement(isDivider ? 'hr' : 'div');
 		var desc_id = 'nuOptionText' + i.toString();
@@ -3608,7 +3604,6 @@ function nuBuildOptionsList(l, p, type) {												//-- loop through adding op
 
 	if (type == 'browse') {
 
-		top = off.top;
 		left = 12
 
 	}
@@ -3858,11 +3853,9 @@ function nuBrowseTitle(b, i, l, m) {
 
 function nuTitleDrag(i) {
 
-	var bc = window.nuFORM.getCurrent();
-	var col = bc.browse_columns;
-	var rows = bc.rows;
-	var h = bc.row_height;
-	var div = document.createElement('div');
+	const bc = window.nuFORM.getCurrent();
+	const h = bc.row_height;
+	const div = document.createElement('div');
 
 	div.setAttribute('id', 'nuTitleDrag' + i);
 
@@ -3879,9 +3872,8 @@ function nuTitleDrag(i) {
 
 function nuDragBrowseDown(e) {
 
-	var t = parseInt($('#nuBrowseTitle0').css('top'));
-	var l = parseInt($('#nuBrowseTitle0').css('left'));
-	var f = parseInt($('#nuBrowseFooter').css('top'));
+	const t = parseInt($('#nuBrowseTitle0').css('top'));
+	const f = parseInt($('#nuBrowseFooter').css('top'));
 
 	window.nuDRAGLINEVSTART = e.pageX;
 	window.nuDRAGLINEVID = e.target.id;
@@ -3902,8 +3894,7 @@ function nuDragBrowseMove(e) {
 
 function nuDragBrowseUp(e) {
 
-	var l = e.offsetX;
-	var h = parseInt($('#nuBrowseTitle0').css('height'));
+	 h = parseInt($('#nuBrowseTitle0').css('height'));
 
 	$('#' + e.target.id).css('height', h);
 	window.nuDRAGLINEVID = '';
@@ -3911,11 +3902,6 @@ function nuDragBrowseUp(e) {
 }
 
 function nuBrowseColumnSize(e) {
-
-	var l = $('#' + e.target.id)
-
-	var bc = window.nuFORM.getCurrent();
-	var totalBrowseHeight = bc.rows * bc.row_height;
 
 	$('#' + e.target.id).css('height', 400);
 
@@ -3931,12 +3917,12 @@ function nuBrowseTable() {
 	var t = parseInt($('#nuBrowseTitle0').css('height')) - h - 2;
 	var l = 7;
 
-	for (r = 0; r < rows; r++) {
+	for (let r = 0; r < rows; r++) {
 
 		l = 7;
 		t = t + h + 7;
 
-		for (c = 0; c < col.length; c++) {
+		for (let c = 0; c < col.length; c++) {
 
 			var w = Number(col[c].width);
 			var a = nuAlign(col[c].align);
@@ -4960,7 +4946,6 @@ function nuWidestTitle(c) {
 
 function nuGetSearchList() {
 
-	var n = nuFORM.getProperty('nosearch_columns');
 	var c = nuFORM.getProperty('browse_columns');
 	var d = document.createElement('div');
 
@@ -5789,7 +5774,7 @@ function nuGetBrowsePaginationInfo() {
 	var e; // Row number of the last record on the current page
 	var s; // Row number of the first record on the current page
 
-	if (c == 0 && f > 0 & p == 1) {
+	if (c == 0 && f > 0 && p == 1) {
 		s = 1;
 		e = f;
 	} else
@@ -5848,11 +5833,11 @@ function nuPrintEditForm(hideObjects, showObjects) {
 		let showObjects = [];
 	}
 
-	for (var i = 0; i < hideObjects.length; i++) {
+	for (let i = 0; i < hideObjects.length; i++) {
 		nuHide(hideObjects[i]);
 	}
 
-	for (var i = 0; i < showObjects.length; i++) {
+	for (let i = 0; i < showObjects.length; i++) {
 		nuShow(hideObjects[i]);
 	}
 
@@ -5865,11 +5850,11 @@ function nuPrintEditForm(hideObjects, showObjects) {
 		$('.nuActionButton').show();
 
 
-		for (var i = 0; i < hideObjects.length; i++) {
+		for (let i = 0; i < hideObjects.length; i++) {
 			nuShow(hideObjects[i]);
 		}
 
-		for (var i = 0; i < showObjects.length; i++) {
+		for (let i = 0; i < showObjects.length; i++) {
 			nuHide(hideObjects[i]);
 		}
 
