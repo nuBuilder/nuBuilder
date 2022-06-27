@@ -2878,7 +2878,7 @@ function nuRunBackup() {
 
 	if (! nuGlobalAccess()) return;
 
-	const c = confirm(nuTranslate("Perform the Backupn now?"));
+	const c = confirm(nuTranslate("Perform the Backup now?"));
 	if (c === true) {
 		nuMessage(nuTranslate("Backup is running") + "...");
 		nuRunPHPHidden("nubackup", 0);
