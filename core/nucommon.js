@@ -2898,7 +2898,6 @@ function nuAddCSSStyle(styleString, id) {
 
 	let css = document.createElement('style');
 	css.id = i;
-	css.type = 'text/css';
 	css.appendChild(document.createTextNode(styleString));
 	document.getElementsByTagName("head")[0].appendChild(css);
 
