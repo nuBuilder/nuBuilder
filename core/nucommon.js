@@ -2876,8 +2876,13 @@ function nuSetLabelText(i, str, translate) {
 
 function nuRunBackup() {
 
-	nuMessage(nuTranslate("Backup is running") + "...");
-	nuRunPHPHidden("nubackup", 0);
+	if (! nuGlobalAccess()) return;
+
+	const c = confirm(nuTranslate("Perform the Backupn now?"));
+	if (c === true) {
+		nuMessage(nuTranslate("Backup is running") + "...");
+		nuRunPHPHidden("nubackup", 0);
+	}
 
 }
 
