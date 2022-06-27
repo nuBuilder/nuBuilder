@@ -284,12 +284,6 @@ function nuDragBox(event) {
 function nuResizeDrag(event) {
 
 	var selectBox = $('#nuSelectBox');
-
-	var x = parseInt(selectBox.css('left'));
-	var y = parseInt(selectBox.css('top'));
-	var w = parseInt(selectBox.css('width'));
-	var h = parseInt(selectBox.css('height'));
-
 	var X = event.clientX - window.startX;
 	var Y = event.clientY + window.scrollY - window.startY;
 
@@ -539,11 +533,9 @@ function nuFindFieldInState(tabNo, fieldID){
 function nuCreateDragOptionsBox(form){
 
 	var dragOptionsBoxWidth		= 400;
-	var dragOptionsBoxMinHeight	= 535;
 	var dragOptionsBoxMinHeight	= 520;
 	var wh	= nuFormWH();
 	var w	= wh.width;
-	var h	= wh.height;
 
 	var optionsBoxHTML = '<div id="nuDragOptionsBox" class="nuDragOptionsBox" style="width:'+(dragOptionsBoxWidth-80)+'px;height:100%;min-height:'+dragOptionsBoxMinHeight+'px;">'+
 		'<div class="nuDragOptionsBoxContainer">'+
@@ -943,16 +935,13 @@ function nuSpaceVertically(){
 
 function nuAlignRight(){
 
-	var rightestFieldID		= '';
-	var rightestPoint		= 0;
-
-	var selected	= nuDragSelected();
+	var rightestPoint = 0;
+	var selected = nuDragSelected();
 
 	selected.each(function(){
 
 		if($(this).position().left+$(this).width() > rightestPoint){
 
-			rightestFieldID = $(this).prop('id');
 			rightestPoint	= $(this).position().left+$(this).width();
 
 		}
@@ -971,7 +960,6 @@ function nuAlignRight(){
 
 function nuAlignLeft(){
 
-	var leftestFieldID		= '';
 	var leftestPoint		= 1000000;
 
 	var selected	= nuDragSelected();
@@ -980,7 +968,6 @@ function nuAlignLeft(){
 
 		if($(this).position().left < leftestPoint){
 
-			leftestFieldID	= $(this).prop('id');
 			leftestPoint	= $(this).position().left;
 
 		}
@@ -1003,7 +990,6 @@ function nuAlignLeft(){
 
 function nuAlignTop(){
 
-	var highestFieldID		= '';
 	var highestPoint		= 1000000;
 
 	var selected	= nuDragSelected();
@@ -1012,7 +998,6 @@ function nuAlignTop(){
 
 		if($(this).position().top < highestPoint){
 
-			highestFieldID	= $(this).prop('id');
 			highestPoint	= $(this).position().top;
 
 		}
@@ -1071,7 +1056,6 @@ function nuAlignBottom(){
 function nuMoveNuDrag() {
 
 	//find tab we are moving objects to
-	var moveToTab				= $('#nuDragOptionsTabsDropdown').val().substring($('#nuDragOptionsTabsDropdown').val().length-1);
 	var moveToTab				= $('#nuDragOptionsTabsDropdown').val().substring(5);
 
 	$('#nuDragOptionsFields :selected').each(function(i, selected){
@@ -1221,7 +1205,6 @@ function nuCheckIfMovingTabOrderAllowed(fieldsSelectBox){
 
 function nuCheckIfMovingFieldToOtherTabAllowed(fieldsSelectBox){
 
-	var currentTabNo		= $('div.nuTabSelected[id^="nuTab"]').attr('data-nu-tab-filter');
 	var tabDropdown		= $('#nuDragOptionsTabsDropdown',window.parent.document.body);
 
 	if($('option:selected', fieldsSelectBox).length >= 1){
@@ -1379,11 +1362,12 @@ function nuGetTopArea() {
 	var nuTabHolder			= parseInt($('#nuTabHolder').css('height'));
 	var p					= parent.window.$;
 	var dialogTitle			= parseInt(p('#dialogTitle').css('height'));
-
+	
+	var nuBreadcrumbHolder;
 	if($('#nuBreadcrumbHolder').length == 1){
-		var nuBreadcrumbHolder	= parseInt($('#nuBreadcrumbHolder').css('height'));
+		nuBreadcrumbHolder	= parseInt($('#nuBreadcrumbHolder').css('height'));
 	}else{
-		var nuBreadcrumbHolder	= 0;
+		nuBreadcrumbHolder	= 0;
 	}
 
 	return nuActionHolder + nuBreadcrumbHolder + nuTabHolder + dialogTitle;
