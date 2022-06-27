@@ -529,7 +529,7 @@ function nuPopup(f, r, filter) {
 
 function nuOptionsListAction(f, r, filter) {
 
-	if (!(nuIsMacintosh() ? event.metaKey : event.ctrlKey)) {
+	if (!(nuIsMacintosh() ? window.event.metaKey : window.event.ctrlKey)) {
 		nuPopup(f, r, filter)
 	} else {
 		nuForm(f, r, filter, '', '');
