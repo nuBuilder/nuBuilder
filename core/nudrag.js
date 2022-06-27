@@ -312,11 +312,6 @@ function nuCreateDrag() {
 
 		if ($('#nuSelectBox').length == 0) { return; }
 
-		var x = parseInt($('#nuSelectBox').css('left'));
-		var y = parseInt($('#nuSelectBox').css('top'));
-		var w = parseInt($('#nuSelectBox').css('width'));
-		var h = parseInt($('#nuSelectBox').css('height'));
-
 		var X = event.clientX - this.startX;
 		var Y = event.clientY + window.scrollY - this.startY;
 
