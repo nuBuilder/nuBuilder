@@ -1144,38 +1144,46 @@ function nuImageList($f){
 
 }
 
-
 function nuCreateFile($j) {
 
-	if ($j == '') return '';
+	function nuCreateTempFile($type) {
 
-	$id = nuID();
+		$id = nuID();
+		return sys_get_temp_dir() . "/$id." . '.' . $type;
+	}
 
-	if (nuStringStartsWith('data:image', $j)) {
-		$type = explode('/', mime_content_type($j)) [1];
-		$file = sys_get_temp_dir() . "/$id." . '.' . $type;
-		list($type, $j) = explode(';', $j);
-		list(, $j) = explode(',', $j);
-		file_put_contents($file, base64_decode($j));
+	if ($data == '') return '';
+
+	if (nuStringStartsWith('data:image', $data)) {
+		$type = explode('/', mime_content_type($data)) [1];
+		$file = nuCreateTempFile($type);
+		list($type, $data) = explode(';', $data);
+		list(, $data) = explode(',', $data);
+		file_put_contents($file, base64_decode($data));
+	} elseif (nuStringStartsWith('http://', $data) || nuStringStartsWith('https://', $data)) {
+		$name = pathinfo(parse_url($data)['path'], PATHINFO_FILENAME);
+		$type = pathinfo(parse_url($data)['path'], PATHINFO_EXTENSION);
+		$file = nuCreateTempFile($type);
+		$content = file_get_contents($data);
+		file_put_contents($file, $content);
 	}
 	else {
-		$f = json_decode($j);
+		$f = json_decode($data);
 		$type = explode('/', $f->type);
 		$type = $type[1];
-		$file = sys_get_temp_dir() . "/$id." . $type;
+		$file = nuCreateTempFile($type);
 		$h = fopen($file, 'w');
 		$d = base64_decode($f->file);
 		$p = explode(';base64,', $d);
 		$p = $p[1];
-		$data = base64_decode($p);
 
-		fwrite($h, $data);
+		fwrite($h, base64_decode($p));
 		fclose($h);
 	}
 
 	return $file;
-
 }
+
 
 function nuHash(){
 	return nuObjKey($_POST,'nuHash');
