@@ -1144,25 +1144,37 @@ function nuImageList($f){
 
 }
 
-function nuCreateFile($j){
 
-	if($j == ''){return '';}
+function nuCreateFile($j) {
 
-	$id		= nuID();
-	$f		= json_decode($j);
-	$t		= explode('/',$f->type);
-	$t		= $t[1];
-	$file	= sys_get_temp_dir()."/$id." . $t;
-	$h		= fopen($file , 'w');
-	$d		= base64_decode($f->file);
-	$p		= explode(';base64,', $d);
-	$p		= $p[1];
-	$data	= base64_decode($p);
+	if ($j == '') return '';
 
-	fwrite($h, $data);
-	fclose($h);
+	$id = nuID();
+
+	if (nuStringStartsWith('data:image', $j)) {
+		$type = explode('/', mime_content_type($j)) [1];
+		$file = sys_get_temp_dir() . "/$id." . '.' . $type;
+		list($type, $j) = explode(';', $j);
+		list(, $j) = explode(',', $j);
+		file_put_contents($file, base64_decode($j));
+	}
+	else {
+		$f = json_decode($j);
+		$type = explode('/', $f->type);
+		$type = $type[1];
+		$file = sys_get_temp_dir() . "/$id." . $type;
+		$h = fopen($file, 'w');
+		$d = base64_decode($f->file);
+		$p = explode(';base64,', $d);
+		$p = $p[1];
+		$data = base64_decode($p);
+
+		fwrite($h, $data);
+		fclose($h);
+	}
 
 	return $file;
+
 }
 
 function nuHash(){
@@ -2042,12 +2054,12 @@ function nuGetGlobalProperties() {
 function nuSetGlobalPropertiesJS() {
 
 	$a = nuGetGlobalProperties();
-    $js = "";
-    foreach ($a as $p => $v) {
-        $js .= "nuSetProperty('". $p ."','" . addslashes($v) ."');\n";
-    }
+	$js = "";
+	foreach ($a as $p => $v) {
+		$js .= "nuSetProperty('". $p ."','" . addslashes($v) ."');\n";
+	}
 
-    if ($js != '') nuAddJavascript($js);
+	if ($js != '') nuAddJavascript($js);
 
 }
 
