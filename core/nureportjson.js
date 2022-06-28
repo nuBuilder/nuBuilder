@@ -11,7 +11,6 @@ window.nuOBJECT = {
 	"fontWeight": "",
 	"format": "",
 	"textAlign": "left",
-	"image": "",
 	"group": 0,
 	"section": 0,
 	"left": 10,

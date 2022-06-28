@@ -33,23 +33,24 @@ function nuLoadReport(b) {
 		nuDragR.setIds();
 	}
 
-	$('body').off('keydown');
-	$('body').off('keyup');
-	$('body').off('mousedown');
-	$('body').off('mouseup');
-	$('body').off('mousemove');
+	const body = $('body');
+	body.off('keydown');
+	body.off('keyup');
+	body.off('mousedown');
+	body.off('mouseup');
+	body.off('mousemove');
 
-	$('body').on('mousedown.nudrag', function (event) { nuDrag.down(event); });
-	$('body').on('keydown.nudrag', function (event) { nuDrag.move(event); });
-	$('body').on('keyup.nudrag', function (event) { nuDrag.up(event); });
-	$('body').on('mouseup.nudrag', function (event) { nuDrag.up(event); });
-	$('body').on('mousemove.nudrag', function (event) { nuDrag.move(event); });
+	body.on('mousedown.nudrag', function (event) { nuDrag.down(event); });
+	body.on('keydown.nudrag', function (event) { nuDrag.move(event); });
+	body.on('keyup.nudrag', function (event) { nuDrag.up(event); });
+	body.on('mouseup.nudrag', function (event) { nuDrag.up(event); });
+	body.on('mousemove.nudrag', function (event) { nuDrag.move(event); });
 
-	$('body').on('mousedown.nureport', function (event) { nuDragR.down(event); });
-	$('body').on('keydown.nureport', function (event) { nuDragR.move(event); });
-	$('body').on('keyup.nureport', function (event) { nuDragR.up(event); });
-	$('body').on('mouseup.nureport', function (event) { nuDragR.up(event); });
-	$('body').on('mousemove.nureport', function (event) { nuDragR.move(event); });
+	body.on('mousedown.nureport', function (event) { nuDragR.down(event); });
+	body.on('keydown.nureport', function (event) { nuDragR.move(event); });
+	body.on('keyup.nureport', function (event) { nuDragR.up(event); });
+	body.on('mouseup.nureport', function (event) { nuDragR.up(event); });
+	body.on('mousemove.nureport', function (event) { nuDragR.move(event); });
 
 	if (arguments.length == 0) {
 
@@ -224,13 +225,13 @@ function nuDragReport() {
 
 		$('#nuSectionHolder').css({ 'position': 'absolute', 'left': 10, 'top': 0, 'width': nuDrag.areaWidth(), 'top': nuDrag.areaTop(), 'background-color': 'yellow', 'border-width': 1, 'border-style': 'solid none none solid' });
 
-		for (i = 1; i < this.groups.length; i++) {
+		for (let i = 1; i < this.groups.length; i++) {
 			this.createSection(i, 0);
 		}
 
 		this.createSection(0, 0);
 
-		for (i = this.groups.length - 1; i > 0; i--) {
+		for (let i = this.groups.length - 1; i > 0; i--) {
 			this.createSection(i, 1);
 		}
 
@@ -464,7 +465,7 @@ function nuDragReport() {
 
 		var t = parseInt($('#' + o).css('top'));
 
-		for (i = 0; i < 21; i++) {
+		for (let i = 0; i < 21; i++) {
 
 			T = parseInt($('#nuSection' + i).css('top'));
 
@@ -1154,7 +1155,6 @@ function nuObjectDialog() {
 	top = nuDialogInput('Font Weight', 'fontWeight', top, 200, D, fun, [['', 'Normal'], ['b', 'Bold'], ['i', 'Italic']]);
 	top = nuDialogInput('Format', 'format', top, 200, D, fun, window.nuFormats);
 	top = nuDialogInput('Text Align', 'textAlign', top, 200, D, fun, [['left', 'Left'], ['right', 'Right'], ['center', 'Center']]);
-	top = nuDialogInput('Image', 'image', top, 200, D, fun);
 	top = nuDialogInput('Minimum Rows', 'minRows', top, 200, D, fun);
 	top = nuDialogInput('Maximum Rows', 'maxRows', top, 200, D, fun);
 	top = nuDialogInput('Z Index', 'zIndex', top, 200, D, fun);
