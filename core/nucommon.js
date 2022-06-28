@@ -36,6 +36,20 @@ window.nuBROWSERESIZE = {
 };
 
 
+String.prototype.nuEndsWith = function(substr, ignoreCase) {
+
+	if (ignoreCase === undefined || ignoreCase === false) return this.endsWith(substr);
+	return this.toLowerCase().endsWith(substr.toLowerCase());
+
+}
+
+String.prototype.nuStartsWith = function(substr, ignoreCase) {
+
+	if (ignoreCase === undefined || ignoreCase === false) return this.startsWith(substr);
+	return this.toLowerCase().startsWith(substr.toLowerCase());
+
+}
+
 String.prototype.nuReplaceAll = function (str1, str2, ignore) {
 	return this.replace(new RegExp(str1.replace(/([\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g, function (c) { return "\\" + c; }), "g" + (ignore ? "i" : "")), str2);
 };
