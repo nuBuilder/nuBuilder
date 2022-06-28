@@ -1943,19 +1943,36 @@ function nuTranslateExport($l = '', $table = 'zzzzsys_translate') {
 	}
 }
 
-function nuStringContains($needle, $haystack) {
+function nuStringContains($needle, $haystack, $ignoreCase = false) {
 	if ($haystack == null) return false;
-	return strpos($haystack, $needle) !== false;
+
+	if ($ignoreCase == true) {
+		return stripos($haystack, $needle) !== false;
+	} else {
+		return strpos($haystack, $needle) !== false;
+	}
 }
 
-function nuStringStartsWith($needle, $haystack) {
+function nuStringStartsWith($needle, $haystack, $ignoreCase = false) {
 	if ($haystack == null) return false;
-	return strpos($haystack, $needle) === 0;
+
+	if ($ignoreCase == true) {
+		return stripos($haystack, $needle) === 0;
+	} else {
+		return strpos($haystack, $needle) === 0;
+	}
+
 }
 
-function nuStringEndsWith($needle, $haystack) {
+function nuStringEndsWith($needle, $haystack, $ignoreCase = false) {
 	if ($haystack == null) return false;
-	return strpos($haystack, $needle) === strlen($haystack) - strlen($needle);
+
+	if ($ignoreCase == true) {
+		return stripos($haystack, $needle) === strlen($haystack) - strlen($needle);
+	} else {
+		return strpos($haystack, $needle) === strlen($haystack) - strlen($needle);
+	}
+
 }
 
 function nuStringLeft($str, $length) {
