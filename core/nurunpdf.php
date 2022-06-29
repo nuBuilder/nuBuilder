@@ -424,10 +424,10 @@ class nuSECTION{
 				$O[$i]->LINES				= array('');
 				$path						= '';
 				$fld						= $O[$i]->fieldName;
-				$img						= $this->ROW[$fld];
 
 				if(nuIsField($fld)){													//-- FIELD NAME
 
+					$img					= $this->ROW[$fld];
 					$path					= nuCreateFile($img);
 					$GLOBALS['nu_files'][]	= $path;
 
@@ -1101,7 +1101,7 @@ function nuIsField($i){
 
 function nuIsImage($i){
 
-	if(substr($i, 0, 6) == 'Image:'){
+	if((nuStringStartsWith('Image:', $i, true))){
 
 		$c = substr($i, 6);
 		$t = nuRunQuery("SELECT * FROM zzzzsys_file WHERE sfi_code = ? ", array($c));

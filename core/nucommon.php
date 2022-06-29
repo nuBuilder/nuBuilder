@@ -1144,7 +1144,7 @@ function nuImageList($f){
 
 }
 
-function nuCreateFile($j) {
+function nuCreateFile($data) {
 
 	function nuCreateTempFile($type) {
 
@@ -1944,6 +1944,7 @@ function nuTranslateExport($l = '', $table = 'zzzzsys_translate') {
 }
 
 function nuStringContains($needle, $haystack, $ignoreCase = false) {
+
 	if ($haystack == null) return false;
 
 	if ($ignoreCase == true) {
@@ -1954,6 +1955,7 @@ function nuStringContains($needle, $haystack, $ignoreCase = false) {
 }
 
 function nuStringStartsWith($needle, $haystack, $ignoreCase = false) {
+
 	if ($haystack == null) return false;
 
 	if ($ignoreCase == true) {
@@ -1965,6 +1967,7 @@ function nuStringStartsWith($needle, $haystack, $ignoreCase = false) {
 }
 
 function nuStringEndsWith($needle, $haystack, $ignoreCase = false) {
+
 	if ($haystack == null) return false;
 
 	if ($ignoreCase == true) {
