@@ -3371,6 +3371,10 @@ function nuAllowChanges(f) {
 	return nuSERVERRESPONSE.form_access == 0 || String(f).substr(0, 2) != 'nu' || f == 'nuuserhome';
 }
 
+function nuHideOptionsItemShortcutKeys() {
+	$('.nuOptionsItemShortcutKey').css('visibility','hidden');
+}
+
 function nuGetOptionsList(f, t, p, a, type) {
 
 	// f: form ID
@@ -3501,8 +3505,9 @@ function nuGetOptionsList(f, t, p, a, type) {
 		.addClass('nuOptionsList');
 
 	nuBuildOptionsList(list, p, type);
+	
+	if (nuIsMobile()) nuHideOptionsItemShortcutKeys();
 	$('[data-nu-option-title]').css('padding', 3);
-
 
 }
 
@@ -5044,6 +5049,8 @@ function nuGetSearchList() {
 
 	$('.nuOptionsItem').css({ 'width': widest - 90, 'padding': '3px 0px 0px 3px' });
 	$('#nuSearchList').css({ 'height': 50 + (c.length * 25) });
+	
+	if (nuIsMobile()) nuHideOptionsItemShortcutKeys();
 
 }
 
