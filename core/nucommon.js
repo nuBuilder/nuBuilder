@@ -2123,7 +2123,7 @@ function nuImportUsersFromCSV(file) {
 
 	nuSetProperty('nuimportusers_file', file);
 
-	nuRunPHP('nuimportusers', '', 0);
+	nuRunPHP('NUIMPORTUSERS', '', 0);
 
 }
 
@@ -2895,7 +2895,7 @@ function nuRunBackup() {
 	const c = confirm(nuTranslate("Perform the Backup now?"));
 	if (c === true) {
 		nuMessage(nuTranslate("Backup is running") + "...");
-		nuRunPHPHidden("nubackup", 0);
+		nuRunPHPHidden("NUBACKUP", 0);
 	}
 
 }

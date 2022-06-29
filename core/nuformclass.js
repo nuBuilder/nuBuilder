@@ -1123,12 +1123,10 @@ function nuSetProperty(f, v, p) {
 		// set the hash cookie to persist / global scope
 		nuSetProperty('hcname', f);
 		nuSetProperty('hcvalue', v);
-		nuRunPHPHidden('nusethashcookie', 0);
+		nuRunPHPHidden('NUSETHASHCOOKIE', 0);
 	}
 
 }
-
-// All global properties are now reset in every form with  nuGetGlobalProperties() and so no need to store them in the browser session storage
 
 function nuGetProperty(f) {
 

@@ -55,7 +55,7 @@ function nuLoadReport(b) {
 	if (arguments.length == 0) {
 
 		var r = JSON.stringify(nuREPORT);
-		nuBACKUP.push(JSON.parse(r));
+		window.nuBACKUP.push(JSON.parse(r));
 
 	}
 
@@ -1524,10 +1524,10 @@ function nuUpdateReport(t) {
 
 function nuUndo() {
 
-	if (nuBACKUP.length > 1) {
+	if (window.nuBACKUP.length > 1) {
 
-		nuBACKUP.splice(nuBACKUP.length - 1, 1);
-		nuREPORT = nuBACKUP[nuBACKUP.length - 1]
+		window.nuBACKUP.splice(window.nuBACKUP.length - 1, 1);
+		nuREPORT = window.nuBACKUP[window.nuBACKUP.length - 1];
 
 		nuLoadReport(1);
 

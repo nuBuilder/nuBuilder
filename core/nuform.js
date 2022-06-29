@@ -2583,7 +2583,7 @@ function nuSubformRefreshSelectObject(prefix, selectId, formId, removeBlank) {
 		var formId = '';
 	}
 
-	let p = 'nurefreshselectobject';
+	let p = 'NUREFRESHSELECTOBJECT';
 	nuSetProperty(p + '_prefix', prefix);
 	nuSetProperty(p + '_selectid', selectId);
 	nuSetProperty(p + '_formid', formId);
@@ -2605,7 +2605,7 @@ function nuSubformRefreshDisplayObject(prefix, displayId, formId) {
 		var formId = '';
 	}
 
-	let p = 'nurefreshdisplayobject';
+	let p = 'NUREFRESHDISPLAYOBJECT';
 	nuSetProperty(p + '_prefix', prefix);
 	nuSetProperty(p + '_displayid', displayId);
 	nuSetProperty(p + '_formid', formId);
@@ -3402,7 +3402,7 @@ function nuGetOptionsList(f, t, p, a, type) {
 		}
 
 		list.push(['', '', '', '']);
-		list.push([nuTranslate('Refresh'), 'if (nuGlobalAccess()) {nuRunPHPHidden("nusetrefreshcache", 0);} else {nuGetBreadcrumb();}', 'fas fa-sync-alt', nuCtrlCmdShiftName('R')]);
+		list.push([nuTranslate('Refresh'), 'if (nuGlobalAccess()) {nuRunPHPHidden("NUSETREFRESHCACHE", 0);} else {nuGetBreadcrumb();}', 'fas fa-sync-alt', nuCtrlCmdShiftName('R')]);
 		list.push([nuTranslate('Search'), 'nuSearchAction();', 'fas fa-search', nuCtrlCmdShiftName('S')]);
 
 		if (nuSERVERRESPONSE.buttons.Add == '1') { list.push([nuTranslate('Add'), 'nuAddAction();', 'fas fa-plus', nuCtrlCmdShiftName('A')]); }
@@ -3446,7 +3446,7 @@ function nuGetOptionsList(f, t, p, a, type) {
 
 		if (type != 'subform') {
 
-			list.push([nuTranslate('Refresh'), 'if (nuGlobalAccess()) {nuRunPHPHidden("nusetrefreshcache", 0);} else {nuGetBreadcrumb();}', 'fas fa-sync-alt', nuCtrlCmdShiftName('R')]);
+			list.push([nuTranslate('Refresh'), 'if (nuGlobalAccess()) {nuRunPHPHidden("NUSETREFRESHCACHE", 0);} else {nuGetBreadcrumb();}', 'fas fa-sync-alt', nuCtrlCmdShiftName('R')]);
 
 			if (nuFORM.getCurrent().form_type != 'launch') {
 
