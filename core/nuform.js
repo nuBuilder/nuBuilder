@@ -3375,12 +3375,16 @@ function nuHideOptionsItemShortcutKeys() {
 	$('.nuOptionsItemShortcutKey').css('visibility','hidden');
 }
 
+
+
+
+
 function nuGetOptionsList(f, t, p, a, type) {
 
 	// f: form ID
-	// a: global_access
+	// a == 1: global_access
 
-	let id = 'nuOptionsListBox';
+	const id = 'nuOptionsListBox';
 	if ($('#' + id).length !== 0) {
 		$('#nuOptionsListBox').remove();
 		return;
@@ -3388,102 +3392,97 @@ function nuGetOptionsList(f, t, p, a, type) {
 
 	let list = [];
 
-	if (nuFormType() == 'browse') {
+	const buttons = nuSERVERRESPONSE.buttons;
+	const objects = nuSERVERRESPONSE.objects;
+	const canChange = nuAllowChanges(f);
+	const admin = a == 1;
+	const hasHelp = nuFORMHELP[p] != '' && nuFORMHELP[p] !== undefined && type != 'subform';
+	const formType = nuFormType()[0];
+	const typeEdit = formType == 'e';
+	const typeBrowse = formType == 'b';
+	const typeSf = type == 'subform';
+	const typeLaunch = nuFORM.getCurrent().form_type != 'launch';
+	const divider = ['', '', '', ''];
 
-		list.push([nuTranslate('Searchable Columns'), 'nuGetSearchList()', 'fa-columns', nuCtrlCmdShiftName('C')]);
+	const itemAddObject = ['Add Object', 'nuPopup("nuobject","-1","")', 'fa fa-plus', 'H'];
+	const itemArrangeObjects = ['Arrange Objects', 'nuPopup("' + f + '", "-2")', 'fas fa-arrows-alt', 'A'];
+	const itemFormProperties = ['Form Properties', 'nuOptionsListAction("nuform", "' + f + '")', 'fa-cog', 'F'];
+	const itemSearchableColumns = ['Searchable Columns', 'nuGetSearchList()', 'fa-columns', 'C'];
+	const labelId = '#label_' + $('#' + p + 'scrollDiv').parent().attr('id');
+	const itemSubformObject = [nuTranslate('Subform Object'), '$("' + labelId + '").dblclick()', 'fa-cog', ''];
+	const itemFormObjectList = ['Form Object List', 'nuOptionsListAction("nuobject", "", "' + f + '")', 'fa-th-list', 'O'];
+	const itemSearch = ['Search', 'nuSearchAction();', 'fas fa-search', 'S'];
+	const itemAdd = ['Add', 'nuAddAction();', 'fas fa-plus', 'A'];
+	const itemPrint = ['Print', 'nuPrintAction();', 'fas fa-table', 'P'];
+	const itemSave = ['Save', 'nuSaveAction();', 'far fa-save', 'Ss'];
+	const itemDelete = ['Delete', 'nuDeleteAction();', 'far fa-trash-alt', 'Y'];
+	const itemClone = ['Clone', 'nuCloneAction();', 'far fa-clone', 'C'];
+	const itemRefresh = ['Refresh', 'if (nuGlobalAccess()) {nuRunPHPHidden("NUSETREFRESHCACHE", 0);} else {nuGetBreadcrumb();}', 'fas fa-sync-alt', 'R'];
+	const itemHelp = ['Help', nuFORMHELP[p], 'fa-question-circle', '?'];
+	const itemChangePassword = ['Change Password', 'nuPopup("nupassword", "", "")', 'fa-password', 'L'];
+	const itemDebugResults = ['nuDebug Results', 'nuOptionsListAction("nudebug", "")', 'fa-bug', 'D'];
+	const itemDatabase = ['Database', 'nuStartDatabaseAdmin();', 'fa-database', 'E'];
+	const itemBackup = ['Backup', 'nuRunBackup();', 'far fa-hdd', 'B'];
+	const itemSetup = ['Setup', 'nuForm("nusetup","1","", "", 2)', 'fa-cogs', 'U'];
+	const itemFormInfo = ['Form Info', 'nuShowFormInfo();', 'fa-info', 'M'];
 
-		if (a == 1 || f == 'nuuserhome') {
-
-			if (nuAllowChanges(f)) {
-
-				list.push([nuTranslate('Form Properties'), 'nuOptionsListAction("nuform", "' + f + '")', 'fa-cog', nuCtrlCmdShiftName('F')]);
-				list.push([nuTranslate('Form Object List'), 'nuOptionsListAction("nuobject", "", "' + f + '")', 'fa-th-list', nuCtrlCmdShiftName('O')]);
-
-			}
-
-		} else {
-			list.push([nuTranslate('Change Password'), 'nuPopup("nupassword", "", "")', 'fa-password', nuCtrlCmdShiftName('L')]);
+	if (typeEdit && admin && canChange) {
+		if (objects.length > 0) {
+			list.push(itemArrangeObjects);
 		}
+		if (!typeSf) {
+			list.push(itemAddObject);
+			list.push(divider);
+		}
+	}
 
-		list.push(['', '', '', '']);
-		list.push([nuTranslate('Refresh'), 'if (nuGlobalAccess()) {nuRunPHPHidden("NUSETREFRESHCACHE", 0);} else {nuGetBreadcrumb();}', 'fas fa-sync-alt', nuCtrlCmdShiftName('R')]);
-		list.push([nuTranslate('Search'), 'nuSearchAction();', 'fas fa-search', nuCtrlCmdShiftName('S')]);
+	if (typeBrowse)  list.push(itemSearchableColumns);
+	if (admin && canChange) list.push(itemFormProperties);
 
-		if (nuSERVERRESPONSE.buttons.Add == '1') { list.push([nuTranslate('Add'), 'nuAddAction();', 'fas fa-plus', nuCtrlCmdShiftName('A')]); }
-		if (nuSERVERRESPONSE.buttons.Print == '1') { list.push([nuTranslate('Print'), 'nuPrintAction();', 'fas fa-table', nuCtrlCmdShiftName('P')]); }
+	if (typeSf && canChange) {
+		list.push(itemSubformObject);
+	}
+
+	if (admin && canChange) list.push(itemFormObjectList);
+
+	if (!typeSf && admin) list.push(divider);
+
+	if (typeBrowse) {
+		list.push(itemSearch);
+		if (buttons.Add == '1') { list.push(itemAdd); }
+		if (buttons.Print == '1') { list.push(itemPrint); }
+	}
+
+	if (typeLaunch && typeEdit && type != 'subform') {
+
+		const data_mode = nuFORM.getCurrent().data_mode;
+		if (buttons.Save == '1' && data_mode !== 0) { list.push(itemSave); }
+		if (buttons.Delete == '1') { list.push(itemDelete); }
+		if (buttons.Clone == '1') { list.push(itemClone); }
 
 	}
 
-	if (nuFormType() == 'edit') {
-
-		if (a == 1) {
-
-			if (nuAllowChanges(f)) {
-
-				if (nuSERVERRESPONSE.objects.length > 0) {
-					list.push([nuTranslate('Arrange Objects'), 'nuPopup("' + f + '", "-2")', 'fas fa-arrows-alt', nuCtrlCmdShiftName('A')]);
-				}
-
-				if (type != 'subform') {
-					list.push([nuTranslate('Add Object'), 'nuPopup("nuobject","-1","")', 'fa fa-plus', nuCtrlCmdShiftName('H')]);
-					list.push(['', '', '', '']);
-				}
-
-				list.push([nuTranslate('Form Properties'), 'nuOptionsListAction("nuform", "' + f + '")', 'fa-cog', nuCtrlCmdShiftName('F')]);
-
-				if (type == 'subform') {
-					let labelId = '#label_' + $('#' + p + 'scrollDiv').parent().attr('id');
-					list.push([nuTranslate('Subform Object'), '$("' + labelId + '").dblclick()', 'fa-cog', '']);
-				}
-
-				list.push([nuTranslate('Form Object List'), 'nuOptionsListAction("nuobject", "", "' + f + '")', 'fa-th-list', nuCtrlCmdShiftName('O')]);
-
-			}
-
-		} else {
-
-			if (type != 'subform') {
-				list.push([nuTranslate('Change Password'), 'nuPopup("nupassword", "", "")', 'fa-lock', nuCtrlCmdShiftName('L')]);
-			}
-
-		}
-
-		if (type != 'subform') {
-
-			list.push([nuTranslate('Refresh'), 'if (nuGlobalAccess()) {nuRunPHPHidden("NUSETREFRESHCACHE", 0);} else {nuGetBreadcrumb();}', 'fas fa-sync-alt', nuCtrlCmdShiftName('R')]);
-
-			if (nuFORM.getCurrent().form_type != 'launch') {
-
-				var data_mode = nuFORM.getCurrent().data_mode;
-
-				if (nuSERVERRESPONSE.buttons.Save == '1' && data_mode !== 0) { list.push([nuTranslate('Save'), 'nuSaveAction();', 'far fa-save', nuCtrlCmdShiftName('S')]); }
-				if (nuSERVERRESPONSE.buttons.Delete == '1') { list.push([nuTranslate('Delete'), 'nuDeleteAction();', 'far fa-trash-alt', nuCtrlCmdShiftName('Y')]); }
-				if (nuSERVERRESPONSE.buttons.Clone == '1') { list.push([nuTranslate('Clone'), 'nuCloneAction();', 'far fa-clone', nuCtrlCmdShiftName('C')]); }
-
-			}
-
-		}
-
-		if (nuFORMHELP[p] != '') {
-			list.push([nuTranslate('Help'), nuFORMHELP[p], 'fa-question-circle', nuCtrlCmdShiftName('?')]);
-		}
-
+	if (hasHelp) {
+		list.push(itemHelp);
 	}
 
-	if (a == 1 && (nuFormType() == 'browse' || nuFormType() == 'edit')) {
+	if (!typeSf) {
+		list.push(itemRefresh);
+		if (admin) list.push(divider);
+	}
 
-		if (type != 'subform') {
+	if (!admin) {
+		list.push(divider);
+		list.push(itemChangePassword);
+	}
 
-			list.push(['', '', '', '']);
-			list.push([nuTranslate('nuDebug Results'), 'nuOptionsListAction("nudebug", "")', 'fa-bug', nuCtrlCmdShiftName('D')]);
-			list.push(['', '', '', '']);
-			list.push([nuTranslate('Database'), 'nuStartDatabaseAdmin();', 'fa-database', nuCtrlCmdShiftName('E')]);
-			list.push([nuTranslate('Backup'), 'nuRunBackup();', 'far fa-hdd', nuCtrlCmdShiftName('B')]);
-			list.push([nuTranslate('Setup'), 'nuForm("nusetup","1","", "", 2)', 'fa-cogs', nuCtrlCmdShiftName('U')]);
-			list.push([nuTranslate('Form Info'), 'nuShowFormInfo();', 'fa-info', nuCtrlCmdShiftName('M')]);
-
-		}
-
+	if (admin && !typeSf) {
+		list.push(itemDebugResults);
+		list.push(divider);
+		list.push(itemDatabase);
+		list.push(itemBackup);
+		list.push(itemSetup);
+		list.push(itemFormInfo);
 	}
 
 	if (list.length == 0) { return; }
@@ -3505,7 +3504,7 @@ function nuGetOptionsList(f, t, p, a, type) {
 		.addClass('nuOptionsList');
 
 	nuBuildOptionsList(list, p, type);
-	
+
 	if (nuIsMobile()) nuHideOptionsItemShortcutKeys();
 	$('[data-nu-option-title]').css('padding', 3);
 
@@ -3518,15 +3517,20 @@ function nuBuildOptionsList(l, p, type) {												//-- loop through adding op
 	var width = 0;
 
 	for (var i = 0; i < l.length; i++) {
+		if (l[i][0] != '') l[i][0] = nuTranslate(l[i][0]); 		// Text
+		l[i][3] = nuCtrlCmdShiftName(l[i][3]); 					// Shortcut
+	}
+
+	for (var i = 0; i < l.length; i++) {
 		width = Math.max((nuGetWordWidth(l[i][0]) + nuGetWordWidth(l[i][3])), width);
 	}
 
 	for (var i = 0; i < l.length; i++) {
 
-		var t = l[i][0]; // Text
-		var f = l[i][1]; // onclick
-		var c = l[i][2]; // Icon
-		var k = l[i][3]; // Shortcut
+		var t = l[i][0];	// Text
+		var f = l[i][1]; 	// onclick
+		var c = l[i][2]; 	// Icon
+		var k = l[i][3]; 	// Shortcut
 		var itemtop = 30 + (i * 20);
 
 		// Add Icon
@@ -3629,7 +3633,7 @@ function nuBuildOptionsList(l, p, type) {												//-- loop through adding op
 
 	$('#nuOptionsListBox').css({
 		'height': 40 + (l.length * 20),
-		'width': 40 + width - reduce,
+		'width': 50 + width - reduce,
 		'left': left,
 		'top': top + 70
 	});
@@ -5049,7 +5053,7 @@ function nuGetSearchList() {
 
 	$('.nuOptionsItem').css({ 'width': widest - 90, 'padding': '3px 0px 0px 3px' });
 	$('#nuSearchList').css({ 'height': 50 + (c.length * 25) });
-	
+
 	if (nuIsMobile()) nuHideOptionsItemShortcutKeys();
 
 }
