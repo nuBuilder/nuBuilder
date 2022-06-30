@@ -1389,19 +1389,22 @@ function nuOnFocus(e) {
 
 function nuClick(e) {
 
-	if ($(e.target).parent().parent().attr('class') !== 'ctxmenu') {
+	const t = $(e.target);
+
+	if (t.parent().parent().attr('class') !== 'ctxmenu') {
 		nuContextMenuClose();
 	}
 
-	if (!$(e.target).hasClass('nuOptionsItem') && !$(e.target).hasClass('nuSearchCheckbox')) {
+	if (!t.hasClass('nuOptionsItem') && ! t.hasClass('nuSearchCheckbox') && ! t.hasClass('nuOptionsList')
+	&& ! $(e.target.parentElement).hasClass('nuOptionsList')) {
 		$('#nuSearchList').remove();
 	}
 
-	if (!$(e.target).hasClass('nuIcon')) {
+	if (!t.hasClass('nuIcon')) {
 		$('#nuOptionsListBox').remove();
 	}
 
-	if (e.target.id != 'nuMessageDiv' && $(e.target).attr('data-nu-option-title') != 'Help') {
+	if (e.target.id != 'nuMessageDiv' && t.attr('data-nu-option-title') != 'Help') {
 
 		if (window.nuHideMessage) {
 			$('#nuMessageDiv').remove();
@@ -1411,7 +1414,7 @@ function nuClick(e) {
 
 	}
 
-	if ($(e.target).attr('type') != 'nuDate' && !$(e.target).hasClass('nuCalendar')) {
+	if (t.attr('type') != 'nuDate' && !t.hasClass('nuCalendar')) {
 		$('#nuCalendar').remove();
 	}
 
