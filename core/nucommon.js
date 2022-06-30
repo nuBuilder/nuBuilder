@@ -928,7 +928,8 @@ function nuTranslate(s) {
 	if (typeof s === 'undefined' || s === '' || s === null) {
 		return '';
 	}
-
+	
+	s = String(s);
 	if (s.charAt(0) == '|') return s.substring(1);
 
 	let l = nuLANGUAGE.find(elem => elem.english === s);
