@@ -3457,8 +3457,8 @@ function nuGetOptionsList(f, t, p, a, type) {
 
 		const data_mode = nuFORM.getCurrent().data_mode;
 		if (buttons.Save == '1' && data_mode !== 0) { list.push(itemSave); }
-		if (buttons.Delete == '1') { list.push(itemDelete); }
-		if (buttons.Clone == '1') { list.push(itemClone); }
+		if (buttons.Delete == '1' && !nuIsNewRecord()) { list.push(itemDelete); }
+		if (buttons.Clone == '1' && !nuIsNewRecord()) { list.push(itemClone); }
 
 	}
 
