@@ -310,28 +310,30 @@ function nuCreateDrag() {
 
 	this.resizeBox = function (event) {
 
-		if ($('#nuSelectBox').length == 0) { return; }
+		const $sb = $('#nuSelectBox');
+
+		if ($sb.length == 0) { return; }
 
 		var X = event.clientX - this.startX;
 		var Y = event.clientY + window.scrollY - this.startY;
 
 		if (X > 0) {
-			$('#nuSelectBox').css({
+			$sb.css({
 				'width': X
 			});
 		} else {
-			$('#nuSelectBox').css({
+			$sb.css({
 				'width': -1 * X,
 				'left': this.startX + X,
 			});
 		}
 
 		if (Y > 0) {
-			$('#nuSelectBox').css({
+			$sb.css({
 				'height': Y
 			});
 		} else {
-			$('#nuSelectBox').css({
+			$sb.css({
 				'height': -1 * Y,
 				'top': this.startY + Y,
 			});
@@ -343,51 +345,53 @@ function nuCreateDrag() {
 
 	this.removeBox = function () {
 
-		if ($('#nuSelectBox').length == 0) { return; }
+		const $sb = $('#nuSelectBox');
+		if ($sb.length == 0) { return; }
 
-		var L = parseInt($('#nuSelectBox').css('left')) - this.areaLeft();
-		var T = parseInt($('#nuSelectBox').css('top')) - this.areaTop();
-		var B = T + parseInt($('#nuSelectBox').css('height'));
-		var R = L + parseInt($('#nuSelectBox').css('width'));
+		var L = parseInt($sb.css('left')) - this.areaLeft();
+		var T = parseInt($sb.css('top')) - this.areaTop();
+		var B = T + parseInt($sb.css('height'));
+		var R = L + parseInt($sb.css('width'));
 
-		$('#nuSelectBox').remove();
+		$sb.remove();
 
 		var o = $('.nuDragObject');
 
 		o.each(function (index) {
 
-			var l = parseInt($(this).css('left'));
-			var t = parseInt($(this).css('top'));
-			var b = t + parseInt($(this).css('height'));
-			var r = l + parseInt($(this).css('width'));
+			const $this = $(this);
+			var l = parseInt($this.css('left'));
+			var t = parseInt($this.css('top'));
+			var b = t + parseInt($this.css('height'));
+			var r = l + parseInt($this.css('width'));
 
 			//drag around selected objects points
 			if (l >= L && l <= R && t >= T && t <= B) {
-				$(this).addClass('nuDragSelected');
+				$this.addClass('nuDragSelected');
 			} else if (r >= L && r <= R && t >= T && t <= B) {
-				$(this).addClass('nuDragSelected');
+				$this.addClass('nuDragSelected');
 			} else if (l >= L && l <= R && b >= T && b <= B) {
-				$(this).addClass('nuDragSelected');
+				$this.addClass('nuDragSelected');
 			} else if (r >= L && r <= R && b >= T && b <= B) {
-				$(this).addClass('nuDragSelected');
+				$this.addClass('nuDragSelected');
 			}
 
 			//drag within selected objects points
 			if (L >= l && L <= r && T >= t && T <= b) {
-				$(this).addClass('nuDragSelected');
+				$this.addClass('nuDragSelected');
 			} else if (R >= l && R <= r && T >= t && T <= b) {
-				$(this).addClass('nuDragSelected');
+				$this.addClass('nuDragSelected');
 			} else if (L >= l && L <= r && B >= t && B <= b) {
-				$(this).addClass('nuDragSelected');
+				$this.addClass('nuDragSelected');
 			} else if (R >= l && R <= r && B >= t && B <= b) {
-				$(this).addClass('nuDragSelected');
+				$this.addClass('nuDragSelected');
 			}
 
 			//drag through object but not through any points
 			if (L >= l && L <= r && T <= t && B >= b) {
-				$(this).addClass('nuDragSelected');
+				$this.addClass('nuDragSelected');
 			} else if (L <= l && R >= r && T >= t && B <= b) {
-				$(this).addClass('nuDragSelected');
+				$this.addClass('nuDragSelected');
 			}
 		});
 
@@ -434,31 +438,31 @@ function nuCreateDrag() {
 
 	this.createArea = function (l, t, w, h) {
 
-		var e = document.createElement('div');
+		const e = document.createElement('div');
 
 		e.setAttribute('id', 'nuDragArea');
 
 		$('body').append(e);
 
-		$('#nuDragArea').css({ 'left': l, 'top': t, 'width': w, 'height': h });
-		$('#nuDragArea').addClass('nuDragArea nuDragNoSelect');
+		$('#nuDragArea').css({ 'left': l, 'top': t, 'width': w, 'height': h })
+						.addClass('nuDragArea nuDragNoSelect');
 
 	}
 
 
 	this.createObject = function (id, prop) {
 
-		var e = document.createElement('div');
+		const e = document.createElement('div');
 
 		e.setAttribute('id', id);
 
 		$('#nuDragArea').append(e);
 
-		$('#' + id).addClass('nuDragObject');
-		$('#' + id).css(prop);
-		$('#' + id).css('z-index', 100 + $('.nuDragObject').length);
-		$('#' + id).attr('data-section', '');
-		$('#' + id).attr('data-x', 0);
+		$('#' + id).addClass('nuDragObject')
+		.css(prop)
+		.css('z-index', 100 + $('.nuDragObject').length)
+		.attr('data-section', '')
+		.attr('data-x', 0);
 
 	}
 
