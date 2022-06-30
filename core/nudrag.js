@@ -307,7 +307,6 @@ function nuCreateDrag() {
 		return false;
 	}
 
-
 	this.resizeBox = function (event) {
 
 		const $sb = $('#nuSelectBox');
@@ -341,8 +340,6 @@ function nuCreateDrag() {
 
 	}
 
-
-
 	this.removeBox = function () {
 
 		const $sb = $('#nuSelectBox');
@@ -365,34 +362,38 @@ function nuCreateDrag() {
 			var b = t + parseInt($this.css('height'));
 			var r = l + parseInt($this.css('width'));
 
+			let add = false;
 			//drag around selected objects points
 			if (l >= L && l <= R && t >= T && t <= B) {
-				$this.addClass('nuDragSelected');
+				add = true; add = true;
 			} else if (r >= L && r <= R && t >= T && t <= B) {
-				$this.addClass('nuDragSelected');
+				add = true;
 			} else if (l >= L && l <= R && b >= T && b <= B) {
-				$this.addClass('nuDragSelected');
+				add = true;
 			} else if (r >= L && r <= R && b >= T && b <= B) {
-				$this.addClass('nuDragSelected');
+				add = true;
 			}
 
 			//drag within selected objects points
 			if (L >= l && L <= r && T >= t && T <= b) {
-				$this.addClass('nuDragSelected');
+				add = true;
 			} else if (R >= l && R <= r && T >= t && T <= b) {
-				$this.addClass('nuDragSelected');
+				add = true;
 			} else if (L >= l && L <= r && B >= t && B <= b) {
-				$this.addClass('nuDragSelected');
+				add = true;
 			} else if (R >= l && R <= r && B >= t && B <= b) {
-				$this.addClass('nuDragSelected');
+				add = true;
 			}
 
 			//drag through object but not through any points
 			if (L >= l && L <= r && T <= t && B >= b) {
-				$this.addClass('nuDragSelected');
+				add = true;
 			} else if (L <= l && R >= r && T >= t && B <= b) {
-				$this.addClass('nuDragSelected');
+				add = true;
 			}
+
+			if (add) $this.addClass('nuDragSelected');
+
 		});
 
 		this.getSelected();
