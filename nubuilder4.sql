@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 30, 2022 at 05:59 PM
+-- Generation Time: Jun 30, 2022 at 08:29 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.2
 
@@ -327,7 +327,8 @@ INSERT INTO `zzzzsys_config` (`zzzzsys_config_id`, `zzzzsys_setup_id`, `cfg_orde
 ('nu62a0a02105062e5', '1', 410, 'nuAdminButtons', 'nuPHP', 'true', 'Show PHP icons for administrator', 2, '1'),
 ('nu62a0a0210506a8f', '1', 420, 'nuAdminButtons', 'nuRefresh', 'true', 'Show Refresh icons for administrator', 2, '1'),
 ('nu62a0a02105071cb', '1', 430, 'nuAdminButtons', 'nuObjects', 'true', 'Show Objects (Obj) icon for administrator', 2, '1'),
-('nu62a0a02105079da', '1', 440, 'nuAdminButtons', 'nuProperties', 'true', 'Show Properties (Prop) icon for administrator', 2, '1');
+('nu62a0a02105079da', '1', 440, 'nuAdminButtons', 'nuProperties', 'true', 'Show Properties (Prop) icon for administrator', 2, '1'),
+('nu62bdc792e1efb3a', '1', 41, 'Settings', '$nuConfigGlobeadminHome', 'nuhome', 'Home form ID for administrator. Default: nuhome', 1, '3');
 
 -- --------------------------------------------------------
 
@@ -668,8 +669,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2022.06.30.00'),
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2022.06.30.12');
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2022.06.30.01'),
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2022.06.30.14');
 
 -- --------------------------------------------------------
 

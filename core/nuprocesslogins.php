@@ -144,7 +144,8 @@ function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 	$_SESSION['nubuilder_session_data']['isGlobeadmin'] = true;
 	$_SESSION['nubuilder_session_data']['translation'] = nuGetTranslation($lang);
 	$_SESSION['nubuilder_session_data']['language'] = $lang;
-	$_SESSION['nubuilder_session_data']['HOME_ID'] = 'nuhome';
+	$_SESSION['nubuilder_session_data']['HOME_ID'] = isset($_SESSION['nubuilder_session_data']['GLOBEADMIN_HOME']) ? $_SESSION['nubuilder_session_data']['GLOBEADMIN_HOME'] : 'nuhome';
+
 
 	$sessionIds = new stdClass;
 	$sessionIds->zzzzsys_access_id = '';
@@ -161,14 +162,14 @@ function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 
 	if ($nuConfig2FAAdmin) {
 		if (nu2FALocalTokenOK($sessionIds->sus_login_name)) {
-			$sessionIds->zzzzsys_form_id = 'nuhome';
+			$sessionIds->zzzzsys_form_id = $_SESSION['nubuilder_session_data']['HOME_ID'];
 		} else {
 			$sessionIds->zzzzsys_form_id = $_SESSION['nubuilder_session_data']['2FA_FORM_ID'];
 			$_SESSION['nubuilder_session_data']['SESSION_2FA_STATUS'] = 'PENDING';
-			$_SESSION['nubuilder_session_data']['SESSION_2FA_REDIRECT_FORM_ID'] = 'nuhome';
+			$_SESSION['nubuilder_session_data']['SESSION_2FA_REDIRECT_FORM_ID'] = $_SESSION['nubuilder_session_data']['HOME_ID'];
 		}
 	} else {
-		$sessionIds->zzzzsys_form_id = 'nuhome';
+		$sessionIds->zzzzsys_form_id = $_SESSION['nubuilder_session_data']['HOME_ID'];
 	}
 
 	$sessionIds->global_access = '1';

@@ -1334,7 +1334,7 @@ function nuGatherFormAndSessionData($home){
 	if(isset($nuState['form_id']) && !$nuState['form_id'] == ''){
 		$formAndSessionData->form_id		= $nuState['form_id'];
 	} else {
-		$formAndSessionData->form_id		= $home == '' ? 'nuhome' : $home;
+		$formAndSessionData->form_id		= $home == '' ? $_SESSION['nubuilder_session_data']['GLOBEADMIN_HOME'] : $home;
 	}
 
 	if(isset($nuState['login_form_id'])){

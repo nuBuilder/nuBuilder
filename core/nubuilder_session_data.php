@@ -15,6 +15,7 @@ class nubuilder_session_data {
 	'GLOBEADMIN_PASS'			=> '',
 	'GLOBEADMIN_DEMO_NAME'		=> '',
 	'GLOBEADMIN_DEMO_PASS'		=> '',
+	'GLOBEADMIN_HOME'			=> 'nuhome',	
 	'DEMO_SAVING_ALLOWED_IDS'	=> '',
 	'USER_LOGIN'				=> '',
 	'USER_NAME'					=> '',
@@ -57,7 +58,7 @@ class nubuilder_session_data {
 	function construct_session(
 		$nuConfigDBDriver,$nuConfigDBPort,$nuConfigDBHost,$nuConfigDBName,$nuConfigDBUser,
 		$nuConfigDBPassword,$nuConfigDBGlobeadminUsername,$nuConfigDBGlobeadminPassword,
-		$nuConfigDBGlobeadminUsers, $nuConfigDemoDBGlobeadminUsername, $nuConfigDemoDBGlobeadminPassword, $nuConfigDemoSavingAllowedIds,
+		$nuConfigDBGlobeadminUsers, $nuConfigDemoDBGlobeadminUsername, $nuConfigDemoDBGlobeadminPassword, $nuConfigGlobeadminHome, $nuConfigDemoSavingAllowedIds,
 		$nuConfig2FAAdmin, $nuConfig2FAUser, $nuConfig2FAFormID, $nuConfig2FATokenValidityTime, $nuConfig2FAShowRememberMe,
 		$nuConfigUserAdditional1Label, $nuConfigUserAdditional2Label, $nuConfigUserCodeLabel, 
 		$nuUseMd5PasswordHash, $nuConfigDBOptions, $nuConfigIsDemo = false) {
@@ -75,6 +76,7 @@ class nubuilder_session_data {
 		$this->nubuilder['GLOBEADMIN_NAME']			= $nuConfigDBGlobeadminUsername;
 		$this->nubuilder['GLOBEADMIN_PASS']			= $nuConfigDBGlobeadminPassword;
 		$this->nubuilder['GLOBEADMIN_USERS']		= $nuConfigDBGlobeadminUsers;
+		$this->nubuilder['GLOBEADMIN_HOME']			= $nuConfigGlobeadminHome;
 
 		$this->nubuilder['GLOBEADMIN_DEMO_NAME']	= $nuConfigDemoDBGlobeadminUsername;
 		$this->nubuilder['GLOBEADMIN_DEMO_PASS']	= $nuConfigDemoDBGlobeadminPassword;
