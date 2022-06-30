@@ -3611,24 +3611,18 @@ function nuBuildOptionsList(l, p, type) {												//-- loop through adding op
 	var reduce = 0;
 
 	if (type == 'browse') {
-
 		left = 12
-
 	}
 
 	if (type == 'form') {
-
 		top = off.top - 6;
 		left = 10;
-
 	}
 
 	if (type == 'subform') {
-
 		top = off.top - 70;
 		left = off.left;
 		reduce = 55;
-
 	}
 
 	$('#nuOptionsListBox').css({
@@ -5053,6 +5047,8 @@ function nuGetSearchList() {
 
 	$('.nuOptionsItem').css({ 'width': widest - 90, 'padding': '3px 0px 0px 3px' });
 	$('#nuSearchList').css({ 'height': 50 + (c.length * 25) });
+
+	nuDragElement($('#nuSearchList')[0], 30);
 
 	if (nuIsMobile()) nuHideOptionsItemShortcutKeys();
 
