@@ -3507,6 +3507,7 @@ function nuGetOptionsList(f, t, p, a, type) {
 
 	if (nuIsMobile()) nuHideOptionsItemShortcutKeys();
 	$('[data-nu-option-title]').css('padding', 3);
+	nuDragElement($('#nuOptionsListBox')[0], 30);
 
 }
 

@@ -1400,7 +1400,7 @@ function nuClick(e) {
 		$('#nuSearchList').remove();
 	}
 
-	if (!t.hasClass('nuIcon')) {
+	if (!t.hasClass('nuIcon') && ! t.hasClass('nuOptionsList') && ! t.hasClass('nuOptionsListTitle')) {
 		$('#nuOptionsListBox').remove();
 	}
 
