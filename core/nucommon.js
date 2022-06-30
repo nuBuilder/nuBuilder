@@ -2961,6 +2961,7 @@ function nuSetStorageItem(key, value, storage, ttl) {
 
 function nuCtrlCmdShiftName(keyName) {
 
+	if (keyName == '') return '';
 	const modifier = nuIsMacintosh() ? 'Cmd' : 'Ctrl';
 	return modifier + '+Shift+' + keyName;
 
