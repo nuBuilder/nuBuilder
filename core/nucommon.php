@@ -1144,13 +1144,14 @@ function nuImageList($f){
 
 }
 
+function nuCreateTempFile($type) {
+
+	$id = nuID();
+	return sys_get_temp_dir() . "/$id." . '.' . $type;
+
+}
+
 function nuCreateFile($data) {
-
-	function nuCreateTempFile($type) {
-
-		$id = nuID();
-		return sys_get_temp_dir() . "/$id." . '.' . $type;
-	}
 
 	if ($data == '') return '';
 
