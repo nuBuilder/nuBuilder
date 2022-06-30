@@ -365,7 +365,7 @@ function nuCreateDrag() {
 			let add = false;
 			//drag around selected objects points
 			if (l >= L && l <= R && t >= T && t <= B) {
-				add = true; add = true;
+				add = true;
 			} else if (r >= L && r <= R && t >= T && t <= B) {
 				add = true;
 			} else if (l >= L && l <= R && b >= T && b <= B) {
