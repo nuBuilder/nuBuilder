@@ -928,7 +928,7 @@ function nuTranslate(s) {
 	if (typeof s === 'undefined' || s === '' || s === null) {
 		return '';
 	}
-	
+
 	s = String(s);
 	if (s.charAt(0) == '|') return s.substring(1);
 
@@ -2961,7 +2961,7 @@ function nuSetStorageItem(key, value, storage, ttl) {
 
 function nuCtrlCmdShiftName(keyName) {
 
-	if (keyName == '') return '';
+	if (keyName === '') return '';
 	const modifier = nuIsMacintosh() ? 'Cmd' : 'Ctrl';
 	return modifier + '+Shift+' + keyName;
 
