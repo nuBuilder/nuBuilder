@@ -65,7 +65,7 @@ function nuDevMode(m) {
 	var d = localStorage.getItem("nuDevMode");
 	if ((d === '1' || d === true) && nuGlobalAccess()) {
 		nuSetProperty('nuDevMode', '1', true);
-		// nuConsoleErrorsToMessage();
+		nuConsoleErrorsToMessage();
 		return true;
 	}
 	if (m === false) {
