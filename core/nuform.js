@@ -864,85 +864,270 @@ function getDBColumnLengh(w, id) {
 
 }
 
-function nuINPUT(w, i, l, p, prop) {
+function nuINPUTfile($fromId, obj, id, p) {
 
-	var obj = prop.objects[i];
-	var ID = p + obj.id;
-	var id = p + obj.id;
-	var ef = p + 'nuRECORD';							//-- Edit Form Id
-	var ty = 'textarea';
-	var vis = obj.display == 0 ? 'hidden' : 'visible';
-	var inputType = obj.input;
-	var objectType = obj.type;
-	var hideSF = '';
-
-	if (objectType != 'textarea') {								//-- Input Object
-		ty = 'input';
-	}
-
-	if (inputType == 'file') {
-
-		var inp = document.createElement('textarea');
-
-		inp.setAttribute('id', id);
-
-		$('#' + ef).append(inp);
-
-		$('#' + id)
-			.css('visibility', 'hidden')
-			.attr('data-nu-field', id)
-			.attr('data-nu-prefix', p)
-			.attr('data-nu-data', '')
-			.attr('onchange', 'this.className = "nuEdited"');
-
-		if (!nuIsNewRecord()) {
-			$('#' + id).val(obj.value);
-		}
-
-		id = id + '_file';
-
-	}
-
-	if (inputType == 'button' && objectType == 'input') {
-		var inp = document.createElement('button');
-	} else {
-		var inp = document.createElement(ty);
-	}
+	const inp = document.createElement('textarea');
 
 	inp.setAttribute('id', id);
 
-	$('#' + ef).append(inp);
+	$fromId.append(inp);
 
-	if (obj.parent_type == 'g') {				//-- in a grid subform
+	$('#' + id)
+		.css('visibility', 'hidden')
+		.attr('data-nu-field', id)
+		.attr('data-nu-prefix', p)
+		.attr('data-nu-data', '')
+		.attr('onchange', 'this.className = "nuEdited"');
 
-		obj.left = l;
-		obj.top = 3;
-
-	} else {
-
-		if (inputType != 'button' && prop.title !== 'Insert-Snippet') {		//-- Input Object
-			nuLabel(w, i, p, prop);
-		}
-
+	if (!nuIsNewRecord()) {
+		$('#' + id).val(obj.value);
 	}
 
-	if (ty == 'input') {														//-- Input Object
+	return id + '_file';
 
-		inp.setAttribute('type', inputType);
+}
 
-		if (objectType == 'lookup') {
-			$('#' + id).addClass('nuHiddenLookup');
-		} else {
-			$('#' + id).addClass('input_' + inputType);
+function nuINPUTInput(id, inp, inputType, obj, objectType) {
+
+	inp.setAttribute('type', inputType);
+
+	if (objectType == 'lookup') {
+		$('#' + id).addClass('nuHiddenLookup');
+	} else {
+		$('#' + id).addClass('input_' + inputType);
+	}
+
+	if (obj.datalist !== null && obj.datalist !== '' && typeof obj.datalist !== "undefined") {
+		let dl = obj.datalist;
+		if (!$.isArray(dl)) dl = JSON.parse(dl);
+		if (!$.isArray(dl)) dl = eval(dl);
+		nuAddDatalist(id, dl);
+	}
+}
+
+function nuINPUTNuScroll(id, w, i) {
+
+	const inputJS = 'nuFORM.scrollList(event, ' + w.objects[i].scroll + ')';
+
+	$('#' + id)
+		.addClass('nuScroll')
+		.attr('onkeydown', inputJS)
+		.attr("title", nuTranslate('Use the keyboard up and down arrows to scroll through the list or add text that is not in the list.'));
+
+}
+
+function nuINPUTNuDate(id, w, i) {
+
+	$('#' + id)
+		.addClass('nuDate')
+		.attr('data-nu-format', w.objects[i].format)
+		.attr('autocomplete', 'off');
+
+}
+
+function nuINPUTNuNumber(id, w, i) {
+
+	$('#' + id)
+		.addClass('nuNumber')
+		.attr('data-nu-format', w.objects[i].format)
+
+}
+
+function nuINPUTCheckbox(id, obj, w, i) {
+
+	document.getElementById(id).checked = (w.objects[i].value == '1');
+
+	if (obj.parent_type == 'g') {
+		$('#' + id).css('margin-top', '1px');
+	}
+
+}
+
+function nuINPUTDisplay(id) {
+
+	$('#' + id)
+		.addClass('nuReadonly')
+		.prop('readonly', true);
+
+}
+
+function nuINPUTLookup(id, objId, w, obj, $fromId, p, i, vis) {
+
+	let $id = $('#' + id);
+	$id.hide();
+	$id.attr('data-nu-lookup-id', '');
+
+	const luv = w.objects[i].values[0][1];
+	if (!nuIsNewRecord() || luv !== '') {
+		$('#' + id).val(luv);
+	}
+
+	const target = id;
+	id = target + 'code';
+	var inp = document.createElement('input');
+
+	inp.setAttribute('id', id);
+
+	$fromId.append(inp);
+
+	nuAddDataTab(id, obj.tab, p);
+
+	$('#' + id).css({
+		'top': Number(obj.top),
+		'left': Number(obj.left),
+		'width': Number(obj.width),
+		'height': Number(obj.height)
+	})
+		.attr('data-nu-form-id', w.objects[i].form_id)
+		.attr('data-nu-object-id', w.objects[i].object_id)
+		.attr("data-nu-prefix", p)
+		.attr('data-nu-target', target)
+		.attr('data-nu-type', 'lookup')
+		.attr('data-nu-subform-sort', 1)
+		.css('visibility', vis)
+		.addClass('nuLookupCode')
+		.attr('onchange', 'nuGetLookupCode(event)')
+		.attr('onfocus', 'nuLookupFocus(event)');
+
+	if (Number(obj.width) == 0) nuHide(id);
+
+	$('#' + id).enterKey(function () {
+		if ($(this).val().length == 0) {
+			let element = $('#' + target + 'button')[0];
+			nuBuildLookup(element, "");
 		}
+	})
 
-		if (obj.datalist !== null && obj.datalist !== '' && typeof obj.datalist !== "undefined") {
-			let dl = obj.datalist;
-			if (!$.isArray(dl)) dl = JSON.parse(dl);
-			if (!$.isArray(dl)) dl = eval(dl);
-			nuAddDatalist(id, dl);
+
+	w.objects[i].values[0][0] = p + obj.id;
+	w.objects[i].values[1][0] = p + obj.id + 'code';
+	w.objects[i].values[2][0] = p + obj.id + 'description';
+
+	id = target + 'button';
+	var inp = document.createElement('div');
+
+	inp.setAttribute('id', id);
+
+	$fromId.append(inp);
+
+	nuAddDataTab(id, obj.tab, p);
+
+	var luClass = obj.label === 'Insert-Snippet' ? 'fa fa-code' : 'fa fa-search';
+
+	$('#' + id).css({
+		'top': Number(obj.top),
+		'left': Number(obj.left) + Number(obj.width) + 6,
+		'width': 15,
+		'height': Number(obj.height - 2)
+	})
+		.attr('type', 'button')
+		.attr("data-nu-prefix", p)
+		.attr('data-nu-form-id', w.objects[i].form_id)
+		.attr('data-nu-object-id', w.objects[i].object_id)
+		.attr('data-nu-target', target)
+		.attr('data-nu-subform-sort', 1)
+		.attr('onfocus', 'nuLookupFocus(event)')
+		.attr('onclick', 'nuBuildLookup(this,"")')
+		.addClass('nuLookupButton')
+		.html('<i style="padding:4px" class="' + luClass + '"></i>')
+		.css('visibility', vis);
+
+	if (obj.label === 'Insert-Snippet') $('#' + id).css('font-size', '18px');
+
+	nuAddJSObjectEvents(id, obj.js);
+
+	id = p + obj.id + 'description';
+	var inp = document.createElement('input');
+	inp.setAttribute('id', id);
+
+	$fromId.append(inp);
+	nuAddDataTab(id, obj.tab, p);
+	$('#' + id).css({
+		'top': obj.mobile ? Number(obj.top) + Number(obj.height) + 5 : Number(obj.top),
+		'left': obj.mobile ? Number(obj.left) : Number(obj.left) + Number(obj.width) + 25,
+		'width': obj.mobile ? Number(obj.width) : obj.description_width,
+		'visibility': obj.description_width == 0 || obj.display == 0 ? 'hidden' : 'visible',
+		'height': Number(obj.height)
+	})
+		.attr('tabindex', '-1')
+		.attr("data-nu-prefix", p)
+		.addClass('nuLookupDescription')
+		.addClass('nuReadonly')
+		.prop('readonly', true);
+
+	nuPopulateLookup3(w.objects[i].values, p);
+
+	nuSetAccess(objId, obj.read);
+
+	nuAddStyle(id, obj);
+
+	return Number(obj.width) + Number(obj.description_width) + 30;
+
+}
+
+function nuINPUTNuAutoNumber(id, obj) {
+
+	$('#' + id)
+		.prop('readonly', true)
+		.addClass('nuReadonly');
+
+	if (!nuIsNewRecord()) {
+		$('#' + id).val(obj.counter);
+	}
+
+}
+
+function nuINPUTCalc(id, w, i, p) {
+
+	const formula = String(w.objects[i].formula).nuReplaceAll("al('", "al('" + p);
+
+	$('#' + id).addClass('nuCalculator')
+		.attr('data-nu-format', w.objects[i].format)
+		.attr('data-nu-calc-order', w.objects[i].calc_order)
+		.prop('readonly', true).prop('tabindex', -1)
+		.attr('data-nu-formula', formula);
+
+	if (p != '') {
+		$('#' + id).addClass('nuSubformObject');
+	}
+
+}
+
+function nuINPUT(w, i, l, p, prop) {
+
+	var obj = prop.objects[i];
+	const objId = p + obj.id;
+	var id = p + obj.id;
+	const $fromId = $('#' + p + 'nuRECORD');							//-- Edit Form Id
+	var type = 'textarea';
+	var vis = obj.display == 0 ? 'hidden' : 'visible';
+	var inputType = obj.input;
+	var objectType = obj.type;
+
+	if (objectType != 'textarea') {										//-- Input Object
+		type = 'input';
+	}
+
+	if (inputType == 'file') {
+		id = nuINPUTfile($fromId, obj, id, p)
+	}
+
+	var inp = document.createElement(inputType == 'button' && objectType == 'input' ? 'button': type);
+	inp.setAttribute('id', id);
+
+	$fromId.append(inp);
+
+	if (obj.parent_type == 'g') {				//-- in a grid subform
+		obj.left = l;
+		obj.top = 3;
+	} else {
+		if (inputType != 'button' && prop.title !== 'Insert-Snippet') {			//-- Input Object
+			nuLabel(w, i, p, prop);
 		}
+	}
 
+	if (type == 'input') {														//-- Input Object
+		nuINPUTInput(id, inp, inputType, obj, objectType);
 	}
 
 	var onChange = 'nuChange(event)';
@@ -977,46 +1162,26 @@ function nuINPUT(w, i, l, p, prop) {
 		.attr('data-nu-label', w.objects[i].label)
 		.attr('onfocus', 'nuLookupFocus(event)')
 
-	if (inputType == 'nuScroll') {
-
-		var input_js = 'nuFORM.scrollList(event, ' + w.objects[i].scroll + ')';
-
-		$('#' + id)
-			.addClass('nuScroll')
-			.attr('onkeydown', input_js)
-			.attr("title", nuTranslate('Use the keyboard up and down arrows to scroll through the list or add text that is not in the list.'));
-
-	}
-
-
-	if (inputType == 'nuDate') {
-
-		$('#' + id)
-			.addClass('nuDate')
-			.attr('data-nu-format', w.objects[i].format)
-			.attr('autocomplete', 'off');
-	}
-
-
-	if (inputType == 'nuNumber') {
-
-		$('#' + id)
-			.addClass('nuNumber')
-			.attr('data-nu-format', w.objects[i].format)
-
-	}
-
 	if (inputType != 'button') {
 		$('#' + id).attr('data-nu-data', '')
 	} else {
-
-		$('#' + id)
-			.addClass('nuButton')
-
+		$('#' + id).addClass('nuButton')
 	}
 
 	if (w.objects[i].value != '' && nuRecordId() == '-1') {				//== check for Cannot be left blank
 		$('#' + id).addClass('nuEdited');
+	}
+
+	if (inputType == 'nuScroll') {
+		nuINPUTNuScroll(id, w, i)
+	}
+
+	if (inputType == 'nuDate') {
+		nuINPUTNuDate(id, w, i);
+	}
+
+	if (inputType == 'nuNumber') {
+		nuINPUTNuNumber(id, w, i);
 	}
 
 	if (inputType == 'nuDate') {
@@ -1042,163 +1207,25 @@ function nuINPUT(w, i, l, p, prop) {
 	}
 
 	if (w.objects[i].input == 'checkbox') {
-
-		document.getElementById(id).checked = (w.objects[i].value == '1');
-
-		if (obj.parent_type == 'g') {
-			$('#' + id).css('margin-top', '1px');
-		}
-
+		nuINPUTCheckbox(id, obj, w, i);
 	}
 
 	if (objectType == 'display') {
-
-		$('#' + id)
-			.addClass('nuReadonly')
-			.prop('readonly', true);
-
+		nuINPUTDisplay(id);
 	}
 
 	if (objectType == 'calc') {
+		nuINPUTCalc(id, w, i, p);
+	}
 
-		var TOT = String(w.objects[i].formula).nuReplaceAll("al('", "al('" + p);
-
-		$('#' + id).addClass('nuCalculator')
-			.attr('data-nu-format', w.objects[i].format)
-			.attr('data-nu-calc-order', w.objects[i].calc_order)
-			.prop('readonly', true).prop('tabindex', -1)
-			.attr('data-nu-formula', TOT);
-
-		if (p != '') {
-			$('#' + id).addClass('nuSubformObject');
-		}
-
+	if (objectType == 'input' && inputType == 'nuAutoNumber') {
+		nuINPUTNuAutoNumber(id, obj);
 	}
 
 	if (objectType == 'lookup') {
-
-		$('#' + id).hide();
-		$('#' + id).attr('data-nu-lookup-id', '');
-
-		let luv = w.objects[i].values[0][1];
-		if (!nuIsNewRecord() || luv !== '') {
-			$('#' + id).val(luv);
-		}
-
-		var target = id;
-		id = target + 'code';
-		var inp = document.createElement('input');
-
-		inp.setAttribute('id', id);
-
-		$('#' + ef).append(inp);
-
-		nuAddDataTab(id, obj.tab, p);
-
-		$('#' + id).css({
-			'top': Number(obj.top),
-			'left': Number(obj.left),
-			'width': Number(obj.width),
-			'height': Number(obj.height)
-		})
-			.attr('data-nu-form-id', w.objects[i].form_id)
-			.attr('data-nu-object-id', w.objects[i].object_id)
-			.attr("data-nu-prefix", p)
-			.attr('data-nu-target', target)
-			.attr('data-nu-type', 'lookup')
-			.attr('data-nu-subform-sort', 1)
-			.css('visibility', vis)
-			.addClass('nuLookupCode')
-			.attr('onchange', 'nuGetLookupCode(event)')
-			.attr('onfocus', 'nuLookupFocus(event)');
-
-		if (Number(obj.width) == 0) nuHide(id);
-
-		$('#' + id).enterKey(function () {
-			if ($(this).val().length == 0) {
-				let element = $('#' + target + 'button')[0];
-				nuBuildLookup(element, "");
-			}
-		})
-
-
-		w.objects[i].values[0][0] = p + obj.id;
-		w.objects[i].values[1][0] = p + obj.id + 'code';
-		w.objects[i].values[2][0] = p + obj.id + 'description';
-
-		id = target + 'button';
-		var inp = document.createElement('div');
-
-		inp.setAttribute('id', id);
-
-		$('#' + ef).append(inp);
-
-		nuAddDataTab(id, obj.tab, p);
-
-		var luClass = obj.label === 'Insert-Snippet' ? 'fa fa-code' : 'fa fa-search';
-
-		$('#' + id).css({
-			'top': Number(obj.top),
-			'left': Number(obj.left) + Number(obj.width) + 6,
-			'width': 15,
-			'height': Number(obj.height - 2)
-		})
-			.attr('type', 'button')
-			.attr("data-nu-prefix", p)
-			.attr('data-nu-form-id', w.objects[i].form_id)
-			.attr('data-nu-object-id', w.objects[i].object_id)
-			.attr('data-nu-target', target)
-			.attr('data-nu-subform-sort', 1)
-			.attr('onfocus', 'nuLookupFocus(event)')
-			.attr('onclick', 'nuBuildLookup(this,"")')
-			.addClass('nuLookupButton')
-			.html('<i style="padding:4px" class="' + luClass + '"></i>')
-			.css('visibility', vis);
-
-		if (obj.label === 'Insert-Snippet') $('#' + id).css('font-size', '18px');
-
-		nuAddJSObjectEvents(id, obj.js);
-
-		id = p + obj.id + 'description';
-		var inp = document.createElement('input');
-		inp.setAttribute('id', id);
-
-		$('#' + ef).append(inp);
-		nuAddDataTab(id, obj.tab, p);
-		$('#' + id).css({
-			'top': obj.mobile ? Number(obj.top) + Number(obj.height) + 5 : Number(obj.top),
-			'left': obj.mobile ? Number(obj.left) : Number(obj.left) + Number(obj.width) + 25,
-			'width': obj.mobile ? Number(obj.width) : obj.description_width,
-			'visibility': obj.description_width == 0 || obj.display == 0 ? 'hidden' : 'visible',
-			'height': Number(obj.height)
-		})
-			.attr('tabindex', '-1')
-			.attr("data-nu-prefix", p)
-			.addClass('nuLookupDescription')
-			.addClass('nuReadonly')
-			.prop('readonly', true);
-
-		nuPopulateLookup3(w.objects[i].values, p);
-
-		nuSetAccess(ID, obj.read);
-
-		nuAddStyle(id, obj);
-
-		return Number(obj.width) + Number(obj.description_width) + 30;
-
+		return nuINPUTLookup(id, objId, w, obj, $fromId, p, i, vis);
 	} else {
 
-		if (objectType == 'input' && inputType == 'nuAutoNumber') {
-
-			$('#' + id)
-				.prop('readonly', true)
-				.addClass('nuReadonly');
-
-			if (!nuIsNewRecord()) {
-				$('#' + id).val(obj.counter);
-			}
-
-		}
 
 		var maxLengthInputType = ['text', 'url', 'telephone', 'search', 'password', 'month', 'email', 'color', 'nuScroll'].indexOf(inputType) !== -1;
 		if ((maxLengthInputType && objectType == 'input') || objectType == 'textarea') {
@@ -1211,7 +1238,7 @@ function nuINPUT(w, i, l, p, prop) {
 
 		nuAddJSObjectEvents(id, obj.js);
 
-		nuSetAccess(ID, obj.read);
+		nuSetAccess(objId, obj.read);
 
 		if (inputType == 'button' && objectType == 'input') {
 			nuAddInputIcon(id, obj.input_icon);
@@ -1918,14 +1945,14 @@ function nuSUBFORM(w, i, l, p, prop) {
 			'height': Number(rowHeight),
 			'position': 'absolute'
 		})
-			.addClass('nuSubform' + even);
+		.addClass('nuSubform' + even);
 
 		nuBuildEditObjects(SFR.forms[c], prefix, SF, SF.forms[0]);
 
 		if (SF.delete == '1') {
 			SF.forms[c].deletable = '1';
 		} else {
-			SF.forms[c].deletable = '0';				//-- Fike
+			SF.forms[c].deletable = '0';
 		}
 
 		nuRecordProperties(SF.forms[c], prefix, rowWidth - 40);
