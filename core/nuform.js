@@ -978,16 +978,16 @@ function nuINPUTLookup(id, objId, w, obj, $fromId, p, i, vis) {
 		'width': Number(obj.width),
 		'height': Number(obj.height)
 	})
-		.attr('data-nu-form-id', w.objects[i].form_id)
-		.attr('data-nu-object-id', w.objects[i].object_id)
-		.attr("data-nu-prefix", p)
-		.attr('data-nu-target', target)
-		.attr('data-nu-type', 'lookup')
-		.attr('data-nu-subform-sort', 1)
-		.css('visibility', vis)
-		.addClass('nuLookupCode')
-		.attr('onchange', 'nuGetLookupCode(event)')
-		.attr('onfocus', 'nuLookupFocus(event)');
+	.attr('data-nu-form-id', w.objects[i].form_id)
+	.attr('data-nu-object-id', w.objects[i].object_id)
+	.attr("data-nu-prefix", p)
+	.attr('data-nu-target', target)
+	.attr('data-nu-type', 'lookup')
+	.attr('data-nu-subform-sort', 1)
+	.css('visibility', vis)
+	.addClass('nuLookupCode')
+	.attr('onchange', 'nuGetLookupCode(event)')
+	.attr('onfocus', 'nuLookupFocus(event)');
 
 	if (Number(obj.width) == 0) nuHide(id);
 
@@ -1093,18 +1093,83 @@ function nuINPUTCalc(id, w, i, p) {
 
 }
 
+function nuINPUTSetValue(id, w, i, inputType) {
+
+	if (inputType == 'button') {
+		$('#' + id).html(nuTranslate(w.objects[i].value))
+	} else {
+
+		if (inputType == 'datetime-local') {													//-- replace ' ' between date and time with 'T'
+			w.objects[i].value = w.objects[i].value == null ? null : w.objects[i].value.replace(' ', 'T');
+		}
+
+		if (!nuIsNewRecord() || w.objects[i].value !== '') {
+			$('#' + id).val(nuFORM.addFormatting(w.objects[i].value, w.objects[i].format));
+		}
+
+	}
+
+}
+
+function nuIPUTNuChangeEvent(inputType, objectType) {
+
+	let onChange = 'nuChange(event)';
+	if (inputType == 'file') {
+		onChange = 'nuChangeFile(event)';
+	} else if (objectType == 'lookup') {
+		onChange = 'nuGetLookupId(this.value, this.id)';
+	}
+
+	return onChange;
+}
+
+function nuINPUTSetProperties(id, obj, inputType, objectType, w, p, i) {
+
+	const leftInc = inputType == 'button' && p != '' ? 3 : 0;
+
+	$id = $('#' + id);
+	$id.css({
+		'top': Number(obj.top),
+		'left': Number(obj.left) + leftInc,
+		'width': Number(obj.width),
+		'height': Number(obj.height),
+		'text-align': obj.align,
+		'position': 'absolute'
+	})
+	.attr('onchange', nuIPUTNuChangeEvent(inputType, objectType))
+	.attr('data-nu-field', inputType == 'button' || inputType == 'file' ? null : obj.id)
+	.attr('data-nu-object-id', w.objects[i].object_id)
+	.attr('data-nu-format', '')
+	.attr('data-nu-prefix', p)
+	.attr('data-nu-type', objectType)
+	.attr('data-nu-subform-sort', 1)
+	.attr('data-nu-label', w.objects[i].label)
+	.attr('onfocus', 'nuLookupFocus(event)');
+
+	if (inputType != 'button') {
+		$id.attr('data-nu-data', '')
+	} else {
+		$id.addClass('nuButton')
+	}
+
+	if (w.objects[i].value != '' && nuRecordId() == '-1') {				//== check for Cannot be left blank
+		$id.addClass('nuEdited');
+	}
+
+}
+
 function nuINPUT(w, i, l, p, prop) {
 
 	var obj = prop.objects[i];
 	const objId = p + obj.id;
 	var id = p + obj.id;
-	const $fromId = $('#' + p + 'nuRECORD');							//-- Edit Form Id
+	const $fromId = $('#' + p + 'nuRECORD');									//-- Edit Form Id
 	var type = 'textarea';
 	var vis = obj.display == 0 ? 'hidden' : 'visible';
 	var inputType = obj.input;
 	var objectType = obj.type;
 
-	if (objectType != 'textarea') {										//-- Input Object
+	if (objectType != 'textarea') {												//-- Input Object
 		type = 'input';
 	}
 
@@ -1112,12 +1177,11 @@ function nuINPUT(w, i, l, p, prop) {
 		id = nuINPUTfile($fromId, obj, id, p)
 	}
 
-	var inp = document.createElement(inputType == 'button' && objectType == 'input' ? 'button': type);
+	const inp = document.createElement(inputType == 'button' && objectType == 'input' ? 'button': type);
 	inp.setAttribute('id', id);
-
 	$fromId.append(inp);
 
-	if (obj.parent_type == 'g') {				//-- in a grid subform
+	if (obj.parent_type == 'g') {												//-- in a grid subform
 		obj.left = l;
 		obj.top = 3;
 	} else {
@@ -1130,47 +1194,7 @@ function nuINPUT(w, i, l, p, prop) {
 		nuINPUTInput(id, inp, inputType, obj, objectType);
 	}
 
-	var onChange = 'nuChange(event)';
-
-	if (inputType == 'file') {
-		onChange = 'nuChangeFile(event)';
-	}
-
-	if (objectType == 'lookup') {
-		onChange = 'nuGetLookupId(this.value, this.id)';
-	}
-
 	nuAddDataTab(id, obj.tab, p);
-
-	const leftInc = inputType == 'button' && p != '' ? 3 : 0;
-
-	$('#' + id).css({
-		'top': Number(obj.top),
-		'left': Number(obj.left) + leftInc,
-		'width': Number(obj.width),
-		'height': Number(obj.height),
-		'text-align': obj.align,
-		'position': 'absolute'
-	})
-		.attr('onchange', onChange)
-		.attr('data-nu-field', inputType == 'button' || inputType == 'file' ? null : obj.id)
-		.attr('data-nu-object-id', w.objects[i].object_id)
-		.attr('data-nu-format', '')
-		.attr('data-nu-prefix', p)
-		.attr('data-nu-type', objectType)
-		.attr('data-nu-subform-sort', 1)
-		.attr('data-nu-label', w.objects[i].label)
-		.attr('onfocus', 'nuLookupFocus(event)')
-
-	if (inputType != 'button') {
-		$('#' + id).attr('data-nu-data', '')
-	} else {
-		$('#' + id).addClass('nuButton')
-	}
-
-	if (w.objects[i].value != '' && nuRecordId() == '-1') {				//== check for Cannot be left blank
-		$('#' + id).addClass('nuEdited');
-	}
 
 	if (inputType == 'nuScroll') {
 		nuINPUTNuScroll(id, w, i)
@@ -1189,21 +1213,7 @@ function nuINPUT(w, i, l, p, prop) {
 	}
 
 	if (inputType != 'file') {
-
-		if (inputType == 'button') {
-			$('#' + id).html(nuTranslate(w.objects[i].value))
-		} else {
-
-			if (inputType == 'datetime-local') {													//-- replace ' ' between date and time with 'T'
-				w.objects[i].value = w.objects[i].value == null ? null : w.objects[i].value.replace(' ', 'T');
-			}
-
-			if (!nuIsNewRecord() || w.objects[i].value !== '') {
-				$('#' + id).val(nuFORM.addFormatting(w.objects[i].value, w.objects[i].format));
-			}
-
-		}
-
+		nuINPUTSetValue(id, w, i, inputType);
 	}
 
 	if (w.objects[i].input == 'checkbox') {
@@ -1221,6 +1231,8 @@ function nuINPUT(w, i, l, p, prop) {
 	if (objectType == 'input' && inputType == 'nuAutoNumber') {
 		nuINPUTNuAutoNumber(id, obj);
 	}
+
+	nuINPUTSetProperties(id, obj, inputType, objectType, w, p, i);
 
 	if (objectType == 'lookup') {
 		return nuINPUTLookup(id, objId, w, obj, $fromId, p, i, vis);
