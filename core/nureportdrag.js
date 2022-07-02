@@ -819,16 +819,6 @@ function nuAdjustButton(top, left, funct, value, title) {
 
 }
 
-function nuREPORTUpdate(p, v) {
-
-	var s = document.getElementsByClassName('nuDragSelected');
-
-	for (var i = 0; i < s.length; i++) {
-
-	}
-
-}
-
 function nuMoverAlignLeftClick() {
 
 	var s = document.getElementsByClassName('nuDragSelected');
