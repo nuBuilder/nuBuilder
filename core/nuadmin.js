@@ -1621,7 +1621,7 @@ var nuPrettyPrint = (function () {
 					.addRow(['Date', sDate.slice(0, 4).join('-')]);
 
 				return settings.expanded ? miniTable.node : util.expander(
-					'Date (timestamp): ' + (+date),
+					'Date (timestamp): ' + Number(date),
 					'Click to see a little more info about this date',
 					function () {
 						this.parentNode.appendChild(miniTable.node);
