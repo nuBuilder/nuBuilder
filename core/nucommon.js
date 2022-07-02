@@ -2704,8 +2704,10 @@ function nuSetValue(i, v, method) {
 		switch (method) {
 			case 'html':
 				obj.html(v);
+				break;
 			case 'text':
 				obj.text(v);
+				break;
 			default:
 				obj.val(v).change();
 		}
