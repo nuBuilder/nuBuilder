@@ -1421,7 +1421,7 @@ function nuClick(e) {
 }
 
 function nuAddSlashes(s) {
-	return (s + '').replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
+	return String(s).replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
 }
 
 
