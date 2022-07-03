@@ -1257,11 +1257,14 @@ function nuAddAttributes(id, attr) {
 		attr.trim().replace(/\"/g, "").split(",").forEach(attr => {
 
 			let arr = attr.split('=');
+			let key;
+			let value;
+
 			if (arr.length == 2) {
-				var [key, value] = arr;
+				[key, value] = arr;
 			} else if (arr.length == 1) {
-				var key = attr;
-				var value = '';
+				key = attr;
+				value = '';
 			}
 
 			if (arr.length == 1 || arr.length == 2) $('#' + id)[0].setAttribute(key.trim(), value);
@@ -1274,11 +1277,11 @@ function nuAddAttributes(id, attr) {
 
 function nuAddInputIcon(id, icon) {
 
-	function addIcon(id, string, after) {
+	function addIcon(idIcon, string, after) {
 		if (string.startsWith('fa')) {
-			nuAttachFontAwesome(id, string, 'normal', after);
+			nuAttachFontAwesome(idIcon, string, 'normal', after);
 		} else {
-			nuAttachHTML(id, string, after);
+			nuAttachHTML(idIcon, string, after);
 		}
 	}
 
@@ -2274,7 +2277,7 @@ function nuSubformHandleArrowKeyEvent(e) {
 
 function nuSubformAddFilter(filter) {
 
-	for (var sfName in filter) {
+	for (let sfName in filter) {
 		nuSubformFiltersAdd(sfName, filter[sfName]);
 	}
 
@@ -2297,7 +2300,7 @@ function nuSubformAddFilter(filter) {
 		let arr = {};
 		let isArray = Array.isArray(arrColumns);
 
-		for (var columnId in arrColumns) {
+		for (let columnId in arrColumns) {
 			if (isArray) columnId = arrColumns[columnId];
 			arr[columnId] = {};
 			arr[columnId].type = isArray ? 'select' : arrColumns[columnId].type;
@@ -2678,9 +2681,9 @@ function nuSubformPaste(e, jsonObj) {
 	var sNumCols = Object.keys(jsonObj[0]).length;
 
 	var sc = 0;
-	for (var c = dColStart; c < (dColStart + sNumCols); c++) {
+	for (let c = dColStart; c < (dColStart + sNumCols); c++) {
 		var sr = 0;
-		for (var r = dRow; r < parseInt(dRow + sNumRows); r++) {
+		for (let r = dRow; r < parseInt(dRow + sNumRows); r++) {
 			var dest = $('#' + sfId + nuPad3(r) + obj.fields[c]);
 			dest.attr("data-prevalue", dest.val());
 			dest.val(jsonObj[sr][sc]).change();
@@ -2691,11 +2694,13 @@ function nuSubformPaste(e, jsonObj) {
 }
 
 function nuGetClipboardRows(clipText) {
+
 	let clipRows = clipText.split('\n');
 	for (let i = 0; i < clipRows.length; i++) {
 		clipRows[i] = clipRows[i].split('\t');
 	}
 	return clipRows;
+
 }
 
 function nuGetClipboardJson(clipRows) {
@@ -4001,9 +4006,9 @@ function nuBrowseTable() {
 
 								$("[data-nu-row]").addClass('nuBrowseTable').removeClass('nuSelectBrowse');
 
-								var rw = $(this).attr('data-nu-row');
 								window.nuBROWSEROW = -1;
 
+								const rw = $(this).attr('data-nu-row');
 								$("[data-nu-row='" + rw + "']").not('.nuCellColored').addClass('nuSelectBrowse').removeClass('nuBrowseTable');
 							}
 
@@ -4012,9 +4017,9 @@ function nuBrowseTable() {
 							if (window.nuBROWSERESIZE.moving_element == '') {
 								$("[data-nu-row]").addClass('nuBrowseTable').removeClass('nuSelectBrowse');
 
-								var rw = $(this).attr('data-nu-row');
 								window.nuBROWSEROW = -1;
 
+								const rw = $(this).attr('data-nu-row');
 								$("[data-nu-row='" + rw + "']").addClass('nuBrowseTable').removeClass('nuSelectBrowse');
 							}
 
