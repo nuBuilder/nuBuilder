@@ -6,8 +6,8 @@ if(! is_file($nuconfig)){
     die('nuconfig.php not found. Rename nuconfig-sample.php to nuconfig.php');
 }
 require_once('nuconfig.php');
-require_once('core/nudatabase.php'); 
-require_once('core/nusetuplibs.php'); 
+require_once('core/nudatabase.php');
+require_once('core/nusetuplibs.php');
 
 $config = nuConfigScript();
 eval($config['code']);
@@ -26,7 +26,7 @@ if ( !isset($_SESSION['nubuilder_session_data']['NB_PATH']) || dirname($_SESSION
 	header('Location: '.$_SERVER['PHP_SELF']);
 	die;
 
-} 
+}
 
 ?>
 
@@ -42,22 +42,22 @@ if ( !isset($_SESSION['nubuilder_session_data']['NB_PATH']) || dirname($_SESSION
 <?php
 
 function nuInclude($pfile, $type){
-	
+
 	if ($pfile == '') return;
-	
+
 	$a = array();
 	if (!is_array ($pfile)) {
 		array_push($a, $pfile);
 	} else {
 		$a = $pfile;
 	}
-	
-	foreach ($a as $value) { 
-		$timestamp = date("YmdHis"); //-- Add timestamp so JavaScript changes are effective immediately		
+
+	foreach ($a as $value) {
+		$timestamp = date("YmdHis"); //-- Add timestamp so JavaScript changes are effective immediately
 		if ($type == 'script') print "<script src='$value?ts=$timestamp' type='text/javascript'></script>\n";
 		if ($type == 'stylesheet') print "<link rel='stylesheet' href='$value?ts=$timestamp' />\n";
 	}
-	
+
 }
 
 function nuJSIndexInclude($pfile){
@@ -74,12 +74,12 @@ function nuJSChartsInclude(){
 	global $nuConfigIncludeApexCharts;
 
 	if ($nuConfigIncludeGoogleCharts != false) {
-		$pfile = "https://www.gstatic.com/charts/loader.js";		
+		$pfile = "https://www.gstatic.com/charts/loader.js";
 		nuInclude($pfile, 'script');
 	}
 
 	if ($nuConfigIncludeApexCharts != false) {
-		$pfile = "core/libs/apexcharts/apexcharts.min.js";		
+		$pfile = "core/libs/apexcharts/apexcharts.min.js";
 		nuInclude($pfile, 'script');
 	}
 }
@@ -96,8 +96,8 @@ function nuHeader(){
 
 	$sql				= "SELECT * FROM zzzzsys_setup WHERE zzzzsys_setup_id = 1 ";
 	$rs 				= nuRunQuery($sql);
-	$obj 				= db_fetch_object($rs);	
-	$style				= isset($obj->set_style) ? $obj->set_style : '';	
+	$obj 				= db_fetch_object($rs);
+	$style				= isset($obj->set_style) ? $obj->set_style : '';
 	$style				= '</script>'. (nuEndsWithStyleTag($style) ? $style :  '<style>'.$style.'</style>') . '<script>';
 	$HTMLHeader 		= $obj->set_header . $style;
 	$j					= "\n\n" . $HTMLHeader . "\n\n";
@@ -121,15 +121,15 @@ nuJSIndexInclude('core/libs/ctxmenu/ctxmenu.min.js');
 nuJSIndexInclude('core/libs/vanillajs-datepicker/datepicker-full.min.js');
 
 if (isset($nuConfigIncludeQuill) && $nuConfigIncludeQuill == true) {
-	nuJSIndexInclude('core/libs/quill/quill.min.js'); 
+	nuJSIndexInclude('core/libs/quill/quill.min.js');
 	nuJSIndexInclude('core/libs/quill/modules/quill-divider.js');
 	nuCSSIndexInclude('core/libs/quill/themes/quill.snow.css');
 }
 
-nuJSIndexInclude('core/libs/select2/select2.min.js'); 
+nuJSIndexInclude('core/libs/select2/select2.min.js');
 
 if (isset($nuConfigIncludeTinyMCE) && $nuConfigIncludeTinyMCE != false) {
-	nuJSIndexInclude('core/libs/tinymce/tinymce.min.js'); 
+	nuJSIndexInclude('core/libs/tinymce/tinymce.min.js');
 }
 
 nuCSSIndexInclude('core/css/nubuilder4.css');
@@ -150,7 +150,7 @@ nuCSSIndexInclude('core/libs/vanillajs-datepicker/datepicker.min.css');
 <script>
 
 function nuValidCaller(o){
-	
+
 	if(o === null){return false;}
 	return o.hasOwnProperty('nuVersion');
 }
@@ -160,8 +160,8 @@ function nuLoginRequest(u, p){
 	$(":submit").nuDisable();
 
 	var w = {
-				call_type		: 'login', 
-				username		: arguments.length == 0 ? $('#nuusername').val() : u, 
+				call_type		: 'login',
+				username		: arguments.length == 0 ? $('#nuusername').val() : u,
 				password		: arguments.length == 0 ? $('#nupassword').val() : p,
 				login_form_id	: nuLoginF,
 				login_record_id	: nuLoginR
@@ -170,7 +170,7 @@ function nuLoginRequest(u, p){
 	w	= JSON.stringify(w);
 
 	$.ajax({
-		async		: true,	
+		async		: true,
 		dataType	: "json",
 		url			: "core/nuapi.php",
 		method		 : "POST",
@@ -194,7 +194,7 @@ function nuLoginRequest(u, p){
 			nuMessage(err);
 
 		},
-	}); 
+	});
 }
 
 window.nuVersion 		= 'nuBuilder4.5';
@@ -211,7 +211,7 @@ window.nuHASH				= [];
 	$iframe					= '';
 	$target					= '';
 	$l						= scandir('core/graphics');
-	$f						= JSON_encode($l);
+	$f						= json_encode($l);
 	$nuBrowseFunction		= 'browse';
 	$like					= '';
 	$nuUser					= '';
@@ -255,17 +255,17 @@ window.nuHASH				= [];
 	if ( $nuUser != '' && $nuPassword != '' ){
 		$h2 = nuUseUP($nuBrowseFunction, $target, $welcome, $nuUser, $nuPassword);
 	}else{
-		
+
 		if($opener == ''){
 				$h2 = nuGetJS_login($nuBrowseFunction, $target, $welcome, $nuForm, $nuRecord, $isSession);
 			}else{
 				$h2 = nuGetJS_action_screen($nuBrowseFunction, $target, $welcome, $opener, $search, $like);
 		}
-		
+
 	}
 
 	$sessionAlive = '';
-	
+
 	if (isset($nuConfigKeepSessionAlive) && $nuConfigKeepSessionAlive) {
 		$nuConfigKeepSessionAliveInterval = !isset($nuConfigKeepSessionAliveInterval) ? 600 : $nuConfigKeepSessionAliveInterval;
 		$sessionAlive = "
@@ -284,9 +284,9 @@ window.nuHASH				= [];
 		}
 		";
 	}
-	
+
 	$h3 = isset($nuJSOptions) ? $nuJSOptions : '';
-	
+
 	$h4 = "
 
 	function nuResize(){
