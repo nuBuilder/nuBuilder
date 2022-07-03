@@ -38,7 +38,7 @@ for($col = 0 ; $col < $colCount ; $col++){
 
 	$wd		= ($c[$col]->width) . 'px';
 
-	if($c[$col]->align == 'l'){$align = 'left';}
+	$align = 'left';
 	if($c[$col]->align == 'r'){$align = 'right';}
 	if($c[$col]->align == 'c'){$align = 'center';}
 
