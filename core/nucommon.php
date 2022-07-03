@@ -246,6 +246,8 @@ function nuObjKey($o, $k, $d = null) {
 
 function nuSetHashList($p){
 
+	$A 				= array();
+
 	if (! is_null($p)) {
 
 		$fid		= addslashes(nuObjKey($p,'form_id'));
