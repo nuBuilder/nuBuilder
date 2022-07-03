@@ -1573,27 +1573,29 @@ function nuUpdateSectionProperty(t) {
 
 
 function nuMoveReportGroup(ele, dir) {
+	
+	function nuMoveGroupUpDown(i) {
+		
+			const tempObj = nuREPORT.groups[groupNumber];
+			nuREPORT.groups[groupNumber] = nuREPORT.groups[groupNumber + i];
+			nuREPORT.groups[groupNumber + i] = tempObj;
+			nuREPORT.setFocus = $('#sortField' + (groupNumber + i)).attr('id');
+			nuDIALOG.groupNumber = groupNumber + i;		
+			
+	}
 
 	var groupNumber = Number(ele);
 	if (dir == 1) {
 		if (groupNumber >= 10 || nuREPORT.groups[groupNumber + 1].sortField == '') {
 			return;
 		} else {
-			var tempObj = nuREPORT.groups[groupNumber];
-			nuREPORT.groups[groupNumber] = nuREPORT.groups[groupNumber + 1];
-			nuREPORT.groups[groupNumber + 1] = tempObj;
-			nuREPORT.setFocus = $('#sortField' + (groupNumber + 1)).attr('id');
-			nuDIALOG.groupNumber = groupNumber + 1;
+			nuMoveGroupUpDown(1);
 		}
 	} else if (dir == -1) {
 		if (groupNumber <= 3 || nuREPORT.groups[groupNumber - 1].sortField == '') {
 			return;
 		} else {
-			var tempObj = nuREPORT.groups[groupNumber];
-			nuREPORT.groups[groupNumber] = nuREPORT.groups[groupNumber - 1];
-			nuREPORT.groups[groupNumber - 1] = tempObj;
-			nuREPORT.setFocus = $('#sortField' + (groupNumber - 1)).attr('id');
-			nuDIALOG.groupNumber = groupNumber - 1;
+			nuMoveGroupUpDown(-1);
 		}
 	}
 
