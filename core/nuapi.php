@@ -6,7 +6,7 @@
 	require_once('nusecurity.php');
 	require_once('nusession.php');
 	require_once('nucommon.php');
-	require_once('nuform.php'); 
+	require_once('nuform.php');
 	require_once('nudata.php');
 	require_once('nudrag.php');
 	require_once('nudatabase.php');
@@ -98,9 +98,9 @@
 		$f->forms[0]->user_team					= $globalAccess ? '' : nuObjKey($U, 'USER_TEAM', null);
 		$f->forms[0]->user_department			= $globalAccess ? '' : nuObjKey($U, 'USER_DEPARTMENT', null);
 		$f->forms[0]->user_position				= $globalAccess ? '' : nuObjKey($U, 'USER_POSITION', null);
-		$f->forms[0]->user_code					= $globalAccess ? '' : nuObjKey($U, 'USER_CODE', null);		
+		$f->forms[0]->user_code					= $globalAccess ? '' : nuObjKey($U, 'USER_CODE', null);
 		$f->forms[0]->user_additional1			= $globalAccess ? '' : nuObjKey($U, 'USER_ADDITIONAL1', null);
-		$f->forms[0]->user_additional2			= $globalAccess ? '' : nuObjKey($U, 'USER_ADDITIONAL2', null);		
+		$f->forms[0]->user_additional2			= $globalAccess ? '' : nuObjKey($U, 'USER_ADDITIONAL2', null);
 		$f->forms[0]->user_name					= $globalAccess ? '' : nuUser($U['USER_ID'])->sus_name;
 		$f->forms[0]->home_id					= $_SESSION['nubuilder_session_data']['HOME_ID'];
 		$f->forms[0]->language					= $_SESSION['nubuilder_session_data']['language'];
@@ -109,7 +109,7 @@
 		$f->forms[0]->access_level_code			= $U['ACCESS_LEVEL_CODE'];
 		$f->forms[0]->access_level_group		= $U['ACCESS_LEVEL_GROUP'];
 
-		$f->forms[0]->database					= $nuConfigDBName;
+		$f->forms[0]->database					= $_SESSION['nubuilder_session_data']['DB_NAME'];
 		$f->forms[0]->dimensions				= isset($formAndSessionData->dimensions) ? $formAndSessionData->dimensions : null;
 		$f->forms[0]->translation				= $formAndSessionData->translation;
 
@@ -132,7 +132,7 @@
 		$f->forms[0]->token_validity_time_2fa	= $_SESSION['nubuilder_session_data']['2FA_TOKEN_VALIDITY_TIME'];
 		$f->forms[0]->form_access				= $GLOBALS['nuSetup']->set_denied;
 		$f->forms[0]->javascript				= nuObjKey($GLOBALS,'EXTRAJS');
-		$f->forms[0]->style						= nuObjKey($GLOBALS,'STYLE');		
+		$f->forms[0]->style						= nuObjKey($GLOBALS,'STYLE');
 		$f->forms[0]->javascript_bc				= nuObjKey($GLOBALS,'EXTRAJS_BC');
 		$f->forms[0]->target					= nuObjKey($P,'target');
 		$b										= nuButtons($F, $P);
