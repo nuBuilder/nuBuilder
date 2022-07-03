@@ -6,7 +6,7 @@ require_once('nudatabase.php');
 $config = nuConfigScript();
 eval($config['code']);
 
-class nubuilder_session_data {
+class nuBuilderSessionData {
 
 	var $nubuilder	= array(
 	'NB_PATH'					=> __DIR__,
@@ -50,12 +50,12 @@ class nubuilder_session_data {
 	function __construct() {
 	}
 
-	function get_nubuilder_session_data() {
+	function getNubuilderSessionData() {
 
 		return $this->nubuilder;
 	}
 
-	function construct_session(
+	function constructSession(
 		$nuConfigDBDriver,$nuConfigDBPort,$nuConfigDBHost,$nuConfigDBName,$nuConfigDBUser,
 		$nuConfigDBPassword,$nuConfigDBGlobeadminUsername,$nuConfigDBGlobeadminPassword,
 		$nuConfigDBGlobeadminUsers, $nuConfigDemoDBGlobeadminUsername, $nuConfigDemoDBGlobeadminPassword, $nuConfigGlobeadminHome, $nuConfigDemoSavingAllowedIds,
