@@ -95,6 +95,7 @@ function nuUpdateSystemRecords(){
 
 	$ts			= nuBuildTableSchema();
 	$t			= nuListSystemTables();
+	$new		= array();
 
 	$countTables = count($t);
 	for($i = 0 ; $i < $countTables ; $i++){
@@ -120,7 +121,7 @@ function nuUpdateSystemRecords(){
 	}
 
 	$ts 			= nuBuildTableSchema();
-	for($i = 0 ; $i < count($t) ; $i++){
+	for($i = 0 ; $i < $countTables ; $i++){
 
 		$table		= $t[$i];
 		$lfield		= 'FIRST';
