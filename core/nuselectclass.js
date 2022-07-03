@@ -19,7 +19,7 @@ class nuSelectObject {
 		var s = parent.nuFORM.tableSchema;
 		var n = s[t].names;
 		var p = s[t].types;
-		var i = arguments.length == 1 ? nuID() : String(id).substr(3);
+		var i = arguments.length == 1 ? nuID() : String(id).substring(3);
 		this.boxID = 'box' + i;
 		this.scrollID = 'scroll' + i;
 		var w = this.boxWidth(s, t);
@@ -617,7 +617,7 @@ class nuSelectObject {
 	boxColumn(c, t, l, w, v, title) {
 
 		var suf = '_' + t + '_' + this.boxID;
-		
+
 		const col = document.createElement(c == 'select' ? 'input' : 'span');
 
 		col.setAttribute('id', c + suf);
