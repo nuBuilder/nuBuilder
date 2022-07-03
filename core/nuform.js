@@ -2331,7 +2331,7 @@ function nuSubformAddFilter(filter) {
 
 			const prop = arrColumns[columnId];
 			const float = prop === undefined || prop.float === undefined ? 'center' : prop.float;
-			const placeholder = prop === undefined || prop.placeholder === undefined ? '' : prop.placeholder;
+			const placeholder = prop.placeholder;
 			let width = $('#' + sfName + '000' + columnId).width() - 3;
 			width = prop === undefined || prop.width === undefined ? width : prop.width;
 
@@ -2346,7 +2346,8 @@ function nuSubformAddFilter(filter) {
 			let obj = nuSubformFilterAddObject(type, sfName, columnId, filterId, prop);
 
 			$(columnTitle).append("<br />");
-			obj.appendTo(columnTitle).css(style).nuSetPlaceholder(placeholder);
+
+			if (placeholder) obj.appendTo(columnTitle).css(style).nuSetPlaceholder(placeholder);
 
 		}
 
