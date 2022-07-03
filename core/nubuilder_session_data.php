@@ -15,7 +15,7 @@ class nuBuilderSessionData {
 	'GLOBEADMIN_PASS'			=> '',
 	'GLOBEADMIN_DEMO_NAME'		=> '',
 	'GLOBEADMIN_DEMO_PASS'		=> '',
-	'GLOBEADMIN_HOME'			=> 'nuhome',	
+	'GLOBEADMIN_HOME'			=> 'nuhome',
 	'DEMO_SAVING_ALLOWED_IDS'	=> '',
 	'USER_LOGIN'				=> '',
 	'USER_NAME'					=> '',
@@ -30,7 +30,7 @@ class nuBuilderSessionData {
 	'DB_PASSWORD'				=> '',
 	'DB_HOST'					=> '',
 	'DB_CHARSET'				=> '',
-	'DB_OPTIONS'				=> array(),	
+	'DB_OPTIONS'				=> array(),
 	'NU_SITE_URL'				=> '',
 	'IS_DEMO'					=> false,
 	'2FA_ADMIN'					=> false,
@@ -47,20 +47,20 @@ class nuBuilderSessionData {
 	'USER_CODE_LABEL'			=> null
 	);
 
-	function __construct() {
+	private function __construct() {
 	}
 
-	function getNubuilderSessionData() {
+	public function getNubuilderSessionData() {
 
 		return $this->nubuilder;
 	}
 
-	function constructSession(
+	public function constructSession(
 		$nuConfigDBDriver,$nuConfigDBPort,$nuConfigDBHost,$nuConfigDBName,$nuConfigDBUser,
 		$nuConfigDBPassword,$nuConfigDBGlobeadminUsername,$nuConfigDBGlobeadminPassword,
 		$nuConfigDBGlobeadminUsers, $nuConfigDemoDBGlobeadminUsername, $nuConfigDemoDBGlobeadminPassword, $nuConfigGlobeadminHome, $nuConfigDemoSavingAllowedIds,
 		$nuConfig2FAAdmin, $nuConfig2FAUser, $nuConfig2FAFormID, $nuConfig2FATokenValidityTime, $nuConfig2FAShowRememberMe,
-		$nuConfigUserAdditional1Label, $nuConfigUserAdditional2Label, $nuConfigUserCodeLabel, 
+		$nuConfigUserAdditional1Label, $nuConfigUserAdditional2Label, $nuConfigUserCodeLabel,
 		$nuUseMd5PasswordHash, $nuConfigDBOptions, $nuConfigIsDemo = false) {
 
 		$this->nubuilder['DB_DRIVER']				= $nuConfigDBDriver;
@@ -90,9 +90,9 @@ class nuBuilderSessionData {
 		$this->nubuilder['2FA_FORM_ID']				= $nuConfig2FAFormID == '' ? 'nuauthentication' : $nuConfig2FAFormID;
 		$this->nubuilder['2FA_TOKEN_VALIDITY_TIME']	= $nuConfig2FATokenValidityTime == '' ? 168 : $nuConfig2FATokenValidityTime;
 		$this->nubuilder['2FA_REMEMBER_ME']			= $nuConfig2FAShowRememberMe;
-		
+
 		$this->nubuilder['USE_MD5_PASSWORD_HASH']	= $nuUseMd5PasswordHash;
-	
+
 		$this->nubuilder['USER_ADDITIONAL1_LABEL']	= $nuConfigUserAdditional1Label;
 		$this->nubuilder['USER_ADDITIONAL2_LABEL']	= $nuConfigUserAdditional2Label;
 		$this->nubuilder['USER_CODE_LABEL']			= $nuConfigUserCodeLabel;
