@@ -261,8 +261,8 @@ function nuOpener(t, f, r, filter, parameters) {
 	this.record_id = r;
 	this.type = t;
 
-	this.filter = typeof (filter) == "undefined" ? '' : filter;
-	this.parameters = typeof (parameters) == "undefined" ? '' : parameters;
+	this.filter = nuDefine(filter);
+	this.parameters = nuDefine(parameters);
 
 }
 
@@ -939,7 +939,7 @@ function nuTranslate(s) {
 
 function nuTranslateToEnglish(s) {
 
-	if (typeof s === 'undefined' || s === '' || s === null) {
+	if (!s || s === '' || s === null) {
 		return '';
 	}
 
@@ -2121,9 +2121,7 @@ function nuImportCSV(t, s) {
 
 function nuImportUsersFromCSV(file) {
 
-	if (typeof file === 'undefined') {
-		var file = 'user_import.csv';
-	}
+	file = nuDefine(file, 'user_import.csv');
 
 	nuSetProperty('nuimportusers_file', file);
 
@@ -2264,11 +2262,9 @@ function nuSetPlaceholder(i, placeholder, translate) {
 
 	var f = $('#' + i);
 
-	if (typeof translate === 'undefined') {
-		var translate = true;
-	}
+	translate = nuDefine(translate, true);
 
-	if (typeof placeholder === 'undefined') {
+	if (!placeholder) {
 		placeholder = f.attr('data-nu-format').substring(2);
 	} else {
 		placeholder = translate ? nuTranslate(placeholder) : placeholder;
@@ -2377,13 +2373,8 @@ jQuery.fn.cssNumber = function (prop) {
 
 function nuEnableDisableAllObjects(v, excludeTypes, excludeIds) {
 
-	if (typeof excludeTypes === 'undefined') {
-		let excludeTypes = [];
-	}
-
-	if (typeof excludeIds === 'undefined') {
-		let excludeIds = [];
-	}
+	excludeTypes = nuDefine(excludeTypes, []);
+	excludeIds = nuDefine(excludeIds, []);
 
 	var r = JSON.parse(JSON.stringify(nuSERVERRESPONSE));
 	for (var i = 0; i < r.objects.length; i++) {
@@ -2629,7 +2620,7 @@ function nuInputMaxLength(id, maxLength, label) {
 
 	$('#' + id).attr('maxlength', maxLength);
 
-	if (typeof label !== "undefined") {
+	if (label) {
 		$('#' + label).html(maxLength + '/' + maxLength);
 		$('#' + id).keyup(function () {
 			var textlen = maxLength - $(this).val().length;
@@ -2790,8 +2781,8 @@ function nuSetSaveButtonPosition(t, l, h, w, fs) {
 	var sb = $('#nuSaveButton');
 	sb.appendTo('div#nuRECORD');
 
-	if (typeof w === 'undefined' || w === 0) w = sb.cssNumber("width");
-	if (typeof h === 'undefined' || h === 0) h = sb.cssNumber("height");
+	if (!w || w === 0) w = sb.cssNumber("width");
+	if (!h || h === 0) h = sb.cssNumber("height");
 
 	sb.css({
 		"top": t + "px",
@@ -2805,7 +2796,7 @@ function nuSetSaveButtonPosition(t, l, h, w, fs) {
 	sb.attr('data-nu-tab', '0');
 	sb.attr('data-nu-form', '');
 
-	if (typeof fs !== 'undefined' && fs !== 0) sb[0].style.fontSize = fs + "px";
+	if (fs && fs !== 0) sb[0].style.fontSize = fs + "px";
 	if (nuSelectedTabNumber() !== '0') sb.css('display', 'none');
 
 	return sb;
@@ -2821,10 +2812,10 @@ function nuAttachSaveButtonTo(i, dx, dy, h, w, fs) {
 
 	dest.after(sb);
 
-	if (typeof dx === 'undefined' || dx == 0) dx = 0;
-	if (typeof dy === 'undefined' || dy == 0) dy = 0;
-	if (typeof w === 'undefined' || w == 0) w = sb.cssNumber("width");
-	if (typeof h === 'undefined' || h == 0) h = sb.cssNumber("height");
+	if (!dx || dx == 0) dx = 0;
+	if (!dy || dy == 0) dy = 0;
+	if (!w || w == 0) w = sb.cssNumber("width");
+	if (!h || h == 0) h = sb.cssNumber("height");
 
 	sb.css({
 		"top": dest.cssNumber("top") + dest.cssNumber("height") + 15 + dy,
@@ -2838,7 +2829,7 @@ function nuAttachSaveButtonTo(i, dx, dy, h, w, fs) {
 	sb.attr('data-nu-tab', '0');
 	sb.attr('data-nu-form', '');
 
-	if (typeof fs !== 'undefined' && fs !== 0) sb[0].style.fontSize = fs + "px";
+	if (fs && fs !== 0) sb[0].style.fontSize = fs + "px";
 	if (nuSelectedTabNumber() !== '0') sb.css('display', 'none');
 
 	return sb;

@@ -12,9 +12,7 @@ function nuOpenCurrentObjectList() {
 
 function nuAddAdminButton(i, v, f, t) {
 
-	if (typeof t === 'undefined') {
-		var t = '';
-	}
+	t = nuDefine(t);
 
 	const button = "<input id='nu" + i + "Button' type='button' type='button' title='" + nuTranslate(t) + "' class='nuActionButton nuAdminButton' value='" + nuTranslate(v) + "' onclick='" + f + "'>";
 	$('#nuActionHolder').prepend(button);
@@ -57,7 +55,7 @@ function nuShowFormInfo() {
 
 function nuDevMode(m) {
 
-	if (typeof m !== 'undefined') {
+	if (m) {
 		if (m === true) localStorage.setItem("nuDevMode", '1');
 		if (m === false) localStorage.setItem("nuDevMode", '0');
 	}
@@ -80,7 +78,7 @@ function nuAddAdminButtons() {
 	if (nuGlobalAccess()) {
 
 		const ft = nuCurrentProperties().form_type;
-		if (ft === null || typeof ft === 'undefined') return;
+		if (ft === null || !ft) return;
 
 		const devMode = nuDevMode();
 
@@ -924,7 +922,7 @@ function nuContextMenuUpdate() {
 
 function nuContextMenuClose() {
 
-	if (typeof ctxmenu !== "undefined") {
+	if (ctxmenu) {
 		ctxmenu.hide();
 	}
 
@@ -1543,12 +1541,12 @@ var nuPrettyPrint = (function () {
 									'[EXPAND]',
 									'Click to show items from this slice',
 									function () {
-										var obj = {};
+										let obj = {};
 										for (var j = i; j < until; j++) {
 											obj[j] = arr[j];
 										}
 										try {
-											var child = prettyPrintThis(obj, { maxDepth: 1 });
+											const child = prettyPrintThis(obj, { maxDepth: 1 });
 											child.getElementsByTagName('th')[0].style.display = 'none';
 											this.parentNode.appendChild(child);
 										} catch (e) {
@@ -1562,9 +1560,9 @@ var nuPrettyPrint = (function () {
 							isEmpty = false;
 						})(i);
 				} else {
-					util.forEach(arr, function (item, i) {
+					util.forEach(arr, function (item, index) {
 						isEmpty = false;
-						table.addRow([i, typeDealer[util.type(item)](item, depth + 1, i)]);
+						table.addRow([index, typeDealer[util.type(item)](item, depth + 1, index)]);
 					});
 				}
 

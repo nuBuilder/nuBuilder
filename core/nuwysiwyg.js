@@ -2,14 +2,14 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 
 	nuHide(id);
 
-	if (typeof options !== "undefined") {
+	if (options) {
 		if ($.type(options) !== 'object') {
-			var plugins = options;
+			plugins = options;
 			options = undefined;
 		}
 	}
 
-	if (typeof tinymce === "undefined") {
+	if (!tinymce) {
 		nuMessage(["<h2>TinyMCE is not included</h2>","Set $nuConfigIncludeTinyMCE = true in nuconfig.php"]);
 		return;
 	}
@@ -20,14 +20,14 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 	let obj = document.getElementById(idContainer);
 
 	var _plugins;
-	if (typeof plugins == "undefined") {
+	if (!plugins) {
 		_plugins = 'code print preview importcss searchreplace autolink autosave save directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor insertdatetime advlist lists textpattern noneditable help charmap emoticons';
 	} else {
 		_plugins = plugins;
 	}
 
 	var _mobile;
-	if (typeof mobile == "undefined") {
+	if (!mobile) {
 		_mobile = {
 			plugins: 'print preview importcss searchreplace autolink autosave save directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor insertdatetime advlist lists textpattern noneditable help charmap emoticons'
 		}
@@ -36,7 +36,7 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 	}
 
 	var _toolbar;
-	if (typeof toolbar == "undefined") {
+	if (!toolbar) {
 		_toolbar = 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |	numlist bullist checklist | forecolor backcolor casechange	formatpainter removeformat | pagebreak | charmap emoticons | fullscreen	preview save print | insertfile image media pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments addcomment';
 	} else {
 
@@ -48,21 +48,21 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 	}
 
 	var _toolbar_groups;
-	if (typeof toolbar_groups == "undefined") {
+	if (!toolbar_groups) {
 		_toolbar_groups = {};
 	} else {
 		_toolbar_groups = toolbar_groups;
 	}
 
 	var _menubar;
-	if (typeof menubar == "undefined") {
+	if (!menubar) {
 		_menubar = 'file edit view insert format tools table tc help';
 	} else {
 		_menubar = menubar;
 	}
 
 	var _contextmenu;
-	if (typeof contextmenu == "undefined") {
+	if (!contextmenu) {
 		_contextmenu = 'image table configurepermanentpen';
 	} else {
 		_contextmenu = contextmenu;
@@ -70,7 +70,7 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 
 
 	var _quickbars;
-	if (typeof quickbars == "undefined") {
+	if (!quickbars) {
 		_quickbars = 'bold italic | quicklink h2 h3 blockquote quickimage quicktable';
 	} else {
 		_quickbars = quickbars;
@@ -126,7 +126,7 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 
 	let mergedOptions = defaultOptions;
 
-	if (typeof options !== "undefined") {
+	if (options) {
 		mergedOptions = $.extend(defaultOptions, options)
 	}
 
@@ -225,12 +225,12 @@ function nuQuill(i, options) {
 
 	nuHide(i);
 
-	if (typeof Quill === "undefined") {
+	if (!Quill) {
 		nuMessage(["<h2>Quill is not included</h2>","Set $nuConfigIncludeQuill = true in nuconfig.php"]);
 		return;
 	}
 
-	if (typeof options === 'undefined') {
+	if (!options) {
 		var options = {
 			modules: {
 				toolbar: null
@@ -249,7 +249,7 @@ function nuQuill(i, options) {
 		options.modules.toolbar = nuQuillToolbarOptions(options.fontNames);
 	}
 
-	if (typeof options.modules === 'undefined' || options.modules === null) {
+	if (!options.modules || options.modules === null) {
 
 		if (options.modules.toolbar === false)	{
 			options.modules.toolbar = false;
@@ -303,7 +303,7 @@ function nuQuillGetInstance(i) {
 	var quill = new Quill(container);
 	if (Quill.find(container) === quill) {
 		return quill;
-	} 
+	}
 
 	return null;
 

@@ -625,7 +625,7 @@ function nuAddActionButton(i, v, f, t, e) {
 
 	let html = "<input id='" + id + "' type='button' title='" + nuTranslate(t) + "' class='nuActionButton" + nuClass + "' value='" + nuTranslate(v) + "' onclick='" + f + "'>";
 
-	if (typeof e !== 'undefined') {
+	if (e) {
 		$(html).insertAfter('#' + e);
 	} else {
 		$('#nuActionHolder').append(html);
@@ -2522,7 +2522,7 @@ function nuSubformAddFilter(filter) {
 
 			// Restore positions:
 			let top = rec.data('nu-top-position');
-			if (typeof top !== "undefined") {
+			if (top) {
 				rec.css("top", top);
 				if (nuNoAdd == '1' && lastRow !== r) rec.show();
 			}
@@ -2602,11 +2602,9 @@ function nuRefreshSelectObject(selectId, formId, removeBlank) {
 
 function nuSubformRefreshSelectObject(prefix, selectId, formId, removeBlank) {
 
-	if (typeof formId === 'undefined') {
-		var formId = '';
-	}
+	formId = nuDefine(formId);
 
-	let p = 'NUREFRESHSELECTOBJECT';
+	const p = 'NUREFRESHSELECTOBJECT';
 	nuSetProperty(p + '_prefix', prefix);
 	nuSetProperty(p + '_selectid', selectId);
 	nuSetProperty(p + '_formid', formId);
@@ -2624,11 +2622,9 @@ function nuRefreshDisplayObject(displayId, formId) {
 
 function nuSubformRefreshDisplayObject(prefix, displayId, formId) {
 
-	if (typeof formId === 'undefined') {
-		var formId = '';
-	}
+	formId = nuDefine(formId);
 
-	let p = 'NUREFRESHDISPLAYOBJECT';
+	const p = 'NUREFRESHDISPLAYOBJECT';
 	nuSetProperty(p + '_prefix', prefix);
 	nuSetProperty(p + '_displayid', displayId);
 	nuSetProperty(p + '_formid', formId);
@@ -2639,8 +2635,8 @@ function nuSubformRefreshDisplayObject(prefix, displayId, formId) {
 
 function nuGetClipboardText(e) {
 
-	var cb;
-	var clipText = '';
+	let cb;
+	let clipText = '';
 	if (window.clipboardData && window.clipboardData.getData) {
 		cb = window.clipboardData;
 		clipText = cb.getData('Text');
@@ -2736,9 +2732,10 @@ function nuSubformEnableMultiPaste(subformId, selector, undoButton) {
 				$('[data-nu-form="' + subformId + '"]').removeAttr("data-prevalue");
 				nuSubformPaste(e, jsonObj);
 
-				if (typeof undoButton !== 'undefined') {
+				if (undoButton) {
 					nuShow(undoButton);
 				}
+
 				window.nuNEW = 0;
 
 			}
@@ -2817,12 +2814,12 @@ function nuSubformToClipboard(i, delimiter, includeHeader, includeId) {
 
 	var s = "";
 
-	if (typeof delimiter === "undefined") {
-		var delimiter = '\t';
+	if (!delimiter) {
+		delimiter = '\t';
 	}
 
-	if (typeof includeId === "undefined") {
-		var includeId = false;
+	if (!includeId) {
+		includeId = false;
 	}
 
 	if (includeHeader === true) {
@@ -2996,12 +2993,12 @@ function nuAddHolder(t) {
 
 function nuGetWordWidth(w, objClass) {
 
-	if (typeof objClass === 'undefined') {
-		var objClass = 'nuSection';
+	if (!objClass) {
+		objClass = 'nuSection';
 	}
 
 	const W = 'nuTestWidth';
-	let h = "<" + 'div' + " id='" + W + "' style='position:absolute;visible:hidden;width:auto'>" + w + "</" + 'div' + ">";
+	const h = "<" + 'div' + " id='" + W + "' style='position:absolute;visible:hidden;width:auto'>" + w + "</" + 'div' + ">";
 	$('body').append(h);
 	let obj = $('#' + W);
 	obj.addClass(objClass);
@@ -5567,7 +5564,7 @@ function nuClickTab(t, s) {
 
 }
 
-function nuFilterRun(id, f) {
+function nuFilterRun(id, filter) {
 
 	var r = JSON.parse(JSON.stringify(nuSERVERRESPONSE));
 	var o = -1;
@@ -5576,9 +5573,9 @@ function nuFilterRun(id, f) {
 
 		if (r.objects[i].id == id) {
 
-			if (typeof f !== 'undefined') {
-				if (r.objects[i].filter == f) { return; }
-				r.objects[i].filter = f;
+			if (filter) {
+				if (r.objects[i].filter == filter) { return; }
+				r.objects[i].filter = filter;
 
 			}
 
@@ -5594,7 +5591,7 @@ function nuFilterRun(id, f) {
 
 }
 
-function nuRecordRun(id, f) {
+function nuRecordRun(id, filter) {
 
 	var r = JSON.parse(JSON.stringify(nuSERVERRESPONSE));
 	var o = -1;
@@ -5603,9 +5600,9 @@ function nuRecordRun(id, f) {
 
 		if (r.objects[i].id == id) {
 
-			if (typeof f !== 'undefined') {
-				if (r.objects[i].record_id == f) { return; }
-				r.objects[i].record_id = f;
+			if (filter) {
+				if (r.objects[i].record_id == filter) { return; }
+				r.objects[i].record_id = filter;
 			}
 
 			o = i;
@@ -5623,13 +5620,13 @@ function nuRecordRun(id, f) {
 function nuGetIframeValue(f, o, method) {
 
 	let obj = $('#' + f).contents().find('#' + o)
-	return (typeof method === 'undefined' || method == 'val') ? obj.val() : obj.html();
+	return (!method || method == 'val') ? obj.val() : obj.html();
 }
 
 function nuSetIframeValue(f, o, v, method) {
 
 	let obj = $('#' + f).contents().find('#' + o)
-	return (typeof method === 'undefined' || method == 'val') ? obj.val(v) : obj.html(v);
+	return (!method || method == 'val') ? obj.val(v) : obj.html(v);
 
 }
 
@@ -5831,12 +5828,12 @@ function nuPrintEditForm(hideObjects, showObjects) {
 	$('#nuTabHolder').hide();
 	$('.nuActionButton').hide();
 
-	if (typeof hideObjects === 'undefined') {
-		var hideObjects = [];
+	if (!hideObjects) {
+		hideObjects = [];
 	}
 
-	if (typeof showObjects === 'undefined') {
-		var showObjects = [];
+	if (!showObjects) {
+		showObjects = [];
 	}
 
 	for (let i = 0; i < hideObjects.length; i++) {

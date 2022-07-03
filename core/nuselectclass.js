@@ -765,7 +765,7 @@ class nuSelectObject {
 
 		for (var i = 0; i < J.tables.length; i++) {
 
-			if (typeof (parent.nuFORM.tableSchema[J.tables[i].tablename]) == 'undefined') {
+			if (!parent.nuFORM.tableSchema[J.tables[i].tablename]) {
 
 				nuMessage(['No table named <b>' + J.tables[i].tablename + '</b>.']);
 
