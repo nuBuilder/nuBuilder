@@ -287,6 +287,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 					$v = isset($r->sob_html_vertictal_label) ? $r->sob_html_vertictal_label : '';
 					$h = isset($r->sob_html_horizontal_label) ? $r->sob_html_horizontal_label : '';
 					$title = isset($r->sob_html_title) ? $r->sob_html_title : '';
+					$htmlj = "";
 
 					if($r->sob_html_chart_type == 'p'){
 						$htmlj	= "\nnuChart('$r->sob_all_id', 'PieChart', '$htmljs', '$title', '$h', '$v', 'bars', false);";
