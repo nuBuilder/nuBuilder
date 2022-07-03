@@ -1203,23 +1203,16 @@ function nuINPUT(w, i, l, p, prop) {
 
 	if (inputType == 'nuScroll') {
 		nuINPUTnuScroll($id, wi);
-	} else
-	if (inputType == 'nuDate') {
+	} else if (inputType == 'nuDate') {
 		nuINPUTnuDate($id, wi);
-	} else
-	if (inputType == 'nuNumber') {
-		nuINPUTnuNumber($id, wi);
-	} else
-	if (inputType == 'nuDate') {
 		$id.attr('onclick', 'nuPopupCalendar(this);');
-	} else
-	if (wi.input == 'checkbox') {
+	} else if (inputType == 'nuNumber') {
+		nuINPUTnuNumber($id, wi);
+	} else if (wi.input == 'checkbox') {
 		nuINPUTCheckbox($id, obj, wi);
-	} else
-	if (objectType == 'display') {
+	} else if (objectType == 'display') {
 		nuINPUTDisplay($id);
-	} else
-	if (objectType == 'calc') {
+	} else if (objectType == 'calc') {
 		nuINPUTCalc($id, wi, p);
 	}
 
@@ -3681,17 +3674,20 @@ function nuSelectTab(tab, byUser) {
 	}
 
 	if (byUser === undefined) byUser = false;
-	var byUser = byUser === true && !$('#' + tab.id).is('[nu-data-clicked-by-system]') ? true : false;
+
+	$tabId = $('#' + tab.id);
+
+	var byUser = byUser === true && ! $tabId.is('[nu-data-clicked-by-system]') ? true : false;
 
 	if (byUser) nuSaveScrollPositions();
 
-	$('#' + tab.id).removeAttr('nu-data-clicked-by-system');
+	$tabId.removeAttr('nu-data-clicked-by-system');
 
 	$('.nuTabTitleColumn').remove();
 
-	let filt = $('#' + tab.id).attr('data-nu-tab-filter');
-	let form = $('#' + tab.id).attr('data-nu-form-filter');
-	let tabId = $('#' + tab.id).attr('data-nu-tab-id');
+	const filt = $tabId.attr('data-nu-tab-filter');
+	const form = $tabId.attr('data-nu-form-filter');
+	const tabId = $tabId.attr('data-nu-tab-id');
 
 	window.nuFORMHELP[form] = window.nuTABHELP[tabId];
 
