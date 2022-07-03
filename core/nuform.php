@@ -393,7 +393,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 				$f->primary_key_name	= $o->primary_key_name;
 				$o->add					= $r->sob_subform_add;
 				$o->dimensions			= nuFormDimensions($r->sob_subform_zzzzsys_form_id);
-				$o->forms				= nuGetSubformRecords($r, $o->add, $R);
+				$o->forms				= nuGetSubformRecords($r, $o->add);
 				$o->sf_form_id			= $r->sob_subform_zzzzsys_form_id;
 				$o->browse_columns		= array();
 
