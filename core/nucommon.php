@@ -363,24 +363,6 @@ function nuRunReport($report_id){
 
 }
 
-function nuInstall(){
-
-	$id									= nuID();
-	$s									= "SELECT zzzzsys_php_id, sph_code, sph_description  FROM zzzzsys_php WHERE sph_code = '$procedure_code'";
-	$t									= nuRunQuery($s);
-	$ob									= db_fetch_object($t);
-	$_POST['nuHash']['code']			= $ob->sph_code;
-	$_POST['nuHash']['description']		= $ob->sph_description;
-	$_POST['nuHash']['parentID']		= $ob->zzzzsys_php_id;
-	$_POST['nuHash']['nuInstall']		= '1';
-	$j									= json_encode($_POST['nuHash']);
-
-	nuSetJSONData($id, $j);
-
-	return $id;
-
-}
-
 function nuAllowedActivities(){
 
 	$t	= nuRunQuery("SELECT sss_access FROM zzzzsys_session WHERE zzzzsys_session_id = ? ", array($_SESSION['nubuilder_session_data']['SESSION_ID']));
