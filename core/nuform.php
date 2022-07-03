@@ -509,7 +509,7 @@ function nuGetSrc($i){
 
 	if (db_num_rows($t) == 1) {
 		$r		= db_fetch_object($t);
-		$json	= JSON_decode($r->sfi_json);
+		$json	= json_decode($r->sfi_json);
 		$j		= $json->file;
 	} else {
 		$j	= null;
