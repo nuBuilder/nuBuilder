@@ -1277,6 +1277,7 @@ function nuBrowseWhereClause($searchFields, $searchString, $returnArray = false)
 
 	$wordSearches			= explode(' ', $searchString);
 	$quo					= '"';
+	$task					= array();
 
 	$countWordSearches = count($wordSearches);
 	for ($i = 0; $i < $countWordSearches; $i++) {
@@ -1301,14 +1302,14 @@ function nuBrowseWhereClause($searchFields, $searchString, $returnArray = false)
 	}
 
 	$countS = count($SEARCHES);
-	for ($i = 0; $i < $countS; $i++) {															//-- search for (or exclude) these strings
+	for ($i = 0; $i < $countS; $i++) {																	//-- search for (or exclude) these strings
 
 		$include = array();
 		$exclude = array();
 
 		for ($SF = 0; $SF < count($searchFields); $SF++) {												//-- loop through searchable fields
 
-			if ($task[$i] == 'include') {																	//-- changed by KEE
+			if ($task[$i] == 'include') {																//-- changed by KEE
 				$include[] = 'CONVERT(' . $searchFields[$SF] . ' USING utf8) LIKE ' . $SEARCHES[$i];
 			} else {
 				$exclude[] = 'CONVERT(' . $searchFields[$SF] . ' USING utf8) NOT LIKE ' . $SEARCHES[$i];
