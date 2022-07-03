@@ -1000,11 +1000,12 @@ function nuAddThousandSpaces($s, $c){
 	$a			= str_split($r, 3);
 	$n			= array();
 
-	for($i = 0 ; $i < count($a) ; $i++){
+	$countA = count($a);
+	for($i = 0 ; $i < $countA ; $i++){
 
 		$n[]	= strrev($a[$i]);
 
-		if($i < count($a) - 1){
+		if($i < $countA - 1){
 
 			$n[]	= $c;
 
@@ -1307,7 +1308,8 @@ function nuFontList(){
 
 		$list			= scandir($folder);
 
-		for ( $x=0; $x<count($list); $x++) {
+		$countList = count($list);
+		for ( $x=0; $x < $countList; $x++) {
 
 				if ( !in_array($list[$x], $exclude) )  {
 
@@ -1325,7 +1327,8 @@ function nuFontList(){
 				}
 		}
 
-		for ( $x=0; $x<count($result); $x++) {
+		$countResult = count($result);
+		for ( $x=0; $x < $countResult; $x++) {
 
 				$element	= array();
 				$element[0]	= $result[$x];
@@ -1439,7 +1442,8 @@ function nuExceptionHandler($e, $code){
 	$a		= $e->getTrace();
 	$t		= array_reverse($a);
 
-	for($i = 0 ; $i < count($t) ; $i++){
+	$count = count($t);
+	for($i = 0 ; $i < $count ; $i++){
 
 		$m	= '(line:<i>' . $t[$i]['line'] . '</i>) ' . $t[$i]['file'] . ' <b> - ' . $t[$i]['function'] . '<b>';
 
@@ -1634,7 +1638,8 @@ function nuToCSV($table, $file, $d){
 
 	fputcsv($fp, $c, chr($d));
 
-	for($i = 0 ; $i < count($a) ; $i++) {
+	$count = count($a);
+	for($i = 0 ; $i < $count ; $i++) {
 		fputcsv($fp, $a[$i], chr($d));
 	}
 
@@ -1670,9 +1675,11 @@ function nuFromCSV($file, $table, $d, $delete){
 			$a[] = $data;
 		}
 
-		for($I = 1 ; $I < count($a) ; $I++){
+		$count = count($a);
+		for($I = 1 ; $I < $count ; $I++){
 
-			for($i = 0 ; $i < count($a[$I]) ; $i++){
+			$countI = count($a[$I]);
+			for($i = 0 ; $i < $countI ; $i++){
 
 				if(isset($w[$i])){
 					$w[$i] = max($w[$i], strlen($a[$I][$i]));
@@ -1690,7 +1697,9 @@ function nuFromCSV($file, $table, $d, $delete){
 
 	$columns = array();
 	$rows = array();
-	for($i = 0 ; $i < count($w) ; $i++){
+
+	$count = count($w);
+	for($i = 0 ; $i < $count ; $i++){
 
 		$name = $a[0][$i];
 		$size = $w[$i];
@@ -1715,11 +1724,13 @@ function nuFromCSV($file, $table, $d, $delete){
 
 	$s1 = "INSERT INTO `$table` (" . implode(',',$columns) . ") VALUES " ;
 
-	for($I = 1 ; $I < count($a) ; $I++){
+	$count = count($a);
+	for($I = 1 ; $I < $count ; $I++){
 
 		$values = array();
 
-		for($i = 0 ; $i < count($a[$I]) ; $i++){
+		$countI = count($a[$I]);
+		for($i = 0 ; $i < $countI ; $i++){
 			$values[] = '"' . $a[$I][$i] . '"';
 		}
 
@@ -2022,7 +2033,7 @@ function nuFormatDateTime($d, $format){
 
 }
 
-function nuGetProperty($p) {
+function nuGetPropertiesArray() {
 
 	$a = nuObjKey($_POST, 'nuHash', null);
 	if ($a != null) {
@@ -2037,6 +2048,16 @@ function nuGetProperty($p) {
 				$a = array_merge($j, $a);
 			}
 		}
+	}
+
+	return $a;
+
+}
+
+function nuGetProperty($p, $a = null) {
+
+	if ($a == null) {
+		$a = nuGetPropertiesArray();
 	}
 
 	return array_key_exists($p, $a) ? $a[$p] : null;

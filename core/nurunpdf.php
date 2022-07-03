@@ -105,7 +105,8 @@ function nuPrintReport($PDF, $LAY, $DATA, $JSON, $isHTML){
 	$lastSectionTop			= 10000;
 	$pageNumber				= 0;
 
-	for($s = 0 ; $s < count($DATA) ; $s++){
+	$countData = count($DATA);
+	for($s = 0 ; $s < $countData ; $s++){
 
 		if($lastSectionTop > $DATA[$s]->sectionTop){
 			$pageNumber++;
@@ -113,7 +114,8 @@ function nuPrintReport($PDF, $LAY, $DATA, $JSON, $isHTML){
 
 		$lastSectionTop=$DATA[$s]->sectionTop;
 
-		for($o = 0 ; $o < count($DATA[$s]->objects) ; $o++){
+		$countObjects = count($DATA[$s]->objects);
+		for($o = 0 ; $o < $countObjects ; $o++){
 
 			$O				= nuGetObjectProperties($LAY, $DATA[$s]->objects[$o]->id);
 
@@ -123,10 +125,12 @@ function nuPrintReport($PDF, $LAY, $DATA, $JSON, $isHTML){
 		}
 
 	}
+	
+	$countDATA = count($DATA);	
+	for($s = 0 ; $s < count($countDATA) ; $s++){
 
-	for($s = 0 ; $s < count($DATA) ; $s++){
-
-		for($o = 0 ; $o < count($DATA[$s]->objects) ; $o++){
+		$countObjects = count($DATA[$s]->objects);
+		for($o = 0 ; $o < $countObjects ; $o++){
 
 			$O				= nuGetObjectProperties($LAY, $DATA[$s]->objects[$o]->id);
 
@@ -156,7 +160,8 @@ function nuPrintReport($PDF, $LAY, $DATA, $JSON, $isHTML){
 
 	$lastSectionTop = 10000;
 
-	for($s = 0 ; $s < count($DATA) ; $s++){
+	$countDATA = count($DATA);
+	for($s = 0 ; $s < $countDATA ; $s++){
 
 		if($lastSectionTop > $DATA[$s]->sectionTop){
 
@@ -171,7 +176,8 @@ function nuPrintReport($PDF, $LAY, $DATA, $JSON, $isHTML){
 
 		nuPrintBackground($PDF, $DATA[$s]->sectionTop, $DATA[$s]->sectionHeight, $color);
 
-		for($o = 0 ; $o < count($DATA[$s]->objects) ; $o++){
+		$countObjects = count($DATA[$s]->objects);
+		for($o = 0 ; $o < $countObjects ; $o++){
 
 			$O				= nuGetObjectProperties($LAY, $DATA[$s]->objects[$o]->id);
 			if($O->objectType == 'field' or $O->objectType == 'label'){
@@ -236,7 +242,8 @@ function nuBuildReport($PDF, $REPORT, $TABLE_ID){
 //======================================================
 //	FIRST SECTION HEADERS
 //======================================================
-	for($g = 0 ; $g < count($groups) ; $g++){
+	$countGroups = count($groups);
+	for($g = 0 ; $g < $countGroups ; $g++){
 
 		$S								= new nuSECTION($PDF, $ROW, $REPORT, 3 + $g, 0, $sectionTop);					//-- section headers
 		$sectionTop						= $S->buildSection();
@@ -257,7 +264,9 @@ function nuBuildReport($PDF, $REPORT, $TABLE_ID){
 //======================================================
 //	FOOTERS AND HEADERS AS GROUPS CHANGE
 //======================================================
-			for($g = count($groups) - 1 ; $g >= $backUpTo ; $g--){
+
+			$countGroups = count($groups);
+			for($g = $countGroups - 1 ; $g >= $backUpTo ; $g--){
 
 				$S							= new nuSECTION($PDF, $lastROW, $REPORT, 3 + $g, 1, $sectionTop);				//-- section footers
 				$sectionTop					= $S->buildSection();
@@ -265,7 +274,7 @@ function nuBuildReport($PDF, $REPORT, $TABLE_ID){
 
 			}
 
-			for($g = $backUpTo ; $g < count($groups) ; $g++){
+			for($g = $backUpTo ; $g < $countGroups ; $g++){
 
 				$S							= new nuSECTION($PDF, $ROW, $REPORT, 3 + $g, 0, $sectionTop);					//-- section headers
 				$sectionTop					= $S->buildSection();
@@ -287,7 +296,9 @@ function nuBuildReport($PDF, $REPORT, $TABLE_ID){
 //======================================================
 //	LAST GROUP FOOTERS
 //======================================================
-	for($g = count($groups) - 1 ; $g > -1 ; $g--){
+
+	$countGroups = count($groups);
+	for($g = $countGroups - 1 ; $g > -1 ; $g--){
 
 		$S								= new nuSECTION($PDF, $lastROW, $REPORT, 3 + $g, 1, $sectionTop);					//-- section footers
 		// last group doesn't need a page break
@@ -395,7 +406,8 @@ class nuSECTION{
 
 	private function setObjectLines($O, $stopGrow = false){
 
-		for($i = 0 ; $i < count($O) ; $i++){
+		$countO = count($O);
+		for($i = 0 ; $i < $countO ; $i++){
 
 			$O[$i]->path						= '';
 
@@ -467,11 +479,12 @@ class nuSECTION{
 			$pageBreak						= $this->LAY->groups[$this->group]->sections[$this->section]->page_break;
 		}
 
-		for($i = 0 ; $i < count($this->O) ; $i++){
+		$countO = count($this->O);
+		for($i = 0 ; $i < $countO ; $i++){
 			$sectionObjects[]				 = $this->O[$i]->id;
 		}
 
-		for($i = 0 ; $i < count($this->O) ; $i++){
+		for($i = 0 ; $i < $countO ; $i++){
 
 			$OID							= $this->O[$i]->id;
 			$availableHeight				= $this->paperBottom() - $sectionTop - $this->O[$i]->top;
@@ -660,7 +673,8 @@ class nuSECTION{
 
 		}
 
-		for($i = 0 ; $i < count($lines) ; $i ++){								//-- loop through current lines
+		$countLines = count($lines);
+		for($i = 0 ; $i < $countLines ; $i ++){								//-- loop through current lines
 
 			$thisLine		= $lines[$i];
 			$forceRow		= true;
@@ -864,13 +878,16 @@ function nuSetPixelsToMM($pxREPORT){
 
 	$ratio = .25;
 
-	for($g = 0 ; $g < count($pxREPORT->groups) ; $g++){
+	$countGroups = count($pxREPORT->groups);
+	for($g = 0 ; $g < $countGroups; $g++){
 
-		for($s = 0 ; $s < count($pxREPORT->groups[$g]->sections) ; $s++){
+		$countSections = count($pxREPORT->groups[$g]->sections);
+		for($s = 0 ; $s < $countSections ; $s++){
 
 			$pxREPORT->groups[$g]->sections[$s]->height							= $pxREPORT->groups[$g]->sections[$s]->height				* $ratio;
 
-			for($o = 0 ; $o < count($pxREPORT->groups[$g]->sections[$s]->objects) ; $o++){
+			$countObjects = count($pxREPORT->groups[$g]->sections[$s]->objects);
+			for($o = 0 ; $o < $countObjects ; $o++){
 
 				$pxREPORT->groups[$g]->sections[$s]->objects[$o]->fontSize		= $pxREPORT->groups[$g]->sections[$s]->objects[$o]->fontSize;
 				$pxREPORT->groups[$g]->sections[$s]->objects[$o]->height		= $pxREPORT->groups[$g]->sections[$s]->objects[$o]->height	* $ratio;
@@ -1044,7 +1061,8 @@ function nuMakeSummaryTable($REPORT, $TABLE_ID){
 
 		nuRunQuery("CREATE TABLE $TABLE_ID"."_nu_summary SELECT count(*) as nu_count, " . implode(',',$field) . ", " . implode(',',$groups) . " FROM $TABLE_ID group by " . implode(',',$groups));
 
-		for($i = 0 ; $i < count($groups) ; $i++){
+		$countGroups = count($groups);
+		for($i = 0 ; $i < count($countGroups) ; $i++){
 
 			nuRunQuery("ALTER TABLE $TABLE_ID"."_nu_summary ADD INDEX `".$groups[$i]."` (`".$groups[$i]."`)");
 

@@ -607,7 +607,8 @@ function nuDefaultObject($r, $t){
 	$o->read			= $r->sob_all_access;
 	$o->format			= '';
 
-	for($i = 0 ; $i < count($t) ; $i++){
+	$countt = count($t);
+	for($i = 0 ; $i < $countt ; $i++){
 
 		if($r->sob_all_zzzzsys_tab_id == $t[$i]->zzzzsys_tab_id){
 			$o->tab = $t[$i]->number;
@@ -946,7 +947,8 @@ function nuSelectOptions($sql) {
 
 		$t			= explode('|', nuRemoveNonCharacters($sql));
 
-		for ($i = 0; $i < count($t); $i++) {
+		$countt = count($t);
+		for ($i = 0; $i < $countt; $i++) {
 
 			$r		= array();
 			$r[0]	= $t[$i];
@@ -985,6 +987,7 @@ function nuGetSubformRecords($R, $A){
 	$a = array();
 
 	$tabs			= nuBuildTabList($R->sob_subform_zzzzsys_form_id);
+
 	while($r = db_fetch_row($t)){
 
 		$_POST['nuHash']['RECORD_ID']			= $r[0];
@@ -1041,7 +1044,8 @@ function nuRefineTabList($t){
 
 	$a			= array();
 
-	for($i = 0 ; $i < count($t) ; $i++){
+	$count = count($t);
+	for($i = 0 ; $i < $count ; $i++){
 
 		$a[]	= array('title' => $t[$i]->syt_title, 'id' => $t[$i]->zzzzsys_tab_id, 'help' => $t[$i]->syt_help, 'access' => isset($t[$i]->syt_access) ? $t[$i]->syt_access : null);
 
@@ -1137,7 +1141,9 @@ function nuBrowseRows($f){
 	$S->addField('$'.$f->primary_key.'$');
 
 	$displayContainsPK = false;
-	for($i = 0 ; $i < count($f->browse_columns) ; $i++){
+
+	$countBrowseColumns = count($f->browse_columns);
+	for($i = 0 ; $i < $countBrowseColumns ; $i++){
 		$d = $f->browse_columns[$i]->display;
 		if ($d == $f->primary_key) $displayContainsPK = true;
 		$S->addField($d);
@@ -1150,7 +1156,8 @@ function nuBrowseRows($f){
 		$_POST['nuSTATE']['nosearch_columns']	= array();
 	}
 
-	for($i = 0 ; $i < count($fields) ; $i++){
+	$countFields = count($fields);
+	for($i = 0 ; $i < $countFields ; $i++){
 
 		if(!in_array($i, $_POST['nuSTATE']['nosearch_columns'])){
 			$flds[]	= $fields[$i];
@@ -1239,13 +1246,15 @@ function nuBrowseWhereClause($searchFields, $searchString, $returnArray = false)
 
 	}
 
-	for ($i = 0; $i < count($phrases); $i++) {
+	$countPhrases = count($phrases);
+	for ($i = 0; $i < $countPhrases; $i++) {
 
 		$p				= explode(',', $phrases[$i]);
 		$SEARCHES[]		= substr($searchString, $p[0], $p[1] - $p[0]);
 	}
 
-	for ($i = 0; $i < count($SEARCHES); $i++) {
+	$countS = count($SEARCHES);
+	for ($i = 0; $i < $countS; $i++) {
 
 		$pos = strpos($searchString, '-' . $SEARCHES[$i]);												//-- check for a preceeding minus
 
@@ -1269,7 +1278,8 @@ function nuBrowseWhereClause($searchFields, $searchString, $returnArray = false)
 	$wordSearches			= explode(' ', $searchString);
 	$quo					= '"';
 
-	for ($i = 0; $i < count($wordSearches); $i++) {
+	$countWordSearches = count($wordSearches);
+	for ($i = 0; $i < $countWordSearches; $i++) {
 
 		if (strlen($wordSearches[$i]) > 0) {
 
@@ -1290,7 +1300,8 @@ function nuBrowseWhereClause($searchFields, $searchString, $returnArray = false)
 
 	}
 
-	for ($i = 0; $i < count($SEARCHES); $i++) {															//-- search for (or exclude) these strings
+	$countS = count($SEARCHES);
+	for ($i = 0; $i < $countS; $i++) {															//-- search for (or exclude) these strings
 
 		$include = array();
 		$exclude = array();
@@ -1444,15 +1455,18 @@ function nuFormAccessList($j){
 		$a[]	= $r[0];
 	}
 
-	for($i = 0 ; $i < count($j->forms) ; $i++){
+	$count = count($j->forms);
+	for($i = 0 ; $i < $count ; $i++){
 		$a[]	= $j->forms[$i][0];
 	}
 
-	for($i = 0 ; $i < count($j->reports) ; $i++){
+	$count = count($j->reports);
+	for($i = 0 ; $i < $count ; $i++){
 		$a[]	= $j->reports[$i][1];
 	}
 
-	for($i = 0 ; $i < count($j->procedures) ; $i++){
+	$count = count($j->procedures);
+	for($i = 0 ; $i < $count ; $i++){
 		$a[]	= $j->procedures[$i][1];
 	}
 
@@ -1470,7 +1484,8 @@ function nuProcedureAccessList($j){
 
 	$a			= array();
 
-	for($i = 0 ; $i < count($j->procedures) ; $i++){
+	$count = count($j->procedures);
+	for($i = 0 ; $i < $count ; $i++){
 		$a[]	= $j->procedures[$i][0];
 	}
 
@@ -1482,7 +1497,8 @@ function nuReportAccessList($j){
 
 	$a			= array();
 
-	for($i = 0 ; $i < count($j->reports) ; $i++){
+	$count = count($j->reports);
+	for($i = 0 ; $i < $count ; $i++){
 		$a[]	= $j->reports[$i][0];
 	}
 
@@ -1598,7 +1614,8 @@ function nuFormAccess($s, $a){
 
 	if($a !== null){
 
-		for($i = 0 ; $i < count($a) ; $i++){
+		$count = count($a);
+		for($i = 0 ; $i < $count ; $i++){
 
 			$F	= $a[$i];
 
@@ -1759,7 +1776,8 @@ function nuPreloadImages($a){
 
 	$js = '';
 
-	for($i = 0 ; $i < count($a) ; $i++){
+	$count = count($a);
+	for($i = 0 ; $i < $count ; $i++){
 
 		$s = "
 				SELECT sfi_code, sfi_json

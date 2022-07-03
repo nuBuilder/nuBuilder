@@ -81,10 +81,13 @@ function nuInstallException($e){
 	print "$ce $se<br>" . $e->getFile() .'<i>' . $e->getMessage() . '</i>' . '<br><b><i>Traced from...</i></b><br>';
 	$a		= $e->getTrace();
 	$t		= array_reverse($a);
-	for($i = 0 ; $i < count($t) ; $i++){
+
+	$count = count($t);
+	for($i = 0 ; $i < $count ; $i++){
 		$m	= '(line:<i>' . $t[$i]['line'] . '</i>) ' . $t[$i]['file'] . ' <b> - ' . $t[$i]['function'] . '<b>';
 		print $m . '<br>';
 	}
+
 }
 
 //-- after zzzzsys files have been imported
@@ -93,8 +96,8 @@ function nuUpdateSystemRecords(){
 	$ts			= nuBuildTableSchema();
 	$t			= nuListSystemTables();
 
-
-	for($i = 0 ; $i < count($t) ; $i++){
+	$countTables = count($t);
+	for($i = 0 ; $i < $countTables ; $i++){
 
 		$table		= $t[$i];
 		$new		= $ts["$table"]['names'];
@@ -103,7 +106,8 @@ function nuUpdateSystemRecords(){
 
 		if (is_array($old)) {
 		//-- remove unused fields from old
-		for($c = 0 ; $c < count($old) ; $c++){
+		$countOld = count($old);
+		for($c = 0 ; $c < $countOld ; $c++){
 			$field	= $old[$c];
 			if(!in_array($field, $new)){
 				$sql= "ALTER TABLE sys_$table DROP COLUMN $field";
@@ -122,7 +126,8 @@ function nuUpdateSystemRecords(){
 		$lfield		= 'FIRST';
 
 		//-- insert extra new fields into old
-		for($c = 0 ; $c < count($new) ; $c++){
+		$countNew = count($new);
+		for($c = 0 ; $c < $countNew ; $c++){
 
 			$new	= $ts["$table"]['names'];
 			$newt	= $ts["$table"]['types'];
@@ -442,7 +447,9 @@ function nuImportLanguageFiles() {
 
 	$l = nuGetIncludedLanguages();
 	try{
-		for($i = 0; $i < count($l); $i++) {
+
+		$countLanguages = count($l);
+		for($i = 0 ; $i < $countLanguages ; $i++){
 
 			if (trim($l[$i]) != '') {
 				$file = dirname(__FILE__). '/languages/'. $l[$i].'.sql';
@@ -453,12 +460,14 @@ function nuImportLanguageFiles() {
 					throw new nuInstallException("Error opening the file: $file");
 				}
 			}
+
 		}
 	} catch (Throwable $e) {
 		nuInstallException($e);
 	}catch (Exception $e) {
 		nuInstallException($e);
 	}
+
 }
 
 ?>

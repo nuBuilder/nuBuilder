@@ -6,7 +6,8 @@ function nuValidateSubforms(){
 
 	nuCheckAccessLevel($nudata[0]);
 
-	for($d = 0 ; $d < count($nudata) ; $d++){
+	$countNuData = count($nudata);
+	for($d = 0 ; $d < $countNuData ; $d++){
 
 		$sf			= $nudata[$d];
 		$a			= array();
@@ -34,8 +35,10 @@ function nuValidateSubforms(){
 				$L[$r->id]			= $r->label;
 			}
 
-			for($i = 0 ; $i < count($sf->rows) ; $i++){
+			$countRows = count($sf->rows);
+			for($i = 0 ; $i < $countRows ; $i++){
 
+				$countFields = count($sf->fields);
 				for($I = 1 ; $I < count($sf->fields) ; $I++){
 
 					$fld			= $sf->fields[$I];
@@ -186,7 +189,8 @@ function nuUpdateDatabase(){
 
 	$S = array();
 
-	for($d = 0 ; $d < count($nudata) ; $d++){
+	$countNuData = count($nudata);
+	for($d = 0 ; $d < $countNuData ; $d++){
 
 		$sf			= $nudata[$d];
 		$action		= $sf->action;
@@ -212,7 +216,8 @@ function nuUpdateDatabase(){
 
 		$log		= in_array($table . '_nulog', $CTSTN);
 
-		for($r = 0 ; $r < count($rows) ; $r++){
+		$countRows = count($rows);
+		for($r = 0 ; $r < $countRows ; $r++){
 
 			if ($d == 0 && $recordID == '-1') {		// Main form
 				$editedRow = nuEditedRow($edited[$r]) || nuSubFormsEdited($nudata);
@@ -264,7 +269,8 @@ function nuUpdateDatabase(){
 
 				}
 
-				for($R = 1 ; $R < count($row) ; $R++){
+				$countR =  count($row);
+				for($R = 1 ; $R < $countR ; $R++){
 
 					$isAN			= in_array($fields[$R], $auto);
 
@@ -378,7 +384,8 @@ function nuUpdateDatabase(){
 
 		}
 
-		for($i = 0 ; $i < count($deleted) ; $i++){
+		$countDeleted = count($deleted);
+		for($i = 0 ; $i < $countDeleted ; $i++){
 
 			$id				= $rows[$i][0];
 
@@ -413,7 +420,8 @@ function nuUpdateDatabase(){
 
 		if($S != null){
 
-		for($i = 0 ; $i < count($S) ; $i++){
+		$countS = count($S);
+		for($i = 0 ; $i < $countS ; $i++){
 
 			$sql			= $S[$i];
 			$insert			= "INSERT INTO $nuMainTable";
@@ -461,7 +469,8 @@ function nuGetNuDataValue($nudata, $formId, $field) {
 
 	if($formId == '') $formId = 'nuBuilder4EditForm';
 
-	for($d = 0 ; $d < count($nudata) ; $d++){
+	$count = count($nudata);
+	for($d = 0 ; $d < $count ; $d++){
 		$sf = $nudata[$d];
 		if ($formId == $sf->id) {
 			$key = array_search($field, $sf->fields);
@@ -477,7 +486,8 @@ function nuSetNuDataValue(&$nudata, $formId, $field, $value) {
 
 	if($formId == '') $formId = 'nuBuilder4EditForm';
 
-	for($d = 0 ; $d < count($nudata) ; $d++){
+	$count = count($nudata);
+	for($d = 0 ; $d < $count ; $d++){
 		$sf = $nudata[$d];
 		if ($formId == $sf->id) {
 			$key = array_search($field, $sf->fields);
@@ -512,7 +522,8 @@ function nuEditedRow($e){
 
 	$t	= 0;
 
-	for($i = 0 ; $i < count($e) ; $i++){
+	$count = count($e);
+	for($i = 0 ; $i < $count ; $i++){
 		$t	= $t + $e[$i];
 	}
 
@@ -530,11 +541,14 @@ function nuSubFormsEdited($nudata) {
 		$sf			= $nudata[$d];
 		$edited		= $sf->edited;
 		$rows		= $sf->rows;
-		for($r = 0 ; $r < count($rows) ; $r++){
+
+		$countRows = count($rows);
+		for($r = 0 ; $r < count($countRows) ; $r++){
 			if(nuEditedRow($edited[$r])){
 				return true;
 			}
 		}
+
 	}
 	return false;
 }
@@ -570,7 +584,8 @@ function nuUpdateRow($r, $p, $row, $FK){
 	$objects		= nuEditObjects($r->zzzzsys_form_id);
 	$q				= array();
 
-	for($i = 0 ; $i < count($row['f']) ; $i++){
+	$countF = count($row['f']);
+	for($i = 0 ; $i < $countF ; $i++){
 
 		if(array_search($row['f'][$i], $columns) !== false){
 
@@ -764,7 +779,8 @@ function nuSubformObject($id){
 
 	$sfs	= $_POST['nuHash']['nuFORMdata'];
 
-	for($i = 0 ; $i < count($sfs) ; $i++){
+	$count = count($sfs);
+	for($i = 0 ; $i < $count ; $i++){
 
 		if($sfs[$i]->id == $id){
 			return $sfs[$i];

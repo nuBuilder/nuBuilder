@@ -40,7 +40,8 @@ class nuSqlClass{
 
 		$this->OBJ['SELECT'][] 		= $c;
 
-		for($i = 0 ; $i < count($this->OBJ['SELECT']) ; $i++){
+		$count = count($this->OBJ['SELECT']);
+		for($i = 0 ; $i < $count ; $i++){
 			$this->OBJ['SELECT'][$i]['delim'] = ',';
 		}
 
