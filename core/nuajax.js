@@ -226,7 +226,7 @@ function nuRunReportSave(f, tag = null, callback = null) {
 			if (callback !== null) {
 				xhr.onreadystatechange = function () {
 					if (this.readyState == 4 && this.status == 200) {
-						var data = JSON.parse(xhr.responseText);
+						const data = JSON.parse(xhr.responseText);
 						callback(data.filename, data.id, this);
 					}
 				}
@@ -473,8 +473,8 @@ function nuAttachImage(i, code, fit) {
 
 	if (PARENT.nuImages[code] !== undefined) {
 
-		var p = JSON.parse(PARENT.nuImages[code]);
-		var b = atob(p.file);
+		const p = JSON.parse(PARENT.nuImages[code]);
+		const b = atob(p.file);
 
 		$('#' + imgID).attr('src', b)
 
@@ -482,8 +482,8 @@ function nuAttachImage(i, code, fit) {
 
 	}
 
-	var current = nuFORM.getCurrent();
-	var last = $.extend(true, {}, current);
+	const current = nuFORM.getCurrent();
+	let last = $.extend(true, {}, current);
 
 	last.session_id = window.nuSESSION;
 	last.call_type = 'getfile';
@@ -496,8 +496,8 @@ function nuAttachImage(i, code, fit) {
 		if (data.JSONfile !== null) {
 
 			PARENT.nuImages[code] = data.JSONfile;
-			var p = JSON.parse(PARENT.nuImages[code]);
-			var b = atob(p.file);
+			const p = JSON.parse(PARENT.nuImages[code]);
+			const b = atob(p.file);
 
 			$('#' + imgID).attr('src', b)
 
@@ -556,8 +556,8 @@ function nuAttachButtonImage(i, c, cssClass) {
 		if (data.JSONfile !== null) {
 
 			PARENT.nuImages[c] = data.JSONfile;
-			var p = JSON.parse(pi);
-			var b = atob(p.file);
+			const p = JSON.parse(pi);
+			const b = atob(p.file);
 
 			$('#' + i)
 				.css('background-image', 'url("' + b + '")')
