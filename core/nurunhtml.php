@@ -17,6 +17,7 @@ if (db_num_rows($t) == 0) {
 $r					= db_fetch_object($t);
 $j					= json_decode($r->json);
 $c					= $j->columns;
+$colCount			= count($c);
 
 $_POST['nuHash']	= (array) $j->hash;
 $hash				= nuHash();
@@ -31,7 +32,9 @@ print "<style>\n";
 
 $class = array();
 
-for($col = 0 ; $col < count($c) ; $col++){
+
+
+for($col = 0 ; $col < $colCount ; $col++){
 
 	$wd		= ($c[$col]->width) . 'px';
 
@@ -48,7 +51,7 @@ print "</style>\n";
 print "<TABLE border=1; style='border-collapse: collapse'>\n";
 print "\n<TR>";
 
-for($col = 0 ; $col < count($c) ; $col++){
+for($col = 0 ; $col < $colCount ; $col++){
 
 	if(!($c[$col]->width == 0 && $includeHiddenColumns != true)) {
 		$st	= $class[$col];
@@ -67,7 +70,7 @@ while($r = db_fetch_array($t)){
 
 	$h	.= "\n<TR>\n";
 
-	for($col = 0 ; $col < count($c) ; $col++){
+	for($col = 0 ; $col < $colCount ; $col++){
 
 		if(!($c[$col]->width == 0 && $includeHiddenColumns != true)) {
 			$v = $c[$col]->display == 'null' || $c[$col]->display == '""' ? '' : $r[$c[$col]->display];
