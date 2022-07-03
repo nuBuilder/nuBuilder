@@ -125,8 +125,8 @@ function nuPrintReport($PDF, $LAY, $DATA, $JSON, $isHTML){
 		}
 
 	}
-	
-	$countDATA = count($DATA);	
+
+	$countDATA = count($DATA);
 	for($s = 0 ; $s < count($countDATA) ; $s++){
 
 		$countObjects = count($DATA[$s]->objects);
@@ -750,12 +750,12 @@ class nuSECTION{
 			}
 			$break = strpos(", ;-", $widestLine[$i]);	//-- look for breakable points
 
-			if($break === false){
-			}else{
+			if($break !== false){
 				$to			 = $i;
 				$foundSeperator = true;
 				break;
 			}
+
 		}
 
 		if (!$foundSeperator)
