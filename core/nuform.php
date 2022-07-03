@@ -282,7 +282,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 				}else{
 
 					$o->html		= '';
-					$htmljs			= addSlashes($r->sob_html_javascript);
+					$htmljs			= addslashes($r->sob_html_javascript);
 
 					$v = isset($r->sob_html_vertictal_label) ? $r->sob_html_vertictal_label : '';
 					$h = isset($r->sob_html_horizontal_label) ? $r->sob_html_horizontal_label : '';
