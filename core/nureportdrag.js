@@ -1489,22 +1489,21 @@ function nuDoNothing(t) {
 
 function nuUpdateReport(t) {
 
-	var p = $('#paper').val() + $('#orientation').val();
-	var a = [];
+	const p = $('#paper').val() + $('#orientation').val();
+	let a = [];
 
-	a['A4P'] = [['297'], ['210']];
-	a['A5P'] = [['210'], ['148']];
-	a['LetterP'] = [['279.4'], ['215.9']];
-	a['LegalP'] = [['355.6'], ['215.9']];
-	a['A4L'] = [['210'], ['297']];
-	a['A5L'] = [['148'], ['210']];
-	a['LetterL'] = [['215.9'], ['279.4']];
-	a['LegalL'] = [['215.9'], ['355.6']];
-
+	a.A4P = [['297'], ['210']];
+	a.A5P = [['210'], ['148']];
+	a.LetterP = [['279.4'], ['215.9']];
+	a.LegalP = [['355.6'], ['215.9']];
+	a.A4L = [['210'], ['297']];
+	a.A5L = [['148'], ['210']];
+	a.LetterL = [['215.9'], ['279.4']];
+	a.LegalL = [['215.9'], ['355.6']];
 
 	nuREPORT[$(t).attr('id')] = $(t).val();
-	nuREPORT['height'] = Number(a[p][0][0]);
-	nuREPORT['width'] = Number(a[p][1][0]);
+	nuREPORT.height = Number(a[p][0][0]);
+	nuREPORT.width = Number(a[p][1][0]);
 
 	nuREPORT.setFocus = $(t).attr('id');
 
