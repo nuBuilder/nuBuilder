@@ -246,13 +246,15 @@ function nuObjKey($o, $k, $d = null) {
 
 function nuSetHashList($p){
 
-	$A 				= array();
+	$A 			= array();
+	$r			= array();
+	$h			= array();
 
 	if (! is_null($p)) {
 
 		$fid		= addslashes(nuObjKey($p,'form_id'));
 		$rid		= addslashes(nuObjKey($p,'record_id'));
-		$r			= array();
+
 		$A			= nuGetUserAccess();
 
 		if ($fid != '' && $rid != '' && $fid != 'doesntmatter') {
@@ -263,7 +265,6 @@ function nuSetHashList($p){
 			if (db_num_rows($t) > 0) {
 
 				$R			= db_fetch_object($t);
-				$h			= array();
 
 				if($p['call_type'] == 'getform'){
 
