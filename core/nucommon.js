@@ -104,7 +104,7 @@ String.prototype.nuInsertString = function (index, string) {
 };
 
 String.prototype.isEmpty = function () {
-	return (this == null || this.length === 0);
+	return (this === null || this.length === 0);
 }
 
 Date.prototype.withoutTime = function () {
@@ -952,7 +952,7 @@ function nuTranslateToEnglish(s) {
 
 function nuIsOpener() {
 
-	if (window.opener != null) {
+	if (window.opener !== null) {
 		return true;
 	}
 
@@ -1431,7 +1431,7 @@ function nuOpenTab(i) {
 
 function nuSelectedTabNumber(parent = null) {
 
-	let t = parent == null ? window.nuFORM.getProperty('tab_start') : window.parent.nuFORM.getProperty('tab_start');
+	let t = parent === null ? window.nuFORM.getProperty('tab_start') : window.parent.nuFORM.getProperty('tab_start');
 	return t.length == 0 ? null : t[0].tabNumber;
 
 }
@@ -1439,7 +1439,7 @@ function nuSelectedTabNumber(parent = null) {
 function nuSelectedTabId(parent = null) {
 
 	let n = nuSelectedTabNumber(parent);
-	if (n == null) return null;
+	if (n === null) return null;
 	return parent == null ? $('#nuTab' + n).attr('data-nu-tab-id') : parent.$('#nuTab' + n).attr('data-nu-tab-id');
 
 }
@@ -1447,7 +1447,7 @@ function nuSelectedTabId(parent = null) {
 function nuSelectedTab(parent = null) {
 
 	let n = nuSelectedTabNumber(parent);
-	if (n == null) return null;
+	if (n === null) return null;
 	return parent == null ? $('#nuTab' + n) : parent.$('#nuTab' + n);
 
 }
@@ -1455,8 +1455,8 @@ function nuSelectedTab(parent = null) {
 function nuSelectedTabTitle(parent = null) {
 
 	let n = nuSelectedTabNumber(parent)
-	if (n == null) return null;
-	return parent == null ? $('#nuTab' + n).html() : parent.$('#nuTab' + n).html();
+	if (n === null) return null;
+	return parent === null ? $('#nuTab' + n).html() : parent.$('#nuTab' + n).html();
 
 }
 
@@ -1578,7 +1578,7 @@ function nuButtonIcon(j) {
 function nuChart(i, t, a, h, x, y, st, is) {
 
 	let obj = document.getElementById(i);
-	if (obj == null) return;
+	if (obj === null) return;
 
 	a = eval(a);
 
@@ -2472,7 +2472,7 @@ function nuCreateAppendHTML(htmlStr) {
 
 function nuSelectMultiWithoutCtrl(i, active) {
 
-	var id = i === undefined || i == null ? 'select' : '#' + i;
+	var id = i === undefined || i === null ? 'select' : '#' + i;
 
 	if (active == false) {
 		$(id + "[multiple] option").off('mousedown.selectmultinoctrl');
@@ -2519,7 +2519,7 @@ function nuSelectRemoveOption(i, value) {
 
 function nuSelectRemoveMultiple(i) {
 
-	var id = i === undefined || i == null ? 'select' : '#' + i;
+	var id = i === undefined || i === null ? 'select' : '#' + i;
 	$(id + "[multiple]").removeAttr('multiple').attr('size', '5');
 
 }

@@ -880,7 +880,7 @@ class nuFormObject {
 
 
 		if (v == undefined) { return ''; }
-		if (v == null) { return ''; }
+		if (v === null) { return ''; }
 		if (f == undefined) { return v; }
 		if (f == '') { return v; }
 		if (v == '') { return v; }
