@@ -1431,14 +1431,14 @@ function nuOpenTab(i) {
 
 function nuSelectedTabNumber(parent = null) {
 
-	let t = parent === null ? window.nuFORM.getProperty('tab_start') : window.parent.nuFORM.getProperty('tab_start');
+	const t = parent === null ? window.nuFORM.getProperty('tab_start') : window.parent.nuFORM.getProperty('tab_start');
 	return t.length == 0 ? null : t[0].tabNumber;
 
 }
 
 function nuSelectedTabId(parent = null) {
 
-	let n = nuSelectedTabNumber(parent);
+	const n = nuSelectedTabNumber(parent);
 	if (n === null) return null;
 	return parent === null ? $('#nuTab' + n).attr('data-nu-tab-id') : parent.$('#nuTab' + n).attr('data-nu-tab-id');
 
@@ -1446,7 +1446,7 @@ function nuSelectedTabId(parent = null) {
 
 function nuSelectedTab(parent = null) {
 
-	let n = nuSelectedTabNumber(parent);
+	const n = nuSelectedTabNumber(parent);
 	if (n === null) return null;
 	return parent === null ? $('#nuTab' + n) : parent.$('#nuTab' + n);
 
@@ -1454,7 +1454,7 @@ function nuSelectedTab(parent = null) {
 
 function nuSelectedTabTitle(parent = null) {
 
-	let n = nuSelectedTabNumber(parent)
+	const n = nuSelectedTabNumber(parent)
 	if (n === null) return null;
 	return parent === null ? $('#nuTab' + n).html() : parent.$('#nuTab' + n).html();
 
@@ -1462,9 +1462,9 @@ function nuSelectedTabTitle(parent = null) {
 
 function nuSelectNextTab(i) {
 
-	let selectedTab = $('.nuTabSelected')[0].id.substring(5);
-	let nextTab = parseInt(selectedTab) + i;
-	let e = document.getElementById('nuTab' + nextTab);
+	const selectedTab = $('.nuTabSelected')[0].id.substring(5);
+	const nextTab = parseInt(selectedTab) + i;
+	const e = document.getElementById('nuTab' + nextTab);
 	if (e !== null) {
 		nuSelectTab(e);
 	}
@@ -1473,7 +1473,7 @@ function nuSelectNextTab(i) {
 
 function nuHideHolders(h) {
 
-	for (var i = 0; i < arguments.length; i++) {
+	for (let i = 0; i < arguments.length; i++) {
 
 		if (arguments[i] == 0) { $('#nuActionHolder').hide(); }
 		if (arguments[i] == 1) { $('#nuBreadcrumbHolder').hide(); }
@@ -1485,7 +1485,7 @@ function nuHideHolders(h) {
 
 function nuRemoveHolders(h) {
 
-	for (var i = 0; i < arguments.length; i++) {
+	for (let i = 0; i < arguments.length; i++) {
 
 		if (arguments[i] == 0) { $('#nuActionHolder').remove(); }
 		if (arguments[i] == 1) { $('#nuBreadcrumbHolder').remove(); }
@@ -1497,14 +1497,14 @@ function nuRemoveHolders(h) {
 
 function nuAttachFontAwesome(i, c, s, after) {
 
-	let size = s === undefined ? 'medium' : s;
+	const size = nuDefine(s, 'medium');
 
 	let o = '#' + i;
 	if (i instanceof jQuery) {
 		o = i;
 	}
 
-	let html = '<i style="font-size:' + size + '" class="' + c + '"></i>';
+	const html = '<i style="font-size:' + size + '" class="' + c + '"></i>';
 	let obj = $(o);
 	if (obj.length === 0) return;
 
@@ -1638,15 +1638,15 @@ function nuDecode(s) {
 
 function nuAddRow(s) {
 
-	var o = nuSubformObject(s);
+	const o = nuSubformObject(s);
+	const i = s + nuPad3(o.rows.length - 1) + o.fields[1];
+	const $i = $('#' + i);
 
-	var i = s + nuPad3(o.rows.length - 1) + o.fields[1];
-
-	$('#' + i).change();
+	$i.change();
 
 	i = s + nuPad3(o.rows.length) + o.fields[1];
 
-	$('#' + i).focus();
+	$i.focus();
 
 }
 
@@ -1698,7 +1698,7 @@ function nuUserLogin() {
 }
 
 function nuUserLanguage() {
-	let l = nuSERVERRESPONSE.language;
+	const l = nuSERVERRESPONSE.language;
 	return l === null ? '' : l;
 }
 
@@ -1842,22 +1842,22 @@ function nuEmbedObject(f, d, w, h) {
 
 	if (f == '') { return; }
 
-	if (w === undefined) { w = 300; }
-	if (h === undefined) { h = 300; }
+	w = nuDefine(w, 300);
+	h = nuDefine(h, 300);
 
-	var ob = JSON.parse(f);
-	var ty = ob.type;
-	var ur = atob(ob.file);
-	var x = document.createElement("EMBED");
+	const obj = JSON.parse(f);
+	const type = obj.type;
+	const url = atob(obj.file);
 
-	x.setAttribute("type", ty);
-	x.setAttribute("src", ur);
+	var el = document.createElement("EMBED");
+	el.setAttribute("type", type);
+	el.setAttribute("src", url);
 
-	if (w !== -1) x.setAttribute("width", w + "px");
-	if (h !== -1) x.setAttribute("height", h + "px");
+	if (w !== -1) el.setAttribute("width", w + "px");
+	if (h !== -1) el.setAttribute("height", h + "px");
 
 	$('#' + d).html('');
-	document.getElementById(d).appendChild(x);
+	document.getElementById(d).appendChild(el);
 
 }
 
@@ -1888,7 +1888,7 @@ function nuSetBrowserColumns(c) {
 	const p = nuTotalWidth('nucell_0_0') - $('#nucell_0_0').width();	//-- padding
 	var l = 7;
 
-	for (var i = 0; i < c.length; i++) {
+	for (let i = 0; i < c.length; i++) {
 
 		$('[data-nu-column="' + i + '"]').css({ 'left': l, 'width': c[i] });
 		$('#nuBrowseTitle' + i).css({ 'left': l, 'width': c[i] });
@@ -1926,7 +1926,7 @@ function nuResizeBrowseColumns(force) {
 
 	var w = nuArrayColumn(nuSERVERRESPONSE.browse_columns, 'width').map(Number);
 	var t = 0;
-	var p = nuTotalWidth('nucell_0_0') - $('#nucell_0_0').width();	//-- padding
+	const p = nuTotalWidth('nucell_0_0') - $('#nucell_0_0').width();	//-- padding
 
 	if ((nuFORM.getCurrent().refreshed != 0 && force !== true) && nuMainForm()) { return; }
 
@@ -1961,13 +1961,8 @@ function nuDragTitleEvents() {
 
 	if (nuFormType() != 'browse') { return; }
 
-	var last = nuFORM.breadcrumbs.length - 1;
-
-	if (nuFORM.getCurrent().column_widths == 0) {
-		nuSetBrowserColumns(nuGetColumWidths());
-	} else {
-		nuSetBrowserColumns(nuFORM.getCurrent().column_widths);
-	}
+	const colWidths = nuFORM.getCurrent().column_widths == 0 ? nuGetColumWidths() : nuFORM.getCurrent().column_widths;
+	nuSetBrowserColumns(colWidths);
 
 	$('#nubody').on('mousemove.nuresizecolumn', function (event) { nuDragBrowseColumn(event, 'pointer'); });
 
@@ -1987,7 +1982,7 @@ function nuDragTitleEvents() {
 
 function nuGetColumWidths() {
 
-	var a = [];
+	let a = [];
 
 	$("div[id^='nuBrowseTitle']").each(function (index) {
 		a.push(parseInt($(this).css('width')));
@@ -2004,7 +1999,7 @@ function nuDownBrowseResize(e, p) {
 	window.nuBROWSERESIZE.mouse_down = true;
 	window.nuBROWSERESIZE.pointer = p;
 
-	let target = e.target.id.replace('nusort_', 'nuBrowseTitle');
+	const target = e.target.id.replace('nusort_', 'nuBrowseTitle');
 
 	window.nuBROWSERESIZE.moving_element = target;
 	window.nuBROWSERESIZE.x_position = e.clientX;
