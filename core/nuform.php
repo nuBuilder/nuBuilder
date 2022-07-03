@@ -1389,8 +1389,8 @@ function nuGatherFormAndSessionData($home){
 
 
 
-				$nuT					= nuRunQuery("SELECT sph_code FROM zzzzsys_report WHERE zzzzsys_report_id = ?");
-				$nuR					= db_fetch_object($nuT, array($formAndSessionData->record_id));
+				$nuT					= nuRunQuery("SELECT sph_code FROM zzzzsys_report WHERE zzzzsys_report_id = ?", array($formAndSessionData->record_id));
+				$nuR					= db_fetch_object($nuT);
 
 				nuDisplayError("Access To Report Denied... ($nuR->sre_code)");
 
@@ -1404,8 +1404,8 @@ function nuGatherFormAndSessionData($home){
 
 			if(!in_array($formAndSessionData->record_id, $p)) { //form_id is record_id for getphp
 
-				$nuT					= nuRunQuery("SELECT sph_code FROM zzzzsys_php WHERE zzzzsys_php_id = ?");
-				$nuR					= db_fetch_object($nuT, array($formAndSessionData->record_id));
+				$nuT					= nuRunQuery("SELECT sph_code FROM zzzzsys_php WHERE zzzzsys_php_id = ?", array($formAndSessionData->record_id));
+				$nuR					= db_fetch_object($nuT);
 
 				nuDisplayError("Access To Procedure Denied... ($nuR->sph_code)");
 			}
