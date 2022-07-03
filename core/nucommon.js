@@ -2074,51 +2074,6 @@ function nuRemovePX(s) {
 	return Number(String(s).split('px')[0]);
 }
 
-
-function nuImportCSV(t, s) {
-
-	var csv = String(s).split('\n');
-	var header = String(s[0]).split(',');
-	var inserts = [];
-
-	for (var i = 1; i < c.length; i++) {
-
-		var r = String(c[i]);
-		var c = nuCSVcolumn(r);
-
-		if (r.substr(0, 2) == '"') {
-			R.push('"' + r.join('","') + '"');
-		} else {
-
-			for (var f = 0; f < r.length; f++) {
-
-				if (String(r[f]).substr(0, 1) == '"') {
-
-					var Q = f;
-
-					for (var q = f; q < r.length; q++) {
-
-						if (String(r[q]).substr(String(r[q]).length - 1) != '"') {
-
-							r[f] = r[f] + ',' + r[q];
-							r.splice(q, 1)
-
-						}
-
-					}
-
-				}
-
-			}
-
-			R.push('"' + r.join('","') + '"');
-
-		}
-
-	}
-
-}
-
 function nuImportUsersFromCSV(file) {
 
 	file = nuDefine(file, 'user_import.csv');
