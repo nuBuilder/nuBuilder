@@ -772,6 +772,7 @@ class nuSECTION{
 
 		$type			= '';
 		$value			= '';
+		$field			= '';
 
 		if(strtoupper(substr($O->fieldName,0,4)) == 'SUM('){
 			$type		= 's';
