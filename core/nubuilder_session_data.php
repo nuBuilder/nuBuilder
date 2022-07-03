@@ -8,7 +8,7 @@ eval($config['code']);
 
 class nuBuilderSessionData {
 
-	var $nubuilder	= array(
+	public $nubuilder	= array(
 	'NB_PATH'					=> __DIR__,
 	'GLOBEADMIN'				=> false,
 	'GLOBEADMIN_NAME'			=> '',
