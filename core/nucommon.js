@@ -1440,7 +1440,7 @@ function nuSelectedTabId(parent = null) {
 
 	let n = nuSelectedTabNumber(parent);
 	if (n === null) return null;
-	return parent == null ? $('#nuTab' + n).attr('data-nu-tab-id') : parent.$('#nuTab' + n).attr('data-nu-tab-id');
+	return parent === null ? $('#nuTab' + n).attr('data-nu-tab-id') : parent.$('#nuTab' + n).attr('data-nu-tab-id');
 
 }
 
@@ -1448,7 +1448,7 @@ function nuSelectedTab(parent = null) {
 
 	let n = nuSelectedTabNumber(parent);
 	if (n === null) return null;
-	return parent == null ? $('#nuTab' + n) : parent.$('#nuTab' + n);
+	return parent === null ? $('#nuTab' + n) : parent.$('#nuTab' + n);
 
 }
 
