@@ -303,9 +303,9 @@ function nuQuillGetInstance(i) {
 	var quill = new Quill(container);
 	if (Quill.find(container) === quill) {
 		return quill;
-	} else {
-		return null;
-	}
+	} 
+
+	return null;
 
 }
 

@@ -469,9 +469,9 @@ class nuSelectObject {
 
 		if (a == t) {
 			return t;
-		} else {
-			return t + ' AS ' + a;
 		}
+
+		return t + ' AS ' + a;
 
 	}
 
@@ -479,9 +479,9 @@ class nuSelectObject {
 
 		if (a == '') {
 			return t;
-		} else {
-			return t + ' AS ' + a;
 		}
+
+		return t + ' AS ' + a;
 
 	}
 
@@ -490,9 +490,9 @@ class nuSelectObject {
 
 		if (a == '') {
 			return t;
-		} else {
-			return a;
 		}
+
+		return a;
 
 	}
 

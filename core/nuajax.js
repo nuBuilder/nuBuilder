@@ -28,9 +28,9 @@ function nuAjax(w, successCallback, errorCallback) {
 				let msgDiv = parent.nuMessage(err);
 				nuClosePopup();
 				return;
-			} else {
-				let msgDiv = nuMessage(err);
 			}
+
+			let msgDiv = nuMessage(err);
 
 			if (window.nuOnMessage) {
 				nuOnMessage(msgDiv, err);
@@ -767,7 +767,7 @@ function nuUpdateData(action, instruction, close) {
 
 function nuSaveAfterDrag() {
 
-	var f = $('#nuDragDialog iframe')[0].contentWindow.nuFORM;
+	const f = $('#nuDragDialog iframe')[0].contentWindow.nuFORM;
 
 	var last = f.getCurrent();
 
@@ -802,19 +802,17 @@ function nuOpenNewBrowserTab(c, f, r, filter) {
 
 		nuOpenerAppend('type', c);
 
-		var len = window.nuOPENER.length - 1;
-		var id = window.nuOPENER[window.nuOPENER.length - 1].id;
-		var u = window.location.origin + window.location.pathname + '?i=' + len + '&opener=' + id;
+		const len = window.nuOPENER.length - 1;
+		const id = window.nuOPENER[window.nuOPENER.length - 1].id;
+		const u = window.location.origin + window.location.pathname + '?i=' + len + '&opener=' + id;
 
 		window.open(u);
 
 		return true;
 
-	} else {
-
-		return false;
-
 	}
+
+	return false;
 
 }
 

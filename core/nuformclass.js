@@ -983,9 +983,9 @@ class nuFormObject {
 
 			if (CF[2] == '') {
 				return v.replace(CF[0], '').replace(' ', '').nuReplaceAll(CF[1], '');
-			} else {
-				return v.replace(CF[0], '').replace(' ', '').nuReplaceAll(CF[1], '').replace(CF[2], '.');
 			}
+
+			return v.replace(CF[0], '').replace(' ', '').nuReplaceAll(CF[1], '').replace(CF[2], '.');
 
 		}
 
@@ -1052,9 +1052,9 @@ class nuFormObject {
 
 			if (hasTime) {
 				return String(y + m + a + h + n + s);
-			} else {
-				return String(y + m + a).trim();
 			}
+
+			return String(y + m + a).trim();
 
 		}
 

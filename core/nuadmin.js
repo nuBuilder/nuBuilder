@@ -16,7 +16,7 @@ function nuAddAdminButton(i, v, f, t) {
 		var t = '';
 	}
 
-	var button = "<input id='nu" + i + "Button' type='button' type='button' title='" + nuTranslate(t) + "' class='nuActionButton nuAdminButton' value='" + nuTranslate(v) + "' onclick='" + f + "'>";
+	const button = "<input id='nu" + i + "Button' type='button' type='button' title='" + nuTranslate(t) + "' class='nuActionButton nuAdminButton' value='" + nuTranslate(v) + "' onclick='" + f + "'>";
 	$('#nuActionHolder').prepend(button);
 
 }
@@ -62,7 +62,7 @@ function nuDevMode(m) {
 		if (m === false) localStorage.setItem("nuDevMode", '0');
 	}
 
-	var d = localStorage.getItem("nuDevMode");
+	const d = localStorage.getItem("nuDevMode");
 	if ((d === '1' || d === true) && nuGlobalAccess()) {
 		nuSetProperty('nuDevMode', '1', true);
 		nuConsoleErrorsToMessage();
@@ -137,12 +137,12 @@ function nuSetBrowseColumnWidths() {
 
 	if (confirm(nuTranslate("Copy Column Widths from the Browse Table (Overwrite existing values)?"))) {
 
-		var sf = nuSubformObject('zzzzsys_browse_sf');
-		for (var i = 0; i < sf.rows.length; i++) {
+		const sf = nuSubformObject('zzzzsys_browse_sf');
+		for (let i = 0; i < sf.rows.length; i++) {
 
 			if (sf.deleted[i] == 0) {
-				var c = $("div[id='nuBrowseTitle" + i + "']", window.parent.document);
-				var w = Math.ceil(nuRoundNearest(parseFloat(c[0].style.width), 5)).toString();
+				const c = $("div[id='nuBrowseTitle" + i + "']", window.parent.document);
+				const w = Math.ceil(nuRoundNearest(parseFloat(c[0].style.width), 5)).toString();
 				$('#' + 'zzzzsys_browse_sf' + nuPad3(i) + 'sbr_width').val(w.replace('px', '')).change();
 			}
 
@@ -183,13 +183,13 @@ function nuOpenPropertiesOnMiddleClick(e) {
 
 		if (e.button === 1) {
 
-			var id = e.target.id;
+			const id = e.target.id;
 
 			if (id == "nubody" || id == "nuRECORD" || id == "nuhtml") {
 				// Form Properties
 				nuForm('nuform', nuFormId(), '', '', 2);
 			} else {
-				var objId = nuObjectIdFromId(e.target.id);
+				const objId = nuObjectIdFromId(e.target.id);
 				if (objId !== null) {
 					// Object Properties
 					nuForm('nuobject', objId, '', '', '2');
@@ -241,9 +241,8 @@ function nuShowObjectTooltip() {
 function nuConsoleErrorsToMessage() {
 
 	window.onerror = function (msg, url, lineNo, columnNo, error) {
-		var string = msg.toLowerCase();
-		var substring = 'script error';
-		if (string.indexOf(substring) > -1) {
+
+		if (msg.toLowerCase().indexOf('script error') > -1) {
 			alert('Script Error: See Browser Console for Details');
 		} else {
 			var message = [
@@ -607,9 +606,9 @@ function nuContextMenuItemText(label, iconClass) {
 
 function nuContextMenuGetWordWidth(w) {
 
-	var h = "<div id='nuTestWidth' style='font-size:13px;position:absolute;visible:hidden;width:auto'>" + w + "</div>";
+	const h = "<div id='nuTestWidth' style='font-size:13px;position:absolute;visible:hidden;width:auto'>" + w + "</div>";
 	$('body').append(h);
-	var l = parseInt($('#nuTestWidth').css('width'));
+	const l = parseInt($('#nuTestWidth').css('width'));
 	$('#nuTestWidth').remove();
 
 	return l + 5;
@@ -669,8 +668,8 @@ function nuContextMenuItemPositionChanged(t, update) {
 
 function nuContextMenuItemPosition(label, v) {
 
-	var lwidth = nuContextMenuGetWordWidth(label);
-	var left = 70 - lwidth + 17;
+	const lwidth = nuContextMenuGetWordWidth(label);
+	let left = 70 - lwidth + 17;
 	if (label == 'Top') left += 2;
 	if (label == 'Left') left += 1;
 	if (label == 'Height') left -= 1;
@@ -682,7 +681,7 @@ function nuContextMenuItemPosition(label, v) {
 
 function nuContextMenuUpdateAccess(v) {
 
-	let id = contextMenuCurrentTargetId();
+	const id = contextMenuCurrentTargetId();
 	if (v == 0) { 				//-- editable
 		nuEnable(id);
 		nuShow(id);
@@ -702,8 +701,8 @@ function nuContextMenuUpdateAccess(v) {
 
 function nuContextMenuUpdateAlign(v) {
 
-	let ftEdit = nuFormType() == 'edit';
-	let id = ftEdit ? contextMenuCurrentTargetUpdateId() : nuContextMenuCurrentTargetBrowseId(contextMenuCurrentTarget.id);
+	const ftEdit = nuFormType() == 'edit';
+	const id = ftEdit ? contextMenuCurrentTargetUpdateId() : nuContextMenuCurrentTargetBrowseId(contextMenuCurrentTarget.id);
 
 	$('#' + id).css('text-align', v);
 
@@ -711,7 +710,7 @@ function nuContextMenuUpdateAlign(v) {
 		nuContextMenuUpdateObject(v, 'sob_all_align');
 	} else {
 
-		let colNumber = id.replace('nuBrowseTitle', '');
+		const colNumber = id.replace('nuBrowseTitle', '');
 		$('[data-nu-column="' + colNumber + '"]').each(function (index) {
 			$(this).css('text-align', v)
 		});
@@ -747,7 +746,7 @@ function nuContextMenuUpdateValidation(v) {
 
 function nuContextMenuUpdateLabel(id) {
 
-	var objLabel = $('#label_' + id);
+	const objLabel = $('#label_' + id);
 
 	if (objLabel.hasClass('nuContentBoxTitle')) return;
 
@@ -758,20 +757,20 @@ function nuContextMenuUpdateLabel(id) {
 
 function nuContextMenuGetFormId(id) {
 
-	let subform = $('#' + id).attr('data-nu-subform');
+	const subform = $('#' + id).attr('data-nu-subform');
 	if (subform !== undefined && subform !== 'true') {
 		return $('#' + subform + '000nuRECORD').attr('data-nu-form-id');
 	} else if (nuFormType() == 'edit') {
 
-		let field = $('[data-nu-field="' + id + '"]');
-		let obj = $('#' + id);
-		let hasClass = nuObjectClassList(id).containsAny(['nuWord', 'nuImage', 'nuContentBoxContainer', 'nuHtml', 'nuSubform']);
+		const field = $('[data-nu-field="' + id + '"]');
+		const obj = $('#' + id);
+		const hasClass = nuObjectClassList(id).containsAny(['nuWord', 'nuImage', 'nuContentBoxContainer', 'nuHtml', 'nuSubform']);
 
 		return id == field || hasClass || obj.is(":button") ? obj.parent().attr('data-nu-form-id') : field.parent().attr('data-nu-form-id');
 
-	} else {
-		return nuFormId();
 	}
+
+	return nuFormId();
 
 }
 
@@ -827,11 +826,11 @@ function contextMenuCurrentTargetUpdateId() {
 			return idNoLabel.attr('id');
 		} else if (idNoLabel.hasClass('select2-hidden-accessible')) {
 			return strIdNoLabel + '_select2';
+		} else {
+			let id = t.hasClass('nuSubformTitle') ? t.attr('data-nu-field') : idNoLabel.attr('data-nu-field');
+			id = id === undefined ? contextMenuCurrentTarget.id : id;
+			return id;
 		}
-
-		let id = t.hasClass('nuSubformTitle') ? t.attr('data-nu-field') : idNoLabel.attr('data-nu-field');
-		id = id === undefined ? contextMenuCurrentTarget.id : id;
-		return id;
 	}
 
 }

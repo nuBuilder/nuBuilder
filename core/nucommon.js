@@ -386,9 +386,9 @@ function nuFormatAjaxErrorMessage(jqXHR, exception) {
 		return nuTranslate('Time out error.');
 	} else if (exception === 'abort') {
 		return nuTranslate('Ajax request aborted.');
-	} else {
-		return ['<h3>' + nuTranslate('Uncaught Error.') + '</h3>', jqXHR.responseText];
 	}
+
+	return ['<h3>' + nuTranslate('Uncaught Error.') + '</h3>', jqXHR.responseText];
 
 }
 

@@ -317,11 +317,11 @@ function nuWeekDayFromString(n) {
 	if (wd != nuTranslate(wd)) {
 		let t = nuCalendarWeekStartNumber() == '1' ? nuTranslate('MTWTFSS') : nuTranslate('SMTWTFS');
 		return t.substr(n, 1);
-	} else {
-		let t2 = nuCalendarWeekStartNumber() == '1' ? nuTranslate('M,T,W,T,F,S,S') : nuTranslate('S,M,T,W,T,F,S');
-
-		return t2.split(',')[n];
 	}
+
+	let t2 = nuCalendarWeekStartNumber() == '1' ? nuTranslate('M,T,W,T,F,S,S') : nuTranslate('S,M,T,W,T,F,S');
+
+	return t2.split(',')[n];
 
 }
 
