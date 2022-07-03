@@ -106,7 +106,6 @@ function nuBeforeEdit($FID, $RID){
 
 	}
 
-
 	if ($recordID != '') {
 		$p = nuProcedure('nuBeforeEdit');
 		if($p != '') { eval($p); }
@@ -887,7 +886,7 @@ function nuSetFormValue($f, $v){
 
 }
 
-function nuDatalistOptions($sql) {
+function nuDataListOptions($sql) {
 
 	$a				= array();
 
