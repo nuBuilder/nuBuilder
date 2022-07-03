@@ -388,7 +388,7 @@ function nuDebug($a){
 		$m				= "$date - $nuProcedureEval $nuSystemEval line $l\n\n<br>\n" ;
 	}
 
-	for($i = 0 ; $i < func_num_args()) ; $i++){
+	for($i = 0 ; $i < func_num_args() ; $i++){
 
 		$p				= func_get_arg($i);
 
