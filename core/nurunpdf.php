@@ -1016,6 +1016,7 @@ function nuMakeSummaryTable($REPORT, $TABLE_ID){
 
 	$sum		= array();
 	$field		= array();
+	$groups		= array();
 
 	for($i = 3 ; $i < 8 ; $i++){
 
