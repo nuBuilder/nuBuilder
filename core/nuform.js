@@ -533,7 +533,7 @@ function nuTotalHolderWidth(i) {
 
 }
 
-function nuDefine(v) {
+function nuDefine(v, defaultValue = '') {
 
 	if (v === undefined) {
 		v = '';
