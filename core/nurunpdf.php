@@ -529,7 +529,7 @@ class nuSECTION{
 
 			}
 
-			$pages							= Max($pages, count($objectParts[$OID]));
+			$pages							= max($pages, count($objectParts[$OID]));
 
 		}
 
