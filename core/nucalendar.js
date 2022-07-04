@@ -33,8 +33,10 @@ function nuPopupCalendarVanillaJs(pThis, d) {
 	let id = pThis.id;
 	let datepicker = window[id + '_datepicker'];
 
-	if (datepicker) datepicker.destroy;
-	// if (! datepicker) {
+	if (datepicker) {
+		datepicker.destroy();
+	}
+
 	let optionWeekStart = {};
 	let weekStartNumber = nuCalendarWeekStartNumber();
 
@@ -63,7 +65,6 @@ function nuPopupCalendarVanillaJs(pThis, d) {
 
 	datepicker = new Datepicker(pThis, calendarOptions);
 	window[id + '_datepicker'] = datepicker;
-	// }
 
 	datepicker.setOptions({ defaultViewDate: d });
 	datepicker.show();
