@@ -5,7 +5,6 @@ error_reporting( error_reporting() & ~E_NOTICE );
 require_once('nuchoosesetup.php');
 require_once('nubuilders.php');
 require_once('nuemailer.php');
-require_once dirname(__FILE__) . '/nusqlclass.php';
 
 //set_time_limit(0);
 
