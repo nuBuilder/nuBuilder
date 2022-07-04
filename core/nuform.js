@@ -3680,7 +3680,7 @@ function nuSelectTab(tab, byUser) {
 
 	$tabId = $('#' + tab.id);
 
-	var byUser = byUser === true && ! $tabId.is('[nu-data-clicked-by-system]') ? true : false;
+	byUser = byUser === true && ! $tabId.is('[nu-data-clicked-by-system]') ? true : false;
 
 	if (byUser) nuSaveScrollPositions();
 
@@ -4006,7 +4006,7 @@ function nuBrowseTable() {
 
 								window.nuBROWSEROW = -1;
 
-								const rw = $(this).attr('data-nu-row');
+								const dataRow = $(this).attr('data-nu-row');
 								$("[data-nu-row='" + rw + "']").not('.nuCellColored').addClass('nuSelectBrowse').removeClass('nuBrowseTable');
 							}
 
@@ -4017,7 +4017,7 @@ function nuBrowseTable() {
 
 								window.nuBROWSEROW = -1;
 
-								const rw = $(this).attr('data-nu-row');
+								const dataRow = $(this).attr('data-nu-row');
 								$("[data-nu-row='" + rw + "']").addClass('nuBrowseTable').removeClass('nuSelectBrowse');
 							}
 
@@ -5676,8 +5676,8 @@ function nuPortraitScreen(columns) {
 		if (o[i].tab != b) {
 
 			b = o[i].tab;
-			var l = $('#nuTab' + o[i].tab).html();
-			var d = '<div class="nuPortraitTab" id="nuPort' + b + '" style="top:' + t + 'px" >' + l + '</div>';
+			const l = $('#nuTab' + o[i].tab).html();
+			const d = '<div class="nuPortraitTab" id="nuPort' + b + '" style="top:' + t + 'px" >' + l + '</div>';
 			$('#nuRECORD').append(d);
 			var OH = $('#nuPort' + b).outerHeight()
 
@@ -5697,8 +5697,8 @@ function nuPortraitScreen(columns) {
 
 			if (o[i].type == 'lookup') {
 
-				var w = $('#' + o[i].id + 'code').outerWidth()
-				var d = $('#' + o[i].id + 'description').outerWidth()
+				const w = $('#' + o[i].id + 'code').outerWidth()
+				const d = $('#' + o[i].id + 'description').outerWidth()
 				W = Math.max(W, w + d + 30);
 
 				$('#' + o[i].id + 'code').css({ 'top': t, 'left': lw + 10 });
@@ -5973,9 +5973,7 @@ function nuPrompt(text, caption, defaultValue, format, fctn) {
 
 	}
 
-	if (fctn === undefined) {
-		var fctn = 'nuOnPromptClose';
-	}
+	fctn = nuDefine(fctn, 'nuOnPromptClose');
 
 	promot.render(text, caption, defaultValue, format, fctn);
 
@@ -5990,7 +5988,7 @@ function nuAddBrowseTitleSelect(index, data, w) {
 	list.setAttribute("id", id);
 
 	if (w === undefined) {
-		var w = nuCurrentProperties().column_widths == 0 ? nuCurrentProperties().browse_columns[index].width : nuCurrentProperties().column_widths[index] - 3;
+		w = nuCurrentProperties().column_widths == 0 ? nuCurrentProperties().browse_columns[index].width : nuCurrentProperties().column_widths[index] - 3;
 	}
 
 	list.setAttribute('style', 'width:' + w + 'px');
