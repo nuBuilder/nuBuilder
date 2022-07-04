@@ -223,7 +223,7 @@ function nuDragReport() {
 
 		$('body').append(e);
 
-		$('#nuSectionHolder').css({ 'position': 'absolute', 'left': 10, 'top': 0, 'width': nuDrag.areaWidth(), 'top': nuDrag.areaTop(), 'background-color': 'yellow', 'border-width': 1, 'border-style': 'solid none none solid' });
+		$('#nuSectionHolder').css({ 'position': 'absolute', 'left': 10, 'width': nuDrag.areaWidth(), 'top': nuDrag.areaTop(), 'background-color': 'yellow', 'border-width': 1, 'border-style': 'solid none none solid' });
 
 		for (let i = 1; i < this.groups.length; i++) {
 			this.createSection(i, 0);
@@ -1436,7 +1436,7 @@ function nuUpdateGroup(t) {
 
 	const dataGroup = $('#' + t.id).attr('data-dataGroup');
 	const s = nuREPORT.group[dataGroup].sections.length;
-	
+
 	let group = nuREPORT.group[dataGroup];
 
 	group.groupBy = $('#sortBy' + dataGroup).val();
@@ -1515,7 +1515,7 @@ function nuUpdateReport(t) {
 function nuUndo() {
 
 	const length = window.nuBACKUP.length;
-	
+
 	if (length > 1) {
 
 		window.nuBACKUP.splice(length - 1, 1);
@@ -1576,15 +1576,15 @@ function nuUpdateSectionProperty(t) {
 
 
 function nuMoveReportGroup(ele, dir) {
-	
+
 	function nuMoveGroupUpDown(i) {
-		
+
 			const tempObj = nuREPORT.groups[groupNumber];
 			nuREPORT.groups[groupNumber] = nuREPORT.groups[groupNumber + i];
 			nuREPORT.groups[groupNumber + i] = tempObj;
 			nuREPORT.setFocus = $('#sortField' + (groupNumber + i)).attr('id');
-			nuDIALOG.groupNumber = groupNumber + i;		
-			
+			nuDIALOG.groupNumber = groupNumber + i;
+
 	}
 
 	var groupNumber = Number(ele);
