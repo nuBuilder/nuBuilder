@@ -2210,17 +2210,17 @@ function nuPrintEditForm() {
 
 function nuSetPlaceholder(i, placeholder, translate) {
 
-	var f = $('#' + i);
+	var $i = $('#' + i);
 
 	translate = nuDefine(translate, true);
 
 	if (!placeholder) {
-		placeholder = f.attr('data-nu-format').substring(2);
+		placeholder = $i.attr('data-nu-format').substring(2);
 	} else {
 		placeholder = translate ? nuTranslate(placeholder) : placeholder;
 	}
 
-	f.attr("placeholder", placeholder);
+	$i.attr("placeholder", placeholder);
 
 }
 
