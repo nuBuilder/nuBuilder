@@ -1,6 +1,8 @@
-function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, contextmenu) {
+function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, contextmenu, quickbars) {
 
 	nuHide(id);
+
+	let plugins;
 
 	if (options) {
 		if ($.type(options) !== 'object') {
