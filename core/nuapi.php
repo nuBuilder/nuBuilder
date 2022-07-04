@@ -114,7 +114,7 @@
 		$f->forms[0]->translation				= $formAndSessionData->translation;
 
 		$f->forms[0]->tableSchema				= nuUpdateTableSchema($CT, $refreshCache && $globalAccess);
-		$f->forms[0]->viewSchema				= nuBuildViewSchema($CT);
+		$f->forms[0]->viewSchema				= nuBuildViewSchema();
 		$f->forms[0]->formSchema				= nuUpdateFormSchema($refreshCache  && $globalAccess);
 
 		if ($refreshCache) nuSetJSONData('REFRESH_CACHE','0');
