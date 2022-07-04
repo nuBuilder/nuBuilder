@@ -4007,7 +4007,7 @@ function nuBrowseTable() {
 								window.nuBROWSEROW = -1;
 
 								const dataRow = $(this).attr('data-nu-row');
-								$("[data-nu-row='" + rw + "']").not('.nuCellColored').addClass('nuSelectBrowse').removeClass('nuBrowseTable');
+								$("[data-nu-row='" + dataRow + "']").not('.nuCellColored').addClass('nuSelectBrowse').removeClass('nuBrowseTable');
 							}
 
 						}, function () {
@@ -4018,7 +4018,7 @@ function nuBrowseTable() {
 								window.nuBROWSEROW = -1;
 
 								const dataRow = $(this).attr('data-nu-row');
-								$("[data-nu-row='" + rw + "']").addClass('nuBrowseTable').removeClass('nuSelectBrowse');
+								$("[data-nu-row='" + dataRow + "']").addClass('nuBrowseTable').removeClass('nuSelectBrowse');
 							}
 
 						}
