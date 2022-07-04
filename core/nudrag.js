@@ -211,8 +211,8 @@ function nuCreateDrag() {
 		for (var i = 0; i < s.length; i++) {
 
 			o = s[i].style;
-			l = parseInt(o.left) + (this.moveX - this.lastMoveX);
-			t = parseInt(o.top) + (m ? 0 : (this.moveY - this.lastMoveY));
+			l = parseInt(o.left, 10) + (this.moveX - this.lastMoveX);
+			t = parseInt(o.top, 10) + (m ? 0 : (this.moveY - this.lastMoveY));
 			o.left = l + 'px';
 			o.top = t + 'px';
 
@@ -233,8 +233,8 @@ function nuCreateDrag() {
 		for (var i = 0; i < s.length; i++) {
 
 			o = s[i].style;
-			w = parseInt(o.width) + (this.moveX - this.lastMoveX);
-			h = parseInt(o.height) + (m ? 0 : (this.moveY - this.lastMoveY));
+			w = parseInt(o.width, 10) + (this.moveX - this.lastMoveX);
+			h = parseInt(o.height, 10) + (m ? 0 : (this.moveY - this.lastMoveY));
 
 			if (w == 0) {
 				w = 1;
@@ -259,22 +259,22 @@ function nuCreateDrag() {
 		if (s.length == 0) { return; }
 
 		var o = s[0].style;
-		this.left = parseInt(o.left);
-		this.top = parseInt(o.top);
-		this.right = parseInt(o.left) + (parseInt(o.borderWidth) * 2)
-		this.bottom = parseInt(o.top) + (parseInt(o.borderWidth) * 2);
-		this.width = parseInt(o.width);
-		this.height = parseInt(o.height);
+		this.left = parseInt(o.left, 10);
+		this.top = parseInt(o.top, 10);
+		this.right = parseInt(o.left, 10) + (parseInt(o.borderWidth) * 2, 10)
+		this.bottom = parseInt(o.top, 10) + (parseInt(o.borderWidth) * 2, 10);
+		this.width = parseInt(o.width, 10);
+		this.height = parseInt(o.height, 10);
 
 		for (var i = 0; i < s.length; i++) {
 
 			o = s[i].style;
-			this.left = Math.min(this.left, parseInt(o.left));
-			this.right = Math.max(this.right, parseInt(o.left) + parseInt(o.width) + (parseInt(o.borderWidth) * 2))
-			this.top = Math.min(this.top, parseInt(o.top));
-			this.bottom = Math.max(this.bottom, parseInt(o.top) + parseInt(o.height) + (parseInt(o.borderWidth) * 2));
-			this.width = Math.min(this.width, parseInt(o.width));
-			this.height = Math.min(this.height, parseInt(o.height));
+			this.left = Math.min(this.left, parseInt(o.left, 10));
+			this.right = Math.max(this.right, parseInt(o.left, 10) + parseInt(o.width, 10) + (parseInt(o.borderWidth, 10) * 2))
+			this.top = Math.min(this.top, parseInt(o.top, 10));
+			this.bottom = Math.max(this.bottom, parseInt(o.top, 10) + parseInt(o.height, 10) + (parseInt(o.borderWidth, 10) * 2));
+			this.width = Math.min(this.width, parseInt(o.width, 10));
+			this.height = Math.min(this.height, parseInt(o.height, 10));
 
 		}
 
@@ -345,10 +345,10 @@ function nuCreateDrag() {
 		const $sb = $('#nuSelectBox');
 		if ($sb.length == 0) { return; }
 
-		var L = parseInt($sb.css('left')) - this.areaLeft();
-		var T = parseInt($sb.css('top')) - this.areaTop();
-		var B = T + parseInt($sb.css('height'));
-		var R = L + parseInt($sb.css('width'));
+		var L = parseInt($sb.css('left'), 10) - this.areaLeft();
+		var T = parseInt($sb.css('top'), 10) - this.areaTop();
+		var B = T + parseInt($sb.css('height'), 10);
+		var R = L + parseInt($sb.css('width'), 10);
 
 		$sb.remove();
 
@@ -357,10 +357,10 @@ function nuCreateDrag() {
 		o.each(function (index) {
 
 			const $this = $(this);
-			var l = parseInt($this.css('left'));
-			var t = parseInt($this.css('top'));
-			var b = t + parseInt($this.css('height'));
-			var r = l + parseInt($this.css('width'));
+			var l = parseInt($this.css('left'), 10);
+			var t = parseInt($this.css('top'), 10);
+			var b = t + parseInt($this.css('height'), 10);
+			var r = l + parseInt($this.css('width'), 10);
 
 			let add = false;
 			//drag around selected objects points
@@ -406,7 +406,7 @@ function nuCreateDrag() {
 		if (arguments.length == 1) {
 			return $('#nuDragArea').css('left', a);
 		}
-		return parseInt($('#nuDragArea').css('left'));
+		return parseInt($('#nuDragArea', 10).css('left'));
 
 	}
 
@@ -415,7 +415,7 @@ function nuCreateDrag() {
 		if (arguments.length == 1) {
 			return $('#nuDragArea').css('top', a);
 		}
-		return parseInt($('#nuDragArea').css('top'));
+		return parseInt($('#nuDragArea', 10).css('top'));
 
 	}
 
@@ -424,7 +424,7 @@ function nuCreateDrag() {
 		if (arguments.length == 1) {
 			return $('#nuDragArea').css('width', a);
 		}
-		return parseInt($('#nuDragArea').css('width'));
+		return parseInt($('#nuDragArea', 10).css('width'));
 
 	}
 
@@ -433,7 +433,7 @@ function nuCreateDrag() {
 		if (arguments.length == 1) {
 			return $('#nuDragArea').css('height', a);
 		}
-		return parseInt($('#nuDragArea').css('height'));
+		return parseInt($('#nuDragArea', 10).css('height'));
 
 	}
 

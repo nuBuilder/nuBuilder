@@ -606,7 +606,7 @@ function nuContextMenuGetWordWidth(w) {
 
 	const h = "<div id='nuTestWidth' style='font-size:13px;position:absolute;visible:hidden;width:auto'>" + w + "</div>";
 	$('body').append(h);
-	const l = parseInt($('#nuTestWidth').css('width'));
+	const l = parseInt($('#nuTestWidth', 10).css('width'));
 	$('#nuTestWidth').remove();
 
 	return l + 5;

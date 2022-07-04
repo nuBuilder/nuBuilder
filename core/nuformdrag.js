@@ -327,10 +327,10 @@ function nuRemoveBox(ctrlKey) {
 
 	var selectBox	= $('#nuSelectBox');
 
-	var L			= parseInt(selectBox.css('left'));
-	var T			= parseInt(selectBox.css('top')) - nuGetTopArea();
-	var B			= T + parseInt(selectBox.css('height'));
-	var R			= L + parseInt(selectBox.css('width'));
+	var L			= parseInt(selectBox.css('left'), 10);
+	var T			= parseInt(selectBox.css('top'), 10) - nuGetTopArea();
+	var B			= T + parseInt(selectBox.css('height'), 10);
+	var R			= L + parseInt(selectBox.css('width'), 10);
 
 	selectBox.remove();
 
@@ -345,10 +345,10 @@ function nuRemoveBox(ctrlKey) {
 	o.each(function(index) {
 
 		if($(this).attr('data-nu-tab') == selectedTab) {
-			var l	=		parseInt($(this).css('left'));
-			var t	=		parseInt($(this).css('top'));
-			var b	= t +	parseInt($(this).css('height'));
-			var r	= l +	parseInt($(this).css('width'));
+			var l	=		parseInt($(this).css('left'), 10);
+			var t	=		parseInt($(this).css('top'), 10);
+			var b	= t +	parseInt($(this).css('height'), 10);
+			var r	= l +	parseInt($(this).css('width'), 10);
 
 			//drag around selected objects points
 			if(l >= L && l <= R && t >= T && t <= B) {
@@ -1306,8 +1306,8 @@ function nuMoveSelected() {
 	for(var i = 0 ; i < s.length ; i ++){
 
 		o		= s[i].style;
-		l		= parseInt(o.left)	+ (window.moveX - window.lastMoveX);
-		t		= parseInt(o.top)	+ (window.moveY - window.lastMoveY);
+		l		= parseInt(o.left, 10)	+ (window.moveX - window.lastMoveX);
+		t		= parseInt(o.top, 10)	+ (window.moveY - window.lastMoveY);
 		o.left	= l + 'px';
 		o.top	= t + 'px';
 
@@ -1337,10 +1337,10 @@ function nuCanMove() {
 	for(var i = 0 ; i < s.length ; i ++){
 
 		o		= s[i].style;
-		l		= parseInt(o.left) + (window.moveX - window.lastMoveX);
-		r		= l + parseInt(o.width);
-		t		= parseInt(o.top) + (window.moveY - window.lastMoveY);
-		b		= t + parseInt(o.height);
+		l		= parseInt(o.left, 10) + (window.moveX - window.lastMoveX);
+		r		= l + parseInt(o.width, 10);
+		t		= parseInt(o.top, 10) + (window.moveY - window.lastMoveY);
+		b		= t + parseInt(o.height, 10);
 
 		if(l < 0) {
 			return false;
@@ -1358,14 +1358,14 @@ function nuCanMove() {
 
 function nuGetTopArea() {
 
-	var nuActionHolder		= parseInt($('#nuActionHolder').css('height'));
-	var nuTabHolder			= parseInt($('#nuTabHolder').css('height'));
+	var nuActionHolder		= parseInt($('#nuActionHolder').css('height'), 10);
+	var nuTabHolder			= parseInt($('#nuTabHolder').css('height'), 10);
 	var p					= parent.window.$;
-	var dialogTitle			= parseInt(p('#dialogTitle').css('height'));
+	var dialogTitle			= parseInt($('#dialogTitle').css('height'), 10);
 	
 	var nuBreadcrumbHolder;
 	if($('#nuBreadcrumbHolder').length == 1){
-		nuBreadcrumbHolder	= parseInt($('#nuBreadcrumbHolder').css('height'));
+		nuBreadcrumbHolder	= parseInt($('#nuBreadcrumbHolder').css('height'), 10);
 	}else{
 		nuBreadcrumbHolder	= 0;
 	}

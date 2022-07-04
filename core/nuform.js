@@ -483,14 +483,14 @@ function nuTotalHeight(i) {
 
 	let obj = $('#' + i);
 	if (obj.length == 0) { return 0; }
-
-	h += parseInt(obj.css('height'));
-	h += parseInt(obj.css('padding-top'));
-	h += parseInt(obj.css('padding-bottom'));
-	h += parseInt(obj.css('border-top-width'));
-	h += parseInt(obj.css('border-bottom-width'));
-	h += parseInt(obj.css('margin-top'));
-	h += parseInt(obj.css('margin-bottom'));
+debugger;
+	h += parseInt(obj.css('height'), 10);
+	h += parseInt(obj.css('padding-top'), 10);
+	h += parseInt(obj.css('padding-bottom'), 10);
+	h += parseInt(obj.css('border-top-width'), 10);
+	h += parseInt(obj.css('border-bottom-width'), 10);
+	h += parseInt(obj.css('margin-top'), 10);
+	h += parseInt(obj.css('margin-bottom'), 10);
 
 	return h;
 
@@ -503,13 +503,13 @@ function nuTotalWidth(i) {
 	let obj = $('#' + i);
 	if (obj.length == 0) { return 0; }
 
-	h += parseInt(obj.css('width'));
-	h += parseInt(obj.css('padding-left'));
-	h += parseInt(obj.css('padding-right'));
-	h += parseInt(obj.css('border-left-width'));
-	h += parseInt(obj.css('border-right-width'));
-	h += parseInt(obj.css('margin-left'));
-	h += parseInt(obj.css('margin-right'));
+	h += parseInt(obj.css('width'), 10);
+	h += parseInt(obj.css('padding-left'), 10);
+	h += parseInt(obj.css('padding-right'), 10);
+	h += parseInt(obj.css('border-left-width'), 10);
+	h += parseInt(obj.css('border-right-width'), 10);
+	h += parseInt(obj.css('margin-left'), 10);
+	h += parseInt(obj.css('margin-right'), 10);
 
 	return h;
 
@@ -522,12 +522,12 @@ function nuTotalHolderWidth(i) {
 	let obj = $('#' + i);
 	if (obj.length == 0) { return 0; }
 
-	h += parseInt(obj.css('padding-left'));
-	h += parseInt(obj.css('padding-right'));
-	h += parseInt(obj.css('border-left-width'));
-	h += parseInt(obj.css('border-right-width'));
-	h += parseInt(obj.css('margin-left'));
-	h += parseInt(obj.css('margin-right'));
+	h += parseInt(obj.css('padding-left'), 10);
+	h += parseInt(obj.css('padding-right'), 10);
+	h += parseInt(obj.css('border-left-width'), 10);
+	h += parseInt(obj.css('border-right-width'), 10);
+	h += parseInt(obj.css('margin-left'), 10);
+	h += parseInt(obj.css('margin-right'), 10);
 
 	return h;
 
@@ -850,7 +850,7 @@ function getDBColumnLengh(w, id) {
 				break;
 			default:
 				if (datatype.includes('CHAR')) {
-					len = parseInt(datatype.replace(/\D/g, ""));
+					len = parseInt(datatype.replace(/\D/g, ""), 10);
 				}
 		}
 	}
@@ -2090,7 +2090,7 @@ function nuSubformLastRow(t) {
 
 	var i = String($('#' + t.id).parent().attr('id'));
 	var p = i.substr(0, i.length - 17);
-	var s = parseInt(i.substr(11, 3)) + 1;
+	var s = parseInt(i.substr(11, 3), 10) + 1;
 	var n = $('#' + p + nuPad3(s) + 'nuRECORD').length;
 
 	return n == 0;
@@ -2669,7 +2669,7 @@ function nuSubformPaste(e, jsonObj) {
 
 	var sfId = $('#' + id).attr('data-nu-form');
 	var field = $('#' + id).attr('data-nu-field');
-	var dRow = parseInt($('#' + String(id)).attr('data-nu-prefix').slice(-3));
+	var dRow = parseInt($('#' + String(id), 10).attr('data-nu-prefix').slice(-3));
 
 	var obj = nuSubformObject(sfId);
 	var dColStart = obj.fields.indexOf(field);
@@ -2680,7 +2680,7 @@ function nuSubformPaste(e, jsonObj) {
 	var sc = 0;
 	for (let c = dColStart; c < (dColStart + sNumCols); c++) {
 		var sr = 0;
-		for (let r = dRow; r < parseInt(dRow + sNumRows); r++) {
+		for (let r = dRow; r < parseInt(dRow + sNumRows, 10); r++) {
 			var dest = $('#' + sfId + nuPad3(r) + obj.fields[c]);
 			dest.attr("data-prevalue", dest.val());
 			dest.val(jsonObj[sr][sc]).change();
@@ -2851,7 +2851,7 @@ function nuRecordHolderObject(t) {
 	this.last = $('#' + s).length == 0;
 	s = this.form + nuPad3(this.rows - 1);
 	this.html = window.nuSUBFORMROW[s];
-	this.even = parseInt(this.rows / 2) == this.rows / 2 ? '0' : '1';
+	this.even = parseInt(this.rows / 2, 10) == this.rows / 2 ? '0' : '1';
 
 }
 
@@ -3003,7 +3003,7 @@ function nuGetWordWidth(w, objClass) {
 	$('body').append(h);
 	let obj = $('#' + W);
 	obj.addClass(objClass);
-	let l = parseInt(obj.css('width'));
+	let l = parseInt(obj.css('width'), 10);
 	obj.remove();
 
 	return l + 5;
@@ -3795,7 +3795,7 @@ function nuHideTabById(id) {
 function nuHideTabs(t) {
 
 	for (var i = 0; i < arguments.length; i++) {
-		if (arguments[i] == parseInt(arguments[i])) {
+		if (arguments[i] == parseInt(arguments[i]), 10) {
 			$('#nuTab' + arguments[i]).hide();
 		} else {
 			nuHideTabByTitle(arguments[i]);
@@ -3899,8 +3899,8 @@ function nuTitleDrag(i) {
 
 function nuDragBrowseDown(e) {
 
-	const t = parseInt($('#nuBrowseTitle0').css('top'));
-	const f = parseInt($('#nuBrowseFooter').css('top'));
+	const t = parseInt($('#nuBrowseTitle0').css('top'), 10);
+	const f = parseInt($('#nuBrowseFooter').css('top'), 10);
 
 	window.nuDRAGLINEVSTART = e.pageX;
 	window.nuDRAGLINEVID = e.target.id;
@@ -3919,7 +3919,7 @@ function nuDragBrowseMove(e) {
 
 function nuDragBrowseUp(e) {
 
-	let h = parseInt($('#nuBrowseTitle0').css('height'));
+	let h = parseInt($('#nuBrowseTitle0').css('height'), 10);
 
 	$('#' + e.target.id).css('height', h);
 	window.nuDRAGLINEVID = '';
@@ -3939,7 +3939,7 @@ function nuBrowseTable() {
 	var row = bc.browse_rows;
 	var rows = bc.rows;
 	var h = bc.row_height;
-	var t = parseInt($('#nuBrowseTitle0').css('height')) - h - 2;
+	var t = parseInt($('#nuBrowseTitle0').css('height'), 10) - h - 2;
 	var l = 7;
 
 	for (let r = 0; r < rows; r++) {
@@ -3963,7 +3963,7 @@ function nuBrowseTable() {
 
 			$id.attr('data-nu-row', rw)
 				.attr('data-nu-column', column)
-				.addClass('nuCell' + ((r / 2) == parseInt(r / 2) ? 'Even' : 'Odd'))
+				.addClass('nuCell' + ((r / 2) == parseInt(r / 2, 10) ? 'Even' : 'Odd'))
 				.addClass(w == 0 ? '' : 'nuBrowseTable')
 				.css({
 					'text-align': a,
@@ -4258,7 +4258,7 @@ function nuSortBrowse(c) {
 
 function nuGetPage(p) {
 
-	var P = parseInt('00' + p);
+	var P = parseInt('00' + p, 10);
 	var B = window.nuFORM.getCurrent();
 
 	if (P == 0) {
@@ -4552,8 +4552,8 @@ function nuCalculateForm(setAsEdited) {	//-- calculate subform 'calcs' first
 
 		var A = $('#' + a.id).hasClass('nuSubformObject') ? 0 : 1000;
 		var B = $('#' + b.id).hasClass('nuSubformObject') ? 0 : 1000;
-		a = parseInt($('#' + a.id).attr('data-nu-calc-order'));
-		b = parseInt($('#' + b.id).attr('data-nu-calc-order'));
+		a = parseInt($('#' + a.id).attr('data-nu-calc-order'), 10);
+		b = parseInt($('#' + b.id).attr('data-nu-calc-order'), 10);
 
 		if (setAsEdited === undefined) {
 			$('#' + a.id).addClass('nuEdited');
@@ -5114,17 +5114,17 @@ function nuWindowPosition() {
 
 	var d = $('#nuDragDialog', p);
 
-	const l = parseInt(d.css('left'));
-	const t = parseInt(d.css('top'));
-	var w = parseInt(d.css('width'));
-	var h = parseInt(d.css('height'));
+	const l = parseInt(d.css('left'), 10);
+	const t = parseInt(d.css('top'), 10);
+	var w = parseInt(d.css('width'), 10);
+	var h = parseInt(d.css('height'), 10);
 
 	window.nuDialogSize = { left: l, top: t, width: w, height: h };
 
 	d = $('#nuWindow', p);
 
-	w = parseInt(d.css('width'));
-	h = parseInt(d.css('height'));
+	w = parseInt(d.css('width'), 10);
+	h = parseInt(d.css('height'), 10);
 
 	window.nuWindowSize = { width: w, height: h };
 
@@ -5482,10 +5482,10 @@ function nuBrowseBorders() {
 
 function nuObjectPosition(i) {
 
-	var t = parseInt($(i).css('top'));
-	var l = parseInt($(i).css('left'));
-	var h = parseInt($(i).css('height'));
-	var w = parseInt($(i).css('width'));
+	var t = parseInt($(i).css('top'), 10);
+	var l = parseInt($(i).css('left'), 10);
+	var h = parseInt($(i).css('height'), 10);
+	var w = parseInt($(i).css('width'), 10);
 
 	var b = t + h; // bottom
 	var r = l + w; // right
@@ -5505,8 +5505,8 @@ function nuFormWH() {
 
 	$(s).each(function () {
 
-		w = Math.max(w, parseInt($(this).css('width')) + parseInt($(this).css('left')));
-		h = Math.max(h, parseInt($(this).css('height')) + parseInt($(this).css('top')));
+		w = Math.max(w, parseInt($(this).css('width'), 10) + parseInt($(this).css('left'), 10));
+		h = Math.max(h, parseInt($(this).css('height'), 10) + parseInt($(this).css('top'), 10));
 
 	});
 

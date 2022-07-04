@@ -845,8 +845,8 @@ function nuUp(e) {
 
 	if (el.hasClass('nuTableName')) {
 
-		window.nuY = parseInt($(e.target).parent().css('top'));
-		window.nuX = parseInt($(e.target).parent().css('left'));
+		window.nuY = parseInt($(e.target).parent().css('top'), 10);
+		window.nuX = parseInt($(e.target).parent().css('left'), 10);
 
 	}
 
@@ -892,8 +892,8 @@ function nuDown(e) {
 
 	if (el.hasClass('nuTableName')) {
 
-		window.nuY = e.clientY - parseInt($(e.target).parent().css('top'));
-		window.nuX = e.clientX - parseInt($(e.target).parent().css('left'));
+		window.nuY = e.clientY - parseInt($(e.target).parent().css('top'), 10);
+		window.nuX = e.clientX - parseInt($(e.target).parent().css('left'), 10);
 
 	}
 
@@ -995,16 +995,16 @@ function nuAngle() {
 			});
 
 		var L = $('#' + L.id);
-		var top = parseInt(f.top + f.top - L.top);
-		var left = parseInt(f.left + f.left - L.left);
+		var top = parseInt(f.top + f.top - L.top, 10);
+		var left = parseInt(f.left + f.left - L.left, 10);
 
 		$('#' + i)
 			.css('top', top)
 			.css('left', left);
 
 
-		var Ltop = parseInt(L.css('top'));
-		var Lleft = parseInt(L.css('left'));
+		var Ltop = parseInt(L.css('top'), 10);
+		var Lleft = parseInt(L.css('left'), 10);
 
 		if (F.offset().top < T.offset().top) {
 			L.css('top', 7 + Ltop + F.offset().top - L.offset().top);

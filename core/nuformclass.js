@@ -51,12 +51,12 @@ class nuResponseForm {
 			left: Number(O.left),
 			height: Number(O.height),
 			tab: Number(O.tab),
-			lleft: l.length == 0 ? 0 : parseInt(l.css('left')),
-			lheight: l.length == 0 ? 0 : parseInt(l.css('height')),
-			owidth: parseInt(o.css('width')),
-			lwidth: l.length == 0 ? 0 : parseInt(l.css('width')),
-			cwidth: isNaN(parseInt(c.css('width'))) ? 0 : parseInt(c.css('width')),
-			dwidth: isNaN(parseInt(d.css('width'))) ? 20 : parseInt(d.css('width')) + 20,
+			lleft: l.length == 0 ? 0 : parseInt(l.css('left'), 10),
+			lheight: l.length == 0 ? 0 : parseInt(l.css('height'), 10),
+			owidth: parseInt(o.css('width'), 10),
+			lwidth: l.length == 0 ? 0 : parseInt(l.css('width'), 10),
+			cwidth: isNaN(parseInt(c.css('width'), 10)) ? 0 : parseInt(c.css('width'), 10),
+			dwidth: isNaN(parseInt(d.css('width'), 10)) ? 20 : parseInt(d.css('width'), 10) + 20,
 			tabtitle: window.nuSERVERRESPONSE.tabs[O.tab].title
 		};
 

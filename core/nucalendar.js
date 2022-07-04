@@ -99,7 +99,7 @@ function nuPopupCalendar(pThis, d) {
 
 	var i = pThis.id; 					//-- Object ID;
 	var tar = $('#' + i);
-	var h = parseInt(tar.css('height'));
+	var h = parseInt(tar.css('height'), 10);
 	var off = $('#' + i).offset();
 	var top = off.top;
 	var left = off.left;

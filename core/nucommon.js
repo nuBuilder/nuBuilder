@@ -621,8 +621,8 @@ function nuCreateDialog(t) {
 		if (s === null) return;
 
 		var o = s.style;
-		var l = parseInt(o.left) + this.moveX;
-		var t = parseInt(o.top) + this.moveY;
+		var l = parseInt(o.left, 10) + this.moveX;
+		var t = parseInt(o.top, 10) + this.moveY;
 
 		if (e.target.classList == '' && e.target.id != 'nuSelectBox') {
 
@@ -1283,10 +1283,10 @@ function nuResizeWindow(e) {
 	var W = 0;
 	var w = $('#nuWindow');
 	var f = $('#nuDragDialog iframe')[0].contentWindow;
-	var l = parseInt(d.css('left'));
+	var l = parseInt(d.css('left'), 10);
 
 	if (D.length != 0) {
-		W = parseInt(D.css('width'));
+		W = parseInt(D.css('width'), 10);
 	}
 
 	if (l == 2) {
@@ -1298,8 +1298,8 @@ function nuResizeWindow(e) {
 
 		d.css({ top: 0, left: 2, width: window.innerWidth - 30, height: window.innerHeight });
 
-		var dh = parseInt(d.css('height')) - 50;
-		var dw = parseInt(d.css('width')) - W - 10;
+		var dh = parseInt(d.css('height'), 10) - 50;
+		var dw = parseInt(d.css('width'), 10) - W - 10;
 
 		w.css({ top: 30, width: dw, height: dh });
 
@@ -1463,7 +1463,7 @@ function nuSelectedTabTitle(parent = null) {
 function nuSelectNextTab(i) {
 
 	const selectedTab = $('.nuTabSelected')[0].id.substring(5);
-	const nextTab = parseInt(selectedTab) + i;
+	const nextTab = parseInt(selectedTab, 10) + i;
 	const e = document.getElementById('nuTab' + nextTab);
 	if (e !== null) {
 		nuSelectTab(e);
@@ -1749,7 +1749,7 @@ function nuSortSubform(sfName, c, e) {
 		if (id !== newRecordId) { // exclude new record
 
 			const f = this.id.replaceAll('nuRECORD', '');
-			h = parseInt($(this).css('height'));
+			h = parseInt($(this).css('height'), 10);
 
 			const objF = $('#' + f + so);
 			t = objF.hasClass('input_number') || objF.hasClass('input_nuNumber') || objF.hasClass('nuCalculator');
@@ -1937,7 +1937,7 @@ function nuResizeBrowseColumns(force) {
 		}
 
 		for (var i = 0; i < w.length; i++) {
-			w[i] = parseInt((window.innerWidth - 30) * w[i] / t) - p;
+			w[i] = parseInt((window.innerWidth - 30) * w[i] / t, 10) - p;
 		}
 
 	} else {
@@ -1985,7 +1985,7 @@ function nuGetColumWidths() {
 	let a = [];
 
 	$("div[id^='nuBrowseTitle']").each(function (index) {
-		a.push(parseInt($(this).css('width')));
+		a.push(parseInt($(this).css('width')), 10);
 	});
 
 	return a;
@@ -2803,7 +2803,7 @@ function nuBase64decode(str) {
 
 function nuBase64encode(str) {
 
-	let encode = encodeURIComponent(str).replace(/%([a-f0-9]{2})/gi, (m, $1) => String.fromCharCode(parseInt($1, 16)))
+	let encode = encodeURIComponent(str).replace(/%([a-f0-9]{2})/gi, (m, $1) => String.fromCharCode(parseInt($1, 10)))
 	return btoa(encode);
 
 }

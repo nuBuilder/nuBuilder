@@ -18,8 +18,8 @@ function nuLoadReport(b) {
 
 	} else {
 
-		nuDIALOG.dialogX = parseInt($('#nuDragDialog').css('left'));
-		nuDIALOG.dialogY = parseInt($('#nuDragDialog').css('top'));
+		nuDIALOG.dialogX = parseInt($('#nuDragDialog').css('left'), 10);
+		nuDIALOG.dialogY = parseInt($('#nuDragDialog').css('top'), 10);
 
 	}
 
@@ -248,7 +248,7 @@ function nuDragReport() {
 		if (arguments.length == 1) {
 			return $('#nuSectionHolder').css('height', a);
 		}
-		return parseInt($('#nuSectionHolder').css('height'));
+		return parseInt($('#nuSectionHolder').css('height'), 10);
 
 	}
 
