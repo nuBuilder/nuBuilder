@@ -68,7 +68,32 @@ function nuRunQueryTest($s, $a = array()){
 
 }
 
-function nuRunQuery($s, $a = array(), $isInsert = false){
+function nuDebugMessageString($user, $message, $sql, $trace) {
+
+		$debug	= "
+		===USER==========
+
+		$user
+
+		===PDO MESSAGE===
+
+		$message
+
+		===SQL===========
+
+		$sql
+
+		===BACK TRACE====
+
+		$trace
+
+		";
+
+		return  trim(preg_replace('/\t/', '', $debug));
+
+}
+
+function nuRunQuery($sql, $a = array(), $isInsert = false){
 
 	global $DBHost;
 	global $DBName;
@@ -77,20 +102,22 @@ function nuRunQuery($s, $a = array(), $isInsert = false){
 	global $nuDB;
 	global $DBCharset;
 
-	if($s == ''){
+	if($sql == ''){
 		$a			= array();
 		$a[0]		= $DBHost;
 		$a[1]		= $DBName;
 		$a[2]		= $DBUser;
 		$a[3]		= $DBPassword;
+		$a[4]		= $nuDB;
+		$a[4]		= $DBCharset;
 		return $a;
 	}
 
 	// nuLog($s, count($a)> 0 ? $a[0] : '');
-	$object = $nuDB->prepare($s);
+	$stmt = $nuDB->prepare($sql);
 
 	try {
-		$object->execute($a);
+		$stmt->execute($a);
 	}catch(PDOException $ex){
 
 		$user		= 'globeadmin';
@@ -102,24 +129,7 @@ function nuRunQuery($s, $a = array(), $isInsert = false){
 			$trace .= $array[$i]['file'] . ' - line ' . $array[$i]['line'] . ' (' . $array[$i]['function'] . ")\n\n";
 		}
 
-		$debug	= "
-===USER==========
-
-$user
-
-===PDO MESSAGE===
-
-$message
-
-===SQL===========
-
-$s
-
-===BACK TRACE====
-
-$trace
-
-";
+		$debug = nuDebugMessageString($user, $message, $sql, $trace);
 
 		$_POST['RunQuery']		= 1;
 		nuDebug($debug);
@@ -138,7 +148,7 @@ $trace
 
 	}else{
 
-		return $object;
+		return $stmt;
 
 	}
 
