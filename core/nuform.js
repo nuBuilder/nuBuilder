@@ -2283,8 +2283,10 @@ function nuSubformHandleArrowKeyEvent(e) {
 
 function nuSubformAddFilter(filter) {
 
-	for (let sfName in filter) {
-		nuSubformFiltersAdd(sfName, filter[sfName]);
+	for (const sfName in filter) {
+		if (Object.prototype.hasOwnProperty.call(filter, sfName)) {
+			nuSubformFiltersAdd(sfName, filter[sfName]);
+		}
 	}
 
 	function nuSubformFilterId(sfName, columnId) {
