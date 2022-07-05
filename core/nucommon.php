@@ -6,8 +6,6 @@ require_once('nuchoosesetup.php');
 require_once('nubuilders.php');
 require_once('nuemailer.php');
 
-//set_time_limit(0);
-
 nuSetTimeLimit(0);
 
 mb_internal_encoding('UTF-8');
@@ -47,9 +45,9 @@ function nuClientTimeZone(){
 
 }
 
-function nuSetTimeLimit(){
+function nuSetTimeLimit($seconds){
 	if (function_exists('set_time_limit')) {
-		set_time_limit(0);
+		set_time_limit($seconds);
 	}
 }
 
