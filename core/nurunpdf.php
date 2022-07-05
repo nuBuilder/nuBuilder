@@ -360,7 +360,7 @@ class nuSECTION{
 	public $OBJECTS			= array();
 	public $TABLE_ID		= '';
 
-	function __construct($PDF, $ROW, $LAY, $group, $section, $sectionTop){
+	public function __construct($PDF, $ROW, $LAY, $group, $section, $sectionTop){
 
 		$this->PDF			= $PDF;
 		$this->ROW			= $ROW;
