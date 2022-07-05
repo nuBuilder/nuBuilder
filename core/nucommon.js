@@ -1985,7 +1985,7 @@ function nuGetColumWidths() {
 	let a = [];
 
 	$("div[id^='nuBrowseTitle']").each(function (index) {
-		a.push(parseInt($(this).css('width')), 10);
+		a.push(parseInt($(this).css('width'), 10));
 	});
 
 	return a;
