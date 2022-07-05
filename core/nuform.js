@@ -1192,11 +1192,12 @@ function nuINPUT(w, i, l, p, prop) {
 
 	obj = nuLabelOrPosition(obj, w, i, l, p, prop);
 
+	nuAddDataTab(id, obj.tab, p);debugger;
+	nuINPUTSetProperties($id, obj, inputType, objectType, wi, p);
+
 	if (type == 'input') {														//-- Input Object
 		nuINPUTInput($id, inp, inputType, obj, objectType);
 	}
-
-	nuAddDataTab(id, obj.tab, p);
 
 	if (inputType == 'nuScroll') {
 		nuINPUTnuScroll($id, wi);
@@ -1224,8 +1225,6 @@ function nuINPUT(w, i, l, p, prop) {
 	if (inputType == 'button' && objectType == 'input') {
 		nuAddInputIcon(id, obj.input_icon);
 	}
-
-	nuINPUTSetProperties($id, obj, inputType, objectType, wi, p);
 
 	if (objectType == 'lookup') {
 
@@ -2356,7 +2355,8 @@ function nuSubformAddFilter(filter) {
 
 				$(columnTitle).append("<br />");
 
-				if (placeholder) obj.appendTo(columnTitle).css(style).nuSetPlaceholder(placeholder);
+				 obj.appendTo(columnTitle).css(style);
+				 if (placeholder) obj.nuSetPlaceholder(placeholder);
 
 			}
 
