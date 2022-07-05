@@ -483,7 +483,7 @@ function nuTotalHeight(i) {
 
 	let obj = $('#' + i);
 	if (obj.length == 0) { return 0; }
-debugger;
+
 	h += parseInt(obj.css('height'), 10);
 	h += parseInt(obj.css('padding-top'), 10);
 	h += parseInt(obj.css('padding-bottom'), 10);
@@ -1267,7 +1267,9 @@ function nuAddAttributes(id, attr) {
 				value = '';
 			}
 
-			if (arr.length == 1 || arr.length == 2) $('#' + id)[0].setAttribute(key.trim(), value);
+			if (arr.length == 1 || arr.length == 2) {
+				$('#' + id)[0].setAttribute(key.trim(), value);
+			}
 
 		});
 

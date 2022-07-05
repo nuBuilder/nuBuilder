@@ -536,7 +536,8 @@ function nuContextMenuBeforeRender(menu, event) {
 	let isSelect = $('#' + contextMenuCurrentTargetUpdateId()).is("select");
 
 	for (let i = 0; i < menu.length; i++) {
-		if (menu[i].hasOwnProperty('tag')) {
+
+		if (Object.prototype.hasOwnProperty.call(menu[i], "tag")) {
 
 			if (menu[i].tag == 'Top') menu[i].html = nuContextMenuPositionText(id, 'Top');
 			if (menu[i].tag == 'Left') menu[i].html = nuContextMenuPositionText(id, 'Left');

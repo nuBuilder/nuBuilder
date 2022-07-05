@@ -516,7 +516,7 @@ class nuFormObject {
 
 		for (var key in nuFORM.formSchema) {
 
-			if (nuFORM.formSchema.hasOwnProperty(key)) {
+			if (Object.prototype.hasOwnProperty.call(nuFORM.formSchema, key)) {
 				forms.push(key)
 			}
 
@@ -532,7 +532,7 @@ class nuFormObject {
 
 		for (var key in nuFORM.tableSchema) {
 
-			if (nuFORM.tableSchema.hasOwnProperty(key)) {
+			if (Object.prototype.hasOwnProperty.call(nuFORM.tableSchema, key)) {
 				tables.push(key)
 			}
 
