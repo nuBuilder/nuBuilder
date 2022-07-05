@@ -1173,11 +1173,7 @@ function nuINPUT(w, i, l, p, prop) {
 	var vis = obj.display == 0 ? 'hidden' : 'visible';
 	var inputType = obj.input;
 	var objectType = obj.type;
-/*
-	if (JSON.stringify(obj) != JSON.stringify(w.objects[i])) {
-		console.log('obj and w obji not same');
-	}
-*/
+
 	if (objectType != 'textarea') {												//-- Input Object
 		type = 'input';
 	}
@@ -1191,9 +1187,10 @@ function nuINPUT(w, i, l, p, prop) {
 
 	let $id = $(inp);
 
+
 	$fromId.append(inp);
 
-	nuLabelOrPosition(obj, w, i, l, p, prop);
+	obj = nuLabelOrPosition(obj, w, i, l, p, prop);
 
 	if (type == 'input') {														//-- Input Object
 		nuINPUTInput($id, inp, inputType, obj, objectType);
@@ -1232,7 +1229,7 @@ function nuINPUT(w, i, l, p, prop) {
 
 	if (objectType == 'lookup') {
 
-		nuINPUTLookup(id, objId, wi, obj, $fromId, p, vis);
+		return nuINPUTLookup(id, objId, wi, obj, $fromId, p, vis);
 
 	} else {
 
@@ -1422,6 +1419,8 @@ function nuLabelOrPosition(obj, w, i, l, p, prop) {
 
 	}
 
+	return obj;
+
 }
 
 function nuHTML(w, i, l, p, prop, id) {
@@ -1433,7 +1432,7 @@ function nuHTML(w, i, l, p, prop, id) {
 
 	inp.setAttribute('id', id);
 
-	nuLabelOrPosition(obj, w, i, l, p, prop);
+	obj = nuLabelOrPosition(obj, w, i, l, p, prop);
 
 	$('#' + ef).append(inp);
 
@@ -1523,7 +1522,7 @@ function nuIMAGE(w, i, l, p, prop) {
 
 	inp.setAttribute('id', id);
 
-	nuLabelOrPosition(obj, w, i, l, p, prop);
+	obj = nuLabelOrPosition(obj, w, i, l, p, prop);
 
 	$('#' + ef).append(inp);
 
@@ -1709,7 +1708,7 @@ function nuSELECT(w, i, l, p, prop) {
 	var id = p + obj.id;
 	var ef = p + 'nuRECORD';					//-- Edit Form Id
 
-	nuLabelOrPosition(obj, w, i, l, p, prop);
+	obj = nuLabelOrPosition(obj, w, i, l, p, prop);
 
 	var sel = document.createElement('select');
 
