@@ -125,7 +125,8 @@ function nuRunQuery($sql, $a = array(), $isInsert = false){
 		$array		= debug_backtrace();
 		$trace		= '';
 
-		for($i = 0 ; $i < count($array) ; $i ++){
+		$count = count($array);
+		for($i = 0 ; $i < $count; $i ++){
 			$trace .= $array[$i]['file'] . ' - line ' . $array[$i]['line'] . ' (' . $array[$i]['function'] . ")\n\n";
 		}
 
