@@ -458,34 +458,33 @@ function nuSetJSONDataAll($i, $nj){
 }
 
 
-function nuSetJSONData($i, $nj){
+function nuSetJSONData($name, $newJson){
 
-	$s					= "SELECT sss_access FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
-	$t					= nuRunQuery($s, array($_SESSION['nubuilder_session_data']['SESSION_ID']));
-	$r					= db_fetch_object($t);
-	$j					= json_decode($r->sss_access, true);
+	$sessionId			= $_SESSION['nubuilder_session_data']['SESSION_ID'];
+	$stmt				= nuRunQuery("SELECT sss_access FROM zzzzsys_session WHERE zzzzsys_session_id = ? ", array($sessionId));
+	$row				= db_fetch_object($stmt);
+	$access				= json_decode($row->sss_access, true);
 
-	$j[$i]				= $nj;
-	$J					= json_encode($j);
+	$access[$name]		= $newJson;
+	$update				= json_encode($access);
 
-	$s					= "UPDATE zzzzsys_session SET sss_access = ? WHERE zzzzsys_session_id = ? ";
-	$t					= nuRunQuery($s, array($J, $_SESSION['nubuilder_session_data']['SESSION_ID']));
+	nuRunQuery("UPDATE zzzzsys_session SET sss_access = ? WHERE zzzzsys_session_id = ? ", array($update, $sessionId));
 
 }
 
-function nuGetJSONData($i){
+function nuGetJSONData($name){
 
-	$s					= "SELECT sss_access FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
-	$t					= nuRunQuery($s, array($_SESSION['nubuilder_session_data']['SESSION_ID']));
+	$sessionId			= $_SESSION['nubuilder_session_data']['SESSION_ID'];
+	$stmt				= nuRunQuery("SELECT sss_access FROM zzzzsys_session WHERE zzzzsys_session_id = ? ", array($sessionId));
 
-	if (db_num_rows($t) > 0) {
-		$r				= db_fetch_object($t);
-		$j				= json_decode($r->sss_access, true);
+	if (db_num_rows($stmt) > 0) {
+		$row			= db_fetch_object($stmt);
+		$access			= json_decode($row->sss_access, true);
 	} else {
 		return '';
 	}
 
-	return nuObjKey($j,$i,'');
+	return nuObjKey($access, $name,'');
 
 }
 
@@ -1235,17 +1234,17 @@ function nuBuildViewSchema(){
 
 function nuUpdateFormSchema($force_update = false){
 
-	$s		= nuGetJSONData('clientFormSchema');
+	$json		= nuGetJSONData('clientFormSchema');
 
-	if(is_null($s) || $force_update){
+	if($json == '' || $force_update){
 
-		$s	= nuBuildFormSchema();
-		nuSetJSONData('clientFormSchema', $s);
+		$json	= nuBuildFormSchema();
+		nuSetJSONData('clientFormSchema', $json);
 
-		return $s;
+		return $json;
 
 	}else{
-		return array();
+		return nuGlobalAccess() ? $json : array();
 	}
 
 }
