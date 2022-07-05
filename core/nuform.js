@@ -2334,28 +2334,32 @@ function nuSubformAddFilter(filter) {
 		let isArray = Array.isArray(arrColumns);
 		for (let columnId in arrColumns) {
 
-			if (isArray)
-				columnId = arrColumns[columnId];
+			if (Object.prototype.hasOwnProperty.call(arrColumns, columnId)) {
 
-			const prop = arrColumns[columnId];
-			const float = prop === undefined || prop.float === undefined ? 'center' : prop.float;
-			const placeholder = prop.placeholder;
-			let width = $('#' + sfName + '000' + columnId).width() - 3;
-			width = prop === undefined || prop.width === undefined ? width : prop.width;
+				if (isArray)
+					columnId = arrColumns[columnId];
 
-			let style = {
-				'width': width + 'px',
-				'float': float
-			};
+				const prop = arrColumns[columnId];
+				const float = prop === undefined || prop.float === undefined ? 'center' : prop.float;
+				const placeholder = prop.placeholder;
+				let width = $('#' + sfName + '000' + columnId).width() - 3;
+				width = prop === undefined || prop.width === undefined ? width : prop.width;
 
-			const columnTitle = '#title_' + sfName + columnId;
-			const filterId = nuSubformFilterId(sfName, columnId);
-			const type = prop === undefined || prop.type === undefined ? 'select' : prop.type;
-			let obj = nuSubformFilterAddObject(type, sfName, columnId, filterId, prop);
+				let style = {
+					'width': width + 'px',
+					'float': float
+				};
 
-			$(columnTitle).append("<br />");
+				const columnTitle = '#title_' + sfName + columnId;
+				const filterId = nuSubformFilterId(sfName, columnId);
+				const type = prop === undefined || prop.type === undefined ? 'select' : prop.type;
+				let obj = nuSubformFilterAddObject(type, sfName, columnId, filterId, prop);
 
-			if (placeholder) obj.appendTo(columnTitle).css(style).nuSetPlaceholder(placeholder);
+				$(columnTitle).append("<br />");
+
+				if (placeholder) obj.appendTo(columnTitle).css(style).nuSetPlaceholder(placeholder);
+
+			}
 
 		}
 
