@@ -19,7 +19,9 @@ function nuCopySystemTables() {
 	dropObject('zzzzsys_object_list', ['VIEW', 'TABLE']);
 
 	$t	= nuSystemList();
-	for($i = 0 ; $i < count($t) ; $i++){
+
+	$count = count($t);
+	for($i = 0 ; $i < $count ; $i++){
 
 		$table = $t[$i];
 		dropObject("sys_".$table, ['TABLE']);
