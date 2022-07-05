@@ -1305,26 +1305,30 @@ function nuAddStyleFromArray(id, obj) {
 
 	var arr = JSON.parse(obj.style);
 
-	for (var key in arr) {
+	for (let key in arr) {
 
-		var obj2;
-		if (key == 'label') {
-			obj2 = $('#' + 'label' + '_' + id);
-		} else {
-			obj2 = $('#' + id + ' .' + key);
-			if (obj2.length === 0) {
-				obj2 = $('#' + id);
+		if (Object.prototype.hasOwnProperty.call(arr, key)) {
+
+			let obj2;
+			if (key == 'label') {
+				obj2 = $('#' + 'label' + '_' + id);
+			} else {
+				obj2 = $('#' + id + ' .' + key);
+				if (obj2.length === 0) {
+					obj2 = $('#' + id);
+				}
 			}
-		}
 
-		if (obj.style_type == 'CSS') {
+			if (obj.style_type == 'CSS') {
 
-			var css = obj2[0].getAttribute("style");
-			css = css === null ? arr[key] : css += ';' + arr[key];
-			obj2[0].setAttribute("style", css);
+				let css = obj2[0].getAttribute("style");
+				css = css === null ? arr[key] : css += ';' + arr[key];
+				obj2[0].setAttribute("style", css);
 
-		} else if (obj.style_type == 'Class') {
-			obj2.addClass(arr[key]);
+			} else if (obj.style_type == 'Class') {
+				obj2.addClass(arr[key]);
+			}
+
 		}
 
 	}
