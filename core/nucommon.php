@@ -88,7 +88,7 @@ class nuSqlString{
 	public  $Dfields		= array();
 	public  $SQL			= '';
 
-	function __construct($sql){
+	public function __construct($sql){
 
 		$sql				= preg_replace('%(/\*)(.*?)(\*/)%s',"",$sql); 	//-- remove  / * * / style comments
 		$sql				= str_replace(chr(13), ' ', $sql);				//-- remove carrige returns
