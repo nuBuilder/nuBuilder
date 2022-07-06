@@ -693,15 +693,12 @@ class nuFormObject {
 			var C = 1;
 			var chk = $('#' + this.id).prop("checked");
 
-
-
 			THIS.children('[data-nu-data]').each(function () {
 
-
+				let $this = $('#' + this.id);
 				if (this.id.substr(-8) == 'nuDelete') {
-					chk = ($('#' + this.id).prop("checked") || deleteAll) ? 1 : 0;
+					chk = ($this.prop("checked") || deleteAll) ? 1 : 0;
 				}
-
 
 				if (sf == 'nuRECORD') {						//-- the main Form
 					F[C] = this.id;
@@ -709,20 +706,20 @@ class nuFormObject {
 					F[C] = this.id.substr(sf.length + 3);
 				}
 
-				var dnf = $('#' + this.id).attr('data-nu-format');
-				var typ = $('#' + this.id).attr('type');
-				var val = $('#' + this.id).val();
+				const dnf = $this.attr('data-nu-format');
+				const type = $this.attr('type');
+				let val = $this.val();
 
-				if (typ == 'checkbox') {
-					val = $('#' + this.id).prop("checked") ? 1 : 0;
+				if (type == 'checkbox') {
+					val = $this.prop("checked") ? 1 : 0;
 				}
 
-				if (typeof ($('#' + this.id).val()) == 'object') {						//-- multi SELECT Object
-					val = JSON.stringify($('#' + this.id).val());
+				if (typeof ($this.val()) == 'object') {						//-- multi SELECT Object
+					val = JSON.stringify($this.val());
 				}
 
 				V[C] = nuFORM.removeFormatting(val, dnf);
-				E[C] = $('#' + this.id).hasClass('nuEdited') ? 1 : 0;
+				E[C] = $this.hasClass('nuEdited') ? 1 : 0;
 
 				C++;
 
