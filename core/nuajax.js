@@ -65,10 +65,6 @@ function nuForm(f, r, filter, search, n, like) {
 
 	if (nuOpenNewBrowserTab('getform', f, r, filter)) { return; }
 
-	var u = '';
-	var p = '';
-	var s = '';
-
 	if (n != 1) {	//-- add a new breadcrumb
 		window.nuFORM.addBreadcrumb();
 	}
