@@ -4918,7 +4918,7 @@ function nuSearchableList() {
 
 		if (search) {
 			$('#' + 'nuSearchableCheckbox' + i)
-				.addClass('nuNoSearch')
+				.addClass('nuNoSearch');
 		}
 
 		var span = document.createElement('span');
@@ -5093,7 +5093,7 @@ function nuMessage(o, timeout, callback) {
 	let l = Math.max(0, $(this).scrollLeft() + (w - widest) / 2);
 	w = Math.min(w, widest);
 
-	$('body', par).append("<div id='nuMessageDiv' class='nuMessage' style='overflow:hidden;width:" + w + "px;left:" + l + "px' ></div>")
+	$('body', par).append("<div id='nuMessageDiv' class='nuMessage' style='overflow:hidden;width:" + w + "px;left:" + l + "px' ></div>");
 
 	let msgDiv = $('#nuMessageDiv', par);
 
@@ -5411,7 +5411,7 @@ function nuSetVerticalTabs() {
 	$('.nuTab').css('display', 'block');
 	$('#nuRecord').css('display', 'inline-block');
 	$('.nuTab').css('padding', '8px 2px 0px 2px');
-	tabHolder.css('height', window.innerHeight)
+	tabHolder.css('height', window.innerHeight);
 
 	var w = 0;
 
@@ -5532,7 +5532,7 @@ function nuResizeFormDialogCoordinates() {
 	var h = wh.height;
 
 	h = h + nuDialogHeadersHeight() + 50;
-	w = w + 40
+	w = w + 40;
 
 	let dragDlg = $('#nuDragDialog', window.parent.document);
 	if (dragDlg.length == 0) { return; }
@@ -5792,7 +5792,7 @@ function nuGetBrowsePaginationInfo() {
 	} else
 		if (p == c + 1 || f == 0) {
 			s = f == 0 ? 0 : c * r + 1;
-			e = f
+			e = f;
 		} else
 			if (c == 0 && p > 1) {
 				s = 1;
@@ -6003,7 +6003,7 @@ function nuAddBrowseTitleSelect(index, data, w) {
 
 	list.setAttribute('style', 'width:' + w + 'px');
 
-	var is1DArray = data[0][0] === undefined
+	var is1DArray = data[0][0] === undefined;
 	data.forEach(function (a) {
 		var opt = document.createElement('option');
 		opt.value = is1DArray ? a : a[0];
@@ -6083,7 +6083,7 @@ function nuSetSelect2(id, obj) {
 		dropdownParent: $('#nuRECORD'),
 		selectionCssClass: select2Id,
 		theme: nuUXOptions.nuSelect2Theme ? nuUXOptions.nuSelect2Theme : 'default',
-		language: lang
+		language: lang;
 	}
 
 	let objSelect2OptionsDefault = { options: select2OptionsDefault };
