@@ -430,7 +430,7 @@ function nuLogin(nuconfigNuWelcomeBodyInnerHTML) {
 
 	`;
 
-	var H = HTML == '' ? h : HTML
+	var H = HTML == '' ? h : HTML;
 
 	var e = document.createElement('div');
 
@@ -442,7 +442,7 @@ function nuLogin(nuconfigNuWelcomeBodyInnerHTML) {
 	$('body').html(H);
 
 	if (nuIsMobile()) {
-		$('body').css('width', 300).css('height', 300)
+		$('body').css('width', 300).css('height', 300);
 	}
 
 	if (window.nuLoginU == '' && window.nuLoginP == '') {
@@ -939,7 +939,7 @@ function nuTranslate(s) {
 
 function nuTranslateToEnglish(s) {
 
-	if (!s || s === '' || s === null) {
+	if (!s || s === '') {
 		return '';
 	}
 
@@ -1072,7 +1072,7 @@ function nuEnable(i, enable) {					//-- Enable Edit Form Object
 		a = i;
 	}
 
-	$.each(a, function (index, value) {
+	$.each(a, function (index) {
 
 		i = a[index];
 
@@ -1126,7 +1126,7 @@ function nuDisable(i) {					//-- Disable Edit Form Object
 		a = i;
 	}
 
-	$.each(a, function (index, value) {
+	$.each(a, function (index) {
 
 		i = a[index];
 
