@@ -4293,14 +4293,14 @@ function nuPopulateLookup(fm, target, setFocus) {
 	var p = String($('#' + target).attr('data-nu-prefix'));
 	var f = fm.lookup_values;
 
-	window.nuSubformRow = Number(p.substr(p.length - 3));
+	window.nuSubformRow = Number(p.slice(-3));
 
 	for (var i = 0; i < f.length; i++) {
 
 		var id = String(f[i][0]);
 		var $id = $('#' + id);
 
-		if (id.substr(0, p.length) != p) {
+		if (id.substring(0, p.length) != p) {
 			$id = $('#' + p + id);
 		}
 
@@ -4317,7 +4317,7 @@ function nuPopulateLookup(fm, target, setFocus) {
 			if ($id.attr('data-nu-format') !== undefined) {
 
 				nuReformat($id[0]);
-				$id.addClass('nuEdited')
+				$id.addClass('nuEdited');
 				$('#' + p + 'nuDelete').prop('checked', false);
 
 			}
