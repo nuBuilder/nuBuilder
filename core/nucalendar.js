@@ -112,8 +112,8 @@ function nuPopupCalendar(pThis, d) {
 
 	window.nuOnCalendar = 0;							//-- cursor not in calendar
 
-	var c = nuAppendChild('body', 'div', 'nuCalendar');
-	c = $('#nuCalendar');
+	nuAppendChild('body', 'div', 'nuCalendar');
+	var c = $('#nuCalendar');
 
 	c
 		.attr('onmouseover', 'window.nuOnCalendar = 1')
@@ -122,8 +122,7 @@ function nuPopupCalendar(pThis, d) {
 		.addClass('nuCalendar nuCalendarColor')
 		.html('<img id="dialogCalClose" src="core/graphics/close.png" style="position: absolute; top: 0px; right: 0px;" onclick="$(\'#nuCalendar\').remove()">');
 
-	var c = nuAppendChild('#nuTabAreaHolder', 'div', 'nuCalCloser');
-
+	nuAppendChild('#nuTabAreaHolder', 'div', 'nuCalCloser');
 	c = $('#nuCalCloser');
 
 	c
@@ -148,8 +147,7 @@ function nuPopupCalendar(pThis, d) {
 		});
 
 
-	var c = nuAppendChild('#nuCalendar', 'div', 'nuCalYear');
-
+	nuAppendChild('#nuCalendar', 'div', 'nuCalYear');
 	c = $('#nuCalYear');
 
 	c.css({
@@ -166,8 +164,7 @@ function nuPopupCalendar(pThis, d) {
 		.addClass('nuCalendarColor');
 
 
-	var c = nuAppendChild('#nuCalendar', 'div', 'nuCalYearLess');
-
+	nuAppendChild('#nuCalendar', 'div', 'nuCalYearLess');
 	c = $('#nuCalYearLess');
 
 	c.attr('onclick', "window.nuCalYear--;nuPopulateCalendar('')")
@@ -186,8 +183,7 @@ function nuPopupCalendar(pThis, d) {
 		.addClass('nuCalendarSelected nuCalendar');
 
 
-	var c = nuAppendChild('#nuCalendar', 'div', 'nuCalYearMore');
-
+	nuAppendChild('#nuCalendar', 'div', 'nuCalYearMore');
 	c = $('#nuCalYearMore');
 
 	c
@@ -206,13 +202,12 @@ function nuPopupCalendar(pThis, d) {
 		.html('&#9658;')
 		.addClass('nuCalendarSelected nuCalendar');
 
-	var c = nuAppendChild('#nuCalendar', 'select', 'nuCalMonth');
+	nuAppendChild('#nuCalendar', 'select', 'nuCalMonth');
 	c = $('#nuCalMonth');
 
-	var m = Array();
 	m = nuMonthNames();
 	for (var i = 0; i < 12; i++) {
-		c.append('<option value="' + m[i] + '">' + nuTranslate(m[i]) + '</option>')
+		c.append('<option value="' + m[i] + '">' + nuTranslate(m[i]) + '</option>');
 	}
 
 	c.click(function (event) {
@@ -237,8 +232,7 @@ function nuPopupCalendar(pThis, d) {
 	})
 		.addClass('nuCalendarColor');
 
-	var c = nuAppendChild('#nuCalendar', 'div', 'nuCalMonthLess');
-
+	nuAppendChild('#nuCalendar', 'div', 'nuCalMonthLess');
 	c = $('#nuCalMonthLess');
 
 	c
@@ -258,8 +252,7 @@ function nuPopupCalendar(pThis, d) {
 		.addClass('nuCalendarSelected nuCalendar');
 
 
-	var c = nuAppendChild('#nuCalendar', 'div', 'nuCalMonthMore');
-
+	nuAppendChild('#nuCalendar', 'div', 'nuCalMonthMore');
 	c = $('#nuCalMonthMore');
 
 	c.attr('onclick', "window.nuCalMonth++;nuPopulateCalendar(this.id)")
@@ -284,7 +277,7 @@ function nuPopupCalendar(pThis, d) {
 
 		if (t == 100) { nuTitleBox(i, l); }
 
-		nuDayBox(i, l, t)
+		nuDayBox(i, l, t);
 
 		if (l == 180) {
 
@@ -328,8 +321,7 @@ function nuWeekDayFromString(n) {
 
 function nuTitleBox(n, l) {
 
-	var c = nuAppendChild('#nuCalendar', 'div', 'nuCalTitle' + n);
-
+	nuAppendChild('#nuCalendar', 'div', 'nuCalTitle' + n);
 	c = $('#nuCalTitle' + n);
 
 	c
@@ -355,8 +347,7 @@ function nuTitleBox(n, l) {
 
 function nuDayBox(n, l, t) {
 
-	var c = nuAppendChild('#nuCalendar', 'div', 'nuCalDay' + n);
-	var today = new Date();
+	nuAppendChild('#nuCalendar', 'div', 'nuCalDay' + n);
 
 	c = $('#nuCalDay' + n);
 
@@ -403,7 +394,6 @@ function nuPopulateCalendar(id, y, m, d) {
 	var s = new Date(window.nuCalYear, window.nuCalMonth, 1);
 	var today = new Date();
 	var day = 0;
-	var nextmonth = 0;
 
 	var weekDay = s.getDay();
 
@@ -426,7 +416,7 @@ function nuPopulateCalendar(id, y, m, d) {
 
 		day++;
 		s.setDate(day);
-		c = document.getElementById('nuCalDay' + i);
+		let c = document.getElementById('nuCalDay' + i);
 
 		if (s.getDate() != day) {
 			return;
@@ -466,7 +456,7 @@ function nuPreviousMonth(y, m, d) {
 
 function nuMonthNames() {
 
-	var m = Array();
+	let m = Array();
 
 	m[0] = 'January';
 	m[1] = 'February';
@@ -486,17 +476,14 @@ function nuMonthNames() {
 
 function nuFullMonth(n) {
 
-	var m = Array();
-
-	m = nuMonthNames();
-
+	let m = nuMonthNames();
 	return String(m[n]);
 
 }
 
 function nu2Month(n) {
 
-	var mth = Array();
+	let mth = Array();
 
 	mth['Jan'] = '01';
 	mth['Feb'] = '02';
