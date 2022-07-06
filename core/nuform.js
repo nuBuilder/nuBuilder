@@ -4301,7 +4301,7 @@ function nuPopulateLookup(fm, target, setFocus) {
 		var $id = $('#' + id);
 
 		if (id.substr(0, p.length) != p) {
-			id = p + id;
+			$id = $('#' + p + id);
 		}
 
 		$id.addClass('nuEdited');
