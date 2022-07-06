@@ -6,9 +6,8 @@
 	if ( !session_id() ) {
 
 		nuCheckGarbageCollector();
-		ini_set('session.cookie_httponly', '1');
-		if (nuIsHTTPS()) ini_set('session.cookie_secure', 1);
-		session_start();
+		session_start(['cookie_lifetime' => 0,'cookie_secure' => nuIsHTTPS(),'cookie_httponly' => true]);
+
 	}
 
 	if ( !isset($_SESSION['nubuilder_session_data']) ) {
@@ -16,7 +15,6 @@
 		nuLoadNewSession();
 	}
 
-	// nudatabase will not work without $_SESSION['nubuilder_session_data'] loaded
 	require_once('nudatabase.php');
 
 function nuIsHTTPS() {
