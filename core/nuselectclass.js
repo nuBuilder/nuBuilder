@@ -121,9 +121,9 @@ class nuSelectObject {
 			})
 			.change(function () {
 				nuSQL.buildSQL();
-			})
+			});
 
-		for (var rows = 0; rows < n.length; rows++) {								//-- add field list
+		for (let rows = 0; rows < n.length; rows++) {								//-- add field list
 			this.boxRow(rows, n[rows], p[rows], w);
 		}
 
@@ -202,7 +202,6 @@ class nuSelectObject {
 
 				var t = $('#tablename' + b).html();
 				var a = $('#alias' + b).val();
-				var u = a == '' ? t : a;
 				var T = this.justAlias(t, a);
 
 
@@ -242,13 +241,12 @@ class nuSelectObject {
 
 	buildFrom() {
 
-		var THIS = this;
 		this.tempTables = this.usedTables();
 		this.tempJoins = this.getJoinObjects();													//-- current visible joins
 
 		var torder = function (b, a) {
 			return (a.joins.length < b.joins.length);
-		}
+		};
 
 		for (var i = 0; i < this.tempTables.length; i++) {
 
@@ -256,12 +254,10 @@ class nuSelectObject {
 
 				var f = this.tempTables.sort(torder);
 				var more = true;
-				var t = this.tempTables[i].table;
 				var a = this.tempTables[i].alias;
 				var A = this.fromAlias(f[0].table, f[0].alias);
 				var defined = [A, a];												//-- growing list of used tables
 				var ob = {};
-				var s = '';
 				var F = [];
 
 				while (more) {
@@ -402,8 +398,7 @@ class nuSelectObject {
 
 			if (aList.indexOf(j) != -1 || aList.indexOf(J) != -1) {
 
-				var r = this.tempJoins.splice(i, 1);
-
+				// var r = this.tempJoins.splice(i, 1);
 				return [true, o];
 
 			}
@@ -544,7 +539,7 @@ class nuSelectObject {
 
 		var o = function (b, a) {														//-- used to order clauses
 			return (b[1] + 10000 + Number(b[4])) - (a[1] + 10000 + Number(a[4]));
-		}
+		};
 
 		var T = '';
 		var F = '';
@@ -861,7 +856,7 @@ function nuUp(e) {
 
 			if (I.split('_')[2] != i.split('_')[2]) {				//-- different box
 
-				nuSQL.addJoin(I + '--' + i, '')
+				nuSQL.addJoin(I + '--' + i, '');
 				nuAngle();
 
 			}
@@ -939,13 +934,13 @@ function nuAngle() {
 	var r = J.joins;
 	var ok = [];
 
-	for (var key in r) {																//-- remove links to closed boxes
+	for (let key in r) {																//-- remove links to closed boxes
 
 		var I = key.split('--')[0];
 		var i = key.split('--')[1];
 
 		if ($('#' + I).length == 1 && $('#' + i).length == 1) {
-			ok[I + '--' + i] = r[key]
+			ok[I + '--' + i] = r[key];
 		}
 
 	}

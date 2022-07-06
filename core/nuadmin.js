@@ -566,7 +566,7 @@ function nuContextMenuBeforeRender(menu, event) {
 				} else {
 					for (let j = 0; j < menu[i].subMenu.length; j++) {
 						let sub = menu[i].subMenu[j];
-						sub.text = nuContextMenuAlignText(id, sub, sub.tag)
+						sub.text = nuContextMenuAlignText(id, sub, sub.tag);
 					}
 				}
 			} else if (menu[i].tag == 'Validation') {
@@ -986,7 +986,6 @@ var nuPrettyPrint = (function () {
 
 			/* Add attributes to el */
 			if (attrs && attrs.style) {
-				var styles = attrs.style;
 				util.applyCSS(el, attrs.style);
 				delete attrs.style;
 			}
