@@ -27,7 +27,7 @@ class nuResponseForm {
 
 	setStartPosition(O) {
 
-		var id = O.id
+		var id = O.id;
 		var lid = 'label_' + O.id;
 
 		var o = $('#' + id);
@@ -99,7 +99,7 @@ class nuResponseForm {
 
 		for (var n = 0; n < tabs.length; n++) {
 
-			var t = tabs[n].title.nuReplaceAll(' ', '&#160;')
+			var t = tabs[n].title.nuReplaceAll(' ', '&#160;');
 
 			$('#nuResponseTabs').append('<option value="nuTab' + n + '">' + t + '</option>');
 
@@ -128,9 +128,9 @@ class nuResponseForm {
 
 		for (var i = 0; i < D.length; i++) {
 
-			if (scr < D[i].cwidth + D[i].dwidth + 50) { scr = (D[i].cwidth + D[i].dwidth + 50) }
-
-			var dl = D[i].left;
+			if (scr < D[i].cwidth + D[i].dwidth + 50) {
+				scr = (D[i].cwidth + D[i].dwidth + 50);
+			}
 
 			if (arguments.length == 2) {
 				window.nuRESPONSEWRAP = wrap;
@@ -202,7 +202,6 @@ class nuResponseForm {
 	resetDefault() {
 
 		var D = this.StartPositions;
-		var ll = this.label_length + 5;
 
 		$('.nuTabTitleColumn').remove();
 
@@ -586,8 +585,8 @@ class nuFormObject {
 
 			var SF = d[i];
 			if (SF.id == subform_name) {												//-- i've got the right subform
-				var fmt = $("[id$='" + field_name + "']input[id^='" + subform_name + "']").attr('data-nu-format')
-				var f = SF.fields.indexOf(field_name);						//-- check for valid field(column)
+				// var fmt = $("[id$='" + field_name + "']input[id^='" + subform_name + "']").attr('data-nu-format')
+				var f = SF.fields.indexOf(field_name);									//-- check for valid field(column)
 				if (f == -1) { return 0; }
 				for (var c = 0; c < SF.rows.length; c++) {
 
@@ -666,11 +665,13 @@ class nuFormObject {
 
 			var sel = "[id*='" + sf + "'][id*='nuRECORD']";
 			var table = $(sel).attr('data-nu-table');
-			var oi = $('#' + sf).attr('data-nu-object-id');
-			var fk = $('#' + sf).attr('data-nu-foreign-key-name');
-			var pk = $('#' + sf).attr('data-nu-primary-key-name');
-			var nd = $('#' + sf).attr('data-nu-delete');
-			var na = $('#' + sf).attr('data-nu-add');
+
+			let $sf = $('#' + sf);
+			var oi = $sf.attr('data-nu-object-id');
+			var fk = $sf.attr('data-nu-foreign-key-name');
+			var pk = $sf.attr('data-nu-primary-key-name');
+			var nd = $sf.attr('data-nu-delete');
+			var na = $sf.attr('data-nu-add');
 
 		}
 
@@ -682,12 +683,11 @@ class nuFormObject {
 		o.chartDataPivot = [];
 		o.edited = [];
 		o.deleted = [];
-		var deleteRow = false;
 
 		$(sel).each(function (index) {
 
 			var THIS = $(this);
-			var dnpk = $(this).attr('data-nu-primary-key')
+			var dnpk = $(this).attr('data-nu-primary-key');
 			var V = [dnpk];
 			var E = [0];
 			var C = 1;
@@ -744,9 +744,8 @@ class nuFormObject {
 		for (var f = 0; f < o.fields.length - 1; f++) {
 
 			var c = [];
-			var d = 0;
 
-			titles.push($('#title_' + sf + o.fields[f]).html())
+			titles.push($('#title_' + sf + o.fields[f]).html());
 
 			for (var r = 0; r < o.rows.length; r++) {
 
@@ -1015,7 +1014,7 @@ class nuFormObject {
 				.nuReplaceAll(',', ' ')
 				.split(' ');
 
-			var o = Date().toString().split(' ', 6)								//-- Tue Sep 07 2004 11:11:12 GMT+0930 (Cen. Australia Standard Time)
+			var o = Date().toString().split(' ', 6);								//-- Tue Sep 07 2004 11:11:12 GMT+0930 (Cen. Australia Standard Time)
 			var time = String(o[4]).split(':');
 
 			var d = { 'y': o[3], 'm': FMT[nuTranslateToEnglish(o[1])].jsmonth, 'd': o[2], 'h': time[0], 'n': time[1], 's': time[2] };	//-- today's date time[2]};	//-- today's date
