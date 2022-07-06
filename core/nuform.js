@@ -4541,7 +4541,7 @@ function nuChangeFile(e) {
 
 		$('#' + theTextarea).val(j).addClass('nuEdited');
 
-	}
+	};
 
 	r.readAsDataURL(a);
 
@@ -4834,9 +4834,6 @@ function nuFormsUnsaved() {
 }
 
 function nuAddJavascript(js) {
-
-	var nuLoadEdit = null;
-	var nuLoadBrowse = null;
 
 	var s = document.createElement('script');
 	s.innerHTML = "\n\n" + js + "\n\n";
