@@ -28,7 +28,7 @@ function nuIsHTTPS() {
 		?? null
 	;
 
-	$isHttps =
+	return
 		$isHttps && (
 			strcasecmp('on', $isHttps) == 0
 			|| strcasecmp('https', $isHttps) == 0
