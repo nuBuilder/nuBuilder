@@ -497,7 +497,7 @@ function nuContextLabelHasClass(id, className) {
 
 function nuContextMenuIdHasAlgin(id, align) {
 
-	if (nuFormType() == 'browse') id = nuContextMenuCurrentTargetBrowseId(id);
+	if (nuFormType() == 'browse') id = nuContextMenuCurrentTargetBrowseId();
 	id = $('#' + id).hasClass('nuContentBoxContainer') ? 'label_' + id : id;
 
 	return $('#' + id).css('text-align').toLowerCase() == align.toLowerCase();
@@ -514,7 +514,7 @@ function nuContextMenuAccessText(id, sub, access) {
 
 function nuContextMenuPositionText(id, position) {
 
-	if (nuFormType() == 'browse') id = nuContextMenuCurrentTargetBrowseId(id);
+	if (nuFormType() == 'browse') id = nuContextMenuCurrentTargetBrowseId();
 
 	if ($('#' + id).hasClass('nuContentBoxContainer') && (position == 'Height' || position == 'Width')) {
 		id = 'content_' + id;
@@ -701,7 +701,7 @@ function nuContextMenuUpdateAccess(v) {
 function nuContextMenuUpdateAlign(v) {
 
 	const ftEdit = nuFormType() == 'edit';
-	const id = ftEdit ? contextMenuCurrentTargetUpdateId() : nuContextMenuCurrentTargetBrowseId(contextMenuCurrentTarget.id);
+	const id = ftEdit ? contextMenuCurrentTargetUpdateId() : nuContextMenuCurrentTargetBrowseId();
 
 	$('#' + id).css('text-align', v);
 
