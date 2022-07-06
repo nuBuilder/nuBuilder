@@ -6083,7 +6083,7 @@ function nuSetSelect2(id, obj) {
 		dropdownParent: $('#nuRECORD'),
 		selectionCssClass: select2Id,
 		theme: nuUXOptions.nuSelect2Theme ? nuUXOptions.nuSelect2Theme : 'default',
-		language: lang;
+		language: lang
 	}
 
 	let objSelect2OptionsDefault = { options: select2OptionsDefault };
