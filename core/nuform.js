@@ -1192,7 +1192,7 @@ function nuINPUT(w, i, l, p, prop) {
 
 	obj = nuLabelOrPosition(obj, w, i, l, p, prop);
 
-	nuAddDataTab(id, obj.tab, p);debugger;
+	nuAddDataTab(id, obj.tab, p);
 	nuINPUTSetProperties($id, obj, inputType, objectType, wi, p);
 
 	if (type == 'input') {														//-- Input Object
@@ -1645,8 +1645,7 @@ function nuRUN(w, i, l, p, prop) {
 
 	if (obj.run_method == 'b') {
 
-		var clicker = '';
-
+		let clicker = '';
 		var runTarget = obj.run_target;
 		runTarget = runTarget == '' || runTarget === null ? '0' : runTarget;
 
@@ -1657,8 +1656,11 @@ function nuRUN(w, i, l, p, prop) {
 		if (obj.run_type == 'R') { clicker = "nuRunReport('" + obj.record_id + "')"; }
 		if (obj.run_type == 'P') {
 
-			if (obj.run_hidden) { clicker = "nuRunPHPHidden('" + obj.record_id + "')" };
-			if (!obj.run_hidden) { clicker = "nuRunPHP('" + obj.record_id + "')" };
+			if (obj.run_hidden) {
+				clicker = "nuRunPHPHidden('" + obj.record_id + "')";
+			} else {
+				clicker = "nuRunPHP('" + obj.record_id + "')";
+			}
 
 		}
 
@@ -3689,7 +3691,7 @@ function nuSelectTab(tab, byUser) {
 
 	if (byUser === undefined) byUser = false;
 
-	$tabId = $('#' + tab.id);
+	let $tabId = $('#' + tab.id);
 
 	byUser = byUser === true && ! $tabId.is('[nu-data-clicked-by-system]') ? true : false;
 
@@ -3803,10 +3805,10 @@ function nuHideTabById(id) {
 	nuShowTabById(id, false);
 }
 
-function nuHideTabs(t) {
+function nuHideTabs() {
 
 	for (var i = 0; i < arguments.length; i++) {
-		if (arguments[i] == parseInt(arguments[i]), 10) {
+		if (arguments[i] === parseInt(arguments[i]), 10) {
 			$('#nuTab' + arguments[i]).hide();
 		} else {
 			nuHideTabByTitle(arguments[i]);
