@@ -1752,7 +1752,7 @@ function nuSortSubform(sfName, c, e) {
 			const objF = $('#' + f + so);
 			t = objF.hasClass('input_number') || objF.hasClass('input_nuNumber') || objF.hasClass('nuCalculator');
 			let v = objF.val();
-			let m = objF.attr('data-nu-format')
+			let m = objF.attr('data-nu-format');
 			const l = objF.hasClass('nuHiddenLookup');
 
 			if (m != '') {
@@ -2542,11 +2542,10 @@ jQuery.fn.nuHighlight = function (pat) {
 			var pos = node.data.toUpperCase().indexOf(pat);
 			pos -= (node.data.substr(0, pos).toUpperCase().length - node.data.substr(0, pos).length);
 			if (pos >= 0) {
-				var spannode = document.createElement('span');
+				let spannode = document.createElement('span');
 				spannode.className = 'nuBrowseSearch';
-				var middlebit = node.splitText(pos);
-				var endbit = middlebit.splitText(pat.length);
-				var middleclone = middlebit.cloneNode(true);
+				let middlebit = node.splitText(pos);
+				const middleclone = middlebit.cloneNode(true);
 				spannode.appendChild(middleclone);
 				middlebit.parentNode.replaceChild(spannode, middlebit);
 				skip = 1;
