@@ -1639,14 +1639,12 @@ function nuDecode(s) {
 function nuAddRow(s) {
 
 	const o = nuSubformObject(s);
-	const i = s + nuPad3(o.rows.length - 1) + o.fields[1];
-	const $i = $('#' + i);
-
-	$i.change();
+	let i = s + nuPad3(o.rows.length - 1) + o.fields[1];
+	$('#' + i).change();
 
 	i = s + nuPad3(o.rows.length) + o.fields[1];
 
-	$i.focus();
+	$('#' + i).focus();
 
 }
 
