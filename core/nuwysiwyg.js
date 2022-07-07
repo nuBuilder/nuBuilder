@@ -253,9 +253,7 @@ function nuQuill(i, options) {
 
 	if (!options.modules || options.modules === null) {
 
-		if (options.modules.toolbar === false)	{
-			options.modules.toolbar = false;
-		} else {
+		if (options.modules.toolbar) {
 
 			options.modules = {
 				toolbar: options.toolbar,
@@ -267,6 +265,9 @@ function nuQuill(i, options) {
 				}
 
 			}
+
+		} else {
+			options.modules.toolbar = false;
 		}
 
 	}
