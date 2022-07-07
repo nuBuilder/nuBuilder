@@ -465,80 +465,57 @@ function nuSetBody(f) {
 
 }
 
+function nuCSSPropertySum(id, arr) {
+
+	let $id = $('#' + id);
+	if ($id.length == 0) { return 0; }
+
+	let sum = 0;
+	arr.forEach(function(element){
+		sum += parseInt($id.css(element), 10);
+	 });
+
+	return sum;
+
+}
+
 function nuDialogHeadersHeight() {
 
-	let h = 0;
+	let height = 0;
+	let arr = ['nuBreadcrumbHolder','nuActionHolder','nuTabHolder','nuBrowseTitle0','nuBrowseFooter'];
+	arr.forEach(function(element){
+		height += nuTotalHeight(element);
+	 });
 
-	h = h + nuTotalHeight('nuBreadcrumbHolder');
-	h = h + nuTotalHeight('nuActionHolder');
-	h = h + nuTotalHeight('nuTabHolder');
-	h = h + nuTotalHeight('nuBrowseTitle0');
-	h = h + nuTotalHeight('nuBrowseFooter');
-
-	return h;
+	return height;
 
 }
 
-function nuTotalHeight(i) {
+function nuTotalHeight(id) {
 
-	let h = 0;
-
-	let obj = $('#' + i);
-	if (obj.length == 0) { return 0; }
-
-	h += parseInt(obj.css('height'), 10);
-	h += parseInt(obj.css('padding-top'), 10);
-	h += parseInt(obj.css('padding-bottom'), 10);
-	h += parseInt(obj.css('border-top-width'), 10);
-	h += parseInt(obj.css('border-bottom-width'), 10);
-	h += parseInt(obj.css('margin-top'), 10);
-	h += parseInt(obj.css('margin-bottom'), 10);
-
-	return h;
+	const arrProperties = ['height','padding-top','padding-bottom','border-top-width','border-bottom-width','margin-top','margin-bottom'];
+	return nuCSSPropertySum(id, arrProperties);
 
 }
 
-function nuTotalWidth(i) {
+function nuTotalWidth(id) {
 
-	let h = 0;
-
-	let obj = $('#' + i);
-	if (obj.length == 0) { return 0; }
-
-	h += parseInt(obj.css('width'), 10);
-	h += parseInt(obj.css('padding-left'), 10);
-	h += parseInt(obj.css('padding-right'), 10);
-	h += parseInt(obj.css('border-left-width'), 10);
-	h += parseInt(obj.css('border-right-width'), 10);
-	h += parseInt(obj.css('margin-left'), 10);
-	h += parseInt(obj.css('margin-right'), 10);
-
-	return h;
+	const arrProperties = ['width','padding-left','padding-right','border-left-width','border-right-width','margin-left','margin-right'];
+	return nuCSSPropertySum(id, arrProperties);
 
 }
 
-function nuTotalHolderWidth(i) {
+function nuTotalHolderWidth(id) {
 
-	var h = 0;
-
-	let obj = $('#' + i);
-	if (obj.length == 0) { return 0; }
-
-	h += parseInt(obj.css('padding-left'), 10);
-	h += parseInt(obj.css('padding-right'), 10);
-	h += parseInt(obj.css('border-left-width'), 10);
-	h += parseInt(obj.css('border-right-width'), 10);
-	h += parseInt(obj.css('margin-left'), 10);
-	h += parseInt(obj.css('margin-right'), 10);
-
-	return h;
+	const arrProperties = ['padding-left','padding-right','border-left-width','border-right-width','margin-left','margin-right'];
+	return nuCSSPropertySum(id, arrProperties);
 
 }
 
 function nuDefine(v, defaultValue = '') {
 
 	if (v === undefined) {
-		v = '';
+		v = defaultValue;
 	}
 
 	return v;
