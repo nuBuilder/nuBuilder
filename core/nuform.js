@@ -3786,7 +3786,7 @@ function nuHideTabById(id) {
 function nuHideTabs() {
 
 	for (var i = 0; i < arguments.length; i++) {
-		if (arguments[i] === parseInt(arguments[i]), 10) {
+		if (arguments[i] === parseInt(arguments[i], 10)) {
 			$('#nuTab' + arguments[i]).hide();
 		} else {
 			nuHideTabByTitle(arguments[i]);
