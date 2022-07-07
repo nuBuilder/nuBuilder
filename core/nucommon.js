@@ -2773,7 +2773,7 @@ function nuAttachSaveButtonTo(i, dx, dy, h, w, fs) {
 	sb.attr('data-nu-tab', '0');
 	sb.attr('data-nu-form', '');
 
-	if (fs && fs !== 0) sb[0].style.fontSize = fs + "px";
+	if (fs) sb[0].style.fontSize = fs + "px";
 	if (nuSelectedTabNumber() !== '0') sb.css('display', 'none');
 
 	return sb;
