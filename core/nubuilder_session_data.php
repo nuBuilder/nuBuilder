@@ -47,9 +47,6 @@ class nuBuilderSessionData {
 	'USER_CODE_LABEL'			=> null
 	);
 
-	public function __construct() {
-	}
-
 	public function getNubuilderSessionData() {
 
 		return $this->nubuilder;
