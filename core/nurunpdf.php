@@ -777,6 +777,7 @@ class nuSECTION{
 		$type			= '';
 		$value			= '';
 		$field			= '';
+		$fields			= array();
 
 		if(strtoupper(substr($O->fieldName,0,4)) == 'SUM('){
 			$type		= 's';
@@ -997,7 +998,7 @@ function nuGetTotalPages(){
 	$pages					 = 0;
 
 	$count = count($GLOBALS['nu_report']);
-	for($i = 0 ; $i < $count) ; $i++){
+	for($i = 0 ; $i < $count ; $i++){
 		if($GLOBALS['nu_report'][$i]->sectionTop == 0){
 			$pages++;
 		}
@@ -1016,7 +1017,7 @@ function nuReplaceLabelHashVariables($LAY, $hashData){
 
 			if($O->objectType == 'label'){
 
-				$countLines = count($GLOBALS['nu_report'][$i]->objects[$o]->lines;
+				$countLines = count($GLOBALS['nu_report'][$i]->objects[$o]->lines);
 				for($l = 0 ; $l < $countLines ; $l++){
 					$GLOBALS['nu_report'][$i]->objects[$o]->lines[$l] = nuReplaceHashVariables($GLOBALS['nu_report'][$i]->objects[$o]->lines[$l]);
 				}
