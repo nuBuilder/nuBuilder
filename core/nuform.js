@@ -2336,7 +2336,7 @@ function nuSubformAddFilter(filter) {
 				$(columnTitle).append("<br />");
 
 				 obj.appendTo(columnTitle).css(style);
-				 if (prop.placeholder) obj.nuSetPlaceholder(prop.placeholder);
+				 if (prop !== undefined && prop.placeholder) obj.nuSetPlaceholder(prop.placeholder);
 
 			}
 
