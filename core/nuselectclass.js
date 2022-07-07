@@ -456,8 +456,8 @@ class nuSelectObject {
 
 		}
 
-		for (var k in j) {
-			J.push(j[k]);
+		for (const item of j) {
+			J.push(item);
 		}
 
 		return J;
