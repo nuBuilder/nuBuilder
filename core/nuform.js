@@ -809,15 +809,15 @@ function nuDRAG(w, i, l, p, prop) {
 
 function getDBColumnLengh(w, id) {
 
-	let tableSchema = nuSERVERRESPONSE.tableSchema;
+	const tableSchema = nuSERVERRESPONSE.tableSchema;
 	if (tableSchema === undefined || w.table == '' || tableSchema[w.table] === undefined) return 0;
 
 	var len = 0;
-	let index = tableSchema[w.table].names.indexOf(id);
+	const index = tableSchema[w.table].names.indexOf(id);
 
 	if (index !== -1) {
 
-		let datatype = tableSchema[w.table]["types"][index].toUpperCase();
+		const datatype = tableSchema[w.table]["types"][index].toUpperCase();
 
 		switch (datatype) {
 			case "TINYTEXT":
@@ -868,11 +868,8 @@ function nuINPUTInput($id, inp, inputType, obj, objectType) {
 
 	inp.setAttribute('type', inputType);
 
-	if (objectType == 'lookup') {
-		$id.addClass('nuHiddenLookup');
-	} else {
-		$id.addClass('input_' + inputType);
-	}
+	const className = objectType == 'lookup' ? 'nuHiddenLookup' : 'input_' + inputType;
+	$id.addClass(className);
 
 	if (obj.datalist !== null && obj.datalist !== '' && typeof obj.datalist !== "undefined") {
 		let dl = obj.datalist;
