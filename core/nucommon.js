@@ -1588,8 +1588,6 @@ function nuChart(i, t, a, h, x, y, st, is) {
 
 	google.charts.setOnLoadCallback(drawVisualization);
 
-	if (a == '') { return; }
-
 	function drawVisualization() {
 
 		let data = google.visualization.arrayToDataTable(a);

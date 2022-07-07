@@ -6062,7 +6062,7 @@ function nuSetSelect2(id, obj) {
 		selectionCssClass: select2Id,
 		theme: nuUXOptions.nuSelect2Theme ? nuUXOptions.nuSelect2Theme : 'default',
 		language: lang
-	}
+	};
 
 	let objSelect2OptionsDefault = { options: select2OptionsDefault };
 	let select2UserOptions = [];
