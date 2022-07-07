@@ -4302,7 +4302,7 @@ function nuPopulateLookup(fm, target, setFocus) {
 
 		}
 
-		if (i == 1 && !(setFocus == false)) {
+		if (i == 1 && setFocus !== false) {
 			$id.focus();
 		}
 
