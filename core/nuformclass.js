@@ -884,7 +884,6 @@ class nuFormObject {
 
 
 		if (v == undefined) { return ''; }
-		if (v === null) { return ''; }
 		if (f == undefined) { return v; }
 		if (f == '') { return v; }
 		if (v == '') { return v; }
@@ -925,7 +924,7 @@ class nuFormObject {
 
 			var o = new Date(d[0], d[1] - 1, d[2], t[0], t[1], t[2], 0);			//-- (year, month, day, hours, minutes, seconds, milliseconds)
 
-			if (o == 'Invalid Date') { return ''; }
+			if (!nuDateIsValid(o)) { return ''; }
 
 			const splitDate = o.toString().split(' ');
 			var wee = splitDate[0];													//-- Tue Jul 07 2022 11:11:12 GMT+0930 (Cen. Australia Standard Time)
