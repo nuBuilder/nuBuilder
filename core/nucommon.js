@@ -2724,8 +2724,9 @@ function nuSetSaveButtonPosition(t, l, h, w, fs) {
 	var sb = $('#nuSaveButton');
 	sb.appendTo('div#nuRECORD');
 
-	if (!w || w === 0) w = sb.cssNumber("width");
-	if (!h || h === 0) h = sb.cssNumber("height");
+	// not defined or 0
+	if (!w) w = sb.cssNumber("width");
+	if (!h) h = sb.cssNumber("height");
 
 	sb.css({
 		"top": t + "px",
