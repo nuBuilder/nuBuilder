@@ -1090,10 +1090,10 @@ function nuMoveNuDrag() {
 		}
 
 		//update orders
-		var tabObjects			= $("#nuWindow")[0].contentWindow.nuDragOptionsState.tabs[moveToTab];
+		var tabObjectsU			= $("#nuWindow")[0].contentWindow.nuDragOptionsState.tabs[moveToTab];
 
-		for(var j = 0; j < tabObjects.objects.length; j++) {
-			tabObjects.objects[j].tab_order = Number(j * 10) + Number(moveToTab * 100);
+		for(var j = 0; j < tabObjectsU.objects.length; j++) {
+			tabObjectsU.objects[j].tab_order = Number(j * 10) + Number(moveToTab * 100);
 		}
 
 	});
