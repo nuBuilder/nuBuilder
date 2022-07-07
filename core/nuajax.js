@@ -29,10 +29,9 @@ function nuAjax(w, successCallback, errorCallback) {
 			if (parent.$('#nuModal').length > 0 && parent.$('#nuModal').siblings(".nuDragDialog").css("visibility") == "hidden") {
 				msgDiv = parent.nuMessage(err);
 				nuClosePopup();
-				return;
+			} else {
+				msgDiv = nuMessage(err);
 			}
-
-			msgDiv = nuMessage(err);
 
 			if (window.nuOnMessage) {
 				nuOnMessage(msgDiv, err);
