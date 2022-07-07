@@ -202,7 +202,7 @@ class nuSelectObject {
 
 				var t = $('#tablename' + b).html();
 				var a = $('#alias' + b).val();
-							
+
 				var T = this.justAlias(t, a);
 
 
@@ -242,7 +242,7 @@ class nuSelectObject {
 
 	buildFrom() {
 
-				  
+
 		this.tempTables = this.usedTables();
 		this.tempJoins = this.getJoinObjects();													//-- current visible joins
 
@@ -256,12 +256,12 @@ class nuSelectObject {
 
 				var f = this.tempTables.sort(torder);
 				var more = true;
-									 
+
 				var a = this.tempTables[i].alias;
 				var A = this.fromAlias(f[0].table, f[0].alias);
 				var defined = [A, a];												//-- growing list of used tables
 				var ob = {};
-			   
+
 				var F = [];
 
 				while (more) {
@@ -469,8 +469,8 @@ class nuSelectObject {
 
 		if (a == t) {
 			return t;
-		  
-						 
+
+
 		}
 
 		return t + ' AS ' + a;
@@ -481,8 +481,8 @@ class nuSelectObject {
 
 		if (a == '') {
 			return t;
-		  
-						 
+
+
 		}
 
 		return t + ' AS ' + a;
@@ -494,8 +494,8 @@ class nuSelectObject {
 
 		if (a == '') {
 			return t;
-		  
-			
+
+
 		}
 
 		return a;
@@ -747,7 +747,6 @@ class nuSelectObject {
 	getJoins() {
 
 		var a = [];
-		var j = [];
 		var r = this.joins;
 
 		for (var k in r) {
