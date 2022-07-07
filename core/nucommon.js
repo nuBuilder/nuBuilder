@@ -2906,3 +2906,11 @@ function nuCtrlCmdShiftName(keyName) {
 	return modifier + '+Shift+' + keyName;
 
 }
+
+function nuDateIsValid(date) {
+
+	return (
+		Object.prototype.toString.call(date) === '[object Date]' && !isNaN(date)
+	);
+
+}
