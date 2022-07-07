@@ -447,15 +447,17 @@ function nuAddedByLookup(f) {
 
 function nuSetBody(f) {
 
-	$('body').html('');
-	$('body').removeClass('nuBrowseBody nuEditBody');
+	let $body = $('body');
+
+	$body.html('');
+	$body.removeClass('nuBrowseBody nuEditBody');
 
 	if (nuFormType() == 'browse') {
-		$('body').addClass('nuBrowseBody');
+		$body.addClass('nuBrowseBody');
 	} else {
 
 		var height = f.dimensions === null ? 0 : f.dimensions.edit.height;
-		$('body').addClass('nuEditBody')
+		$body.addClass('nuEditBody')
 			.css('width', window.innerWidth - 1)
 			.css('height', height);
 
