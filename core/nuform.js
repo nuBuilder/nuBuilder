@@ -764,18 +764,17 @@ function nuRecordProperties(w, p, l) {
 
 function nuDRAG(w, i, l, p, prop) {
 
-	let obj = prop.objects[i];
-	let id = p + obj.id;
-	let ef = p + 'nuRECORD';
-	let nuObjectType = p + obj.type;
-	let drg = document.createElement('div');
-	drg.setAttribute('id', id);
+	const obj = prop.objects[i];
+	const id = p + obj.id;
+	const nuObjectType = p + obj.type;
+	let drgDiv = document.createElement('div');
+	drgDiv.setAttribute('id', id);
 
-	$('#' + ef).append(drg);
+	$('#' + p + 'nuRECORD').append(drgDiv);
 
-	let objId = $('#' + id);
+	let $id = $('#' + id);
 
-	objId.css({
+	$id.css({
 		'top': Number(obj.top),
 		'left': Number(obj.left),
 		'width': Number(obj.width),
@@ -788,11 +787,13 @@ function nuDRAG(w, i, l, p, prop) {
 		'padding-left': '4px'
 	}).addClass('nu_' + nuObjectType);
 
-	objId.text(id);
-	objId.attr('data-drag', 1);
-	objId.attr('data-nu-object-id', obj.object_id);
+	$id.text(id);
+	$id.attr('data-drag', 1)
+		.attr('data-nu-object-id', obj.object_id);
 
-	if (obj.input == 'button' || nuObjectType == 'run') objId.attr('data-drag-button-label', obj.label);
+	if (obj.input == 'button' || nuObjectType == 'run') {
+		$id.attr('data-drag-button-label', obj.label);
+	}
 
 	if (obj.input != 'button' && nuObjectType != 'run' && nuObjectType != 'contentbox' && prop.title !== 'Insert-Snippet') {		//-- Input Object
 		let lab = nuLabel(w, i, p, prop);
@@ -804,6 +805,7 @@ function nuDRAG(w, i, l, p, prop) {
 	return Number(obj.width);
 
 }
+
 
 function getDBColumnLengh(w, id) {
 
