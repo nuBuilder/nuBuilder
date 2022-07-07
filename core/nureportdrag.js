@@ -745,24 +745,24 @@ function nuSelectDialog() {
 
 
 	var a = [];
-	var sel = document.getElementsByClassName('nuDragObject');
 
-	for (var o = 0; o < sel.length; o++) {
+	var dragObj  = document.getElementsByClassName('nuDragObject');
 
-		a[a.length] = new nuOrderedSelectObjects(sel[o].id);
+	for (let o = 0; o < dragObj.length; o++) {
+
+		a[a.length] = new nuOrderedSelectObjects(dragObj[o].id);
 
 	}
 
 	a.sort(nuSortObjects);
 
-	for (var i = 0; i < a.length; i++) {
+	for (let i = 0; i < a.length; i++) {
 
-		var o = $('#' + a[i].id);
-		var sec = $('#nuSectionLeft' + o.attr('data-order')).html();
-		var val = o.html();
-		var sel = o.hasClass('nuDragSelected') ? ' selected ' : '';
+		const o = $('#' + a[i].id);
+		const sec = $('#nuSectionLeft' + o.attr('data-order')).html();
 
-		$("#nuObjectList").append("<option " + sel + " value='" + a[i].id + "'>" + sec + " : " + a[i].id + " : " + val + "</option>");
+		const dragSelected = o.hasClass('nuDragSelected') ? ' selected ' : '';
+		$("#nuObjectList").append("<option " + dragSelected + " value='" + a[i].id + "'>" + sec + " : " + a[i].id + " : " + o.html() + "</option>");
 
 	}
 
@@ -1289,7 +1289,7 @@ function nuGroupDialog() {
 	$('#sortField').attr({ 'id': 'sortField9', 'data-group': 9 }).click(function () { nuClickGroup(this); });
 	top = nuDialogInput('', 'sortField', top, left, nuREPORT.groups[10], fun);
 	$('#sortField').attr({ 'id': 'sortField10', 'data-group': 10 }).click(function () { nuClickGroup(this); });
-	top = nuDialogInput('', 'sortField', top, left, nuREPORT.groups[0], fun);
+	nuDialogInput('', 'sortField', top, left, nuREPORT.groups[0], fun);
 	$('#sortField').attr({ 'id': 'sortField0', 'readonly': true, 'data-group': 0 }).css('background-color', '#DFDFDF').click(function () { nuClickGroup(this); });
 
 	top = 120;
@@ -1309,7 +1309,7 @@ function nuGroupDialog() {
 	$('#sortBy').attr('id', 'sortBy8').css('width', 105);
 	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[9], 'nuDoNothing', [['a', 'Ascending'], ['d', 'Descending']]);
 	$('#sortBy').attr('id', 'sortBy9').css('width', 105);
-	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[10], 'nuDoNothing', [['a', 'Ascending'], ['d', 'Descending']]);
+	nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[10], 'nuDoNothing', [['a', 'Ascending'], ['d', 'Descending']]);
 	$('#sortBy').attr('id', 'sortBy10').css('width', 105);
 
 	top = 430;
@@ -1321,7 +1321,7 @@ function nuGroupDialog() {
 	$('#height').attr({ 'id': 'height0', 'data-property': 'height', 'data-section': '0' });
 	//	top = nuDialogInput('Section Color', 'color', top-5, left, nuREPORT.groups[nuDIALOG.groupNumber].sections[0], 'nuUpdateSectionProperty');
 	//	$('#color').attr({'id' : 'color0', 'data-property' : 'color', 'data-section' : '0'});
-	top = nuDialogInput('Page Break', 'page_break', top - 5, left, nuREPORT.groups[nuDIALOG.groupNumber].sections[0], 'nuUpdateSectionProperty', [['0', 'No'], ['1', 'Yes']]);
+	nuDialogInput('Page Break', 'page_break', top - 5, left, nuREPORT.groups[nuDIALOG.groupNumber].sections[0], 'nuUpdateSectionProperty', [['0', 'No'], ['1', 'Yes']]);
 	$('#page_break').attr({ 'id': 'page_break0', 'data-property': 'page_break', 'data-section': '0' });
 
 	top = 550;
