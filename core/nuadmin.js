@@ -605,9 +605,10 @@ function nuContextMenuItemText(label, iconClass) {
 
 function nuContextMenuGetWordWidth(w) {
 
-	const h = "<div id='nuTestWidth' style='font-size:13px;position:absolute;visible:hidden;width:auto'>" + w + "</div>";
+	const ww = $('.interactive').css('font-size');
+	const h = "<div id='nuTestWidth' style='font-size:" + ww + ";position:absolute;visible:hidden;width:auto'>" + w + "</div>";
 	$('body').append(h);
-	const l = parseInt($('#nuTestWidth', 10).css('width'));
+	const l = parseInt($('#nuTestWidth').css('width'), 10);
 	$('#nuTestWidth').remove();
 
 	return l + 5;
