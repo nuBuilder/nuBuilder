@@ -1265,9 +1265,9 @@ function nuGroupDialog() {
 	nuDragD.createDialog(400, window.scrollY + 50, 650, 750, opener.nuTranslate('Group Properties'));
 
 
-	var top = 60;
-	var left = 120;
-	var fun = 'nuUpdateGroup';
+	let top = 60;
+	let left = 120;
+	let fun = 'nuUpdateGroup';
 
 	top = nuDialogInput('', 'sortField', top, left, nuREPORT.groups[1], 'nuDoNothing');
 	$('#sortField').attr({ 'id': 'sortField1', 'readonly': true, 'data-group': 1 }).css('background-color', '#DFDFDF').click(function () { nuClickGroup(this); });
@@ -1292,8 +1292,8 @@ function nuGroupDialog() {
 	top = nuDialogInput('', 'sortField', top, left, nuREPORT.groups[0], fun);
 	$('#sortField').attr({ 'id': 'sortField0', 'readonly': true, 'data-group': 0 }).css('background-color', '#DFDFDF').click(function () { nuClickGroup(this); });
 
-	var top = 120;
-	var left = left + 210;
+	top = 120;
+	left = left + 210;
 
 	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[3], 'nuDoNothing', [['a', 'Ascending'], ['d', 'Descending']]);
 	$('#sortBy').attr('id', 'sortBy3').css('width', 105);
@@ -1312,8 +1312,8 @@ function nuGroupDialog() {
 	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[10], 'nuDoNothing', [['a', 'Ascending'], ['d', 'Descending']]);
 	$('#sortBy').attr('id', 'sortBy10').css('width', 105);
 
-	var top = 430;
-	var left = left - 100;
+	top = 430;
+	left = left - 100;
 
 	top = nuDialogInput('Section Name', 'label', top, left, nuREPORT.groups[nuDIALOG.groupNumber].sections[0], 'nuDoNothing');
 	$('#label').attr('id', 'label0').attr('readonly', true).css('background-color', '#DFDFDF');
@@ -1324,7 +1324,7 @@ function nuGroupDialog() {
 	top = nuDialogInput('Page Break', 'page_break', top - 5, left, nuREPORT.groups[nuDIALOG.groupNumber].sections[0], 'nuUpdateSectionProperty', [['0', 'No'], ['1', 'Yes']]);
 	$('#page_break').attr({ 'id': 'page_break0', 'data-property': 'page_break', 'data-section': '0' });
 
-	var top = 550;
+	top = 550;
 
 	if (nuREPORT.groups[nuDIALOG.groupNumber].sections.length == 2) {
 
