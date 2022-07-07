@@ -114,12 +114,12 @@ class nuResponseForm {
 		var D = this.StartPositions;
 		var top = 10;
 		var scr = 0;
-
+		var tab;
 
 		if ($('#nuResponseTabs').length == 1) {
-			var tab = String($('#nuResponseTabs').val()).substr(5);
+			tab = String($('#nuResponseTabs').val()).substr(5);
 		} else {
-			var tab = $('.nuTabSelected')[0].id.substr(5);
+			tab = $('.nuTabSelected')[0].id.substr(5);
 		}
 
 		$('.nuTabTitleColumn').remove();
@@ -645,15 +645,22 @@ class nuFormObject {
 
 		var id = sf;
 		var deleteAll = action == 'delete';
+		var sel;
+		var oi;
+		var table;
+		var fk;
+		var pk;
+		var nd;
+		var na;
 
 		if (sf == '') {
 
 			id = 'nuBuilder4EditForm';
-			var oi = -1;
-			var fk = '';
-			var pk = $('#nuRECORD').attr('data-nu-primary-key-name');
-			var table = $('#nuRECORD').attr('data-nu-table');
-			var sel = '#nuRECORD';
+			oi = -1;
+			fk = '';
+			pk = $('#nuRECORD').attr('data-nu-primary-key-name');
+			table = $('#nuRECORD').attr('data-nu-table');
+			sel = '#nuRECORD';
 			var sf = 'nuRECORD';
 
 			if (table === undefined) {
@@ -664,15 +671,15 @@ class nuFormObject {
 
 		} else {
 
-			var sel = "[id*='" + sf + "'][id*='nuRECORD']";
-			var table = $(sel).attr('data-nu-table');
+			sel = "[id*='" + sf + "'][id*='nuRECORD']";
+			table = $(sel).attr('data-nu-table');
 
 			let $sf = $('#' + sf);
-			var oi = $sf.attr('data-nu-object-id');
-			var fk = $sf.attr('data-nu-foreign-key-name');
-			var pk = $sf.attr('data-nu-primary-key-name');
-			var nd = $sf.attr('data-nu-delete');
-			var na = $sf.attr('data-nu-add');
+			oi = $sf.attr('data-nu-object-id');
+			fk = $sf.attr('data-nu-foreign-key-name');
+			pk = $sf.attr('data-nu-primary-key-name');
+			nd = $sf.attr('data-nu-delete');
+			na = $sf.attr('data-nu-add');
 
 		}
 
