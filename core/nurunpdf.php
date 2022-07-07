@@ -1017,7 +1017,7 @@ function nuReplaceLabelHashVariables($LAY, $hashData){
 			if($O->objectType == 'label'){
 
 				$countLines = count($GLOBALS['nu_report'][$i]->objects[$o]->lines;
-				for($l = 0 ; $l < $countLines ) ; $l++){
+				for($l = 0 ; $l < $countLines ; $l++){
 					$GLOBALS['nu_report'][$i]->objects[$o]->lines[$l] = nuReplaceHashVariables($GLOBALS['nu_report'][$i]->objects[$o]->lines[$l]);
 				}
 			}
