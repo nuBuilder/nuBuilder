@@ -66,7 +66,7 @@ function nuImportSystemFiles() {
 				}
 			}
 		}else{
-			throw new nuInstallException("Error opening the file: $file");
+			nuInstallException("Error opening the file: $file");
 		}
 
 	}catch (Throwable $e) {
@@ -460,7 +460,7 @@ function nuImportLanguageFiles() {
 				if ($sql) {
 					nuRunQuery($sql);
 				} else {
-					throw new nuInstallException("Error opening the file: $file");
+					nuInstallException("Error opening the file: $file");
 				}
 			}
 
