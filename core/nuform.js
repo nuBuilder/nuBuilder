@@ -954,10 +954,10 @@ function nuINPUTLookup(id, objId, wi, obj, $fromId, p, vis) {
 	.attr('data-nu-target', target)
 	.attr('data-nu-type', 'lookup')
 	.attr('data-nu-subform-sort', 1)
-	.css('visibility', vis)
-	.addClass('nuLookupCode')
 	.attr('onchange', 'nuGetLookupCode(event)')
-	.attr('onfocus', 'nuLookupFocus(event)');
+	.attr('onfocus', 'nuLookupFocus(event)')
+	.css('visibility', vis)
+	.addClass('nuLookupCode');
 
 	if (Number(obj.width) == 0) nuHide(id);
 
@@ -1052,8 +1052,8 @@ function nuINPUTCalc($id, wi, p) {
 	$id.addClass('nuCalculator')
 		.attr('data-nu-format', wi.format)
 		.attr('data-nu-calc-order', wi.calc_order)
-		.prop('readonly', true).prop('tabindex', -1)
-		.attr('data-nu-formula', formula);
+		.attr('data-nu-formula', formula)
+		.prop('readonly', true).prop('tabindex', -1);
 
 	if (p != '') {
 		$id.addClass('nuSubformObject');
@@ -1081,14 +1081,14 @@ function nuINPUTSetValue($id, wi, inputType) {
 
 function nuIPUTNuChangeEvent(inputType, objectType) {
 
-	let c = 'nuChange(event)';
+	let change = 'nuChange(event)';
 	if (inputType == 'file') {
-		c = 'nuChangeFile(event)';
+		change = 'nuChangeFile(event)';
 	} else if (objectType == 'lookup') {
-		c = 'nuGetLookupId(this.value, this.id)';
+		change = 'nuGetLookupId(this.value, this.id)';
 	}
 
-	return c;
+	return change;
 
 }
 
