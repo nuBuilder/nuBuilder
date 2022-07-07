@@ -919,13 +919,15 @@ class nuFormObject {
 
 			if (o == 'Invalid Date') { return ''; }
 
-			var wee = o.toString().split(' ')[0];								//-- Tue Sep 07 2004 11:11:12 GMT+0930 (Cen. Australia Standard Time)
-			var mth = o.toString().split(' ')[1];
-			var day = o.toString().split(' ')[2];
-			var yea = o.toString().split(' ')[3];
-			var hou = String(o.toString().split(' ')[4]).split(':')[0];
-			var min = String(o.toString().split(' ')[4]).split(':')[1];
-			var sec = String(o.toString().split(' ')[4]).split(':')[2];
+			const splitDate = o.toString().split(' ');
+			var wee = splitDate[0];													//-- Tue Jul 07 2022 11:11:12 GMT+0930 (Cen. Australia Standard Time)
+			var mth = splitDate[1];
+			var day = splitDate[2];
+			var yea = splitDate[3];
+
+			var hou = String(splitDate[4]).split(':')[0];
+			var min = String(splitDate[4]).split(':')[1];
+			var sec = String(splitDate[4]).split(':')[2];
 
 			var s = String(f);
 
