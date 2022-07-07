@@ -55,10 +55,8 @@ function nuShowFormInfo() {
 
 function nuDevMode(m) {
 
-	if (m) {
-		if (m === true) localStorage.setItem("nuDevMode", '1');
-		if (m === false) localStorage.setItem("nuDevMode", '0');
-	}
+	if (m === true) localStorage.setItem("nuDevMode", '1');
+	if (m === false) localStorage.setItem("nuDevMode", '0');
 
 	const d = localStorage.getItem("nuDevMode");
 	if ((d === '1' || d === true) && nuGlobalAccess()) {
