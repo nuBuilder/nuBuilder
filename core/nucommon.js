@@ -936,9 +936,7 @@ function nuTranslate(str) {
 
 function nuTranslateToEnglish(str) {
 
-	if (!str || str === '') {
-		return '';
-	}
+	if (!str) return '';
 
 	str = String(str);
 	if (str.charAt(0) == '|') return str.substring(1);
