@@ -205,7 +205,7 @@ function nuPopupCalendar(pThis, d) {
 	nuAppendChild('#nuCalendar', 'select', 'nuCalMonth');
 	c = $('#nuCalMonth');
 
-	m = nuMonthNames();
+	let m = nuMonthNames();
 	for (var i = 0; i < 12; i++) {
 		c.append('<option value="' + m[i] + '">' + nuTranslate(m[i]) + '</option>');
 	}
@@ -349,7 +349,7 @@ function nuDayBox(n, l, t) {
 
 	nuAppendChild('#nuCalendar', 'div', 'nuCalDay' + n);
 
-	c = $('#nuCalDay' + n);
+	let c = $('#nuCalDay' + n);
 
 	c
 		.attr('onclick', "window.nuCalDay=this.innerHTML;nuCalChoice(this)")
