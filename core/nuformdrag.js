@@ -1360,7 +1360,7 @@ function nuGetTopArea() {
 
 	var nuActionHolder		= parseInt($('#nuActionHolder').css('height'), 10);
 	var nuTabHolder			= parseInt($('#nuTabHolder').css('height'), 10);
-	var dialogTitle			= parseInt(p('#dialogTitle').css('height'), 10);
+	var dialogTitle			= parseInt($('#dialogTitle').css('height'), 10);
 
 	var nuBreadcrumbHolder;
 	if($('#nuBreadcrumbHolder').length == 1){
