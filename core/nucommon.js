@@ -2916,6 +2916,8 @@ function nuDateIsValid(date) {
 
 function nuEscapeHTML(string) {
 
+	if (string === undefined) return '';
+
 	let replacements= {"<": "&lt;", ">": "&gt;","&": "&amp;", '"': "&quot;","'": "&#039;"};
 	return string.replace(/[<>&"]/g, function(character) {
 		return replacements[character];
