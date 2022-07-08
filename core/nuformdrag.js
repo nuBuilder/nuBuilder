@@ -1360,7 +1360,7 @@ function nuGetTopArea() {
 
 	var nuActionHolder		= parseInt($('#nuActionHolder').css('height'), 10);
 	var nuTabHolder			= parseInt($('#nuTabHolder').css('height'), 10);
-	var dialogTitle			= parseInt($('#dialogTitle').css('height'), 10);
+	var dialogTitle			= parseInt(parent.window.$('#dialogTitle').css('height'), 10);
 
 	var nuBreadcrumbHolder;
 	if($('#nuBreadcrumbHolder').length == 1){
@@ -1451,4 +1451,3 @@ function nuDragElement(element, dragHeaderOffset) {
 		document.ontouchmove = null;
 	}
 }
-
