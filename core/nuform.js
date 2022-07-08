@@ -2990,7 +2990,7 @@ function nuGetWordWidth(w, objClass) {
 	}
 
 	const W = 'nuTestWidth';
-	const h = "<" + 'div' + " id='" + W + "' style='position:absolute;visible:hidden;width:auto'>" + w + "</" + 'div' + ">";
+	const h = "<" + 'div' + " id='" + W + "' style='position:absolute;visible:hidden;width:auto'>" + nuEscapeHTML(w) + "</" + 'div' + ">";
 	$('body').append(h);
 	let obj = $('#' + W);
 	obj.addClass(objClass);
@@ -3177,7 +3177,7 @@ function nuSetTitle(t, browse) {
 
 	let b = $('.nuBreadcrumb').length;
 	if (b === 0 && !nuIsIframe()) {
-		$('#nuHomeGap').append(t);
+		$('#nuHomeGap').append(nuEscapeHTML(t));
 	} else {
 		let h = '<div id="nuarrow' + (b - 1) + '" class="nuBreadcrumbArrow">&nbsp;<i class="fa fa-caret-right"></i>&nbsp;</div>';
 
@@ -3185,7 +3185,7 @@ function nuSetTitle(t, browse) {
 			h = '';
 		}
 
-		$('#nuBreadcrumb' + b).html(h + t);
+		$('#nuBreadcrumb' + b).html(h + nuEscapeHTML(t));
 	}
 
 }
