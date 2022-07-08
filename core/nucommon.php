@@ -2014,7 +2014,7 @@ function nuFormatDateTime($d, $format){
 
 }
 
-function nuGetPropertiesArray() {
+function nuGetProperties() {
 
 	$a = nuObjKey($_POST, 'nuHash', null);
 	if ($a != null) {
@@ -2038,7 +2038,7 @@ function nuGetPropertiesArray() {
 function nuGetProperty($p, $a = null) {
 
 	if ($a == null) {
-		$a = nuGetPropertiesArray();
+		$a = nuGetProperties();
 	}
 
 	return array_key_exists($p, $a) ? $a[$p] : null;
