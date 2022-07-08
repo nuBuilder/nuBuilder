@@ -2061,11 +2061,12 @@ function nuRemovePX(s) {
 	return Number(String(s).split('px')[0]);
 }
 
-function nuImportUsersFromCSV(file) {
+function nuImportUsersFromCSV(file, delimiter) {
 
 	file = nuDefine(file, 'user_import.csv');
 
-	nuSetProperty('nuimportusers_file', file);
+	nuSetProperty('NUIMPORTUSERS_file', file);
+	nuSetProperty('NUIMPORTUSERS_delimiter', delimiter);
 
 	nuRunPHP('NUIMPORTUSERS', '', 0);
 
