@@ -139,6 +139,75 @@ function nuDuplicate($S, $R, $F){
 
 }
 
+function nuUpdateDatabaseSave($pv, $r, $pk, $table, $F, $V, $I, $deleted, $log, $user, &$S){
+
+	$fs				= implode(', ', $F);																//-- for update statement
+	$vs				= ' VALUES (' . implode(', ', $V) . ')';
+	$is				= ' (' . implode(', ', $I) . ')';
+
+	if($pv == '-1'){
+
+		if($deleted[$r] == '0'){
+
+			$sql	= "INSERT INTO $table $is $vs;";
+			$S[]	= $sql;
+
+		}
+
+	}else{
+
+		$sql		= "UPDATE $table SET $fs WHERE `$pk` = '$pv';";
+		$S[]		= $sql;
+
+		if($log){
+
+			$sql	= "SELECT $table" . "_nulog FROM $table WHERE `$pk` = '$pv';";
+			$logt	= nuRunQuery($sql);
+			$logr	= db_fetch_row($logt);
+			$jd		= json_decode($logr[0]);
+
+			if(gettype($jd) == 'object'){
+				$jd->edited	= Array('user' => $user, 'time' => time());
+			}else{
+
+				$jd			= new stdClass;
+				$jd->added	= Array('user' => 'unknown', 'time' => 0);
+				$jd->edited	= Array('user' => $user, 'time' => time());
+
+			}
+
+			$je		= addslashes(json_encode($jd));
+			$sql	= "UPDATE $table SET $table" . "_nulog = '$je' WHERE `$pk` = '$pv';";
+			$S[]	= $sql;
+
+		}
+
+	}
+
+}
+
+function nuUpdateDatabaseDelete($table, $pk, $deleted, $rows, $action, &$S) {
+
+	$countDeleted = count($deleted);
+	for($i = 0 ; $i < $countDeleted ; $i++){
+
+		$id				= $rows[$i][0];
+
+		if($action == 'delete' || $deleted[$i] == '1'){
+
+			if($id != '-1'){
+
+				$sql	= "DELETE FROM $table WHERE `$pk` = '$id';";
+				$S[]	= $sql;
+
+			}
+
+		}
+
+
+	}
+}
+
 function nuUpdateDatabase(){
 
 	$form_id		= $_POST['nuHash']['form_id'];
@@ -328,79 +397,18 @@ function nuUpdateDatabase(){
 
 				}
 
-				if (true) { // !empty($F)
+				if($action == 'save'){
 
-					$fs				= implode(', ', $F);																//-- for update statement
-					$vs				= ' VALUES (' . implode(', ', $V) . ')';
-					$is				= ' (' . implode(', ', $I) . ')';
-
-					if($action == 'save'){
-
-						if($pv == '-1'){
-
-							if($deleted[$r] == '0'){
-
-								$sql	= "INSERT INTO $table $is $vs;";
-								$S[]	= $sql;
-
-							}
-
-						}else{
-
-							$sql		= "UPDATE $table SET $fs WHERE `$pk` = '$pv';";
-
-							$S[]		= $sql;
-
-							if($log){
-
-								$sql	= "SELECT $table" . "_nulog FROM $table WHERE `$pk` = '$pv';";
-								$logt	= nuRunQuery($sql);
-								$logr	= db_fetch_row($logt);
-								$jd		= json_decode($logr[0]);
-
-								if(gettype($jd) == 'object'){
-									$jd->edited	= Array('user' => $user, 'time' => time());
-								}else{
-
-									$jd			= new stdClass;
-									$jd->added	= Array('user' => 'unknown', 'time' => 0);
-									$jd->edited	= Array('user' => $user, 'time' => time());
-
-								}
-
-								$je		= addslashes(json_encode($jd));
-								$sql	= "UPDATE $table SET $table" . "_nulog = '$je' WHERE `$pk` = '$pv';";
-								$S[]	= $sql;
-
-							}
-
-						}
-
-					}
+					nuUpdateDatabaseSave($pv, $r, $pk, $table, $F, $V, $I, $deleted, $log, $user, $S);
 
 				}
+
 
 			}
 
 		}
 
-		$countDeleted = count($deleted);
-		for($i = 0 ; $i < $countDeleted ; $i++){
-
-			$id				= $rows[$i][0];
-
-			if($action == 'delete' || $deleted[$i] == '1'){
-
-				if($id != '-1'){
-
-					$sql	= "DELETE FROM $table WHERE `$pk` = '$id';";
-					$S[]	= $sql;
-
-				}
-
-			}
-
-		}
+		nuUpdateDatabaseDelete($table, $pk,  $deleted, $rows, $action, $S);
 
 	}
 
