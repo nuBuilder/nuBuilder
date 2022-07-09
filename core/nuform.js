@@ -5565,7 +5565,7 @@ function nuFilterRun(id, filter) {
 	const r = JSON.parse(JSON.stringify(nuSERVERRESPONSE));
 	let o = -1;
 
-	for (var i = 0; i < r.objects.length; i++) {
+	for (let i = 0; i < r.objects.length; i++) {
 
 		const obj = r.objects[i];
 		if (obj.id == id) {
@@ -5590,16 +5590,17 @@ function nuFilterRun(id, filter) {
 
 function nuRecordRun(id, filter) {
 
-	var r = JSON.parse(JSON.stringify(nuSERVERRESPONSE));
-	var o = -1;
+	const r = JSON.parse(JSON.stringify(nuSERVERRESPONSE));
+	let o = -1;
 
-	for (var i = 0; i < r.objects.length; i++) {
+	for (let i = 0; i < r.objects.length; i++) {
 
-		if (r.objects[i].id == id) {
+		const obj = r.objects[i];
+		if (obj.id == id) {
 
 			if (filter) {
-				if (r.objects[i].record_id == filter) { return; }
-				r.objects[i].record_id = filter;
+				if (obj.record_id == filter) { return; }
+				obj.record_id = filter;
 			}
 
 			o = i;
