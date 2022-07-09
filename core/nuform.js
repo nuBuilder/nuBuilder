@@ -5508,30 +5508,33 @@ function nuFormWH() {
 
 function nuResizeFormDialogCoordinates() {
 
-	var wh = nuFormWH();
+	const wh = nuFormWH();
+	let w = wh.width;
+	let h = wh.height;
 
-	var w = wh.width;
-	var h = wh.height;
-
-	h = h + nuDialogHeadersHeight() + 50;
 	w = w + 40;
+	h = h + nuDialogHeadersHeight() + 50;
 
-	let dragDlg = $('#nuDragDialog', window.parent.document);
+	const parentDocument = window.parent.document;
+	const windowInnerHeight = window.innerHeight;
+	const $body = $('body');
+	
+	let dragDlg = $('#nuDragDialog', parentDocument);
 	if (dragDlg.length == 0) { return; }
 
 	dragDlg.css('visibility', 'visible');
 	dragDlg.css('width', w + 12);
-	$('#nuWindow', window.parent.document).css('width', w);
-	$('body').css('width', w);
+	$('#nuWindow', parentDocument).css('width', w);
+	$body.css('width', w);
 
 	dragDlg.css('height', h + 50).css('visibility', 'visible');
-	$('#nuWindow', window.parent.document).css('height', h + 10);
-	$('body').css('height', window.innerHeight);
+	$('#nuWindow', parentDocument).css('height', h + 10);
+	$body.css('height', windowInnerHeight);
 
-	if (h < window.innerHeight) {
-		$('body').css('height', '100%');
+	if (h < windowInnerHeight) {
+		$body.css('height', '100%');
 	} else {
-		$('body').css('height', h);
+		$body.css('height', h);
 	}
 
 	if (w > window.innerWidth) {
