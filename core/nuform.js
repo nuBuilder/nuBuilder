@@ -967,11 +967,11 @@ function nuINPUTLookup(id, objId, wi, obj, $fromId, p, vis) {
 			nuBuildLookup(element, "");
 		}
 	});
-/*
+
 	wi.values[0][0] = p + obj.id;
 	wi.values[1][0] = p + obj.id + 'code';
 	wi.values[2][0] = p + obj.id + 'description';
-*/
+
 	id = target + 'button';
 	var div = document.createElement('div');
 
@@ -6144,4 +6144,3 @@ function nuAccessFormSetButtonIcons(force) {
 	}
 
 }
-
