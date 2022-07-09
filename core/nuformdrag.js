@@ -51,7 +51,7 @@ function nuBindDragEvents(){
 
 			if (id === '') return;
 
-			isCb = $('#'+ id).hasClass('nuContentBoxFrame');
+			const isCb = $('#'+ id).hasClass('nuContentBoxFrame');
 
 			if(e.target === document.body || isCb || e.target === $('#nuRECORD')[0]) {
 
@@ -641,8 +641,8 @@ function nuCreateDragOptionsBox(form){
 	nuShowContentBoxFrames();
 
 	if ($('div.nuTab[id^="nuTab"]').length == 1) {
-		$('#move_tab_btn', window.parent.document.body).css('visibility', 'hidden')
-		$('#nuDragOptionsTabsDropdown', window.parent.document.body).css('visibility', 'hidden')
+		$('#move_tab_btn', window.parent.document.body).css('visibility', 'hidden');
+		$('#nuDragOptionsTabsDropdown', window.parent.document.body).css('visibility', 'hidden');
 	}
 
 	$('#nuRECORD').css('height', window.innerHeight);
@@ -730,7 +730,7 @@ function nuResizeToLowest(){
 	selected.each(function(){
 
 		var cb = nuThisContentBox(this);
-		h = cb.length == 0 ? $(this).height() : cb.height();
+		const h = cb.length == 0 ? $(this).height() : cb.height();
 
 		if(h < lowest){
 			lowest	= h;
@@ -780,7 +780,7 @@ function nuResizeToHighest(){
 	selected.each(function(){
 
 		var cb = nuThisContentBox(this);
-		h = cb.length == 0 ? $(this).height() : cb.height();
+		const h = cb.length == 0 ? $(this).height() : cb.height();
 
 		if(h > highest){
 			highest	= h;
@@ -1068,7 +1068,6 @@ function nuMoveNuDrag() {
 
 		//get tab objects array
 		var tabObjects			= $("#nuWindow")[0].contentWindow.nuDragOptionsState.tabs[initialTab];
-		var index				= 0;
 		var foundField			= false;
 
 		for(var i = 0; i < tabObjects.objects.length; i++) {
