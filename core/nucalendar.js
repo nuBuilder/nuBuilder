@@ -322,7 +322,7 @@ function nuWeekDayFromString(n) {
 function nuTitleBox(n, l) {
 
 	nuAppendChild('#nuCalendar', 'div', 'nuCalTitle' + n);
-	c = $('#nuCalTitle' + n);
+	let c = $('#nuCalTitle' + n);
 
 	c
 		.css({
