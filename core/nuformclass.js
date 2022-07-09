@@ -593,7 +593,7 @@ class nuFormObject {
 
 					if (SF.deleted[c] == 0) {										//-- add up only stuff not being deleted
 						u = SF.rows[c][f];
-						v = parseFloat(Number(v) + Number(u)).toPrecision(10)
+						v = parseFloat(Number(v) + Number(u)).toPrecision(10);
 
 					}
 
