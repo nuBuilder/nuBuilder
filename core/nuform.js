@@ -5468,24 +5468,26 @@ function nuBrowseBorders() {
 
 }
 
-function nuObjectPosition(i) {
+function nuObjectPosition(id) {
 
-	var t = parseInt($(i).css('top'), 10);
-	var l = parseInt($(i).css('left'), 10);
-	var h = parseInt($(i).css('height'), 10);
-	var w = parseInt($(i).css('width'), 10);
+	const $id = $('#' + id);
+	const t = parseInt($id.css('top'), 10);
+	const l = parseInt($id.css('left'), 10);
+	const h = parseInt($id.css('height'), 10);
+	const w = parseInt($id.css('width'), 10);
 
-	var b = t + h; // bottom
-	var r = l + w; // right
+	const b = t + h;			// bottom
+	const r = l + w;			// right
 
-	return [t, l, h, w, b, r];
+	return {t, l, h, w, b, r};
+
 }
 
 function nuFormWH() {
 
-	var w = 0;
-	var h = 0;
-	var s = '[data-nu-object-id][data-nu-prefix=""], [data-nu-subform=true]';
+	let width = 0;
+	let height = 0;
+	let s = '[data-nu-object-id][data-nu-prefix=""], [data-nu-subform=true]';
 
 	if (nuSERVERRESPONSE.record_id == -2) {
 		s = '[data-nu-object-id]';
@@ -5493,12 +5495,14 @@ function nuFormWH() {
 
 	$(s).each(function () {
 
-		w = Math.max(w, parseInt($(this).css('width'), 10) + parseInt($(this).css('left'), 10));
-		h = Math.max(h, parseInt($(this).css('height'), 10) + parseInt($(this).css('top'), 10));
+		let {t, l, h, w} = nuObjectPosition($(this).attr('id'));
+
+		width = Math.max(width, w + l);
+		height = Math.max(height, h + t);
 
 	});
 
-	return { 'width': w, 'height': h };
+	return { 'width': width, 'height': height };
 
 }
 
