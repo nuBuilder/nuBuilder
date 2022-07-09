@@ -5562,16 +5562,17 @@ function nuClickTab(t, s) {
 
 function nuFilterRun(id, filter) {
 
-	var r = JSON.parse(JSON.stringify(nuSERVERRESPONSE));
-	var o = -1;
+	const r = JSON.parse(JSON.stringify(nuSERVERRESPONSE));
+	let o = -1;
 
 	for (var i = 0; i < r.objects.length; i++) {
 
-		if (r.objects[i].id == id) {
+		const obj = r.objects[i];
+		if (obj.id == id) {
 
 			if (filter) {
-				if (r.objects[i].filter == filter) { return; }
-				r.objects[i].filter = filter;
+				if (obj.filter == filter) { return; }
+				obj.filter = filter;
 
 			}
 
