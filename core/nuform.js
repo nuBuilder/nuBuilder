@@ -355,7 +355,7 @@ function nuSaveScrollPositions() {
 
 function nuEvalnuOnLoadEvents() {
 
-	let r = JSON.parse(JSON.stringify(nuSERVERRESPONSE));
+	const r = JSON.parse(JSON.stringify(nuSERVERRESPONSE));
 	for (let i = 0; i < r.objects.length; i++) {
 		let obj = r.objects[i];
 		if (obj.js.length > 0) {
@@ -482,7 +482,7 @@ function nuCSSPropertySum(id, arr) {
 function nuDialogHeadersHeight() {
 
 	let height = 0;
-	let arr = ['nuBreadcrumbHolder','nuActionHolder','nuTabHolder','nuBrowseTitle0','nuBrowseFooter'];
+	const arr = ['nuBreadcrumbHolder','nuActionHolder','nuTabHolder','nuBrowseTitle0','nuBrowseFooter'];
 	arr.forEach(function(element){
 		height += nuTotalHeight(element);
 	 });
@@ -628,7 +628,7 @@ function nuBuildEditObjects(f, p, o, prop) {
 
 	const draggable = nuRecordId() == '-2' ? 1 : 0;
 
-	for (var i = 0; i < f.objects.length; i++) {
+	for (let i = 0; i < f.objects.length; i++) {
 
 		if (!draggable) {
 
@@ -680,12 +680,12 @@ function nuBuildEditObjects(f, p, o, prop) {
 
 function nuAddJSObjectEvents(i, j) {
 
-	var o = document.getElementById(i);
+	const o = document.getElementById(i);
 
-	for (var J = 0; J < j.length; J++) {
+	for (let J = 0; J < j.length; J++) {
 
-		var code = o.getAttribute(j[J].event);
-		var ev = j[J].event;
+		let code = o.getAttribute(j[J].event);
+		let ev = j[J].event;
 
 		code = code === null ? '' : code + ';';
 
@@ -1775,29 +1775,7 @@ function nuSELECT(w, i, l, p, prop) {
 
 }
 
-function nuSUBFORM(w, i, l, p, prop) {
-
-	var SF = prop.objects[i];						//-- First row
-	var SFR = w.objects[i];							//-- All rows
-	var id = p + SF.id;
-	var ef = p + 'nuRECORD';						//-- Edit Form Id
-	var inp = document.createElement('div');
-	var fms = SFR.forms;
-
-	inp.setAttribute('id', id);
-
-	if (SF.parent_type == 'g') {
-
-		SF.left = l;
-		SF.top = 3;
-
-	} else {
-		nuLabel(w, i, p, prop);
-	}
-
-	$('#' + ef).append(inp);
-
-	nuAddDataTab(id, SF.tab, p);
+function nuSUBFORMAddCSS(id, SF) {
 
 	$('#' + id).css({
 		'top': Number(SF.top),
@@ -1815,79 +1793,10 @@ function nuSUBFORM(w, i, l, p, prop) {
 		.attr('data-nu-delete', SF.delete)
 		.addClass('nuSubform');
 
-	nuAddJSObjectEvents(id, SF.js);
+}
 
-	if (SF.forms[0] !== undefined) {
-		nuGetSubformRowSize(SF.forms[0].objects, SF, id);
-	}
+function nuSUBFORMScrollDivAddCSS(id, SF, scrId, rowTop, rowWidth) {
 
-	let rowHeight;
-	let rowWidth;
-
-	if (SF.subform_type == 'f') {
-
-		rowHeight = Number(SF.dimensions.edit.height + 10);
-		rowWidth = Number(SF.dimensions.edit.width + 10);
-
-	} else {
-
-		rowHeight = Number(SF.dimensions.grid.height);
-		rowWidth = Number(SF.dimensions.grid.width + 55);
-
-	}
-
-	if (SF.delete == '1') {
-		rowWidth = rowWidth - 3;
-	} else {
-		rowWidth = rowWidth - 25;
-	}
-
-	var rowTop = 52;
-
-	if (SF.subform_type == 'f') {
-		rowTop = 33;
-	}
-
-	var tabId = id + 'nuTabHolder';
-	var tabDiv = document.createElement('div');
-	tabDiv.setAttribute('id', tabId);
-	$('#' + id).prepend(tabDiv);
-	$('#' + tabId).css({
-		'top': 0,
-		'left': 0,
-		'width': rowWidth,
-		'height': rowTop,
-		'overflow-x': 'hidden',
-		'overflow-y': 'hidden',
-		'position': 'absolute',
-		'padding': '12px 0px 0px 0px'
-	})
-		.addClass('nuTabHolder')
-		.attr('data-nu-subform', tabId)
-		.prepend('&nbsp;&nbsp;&nbsp;');
-
-	if (SF.subform_type == 'f') {
-		nuAddEditTabs(id, SF.forms[0]);
-	} else {
-
-		if (SFR.forms.length > 0) {
-
-			nuTABHELP[SFR.forms[0].tabs[0].id] = SFR.forms[0].tabs[0].help;
-			nuFORMHELP[SF.id] = SFR.forms[0].tabs[0].help;
-
-		}
-
-	}
-
-	nuOptions(id, SF.sf_form_id, 'subform', w.global_access);
-
-	var scrId = id + 'scrollDiv';
-	var scrDiv = document.createElement('div');
-
-	scrDiv.setAttribute('id', scrId);
-	scrDiv.setAttribute('class', 'nuSubformScrollDiv');
-
-	$('#' + id).append(scrDiv);
 	$('#' + scrId).css({
 		'top': rowTop,
 		'left': 0,
@@ -1906,39 +1815,123 @@ function nuSUBFORM(w, i, l, p, prop) {
 
 	}
 
-	rowTop = 0;
-	var even = 0;
-	var prefix;
+}
 
-	for (var c = 0; c < fms.length; c++) {
+function nuSUBFORMnuTabHolderAddCSS(tabId, rowTop, rowWidth) {
+
+	$('#' + tabId).css({
+		'top': 0,
+		'left': 0,
+		'width': rowWidth,
+		'height': rowTop,
+		'overflow-x': 'hidden',
+		'overflow-y': 'hidden',
+		'position': 'absolute',
+		'padding': '12px 0px 0px 0px'
+	})
+		.addClass('nuTabHolder')
+		.attr('data-nu-subform', tabId)
+		.prepend('&nbsp;&nbsp;&nbsp;');
+
+}
+
+function nuSUBFORMnuRECORDAddCSS(frmId, rowTop, rowWidth, rowHeight, even) {
+
+	$('#' + frmId).css({
+		'top': Number(rowTop),
+		'left': 0,
+		'width': Number(rowWidth),
+		'height': Number(rowHeight),
+		'position': 'absolute'
+	})
+	.addClass('nuSubform' + even);
+
+}
+
+function nuCreateElementAppend(type, id, selector) {
+
+	let ele = document.createElement(type);
+	ele.setAttribute('id', id);
+	$('#' + selector).append(ele);
+
+	return ele;
+
+}
+
+function nuGetSubformDimensions(SF) {
+
+	let sfTypeGrid = SF.subform_type == 'g';
+	let sfType = sfTypeGrid ? 'grid' : 'edit';
+	let rowHeight = Number(SF.dimensions[sfType].height + (sfTypeGrid ? 0 : 10));
+	let rowWidth = Number(SF.dimensions[sfType].width  + (sfTypeGrid ? 55 : 10));
+	rowWidth = SF.delete == '1' ? rowWidth - 3 :  rowWidth - 25;
+	rowTop = sfTypeGrid ? 52 : 33;
+
+	return { rowHeight, rowWidth, rowTop };
+ }
+
+ function nuSUBFORM(w, i, l, p, prop) {
+
+	var SF = prop.objects[i];								//-- First row
+	var subformRows = w.objects[i];							//-- All rows
+
+	let id = p + SF.id;
+	nuCreateElementAppend('div', id, p + 'nuRECORD');  		//-- Edit Form Id
+
+	nuLabelOrPosition(SF, w, i, l, p, prop)
+	nuAddDataTab(id, SF.tab, p);
+	nuSUBFORMAddCSS(id, SF);
+	nuAddJSObjectEvents(id, SF.js);
+
+	if (SF.forms[0] !== undefined) {
+		nuGetSubformRowSize(SF.forms[0].objects, SF, id);
+	}
+
+	let sfDimensions = nuGetSubformDimensions(SF);
+	let rowHeight = sfDimensions.rowHeight;
+	let rowWidth = sfDimensions.rowWidth;
+	let rowTop = sfDimensions.rowTop;
+
+	var tabId = id + 'nuTabHolder';
+	nuSUBFORMnuTabHolderAddCSS(tabId, rowTop, rowWidth);
+
+	if (SF.subform_type == 'f') {
+		nuAddEditTabs(id, SF.forms[0]);
+	} else {
+
+		if (subformRows.forms.length > 0) {
+
+			let tab0 = subformRows.forms[0].tabs[0];
+			nuTABHELP[tab0.id] = tab0.help;
+			nuFORMHELP[SF.id] = tab0.help;
+
+		}
+
+	}
+
+	nuOptions(id, SF.sf_form_id, 'subform', w.global_access);
+
+	var scrId = id + 'scrollDiv';
+	let scrDiv = nuCreateElementAppend('div', scrId, id);
+	scrDiv.setAttribute('class', 'nuSubformScrollDiv');
+
+	nuSUBFORMScrollDivAddCSS(id, SF, scrId, rowTop, rowWidth);
+
+	rowTop = 0;
+	let prefix;
+
+	for (var c = 0; c < subformRows.forms.length; c++) {
 
 		prefix = id + nuPad3(c);
 		const frmId = prefix + 'nuRECORD';
-		var frmDiv = document.createElement('div');
+		nuCreateElementAppend('div', frmId, scrId);
 
-		frmDiv.setAttribute('id', frmId);
-		$('#' + scrId).append(frmDiv);
-		$('#' + frmId).css({
-			'top': Number(rowTop),
-			'left': 0,
-			'width': Number(rowWidth),
-			'height': Number(rowHeight),
-			'position': 'absolute'
-		})
-		.addClass('nuSubform' + even);
-
-		nuBuildEditObjects(SFR.forms[c], prefix, SF, SF.forms[0]);
-
-		if (SF.delete == '1') {
-			SF.forms[c].deletable = '1';
-		} else {
-			SF.forms[c].deletable = '0';
-		}
-
+		nuSUBFORMnuRECORDAddCSS(frmId, rowTop, rowWidth, rowHeight, c%2 == 0 ? '1' : '0');
+		nuBuildEditObjects(subformRows.forms[c], prefix, SF, SF.forms[0]);
+		SF.forms[c].deletable = SF.delete == '1' ? '1' : '0';
 		nuRecordProperties(SF.forms[c], prefix, rowWidth - 40);
 
 		rowTop = Number(rowTop) + Number(rowHeight);
-		even = even == '0' ? '1' : '0';
 
 	}
 
@@ -1954,7 +1947,6 @@ function nuSUBFORM(w, i, l, p, prop) {
 	}
 
 	nuSetAccess(id, SF.read);
-
 	nuAddStyle(id, SF);
 
 	return Number(SF.width);
@@ -5617,20 +5609,20 @@ function nuRecordRun(id, filter) {
 
 function nuGetIframeValue(f, o, method) {
 
-	let obj = $('#' + f).contents().find('#' + o)
+	const obj = $('#' + f).contents().find('#' + o)
 	return (!method || method == 'val') ? obj.val() : obj.html();
 }
 
 function nuSetIframeValue(f, o, v, method) {
 
-	let obj = $('#' + f).contents().find('#' + o)
+	const obj = $('#' + f).contents().find('#' + o)
 	return (!method || method == 'val') ? obj.val(v) : obj.html(v);
 
 }
 
 function nuLookingUp() {
 
-	for (var lu in window.nuLOOKUPSTATE) {
+	for (let lu in window.nuLOOKUPSTATE) {
 
 		if (window.nuLOOKUPSTATE[lu] == 'looking') {
 
