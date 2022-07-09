@@ -119,6 +119,8 @@ nuJSIndexInclude('core/nuajax.js');
 nuJSChartsInclude();
 nuJSIndexInclude('core/libs/ctxmenu/ctxmenu.min.js');
 nuJSIndexInclude('core/libs/vanillajs-datepicker/datepicker-full.min.js');
+nuJSIndexInclude('core/libs/jquery/jquery-confirm.min.js');
+
 
 if (isset($nuConfigIncludeQuill) && $nuConfigIncludeQuill == true) {
 	nuJSIndexInclude('core/libs/quill/quill.min.js');
@@ -142,6 +144,7 @@ nuCSSIndexInclude($nuConfigIncludeCSS);
 
 nuCSSIndexInclude('core/libs/select2/select2.min.css');
 nuCSSIndexInclude('core/libs/vanillajs-datepicker/datepicker.min.css');
+nuCSSIndexInclude('core/libs/jquery/jquery-confirm.min.css');
 
 ?>
 
