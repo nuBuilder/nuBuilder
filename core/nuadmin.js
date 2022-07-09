@@ -1523,8 +1523,7 @@ var nuPrettyPrint = (function () {
 
 				/* Accepts a table and modifies it */
 				var me = jquery ? 'jQuery' : 'Array', table = util.table([((arr.constructor && arr.constructor.name) || me) + '(' + arr.length + ')', null], jquery ? 'jquery' : me.toLowerCase()),
-					isEmpty = true,
-					count = 0;
+					isEmpty = true;
 
 				if (jquery) {
 					table.addRow(['selector', arr.selector]);
@@ -1588,9 +1587,7 @@ var nuPrettyPrint = (function () {
 				var stackKey = util.within(stack).is(fn);
 				if (stackKey) { return util.common.circRef(fn, stackKey); }
 				stack[key || 'TOP'] = fn;
-
 				var miniTable = util.table(['Function', null], 'function'),
-					argsTable = util.table(['Arguments']),
 					args = fn.toString().match(/\((.+?)\)/),
 					body = fn.toString().match(/\(.*?\)\s+?\{?([\S\s]+)/)[1].replace(/\}?$/, '');
 
