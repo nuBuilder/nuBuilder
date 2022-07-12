@@ -247,7 +247,7 @@
 	 height:223px;
 	 color:#000000;
 	 border-style:none;
-	 user-select: none 
+	 user-select: none
 }
  #nuCalendar {
 	 box-shadow:5px 5px 5px 0 rgba(150,147,150,1) 
@@ -690,6 +690,14 @@
  .nuButton:hover {
 	 color:#E2EAFF 
 }
+ .input_button_left {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0
+}
+ .input_button_right {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0
+}
  .nuUserHomeButton {
 	 color:white;
 	 background-color:#88cb51;
@@ -869,7 +877,7 @@
 	 border-width:0 
 }
  .nuDragNoSelect {
-	 user-select: none 
+	 user-select: none
 }
  .nuDragArea {
 	 position:absolute;
@@ -899,7 +907,7 @@
 	 border-width:1px;
 	 font-size:12px;
 	 font-family:var(--nu-font-sans-serif);
-	 user-select: none 
+	 user-select: none
 }
  .nuDragLine {
 	 position:absolute;
@@ -1273,10 +1281,7 @@
 }
  #nuprompt div{
 	 background:#ffffff;
-	 -moz-user-select: none;
-	 -webkit-user-select: none;
-	 -ms-user-select: none;
-	 user-select: none 
+	 user-select: none
 }
  #nuprompt #nuprompthead{
 	 background: #f9f8f8;
@@ -1320,10 +1325,7 @@
 	 margin: 1px 0;
 	 display: block;
 	 position: relative;
-	 user-select: none;
-	 -moz-user-select: none;
-	 -webkit-user-select: none;
-	 -ms-user-select: none
+	 user-select: none
 }
  .ctxmenu li.heading {
 	 font-weight: bold;
