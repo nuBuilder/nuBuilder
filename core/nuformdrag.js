@@ -1392,6 +1392,7 @@ function nuPopulateTabDropdown(currentlySelectedTabNo){
 }
 
 function nuDragElement(element, dragHeaderOffset) {
+
 	var startX = 0, startY = 0, endX = 0, endY = 0;
 	element.onmousedown = dragStart;
 	element.ontouchstart = dragStart;
@@ -1399,9 +1400,14 @@ function nuDragElement(element, dragHeaderOffset) {
 	function dragStart(e) {
 		e = e || window.event;
 		if (dragHeaderOffset !== undefined) {
-			if  (e.clientY - e.currentTarget.offsetTop > dragHeaderOffset) {
+
+			let touch = (e.touches && e.touches[0]) || (e.pointerType && e.pointerType === 'touch' && e);
+			let clientY = (touch || e).clientY;
+
+			if  (clientY - e.currentTarget.offsetTop > dragHeaderOffset) {
 				return;
 			}
+
 		}
 
 		e.preventDefault();
@@ -1449,4 +1455,5 @@ function nuDragElement(element, dragHeaderOffset) {
 		document.ontouchend = null;
 		document.ontouchmove = null;
 	}
+
 }
