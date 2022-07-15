@@ -5671,7 +5671,7 @@ function nuPortraitScreen(columns) {
 		if (o[i].tab != b) {
 
 			let $tab = $('#nuTab' + o[i].tab);
-			if ( $tab.nuIsVisible()) {
+			if ( $tab.nuIsVisible() && $('.nuTab').length > 1) {
 				b = o[i].tab;
 				const l =  $tab.html();
 				const d = '<div class="nuPortraitTab" id="nuPort' + b + '" style="top:' + t + 'px" >' + l + '</div>';
