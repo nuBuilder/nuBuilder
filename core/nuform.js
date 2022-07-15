@@ -3418,7 +3418,7 @@ function nuGetOptionsList(f, t, p, a, type) {
 		Search : ['Search', 'nuSearchAction();', 'fas fa-search', 'S'],
 		Add : ['Add', 'nuAddAction();', 'fas fa-plus', 'A'],
 		Print : ['Print', 'nuPrintAction();', 'fas fa-table', 'P'],
-		Save : ['Save', 'nuSaveAction();', 'far fa-save', 'Ss'],
+		Save : ['Save', 'nuSaveAction();', 'far fa-save', 'S'],
 		Delete : ['Delete', 'nuDeleteAction();', 'far fa-trash-alt', 'Y'],
 		Clone : ['Clone', 'nuCloneAction();', 'far fa-clone', 'C'],
 		Refresh : ['Refresh', 'if (nuGlobalAccess()) {nuRunPHPHidden("NUSETREFRESHCACHE", 0);} else {nuGetBreadcrumb();}', 'fas fa-sync-alt', 'R'],
