@@ -1321,6 +1321,11 @@
 	 overflow-y: auto;
 	 font: 15px Verdana, sans-serif
 }
+@media only screen and (max-device-width:480px){
+    .ctxmenu {
+        font-size: 11px;
+    }
+}
  .ctxmenu li {
 	 margin: 1px 0;
 	 display: block;
