@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 15, 2022 at 09:25 PM
+-- Generation Time: Jul 15, 2022 at 09:29 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.2
 
@@ -36,13 +36,6 @@ CREATE TABLE `zzzzsys_access` (
   `sal_use_2fa` varchar(1) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `zzzzsys_access`
---
-
-INSERT INTO `zzzzsys_access` (`zzzzsys_access_id`, `sal_code`, `sal_description`, `sal_group`, `sal_zzzzsys_form_id`, `sal_use_2fa`) VALUES
-('nu62c8dd5ab3aeb13', '123', '123', NULL, 'nuaccesslevelreport', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -62,15 +55,6 @@ CREATE TABLE `zzzzsys_access_form` (
   `slf_data_mode` varchar(2) DEFAULT NULL,
   `slf_form_type` varchar(2) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `zzzzsys_access_form`
---
-
-INSERT INTO `zzzzsys_access_form` (`zzzzsys_access_form_id`, `slf_zzzzsys_access_id`, `slf_zzzzsys_form_id`, `slf_add_button`, `slf_save_button`, `slf_delete_button`, `slf_clone_button`, `slf_new_button`, `slf_print_button`, `slf_data_mode`, `slf_form_type`) VALUES
-('nu62c8dd5ab4fa407', 'nu62c8dd5ab3aeb13', 'nulaunchdates', '1', '1', '1', '1', NULL, '1', NULL, NULL),
-('nu62c8dd5ab767872', 'nu62c8dd5ab3aeb13', 'nurunreport', '1', '1', '1', '1', NULL, '1', NULL, NULL),
-('nu62c8dd5ab63406b', 'nu62c8dd5ab3aeb13', 'nupassword', '1', '1', '1', '1', NULL, '1', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -692,7 +676,7 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-15.07.2022.00'),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-15.07.2022.01'),
 ('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-15.07.2022.03');
 
 -- --------------------------------------------------------
