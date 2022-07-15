@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 12, 2022 at 03:34 PM
+-- Generation Time: Jul 15, 2022 at 09:25 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.2
 
@@ -692,8 +692,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-12.07.2022.01'),
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-12.07.2022.01');
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-15.07.2022.00'),
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-15.07.2022.03');
 
 -- --------------------------------------------------------
 
@@ -1326,7 +1326,7 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu62cca90dbe23269', 'nuhomecompact', '', 'input', 'open_database', 'Database', 'nu62cca90dba09759', 110, 128, 399, 206, 30, '0', 'left', '0', '0', '1', 'Class', 'input_button_left', '', '', '', '', '', '', '', '', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 'button', 'fa fa-database', '', NULL, 'title=\"phpMyAdmin\"', '', '', '', '', '', '', '', NULL),
 ('nu62cca90dbe2e1f9', 'nuhomecompact', '', 'run', 'user_home', 'User Home', 'nu62cca90dba09759', 20, 61, 67, 206, 30, '1', 'left', '0', '0', '0', '', '', '', '', 'nuuserhome', '', 'b', '0', 'F', '-1', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', '', 'fa fa-home', '', NULL, NULL, '', '', '', '', '', '', '', NULL),
 ('nu62cca90dbe3f7d5', 'nuhomecompact', '', 'run', 'run_note', 'Notes', 'nu62cca90dba09759', 190, 128, 731, 206, 30, '1', 'left', '0', '0', '0', 'Class', 'input_button_left', '', '', 'nunotes', '', 'b', '0', 'F', '', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', '', 'far fa-edit', '', NULL, NULL, '', '', '', '', '', '', '', NULL),
-('nu62cca90dbe662c9', 'nuhomecompact', '', 'run', 'run_nucodesnippets', 'Code Snippets', 'nu62cca90dba09759', 250, 280, 731, 206, 30, '0', 'left', '0', '0', '0', 'Class', 'input_button_left', '', '', 'nucodesnippet', '', 'b', '0', 'F', '', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', '', 'far fa-file-code', '', NULL, NULL, '', '', '', '', '', '', '', NULL),
+('nu62cca90dbe662c9', 'nuhomecompact', '', 'run', 'run_nucodesnippets', 'Code Snippets', 'nu62cca90dba09759', 250, 278, 731, 206, 30, '0', 'left', '0', '0', '0', 'Class', 'input_button_left', '', '', 'nucodesnippet', '', 'b', '0', 'F', '', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', '', 'far fa-file-code', '', NULL, NULL, '', '', '', '', '', '', '', NULL),
 ('nu62cca90dbe72fcf', 'nuhomecompact', '', 'input', 'menu_forms', ' ', 'nu62cca90dba09759', 160, 230, 606, 33, 30, '1', 'center', '0', '0', '1', 'Class', 'input_button_right', '', '', '', '', '', '0', '', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', 'nurunreport', '', '0', '0', '', '', 0, '', 'button', 'fa fa-caret-down', '', '', 'data-nu-same-row', '', '', '', '', '', '', '', ''),
 ('nu62cca90dbe7d11b', 'nuhomecompact', '', 'input', 'menu_database', ' ', 'nu62cca90dba09759', 120, 128, 606, 33, 30, '1', 'center', '0', '0', '1', 'Class', 'input_button_right', '', '', '', '', '', '0', '', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', 'nurunreport', '', '0', '0', '', '', 0, '', 'button', 'fa fa-caret-down', '', '', 'data-nu-same-row', '', '', '', '', '', '', '', ''),
 ('nu62cca90dbe86fbb', 'nuhomecompact', '', 'run', 'access_add', ' ', 'nu62cca90dba09759', 60, 179, 274, 33, 30, '1', 'center', '0', '0', '0', 'Class', 'input_button_right', '', '', 'nuaccess', '', 'b', '0', 'F', '-1', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', '', 'fa fas fa-plus', '', '', 'title=\"Add Access Level\", data-nu-same-row', '', '', '', '', '', '', '', ''),
@@ -1334,7 +1334,7 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu62cca90dbea4053', 'nuhomecompact', '', 'input', 'menu_setup', ' ', 'nu62cca90dba09759', 140, 179, 606, 33, 30, '1', 'center', '0', '0', '1', 'Class', 'input_button_right', '', '', '', '', '', '0', '', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', 'nurunreport', '', '0', '0', '', '', 0, '', 'button', 'fa fa-caret-down', '', '', 'data-nu-same-row', '', '', '', '', '', '', '', ''),
 ('nu62cca90dbeb1355', 'nuhomecompact', '', 'contentbox', 'contentbox', ' ', 'nu62cca90dba09759', 10, 10, 10, 1030, 316, '1', 'left', '0', '0', '0', '', '', '', '', 'nuuser', '', 'b', '0', 'F', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', '', 'fa fa fa-user', '', '', NULL, '', '', '', '', '', '', '', ''),
 ('nu62cca90dbebf625', 'nuhomecompact', '', 'run', 'objects_add', ' ', 'nu62cca90dba09759', 180, 280, 606, 33, 30, '1', 'center', '0', '0', '0', 'Class', 'input_button_right', '', '', 'nuobject', '', 'b', '0', 'F', '-1', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', '', 'fa fas fa-plus', '', '', 'title=\"Add Object\",data-nu-same-row', '', '', '', '', '', '', '', ''),
-('nu62cca90dbed87c1', 'nuhomecompact', '', 'run', 'nucodesnippets_add', ' ', 'nu62cca90dba09759', 260, 280, 938, 33, 30, '1', 'center', '0', '0', '0', 'Class', 'input_button_right', '', '', 'nucodesnippet', '', 'b', '0', 'F', '-1', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', '', 'fa fas fa-plus', '', '', 'title=\"Add Code Snippet\",data-nu-same-row', '', '', '', '', '', '', '', ''),
+('nu62cca90dbed87c1', 'nuhomecompact', '', 'run', 'nucodesnippets_add', ' ', 'nu62cca90dba09759', 260, 278, 938, 33, 30, '1', 'center', '0', '0', '0', 'Class', 'input_button_right', '', '', 'nucodesnippet', '', 'b', '0', 'F', '-1', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', '', 'fa fas fa-plus', '', '', 'title=\"Add Code Snippet\",data-nu-same-row', '', '', '', '', '', '', '', ''),
 ('nu62cca90dbee3839', 'nuhomecompact', '', 'run', 'notes_add', ' ', 'nu62cca90dba09759', 200, 128, 938, 33, 30, '1', 'center', '0', '0', '0', 'Class', 'input_button_right', '', '', 'nunotes', '', 'b', '0', 'F', '-1', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', '', 'fa fas fa-plus', '', '', 'title=\"Add Note\",data-nu-same-row', '', '', '', '', '', '', '', ''),
 ('nu62cca90dbeed89a', 'nuhomecompact', '', 'run', 'sql_add', ' ', 'nu62cca90dba09759', 220, 179, 938, 33, 30, '1', 'center', '0', '0', '0', 'Class', 'input_button_right', '', '', 'nuselect', '', 'b', '0', 'F', '-1', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', '', 'fa fas fa-plus', '', '', 'title=\"Add SQL\",data-nu-same-row', '', '', '', '', '', '', '', ''),
 ('nu62cca90dbef85e9', 'nuhomecompact', '', 'run', 'sql_file', ' ', 'nu62cca90dba09759', 240, 230, 938, 33, 30, '1', 'center', '0', '0', '0', 'Class', 'input_button_right', '', '', 'nufile', '', 'b', '0', 'F', '-1', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', '', 'fa fas fa-plus', '', '', 'title=\"Add File\",data-nu-same-row', '', '', '', '', '', '', '', '');
