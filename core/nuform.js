@@ -408,7 +408,7 @@ function nuAddHomeLogout() {
 
 		}
 
-		if (!nuIsMobile()) {
+		if (!nuIsMobile() || $('.nuBreadcrumb').length == 0) {
 			$('#nuBreadcrumbHolder').append('<span id="nulink"><a href="https://www.nubuilder.com" class="nuBuilderLink" target="_blank">nuBuilder</a></span>');
 			nuAddIconToBreadCrumb('nuLogout', 'Log out', 16, 'nuAskLogout()', 'fas fa-sign-out-alt');
 		}	
@@ -3428,7 +3428,7 @@ function nuGetOptionsList(f, t, p, a, type) {
 		FormObjectList : ['Form Object List', 'nuOptionsListAction("nuobject", "", "' + f + '")', 'fa-th-list', 'O'],
 		Search : ['Search', 'nuSearchAction();', 'fas fa-search', 'S'],
 		Add : ['Add', 'nuAddAction();', 'fas fa-plus', 'A'],
-		Print : ['Print', 'nuPrintAction();', 'fas fa-table', 'P'],
+		Print : ['Print', 'nuPrintAction();', 'fas fa-print', 'P'],
 		Save : ['Save', 'nuSaveAction();', 'far fa-save', 'S'],
 		Delete : ['Delete', 'nuDeleteAction();', 'far fa-trash-alt', 'Y'],
 		Clone : ['Clone', 'nuCloneAction();', 'far fa-clone', 'C'],
