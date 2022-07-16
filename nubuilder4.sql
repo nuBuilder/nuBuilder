@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 15, 2022 at 09:29 PM
+-- Generation Time: Jul 16, 2022 at 07:24 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.2
 
@@ -676,8 +676,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-15.07.2022.01'),
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-15.07.2022.03');
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-16.07.2022.00'),
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-16.07.2022.04');
 
 -- --------------------------------------------------------
 
@@ -1127,7 +1127,7 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu5fe19f9d396cc05', 'nusetup', 'zzzzsys_setup', 'display', 'set_db_version', 'DB', 'nu5fe19e93306dd6e', 280, 92, 110, 149, 22, '1', 'center', '1', '0', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', 'SELECT `inf_details` FROM `zzzzsys_info` WHERE `inf_code` = \'nuDBVersion\'', '', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'text', NULL, '', NULL, NULL, '', '', '', '', '', '', '', NULL),
 ('nu5fe19fb39693948', 'nusetup', 'zzzzsys_setup', 'display', 'set_files_version', 'Files', 'nu5fe19e93306dd6e', 310, 125, 110, 149, 22, '1', 'center', '1', '0', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', 'SELECT `inf_details` FROM `zzzzsys_info` WHERE `inf_code` = \'nuFilesVersion\'', '', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'text', NULL, '', NULL, NULL, '', '', '', '', '', '', '', NULL),
 ('nu5fe1a0f0c355360', 'nusetup', 'zzzzsys_setup', 'display', 'set_db_version_user', 'DB Version', 'nu5bad6cb36d97acd', 130, 74, 227, 128, 22, '1', 'center', '0', '1', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', 'SELECT `inf_details` FROM `zzzzsys_info` WHERE `inf_code` = \'nuDBVersion\'', '', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'text', NULL, '', NULL, NULL, '', '', '', '', '', '', '', NULL),
-('nu5fe1a1310d52cd7', 'nusetup', 'zzzzsys_setup', 'display', 'set_files_version_user', 'Files Version', 'nu5bad6cb36d97acd', 140, 101, 227, 128, 22, '1', 'center', '0', '1', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', 'SELECT `inf_details` FROM `zzzzsys_info` WHERE `inf_code` = \'nuFilesVersion\'', '', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'text', NULL, '', NULL, NULL, '', '', '', '', '', '', '', NULL),
+('nu5fe1a1310d52cd7', 'nusetup', 'zzzzsys_setup', 'display', 'set_files_version_user', 'Files Version', 'nu5bad6cb36d97acd', 140, 101, 227, 128, 22, '1', 'center', '0', '0', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', 'SELECT `inf_details` FROM `zzzzsys_info` WHERE `inf_code` = \'nuFilesVersion\'', '', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', '', NULL, '', NULL, NULL, '', '', '', '', '', '', '', NULL),
 ('nu5fe1aeac3363ae7', 'nusetup', 'zzzzsys_setup', 'input', 'set_db_version_inc_btn', ' ', 'nu5fe19e93306dd6e', 290, 90, 278, 30, 21, '1', 'center', '1', '0', '1', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'button', 'fa fa-plus', '', NULL, NULL, '', '', '', '', '', '', '', NULL),
 ('nu5fe1af2e2b4455a', 'nusetup', 'zzzzsys_setup', 'input', 'set_db_version_inc', 'DB New', 'nu5fe19e93306dd6e', 300, 92, 410, 149, 22, '1', 'left', '0', '0', '0', '', '', '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'text', 'fas fa-adjust', '', NULL, NULL, '', '', '', '', '', '', '', ''),
 ('nu5fe1b155aed9e46', 'nusetup', 'zzzzsys_setup', 'input', 'set_files_version_inc_btn', ' ', 'nu5fe19e93306dd6e', 320, 125, 278, 30, 21, '1', 'center', '1', '0', '1', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'button', 'fa fa-plus', '', NULL, NULL, '', '', '', '', '', '', '', NULL),
