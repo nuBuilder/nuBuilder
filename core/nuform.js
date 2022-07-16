@@ -5774,7 +5774,7 @@ function nuMobileView() {
 
 	const fId = nuFormId();
 
-	if (nuFormType() == 'edit' && (fId.startsWith('nuhome') || fId == 'nuaccess' || fId == 'nuuser')) {
+	if (nuFormType() == 'edit' && (fId.startsWith('nuhome') || fId == 'nuaccess' || fId == 'nuuser' || fId == 'nuphp' || fId == 'nucodesnippet')) {
 		nuPortraitScreen();
 		$('#nuActionHolder').hide();
 		$('button').css('text-align', 'left');
