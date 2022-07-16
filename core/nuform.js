@@ -51,8 +51,7 @@ function nuBuildForm(f) {
 		nuAddJavascript(f.javascript_bc);
 	}
 
-	$('#nubody').off('.nuresizecolumn')
-		.css('transform', 'scale(1)');
+	$('#nubody').off('.nuresizecolumn').css('transform', 'scale(1)');
 	$('html,body').scrollTop(0).scrollLeft(0);
 
 	nuSetProperty('CLONED_RECORD', 0);
@@ -550,13 +549,19 @@ function nuAddActionButtons(form) {
 		var f = nuDefine(nuFORM.getProperty('filter'));
 
 		$('#nuActionHolder').append("<input id='nuSearchField' type='text' class='nuSearch' onfocus='this.value = this.value;' onkeypress='nuSearchPressed(event)' onkeydown='nuArrowPressed(event)' value='" + s + "'>")
-			.append("<input id='nuFilter' style='visibility:hidden;width:0px' value='" + f + "'>")
-			.append("<button id='nuSearchButton' type='button' class='nuActionButton' onclick='nuSearchAction()'><i class='fa fa-search'></i>&nbsp;" + nuTranslate('Search') + "</button>");
+			.append("<input id='nuFilter' style='visibility:hidden;width:0px' value='" + f + "'>");
 
+		const isMobile = nuIsMobile();
+		const searchCaption = isMobile ? "" : "&nbsp;" + nuTranslate('Search');
+		const printCaption = isMobile ? "<i class='fa fa-print'></i>" : nuTranslate('Print');
+		const addCaption = isMobile ? "<i class='fa fa-add'></i>" : nuTranslate('Add');
+		
+		nuAddActionButton("Seach", "<i class='fa fa-search'></i>" + searchCaption, 'nuSearchAction()');
+
+		if (button.Add == 1) { nuAddActionButton('Add', addCaption, 'nuAddAction()'); }
+		if (button.Print == 1) { nuAddActionButton('Print', printCaption, 'nuPrintAction()'); }
+		
 		nuSearchFieldSetSearchType();
-
-		if (button.Add == 1) { nuAddActionButton('Add'); }
-		if (button.Print == 1) { nuAddActionButton('Print'); }
 
 	} else {
 
@@ -584,16 +589,16 @@ function nuAddActionButtons(form) {
 
 }
 
-function nuAddActionButton(i, v, f, t, e) {
+function nuAddActionButton(i, v, func, t, e) {
 
 	if (arguments.length == 1) {
 
 		v = i;
-		f = 'nu' + i + 'Action()';
+		func = 'nu' + i + 'Action()';
 
 	}
 
-	t = nuDefine(t);
+	t = nuTranslate(nuDefine(t));
 
 	let nuClass = "";
 	if (i == 'Save' || i == 'Add' || i == 'Clone' || i == 'Delete') {
@@ -601,8 +606,7 @@ function nuAddActionButton(i, v, f, t, e) {
 	}
 
 	let id = "nu" + i + "Button";
-
-	let html = "<input id='" + id + "' type='button' title='" + nuTranslate(t) + "' class='nuActionButton" + nuClass + "' value='" + nuTranslate(v) + "' onclick='" + f + "'>";
+	let html = `<button id='${id}' type='button' class='nuActionButton' title = '${t}' onclick='${func}'>${v}` + "</button>";
 
 	if (e) {
 		$(html).insertAfter('#' + e);
