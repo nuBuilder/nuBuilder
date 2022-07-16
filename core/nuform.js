@@ -5734,7 +5734,7 @@ function nuPortraitScreen(columns) {
 				}
 
 
-				oWidth = lw + 10 + o[i].width;
+				oWidth = lw + 10 + Number(o[i].width);
 				oTop = t;
 
 				if (!sameRow) {
