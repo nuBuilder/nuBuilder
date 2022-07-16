@@ -5076,7 +5076,7 @@ function nuMessage(o, timeout, callback) {
 	}
 
 	widest = Math.min(widest + 200, 1000);
-	let w = $(this).innerWidth() - 42; 								//-- subtract padding, border
+	let w = window.visualViewport.width - 42; 								//-- subtract padding, border
 	let l = Math.max(0, $(this).scrollLeft() + (w - widest) / 2);
 	w = Math.min(w, widest);
 
