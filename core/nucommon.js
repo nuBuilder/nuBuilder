@@ -1500,7 +1500,7 @@ function nuAttachFontAwesome(i, c, s, after) {
 		o = i;
 	}
 
-	const html = '<i style="font-size:' + size + '" class="' + c + '"></i>';
+	const html = '<i style="font-size:' + size + '" class="' + 'fa-fw ' + c + '"></i>';
 	let obj = $(o);
 	if (obj.length === 0) return;
 
