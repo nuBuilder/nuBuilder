@@ -176,6 +176,11 @@ jQuery.fn.extend({
 			nuHide(this.id);
 		});
 	},
+	nuRemove: function () {
+		return this.each(function () {
+			nuRemove(this.id);
+		});
+	},
 	nuSelectRemoveEmpty: function (setIndex) {
 		return this.each(function () {
 			nuSelectRemoveEmpty(this.id, setIndex);
@@ -1226,6 +1231,26 @@ function nuHide(i) {
 
 			}
 
+		}
+	}
+
+}
+
+function nuRemove(i) {
+
+	let arr = [];
+	if (!$.isArray(i)) {
+		arr.push(i);
+	} else {
+		arr = i;
+	}
+
+	for (let s = 0; s < arr.length; s++) {
+
+		const o = nuObjectComponents(arr[s]);
+
+		for (let c = 0; c < o.length; c++) {
+			$('#' + o[c]).remove();
 		}
 	}
 
