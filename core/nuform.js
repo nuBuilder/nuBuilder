@@ -5830,7 +5830,7 @@ function nuMobileView() {
 function nuMobileView() {
 
 	function nuInFormIds(fId) {
-		return ['nuaccess', 'nuuser', 'nuphp', 'nuphp', 'nufile', 'nucodesnippet','nucsvtransfer','nuformat','nufrlaunch','nusetup','nuselect','nutranslate','nuobject','nuform'].indexOf(fId) !== -1;
+		return ['nuaccess', 'nuuser', 'nuphp', 'nuphp', 'nufile', 'nucodesnippet','nucsvtransfer','nuformat','nufrlaunch','nusetup','nuselect','nutranslate','nuobject','nuform','nufflaunch'].indexOf(fId) !== -1;
 	}
 
 	const fId = nuFormId();
