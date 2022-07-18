@@ -25,11 +25,12 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\MoTranslator;
 
-use const PHP_INT_MAX;
 use function file_get_contents;
 use function strlen;
 use function substr;
 use function unpack;
+
+use const PHP_INT_MAX;
 
 /**
  * Simple wrapper around string buffer for
@@ -63,7 +64,9 @@ class StringReader
             throw new ReaderException('Not enough bytes!');
         }
 
-        return substr($this->string, $pos, $bytes);
+        $data = substr($this->string, $pos, $bytes);
+
+        return $data === false ? '' : $data;
     }
 
     /**

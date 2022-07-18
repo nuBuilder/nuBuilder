@@ -8,7 +8,7 @@ use PhpMyAdmin\ConfigStorage\RelationCleanup;
 return [
     'services' => [
         'advisor' => [
-            'class' => PhpMyAdmin\Advisor::class,
+            'class' => PhpMyAdmin\Advisory\Advisor::class,
             'arguments' => [
                 '$dbi' => '@dbi',
                 '$expression' => '@expression_language',
@@ -87,6 +87,7 @@ return [
         'expression_language' => [
             'class' => Symfony\Component\ExpressionLanguage\ExpressionLanguage::class,
         ],
+        'file_listing' => ['class' => PhpMyAdmin\FileListing::class],
         'flash' => [
             'class' => PhpMyAdmin\FlashMessages::class,
         ],
@@ -102,7 +103,7 @@ return [
         ],
         'insert_edit' => [
             'class' => PhpMyAdmin\InsertEdit::class,
-            'arguments' => ['@dbi'],
+            'arguments' => ['@dbi', '@relation', '@transformations', '@file_listing', '@template'],
         ],
         'navigation' => [
             'class' => PhpMyAdmin\Navigation\Navigation::class,
@@ -201,6 +202,10 @@ return [
             'class' => PhpMyAdmin\Server\Status\Processes::class,
             'arguments' => ['@dbi'],
         ],
+        'table_columns_definition' => [
+            'class' => PhpMyAdmin\Table\ColumnsDefinition::class,
+            'arguments' => ['$dbi' => '@dbi', '$relation' => '@relation', '$transformations' => '@transformations'],
+        ],
         'table_indexes' => [
             'class' => PhpMyAdmin\Table\Indexes::class,
             'arguments' => ['$response' => '@response', '$template' => '@template', '$dbi' => '@dbi'],
@@ -234,6 +239,9 @@ return [
         ],
         'user_preferences' => [
             'class' => PhpMyAdmin\UserPreferences::class,
+        ],
+        'version_information' => [
+            'class' => PhpMyAdmin\VersionInformation::class,
         ],
         PhpMyAdmin\DatabaseInterface::class => 'dbi',
         PhpMyAdmin\FlashMessages::class => 'flash',

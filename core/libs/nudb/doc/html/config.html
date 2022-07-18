@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Configuration &#8212; phpMyAdmin 5.2.0-dev documentation</title>
+    <title>Configuration &#8212; phpMyAdmin 5.3.0-dev documentation</title>
     
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '5.2.0-dev',
+        VERSION:     '5.3.0-dev',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="copyright" title="Copyright" href="copyright.html" />
-    <link rel="top" title="phpMyAdmin 5.2.0-dev documentation" href="index.html" />
+    <link rel="top" title="phpMyAdmin 5.3.0-dev documentation" href="index.html" />
     <link rel="next" title="User Guide" href="user.html" />
     <link rel="prev" title="Installation" href="setup.html" /> 
   </head>
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="setup.html" title="Installation"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.2.0-dev documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.3.0-dev documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -299,6 +299,12 @@ warning will no longer be displayed.</p>
 </tr>
 </tbody>
 </table>
+<p>Valid values are:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">ask</span></code></li>
+<li><code class="docutils literal"><span class="pre">always</span></code></li>
+<li><code class="docutils literal"><span class="pre">never</span></code></li>
+</ul>
 <p>Sets the default behavior for JavaScript error reporting.</p>
 <p>Whenever an error is detected in the JavaScript execution, an error report
 may be sent to the phpMyAdmin team if the user agrees.</p>
@@ -422,7 +428,7 @@ can configure the path to the socket with
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><span class="target" id="index-11"></span><a class="reference internal" href="#cfg_Servers_port"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['port']</span></code></a>,
-&lt;<a class="reference external" href="https://dev.mysql.com/doc/refman/5.7/en/connecting.html">https://dev.mysql.com/doc/refman/5.7/en/connecting.html</a>&gt;</p>
+&lt;<a class="reference external" href="https://dev.mysql.com/doc/refman/8.0/en/connecting.html">https://dev.mysql.com/doc/refman/8.0/en/connecting.html</a>&gt;</p>
 </div>
 </dd></dl>
 
@@ -451,7 +457,7 @@ in <span class="target" id="index-12"></span><a class="reference internal" href=
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><span class="target" id="index-13"></span><a class="reference internal" href="#cfg_Servers_host"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['host']</span></code></a>,
-&lt;<a class="reference external" href="https://dev.mysql.com/doc/refman/5.7/en/connecting.html">https://dev.mysql.com/doc/refman/5.7/en/connecting.html</a>&gt;</p>
+&lt;<a class="reference external" href="https://dev.mysql.com/doc/refman/8.0/en/connecting.html">https://dev.mysql.com/doc/refman/8.0/en/connecting.html</a>&gt;</p>
 </div>
 </dd></dl>
 
@@ -480,7 +486,7 @@ to <code class="docutils literal"><span class="pre">localhost</span></code>.</p>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><span class="target" id="index-15"></span><a class="reference internal" href="#cfg_Servers_host"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['host']</span></code></a>,
-&lt;<a class="reference external" href="https://dev.mysql.com/doc/refman/5.7/en/connecting.html">https://dev.mysql.com/doc/refman/5.7/en/connecting.html</a>&gt;</p>
+&lt;<a class="reference external" href="https://dev.mysql.com/doc/refman/8.0/en/connecting.html">https://dev.mysql.com/doc/refman/8.0/en/connecting.html</a>&gt;</p>
 </div>
 </dd></dl>
 
@@ -506,6 +512,7 @@ none of the remaining <code class="docutils literal"><span class="pre">'ssl...'<
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference internal" href="setup.html#ssl"><span class="std std-ref">Using SSL for connection to database server</span></a>,
 <a class="reference internal" href="#example-google-ssl"><span class="std std-ref">Google Cloud SQL with SSL</span></a>,
+<a class="reference internal" href="#example-aws-ssl"><span class="std std-ref">Amazon RDS Aurora with SSL</span></a>,
 <span class="target" id="index-16"></span><a class="reference internal" href="#cfg_Servers_ssl_key"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl_key']</span></code></a>,
 <span class="target" id="index-17"></span><a class="reference internal" href="#cfg_Servers_ssl_cert"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl_cert']</span></code></a>,
 <span class="target" id="index-18"></span><a class="reference internal" href="#cfg_Servers_ssl_ca"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl_ca']</span></code></a>,
@@ -538,6 +545,7 @@ server. This is used to authenticate the client to the server.</p>
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference internal" href="setup.html#ssl"><span class="std std-ref">Using SSL for connection to database server</span></a>,
 <a class="reference internal" href="#example-google-ssl"><span class="std std-ref">Google Cloud SQL with SSL</span></a>,
+<a class="reference internal" href="#example-aws-ssl"><span class="std std-ref">Amazon RDS Aurora with SSL</span></a>,
 <span class="target" id="index-22"></span><a class="reference internal" href="#cfg_Servers_ssl"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl']</span></code></a>,
 <span class="target" id="index-23"></span><a class="reference internal" href="#cfg_Servers_ssl_cert"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl_cert']</span></code></a>,
 <span class="target" id="index-24"></span><a class="reference internal" href="#cfg_Servers_ssl_ca"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl_ca']</span></code></a>,
@@ -566,6 +574,7 @@ MySQL server. This is used to authenticate the client to the server.</p>
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference internal" href="setup.html#ssl"><span class="std std-ref">Using SSL for connection to database server</span></a>,
 <a class="reference internal" href="#example-google-ssl"><span class="std std-ref">Google Cloud SQL with SSL</span></a>,
+<a class="reference internal" href="#example-aws-ssl"><span class="std std-ref">Amazon RDS Aurora with SSL</span></a>,
 <span class="target" id="index-28"></span><a class="reference internal" href="#cfg_Servers_ssl"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl']</span></code></a>,
 <span class="target" id="index-29"></span><a class="reference internal" href="#cfg_Servers_ssl_key"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl_key']</span></code></a>,
 <span class="target" id="index-30"></span><a class="reference internal" href="#cfg_Servers_ssl_ca"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl_ca']</span></code></a>,
@@ -593,6 +602,7 @@ MySQL server. This is used to authenticate the client to the server.</p>
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference internal" href="setup.html#ssl"><span class="std std-ref">Using SSL for connection to database server</span></a>,
 <a class="reference internal" href="#example-google-ssl"><span class="std std-ref">Google Cloud SQL with SSL</span></a>,
+<a class="reference internal" href="#example-aws-ssl"><span class="std std-ref">Amazon RDS Aurora with SSL</span></a>,
 <span class="target" id="index-34"></span><a class="reference internal" href="#cfg_Servers_ssl"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl']</span></code></a>,
 <span class="target" id="index-35"></span><a class="reference internal" href="#cfg_Servers_ssl_key"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl_key']</span></code></a>,
 <span class="target" id="index-36"></span><a class="reference internal" href="#cfg_Servers_ssl_cert"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl_cert']</span></code></a>,
@@ -620,6 +630,7 @@ MySQL server. This is used to authenticate the client to the server.</p>
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference internal" href="setup.html#ssl"><span class="std std-ref">Using SSL for connection to database server</span></a>,
 <a class="reference internal" href="#example-google-ssl"><span class="std std-ref">Google Cloud SQL with SSL</span></a>,
+<a class="reference internal" href="#example-aws-ssl"><span class="std std-ref">Amazon RDS Aurora with SSL</span></a>,
 <span class="target" id="index-40"></span><a class="reference internal" href="#cfg_Servers_ssl"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl']</span></code></a>,
 <span class="target" id="index-41"></span><a class="reference internal" href="#cfg_Servers_ssl_key"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl_key']</span></code></a>,
 <span class="target" id="index-42"></span><a class="reference internal" href="#cfg_Servers_ssl_cert"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl_cert']</span></code></a>,
@@ -647,6 +658,7 @@ MySQL server. This is used to authenticate the client to the server.</p>
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference internal" href="setup.html#ssl"><span class="std std-ref">Using SSL for connection to database server</span></a>,
 <a class="reference internal" href="#example-google-ssl"><span class="std std-ref">Google Cloud SQL with SSL</span></a>,
+<a class="reference internal" href="#example-aws-ssl"><span class="std std-ref">Amazon RDS Aurora with SSL</span></a>,
 <span class="target" id="index-46"></span><a class="reference internal" href="#cfg_Servers_ssl"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl']</span></code></a>,
 <span class="target" id="index-47"></span><a class="reference internal" href="#cfg_Servers_ssl_key"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl_key']</span></code></a>,
 <span class="target" id="index-48"></span><a class="reference internal" href="#cfg_Servers_ssl_cert"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl_cert']</span></code></a>,
@@ -692,6 +704,7 @@ This will make the connection vulnerable to man in the middle attacks.</p>
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference internal" href="setup.html#ssl"><span class="std std-ref">Using SSL for connection to database server</span></a>,
 <a class="reference internal" href="#example-google-ssl"><span class="std std-ref">Google Cloud SQL with SSL</span></a>,
+<a class="reference internal" href="#example-aws-ssl"><span class="std std-ref">Amazon RDS Aurora with SSL</span></a>,
 <span class="target" id="index-52"></span><a class="reference internal" href="#cfg_Servers_ssl"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl']</span></code></a>,
 <span class="target" id="index-53"></span><a class="reference internal" href="#cfg_Servers_ssl_key"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl_key']</span></code></a>,
 <span class="target" id="index-54"></span><a class="reference internal" href="#cfg_Servers_ssl_cert"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl_cert']</span></code></a>,
@@ -927,6 +940,32 @@ explicitly specified in your configuration, a string combined of
 <span class="target" id="index-74"></span><a class="reference internal" href="#cfg_Servers_host"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['host']</span></code></a> will be used.</p>
 </dd></dl>
 
+<span class="target" id="servers-auth-swekey-config"></span><dl class="option">
+<dt id="cfg_Servers_auth_swekey_config">
+<code class="descname">$cfg['Servers'][$i]['auth_swekey_config']</code><a class="headerlink" href="#cfg_Servers_auth_swekey_config" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Default value:</th><td class="field-body"><code class="docutils literal"><span class="pre">''</span></code></td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 3.0.0.0: </span>This setting was named <cite>$cfg[&#8216;Servers&#8217;][$i][&#8216;auth_feebee_config&#8217;]</cite> and was renamed before the <cite>3.0.0.0</cite> release.</p>
+</div>
+<div class="deprecated">
+<p><span class="versionmodified">Deprecated since version 4.6.4: </span>This setting was removed because their servers are no longer working and it was not working correctly.</p>
+</div>
+<div class="deprecated">
+<p><span class="versionmodified">Deprecated since version 4.0.10.17: </span>This setting was removed in a maintenance release because their servers are no longer working and it was not working correctly.</p>
+</div>
+<p>The name of the file containing swekey ids and login names for hardware
+authentication. Leave empty to deactivate this feature.</p>
+</dd></dl>
+
 <span class="target" id="servers-user"></span><dl class="option">
 <dt id="cfg_Servers_user">
 <code class="descname">$cfg['Servers'][$i]['user']</code><a class="headerlink" href="#cfg_Servers_user" title="Permalink to this definition">¶</a></dt>
@@ -1129,6 +1168,9 @@ database containing the phpMyAdmin configuration storage.</p>
 </tr>
 </tbody>
 </table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.2.0.</span></p>
+</div>
 <p>Since release 2.2.0 phpMyAdmin allows users to bookmark queries. This
 can be useful for queries you often run. To allow the usage of this
 functionality:</p>
@@ -1152,6 +1194,9 @@ functionality:</p>
 </tr>
 </tbody>
 </table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.2.4.</span></p>
+</div>
 <p>Since release 2.2.4 you can describe, in a special &#8216;relation&#8217; table,
 which column is a key in another table (a foreign key). phpMyAdmin
 currently uses this to:</p>
@@ -1200,6 +1245,9 @@ relations.</p>
 </tr>
 </tbody>
 </table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.3.0.</span></p>
+</div>
 <p>Since release 2.3.0 you can describe, in a special &#8216;table_info&#8217;
 table, which column is to be displayed as a tool-tip when moving the
 cursor over the corresponding key. This configuration variable will
@@ -1253,6 +1301,9 @@ required for using the PDF relation export feature, see
 </tr>
 </tbody>
 </table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.3.0.</span></p>
+</div>
 <p>Since release 2.3.0 you can have phpMyAdmin create <a class="reference internal" href="glossary.html#term-pdf"><span class="xref std std-term">PDF</span></a> pages
 showing the relations between your tables. Further, the designer interface
 permits visually managing the relations. To do this it needs two tables
@@ -1312,6 +1363,9 @@ visually manage the relations.</p>
 </tr>
 </tbody>
 </table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.3.0.</span></p>
+</div>
 <p>This part requires a content update!  Since release 2.3.0 you can
 store comments to describe each column for each table. These will then
 be shown on the &#8220;printview&#8221;.</p>
@@ -1361,7 +1415,7 @@ remember that the Variable in <code class="file docutils literal"><span class="p
 <p class="first admonition-title">Note</p>
 <p class="last">For auto-upgrade functionality to work, your
 <span class="target" id="index-92"></span><a class="reference internal" href="#cfg_Servers_controluser"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['controluser']</span></code></a> must have ALTER privilege on
-<code class="docutils literal"><span class="pre">phpmyadmin</span></code> database. See the <a class="reference external" href="https://dev.mysql.com/doc/refman/5.7/en/grant.html">MySQL documentation for GRANT</a> on how to
+<code class="docutils literal"><span class="pre">phpmyadmin</span></code> database. See the <a class="reference external" href="https://dev.mysql.com/doc/refman/8.0/en/grant.html">MySQL documentation for GRANT</a> on how to
 <code class="docutils literal"><span class="pre">GRANT</span></code> privileges to a user.</p>
 </div>
 </dd></dl>
@@ -1379,6 +1433,9 @@ remember that the Variable in <code class="file docutils literal"><span class="p
 </tr>
 </tbody>
 </table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.5.0.</span></p>
+</div>
 <p>Since release 2.5.0 you can store your <a class="reference internal" href="glossary.html#term-sql"><span class="xref std std-term">SQL</span></a> history, which means all
 queries you entered manually into the phpMyAdmin interface. If you don&#8217;t
 want to use a table-based history, you can use the JavaScript-based
@@ -1411,6 +1468,9 @@ your browser.</p>
 </tr>
 </tbody>
 </table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 3.5.0.</span></p>
+</div>
 <p>Since release 3.5.0 you can show recently used tables in the
 navigation panel. It helps you to jump across table directly, without
 the need to select the database, and then select the table. Using
@@ -1441,6 +1501,9 @@ but it will disappear after you logout.</p>
 </tr>
 </tbody>
 </table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.2.0.</span></p>
+</div>
 <p>Since release 4.2.0 you can show a list of selected tables in the
 navigation panel. It helps you to jump to the table directly, without
 the need to select the database, and then select the table. When you
@@ -1474,6 +1537,9 @@ but it will disappear after you logout.</p>
 </tr>
 </tbody>
 </table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 3.5.0.</span></p>
+</div>
 <p>Since release 3.5.0 phpMyAdmin can be configured to remember several
 things (sorted column <span class="target" id="index-104"></span><a class="reference internal" href="#cfg_RememberSorting"><code class="xref config config-option docutils literal"><span class="pre">$cfg['RememberSorting']</span></code></a>, column order,
 and column visibility from a database table) for browsing tables. Without
@@ -1519,6 +1585,9 @@ and the suggested settings.</p>
 </tr>
 </tbody>
 </table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.1.0.</span></p>
+</div>
 <p>Since release 4.1.0 you can create different user groups with menu items
 attached to them. Users can be assigned to these groups and the logged in
 user would only see menu items configured to the usergroup they are assigned to.
@@ -1551,6 +1620,9 @@ user group) and &#8220;users&#8221; (storing users and their assignments to user
 </tr>
 </tbody>
 </table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.1.0.</span></p>
+</div>
 <p>Since release 4.1.0 you can hide/show items in the navigation tree.</p>
 <p>To allow the usage of this functionality:</p>
 <ul class="simple">
@@ -1574,6 +1646,9 @@ user group) and &#8220;users&#8221; (storing users and their assignments to user
 </tr>
 </tbody>
 </table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.3.0.</span></p>
+</div>
 <p>Since release 4.3.0 you can have a central list of columns per database.
 You can add/remove columns to the list as per your requirement. These columns
 in the central list will be available to use while you create a new column for
@@ -1602,6 +1677,9 @@ over again or from writing different names for similar column.</p>
 </tr>
 </tbody>
 </table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.5.0.</span></p>
+</div>
 <p>Since release 4.5.0 your designer settings can be remembered.
 Your choice regarding &#8216;Angular/Direct Links&#8217;, &#8216;Snap to Grid&#8217;, &#8216;Toggle Relation Lines&#8217;,
 &#8216;Small/Big All&#8217;, &#8216;Move Menu&#8217; and &#8216;Pin Text&#8217; can be remembered persistently.</p>
@@ -1627,6 +1705,9 @@ Your choice regarding &#8216;Angular/Direct Links&#8217;, &#8216;Snap to Grid&#8
 </tr>
 </tbody>
 </table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.2.0.</span></p>
+</div>
 <p>Since release 4.2.0 you can save and load query-by-example searches from the Database &gt; Query panel.</p>
 <p>To allow the usage of this functionality:</p>
 <ul class="simple">
@@ -1650,6 +1731,9 @@ Your choice regarding &#8216;Angular/Direct Links&#8217;, &#8216;Snap to Grid&#8
 </tr>
 </tbody>
 </table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.5.0.</span></p>
+</div>
 <p>Since release 4.5.0 you can save and load export templates.</p>
 <p>To allow the usage of this functionality:</p>
 <ul class="simple">
@@ -1673,6 +1757,9 @@ Your choice regarding &#8216;Angular/Direct Links&#8217;, &#8216;Snap to Grid&#8
 </tr>
 </tbody>
 </table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 3.3.x.</span></p>
+</div>
 <p>Since release 3.3.x a tracking mechanism is available. It helps you to
 track every <a class="reference internal" href="glossary.html#term-sql"><span class="xref std std-term">SQL</span></a> command which is
 executed by phpMyAdmin. The mechanism supports logging of data
@@ -1754,7 +1841,7 @@ versions.</p>
 </tr>
 </tbody>
 </table>
-<p>Whether a DROP VIEW IF EXISTS statement will be added as first line to
+<p>Whether a <cite>DROP VIEW IF EXISTS</cite> statement will be added as first line to
 the log when creating a view.</p>
 </dd></dl>
 
@@ -1771,7 +1858,7 @@ the log when creating a view.</p>
 </tr>
 </tbody>
 </table>
-<p>Whether a DROP TABLE IF EXISTS statement will be added as first line
+<p>Whether a <cite>DROP TABLE IF EXISTS</cite> statement will be added as first line
 to the log when creating a table.</p>
 </dd></dl>
 
@@ -1788,7 +1875,7 @@ to the log when creating a table.</p>
 </tr>
 </tbody>
 </table>
-<p>Whether a DROP DATABASE IF EXISTS statement will be added as first
+<p>Whether a <cite>DROP DATABASE IF EXISTS</cite> statement will be added as first
 line to the log when creating a database.</p>
 </dd></dl>
 
@@ -1805,6 +1892,9 @@ line to the log when creating a database.</p>
 </tr>
 </tbody>
 </table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 3.4.x.</span></p>
+</div>
 <p>Since release 3.4.x phpMyAdmin allows users to set most preferences by
 themselves and store them in the database.</p>
 <p>If you don&#8217;t allow for storing preferences in
@@ -1856,7 +1946,7 @@ delete older rows.</p>
 </table>
 <p>Sets the time zone used by phpMyAdmin. Leave blank to use the time zone of your
 database server. Possible values are explained at
-<a class="reference external" href="https://dev.mysql.com/doc/refman/5.7/en/time-zone-support.html">https://dev.mysql.com/doc/refman/5.7/en/time-zone-support.html</a></p>
+<a class="reference external" href="https://dev.mysql.com/doc/refman/8.0/en/time-zone-support.html">https://dev.mysql.com/doc/refman/8.0/en/time-zone-support.html</a></p>
 <p>This is useful when your database server uses a time zone which is different from the
 time zone you want to use in phpMyAdmin.</p>
 </dd></dl>
@@ -2189,6 +2279,30 @@ after logout (doesn&#8217;t affect config authentication method). Should be
 absolute including protocol.</p>
 </dd></dl>
 
+<dl class="option">
+<dt id="cfg_Servers_hide_connection_errors">
+<code class="descname">$cfg['Servers'][$i]['hide_connection_errors']</code><a class="headerlink" href="#cfg_Servers_hide_connection_errors" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Default value:</th><td class="field-body">false</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.9.8.</span></p>
+</div>
+<p>Whether to show or hide detailed MySQL/MariaDB connection errors on the login page.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This error message can contain the target database server hostname or IP address,
+which may reveal information about your network to an attacker.</p>
+</div>
+</dd></dl>
+
 </div>
 <div class="section" id="generic-settings">
 <h2>Generic settings<a class="headerlink" href="#generic-settings" title="Permalink to this headline">¶</a></h2>
@@ -2259,7 +2373,7 @@ page or by directly accessing <cite>index.php?route=/version-check</cite>.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Default value:</th><td class="field-body">&#8220;&#8221;</td>
+<tr class="field-even field"><th class="field-name">Default value:</th><td class="field-body"><code class="docutils literal"><span class="pre">''</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -2279,7 +2393,7 @@ The format is: &#8220;hostname:portnumber&#8221;</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Default value:</th><td class="field-body">&#8220;&#8221;</td>
+<tr class="field-even field"><th class="field-name">Default value:</th><td class="field-body"><code class="docutils literal"><span class="pre">''</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -2298,7 +2412,7 @@ are currently supported.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Default value:</th><td class="field-body">&#8220;&#8221;</td>
+<tr class="field-even field"><th class="field-name">Default value:</th><td class="field-body"><code class="docutils literal"><span class="pre">''</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -2389,14 +2503,13 @@ query&#8217;s length exceeds this limit, this query is not saved in the history.
 </tr>
 </tbody>
 </table>
-<p>Whether <a class="reference external" href="https://www.php.net/manual/en/features.persistent-connections.php">persistent connections</a> should be used or not. Works with
-following extensions:</p>
-<ul class="simple">
-<li>mysql (<a class="reference external" href="https://www.php.net/manual/en/function.mysql-pconnect.php">mysql_pconnect</a>),</li>
-<li>mysqli (requires PHP 5.3.0 or newer, <a class="reference external" href="https://www.php.net/manual/en/mysqli.persistconns.php">more information</a>).</li>
-</ul>
+<p>Whether <a class="reference external" href="https://www.php.net/manual/en/features.persistent-connections.php">persistent connections</a> should be used or not.</p>
 </dd></dl>
 
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://www.php.net/manual/en/mysqli.persistconns.php">mysqli documentation for persistent connections</a></p>
+</div>
 <dl class="option">
 <dt id="cfg_ForceSSL">
 <code class="descname">$cfg['ForceSSL']</code><a class="headerlink" href="#cfg_ForceSSL" title="Permalink to this definition">¶</a></dt>
@@ -2699,6 +2812,47 @@ statement if one of the queries fails. Default is to abort execution.</p>
 <p>Whether or not the drag and drop import feature is enabled.
 When enabled, a user can drag a file in to their browser and phpMyAdmin will
 attempt to import the file.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cfg_URLQueryEncryption">
+<code class="descname">$cfg['URLQueryEncryption']</code><a class="headerlink" href="#cfg_URLQueryEncryption" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Default value:</th><td class="field-body">false</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.9.8.</span></p>
+</div>
+<p>Define whether phpMyAdmin will encrypt sensitive data (like database name
+and table name) from the URL query string. Default is to not encrypt the URL
+query string.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cfg_URLQueryEncryptionSecretKey">
+<code class="descname">$cfg['URLQueryEncryptionSecretKey']</code><a class="headerlink" href="#cfg_URLQueryEncryptionSecretKey" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Default value:</th><td class="field-body"><code class="docutils literal"><span class="pre">''</span></code></td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.9.8.</span></p>
+</div>
+<p>A secret key used to encrypt/decrypt the URL query string.
+Should be 32 bytes long.</p>
 </dd></dl>
 
 </div>
@@ -3024,6 +3178,9 @@ for the reCaptcha v2 service, either Google&#8217;s or a compatible one.</p>
 <p class="last">&lt;<a class="reference external" href="https://developers.google.com/recaptcha/docs/v3">https://developers.google.com/recaptcha/docs/v3</a>&gt;</p>
 </div>
 <p>reCaptcha will be then used in <a class="reference internal" href="setup.html#cookie"><span class="std std-ref">Cookie authentication mode</span></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.1.0.</span></p>
+</div>
 </dd></dl>
 
 <dl class="option">
@@ -3046,6 +3203,9 @@ for the reCaptcha v2 service, either Google&#8217;s or a compatible one.</p>
 <p class="last">&lt;<a class="reference external" href="https://developers.google.com/recaptcha/docs/v3">https://developers.google.com/recaptcha/docs/v3</a>&gt;</p>
 </div>
 <p>reCaptcha will be then used in <a class="reference internal" href="setup.html#cookie"><span class="std std-ref">Cookie authentication mode</span></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.1.0.</span></p>
+</div>
 </dd></dl>
 
 <dl class="option">
@@ -3767,7 +3927,7 @@ check&#8221; column that displays when each table was last checked.</p>
 </tr>
 </tbody>
 </table>
-<p>Defines whether the table structure actions are hidden under a &#8220;More&#8221;
+<p>Defines whether the table structure actions are hidden under a &#8220;<span class="guilabel">More</span>&#8221;
 drop-down.</p>
 </dd></dl>
 
@@ -3856,7 +4016,7 @@ segment. Value can be either of <code class="docutils literal"><span class="pre"
 </tr>
 </tbody>
 </table>
-<p>Defines whether a user should be displayed a &#8220;Show all&#8221; button in browse
+<p>Defines whether a user should be displayed a &#8220;<span class="guilabel">Show all</span>&#8221; button in browse
 mode or not in all cases. By default it is shown only on small tables (less
 than 500 rows) to avoid performance issues while getting too many rows.</p>
 </dd></dl>
@@ -3875,8 +4035,8 @@ than 500 rows) to avoid performance issues while getting too many rows.</p>
 </tbody>
 </table>
 <p>Number of rows displayed when browsing a result set and no LIMIT
-clause is used. If the result set contains more rows, &#8220;Previous&#8221; and
-&#8220;Next&#8221; links will be shown. Possible values: 25,50,100,250,500.</p>
+clause is used. If the result set contains more rows, &#8220;<span class="guilabel">Previous</span>&#8221; and
+&#8220;<span class="guilabel">Next</span>&#8221; links will be shown. Possible values: 25,50,100,250,500.</p>
 </dd></dl>
 
 <dl class="option">
@@ -4270,6 +4430,25 @@ done assuming UTF-8.</p>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference internal" href="faq.html#faq6-27"><span class="std std-ref">6.27 What format strings can I use?</span></a></p>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cfg_Export_remove_definer_from_definitions">
+<code class="descname">$cfg['Export']['remove_definer_from_definitions']</code><a class="headerlink" href="#cfg_Export_remove_definer_from_definitions" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Default value:</th><td class="field-body">false</td>
+</tr>
+</tbody>
+</table>
+<p>Remove DEFINER clause from the event, view and routine definitions.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.2.0.</span></p>
 </div>
 </dd></dl>
 
@@ -4952,7 +5131,7 @@ column.</p>
 <p>This will define the first day of week in the calendar. The number
 can be set from 0 to 6, which represents the seven days of the week,
 Sunday to Saturday respectively. This value can also be configured by the user
-in server settings -&gt; features -&gt; general -&gt; First Day calendar field.</p>
+in <span class="guilabel">Settings</span> -&gt; <span class="guilabel">Features</span> -&gt; <span class="guilabel">General</span> -&gt; <span class="guilabel">First day of calendar</span> field.</p>
 </dd></dl>
 
 </div>
@@ -5528,6 +5707,9 @@ to classes under <code class="file docutils literal"><span class="pre">libraries
 </tr>
 </tbody>
 </table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 3.4.0.</span></p>
+</div>
 <p>Activates in the user preferences a tab containing options for
 developers of phpMyAdmin.</p>
 </dd></dl>
@@ -6100,7 +6282,7 @@ This is used for <a class="reference external" href="https://www.phpmyadmin.net/
 <p>It currently changes following behavior:</p>
 <ul class="simple">
 <li>There is welcome message on the main page.</li>
-<li>There is footer information about demo server and used git revision.</li>
+<li>There is footer information about demo server and used Git revision.</li>
 <li>The setup script is enabled even with existing configuration.</li>
 <li>The setup does not try to connect to the MySQL server.</li>
 </ul>
@@ -6282,6 +6464,13 @@ configuration options, only the most frequently used ones.</p>
 <span class="c1">//$cfg[&#39;SendErrorReports&#39;] = &#39;always&#39;;</span>
 
 <span class="sd">/**</span>
+<span class="sd"> * &#39;URLQueryEncryption&#39; defines whether phpMyAdmin will encrypt sensitive data from the URL query string.</span>
+<span class="sd"> * &#39;URLQueryEncryptionSecretKey&#39; is a 32 bytes long secret key used to encrypt/decrypt the URL query string.</span>
+<span class="sd"> */</span>
+<span class="c1">//$cfg[&#39;URLQueryEncryption&#39;] = true;</span>
+<span class="c1">//$cfg[&#39;URLQueryEncryptionSecretKey&#39;] = &#39;&#39;;</span>
+
+<span class="sd">/**</span>
 <span class="sd"> * You can find more configuration options in the documentation</span>
 <span class="sd"> * in the doc/ folder or at &lt;https://docs.phpmyadmin.net/&gt;.</span>
 <span class="sd"> */</span>
@@ -6309,7 +6498,7 @@ as password.</p>
 <h3>Example for IP address limited autologin<a class="headerlink" href="#example-for-ip-address-limited-autologin" title="Permalink to this headline">¶</a></h3>
 <p>If you want to automatically login when accessing phpMyAdmin locally while asking
 for a password when accessing remotely, you can achieve it using following snippet:</p>
-<div class="highlight-php"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s2">&quot;REMOTE_ADDR&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight-php"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;REMOTE_ADDR&#39;</span><span class="p">]</span> <span class="o">===</span> <span class="s1">&#39;127.0.0.1&#39;</span><span class="p">)</span> <span class="p">{</span>
     <span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;Servers&#39;</span><span class="p">][</span><span class="nv">$i</span><span class="p">][</span><span class="s1">&#39;auth_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;config&#39;</span><span class="p">;</span>
     <span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;Servers&#39;</span><span class="p">][</span><span class="nv">$i</span><span class="p">][</span><span class="s1">&#39;user&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;root&#39;</span><span class="p">;</span>
     <span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;Servers&#39;</span><span class="p">][</span><span class="nv">$i</span><span class="p">][</span><span class="s1">&#39;password&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;yourpassword&#39;</span><span class="p">;</span>
@@ -6329,8 +6518,8 @@ only for local address.</p>
 <p>You can configure any number of servers using <span class="target" id="index-160"></span><a class="reference internal" href="#cfg_Servers"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers']</span></code></a>,
 following example shows two of them:</p>
 <div class="highlight-php"><div class="highlight"><pre><span></span><span class="o">&lt;?</span><span class="nx">php</span>
-<span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;blowfish_secret&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;multiServerExample70518&#39;</span><span class="p">;</span>
-<span class="c1">//any string of your choice</span>
+<span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;blowfish_secret&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;multiServerExample70518&#39;</span><span class="p">;</span>
+<span class="c1">// any string of your choice</span>
 <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
 <span class="nv">$i</span><span class="o">++</span><span class="p">;</span> <span class="c1">// server 1 :</span>
@@ -6393,6 +6582,38 @@ server certificates and tell phpMyAdmin to use them:</p>
 <span class="target" id="index-164"></span><a class="reference internal" href="#cfg_Servers_ssl_ca"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl_ca']</span></code></a>,
 <span class="target" id="index-165"></span><a class="reference internal" href="#cfg_Servers_ssl_verify"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl_verify']</span></code></a>,
 &lt;<a class="reference external" href="https://bugs.php.net/bug.php?id=72048">https://bugs.php.net/bug.php?id=72048</a>&gt;</p>
+</div>
+</div>
+<div class="section" id="amazon-rds-aurora-with-ssl">
+<span id="example-aws-ssl"></span><h3>Amazon RDS Aurora with SSL<a class="headerlink" href="#amazon-rds-aurora-with-ssl" title="Permalink to this headline">¶</a></h3>
+<p>To connect phpMyAdmin to an Amazon RDS Aurora MySQL database instance using SSL,
+download the CA server certificate and tell phpMyAdmin to use it:</p>
+<div class="highlight-php"><div class="highlight"><pre><span></span><span class="c1">// Address of your instance</span>
+<span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;Servers&#39;</span><span class="p">][</span><span class="nv">$i</span><span class="p">][</span><span class="s1">&#39;host&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;replace-me-custer-name.cluster-replace-me-id.replace-me-region.rds.amazonaws.com&#39;</span><span class="p">;</span>
+<span class="c1">// Use SSL for connection</span>
+<span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;Servers&#39;</span><span class="p">][</span><span class="nv">$i</span><span class="p">][</span><span class="s1">&#39;ssl&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
+<span class="c1">// You need to have the region CA file and the authority CA file (2019 edition CA for example) in the PEM bundle for it to work</span>
+<span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;Servers&#39;</span><span class="p">][</span><span class="nv">$i</span><span class="p">][</span><span class="s1">&#39;ssl_ca&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;../rds-combined-ca-bundle.pem&#39;</span><span class="p">;</span>
+<span class="c1">// Enable SSL verification</span>
+<span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;Servers&#39;</span><span class="p">][</span><span class="nv">$i</span><span class="p">][</span><span class="s1">&#39;ssl_verify&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="setup.html#ssl"><span class="std std-ref">Using SSL for connection to database server</span></a>,
+<span class="target" id="index-166"></span><a class="reference internal" href="#cfg_Servers_ssl"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl']</span></code></a>,
+<span class="target" id="index-167"></span><a class="reference internal" href="#cfg_Servers_ssl_ca"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl_ca']</span></code></a>,
+<span class="target" id="index-168"></span><a class="reference internal" href="#cfg_Servers_ssl_verify"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['ssl_verify']</span></code></a></p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li>Current RDS CA bundle for all regions <a class="reference external" href="https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem">https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem</a></li>
+<li>The RDS CA (2019 edition) for the region <cite>eu-west-3</cite> without the parent CA <a class="reference external" href="https://s3.amazonaws.com/rds-downloads/rds-ca-2019-eu-west-3.pem">https://s3.amazonaws.com/rds-downloads/rds-ca-2019-eu-west-3.pem</a></li>
+<li><a class="reference external" href="https://s3.amazonaws.com/rds-downloads/">List of available Amazon RDS CA files</a></li>
+<li><a class="reference external" href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraMySQL.Security.html">Amazon MySQL Aurora security guide</a></li>
+<li><a class="reference external" href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.SSL.html">Amazon certificates bundles per region</a></li>
+</ul>
 </div>
 </div>
 <div class="section" id="recaptcha-using-hcaptcha">
@@ -6462,6 +6683,7 @@ server certificates and tell phpMyAdmin to use them:</p>
 <li><a class="reference internal" href="#example-for-ip-address-limited-autologin">Example for IP address limited autologin</a></li>
 <li><a class="reference internal" href="#example-for-using-multiple-mysql-servers">Example for using multiple MySQL servers</a></li>
 <li><a class="reference internal" href="#google-cloud-sql-with-ssl">Google Cloud SQL with SSL</a></li>
+<li><a class="reference internal" href="#amazon-rds-aurora-with-ssl">Amazon RDS Aurora with SSL</a></li>
 <li><a class="reference internal" href="#recaptcha-using-hcaptcha">reCaptcha using hCaptcha</a></li>
 </ul>
 </li>
@@ -6508,7 +6730,7 @@ server certificates and tell phpMyAdmin to use them:</p>
         <li class="right" >
           <a href="setup.html" title="Installation"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.2.0-dev documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 5.3.0-dev documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

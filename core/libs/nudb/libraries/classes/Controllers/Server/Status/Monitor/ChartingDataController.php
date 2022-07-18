@@ -34,10 +34,10 @@ final class ChartingDataController extends AbstractController
 
     public function __invoke(): void
     {
-        global $errorUrl;
+        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
 
         $params = ['requiredData' => $_POST['requiredData'] ?? null];
-        $errorUrl = Url::getFromRoute('/');
+        $GLOBALS['errorUrl'] = Url::getFromRoute('/');
 
         if ($this->dbi->isSuperUser()) {
             $this->dbi->selectDb('mysql');

@@ -73,18 +73,15 @@ class AuthenticationConfig extends AuthenticationPlugin
      */
     public function showFailure($failure): void
     {
-        global $dbi;
-
         parent::showFailure($failure);
-        $conn_error = $dbi->getError();
+        $conn_error = $GLOBALS['dbi']->getError();
         if (! $conn_error) {
             $conn_error = __('Cannot connect: invalid settings.');
         }
 
         /* HTML header */
         $response = ResponseRenderer::getInstance();
-        $response->getFooter()
-            ->setMinimal();
+        $response->setMinimalFooter();
         $header = $response->getHeader();
         $header->setBodyId('loginform');
         $header->setTitle(__('Access denied!'));

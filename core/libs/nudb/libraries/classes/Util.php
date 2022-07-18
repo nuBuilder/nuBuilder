@@ -6,13 +6,11 @@ namespace PhpMyAdmin;
 
 use PhpMyAdmin\Dbal\ResultInterface;
 use PhpMyAdmin\Html\Generator;
-use PhpMyAdmin\Html\MySQLDocumentation;
 use PhpMyAdmin\Query\Utilities;
 use PhpMyAdmin\SqlParser\Components\Expression;
 use PhpMyAdmin\SqlParser\Context;
 use PhpMyAdmin\SqlParser\Token;
 use PhpMyAdmin\Utils\SessionCache;
-use phpseclib3\Crypt\Random;
 use Stringable;
 
 use function __;
@@ -23,10 +21,8 @@ use function array_map;
 use function array_merge;
 use function array_shift;
 use function array_unique;
-use function basename;
 use function bin2hex;
 use function chr;
-use function class_exists;
 use function count;
 use function ctype_digit;
 use function date;
@@ -46,7 +42,6 @@ use function implode;
 use function in_array;
 use function ini_get;
 use function is_array;
-use function is_callable;
 use function is_object;
 use function is_scalar;
 use function is_string;
@@ -64,6 +59,7 @@ use function parse_url;
 use function preg_match;
 use function preg_quote;
 use function preg_replace;
+use function random_bytes;
 use function range;
 use function reset;
 use function round;
@@ -204,8 +200,6 @@ class Util
      */
     public static function getMySQLDocuURL(string $link, string $anchor = ''): string
     {
-        global $dbi;
-
         // Fixup for newly used names:
         $link = str_replace('_', '-', mb_strtolower($link));
 
@@ -215,8 +209,8 @@ class Util
 
         $mysql = '5.5';
         $lang = 'en';
-        if (isset($dbi)) {
-            $serverVersion = $dbi->getVersion();
+        if (isset($GLOBALS['dbi'])) {
+            $serverVersion = $GLOBALS['dbi']->getVersion();
             if ($serverVersion >= 80000) {
                 $mysql = '8.0';
             } elseif ($serverVersion >= 50700) {
@@ -267,8 +261,6 @@ class Util
      */
     private static function checkRowCount($db, array $table)
     {
-        global $dbi;
-
         $rowCount = 0;
 
         if ($table['Rows'] === null) {
@@ -284,7 +276,7 @@ class Util
             $tableIsView = $table['TABLE_TYPE'] === 'VIEW';
 
             if ($tableIsView || Utilities::isSystemSchema($db)) {
-                $rowCount = $dbi
+                $rowCount = $GLOBALS['dbi']
                     ->getTable($db, $table['Name'])
                     ->countRecords();
             }
@@ -302,11 +294,9 @@ class Util
      */
     public static function getTableList($db): array
     {
-        global $dbi;
-
         $sep = $GLOBALS['cfg']['NavigationTreeTableSeparator'];
 
-        $tables = $dbi->getTablesFull($db);
+        $tables = $GLOBALS['dbi']->getTablesFull($db);
 
         if ($GLOBALS['cfg']['NaturalOrder']) {
             uksort($tables, 'strnatcasecmp');
@@ -808,46 +798,6 @@ class Util
     }
 
     /**
-     * Function added to avoid path disclosures.
-     * Called by each script that needs parameters, it displays
-     * an error message and, by default, stops the execution.
-     *
-     * @param string[] $params  The names of the parameters needed by the calling
-     *                          script
-     * @param bool     $request Check parameters in request
-     */
-    public static function checkParameters($params, $request = false): void
-    {
-        $reportedScriptName = basename($GLOBALS['PMA_PHP_SELF']);
-        $foundError = false;
-        $errorMessage = '';
-        if ($request) {
-            $array = $_REQUEST;
-        } else {
-            $array = $GLOBALS;
-        }
-
-        foreach ($params as $param) {
-            if (isset($array[$param])) {
-                continue;
-            }
-
-            $errorMessage .= $reportedScriptName
-                . ': ' . __('Missing parameter:') . ' '
-                . $param
-                . MySQLDocumentation::showDocumentation('faq', 'faqmissingparameters', true)
-                . '[br]';
-            $foundError = true;
-        }
-
-        if (! $foundError) {
-            return;
-        }
-
-        Core::fatalError($errorMessage);
-    }
-
-    /**
      * Build a condition and with a value
      *
      * @param string|int|float|null $row          The row value
@@ -866,8 +816,6 @@ class Util
         string $conditionKey,
         string $condition
     ): array {
-        global $dbi;
-
         if ($row === null) {
             return ['IS NULL', $condition];
         }
@@ -903,7 +851,7 @@ class Util
         } elseif ($meta->isMappedTypeGeometry && ! empty($row)) {
             // do not build a too big condition
             if (mb_strlen((string) $row) < 5000) {
-                $condition .= '=0x' . bin2hex((string) $row) . ' AND';
+                $condition .= '= CAST(0x' . bin2hex((string) $row) . ' AS BINARY)';
             } else {
                 $condition = '';
             }
@@ -912,7 +860,7 @@ class Util
                 . self::printableBitValue((int) $row, (int) $meta->length) . "'";
         } else {
             $conditionValue = '= \''
-                . $dbi->escapeString($row) . '\'';
+                . $GLOBALS['dbi']->escapeString($row) . '\'';
         }
 
         return [$conditionValue, $condition];
@@ -939,8 +887,6 @@ class Util
         $restrictToTable = false,
         array $expressions = []
     ): array {
-        global $dbi;
-
         $primaryKey = '';
         $uniqueKey = '';
         $nonPrimaryCondition = '';
@@ -982,7 +928,7 @@ class Util
             // because there is some caching in the function).
             if (
                 $meta->table !== $meta->orgtable
-                && ! $dbi->getTable($GLOBALS['db'], $meta->table)->isView()
+                && ! $GLOBALS['dbi']->getTable($GLOBALS['db'], $meta->table)->isView()
             ) {
                 $meta->table = $meta->orgtable;
             }
@@ -1267,6 +1213,7 @@ class Util
         SessionCache::remove('is_superuser');
         SessionCache::remove('is_createuser');
         SessionCache::remove('is_grantuser');
+        SessionCache::remove('mysql_cur_user');
     }
 
     /**
@@ -1594,24 +1541,16 @@ class Util
      * Formats user string, expanding @VARIABLES@, accepting strftime format
      * string.
      *
-     * @param string       $string  Text where to do expansion.
-     * @param array|string $escape  Function to call for escaping variable values.
-     *                              Can also be an array of:
-     *                              - the escape method name
-     *                              - the class that contains the method
-     *                              - location of the class (for inclusion)
-     * @param array        $updates Array with overrides for default parameters
-     *                              (obtained from GLOBALS).
-     *
-     * @return string
+     * @param string                     $string  Text where to do expansion.
+     * @param callable|null              $escape  Function to call for escaping variable values.
+     * @param array<string, string|null> $updates Array with overrides for default parameters (obtained from GLOBALS).
+     * @psalm-param callable(string):string|null $escape
      */
     public static function expandUserString(
-        $string,
-        $escape = null,
+        string $string,
+        ?callable $escape = null,
         array $updates = []
-    ) {
-        global $dbi;
-
+    ): string {
         /* Content */
         $vars = [];
         $vars['http_host'] = Core::getenv('HTTP_HOST');
@@ -1653,20 +1592,7 @@ class Util
 
         /* Optional escaping */
         if ($escape !== null) {
-            if (is_array($escape)) {
-                $escapeClass = new $escape[1]();
-                $escapeMethod = $escape[0];
-            }
-
-            foreach ($replace as $key => $val) {
-                if (isset($escapeClass, $escapeMethod)) {
-                    $replace[$key] = $escapeClass->$escapeMethod($val);
-                } elseif ($escape === 'backquote') {
-                    $replace[$key] = self::backquote($val);
-                } elseif (is_callable($escape)) {
-                    $replace[$key] = $escape($val);
-                }
-            }
+            $replace = array_map($escape, $replace);
         }
 
         /* Backward compatibility in 3.5.x */
@@ -1676,7 +1602,7 @@ class Util
 
         /* Fetch columns list if required */
         if (str_contains($string, '@COLUMNS@')) {
-            $columnsList = $dbi->getColumns($GLOBALS['db'], $GLOBALS['table']);
+            $columnsList = $GLOBALS['dbi']->getColumns($GLOBALS['db'], $GLOBALS['table']);
 
             // sometimes the table no longer exists at this point
             if ($columnsList !== null) {
@@ -1712,13 +1638,11 @@ class Util
      */
     public static function getSupportedDatatypes($html = false, $selected = '')
     {
-        global $dbi;
-
         if ($html) {
             $retval = Generator::getSupportedDatatypes($selected);
         } else {
             $retval = [];
-            foreach ($dbi->types->getColumns() as $value) {
+            foreach ($GLOBALS['dbi']->types->getColumns() as $value) {
                 if (is_array($value)) {
                     foreach ($value as $subvalue) {
                         if ($subvalue === '-') {
@@ -1770,11 +1694,9 @@ class Util
      */
     public static function currentUserHasPrivilege(string $priv, ?string $db = null, ?string $tbl = null): bool
     {
-        global $dbi;
-
         // Get the username for the current user in the format
         // required to use in the information schema database.
-        [$user, $host] = $dbi->getCurrentUserAndHost();
+        [$user, $host] = $GLOBALS['dbi']->getCurrentUserAndHost();
 
         // MySQL is started with --skip-grant-tables
         if ($user === '') {
@@ -1792,7 +1714,7 @@ class Util
                . "WHERE GRANTEE='%s' AND PRIVILEGE_TYPE='%s'";
 
         // Check global privileges first.
-        $userPrivileges = $dbi->fetchValue(
+        $userPrivileges = $GLOBALS['dbi']->fetchValue(
             sprintf(
                 $query,
                 'USER_PRIVILEGES',
@@ -1813,13 +1735,13 @@ class Util
         }
 
         $query .= " AND '%s' LIKE `TABLE_SCHEMA`";
-        $schemaPrivileges = $dbi->fetchValue(
+        $schemaPrivileges = $GLOBALS['dbi']->fetchValue(
             sprintf(
                 $query,
                 'SCHEMA_PRIVILEGES',
                 $username,
                 $priv,
-                $dbi->escapeString($db)
+                $GLOBALS['dbi']->escapeString($db)
             )
         );
         if ($schemaPrivileges) {
@@ -1830,14 +1752,14 @@ class Util
         // find any valid privileges, try table-wise privileges.
         if ($tbl !== null) {
             $query .= " AND TABLE_NAME='%s'";
-            $tablePrivileges = $dbi->fetchValue(
+            $tablePrivileges = $GLOBALS['dbi']->fetchValue(
                 sprintf(
                     $query,
                     'TABLE_PRIVILEGES',
                     $username,
                     $priv,
-                    $dbi->escapeString($db),
-                    $dbi->escapeString($tbl)
+                    $GLOBALS['dbi']->escapeString($db),
+                    $GLOBALS['dbi']->escapeString($tbl)
                 )
             );
             if ($tablePrivileges) {
@@ -1861,13 +1783,11 @@ class Util
      */
     public static function getServerType(): string
     {
-        global $dbi;
-
-        if ($dbi->isMariaDB()) {
+        if ($GLOBALS['dbi']->isMariaDB()) {
             return 'MariaDB';
         }
 
-        if ($dbi->isPercona()) {
+        if ($GLOBALS['dbi']->isPercona()) {
             return 'Percona Server';
         }
 
@@ -2068,9 +1988,7 @@ class Util
      */
     public static function getCollateForIS()
     {
-        global $dbi;
-
-        $names = $dbi->getLowerCaseNames();
+        $names = $GLOBALS['dbi']->getLowerCaseNames();
         if ($names === '0') {
             return 'COLLATE utf8_bin';
         }
@@ -2150,8 +2068,6 @@ class Util
      */
     public static function getDbInfo($db, string $subPart)
     {
-        global $cfg, $dbi;
-
         /**
          * limits for table list
          */
@@ -2169,7 +2085,7 @@ class Util
         /**
          * whether to display extended stats
          */
-        $isShowStats = $cfg['ShowStats'];
+        $isShowStats = $GLOBALS['cfg']['ShowStats'];
 
         /**
          * whether selected db is information_schema
@@ -2190,8 +2106,8 @@ class Util
         $tooltipAliasName = [];
 
         // Special speedup for newer MySQL Versions (in 4.0 format changed)
-        if ($cfg['SkipLockedTables'] === true) {
-            $dbInfoResult = $dbi->query(
+        if ($GLOBALS['cfg']['SkipLockedTables'] === true) {
+            $dbInfoResult = $GLOBALS['dbi']->query(
                 'SHOW OPEN TABLES FROM ' . self::backquote($db) . ' WHERE In_use > 0;'
             );
 
@@ -2246,7 +2162,7 @@ class Util
                     $tableGroup = $_REQUEST['tbl_group'];
                     // include the table with the exact name of the group if such
                     // exists
-                    $groupTable = $dbi->getTablesFull(
+                    $groupTable = $GLOBALS['dbi']->getTablesFull(
                         $db,
                         $tableGroup,
                         false,
@@ -2263,7 +2179,7 @@ class Util
                 // all tables in db
                 // - get the total number of tables
                 //  (needed for proper working of the MaxTableList feature)
-                $tables = $dbi->getTables($db);
+                $tables = $GLOBALS['dbi']->getTables($db);
                 $totalNumTables = count($tables);
                 if ($subPart !== '_export') {
                     // fetch the details for a possible limited subset
@@ -2272,18 +2188,16 @@ class Util
                 }
             }
 
-            $tables = array_merge(
-                $groupTable,
-                $dbi->getTablesFull(
-                    $db,
-                    $groupWithSeparator !== false ? $groupWithSeparator : '',
-                    $groupWithSeparator !== false,
-                    $limitOffset,
-                    $limitCount,
-                    $sort,
-                    $sortOrder,
-                    $tableType
-                )
+            // We must use union operator here instead of array_merge to preserve numerical keys
+            $tables = $groupTable + $GLOBALS['dbi']->getTablesFull(
+                $db,
+                $groupWithSeparator !== false ? $groupWithSeparator : '',
+                $groupWithSeparator !== false,
+                $limitOffset,
+                $limitCount,
+                $sort,
+                $sortOrder,
+                $tableType
             );
         }
 
@@ -2325,8 +2239,6 @@ class Util
      */
     public static function getTablesWhenOpen($db, ResultInterface $dbInfoResult): array
     {
-        global $dbi;
-
         $sotCache = [];
         $tables = [];
 
@@ -2343,8 +2255,8 @@ class Util
                 && is_scalar($_REQUEST['tbl_group'])
                 && strlen((string) $_REQUEST['tbl_group']) > 0
             ) {
-                $group = self::escapeMysqlWildcards((string) $_REQUEST['tbl_group']);
-                $groupWithSeparator = self::escapeMysqlWildcards(
+                $group = $GLOBALS['dbi']->escapeMysqlLikeString((string) $_REQUEST['tbl_group']);
+                $groupWithSeparator = $GLOBALS['dbi']->escapeMysqlLikeString(
                     $_REQUEST['tbl_group']
                     . $GLOBALS['cfg']['NavigationTreeTableSeparator']
                 );
@@ -2366,7 +2278,7 @@ class Util
                 }
             }
 
-            $dbInfoResult = $dbi->query('SHOW FULL TABLES FROM ' . self::backquote($db) . $tblGroupSql);
+            $dbInfoResult = $GLOBALS['dbi']->query('SHOW FULL TABLES FROM ' . self::backquote($db) . $tblGroupSql);
             unset($tblGroupSql, $whereAdded);
 
             if ($dbInfoResult->numRows() > 0) {
@@ -2388,7 +2300,7 @@ class Util
                 if (count($names) > 0) {
                     $tables = array_merge(
                         $tables,
-                        $dbi->getTablesFull($db, $names)
+                        $GLOBALS['dbi']->getTablesFull($db, $names)
                     );
                 }
 
@@ -2463,19 +2375,11 @@ class Util
     public static function generateRandom(int $length, bool $asHex = false): string
     {
         $result = '';
-        if (class_exists(Random::class)) {
-            $randomFunction = [
-                Random::class,
-                'string',
-            ];
-        } else {
-            $randomFunction = 'openssl_random_pseudo_bytes';
-        }
 
         while (strlen($result) < $length) {
             // Get random byte and strip highest bit
             // to get ASCII only range
-            $byte = ord((string) $randomFunction(1)) & 0x7f;
+            $byte = ord(random_bytes(1)) & 0x7f;
             // We want only ASCII chars and no DEL character (127)
             if ($byte <= 32 || $byte === 127) {
                 continue;
@@ -2631,9 +2535,9 @@ class Util
             $urlParams['tbl_group'] = $_REQUEST['tbl_group'];
         }
 
-        $url = Url::getFromRoute('/database/structure', $urlParams);
+        $url = Url::getFromRoute('/database/structure');
 
-        return Generator::linkOrButton($url, $title . $orderImg, $orderLinkParams);
+        return Generator::linkOrButton($url, $urlParams, $title . $orderImg, $orderLinkParams);
     }
 
     /**
@@ -2643,7 +2547,7 @@ class Util
      */
     public static function isInteger($input): bool
     {
-        return ctype_digit((string) $input);
+        return is_scalar($input) && ctype_digit((string) $input);
     }
 
     /**

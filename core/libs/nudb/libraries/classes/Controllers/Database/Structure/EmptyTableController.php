@@ -6,7 +6,7 @@ namespace PhpMyAdmin\Controllers\Database\Structure;
 
 use PhpMyAdmin\ConfigStorage\Relation;
 use PhpMyAdmin\ConfigStorage\RelationCleanup;
-use PhpMyAdmin\Controllers\Database\AbstractController;
+use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\Controllers\Database\StructureController;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\FlashMessages;
@@ -45,7 +45,6 @@ final class EmptyTableController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
-        string $db,
         DatabaseInterface $dbi,
         Relation $relation,
         RelationCleanup $relationCleanup,
@@ -53,7 +52,7 @@ final class EmptyTableController extends AbstractController
         FlashMessages $flash,
         StructureController $structureController
     ) {
-        parent::__construct($response, $template, $db);
+        parent::__construct($response, $template);
         $this->dbi = $dbi;
         $this->relation = $relation;
         $this->relationCleanup = $relationCleanup;
@@ -64,29 +63,29 @@ final class EmptyTableController extends AbstractController
 
     public function __invoke(): void
     {
-        global $db, $table, $message, $sql_query;
+        $GLOBALS['message'] = $GLOBALS['message'] ?? null;
 
         $multBtn = $_POST['mult_btn'] ?? '';
         $selected = $_POST['selected'] ?? [];
 
         if ($multBtn !== __('Yes')) {
             $this->flash->addMessage('success', __('No change'));
-            $this->redirect('/database/structure', ['db' => $db]);
+            $this->redirect('/database/structure', ['db' => $GLOBALS['db']]);
 
             return;
         }
 
         $defaultFkCheckValue = ForeignKey::handleDisableCheckInit();
 
-        $sql_query = '';
+        $GLOBALS['sql_query'] = '';
         $selectedCount = count($selected);
 
         for ($i = 0; $i < $selectedCount; $i++) {
             $aQuery = 'TRUNCATE ';
             $aQuery .= Util::backquote($selected[$i]);
 
-            $sql_query .= $aQuery . ';' . "\n";
-            $this->dbi->selectDb($db);
+            $GLOBALS['sql_query'] .= $aQuery . ';' . "\n";
+            $this->dbi->selectDb($GLOBALS['db']);
             $this->dbi->query($aQuery);
         }
 
@@ -100,15 +99,15 @@ final class EmptyTableController extends AbstractController
                 $this->template
             );
 
-            $_REQUEST['pos'] = $sql->calculatePosForLastPage($db, $table, $_REQUEST['pos']);
+            $_REQUEST['pos'] = $sql->calculatePosForLastPage($GLOBALS['db'], $GLOBALS['table'], $_REQUEST['pos']);
         }
 
         ForeignKey::handleDisableCheckCleanup($defaultFkCheckValue);
 
-        $message = Message::success();
+        $GLOBALS['message'] = Message::success();
 
         if (empty($_POST['message'])) {
-            $_POST['message'] = $message;
+            $_POST['message'] = $GLOBALS['message'];
         }
 
         unset($_POST['mult_btn']);

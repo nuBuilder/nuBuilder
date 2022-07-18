@@ -7,13 +7,18 @@ namespace PhpMyAdmin;
 use PhpMyAdmin\Config\ConfigFile;
 use PhpMyAdmin\Config\Forms\User\UserFormList;
 use PhpMyAdmin\ConfigStorage\Relation;
+use PhpMyAdmin\Dbal\DatabaseName;
 
 use function __;
 use function array_flip;
 use function array_merge;
 use function basename;
+use function htmlspecialchars;
 use function http_build_query;
 use function is_array;
+use function is_int;
+use function is_numeric;
+use function is_string;
 use function json_decode;
 use function json_encode;
 use function str_contains;
@@ -33,9 +38,7 @@ class UserPreferences
 
     public function __construct()
     {
-        global $dbi;
-
-        $this->relation = new Relation($dbi);
+        $this->relation = new Relation($GLOBALS['dbi']);
         $this->template = new Template();
     }
 
@@ -66,25 +69,23 @@ class UserPreferences
      * * mtime - last modification time
      * * type - 'db' (config read from pmadb) or 'session' (read from user session)
      *
-     * @return array
+     * @psalm-return array{config_data: array, mtime: int, type: 'session'|'db'}
      */
-    public function load()
+    public function load(): array
     {
-        global $dbi;
-
         $relationParameters = $this->relation->getRelationParameters();
         if ($relationParameters->userPreferencesFeature === null) {
             // no pmadb table, use session storage
-            if (! isset($_SESSION['userconfig'])) {
-                $_SESSION['userconfig'] = [
-                    'db' => [],
-                    'ts' => time(),
-                ];
+            if (! isset($_SESSION['userconfig']) || ! is_array($_SESSION['userconfig'])) {
+                $_SESSION['userconfig'] = ['db' => [], 'ts' => time()];
             }
 
+            $configData = $_SESSION['userconfig']['db'] ?? null;
+            $timestamp = $_SESSION['userconfig']['ts'] ?? null;
+
             return [
-                'config_data' => $_SESSION['userconfig']['db'],
-                'mtime' => $_SESSION['userconfig']['ts'],
+                'config_data' => is_array($configData) ? $configData : [],
+                'mtime' => is_int($timestamp) ? $timestamp : time(),
                 'type' => 'session',
             ];
         }
@@ -95,13 +96,22 @@ class UserPreferences
         $query = 'SELECT `config_data`, UNIX_TIMESTAMP(`timevalue`) ts'
             . ' FROM ' . $query_table
             . ' WHERE `username` = \''
-            . $dbi->escapeString((string) $relationParameters->user)
+            . $GLOBALS['dbi']->escapeString((string) $relationParameters->user)
             . '\'';
-        $row = $dbi->fetchSingleRow($query, DatabaseInterface::FETCH_ASSOC, DatabaseInterface::CONNECT_CONTROL);
+        $row = $GLOBALS['dbi']->fetchSingleRow(
+            $query,
+            DatabaseInterface::FETCH_ASSOC,
+            DatabaseInterface::CONNECT_CONTROL
+        );
+        if (! is_array($row) || ! isset($row['config_data']) || ! isset($row['ts'])) {
+            return ['config_data' => [], 'mtime' => time(), 'type' => 'db'];
+        }
+
+        $configData = is_string($row['config_data']) ? json_decode($row['config_data'], true) : [];
 
         return [
-            'config_data' => $row ? json_decode($row['config_data'], true) : [],
-            'mtime' => $row ? $row['ts'] : time(),
+            'config_data' => is_array($configData) ? $configData : [],
+            'mtime' => is_numeric($row['ts']) ? (int) $row['ts'] : time(),
             'type' => 'db',
         ];
     }
@@ -115,12 +125,14 @@ class UserPreferences
      */
     public function save(array $config_array)
     {
-        global $dbi;
-
         $relationParameters = $this->relation->getRelationParameters();
         $server = $GLOBALS['server'] ?? $GLOBALS['cfg']['ServerDefault'];
         $cache_key = 'server_' . $server;
-        if ($relationParameters->userPreferencesFeature === null || $relationParameters->user === null) {
+        if (
+            $relationParameters->userPreferencesFeature === null
+            || $relationParameters->user === null
+            || $relationParameters->db === null
+        ) {
             // no pmadb table, use session storage
             $_SESSION['userconfig'] = [
                 'db' => $config_array,
@@ -138,42 +150,65 @@ class UserPreferences
             . Util::backquote($relationParameters->userPreferencesFeature->userConfig);
         $query = 'SELECT `username` FROM ' . $query_table
             . ' WHERE `username` = \''
-            . $dbi->escapeString($relationParameters->user)
+            . $GLOBALS['dbi']->escapeString($relationParameters->user)
             . '\'';
 
-        $has_config = $dbi->fetchValue($query, 0, DatabaseInterface::CONNECT_CONTROL);
+        $has_config = $GLOBALS['dbi']->fetchValue($query, 0, DatabaseInterface::CONNECT_CONTROL);
         $config_data = json_encode($config_array);
         if ($has_config) {
             $query = 'UPDATE ' . $query_table
                 . ' SET `timevalue` = NOW(), `config_data` = \''
-                . $dbi->escapeString($config_data)
+                . $GLOBALS['dbi']->escapeString($config_data)
                 . '\''
                 . ' WHERE `username` = \''
-                . $dbi->escapeString($relationParameters->user)
+                . $GLOBALS['dbi']->escapeString($relationParameters->user)
                 . '\'';
         } else {
             $query = 'INSERT INTO ' . $query_table
                 . ' (`username`, `timevalue`,`config_data`) '
                 . 'VALUES (\''
-                . $dbi->escapeString($relationParameters->user) . '\', NOW(), '
-                . '\'' . $dbi->escapeString($config_data) . '\')';
+                . $GLOBALS['dbi']->escapeString($relationParameters->user) . '\', NOW(), '
+                . '\'' . $GLOBALS['dbi']->escapeString($config_data) . '\')';
         }
 
         if (isset($_SESSION['cache'][$cache_key]['userprefs'])) {
             unset($_SESSION['cache'][$cache_key]['userprefs']);
         }
 
-        if (! $dbi->tryQuery($query, DatabaseInterface::CONNECT_CONTROL)) {
+        if (! $GLOBALS['dbi']->tryQuery($query, DatabaseInterface::CONNECT_CONTROL)) {
             $message = Message::error(__('Could not save configuration'));
             $message->addMessage(
-                Message::rawError($dbi->getError(DatabaseInterface::CONNECT_CONTROL)),
+                Message::error($GLOBALS['dbi']->getError(DatabaseInterface::CONNECT_CONTROL)),
                 '<br><br>'
             );
+            if (! $this->hasAccessToDatabase($relationParameters->db)) {
+                /**
+                 * When phpMyAdmin cached the configuration storage parameters, it checked if the database can be
+                 * accessed, so if it could not be accessed anymore, then the cache must be cleared as it's out of date.
+                 *
+                 * @psalm-suppress MixedArrayAssignment
+                 */
+                $_SESSION['relation'][$GLOBALS['server']] = [];
+                $message->addMessage(Message::error(htmlspecialchars(
+                    __('The phpMyAdmin configuration storage database could not be accessed.')
+                )), '<br><br>');
+            }
 
             return $message;
         }
 
         return true;
+    }
+
+    private function hasAccessToDatabase(DatabaseName $database): bool
+    {
+        $escapedDb = $GLOBALS['dbi']->escapeString($database->getName());
+        $query = 'SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = \'' . $escapedDb . '\';';
+        if ($GLOBALS['cfg']['Server']['DisableIS']) {
+            $query = 'SHOW DATABASES LIKE \'' . Util::escapeMysqlWildcards($escapedDb) . '\';';
+        }
+
+        return (bool) $GLOBALS['dbi']->fetchSingleRow($query, 'ASSOC', DatabaseInterface::CONNECT_CONTROL);
     }
 
     /**

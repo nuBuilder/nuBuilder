@@ -176,8 +176,6 @@ class ExportMediawiki extends ExportPlugin
         $dates = false,
         array $aliases = []
     ): bool {
-        global $dbi;
-
         $db_alias = $db;
         $table_alias = $table;
         $this->initAlias($aliases, $db_alias, $table_alias);
@@ -185,7 +183,7 @@ class ExportMediawiki extends ExportPlugin
         $output = '';
         switch ($exportMode) {
             case 'create_table':
-                $columns = $dbi->getColumns($db, $table);
+                $columns = $GLOBALS['dbi']->getColumns($db, $table);
                 $columns = array_values($columns);
                 $row_cnt = count($columns);
 
@@ -269,8 +267,6 @@ class ExportMediawiki extends ExportPlugin
         $sqlQuery,
         array $aliases = []
     ): bool {
-        global $dbi;
-
         $db_alias = $db;
         $table_alias = $table;
         $this->initAlias($aliases, $db_alias, $table_alias);
@@ -296,7 +292,7 @@ class ExportMediawiki extends ExportPlugin
         // Add the table headers
         if (isset($GLOBALS['mediawiki_headers'])) {
             // Get column names
-            $column_names = $dbi->getColumnNames($db, $table);
+            $column_names = $GLOBALS['dbi']->getColumnNames($db, $table);
 
             // Add column names as table headers
             if ($column_names !== []) {
@@ -315,10 +311,14 @@ class ExportMediawiki extends ExportPlugin
         }
 
         // Get the table data from the database
-        $result = $dbi->query($sqlQuery, DatabaseInterface::CONNECT_USER, DatabaseInterface::QUERY_UNBUFFERED);
-        $fields_cnt = $dbi->numFields($result);
+        $result = $GLOBALS['dbi']->query(
+            $sqlQuery,
+            DatabaseInterface::CONNECT_USER,
+            DatabaseInterface::QUERY_UNBUFFERED
+        );
+        $fields_cnt = $result->numFields();
 
-        while ($row = $dbi->fetchRow($result)) {
+        while ($row = $result->fetchRow()) {
             $output .= '|-' . $this->exportCRLF();
 
             // Use '|' for separating table columns

@@ -1,4 +1,18 @@
 "use strict";
+(self["webpackChunkphpmyadmin"] = self["webpackChunkphpmyadmin"] || []).push([[54],{
+
+/***/ 1:
+/***/ (function(module) {
+
+module.exports = jQuery;
+
+/***/ }),
+
+/***/ 60:
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 
 /**
  *
@@ -9,49 +23,50 @@
 /**
  * Unbind all event handlers before tearing down a page
  */
-AJAX.registerTeardown('server/status/variables.js', function () {
-  $('#filterAlert').off('change');
-  $('#filterText').off('keyup');
-  $('#filterCategory').off('change');
-  $('#dontFormat').off('change');
+
+window.AJAX.registerTeardown('server/status/variables.js', function () {
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#filterAlert').off('change');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#filterText').off('keyup');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#filterCategory').off('change');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#dontFormat').off('change');
 });
-AJAX.registerOnload('server/status/variables.js', function () {
+window.AJAX.registerOnload('server/status/variables.js', function () {
   // Filters for status variables
   var textFilter = null;
-  var alertFilter = $('#filterAlert').prop('checked');
-  var categoryFilter = $('#filterCategory').find(':selected').val();
+  var alertFilter = jquery__WEBPACK_IMPORTED_MODULE_0__('#filterAlert').prop('checked');
+  var categoryFilter = jquery__WEBPACK_IMPORTED_MODULE_0__('#filterCategory').find(':selected').val();
   var text = ''; // Holds filter text
 
   /* 3 Filtering functions */
 
-  $('#filterAlert').on('change', function () {
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#filterAlert').on('change', function () {
     alertFilter = this.checked;
     filterVariables();
   });
-  $('#filterCategory').on('change', function () {
-    categoryFilter = $(this).val();
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#filterCategory').on('change', function () {
+    categoryFilter = jquery__WEBPACK_IMPORTED_MODULE_0__(this).val();
     filterVariables();
   });
-  $('#dontFormat').on('change', function () {
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#dontFormat').on('change', function () {
     // Hiding the table while changing values speeds up the process a lot
-    const serverStatusVariables = $('#serverStatusVariables');
+    const serverStatusVariables = jquery__WEBPACK_IMPORTED_MODULE_0__('#serverStatusVariables');
     serverStatusVariables.hide();
     serverStatusVariables.find('td.value span.original').toggle(this.checked);
     serverStatusVariables.find('td.value span.formatted').toggle(!this.checked);
     serverStatusVariables.show();
   }).trigger('change');
-  $('#filterText').on('keyup', function () {
-    var word = $(this).val().replace(/_/g, ' ');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#filterText').on('keyup', function () {
+    var word = jquery__WEBPACK_IMPORTED_MODULE_0__(this).val().replace(/_/g, ' ');
 
     if (word.length === 0) {
       textFilter = null;
     } else {
       try {
         textFilter = new RegExp('(^| )' + word, 'i');
-        $(this).removeClass('error');
+        jquery__WEBPACK_IMPORTED_MODULE_0__(this).removeClass('error');
       } catch (e) {
         if (e instanceof SyntaxError) {
-          $(this).addClass('error');
+          jquery__WEBPACK_IMPORTED_MODULE_0__(this).addClass('error');
           textFilter = null;
         }
       }
@@ -71,28 +86,38 @@ AJAX.registerOnload('server/status/variables.js', function () {
     }
 
     if (section.length > 1) {
-      $('#linkSuggestions').find('span').each(function () {
-        if ($(this).attr('class').indexOf('status_' + section) !== -1) {
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#linkSuggestions').find('span').each(function () {
+        if (jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('class').indexOf('status_' + section) !== -1) {
           usefulLinks++;
-          $(this).css('display', '');
+          jquery__WEBPACK_IMPORTED_MODULE_0__(this).css('display', '');
         } else {
-          $(this).css('display', 'none');
+          jquery__WEBPACK_IMPORTED_MODULE_0__(this).css('display', 'none');
         }
       });
     }
 
     if (usefulLinks > 0) {
-      $('#linkSuggestions').css('display', '');
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#linkSuggestions').css('display', '');
     } else {
-      $('#linkSuggestions').css('display', 'none');
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#linkSuggestions').css('display', 'none');
     }
 
-    $('#serverStatusVariables').find('th.name').each(function () {
-      if ((textFilter === null || textFilter.exec($(this).text())) && (!alertFilter || $(this).next().find('span.text-danger').length > 0) && (categoryFilter.length === 0 || $(this).parent().hasClass('s_' + categoryFilter))) {
-        $(this).parent().css('display', '');
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#serverStatusVariables').find('th.name').each(function () {
+      if ((textFilter === null || textFilter.exec(jquery__WEBPACK_IMPORTED_MODULE_0__(this).text())) && (!alertFilter || jquery__WEBPACK_IMPORTED_MODULE_0__(this).next().find('span.text-danger').length > 0) && (categoryFilter.length === 0 || jquery__WEBPACK_IMPORTED_MODULE_0__(this).parent().hasClass('s_' + categoryFilter))) {
+        jquery__WEBPACK_IMPORTED_MODULE_0__(this).parent().css('display', '');
       } else {
-        $(this).parent().css('display', 'none');
+        jquery__WEBPACK_IMPORTED_MODULE_0__(this).parent().css('display', 'none');
       }
     });
   }
 });
+
+/***/ })
+
+},
+/******/ function(__webpack_require__) { // webpackRuntimeModules
+/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
+/******/ var __webpack_exports__ = (__webpack_exec__(60));
+/******/ }
+]);
+//# sourceMappingURL=variables.js.map

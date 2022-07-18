@@ -34,7 +34,7 @@ final class GeneralLogController extends AbstractController
 
     public function __invoke(): void
     {
-        global $errorUrl;
+        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
 
         $params = [
             'time_start' => $_POST['time_start'] ?? null,
@@ -42,7 +42,7 @@ final class GeneralLogController extends AbstractController
             'limitTypes' => $_POST['limitTypes'] ?? null,
             'removeVariables' => $_POST['removeVariables'] ?? null,
         ];
-        $errorUrl = Url::getFromRoute('/');
+        $GLOBALS['errorUrl'] = Url::getFromRoute('/');
 
         if ($this->dbi->isSuperUser()) {
             $this->dbi->selectDb('mysql');

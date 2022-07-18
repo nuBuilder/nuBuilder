@@ -1,4 +1,18 @@
 "use strict";
+(self["webpackChunkphpmyadmin"] = self["webpackChunkphpmyadmin"] || []).push([[39],{
+
+/***/ 1:
+/***/ (function(module) {
+
+module.exports = jQuery;
+
+/***/ }),
+
+/***/ 46:
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 
 /**
  * Handles the resizing of a menu according to the available screen width
@@ -20,6 +34,7 @@
  *
  * @package PhpMyAdmin
  */
+
 (function ($) {
   function MenuResizer($container, widthCalculator) {
     var self = this;
@@ -42,7 +57,7 @@
       'data-bs-toggle': 'dropdown',
       'aria-haspopup': 'true',
       'aria-expanded': 'false'
-    }).text(Messages.strMore);
+    }).text(window.Messages.strMore);
     var img = $container.find('li img');
 
     if (img.length) {
@@ -207,4 +222,14 @@
       $.error('Method ' + method + ' does not exist on jQuery.menuResizer');
     }
   };
-})(jQuery);
+})(jquery__WEBPACK_IMPORTED_MODULE_0__);
+
+/***/ })
+
+},
+/******/ function(__webpack_require__) { // webpackRuntimeModules
+/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
+/******/ var __webpack_exports__ = (__webpack_exec__(46));
+/******/ }
+]);
+//# sourceMappingURL=menu_resizer.js.map

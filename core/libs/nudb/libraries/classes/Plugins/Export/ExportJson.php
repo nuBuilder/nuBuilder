@@ -21,7 +21,6 @@ use function __;
 use function bin2hex;
 use function explode;
 use function json_encode;
-use function stripslashes;
 
 use const JSON_PRETTY_PRINT;
 use const JSON_UNESCAPED_UNICODE;
@@ -108,7 +107,7 @@ class ExportJson extends ExportPlugin
      */
     public function exportHeader(): bool
     {
-        global $crlf;
+        $GLOBALS['crlf'] = $GLOBALS['crlf'] ?? null;
 
         $data = $this->encode([
             'type' => 'header',
@@ -119,7 +118,7 @@ class ExportJson extends ExportPlugin
             return false;
         }
 
-        return $this->export->outputHandler('[' . $crlf . $data . ',' . $crlf);
+        return $this->export->outputHandler('[' . $GLOBALS['crlf'] . $data . ',' . $GLOBALS['crlf']);
     }
 
     /**
@@ -127,9 +126,9 @@ class ExportJson extends ExportPlugin
      */
     public function exportFooter(): bool
     {
-        global $crlf;
+        $GLOBALS['crlf'] = $GLOBALS['crlf'] ?? null;
 
-        return $this->export->outputHandler(']' . $crlf);
+        return $this->export->outputHandler(']' . $GLOBALS['crlf']);
     }
 
     /**
@@ -140,7 +139,7 @@ class ExportJson extends ExportPlugin
      */
     public function exportDBHeader($db, $dbAlias = ''): bool
     {
-        global $crlf;
+        $GLOBALS['crlf'] = $GLOBALS['crlf'] ?? null;
 
         if (empty($dbAlias)) {
             $dbAlias = $db;
@@ -151,7 +150,7 @@ class ExportJson extends ExportPlugin
             return false;
         }
 
-        return $this->export->outputHandler($data . ',' . $crlf);
+        return $this->export->outputHandler($data . ',' . $GLOBALS['crlf']);
     }
 
     /**
@@ -194,8 +193,6 @@ class ExportJson extends ExportPlugin
         $sqlQuery,
         array $aliases = []
     ): bool {
-        global $dbi;
-
         $db_alias = $db;
         $table_alias = $table;
         $this->initAlias($aliases, $db_alias, $table_alias);
@@ -218,7 +215,7 @@ class ExportJson extends ExportPlugin
             return false;
         }
 
-        return $this->doExportForQuery($dbi, $sqlQuery, $buffer, $crlf, $aliases, $db, $table);
+        return $this->doExportForQuery($GLOBALS['dbi'], $sqlQuery, $buffer, $crlf, $aliases, $db, $table);
     }
 
     /**
@@ -263,7 +260,7 @@ class ExportJson extends ExportPlugin
                 $col_as = $aliases[$db]['tables'][$table]['columns'][$col_as];
             }
 
-            $columns[$i] = stripslashes($col_as);
+            $columns[$i] = $col_as;
         }
 
         $record_cnt = 0;
@@ -326,8 +323,6 @@ class ExportJson extends ExportPlugin
      */
     public function exportRawQuery(string $errorUrl, string $sqlQuery, string $crlf): bool
     {
-        global $dbi;
-
         $buffer = $this->encode([
             'type' => 'raw',
             'data' => '@@DATA@@',
@@ -336,6 +331,6 @@ class ExportJson extends ExportPlugin
             return false;
         }
 
-        return $this->doExportForQuery($dbi, $sqlQuery, $buffer, $crlf, null, null, null);
+        return $this->doExportForQuery($GLOBALS['dbi'], $sqlQuery, $buffer, $crlf, null, null, null);
     }
 }

@@ -35,9 +35,6 @@ if (! @is_readable(AUTOLOAD_FILE)) {
 
 require AUTOLOAD_FILE;
 
-global $route, $containerBuilder, $request;
-
 Common::run();
 
-$dispatcher = Routing::getDispatcher();
-Routing::callControllerForRoute($request, $route, $dispatcher, $containerBuilder);
+Routing::callControllerForRoute(Common::getRequest(), Routing::getDispatcher(), $GLOBALS['containerBuilder']);

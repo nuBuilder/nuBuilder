@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace PhpMyAdmin\Dbal;
 
 use mysqli;
+use mysqli_sql_exception;
 use mysqli_stmt;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Query\Utilities;
@@ -19,16 +20,20 @@ use function mysqli_connect_error;
 use function mysqli_get_client_info;
 use function mysqli_init;
 use function mysqli_report;
+use function sprintf;
 use function stripos;
 use function trigger_error;
 
+use const E_USER_ERROR;
 use const E_USER_WARNING;
 use const MYSQLI_CLIENT_COMPRESS;
 use const MYSQLI_CLIENT_SSL;
 use const MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT;
 use const MYSQLI_OPT_LOCAL_INFILE;
 use const MYSQLI_OPT_SSL_VERIFY_SERVER_CERT;
+use const MYSQLI_REPORT_ERROR;
 use const MYSQLI_REPORT_OFF;
+use const MYSQLI_REPORT_STRICT;
 use const MYSQLI_STORE_RESULT;
 use const MYSQLI_USE_RESULT;
 
@@ -54,7 +59,7 @@ class DbiMysqli implements DbiExtension
                 : $server['host'];
         }
 
-        mysqli_report(MYSQLI_REPORT_OFF);
+        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
         $mysqli = mysqli_init();
 
@@ -105,17 +110,17 @@ class DbiMysqli implements DbiExtension
             $host = $server['host'];
         }
 
-        $return_value = $mysqli->real_connect(
-            $host,
-            $user,
-            $password,
-            '',
-            $server['port'],
-            (string) $server['socket'],
-            $client_flags
-        );
-
-        if ($return_value === false) {
+        try {
+            $mysqli->real_connect(
+                $host,
+                $user,
+                $password,
+                '',
+                $server['port'],
+                (string) $server['socket'],
+                $client_flags
+            );
+        } catch (mysqli_sql_exception $exception) {
             /*
              * Switch to SSL if server asked us to do so, unfortunately
              * there are more ways MySQL server can tell this:
@@ -143,10 +148,30 @@ class DbiMysqli implements DbiExtension
                 return self::connect($user, $password, $server);
             }
 
+            if ($error_number === 1045 && $server['hide_connection_errors']) {
+                trigger_error(
+                    sprintf(
+                        __(
+                            'Error 1045: Access denied for user. Additional error information'
+                            . ' may be available, but is being hidden by the %s configuration directive.'
+                        ),
+                        '[code][doc@cfg_Servers_hide_connection_errors]'
+                        . '$cfg[\'Servers\'][$i][\'hide_connection_errors\'][/doc][/code]'
+                    ),
+                    E_USER_ERROR
+                );
+            } else {
+                trigger_error($error_number . ': ' . $error_message, E_USER_WARNING);
+            }
+
+            mysqli_report(MYSQLI_REPORT_OFF);
+
             return false;
         }
 
         $mysqli->options(MYSQLI_OPT_LOCAL_INFILE, (int) defined('PMA_ENABLE_LDI'));
+
+        mysqli_report(MYSQLI_REPORT_OFF);
 
         return $mysqli;
     }

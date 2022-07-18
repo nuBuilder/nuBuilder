@@ -174,6 +174,12 @@ Basic settings
     :type: string
     :default: ``'ask'``
 
+    Valid values are:
+
+    * ``ask``
+    * ``always``
+    * ``never``
+
     Sets the default behavior for JavaScript error reporting.
 
     Whenever an error is detected in the JavaScript execution, an error report
@@ -266,7 +272,7 @@ Server connection settings
     .. seealso::
 
         :config:option:`$cfg['Servers'][$i]['port']`,
-        <https://dev.mysql.com/doc/refman/5.7/en/connecting.html>
+        <https://dev.mysql.com/doc/refman/8.0/en/connecting.html>
 
 .. config:option:: $cfg['Servers'][$i]['port']
 
@@ -286,7 +292,7 @@ Server connection settings
     .. seealso::
 
         :config:option:`$cfg['Servers'][$i]['host']`,
-        <https://dev.mysql.com/doc/refman/5.7/en/connecting.html>
+        <https://dev.mysql.com/doc/refman/8.0/en/connecting.html>
 
 .. config:option:: $cfg['Servers'][$i]['socket']
 
@@ -306,7 +312,7 @@ Server connection settings
     .. seealso::
 
         :config:option:`$cfg['Servers'][$i]['host']`,
-        <https://dev.mysql.com/doc/refman/5.7/en/connecting.html>
+        <https://dev.mysql.com/doc/refman/8.0/en/connecting.html>
 
 .. config:option:: $cfg['Servers'][$i]['ssl']
 
@@ -325,6 +331,7 @@ Server connection settings
 
         :ref:`ssl`,
         :ref:`example-google-ssl`,
+        :ref:`example-aws-ssl`,
         :config:option:`$cfg['Servers'][$i]['ssl_key']`,
         :config:option:`$cfg['Servers'][$i]['ssl_cert']`,
         :config:option:`$cfg['Servers'][$i]['ssl_ca']`,
@@ -350,6 +357,7 @@ Server connection settings
 
         :ref:`ssl`,
         :ref:`example-google-ssl`,
+        :ref:`example-aws-ssl`,
         :config:option:`$cfg['Servers'][$i]['ssl']`,
         :config:option:`$cfg['Servers'][$i]['ssl_cert']`,
         :config:option:`$cfg['Servers'][$i]['ssl_ca']`,
@@ -369,6 +377,7 @@ Server connection settings
 
         :ref:`ssl`,
         :ref:`example-google-ssl`,
+        :ref:`example-aws-ssl`,
         :config:option:`$cfg['Servers'][$i]['ssl']`,
         :config:option:`$cfg['Servers'][$i]['ssl_key']`,
         :config:option:`$cfg['Servers'][$i]['ssl_ca']`,
@@ -387,6 +396,7 @@ Server connection settings
 
         :ref:`ssl`,
         :ref:`example-google-ssl`,
+        :ref:`example-aws-ssl`,
         :config:option:`$cfg['Servers'][$i]['ssl']`,
         :config:option:`$cfg['Servers'][$i]['ssl_key']`,
         :config:option:`$cfg['Servers'][$i]['ssl_cert']`,
@@ -405,6 +415,7 @@ Server connection settings
 
         :ref:`ssl`,
         :ref:`example-google-ssl`,
+        :ref:`example-aws-ssl`,
         :config:option:`$cfg['Servers'][$i]['ssl']`,
         :config:option:`$cfg['Servers'][$i]['ssl_key']`,
         :config:option:`$cfg['Servers'][$i]['ssl_cert']`,
@@ -423,6 +434,7 @@ Server connection settings
 
         :ref:`ssl`,
         :ref:`example-google-ssl`,
+        :ref:`example-aws-ssl`,
         :config:option:`$cfg['Servers'][$i]['ssl']`,
         :config:option:`$cfg['Servers'][$i]['ssl_key']`,
         :config:option:`$cfg['Servers'][$i]['ssl_cert']`,
@@ -461,6 +473,7 @@ Server connection settings
 
         :ref:`ssl`,
         :ref:`example-google-ssl`,
+        :ref:`example-aws-ssl`,
         :config:option:`$cfg['Servers'][$i]['ssl']`,
         :config:option:`$cfg['Servers'][$i]['ssl_key']`,
         :config:option:`$cfg['Servers'][$i]['ssl_cert']`,
@@ -617,6 +630,27 @@ Server connection settings
     "phpMyAdmin " and either :config:option:`$cfg['Servers'][$i]['verbose']` or
     :config:option:`$cfg['Servers'][$i]['host']` will be used.
 
+.. _servers_auth_swekey_config:
+.. config:option:: $cfg['Servers'][$i]['auth_swekey_config']
+
+    :type: string
+    :default: ``''``
+
+    .. versionadded:: 3.0.0.0
+
+        This setting was named `$cfg['Servers'][$i]['auth_feebee_config']` and was renamed before the `3.0.0.0` release.
+
+    .. deprecated:: 4.6.4
+
+        This setting was removed because their servers are no longer working and it was not working correctly.
+
+    .. deprecated:: 4.0.10.17
+
+        This setting was removed in a maintenance release because their servers are no longer working and it was not working correctly.
+
+    The name of the file containing swekey ids and login names for hardware
+    authentication. Leave empty to deactivate this feature.
+
 .. _servers_user:
 .. config:option:: $cfg['Servers'][$i]['user']
 
@@ -755,6 +789,8 @@ Server connection settings
     :type: string or false
     :default: ``''``
 
+    .. versionadded:: 2.2.0
+
     Since release 2.2.0 phpMyAdmin allows users to bookmark queries. This
     can be useful for queries you often run. To allow the usage of this
     functionality:
@@ -769,6 +805,8 @@ Server connection settings
 
     :type: string or false
     :default: ``''``
+
+    .. versionadded:: 2.2.4
 
     Since release 2.2.4 you can describe, in a special 'relation' table,
     which column is a key in another table (a foreign key). phpMyAdmin
@@ -811,6 +849,8 @@ Server connection settings
     :type: string or false
     :default: ``''``
 
+    .. versionadded:: 2.3.0
+
     Since release 2.3.0 you can describe, in a special 'table\_info'
     table, which column is to be displayed as a tool-tip when moving the
     cursor over the corresponding key. This configuration variable will
@@ -844,6 +884,8 @@ Server connection settings
 
     :type: string or false
     :default: ``''``
+
+    .. versionadded:: 2.3.0
 
     Since release 2.3.0 you can have phpMyAdmin create :term:`PDF` pages
     showing the relations between your tables. Further, the designer interface
@@ -886,6 +928,8 @@ Server connection settings
 
     :type: string or false
     :default: ``''``
+
+    .. versionadded:: 2.3.0
 
     This part requires a content update!  Since release 2.3.0 you can
     store comments to describe each column for each table. These will then
@@ -939,7 +983,7 @@ Server connection settings
         For auto-upgrade functionality to work, your
         :config:option:`$cfg['Servers'][$i]['controluser']` must have ALTER privilege on
         ``phpmyadmin`` database. See the `MySQL documentation for GRANT
-        <https://dev.mysql.com/doc/refman/5.7/en/grant.html>`_ on how to
+        <https://dev.mysql.com/doc/refman/8.0/en/grant.html>`_ on how to
         ``GRANT`` privileges to a user.
 
 .. _history:
@@ -947,6 +991,8 @@ Server connection settings
 
     :type: string or false
     :default: ``''``
+
+    .. versionadded:: 2.5.0
 
     Since release 2.5.0 you can store your :term:`SQL` history, which means all
     queries you entered manually into the phpMyAdmin interface. If you don't
@@ -975,6 +1021,8 @@ Server connection settings
     :type: string or false
     :default: ``''``
 
+    .. versionadded:: 3.5.0
+
     Since release 3.5.0 you can show recently used tables in the
     navigation panel. It helps you to jump across table directly, without
     the need to select the database, and then select the table. Using
@@ -998,6 +1046,8 @@ Server connection settings
 
     :type: string or false
     :default: ``''``
+
+    .. versionadded:: 4.2.0
 
     Since release 4.2.0 you can show a list of selected tables in the
     navigation panel. It helps you to jump to the table directly, without
@@ -1027,6 +1077,8 @@ Server connection settings
     :type: string or false
     :default: ``''``
 
+    .. versionadded:: 3.5.0
+
     Since release 3.5.0 phpMyAdmin can be configured to remember several
     things (sorted column :config:option:`$cfg['RememberSorting']`, column order,
     and column visibility from a database table) for browsing tables. Without
@@ -1055,6 +1107,8 @@ Server connection settings
     :type: string or false
     :default: ``''``
 
+    .. versionadded:: 4.1.0
+
     Since release 4.1.0 you can create different user groups with menu items
     attached to them. Users can be assigned to these groups and the logged in
     user would only see menu items configured to the usergroup they are assigned to.
@@ -1078,6 +1132,8 @@ Server connection settings
     :type: string or false
     :default: ``''``
 
+    .. versionadded:: 4.1.0
+
     Since release 4.1.0 you can hide/show items in the navigation tree.
 
     To allow the usage of this functionality:
@@ -1093,6 +1149,8 @@ Server connection settings
 
     :type: string or false
     :default: ``''``
+
+    .. versionadded:: 4.3.0
 
     Since release 4.3.0 you can have a central list of columns per database.
     You can add/remove columns to the list as per your requirement. These columns
@@ -1115,6 +1173,8 @@ Server connection settings
     :type: string or false
     :default: ``''``
 
+    .. versionadded:: 4.5.0
+
     Since release 4.5.0 your designer settings can be remembered.
     Your choice regarding 'Angular/Direct Links', 'Snap to Grid', 'Toggle Relation Lines',
     'Small/Big All', 'Move Menu' and 'Pin Text' can be remembered persistently.
@@ -1133,6 +1193,8 @@ Server connection settings
     :type: string or false
     :default: ``''``
 
+    .. versionadded:: 4.2.0
+
     Since release 4.2.0 you can save and load query-by-example searches from the Database > Query panel.
 
     To allow the usage of this functionality:
@@ -1149,6 +1211,8 @@ Server connection settings
     :type: string or false
     :default: ``''``
 
+    .. versionadded:: 4.5.0
+
     Since release 4.5.0 you can save and load export templates.
 
     To allow the usage of this functionality:
@@ -1164,6 +1228,8 @@ Server connection settings
 
     :type: string or false
     :default: ``''``
+
+    .. versionadded:: 3.3.x
 
     Since release 3.3.x a tracking mechanism is available. It helps you to
     track every :term:`SQL` command which is
@@ -1225,7 +1291,7 @@ Server connection settings
     :type: boolean
     :default: true
 
-    Whether a DROP VIEW IF EXISTS statement will be added as first line to
+    Whether a `DROP VIEW IF EXISTS` statement will be added as first line to
     the log when creating a view.
 
 .. _tracking5:
@@ -1234,7 +1300,7 @@ Server connection settings
     :type: boolean
     :default: true
 
-    Whether a DROP TABLE IF EXISTS statement will be added as first line
+    Whether a `DROP TABLE IF EXISTS` statement will be added as first line
     to the log when creating a table.
 
 .. _tracking6:
@@ -1243,7 +1309,7 @@ Server connection settings
     :type: boolean
     :default: true
 
-    Whether a DROP DATABASE IF EXISTS statement will be added as first
+    Whether a `DROP DATABASE IF EXISTS` statement will be added as first
     line to the log when creating a database.
 
 .. _userconfig:
@@ -1251,6 +1317,8 @@ Server connection settings
 
     :type: string or false
     :default: ``''``
+
+    .. versionadded:: 3.4.x
 
     Since release 3.4.x phpMyAdmin allows users to set most preferences by
     themselves and store them in the database.
@@ -1288,7 +1356,7 @@ Server connection settings
 
     Sets the time zone used by phpMyAdmin. Leave blank to use the time zone of your
     database server. Possible values are explained at
-    https://dev.mysql.com/doc/refman/5.7/en/time-zone-support.html
+    https://dev.mysql.com/doc/refman/8.0/en/time-zone-support.html
 
     This is useful when your database server uses a time zone which is different from the
     time zone you want to use in phpMyAdmin.
@@ -1498,6 +1566,20 @@ Server connection settings
     after logout (doesn't affect config authentication method). Should be
     absolute including protocol.
 
+.. config:option:: $cfg['Servers'][$i]['hide_connection_errors']
+
+    :type: boolean
+    :default: false
+
+    .. versionadded:: 4.9.8
+
+    Whether to show or hide detailed MySQL/MariaDB connection errors on the login page.
+
+    .. note::
+
+        This error message can contain the target database server hostname or IP address,
+        which may reveal information about your network to an attacker.
+
 Generic settings
 ----------------
 
@@ -1536,7 +1618,7 @@ Generic settings
 .. config:option:: $cfg['ProxyUrl']
 
     :type: string
-    :default: ""
+    :default: ``''``
 
     The url of the proxy to be used when phpmyadmin needs to access the outside
     internet such as when retrieving the latest version info or submitting error
@@ -1547,7 +1629,7 @@ Generic settings
 .. config:option:: $cfg['ProxyUser']
 
     :type: string
-    :default: ""
+    :default: ``''``
 
     The username for authenticating with the proxy. By default, no
     authentication is performed. If a username is supplied, Basic
@@ -1557,7 +1639,7 @@ Generic settings
 .. config:option:: $cfg['ProxyPass']
 
     :type: string
-    :default: ""
+    :default: ``''``
 
     The password for authenticating with the proxy.
 
@@ -1602,13 +1684,11 @@ Generic settings
     :default: false
 
     Whether `persistent connections <https://www.php.net/manual/en/features
-    .persistent-connections.php>`_ should be used or not. Works with
-    following extensions:
+    .persistent-connections.php>`_ should be used or not.
 
-    * mysql (`mysql\_pconnect <https://www.php.net/manual/en/function.mysql-
-      pconnect.php>`_),
-    * mysqli (requires PHP 5.3.0 or newer, `more information
-      <https://www.php.net/manual/en/mysqli.persistconns.php>`_).
+.. seealso::
+
+    `mysqli documentation for persistent connections <https://www.php.net/manual/en/mysqli.persistconns.php>`_
 
 .. config:option:: $cfg['ForceSSL']
 
@@ -1786,6 +1866,27 @@ Generic settings
     Whether or not the drag and drop import feature is enabled.
     When enabled, a user can drag a file in to their browser and phpMyAdmin will
     attempt to import the file.
+
+.. config:option:: $cfg['URLQueryEncryption']
+
+    :type: boolean
+    :default: false
+
+    .. versionadded:: 4.9.8
+
+    Define whether phpMyAdmin will encrypt sensitive data (like database name
+    and table name) from the URL query string. Default is to not encrypt the URL
+    query string.
+
+.. config:option:: $cfg['URLQueryEncryptionSecretKey']
+
+    :type: string
+    :default: ``''``
+
+    .. versionadded:: 4.9.8
+
+    A secret key used to encrypt/decrypt the URL query string.
+    Should be 32 bytes long.
 
 Cookie authentication options
 -----------------------------
@@ -1983,6 +2084,8 @@ Cookie authentication options
 
     reCaptcha will be then used in :ref:`cookie`.
 
+    .. versionadded:: 4.1.0
+
 .. config:option:: $cfg['CaptchaLoginPrivateKey']
 
     :type: string
@@ -1994,6 +2097,8 @@ Cookie authentication options
     .. seealso:: <https://developers.google.com/recaptcha/docs/v3>
 
     reCaptcha will be then used in :ref:`cookie`.
+
+    .. versionadded:: 4.1.0
 
 .. config:option:: $cfg['CaptchaSiteVerifyURL']
 
@@ -2372,7 +2477,7 @@ Database structure
     :type: boolean
     :default: true
 
-    Defines whether the table structure actions are hidden under a "More"
+    Defines whether the table structure actions are hidden under a ":guilabel:`More`"
     drop-down.
 
 .. config:option:: $cfg['ShowColumnComments']
@@ -2416,7 +2521,7 @@ Browse mode
     :type: boolean
     :default: false
 
-    Defines whether a user should be displayed a "Show all" button in browse
+    Defines whether a user should be displayed a ":guilabel:`Show all`" button in browse
     mode or not in all cases. By default it is shown only on small tables (less
     than 500 rows) to avoid performance issues while getting too many rows.
 
@@ -2426,8 +2531,8 @@ Browse mode
     :default: 25
 
     Number of rows displayed when browsing a result set and no LIMIT
-    clause is used. If the result set contains more rows, "Previous" and
-    "Next" links will be shown. Possible values: 25,50,100,250,500.
+    clause is used. If the result set contains more rows, ":guilabel:`Previous`" and
+    ":guilabel:`Next`" links will be shown. Possible values: 25,50,100,250,500.
 
 .. config:option:: $cfg['Order']
 
@@ -2623,6 +2728,15 @@ Export and import settings
     Default filename template for server exports.
 
     .. seealso:: :ref:`faq6_27`
+
+.. config:option:: $cfg['Export']['remove_definer_from_definitions']
+
+    :type: boolean
+    :default: false
+
+    Remove DEFINER clause from the event, view and routine definitions.
+
+    .. versionadded:: 5.2.0
 
 .. config:option:: $cfg['Import']
 
@@ -3001,7 +3115,7 @@ Design customization
     This will define the first day of week in the calendar. The number
     can be set from 0 to 6, which represents the seven days of the week,
     Sunday to Saturday respectively. This value can also be configured by the user
-    in server settings -> features -> general -> First Day calendar field.
+    in :guilabel:`Settings` -> :guilabel:`Features` -> :guilabel:`General` -> :guilabel:`First day of calendar` field.
 
 Text fields
 -----------
@@ -3347,6 +3461,8 @@ Various display setting
     :type: boolean
     :default: false
 
+    .. versionadded:: 3.4.0
+
     Activates in the user preferences a tab containing options for
     developers of phpMyAdmin.
 
@@ -3613,7 +3729,7 @@ Developer
     It currently changes following behavior:
 
     * There is welcome message on the main page.
-    * There is footer information about demo server and used git revision.
+    * There is footer information about demo server and used Git revision.
     * The setup script is enabled even with existing configuration.
     * The setup does not try to connect to the MySQL server.
 
@@ -3671,7 +3787,7 @@ for a password when accessing remotely, you can achieve it using following snipp
 
 .. code-block:: php
 
-    if ($_SERVER["REMOTE_ADDR"] == "127.0.0.1") {
+    if ($_SERVER['REMOTE_ADDR'] === '127.0.0.1') {
         $cfg['Servers'][$i]['auth_type'] = 'config';
         $cfg['Servers'][$i]['user'] = 'root';
         $cfg['Servers'][$i]['password'] = 'yourpassword';
@@ -3693,8 +3809,8 @@ following example shows two of them:
 .. code-block:: php
 
     <?php
-    $cfg['blowfish_secret']='multiServerExample70518';
-    //any string of your choice
+    $cfg['blowfish_secret'] = 'multiServerExample70518';
+    // any string of your choice
     $i = 0;
 
     $i++; // server 1 :
@@ -3762,6 +3878,40 @@ server certificates and tell phpMyAdmin to use them:
     :config:option:`$cfg['Servers'][$i]['ssl_ca']`,
     :config:option:`$cfg['Servers'][$i]['ssl_verify']`,
     <https://bugs.php.net/bug.php?id=72048>
+
+.. _example-aws-ssl:
+
+Amazon RDS Aurora with SSL
+++++++++++++++++++++++++++
+
+To connect phpMyAdmin to an Amazon RDS Aurora MySQL database instance using SSL,
+download the CA server certificate and tell phpMyAdmin to use it:
+
+.. code-block:: php
+
+    // Address of your instance
+    $cfg['Servers'][$i]['host'] = 'replace-me-custer-name.cluster-replace-me-id.replace-me-region.rds.amazonaws.com';
+    // Use SSL for connection
+    $cfg['Servers'][$i]['ssl'] = true;
+    // You need to have the region CA file and the authority CA file (2019 edition CA for example) in the PEM bundle for it to work
+    $cfg['Servers'][$i]['ssl_ca'] = '../rds-combined-ca-bundle.pem';
+    // Enable SSL verification
+    $cfg['Servers'][$i]['ssl_verify'] = true;
+
+.. seealso::
+
+    :ref:`ssl`,
+    :config:option:`$cfg['Servers'][$i]['ssl']`,
+    :config:option:`$cfg['Servers'][$i]['ssl_ca']`,
+    :config:option:`$cfg['Servers'][$i]['ssl_verify']`
+
+.. seealso::
+
+    - Current RDS CA bundle for all regions https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem
+    - The RDS CA (2019 edition) for the region `eu-west-3` without the parent CA https://s3.amazonaws.com/rds-downloads/rds-ca-2019-eu-west-3.pem
+    - `List of available Amazon RDS CA files <https://s3.amazonaws.com/rds-downloads/>`_
+    - `Amazon MySQL Aurora security guide <https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraMySQL.Security.html>`_
+    - `Amazon certificates bundles per region <https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.SSL.html>`_
 
 reCaptcha using hCaptcha
 ++++++++++++++++++++++++

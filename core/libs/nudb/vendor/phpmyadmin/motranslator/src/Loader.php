@@ -26,6 +26,9 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\MoTranslator;
 
+use PhpMyAdmin\MoTranslator\Cache\CacheFactoryInterface;
+use PhpMyAdmin\MoTranslator\Cache\InMemoryCache;
+
 use function array_push;
 use function file_exists;
 use function getenv;
@@ -41,7 +44,15 @@ class Loader
      * @static
      * @var Loader
      */
-    private static $instance;
+    private static $instance = null;
+
+    /**
+     * Factory to return a factory responsible for returning a `CacheInterface`
+     *
+     * @static
+     * @var CacheFactoryInterface|null
+     */
+    private static $cacheFactory = null;
 
     /**
      * Default gettext domain to use.
@@ -78,7 +89,7 @@ class Loader
      */
     public static function getInstance(): Loader
     {
-        if (empty(self::$instance)) {
+        if (self::$instance === null) {
             self::$instance = new self();
         }
 
@@ -107,14 +118,16 @@ class Loader
         $localeNames = [];
 
         if ($locale) {
-            if (preg_match(
-                '/^(?P<lang>[a-z]{2,3})'      // language code
-                . '(?:_(?P<country>[A-Z]{2}))?'           // country code
-                . '(?:\\.(?P<charset>[-A-Za-z0-9_]+))?'   // charset
-                . '(?:@(?P<modifier>[-A-Za-z0-9_]+))?$/', // @ modifier
-                $locale,
-                $matches
-            )) {
+            if (
+                preg_match(
+                    '/^(?P<lang>[a-z]{2,3})' // language code
+                    . '(?:_(?P<country>[A-Z]{2}))?' // country code
+                    . '(?:\\.(?P<charset>[-A-Za-z0-9_]+))?' // charset
+                    . '(?:@(?P<modifier>[-A-Za-z0-9_]+))?$/', // @ modifier
+                    $locale,
+                    $matches
+                )
+            ) {
                 $lang = $matches['lang'] ?? null;
                 $country = $matches['country'] ?? null;
                 $charset = $matches['charset'] ?? null;
@@ -178,6 +191,14 @@ class Loader
     }
 
     /**
+     * Sets factory responsible for composing a `CacheInterface`
+     */
+    public static function setCacheFactory(?CacheFactoryInterface $cacheFactory): void
+    {
+        self::$cacheFactory = $cacheFactory;
+    }
+
+    /**
      * Returns Translator object for domain or for default domain.
      *
      * @param string $domain Translation domain
@@ -211,7 +232,14 @@ class Loader
 
             // We don't care about invalid path, we will get fallback
             // translator here
-            $this->domains[$this->locale][$domain] = new Translator($filename);
+            $moParser = new MoParser($filename);
+            if (self::$cacheFactory instanceof CacheFactoryInterface) {
+                $cache = self::$cacheFactory->getInstance($moParser, $this->locale, $domain);
+            } else {
+                $cache = new InMemoryCache($moParser);
+            }
+
+            $this->domains[$this->locale][$domain] = new Translator($cache);
         }
 
         return $this->domains[$this->locale][$domain];

@@ -1,17 +1,52 @@
 "use strict";
+(self["webpackChunkphpmyadmin"] = self["webpackChunkphpmyadmin"] || []).push([[5],[
+/* 0 */,
+/* 1 */
+/***/ (function(module) {
 
-/**
- * Used in or for console
- *
- * @package phpMyAdmin-Console
- */
+module.exports = jQuery;
 
-/* global debugSQLInfo */
-// libraries/classes/Footer.php
+/***/ }),
+/* 2 */,
+/* 3 */,
+/* 4 */,
+/* 5 */,
+/* 6 */
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Console": function() { return /* reexport safe */ _modules_console_js__WEBPACK_IMPORTED_MODULE_1__.Console; }
+/* harmony export */ });
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony import */ var _modules_console_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
+
+
+jquery__WEBPACK_IMPORTED_MODULE_0__(function () {
+  _modules_console_js__WEBPACK_IMPORTED_MODULE_1__.Console.initialize();
+});
+
+
+/***/ }),
+/* 7 */
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Console": function() { return /* binding */ Console; }
+/* harmony export */ });
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony import */ var codemirror__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(8);
+/* harmony import */ var _console_config_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(9);
+
+
+
+/* global Functions, Navigation */
 
 /**
  * Console object
  */
+
 var Console = {
   /**
    * @var {JQuery}, jQuery object, selector is '#pma_console>.content'
@@ -45,12 +80,6 @@ var Console = {
   $requestForm: null,
 
   /**
-   * @var {object}, contain console config
-   * @access private
-   */
-  config: null,
-
-  /**
    * @var {boolean}, if console element exist, it'll be true
    * @access public
    */
@@ -63,17 +92,22 @@ var Console = {
   isInitialized: false,
 
   /**
+   * @type {Object|string|null}
+   */
+  debugSqlInfo: null,
+
+  /**
    * Used for console initialize, reinit is ok, just some variable assignment
    *
    * @return {void}
    */
   initialize: function () {
-    if ($('#pma_console').length === 0) {
+    if (jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').length === 0) {
       return;
     }
 
     Functions.configGet('Console', false, data => {
-      Console.config = data;
+      _console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.init(data);
       Console.setupAfterInit();
     });
   },
@@ -84,36 +118,36 @@ var Console = {
   setupAfterInit: function () {
     Console.isEnabled = true; // Vars init
 
-    Console.$consoleToolbar = $('#pma_console').find('>.toolbar');
-    Console.$consoleContent = $('#pma_console').find('>.content');
-    Console.$consoleAllContents = $('#pma_console').find('.content');
-    Console.$consoleTemplates = $('#pma_console').find('>.templates'); // Generate a form for post
+    Console.$consoleToolbar = jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('>.toolbar');
+    Console.$consoleContent = jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('>.content');
+    Console.$consoleAllContents = jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.content');
+    Console.$consoleTemplates = jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('>.templates'); // Generate a form for post
 
-    Console.$requestForm = $('<form method="post" action="index.php?route=/import">' + '<input name="is_js_confirmed" value="0">' + '<textarea name="sql_query"></textarea>' + '<input name="console_message_id" value="0">' + '<input name="server" value="">' + '<input name="db" value="">' + '<input name="table" value="">' + '<input name="token" value="">' + '</form>');
-    Console.$requestForm.children('[name=token]').val(CommonParams.get('token'));
-    Console.$requestForm.on('submit', AJAX.requestHandler); // Event binds shouldn't run again
+    Console.$requestForm = jquery__WEBPACK_IMPORTED_MODULE_0__('<form method="post" action="index.php?route=/import">' + '<input name="is_js_confirmed" value="0">' + '<textarea name="sql_query"></textarea>' + '<input name="console_message_id" value="0">' + '<input name="server" value="">' + '<input name="db" value="">' + '<input name="table" value="">' + '<input name="token" value="">' + '</form>');
+    Console.$requestForm.children('[name=token]').val(window.CommonParams.get('token'));
+    Console.$requestForm.on('submit', window.AJAX.requestHandler); // Event binds shouldn't run again
 
     if (Console.isInitialized === false) {
       // Load config first
-      if (Console.config.AlwaysExpand === true) {
-        $('#pma_console_options input[name=always_expand]').prop('checked', true);
+      if (_console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.AlwaysExpand) {
+        document.getElementById('consoleOptionsAlwaysExpandCheckbox').checked = true;
       }
 
-      if (Console.config.StartHistory === true) {
-        $('#pma_console_options').find('input[name=start_history]').prop('checked', true);
+      if (_console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.StartHistory) {
+        document.getElementById('consoleOptionsStartHistoryCheckbox').checked = true;
       }
 
-      if (Console.config.CurrentQuery === true) {
-        $('#pma_console_options').find('input[name=current_query]').prop('checked', true);
+      if (_console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.CurrentQuery) {
+        document.getElementById('consoleOptionsCurrentQueryCheckbox').checked = true;
       }
 
-      if (Console.config.EnterExecutes === true) {
-        $('#pma_console_options').find('input[name=enter_executes]').prop('checked', true);
+      if (_console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.EnterExecutes) {
+        document.getElementById('consoleOptionsEnterExecutesCheckbox').checked = true;
       }
 
-      if (Console.config.DarkTheme === true) {
-        $('#pma_console_options').find('input[name=dark_theme]').prop('checked', true);
-        $('#pma_console').find('>.content').addClass('console_dark_theme');
+      if (_console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.DarkTheme) {
+        document.getElementById('consoleOptionsDarkThemeCheckbox').checked = true;
+        jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('>.content').addClass('console_dark_theme');
       }
 
       ConsoleResizer.initialize();
@@ -122,20 +156,20 @@ var Console = {
       ConsoleBookmarks.initialize();
       ConsoleDebug.initialize();
       Console.$consoleToolbar.children('.console_switch').on('click', Console.toggle);
-      $('#pma_console').find('.toolbar').children().on('mousedown', function (event) {
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.toolbar').children().on('mousedown', function (event) {
         event.preventDefault();
         event.stopImmediatePropagation();
       });
-      $('#pma_console').find('.button.clear').on('click', function () {
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.button.clear').on('click', function () {
         ConsoleMessages.clear();
       });
-      $('#pma_console').find('.button.history').on('click', function () {
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.button.history').on('click', function () {
         ConsoleMessages.showHistory();
       });
-      $('#pma_console').find('.button.options').on('click', function () {
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.button.options').on('click', function () {
         Console.showCard('#pma_console_options');
       });
-      $('#pma_console').find('.button.debug').on('click', function () {
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.button.debug').on('click', function () {
         Console.showCard('#debug_console');
       });
       Console.$consoleContent.on('click', function (event) {
@@ -143,33 +177,33 @@ var Console = {
           ConsoleInput.focus();
         }
       });
-      $('#pma_console').find('.mid_layer').on('click', function () {
-        Console.hideCard($(this).parent().children('.card'));
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.mid_layer').on('click', function () {
+        Console.hideCard(jquery__WEBPACK_IMPORTED_MODULE_0__(this).parent().children('.card'));
       });
-      $('#debug_console').find('.switch_button').on('click', function () {
-        Console.hideCard($(this).closest('.card'));
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').find('.switch_button').on('click', function () {
+        Console.hideCard(jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('.card'));
       });
-      $('#pma_bookmarks').find('.switch_button').on('click', function () {
-        Console.hideCard($(this).closest('.card'));
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_bookmarks').find('.switch_button').on('click', function () {
+        Console.hideCard(jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('.card'));
       });
-      $('#pma_console_options').find('.switch_button').on('click', function () {
-        Console.hideCard($(this).closest('.card'));
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console_options').find('.switch_button').on('click', function () {
+        Console.hideCard(jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('.card'));
       });
-      $('#pma_console_options').find('input[type=checkbox]').on('change', function () {
-        Console.updateConfig();
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console_options').find('input[type=checkbox]').on('change', function () {
+        _console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.update();
       });
-      $('#pma_console_options').find('.button.default').on('click', function () {
-        $('#pma_console_options input[name=always_expand]').prop('checked', false);
-        $('#pma_console_options').find('input[name=start_history]').prop('checked', false);
-        $('#pma_console_options').find('input[name=current_query]').prop('checked', true);
-        $('#pma_console_options').find('input[name=enter_executes]').prop('checked', false);
-        $('#pma_console_options').find('input[name=dark_theme]').prop('checked', false);
-        Console.updateConfig();
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console_options').find('.button.default').on('click', function () {
+        document.getElementById('consoleOptionsAlwaysExpandCheckbox').checked = false;
+        document.getElementById('consoleOptionsStartHistoryCheckbox').checked = false;
+        document.getElementById('consoleOptionsCurrentQueryCheckbox').checked = true;
+        document.getElementById('consoleOptionsEnterExecutesCheckbox').checked = false;
+        document.getElementById('consoleOptionsDarkThemeCheckbox').checked = false;
+        _console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.update();
       });
-      $('#pma_console_options').find('input[name=enter_executes]').on('change', function () {
-        ConsoleMessages.showInstructions(Console.config.EnterExecutes);
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#consoleOptionsEnterExecutesCheckbox').on('change', function () {
+        ConsoleMessages.showInstructions(_console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.EnterExecutes);
       });
-      $(document).on('ajaxComplete', function (event, xhr, ajaxOptions) {
+      jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('ajaxComplete', function (event, xhr, ajaxOptions) {
         if (ajaxOptions.dataType && ajaxOptions.dataType.indexOf('json') !== -1) {
           return;
         }
@@ -192,7 +226,7 @@ var Console = {
     } // Change console mode from cookie
 
 
-    switch (Console.config.Mode) {
+    switch (_console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.Mode) {
       case 'collapse':
         Console.collapse();
         break;
@@ -207,7 +241,7 @@ var Console = {
         break;
 
       default:
-        Console.setConfig('Mode', 'info');
+        _console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.set('Mode', 'info');
         Console.info();
     }
   },
@@ -226,7 +260,7 @@ var Console = {
     }
 
     Console.$requestForm.children('textarea').val(queryString);
-    Console.$requestForm.children('[name=server]').attr('value', CommonParams.get('server'));
+    Console.$requestForm.children('[name=server]').attr('value', window.CommonParams.get('server'));
 
     if (options && options.db) {
       Console.$requestForm.children('[name=db]').val(options.db);
@@ -237,7 +271,7 @@ var Console = {
         Console.$requestForm.children('[name=table]').val('');
       }
     } else {
-      Console.$requestForm.children('[name=db]').val(CommonParams.get('db').length > 0 ? CommonParams.get('db') : '');
+      Console.$requestForm.children('[name=db]').val(window.CommonParams.get('db').length > 0 ? window.CommonParams.get('db') : '');
     }
 
     Console.$requestForm.find('[name=profiling]').remove();
@@ -262,7 +296,7 @@ var Console = {
       ConsoleMessages.updateQuery(data.console_message_id, data.success, data.reloadQuerywindow ? data.reloadQuerywindow : false);
     } else if (data && data.reloadQuerywindow) {
       if (data.reloadQuerywindow.sql_query.length > 0) {
-        ConsoleMessages.appendQuery(data.reloadQuerywindow, 'successed').$message.addClass(Console.config.CurrentQuery ? '' : 'hide');
+        ConsoleMessages.appendQuery(data.reloadQuerywindow, 'successed').$message.addClass(_console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.CurrentQuery ? '' : 'hide');
       }
     }
   },
@@ -273,8 +307,8 @@ var Console = {
    * @return {void}
    */
   collapse: function () {
-    Console.setConfig('Mode', 'collapse');
-    var pmaConsoleHeight = Math.max(92, Console.config.Height);
+    _console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.set('Mode', 'collapse');
+    var pmaConsoleHeight = Math.max(92, _console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.Height);
     Console.$consoleToolbar.addClass('collapsed');
     Console.$consoleAllContents.height(pmaConsoleHeight);
     Console.$consoleContent.stop();
@@ -284,7 +318,7 @@ var Console = {
       Console.$consoleContent.css({
         display: 'none'
       });
-      $(window).trigger('resize');
+      jquery__WEBPACK_IMPORTED_MODULE_0__(window).trigger('resize');
     });
     Console.hideCard();
   },
@@ -296,10 +330,10 @@ var Console = {
    * @return {void}
    */
   show: function (inputFocus) {
-    Console.setConfig('Mode', 'show');
-    var pmaConsoleHeight = Math.max(92, Console.config.Height); // eslint-disable-next-line compat/compat
+    _console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.set('Mode', 'show');
+    var pmaConsoleHeight = Math.max(92, _console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.Height); // eslint-disable-next-line compat/compat
 
-    pmaConsoleHeight = Math.min(Console.config.Height, (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight) - 25);
+    pmaConsoleHeight = Math.min(_console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.Height, (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight) - 25);
     Console.$consoleContent.css({
       display: 'block'
     });
@@ -313,7 +347,7 @@ var Console = {
     Console.$consoleContent.animate({
       'margin-bottom': 0
     }, 'fast', 'easeOutQuart', function () {
-      $(window).trigger('resize');
+      jquery__WEBPACK_IMPORTED_MODULE_0__(window).trigger('resize');
 
       if (inputFocus) {
         ConsoleInput.focus();
@@ -340,15 +374,10 @@ var Console = {
    * @return {void}
    */
   toggle: function () {
-    switch (Console.config.Mode) {
-      case 'collapse':
-      case 'info':
-        Console.show(true);
-        break;
-
-      case 'show':
-        Console.collapse();
-        break;
+    if (_console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.Mode === 'show') {
+      Console.collapse();
+    } else {
+      Console.show(true);
     }
   },
 
@@ -379,7 +408,7 @@ var Console = {
         return;
       }
     } else {
-      $card = $('#pma_console ' + cardSelector);
+      $card = jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console ' + cardSelector);
     }
 
     if ($card.length === 0) {
@@ -403,37 +432,13 @@ var Console = {
    */
   hideCard: function ($targetCard) {
     if (!$targetCard) {
-      $('#pma_console').find('.mid_layer').fadeOut(140);
-      $('#pma_console').find('.card').removeClass('show');
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.mid_layer').fadeOut(140);
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.card').removeClass('show');
     } else if ($targetCard.length > 0) {
       $targetCard.parent().find('.mid_layer').fadeOut(140);
       $targetCard.find('.card').removeClass('show');
       $targetCard.removeClass('show');
     }
-  },
-
-  /**
-   * Used for update console config
-   *
-   * @return {void}
-   */
-  updateConfig: function () {
-    Console.setConfig('AlwaysExpand', $('#pma_console_options input[name=always_expand]').prop('checked'));
-    Console.setConfig('StartHistory', $('#pma_console_options').find('input[name=start_history]').prop('checked'));
-    Console.setConfig('CurrentQuery', $('#pma_console_options').find('input[name=current_query]').prop('checked'));
-    Console.setConfig('EnterExecutes', $('#pma_console_options').find('input[name=enter_executes]').prop('checked'));
-    Console.setConfig('DarkTheme', $('#pma_console_options').find('input[name=dark_theme]').prop('checked'));
-    /* Setting the dark theme of the console*/
-
-    if (Console.config.DarkTheme) {
-      $('#pma_console').find('>.content').addClass('console_dark_theme');
-    } else {
-      $('#pma_console').find('>.content').removeClass('console_dark_theme');
-    }
-  },
-  setConfig: function (key, value) {
-    Console.config[key] = value;
-    Functions.configSet('Console/' + key, value);
   },
   isSelect: function (queryString) {
     var regExp = /^SELECT\s+/i;
@@ -459,16 +464,16 @@ var ConsoleResizer = {
    * @return {void}
    */
   mouseDown: function (event) {
-    if (Console.config.Mode !== 'show') {
+    if (_console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.Mode !== 'show') {
       return;
     }
 
     ConsoleResizer.posY = event.pageY;
     ConsoleResizer.height = Console.$consoleContent.height();
-    $(document).on('mousemove', ConsoleResizer.mouseMove);
-    $(document).on('mouseup', ConsoleResizer.mouseUp); // Disable text selection while resizing
+    jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('mousemove', ConsoleResizer.mouseMove);
+    jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('mouseup', ConsoleResizer.mouseUp); // Disable text selection while resizing
 
-    $(document).on('selectstart', function () {
+    jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('selectstart', function () {
       return false;
     });
   },
@@ -507,11 +512,11 @@ var ConsoleResizer = {
    * @return {void}
    */
   mouseUp: function () {
-    Console.setConfig('Height', ConsoleResizer.resultHeight);
+    _console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.set('Height', ConsoleResizer.resultHeight);
     Console.show();
-    $(document).off('mousemove');
-    $(document).off('mouseup');
-    $(document).off('selectstart');
+    jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('mousemove');
+    jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('mouseup');
+    jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('selectstart');
   },
 
   /**
@@ -520,8 +525,8 @@ var ConsoleResizer = {
    * @return {void}
    */
   initialize: function () {
-    $('#pma_console').find('.toolbar').off('mousedown');
-    $('#pma_console').find('.toolbar').on('mousedown', ConsoleResizer.mouseDown);
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.toolbar').off('mousedown');
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.toolbar').on('mousedown', ConsoleResizer.mouseDown);
   }
 };
 /**
@@ -564,7 +569,7 @@ var ConsoleInput = {
       return;
     }
 
-    if (typeof CodeMirror !== 'undefined') {
+    if (typeof codemirror__WEBPACK_IMPORTED_MODULE_1__ !== 'undefined') {
       ConsoleInput.codeMirror = true;
     }
 
@@ -572,7 +577,7 @@ var ConsoleInput = {
 
     if (ConsoleInput.codeMirror) {
       // eslint-disable-next-line new-cap
-      ConsoleInput.inputs.console = CodeMirror($('#pma_console').find('.console_query_input')[0], {
+      ConsoleInput.inputs.console = codemirror__WEBPACK_IMPORTED_MODULE_1__(jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.console_query_input')[0], {
         theme: 'pma',
         mode: 'text/x-sql',
         lineWrapping: true,
@@ -585,7 +590,7 @@ var ConsoleInput = {
         },
         gutters: ['CodeMirror-lint-markers'],
         lint: {
-          'getAnnotations': CodeMirror.sqlLint,
+          'getAnnotations': codemirror__WEBPACK_IMPORTED_MODULE_1__.sqlLint,
           'async': true
         }
       });
@@ -594,9 +599,9 @@ var ConsoleInput = {
         ConsoleInput.historyNavigate(event);
       });
 
-      if ($('#pma_bookmarks').length !== 0) {
+      if (jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_bookmarks').length !== 0) {
         // eslint-disable-next-line new-cap
-        ConsoleInput.inputs.bookmark = CodeMirror($('#pma_console').find('.bookmark_add_input')[0], {
+        ConsoleInput.inputs.bookmark = codemirror__WEBPACK_IMPORTED_MODULE_1__(jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.bookmark_add_input')[0], {
           theme: 'pma',
           mode: 'text/x-sql',
           lineWrapping: true,
@@ -609,21 +614,21 @@ var ConsoleInput = {
           },
           gutters: ['CodeMirror-lint-markers'],
           lint: {
-            'getAnnotations': CodeMirror.sqlLint,
+            'getAnnotations': codemirror__WEBPACK_IMPORTED_MODULE_1__.sqlLint,
             'async': true
           }
         });
         ConsoleInput.inputs.bookmark.on('inputRead', Functions.codeMirrorAutoCompleteOnInputRead);
       }
     } else {
-      ConsoleInput.inputs.console = $('<textarea>').appendTo('#pma_console .console_query_input').on('keydown', ConsoleInput.historyNavigate);
+      ConsoleInput.inputs.console = jquery__WEBPACK_IMPORTED_MODULE_0__('<textarea>').appendTo('#pma_console .console_query_input').on('keydown', ConsoleInput.historyNavigate);
 
-      if ($('#pma_bookmarks').length !== 0) {
-        ConsoleInput.inputs.bookmark = $('<textarea>').appendTo('#pma_console .bookmark_add_input');
+      if (jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_bookmarks').length !== 0) {
+        ConsoleInput.inputs.bookmark = jquery__WEBPACK_IMPORTED_MODULE_0__('<textarea>').appendTo('#pma_console .bookmark_add_input');
       }
     }
 
-    $('#pma_console').find('.console_query_input').on('keydown', ConsoleInput.keyDown);
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.console_query_input').on('keydown', ConsoleInput.keyDown);
   },
 
   /**
@@ -643,7 +648,7 @@ var ConsoleInput = {
       } else {
         // Get cursor position from textarea
         var text = ConsoleInput.getText();
-        cursorLine = text.substr(0, editor.prop('selectionStart')).split('\n').length - 1;
+        cursorLine = text.substring(0, editor.prop('selectionStart')).split('\n').length - 1;
         totalLine = text.split(/\r*\n/).length;
       }
 
@@ -705,7 +710,7 @@ var ConsoleInput = {
    */
   keyDown: function (event) {
     // Execute command
-    if (Console.config.EnterExecutes) {
+    if (_console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.EnterExecutes) {
       // Enter, but not in combination with Shift (which writes a new line).
       if (!event.shiftKey && event.keyCode === 13) {
         ConsoleInput.execute();
@@ -841,9 +846,9 @@ var ConsoleMessages = {
    * @return {void}
    */
   clear: function () {
-    $('#pma_console').find('.content .console_message_container .message:not(.welcome)').addClass('hide');
-    $('#pma_console').find('.content .console_message_container .message.failed').remove();
-    $('#pma_console').find('.content .console_message_container .message.expanded').find('.action.collapse').trigger('click');
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.content .console_message_container .message:not(.welcome)').addClass('hide');
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.content .console_message_container .message.failed').remove();
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.content .console_message_container .message.expanded').find('.action.collapse').trigger('click');
   },
 
   /**
@@ -852,7 +857,7 @@ var ConsoleMessages = {
    * @return {void}
    */
   showHistory: function () {
-    $('#pma_console').find('.content .console_message_container .message.hide').removeClass('hide');
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.content .console_message_container .message.hide').removeClass('hide');
   },
 
   /**
@@ -862,7 +867,7 @@ var ConsoleMessages = {
    * @return {string | false} message
    */
   getHistory: function (nthLast) {
-    var $queries = $('#pma_console').find('.content .console_message_container .query');
+    var $queries = jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.content .console_message_container .query');
     var length = $queries.length;
     var $query = $queries.eq(length - nthLast);
 
@@ -883,7 +888,7 @@ var ConsoleMessages = {
   showInstructions: function (enterExecutes) {
     var enter = +enterExecutes || 0; // conversion to int
 
-    var $welcomeMsg = $('#pma_console').find('.content .console_message_container .message.welcome span');
+    var $welcomeMsg = jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.content .console_message_container .message.welcome span');
     $welcomeMsg.children('[id^=instructions]').hide();
     $welcomeMsg.children('#instructions-' + enter).show();
   },
@@ -903,14 +908,14 @@ var ConsoleMessages = {
 
     var msgId = Math.round(Math.random() * 899999999999 + 100000000000);
     var now = new Date();
-    var $newMessage = $('<div class="message ' + (Console.config.AlwaysExpand ? 'expanded' : 'collapsed') + '" msgid="' + msgId + '"><div class="action_content"></div></div>');
+    var $newMessage = jquery__WEBPACK_IMPORTED_MODULE_0__('<div class="message ' + (_console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.AlwaysExpand ? 'expanded' : 'collapsed') + '" msgid="' + msgId + '"><div class="action_content"></div></div>');
 
     switch (msgType) {
       case 'query':
         $newMessage.append('<div class="query highlighted"></div>');
 
         if (ConsoleInput.codeMirror) {
-          CodeMirror.runMode(msgString, 'text/x-sql', $newMessage.children('.query')[0]);
+          codemirror__WEBPACK_IMPORTED_MODULE_1__.runMode(msgString, 'text/x-sql', $newMessage.children('.query')[0]);
         } else {
           $newMessage.children('.query').text(msgString);
         }
@@ -982,22 +987,22 @@ var ConsoleMessages = {
 
     $targetMessage.addClass('binded');
     $targetMessage.find('.action.expand').on('click', function () {
-      $(this).closest('.message').removeClass('collapsed');
-      $(this).closest('.message').addClass('expanded');
+      jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('.message').removeClass('collapsed');
+      jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('.message').addClass('expanded');
     });
     $targetMessage.find('.action.collapse').on('click', function () {
-      $(this).closest('.message').addClass('collapsed');
-      $(this).closest('.message').removeClass('expanded');
+      jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('.message').addClass('collapsed');
+      jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('.message').removeClass('expanded');
     });
     $targetMessage.find('.action.edit').on('click', function () {
-      ConsoleInput.setText($(this).parent().siblings('.query').text());
+      ConsoleInput.setText(jquery__WEBPACK_IMPORTED_MODULE_0__(this).parent().siblings('.query').text());
       ConsoleInput.focus();
     });
     $targetMessage.find('.action.requery').on('click', function () {
-      var query = $(this).parent().siblings('.query').text();
-      var $message = $(this).closest('.message');
+      var query = jquery__WEBPACK_IMPORTED_MODULE_0__(this).parent().siblings('.query').text();
+      var $message = jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('.message');
 
-      if (confirm(Messages.strConsoleRequeryConfirm + '\n' + (query.length < 100 ? query : query.slice(0, 100) + '...'))) {
+      if (confirm(window.Messages.strConsoleRequeryConfirm + '\n' + (query.length < 100 ? query : query.slice(0, 100) + '...'))) {
         Console.execute(query, {
           db: $message.attr('targetdb'),
           table: $message.attr('targettable')
@@ -1005,25 +1010,25 @@ var ConsoleMessages = {
       }
     });
     $targetMessage.find('.action.bookmark').on('click', function () {
-      var query = $(this).parent().siblings('.query').text();
-      var $message = $(this).closest('.message');
+      var query = jquery__WEBPACK_IMPORTED_MODULE_0__(this).parent().siblings('.query').text();
+      var $message = jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('.message');
       ConsoleBookmarks.addBookmark(query, $message.attr('targetdb'));
       Console.showCard('#pma_bookmarks .card.add');
     });
     $targetMessage.find('.action.edit_bookmark').on('click', function () {
-      var query = $(this).parent().siblings('.query').text();
-      var $message = $(this).closest('.message');
+      var query = jquery__WEBPACK_IMPORTED_MODULE_0__(this).parent().siblings('.query').text();
+      var $message = jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('.message');
       var isShared = $message.find('span.bookmark_label').hasClass('shared');
       var label = $message.find('span.bookmark_label').text();
       ConsoleBookmarks.addBookmark(query, $message.attr('targetdb'), label, isShared);
       Console.showCard('#pma_bookmarks .card.add');
     });
     $targetMessage.find('.action.delete_bookmark').on('click', function () {
-      var $message = $(this).closest('.message');
+      var $message = jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('.message');
 
-      if (confirm(Messages.strConsoleDeleteBookmarkConfirm + '\n' + $message.find('.bookmark_label').text())) {
-        $.post('index.php?route=/import', {
-          'server': CommonParams.get('server'),
+      if (confirm(window.Messages.strConsoleDeleteBookmarkConfirm + '\n' + $message.find('.bookmark_label').text())) {
+        jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/import', {
+          'server': window.CommonParams.get('server'),
           'action_bookmark': 2,
           'ajax_request': true,
           'id_bookmark': $message.attr('bookmarkid')
@@ -1033,22 +1038,22 @@ var ConsoleMessages = {
       }
     });
     $targetMessage.find('.action.profiling').on('click', function () {
-      var $message = $(this).closest('.message');
-      Console.execute($(this).parent().siblings('.query').text(), {
+      var $message = jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('.message');
+      Console.execute(jquery__WEBPACK_IMPORTED_MODULE_0__(this).parent().siblings('.query').text(), {
         db: $message.attr('targetdb'),
         table: $message.attr('targettable'),
         profiling: true
       });
     });
     $targetMessage.find('.action.explain').on('click', function () {
-      var $message = $(this).closest('.message');
-      Console.execute('EXPLAIN ' + $(this).parent().siblings('.query').text(), {
+      var $message = jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('.message');
+      Console.execute('EXPLAIN ' + jquery__WEBPACK_IMPORTED_MODULE_0__(this).parent().siblings('.query').text(), {
         db: $message.attr('targetdb'),
         table: $message.attr('targettable')
       });
     });
     $targetMessage.find('.action.dbg_show_trace').on('click', function () {
-      var $message = $(this).closest('.message');
+      var $message = jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('.message');
 
       if (!$message.find('.trace').length) {
         ConsoleDebug.getQueryDetails($message.data('queryInfo'), $message.data('totalTime'), $message);
@@ -1059,30 +1064,30 @@ var ConsoleMessages = {
       $message.removeClass('hide_trace');
     });
     $targetMessage.find('.action.dbg_hide_trace').on('click', function () {
-      var $message = $(this).closest('.message');
+      var $message = jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('.message');
       $message.addClass('hide_trace');
       $message.removeClass('show_trace');
     });
     $targetMessage.find('.action.dbg_show_args').on('click', function () {
-      var $message = $(this).closest('.message');
+      var $message = jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('.message');
       $message.addClass('show_args expanded');
       $message.removeClass('hide_args collapsed');
     });
     $targetMessage.find('.action.dbg_hide_args').on('click', function () {
-      var $message = $(this).closest('.message');
+      var $message = jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('.message');
       $message.addClass('hide_args collapsed');
       $message.removeClass('show_args expanded');
     });
 
     if (ConsoleInput.codeMirror) {
       $targetMessage.find('.query:not(.highlighted)').each(function (index, elem) {
-        CodeMirror.runMode($(elem).text(), 'text/x-sql', elem);
-        $(this).addClass('highlighted');
+        codemirror__WEBPACK_IMPORTED_MODULE_1__.runMode(jquery__WEBPACK_IMPORTED_MODULE_0__(elem).text(), 'text/x-sql', elem);
+        jquery__WEBPACK_IMPORTED_MODULE_0__(this).addClass('highlighted');
       });
     }
   },
   msgAppend: function (msgId, msgString) {
-    var $targetMessage = $('#pma_console').find('.content .console_message_container .message[msgid=' + msgId + ']');
+    var $targetMessage = jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.content .console_message_container .message[msgid=' + msgId + ']');
 
     if ($targetMessage.length === 0 || isNaN(parseInt(msgId)) || typeof msgString !== 'string') {
       return false;
@@ -1091,7 +1096,7 @@ var ConsoleMessages = {
     $targetMessage.append('<div>' + msgString + '</div>');
   },
   updateQuery: function (msgId, isSuccessed, queryData) {
-    var $targetMessage = $('#pma_console').find('.console_message_container .message[msgid=' + parseInt(msgId) + ']');
+    var $targetMessage = jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.console_message_container .message[msgid=' + parseInt(msgId) + ']');
 
     if ($targetMessage.length === 0 || isNaN(parseInt(msgId))) {
       return false;
@@ -1111,7 +1116,7 @@ var ConsoleMessages = {
         }
 
         if (ConsoleInput.codeMirror) {
-          CodeMirror.runMode(queryData.sql_query, 'text/x-sql', $targetMessage.children('.query')[0]);
+          codemirror__WEBPACK_IMPORTED_MODULE_1__.runMode(queryData.sql_query, 'text/x-sql', $targetMessage.children('.query')[0]);
         } else {
           $targetMessage.children('.query').text(queryData.sql_query);
         }
@@ -1131,13 +1136,13 @@ var ConsoleMessages = {
    * @return {void}
    */
   initialize: function () {
-    ConsoleMessages.messageEventBinds($('#pma_console').find('.message:not(.binded)'));
+    ConsoleMessages.messageEventBinds(jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.message:not(.binded)'));
 
-    if (Console.config.StartHistory) {
+    if (_console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.StartHistory) {
       ConsoleMessages.showHistory();
     }
 
-    ConsoleMessages.showInstructions(Console.config.EnterExecutes);
+    ConsoleMessages.showInstructions(_console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.EnterExecutes);
   }
 };
 /**
@@ -1147,10 +1152,10 @@ var ConsoleMessages = {
 var ConsoleBookmarks = {
   bookmarks: [],
   addBookmark: function (queryString, targetDb, label, isShared) {
-    $('#pma_bookmarks').find('.add [name=shared]').prop('checked', false);
-    $('#pma_bookmarks').find('.add [name=label]').val('');
-    $('#pma_bookmarks').find('.add [name=targetdb]').val('');
-    $('#pma_bookmarks').find('.add [name=id_bookmark]').val('');
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_bookmarks').find('.add [name=shared]').prop('checked', false);
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_bookmarks').find('.add [name=label]').val('');
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_bookmarks').find('.add [name=targetdb]').val('');
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_bookmarks').find('.add [name=id_bookmark]').val('');
     ConsoleInput.setText('', 'bookmark');
 
     if (typeof queryString !== 'undefined') {
@@ -1158,26 +1163,26 @@ var ConsoleBookmarks = {
     }
 
     if (typeof targetDb !== 'undefined') {
-      $('#pma_bookmarks').find('.add [name=targetdb]').val(targetDb);
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_bookmarks').find('.add [name=targetdb]').val(targetDb);
     }
 
     if (typeof label !== 'undefined') {
-      $('#pma_bookmarks').find('.add [name=label]').val(label);
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_bookmarks').find('.add [name=label]').val(label);
     }
 
     if (typeof isShared !== 'undefined') {
-      $('#pma_bookmarks').find('.add [name=shared]').prop('checked', isShared);
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_bookmarks').find('.add [name=shared]').prop('checked', isShared);
     }
   },
   refresh: function () {
-    $.get('index.php?route=/import', {
+    jquery__WEBPACK_IMPORTED_MODULE_0__.get('index.php?route=/import', {
       'ajax_request': true,
-      'server': CommonParams.get('server'),
+      'server': window.CommonParams.get('server'),
       'console_bookmark_refresh': 'refresh'
     }, function (data) {
       if (data.console_message_bookmark) {
-        $('#pma_bookmarks').find('.content.bookmark').html(data.console_message_bookmark);
-        ConsoleMessages.messageEventBinds($('#pma_bookmarks').find('.message:not(.binded)'));
+        jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_bookmarks').find('.content.bookmark').html(data.console_message_bookmark);
+        ConsoleMessages.messageEventBinds(jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_bookmarks').find('.message:not(.binded)'));
       }
     });
   },
@@ -1189,133 +1194,125 @@ var ConsoleBookmarks = {
    * @return {void}
    */
   initialize: function () {
-    if ($('#pma_bookmarks').length === 0) {
+    if (jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_bookmarks').length === 0) {
       return;
     }
 
-    $('#pma_console').find('.button.bookmarks').on('click', function () {
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.button.bookmarks').on('click', function () {
       Console.showCard('#pma_bookmarks');
     });
-    $('#pma_bookmarks').find('.button.add').on('click', function () {
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_bookmarks').find('.button.add').on('click', function () {
       Console.showCard('#pma_bookmarks .card.add');
     });
-    $('#pma_bookmarks').find('.card.add [name=submit]').on('click', function () {
-      if ($('#pma_bookmarks').find('.card.add [name=label]').val().length === 0 || ConsoleInput.getText('bookmark').length === 0) {
-        alert(Messages.strFormEmpty);
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_bookmarks').find('.card.add [name=submit]').on('click', function () {
+      if (jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_bookmarks').find('.card.add [name=label]').val().length === 0 || ConsoleInput.getText('bookmark').length === 0) {
+        alert(window.Messages.strFormEmpty);
         return;
       }
 
-      $(this).prop('disabled', true);
-      $.post('index.php?route=/import', {
+      jquery__WEBPACK_IMPORTED_MODULE_0__(this).prop('disabled', true);
+      jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/import', {
         'ajax_request': true,
         'console_bookmark_add': 'true',
-        'label': $('#pma_bookmarks').find('.card.add [name=label]').val(),
-        'server': CommonParams.get('server'),
-        'db': $('#pma_bookmarks').find('.card.add [name=targetdb]').val(),
+        'label': jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_bookmarks').find('.card.add [name=label]').val(),
+        'server': window.CommonParams.get('server'),
+        'db': jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_bookmarks').find('.card.add [name=targetdb]').val(),
         'bookmark_query': ConsoleInput.getText('bookmark'),
-        'shared': $('#pma_bookmarks').find('.card.add [name=shared]').prop('checked')
+        'shared': jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_bookmarks').find('.card.add [name=shared]').prop('checked')
       }, function () {
         ConsoleBookmarks.refresh();
-        $('#pma_bookmarks').find('.card.add [name=submit]').prop('disabled', false);
-        Console.hideCard($('#pma_bookmarks').find('.card.add'));
+        jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_bookmarks').find('.card.add [name=submit]').prop('disabled', false);
+        Console.hideCard(jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_bookmarks').find('.card.add'));
       });
     });
-    $('#pma_console').find('.button.refresh').on('click', function () {
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.button.refresh').on('click', function () {
       ConsoleBookmarks.refresh();
     });
   }
 };
 var ConsoleDebug = {
-  config: {
-    groupQueries: false,
-    orderBy: 'exec',
-    // Possible 'exec' => Execution order, 'time' => Time taken, 'count'
-    order: 'asc' // Possible 'asc', 'desc'
-
-  },
   lastDebugInfo: {
     debugInfo: null,
     url: null
   },
   initialize: function () {
     // Try to get debug info after every AJAX request
-    $(document).on('ajaxSuccess', function (event, xhr, settings, data) {
+    jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('ajaxSuccess', function (event, xhr, settings, data) {
       if (data.debug) {
         ConsoleDebug.showLog(data.debug, settings.url);
       }
     });
 
-    if (Console.config.GroupQueries) {
-      $('#debug_console').addClass('grouped');
+    if (_console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.GroupQueries) {
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').addClass('grouped');
     } else {
-      $('#debug_console').addClass('ungrouped');
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').addClass('ungrouped');
 
-      if (Console.config.OrderBy === 'count') {
-        $('#debug_console').find('.button.order_by.sort_exec').addClass('active');
+      if (_console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.OrderBy === 'count') {
+        jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').find('.button.order_by.sort_exec').addClass('active');
       }
     }
 
-    var orderBy = Console.config.OrderBy;
-    var order = Console.config.Order;
-    $('#debug_console').find('.button.order_by.sort_' + orderBy).addClass('active');
-    $('#debug_console').find('.button.order.order_' + order).addClass('active'); // Initialize actions in toolbar
+    var orderBy = _console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.OrderBy;
+    var order = _console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.Order;
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').find('.button.order_by.sort_' + orderBy).addClass('active');
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').find('.button.order.order_' + order).addClass('active'); // Initialize actions in toolbar
 
-    $('#debug_console').find('.button.group_queries').on('click', function () {
-      $('#debug_console').addClass('grouped');
-      $('#debug_console').removeClass('ungrouped');
-      Console.setConfig('GroupQueries', true);
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').find('.button.group_queries').on('click', function () {
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').addClass('grouped');
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').removeClass('ungrouped');
+      _console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.set('GroupQueries', true);
       ConsoleDebug.refresh();
 
-      if (Console.config.OrderBy === 'count') {
-        $('#debug_console').find('.button.order_by.sort_exec').removeClass('active');
+      if (_console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.OrderBy === 'count') {
+        jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').find('.button.order_by.sort_exec').removeClass('active');
       }
     });
-    $('#debug_console').find('.button.ungroup_queries').on('click', function () {
-      $('#debug_console').addClass('ungrouped');
-      $('#debug_console').removeClass('grouped');
-      Console.setConfig('GroupQueries', false);
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').find('.button.ungroup_queries').on('click', function () {
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').addClass('ungrouped');
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').removeClass('grouped');
+      _console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.set('GroupQueries', false);
       ConsoleDebug.refresh();
 
-      if (Console.config.OrderBy === 'count') {
-        $('#debug_console').find('.button.order_by.sort_exec').addClass('active');
+      if (_console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.OrderBy === 'count') {
+        jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').find('.button.order_by.sort_exec').addClass('active');
       }
     });
-    $('#debug_console').find('.button.order_by').on('click', function () {
-      var $this = $(this);
-      $('#debug_console').find('.button.order_by').removeClass('active');
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').find('.button.order_by').on('click', function () {
+      var $this = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').find('.button.order_by').removeClass('active');
       $this.addClass('active');
 
       if ($this.hasClass('sort_time')) {
-        Console.setConfig('OrderBy', 'time');
+        _console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.set('OrderBy', 'time');
       } else if ($this.hasClass('sort_exec')) {
-        Console.setConfig('OrderBy', 'exec');
+        _console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.set('OrderBy', 'exec');
       } else if ($this.hasClass('sort_count')) {
-        Console.setConfig('OrderBy', 'count');
+        _console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.set('OrderBy', 'count');
       }
 
       ConsoleDebug.refresh();
     });
-    $('#debug_console').find('.button.order').on('click', function () {
-      var $this = $(this);
-      $('#debug_console').find('.button.order').removeClass('active');
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').find('.button.order').on('click', function () {
+      var $this = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').find('.button.order').removeClass('active');
       $this.addClass('active');
 
       if ($this.hasClass('order_asc')) {
-        Console.setConfig('Order', 'asc');
+        _console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.set('Order', 'asc');
       } else if ($this.hasClass('order_desc')) {
-        Console.setConfig('Order', 'desc');
+        _console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.set('Order', 'desc');
       }
 
       ConsoleDebug.refresh();
     }); // Show SQL debug info for first page load
 
-    if (typeof debugSQLInfo !== 'undefined' && debugSQLInfo !== 'null') {
-      $('#pma_console').find('.button.debug').removeClass('hide');
-    } else {
+    if (Console.debugSqlInfo === null) {
       return;
     }
 
-    ConsoleDebug.showLog(debugSQLInfo);
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_console').find('.button.debug').removeClass('hide');
+    ConsoleDebug.showLog(Console.debugSqlInfo);
   },
   formatFunctionCall: function (dbgStep) {
     var functionName = '';
@@ -1336,13 +1333,13 @@ var ConsoleDebug = {
     return functionName;
   },
   formatFunctionArgs: function (dbgStep) {
-    var $args = $('<div>');
+    var $args = jquery__WEBPACK_IMPORTED_MODULE_0__('<div>');
 
     if (dbgStep.args.length) {
-      $args.append('<div class="message welcome">').append($('<div class="message welcome">').text(Functions.sprintf(Messages.strConsoleDebugArgsSummary, dbgStep.args.length)));
+      $args.append('<div class="message welcome">').append(jquery__WEBPACK_IMPORTED_MODULE_0__('<div class="message welcome">').text(Functions.sprintf(window.Messages.strConsoleDebugArgsSummary, dbgStep.args.length)));
 
       for (var i = 0; i < dbgStep.args.length; i++) {
-        $args.append($('<div class="message">').html('<pre>' + Functions.escapeHtml(JSON.stringify(dbgStep.args[i], null, '  ')) + '</pre>'));
+        $args.append(jquery__WEBPACK_IMPORTED_MODULE_0__('<div class="message">').html('<pre>' + Functions.escapeHtml(JSON.stringify(dbgStep.args[i], null, '  ')) + '</pre>'));
       }
     }
 
@@ -1359,8 +1356,8 @@ var ConsoleDebug = {
     return fileName;
   },
   formatBackTrace: function (dbgTrace) {
-    var $traceElem = $('<div class="trace">');
-    $traceElem.append($('<div class="message welcome">'));
+    var $traceElem = jquery__WEBPACK_IMPORTED_MODULE_0__('<div class="trace">');
+    $traceElem.append(jquery__WEBPACK_IMPORTED_MODULE_0__('<div class="message welcome">'));
     var step;
     var $stepElem;
 
@@ -1369,16 +1366,16 @@ var ConsoleDebug = {
         step = dbgTrace[stepId];
 
         if (!Array.isArray(step) && typeof step !== 'object') {
-          $stepElem = $('<div class="message traceStep collapsed hide_args">').append($('<span>').text(step));
+          $stepElem = jquery__WEBPACK_IMPORTED_MODULE_0__('<div class="message traceStep collapsed hide_args">').append(jquery__WEBPACK_IMPORTED_MODULE_0__('<span>').text(step));
         } else {
           if (typeof step.args === 'string' && step.args) {
             step.args = [step.args];
           }
 
-          $stepElem = $('<div class="message traceStep collapsed hide_args">').append($('<span class="function">').text(this.formatFunctionCall(step))).append($('<span class="file">').text(this.formatFileName(step)));
+          $stepElem = jquery__WEBPACK_IMPORTED_MODULE_0__('<div class="message traceStep collapsed hide_args">').append(jquery__WEBPACK_IMPORTED_MODULE_0__('<span class="function">').text(this.formatFunctionCall(step))).append(jquery__WEBPACK_IMPORTED_MODULE_0__('<span class="file">').text(this.formatFileName(step)));
 
           if (step.args && step.args.length) {
-            $stepElem.append($('<span class="args">').html(this.formatFunctionArgs(step))).prepend($('<div class="action_content">').append('<span class="action dbg_show_args">' + Messages.strConsoleDebugShowArgs + '</span> ').append('<span class="action dbg_hide_args">' + Messages.strConsoleDebugHideArgs + '</span> '));
+            $stepElem.append(jquery__WEBPACK_IMPORTED_MODULE_0__('<span class="args">').html(this.formatFunctionArgs(step))).prepend(jquery__WEBPACK_IMPORTED_MODULE_0__('<div class="action_content">').append('<span class="action dbg_show_args">' + window.Messages.strConsoleDebugShowArgs + '</span> ').append('<span class="action dbg_hide_args">' + window.Messages.strConsoleDebugHideArgs + '</span> '));
           }
         }
 
@@ -1411,7 +1408,7 @@ var ConsoleDebug = {
       queryTime = queryInfo.time;
     }
 
-    var $query = $('<div class="message collapsed hide_trace">').append($('#debug_console').find('.templates .debug_query').clone()).append($('<div class="query">').text(queryText)).data('queryInfo', queryInfo).data('totalTime', totalTime);
+    var $query = jquery__WEBPACK_IMPORTED_MODULE_0__('<div class="message collapsed hide_trace">').append(jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').find('.templates .debug_query').clone()).append(jquery__WEBPACK_IMPORTED_MODULE_0__('<div class="query">').text(queryText)).data('queryInfo', queryInfo).data('totalTime', totalTime);
 
     if (grouped) {
       $query.find('.text.count').removeClass('hide');
@@ -1423,7 +1420,7 @@ var ConsoleDebug = {
   },
   appendQueryExtraInfo: function (query, $elem) {
     if ('error' in query) {
-      $elem.append($('<div>').html(query.error));
+      $elem.append(jquery__WEBPACK_IMPORTED_MODULE_0__('<div>').html(query.error));
     }
 
     $elem.append(this.formatBackTrace(query.trace));
@@ -1433,7 +1430,7 @@ var ConsoleDebug = {
       var $singleQuery;
 
       for (var i in queryInfo) {
-        $singleQuery = $('<div class="message welcome trace">').text(parseInt(i) + 1 + '.').append($('<span class="time">').text(Messages.strConsoleDebugTimeTaken + ' ' + queryInfo[i].time + 's' + ' (' + (queryInfo[i].time * 100 / totalTime).toFixed(3) + '%)'));
+        $singleQuery = jquery__WEBPACK_IMPORTED_MODULE_0__('<div class="message welcome trace">').text(parseInt(i) + 1 + '.').append(jquery__WEBPACK_IMPORTED_MODULE_0__('<span class="time">').text(window.Messages.strConsoleDebugTimeTaken + ' ' + queryInfo[i].time + 's' + ' (' + (queryInfo[i].time * 100 / totalTime).toFixed(3) + '%)'));
         this.appendQueryExtraInfo(queryInfo[i], $singleQuery);
         $query.append('<div class="message welcome trace">').append($singleQuery);
       }
@@ -1444,8 +1441,8 @@ var ConsoleDebug = {
   showLog: function (debugInfo, url) {
     this.lastDebugInfo.debugInfo = debugInfo;
     this.lastDebugInfo.url = url;
-    $('#debug_console').find('.debugLog').empty();
-    $('#debug_console').find('.debug>.welcome').empty();
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').find('.debugLog').empty();
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').find('.debug>.welcome').empty();
     var debugJson = false;
     var i;
 
@@ -1475,7 +1472,7 @@ var ConsoleDebug = {
     }
 
     if (debugJson === false) {
-      $('#debug_console').find('.debug>.welcome').text(Messages.strConsoleDebugError);
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').find('.debug>.welcome').text(window.Messages.strConsoleDebugError);
       return;
     }
 
@@ -1508,15 +1505,15 @@ var ConsoleDebug = {
 
     uniqueQueries = uniqueArray; // Show summary
 
-    $('#debug_console').find('.debug>.welcome').append($('<span class="debug_summary">').text(Functions.sprintf(Messages.strConsoleDebugSummary, totalUnique, totalExec, totalTime)));
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').find('.debug>.welcome').append(jquery__WEBPACK_IMPORTED_MODULE_0__('<span class="debug_summary">').text(Functions.sprintf(window.Messages.strConsoleDebugSummary, totalUnique, totalExec, totalTime)));
 
     if (url) {
-      $('#debug_console').find('.debug>.welcome').append($('<span class="script_name">').text(url.split('?')[0]));
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').find('.debug>.welcome').append(jquery__WEBPACK_IMPORTED_MODULE_0__('<span class="script_name">').text(url.split('?')[0]));
     } // For sorting queries
 
 
     function sortByTime(a, b) {
-      var order = Console.config.Order === 'asc' ? 1 : -1;
+      var order = _console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.Order === 'asc' ? 1 : -1;
 
       if (Array.isArray(a) && Array.isArray(b)) {
         // It is grouped
@@ -1539,14 +1536,14 @@ var ConsoleDebug = {
     }
 
     function sortByCount(a, b) {
-      var order = Console.config.Oorder === 'asc' ? 1 : -1;
+      var order = _console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.Order === 'asc' ? 1 : -1;
       return (a.length - b.length) * order;
     }
 
-    var orderBy = Console.config.OrderBy;
-    var order = Console.config.Order;
+    var orderBy = _console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.OrderBy;
+    var order = _console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.Order;
 
-    if (Console.config.GroupQueries) {
+    if (_console_config_js__WEBPACK_IMPORTED_MODULE_2__.Config.GroupQueries) {
       // Sort queries
       if (orderBy === 'time') {
         uniqueQueries.sort(sortByTime);
@@ -1563,7 +1560,7 @@ var ConsoleDebug = {
           uniqueQueries[i].reverse();
         }
 
-        $('#debug_console').find('.debugLog').append(this.formatQueryOrGroup(uniqueQueries[i], totalTime));
+        jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').find('.debugLog').append(this.formatQueryOrGroup(uniqueQueries[i], totalTime));
       }
     } else {
       if (orderBy === 'time') {
@@ -1573,21 +1570,145 @@ var ConsoleDebug = {
       }
 
       for (i = 0; i < totalExec; ++i) {
-        $('#debug_console').find('.debugLog').append(this.formatQueryOrGroup(allQueries[i], totalTime));
+        jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').find('.debugLog').append(this.formatQueryOrGroup(allQueries[i], totalTime));
       }
     }
 
-    ConsoleMessages.messageEventBinds($('#debug_console').find('.message:not(.binded)'));
+    ConsoleMessages.messageEventBinds(jquery__WEBPACK_IMPORTED_MODULE_0__('#debug_console').find('.message:not(.binded)'));
   },
   refresh: function () {
     var last = this.lastDebugInfo;
     ConsoleDebug.showLog(last.debugInfo, last.url);
   }
 };
-/**
- * Executed on page load
- */
 
-$(function () {
-  Console.initialize();
-});
+
+/***/ }),
+/* 8 */
+/***/ (function(module) {
+
+module.exports = CodeMirror;
+
+/***/ }),
+/* 9 */
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Config": function() { return /* binding */ Config; }
+/* harmony export */ });
+/* global Functions */
+
+/**
+ * @link https://docs.phpmyadmin.net/en/latest/config.html#console-settings
+ */
+const Config = {
+  /**
+   * @type {boolean}
+   */
+  StartHistory: false,
+
+  /**
+   * @type {boolean}
+   */
+  AlwaysExpand: false,
+
+  /**
+   * @type {boolean}
+   */
+  CurrentQuery: true,
+
+  /**
+   * @type {boolean}
+   */
+  EnterExecutes: false,
+
+  /**
+   * @type {boolean}
+   */
+  DarkTheme: false,
+
+  /**
+   * @type {'info'|'show'|'collapse'}
+   */
+  Mode: 'info',
+
+  /**
+   * @type {number}
+   */
+  Height: 92,
+
+  /**
+   * @type {boolean}
+   */
+  GroupQueries: false,
+
+  /**
+   * @type {'exec'|'time'|'count'}
+   */
+  OrderBy: 'exec',
+
+  /**
+   * @type {'asc'|'desc'}
+   */
+  Order: 'asc',
+
+  /**
+   * @param {Object} data
+   * @return {void}
+   */
+  init: function (data) {
+    this.StartHistory = !!data.StartHistory;
+    this.AlwaysExpand = !!data.AlwaysExpand;
+    this.CurrentQuery = data.CurrentQuery !== undefined ? !!data.CurrentQuery : true;
+    this.EnterExecutes = !!data.EnterExecutes;
+    this.DarkTheme = !!data.DarkTheme;
+    this.Mode = data.Mode === 'show' || data.Mode === 'collapse' ? data.Mode : 'info';
+    this.Height = data.Height > 0 ? Number(data.Height) : 92;
+    this.GroupQueries = !!data.GroupQueries;
+    this.OrderBy = data.OrderBy === 'time' || data.OrderBy === 'count' ? data.OrderBy : 'exec';
+    this.Order = data.Order === 'desc' ? 'desc' : 'asc';
+  },
+
+  /**
+   * @param {'StartHistory'|'AlwaysExpand'|'CurrentQuery'|'EnterExecutes'|'DarkTheme'|'Mode'|'Height'|'GroupQueries'|'OrderBy'|'Order'} key
+   * @param {boolean|string|number} value
+   * @return {void}
+   */
+  set: function (key, value) {
+    this[key] = value;
+    Functions.configSet('Console/' + key, value);
+  },
+
+  /**
+   * Used for update console config
+   *
+   * @return {void}
+   */
+  update: function () {
+    this.set('AlwaysExpand', !!document.getElementById('consoleOptionsAlwaysExpandCheckbox').checked);
+    this.set('StartHistory', !!document.getElementById('consoleOptionsStartHistoryCheckbox').checked);
+    this.set('CurrentQuery', !!document.getElementById('consoleOptionsCurrentQueryCheckbox').checked);
+    this.set('EnterExecutes', !!document.getElementById('consoleOptionsEnterExecutesCheckbox').checked);
+    this.set('DarkTheme', !!document.getElementById('consoleOptionsDarkThemeCheckbox').checked);
+    /* Setting the dark theme of the console*/
+
+    const consoleContent = document.getElementById('pma_console').querySelector('.content');
+
+    if (this.DarkTheme) {
+      consoleContent.classList.add('console_dark_theme');
+    } else {
+      consoleContent.classList.remove('console_dark_theme');
+    }
+  }
+};
+
+/***/ })
+],
+/******/ function(__webpack_require__) { // webpackRuntimeModules
+/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
+/******/ var __webpack_exports__ = (__webpack_exec__(6));
+/******/ window.Console = __webpack_exports__.Console;
+/******/ }
+]);
+//# sourceMappingURL=console.js.map

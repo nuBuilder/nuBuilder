@@ -289,7 +289,7 @@ class Monitor
             'sum' => [],
         ];
 
-        while ($row = $this->dbi->fetchAssoc($result)) {
+        while ($row = $result->fetchAssoc()) {
             $type = mb_strtolower(
                 mb_substr(
                     $row['sql_text'],
@@ -374,7 +374,7 @@ class Monitor
         $insertTablesFirst = -1;
         $i = 0;
 
-        while ($row = $this->dbi->fetchAssoc($result)) {
+        while ($row = $result->fetchAssoc()) {
             preg_match('/^(\w+)\s/', $row['argument'], $match);
             $type = mb_strtolower($match[1]);
 
@@ -506,7 +506,7 @@ class Monitor
         string $database,
         string $query
     ): array {
-        global $cached_affected_rows;
+        $GLOBALS['cached_affected_rows'] = $GLOBALS['cached_affected_rows'] ?? null;
 
         $return = [];
 
@@ -524,7 +524,7 @@ class Monitor
         $sqlQuery = preg_replace('/^(\s*SELECT)/i', '\\1 SQL_NO_CACHE', $query);
 
         $this->dbi->tryQuery($sqlQuery);
-        $return['affectedRows'] = $cached_affected_rows;
+        $return['affectedRows'] = $GLOBALS['cached_affected_rows'];
 
         $result = $this->dbi->tryQuery('EXPLAIN ' . $sqlQuery);
         if ($result !== false) {

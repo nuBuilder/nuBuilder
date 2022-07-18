@@ -1,15 +1,9 @@
 {# Get inputbox based on different column types (Foreign key, geometrical, enum) #}
-{% if foreigners and search_column_in_foreigners(foreigners, column_name) %}
+{% if foreigners and search_column_in_foreigners %}
     {% if foreign_data['disp_row'] is iterable %}
         <select name="criteriaValues[{{ column_index }}]"
             id="{{ column_id }}{{ column_index }}">
-            {{ foreign_dropdown(
-                foreign_data['disp_row'],
-                foreign_data['foreign_field'],
-                foreign_data['foreign_display'],
-                '',
-                foreign_max_limit
-            ) }}
+            {{ foreign_dropdown|raw }}
         </select>
     {% elseif foreign_data['foreign_link'] == true %}
         <input type="text"
@@ -21,7 +15,7 @@
                 value="{{ criteria_values[column_index] }}"
             {% endif %}>
         <a class="ajax browse_foreign" href="{{ url('/browse-foreigners') }}" data-post="
-            {{- get_common({'db': db, 'table': table}, '') -}}
+            {{- get_common({'db': db, 'table': table}, '', false) -}}
             &amp;field={{ column_name|url_encode }}&amp;fieldkey=
             {{- column_index }}&amp;fromsearch=1">
             {{ get_icon('b_browse', 'Browse foreign values'|trans) }}
@@ -36,7 +30,7 @@
     {% if in_fbs %}
         {% set edit_str = get_icon('b_edit', 'Edit/Insert'|trans) %}
         <span class="open_search_gis_editor">
-            {{ link_or_button(url('/gis-data-editor'), edit_str, [], '_blank') }}
+            {{ link_or_button(url('/gis-data-editor'), [], edit_str, [], '_blank') }}
         </span>
     {% endif %}
 {% elseif column_type starts with 'enum'

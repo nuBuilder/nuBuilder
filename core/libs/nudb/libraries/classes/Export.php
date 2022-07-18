@@ -14,6 +14,7 @@ use PhpMyAdmin\Plugins\ExportPlugin;
 use PhpMyAdmin\Plugins\SchemaPlugin;
 
 use function __;
+use function array_filter;
 use function array_merge_recursive;
 use function error_get_last;
 use function fclose;
@@ -25,6 +26,7 @@ use function gzencode;
 use function header;
 use function htmlentities;
 use function htmlspecialchars;
+use function http_build_query;
 use function implode;
 use function in_array;
 use function ini_get;
@@ -45,7 +47,6 @@ use function strtolower;
 use function substr;
 use function time;
 use function trim;
-use function urlencode;
 
 /**
  * PhpMyAdmin\Export class
@@ -125,7 +126,8 @@ class Export
      */
     public function outputHandler(?string $line): bool
     {
-        global $time_start, $save_filename;
+        $GLOBALS['time_start'] = $GLOBALS['time_start'] ?? null;
+        $GLOBALS['save_filename'] = $GLOBALS['save_filename'] ?? null;
 
         // Kanji encoding convert feature
         if ($GLOBALS['output_kanji_conversion']) {
@@ -157,7 +159,7 @@ class Export
                             $GLOBALS['message'] = Message::error(
                                 __('Insufficient space to save the file %s.')
                             );
-                            $GLOBALS['message']->addParam($save_filename);
+                            $GLOBALS['message']->addParam($GLOBALS['save_filename']);
 
                             return false;
                         }
@@ -170,8 +172,8 @@ class Export
                 }
             } else {
                 $timeNow = time();
-                if ($time_start >= $timeNow + 30) {
-                    $time_start = $timeNow;
+                if ($GLOBALS['time_start'] >= $timeNow + 30) {
+                    $GLOBALS['time_start'] = $timeNow;
                     header('X-pmaPing: Pong');
                 }
             }
@@ -193,14 +195,14 @@ class Export
                     $GLOBALS['message'] = Message::error(
                         __('Insufficient space to save the file %s.')
                     );
-                    $GLOBALS['message']->addParam($save_filename);
+                    $GLOBALS['message']->addParam($GLOBALS['save_filename']);
 
                     return false;
                 }
 
                 $timeNow = time();
-                if ($time_start >= $timeNow + 30) {
-                    $time_start = $timeNow;
+                if ($GLOBALS['time_start'] >= $timeNow + 30) {
+                    $GLOBALS['time_start'] = $timeNow;
                     header('X-pmaPing: Pong');
                 }
             } else {
@@ -218,14 +220,16 @@ class Export
     /**
      * Returns HTML containing the footer for a displayed export
      *
-     * @param string $backButton    the link for going Back
-     * @param string $refreshButton the link for refreshing page
+     * @param string $exportType the export type
+     * @param string $db         the database name
+     * @param string $table      the table name
      *
      * @return string the HTML output
      */
     public function getHtmlForDisplayedExportFooter(
-        string $backButton,
-        string $refreshButton
+        string $exportType,
+        string $db,
+        string $table
     ): string {
         /**
          * Close the html tags and add the footers for on-screen export
@@ -234,8 +238,8 @@ class Export
             . '    </form>'
             . '<br>'
             // bottom back button
-            . $backButton
-            . $refreshButton
+            . $this->getHTMLForBackButton($exportType, $db, $table)
+            . $this->getHTMLForRefreshButton($exportType)
             . '</div>'
             . '<script type="text/javascript">' . "\n"
             . '//<![CDATA[' . "\n"
@@ -532,86 +536,24 @@ class Export
      * @param string $db         the database name
      * @param string $table      the table name
      *
-     * @return string[] the generated HTML and back button
+     * @return string the generated HTML and back button
      */
     public function getHtmlForDisplayedExportHeader(
         string $exportType,
         string $db,
         string $table
-    ): array {
-        $html = '<div>';
-
+    ): string {
         /**
          * Displays a back button with all the $_POST data in the URL
-         * (store in a variable to also display after the textarea)
          */
-        $backButton = '<p>[ <a href="';
-        if ($exportType === 'server') {
-            $backButton .= Url::getFromRoute('/server/export') . '" data-post="' . Url::getCommon([], '');
-        } elseif ($exportType === 'database') {
-            $backButton .= Url::getFromRoute('/database/export') . '" data-post="' . Url::getCommon(['db' => $db], '');
-        } else {
-            $backButton .= Url::getFromRoute('/table/export') . '" data-post="' . Url::getCommon(
-                [
-                    'db' => $db,
-                    'table' => $table,
-                ],
-                ''
-            );
-        }
-
-        $postParams = $_POST;
-
-        // Convert the multiple select elements from an array to a string
-        if ($exportType === 'database') {
-            $structOrDataForced = empty($postParams['structure_or_data_forced']);
-            if ($structOrDataForced && ! isset($postParams['table_structure'])) {
-                $postParams['table_structure'] = [];
-            }
-
-            if ($structOrDataForced && ! isset($postParams['table_data'])) {
-                $postParams['table_data'] = [];
-            }
-        }
-
-        foreach ($postParams as $name => $value) {
-            if (is_array($value)) {
-                continue;
-            }
-
-            $backButton .= '&amp;' . urlencode((string) $name) . '=' . urlencode((string) $value);
-        }
-
-        $backButton .= '&amp;repopulate=1">' . __('Back') . '</a> ]</p>';
-        $html .= '<br>';
-        $html .= $backButton;
-        $refreshButton = '<form id="export_refresh_form" method="POST" action="'
-            . Url::getFromRoute('/export') . '" class="disableAjax">';
-        $refreshButton .= '[ <a class="disableAjax export_refresh_btn">' . __('Refresh') . '</a> ]';
-        foreach ($postParams as $name => $value) {
-            if (is_array($value)) {
-                foreach ($value as $val) {
-                    $refreshButton .= '<input type="hidden" name="' . htmlentities((string) $name)
-                        . '[]" value="' . htmlentities((string) $val) . '">';
-                }
-            } else {
-                $refreshButton .= '<input type="hidden" name="' . htmlentities((string) $name)
-                    . '" value="' . htmlentities((string) $value) . '">';
-            }
-        }
-
-        $refreshButton .= '</form>';
-        $html .= $refreshButton
+        return '<div>'
+            . '<br>'
+            . $this->getHTMLForBackButton($exportType, $db, $table)
+            . $this->getHTMLForRefreshButton($exportType)
             . '<br>'
             . '<form name="nofunction">'
             . '<textarea name="sqldump" cols="50" rows="30" '
             . 'id="textSQLDUMP" wrap="OFF">';
-
-        return [
-            $html,
-            $backButton,
-            $refreshButton,
-        ];
     }
 
     /**
@@ -795,7 +737,7 @@ class Export
 
                         $size = (int) $this->dbi->fetchValue($query);
                         //Converting the size to MB
-                        $size /= 1024 / 1024;
+                        $size /= 1024 * 1024;
                         if ($size > $tableSize) {
                             continue;
                         }
@@ -1151,29 +1093,30 @@ class Export
      */
     public function showPage(string $exportType): void
     {
-        global $active_page, $containerBuilder;
+        $GLOBALS['active_page'] = $GLOBALS['active_page'] ?? null;
+        $GLOBALS['containerBuilder'] = $GLOBALS['containerBuilder'] ?? null;
 
         if ($exportType === 'server') {
-            $active_page = Url::getFromRoute('/server/export');
+            $GLOBALS['active_page'] = Url::getFromRoute('/server/export');
             /** @var ServerExportController $controller */
-            $controller = $containerBuilder->get(ServerExportController::class);
+            $controller = $GLOBALS['containerBuilder']->get(ServerExportController::class);
             $controller();
 
             return;
         }
 
         if ($exportType === 'database') {
-            $active_page = Url::getFromRoute('/database/export');
+            $GLOBALS['active_page'] = Url::getFromRoute('/database/export');
             /** @var DatabaseExportController $controller */
-            $controller = $containerBuilder->get(DatabaseExportController::class);
+            $controller = $GLOBALS['containerBuilder']->get(DatabaseExportController::class);
             $controller();
 
             return;
         }
 
-        $active_page = Url::getFromRoute('/table/export');
+        $GLOBALS['active_page'] = Url::getFromRoute('/table/export');
         /** @var TableExportController $controller */
-        $controller = $containerBuilder->get(TableExportController::class);
+        $controller = $GLOBALS['containerBuilder']->get(TableExportController::class);
         $controller();
     }
 
@@ -1334,5 +1277,75 @@ class Export
 
         $this->dbi->selectDb($_POST['db']);
         $exportPlugin->exportSchema($_POST['db']);
+    }
+
+    private function getHTMLForRefreshButton(string $exportType): string
+    {
+        $postParams = $this->getPostParams($exportType);
+
+        $refreshButton = '<form id="export_refresh_form" method="POST" action="'
+            . Url::getFromRoute('/export') . '" class="disableAjax">';
+        $refreshButton .= '[ <a class="disableAjax export_refresh_btn">' . __('Refresh') . '</a> ]';
+        foreach ($postParams as $name => $value) {
+            if (is_array($value)) {
+                foreach ($value as $val) {
+                    $refreshButton .= '<input type="hidden" name="' . htmlentities((string) $name)
+                        . '[]" value="' . htmlentities((string) $val) . '">';
+                }
+            } else {
+                $refreshButton .= '<input type="hidden" name="' . htmlentities((string) $name)
+                    . '" value="' . htmlentities((string) $value) . '">';
+            }
+        }
+
+        return $refreshButton . '</form>';
+    }
+
+    private function getHTMLForBackButton(string $exportType, string $db, string $table): string
+    {
+        $backButton = '<p>[ <a href="';
+        if ($exportType === 'server') {
+            $backButton .= Url::getFromRoute('/server/export') . '" data-post="' . Url::getCommon([], '', false);
+        } elseif ($exportType === 'database') {
+            $backButton .= Url::getFromRoute('/database/export') . '" data-post="' . Url::getCommon(
+                ['db' => $db],
+                '',
+                false
+            );
+        } else {
+            $backButton .= Url::getFromRoute('/table/export') . '" data-post="' . Url::getCommon(
+                ['db' => $db, 'table' => $table],
+                '',
+                false
+            );
+        }
+
+        $postParams = array_filter($this->getPostParams($exportType), static function ($value) {
+            return ! is_array($value);
+        });
+        $backButton .= '&amp;' . http_build_query($postParams);
+
+        $backButton .= '&amp;repopulate=1">' . __('Back') . '</a> ]</p>';
+
+        return $backButton;
+    }
+
+    private function getPostParams(string $exportType): array
+    {
+        $postParams = $_POST;
+
+        // Convert the multiple select elements from an array to a string
+        if ($exportType === 'database') {
+            $structOrDataForced = empty($postParams['structure_or_data_forced']);
+            if ($structOrDataForced && ! isset($postParams['table_structure'])) {
+                $postParams['table_structure'] = [];
+            }
+
+            if ($structOrDataForced && ! isset($postParams['table_data'])) {
+                $postParams['table_data'] = [];
+            }
+        }
+
+        return $postParams;
     }
 }

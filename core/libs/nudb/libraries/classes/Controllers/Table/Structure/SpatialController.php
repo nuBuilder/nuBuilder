@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Table\Structure;
 
-use PhpMyAdmin\Controllers\Table\AbstractController;
+use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\Controllers\Table\StructureController;
 use PhpMyAdmin\DatabaseInterface;
+use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Template;
@@ -26,19 +27,17 @@ final class SpatialController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
-        string $db,
-        string $table,
         DatabaseInterface $dbi,
         StructureController $structureController
     ) {
-        parent::__construct($response, $template, $db, $table);
+        parent::__construct($response, $template);
         $this->dbi = $dbi;
         $this->structureController = $structureController;
     }
 
-    public function __invoke(): void
+    public function __invoke(ServerRequest $request): void
     {
-        global $sql_query, $db, $table, $message;
+        $GLOBALS['message'] = $GLOBALS['message'] ?? null;
 
         $selected = $_POST['selected_fld'] ?? [];
 
@@ -51,24 +50,24 @@ final class SpatialController extends AbstractController
 
         $i = 1;
         $selectedCount = count($selected);
-        $sql_query = 'ALTER TABLE ' . Util::backquote($table) . ' ADD SPATIAL(';
+        $GLOBALS['sql_query'] = 'ALTER TABLE ' . Util::backquote($GLOBALS['table']) . ' ADD SPATIAL(';
 
         foreach ($selected as $field) {
-            $sql_query .= Util::backquote($field);
-            $sql_query .= $i++ === $selectedCount ? ');' : ', ';
+            $GLOBALS['sql_query'] .= Util::backquote($field);
+            $GLOBALS['sql_query'] .= $i++ === $selectedCount ? ');' : ', ';
         }
 
-        $this->dbi->selectDb($db);
-        $result = $this->dbi->tryQuery($sql_query);
+        $this->dbi->selectDb($GLOBALS['db']);
+        $result = $this->dbi->tryQuery($GLOBALS['sql_query']);
 
         if (! $result) {
-            $message = Message::error($this->dbi->getError());
+            $GLOBALS['message'] = Message::error($this->dbi->getError());
         }
 
-        if (empty($message)) {
-            $message = Message::success();
+        if (empty($GLOBALS['message'])) {
+            $GLOBALS['message'] = Message::success();
         }
 
-        ($this->structureController)();
+        ($this->structureController)($request);
     }
 }

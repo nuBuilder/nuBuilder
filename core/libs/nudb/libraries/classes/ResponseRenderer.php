@@ -244,16 +244,6 @@ class ResponseRenderer
     }
 
     /**
-     * Returns a PhpMyAdmin\Footer object
-     *
-     * @return Footer
-     */
-    public function getFooter()
-    {
-        return $this->footer;
-    }
-
-    /**
      * Append HTML code to the current output buffer
      */
     public function addHTML(string $content): void
@@ -290,11 +280,11 @@ class ResponseRenderer
         // if its content was already rendered
         // and, in this case, the header will be
         // in the content part of the request
-        $retval = $this->header->getDisplay();
-        $retval .= $this->HTML;
-        $retval .= $this->footer->getDisplay();
-
-        return $retval;
+        return (new Template())->render('base', [
+            'header' => $this->header->getDisplay(),
+            'content' => $this->HTML,
+            'footer' => $this->footer->getDisplay(),
+        ]);
     }
 
     /**
@@ -302,8 +292,6 @@ class ResponseRenderer
      */
     private function ajaxResponse(): string
     {
-        global $dbi;
-
         /* Avoid wrapping in case we're disabled */
         if ($this->isDisabled) {
             return $this->getDisplay();
@@ -328,12 +316,12 @@ class ResponseRenderer
                 $this->addJSON('title', '<title>' . $this->getHeader()->getPageTitle() . '</title>');
             }
 
-            if (isset($dbi)) {
+            if (isset($GLOBALS['dbi'])) {
                 $this->addJSON('menu', $this->getHeader()->getMenu()->getDisplay());
             }
 
             $this->addJSON('scripts', $this->getHeader()->getScripts()->getFiles());
-            $this->addJSON('selflink', $this->getFooter()->getSelfUrl());
+            $this->addJSON('selflink', $this->footer->getSelfUrl());
             $this->addJSON('displayMessage', $this->getHeader()->getMessage());
 
             $debug = $this->footer->getDebugMessage();
@@ -496,7 +484,7 @@ class ResponseRenderer
             return true;
         }
 
-        $this->getFooter()->setMinimal();
+        $this->setMinimalFooter();
         $header = $this->getHeader();
         $header->setBodyId('loginform');
         $header->setTitle('phpMyAdmin');
@@ -504,5 +492,20 @@ class ResponseRenderer
         $header->disableWarnings();
 
         return false;
+    }
+
+    public function setMinimalFooter(): void
+    {
+        $this->footer->setMinimal();
+    }
+
+    public function getSelfUrl(): string
+    {
+        return $this->footer->getSelfUrl();
+    }
+
+    public function getFooterScripts(): Scripts
+    {
+        return $this->footer->getScripts();
     }
 }

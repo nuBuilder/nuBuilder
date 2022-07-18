@@ -64,8 +64,6 @@ class SqlQueryForm
         $display_tab = false,
         $delimiter = ';'
     ) {
-        global $dbi;
-
         if (! $display_tab) {
             $display_tab = 'full';
         }
@@ -92,12 +90,17 @@ class SqlQueryForm
             [$legend, $query, $columns_list] = $this->init($query);
         }
 
-        $relation = new Relation($dbi);
+        $relation = new Relation($GLOBALS['dbi']);
         $bookmarkFeature = $relation->getRelationParameters()->bookmarkFeature;
 
         $bookmarks = [];
         if ($display_tab === 'full' && $bookmarkFeature !== null) {
-            $bookmark_list = Bookmark::getList($bookmarkFeature, $dbi, $GLOBALS['cfg']['Server']['user'], $db);
+            $bookmark_list = Bookmark::getList(
+                $bookmarkFeature,
+                $GLOBALS['dbi'],
+                $GLOBALS['cfg']['Server']['user'],
+                $db
+            );
 
             foreach ($bookmark_list as $bookmarkItem) {
                 $bookmarks[] = [
@@ -140,8 +143,6 @@ class SqlQueryForm
      */
     public function init($query)
     {
-        global $dbi;
-
         $columns_list = [];
         if (strlen($GLOBALS['db']) === 0) {
             // prepare for server related
@@ -164,7 +165,7 @@ class SqlQueryForm
             $tmp_db_link .= htmlspecialchars($db) . '</a>';
             $legend = sprintf(__('Run SQL query/queries on database %s'), $tmp_db_link);
             if (empty($query)) {
-                $query = Util::expandUserString($GLOBALS['cfg']['DefaultQueryDatabase'], 'backquote');
+                $query = Util::expandUserString($GLOBALS['cfg']['DefaultQueryDatabase'], [Util::class, 'backquote']);
             }
         } else {
             $db = $GLOBALS['db'];
@@ -172,14 +173,14 @@ class SqlQueryForm
             // Get the list and number of fields
             // we do a try_query here, because we could be in the query window,
             // trying to synchronize and the table has not yet been created
-            $columns_list = $dbi->getColumns($db, $GLOBALS['table'], true);
+            $columns_list = $GLOBALS['dbi']->getColumns($db, $GLOBALS['table'], true);
 
             $scriptName = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabTable'], 'table');
             $tmp_tbl_link = '<a href="' . $scriptName . Url::getCommon(['db' => $db, 'table' => $table], '&') . '">';
             $tmp_tbl_link .= htmlspecialchars($db) . '.' . htmlspecialchars($table) . '</a>';
             $legend = sprintf(__('Run SQL query/queries on table %s'), $tmp_tbl_link);
             if (empty($query)) {
-                $query = Util::expandUserString($GLOBALS['cfg']['DefaultQueryTable'], 'backquote');
+                $query = Util::expandUserString($GLOBALS['cfg']['DefaultQueryTable'], [Util::class, 'backquote']);
             }
         }
 

@@ -1,7 +1,4 @@
 <?php
-/**
- * set of functions with the insert/edit features in pma
- */
 
 declare(strict_types=1);
 
@@ -35,7 +32,6 @@ use function max;
 use function mb_stripos;
 use function mb_strlen;
 use function mb_strstr;
-use function mb_substr;
 use function md5;
 use function method_exists;
 use function min;
@@ -54,16 +50,9 @@ use function trim;
 use const ENT_COMPAT;
 use const PASSWORD_DEFAULT;
 
-/**
- * PhpMyAdmin\InsertEdit class
- */
 class InsertEdit
 {
-    /**
-     * DatabaseInterface instance
-     *
-     * @var DatabaseInterface
-     */
+    /** @var DatabaseInterface */
     private $dbi;
 
     /** @var Relation */
@@ -76,18 +65,48 @@ class InsertEdit
     private $fileListing;
 
     /** @var Template */
-    public $template;
+    private $template;
 
-    /**
-     * @param DatabaseInterface $dbi DatabaseInterface instance
-     */
-    public function __construct(DatabaseInterface $dbi)
-    {
+    private const FUNC_OPTIONAL_PARAM = [
+        'RAND',
+        'UNIX_TIMESTAMP',
+    ];
+
+    private const FUNC_NO_PARAM = [
+        'CONNECTION_ID',
+        'CURRENT_USER',
+        'CURDATE',
+        'CURTIME',
+        'CURRENT_DATE',
+        'CURRENT_TIME',
+        'DATABASE',
+        'LAST_INSERT_ID',
+        'NOW',
+        'PI',
+        'RAND',
+        'SYSDATE',
+        'UNIX_TIMESTAMP',
+        'USER',
+        'UTC_DATE',
+        'UTC_TIME',
+        'UTC_TIMESTAMP',
+        'UUID',
+        'UUID_SHORT',
+        'VERSION',
+    ];
+
+    public function __construct(
+        DatabaseInterface $dbi,
+        Relation $relation,
+        Transformations $transformations,
+        FileListing $fileListing,
+        Template $template
+    ) {
         $this->dbi = $dbi;
-        $this->relation = new Relation($this->dbi);
-        $this->transformations = new Transformations();
-        $this->fileListing = new FileListing();
-        $this->template = new Template();
+        $this->relation = $relation;
+        $this->transformations = $transformations;
+        $this->fileListing = $fileListing;
+        $this->template = $template;
     }
 
     /**
@@ -99,7 +118,7 @@ class InsertEdit
      * @param array      $whereClauseArray array of where clauses
      * @param string     $errorUrl         error url
      *
-     * @return array array of insert/edit form parameters
+     * @return array<string, string> array of insert/edit form parameters
      */
     public function getFormParametersForInsertForm(
         $db,
@@ -131,9 +150,9 @@ class InsertEdit
     /**
      * Creates array of where clauses
      *
-     * @param array|string|null $whereClause where clause
+     * @param string[]|string|null $whereClause where clause
      *
-     * @return array whereClauseArray array of where clauses
+     * @return string[] whereClauseArray array of where clauses
      */
     private function getWhereClauseArray($whereClause): array
     {
@@ -145,17 +164,18 @@ class InsertEdit
             return $whereClause;
         }
 
-        return [0 => $whereClause];
+        return [$whereClause];
     }
 
     /**
      * Analysing where clauses array
      *
-     * @param array  $whereClauseArray array of where clauses
-     * @param string $table            name of the table
-     * @param string $db               name of the database
+     * @param string[] $whereClauseArray array of where clauses
+     * @param string   $table            name of the table
+     * @param string   $db               name of the database
      *
-     * @return array $where_clauses, $result, $rows, $found_unique_key
+     * @return array<int, string[]|ResultInterface[]|array<string, string|null>[]|bool>
+     * @phpstan-return array{string[], ResultInterface[], array<string, string|null>[], bool}
      */
     private function analyzeWhereClauses(
         array $whereClauseArray,
@@ -172,7 +192,7 @@ class InsertEdit
                 . Util::backquote($table)
                 . ' WHERE ' . $whereClause . ';';
             $result[$keyId] = $this->dbi->query($localQuery);
-            $rows[$keyId] = $this->dbi->fetchAssoc($result[$keyId]);
+            $rows[$keyId] = $result[$keyId]->fetchAssoc();
 
             $whereClauses[$keyId] = str_replace('\\', '\\\\', $whereClause);
             $hasUniqueCondition = $this->showEmptyResultMessageOrSetUniqueCondition(
@@ -248,9 +268,10 @@ class InsertEdit
      * @param string $table name of the table
      * @param string $db    name of the database
      *
-     * @return array containing $result and $rows arrays
+     * @return array<int, ResultInterface|false[]>
+     * @phpstan-return array{ResultInterface, false[]}
      */
-    private function loadFirstRow($table, $db)
+    private function loadFirstRow($table, $db): array
     {
         $result = $this->dbi->query(
             'SELECT * FROM ' . Util::backquote($db)
@@ -317,13 +338,13 @@ class InsertEdit
 
         if (! $isShow) {
             return ' : <a href="' . Url::getFromRoute('/table/change') . '" data-post="'
-                . Url::getCommon($thisUrlParams, '') . '">'
+                . Url::getCommon($thisUrlParams, '', false) . '">'
                 . $this->showTypeOrFunctionLabel($which)
                 . '</a>';
         }
 
         return '<th><a href="' . Url::getFromRoute('/table/change') . '" data-post="'
-            . Url::getCommon($thisUrlParams, '')
+            . Url::getCommon($thisUrlParams, '', false)
             . '" title="' . __('Hide') . '">'
             . $this->showTypeOrFunctionLabel($which)
             . '</a></th>';
@@ -363,7 +384,6 @@ class InsertEdit
         array $commentsMap,
         $timestampSeen
     ) {
-        $column['Field_html'] = htmlspecialchars($column['Field']);
         $column['Field_md5'] = md5($column['Field']);
         // True_Type contains only the type (stops at first bracket)
         $column['True_Type'] = preg_replace('@\(.*@s', '', $column['Type']);
@@ -415,10 +435,10 @@ class InsertEdit
         if (isset($commentsMap[$column['Field']])) {
             return '<span style="border-bottom: 1px dashed black;" title="'
                 . htmlspecialchars($commentsMap[$column['Field']]) . '">'
-                . $column['Field_html'] . '</span>';
+                . htmlspecialchars($column['Field']) . '</span>';
         }
 
-        return $column['Field_html'];
+        return htmlspecialchars($column['Field']);
     }
 
     /**
@@ -817,11 +837,12 @@ class InsertEdit
         // HTML5 data-* attribute data-type
         $dataType = $this->dbi->types->getTypeClass($column['True_Type']);
         $fieldsize = $this->getColumnSize($column, $extractedColumnspec['spec_in_brackets']);
-        $htmlOutput = $backupField . "\n";
-        if ($column['is_char'] && ($GLOBALS['cfg']['CharEditing'] === 'textarea' || str_contains($data, "\n"))) {
-            $htmlOutput .= "\n";
+
+        $isTextareaRequired = $column['is_char']
+            && ($GLOBALS['cfg']['CharEditing'] === 'textarea' || str_contains($data, "\n"));
+        if ($isTextareaRequired) {
             $GLOBALS['cfg']['CharEditing'] = $defaultCharEditing;
-            $htmlOutput .= $this->getTextarea(
+            $htmlField = $this->getTextarea(
                 $column,
                 $backupField,
                 $columnNameAppendix,
@@ -835,7 +856,7 @@ class InsertEdit
                 $readOnly
             );
         } else {
-            $htmlOutput .= $this->getHtmlInput(
+            $htmlField = $this->getHtmlInput(
                 $column,
                 $columnNameAppendix,
                 $specialChars,
@@ -847,38 +868,15 @@ class InsertEdit
                 $dataType,
                 $readOnly
             );
-
-            if (
-                preg_match('/(VIRTUAL|PERSISTENT|GENERATED)/', $column['Extra'])
-                && ! str_contains($column['Extra'], 'DEFAULT_GENERATED')
-            ) {
-                $htmlOutput .= '<input type="hidden" name="virtual'
-                    . $columnNameAppendix . '" value="1">';
-            }
-
-            if ($column['Extra'] === 'auto_increment') {
-                $htmlOutput .= '<input type="hidden" name="auto_increment'
-                    . $columnNameAppendix . '" value="1">';
-            }
-
-            if (substr($column['pma_type'], 0, 9) === 'timestamp') {
-                $htmlOutput .= '<input type="hidden" name="fields_type'
-                    . $columnNameAppendix . '" value="timestamp">';
-            }
-
-            if (substr($column['pma_type'], 0, 4) === 'date') {
-                $type = substr($column['pma_type'], 0, 8) === 'datetime' ? 'datetime' : 'date';
-                $htmlOutput .= '<input type="hidden" name="fields_type'
-                    . $columnNameAppendix . '" value="' . $type . '">';
-            }
-
-            if ($column['True_Type'] === 'bit') {
-                $htmlOutput .= '<input type="hidden" name="fields_type'
-                    . $columnNameAppendix . '" value="bit">';
-            }
         }
 
-        return $htmlOutput;
+        return $this->template->render('table/insert/value_column_for_other_datatype', [
+            'html_field' => $htmlField,
+            'backup_field' => $backupField,
+            'is_textarea' => $isTextareaRequired,
+            'columnNameAppendix' => $columnNameAppendix,
+            'column' => $column,
+        ]);
     }
 
     /**
@@ -1554,30 +1552,16 @@ class InsertEdit
     /**
      * Get current value in multi edit mode
      *
-     * @param array  $multiEditFuncs       multiple edit functions array
-     * @param array  $multiEditSalt        multiple edit array with encryption salt
-     * @param array  $gisFromTextFunctions array that contains gis from text functions
-     * @param string $currentValue         current value in the column
-     * @param array  $gisFromWkbFunctions  initially $val is $multi_edit_columns[$key]
-     * @param array  $funcOptionalParam    array('RAND','UNIX_TIMESTAMP')
-     * @param array  $funcNoParam          array of set of string
-     * @param string $key                  an md5 of the column name
+     * @param string  $multiEditFunction multiple edit functions array
+     * @param ?string $multiEditSalt     multiple edit array with encryption salt
+     * @param string  $currentValue      current value in the column
      */
     public function getCurrentValueAsAnArrayForMultipleEdit(
-        $multiEditFuncs,
-        $multiEditSalt,
-        $gisFromTextFunctions,
-        $currentValue,
-        $gisFromWkbFunctions,
-        $funcOptionalParam,
-        $funcNoParam,
-        $key
+        string $multiEditFunction,
+        ?string $multiEditSalt,
+        string $currentValue
     ): string {
-        if (empty($multiEditFuncs[$key])) {
-            return $currentValue;
-        }
-
-        if ($multiEditFuncs[$key] === 'PHP_PASSWORD_HASH') {
+        if ($multiEditFunction === 'PHP_PASSWORD_HASH') {
             /**
              * @see https://github.com/vimeo/psalm/issues/3350
              *
@@ -1585,52 +1569,45 @@ class InsertEdit
              */
             $hash = password_hash($currentValue, PASSWORD_DEFAULT);
 
-            return "'" . $hash . "'";
+            return "'" . $this->dbi->escapeString($hash) . "'";
         }
 
-        if ($multiEditFuncs[$key] === 'UUID') {
+        if ($multiEditFunction === 'UUID') {
             /* This way user will know what UUID new row has */
             $uuid = (string) $this->dbi->fetchValue('SELECT UUID()');
 
-            return "'" . $uuid . "'";
+            return "'" . $this->dbi->escapeString($uuid) . "'";
         }
 
         if (
-            in_array($multiEditFuncs[$key], $gisFromTextFunctions)
-            || in_array($multiEditFuncs[$key], $gisFromWkbFunctions)
+            in_array($multiEditFunction, $this->getGisFromTextFunctions())
+            || in_array($multiEditFunction, $this->getGisFromWKBFunctions())
         ) {
-            // Remove enclosing apostrophes
-            $currentValue = mb_substr($currentValue, 1, -1);
-            // Remove escaping apostrophes
-            $currentValue = str_replace("''", "'", $currentValue);
-            // Remove backslash-escaped apostrophes
-            $currentValue = str_replace("\'", "'", $currentValue);
-
-            return $multiEditFuncs[$key] . '(' . $currentValue . ')';
+            return $multiEditFunction . "('" . $this->dbi->escapeString($currentValue) . "')";
         }
 
         if (
-            ! in_array($multiEditFuncs[$key], $funcNoParam)
-            || ($currentValue != "''"
-                && in_array($multiEditFuncs[$key], $funcOptionalParam))
+            ! in_array($multiEditFunction, self::FUNC_NO_PARAM)
+            || ($currentValue !== ''
+                && in_array($multiEditFunction, self::FUNC_OPTIONAL_PARAM))
         ) {
             if (
-                (isset($multiEditSalt[$key])
-                    && ($multiEditFuncs[$key] === 'AES_ENCRYPT'
-                        || $multiEditFuncs[$key] === 'AES_DECRYPT'))
-                || (! empty($multiEditSalt[$key])
-                    && ($multiEditFuncs[$key] === 'DES_ENCRYPT'
-                        || $multiEditFuncs[$key] === 'DES_DECRYPT'
-                        || $multiEditFuncs[$key] === 'ENCRYPT'))
+                (isset($multiEditSalt)
+                    && ($multiEditFunction === 'AES_ENCRYPT'
+                        || $multiEditFunction === 'AES_DECRYPT'))
+                || (! empty($multiEditSalt)
+                    && ($multiEditFunction === 'DES_ENCRYPT'
+                        || $multiEditFunction === 'DES_DECRYPT'
+                        || $multiEditFunction === 'ENCRYPT'))
             ) {
-                return $multiEditFuncs[$key] . '(' . $currentValue . ",'"
-                    . $this->dbi->escapeString($multiEditSalt[$key]) . "')";
+                return $multiEditFunction . "('" . $this->dbi->escapeString($currentValue) . "','"
+                    . $this->dbi->escapeString($multiEditSalt) . "')";
             }
 
-            return $multiEditFuncs[$key] . '(' . $currentValue . ')';
+            return $multiEditFunction . "('" . $this->dbi->escapeString($currentValue) . "')";
         }
 
-        return $multiEditFuncs[$key] . '()';
+        return $multiEditFunction . '()';
     }
 
     /**
@@ -1722,7 +1699,6 @@ class InsertEdit
      * @param bool         $usingKey                 whether editing or new row
      * @param string       $whereClause              where clause
      * @param string       $table                    table name
-     * @param array        $multiEditFuncs           multiple edit functions array
      *
      * @return string  current column value in the form
      */
@@ -1730,7 +1706,7 @@ class InsertEdit
         $possiblyUploadedVal,
         $key,
         ?array $multiEditColumnsType,
-        $currentValue,
+        string $currentValue,
         ?array $multiEditAutoIncrement,
         $rownumber,
         $multiEditColumnsName,
@@ -1739,15 +1715,10 @@ class InsertEdit
         $isInsert,
         $usingKey,
         $whereClause,
-        $table,
-        $multiEditFuncs
+        $table
     ): string {
         if ($possiblyUploadedVal !== false) {
             return $possiblyUploadedVal;
-        }
-
-        if (! empty($multiEditFuncs[$key])) {
-            return "'" . $this->dbi->escapeString($currentValue) . "'";
         }
 
         // c o l u m n    v a l u e    i n    t h e    f o r m
@@ -1893,11 +1864,21 @@ class InsertEdit
     /**
      * Function to determine Insert/Edit rows
      *
-     * @param string|null $whereClause where clause
-     * @param string      $db          current database
-     * @param string      $table       current table
+     * @param string[]|string|null $whereClause where clause
+     * @param string               $db          current database
+     * @param string               $table       current table
      *
-     * @return array
+     * @return array<int, bool|string[]|string|ResultInterface|ResultInterface[]|null>
+     * @phpstan-return array{
+     *     bool,
+     *     string[]|string|null,
+     *     string[],
+     *     string[]|null,
+     *     ResultInterface[]|ResultInterface,
+     *     array<string, string|null>[]|false[],
+     *     bool,
+     *     string|null
+     * }
      */
     public function determineInsertOrEdit($whereClause, $db, $table): array
     {
@@ -2054,7 +2035,7 @@ class InsertEdit
         int $columnNumber,
         array $commentsMap,
         $timestampSeen,
-        $currentResult,
+        ResultInterface $currentResult,
         $chgEvtHandler,
         $jsvkey,
         $vkey,
@@ -2390,15 +2371,13 @@ class InsertEdit
 
     private function isColumnBinary(array $column, bool $isUpload): bool
     {
-        global $cfg;
-
-        if (! $cfg['ShowFunctionFields']) {
+        if (! $GLOBALS['cfg']['ShowFunctionFields']) {
             return false;
         }
 
-        return ($cfg['ProtectBinary'] === 'blob' && $column['is_blob'] && ! $isUpload)
-            || ($cfg['ProtectBinary'] === 'all' && $column['is_binary'])
-            || ($cfg['ProtectBinary'] === 'noblob' && $column['is_binary']);
+        return ($GLOBALS['cfg']['ProtectBinary'] === 'blob' && $column['is_blob'] && ! $isUpload)
+            || ($GLOBALS['cfg']['ProtectBinary'] === 'all' && $column['is_binary'])
+            || ($GLOBALS['cfg']['ProtectBinary'] === 'noblob' && $column['is_binary']);
     }
 
     /**
@@ -2435,7 +2414,7 @@ class InsertEdit
         array $tableColumns,
         array $commentsMap,
         $timestampSeen,
-        $currentResult,
+        ResultInterface $currentResult,
         $chgEvtHandler,
         $jsvkey,
         $vkey,
@@ -2517,5 +2496,65 @@ class InsertEdit
         return $htmlOutput . '  </tbody>'
             . '</table></div><br>'
             . '<div class="clearfloat"></div>';
+    }
+
+    /**
+     * Returns list of function names that accept WKB as text
+     *
+     * @return string[]
+     */
+    private function getGisFromTextFunctions(): array
+    {
+        return $this->dbi->getVersion() >= 50600 ?
+        [
+            'ST_GeomFromText',
+            'ST_GeomCollFromText',
+            'ST_LineFromText',
+            'ST_MLineFromText',
+            'ST_PointFromText',
+            'ST_MPointFromText',
+            'ST_PolyFromText',
+            'ST_MPolyFromText',
+        ] :
+        [
+            'GeomFromText',
+            'GeomCollFromText',
+            'LineFromText',
+            'MLineFromText',
+            'PointFromText',
+            'MPointFromText',
+            'PolyFromText',
+            'MPolyFromText',
+        ];
+    }
+
+    /**
+     * Returns list of function names that accept WKB as binary
+     *
+     * @return string[]
+     */
+    private function getGisFromWKBFunctions(): array
+    {
+        return $this->dbi->getVersion() >= 50600 ?
+        [
+            'ST_GeomFromWKB',
+            'ST_GeomCollFromWKB',
+            'ST_LineFromWKB',
+            'ST_MLineFromWKB',
+            'ST_PointFromWKB',
+            'ST_MPointFromWKB',
+            'ST_PolyFromWKB',
+            'ST_MPolyFromWKB',
+        ] :
+        [
+            'GeomFromWKB',
+            'GeomCollFromWKB',
+            'LineFromWKB',
+            'MLineFromWKB',
+            'PointFromWKB',
+            'MPointFromWKB',
+            'PolyFromWKB',
+            'MPolyFromWKB',
+        ];
     }
 }

@@ -21,25 +21,25 @@ interface DbalInterface
     /**
      * runs a query
      *
-     * @param string $query               SQL query to execute
-     * @param mixed  $link                optional database link to use
-     * @param int    $options             optional query options
-     * @param bool   $cache_affected_rows whether to cache affected rows
+     * @param string $query             SQL query to execute
+     * @param mixed  $link              optional database link to use
+     * @param int    $options           optional query options
+     * @param bool   $cacheAffectedRows whether to cache affected rows
      */
     public function query(
         string $query,
         $link = DatabaseInterface::CONNECT_USER,
         int $options = 0,
-        bool $cache_affected_rows = true
+        bool $cacheAffectedRows = true
     ): ResultInterface;
 
     /**
      * runs a query and returns the result
      *
-     * @param string $query               query to run
-     * @param mixed  $link                link type
-     * @param int    $options             query options
-     * @param bool   $cache_affected_rows whether to cache affected row
+     * @param string $query             query to run
+     * @param mixed  $link              link type
+     * @param int    $options           query options
+     * @param bool   $cacheAffectedRows whether to cache affected row
      *
      * @return mixed
      */
@@ -47,7 +47,7 @@ interface DbalInterface
         string $query,
         $link = DatabaseInterface::CONNECT_USER,
         int $options = 0,
-        bool $cache_affected_rows = true
+        bool $cacheAffectedRows = true
     );
 
     /**
@@ -87,12 +87,12 @@ interface DbalInterface
      *
      * @param string       $database     database
      * @param string|array $table        table name(s)
-     * @param bool         $tbl_is_group $table is a table group
-     * @param int          $limit_offset zero-based offset for the count
-     * @param bool|int     $limit_count  number of tables to return
-     * @param string       $sort_by      table attribute to sort by
-     * @param string       $sort_order   direction to sort (ASC or DESC)
-     * @param string|null  $table_type   whether table or view
+     * @param bool         $tableIsGroup $table is a table group
+     * @param int          $limitOffset  zero-based offset for the count
+     * @param bool|int     $limitCount   number of tables to return
+     * @param string       $sortBy       table attribute to sort by
+     * @param string       $sortOrder    direction to sort (ASC or DESC)
+     * @param string|null  $tableType    whether table or view
      * @param mixed        $link         link type
      *
      * @return array           list of tables in given db(s)
@@ -102,12 +102,12 @@ interface DbalInterface
     public function getTablesFull(
         string $database,
         $table = '',
-        bool $tbl_is_group = false,
-        int $limit_offset = 0,
-        $limit_count = false,
-        string $sort_by = 'Name',
-        string $sort_order = 'ASC',
-        ?string $table_type = null,
+        bool $tableIsGroup = false,
+        int $limitOffset = 0,
+        $limitCount = false,
+        string $sortBy = 'Name',
+        string $sortOrder = 'ASC',
+        ?string $tableType = null,
         $link = DatabaseInterface::CONNECT_USER
     ): array;
 
@@ -123,14 +123,13 @@ interface DbalInterface
     /**
      * returns array with databases containing extended infos about them
      *
-     * @param string|null $database     database
-     * @param bool        $force_stats  retrieve stats also for MySQL < 5
-     * @param int         $link         link type
-     * @param string      $sort_by      column to order by
-     * @param string      $sort_order   ASC or DESC
-     * @param int         $limit_offset starting offset for LIMIT
-     * @param bool|int    $limit_count  row count for LIMIT or true
-     *                                  for $GLOBALS['cfg']['MaxDbList']
+     * @param string|null $database    database
+     * @param bool        $forceStats  retrieve stats also for MySQL < 5
+     * @param int         $link        link type
+     * @param string      $sortBy      column to order by
+     * @param string      $sortOrder   ASC or DESC
+     * @param int         $limitOffset starting offset for LIMIT
+     * @param bool|int    $limitCount  row count for LIMIT or true for $GLOBALS['cfg']['MaxDbList']
      *
      * @return array
      *
@@ -138,23 +137,23 @@ interface DbalInterface
      */
     public function getDatabasesFull(
         ?string $database = null,
-        bool $force_stats = false,
+        bool $forceStats = false,
         $link = DatabaseInterface::CONNECT_USER,
-        string $sort_by = 'SCHEMA_NAME',
-        string $sort_order = 'ASC',
-        int $limit_offset = 0,
-        $limit_count = false
+        string $sortBy = 'SCHEMA_NAME',
+        string $sortOrder = 'ASC',
+        int $limitOffset = 0,
+        $limitCount = false
     ): array;
 
     /**
      * returns detailed array with all columns for sql
      *
-     * @param string $sql_query    target SQL query to get columns
-     * @param array  $view_columns alias for columns
+     * @param string $sqlQuery    target SQL query to get columns
+     * @param array  $viewColumns alias for columns
      *
      * @return array
      */
-    public function getColumnMapFromSql(string $sql_query, array $view_columns = []): array;
+    public function getColumnMapFromSql(string $sqlQuery, array $viewColumns = []): array;
 
     /**
      * returns detailed array with all columns for given table in database,
@@ -246,9 +245,9 @@ interface DbalInterface
      * @param string $var  mysql server variable name
      * @param int    $type DatabaseInterface::GETVAR_SESSION |
      *                     DatabaseInterface::GETVAR_GLOBAL
-     * @param mixed  $link mysql link resource|object
+     * @param int    $link mysql link resource|object
      *
-     * @return mixed   value for mysql server variable
+     * @return false|string|null value for mysql server variable
      */
     public function getVariable(
         string $var,
@@ -261,7 +260,7 @@ interface DbalInterface
      *
      * @param string $var   variable name
      * @param string $value value to set
-     * @param mixed  $link  mysql link resource|object
+     * @param int    $link  mysql link resource|object
      */
     public function setVariable(string $var, string $value, $link = DatabaseInterface::CONNECT_USER): bool;
 
@@ -530,28 +529,6 @@ interface DbalInterface
     public function selectDb($dbname, $link = DatabaseInterface::CONNECT_USER): bool;
 
     /**
-     * returns array of rows with associative keys from $result
-     *
-     * @param ResultInterface $result result set identifier
-     */
-    public function fetchAssoc(ResultInterface $result): array;
-
-    /**
-     * returns array of rows with numeric keys from $result
-     *
-     * @param ResultInterface $result result set identifier
-     */
-    public function fetchRow(ResultInterface $result): array;
-
-    /**
-     * Adjusts the result pointer to an arbitrary row in the result
-     *
-     * @param ResultInterface $result database result
-     * @param int             $offset offset to seek
-     */
-    public function dataSeek(ResultInterface $result, int $offset): bool;
-
-    /**
      * Check if there are any more query results from a multi query
      *
      * @param int $link link type
@@ -630,13 +607,13 @@ interface DbalInterface
     /**
      * returns the number of rows affected by last query
      *
-     * @param int  $link           link type
-     * @param bool $get_from_cache whether to retrieve from cache
+     * @param int  $link         link type
+     * @param bool $getFromCache whether to retrieve from cache
      *
      * @return int|string
      * @psalm-return int|numeric-string
      */
-    public function affectedRows($link = DatabaseInterface::CONNECT_USER, bool $get_from_cache = true);
+    public function affectedRows($link = DatabaseInterface::CONNECT_USER, bool $getFromCache = true);
 
     /**
      * returns metainfo for fields in $result
@@ -648,15 +625,6 @@ interface DbalInterface
     public function getFieldsMeta(ResultInterface $result): array;
 
     /**
-     * return number of fields in given $result
-     *
-     * @param ResultInterface $result result set identifier
-     *
-     * @return int field count
-     */
-    public function numFields(ResultInterface $result): int;
-
-    /**
      * returns properly escaped string for use in MySQL queries
      *
      * @param string $str  string to be escaped
@@ -664,7 +632,17 @@ interface DbalInterface
      *
      * @return string a MySQL escaped string
      */
-    public function escapeString(string $str, $link = DatabaseInterface::CONNECT_USER);
+    public function escapeString(string $str, $link = DatabaseInterface::CONNECT_USER): string;
+
+    /**
+     * returns properly escaped string for use in MySQL LIKE clauses
+     *
+     * @param string $str  string to be escaped
+     * @param int    $link optional database link to use
+     *
+     * @return string a MySQL escaped LIKE string
+     */
+    public function escapeMysqlLikeString(string $str, int $link = DatabaseInterface::CONNECT_USER);
 
     /**
      * Checks if this database server is running on Amazon RDS.
@@ -686,10 +664,10 @@ interface DbalInterface
     /**
      * Get a table with database name and table name
      *
-     * @param string $db_name    DB name
-     * @param string $table_name Table name
+     * @param string $dbName    DB name
+     * @param string $tableName Table name
      */
-    public function getTable(string $db_name, string $table_name): Table;
+    public function getTable(string $dbName, string $tableName): Table;
 
     /**
      * returns collation of given db

@@ -1,4 +1,20 @@
 "use strict";
+(self["webpackChunkphpmyadmin"] = self["webpackChunkphpmyadmin"] || []).push([[10],{
+
+/***/ 1:
+/***/ (function(module) {
+
+module.exports = jQuery;
+
+/***/ }),
+
+/***/ 15:
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+
+/* global Navigation */
 
 /**
  * @fileoverview    function used in server privilege pages
@@ -23,44 +39,45 @@
 /**
  * Unbind all event handlers before tearing down a page
  */
-AJAX.registerTeardown('database/operations.js', function () {
-  $(document).off('submit', '#rename_db_form.ajax');
-  $(document).off('submit', '#copy_db_form.ajax');
-  $(document).off('submit', '#change_db_charset_form.ajax');
-  $(document).off('click', '#drop_db_anchor.ajax');
+
+window.AJAX.registerTeardown('database/operations.js', function () {
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('submit', '#rename_db_form.ajax');
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('submit', '#copy_db_form.ajax');
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('submit', '#change_db_charset_form.ajax');
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', '#drop_db_anchor.ajax');
 });
-AJAX.registerOnload('database/operations.js', function () {
+window.AJAX.registerOnload('database/operations.js', function () {
   /**
    * Ajax event handlers for 'Rename Database'
    */
-  $(document).on('submit', '#rename_db_form.ajax', function (event) {
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('submit', '#rename_db_form.ajax', function (event) {
     event.preventDefault();
 
     if (Functions.emptyCheckTheField(this, 'newname')) {
-      Functions.ajaxShowMessage(Messages.strFormEmpty, false, 'error');
+      Functions.ajaxShowMessage(window.Messages.strFormEmpty, false, 'error');
       return false;
     }
 
-    var oldDbName = CommonParams.get('db');
-    var newDbName = $('#new_db_name').val();
+    var oldDbName = window.CommonParams.get('db');
+    var newDbName = jquery__WEBPACK_IMPORTED_MODULE_0__('#new_db_name').val();
 
     if (newDbName === oldDbName) {
-      Functions.ajaxShowMessage(Messages.strDatabaseRenameToSameName, false, 'error');
+      Functions.ajaxShowMessage(window.Messages.strDatabaseRenameToSameName, false, 'error');
       return false;
     }
 
-    var $form = $(this);
+    var $form = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
     var question = Functions.escapeHtml('CREATE DATABASE ' + newDbName + ' / DROP DATABASE ' + oldDbName);
     Functions.prepareForAjaxRequest($form);
     $form.confirm(question, $form.attr('action'), function (url) {
-      Functions.ajaxShowMessage(Messages.strRenamingDatabases, false);
-      $.post(url, $('#rename_db_form').serialize() + CommonParams.get('arg_separator') + 'is_js_confirmed=1', function (data) {
+      Functions.ajaxShowMessage(window.Messages.strRenamingDatabases, false);
+      jquery__WEBPACK_IMPORTED_MODULE_0__.post(url, jquery__WEBPACK_IMPORTED_MODULE_0__('#rename_db_form').serialize() + window.CommonParams.get('arg_separator') + 'is_js_confirmed=1', function (data) {
         if (typeof data !== 'undefined' && data.success === true) {
           Functions.ajaxShowMessage(data.message);
-          CommonParams.set('db', data.newname);
+          window.CommonParams.set('db', data.newname);
           Navigation.reload(function () {
-            $('#pma_navigation_tree').find('a:not(\'.expander\')').each(function () {
-              var $thisAnchor = $(this);
+            jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_navigation_tree').find('a:not(\'.expander\')').each(function () {
+              var $thisAnchor = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
 
               if ($thisAnchor.text() === data.newname) {
                 // simulate a click on the new db name
@@ -80,29 +97,29 @@ AJAX.registerOnload('database/operations.js', function () {
    * Ajax Event Handler for 'Copy Database'
    */
 
-  $(document).on('submit', '#copy_db_form.ajax', function (event) {
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('submit', '#copy_db_form.ajax', function (event) {
     event.preventDefault();
 
     if (Functions.emptyCheckTheField(this, 'newname')) {
-      Functions.ajaxShowMessage(Messages.strFormEmpty, false, 'error');
+      Functions.ajaxShowMessage(window.Messages.strFormEmpty, false, 'error');
       return false;
     }
 
-    Functions.ajaxShowMessage(Messages.strCopyingDatabase, false);
-    var $form = $(this);
+    Functions.ajaxShowMessage(window.Messages.strCopyingDatabase, false);
+    var $form = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
     Functions.prepareForAjaxRequest($form);
-    $.post($form.attr('action'), $form.serialize(), function (data) {
+    jquery__WEBPACK_IMPORTED_MODULE_0__.post($form.attr('action'), $form.serialize(), function (data) {
       // use messages that stay on screen
-      $('.alert-success, .alert-danger').fadeOut();
+      jquery__WEBPACK_IMPORTED_MODULE_0__('.alert-success, .alert-danger').fadeOut();
 
       if (typeof data !== 'undefined' && data.success === true) {
-        if ($('#checkbox_switch').is(':checked')) {
-          CommonParams.set('db', data.newname);
-          CommonActions.refreshMain(false, function () {
+        if (jquery__WEBPACK_IMPORTED_MODULE_0__('#checkbox_switch').is(':checked')) {
+          window.CommonParams.set('db', data.newname);
+          window.CommonActions.refreshMain(false, function () {
             Functions.ajaxShowMessage(data.message);
           });
         } else {
-          CommonParams.set('db', data.db);
+          window.CommonParams.set('db', data.db);
           Functions.ajaxShowMessage(data.message);
         }
 
@@ -117,20 +134,20 @@ AJAX.registerOnload('database/operations.js', function () {
    * Change tables columns visible only if change tables is checked
    */
 
-  $('#span_change_all_tables_columns_collations').hide();
-  $('#checkbox_change_all_tables_collations').on('click', function () {
-    $('#span_change_all_tables_columns_collations').toggle();
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#span_change_all_tables_columns_collations').hide();
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#checkbox_change_all_tables_collations').on('click', function () {
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#span_change_all_tables_columns_collations').toggle();
   });
   /**
    * Ajax Event handler for 'Change Charset' of the database
    */
 
-  $(document).on('submit', '#change_db_charset_form.ajax', function (event) {
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('submit', '#change_db_charset_form.ajax', function (event) {
     event.preventDefault();
-    var $form = $(this);
+    var $form = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
     Functions.prepareForAjaxRequest($form);
-    Functions.ajaxShowMessage(Messages.strChangingCharset);
-    $.post($form.attr('action'), $form.serialize(), function (data) {
+    Functions.ajaxShowMessage(window.Messages.strChangingCharset);
+    jquery__WEBPACK_IMPORTED_MODULE_0__.post($form.attr('action'), $form.serialize(), function (data) {
       if (typeof data !== 'undefined' && data.success === true) {
         Functions.ajaxShowMessage(data.message);
       } else {
@@ -143,24 +160,24 @@ AJAX.registerOnload('database/operations.js', function () {
    * Ajax event handlers for Drop Database
    */
 
-  $(document).on('click', '#drop_db_anchor.ajax', function (event) {
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', '#drop_db_anchor.ajax', function (event) {
     event.preventDefault();
-    var $link = $(this);
+    var $link = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
     /**
      * @var {String} question String containing the question to be asked for confirmation
      */
 
-    var question = Messages.strDropDatabaseStrongWarning + ' ';
-    question += Functions.sprintf(Messages.strDoYouReally, 'DROP DATABASE `' + Functions.escapeHtml(CommonParams.get('db') + '`'));
+    var question = window.Messages.strDropDatabaseStrongWarning + ' ';
+    question += Functions.sprintf(window.Messages.strDoYouReally, 'DROP DATABASE `' + Functions.escapeHtml(window.CommonParams.get('db') + '`'));
     var params = Functions.getJsConfirmCommonParam(this, $link.getPostData());
-    $(this).confirm(question, $(this).attr('href'), function (url) {
-      Functions.ajaxShowMessage(Messages.strProcessingRequest);
-      $.post(url, params, function (data) {
+    jquery__WEBPACK_IMPORTED_MODULE_0__(this).confirm(question, jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('href'), function (url) {
+      Functions.ajaxShowMessage(window.Messages.strProcessingRequest);
+      jquery__WEBPACK_IMPORTED_MODULE_0__.post(url, params, function (data) {
         if (typeof data !== 'undefined' && data.success) {
           // Database deleted successfully, refresh both the frames
           Navigation.reload();
-          CommonParams.set('db', '');
-          CommonActions.refreshMain('index.php?route=/server/databases', function () {
+          window.CommonParams.set('db', '');
+          window.CommonActions.refreshMain('index.php?route=/server/databases', function () {
             Functions.ajaxShowMessage(data.message);
           });
         } else {
@@ -170,3 +187,13 @@ AJAX.registerOnload('database/operations.js', function () {
     });
   });
 });
+
+/***/ })
+
+},
+/******/ function(__webpack_require__) { // webpackRuntimeModules
+/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
+/******/ var __webpack_exports__ = (__webpack_exec__(15));
+/******/ }
+]);
+//# sourceMappingURL=operations.js.map

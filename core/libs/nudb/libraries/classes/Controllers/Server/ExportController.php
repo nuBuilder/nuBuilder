@@ -34,10 +34,12 @@ final class ExportController extends AbstractController
 
     public function __invoke(): void
     {
-        global $db, $table, $sql_query, $num_tables, $unlim_num_rows;
-        global $tmp_select, $select_item, $errorUrl;
+        $GLOBALS['num_tables'] = $GLOBALS['num_tables'] ?? null;
+        $GLOBALS['unlim_num_rows'] = $GLOBALS['unlim_num_rows'] ?? null;
+        $GLOBALS['errorUrl'] = Url::getFromRoute('/');
 
-        $errorUrl = Url::getFromRoute('/');
+        $GLOBALS['tmp_select'] = $GLOBALS['tmp_select'] ?? null;
+        $GLOBALS['select_item'] = $GLOBALS['select_item'] ?? null;
 
         if ($this->dbi->isSuperUser()) {
             $this->dbi->selectDb('mysql');
@@ -49,19 +51,19 @@ final class ExportController extends AbstractController
 
         $this->addScriptFiles(['export.js']);
 
-        $select_item = $tmp_select ?? '';
-        $databases = $this->export->getDatabasesForSelectOptions($select_item);
+        $GLOBALS['select_item'] = $GLOBALS['tmp_select'] ?? '';
+        $databases = $this->export->getDatabasesForSelectOptions($GLOBALS['select_item']);
 
-        if (! isset($sql_query)) {
-            $sql_query = '';
+        if (! isset($GLOBALS['sql_query'])) {
+            $GLOBALS['sql_query'] = '';
         }
 
-        if (! isset($num_tables)) {
-            $num_tables = 0;
+        if (! isset($GLOBALS['num_tables'])) {
+            $GLOBALS['num_tables'] = 0;
         }
 
-        if (! isset($unlim_num_rows)) {
-            $unlim_num_rows = 0;
+        if (! isset($GLOBALS['unlim_num_rows'])) {
+            $GLOBALS['unlim_num_rows'] = 0;
         }
 
         $GLOBALS['single_table'] = $_POST['single_table'] ?? $_GET['single_table'] ?? $GLOBALS['single_table'] ?? null;
@@ -78,11 +80,11 @@ final class ExportController extends AbstractController
 
         $options = $this->export->getOptions(
             'server',
-            $db,
-            $table,
-            $sql_query,
-            $num_tables,
-            $unlim_num_rows,
+            $GLOBALS['db'],
+            $GLOBALS['table'],
+            $GLOBALS['sql_query'],
+            $GLOBALS['num_tables'],
+            $GLOBALS['unlim_num_rows'],
             $exportList
         );
 

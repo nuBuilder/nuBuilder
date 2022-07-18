@@ -47,9 +47,9 @@ abstract class ImportPlugin implements Plugin
     /**
      * Handles the whole import logic
      *
-     * @param array $sql_data 2-element array with sql data
+     * @return string[]
      */
-    abstract public function doImport(?File $importHandle = null, array &$sql_data = []): void;
+    abstract public function doImport(?File $importHandle = null): array;
 
     /**
      * Gets the import specific format plugin properties
@@ -90,7 +90,7 @@ abstract class ImportPlugin implements Plugin
         ];
     }
 
-    public function isAvailable(): bool
+    public static function isAvailable(): bool
     {
         return true;
     }

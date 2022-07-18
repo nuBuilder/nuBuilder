@@ -62,13 +62,11 @@ class Footer
      */
     public function __construct()
     {
-        global $dbi;
-
         $this->template = new Template();
         $this->isEnabled = true;
         $this->scripts = new Scripts();
         $this->isMinimal = false;
-        $this->relation = new Relation($dbi);
+        $this->relation = new Relation($GLOBALS['dbi']);
     }
 
     /**
@@ -119,7 +117,7 @@ class Footer
      */
     public function getDebugMessage(): string
     {
-        $retval = '\'null\'';
+        $retval = '\'false\'';
         if ($GLOBALS['cfg']['DBG']['sql'] && empty($_REQUEST['no_debug']) && ! empty($_SESSION['debug'])) {
             // Remove recursions and iterators from $_SESSION['debug']
             self::removeRecursion($_SESSION['debug']);
@@ -140,45 +138,20 @@ class Footer
      */
     public function getSelfUrl(): string
     {
-        global $route, $db, $table, $server;
+        $GLOBALS['server'] = $GLOBALS['server'] ?? null;
 
         $params = [];
-        if (isset($route)) {
-            $params['route'] = $route;
+        $params['route'] = Common::getRequest()->getRoute();
+
+        if (isset($GLOBALS['db']) && strlen($GLOBALS['db']) > 0) {
+            $params['db'] = $GLOBALS['db'];
         }
 
-        if (isset($db) && strlen($db) > 0) {
-            $params['db'] = $db;
+        if (isset($GLOBALS['table']) && strlen($GLOBALS['table']) > 0) {
+            $params['table'] = $GLOBALS['table'];
         }
 
-        if (isset($table) && strlen($table) > 0) {
-            $params['table'] = $table;
-        }
-
-        $params['server'] = $server;
-
-        // needed for server privileges tabs
-        if (isset($_GET['viewing_mode']) && in_array($_GET['viewing_mode'], ['server', 'db', 'table'])) {
-            $params['viewing_mode'] = $_GET['viewing_mode'];
-        }
-
-        /**
-         * @todo    coming from /server/privileges, here $db is not set,
-         *          add the following condition below when that is fixed
-         *          && $_GET['checkprivsdb'] == $db
-         */
-        if (isset($_GET['checkprivsdb'])) {
-            $params['checkprivsdb'] = $_GET['checkprivsdb'];
-        }
-
-        /**
-         * @todo    coming from /server/privileges, here $table is not set,
-         *          add the following condition below when that is fixed
-         *          && $_REQUEST['checkprivstable'] == $table
-         */
-        if (isset($_GET['checkprivstable'])) {
-            $params['checkprivstable'] = $_GET['checkprivstable'];
-        }
+        $params['server'] = $GLOBALS['server'];
 
         if (isset($_REQUEST['single_table']) && in_array($_REQUEST['single_table'], [true, false])) {
             $params['single_table'] = $_REQUEST['single_table'];
@@ -210,8 +183,6 @@ class Footer
      */
     private function setHistory(): void
     {
-        global $dbi;
-
         if (
             (
                 isset($_REQUEST['no_history'])
@@ -220,8 +191,8 @@ class Footer
             )
             || ! empty($GLOBALS['error_message'])
             || empty($GLOBALS['sql_query'])
-            || ! isset($dbi)
-            || ! $dbi->isConnected()
+            || ! isset($GLOBALS['dbi'])
+            || ! $GLOBALS['dbi']->isConnected()
         ) {
             return;
         }
@@ -283,7 +254,7 @@ class Footer
                     $url = $this->getSelfUrl();
                 }
 
-                $this->scripts->addCode('var debugSQLInfo = ' . $this->getDebugMessage() . ';');
+                $this->scripts->addCode('window.Console.debugSqlInfo = ' . $this->getDebugMessage() . ';');
                 $errorMessages = $this->getErrorMessages();
                 $scripts = $this->scripts->getDisplay();
 

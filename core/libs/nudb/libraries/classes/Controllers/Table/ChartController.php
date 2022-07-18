@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Table;
 
+use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\DbTableExists;
 use PhpMyAdmin\FieldMetadata;
@@ -35,17 +36,15 @@ class ChartController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
-        string $db,
-        string $table,
         DatabaseInterface $dbi
     ) {
-        parent::__construct($response, $template, $db, $table);
+        parent::__construct($response, $template);
         $this->dbi = $dbi;
     }
 
     public function __invoke(): void
     {
-        global $db, $table, $cfg, $sql_query, $errorUrl;
+        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
 
         if (isset($_REQUEST['pos'], $_REQUEST['session_max_rows']) && $this->response->isAjax()) {
             $this->ajax();
@@ -54,7 +53,7 @@ class ChartController extends AbstractController
         }
 
         // Throw error if no sql query is set
-        if (! isset($sql_query) || $sql_query == '') {
+        if (! isset($GLOBALS['sql_query']) || $GLOBALS['sql_query'] == '') {
             $this->response->setRequestStatus(false);
             $this->response->addHTML(
                 Message::error(__('No SQL query was set to fetch data.'))->getDisplay()
@@ -83,41 +82,41 @@ class ChartController extends AbstractController
         /**
          * Runs common work
          */
-        if (strlen($table) > 0) {
-            Util::checkParameters(['db', 'table']);
+        if (strlen($GLOBALS['table']) > 0) {
+            $this->checkParameters(['db', 'table']);
 
-            $url_params = ['db' => $db, 'table' => $table];
-            $errorUrl = Util::getScriptNameForOption($cfg['DefaultTabTable'], 'table');
-            $errorUrl .= Url::getCommon($url_params, '&');
+            $url_params = ['db' => $GLOBALS['db'], 'table' => $GLOBALS['table']];
+            $GLOBALS['errorUrl'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabTable'], 'table');
+            $GLOBALS['errorUrl'] .= Url::getCommon($url_params, '&');
 
-            DbTableExists::check();
+            DbTableExists::check($GLOBALS['db'], $GLOBALS['table']);
 
-            $url_params['goto'] = Util::getScriptNameForOption($cfg['DefaultTabTable'], 'table');
+            $url_params['goto'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabTable'], 'table');
             $url_params['back'] = Url::getFromRoute('/table/sql');
-            $this->dbi->selectDb($db);
-        } elseif (strlen($db) > 0) {
-            $url_params['goto'] = Util::getScriptNameForOption($cfg['DefaultTabDatabase'], 'database');
+            $this->dbi->selectDb($GLOBALS['db']);
+        } elseif (strlen($GLOBALS['db']) > 0) {
+            $url_params['goto'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabDatabase'], 'database');
             $url_params['back'] = Url::getFromRoute('/sql');
 
-            Util::checkParameters(['db']);
+            $this->checkParameters(['db']);
 
-            $errorUrl = Util::getScriptNameForOption($cfg['DefaultTabDatabase'], 'database');
-            $errorUrl .= Url::getCommon(['db' => $db], '&');
+            $GLOBALS['errorUrl'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabDatabase'], 'database');
+            $GLOBALS['errorUrl'] .= Url::getCommon(['db' => $GLOBALS['db']], '&');
 
             if (! $this->hasDatabase()) {
                 return;
             }
         } else {
-            $url_params['goto'] = Util::getScriptNameForOption($cfg['DefaultTabServer'], 'server');
+            $url_params['goto'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabServer'], 'server');
             $url_params['back'] = Url::getFromRoute('/sql');
-            $errorUrl = Url::getFromRoute('/');
+            $GLOBALS['errorUrl'] = Url::getFromRoute('/');
 
             if ($this->dbi->isSuperUser()) {
                 $this->dbi->selectDb('mysql');
             }
         }
 
-        $result = $this->dbi->tryQuery($sql_query);
+        $result = $this->dbi->tryQuery($GLOBALS['sql_query']);
         $fields_meta = $row = [];
         if ($result !== false) {
             $fields_meta = $this->dbi->getFieldsMeta($result);
@@ -148,10 +147,10 @@ class ChartController extends AbstractController
             return;
         }
 
-        $url_params['db'] = $db;
+        $url_params['db'] = $GLOBALS['db'];
         $url_params['reload'] = 1;
 
-        $startAndNumberOfRowsFieldset = Generator::getStartAndNumberOfRowsFieldsetData($sql_query);
+        $startAndNumberOfRowsFieldset = Generator::getStartAndNumberOfRowsFieldsetData($GLOBALS['sql_query']);
 
         /**
          * Displays the page
@@ -170,19 +169,19 @@ class ChartController extends AbstractController
      */
     public function ajax(): void
     {
-        global $db, $table, $sql_query, $urlParams, $errorUrl, $cfg;
+        $GLOBALS['urlParams'] = $GLOBALS['urlParams'] ?? null;
+        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
+        if (strlen($GLOBALS['table']) > 0 && strlen($GLOBALS['db']) > 0) {
+            $this->checkParameters(['db', 'table']);
 
-        if (strlen($table) > 0 && strlen($db) > 0) {
-            Util::checkParameters(['db', 'table']);
+            $GLOBALS['urlParams'] = ['db' => $GLOBALS['db'], 'table' => $GLOBALS['table']];
+            $GLOBALS['errorUrl'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabTable'], 'table');
+            $GLOBALS['errorUrl'] .= Url::getCommon($GLOBALS['urlParams'], '&');
 
-            $urlParams = ['db' => $db, 'table' => $table];
-            $errorUrl = Util::getScriptNameForOption($cfg['DefaultTabTable'], 'table');
-            $errorUrl .= Url::getCommon($urlParams, '&');
-
-            DbTableExists::check();
+            DbTableExists::check($GLOBALS['db'], $GLOBALS['table']);
         }
 
-        $parser = new Parser($sql_query);
+        $parser = new Parser($GLOBALS['sql_query']);
         /**
          * @var SelectStatement $statement
          */

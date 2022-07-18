@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace PhpMyAdmin\Controllers\Table;
 
 use PhpMyAdmin\Config;
-use PhpMyAdmin\ConfigStorage\Relation;
+use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\Core;
 use PhpMyAdmin\CreateAddField;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\DbTableExists;
 use PhpMyAdmin\Html\Generator;
+use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Table\ColumnsDefinition;
@@ -22,6 +23,7 @@ use PhpMyAdmin\Util;
 use function __;
 use function intval;
 use function is_array;
+use function is_numeric;
 use function min;
 use function strlen;
 
@@ -36,47 +38,51 @@ class AddFieldController extends AbstractController
     /** @var Config */
     private $config;
 
-    /** @var Relation */
-    private $relation;
-
     /** @var DatabaseInterface */
     private $dbi;
+
+    /** @var ColumnsDefinition */
+    private $columnsDefinition;
 
     public function __construct(
         ResponseRenderer $response,
         Template $template,
-        string $db,
-        string $table,
         Transformations $transformations,
         Config $config,
-        Relation $relation,
-        DatabaseInterface $dbi
+        DatabaseInterface $dbi,
+        ColumnsDefinition $columnsDefinition
     ) {
-        parent::__construct($response, $template, $db, $table);
+        parent::__construct($response, $template);
         $this->transformations = $transformations;
         $this->config = $config;
-        $this->relation = $relation;
         $this->dbi = $dbi;
+        $this->columnsDefinition = $columnsDefinition;
     }
 
-    public function __invoke(): void
+    public function __invoke(ServerRequest $request): void
     {
-        global $errorUrl, $message, $action, $active_page, $sql_query;
-        global $num_fields, $regenerate, $result, $db, $table;
+        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
+        $GLOBALS['message'] = $GLOBALS['message'] ?? null;
+        $GLOBALS['active_page'] = $GLOBALS['active_page'] ?? null;
+        $GLOBALS['num_fields'] = $GLOBALS['num_fields'] ?? null;
+        $GLOBALS['regenerate'] = $GLOBALS['regenerate'] ?? null;
+        $GLOBALS['result'] = $GLOBALS['result'] ?? null;
+
+        /** @var string|null $numberOfFields */
+        $numberOfFields = $request->getParsedBodyParam('num_fields');
 
         $this->addScriptFiles(['table/structure.js']);
 
-        // Check parameters
-        Util::checkParameters(['db', 'table']);
+        $this->checkParameters(['db', 'table']);
 
         $cfg = $this->config->settings;
 
         /**
          * Defines the url to return to in case of error in a sql statement
          */
-        $errorUrl = Url::getFromRoute('/table/sql', [
-            'db' => $db,
-            'table' => $table,
+        $GLOBALS['errorUrl'] = Url::getFromRoute('/table/sql', [
+            'db' => $GLOBALS['db'],
+            'table' => $GLOBALS['table'],
         ]);
 
         // check number of fields to be created
@@ -89,15 +95,15 @@ class AddFieldController extends AbstractController
                 $_POST['field_where'] = $_POST['orig_field_where'];
             }
 
-            $num_fields = min(
+            $GLOBALS['num_fields'] = min(
                 intval($_POST['orig_num_fields']) + intval($_POST['added_fields']),
                 4096
             );
-            $regenerate = true;
-        } elseif (isset($_POST['num_fields']) && intval($_POST['num_fields']) > 0) {
-            $num_fields = min(4096, intval($_POST['num_fields']));
+            $GLOBALS['regenerate'] = true;
+        } elseif (is_numeric($numberOfFields) && $numberOfFields > 0) {
+            $GLOBALS['num_fields'] = min(4096, (int) $numberOfFields);
         } else {
-            $num_fields = 1;
+            $GLOBALS['num_fields'] = 1;
         }
 
         if (isset($_POST['do_save_data'])) {
@@ -107,19 +113,23 @@ class AddFieldController extends AbstractController
 
             $createAddField = new CreateAddField($this->dbi);
 
-            $sql_query = $createAddField->getColumnCreationQuery($table);
+            $GLOBALS['sql_query'] = $createAddField->getColumnCreationQuery($GLOBALS['table']);
 
             // If there is a request for SQL previewing.
             if (isset($_POST['preview_sql'])) {
-                Core::previewSQL($sql_query);
+                Core::previewSQL($GLOBALS['sql_query']);
 
                 return;
             }
 
-            $result = $createAddField->tryColumnCreationQuery($db, $sql_query, $errorUrl);
+            $GLOBALS['result'] = $createAddField->tryColumnCreationQuery(
+                $GLOBALS['db'],
+                $GLOBALS['sql_query'],
+                $GLOBALS['errorUrl']
+            );
 
-            if ($result !== true) {
-                $error_message_html = Generator::mysqlDie('', '', false, $errorUrl, false);
+            if ($GLOBALS['result'] !== true) {
+                $error_message_html = Generator::mysqlDie('', '', false, $GLOBALS['errorUrl'], false);
                 $this->response->addHTML($error_message_html ?? '');
                 $this->response->setRequestStatus(false);
 
@@ -134,8 +144,8 @@ class AddFieldController extends AbstractController
                     }
 
                     $this->transformations->setMime(
-                        $db,
-                        $table,
+                        $GLOBALS['db'],
+                        $GLOBALS['table'],
                         $_POST['field_name'][$fieldindex],
                         $mimetype,
                         $_POST['field_transformation'][$fieldindex],
@@ -147,21 +157,21 @@ class AddFieldController extends AbstractController
             }
 
             // Go back to the structure sub-page
-            $message = Message::success(
+            $GLOBALS['message'] = Message::success(
                 __('Table %1$s has been altered successfully.')
             );
-            $message->addParam($table);
+            $GLOBALS['message']->addParam($GLOBALS['table']);
             $this->response->addJSON(
                 'message',
-                Generator::getMessage($message, $sql_query, 'success')
+                Generator::getMessage($GLOBALS['message'], $GLOBALS['sql_query'], 'success')
             );
 
             // Give an URL to call and use to appends the structure after the success message
             $this->response->addJSON(
                 'structure_refresh_route',
                 Url::getFromRoute('/table/structure', [
-                    'db' => $db,
-                    'table' => $table,
+                    'db' => $GLOBALS['db'],
+                    'table' => $GLOBALS['table'],
                     'ajax_request' => '1',
                 ])
             );
@@ -169,27 +179,22 @@ class AddFieldController extends AbstractController
             return;
         }
 
-        $url_params = ['db' => $db, 'table' => $table];
-        $errorUrl = Util::getScriptNameForOption($cfg['DefaultTabTable'], 'table');
-        $errorUrl .= Url::getCommon($url_params, '&');
+        $url_params = ['db' => $GLOBALS['db'], 'table' => $GLOBALS['table']];
+        $GLOBALS['errorUrl'] = Util::getScriptNameForOption($cfg['DefaultTabTable'], 'table');
+        $GLOBALS['errorUrl'] .= Url::getCommon($url_params, '&');
 
-        DbTableExists::check();
+        DbTableExists::check($GLOBALS['db'], $GLOBALS['table']);
 
-        $active_page = Url::getFromRoute('/table/structure');
-        /**
-         * Display the form
-         */
-        $action = Url::getFromRoute('/table/add-field');
+        $GLOBALS['active_page'] = Url::getFromRoute('/table/structure');
 
         $this->addScriptFiles(['vendor/jquery/jquery.uitablefilter.js', 'indexes.js']);
 
-        $templateData = ColumnsDefinition::displayForm(
-            $this->transformations,
-            $this->relation,
-            $this->dbi,
-            $action,
-            $num_fields,
-            $regenerate
+        $this->checkParameters(['server', 'db', 'table', 'num_fields']);
+
+        $templateData = $this->columnsDefinition->displayForm(
+            '/table/add-field',
+            $GLOBALS['num_fields'],
+            $GLOBALS['regenerate']
         );
 
         $this->render('columns_definitions/column_definitions_form', $templateData);

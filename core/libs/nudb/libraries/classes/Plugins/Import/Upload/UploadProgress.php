@@ -13,7 +13,6 @@ use PhpMyAdmin\Plugins\UploadInterface;
 use function array_key_exists;
 use function function_exists;
 use function trim;
-use function uploadprogress_get_info;
 
 /**
  * Implementation for upload progress
@@ -41,14 +40,14 @@ class UploadProgress implements UploadInterface
      */
     public static function getUploadStatus($id)
     {
-        global $SESSION_KEY;
+        $GLOBALS['SESSION_KEY'] = $GLOBALS['SESSION_KEY'] ?? null;
 
         if (trim($id) == '') {
             return null;
         }
 
-        if (! array_key_exists($id, $_SESSION[$SESSION_KEY])) {
-            $_SESSION[$SESSION_KEY][$id] = [
+        if (! array_key_exists($id, $_SESSION[$GLOBALS['SESSION_KEY']])) {
+            $_SESSION[$GLOBALS['SESSION_KEY']][$id] = [
                 'id' => $id,
                 'finished' => false,
                 'percent' => 0,
@@ -58,7 +57,7 @@ class UploadProgress implements UploadInterface
             ];
         }
 
-        $ret = $_SESSION[$SESSION_KEY][$id];
+        $ret = $_SESSION[$GLOBALS['SESSION_KEY']][$id];
 
         if (! Ajax::progressCheck() || $ret['finished']) {
             return $ret;
@@ -67,7 +66,8 @@ class UploadProgress implements UploadInterface
         $status = null;
         // @see https://pecl.php.net/package/uploadprogress
         if (function_exists('uploadprogress_get_info')) {
-            $status = uploadprogress_get_info($id);
+            // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
+            $status = \uploadprogress_get_info($id);
         }
 
         if ($status) {
@@ -94,7 +94,7 @@ class UploadProgress implements UploadInterface
             ];
         }
 
-        $_SESSION[$SESSION_KEY][$id] = $ret;
+        $_SESSION[$GLOBALS['SESSION_KEY']][$id] = $ret;
 
         return $ret;
     }

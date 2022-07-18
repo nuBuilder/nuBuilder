@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Database\Structure\CentralColumns;
 
-use PhpMyAdmin\Controllers\Database\AbstractController;
+use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\Controllers\Database\StructureController;
 use PhpMyAdmin\Database\CentralColumns;
 use PhpMyAdmin\DatabaseInterface;
@@ -25,18 +25,17 @@ final class MakeConsistentController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
-        string $db,
         DatabaseInterface $dbi,
         StructureController $structureController
     ) {
-        parent::__construct($response, $template, $db);
+        parent::__construct($response, $template);
         $this->dbi = $dbi;
         $this->structureController = $structureController;
     }
 
     public function __invoke(): void
     {
-        global $db, $message;
+        $GLOBALS['message'] = $GLOBALS['message'] ?? null;
 
         $selected = $_POST['selected_tbl'] ?? [];
 
@@ -48,9 +47,9 @@ final class MakeConsistentController extends AbstractController
         }
 
         $centralColumns = new CentralColumns($this->dbi);
-        $error = $centralColumns->makeConsistentWithList($db, $selected);
+        $error = $centralColumns->makeConsistentWithList($GLOBALS['db'], $selected);
 
-        $message = $error instanceof Message ? $error : Message::success(__('Success!'));
+        $GLOBALS['message'] = $error instanceof Message ? $error : Message::success(__('Success!'));
 
         unset($_POST['submit_mult']);
 

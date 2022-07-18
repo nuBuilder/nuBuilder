@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Database\Structure;
 
-use PhpMyAdmin\Controllers\Database\AbstractController;
+use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\Controllers\Database\StructureController;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\Operations;
@@ -25,18 +25,17 @@ final class CopyTableController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
-        string $db,
         Operations $operations,
         StructureController $structureController
     ) {
-        parent::__construct($response, $template, $db);
+        parent::__construct($response, $template);
         $this->operations = $operations;
         $this->structureController = $structureController;
     }
 
     public function __invoke(): void
     {
-        global $db, $message;
+        $GLOBALS['message'] = $GLOBALS['message'] ?? null;
 
         $selected = $_POST['selected'] ?? [];
         $targetDb = $_POST['target_db'] ?? null;
@@ -44,7 +43,7 @@ final class CopyTableController extends AbstractController
 
         for ($i = 0; $i < $selectedCount; $i++) {
             Table::moveCopy(
-                $db,
+                $GLOBALS['db'],
                 $selected[$i],
                 $targetDb,
                 $selected[$i],
@@ -58,13 +57,13 @@ final class CopyTableController extends AbstractController
                 continue;
             }
 
-            $this->operations->adjustPrivilegesCopyTable($db, $selected[$i], $targetDb, $selected[$i]);
+            $this->operations->adjustPrivilegesCopyTable($GLOBALS['db'], $selected[$i], $targetDb, $selected[$i]);
         }
 
-        $message = Message::success();
+        $GLOBALS['message'] = Message::success();
 
         if (empty($_POST['message'])) {
-            $_POST['message'] = $message;
+            $_POST['message'] = $GLOBALS['message'];
         }
 
         ($this->structureController)();

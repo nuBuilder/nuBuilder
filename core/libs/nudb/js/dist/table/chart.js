@@ -1,10 +1,22 @@
 "use strict";
+(self["webpackChunkphpmyadmin"] = self["webpackChunkphpmyadmin"] || []).push([[62],{
+
+/***/ 1:
+/***/ (function(module) {
+
+module.exports = jQuery;
+
+/***/ }),
+
+/***/ 68:
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 
 /* global ColumnType, DataTable, JQPlotChartFactory */
 // js/chart.js
 
-/* global codeMirrorEditor */
-// js/functions.js
 var chartData = {};
 var tempChartTitle;
 var currentChart = null;
@@ -21,13 +33,13 @@ function extractDate(dateString) {
 
   if (matches !== null && matches.length > 0) {
     match = matches[0];
-    return new Date(match.substr(0, 4), parseInt(match.substr(5, 2), 10) - 1, match.substr(8, 2), match.substr(11, 2), match.substr(14, 2), match.substr(17, 2));
+    return new Date(match.substring(0, 4), parseInt(match.substring(5, 7), 10) - 1, match.substring(8, 10), match.substring(11, 13), match.substring(14, 16), match.substring(17, 19));
   } else {
     matches = dateRegExp.exec(dateString);
 
     if (matches !== null && matches.length > 0) {
       match = matches[0];
-      return new Date(match.substr(0, 4), parseInt(match.substr(5, 2), 10) - 1, match.substr(8, 2));
+      return new Date(match.substring(0, 4), parseInt(match.substring(5, 7), 10) - 1, match.substring(8, 10));
     }
   }
 
@@ -35,7 +47,7 @@ function extractDate(dateString) {
 }
 
 function queryChart(data, columnNames, settings) {
-  if ($('#querychart').length === 0) {
+  if (jquery__WEBPACK_IMPORTED_MODULE_0__('#querychart').length === 0) {
     return;
   }
 
@@ -85,12 +97,12 @@ function queryChart(data, columnNames, settings) {
   var values = [];
 
   if (settings.seriesColumn === null) {
-    $.each(settings.selectedSeries, function (index, element) {
+    jquery__WEBPACK_IMPORTED_MODULE_0__.each(settings.selectedSeries, function (index, element) {
       dataTable.addColumn(ColumnType.NUMBER, columnNames[element]);
     }); // set data to the data table
 
     var columnsToExtract = [settings.mainAxis];
-    $.each(settings.selectedSeries, function (index, element) {
+    jquery__WEBPACK_IMPORTED_MODULE_0__.each(settings.selectedSeries, function (index, element) {
       columnsToExtract.push(element);
     });
     var newRow;
@@ -136,7 +148,7 @@ function queryChart(data, columnNames, settings) {
       }
     }
 
-    $.each(seriesNames, function (seriesName) {
+    jquery__WEBPACK_IMPORTED_MODULE_0__.each(seriesNames, function (seriesName) {
       dataTable.addColumn(ColumnType.NUMBER, seriesName);
     });
     var valueMap = {};
@@ -158,7 +170,7 @@ function queryChart(data, columnNames, settings) {
       value[seriesNumber] = parseFloat(data[i][valueColumnName]);
     }
 
-    $.each(valueMap, function (index, value) {
+    jquery__WEBPACK_IMPORTED_MODULE_0__.each(valueMap, function (index, value) {
       values.push(value);
     });
     dataTable.setData(values);
@@ -170,23 +182,23 @@ function queryChart(data, columnNames, settings) {
 }
 
 function drawChart() {
-  currentSettings.width = $('#resizer').width() - 20;
-  currentSettings.height = $('#resizer').height() - 20; // TODO: a better way using .redraw() ?
+  currentSettings.width = jquery__WEBPACK_IMPORTED_MODULE_0__('#resizer').width() - 20;
+  currentSettings.height = jquery__WEBPACK_IMPORTED_MODULE_0__('#resizer').height() - 20; // TODO: a better way using .redraw() ?
 
   if (currentChart !== null) {
     currentChart.destroy();
   }
 
   var columnNames = [];
-  $('#chartXAxisSelect option').each(function () {
-    columnNames.push(Functions.escapeHtml($(this).text()));
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#chartXAxisSelect option').each(function () {
+    columnNames.push(Functions.escapeHtml(jquery__WEBPACK_IMPORTED_MODULE_0__(this).text()));
   });
 
   try {
     currentChart = queryChart(chartData, columnNames, currentSettings);
 
     if (currentChart !== null) {
-      $('#saveChart').attr('href', currentChart.toImageString());
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#saveChart').attr('href', currentChart.toImageString());
     }
   } catch (err) {
     Functions.ajaxShowMessage(err.message, false);
@@ -194,16 +206,16 @@ function drawChart() {
 }
 
 function getSelectedSeries() {
-  var val = $('#chartSeriesSelect').val() || [];
+  var val = jquery__WEBPACK_IMPORTED_MODULE_0__('#chartSeriesSelect').val() || [];
   var ret = [];
-  $.each(val, function (i, v) {
+  jquery__WEBPACK_IMPORTED_MODULE_0__.each(val, function (i, v) {
     ret.push(parseInt(v, 10));
   });
   return ret;
 }
 
 function onXAxisChange() {
-  var $xAxisSelect = $('#chartXAxisSelect');
+  var $xAxisSelect = jquery__WEBPACK_IMPORTED_MODULE_0__('#chartXAxisSelect');
   currentSettings.mainAxis = parseInt($xAxisSelect.val(), 10);
 
   if (dateTimeCols.indexOf(currentSettings.mainAxis) !== -1) {
@@ -212,7 +224,7 @@ function onXAxisChange() {
     document.getElementById('timelineChartType').classList.add('d-none');
 
     if (currentSettings.type === 'timeline') {
-      $('#lineChartTypeRadio').prop('checked', true);
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#lineChartTypeRadio').prop('checked', true);
       currentSettings.type = 'line';
     }
   }
@@ -223,18 +235,18 @@ function onXAxisChange() {
     document.getElementById('scatterChartType').classList.add('d-none');
 
     if (currentSettings.type === 'scatter') {
-      $('#lineChartTypeRadio').prop('checked', true);
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#lineChartTypeRadio').prop('checked', true);
       currentSettings.type = 'line';
     }
   }
 
   var xAxisTitle = $xAxisSelect.children('option:selected').text();
-  $('#xAxisLabelInput').val(xAxisTitle);
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#xAxisLabelInput').val(xAxisTitle);
   currentSettings.xaxisLabel = xAxisTitle;
 }
 
 function onDataSeriesChange() {
-  var $seriesSelect = $('#chartSeriesSelect');
+  var $seriesSelect = jquery__WEBPACK_IMPORTED_MODULE_0__('#chartSeriesSelect');
   currentSettings.selectedSeries = getSelectedSeries();
   var yAxisTitle;
 
@@ -245,14 +257,14 @@ function onDataSeriesChange() {
     document.getElementById('pieChartType').classList.add('d-none');
 
     if (currentSettings.type === 'pie') {
-      $('#lineChartTypeRadio').prop('checked', true);
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#lineChartTypeRadio').prop('checked', true);
       currentSettings.type = 'line';
     }
 
-    yAxisTitle = Messages.strYValues;
+    yAxisTitle = window.Messages.strYValues;
   }
 
-  $('#yAxisLabelInput').val(yAxisTitle);
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#yAxisLabelInput').val(yAxisTitle);
   currentSettings.yaxisLabel = yAxisTitle;
 }
 /**
@@ -260,26 +272,26 @@ function onDataSeriesChange() {
  */
 
 
-AJAX.registerTeardown('table/chart.js', function () {
-  $('input[name="chartType"]').off('click');
-  $('#barStackedCheckbox').off('click');
-  $('#seriesColumnCheckbox').off('click');
-  $('#chartTitleInput').off('focus').off('keyup').off('blur');
-  $('#chartXAxisSelect').off('change');
-  $('#chartSeriesSelect').off('change');
-  $('#chartSeriesColumnSelect').off('change');
-  $('#chartValueColumnSelect').off('change');
-  $('#xAxisLabelInput').off('keyup');
-  $('#yAxisLabelInput').off('keyup');
-  $('#resizer').off('resizestop');
-  $('#tblchartform').off('submit');
+window.AJAX.registerTeardown('table/chart.js', function () {
+  jquery__WEBPACK_IMPORTED_MODULE_0__('input[name="chartType"]').off('click');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#barStackedCheckbox').off('click');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#seriesColumnCheckbox').off('click');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#chartTitleInput').off('focus').off('keyup').off('blur');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#chartXAxisSelect').off('change');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#chartSeriesSelect').off('change');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#chartSeriesColumnSelect').off('change');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#chartValueColumnSelect').off('change');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#xAxisLabelInput').off('keyup');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#yAxisLabelInput').off('keyup');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#resizer').off('resizestop');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#tblchartform').off('submit');
 });
-AJAX.registerOnload('table/chart.js', function () {
+window.AJAX.registerOnload('table/chart.js', function () {
   // handle manual resize
-  $('#resizer').on('resizestop', function () {
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#resizer').on('resizestop', function () {
     // make room so that the handle will still appear
-    $('#querychart').height($('#resizer').height() * 0.96);
-    $('#querychart').width($('#resizer').width() * 0.96);
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#querychart').height(jquery__WEBPACK_IMPORTED_MODULE_0__('#resizer').height() * 0.96);
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#querychart').width(jquery__WEBPACK_IMPORTED_MODULE_0__('#resizer').width() * 0.96);
 
     if (currentChart !== null) {
       currentChart.redraw({
@@ -288,14 +300,14 @@ AJAX.registerOnload('table/chart.js', function () {
     }
   }); // handle chart type changes
 
-  $('input[name="chartType"]').on('click', function () {
-    var type = currentSettings.type = $(this).val();
+  jquery__WEBPACK_IMPORTED_MODULE_0__('input[name="chartType"]').on('click', function () {
+    var type = currentSettings.type = jquery__WEBPACK_IMPORTED_MODULE_0__(this).val();
 
     if (type === 'bar' || type === 'column' || type === 'area') {
       document.getElementById('barStacked').classList.remove('d-none');
     } else {
-      $('#barStackedCheckbox').prop('checked', false);
-      $.extend(true, currentSettings, {
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#barStackedCheckbox').prop('checked', false);
+      jquery__WEBPACK_IMPORTED_MODULE_0__.extend(true, currentSettings, {
         stackSeries: false
       });
       document.getElementById('barStacked').classList.add('d-none');
@@ -304,12 +316,12 @@ AJAX.registerOnload('table/chart.js', function () {
     drawChart();
   }); // handle chosing alternative data format
 
-  $('#seriesColumnCheckbox').on('click', function () {
-    var $seriesColumn = $('#chartSeriesColumnSelect');
-    var $valueColumn = $('#chartValueColumnSelect');
-    var $chartSeries = $('#chartSeriesSelect');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#seriesColumnCheckbox').on('click', function () {
+    var $seriesColumn = jquery__WEBPACK_IMPORTED_MODULE_0__('#chartSeriesColumnSelect');
+    var $valueColumn = jquery__WEBPACK_IMPORTED_MODULE_0__('#chartValueColumnSelect');
+    var $chartSeries = jquery__WEBPACK_IMPORTED_MODULE_0__('#chartSeriesSelect');
 
-    if ($(this).is(':checked')) {
+    if (jquery__WEBPACK_IMPORTED_MODULE_0__(this).is(':checked')) {
       $seriesColumn.prop('disabled', false);
       $valueColumn.prop('disabled', false);
       $chartSeries.prop('disabled', true);
@@ -326,13 +338,13 @@ AJAX.registerOnload('table/chart.js', function () {
     drawChart();
   }); // handle stacking for bar, column and area charts
 
-  $('#barStackedCheckbox').on('click', function () {
-    if ($(this).is(':checked')) {
-      $.extend(true, currentSettings, {
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#barStackedCheckbox').on('click', function () {
+    if (jquery__WEBPACK_IMPORTED_MODULE_0__(this).is(':checked')) {
+      jquery__WEBPACK_IMPORTED_MODULE_0__.extend(true, currentSettings, {
         stackSeries: true
       });
     } else {
-      $.extend(true, currentSettings, {
+      jquery__WEBPACK_IMPORTED_MODULE_0__.extend(true, currentSettings, {
         stackSeries: false
       });
     }
@@ -340,52 +352,52 @@ AJAX.registerOnload('table/chart.js', function () {
     drawChart();
   }); // handle changes in chart title
 
-  $('#chartTitleInput').on('focus', function () {
-    tempChartTitle = $(this).val();
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#chartTitleInput').on('focus', function () {
+    tempChartTitle = jquery__WEBPACK_IMPORTED_MODULE_0__(this).val();
   }).on('keyup', function () {
-    currentSettings.title = $('#chartTitleInput').val();
+    currentSettings.title = jquery__WEBPACK_IMPORTED_MODULE_0__('#chartTitleInput').val();
     drawChart();
   }).on('blur', function () {
-    if ($(this).val() !== tempChartTitle) {
+    if (jquery__WEBPACK_IMPORTED_MODULE_0__(this).val() !== tempChartTitle) {
       drawChart();
     }
   }); // handle changing the x-axis
 
-  $('#chartXAxisSelect').on('change', function () {
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#chartXAxisSelect').on('change', function () {
     onXAxisChange();
     drawChart();
   }); // handle changing the selected data series
 
-  $('#chartSeriesSelect').on('change', function () {
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#chartSeriesSelect').on('change', function () {
     onDataSeriesChange();
     drawChart();
   }); // handle changing the series column
 
-  $('#chartSeriesColumnSelect').on('change', function () {
-    currentSettings.seriesColumn = parseInt($(this).val(), 10);
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#chartSeriesColumnSelect').on('change', function () {
+    currentSettings.seriesColumn = parseInt(jquery__WEBPACK_IMPORTED_MODULE_0__(this).val(), 10);
     drawChart();
   }); // handle changing the value column
 
-  $('#chartValueColumnSelect').on('change', function () {
-    currentSettings.valueColumn = parseInt($(this).val(), 10);
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#chartValueColumnSelect').on('change', function () {
+    currentSettings.valueColumn = parseInt(jquery__WEBPACK_IMPORTED_MODULE_0__(this).val(), 10);
     drawChart();
   }); // handle manual changes to the chart x-axis labels
 
-  $('#xAxisLabelInput').on('keyup', function () {
-    currentSettings.xaxisLabel = $(this).val();
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#xAxisLabelInput').on('keyup', function () {
+    currentSettings.xaxisLabel = jquery__WEBPACK_IMPORTED_MODULE_0__(this).val();
     drawChart();
   }); // handle manual changes to the chart y-axis labels
 
-  $('#yAxisLabelInput').on('keyup', function () {
-    currentSettings.yaxisLabel = $(this).val();
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#yAxisLabelInput').on('keyup', function () {
+    currentSettings.yaxisLabel = jquery__WEBPACK_IMPORTED_MODULE_0__(this).val();
     drawChart();
   }); // handler for ajax form submission
 
-  $('#tblchartform').on('submit', function () {
-    var $form = $(this);
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#tblchartform').on('submit', function () {
+    var $form = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
 
-    if (codeMirrorEditor) {
-      $form[0].elements.sql_query.value = codeMirrorEditor.getValue();
+    if (window.codeMirrorEditor) {
+      $form[0].elements.sql_query.value = window.codeMirrorEditor.getValue();
     }
 
     if (!Functions.checkSqlQuery($form[0])) {
@@ -394,7 +406,7 @@ AJAX.registerOnload('table/chart.js', function () {
 
     var $msgbox = Functions.ajaxShowMessage();
     Functions.prepareForAjaxRequest($form);
-    $.post($form.attr('action'), $form.serialize(), function (data) {
+    jquery__WEBPACK_IMPORTED_MODULE_0__.post($form.attr('action'), $form.serialize(), function (data) {
       if (typeof data !== 'undefined' && data.success === true && typeof data.chartData !== 'undefined') {
         chartData = JSON.parse(data.chartData);
         drawChart();
@@ -407,31 +419,41 @@ AJAX.registerOnload('table/chart.js', function () {
     return false;
   }); // from jQuery UI
 
-  $('#resizer').resizable({
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#resizer').resizable({
     minHeight: 240,
     minWidth: 300
-  }).width($('#div_view_options').width() - 50).trigger('resizestop');
+  }).width(jquery__WEBPACK_IMPORTED_MODULE_0__('#div_view_options').width() - 50).trigger('resizestop');
   currentSettings = {
     type: 'line',
-    width: $('#resizer').width() - 20,
-    height: $('#resizer').height() - 20,
-    xaxisLabel: $('#xAxisLabelInput').val(),
-    yaxisLabel: $('#yAxisLabelInput').val(),
-    title: $('#chartTitleInput').val(),
+    width: jquery__WEBPACK_IMPORTED_MODULE_0__('#resizer').width() - 20,
+    height: jquery__WEBPACK_IMPORTED_MODULE_0__('#resizer').height() - 20,
+    xaxisLabel: jquery__WEBPACK_IMPORTED_MODULE_0__('#xAxisLabelInput').val(),
+    yaxisLabel: jquery__WEBPACK_IMPORTED_MODULE_0__('#yAxisLabelInput').val(),
+    title: jquery__WEBPACK_IMPORTED_MODULE_0__('#chartTitleInput').val(),
     stackSeries: false,
-    mainAxis: parseInt($('#chartXAxisSelect').val(), 10),
+    mainAxis: parseInt(jquery__WEBPACK_IMPORTED_MODULE_0__('#chartXAxisSelect').val(), 10),
     selectedSeries: getSelectedSeries(),
     seriesColumn: null
   };
-  var vals = $('input[name="dateTimeCols"]').val().split(' ');
-  $.each(vals, function (i, v) {
+  var vals = jquery__WEBPACK_IMPORTED_MODULE_0__('input[name="dateTimeCols"]').val().split(' ');
+  jquery__WEBPACK_IMPORTED_MODULE_0__.each(vals, function (i, v) {
     dateTimeCols.push(parseInt(v, 10));
   });
-  vals = $('input[name="numericCols"]').val().split(' ');
-  $.each(vals, function (i, v) {
+  vals = jquery__WEBPACK_IMPORTED_MODULE_0__('input[name="numericCols"]').val().split(' ');
+  jquery__WEBPACK_IMPORTED_MODULE_0__.each(vals, function (i, v) {
     numericCols.push(parseInt(v, 10));
   });
   onXAxisChange();
   onDataSeriesChange();
-  $('#tblchartform').trigger('submit');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#tblchartform').trigger('submit');
 });
+
+/***/ })
+
+},
+/******/ function(__webpack_require__) { // webpackRuntimeModules
+/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
+/******/ var __webpack_exports__ = (__webpack_exec__(68));
+/******/ }
+]);
+//# sourceMappingURL=chart.js.map

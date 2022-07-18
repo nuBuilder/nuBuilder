@@ -1,7 +1,7 @@
 <tr class="noclick">
   <td class="text-center">
-    {{ column.Field_title }}
-    <input type="hidden" name="fields_name[multi_edit][{{ row_id }}][{{ column.Field_md5 }}]" value="{{ column.Field_html }}">
+    {{ column.Field_title|raw }}
+    <input type="hidden" name="fields_name[multi_edit][{{ row_id }}][{{ column.Field_md5 }}]" value="{{ column.Field }}">
   </td>
 
   {% if show_field_types_in_data_edit_view %}
@@ -119,7 +119,7 @@
       {% endif %}
 
       {% if column.pma_type in gis_data_types %}
-        <span class="open_gis_editor" data-row-id="{{ row_id }}">{{ link_or_button('#', get_icon('b_edit', 'Edit/Insert'|trans), [], '_blank') }}</span>
+        <span class="open_gis_editor" data-row-id="{{ row_id }}">{{ link_or_button('#', null, get_icon('b_edit', 'Edit/Insert'|trans), [], '_blank') }}</span>
       {% endif %}
     {% endif %}
   </td>

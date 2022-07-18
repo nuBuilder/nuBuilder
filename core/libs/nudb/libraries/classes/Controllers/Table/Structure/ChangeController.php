@@ -5,43 +5,33 @@ declare(strict_types=1);
 namespace PhpMyAdmin\Controllers\Table\Structure;
 
 use PhpMyAdmin\CheckUserPrivileges;
-use PhpMyAdmin\ConfigStorage\Relation;
-use PhpMyAdmin\Controllers\Table\AbstractController;
+use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Table\ColumnsDefinition;
 use PhpMyAdmin\Template;
-use PhpMyAdmin\Transformations;
-use PhpMyAdmin\Url;
 
 use function __;
 use function count;
 
 final class ChangeController extends AbstractController
 {
-    /** @var Relation */
-    private $relation;
-
-    /** @var Transformations */
-    private $transformations;
-
     /** @var DatabaseInterface */
     private $dbi;
+
+    /** @var ColumnsDefinition */
+    private $columnsDefinition;
 
     public function __construct(
         ResponseRenderer $response,
         Template $template,
-        string $db,
-        string $table,
-        Relation $relation,
-        Transformations $transformations,
-        DatabaseInterface $dbi
+        DatabaseInterface $dbi,
+        ColumnsDefinition $columnsDefinition
     ) {
-        parent::__construct($response, $template, $db, $table);
-        $this->relation = $relation;
-        $this->transformations = $transformations;
+        parent::__construct($response, $template);
         $this->dbi = $dbi;
+        $this->columnsDefinition = $columnsDefinition;
     }
 
     public function __invoke(): void
@@ -71,7 +61,7 @@ final class ChangeController extends AbstractController
      */
     private function displayHtmlForColumnChange(?array $selected): void
     {
-        global $action, $num_fields;
+        $GLOBALS['num_fields'] = $GLOBALS['num_fields'] ?? null;
 
         if (empty($selected)) {
             $selected[] = $_REQUEST['field'];
@@ -85,7 +75,7 @@ final class ChangeController extends AbstractController
          */
         $fields_meta = [];
         for ($i = 0; $i < $selected_cnt; $i++) {
-            $value = $this->dbi->getColumn($this->db, $this->table, $selected[$i], true);
+            $value = $this->dbi->getColumn($GLOBALS['db'], $GLOBALS['table'], $selected[$i], true);
             if (count($value) === 0) {
                 $message = Message::error(
                     __('Failed to get description of column %s!')
@@ -97,9 +87,7 @@ final class ChangeController extends AbstractController
             }
         }
 
-        $num_fields = count($fields_meta);
-
-        $action = Url::getFromRoute('/table/structure/save');
+        $GLOBALS['num_fields'] = count($fields_meta);
 
         /**
          * Form for changing properties.
@@ -109,12 +97,11 @@ final class ChangeController extends AbstractController
 
         $this->addScriptFiles(['vendor/jquery/jquery.uitablefilter.js', 'indexes.js']);
 
-        $templateData = ColumnsDefinition::displayForm(
-            $this->transformations,
-            $this->relation,
-            $this->dbi,
-            $action,
-            $num_fields,
+        $this->checkParameters(['server', 'db', 'table', 'num_fields']);
+
+        $templateData = $this->columnsDefinition->displayForm(
+            '/table/structure/save',
+            $GLOBALS['num_fields'],
             null,
             $selected,
             $fields_meta

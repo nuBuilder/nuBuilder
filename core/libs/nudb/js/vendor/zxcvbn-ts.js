@@ -353,6 +353,185 @@ this.zxcvbnts.core = (function (exports) {
 
     }
 
+    const peq = new Uint32Array(0x10000);
+    const myers_32 = (a, b) => {
+      const n = a.length;
+      const m = b.length;
+      const lst = 1 << (n - 1);
+      let pv = -1;
+      let mv = 0;
+      let sc = n;
+      let i = n;
+      while (i--) {
+        peq[a.charCodeAt(i)] |= 1 << i;
+      }
+      for (i = 0; i < m; i++) {
+        let eq = peq[b.charCodeAt(i)];
+        const xv = eq | mv;
+        eq |= ((eq & pv) + pv) ^ pv;
+        mv |= ~(eq | pv);
+        pv &= eq;
+        if (mv & lst) {
+          sc++;
+        }
+        if (pv & lst) {
+          sc--;
+        }
+        mv = (mv << 1) | 1;
+        pv = (pv << 1) | ~(xv | mv);
+        mv &= xv;
+      }
+      i = n;
+      while (i--) {
+        peq[a.charCodeAt(i)] = 0;
+      }
+      return sc;
+    };
+
+    const myers_x = (a, b) => {
+      const n = a.length;
+      const m = b.length;
+      const mhc = [];
+      const phc = [];
+      const hsize = Math.ceil(n / 32);
+      const vsize = Math.ceil(m / 32);
+      let score = m;
+      for (let i = 0; i < hsize; i++) {
+        phc[i] = -1;
+        mhc[i] = 0;
+      }
+      let j = 0;
+      for (; j < vsize - 1; j++) {
+        let mv = 0;
+        let pv = -1;
+        const start = j * 32;
+        const end = Math.min(32, m) + start;
+        for (let k = start; k < end; k++) {
+          peq[b.charCodeAt(k)] |= 1 << k;
+        }
+        score = m;
+        for (let i = 0; i < n; i++) {
+          const eq = peq[a.charCodeAt(i)];
+          const pb = (phc[(i / 32) | 0] >>> i) & 1;
+          const mb = (mhc[(i / 32) | 0] >>> i) & 1;
+          const xv = eq | mv;
+          const xh = ((((eq | mb) & pv) + pv) ^ pv) | eq | mb;
+          let ph = mv | ~(xh | pv);
+          let mh = pv & xh;
+          if ((ph >>> 31) ^ pb) {
+            phc[(i / 32) | 0] ^= 1 << i;
+          }
+          if ((mh >>> 31) ^ mb) {
+            mhc[(i / 32) | 0] ^= 1 << i;
+          }
+          ph = (ph << 1) | pb;
+          mh = (mh << 1) | mb;
+          pv = mh | ~(xv | ph);
+          mv = ph & xv;
+        }
+        for (let k = start; k < end; k++) {
+          peq[b.charCodeAt(k)] = 0;
+        }
+      }
+      let mv = 0;
+      let pv = -1;
+      const start = j * 32;
+      const end = Math.min(32, m - start) + start;
+      for (let k = start; k < end; k++) {
+        peq[b.charCodeAt(k)] |= 1 << k;
+      }
+      score = m;
+      for (let i = 0; i < n; i++) {
+        const eq = peq[a.charCodeAt(i)];
+        const pb = (phc[(i / 32) | 0] >>> i) & 1;
+        const mb = (mhc[(i / 32) | 0] >>> i) & 1;
+        const xv = eq | mv;
+        const xh = ((((eq | mb) & pv) + pv) ^ pv) | eq | mb;
+        let ph = mv | ~(xh | pv);
+        let mh = pv & xh;
+        score += (ph >>> (m - 1)) & 1;
+        score -= (mh >>> (m - 1)) & 1;
+        if ((ph >>> 31) ^ pb) {
+          phc[(i / 32) | 0] ^= 1 << i;
+        }
+        if ((mh >>> 31) ^ mb) {
+          mhc[(i / 32) | 0] ^= 1 << i;
+        }
+        ph = (ph << 1) | pb;
+        mh = (mh << 1) | mb;
+        pv = mh | ~(xv | ph);
+        mv = ph & xv;
+      }
+      for (let k = start; k < end; k++) {
+        peq[b.charCodeAt(k)] = 0;
+      }
+      return score;
+    };
+
+    const distance = (a, b) => {
+      if (a.length > b.length) {
+        const tmp = b;
+        b = a;
+        a = tmp;
+      }
+      if (a.length === 0) {
+        return b.length;
+      }
+      if (a.length <= 32) {
+        return myers_32(a, b);
+      }
+      return myers_x(a, b);
+    };
+
+    const closest = (str, arr) => {
+      let min_distance = Infinity;
+      let min_index = 0;
+      for (let i = 0; i < arr.length; i++) {
+        const dist = distance(str, arr[i]);
+        if (dist < min_distance) {
+          min_distance = dist;
+          min_index = i;
+        }
+      }
+      return arr[min_index];
+    };
+
+    var fastestLevenshtein = {
+      closest, distance
+    };
+
+    const getUsedThreshold = (password, entry, threshold) => {
+      const isPasswordToShort = password.length <= entry.length;
+      const isThresholdLongerThanPassword = password.length <= threshold;
+      const shouldUsePasswordLength = isPasswordToShort || isThresholdLongerThanPassword; // if password is too small use the password length divided by 4 while the threshold needs to be at least 1
+
+      return shouldUsePasswordLength ? Math.ceil(password.length / 4) : threshold;
+    };
+
+    const findLevenshteinDistance = (password, rankedDictionary, threshold) => {
+      let foundDistance = 0;
+      const found = Object.keys(rankedDictionary).find(entry => {
+        const usedThreshold = getUsedThreshold(password, entry, threshold);
+        const foundEntryDistance = fastestLevenshtein.distance(password, entry);
+        const isInThreshold = foundEntryDistance <= usedThreshold;
+
+        if (isInThreshold) {
+          foundDistance = foundEntryDistance;
+        }
+
+        return isInThreshold;
+      });
+
+      if (found) {
+        return {
+          levenshteinDistance: foundDistance,
+          levenshteinDistanceEntry: found
+        };
+      }
+
+      return {};
+    };
+
     var l33tTable = {
       a: ['4', '@'],
       b: ['8'],
@@ -384,7 +563,8 @@ this.zxcvbnts.core = (function (exports) {
         wordByItself: 'wordByItself',
         namesByThemselves: 'namesByThemselves',
         commonNames: 'commonNames',
-        userInputs: 'userInputs'
+        userInputs: 'userInputs',
+        pwned: 'pwned'
       },
       suggestions: {
         l33t: 'l33t',
@@ -399,7 +579,8 @@ this.zxcvbnts.core = (function (exports) {
         longerKeyboardPattern: 'longerKeyboardPattern',
         anotherWord: 'anotherWord',
         useWords: 'useWords',
-        noNeed: 'noNeed'
+        noNeed: 'noNeed',
+        pwned: 'pwned'
       },
       timeEstimation: {
         ltSecond: 'ltSecond',
@@ -424,12 +605,14 @@ this.zxcvbnts.core = (function (exports) {
         this.matchers = {};
         this.l33tTable = l33tTable;
         this.dictionary = {
-          userInput: []
+          userInputs: []
         };
         this.rankedDictionaries = {};
         this.translations = translationKeys;
         this.graphs = {};
         this.availableGraphs = [];
+        this.useLevenshteinDistance = false;
+        this.levenshteinThreshold = 2;
         this.setRankedDictionaries();
       }
 
@@ -449,6 +632,14 @@ this.zxcvbnts.core = (function (exports) {
 
         if (options.graphs) {
           this.graphs = options.graphs;
+        }
+
+        if (options.useLevenshteinDistance !== undefined) {
+          this.useLevenshteinDistance = options.useLevenshteinDistance;
+        }
+
+        if (options.levenshteinThreshold !== undefined) {
+          this.levenshteinThreshold = options.levenshteinThreshold;
         }
       }
 
@@ -480,36 +671,49 @@ this.zxcvbnts.core = (function (exports) {
       setRankedDictionaries() {
         const rankedDictionaries = {};
         Object.keys(this.dictionary).forEach(name => {
-          const list = this.dictionary[name];
-
-          if (name === 'userInputs') {
-            const sanitizedInputs = [];
-            list.forEach(input => {
-              const inputType = typeof input;
-
-              if (inputType === 'string' || inputType === 'number' || inputType === 'boolean') {
-                sanitizedInputs.push(input.toString().toLowerCase());
-              }
-            });
-            rankedDictionaries[name] = buildRankedDictionary(sanitizedInputs);
-          } else {
-            rankedDictionaries[name] = buildRankedDictionary(list);
-          }
+          rankedDictionaries[name] = this.getRankedDictionary(name);
         });
         this.rankedDictionaries = rankedDictionaries;
       }
 
-      addMatcher(name, matcher) {
-        if (this.matchers[name]) {
-          throw new Error('Matcher already exists');
+      getRankedDictionary(name) {
+        const list = this.dictionary[name];
+
+        if (name === 'userInputs') {
+          const sanitizedInputs = [];
+          list.forEach(input => {
+            const inputType = typeof input;
+
+            if (inputType === 'string' || inputType === 'number' || inputType === 'boolean') {
+              sanitizedInputs.push(input.toString().toLowerCase());
+            }
+          });
+          return buildRankedDictionary(sanitizedInputs);
         }
 
-        this.matchers[name] = matcher;
+        return buildRankedDictionary(list);
+      }
+
+      extendUserInputsDictionary(dictionary) {
+        if (this.dictionary.userInputs) {
+          this.dictionary.userInputs = [...this.dictionary.userInputs, ...dictionary];
+        } else {
+          this.dictionary.userInputs = dictionary;
+        }
+
+        this.rankedDictionaries.userInputs = this.getRankedDictionary('userInputs');
+      }
+
+      addMatcher(name, matcher) {
+        if (this.matchers[name]) {
+          console.info('Matcher already exists');
+        } else {
+          this.matchers[name] = matcher;
+        }
       }
 
     }
-
-    var Options$1 = new Options();
+    const zxcvbnOptions = new Options();
 
     /*
      * -------------------------------------------------------------------------------
@@ -553,7 +757,7 @@ this.zxcvbnts.core = (function (exports) {
         password
       }) {
         const matches = [];
-        const enumeratedSubs = this.enumerateL33tSubs(this.relevantL33tSubtable(password, Options$1.l33tTable));
+        const enumeratedSubs = this.enumerateL33tSubs(this.relevantL33tSubtable(password, zxcvbnOptions.l33tTable));
 
         for (let i = 0; i < enumeratedSubs.length; i += 1) {
           const sub = enumeratedSubs[i]; // corner case: password has no relevant subs.
@@ -708,28 +912,42 @@ this.zxcvbnts.core = (function (exports) {
       defaultMatch({
         password
       }) {
-        // rankedDictionaries variable is for unit testing purposes
         const matches = [];
         const passwordLength = password.length;
-        const passwordLower = password.toLowerCase();
-        Object.keys(Options$1.rankedDictionaries).forEach(dictionaryName => {
-          const rankedDict = Options$1.rankedDictionaries[dictionaryName];
+        const passwordLower = password.toLowerCase(); // eslint-disable-next-line complexity
+
+        Object.keys(zxcvbnOptions.rankedDictionaries).forEach(dictionaryName => {
+          const rankedDict = zxcvbnOptions.rankedDictionaries[dictionaryName];
 
           for (let i = 0; i < passwordLength; i += 1) {
             for (let j = i; j < passwordLength; j += 1) {
-              if (passwordLower.slice(i, +j + 1 || 9e9) in rankedDict) {
-                const word = passwordLower.slice(i, +j + 1 || 9e9);
-                const rank = rankedDict[word];
+              const usedPassword = passwordLower.slice(i, +j + 1 || 9e9);
+              const isInDictionary = (usedPassword in rankedDict);
+              let foundLevenshteinDistance = {}; // only use levenshtein distance on full password to minimize the performance drop
+              // and because otherwise there would be to many false positives
+
+              const isFullPassword = i === 0 && j === passwordLength - 1;
+
+              if (zxcvbnOptions.useLevenshteinDistance && isFullPassword && !isInDictionary) {
+                foundLevenshteinDistance = findLevenshteinDistance(usedPassword, rankedDict, zxcvbnOptions.levenshteinThreshold);
+              }
+
+              const isLevenshteinMatch = Object.keys(foundLevenshteinDistance).length !== 0;
+
+              if (isInDictionary || isLevenshteinMatch) {
+                const usedRankPassword = isLevenshteinMatch ? foundLevenshteinDistance.levenshteinDistanceEntry : usedPassword;
+                const rank = rankedDict[usedRankPassword];
                 matches.push({
                   pattern: 'dictionary',
                   i,
                   j,
                   token: password.slice(i, +j + 1 || 9e9),
-                  matchedWord: word,
+                  matchedWord: usedPassword,
                   rank,
                   dictionaryName: dictionaryName,
                   reversed: false,
-                  l33t: false
+                  l33t: false,
+                  ...foundLevenshteinDistance
                 });
               }
             }
@@ -1058,8 +1276,8 @@ this.zxcvbnts.core = (function (exports) {
       graph,
       turns
     }) => {
-      const startingPosition = Object.keys(Options$1.graphs[graph]).length;
-      const averageDegree = calcAverageDegree(Options$1.graphs[graph]);
+      const startingPosition = Object.keys(zxcvbnOptions.graphs[graph]).length;
+      const averageDegree = calcAverageDegree(zxcvbnOptions.graphs[graph]);
       let guesses = 0;
       const tokenLength = token.length; // # estimate the number of possible patterns w/ tokenLength or less with turns or less.
 
@@ -1135,8 +1353,8 @@ this.zxcvbnts.core = (function (exports) {
         return matchers[name](match);
       }
 
-      if (Options$1.matchers[name] && 'scoring' in Options$1.matchers[name]) {
-        return Options$1.matchers[name].scoring(match);
+      if (zxcvbnOptions.matchers[name] && 'scoring' in zxcvbnOptions.matchers[name]) {
+        return zxcvbnOptions.matchers[name].scoring(match);
       }
 
       return 0;
@@ -1283,7 +1501,8 @@ this.zxcvbnts.core = (function (exports) {
         const optimalMatchSequence = [];
         let k = passwordLength - 1; // find the final best sequence length and score
 
-        let sequenceLength = 0;
+        let sequenceLength = 0; // eslint-disable-next-line no-loss-of-precision
+
         let g = 2e308;
         const temp = this.optimal.g[k]; // safety check for empty passwords
 
@@ -1414,6 +1633,7 @@ this.zxcvbnts.core = (function (exports) {
      */
 
     class MatchRepeat {
+      // eslint-disable-next-line max-statements
       match({
         password,
         omniMatch
@@ -1437,20 +1657,45 @@ this.zxcvbnts.core = (function (exports) {
           if (match) {
             const j = match.index + match[0].length - 1;
             const baseGuesses = this.getBaseGuesses(baseToken, omniMatch);
-            matches.push({
-              pattern: 'repeat',
-              i: match.index,
-              j,
-              token: match[0],
-              baseToken,
-              baseGuesses,
-              repeatCount: match[0].length / baseToken.length
-            });
+            matches.push(this.normalizeMatch(baseToken, j, match, baseGuesses));
             lastIndex = j + 1;
           }
         }
 
+        const hasPromises = matches.some(match => {
+          return match instanceof Promise;
+        });
+
+        if (hasPromises) {
+          return Promise.all(matches);
+        }
+
         return matches;
+      } // eslint-disable-next-line max-params
+
+
+      normalizeMatch(baseToken, j, match, baseGuesses) {
+        const baseMatch = {
+          pattern: 'repeat',
+          i: match.index,
+          j,
+          token: match[0],
+          baseToken,
+          baseGuesses: 0,
+          repeatCount: match[0].length / baseToken.length
+        };
+
+        if (baseGuesses instanceof Promise) {
+          return baseGuesses.then(resolvedBaseGuesses => {
+            return { ...baseMatch,
+              baseGuesses: resolvedBaseGuesses
+            };
+          });
+        }
+
+        return { ...baseMatch,
+          baseGuesses
+        };
       }
 
       getGreedyMatch(password, lastIndex) {
@@ -1502,7 +1747,16 @@ this.zxcvbnts.core = (function (exports) {
       }
 
       getBaseGuesses(baseToken, omniMatch) {
-        const baseAnalysis = scoring.mostGuessableMatchSequence(baseToken, omniMatch.match(baseToken));
+        const matches = omniMatch.match(baseToken);
+
+        if (matches instanceof Promise) {
+          return matches.then(resolvedMatches => {
+            const baseAnalysis = scoring.mostGuessableMatchSequence(baseToken, resolvedMatches);
+            return baseAnalysis.guesses;
+          });
+        }
+
+        const baseAnalysis = scoring.mostGuessableMatchSequence(baseToken, matches);
         return baseAnalysis.guesses;
       }
 
@@ -1649,8 +1903,8 @@ this.zxcvbnts.core = (function (exports) {
         password
       }) {
         const matches = [];
-        Object.keys(Options$1.graphs).forEach(graphName => {
-          const graph = Options$1.graphs[graphName];
+        Object.keys(zxcvbnOptions.graphs).forEach(graphName => {
+          const graph = zxcvbnOptions.graphs[graphName];
           extend(matches, this.helper(password, graph, graphName));
         });
         return sorted(matches);
@@ -1758,6 +2012,7 @@ this.zxcvbnts.core = (function (exports) {
           date: MatchDate,
           dictionary: MatchDictionary,
           regex: MatchRegex,
+          // @ts-ignore => TODO resolve this type issue. This is because it is possible to be async
           repeat: MatchRepeat,
           sequence: MatchSequence,
           spatial: MatchSpatial
@@ -1766,19 +2021,38 @@ this.zxcvbnts.core = (function (exports) {
 
       match(password) {
         const matches = [];
-        const matchers = [...Object.keys(this.matchers), ...Object.keys(Options$1.matchers)];
+        const promises = [];
+        const matchers = [...Object.keys(this.matchers), ...Object.keys(zxcvbnOptions.matchers)];
         matchers.forEach(key => {
-          if (!this.matchers[key] && !Options$1.matchers[key]) {
+          if (!this.matchers[key] && !zxcvbnOptions.matchers[key]) {
             return;
           }
 
-          const Matcher = this.matchers[key] ? this.matchers[key] : Options$1.matchers[key].Matching;
+          const Matcher = this.matchers[key] ? this.matchers[key] : zxcvbnOptions.matchers[key].Matching;
           const usedMatcher = new Matcher();
-          extend(matches, usedMatcher.match({
+          const result = usedMatcher.match({
             password,
             omniMatch: this
-          }));
+          });
+
+          if (result instanceof Promise) {
+            result.then(response => {
+              extend(matches, response);
+            });
+            promises.push(result);
+          } else {
+            extend(matches, result);
+          }
         });
+
+        if (promises.length > 0) {
+          return new Promise(resolve => {
+            Promise.all(promises).then(() => {
+              resolve(sorted(matches));
+            });
+          });
+        }
+
         return sorted(matches);
       }
 
@@ -1816,7 +2090,7 @@ this.zxcvbnts.core = (function (exports) {
 
         const {
           timeEstimation
-        } = Options$1.translations;
+        } = zxcvbnOptions.translations;
         return timeEstimation[key].replace('{base}', `${value}`);
       }
 
@@ -1827,7 +2101,12 @@ this.zxcvbnts.core = (function (exports) {
           offlineSlowHashing1e4PerSecond: guesses / 1e4,
           offlineFastHashing1e10PerSecond: guesses / 1e10
         };
-        const crackTimesDisplay = {};
+        const crackTimesDisplay = {
+          onlineThrottling100PerHour: '',
+          onlineNoThrottling10PerSecond: '',
+          offlineSlowHashing1e4PerSecond: '',
+          offlineFastHashing1e10PerSecond: ''
+        };
         Object.keys(crackTimesSeconds).forEach(scenario => {
           const seconds = crackTimesSeconds[scenario];
           crackTimesDisplay[scenario] = this.displayTime(seconds);
@@ -1894,8 +2173,8 @@ this.zxcvbnts.core = (function (exports) {
 
     var dateMatcher = (() => {
       return {
-        warning: Options$1.translations.warnings.dates,
-        suggestions: [Options$1.translations.suggestions.dates]
+        warning: zxcvbnOptions.translations.warnings.dates,
+        suggestions: [zxcvbnOptions.translations.suggestions.dates]
       };
     });
 
@@ -1904,14 +2183,14 @@ this.zxcvbnts.core = (function (exports) {
 
       if (isSoleMatch && !match.l33t && !match.reversed) {
         if (match.rank <= 10) {
-          warning = Options$1.translations.warnings.topTen;
+          warning = zxcvbnOptions.translations.warnings.topTen;
         } else if (match.rank <= 100) {
-          warning = Options$1.translations.warnings.topHundred;
+          warning = zxcvbnOptions.translations.warnings.topHundred;
         } else {
-          warning = Options$1.translations.warnings.common;
+          warning = zxcvbnOptions.translations.warnings.common;
         }
       } else if (match.guessesLog10 <= 4) {
-        warning = Options$1.translations.warnings.similarToCommon;
+        warning = zxcvbnOptions.translations.warnings.similarToCommon;
       }
 
       return warning;
@@ -1921,7 +2200,7 @@ this.zxcvbnts.core = (function (exports) {
       let warning = '';
 
       if (isSoleMatch) {
-        warning = Options$1.translations.warnings.wordByItself;
+        warning = zxcvbnOptions.translations.warnings.wordByItself;
       }
 
       return warning;
@@ -1929,10 +2208,10 @@ this.zxcvbnts.core = (function (exports) {
 
     const getDictionaryWarningNames = (match, isSoleMatch) => {
       if (isSoleMatch) {
-        return Options$1.translations.warnings.namesByThemselves;
+        return zxcvbnOptions.translations.warnings.namesByThemselves;
       }
 
-      return Options$1.translations.warnings.commonNames;
+      return zxcvbnOptions.translations.warnings.commonNames;
     };
 
     const getDictionaryWarning = (match, isSoleMatch) => {
@@ -1947,7 +2226,7 @@ this.zxcvbnts.core = (function (exports) {
       } else if (isAName) {
         warning = getDictionaryWarningNames(match, isSoleMatch);
       } else if (dictName === 'userInputs') {
-        warning = Options$1.translations.warnings.userInputs;
+        warning = zxcvbnOptions.translations.warnings.userInputs;
       }
 
       return warning;
@@ -1959,17 +2238,17 @@ this.zxcvbnts.core = (function (exports) {
       const word = match.token;
 
       if (word.match(START_UPPER)) {
-        suggestions.push(Options$1.translations.suggestions.capitalization);
+        suggestions.push(zxcvbnOptions.translations.suggestions.capitalization);
       } else if (word.match(ALL_UPPER_INVERTED) && word.toLowerCase() !== word) {
-        suggestions.push(Options$1.translations.suggestions.allUppercase);
+        suggestions.push(zxcvbnOptions.translations.suggestions.allUppercase);
       }
 
       if (match.reversed && match.token.length >= 4) {
-        suggestions.push(Options$1.translations.suggestions.reverseWords);
+        suggestions.push(zxcvbnOptions.translations.suggestions.reverseWords);
       }
 
       if (match.l33t) {
-        suggestions.push(Options$1.translations.suggestions.l33t);
+        suggestions.push(zxcvbnOptions.translations.suggestions.l33t);
       }
 
       return {
@@ -1981,8 +2260,8 @@ this.zxcvbnts.core = (function (exports) {
     var regexMatcher = (match => {
       if (match.regexName === 'recentYear') {
         return {
-          warning: Options$1.translations.warnings.recentYears,
-          suggestions: [Options$1.translations.suggestions.recentYears, Options$1.translations.suggestions.associatedYears]
+          warning: zxcvbnOptions.translations.warnings.recentYears,
+          suggestions: [zxcvbnOptions.translations.suggestions.recentYears, zxcvbnOptions.translations.suggestions.associatedYears]
         };
       }
 
@@ -1993,35 +2272,35 @@ this.zxcvbnts.core = (function (exports) {
     });
 
     var repeatMatcher = (match => {
-      let warning = Options$1.translations.warnings.extendedRepeat;
+      let warning = zxcvbnOptions.translations.warnings.extendedRepeat;
 
       if (match.baseToken.length === 1) {
-        warning = Options$1.translations.warnings.simpleRepeat;
+        warning = zxcvbnOptions.translations.warnings.simpleRepeat;
       }
 
       return {
         warning,
-        suggestions: [Options$1.translations.suggestions.repeated]
+        suggestions: [zxcvbnOptions.translations.suggestions.repeated]
       };
     });
 
     var sequenceMatcher = (() => {
       return {
-        warning: Options$1.translations.warnings.sequences,
-        suggestions: [Options$1.translations.suggestions.sequences]
+        warning: zxcvbnOptions.translations.warnings.sequences,
+        suggestions: [zxcvbnOptions.translations.suggestions.sequences]
       };
     });
 
     var spatialMatcher = (match => {
-      let warning = Options$1.translations.warnings.keyPattern;
+      let warning = zxcvbnOptions.translations.warnings.keyPattern;
 
       if (match.turns === 1) {
-        warning = Options$1.translations.warnings.straightRow;
+        warning = zxcvbnOptions.translations.warnings.straightRow;
       }
 
       return {
         warning,
-        suggestions: [Options$1.translations.suggestions.longerKeyboardPattern]
+        suggestions: [zxcvbnOptions.translations.suggestions.longerKeyboardPattern]
       };
     });
 
@@ -2054,7 +2333,7 @@ this.zxcvbnts.core = (function (exports) {
       }
 
       setDefaultSuggestions() {
-        this.defaultFeedback.suggestions.push(Options$1.translations.suggestions.useWords, Options$1.translations.suggestions.noNeed);
+        this.defaultFeedback.suggestions.push(zxcvbnOptions.translations.suggestions.useWords, zxcvbnOptions.translations.suggestions.noNeed);
       }
 
       getFeedback(score, sequence) {
@@ -2066,7 +2345,7 @@ this.zxcvbnts.core = (function (exports) {
           return defaultFeedback;
         }
 
-        const extraFeedback = Options$1.translations.suggestions.anotherWord;
+        const extraFeedback = zxcvbnOptions.translations.suggestions.anotherWord;
         const longestMatch = this.getLongestMatch(sequence);
         let feedback = this.getMatchFeedback(longestMatch, sequence.length === 1);
 
@@ -2102,8 +2381,8 @@ this.zxcvbnts.core = (function (exports) {
           return this.matchers[match.pattern](match, isSoleMatch);
         }
 
-        if (Options$1.matchers[match.pattern] && 'feedback' in Options$1.matchers[match.pattern]) {
-          return Options$1.matchers[match.pattern].feedback(match, isSoleMatch);
+        if (zxcvbnOptions.matchers[match.pattern] && 'feedback' in zxcvbnOptions.matchers[match.pattern]) {
+          return zxcvbnOptions.matchers[match.pattern].feedback(match, isSoleMatch);
         }
 
         return defaultFeedback;
@@ -2111,15 +2390,44 @@ this.zxcvbnts.core = (function (exports) {
 
     }
 
+    /**
+     * @link https://davidwalsh.name/javascript-debounce-function
+     */
+    var debounce = ((func, wait, isImmediate) => {
+      let timeout;
+      return function debounce(...args) {
+        const context = this;
+
+        const later = () => {
+          timeout = undefined;
+
+          if (!isImmediate) {
+            func.apply(context, args);
+          }
+        };
+
+        const shouldCallNow = isImmediate && !timeout;
+
+        if (timeout !== undefined) {
+          clearTimeout(timeout);
+        }
+
+        timeout = setTimeout(later, wait);
+
+        if (shouldCallNow) {
+          return func.apply(context, args);
+        }
+
+        return undefined;
+      };
+    });
+
     const time = () => new Date().getTime();
 
-    const zxcvbn = password => {
+    const createReturnValue = (resolvedMatches, password, start) => {
       const feedback = new Feedback();
-      const matching = new Matching();
       const timeEstimates = new TimeEstimates();
-      const start = time();
-      const matches = matching.match(password);
-      const matchSequence = scoring.mostGuessableMatchSequence(password, matches);
+      const matchSequence = scoring.mostGuessableMatchSequence(password, resolvedMatches);
       const calcTime = time() - start;
       const attackTimes = timeEstimates.estimateAttackTimes(matchSequence.guesses);
       return {
@@ -2130,12 +2438,39 @@ this.zxcvbnts.core = (function (exports) {
       };
     };
 
-    exports.ZxcvbnOptions = Options$1;
+    const main = (password, userInputs) => {
+      if (userInputs) {
+        zxcvbnOptions.extendUserInputsDictionary(userInputs);
+      }
+
+      const matching = new Matching();
+      return matching.match(password);
+    };
+
+    const zxcvbn = (password, userInputs) => {
+      const start = time();
+      const matches = main(password, userInputs);
+
+      if (matches instanceof Promise) {
+        throw new Error('You are using a Promised matcher, please use `zxcvbnAsync` for it.');
+      }
+
+      return createReturnValue(matches, password, start);
+    };
+    const zxcvbnAsync = async (password, userInputs) => {
+      const start = time();
+      const matches = await main(password, userInputs);
+      return createReturnValue(matches, password, start);
+    };
+
+    exports.debounce = debounce;
     exports.zxcvbn = zxcvbn;
+    exports.zxcvbnAsync = zxcvbnAsync;
+    exports.zxcvbnOptions = zxcvbnOptions;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
     return exports;
 
-}({}));
+})({});
 //# sourceMappingURL=zxcvbn-ts.js.map

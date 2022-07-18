@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Table;
 
+use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\Core;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Html\Generator;
@@ -15,8 +16,8 @@ use PhpMyAdmin\Util;
 use function __;
 use function htmlspecialchars;
 use function ini_set;
+use function mb_strlen;
 use function sprintf;
-use function strlen;
 
 /**
  * Provides download to a given field defined in parameters.
@@ -29,37 +30,29 @@ class GetFieldController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
-        string $db,
-        string $table,
         DatabaseInterface $dbi
     ) {
-        parent::__construct($response, $template, $db, $table);
+        parent::__construct($response, $template);
         $this->dbi = $dbi;
     }
 
     public function __invoke(): void
     {
-        global $db, $table;
-
         $this->response->disable();
 
-        /* Check parameters */
-        Util::checkParameters([
-            'db',
-            'table',
-        ]);
+        $this->checkParameters(['db', 'table']);
 
         /* Select database */
-        if (! $this->dbi->selectDb($db)) {
+        if (! $this->dbi->selectDb($GLOBALS['db'])) {
             Generator::mysqlDie(
-                sprintf(__('\'%s\' database does not exist.'), htmlspecialchars($db)),
+                sprintf(__('\'%s\' database does not exist.'), htmlspecialchars($GLOBALS['db'])),
                 '',
                 false
             );
         }
 
         /* Check if table exists */
-        if (! $this->dbi->getColumns($db, $table)) {
+        if (! $this->dbi->getColumns($GLOBALS['db'], $GLOBALS['table'])) {
             Generator::mysqlDie(__('Invalid table name'));
         }
 
@@ -76,7 +69,7 @@ class GetFieldController extends AbstractController
 
         /* Grab data */
         $sql = 'SELECT ' . Util::backquote($_GET['transform_key'])
-            . ' FROM ' . Util::backquote($table)
+            . ' FROM ' . Util::backquote($GLOBALS['table'])
             . ' WHERE ' . $_GET['where_clause'] . ';';
         $result = $this->dbi->fetchValue($sql);
 
@@ -94,9 +87,9 @@ class GetFieldController extends AbstractController
         ini_set('url_rewriter.tags', '');
 
         Core::downloadHeader(
-            $table . '-' . $_GET['transform_key'] . '.bin',
+            $GLOBALS['table'] . '-' . $_GET['transform_key'] . '.bin',
             Mime::detect($result),
-            strlen($result)
+            mb_strlen($result, '8bit')
         );
         echo $result;
     }

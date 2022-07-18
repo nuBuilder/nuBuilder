@@ -4137,6 +4137,7 @@
     
 
 
+
     // class: $.jqplot.AxisLabelRenderer
     // Renderer to place labels on the axes.
     $.jqplot.AxisLabelRenderer = function(options) {
@@ -4202,6 +4203,7 @@
     
     $.jqplot.AxisLabelRenderer.prototype.pack = function() {
     };
+
 
     // class: $.jqplot.AxisTickRenderer
     // A "tick" object showing the value of a tick/gridline on the plot.
@@ -4362,6 +4364,7 @@
     
     $.jqplot.AxisTickRenderer.prototype.pack = function() {
     };
+
      
     // Class: $.jqplot.CanvasGridRenderer
     // The default jqPlot grid renderer, creating a grid on a canvas element.
@@ -4715,6 +4718,7 @@
         axes = null;
     };
  
+
     // Class: $.jqplot.DivTitleRenderer
     // The default title renderer for jqPlot.  This class has no options beyond the <Title> class. 
     $.jqplot.DivTitleRenderer = function() {
@@ -4804,6 +4808,7 @@
         // nothing to do here
     };
   
+
 
     var dotlen = 0.1;
 
@@ -4913,6 +4918,7 @@
             closePath: closePath
         };
     };
+
 
     // Class: $.jqplot.LineRenderer
     // The default line renderer for jqPlot, this class has no options beyond the <Series> class.
@@ -6122,6 +6128,7 @@
     
     
 
+
     // class: $.jqplot.LinearAxisRenderer
     // The default jqPlot axis renderer, creating a numeric axis.
     $.jqplot.LinearAxisRenderer = function() {
@@ -7098,6 +7105,7 @@
     };
 
 
+
     /**
     * The following code was generaously given to me a while back by Scott Prahl.
     * He did a good job at computing axes min, max and number of ticks for the 
@@ -7460,6 +7468,7 @@
     $.jqplot.LinearTickGenerator.bestConstrainedInterval = bestConstrainedInterval;
 
 
+
     // class: $.jqplot.MarkerRenderer
     // The default jqPlot marker renderer, rendering the points on the line.
     $.jqplot.MarkerRenderer = function(options){
@@ -7695,6 +7704,7 @@
     };
     
 
+
     // class: $.jqplot.shadowRenderer
     // The default jqPlot shadow renderer, rendering shadows behind shapes.
     $.jqplot.ShadowRenderer = function(options){ 
@@ -7804,6 +7814,7 @@
         ctx.restore();
     };
     
+
     // class: $.jqplot.shapeRenderer
     // The default jqPlot shape renderer.  Given a set of points will
     // plot them and either stroke a line (fill = false) or fill them (fill = true).
@@ -7939,6 +7950,7 @@
         ctx.restore();
     };
     
+
     // class $.jqplot.TableLegendRenderer
     // The default legend renderer for jqPlot.
     $.jqplot.TableLegendRenderer = function(){
@@ -8230,6 +8242,7 @@
             }
         } 
     };
+
 
     /**
      * Class: $.jqplot.ThemeEngine
@@ -9118,6 +9131,7 @@
 
 
 
+
     $.fn.jqplotChildText = function() {
         return $(this).contents().filter(function() {
             return this.nodeType == 3;  // Node.TEXT_NODE not defined in I7
@@ -9411,6 +9425,7 @@
         }
     };
     
+
 
 
 
@@ -10896,6 +10911,7 @@
     
     $.jsDate = jsDate;
 
+
       
     /**
      * JavaScript printf/sprintf functions.
@@ -11194,6 +11210,7 @@
   
 
 
+
     var backCompat = $.uiBackCompat !== false;
 
     $.jqplot.effects = {
@@ -11447,6 +11464,7 @@
             }
         }
     });
+
 
 
 

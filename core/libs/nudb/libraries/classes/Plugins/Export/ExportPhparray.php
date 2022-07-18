@@ -19,7 +19,6 @@ use PhpMyAdmin\Version;
 use function __;
 use function preg_match;
 use function preg_replace;
-use function stripslashes;
 use function strtr;
 use function var_export;
 
@@ -160,13 +159,15 @@ class ExportPhparray extends ExportPlugin
         $sqlQuery,
         array $aliases = []
     ): bool {
-        global $dbi;
-
         $db_alias = $db;
         $table_alias = $table;
         $this->initAlias($aliases, $db_alias, $table_alias);
 
-        $result = $dbi->query($sqlQuery, DatabaseInterface::CONNECT_USER, DatabaseInterface::QUERY_UNBUFFERED);
+        $result = $GLOBALS['dbi']->query(
+            $sqlQuery,
+            DatabaseInterface::CONNECT_USER,
+            DatabaseInterface::QUERY_UNBUFFERED
+        );
 
         $columns_cnt = $result->numFields();
         $columns = [];
@@ -175,7 +176,7 @@ class ExportPhparray extends ExportPlugin
                 $col_as = $aliases[$db]['tables'][$table]['columns'][$col_as];
             }
 
-            $columns[$i] = stripslashes($col_as);
+            $columns[$i] = $col_as;
         }
 
         $tablefixed = $table;

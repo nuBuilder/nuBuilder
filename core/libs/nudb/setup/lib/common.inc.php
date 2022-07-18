@@ -32,14 +32,14 @@ require AUTOLOAD_FILE;
 
 chdir('..');
 
-$isMinimumCommon = true;
+$GLOBALS['isMinimumCommon'] = true;
 
 Common::run();
 
 // use default error handler
 restore_error_handler();
 
-// Save current language in a cookie, required since we set $isMinimumCommon
+// Save current language in a cookie, required since we set $GLOBALS['isMinimumCommon']
 $GLOBALS['config']->setCookie('pma_lang', (string) $GLOBALS['lang']);
 $GLOBALS['config']->set('is_setup', true);
 

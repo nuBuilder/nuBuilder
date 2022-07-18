@@ -6,6 +6,7 @@ namespace PhpMyAdmin\Import;
 
 use PhpMyAdmin\Core;
 
+use function defined;
 use function function_exists;
 use function ini_get;
 use function json_encode;
@@ -35,7 +36,7 @@ final class Ajax
         /**
          * unique ID for each upload
          */
-        $upload_id = uniqid('');
+        $upload_id = ! defined('TESTSUITE') ? uniqid('') : 'abc1234567890';
 
         /**
          * list of available plugins
@@ -71,7 +72,7 @@ final class Ajax
      */
     public static function progressCheck(): bool
     {
-        return function_exists('uploadprogress_get_info');
+        return ! defined('TESTSUITE') && function_exists('uploadprogress_get_info');
     }
 
     /**
@@ -79,7 +80,7 @@ final class Ajax
      */
     public static function sessionCheck(): bool
     {
-        return ini_get('session.upload_progress.enabled') === '1';
+        return ! defined('TESTSUITE') && ini_get('session.upload_progress.enabled') === '1';
     }
 
     /**

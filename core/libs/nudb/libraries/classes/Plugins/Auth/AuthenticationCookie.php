@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Plugins\Auth;
 
+use PhpMyAdmin\Common;
 use PhpMyAdmin\Config;
 use PhpMyAdmin\Core;
 use PhpMyAdmin\LanguageManager;
@@ -18,21 +19,17 @@ use PhpMyAdmin\Session;
 use PhpMyAdmin\Url;
 use PhpMyAdmin\Util;
 use PhpMyAdmin\Utils\SessionCache;
-use phpseclib3\Crypt\AES;
-use phpseclib3\Crypt\Random;
 use ReCaptcha;
+use Throwable;
 
 use function __;
 use function array_keys;
 use function base64_decode;
 use function base64_encode;
-use function class_exists;
 use function count;
 use function defined;
 use function explode;
 use function function_exists;
-use function hash_equals;
-use function hash_hmac;
 use function in_array;
 use function ini_get;
 use function intval;
@@ -40,52 +37,24 @@ use function is_array;
 use function is_string;
 use function json_decode;
 use function json_encode;
-use function openssl_cipher_iv_length;
-use function openssl_decrypt;
-use function openssl_encrypt;
-use function openssl_error_string;
-use function openssl_random_pseudo_bytes;
+use function mb_strlen;
+use function mb_substr;
 use function preg_match;
+use function random_bytes;
 use function session_id;
+use function sodium_crypto_secretbox;
+use function sodium_crypto_secretbox_open;
 use function strlen;
-use function substr;
 use function time;
+
+use const SODIUM_CRYPTO_SECRETBOX_KEYBYTES;
+use const SODIUM_CRYPTO_SECRETBOX_NONCEBYTES;
 
 /**
  * Handles the cookie authentication method
  */
 class AuthenticationCookie extends AuthenticationPlugin
 {
-    /**
-     * IV for encryption
-     *
-     * @var string|null
-     */
-    private $cookieIv = null;
-
-    /**
-     * Whether to use OpenSSL directly
-     *
-     * @var bool
-     */
-    private $useOpenSsl;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->useOpenSsl = ! class_exists(Random::class);
-    }
-
-    /**
-     * Forces (not)using of openSSL
-     *
-     * @param bool $use The flag
-     */
-    public function setUseOpenSSL($use): void
-    {
-        $this->useOpenSsl = $use;
-    }
-
     /**
      * Displays authentication form
      *
@@ -95,7 +64,7 @@ class AuthenticationCookie extends AuthenticationPlugin
      */
     public function showLoginForm(): bool
     {
-        global $conn_error, $route;
+        $GLOBALS['conn_error'] = $GLOBALS['conn_error'] ?? null;
 
         $response = ResponseRenderer::getInstance();
 
@@ -158,8 +127,8 @@ class AuthenticationCookie extends AuthenticationPlugin
 
         $errorMessages = '';
         // Show error message
-        if (! empty($conn_error)) {
-            $errorMessages = Message::rawError((string) $conn_error)->getDisplay();
+        if (! empty($GLOBALS['conn_error'])) {
+            $errorMessages = Message::rawError((string) $GLOBALS['conn_error'])->getDisplay();
         } elseif (isset($_GET['session_expired']) && intval($_GET['session_expired']) == 1) {
             $errorMessages = Message::rawError(
                 __('Your session has expired. Please log in again.')
@@ -179,9 +148,7 @@ class AuthenticationCookie extends AuthenticationPlugin
         }
 
         $_form_params = [];
-        if (isset($route)) {
-            $_form_params['route'] = $route;
-        }
+        $_form_params['route'] = Common::getRequest()->getRoute();
 
         if (strlen($GLOBALS['db'])) {
             $_form_params['db'] = $GLOBALS['db'];
@@ -259,7 +226,7 @@ class AuthenticationCookie extends AuthenticationPlugin
      */
     public function readCredentials(): bool
     {
-        global $conn_error;
+        $GLOBALS['conn_error'] = $GLOBALS['conn_error'] ?? null;
 
         // Initialization
         /**
@@ -281,7 +248,9 @@ class AuthenticationCookie extends AuthenticationPlugin
                 && ! empty($GLOBALS['cfg']['CaptchaLoginPublicKey'])
             ) {
                 if (empty($_POST[$GLOBALS['cfg']['CaptchaResponseParam']])) {
-                    $conn_error = __('Missing reCAPTCHA verification, maybe it has been blocked by adblock?');
+                    $GLOBALS['conn_error'] = __(
+                        'Missing reCAPTCHA verification, maybe it has been blocked by adblock?'
+                    );
 
                     return false;
                 }
@@ -316,9 +285,9 @@ class AuthenticationCookie extends AuthenticationPlugin
                     $codes = $resp->getErrorCodes();
 
                     if (in_array('invalid-json', $codes)) {
-                        $conn_error = __('Failed to connect to the reCAPTCHA service!');
+                        $GLOBALS['conn_error'] = __('Failed to connect to the reCAPTCHA service!');
                     } else {
-                        $conn_error = __('Entered captcha is wrong, try again!');
+                        $GLOBALS['conn_error'] = __('Entered captcha is wrong, try again!');
                     }
 
                     return false;
@@ -330,7 +299,7 @@ class AuthenticationCookie extends AuthenticationPlugin
 
             $password = $_POST['pma_password'] ?? '';
             if (strlen($password) >= 1000) {
-                $conn_error = __('Your password is too long. To prevent denial-of-service attacks, ' .
+                $GLOBALS['conn_error'] = __('Your password is too long. To prevent denial-of-service attacks, ' .
                     'phpMyAdmin restricts passwords to less than 1000 characters.');
 
                 return false;
@@ -349,7 +318,7 @@ class AuthenticationCookie extends AuthenticationPlugin
 
                     $match = preg_match($GLOBALS['cfg']['ArbitraryServerRegexp'], $tmp_host);
                     if (! $match) {
-                        $conn_error = __('You are not allowed to log in to this MySQL server!');
+                        $GLOBALS['conn_error'] = __('You are not allowed to log in to this MySQL server!');
 
                         return false;
                     }
@@ -378,7 +347,7 @@ class AuthenticationCookie extends AuthenticationPlugin
             $this->getEncryptionSecret()
         );
 
-        if ($value === false) {
+        if ($value === null) {
             return false;
         }
 
@@ -429,7 +398,7 @@ class AuthenticationCookie extends AuthenticationPlugin
             $serverCookie,
             $this->getSessionEncryptionSecret()
         );
-        if ($value === false) {
+        if ($value === null) {
             return false;
         }
 
@@ -456,8 +425,6 @@ class AuthenticationCookie extends AuthenticationPlugin
      */
     public function storeCredentials(): bool
     {
-        global $cfg;
-
         if ($GLOBALS['cfg']['AllowArbitraryServer'] && ! empty($GLOBALS['pma_auth_server'])) {
             /* Allow to specify 'host port' */
             $parts = explode(' ', $GLOBALS['pma_auth_server']);
@@ -469,10 +436,10 @@ class AuthenticationCookie extends AuthenticationPlugin
                 $tmp_port = '';
             }
 
-            if ($cfg['Server']['host'] != $GLOBALS['pma_auth_server']) {
-                $cfg['Server']['host'] = $tmp_host;
+            if ($GLOBALS['cfg']['Server']['host'] != $GLOBALS['pma_auth_server']) {
+                $GLOBALS['cfg']['Server']['host'] = $tmp_host;
                 if (! empty($tmp_port)) {
-                    $cfg['Server']['port'] = $tmp_port;
+                    $GLOBALS['cfg']['Server']['port'] = $tmp_port;
                 }
             }
 
@@ -487,8 +454,6 @@ class AuthenticationCookie extends AuthenticationPlugin
      */
     public function rememberCredentials(): void
     {
-        global $route;
-
         // Name and password cookies need to be refreshed each time
         // Duration = one month for username
         $this->storeUsernameCookie($this->user);
@@ -502,9 +467,7 @@ class AuthenticationCookie extends AuthenticationPlugin
 
         // any parameters to pass?
         $url_params = [];
-        if (isset($route)) {
-            $url_params['route'] = $route;
-        }
+        $url_params['route'] = Common::getRequest()->getRoute();
 
         if (strlen($GLOBALS['db']) > 0) {
             $url_params['db'] = $GLOBALS['db'];
@@ -585,7 +548,7 @@ class AuthenticationCookie extends AuthenticationPlugin
         $GLOBALS['config']->setCookie(
             'pmaAuth-' . $GLOBALS['server'],
             $this->cookieEncrypt(
-                json_encode($payload),
+                (string) json_encode($payload),
                 $this->getSessionEncryptionSecret()
             ),
             null,
@@ -606,14 +569,14 @@ class AuthenticationCookie extends AuthenticationPlugin
      */
     public function showFailure($failure): void
     {
-        global $conn_error;
+        $GLOBALS['conn_error'] = $GLOBALS['conn_error'] ?? null;
 
         parent::showFailure($failure);
 
         // Deletes password cookie and displays the login form
         $GLOBALS['config']->removeCookie('pmaAuth-' . $GLOBALS['server']);
 
-        $conn_error = $this->getErrorMessage($failure);
+        $GLOBALS['conn_error'] = $this->getErrorMessage($failure);
 
         $response = ResponseRenderer::getInstance();
 
@@ -626,256 +589,61 @@ class AuthenticationCookie extends AuthenticationPlugin
 
     /**
      * Returns blowfish secret or generates one if needed.
-     *
-     * @return string
      */
-    private function getEncryptionSecret()
+    private function getEncryptionSecret(): string
     {
-        if (empty($GLOBALS['cfg']['blowfish_secret'])) {
-            return $this->getSessionEncryptionSecret();
+        $key = $GLOBALS['cfg']['blowfish_secret'] ?? null;
+        if (is_string($key) && mb_strlen($key, '8bit') === SODIUM_CRYPTO_SECRETBOX_KEYBYTES) {
+            return $key;
         }
 
-        return $GLOBALS['cfg']['blowfish_secret'];
+        return $this->getSessionEncryptionSecret();
     }
 
     /**
      * Returns blowfish secret or generates one if needed.
-     *
-     * @return string
      */
-    private function getSessionEncryptionSecret()
+    private function getSessionEncryptionSecret(): string
     {
-        if (empty($_SESSION['encryption_key'])) {
-            if ($this->useOpenSsl) {
-                $_SESSION['encryption_key'] = openssl_random_pseudo_bytes(32);
-            } else {
-                $_SESSION['encryption_key'] = Random::string(32);
-            }
+        $key = $_SESSION['encryption_key'] ?? null;
+        if (is_string($key) && mb_strlen($key, '8bit') === SODIUM_CRYPTO_SECRETBOX_KEYBYTES) {
+            return $key;
         }
 
-        return $_SESSION['encryption_key'];
+        $key = random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES);
+        $_SESSION['encryption_key'] = $key;
+
+        return $key;
     }
 
-    /**
-     * Concatenates secret in order to make it 16 bytes log
-     *
-     * This doesn't add any security, just ensures the secret
-     * is long enough by copying it.
-     *
-     * @param string $secret Original secret
-     *
-     * @return string
-     */
-    public function enlargeSecret($secret)
+    public function cookieEncrypt(string $data, string $secret): string
     {
-        while (strlen($secret) < 16) {
-            $secret .= $secret;
+        try {
+            $nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
+            $ciphertext = sodium_crypto_secretbox($data, $nonce, $secret);
+        } catch (Throwable $throwable) {
+            return '';
         }
 
-        return substr($secret, 0, 16);
+        return base64_encode($nonce . $ciphertext);
     }
 
-    /**
-     * Derives MAC secret from encryption secret.
-     *
-     * @param string $secret the secret
-     *
-     * @return string the MAC secret
-     */
-    public function getMACSecret($secret)
+    public function cookieDecrypt(string $encryptedData, string $secret): ?string
     {
-        // Grab first part, up to 16 chars
-        // The MAC and AES secrets can overlap if original secret is short
-        $length = strlen($secret);
-        if ($length > 16) {
-            return substr($secret, 0, 16);
+        $encrypted = base64_decode($encryptedData);
+        $nonce = mb_substr($encrypted, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, '8bit');
+        $ciphertext = mb_substr($encrypted, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, null, '8bit');
+        try {
+            $decrypted = sodium_crypto_secretbox_open($ciphertext, $nonce, $secret);
+        } catch (Throwable $throwable) {
+            return null;
         }
 
-        return $this->enlargeSecret(
-            $length == 1 ? $secret : substr($secret, 0, -1)
-        );
-    }
-
-    /**
-     * Derives AES secret from encryption secret.
-     *
-     * @param string $secret the secret
-     *
-     * @return string the AES secret
-     */
-    public function getAESSecret($secret)
-    {
-        // Grab second part, up to 16 chars
-        // The MAC and AES secrets can overlap if original secret is short
-        $length = strlen($secret);
-        if ($length > 16) {
-            return substr($secret, -16);
+        if (! is_string($decrypted)) {
+            return null;
         }
 
-        return $this->enlargeSecret(
-            $length == 1 ? $secret : substr($secret, 1)
-        );
-    }
-
-    /**
-     * Cleans any SSL errors
-     *
-     * This can happen from corrupted cookies, by invalid encryption
-     * parameters used in older phpMyAdmin versions or by wrong openSSL
-     * configuration.
-     *
-     * In neither case the error is useful to user, but we need to clear
-     * the error buffer as otherwise the errors would pop up later, for
-     * example during MySQL SSL setup.
-     */
-    public function cleanSSLErrors(): void
-    {
-        if (! function_exists('openssl_error_string')) {
-            return;
-        }
-
-        do {
-            $hasSslErrors = openssl_error_string();
-        } while ($hasSslErrors !== false);
-    }
-
-    /**
-     * Encryption using openssl's AES or phpseclib's AES
-     * (phpseclib uses another extension when it is available)
-     *
-     * @param string $data   original data
-     * @param string $secret the secret
-     *
-     * @return string the encrypted result
-     */
-    public function cookieEncrypt($data, $secret)
-    {
-        $mac_secret = $this->getMACSecret($secret);
-        $aes_secret = $this->getAESSecret($secret);
-        $iv = $this->createIV();
-        if ($this->useOpenSsl) {
-            $result = openssl_encrypt($data, 'AES-128-CBC', $aes_secret, 0, $iv);
-        } else {
-            $cipher = new AES('cbc');
-            $cipher->setIV($iv);
-            $cipher->setKey($aes_secret);
-            $result = base64_encode($cipher->encrypt($data));
-        }
-
-        $this->cleanSSLErrors();
-        $iv = base64_encode($iv);
-
-        return json_encode(
-            [
-                'iv' => $iv,
-                'mac' => hash_hmac('sha1', $iv . $result, $mac_secret),
-                'payload' => $result,
-            ]
-        );
-    }
-
-    /**
-     * Decryption using openssl's AES or phpseclib's AES
-     * (phpseclib uses another extension when it is available)
-     *
-     * @param string $encdata encrypted data
-     * @param string $secret  the secret
-     *
-     * @return string|false original data, false on error
-     */
-    public function cookieDecrypt($encdata, $secret)
-    {
-        $data = json_decode($encdata, true);
-
-        if (
-            ! isset($data['mac'], $data['iv'], $data['payload'])
-            || ! is_array($data)
-            || ! is_string($data['mac'])
-            || ! is_string($data['iv'])
-            || ! is_string($data['payload'])
-        ) {
-            return false;
-        }
-
-        $mac_secret = $this->getMACSecret($secret);
-        $aes_secret = $this->getAESSecret($secret);
-        $newmac = hash_hmac('sha1', $data['iv'] . $data['payload'], $mac_secret);
-
-        if (! hash_equals($data['mac'], $newmac)) {
-            return false;
-        }
-
-        if ($this->useOpenSsl) {
-            $result = openssl_decrypt(
-                $data['payload'],
-                'AES-128-CBC',
-                $aes_secret,
-                0,
-                base64_decode($data['iv'])
-            );
-        } else {
-            $cipher = new AES('cbc');
-            $cipher->setIV(base64_decode($data['iv']));
-            $cipher->setKey($aes_secret);
-            $result = $cipher->decrypt(base64_decode($data['payload']));
-        }
-
-        $this->cleanSSLErrors();
-
-        return $result;
-    }
-
-    /**
-     * Returns size of IV for encryption.
-     *
-     * @return int
-     */
-    public function getIVSize()
-    {
-        if ($this->useOpenSsl) {
-            return openssl_cipher_iv_length('AES-128-CBC');
-        }
-
-        return (new AES('cbc'))->getBlockLengthInBytes();
-    }
-
-    /**
-     * Initialization
-     * Store the initialization vector because it will be needed for
-     * further decryption. I don't think necessary to have one iv
-     * per server so I don't put the server number in the cookie name.
-     *
-     * @return string
-     */
-    public function createIV()
-    {
-        /* Testsuite shortcut only to allow predictable IV */
-        if ($this->cookieIv !== null) {
-            return $this->cookieIv;
-        }
-
-        if ($this->useOpenSsl) {
-            $bytes = openssl_random_pseudo_bytes($this->getIVSize());
-            if ($bytes !== false) {
-                return $bytes;
-            }
-        }
-
-        return Random::string(
-            $this->getIVSize()
-        );
-    }
-
-    /**
-     * Sets encryption IV to use
-     *
-     * This is for testing only!
-     *
-     * @param string $vector The IV
-     */
-    public function setIV($vector): void
-    {
-        $this->cookieIv = $vector;
+        return $decrypted;
     }
 
     /**
@@ -893,23 +661,23 @@ class AuthenticationCookie extends AuthenticationPlugin
      */
     public function logOut(): void
     {
-        global $config;
+        $GLOBALS['config'] = $GLOBALS['config'] ?? null;
 
         // -> delete password cookie(s)
         if ($GLOBALS['cfg']['LoginCookieDeleteAll']) {
             foreach (array_keys($GLOBALS['cfg']['Servers']) as $key) {
-                $config->removeCookie('pmaAuth-' . $key);
-                if (! $config->issetCookie('pmaAuth-' . $key)) {
+                $GLOBALS['config']->removeCookie('pmaAuth-' . $key);
+                if (! $GLOBALS['config']->issetCookie('pmaAuth-' . $key)) {
                     continue;
                 }
 
-                $config->removeCookie('pmaAuth-' . $key);
+                $GLOBALS['config']->removeCookie('pmaAuth-' . $key);
             }
         } else {
             $cookieName = 'pmaAuth-' . $GLOBALS['server'];
-            $config->removeCookie($cookieName);
-            if ($config->issetCookie($cookieName)) {
-                $config->removeCookie($cookieName);
+            $GLOBALS['config']->removeCookie($cookieName);
+            if ($GLOBALS['config']->issetCookie($cookieName)) {
+                $GLOBALS['config']->removeCookie($cookieName);
             }
         }
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhpMyAdmin\Controllers\Database;
 
 use PhpMyAdmin\Config\PageSettings;
+use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\Export;
 use PhpMyAdmin\Export\Options;
 use PhpMyAdmin\Message;
@@ -29,20 +30,27 @@ final class ExportController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
-        string $db,
         Export $export,
         Options $exportOptions
     ) {
-        parent::__construct($response, $template, $db);
+        parent::__construct($response, $template);
         $this->export = $export;
         $this->exportOptions = $exportOptions;
     }
 
     public function __invoke(): void
     {
-        global $db, $table, $sub_part, $urlParams, $sql_query;
-        global $tables, $num_tables, $total_num_tables, $tooltip_truename;
-        global $tooltip_aliasname, $pos, $table_select, $unlim_num_rows, $cfg, $errorUrl;
+        $GLOBALS['sub_part'] = $GLOBALS['sub_part'] ?? null;
+        $GLOBALS['urlParams'] = $GLOBALS['urlParams'] ?? null;
+        $GLOBALS['tables'] = $GLOBALS['tables'] ?? null;
+        $GLOBALS['num_tables'] = $GLOBALS['num_tables'] ?? null;
+        $GLOBALS['total_num_tables'] = $GLOBALS['total_num_tables'] ?? null;
+        $GLOBALS['tooltip_truename'] = $GLOBALS['tooltip_truename'] ?? null;
+        $GLOBALS['tooltip_aliasname'] = $GLOBALS['tooltip_aliasname'] ?? null;
+        $GLOBALS['pos'] = $GLOBALS['pos'] ?? null;
+        $GLOBALS['table_select'] = $GLOBALS['table_select'] ?? null;
+        $GLOBALS['unlim_num_rows'] = $GLOBALS['unlim_num_rows'] ?? null;
+        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
 
         $pageSettings = new PageSettings('Export');
         $pageSettingsErrorHtml = $pageSettings->getErrorHTML();
@@ -52,31 +60,31 @@ final class ExportController extends AbstractController
 
         // $sub_part is used in Util::getDbInfo() to see if we are coming from
         // /database/export, in which case we don't obey $cfg['MaxTableList']
-        $sub_part = '_export';
+        $GLOBALS['sub_part'] = '_export';
 
-        Util::checkParameters(['db']);
+        $this->checkParameters(['db']);
 
-        $errorUrl = Util::getScriptNameForOption($cfg['DefaultTabDatabase'], 'database');
-        $errorUrl .= Url::getCommon(['db' => $db], '&');
+        $GLOBALS['errorUrl'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabDatabase'], 'database');
+        $GLOBALS['errorUrl'] .= Url::getCommon(['db' => $GLOBALS['db']], '&');
 
         if (! $this->hasDatabase()) {
             return;
         }
 
-        $urlParams['goto'] = Url::getFromRoute('/database/export');
+        $GLOBALS['urlParams']['goto'] = Url::getFromRoute('/database/export');
 
         [
-            $tables,
-            $num_tables,
-            $total_num_tables,
-            $sub_part,,,
-            $tooltip_truename,
-            $tooltip_aliasname,
-            $pos,
-        ] = Util::getDbInfo($db, $sub_part);
+            $GLOBALS['tables'],
+            $GLOBALS['num_tables'],
+            $GLOBALS['total_num_tables'],
+            $GLOBALS['sub_part'],,,
+            $GLOBALS['tooltip_truename'],
+            $GLOBALS['tooltip_aliasname'],
+            $GLOBALS['pos'],
+        ] = Util::getDbInfo($GLOBALS['db'], $GLOBALS['sub_part']);
 
         // exit if no tables in db found
-        if ($num_tables < 1) {
+        if ($GLOBALS['num_tables'] < 1) {
             $this->response->addHTML(
                 Message::error(__('No tables found in database.'))->getDisplay()
             );
@@ -84,17 +92,17 @@ final class ExportController extends AbstractController
             return;
         }
 
-        if (! empty($_POST['selected_tbl']) && empty($table_select)) {
-            $table_select = $_POST['selected_tbl'];
+        if (! empty($_POST['selected_tbl']) && empty($GLOBALS['table_select'])) {
+            $GLOBALS['table_select'] = $_POST['selected_tbl'];
         }
 
         $tablesForMultiValues = [];
 
-        foreach ($tables as $each_table) {
+        foreach ($GLOBALS['tables'] as $each_table) {
             if (isset($_POST['table_select']) && is_array($_POST['table_select'])) {
                 $is_checked = $this->export->getCheckedClause($each_table['Name'], $_POST['table_select']);
-            } elseif (isset($table_select)) {
-                $is_checked = $this->export->getCheckedClause($each_table['Name'], $table_select);
+            } elseif (isset($GLOBALS['table_select'])) {
+                $is_checked = $this->export->getCheckedClause($each_table['Name'], $GLOBALS['table_select']);
             } else {
                 $is_checked = true;
             }
@@ -119,12 +127,12 @@ final class ExportController extends AbstractController
             ];
         }
 
-        if (! isset($sql_query)) {
-            $sql_query = '';
+        if (! isset($GLOBALS['sql_query'])) {
+            $GLOBALS['sql_query'] = '';
         }
 
-        if (! isset($unlim_num_rows)) {
-            $unlim_num_rows = 0;
+        if (! isset($GLOBALS['unlim_num_rows'])) {
+            $GLOBALS['unlim_num_rows'] = 0;
         }
 
         $isReturnBackFromRawExport = isset($_POST['export_type']) && $_POST['export_type'] === 'raw';
@@ -148,11 +156,11 @@ final class ExportController extends AbstractController
 
         $options = $this->exportOptions->getOptions(
             $export_type,
-            $db,
-            $table,
-            $sql_query,
-            $num_tables,
-            $unlim_num_rows,
+            $GLOBALS['db'],
+            $GLOBALS['table'],
+            $GLOBALS['sql_query'],
+            $GLOBALS['num_tables'],
+            $GLOBALS['unlim_num_rows'],
             $exportList
         );
 

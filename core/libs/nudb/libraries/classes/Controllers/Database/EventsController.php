@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Database;
 
+use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\Database\Events;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\ResponseRenderer;
@@ -24,62 +25,69 @@ final class EventsController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
-        string $db,
         Events $events,
         DatabaseInterface $dbi
     ) {
-        parent::__construct($response, $template, $db);
+        parent::__construct($response, $template);
         $this->events = $events;
         $this->dbi = $dbi;
     }
 
     public function __invoke(): void
     {
-        global $db, $tables, $num_tables, $total_num_tables, $sub_part, $errors, $text_dir;
-        global $tooltip_truename, $tooltip_aliasname, $pos, $cfg, $errorUrl;
+        $GLOBALS['tables'] = $GLOBALS['tables'] ?? null;
+        $GLOBALS['num_tables'] = $GLOBALS['num_tables'] ?? null;
+        $GLOBALS['total_num_tables'] = $GLOBALS['total_num_tables'] ?? null;
+        $GLOBALS['sub_part'] = $GLOBALS['sub_part'] ?? null;
+        $GLOBALS['errors'] = $GLOBALS['errors'] ?? null;
+        $GLOBALS['text_dir'] = $GLOBALS['text_dir'] ?? null;
+        $GLOBALS['tooltip_truename'] = $GLOBALS['tooltip_truename'] ?? null;
+        $GLOBALS['tooltip_aliasname'] = $GLOBALS['tooltip_aliasname'] ?? null;
+        $GLOBALS['pos'] = $GLOBALS['pos'] ?? null;
+        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
 
         $this->addScriptFiles(['database/events.js']);
 
         if (! $this->response->isAjax()) {
-            Util::checkParameters(['db']);
+            $this->checkParameters(['db']);
 
-            $errorUrl = Util::getScriptNameForOption($cfg['DefaultTabDatabase'], 'database');
-            $errorUrl .= Url::getCommon(['db' => $db], '&');
+            $GLOBALS['errorUrl'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabDatabase'], 'database');
+            $GLOBALS['errorUrl'] .= Url::getCommon(['db' => $GLOBALS['db']], '&');
 
             if (! $this->hasDatabase()) {
                 return;
             }
 
             [
-                $tables,
-                $num_tables,
-                $total_num_tables,
-                $sub_part,,,
-                $tooltip_truename,
-                $tooltip_aliasname,
-                $pos,
-            ] = Util::getDbInfo($db, $sub_part ?? '');
-        } elseif (strlen($db) > 0) {
-            $this->dbi->selectDb($db);
+                $GLOBALS['tables'],
+                $GLOBALS['num_tables'],
+                $GLOBALS['total_num_tables'],
+                $GLOBALS['sub_part'],,,
+                $GLOBALS['tooltip_truename'],
+                $GLOBALS['tooltip_aliasname'],
+                $GLOBALS['pos'],
+            ] = Util::getDbInfo($GLOBALS['db'], $GLOBALS['sub_part'] ?? '');
+        } elseif (strlen($GLOBALS['db']) > 0) {
+            $this->dbi->selectDb($GLOBALS['db']);
         }
 
         /**
          * Keep a list of errors that occurred while
          * processing an 'Add' or 'Edit' operation.
          */
-        $errors = [];
+        $GLOBALS['errors'] = [];
 
         $this->events->handleEditor();
         $this->events->export();
 
-        $items = $this->dbi->getEvents($db);
+        $items = $this->dbi->getEvents($GLOBALS['db']);
 
         $this->render('database/events/index', [
-            'db' => $db,
+            'db' => $GLOBALS['db'],
             'items' => $items,
-            'has_privilege' => Util::currentUserHasPrivilege('EVENT', $db),
+            'has_privilege' => Util::currentUserHasPrivilege('EVENT', $GLOBALS['db']),
             'scheduler_state' => $this->events->getEventSchedulerStatus(),
-            'text_dir' => $text_dir,
+            'text_dir' => $GLOBALS['text_dir'],
             'is_ajax' => $this->response->isAjax() && empty($_REQUEST['ajax_page_request']),
         ]);
     }

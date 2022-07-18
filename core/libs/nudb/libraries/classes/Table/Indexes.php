@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Table;
 
+use PhpMyAdmin\Common;
 use PhpMyAdmin\Controllers\Table\StructureController;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Html\Generator;
@@ -44,7 +45,7 @@ final class Indexes
      */
     public function doSaveData(Index $index, bool $renameMode, string $db, string $table): void
     {
-        global $containerBuilder;
+        $GLOBALS['containerBuilder'] = $GLOBALS['containerBuilder'] ?? null;
 
         $error = false;
         if ($renameMode && Compatibility::isCompatibleRenameIndex($this->dbi->getVersion())) {
@@ -106,8 +107,8 @@ final class Indexes
                 );
             } else {
                 /** @var StructureController $controller */
-                $controller = $containerBuilder->get(StructureController::class);
-                $controller();
+                $controller = $GLOBALS['containerBuilder']->get(StructureController::class);
+                $controller(Common::getRequest());
             }
         } else {
             $this->response->setRequestStatus(false);

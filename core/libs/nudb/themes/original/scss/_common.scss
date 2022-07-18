@@ -126,6 +126,19 @@ div.null_div {
   text-align: center;
   font-style: normal;
   min-width: 50px;
+
+  label {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+
+    input {
+      cursor: pointer;
+    }
+  }
 }
 
 .pma-fieldset {
@@ -159,7 +172,7 @@ th.condition {
  */
 td.null {
   font-style: italic;
-  color: #7d7d7d;
+  color: #7d7d7d !important;
 }
 
 table {
@@ -675,6 +688,7 @@ table#chartGrid {
   div.monitorChart {
     background: #ebebeb;
     border: none;
+    min-width: 1px;
   }
 }
 
@@ -1008,10 +1022,6 @@ select.invalid_value,
  */
 #create_table_form table.table-name td {
   vertical-align: middle;
-}
-
-#tablestructure tbody label {
-  margin: 0.3rem 0;
 }
 
 #structure-action-links a {
@@ -1494,12 +1504,6 @@ input#auto_increment_opt {
   }
 }
 
-.sticky {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 60px;
-}
-
 .pma_table {
   td {
     position: static;
@@ -1596,6 +1600,8 @@ input#auto_increment_opt {
   position: absolute;
   margin-left: 75%;
   right: 0;
+  max-width: 100%;
+  overflow-wrap: break-word;
 
   .lDiv div {
     padding: 0.2em 0.5em 0.2em 0.2em;
@@ -2598,10 +2604,6 @@ body {
 @media only screen and (max-width: 768px) {
   .responsivetable {
     overflow-x: auto;
-  }
-
-  .sticky {
-    top: 0;
   }
 
   body#loginform div.container {

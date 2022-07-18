@@ -56,11 +56,13 @@ class ImportXml extends ImportPlugin
     /**
      * Handles the whole import logic
      *
-     * @param array $sql_data 2-element array with sql data
+     * @return string[]
      */
-    public function doImport(?File $importHandle = null, array &$sql_data = []): void
+    public function doImport(?File $importHandle = null): array
     {
-        global $error, $timeout_passed, $finished, $db;
+        $GLOBALS['error'] = $GLOBALS['error'] ?? null;
+        $GLOBALS['timeout_passed'] = $GLOBALS['timeout_passed'] ?? null;
+        $GLOBALS['finished'] = $GLOBALS['finished'] ?? null;
 
         $buffer = '';
 
@@ -68,7 +70,7 @@ class ImportXml extends ImportPlugin
          * Read in the file via Import::getNextChunk so that
          * it can process compressed files
          */
-        while (! $finished && ! $error && ! $timeout_passed) {
+        while (! $GLOBALS['finished'] && ! $GLOBALS['error'] && ! $GLOBALS['timeout_passed']) {
             $data = $this->import->getNextChunk($importHandle);
             if ($data === false) {
                 /* subtract data we didn't handle yet and stop processing */
@@ -115,7 +117,7 @@ class ImportXml extends ImportPlugin
             unset($xml);
             $GLOBALS['finished'] = false;
 
-            return;
+            return [];
         }
 
         /**
@@ -178,7 +180,7 @@ class ImportXml extends ImportPlugin
             unset($xml);
             $GLOBALS['finished'] = false;
 
-            return;
+            return [];
         }
 
         /**
@@ -225,6 +227,7 @@ class ImportXml extends ImportPlugin
             ->children();
 
         $data_present = false;
+        $analyses = null;
 
         /**
          * Only attempt to analyze/collect data if there is data present
@@ -338,9 +341,9 @@ class ImportXml extends ImportPlugin
          */
 
         /* Set database name to the currently selected one, if applicable */
-        if (strlen((string) $db)) {
+        if (strlen((string) $GLOBALS['db'])) {
             /* Override the database name in the XML file, if one is selected */
-            $db_name = $db;
+            $db_name = $GLOBALS['db'];
             $options = ['create_db' => false];
         } else {
             /* Set database collation/charset */
@@ -351,11 +354,14 @@ class ImportXml extends ImportPlugin
         }
 
         /* Created and execute necessary SQL statements from data */
-        $this->import->buildSql($db_name, $tables, $analyses, $create, $options, $sql_data);
+        $sqlStatements = [];
+        $this->import->buildSql($db_name, $tables, $analyses, $create, $options, $sqlStatements);
 
         unset($analyses, $tables, $create);
 
         /* Commit any possible data in buffers */
-        $this->import->runQuery('', '', $sql_data);
+        $this->import->runQuery('', $sqlStatements);
+
+        return $sqlStatements;
     }
 }

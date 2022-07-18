@@ -1,12 +1,24 @@
 "use strict";
+(self["webpackChunkphpmyadmin"] = self["webpackChunkphpmyadmin"] || []).push([[26],{
 
-/* global TraceKit */
-// js/vendor/tracekit.js
+/***/ 1:
+/***/ (function(module) {
+
+module.exports = jQuery;
+
+/***/ }),
+
+/***/ 30:
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 
 /**
  * general function, usually for data manipulation pages
  *
  */
+
 var ErrorReport = {
   /**
    * @var {object}, stores the last exception info
@@ -40,11 +52,11 @@ var ErrorReport = {
       ErrorReport.showErrorNotification();
     } else if (data.report_setting === 'always') {
       var reportData = ErrorReport.getReportData(exception);
-      var postData = $.extend(reportData, {
+      var postData = jquery__WEBPACK_IMPORTED_MODULE_0__.extend(reportData, {
         'send_error_report': true,
         'automatic': true
       });
-      $.post('index.php?route=/error-report', postData, function (data) {
+      jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/error-report', postData, function (data) {
         if (data.success === false) {
           // in the case of an error, show the error message returned.
           Functions.ajaxShowMessage(data.error, false);
@@ -67,9 +79,9 @@ var ErrorReport = {
     ErrorReport.lastException = exception;
 
     if (ErrorReport.errorReportData === null) {
-      $.post('index.php?route=/error-report', {
+      jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/error-report', {
         'ajax_request': true,
-        'server': CommonParams.get('server'),
+        'server': window.CommonParams.get('server'),
         'get_settings': true,
         'exception_type': 'js'
       }, function (data) {
@@ -92,34 +104,34 @@ var ErrorReport = {
     const reportData = ErrorReport.getReportData(exception);
 
     const sendErrorReport = function () {
-      const postData = $.extend(reportData, {
+      const postData = jquery__WEBPACK_IMPORTED_MODULE_0__.extend(reportData, {
         'send_error_report': true,
-        'description': $('#errorReportDescription').val(),
-        'always_send': $('#errorReportAlwaysSendCheckbox')[0].checked
+        'description': jquery__WEBPACK_IMPORTED_MODULE_0__('#errorReportDescription').val(),
+        'always_send': jquery__WEBPACK_IMPORTED_MODULE_0__('#errorReportAlwaysSendCheckbox')[0].checked
       });
-      $.post('index.php?route=/error-report', postData, function (data) {
+      jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/error-report', postData, function (data) {
         if (data.success === false) {
           Functions.ajaxShowMessage(data.error, false);
         } else {
           Functions.ajaxShowMessage(data.message, 3000);
         }
       });
-      $('#errorReportModal').modal('hide');
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#errorReportModal').modal('hide');
     };
 
-    $.post('index.php?route=/error-report', reportData).done(function (data) {
+    jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/error-report', reportData).done(function (data) {
       // Delete the modal to refresh it in case the user changed SendErrorReports value
       if (document.getElementById('errorReportModal') !== null) {
-        $('#errorReportModal').remove();
+        jquery__WEBPACK_IMPORTED_MODULE_0__('#errorReportModal').remove();
       }
 
-      $('body').append($(data.report_modal));
-      const $errorReportModal = $('#errorReportModal');
+      jquery__WEBPACK_IMPORTED_MODULE_0__('body').append(jquery__WEBPACK_IMPORTED_MODULE_0__(data.report_modal));
+      const $errorReportModal = jquery__WEBPACK_IMPORTED_MODULE_0__('#errorReportModal');
       $errorReportModal.on('show.bs.modal', function () {
         // Prevents multiple onClick events
-        $('#errorReportModalConfirm').off('click', sendErrorReport);
-        $('#errorReportModalConfirm').on('click', sendErrorReport);
-        $('#errorReportModal .modal-body').html(data.message);
+        jquery__WEBPACK_IMPORTED_MODULE_0__('#errorReportModalConfirm').off('click', sendErrorReport);
+        jquery__WEBPACK_IMPORTED_MODULE_0__('#errorReportModalConfirm').on('click', sendErrorReport);
+        jquery__WEBPACK_IMPORTED_MODULE_0__('#errorReportModal .modal-body').html(data.message);
       });
       $errorReportModal.modal('show');
     });
@@ -138,24 +150,24 @@ var ErrorReport = {
     }
 
     ErrorReport.keyDict[key] = 1;
-    var $div = $('<div class="alert alert-danger" role="alert" id="error_notification_' + key + '"></div>').append(Functions.getImage('s_error') + Messages.strErrorOccurred);
-    var $buttons = $('<div class="float-end"></div>');
+    var $div = jquery__WEBPACK_IMPORTED_MODULE_0__('<div class="alert alert-danger" role="alert" id="error_notification_' + key + '"></div>').append(Functions.getImage('s_error') + window.Messages.strErrorOccurred);
+    var $buttons = jquery__WEBPACK_IMPORTED_MODULE_0__('<div class="float-end"></div>');
     var buttonHtml = '<button class="btn btn-primary" id="show_error_report_' + key + '">';
-    buttonHtml += Messages.strShowReportDetails;
+    buttonHtml += window.Messages.strShowReportDetails;
     buttonHtml += '</button>';
-    var settingsUrl = 'index.php?route=/preferences/features&server=' + CommonParams.get('server');
+    var settingsUrl = 'index.php?route=/preferences/features&server=' + window.CommonParams.get('server');
     buttonHtml += '<a class="ajax" href="' + settingsUrl + '">';
-    buttonHtml += Functions.getImage('s_cog', Messages.strChangeReportSettings);
+    buttonHtml += Functions.getImage('s_cog', window.Messages.strChangeReportSettings);
     buttonHtml += '</a>';
     buttonHtml += '<a href="#" id="ignore_error_' + key + '" data-notification-id="' + key + '">';
-    buttonHtml += Functions.getImage('b_close', Messages.strIgnore);
+    buttonHtml += Functions.getImage('b_close', window.Messages.strIgnore);
     buttonHtml += '</a>';
     $buttons.html(buttonHtml);
     $div.append($buttons); // eslint-disable-next-line compat/compat
 
     $div.appendTo(document.body);
-    $(document).on('click', '#show_error_report_' + key, ErrorReport.createReportDialog);
-    $(document).on('click', '#ignore_error_' + key, ErrorReport.removeErrorNotification);
+    jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', '#show_error_report_' + key, ErrorReport.createReportDialog);
+    jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', '#ignore_error_' + key, ErrorReport.removeErrorNotification);
   },
 
   /**
@@ -170,8 +182,8 @@ var ErrorReport = {
       e.preventDefault();
     }
 
-    $('#error_notification_' + $(this).data('notification-id')).fadeOut(function () {
-      $(this).remove();
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#error_notification_' + jquery__WEBPACK_IMPORTED_MODULE_0__(this).data('notification-id')).fadeOut(function () {
+      jquery__WEBPACK_IMPORTED_MODULE_0__(this).remove();
     });
   },
 
@@ -229,15 +241,15 @@ var ErrorReport = {
     }
 
     var reportData = {
-      'server': CommonParams.get('server'),
+      'server': window.CommonParams.get('server'),
       'ajax_request': true,
       'exception': exception,
       'url': window.location.href,
       'exception_type': 'js'
     };
 
-    if (AJAX.scriptHandler.scripts.length > 0) {
-      reportData.scripts = AJAX.scriptHandler.scripts.map(function (script) {
+    if (window.AJAX.scriptHandler.scripts.length > 0) {
+      reportData.scripts = window.AJAX.scriptHandler.scripts.map(function (script) {
         return script;
       });
     }
@@ -258,14 +270,14 @@ var ErrorReport = {
         try {
           return func.apply(this, arguments);
         } catch (x) {
-          TraceKit.report(x);
+          window.TraceKit.report(x);
         }
       };
 
       newFunc.wrapped = true; // Set guid of wrapped function same as original function, so it can be removed
       // See bug#4146 (problem with jquery draggable and sortable)
 
-      newFunc.guid = func.guid = func.guid || newFunc.guid || jQuery.guid++;
+      newFunc.guid = func.guid = func.guid || newFunc.guid || jquery__WEBPACK_IMPORTED_MODULE_0__.guid++;
       return newFunc;
     } else {
       return func;
@@ -273,14 +285,14 @@ var ErrorReport = {
   },
 
   /**
-   * Automatically wraps the callback in AJAX.registerOnload
+   * Automatically wraps the callback in window.AJAX.registerOnload
    *
    * @return {void}
    */
   wrapAjaxOnloadCallback: function () {
-    var oldOnload = AJAX.registerOnload;
+    var oldOnload = window.AJAX.registerOnload;
 
-    AJAX.registerOnload = function (file, func) {
+    window.AJAX.registerOnload = function (file, func) {
       var wrappedFunction = ErrorReport.wrapFunction(func);
       oldOnload.call(this, file, wrappedFunction);
     };
@@ -292,9 +304,9 @@ var ErrorReport = {
    * @return {void}
    */
   wrapJqueryOnCallback: function () {
-    var oldOn = $.fn.on;
+    var oldOn = jquery__WEBPACK_IMPORTED_MODULE_0__.fn.on;
 
-    $.fn.on = function () {
+    jquery__WEBPACK_IMPORTED_MODULE_0__.fn.on = function () {
       for (var i = 1; i <= 3; i++) {
         if (typeof arguments[i] === 'function') {
           arguments[i] = ErrorReport.wrapFunction(arguments[i]);
@@ -307,7 +319,7 @@ var ErrorReport = {
   },
 
   /**
-   * Wraps the callback in AJAX.registerOnload automatically
+   * Wraps the callback in window.AJAX.registerOnload automatically
    *
    * @return {void}
    */
@@ -316,7 +328,17 @@ var ErrorReport = {
     ErrorReport.wrapJqueryOnCallback();
   }
 };
-AJAX.registerOnload('error_report.js', function () {
-  TraceKit.report.subscribe(ErrorReport.errorHandler);
+window.AJAX.registerOnload('error_report.js', function () {
+  window.TraceKit.report.subscribe(ErrorReport.errorHandler);
   ErrorReport.setUpErrorReporting();
 });
+
+/***/ })
+
+},
+/******/ function(__webpack_require__) { // webpackRuntimeModules
+/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
+/******/ var __webpack_exports__ = (__webpack_exec__(30));
+/******/ }
+]);
+//# sourceMappingURL=error_report.js.map

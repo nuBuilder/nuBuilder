@@ -1,4 +1,18 @@
 "use strict";
+(self["webpackChunkphpmyadmin"] = self["webpackChunkphpmyadmin"] || []).push([[25],{
+
+/***/ 1:
+/***/ (function(module) {
+
+module.exports = jQuery;
+
+/***/ }),
+
+/***/ 29:
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 
 /* This script handles PMA Drag Drop Import, loaded only when configuration is enabled.*/
 
@@ -6,6 +20,7 @@
  * Class to handle PMA Drag and Drop Import
  *      feature
  */
+
 var DragDropImport = {
   /**
    * @var {number}, count of total uploads in this view
@@ -43,12 +58,12 @@ var DragDropImport = {
     var arr = file.split('.');
     var ext = arr[arr.length - 1]; // check if compressed
 
-    if (jQuery.inArray(ext.toLowerCase(), DragDropImport.allowedCompressedExtensions) !== -1) {
+    if (jquery__WEBPACK_IMPORTED_MODULE_0__.inArray(ext.toLowerCase(), DragDropImport.allowedCompressedExtensions) !== -1) {
       ext = arr[arr.length - 2];
     } // Now check for extension
 
 
-    if (jQuery.inArray(ext.toLowerCase(), DragDropImport.allowedExtensions) !== -1) {
+    if (jquery__WEBPACK_IMPORTED_MODULE_0__.inArray(ext.toLowerCase(), DragDropImport.allowedExtensions) !== -1) {
       return ext;
     }
 
@@ -64,7 +79,7 @@ var DragDropImport = {
    * @return {void}
    */
   setProgress: function (hash, percent) {
-    $('.pma_sql_import_status div li[data-hash="' + hash + '"]').children('progress').val(percent);
+    jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_sql_import_status div li[data-hash="' + hash + '"]').children('progress').val(percent);
   },
 
   /**
@@ -76,9 +91,9 @@ var DragDropImport = {
    * @return {void}
    */
   sendFileToServer: function (formData, hash) {
-    var jqXHR = $.ajax({
+    var jqXHR = jquery__WEBPACK_IMPORTED_MODULE_0__.ajax({
       xhr: function () {
-        var xhrobj = $.ajaxSettings.xhr();
+        var xhrobj = jquery__WEBPACK_IMPORTED_MODULE_0__.ajaxSettings.xhr();
 
         if (xhrobj.upload) {
           xhrobj.upload.addEventListener('progress', function (event) {
@@ -115,22 +130,22 @@ var DragDropImport = {
       }
     }); // -- provide link to cancel the upload
 
-    $('.pma_sql_import_status div li[data-hash="' + hash + '"] span.filesize').html('<span hash="' + hash + '" class="pma_drop_file_status" task="cancel">' + Messages.dropImportMessageCancel + '</span>'); // -- add event listener to this link to abort upload operation
+    jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_sql_import_status div li[data-hash="' + hash + '"] span.filesize').html('<span hash="' + hash + '" class="pma_drop_file_status" task="cancel">' + window.Messages.dropImportMessageCancel + '</span>'); // -- add event listener to this link to abort upload operation
 
-    $('.pma_sql_import_status div li[data-hash="' + hash + '"] span.filesize span.pma_drop_file_status').on('click', function () {
-      if ($(this).attr('task') === 'cancel') {
+    jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_sql_import_status div li[data-hash="' + hash + '"] span.filesize span.pma_drop_file_status').on('click', function () {
+      if (jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('task') === 'cancel') {
         jqXHR.abort();
-        $(this).html('<span>' + Messages.dropImportMessageAborted + '</span>');
+        jquery__WEBPACK_IMPORTED_MODULE_0__(this).html('<span>' + window.Messages.dropImportMessageAborted + '</span>');
         DragDropImport.importFinished(hash, true, false);
-      } else if ($(this).children('span').html() === Messages.dropImportMessageFailed) {
+      } else if (jquery__WEBPACK_IMPORTED_MODULE_0__(this).children('span').html() === window.Messages.dropImportMessageFailed) {
         // -- view information
-        var $this = $(this);
-        $.each(DragDropImport.importStatus, function (key, value) {
+        var $this = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
+        jquery__WEBPACK_IMPORTED_MODULE_0__.each(DragDropImport.importStatus, function (key, value) {
           if (value.hash === hash) {
-            $('.pma_drop_result:visible').remove();
+            jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_drop_result:visible').remove();
             var filename = $this.parent('span').attr('data-filename');
-            $('body').append('<div class="pma_drop_result"><h2>' + Messages.dropImportImportResultHeader + ' - ' + filename + '<span class="close">x</span></h2>' + value.message + '</div>');
-            $('.pma_drop_result').draggable(); // to make this dialog draggable
+            jquery__WEBPACK_IMPORTED_MODULE_0__('body').append('<div class="pma_drop_result"><h2>' + window.Messages.dropImportImportResultHeader + ' - ' + filename + '<span class="close">x</span></h2>' + value.message + '</div>');
+            jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_drop_result').draggable(); // to make this dialog draggable
           }
         });
       }
@@ -147,7 +162,7 @@ var DragDropImport = {
   dragEnter: function (event) {
     // We don't want to prevent users from using
     // browser's default drag-drop feature on some page(s)
-    if ($('.noDragDrop').length !== 0) {
+    if (jquery__WEBPACK_IMPORTED_MODULE_0__('.noDragDrop').length !== 0) {
       return;
     }
 
@@ -158,13 +173,13 @@ var DragDropImport = {
       return;
     }
 
-    if (CommonParams.get('db') === '') {
-      $('.pma_drop_handler').html(Messages.dropImportSelectDB);
+    if (window.CommonParams.get('db') === '') {
+      jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_drop_handler').html(window.Messages.dropImportSelectDB);
     } else {
-      $('.pma_drop_handler').html(Messages.dropImportDropFiles);
+      jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_drop_handler').html(window.Messages.dropImportDropFiles);
     }
 
-    $('.pma_drop_handler').fadeIn();
+    jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_drop_handler').fadeIn();
   },
 
   /**
@@ -175,7 +190,7 @@ var DragDropImport = {
    * @return {boolean}
    */
   hasFiles: function (event) {
-    return !(typeof event.originalEvent.dataTransfer.types === 'undefined' || $.inArray('Files', event.originalEvent.dataTransfer.types) < 0 || $.inArray('application/x-moz-nativeimage', event.originalEvent.dataTransfer.types) >= 0);
+    return !(typeof event.originalEvent.dataTransfer.types === 'undefined' || jquery__WEBPACK_IMPORTED_MODULE_0__.inArray('Files', event.originalEvent.dataTransfer.types) < 0 || jquery__WEBPACK_IMPORTED_MODULE_0__.inArray('application/x-moz-nativeimage', event.originalEvent.dataTransfer.types) >= 0);
   },
 
   /**
@@ -188,7 +203,7 @@ var DragDropImport = {
   dragOver: function (event) {
     // We don't want to prevent users from using
     // browser's default drag-drop feature on some page(s)
-    if ($('.noDragDrop').length !== 0) {
+    if (jquery__WEBPACK_IMPORTED_MODULE_0__('.noDragDrop').length !== 0) {
       return;
     }
 
@@ -199,7 +214,7 @@ var DragDropImport = {
       return;
     }
 
-    $('.pma_drop_handler').fadeIn();
+    jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_drop_handler').fadeIn();
   },
 
   /**
@@ -212,16 +227,16 @@ var DragDropImport = {
   dragLeave: function (event) {
     // We don't want to prevent users from using
     // browser's default drag-drop feature on some page(s)
-    if ($('.noDragDrop').length !== 0) {
+    if (jquery__WEBPACK_IMPORTED_MODULE_0__('.noDragDrop').length !== 0) {
       return;
     }
 
     event.stopPropagation();
     event.preventDefault();
-    var $dropHandler = $('.pma_drop_handler');
+    var $dropHandler = jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_drop_handler');
     $dropHandler.clearQueue().stop();
     $dropHandler.fadeOut();
-    $dropHandler.html(Messages.dropImportDropFiles);
+    $dropHandler.html(window.Messages.dropImportDropFiles);
   },
 
   /**
@@ -234,28 +249,28 @@ var DragDropImport = {
    * @return {void}
    */
   importFinished: function (hash, aborted, status) {
-    $('.pma_sql_import_status div li[data-hash="' + hash + '"]').children('progress').hide();
+    jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_sql_import_status div li[data-hash="' + hash + '"]').children('progress').hide();
     var icon = 'icon ic_s_success'; // -- provide link to view upload status
 
     if (!aborted) {
       if (status) {
-        $('.pma_sql_import_status div li[data-hash="' + hash + '"] span.filesize span.pma_drop_file_status').html('<span>' + Messages.dropImportMessageSuccess + '</a>');
+        jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_sql_import_status div li[data-hash="' + hash + '"] span.filesize span.pma_drop_file_status').html('<span>' + window.Messages.dropImportMessageSuccess + '</a>');
       } else {
-        $('.pma_sql_import_status div li[data-hash="' + hash + '"] span.filesize span.pma_drop_file_status').html('<span class="underline">' + Messages.dropImportMessageFailed + '</a>');
+        jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_sql_import_status div li[data-hash="' + hash + '"] span.filesize span.pma_drop_file_status').html('<span class="underline">' + window.Messages.dropImportMessageFailed + '</a>');
         icon = 'icon ic_s_error';
       }
     } else {
       icon = 'icon ic_s_notice';
     }
 
-    $('.pma_sql_import_status div li[data-hash="' + hash + '"] span.filesize span.pma_drop_file_status').attr('task', 'info'); // Set icon
+    jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_sql_import_status div li[data-hash="' + hash + '"] span.filesize span.pma_drop_file_status').attr('task', 'info'); // Set icon
 
-    $('.pma_sql_import_status div li[data-hash="' + hash + '"]').prepend('<img src="./themes/dot.gif" title="finished" class="' + icon + '"> '); // Decrease liveUploadCount by one
+    jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_sql_import_status div li[data-hash="' + hash + '"]').prepend('<img src="./themes/dot.gif" title="finished" class="' + icon + '"> '); // Decrease liveUploadCount by one
 
-    $('.pma_import_count').html(--DragDropImport.liveUploadCount);
+    jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_import_count').html(--DragDropImport.liveUploadCount);
 
     if (!DragDropImport.liveUploadCount) {
-      $('.pma_sql_import_status h2 .close').fadeIn();
+      jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_sql_import_status h2 .close').fadeIn();
     }
   },
 
@@ -270,46 +285,46 @@ var DragDropImport = {
   drop: function (event) {
     // We don't want to prevent users from using
     // browser's default drag-drop feature on some page(s)
-    if ($('.noDragDrop').length !== 0) {
+    if (jquery__WEBPACK_IMPORTED_MODULE_0__('.noDragDrop').length !== 0) {
       return;
     }
 
-    var dbname = CommonParams.get('db');
-    var server = CommonParams.get('server'); // if no database is selected -- no
+    var dbname = window.CommonParams.get('db');
+    var server = window.CommonParams.get('server'); // if no database is selected -- no
 
     if (dbname !== '') {
       var files = event.originalEvent.dataTransfer.files;
 
       if (!files || files.length === 0) {
         // No files actually transferred
-        $('.pma_drop_handler').fadeOut();
+        jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_drop_handler').fadeOut();
         event.stopPropagation();
         event.preventDefault();
         return;
       }
 
-      $('.pma_sql_import_status').slideDown();
+      jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_sql_import_status').slideDown();
 
       for (var i = 0; i < files.length; i++) {
         var ext = DragDropImport.getExtension(files[i].name);
-        var hash = AJAX.hash(++DragDropImport.uploadCount);
-        var $sqlImportStatusDiv = $('.pma_sql_import_status div');
+        var hash = window.AJAX.hash(++DragDropImport.uploadCount);
+        var $sqlImportStatusDiv = jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_sql_import_status div');
         $sqlImportStatusDiv.append('<li data-hash="' + hash + '">' + (ext !== '' ? '' : '<img src="./themes/dot.gif" title="invalid format" class="icon ic_s_notice"> ') + Functions.escapeHtml(files[i].name) + '<span class="filesize" data-filename="' + Functions.escapeHtml(files[i].name) + '">' + (files[i].size / 1024).toFixed(2) + ' kb</span></li>'); // scroll the UI to bottom
 
         $sqlImportStatusDiv.scrollTop($sqlImportStatusDiv.scrollTop() + 50); // 50 hardcoded for now
 
         if (ext !== '') {
           // Increment liveUploadCount by one
-          $('.pma_import_count').html(++DragDropImport.liveUploadCount);
-          $('.pma_sql_import_status h2 .close').fadeOut();
-          $('.pma_sql_import_status div li[data-hash="' + hash + '"]').append('<br><progress max="100" value="2"></progress>'); // uploading
+          jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_import_count').html(++DragDropImport.liveUploadCount);
+          jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_sql_import_status h2 .close').fadeOut();
+          jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_sql_import_status div li[data-hash="' + hash + '"]').append('<br><progress max="100" value="2"></progress>'); // uploading
 
           var fd = new FormData();
           fd.append('import_file', files[i]);
           fd.append('noplugin', Math.random().toString(36).substring(2, 12));
           fd.append('db', dbname);
           fd.append('server', server);
-          fd.append('token', CommonParams.get('token'));
+          fd.append('token', window.CommonParams.get('token'));
           fd.append('import_type', 'database'); // todo: method to find the value below
 
           fd.append('MAX_FILE_SIZE', '4194304'); // todo: method to find the value below
@@ -326,12 +341,12 @@ var DragDropImport = {
 
           DragDropImport.sendFileToServer(fd, hash);
         } else if (!DragDropImport.liveUploadCount) {
-          $('.pma_sql_import_status h2 .close').fadeIn();
+          jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_sql_import_status h2 .close').fadeIn();
         }
       }
     }
 
-    $('.pma_drop_handler').fadeOut();
+    jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_drop_handler').fadeOut();
     event.stopPropagation();
     event.preventDefault();
   }
@@ -343,31 +358,41 @@ var DragDropImport = {
  * @return {void}
  */
 
-$(document).on('dragenter', DragDropImport.dragEnter);
-$(document).on('dragover', DragDropImport.dragOver);
-$(document).on('dragleave', '.pma_drop_handler', DragDropImport.dragLeave); // when file is dropped to PMA UI
+jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('dragenter', DragDropImport.dragEnter);
+jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('dragover', DragDropImport.dragOver);
+jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('dragleave', '.pma_drop_handler', DragDropImport.dragLeave); // when file is dropped to PMA UI
 
-$(document).on('drop', 'body', DragDropImport.drop); // minimizing-maximizing the sql ajax upload status
+jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('drop', 'body', DragDropImport.drop); // minimizing-maximizing the sql ajax upload status
 
-$(document).on('click', '.pma_sql_import_status h2 .minimize', function () {
-  if ($(this).attr('toggle') === 'off') {
-    $('.pma_sql_import_status div').css('height', '270px');
-    $(this).attr('toggle', 'on');
-    $(this).html('-'); // to minimize
+jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', '.pma_sql_import_status h2 .minimize', function () {
+  if (jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('toggle') === 'off') {
+    jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_sql_import_status div').css('height', '270px');
+    jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('toggle', 'on');
+    jquery__WEBPACK_IMPORTED_MODULE_0__(this).html('-'); // to minimize
   } else {
-    $('.pma_sql_import_status div').css('height', '0px');
-    $(this).attr('toggle', 'off');
-    $(this).html('+'); // to maximise
+    jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_sql_import_status div').css('height', '0px');
+    jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('toggle', 'off');
+    jquery__WEBPACK_IMPORTED_MODULE_0__(this).html('+'); // to maximise
   }
 }); // closing sql ajax upload status
 
-$(document).on('click', '.pma_sql_import_status h2 .close', function () {
-  $('.pma_sql_import_status').fadeOut(function () {
-    $('.pma_sql_import_status div').html('');
+jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', '.pma_sql_import_status h2 .close', function () {
+  jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_sql_import_status').fadeOut(function () {
+    jquery__WEBPACK_IMPORTED_MODULE_0__('.pma_sql_import_status div').html('');
     DragDropImport.importStatus = []; // clear the message array
   });
 }); // Closing the import result box
 
-$(document).on('click', '.pma_drop_result h2 .close', function () {
-  $(this).parent('h2').parent('div').remove();
+jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', '.pma_drop_result h2 .close', function () {
+  jquery__WEBPACK_IMPORTED_MODULE_0__(this).parent('h2').parent('div').remove();
 });
+
+/***/ })
+
+},
+/******/ function(__webpack_require__) { // webpackRuntimeModules
+/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
+/******/ var __webpack_exports__ = (__webpack_exec__(29));
+/******/ }
+]);
+//# sourceMappingURL=drag_drop_import.js.map

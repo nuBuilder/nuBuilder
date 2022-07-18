@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin;
 
+use PhpMyAdmin\Http\ServerRequest;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
@@ -23,12 +24,14 @@ use function gmdate;
 use function hash_equals;
 use function hash_hmac;
 use function header;
+use function header_remove;
 use function htmlspecialchars;
 use function http_build_query;
 use function in_array;
 use function intval;
 use function is_array;
 use function is_string;
+use function json_decode;
 use function json_encode;
 use function mb_strlen;
 use function mb_strpos;
@@ -87,8 +90,6 @@ class Core
         string $error_message,
         $message_args = null
     ): void {
-        global $dbi;
-
         /* Use format string if applicable */
         if (is_string($message_args)) {
             $error_message = sprintf($error_message, $message_args);
@@ -101,7 +102,7 @@ class Core
          * (this can happen on early fatal error)
          */
         if (
-            isset($dbi, $GLOBALS['config'])
+            isset($GLOBALS['dbi'], $GLOBALS['config'])
             && $GLOBALS['config']->get('is_setup') === false
             && ResponseRenderer::getInstance()->isAjax()
         ) {
@@ -159,12 +160,10 @@ class Core
         /* List of PHP documentation translations */
         $php_doc_languages = [
             'pt_BR',
-            'zh',
+            'zh_CN',
             'fr',
             'de',
-            'it',
             'ja',
-            'ro',
             'ru',
             'es',
             'tr',
@@ -172,7 +171,11 @@ class Core
 
         $lang = 'en';
         if (isset($GLOBALS['lang']) && in_array($GLOBALS['lang'], $php_doc_languages)) {
-            $lang = $GLOBALS['lang'];
+            if ($GLOBALS['lang'] === 'zh_CN') {
+                $lang = 'zh';
+            } else {
+                $lang = $GLOBALS['lang'];
+            }
         }
 
         return self::linkURL('https://www.php.net/manual/' . $lang . '/' . $target);
@@ -190,7 +193,7 @@ class Core
         bool $fatal = false,
         string $extra = ''
     ): void {
-        global $errorHandler;
+        $GLOBALS['errorHandler'] = $GLOBALS['errorHandler'] ?? null;
 
         $message = 'The %s extension is missing. Please check your PHP configuration.';
 
@@ -211,7 +214,7 @@ class Core
             return;
         }
 
-        $errorHandler->addError($message, E_USER_WARNING, '', 0, false);
+        $GLOBALS['errorHandler']->addError($message, E_USER_WARNING, '', 0, false);
     }
 
     /**
@@ -223,9 +226,7 @@ class Core
      */
     public static function getTableCount(string $db): int
     {
-        global $dbi;
-
-        $tables = $dbi->tryQuery('SHOW TABLES FROM ' . Util::backquote($db) . ';');
+        $tables = $GLOBALS['dbi']->tryQuery('SHOW TABLES FROM ' . Util::backquote($db) . ';');
 
         if ($tables) {
             return $tables->numRows();
@@ -483,10 +484,23 @@ class Core
 
         $headers['Content-Type'] = $mimetype;
 
+        /** @var string $browserAgent */
+        $browserAgent = $GLOBALS['config']->get('PMA_USR_BROWSER_AGENT');
+
         // inform the server that compression has been done,
         // to avoid a double compression (for example with Apache + mod_deflate)
-        if (str_contains($mimetype, 'gzip') && $GLOBALS['config']->get('PMA_USR_BROWSER_AGENT') !== 'CHROME') {
-            $headers['Content-Encoding'] = 'gzip';
+        if (str_contains($mimetype, 'gzip')) {
+            /**
+             * @see https://github.com/phpmyadmin/phpmyadmin/issues/11283
+             */
+            if ($browserAgent !== 'CHROME') {
+                $headers['Content-Encoding'] = 'gzip';
+            }
+        } else {
+            // The default output in PMA uses gzip,
+            // so if we want to output uncompressed file, we should reset the encoding.
+            // See PHP bug https://github.com/php/php-src/issues/8218
+            header_remove('Content-Encoding');
         }
 
         $headers['Content-Transfer-Encoding'] = 'binary';
@@ -633,30 +647,17 @@ class Core
      */
     public static function isAllowedDomain(string $url): bool
     {
-        $arr = parse_url($url);
-
-        if (! is_array($arr)) {
-            $arr = [];
-        }
-
-        // We need host to be set
-        if (! isset($arr['host']) || strlen($arr['host']) == 0) {
+        $parsedUrl = parse_url($url);
+        if (
+            ! is_array($parsedUrl)
+            || ! isset($parsedUrl['host'])
+            || isset($parsedUrl['user'])
+            || isset($parsedUrl['pass'])
+            || isset($parsedUrl['port'])
+        ) {
             return false;
         }
 
-        // We do not want these to be present
-        $blocked = [
-            'user',
-            'pass',
-            'port',
-        ];
-        foreach ($blocked as $part) {
-            if (isset($arr[$part]) && strlen((string) $arr[$part]) != 0) {
-                return false;
-            }
-        }
-
-        $domain = $arr['host'];
         $domainAllowList = [
             /* Include current domain */
             $_SERVER['SERVER_NAME'],
@@ -684,7 +685,7 @@ class Core
             'mysqldatabaseadministration.blogspot.com',
         ];
 
-        return in_array($domain, $domainAllowList);
+        return in_array($parsedUrl['host'], $domainAllowList, true);
     }
 
     /**
@@ -757,7 +758,7 @@ class Core
      */
     public static function setPostAsGlobal(array $post_patterns): void
     {
-        global $containerBuilder;
+        $GLOBALS['containerBuilder'] = $GLOBALS['containerBuilder'] ?? null;
 
         foreach (array_keys($_POST) as $post_key) {
             foreach ($post_patterns as $one_post_pattern) {
@@ -766,7 +767,7 @@ class Core
                 }
 
                 $GLOBALS[$post_key] = $_POST[$post_key];
-                $containerBuilder->setParameter($post_key, $GLOBALS[$post_key]);
+                $GLOBALS['containerBuilder']->setParameter($post_key, $GLOBALS[$post_key]);
             }
         }
     }
@@ -943,11 +944,9 @@ class Core
      */
     public static function signSqlQuery($sqlQuery)
     {
-        global $cfg;
-
         $secret = $_SESSION[' HMAC_secret '] ?? '';
 
-        return hash_hmac('sha256', $sqlQuery, $secret . $cfg['blowfish_secret']);
+        return hash_hmac('sha256', $sqlQuery, $secret . $GLOBALS['cfg']['blowfish_secret']);
     }
 
     /**
@@ -958,10 +957,8 @@ class Core
      */
     public static function checkSqlQuerySignature($sqlQuery, $signature): bool
     {
-        global $cfg;
-
         $secret = $_SESSION[' HMAC_secret '] ?? '';
-        $hmac = hash_hmac('sha256', $sqlQuery, $secret . $cfg['blowfish_secret']);
+        $hmac = hash_hmac('sha256', $sqlQuery, $secret . $GLOBALS['cfg']['blowfish_secret']);
 
         return hash_equals($hmac, $signature);
     }
@@ -976,5 +973,65 @@ class Core
         $loader->load('services_loader.php');
 
         return $containerBuilder;
+    }
+
+    public static function populateRequestWithEncryptedQueryParams(ServerRequest $request): ServerRequest
+    {
+        $queryParams = $request->getQueryParams();
+        $parsedBody = $request->getParsedBody();
+
+        unset($_GET['eq'], $_POST['eq'], $_REQUEST['eq']);
+
+        if (! isset($queryParams['eq']) && (! is_array($parsedBody) || ! isset($parsedBody['eq']))) {
+            return $request;
+        }
+
+        $encryptedQuery = '';
+        if (
+            is_array($parsedBody)
+            && isset($parsedBody['eq'])
+            && is_string($parsedBody['eq'])
+            && $parsedBody['eq'] !== ''
+        ) {
+            $encryptedQuery = $parsedBody['eq'];
+            unset($parsedBody['eq'], $queryParams['eq']);
+        } elseif (isset($queryParams['eq']) && is_string($queryParams['eq']) && $queryParams['eq'] !== '') {
+            $encryptedQuery = $queryParams['eq'];
+            unset($queryParams['eq']);
+        }
+
+        $decryptedQuery = null;
+        if ($encryptedQuery !== '') {
+            $decryptedQuery = Url::decryptQuery($encryptedQuery);
+        }
+
+        if ($decryptedQuery === null) {
+            $request = $request->withQueryParams($queryParams);
+            if (is_array($parsedBody)) {
+                $request = $request->withParsedBody($parsedBody);
+            }
+
+            return $request;
+        }
+
+        $urlQueryParams = (array) json_decode($decryptedQuery);
+        foreach ($urlQueryParams as $urlQueryParamKey => $urlQueryParamValue) {
+            if (is_array($parsedBody)) {
+                $parsedBody[$urlQueryParamKey] = $urlQueryParamValue;
+                $_POST[$urlQueryParamKey] = $urlQueryParamValue;
+            } else {
+                $queryParams[$urlQueryParamKey] = $urlQueryParamValue;
+                $_GET[$urlQueryParamKey] = $urlQueryParamValue;
+            }
+
+            $_REQUEST[$urlQueryParamKey] = $urlQueryParamValue;
+        }
+
+        $request = $request->withQueryParams($queryParams);
+        if (is_array($parsedBody)) {
+            $request = $request->withParsedBody($parsedBody);
+        }
+
+        return $request;
     }
 }

@@ -99,19 +99,22 @@ class ImportOds extends ImportPlugin
     /**
      * Handles the whole import logic
      *
-     * @param array $sql_data 2-element array with sql data
+     * @return string[]
      */
-    public function doImport(?File $importHandle = null, array &$sql_data = []): void
+    public function doImport(?File $importHandle = null): array
     {
-        global $db, $error, $timeout_passed, $finished;
+        $GLOBALS['error'] = $GLOBALS['error'] ?? null;
+        $GLOBALS['timeout_passed'] = $GLOBALS['timeout_passed'] ?? null;
+        $GLOBALS['finished'] = $GLOBALS['finished'] ?? null;
 
+        $sqlStatements = [];
         $buffer = '';
 
         /**
          * Read in the file via Import::getNextChunk so that
          * it can process compressed files
          */
-        while (! $finished && ! $error && ! $timeout_passed) {
+        while (! $GLOBALS['finished'] && ! $GLOBALS['error'] && ! $GLOBALS['timeout_passed']) {
             $data = $this->import->getNextChunk($importHandle);
             if ($data === false) {
                 /* subtract data we didn't handle yet and stop processing */
@@ -215,25 +218,27 @@ class ImportOds extends ImportPlugin
          */
 
         /* Set database name to the currently selected one, if applicable */
-        [$db_name, $options] = $this->getDbnameAndOptions($db, 'ODS_DB');
+        [$db_name, $options] = $this->getDbnameAndOptions($GLOBALS['db'], 'ODS_DB');
 
         /* Non-applicable parameters */
         $create = null;
 
         /* Created and execute necessary SQL statements from data */
-        $this->import->buildSql($db_name, $tables, $analyses, $create, $options, $sql_data);
+        $this->import->buildSql($db_name, $tables, $analyses, $create, $options, $sqlStatements);
 
         unset($tables, $analyses);
 
         /* Commit any possible data in buffers */
-        $this->import->runQuery('', '', $sql_data);
+        $this->import->runQuery('', $sqlStatements);
+
+        return $sqlStatements;
     }
 
     /**
      * Get value
      *
-     * @param array $cell_attrs Cell attributes
-     * @param array $text       Texts
+     * @param SimpleXMLElement $cell_attrs Cell attributes
+     * @param SimpleXMLElement $text       Texts
      *
      * @return float|string
      */
@@ -258,7 +263,15 @@ class ImportOds extends ImportPlugin
         /* We need to concatenate all paragraphs */
         $values = [];
         foreach ($text as $paragraph) {
-            $values[] = (string) $paragraph;
+            // Maybe a text node has the content ? (email, url, ...)
+            // Example: <text:a ... xlink:href="mailto:contact@example.org">test@example.fr</text:a>
+            $paragraphValue = $paragraph->__toString();
+            if ($paragraphValue === '' && isset($paragraph->{'a'})) {
+                $values[] = $paragraph->{'a'}->__toString();
+                continue;
+            }
+
+            $values[] = $paragraphValue;
         }
 
         return implode("\n", $values);
@@ -365,7 +378,7 @@ class ImportOds extends ImportPlugin
             if (! $col_names_in_first_row) {
                 if ($_REQUEST['ods_empty_rows'] ?? false) {
                     foreach ($tempRow as $cell) {
-                        if (strcmp('NULL', $cell)) {
+                        if (strcmp('NULL', (string) $cell)) {
                             $tempRows[] = $tempRow;
                             break;
                         }

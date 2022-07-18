@@ -32,12 +32,15 @@ class StatusController
 
     public function __invoke(): void
     {
-        global $SESSION_KEY, $upload_id, $plugins, $timestamp;
+        $GLOBALS['SESSION_KEY'] = $GLOBALS['SESSION_KEY'] ?? null;
+        $GLOBALS['upload_id'] = $GLOBALS['upload_id'] ?? null;
+        $GLOBALS['plugins'] = $GLOBALS['plugins'] ?? null;
+        $GLOBALS['timestamp'] = $GLOBALS['timestamp'] ?? null;
 
         [
-            $SESSION_KEY,
-            $upload_id,
-            $plugins,
+            $GLOBALS['SESSION_KEY'],
+            $GLOBALS['upload_id'],
+            $GLOBALS['plugins'],
         ] = Ajax::uploadProgressSetup();
 
         // $_GET["message"] is used for asking for an import message
@@ -51,7 +54,7 @@ class StatusController
             usleep(300000);
 
             $maximumTime = ini_get('max_execution_time');
-            $timestamp = time();
+            $GLOBALS['timestamp'] = time();
             // wait until message is available
             while (($_SESSION['Import_message']['message'] ?? null) == null) {
                 // close session before sleeping
@@ -61,7 +64,7 @@ class StatusController
                 // reopen session
                 session_start();
 
-                if (time() - $timestamp > $maximumTime) {
+                if (time() - $GLOBALS['timestamp'] > $maximumTime) {
                     $_SESSION['Import_message']['message'] = Message::error(
                         __('Could not load the progress of the import.')
                     )->getDisplay();

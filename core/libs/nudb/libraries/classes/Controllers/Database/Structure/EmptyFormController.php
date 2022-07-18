@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Database\Structure;
 
-use PhpMyAdmin\Controllers\Database\AbstractController;
+use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\Util;
 use PhpMyAdmin\Utils\ForeignKey;
 
@@ -15,8 +15,6 @@ final class EmptyFormController extends AbstractController
 {
     public function __invoke(): void
     {
-        global $db;
-
         $selected = $_POST['selected_tbl'] ?? [];
 
         if (empty($selected)) {
@@ -27,7 +25,7 @@ final class EmptyFormController extends AbstractController
         }
 
         $fullQuery = '';
-        $urlParams = ['db' => $db];
+        $urlParams = ['db' => $GLOBALS['db']];
 
         foreach ($selected as $selectedValue) {
             $fullQuery .= 'TRUNCATE ';

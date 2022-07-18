@@ -6,6 +6,8 @@ namespace PhpMyAdmin\ConfigStorage;
 
 use PhpMyAdmin\ConfigStorage\Features\PdfFeature;
 use PhpMyAdmin\DatabaseInterface;
+use PhpMyAdmin\Dbal\DatabaseName;
+use PhpMyAdmin\Dbal\TableName;
 use PhpMyAdmin\InternalRelations;
 use PhpMyAdmin\RecentFavoriteTable;
 use PhpMyAdmin\SqlParser\Parser;
@@ -57,7 +59,8 @@ class Relation
     /** @var DatabaseInterface */
     public $dbi;
 
-    public function __construct(DatabaseInterface $dbi)
+    /** @param DatabaseInterface $dbi */
+    public function __construct($dbi)
     {
         $this->dbi = $dbi;
     }
@@ -1170,7 +1173,6 @@ class Relation
     /**
      * Performs SQL query used for renaming table.
      *
-     * @param string $table        Relation table to use
      * @param string $source_db    Source database name
      * @param string $target_db    Target database name
      * @param string $source_table Source table name
@@ -1179,7 +1181,8 @@ class Relation
      * @param string $table_field  Name of table field
      */
     public function renameSingleTable(
-        string $table,
+        DatabaseName $configStorageDatabase,
+        TableName $configStorageTable,
         string $source_db,
         string $target_db,
         string $source_table,
@@ -1187,10 +1190,9 @@ class Relation
         string $db_field,
         string $table_field
     ): void {
-        $relationParameters = $this->getRelationParameters();
         $query = 'UPDATE '
-            . Util::backquote($relationParameters->db) . '.'
-            . Util::backquote((string) $relationParameters->{$table})
+            . Util::backquote($configStorageDatabase) . '.'
+            . Util::backquote($configStorageTable)
             . ' SET '
             . $db_field . ' = \'' . $this->dbi->escapeString($target_db)
             . '\', '
@@ -1221,7 +1223,8 @@ class Relation
         // Move old entries from PMA-DBs to new table
         if ($relationParameters->columnCommentsFeature !== null) {
             $this->renameSingleTable(
-                'columnInfo',
+                $relationParameters->columnCommentsFeature->database,
+                $relationParameters->columnCommentsFeature->columnInfo,
                 $source_db,
                 $target_db,
                 $source_table,
@@ -1236,7 +1239,8 @@ class Relation
 
         if ($relationParameters->displayFeature !== null) {
             $this->renameSingleTable(
-                'tableInfo',
+                $relationParameters->displayFeature->database,
+                $relationParameters->displayFeature->tableInfo,
                 $source_db,
                 $target_db,
                 $source_table,
@@ -1248,7 +1252,8 @@ class Relation
 
         if ($relationParameters->relationFeature !== null) {
             $this->renameSingleTable(
-                'relation',
+                $relationParameters->relationFeature->database,
+                $relationParameters->relationFeature->relation,
                 $source_db,
                 $target_db,
                 $source_table,
@@ -1258,7 +1263,8 @@ class Relation
             );
 
             $this->renameSingleTable(
-                'relation',
+                $relationParameters->relationFeature->database,
+                $relationParameters->relationFeature->relation,
                 $source_db,
                 $target_db,
                 $source_table,
@@ -1272,7 +1278,8 @@ class Relation
             if ($source_db == $target_db) {
                 // rename within the database can be handled
                 $this->renameSingleTable(
-                    'tableCoords',
+                    $relationParameters->pdfFeature->database,
+                    $relationParameters->pdfFeature->tableCoords,
                     $source_db,
                     $target_db,
                     $source_table,
@@ -1295,7 +1302,8 @@ class Relation
 
         if ($relationParameters->uiPreferencesFeature !== null) {
             $this->renameSingleTable(
-                'tableUiprefs',
+                $relationParameters->uiPreferencesFeature->database,
+                $relationParameters->uiPreferencesFeature->tableUiPrefs,
                 $source_db,
                 $target_db,
                 $source_table,
@@ -1311,7 +1319,8 @@ class Relation
 
         // update hidden items inside table
         $this->renameSingleTable(
-            'navigationhiding',
+            $relationParameters->navigationItemsHidingFeature->database,
+            $relationParameters->navigationItemsHidingFeature->navigationHiding,
             $source_db,
             $target_db,
             $source_table,
@@ -1753,7 +1762,7 @@ class Relation
     {
         $tables = [];
         $tablesRows = $this->dbi->query('SHOW TABLE STATUS FROM ' . Util::backquote($foreignDb));
-        while ($row = $this->dbi->fetchRow($tablesRows)) {
+        while ($row = $tablesRows->fetchRow()) {
             if (! isset($row[1]) || mb_strtoupper($row[1]) != $tblStorageEngine) {
                 continue;
             }
@@ -1770,9 +1779,7 @@ class Relation
 
     public function getConfigurationStorageDbName(): string
     {
-        global $cfg;
-
-        $cfgStorageDbName = $cfg['Server']['pmadb'] ?? '';
+        $cfgStorageDbName = $GLOBALS['cfg']['Server']['pmadb'] ?? '';
 
         // Use "phpmyadmin" as a default database name to check to keep the behavior consistent
         return empty($cfgStorageDbName) ? 'phpmyadmin' : $cfgStorageDbName;
@@ -1784,15 +1791,22 @@ class Relation
      */
     public function initRelationParamsCache(): void
     {
-        if (strlen($GLOBALS['db'])) {
-            $relationParameters = $this->getRelationParameters();
-            if ($relationParameters->db === null) {
-                $this->fixPmaTables($GLOBALS['db'], false);
-            }
-        }
-
         $storageDbName = $GLOBALS['cfg']['Server']['pmadb'] ?? '';
         // Use "phpmyadmin" as a default database name to check to keep the behavior consistent
-        $this->fixPmaTables($storageDbName ?: 'phpmyadmin', false);
+        $storageDbName = is_string($storageDbName) && $storageDbName !== '' ? $storageDbName : 'phpmyadmin';
+
+        // This will make users not having explicitly listed databases
+        // have config values filled by the default phpMyAdmin storage table name values
+        $this->fixPmaTables($storageDbName, false);
+
+        // This global will be changed if fixPmaTables did find one valid table
+        $storageDbName = $GLOBALS['cfg']['Server']['pmadb'] ?? '';
+
+        // Empty means that until now no pmadb was found eligible
+        if (! empty($storageDbName)) {
+            return;
+        }
+
+        $this->fixPmaTables($GLOBALS['db'], false);
     }
 }

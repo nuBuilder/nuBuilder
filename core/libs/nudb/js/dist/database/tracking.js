@@ -1,20 +1,35 @@
 "use strict";
+(self["webpackChunkphpmyadmin"] = self["webpackChunkphpmyadmin"] || []).push([[16],{
+
+/***/ 1:
+/***/ (function(module) {
+
+module.exports = jQuery;
+
+/***/ }),
+
+/***/ 21:
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 
 /**
  * Unbind all event handlers before tearing down the page
  */
-AJAX.registerTeardown('database/tracking.js', function () {
-  $('body').off('click', '#trackedForm.ajax button[name="submit_mult"], #trackedForm.ajax input[name="submit_mult"]');
-  $('body').off('click', '#untrackedForm.ajax button[name="submit_mult"], #untrackedForm.ajax input[name="submit_mult"]');
-  $('body').off('click', 'a.delete_tracking_anchor.ajax');
+
+window.AJAX.registerTeardown('database/tracking.js', function () {
+  jquery__WEBPACK_IMPORTED_MODULE_0__('body').off('click', '#trackedForm.ajax button[name="submit_mult"], #trackedForm.ajax input[name="submit_mult"]');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('body').off('click', '#untrackedForm.ajax button[name="submit_mult"], #untrackedForm.ajax input[name="submit_mult"]');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('body').off('click', 'a.delete_tracking_anchor.ajax');
 });
 /**
  * Bind event handlers
  */
 
-AJAX.registerOnload('database/tracking.js', function () {
-  var $versions = $('#versions');
-  $versions.find('tr').first().find('th').append($('<div class="sorticon"></div>'));
+window.AJAX.registerOnload('database/tracking.js', function () {
+  var $versions = jquery__WEBPACK_IMPORTED_MODULE_0__('#versions');
+  $versions.find('tr').first().find('th').append(jquery__WEBPACK_IMPORTED_MODULE_0__('<div class="sorticon"></div>'));
   $versions.tablesorter({
     sortList: [[1, 0]],
     headers: {
@@ -35,8 +50,8 @@ AJAX.registerOnload('database/tracking.js', function () {
       }
     }
   });
-  var $noVersions = $('#noversions');
-  $noVersions.find('tr').first().find('th').append($('<div class="sorticon"></div>'));
+  var $noVersions = jquery__WEBPACK_IMPORTED_MODULE_0__('#noversions');
+  $noVersions.find('tr').first().find('th').append(jquery__WEBPACK_IMPORTED_MODULE_0__('<div class="sorticon"></div>'));
   $noVersions.tablesorter({
     sortList: [[1, 0]],
     headers: {
@@ -48,29 +63,29 @@ AJAX.registerOnload('database/tracking.js', function () {
       }
     }
   });
-  var $body = $('body');
+  var $body = jquery__WEBPACK_IMPORTED_MODULE_0__('body');
   /**
    * Handles multi submit for tracked tables
    */
 
   $body.on('click', '#trackedForm.ajax button[name="submit_mult"], #trackedForm.ajax input[name="submit_mult"]', function (e) {
     e.preventDefault();
-    var $button = $(this);
+    var $button = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
     var $form = $button.parent('form');
-    var argsep = CommonParams.get('arg_separator');
+    var argsep = window.CommonParams.get('arg_separator');
     var submitData = $form.serialize() + argsep + 'ajax_request=true' + argsep + 'ajax_page_request=true' + argsep + 'submit_mult=' + $button.val();
 
     if ($button.val() === 'delete_tracking') {
-      var question = Messages.strDeleteTrackingDataMultiple;
+      var question = window.Messages.strDeleteTrackingDataMultiple;
       $button.confirm(question, $form.attr('action'), function (url) {
-        Functions.ajaxShowMessage(Messages.strDeletingTrackingData);
-        AJAX.source = $form;
-        $.post(url, submitData, AJAX.responseHandler);
+        Functions.ajaxShowMessage(window.Messages.strDeletingTrackingData);
+        window.AJAX.source = $form;
+        jquery__WEBPACK_IMPORTED_MODULE_0__.post(url, submitData, window.AJAX.responseHandler);
       });
     } else {
       Functions.ajaxShowMessage();
-      AJAX.source = $form;
-      $.post($form.attr('action'), submitData, AJAX.responseHandler);
+      window.AJAX.source = $form;
+      jquery__WEBPACK_IMPORTED_MODULE_0__.post($form.attr('action'), submitData, window.AJAX.responseHandler);
     }
   });
   /**
@@ -79,13 +94,13 @@ AJAX.registerOnload('database/tracking.js', function () {
 
   $body.on('click', '#untrackedForm.ajax button[name="submit_mult"], #untrackedForm.ajax input[name="submit_mult"]', function (e) {
     e.preventDefault();
-    var $button = $(this);
+    var $button = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
     var $form = $button.parent('form');
-    var argsep = CommonParams.get('arg_separator');
+    var argsep = window.CommonParams.get('arg_separator');
     var submitData = $form.serialize() + argsep + 'ajax_request=true' + argsep + 'ajax_page_request=true' + argsep + 'submit_mult=' + $button.val();
     Functions.ajaxShowMessage();
-    AJAX.source = $form;
-    $.post($form.attr('action'), submitData, AJAX.responseHandler);
+    window.AJAX.source = $form;
+    jquery__WEBPACK_IMPORTED_MODULE_0__.post($form.attr('action'), submitData, window.AJAX.responseHandler);
   });
   /**
    * Ajax Event handler for 'Delete tracking'
@@ -93,15 +108,25 @@ AJAX.registerOnload('database/tracking.js', function () {
 
   $body.on('click', 'a.delete_tracking_anchor.ajax', function (e) {
     e.preventDefault();
-    var $anchor = $(this);
-    var question = Messages.strDeleteTrackingData;
+    var $anchor = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
+    var question = window.Messages.strDeleteTrackingData;
     $anchor.confirm(question, $anchor.attr('href'), function (url) {
-      Functions.ajaxShowMessage(Messages.strDeletingTrackingData);
-      AJAX.source = $anchor;
-      var argSep = CommonParams.get('arg_separator');
+      Functions.ajaxShowMessage(window.Messages.strDeletingTrackingData);
+      window.AJAX.source = $anchor;
+      var argSep = window.CommonParams.get('arg_separator');
       var params = Functions.getJsConfirmCommonParam(this, $anchor.getPostData());
       params += argSep + 'ajax_page_request=1';
-      $.post(url, params, AJAX.responseHandler);
+      jquery__WEBPACK_IMPORTED_MODULE_0__.post(url, params, window.AJAX.responseHandler);
     });
   });
 });
+
+/***/ })
+
+},
+/******/ function(__webpack_require__) { // webpackRuntimeModules
+/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
+/******/ var __webpack_exports__ = (__webpack_exec__(21));
+/******/ }
+]);
+//# sourceMappingURL=tracking.js.map

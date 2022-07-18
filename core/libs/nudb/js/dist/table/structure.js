@@ -1,4 +1,18 @@
 "use strict";
+(self["webpackChunkphpmyadmin"] = self["webpackChunkphpmyadmin"] || []).push([[68],{
+
+/***/ 1:
+/***/ (function(module) {
+
+module.exports = jQuery;
+
+/***/ }),
+
+/***/ 74:
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 
 /**
  * @fileoverview    functions used on the table structure page
@@ -8,13 +22,8 @@
  * @requires    jQueryUI
  * @required    js/functions.js
  */
-// eslint-disable-next-line no-unused-vars
 
-/* global primaryIndexes:writable, indexes:writable, fulltextIndexes:writable, spatialIndexes:writable */
-// js/functions.js
-
-/* global sprintf */
-// js/vendor/sprintf.js
+/* global Navigation */
 
 /**
  * AJAX scripts for /table/structure
@@ -29,22 +38,23 @@
 /**
  * Reload fields table
  */
+
 function reloadFieldForm() {
-  $.post($('#fieldsForm').attr('action'), $('#fieldsForm').serialize() + CommonParams.get('arg_separator') + 'ajax_request=true', function (formData) {
-    var $tempDiv = $('<div id=\'temp_div\'><div>').append(formData.message);
-    $('#fieldsForm').replaceWith($tempDiv.find('#fieldsForm'));
-    $('#addColumns').replaceWith($tempDiv.find('#addColumns'));
-    $('#move_columns_dialog').find('ul').replaceWith($tempDiv.find('#move_columns_dialog ul'));
-    $('#moveColumns').removeClass('move-active');
+  jquery__WEBPACK_IMPORTED_MODULE_0__.post(jquery__WEBPACK_IMPORTED_MODULE_0__('#fieldsForm').attr('action'), jquery__WEBPACK_IMPORTED_MODULE_0__('#fieldsForm').serialize() + window.CommonParams.get('arg_separator') + 'ajax_request=true', function (formData) {
+    var $tempDiv = jquery__WEBPACK_IMPORTED_MODULE_0__('<div id=\'temp_div\'><div>').append(formData.message);
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#fieldsForm').replaceWith($tempDiv.find('#fieldsForm'));
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#addColumns').replaceWith($tempDiv.find('#addColumns'));
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#move_columns_dialog').find('ul').replaceWith($tempDiv.find('#move_columns_dialog ul'));
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#moveColumns').removeClass('move-active');
   });
-  $('#page_content').show();
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#page_content').show();
 }
 
 function checkFirst() {
-  if ($('select[name=after_field] option:selected').data('pos') === 'first') {
-    $('input[name=field_where]').val('first');
+  if (jquery__WEBPACK_IMPORTED_MODULE_0__('select[name=after_field] option:selected').data('pos') === 'first') {
+    jquery__WEBPACK_IMPORTED_MODULE_0__('input[name=field_where]').val('first');
   } else {
-    $('input[name=field_where]').val('after');
+    jquery__WEBPACK_IMPORTED_MODULE_0__('input[name=field_where]').val('after');
   }
 }
 /**
@@ -52,48 +62,48 @@ function checkFirst() {
  */
 
 
-AJAX.registerTeardown('table/structure.js', function () {
-  $(document).off('click', 'a.drop_column_anchor.ajax');
-  $(document).off('click', 'a.add_key.ajax');
-  $(document).off('click', '#move_columns_anchor');
-  $(document).off('submit', '.append_fields_form.ajax');
-  $('body').off('click', '#fieldsForm button');
-  $(document).off('click', 'a[id^=partition_action].ajax');
-  $(document).off('click', '#remove_partitioning.ajax');
+window.AJAX.registerTeardown('table/structure.js', function () {
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', 'a.drop_column_anchor.ajax');
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', 'a.add_key.ajax');
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', '#move_columns_anchor');
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('submit', '.append_fields_form.ajax');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('body').off('click', '#fieldsForm button.mult_submit');
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', 'a[id^=partition_action].ajax');
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', '#remove_partitioning.ajax');
 });
-AJAX.registerOnload('table/structure.js', function () {
+window.AJAX.registerOnload('table/structure.js', function () {
   // Re-initialize variables.
-  primaryIndexes = [];
-  indexes = [];
-  fulltextIndexes = [];
-  spatialIndexes = [];
+  window.primaryIndexes = [];
+  window.indexes = [];
+  window.fulltextIndexes = [];
+  window.spatialIndexes = [];
   /**
    *Ajax action for submitting the "Column Change" and "Add Column" form
    */
 
-  $('.append_fields_form.ajax').off();
-  $(document).on('submit', '.append_fields_form.ajax', function (event) {
+  jquery__WEBPACK_IMPORTED_MODULE_0__('.append_fields_form.ajax').off();
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('submit', '.append_fields_form.ajax', function (event) {
     event.preventDefault();
     /**
      * @var form object referring to the export form
      */
 
-    var $form = $(this);
+    var $form = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
     var fieldCnt = $form.find('input[name=orig_num_fields]').val();
 
     function submitForm() {
-      var $msg = Functions.ajaxShowMessage(Messages.strProcessingRequest);
-      $.post($form.attr('action'), $form.serialize() + CommonParams.get('arg_separator') + 'do_save_data=1', function (data) {
-        if ($('.sqlqueryresults').length !== 0) {
-          $('.sqlqueryresults').remove();
-        } else if ($('.error:not(.tab)').length !== 0) {
-          $('.error:not(.tab)').remove();
+      var $msg = Functions.ajaxShowMessage(window.Messages.strProcessingRequest);
+      jquery__WEBPACK_IMPORTED_MODULE_0__.post($form.attr('action'), $form.serialize() + window.CommonParams.get('arg_separator') + 'do_save_data=1', function (data) {
+        if (jquery__WEBPACK_IMPORTED_MODULE_0__('.sqlqueryresults').length !== 0) {
+          jquery__WEBPACK_IMPORTED_MODULE_0__('.sqlqueryresults').remove();
+        } else if (jquery__WEBPACK_IMPORTED_MODULE_0__('.error:not(.tab)').length !== 0) {
+          jquery__WEBPACK_IMPORTED_MODULE_0__('.error:not(.tab)').remove();
         }
 
         if (typeof data.success !== 'undefined' && data.success === true) {
-          $('#page_content').empty().append(data.message).show();
-          Functions.highlightSql($('#page_content'));
-          $('.result_query .alert-primary').remove();
+          jquery__WEBPACK_IMPORTED_MODULE_0__('#page_content').empty().append(data.message).show();
+          Functions.highlightSql(jquery__WEBPACK_IMPORTED_MODULE_0__('#page_content'));
+          jquery__WEBPACK_IMPORTED_MODULE_0__('.result_query .alert-primary').remove();
 
           if (typeof data.structure_refresh_route !== 'string') {
             // Do not reload the form when the code below freshly filled it
@@ -106,13 +116,13 @@ AJAX.registerOnload('table/structure.js', function () {
 
           if (typeof data.structure_refresh_route === 'string') {
             // Fetch the table structure right after adding a new column
-            $.get(data.structure_refresh_route, function (data) {
+            jquery__WEBPACK_IMPORTED_MODULE_0__.get(data.structure_refresh_route, function (data) {
               if (typeof data.success !== 'undefined' && data.success === true) {
-                $('#page_content').append(data.message).show();
+                jquery__WEBPACK_IMPORTED_MODULE_0__('#page_content').append(data.message).show();
               }
             });
           } else {
-            CommonActions.refreshMain('index.php?route=/table/structure');
+            window.CommonActions.refreshMain('index.php?route=/table/structure');
           }
         } else {
           Functions.ajaxShowMessage(data.error, false);
@@ -132,7 +142,7 @@ AJAX.registerOnload('table/structure.js', function () {
 
       for (i = 0; i < fieldCnt; i++) {
         id = '#field_' + i + '_5';
-        elm = $(id);
+        elm = jquery__WEBPACK_IMPORTED_MODULE_0__(id);
         val = elm.val();
         nameOrig = 'input[name=field_collation_orig\\[' + i + '\\]]';
         elmOrig = $form.find(nameOrig);
@@ -163,7 +173,7 @@ AJAX.registerOnload('table/structure.js', function () {
         // User wants to submit the form
         // If Collation is changed, Warn and Confirm
         if (checkIfConfirmRequired($form)) {
-          var question = sprintf(Messages.strChangeColumnCollation, 'https://wiki.phpmyadmin.net/pma/Garbled_data');
+          var question = window.sprintf(window.Messages.strChangeColumnCollation, 'https://wiki.phpmyadmin.net/pma/Garbled_data');
           $form.confirm(question, $form.attr('action'), function () {
             submitForm();
           });
@@ -178,18 +188,18 @@ AJAX.registerOnload('table/structure.js', function () {
    * Attach Event Handler for 'Drop Column'
    */
 
-  $(document).on('click', 'a.drop_column_anchor.ajax', function (event) {
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', 'a.drop_column_anchor.ajax', function (event) {
     event.preventDefault();
     /**
      * @var currTableName String containing the name of the current table
      */
 
-    var currTableName = $(this).closest('form').find('input[name=table]').val();
+    var currTableName = jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('form').find('input[name=table]').val();
     /**
      * @var currRow    Object reference to the currently selected row (i.e. field in the table)
      */
 
-    var $currRow = $(this).parents('tr');
+    var $currRow = jquery__WEBPACK_IMPORTED_MODULE_0__(this).parents('tr');
     /**
      * @var currColumnName    String containing name of the field referred to by {@link curr_row}
      */
@@ -200,28 +210,28 @@ AJAX.registerOnload('table/structure.js', function () {
      * @var $afterFieldItem    Corresponding entry in the 'After' field.
      */
 
-    var $afterFieldItem = $('select[name=\'after_field\'] option[value=\'' + currColumnName + '\']');
+    var $afterFieldItem = jquery__WEBPACK_IMPORTED_MODULE_0__('select[name=\'after_field\'] option[value=\'' + currColumnName + '\']');
     /**
      * @var question String containing the question to be asked for confirmation
      */
 
-    var question = Functions.sprintf(Messages.strDoYouReally, 'ALTER TABLE `' + currTableName + '` DROP `' + currColumnName + '`;');
-    var $thisAnchor = $(this);
+    var question = Functions.sprintf(window.Messages.strDoYouReally, 'ALTER TABLE `' + currTableName + '` DROP `' + currColumnName + '`;');
+    var $thisAnchor = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
     $thisAnchor.confirm(question, $thisAnchor.attr('href'), function (url) {
-      var $msg = Functions.ajaxShowMessage(Messages.strDroppingColumn, false);
+      var $msg = Functions.ajaxShowMessage(window.Messages.strDroppingColumn, false);
       var params = Functions.getJsConfirmCommonParam(this, $thisAnchor.getPostData());
-      params += CommonParams.get('arg_separator') + 'ajax_page_request=1';
-      $.post(url, params, function (data) {
+      params += window.CommonParams.get('arg_separator') + 'ajax_page_request=1';
+      jquery__WEBPACK_IMPORTED_MODULE_0__.post(url, params, function (data) {
         if (typeof data !== 'undefined' && data.success === true) {
           Functions.ajaxRemoveMessage($msg);
 
-          if ($('.result_query').length) {
-            $('.result_query').remove();
+          if (jquery__WEBPACK_IMPORTED_MODULE_0__('.result_query').length) {
+            jquery__WEBPACK_IMPORTED_MODULE_0__('.result_query').remove();
           }
 
           if (data.sql_query) {
-            $('<div class="result_query"></div>').html(data.sql_query).prependTo('#structure_content');
-            Functions.highlightSql($('#page_content'));
+            jquery__WEBPACK_IMPORTED_MODULE_0__('<div class="result_query"></div>').html(data.sql_query).prependTo('#structure_content');
+            Functions.highlightSql(jquery__WEBPACK_IMPORTED_MODULE_0__('#page_content'));
           } // Adjust the row numbers
 
 
@@ -233,20 +243,20 @@ AJAX.registerOnload('table/structure.js', function () {
           $afterFieldItem.remove();
           $currRow.hide('medium').remove(); // Remove the dropped column from select menu for 'after field'
 
-          $('select[name=after_field]').find('[value="' + currColumnName + '"]').remove(); // by default select the (new) last option to add new column
+          jquery__WEBPACK_IMPORTED_MODULE_0__('select[name=after_field]').find('[value="' + currColumnName + '"]').remove(); // by default select the (new) last option to add new column
           // (in case last column is dropped)
 
-          $('select[name=after_field] option').last().attr('selected', 'selected'); // refresh table stats
+          jquery__WEBPACK_IMPORTED_MODULE_0__('select[name=after_field] option').last().attr('selected', 'selected'); // refresh table stats
 
           if (data.tableStat) {
-            $('#tablestatistics').html(data.tableStat);
+            jquery__WEBPACK_IMPORTED_MODULE_0__('#tablestatistics').html(data.tableStat);
           } // refresh the list of indexes (comes from /sql)
 
 
-          $('.index_info').replaceWith(data.indexes_list);
+          jquery__WEBPACK_IMPORTED_MODULE_0__('.index_info').replaceWith(data.indexes_list);
           Navigation.reload();
         } else {
-          Functions.ajaxShowMessage(Messages.strErrorProcessingRequest + ' : ' + data.error, false);
+          Functions.ajaxShowMessage(window.Messages.strErrorProcessingRequest + ' : ' + data.error, false);
         }
       }); // end $.post()
     });
@@ -256,9 +266,9 @@ AJAX.registerOnload('table/structure.js', function () {
    * Ajax Event handler for adding keys
    */
 
-  $(document).on('click', 'a.add_key.ajax', function (event) {
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', 'a.add_key.ajax', function (event) {
     event.preventDefault();
-    var $this = $(this);
+    var $this = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
     var currTableName = $this.closest('form').find('input[name=table]').val();
     var currColumnName = $this.parents('tr').children('th').children('label').text().trim();
     var addClause = '';
@@ -275,14 +285,14 @@ AJAX.registerOnload('table/structure.js', function () {
       addClause = 'ADD FULLTEXT';
     }
 
-    var question = Functions.sprintf(Messages.strDoYouReally, 'ALTER TABLE `' + Functions.escapeHtml(currTableName) + '` ' + addClause + '(`' + Functions.escapeHtml(currColumnName) + '`);');
-    var $thisAnchor = $(this);
+    var question = Functions.sprintf(window.Messages.strDoYouReally, 'ALTER TABLE `' + Functions.escapeHtml(currTableName) + '` ' + addClause + '(`' + Functions.escapeHtml(currColumnName) + '`);');
+    var $thisAnchor = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
     $thisAnchor.confirm(question, $thisAnchor.attr('href'), function (url) {
       Functions.ajaxShowMessage();
-      AJAX.source = $this;
+      window.AJAX.source = $this;
       var params = Functions.getJsConfirmCommonParam(this, $thisAnchor.getPostData());
-      params += CommonParams.get('arg_separator') + 'ajax_page_request=1';
-      $.post(url, params, AJAX.responseHandler);
+      params += window.CommonParams.get('arg_separator') + 'ajax_page_request=1';
+      jquery__WEBPACK_IMPORTED_MODULE_0__.post(url, params, window.AJAX.responseHandler);
     });
   }); // end Add key
 
@@ -290,29 +300,29 @@ AJAX.registerOnload('table/structure.js', function () {
    * Inline move columns
   **/
 
-  $(document).on('click', '#move_columns_anchor', function (e) {
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', '#move_columns_anchor', function (e) {
     e.preventDefault();
 
-    if ($(this).hasClass('move-active')) {
+    if (jquery__WEBPACK_IMPORTED_MODULE_0__(this).hasClass('move-active')) {
       return;
     }
 
     var buttonOptionsError = {};
 
-    buttonOptionsError[Messages.strOK] = function () {
-      $(this).dialog('close').remove();
+    buttonOptionsError[window.Messages.strOK] = function () {
+      jquery__WEBPACK_IMPORTED_MODULE_0__(this).dialog('close').remove();
     };
 
     var columns = [];
-    $('#tablestructure').find('tbody tr').each(function () {
-      var colName = $(this).find('input:checkbox').eq(0).val();
-      var hiddenInput = $('<input>').prop({
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#tablestructure').find('tbody tr').each(function () {
+      var colName = jquery__WEBPACK_IMPORTED_MODULE_0__(this).find('input:checkbox').eq(0).val();
+      var hiddenInput = jquery__WEBPACK_IMPORTED_MODULE_0__('<input>').prop({
         name: 'move_columns[]',
         type: 'hidden'
       }).val(colName);
-      columns[columns.length] = $('<li></li>').addClass('placeholderDrag').text(colName).append(hiddenInput);
+      columns[columns.length] = jquery__WEBPACK_IMPORTED_MODULE_0__('<li></li>').addClass('placeholderDrag').text(colName).append(hiddenInput);
     });
-    var colList = $('#move_columns_dialog').find('ul').find('li').remove().end();
+    var colList = jquery__WEBPACK_IMPORTED_MODULE_0__('#move_columns_dialog').find('ul').find('li').remove().end();
 
     for (var i in columns) {
       colList.append(columns[i]);
@@ -320,37 +330,37 @@ AJAX.registerOnload('table/structure.js', function () {
 
     colList.sortable({
       axis: 'y',
-      containment: $('#move_columns_dialog').find('div'),
+      containment: jquery__WEBPACK_IMPORTED_MODULE_0__('#move_columns_dialog').find('div'),
       tolerance: 'pointer'
     }).disableSelection();
-    var $form = $('#move_columns_dialog').find('form');
+    var $form = jquery__WEBPACK_IMPORTED_MODULE_0__('#move_columns_dialog').find('form');
     $form.data('serialized-unmoved', $form.serialize());
-    $('#moveColumnsModal').modal('show');
-    $('#designerModalGoButton').on('click', function () {
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#moveColumnsModal').modal('show');
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#designerModalGoButton').on('click', function () {
       // Off event necessary, else the function fires multiple times
-      $('#designerModalGoButton').off('click');
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#designerModalGoButton').off('click');
       event.preventDefault();
       var $msgbox = Functions.ajaxShowMessage();
-      var $this = $('#moveColumnsModal');
+      var $this = jquery__WEBPACK_IMPORTED_MODULE_0__('#moveColumnsModal');
       var $form = $this.find('form');
       var serialized = $form.serialize(); // check if any columns were moved at all
 
-      $('#moveColumnsModal').modal('hide');
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#moveColumnsModal').modal('hide');
 
       if (serialized === $form.data('serialized-unmoved')) {
         Functions.ajaxRemoveMessage($msgbox);
         return;
       }
 
-      $.post($form.prop('action'), serialized + CommonParams.get('arg_separator') + 'ajax_request=true', function (data) {
+      jquery__WEBPACK_IMPORTED_MODULE_0__.post($form.prop('action'), serialized + window.CommonParams.get('arg_separator') + 'ajax_request=true', function (data) {
         if (data.success === false) {
           Functions.ajaxRemoveMessage($msgbox);
-          var errorModal = $('#moveColumnsErrorModal');
+          var errorModal = jquery__WEBPACK_IMPORTED_MODULE_0__('#moveColumnsErrorModal');
           errorModal.modal('show');
           errorModal.find('.modal-body').first().html(data.error);
         } else {
           // sort the fields table
-          var $fieldsTable = $('table#tablestructure tbody'); // remove all existing rows and remember them
+          var $fieldsTable = jquery__WEBPACK_IMPORTED_MODULE_0__('table#tablestructure tbody'); // remove all existing rows and remember them
 
           var $rows = $fieldsTable.find('tr').remove(); // loop through the correct order
 
@@ -371,53 +381,53 @@ AJAX.registerOnload('table/structure.js', function () {
         }
       });
     });
-    $('#designerModalPreviewButton').on('click', function () {
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#designerModalPreviewButton').on('click', function () {
       // Function for Previewing SQL
-      $('#moveColumnsModal').modal('hide');
-      var $form = $('#move_column_form');
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#moveColumnsModal').modal('hide');
+      var $form = jquery__WEBPACK_IMPORTED_MODULE_0__('#move_column_form');
       Functions.previewSql($form);
     });
-    $('#previewSQLCloseButton').on('click', function () {
-      $('#moveColumnsModal').modal('show');
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#previewSQLCloseButton').on('click', function () {
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#moveColumnsModal').modal('show');
     });
-    $('#designerModalCloseButton').on('click', function () {
-      $('#move_columns_anchor').removeClass('move-active');
+    jquery__WEBPACK_IMPORTED_MODULE_0__('#designerModalCloseButton').on('click', function () {
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#move_columns_anchor').removeClass('move-active');
     });
   });
   /**
    * Handles multi submits in table structure page such as change, browse, drop, primary etc.
    */
 
-  $('body').on('click', '#fieldsForm button', function (e) {
+  jquery__WEBPACK_IMPORTED_MODULE_0__('body').on('click', '#fieldsForm button.mult_submit', function (e) {
     e.preventDefault();
-    var $form = $(this).parents('form');
-    var argsep = CommonParams.get('arg_separator');
+    var $form = jquery__WEBPACK_IMPORTED_MODULE_0__(this).parents('form');
+    var argsep = window.CommonParams.get('arg_separator');
     var submitData = $form.serialize() + argsep + 'ajax_request=true' + argsep + 'ajax_page_request=true';
     Functions.ajaxShowMessage();
-    AJAX.source = $form;
-    $.post(this.formAction, submitData, AJAX.responseHandler);
+    window.AJAX.source = $form;
+    jquery__WEBPACK_IMPORTED_MODULE_0__.post(this.formAction, submitData, window.AJAX.responseHandler);
   });
   /**
    * Handles clicks on Action links in partition table
    */
 
-  $(document).on('click', 'a[id^=partition_action].ajax', function (e) {
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', 'a[id^=partition_action].ajax', function (e) {
     e.preventDefault();
-    var $link = $(this);
+    var $link = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
 
     function submitPartitionAction(url) {
       var params = 'ajax_request=true&ajax_page_request=true&' + $link.getPostData();
       Functions.ajaxShowMessage();
-      AJAX.source = $link;
-      $.post(url, params, AJAX.responseHandler);
+      window.AJAX.source = $link;
+      jquery__WEBPACK_IMPORTED_MODULE_0__.post(url, params, window.AJAX.responseHandler);
     }
 
     if ($link.is('#partition_action_DROP')) {
-      $link.confirm(Messages.strDropPartitionWarning, $link.attr('href'), function (url) {
+      $link.confirm(window.Messages.strDropPartitionWarning, $link.attr('href'), function (url) {
         submitPartitionAction(url);
       });
     } else if ($link.is('#partition_action_TRUNCATE')) {
-      $link.confirm(Messages.strTruncatePartitionWarning, $link.attr('href'), function (url) {
+      $link.confirm(window.Messages.strTruncatePartitionWarning, $link.attr('href'), function (url) {
         submitPartitionAction(url);
       });
     } else {
@@ -428,21 +438,31 @@ AJAX.registerOnload('table/structure.js', function () {
    * Handles remove partitioning
    */
 
-  $(document).on('click', '#remove_partitioning.ajax', function (e) {
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', '#remove_partitioning.ajax', function (e) {
     e.preventDefault();
-    var $link = $(this);
-    var question = Messages.strRemovePartitioningWarning;
+    var $link = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
+    var question = window.Messages.strRemovePartitioningWarning;
     $link.confirm(question, $link.attr('href'), function (url) {
       var params = Functions.getJsConfirmCommonParam({
         'ajax_request': true,
         'ajax_page_request': true
       }, $link.getPostData());
       Functions.ajaxShowMessage();
-      AJAX.source = $link;
-      $.post(url, params, AJAX.responseHandler);
+      window.AJAX.source = $link;
+      jquery__WEBPACK_IMPORTED_MODULE_0__.post(url, params, window.AJAX.responseHandler);
     });
   });
-  $(document).on('change', 'select[name=after_field]', function () {
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('change', 'select[name=after_field]', function () {
     checkFirst();
   });
 });
+
+/***/ })
+
+},
+/******/ function(__webpack_require__) { // webpackRuntimeModules
+/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
+/******/ var __webpack_exports__ = (__webpack_exec__(74));
+/******/ }
+]);
+//# sourceMappingURL=structure.js.map

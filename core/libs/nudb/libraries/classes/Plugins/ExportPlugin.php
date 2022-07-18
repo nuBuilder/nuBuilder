@@ -39,13 +39,14 @@ abstract class ExportPlugin implements Plugin
     /** @var Transformations */
     protected $transformations;
 
-    final public function __construct()
+    /**
+     * @psalm-suppress InvalidArrayOffset, MixedAssignment, MixedMethodCall
+     */
+    final public function __construct(Relation $relation, Export $export, Transformations $transformations)
     {
-        global $dbi;
-
-        $this->relation = new Relation($dbi);
-        $this->export = new Export($dbi);
-        $this->transformations = new Transformations();
+        $this->relation = $relation;
+        $this->export = $export;
+        $this->transformations = $transformations;
         $this->init();
         $this->properties = $this->setProperties();
     }
@@ -371,7 +372,7 @@ abstract class ExportPlugin implements Plugin
         return $relation;
     }
 
-    public function isAvailable(): bool
+    public static function isAvailable(): bool
     {
         return true;
     }

@@ -26,19 +26,22 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\MoTranslator;
 
+use PhpMyAdmin\MoTranslator\Cache\CacheInterface;
+use PhpMyAdmin\MoTranslator\Cache\GetAllInterface;
+use PhpMyAdmin\MoTranslator\Cache\InMemoryCache;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Throwable;
-use function array_key_exists;
+
 use function chr;
 use function count;
 use function explode;
+use function get_class;
 use function implode;
 use function intval;
-use function is_readable;
 use function ltrim;
 use function preg_replace;
 use function rtrim;
-use function strcmp;
+use function sprintf;
 use function stripos;
 use function strpos;
 use function strtolower;
@@ -100,77 +103,19 @@ class Translator
     /** @var int|null number of plurals */
     private $pluralCount = null;
 
-    /**
-     * Array with original -> translation mapping.
-     *
-     * @var array<string,string>
-     */
-    private $cacheTranslations = [];
+    /** @var CacheInterface */
+    private $cache;
 
     /**
-     * @param string|null $filename Name of mo file to load (null to not load a file)
+     * @param CacheInterface|string|null $cache Mo file to load (null for no file) or a CacheInterface implementation
      */
-    public function __construct(?string $filename)
+    public function __construct($cache)
     {
-        // The user can load the translations manually
-        if ($filename === null) {
-            return;
+        if (! $cache instanceof CacheInterface) {
+            $cache = new InMemoryCache(new MoParser($cache));
         }
 
-        $this->loadTranslationsFromFile($filename);
-    }
-
-    /**
-     * Load a Mo file translations
-     *
-     * @param string $filename Name of mo file to load
-     */
-    private function loadTranslationsFromFile(string $filename): void
-    {
-        if (! is_readable($filename)) {
-            $this->error = self::ERROR_DOES_NOT_EXIST;
-
-            return;
-        }
-
-        $stream = new StringReader($filename);
-
-        try {
-            $magic = $stream->read(0, 4);
-            if (strcmp($magic, self::MAGIC_LE) === 0) {
-                $unpack = 'V';
-            } elseif (strcmp($magic, self::MAGIC_BE) === 0) {
-                $unpack = 'N';
-            } else {
-                $this->error = self::ERROR_BAD_MAGIC;
-
-                return;
-            }
-
-            /* Parse header */
-            $total = $stream->readint($unpack, 8);
-            $originals = $stream->readint($unpack, 12);
-            $translations = $stream->readint($unpack, 16);
-
-            /* get original and translations tables */
-            $totalTimesTwo = (int) ($total * 2);// Fix for issue #36 on ARM
-            $tableOriginals = $stream->readintarray($unpack, $originals, $totalTimesTwo);
-            $tableTranslations = $stream->readintarray($unpack, $translations, $totalTimesTwo);
-
-            /* read all strings to the cache */
-            for ($i = 0; $i < $total; ++$i) {
-                $iTimesTwo = $i * 2;
-                $iPlusOne = $iTimesTwo + 1;
-                $iPlusTwo = $iTimesTwo + 2;
-                $original = $stream->read($tableOriginals[$iPlusTwo], $tableOriginals[$iPlusOne]);
-                $translation = $stream->read($tableTranslations[$iPlusTwo], $tableTranslations[$iPlusOne]);
-                $this->cacheTranslations[$original] = $translation;
-            }
-        } catch (ReaderException $e) {
-            $this->error = self::ERROR_READING;
-
-            return;
-        }
+        $this->cache = $cache;
     }
 
     /**
@@ -182,11 +127,7 @@ class Translator
      */
     public function gettext(string $msgid): string
     {
-        if (array_key_exists($msgid, $this->cacheTranslations)) {
-            return $this->cacheTranslations[$msgid];
-        }
-
-        return $msgid;
+        return $this->cache->get($msgid);
     }
 
     /**
@@ -196,7 +137,7 @@ class Translator
      */
     public function exists(string $msgid): bool
     {
-        return array_key_exists($msgid, $this->cacheTranslations);
+        return $this->cache->has($msgid);
     }
 
     /**
@@ -289,11 +230,7 @@ class Translator
 
         // cache header field for plural forms
         if ($this->pluralEquation === null) {
-            if (isset($this->cacheTranslations[''])) {
-                $header = $this->cacheTranslations[''];
-            } else {
-                $header = '';
-            }
+            $header = $this->cache->get('');
 
             $expr = $this->extractPluralsForms($header);
             $this->pluralEquation = $this->sanitizePluralExpression($expr);
@@ -345,14 +282,15 @@ class Translator
     {
         // this should contains all strings separated by NULLs
         $key = implode(chr(0), [$msgid, $msgidPlural]);
-        if (! array_key_exists($key, $this->cacheTranslations)) {
+        if (! $this->cache->has($key)) {
             return $number !== 1 ? $msgidPlural : $msgid;
         }
+
+        $result = $this->cache->get($key);
 
         // find out the appropriate form
         $select = $this->selectString($number);
 
-        $result = $this->cacheTranslations[$key];
         $list = explode(chr(0), $result);
         // @codeCoverageIgnoreStart
         if ($list === false) {
@@ -360,6 +298,7 @@ class Translator
             // But according to the php manual it should never happen
             return '';
         }
+
         // @codeCoverageIgnoreEnd
 
         if (! isset($list[$select])) {
@@ -417,7 +356,7 @@ class Translator
      */
     public function setTranslation(string $msgid, string $msgstr): void
     {
-        $this->cacheTranslations[$msgid] = $msgstr;
+        $this->cache->set($msgid, $msgstr);
     }
 
     /**
@@ -427,7 +366,7 @@ class Translator
      */
     public function setTranslations(array $translations): void
     {
-        $this->cacheTranslations = $translations;
+        $this->cache->setAll($translations);
     }
 
     /**
@@ -437,6 +376,13 @@ class Translator
      */
     public function getTranslations(): array
     {
-        return $this->cacheTranslations;
+        if ($this->cache instanceof GetAllInterface) {
+            return $this->cache->getAll();
+        }
+
+        throw new CacheException(sprintf(
+            "Cache '%s' does not support getting translations",
+            get_class($this->cache)
+        ));
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Table;
 
+use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\DbTableExists;
 use PhpMyAdmin\Url;
 use PhpMyAdmin\Util;
@@ -16,7 +17,8 @@ final class DeleteConfirmController extends AbstractController
 {
     public function __invoke(): void
     {
-        global $db, $table, $sql_query, $urlParams, $errorUrl, $cfg;
+        $GLOBALS['urlParams'] = $GLOBALS['urlParams'] ?? null;
+        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
 
         $selected = $_POST['rows_to_delete'] ?? null;
 
@@ -27,19 +29,19 @@ final class DeleteConfirmController extends AbstractController
             return;
         }
 
-        Util::checkParameters(['db', 'table']);
+        $this->checkParameters(['db', 'table']);
 
-        $urlParams = ['db' => $db, 'table' => $table];
-        $errorUrl = Util::getScriptNameForOption($cfg['DefaultTabTable'], 'table');
-        $errorUrl .= Url::getCommon($urlParams, '&');
+        $GLOBALS['urlParams'] = ['db' => $GLOBALS['db'], 'table' => $GLOBALS['table']];
+        $GLOBALS['errorUrl'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabTable'], 'table');
+        $GLOBALS['errorUrl'] .= Url::getCommon($GLOBALS['urlParams'], '&');
 
-        DbTableExists::check();
+        DbTableExists::check($GLOBALS['db'], $GLOBALS['table']);
 
         $this->render('table/delete/confirm', [
-            'db' => $db,
-            'table' => $table,
+            'db' => $GLOBALS['db'],
+            'table' => $GLOBALS['table'],
             'selected' => $selected,
-            'sql_query' => $sql_query,
+            'sql_query' => $GLOBALS['sql_query'],
             'is_foreign_key_check' => ForeignKey::isCheckEnabled(),
         ]);
     }

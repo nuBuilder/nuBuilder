@@ -1,4 +1,4 @@
-<form method="post" action="{{ action|raw }}" class="config-form disableAjax">
+<form method="post" action="{{ action|e('html_attr') }}" class="config-form disableAjax">
   <input type="hidden" name="tab_hash" value="">
   {% if has_check_page_refresh %}
     <input type="hidden" name="check_page_refresh" id="check_page_refresh" value="">
@@ -26,7 +26,7 @@
             <fieldset class="optbox">
               <legend>{{ form.descriptions.name }}</legend>
 
-              {# This must match with displayErrors() in scripts.js #}
+              {# This must match with window.Config.displayErrors() in scripts.js #}
               {% if form.errors is iterable and form.errors|length > 0 %}
                 <dl class="errors">
                   {% for error in form.errors %}
@@ -54,13 +54,13 @@
 </form>
 
 <script type="text/javascript">
-  if (typeof configInlineParams === 'undefined' || !Array.isArray(configInlineParams)) {
-    configInlineParams = [];
+  if (typeof window.configInlineParams === 'undefined' || !Array.isArray(window.configInlineParams)) {
+    window.configInlineParams = [];
   }
-  configInlineParams.push(function () {
+  window.configInlineParams.push(function () {
     {{ js_array|join(';\n')|raw }};
 
-    $.extend(Messages, {
+    $.extend(window.Messages, {
       'error_nan_p': '{{ 'Not a positive number!'|trans|e('js') }}',
       'error_nan_nneg': '{{ 'Not a non-negative number!'|trans|e('js') }}',
       'error_incorrect_port': '{{ 'Not a valid port number!'|trans|e('js') }}',
@@ -68,11 +68,11 @@
       'error_value_lte': '{{ 'Value must be less than or equal to %s!'|trans|e('js') }}',
     });
 
-    $.extend(defaultValues, {
+    $.extend(window.defaultValues, {
       {{ js_default|join(",\n      ")|raw }}
     });
   });
-  if (typeof configScriptLoaded !== 'undefined' && configInlineParams) {
-    loadInlineConfig();
+  if (typeof window.configScriptLoaded !== 'undefined' && window.configInlineParams) {
+    window.Config.loadInlineConfig();
   }
 </script>

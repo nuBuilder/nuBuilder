@@ -8,8 +8,7 @@ final class DatabaseController extends AbstractController
 {
     public function __invoke(): void
     {
-        global $dblist;
-
-        $this->response->addJSON(['databases' => $dblist->databases]);
+        $GLOBALS['dblist'] = $GLOBALS['dblist'] ?? null;
+        $this->response->addJSON(['databases' => $GLOBALS['dblist']->databases]);
     }
 }

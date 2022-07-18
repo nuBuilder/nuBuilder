@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Database\Structure;
 
-use PhpMyAdmin\Controllers\Database\AbstractController;
+use PhpMyAdmin\Controllers\AbstractController;
 
 use function __;
 
@@ -12,8 +12,6 @@ final class ChangePrefixFormController extends AbstractController
 {
     public function __invoke(): void
     {
-        global $db;
-
         $selected = $_POST['selected_tbl'] ?? [];
         $submitMult = $_POST['submit_mult'] ?? '';
 
@@ -29,7 +27,7 @@ final class ChangePrefixFormController extends AbstractController
             $route = '/database/structure/copy-table-with-prefix';
         }
 
-        $urlParams = ['db' => $db];
+        $urlParams = ['db' => $GLOBALS['db']];
         foreach ($selected as $selectedValue) {
             $urlParams['selected'][] = $selectedValue;
         }

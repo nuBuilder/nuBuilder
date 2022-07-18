@@ -1,4 +1,18 @@
 "use strict";
+(self["webpackChunkphpmyadmin"] = self["webpackChunkphpmyadmin"] || []).push([[51],{
+
+/***/ 1:
+/***/ (function(module) {
+
+module.exports = jQuery;
+
+/***/ }),
+
+/***/ 57:
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 
 /**
  * Server Status Processes
@@ -6,6 +20,7 @@
  * @package PhpMyAdmin
  */
 // object to store process list state information
+
 var processList = {
   // denotes whether auto refresh is on or off
   autoRefresh: false,
@@ -32,9 +47,9 @@ var processList = {
     }
 
     if (processList.refreshInterval === null) {
-      processList.refreshInterval = $('#id_refreshRate').val();
+      processList.refreshInterval = jquery__WEBPACK_IMPORTED_MODULE_0__('#id_refreshRate').val();
     } else {
-      $('#id_refreshRate').val(processList.refreshInterval);
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#id_refreshRate').val(processList.refreshInterval);
     }
   },
 
@@ -47,24 +62,24 @@ var processList = {
    */
   killProcessHandler: function (event) {
     event.preventDefault();
-    var argSep = CommonParams.get('arg_separator');
-    var params = $(this).getPostData();
-    params += argSep + 'ajax_request=1' + argSep + 'server=' + CommonParams.get('server'); // Get row element of the process to be killed.
+    var argSep = window.CommonParams.get('arg_separator');
+    var params = jquery__WEBPACK_IMPORTED_MODULE_0__(this).getPostData();
+    params += argSep + 'ajax_request=1' + argSep + 'server=' + window.CommonParams.get('server'); // Get row element of the process to be killed.
 
-    var $tr = $(this).closest('tr');
-    $.post($(this).attr('href'), params, function (data) {
+    var $tr = jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('tr');
+    jquery__WEBPACK_IMPORTED_MODULE_0__.post(jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('href'), params, function (data) {
       // Check if process was killed or not.
       if (data.hasOwnProperty('success') && data.success) {
         // remove the row of killed process.
         $tr.remove(); // As we just removed a row, reapply odd-even classes
         // to keep table stripes consistent
 
-        var $tableProcessListTr = $('#tableprocesslist').find('> tbody > tr');
+        var $tableProcessListTr = jquery__WEBPACK_IMPORTED_MODULE_0__('#tableprocesslist').find('> tbody > tr');
         $tableProcessListTr.each(function (index) {
           if (index >= 0 && index % 2 === 0) {
-            $(this).removeClass('odd').addClass('even');
+            jquery__WEBPACK_IMPORTED_MODULE_0__(this).removeClass('odd').addClass('even');
           } else if (index >= 0 && index % 2 !== 0) {
-            $(this).removeClass('even').addClass('odd');
+            jquery__WEBPACK_IMPORTED_MODULE_0__(this).removeClass('even').addClass('odd');
           }
         }); // Show process killed message
 
@@ -92,11 +107,11 @@ var processList = {
       processList.refreshUrl = 'index.php?route=/server/status/processes/refresh';
       var interval = parseInt(processList.refreshInterval, 10) * 1000;
       var urlParams = processList.getUrlParams();
-      processList.refreshRequest = $.post(processList.refreshUrl, urlParams, function (data) {
+      processList.refreshRequest = jquery__WEBPACK_IMPORTED_MODULE_0__.post(processList.refreshUrl, urlParams, function (data) {
         if (data.hasOwnProperty('success') && data.success) {
-          var $newTable = $(data.message);
-          $('#tableprocesslist').html($newTable.html());
-          Functions.highlightSql($('#tableprocesslist'));
+          var $newTable = jquery__WEBPACK_IMPORTED_MODULE_0__(data.message);
+          jquery__WEBPACK_IMPORTED_MODULE_0__('#tableprocesslist').html($newTable.html());
+          Functions.highlightSql(jquery__WEBPACK_IMPORTED_MODULE_0__('#tableprocesslist'));
         }
 
         processList.refreshTimeout = setTimeout(processList.refresh, interval);
@@ -126,15 +141,15 @@ var processList = {
    */
   setRefreshLabel: function () {
     var img = 'play';
-    var label = Messages.strStartRefresh;
+    var label = window.Messages.strStartRefresh;
 
     if (processList.autoRefresh) {
       img = 'pause';
-      label = Messages.strStopRefresh;
+      label = window.Messages.strStopRefresh;
       processList.refresh();
     }
 
-    $('a#toggleRefresh').html(Functions.getImage(img) + Functions.escapeHtml(label));
+    jquery__WEBPACK_IMPORTED_MODULE_0__('a#toggleRefresh').html(Functions.getImage(img) + Functions.escapeHtml(label));
   },
 
   /**
@@ -146,16 +161,16 @@ var processList = {
    */
   getUrlParams: function () {
     var urlParams = {
-      'server': CommonParams.get('server'),
+      'server': window.CommonParams.get('server'),
       'ajax_request': true,
       'refresh': true,
-      'full': $('input[name="full"]').val(),
-      'order_by_field': $('input[name="order_by_field"]').val(),
-      'column_name': $('input[name="column_name"]').val(),
-      'sort_order': $('input[name="sort_order"]').val()
+      'full': jquery__WEBPACK_IMPORTED_MODULE_0__('input[name="full"]').val(),
+      'order_by_field': jquery__WEBPACK_IMPORTED_MODULE_0__('input[name="order_by_field"]').val(),
+      'column_name': jquery__WEBPACK_IMPORTED_MODULE_0__('input[name="column_name"]').val(),
+      'sort_order': jquery__WEBPACK_IMPORTED_MODULE_0__('input[name="sort_order"]').val()
     };
 
-    if ($('#showExecuting').is(':checked')) {
+    if (jquery__WEBPACK_IMPORTED_MODULE_0__('#showExecuting').is(':checked')) {
       urlParams.showExecuting = true;
       return urlParams;
     }
@@ -163,35 +178,45 @@ var processList = {
     return urlParams;
   }
 };
-AJAX.registerOnload('server/status/processes.js', function () {
+window.AJAX.registerOnload('server/status/processes.js', function () {
   processList.init(); // Bind event handler for kill_process
 
-  $('#tableprocesslist').on('click', 'a.kill_process', processList.killProcessHandler); // Bind event handler for toggling refresh of process list
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#tableprocesslist').on('click', 'a.kill_process', processList.killProcessHandler); // Bind event handler for toggling refresh of process list
 
-  $('a#toggleRefresh').on('click', function (event) {
+  jquery__WEBPACK_IMPORTED_MODULE_0__('a#toggleRefresh').on('click', function (event) {
     event.preventDefault();
     processList.autoRefresh = !processList.autoRefresh;
     processList.setRefreshLabel();
   }); // Bind event handler for change in refresh rate
 
-  $('#id_refreshRate').on('change', function () {
-    processList.refreshInterval = $(this).val();
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#id_refreshRate').on('change', function () {
+    processList.refreshInterval = jquery__WEBPACK_IMPORTED_MODULE_0__(this).val();
     processList.refresh();
   }); // Bind event handler for table header links
 
-  $('#tableprocesslist').on('click', 'thead a', function () {
-    processList.refreshUrl = $(this).attr('href');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#tableprocesslist').on('click', 'thead a', function () {
+    processList.refreshUrl = jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('href');
   });
 });
 /**
  * Unbind all event handlers before tearing down a page
  */
 
-AJAX.registerTeardown('server/status/processes.js', function () {
-  $('#tableprocesslist').off('click', 'a.kill_process');
-  $('a#toggleRefresh').off('click');
-  $('#id_refreshRate').off('change');
-  $('#tableprocesslist').off('click', 'thead a'); // stop refreshing further
+window.AJAX.registerTeardown('server/status/processes.js', function () {
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#tableprocesslist').off('click', 'a.kill_process');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('a#toggleRefresh').off('click');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#id_refreshRate').off('change');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('#tableprocesslist').off('click', 'thead a'); // stop refreshing further
 
   processList.abortRefresh();
 });
+
+/***/ })
+
+},
+/******/ function(__webpack_require__) { // webpackRuntimeModules
+/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
+/******/ var __webpack_exports__ = (__webpack_exec__(57));
+/******/ }
+]);
+//# sourceMappingURL=processes.js.map

@@ -1,4 +1,20 @@
 "use strict";
+(self["webpackChunkphpmyadmin"] = self["webpackChunkphpmyadmin"] || []).push([[15],{
+
+/***/ 1:
+/***/ (function(module) {
+
+module.exports = jQuery;
+
+/***/ }),
+
+/***/ 20:
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+
+/* global Navigation */
 
 /**
  * @fileoverview    functions used on the database structure page
@@ -8,7 +24,9 @@
  * @requires    jQueryUI
  * @required    js/functions.js
  */
+
 var DatabaseStructure = {};
+window.DatabaseStructure = DatabaseStructure;
 /**
  * AJAX scripts for /database/structure
  *
@@ -23,14 +41,14 @@ var DatabaseStructure = {};
  * Unbind all event handlers before tearing down a page
  */
 
-AJAX.registerTeardown('database/structure.js', function () {
-  $(document).off('click', 'a.truncate_table_anchor.ajax');
-  $(document).off('click', 'a.drop_table_anchor.ajax');
-  $(document).off('click', '#real_end_input');
-  $(document).off('click', 'a.favorite_table_anchor.ajax');
-  $('a.real_row_count').off('click');
-  $('a.row_count_sum').off('click');
-  $('select[name=submit_mult]').off('change');
+window.AJAX.registerTeardown('database/structure.js', function () {
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', 'a.truncate_table_anchor.ajax');
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', 'a.drop_table_anchor.ajax');
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', '#real_end_input');
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', 'a.favorite_table_anchor.ajax');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('a.real_row_count').off('click');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('a.row_count_sum').off('click');
+  jquery__WEBPACK_IMPORTED_MODULE_0__('select[name=submit_mult]').off('change');
 });
 /**
  * Adjust number of rows and total size in the summary
@@ -38,12 +56,12 @@ AJAX.registerTeardown('database/structure.js', function () {
  */
 
 DatabaseStructure.adjustTotals = function () {
-  var byteUnits = [Messages.strB, Messages.strKiB, Messages.strMiB, Messages.strGiB, Messages.strTiB, Messages.strPiB, Messages.strEiB];
+  var byteUnits = [window.Messages.strB, window.Messages.strKiB, window.Messages.strMiB, window.Messages.strGiB, window.Messages.strTiB, window.Messages.strPiB, window.Messages.strEiB];
   /**
    * @var $allTr jQuery object that references all the rows in the list of tables
    */
 
-  var $allTr = $('#tablesForm').find('table.data tbody').first().find('tr'); // New summary values for the table
+  var $allTr = jquery__WEBPACK_IMPORTED_MODULE_0__('#tablesForm').find('table.data tbody').first().find('tr'); // New summary values for the table
 
   var tableSum = $allTr.length;
   var rowsSum = 0;
@@ -51,7 +69,7 @@ DatabaseStructure.adjustTotals = function () {
   var overheadSum = 0;
   var rowSumApproximated = false;
   $allTr.each(function () {
-    var $this = $(this);
+    var $this = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
     var i;
     var tmpVal; // Get the number of rows for this SQL table
 
@@ -129,8 +147,8 @@ DatabaseStructure.adjustTotals = function () {
   sizeSum = Math.round(sizeSum * 10) / 10;
   overheadSum = Math.round(overheadSum * 10) / 10; // Update summary with new data
 
-  var $summary = $('#tbl_summary_row');
-  $summary.find('.tbl_num').text(Functions.sprintf(Messages.strNTables, tableSum));
+  var $summary = jquery__WEBPACK_IMPORTED_MODULE_0__('#tbl_summary_row');
+  $summary.find('.tbl_num').text(Functions.sprintf(window.Messages.strNTables, tableSum));
 
   if (rowSumApproximated) {
     $summary.find('.row_count_sum').text(strRowSum);
@@ -148,12 +166,12 @@ DatabaseStructure.adjustTotals = function () {
 
 
 DatabaseStructure.fetchRealRowCount = function ($target) {
-  var $throbber = $('#pma_navigation').find('.throbber').first().clone().css({
+  var $throbber = jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_navigation').find('.throbber').first().clone().css({
     visibility: 'visible',
     display: 'inline-block'
   }).on('click', false);
   $target.html($throbber);
-  $.ajax({
+  jquery__WEBPACK_IMPORTED_MODULE_0__.ajax({
     type: 'GET',
     url: $target.attr('href'),
     cache: false,
@@ -162,9 +180,9 @@ DatabaseStructure.fetchRealRowCount = function ($target) {
       if (response.success) {
         // If to update all row counts for a DB.
         if (response.real_row_count_all) {
-          $.each(JSON.parse(response.real_row_count_all), function (index, table) {
+          jquery__WEBPACK_IMPORTED_MODULE_0__.each(JSON.parse(response.real_row_count_all), function (index, table) {
             // Update each table row count.
-            $('table.data td[data-table*="' + table.table + '"]').text(table.row_count);
+            jquery__WEBPACK_IMPORTED_MODULE_0__('table.data td[data-table*="' + table.table + '"]').text(table.row_count);
           });
         } // If to update a particular table's row count.
 
@@ -177,35 +195,35 @@ DatabaseStructure.fetchRealRowCount = function ($target) {
 
         DatabaseStructure.adjustTotals();
       } else {
-        Functions.ajaxShowMessage(Messages.strErrorRealRowCount);
+        Functions.ajaxShowMessage(window.Messages.strErrorRealRowCount);
       }
     },
     error: function () {
-      Functions.ajaxShowMessage(Messages.strErrorRealRowCount);
+      Functions.ajaxShowMessage(window.Messages.strErrorRealRowCount);
     }
   });
 };
 
-AJAX.registerOnload('database/structure.js', function () {
+window.AJAX.registerOnload('database/structure.js', function () {
   /**
    * Event handler on select of "Make consistent with central list"
    */
-  $('select[name=submit_mult]').on('change', function (event) {
+  jquery__WEBPACK_IMPORTED_MODULE_0__('select[name=submit_mult]').on('change', function (event) {
     var url = 'index.php?route=/database/structure';
-    var action = $(this).val();
+    var action = jquery__WEBPACK_IMPORTED_MODULE_0__(this).val();
 
     if (action === 'make_consistent_with_central_list') {
       event.preventDefault();
       event.stopPropagation();
-      $('#makeConsistentWithCentralListModal').modal('show').on('shown.bs.modal', function () {
-        $('#makeConsistentWithCentralListContinue').on('click', function () {
-          const $form = $('#tablesForm');
-          const argSep = CommonParams.get('arg_separator');
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#makeConsistentWithCentralListModal').modal('show').on('shown.bs.modal', function () {
+        jquery__WEBPACK_IMPORTED_MODULE_0__('#makeConsistentWithCentralListContinue').on('click', function () {
+          const $form = jquery__WEBPACK_IMPORTED_MODULE_0__('#tablesForm');
+          const argSep = window.CommonParams.get('arg_separator');
           const data = $form.serialize() + argSep + 'ajax_request=true' + argSep + 'ajax_page_request=true';
           Functions.ajaxShowMessage();
-          AJAX.source = $form;
-          $.post('index.php?route=/database/structure/central-columns/make-consistent', data, AJAX.responseHandler);
-          $('#makeConsistentWithCentralListModal').modal('hide');
+          window.AJAX.source = $form;
+          jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/database/structure/central-columns/make-consistent', data, window.AJAX.responseHandler);
+          jquery__WEBPACK_IMPORTED_MODULE_0__('#makeConsistentWithCentralListModal').modal('hide');
         });
       });
       return;
@@ -215,42 +233,42 @@ AJAX.registerOnload('database/structure.js', function () {
       event.preventDefault();
       event.stopPropagation();
 
-      if ($('input[name="selected_tbl[]"]:checked').length === 0) {
+      if (jquery__WEBPACK_IMPORTED_MODULE_0__('input[name="selected_tbl[]"]:checked').length === 0) {
         return false;
       }
 
-      var formData = $('#tablesForm').serialize();
+      var formData = jquery__WEBPACK_IMPORTED_MODULE_0__('#tablesForm').serialize();
       var modalTitle = '';
 
       if (action === 'copy_tbl') {
         url = 'index.php?route=/database/structure/copy-form';
-        modalTitle = Messages.strCopyTablesTo;
+        modalTitle = window.Messages.strCopyTablesTo;
       } else if (action === 'add_prefix_tbl') {
         url = 'index.php?route=/database/structure/add-prefix';
-        modalTitle = Messages.strAddPrefix;
+        modalTitle = window.Messages.strAddPrefix;
       } else if (action === 'replace_prefix_tbl') {
         url = 'index.php?route=/database/structure/change-prefix-form';
-        modalTitle = Messages.strReplacePrefix;
+        modalTitle = window.Messages.strReplacePrefix;
       } else if (action === 'copy_tbl_change_prefix') {
         url = 'index.php?route=/database/structure/change-prefix-form';
-        modalTitle = Messages.strCopyPrefix;
+        modalTitle = window.Messages.strCopyPrefix;
       }
 
-      $.ajax({
+      jquery__WEBPACK_IMPORTED_MODULE_0__.ajax({
         type: 'POST',
         url: url,
         dataType: 'html',
         data: formData
       }).done(function (modalBody) {
-        const bulkActionModal = $('#bulkActionModal');
+        const bulkActionModal = jquery__WEBPACK_IMPORTED_MODULE_0__('#bulkActionModal');
         bulkActionModal.on('show.bs.modal', function () {
           this.querySelector('.modal-title').innerText = modalTitle;
           this.querySelector('.modal-body').innerHTML = modalBody;
         });
         bulkActionModal.modal('show').on('shown.bs.modal', function () {
-          $('#bulkActionContinue').on('click', function () {
-            $('#ajax_form').trigger('submit');
-            $('#bulkActionModal').modal('hide');
+          jquery__WEBPACK_IMPORTED_MODULE_0__('#bulkActionContinue').on('click', function () {
+            jquery__WEBPACK_IMPORTED_MODULE_0__('#ajax_form').trigger('submit');
+            jquery__WEBPACK_IMPORTED_MODULE_0__('#bulkActionModal').modal('hide');
           });
         });
       });
@@ -280,28 +298,28 @@ AJAX.registerOnload('database/structure.js', function () {
     } else if (action === 'show_create') {
       url = 'index.php?route=/database/structure/show-create';
     } else {
-      $('#tablesForm').trigger('submit');
+      jquery__WEBPACK_IMPORTED_MODULE_0__('#tablesForm').trigger('submit');
       return;
     }
 
-    var $form = $(this).parents('form');
-    var argsep = CommonParams.get('arg_separator');
+    var $form = jquery__WEBPACK_IMPORTED_MODULE_0__(this).parents('form');
+    var argsep = window.CommonParams.get('arg_separator');
     var data = $form.serialize() + argsep + 'ajax_request=true' + argsep + 'ajax_page_request=true';
     Functions.ajaxShowMessage();
-    AJAX.source = $form;
-    $.post(url, data, AJAX.responseHandler);
+    window.AJAX.source = $form;
+    jquery__WEBPACK_IMPORTED_MODULE_0__.post(url, data, window.AJAX.responseHandler);
   });
   /**
    * Ajax Event handler for 'Truncate Table'
    */
 
-  $(document).on('click', 'a.truncate_table_anchor.ajax', function (event) {
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', 'a.truncate_table_anchor.ajax', function (event) {
     event.preventDefault();
     /**
      * @var $this_anchor Object  referring to the anchor clicked
      */
 
-    var $thisAnchor = $(this); // extract current table name and build the question string
+    var $thisAnchor = jquery__WEBPACK_IMPORTED_MODULE_0__(this); // extract current table name and build the question string
 
     /**
      * @var curr_table_name String containing the name of the table to be truncated
@@ -312,11 +330,11 @@ AJAX.registerOnload('database/structure.js', function () {
      * @var question    String containing the question to be asked for confirmation
      */
 
-    var question = Messages.strTruncateTableStrongWarning + ' ' + Functions.sprintf(Messages.strDoYouReally, 'TRUNCATE `' + Functions.escapeHtml(currTableName) + '`') + Functions.getForeignKeyCheckboxLoader();
+    var question = window.Messages.strTruncateTableStrongWarning + ' ' + Functions.sprintf(window.Messages.strDoYouReally, 'TRUNCATE `' + Functions.escapeHtml(currTableName) + '`') + Functions.getForeignKeyCheckboxLoader();
     $thisAnchor.confirm(question, $thisAnchor.attr('href'), function (url) {
-      Functions.ajaxShowMessage(Messages.strProcessingRequest);
+      Functions.ajaxShowMessage(window.Messages.strProcessingRequest);
       var params = Functions.getJsConfirmCommonParam(this, $thisAnchor.getPostData());
-      $.post(url, params, function (data) {
+      jquery__WEBPACK_IMPORTED_MODULE_0__.post(url, params, function (data) {
         if (typeof data !== 'undefined' && data.success === true) {
           Functions.ajaxShowMessage(data.message); // Adjust table statistics
 
@@ -325,7 +343,7 @@ AJAX.registerOnload('database/structure.js', function () {
           $tr.find('.tbl_size, .tbl_overhead').text('-');
           DatabaseStructure.adjustTotals();
         } else {
-          Functions.ajaxShowMessage(Messages.strErrorProcessingRequest + ' : ' + data.error, false);
+          Functions.ajaxShowMessage(window.Messages.strErrorProcessingRequest + ' : ' + data.error, false);
         }
       }); // end $.post()
     }, Functions.loadForeignKeyCheckbox);
@@ -335,9 +353,9 @@ AJAX.registerOnload('database/structure.js', function () {
    * Ajax Event handler for 'Drop Table' or 'Drop View'
    */
 
-  $(document).on('click', 'a.drop_table_anchor.ajax', function (event) {
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', 'a.drop_table_anchor.ajax', function (event) {
     event.preventDefault();
-    var $thisAnchor = $(this); // extract current table name and build the question string
+    var $thisAnchor = jquery__WEBPACK_IMPORTED_MODULE_0__(this); // extract current table name and build the question string
 
     /**
      * @var $curr_row    Object containing reference to the current row
@@ -361,16 +379,16 @@ AJAX.registerOnload('database/structure.js', function () {
     var question;
 
     if (!isView) {
-      question = Messages.strDropTableStrongWarning + ' ' + Functions.sprintf(Messages.strDoYouReally, 'DROP TABLE `' + Functions.escapeHtml(currTableName) + '`');
+      question = window.Messages.strDropTableStrongWarning + ' ' + Functions.sprintf(window.Messages.strDoYouReally, 'DROP TABLE `' + Functions.escapeHtml(currTableName) + '`');
     } else {
-      question = Functions.sprintf(Messages.strDoYouReally, 'DROP VIEW `' + Functions.escapeHtml(currTableName) + '`');
+      question = Functions.sprintf(window.Messages.strDoYouReally, 'DROP VIEW `' + Functions.escapeHtml(currTableName) + '`');
     }
 
     question += Functions.getForeignKeyCheckboxLoader();
     $thisAnchor.confirm(question, $thisAnchor.attr('href'), function (url) {
-      var $msg = Functions.ajaxShowMessage(Messages.strProcessingRequest);
+      var $msg = Functions.ajaxShowMessage(window.Messages.strProcessingRequest);
       var params = Functions.getJsConfirmCommonParam(this, $thisAnchor.getPostData());
-      $.post(url, params, function (data) {
+      jquery__WEBPACK_IMPORTED_MODULE_0__.post(url, params, function (data) {
         if (typeof data !== 'undefined' && data.success === true) {
           Functions.ajaxShowMessage(data.message);
           $currRow.hide('medium').remove();
@@ -378,7 +396,7 @@ AJAX.registerOnload('database/structure.js', function () {
           Navigation.reload();
           Functions.ajaxRemoveMessage($msg);
         } else {
-          Functions.ajaxShowMessage(Messages.strErrorProcessingRequest + ' : ' + data.error, false);
+          Functions.ajaxShowMessage(window.Messages.strErrorProcessingRequest + ' : ' + data.error, false);
         }
       }); // end $.post()
     }, Functions.loadForeignKeyCheckbox);
@@ -390,31 +408,41 @@ AJAX.registerOnload('database/structure.js', function () {
    *
    */
 
-  $(document).on('click', '#real_end_input', function (event) {
+  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', '#real_end_input', function (event) {
     event.preventDefault();
     /**
      * @var question    String containing the question to be asked for confirmation
      */
 
-    var question = Messages.strOperationTakesLongTime;
-    $(this).confirm(question, '', function () {
+    var question = window.Messages.strOperationTakesLongTime;
+    jquery__WEBPACK_IMPORTED_MODULE_0__(this).confirm(question, '', function () {
       return true;
     });
     return false;
   }); // end Calculate Real End for InnoDB
   // Add tooltip to favorite icons.
 
-  $('.favorite_table_anchor').each(function () {
-    Functions.tooltip($(this), 'a', $(this).attr('title'));
+  jquery__WEBPACK_IMPORTED_MODULE_0__('.favorite_table_anchor').each(function () {
+    Functions.tooltip(jquery__WEBPACK_IMPORTED_MODULE_0__(this), 'a', jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('title'));
   }); // Get real row count via Ajax.
 
-  $('a.real_row_count').on('click', function (event) {
+  jquery__WEBPACK_IMPORTED_MODULE_0__('a.real_row_count').on('click', function (event) {
     event.preventDefault();
-    DatabaseStructure.fetchRealRowCount($(this));
+    DatabaseStructure.fetchRealRowCount(jquery__WEBPACK_IMPORTED_MODULE_0__(this));
   }); // Get all real row count.
 
-  $('a.row_count_sum').on('click', function (event) {
+  jquery__WEBPACK_IMPORTED_MODULE_0__('a.row_count_sum').on('click', function (event) {
     event.preventDefault();
-    DatabaseStructure.fetchRealRowCount($(this));
+    DatabaseStructure.fetchRealRowCount(jquery__WEBPACK_IMPORTED_MODULE_0__(this));
   });
 });
+
+/***/ })
+
+},
+/******/ function(__webpack_require__) { // webpackRuntimeModules
+/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
+/******/ var __webpack_exports__ = (__webpack_exec__(20));
+/******/ }
+]);
+//# sourceMappingURL=structure.js.map

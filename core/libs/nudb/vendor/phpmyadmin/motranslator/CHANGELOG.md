@@ -1,5 +1,12 @@
 # Change Log
 
+## [5.3.0] - 2022-04-26
+
+* Add support for Symfony 6
+* Split out `.mo` parsing to separate `MoParser` class
+* Added `CacheInterface` so alternate cache implementations are pluggable
+* Added `ApcuCache` implementation to leverage shared in-memory translation cache
+
 ## [5.2.0] - 2021-02-05
 
 * Fix "Translator::selectString() must be of the type integer, boolean returned" (#37)

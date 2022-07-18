@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Database\Structure;
 
-use PhpMyAdmin\Controllers\Database\AbstractController;
+use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\Controllers\Database\StructureController;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\ResponseRenderer;
@@ -23,16 +23,15 @@ final class CopyTableWithPrefixController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
-        string $db,
         StructureController $structureController
     ) {
-        parent::__construct($response, $template, $db);
+        parent::__construct($response, $template);
         $this->structureController = $structureController;
     }
 
     public function __invoke(): void
     {
-        global $db, $message;
+        $GLOBALS['message'] = $GLOBALS['message'] ?? null;
 
         $selected = $_POST['selected'] ?? [];
         $fromPrefix = $_POST['from_prefix'] ?? null;
@@ -45,9 +44,9 @@ final class CopyTableWithPrefixController extends AbstractController
             $newTableName = $toPrefix . mb_substr($current, mb_strlen((string) $fromPrefix));
 
             Table::moveCopy(
-                $db,
+                $GLOBALS['db'],
                 $current,
-                $db,
+                $GLOBALS['db'],
                 $newTableName,
                 'data',
                 false,
@@ -56,10 +55,10 @@ final class CopyTableWithPrefixController extends AbstractController
             );
         }
 
-        $message = Message::success();
+        $GLOBALS['message'] = Message::success();
 
         if (empty($_POST['message'])) {
-            $_POST['message'] = $message;
+            $_POST['message'] = $GLOBALS['message'];
         }
 
         ($this->structureController)();

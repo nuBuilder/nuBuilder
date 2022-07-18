@@ -9,9 +9,9 @@ use FastRoute\Dispatcher;
 use FastRoute\Dispatcher\GroupCountBased as DispatcherGroupCountBased;
 use FastRoute\RouteCollector;
 use FastRoute\RouteParser\Std as RouteParserStd;
+use PhpMyAdmin\Controllers\HomeController;
 use PhpMyAdmin\Http\ServerRequest;
 use Psr\Container\ContainerInterface;
-use RuntimeException;
 
 use function __;
 use function file_exists;
@@ -19,8 +19,8 @@ use function file_put_contents;
 use function htmlspecialchars;
 use function is_array;
 use function is_readable;
+use function is_string;
 use function is_writable;
-use function mb_strlen;
 use function rawurldecode;
 use function sprintf;
 use function trigger_error;
@@ -28,6 +28,7 @@ use function var_export;
 
 use const CACHE_DIR;
 use const E_USER_WARNING;
+use const ROOT_PATH;
 
 /**
  * Class used to warm up the routing cache and manage routing.
@@ -45,9 +46,7 @@ class Routing
 
     public static function skipCache(): bool
     {
-        global $cfg;
-
-        return ($cfg['environment'] ?? '') === 'development';
+        return ($GLOBALS['cfg']['environment'] ?? '') === 'development';
     }
 
     public static function canWriteCache(): bool
@@ -73,13 +72,11 @@ class Routing
         // If skip cache is enabled, do not try to read the file
         // If no cache skipping then read it and use it
         if (! $skipCache && file_exists(self::ROUTES_CACHE_FILE)) {
-            /** @psalm-suppress MissingFile, UnresolvableInclude */
+            /** @psalm-suppress MissingFile, UnresolvableInclude, MixedAssignment */
             $dispatchData = require self::ROUTES_CACHE_FILE;
-            if (! is_array($dispatchData)) {
-                throw new RuntimeException('Invalid cache file "' . self::ROUTES_CACHE_FILE . '"');
+            if (self::isRoutesCacheFileValid($dispatchData)) {
+                return new DispatcherGroupCountBased($dispatchData);
             }
-
-            return new DispatcherGroupCountBased($dispatchData);
         }
 
         $routeCollector = new RouteCollector(
@@ -119,35 +116,15 @@ class Routing
         return @file_put_contents(self::ROUTES_CACHE_FILE, $cacheContents) !== false;
     }
 
-    public static function getCurrentRoute(): string
-    {
-        /** @var string $route */
-        $route = $_GET['route'] ?? $_POST['route'] ?? '/';
-
-        /**
-         * See FAQ 1.34.
-         *
-         * @see https://docs.phpmyadmin.net/en/latest/faq.html#faq1-34
-         */
-        if (($route === '/' || $route === '') && isset($_GET['db']) && mb_strlen($_GET['db']) !== 0) {
-            $route = '/database/structure';
-            if (isset($_GET['table']) && mb_strlen($_GET['table']) !== 0) {
-                $route = '/sql';
-            }
-        }
-
-        return $route;
-    }
-
     /**
      * Call associated controller for a route using the dispatcher
      */
     public static function callControllerForRoute(
         ServerRequest $request,
-        string $route,
         Dispatcher $dispatcher,
         ContainerInterface $container
     ): void {
+        $route = $request->getRoute();
         $routeInfo = $dispatcher->dispatch($request->getMethod(), rawurldecode($route));
 
         if ($routeInfo[0] === Dispatcher::NOT_FOUND) {
@@ -185,5 +162,20 @@ class Routing
          */
         $controller = $container->get($controllerName);
         $controller($request, $vars);
+    }
+
+    /**
+     * @param mixed $dispatchData
+     *
+     * @psalm-assert-if-true array[] $dispatchData
+     */
+    private static function isRoutesCacheFileValid($dispatchData): bool
+    {
+        return is_array($dispatchData)
+            && isset($dispatchData[0], $dispatchData[1])
+            && is_array($dispatchData[0]) && is_array($dispatchData[1])
+            && isset($dispatchData[0]['GET']) && is_array($dispatchData[0]['GET'])
+            && isset($dispatchData[0]['GET']['/']) && is_string($dispatchData[0]['GET']['/'])
+            && $dispatchData[0]['GET']['/'] === HomeController::class;
     }
 }

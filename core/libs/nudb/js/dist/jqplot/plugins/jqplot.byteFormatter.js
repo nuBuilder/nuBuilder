@@ -1,17 +1,32 @@
 "use strict";
+(self["webpackChunkphpmyadmin"] = self["webpackChunkphpmyadmin"] || []).push([[34],{
+
+/***/ 1:
+/***/ (function(module) {
+
+module.exports = jQuery;
+
+/***/ }),
+
+/***/ 41:
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 
 /**
  * jqplot formatter for byte values
  *
  * @package phpMyAdmin
  */
+
 (function ($) {
   'use strict';
 
   var formatByte = function (value, index) {
     var val = value;
     var i = index;
-    var units = [Messages.strB, Messages.strKiB, Messages.strMiB, Messages.strGiB, Messages.strTiB, Messages.strPiB, Messages.strEiB];
+    var units = [window.Messages.strB, window.Messages.strKiB, window.Messages.strMiB, window.Messages.strGiB, window.Messages.strTiB, window.Messages.strPiB, window.Messages.strEiB];
 
     while (val >= 1024 && i <= 6) {
       val /= 1024;
@@ -49,4 +64,14 @@
       }
     };
   };
-})(jQuery);
+})(jquery__WEBPACK_IMPORTED_MODULE_0__);
+
+/***/ })
+
+},
+/******/ function(__webpack_require__) { // webpackRuntimeModules
+/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
+/******/ var __webpack_exports__ = (__webpack_exec__(41));
+/******/ }
+]);
+//# sourceMappingURL=jqplot.byteFormatter.js.map

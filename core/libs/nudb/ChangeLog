@@ -1,12 +1,31 @@
 phpMyAdmin - ChangeLog
 ======================
 
-5.2.0 (not yet released)
+5.3.0 (not yet released)
+
+5.2.1 (not yet released)
+- issue #17522 Fix case where the routes cache file is invalid
+- issue #17506 Fix error when configuring 2FA without XMLWriter or Imagick
+- issue        Fix blank page when some error occurs
+- issue #17519 Fix Export pages not working in certain conditions
+- issue #17496 Fix error in table operation page when partitions are broken
+- issue #17386 Fix system memory and system swap values on Windows
+- issue #17517 Fix Database Server panel not getting hidden by ShowServerInfo configuration directive
+- issue #17271 Fix database names not showing on Processes tab
+- issue #17424 Fix export limit size calculation
+- issue #17366 Fix refresh rate popup on Monitor page
+- issue #17577 Fix monitor charts size on RTL languages
+- issue #17121 Fix password_hash function incorrectly adding single quotes to password before hashing
+- issue #17586 Fix statistics not showing for empty databases
+- issue #17592 Clicking on the New index link on the sidebar does not throw an error anymore
+- issue #17584 It's now possible to browse a database that includes two % in its name
+
+5.2.0 (2022-05-10)
 - issue #16521 Upgrade Bootstrap to version 5
 - issue #16521 Drop support for Internet Explorer and others
 - issue        Upgrade to shapefile 3
 - issue #16555 Bump minimum PHP version to 7.2
-- issue        Upgrade phpseclib to version 3
+- issue        Remove the phpseclib dependency
 - issue        Upgrade Symfony components to version 5.2
 - issue        Upgrade to Motranslator 4
 - issue #16005 Improve the performance of the Export logic
@@ -16,7 +35,7 @@ phpMyAdmin - ChangeLog
 - issue #16974 Replace zxcvbn by zxcvbn-ts
 - issue #15691 Disable the last column checkbox in the column list dropdown instead of not allowing un-check
 - issue #16138 Ignore the length of integer types and show a warning on MySQL >= 8.0.18
-- issue        Add suport for the Mroonga engine
+- issue        Add support for the Mroonga engine
 - issue        Double click column name to directly copy to clipboard
 - issue #16425 Add "DELETE FROM" table on table operations page
 - issue #16482 Add a select all link for table-specific privileges
@@ -27,8 +46,42 @@ phpMyAdmin - ChangeLog
 - issue #17203 Redesign the export and the import pages
 - issue #16197 Replace the master/slave terminology
 - issue #17257 Replace libraries/vendor_config.php constants with an array
+- issue        Add the Bootstrap theme
+- issue #17499 Remove stickyfilljs JavaScript dependency
 
-5.1.2 (not yet released)
+5.1.4 (not yet released)
+- issue #17287 Fixed sorting the database list with "statistics" enabled on "Data" column creates a PHP type error
+- issue #17368 Fix for invalid cache when losing access to config storage after it being cached
+- issue #17387 Fix session cookie not respecting the CookieSameSite configuration directive in PHP 7.2
+- issue #16769 Fix create index form accepting too many columns
+- issue #16816 Disable editing to system schemas
+- issue #16853 Add better error handling when IndexedDB is not working
+- issue        Fixed incorrect escaping of special MySQL characters on some pages
+- issue #17188 Fix GIS visualization with an edited query
+- issue #17418 Remove the use of the deprecated `strftime` function in OpenDocument exports
+- issue #17111 Enable tabindex recompute on preview button while insert new rows
+- issue #17474 Fix invalid SQL generated when PRIMARY/UNIQUE key contains a POINT column
+- issue #17484 Fix setup's CSS not loading when the URL doesn't have a trailing slash
+- issue #17494 Remove jQuery SVG JavaScript dependency
+- issue #17335 Fix column visibility dropdown when the column name is too long
+- issue #17445 Fix issue when exporting using Firefox or Safari on PHP 8.1.4
+- issue        Update JavaScript dependencies
+- issue #17428 Fix case where errors were thrown when browsing a table
+- issue #17508 Fix UI issue when user accounts page has the initials navigation bar
+
+5.1.3 (2022-02-10)
+- issue #17308 Fix broken pagination links in the navigation sidebar
+- issue #17331 Fix MariaDB has no support for system variable "disabled_storage_engines"
+- issue #17315 Fix unsupported operand types in Results.php when running "SHOW PROCESSLIST" SQL query
+- issue #17288 Fixed importing browser settings question box after login when having no pmadb
+- issue #17288 Fix "First day of calendar" user override has no effect
+- issue #17239 Fixed repeating headers are not working
+- issue #17298 Fixed import of email-adresses or links from ODS results in empty contents
+- issue #17344 Fixed a type error on ODS import with non string values
+- issue #17239 Fixed header row show/hide columns buttons on each line after hover are shown on each row
+- issue        [security] Fix for path disclosure under certain server configurations (if display_errors is on, for instance)
+
+5.1.2 (2022-01-20)
 - issue        Replaced MySQL documentation redirected links
 - issue #16960 Fix JS error on Designer visual builder on some modal buttons
 - issue        Re-build openlayers JS dependency from the source files and provide a smaller JS bundle
@@ -144,6 +197,10 @@ phpMyAdmin - ChangeLog
 - issue #17259 Fix broken link in the Simulate DML query modal
 - issue #16746 Update tcpdf dependency to ^6.4.4 for PHP 8.1 compatibility
 - issue #16746 Update twig dependency to "^2.14.9 || ^3.3.5" for PHP 8.1 compatibility
+- issue        [security] Add configuration directive $cfg['Servers'][$i]['hide_connection_errors'] to allow hiding host names and other error details when login fails
+- issue        [security] Add configuration directive $cfg['URLQueryEncryption'] to allow encrypting senstive information in the URL
+- issue        [security] Fix a scenario where an authenticated user can disable two factor authentication (PMASA-2022-1)
+- issue        [security] Fix XSS and HTML injection attacks in the graphical setup page (PMASA-2022-2)
 
 5.1.1 (2021-06-04)
 - issue #13325 Fixed created procedure shows up in triggers and events and vice-versa
@@ -567,9 +624,16 @@ phpMyAdmin - ChangeLog
 - issue #15677 Fix show process-list triggers a php exception
 - issue #15697 Fix uncaught php error: "Call to a member function get() on null" in db_export.php when exporting a table from the list
 
-4.9.8 (not yet released)
+4.9.9 (not yet released)
+- issue #17305 Fix syntax error for PHP 5
+- issue #17307 Fix hide_connection_errors being undefined when a controluser is set
+
+4.9.8 (2022-01-20)
 - issue #14321 Display a correct error page when "$cfg['Servers'][$i]['SignonURL']" is empty for auth_type=signon
 - issue #14321 [security] Remove leaked HTML on signon page redirect before login for auth_type=signon
+- issue        [security] Add configuration directive $cfg['Servers'][$i]['hide_connection_errors'] to allow hiding host names and other error details when login fails
+- issue        [security] Add configuration directive $cfg['URLQueryEncryption'] to allow encrypting senstive information in the URL
+- issue        [security] Fix a scenario where an authenticated user can disable two factor authentication
 
 4.9.7 (2020-10-15)
 - issue #16397 Fix compatibility problems with older PHP versions (also issue #16399)
