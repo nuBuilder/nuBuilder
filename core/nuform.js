@@ -560,7 +560,7 @@ function nuAddActionButtons(form) {
 		const printCaption = isMobile ? "<i class='fa fa-print'></i>" : nuTranslate('Print');
 		const addCaption = isMobile ? "<i class='fa fa-add'></i>" : nuTranslate('Add');
 
-		nuAddActionButton("Seach", "<i class='fa fa-search'></i>" + searchCaption, 'nuSearchAction()');
+		nuAddActionButton("Search", "<i class='fa fa-search'></i>" + searchCaption, 'nuSearchAction()');
 
 		if (button.Add == 1) { nuAddActionButton('Add', addCaption, 'nuAddAction()'); }
 		if (button.Print == 1) { nuAddActionButton('Print', printCaption, 'nuPrintAction()'); }
