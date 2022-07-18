@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 18, 2022 at 06:00 PM
+-- Generation Time: Jul 18, 2022 at 06:08 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.2
 
@@ -676,8 +676,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2022.07.18.02'),
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2022.07.18.07');
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2022.07.18.03'),
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2022.07.18.10');
 
 -- --------------------------------------------------------
 
@@ -1253,7 +1253,7 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu61b8493549e0d7b', 'nuaddattribute', '', 'input', 'plh_attribute_name', ' ', 'nu61b4c3e0517719b', 20, 33, 243, 129, 23, '1', 'left', '0', '0', '1', '', '', '', '', '', '', '', '', '', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'search', NULL, '', '', 'placeholder=\"name\"', '', '', '', '', '', '', '', NULL),
 ('nu61b9eafed36e281', 'nuaccess', 'zzzzsys_access', 'input', 'sal_zzzzsys_form_id_open_button', ' ', 'nu5bad6cb36ac903f', 70, 67, 749, 40, 22, '1', 'center', '0', '0', '1', '', '', '', '', '', '', '', '', '', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'button', 'fas fa-external-link-alt', '', '', 'nu-mobileview-hidden', '', '', '', '', '', '', '', NULL),
 ('nu61bb746bc6b5911', 'nuauthentication', '', 'contentbox', 'contentbox', '2 Factor Authentication', 'nu5fe0547b76e25d6', 10, 30, 81, 600, 400, '1', 'left', '0', '0', '0', '', '', '', '', '', '', '', '', '', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', '', NULL, '', '', 'nu-mobileview-hidden', '', '', '', '', '', '', '', NULL),
-('nu61cac33aab3fc06', 'nuform', 'zzzzsys_form', 'input', 'ff_resize', ' ', 'nu5bad6cb36757b92', 240, 42, 1109, 29, 26, '1', 'center', '0', '0', '1', 'Class', 'nuAllowDblClick', '', '', '', '', '', '', '', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'button', 'fa fa-arrows-alt', '', '', NULL, '', '', '', '', '', '', '', NULL),
+('nu61cac33aab3fc06', 'nuform', 'zzzzsys_form', 'input', 'ff_resize', ' ', 'nu5bad6cb36757b92', 240, 42, 1109, 29, 26, '1', 'center', '0', '0', '1', 'Class', 'nuAllowDblClick', '', '', '', '', '', '', '', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'button', 'fa fa-arrows-alt', '', '', 'nu-mobileview-hidden', '', '', '', '', '', '', '', NULL),
 ('nu61ce91900008380', 'nusetup', 'zzzzsys_setup', 'textarea', 'set_style', ' ', 'nu61ce913f08336db', 60, 69, 81, 800, 500, '1', 'left', '0', '0', '0', '', '', '', '', '', '', '', '', '', '', '', '0', '0', 'SELECT trl_language, trl_language AS a \nFROM zzzzsys_translate\nGROUP BY trl_language ', '', '', '', NULL, '', '', NULL, 'zzzzsys_timezone', '', '', '', '', '', '', 0, '', '', NULL, '', '', 'spellcheck=false', '', '', '', '', '', '', '', NULL),
 ('nu61cef87f1e35465', 'nusetup', 'zzzzsys_setup', 'html', 'icon_js', ' ', 'nu5bad6cb36e9143a', 40, 81, 27, 43, 39, '1', 'left', '0', '0', '0', 'CSS', 'background-size: 40px 37px;', '', '', '', '', '', '', '', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', '', NULL, '', '', NULL, '<div></div>', '', '', '', '', '', '', NULL),
 ('nu61d01434aabee5c', 'nusetup', 'zzzzsys_setup', 'html', 'icon_css', ' ', 'nu61ce913f08336db', 50, 81, 27, 43, 39, '1', 'left', '0', '0', '0', 'CSS', 'background-size: 40px 37px;', '', '', '', '', '', '', '', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', '', NULL, '', '', NULL, '<div></div>', '', '', '', '', '', '', NULL),
@@ -1265,7 +1265,7 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu61d7cb6fe784cf4', 'nuaccess', 'zzzzsys_access', 'input', 'sal_group', 'Group', 'nu5bad6cb36ac903f', 50, 148, 156, 200, 22, '1', 'left', '0', '0', '0', '', '', '', '', '', '', '', '', '', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'text', NULL, '', '', NULL, '', '', '', '', '', '', '', NULL),
 ('nu61e42391506d467', 'nuform', 'zzzzsys_form', 'input', 'sfo_primary_key', 'Primary Key', 'nu5bad6cb36791fd5', 90, 183, 182, 285, 22, '1', 'left', '0', '0', '0', '', '', '', '', '', '', '', '', '', '', 'SELECT column_name\nFROM information_schema.columns\nWHERE  table_name = \'#sfo_table#\'\nAND table_schema = database()\nAND COLUMN_KEY = \'PRI\'', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', 'text', NULL, '', '', NULL, '', '', '', '', '', '', '', NULL),
 ('nu61e55dd85d03afb', 'nuobject', 'zzzzsys_object', 'input', 'sob_input_icon', 'Icon', 'nu5bad6cb3686cb0d', 540, 482, 811, 151, 22, '1', 'left', '0', '0', '1', '', '', '', '', '', '', '', '', '', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, 'zzzzsys_tab', '', '', '', '', '', '', 0, '', 'search', '', '', '', NULL, '', '', '', '', '', '', '', NULL),
-('nu61e5ea49958af99', 'nuform', 'zzzzsys_access', 'word', 'button_title', 'Enable Buttons...', 'nu5fdb9ff026348', 480, 35, 719, 200, 22, '1', 'left', '0', '0', '0', '', '', '', '', '', '', '', '', '', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', '', '', '', '', NULL, '', '', '', '', '', '', '', NULL),
+('nu61e5ea49958af99', 'nuform', 'zzzzsys_access', 'word', 'button_title', 'Enable Buttons...', 'nu5fdb9ff026348', 480, 35, 719, 200, 22, '1', 'left', '0', '0', '0', '', '', '', '', '', '', '', '', '', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', '', '', '', '', 'nu-mobileview-hidden', '', '', '', '', '', '', '', NULL),
 ('nu61e9969a4925567', 'nu61e9969a239c033', 'zzzzsys_object_json', 'input', 'soj_json', 'Json', 'nu61e9969a4003a6f', 20, 10, 151, 300, 22, '1', 'left', '0', '0', '0', NULL, NULL, '', '', '', '', '', NULL, NULL, '', '', '', '0', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 'text', '', '', NULL, NULL, '', '', '', '', '', '', '', NULL),
 ('nu61e99e1862a3c0c', 'nu61e9969a239c033', 'zzzzsys_object_json', 'select', 'soj_type', 'Type', 'nu61e9969a4003a6f', 10, 43, 150, 75, 22, '1', 'left', '0', '0', '0', '', '', '', '', '', '', '', '', '', '', '', '0', '0', '0|0|\n1|1', '', '', '', NULL, '', '', NULL, '', '', '', '', '', '', '', 0, '', '', '', '', '', NULL, '', '', '', '', '', '', '', NULL),
 ('nu61e9a3d726fc672', 'nuobject', 'zzzzsys_object', 'textarea', 'sob_all_json', 'JSON', 'nu61e9964c9bf5e13', 1210, 50, 50, 400, 300, '1', 'left', '0', '0', '0', '', '', '', '', '', '', '', '', '', '', '', '0', '0', '', '', '', '', NULL, '', '', NULL, 'zzzzsys_tab', '', '', '', '', '', '', 0, '', '', '', '', '', NULL, '', '', '', '', '', '', '', NULL),
