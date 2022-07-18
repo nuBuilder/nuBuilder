@@ -593,7 +593,7 @@ function nuAddActionButtons(form) {
 
 }
 
-function nuAddActionButton(i, v, func, t, e) {
+function nuAddActionButton(i, v, func, text, textMobileView, e) {
 
 	if (arguments.length == 1) {
 
@@ -602,15 +602,19 @@ function nuAddActionButton(i, v, func, t, e) {
 
 	}
 
-	t = nuTranslate(nuDefine(t));
+	if (nuUXOptions.nuMobileView && textMobileView !== undefined) {
+		text = nuTranslate(nuDefine(textMobileView));
+	} else {
+		text = nuTranslate(nuDefine(text));
+	}
 
-	let nuClass = "";
+	let nuClass = "nuActionButton";
 	if (i == 'Save' || i == 'Add' || i == 'Clone' || i == 'Delete') {
-		nuClass = " " + "nu" + i + "Button";
+		nuClass += " " + "nu" + i + "Button";
 	}
 
 	let id = "nu" + i + "Button";
-	let html = `<button id='${id}' type='button' class='nuActionButton' title = '${t}' onclick='${func}'>${v}` + "</button>";
+	let html = `<button id='${id}' type='button' class='${nuClass}' title = '${text}' onclick='${func}'>${v}` + "</button>";
 
 	if (e) {
 		$(html).insertAfter('#' + e);
@@ -623,7 +627,7 @@ function nuAddActionButton(i, v, func, t, e) {
 
 function nuAddActionButtonSaveClose(caption) {
 
-	nuAddActionButton('SaveClose', nuTranslate(caption === undefined ? 'Save & Close' : caption), "nuSaveAction(true)", '', 'nuSaveButton');
+	nuAddActionButton('SaveClose', nuTranslate(caption === undefined ? 'Save & Close' : caption), "nuSaveAction(true)", '', '', 'nuSaveButton');
 	$('#nuSaveCloseButton').addClass('nuSaveButton');
 
 }
