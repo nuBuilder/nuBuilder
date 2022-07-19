@@ -6251,7 +6251,7 @@ function nuAccessFormSetButtonIcons(force) {
 		element.innerHTML = '<br>&nbsp<span style="padding: 1px 10px 1px 10px;" class="nuActionButton"><i class="' + icon +'"></i></span>';
 	}
 
-	if (nuUserLanguage() !== '' || force === true) {
+	if (nuIsMobile() || force === true) {
 		setInnerHTML(title_accformslf_add_button, 'fas fa-plus');
 		setInnerHTML(title_accformslf_print_button, 'fas fa-print');
 		setInnerHTML(title_accformslf_save_button, 'fas fa-save');
