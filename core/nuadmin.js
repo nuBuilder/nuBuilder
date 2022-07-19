@@ -598,7 +598,7 @@ function nuContextMenuBeforeRender(menu, event) {
 }
 
 function nuContextMenuItemText(label, iconClass) {
-	return '<i class="' + iconClass + ' fa-fw" aria-hidden="true"></i> <span style="padding-left:8px; white-space:nowrap; display: inline;">' + label + '</span>';
+	return '<i class="' + iconClass + ' fa-fw" aria-hidden="true"></i> <span style="padding-left:8px; white-space:nowrap; display: inline;">' + nuTranslate(label) + '</span>';
 }
 
 function nuContextMenuGetWordWidth(w) {
