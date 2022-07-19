@@ -654,7 +654,7 @@ function nuAddActionButton(id, value, func, text, e) {
 
 function nuAddActionButtonSaveClose(caption) {
 
-	nuAddActionButton('SaveClose', nuTranslate(caption === undefined ? 'Save & Close' : caption), "nuSaveAction(true)", '', '', 'nuSaveButton');
+	nuAddActionButton('SaveClose', nuTranslate(caption === undefined ? 'Save & Close' : caption), "nuSaveAction(true)", '', 'nuSaveButton');
 	$('#nuSaveCloseButton').addClass('nuSaveButton');
 
 }
