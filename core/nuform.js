@@ -320,15 +320,7 @@ function nuBuildForm(f) {
 	if (!nuIsMobile()) {
 		$('#nuSearchField').focus();
 	} else {
-
-		if (nuUXOptions.nuMobileView && b.mobile_view == '1') {
-			if (nuFormType() == 'edit') {
-				nuMobileView();
-			} else {
-				$('#nuBreadcrumbHolder').css('width', window.visualViewport.width);
-			}
-		}
-
+		nuMobileView(b.mobile_view);
 	}
 
 	nuWindowPosition();
@@ -628,28 +620,28 @@ function nuAddActionButtons(form) {
 
 }
 
-function nuAddActionButton(i, v, func, text, textMobileView, e) {
+function nuAddActionButton(id, value, func, text, e) {
 
 	if (arguments.length == 1) {
-
-		v = i;
-		func = 'nu' + i + 'Action()';
-
+		value = id;
+		func = 'nu' + id + 'Action()';
 	}
 
-	if (nuUXOptions.nuMobileView && textMobileView !== undefined) {
-		text = nuTranslate(nuDefine(textMobileView));
+	if (typeof(value) == 'object') {
+		value = nuUXOptions.nuMobileView ? value['valueMobile'] : nuTranslate(nuDefine(value('value')));
 	} else {
-		text = nuTranslate(nuDefine(text));
+		value = nuTranslate(nuDefine(value));
 	}
+
+	text = nuTranslate(nuDefine(text));
 
 	let nuClass = "nuActionButton";
-	if (i == 'Save' || i == 'Add' || i == 'Clone' || i == 'Delete') {
-		nuClass += " " + "nu" + i + "Button";
+	if (id == 'Save' || id == 'Add' || id == 'Clone' || id == 'Delete') {
+		nuClass += " " + "nu" + id + "Button";
 	}
 
-	let id = "nu" + i + "Button";
-	let html = `<button id='${id}' type='button' class='${nuClass}' title = '${text}' onclick='${func}'>${v}` + "</button>";
+	id = "nu" + id + "Button";
+	let html = `<button id='${id}' type='button' class='${nuClass}' title = '${text}' onclick='${func}'>${value}` + "</button>";
 
 	if (e) {
 		$(html).insertAfter('#' + e);
@@ -5843,11 +5835,16 @@ function nuPortraitScreen(columns) {
 
 }
 
-function nuMobileView() {
+function nuMobileView(mobileView) {
 
-		nuPortraitScreen();
-		$('#nuActionHolder').hide();
-		$('button').css('text-align', 'left');
+	if (nuUXOptions.nuMobileView && mobileView == '1') {
+		if (nuFormType() == 'edit') {
+			nuPortraitScreen();
+			$('button').css('text-align', 'left');
+		} else {
+			$('#nuBreadcrumbHolder').css('width', window.visualViewport.width);
+		}
+	}
 
 }
 
