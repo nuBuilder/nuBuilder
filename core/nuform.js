@@ -147,6 +147,7 @@ function nuBuildForm(f) {
 	b.browse_filtered_rows = f.browse_height;
 	b.browse_title_multiline = f.browse_title_multiline;
 	b.browse_autoresize_columns = f.browse_autoresize_columns;
+	b.mobile_view = f.mobile_view;
 	b.pages = f.pages;
 	b.form_code = f.form_code;
 	b.form_description = f.form_description;
@@ -320,14 +321,18 @@ function nuBuildForm(f) {
 		$('#nuSearchField').focus();
 	} else {
 
-		if (nuUXOptions.nuMobileView) {
-			nuMobileView();
+		if (nuUXOptions.nuMobileView && b.mobile_view == '1') {
+			if (nuFormType() == 'edit') {
+				nuMobileView();
+			} else {
+				$('#nuBreadcrumbHolder').css('width', window.visualViewport.width);
+			}
 		}
 
 	}
 
 	nuWindowPosition();
-	
+
 	nuBrowseScrollbar();
 
 	nuRestoreScrollPositions();
@@ -361,7 +366,7 @@ function nuBrowseScrollbar() {
 	}
 
 }
-	
+
 function nuRestoreScrollPositions() {
 
 	$(function () {
@@ -5730,7 +5735,7 @@ function nuPortraitScreen(columns) {
 		let $id = $('#' + id);
 
 
-		let {height, width, heightLabel} = nuPortraitScreenObjDimensions(id, $id) 
+		let {height, width, heightLabel} = nuPortraitScreenObjDimensions(id, $id)
 
 		const $tab = $('#nuTab' + obj[i].tab);
 		let tabVisible = $tab.nuIsVisible()
@@ -5840,38 +5845,9 @@ function nuPortraitScreen(columns) {
 
 function nuMobileView() {
 
-	function nuInFormIds(fId) {
-		return ['nuaccess', 'nuuser', 'nuphp', 'nuphp', 'nufile', 'nucodesnippet','nucsvtransfer','nuformat','nufrlaunch','nusetup','nuselect','nutranslate','nucloner','nupassword'].indexOf(fId) !== -1;
-	}
-
-	const fId = nuFormId();
-
-	if (nuFormType() == 'edit' && (fId.startsWith('nuhome') || nuInFormIds(fId))) {
 		nuPortraitScreen();
 		$('#nuActionHolder').hide();
 		$('button').css('text-align', 'left');
-	} else {
-		$('#nuBreadcrumbHolder').css('width', window.visualViewport.width);
-	}
-
-}
-
-
-function nuMobileView() {
-
-	function nuInFormIds(fId) {
-		return ['nuaccess', 'nuuser', 'nuphp', 'nuphp', 'nufile', 'nucodesnippet','nucsvtransfer','nuformat','nufrlaunch','nusetup','nuselect','nutranslate','nuobject','nuform','nufflaunch'].indexOf(fId) !== -1;
-	}
-
-	const fId = nuFormId();
-
-	if (nuFormType() == 'edit' && (fId.startsWith('nuhome') || nuInFormIds(fId))) {
-		nuPortraitScreen();
-		$('#nuActionHolder').hide();
-		$('button').css('text-align', 'left');
-	} else {
-		$('#nuBreadcrumbHolder').css('width', window.visualViewport.width);
-	}
 
 }
 
@@ -6224,7 +6200,7 @@ function nuSetSelect2(id, obj) {
 		left: Number(obj.left)
 	}).attr('id', select2Id);
 
-	
+
 
 	return select2Id;
 
