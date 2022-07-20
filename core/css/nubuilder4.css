@@ -380,7 +380,10 @@
 	 box-shadow:2px 2px 8px 0 rgba(150,147,150,1);
 	 padding-top:4px;
 	 height:20px;
-	 border-radius:4px 
+	 border-radius:4px;
+	 position: absolute;
+	 text-align: left;
+	 z-index: 3000
 }
  #nuSearchList {
 	 background-color:#fcfcfc;
@@ -1208,7 +1211,7 @@
 	 padding:10px;
 	 font-weight:900;
 	 position:absolute;
-	 height:40px;
+	 height:25px;
 	 width: max-content 
 }
  .ql-editor {
