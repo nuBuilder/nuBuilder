@@ -3545,10 +3545,7 @@ function nuGetOptionsList(f, t, p, a, type) {
 		.css({
 			'top': 0,
 			'height': 20 + (list.length * 20),
-			'width': 30,
-			'position': 'absolute',
-			'z-index': 99,
-			'text-align': 'left'
+			'width': 30
 		})
 		.html('<span class="nuOptionsListTitle">&nbsp;&nbsp;' + nuTranslate('Options') + '<\span>')
 		.addClass('nuOptionsList');
