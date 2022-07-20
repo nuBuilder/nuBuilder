@@ -5,6 +5,7 @@ require_once ('nucommon.php');
 require_once ('nudata.php');
 require_once ('nusystemupdatelibs.php');
 require_once('nusetuplibs.php');
+require_once('nuform.php');
 
 $config = nuConfigScript();
 eval($config['code']);
@@ -95,6 +96,12 @@ if (isset($config)) {
 // Set DB Collation
 nuSetCollation();
 nuPrintUpdateMessage($i, 'Set DB Collation');
+$i++;
+
+
+// Run nuAfterUpdate
+nuRunPHPHidden('nuAfterUpdate',0);
+nuPrintUpdateMessage($i, 'Run nuAfterUpdate');
 $i++;
 
 nuPrintLastUpdateMessage('You will need to log in again for the changes to take effect');
