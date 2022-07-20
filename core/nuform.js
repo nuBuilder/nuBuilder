@@ -553,7 +553,6 @@ function nuSearchFieldSetSearchType(isMobile) {
 
 	$("#nuSearchField")
 		.prop("type", "search")
-		.css("width", isMobile ? "120" : "auto")
 		.attr('autocomplete', 'off')
 		.on('search', function () {
 			nuSearchAction();
