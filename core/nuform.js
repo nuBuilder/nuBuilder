@@ -4644,7 +4644,7 @@ function nuDeleteAction() {
 
 function nuDeleteAllAction() {
 
-	if (confirm(nuTranslate("Delete This Record?"))) {
+	if (confirm(nuTranslate("Delete All Records?"))) {
 
 		$('#nuDelete').prop('checked', true);
 		nuUpdateData('delete', 'all');
