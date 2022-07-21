@@ -2690,7 +2690,7 @@ function nuSubformPaste(e, jsonObj) {
 
 	var sfId = $('#' + id).attr('data-nu-form');
 	var field = $('#' + id).attr('data-nu-field');
-	var dRow = parseInt($('#' + String(id), 10).attr('data-nu-prefix').slice(-3));
+	var dRow = parseInt($('#' + String(id)).attr('data-nu-prefix').slice(-3), 10);
 
 	var obj = nuSubformObject(sfId);
 	var dColStart = obj.fields.indexOf(field);
@@ -5698,7 +5698,7 @@ function nuPortraitScreen(columns) {
 
 	}
 
-	$('#nubody').css('transform', 'scale(1)')
+	$('#nubody').css('transform', 'scale(1)');
 
 	if (nuFormType() == 'browse') { return; }
 
