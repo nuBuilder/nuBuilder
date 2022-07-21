@@ -944,6 +944,18 @@ function nuSelectOptions($sql) {
 				$a[]	= $r;
 			}
 
+	} elseif (nuStringStartsWith('[', $sql) && is_array(json_decode($sql))) {	
+			
+			$arr = json_decode($sql);
+			foreach($arr as $item) {
+
+				$r		= array();
+				$r[0]	= $item;
+				$r[1]	= $item;
+				$a[]	= $r;
+
+			}
+
 	} else {																	//-- comma delimited string
 
 		$t			= explode('|', nuRemoveNonCharacters($sql));
