@@ -5830,7 +5830,8 @@ function nuPortraitScreen(columns) {
 				}
 
 				if (sameRow) {
-					$id.css({ 'top': oTop, 'left': oWidth });
+					const spacing = $id.attr('data-nu-same-row') || 0
+					$id.css({ 'top': oTop, 'left': Number(oWidth) + Number(spacing) });
 				} else {
 					$id.css({ 'top': top, 'left': lw + 10 });
 				}
