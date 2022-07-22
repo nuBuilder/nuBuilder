@@ -527,6 +527,7 @@
  .nuBrowseTitle {
 	 background-color:white;
 	 border-style:none;
+	 color: #0073aa;
 	 position:absolute;
 	 top:3px;
 	 font-size:13px;
@@ -691,17 +692,10 @@
 	 text-shadow:0 1px 2px rgba(0,0,0,0.25) 
 }
  .nuButton:hover {
-	 color:#E2EAFF 
+	 background-color:#2e73b1;
+	 color:#E2EAFF
 }
- .input_button_left {
-	border-top-right-radius: 0;
-	border-bottom-right-radius: 0
-}
- .input_button_right {
-	border-top-left-radius: 0;
-	border-bottom-left-radius: 0
-}
- .nuUserHomeButton {
+.nuUserHomeButton {
 	 color:white;
 	 background-color:#88cb51;
 	 display:inline;
@@ -712,6 +706,18 @@
 	 text-shadow:0 1px 2px rgba(0,0,0,0.25);
 	 border-color:#0a1005;
 	 border-width:0 0 1px 
+}
+ .nuUserHomeButton:hover {
+	 background-color:#6aa738;
+	 color:#E2EAFF
+}
+ .input_button_left {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0
+}
+ .input_button_right {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0
 }
  .nuButtonSelected {
 	 background-color: green;
