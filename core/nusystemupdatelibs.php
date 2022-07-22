@@ -195,6 +195,8 @@ function nuAlterSystemTables(){
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_input_datalist` TEXT NULL DEFAULT NULL AFTER `sob_input_javascript`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_input_attribute` VARCHAR(1000) NULL DEFAULT NULL AFTER `sob_input_datalist`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_input_icon` VARCHAR(50) NULL DEFAULT NULL AFTER `sob_input_type`;");
+	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_input_file_target` VARCHAR(1) NOT NULL DEFAULT '0' AFTER `sob_input_attribute`;");
+
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_run_target` VARCHAR(1) NULL DEFAULT NULL AFTER `sob_run_method`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_run_type` VARCHAR(1) NULL DEFAULT NULL AFTER `sob_run_target`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_all_event` VARCHAR(1) NULL DEFAULT NULL AFTER `sob_all_access`;");

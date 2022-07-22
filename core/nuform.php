@@ -270,9 +270,13 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 				";
 
 			}
-
-			if($r->sob_all_type == 'editor'){
+			
+			$fileTarget = isset($r->sob_input_file_target) ? $r->sob_input_file_target : 0;
+			
+			$o->file_target = $fileTarget;
+			if($r->sob_all_type == 'editor'  || $r->sob_all_type == 'input' && $fileTarget == 1){
 					$o->html		= nuReplaceHashVariables($r->sob_html_code);
+					
 			}
 
 			if($r->sob_all_type == 'html'){
@@ -872,13 +876,11 @@ function nuGetAllLookupList(){
 
 }
 
-
 function nuLookupRecord(){
 
 	return $_POST['lookup_row'];
 
 }
-
 
 function nuSetFormValue($f, $v){
 

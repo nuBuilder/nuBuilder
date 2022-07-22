@@ -2133,4 +2133,11 @@ function nuIsMobile() {
 	return preg_match("/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i", $_SERVER["HTTP_USER_AGENT"]);
 }
 
+function nuSanitizeFilename($file) {
+
+	$file = mb_ereg_replace("([^\w\s\d\-_~,;\[\]\(\).])", '', $file);
+	return mb_ereg_replace("([\.]{2,})", '', $file);
+
+}
+
 ?>

@@ -878,7 +878,7 @@ function getDBColumnLengh(w, id) {
 
 }
 
-function nuINPUTfile($fromId, obj, id, p) {
+function nuINPUTfileDatabase($fromId, obj, id, p) {
 
 	const inp = document.createElement('textarea');
 
@@ -899,7 +899,43 @@ function nuINPUTfile($fromId, obj, id, p) {
 	}
 
 	return id + '_file';
+	
+}
 
+function nuINPUTfileFileSystem($fromId, w, i, l, p, prop, id) {
+
+	var obj = prop.objects[i];
+	id = id !== undefined ? id : p + obj.id;
+	var ef = p + 'nuRECORD';
+	var inp = document.createElement('div');
+
+	inp.setAttribute('id', id);
+
+	obj = nuLabelOrPosition(obj, w, i, l, p, prop);
+
+	$('#' + ef).append(inp);
+
+	nuAddDataTab(id, obj.tab, p);
+	
+	let html = w.objects[i].html;
+	html =  html.replaceAll('#uppy_drag_drop_area#', id + '_uppy_drag_drop_area');
+	html =  html.replaceAll('#parent_div#', id);
+
+	$('#' + id).css({
+		'top': Number(obj.top),
+		'left': Number(obj.left),
+		'width': Number(obj.width),
+		'height': Number(obj.height),
+		'position': 'absolute'
+	})
+		.addClass('nuFileUppy').html(html);
+
+	nuSetAccess(id, obj.read);
+
+	nuAddStyle(id, obj);
+
+	return Number(obj.width);
+	
 }
 
 function nuINPUTInput($id, inp, inputType, obj, objectType) {
@@ -1117,10 +1153,13 @@ function nuINPUTSetValue($id, wi, inputType) {
 
 }
 
-function nuIPUTNuChangeEvent(inputType, objectType) {
+function nuIPUTNuChangeEvent(obj, inputType, objectType) {
 
 	let change = 'nuChange(event)';
-	if (inputType == 'file') {
+	
+	if (inputType == 'file' && obj.file_target == '1') {
+		change = '';
+	} else if (inputType == 'file') {
 		change = 'nuChangeFile(event)';
 	} else if (objectType == 'lookup') {
 		change = 'nuGetLookupId(this.value, this.id)';
@@ -1142,7 +1181,7 @@ function nuINPUTSetProperties($id, obj, inputType, objectType, wi, p) {
 		'text-align': obj.align,
 		'position': 'absolute'
 	})
-	.attr('onchange', nuIPUTNuChangeEvent(inputType, objectType))
+	.attr('onchange', nuIPUTNuChangeEvent(obj, inputType, objectType))
 	.attr('data-nu-field', inputType == 'button' || inputType == 'file' ? null : obj.id)
 	.attr('data-nu-object-id', wi.object_id)
 	.attr('data-nu-format', '')
@@ -1187,22 +1226,27 @@ function nuINPUT(w, i, l, p, prop) {
 	const $fromId = $('#' + p + 'nuRECORD');									//-- Edit Form Id
 	var type = 'textarea';
 	var vis = obj.display == 0 ? 'hidden' : 'visible';
-	var inputType = obj.input;
+	var inputType = obj.input;	
 	var objectType = obj.type;
 
 	if (objectType != 'textarea') {												//-- Input Object
 		type = 'input';
 	}
 
-	if (inputType == 'file') {
-		id = nuINPUTfile($fromId, obj, id, p);
-	}
+	const inputSubType = inputType == 'file' && obj.file_target == '1' ? 'uppy' : '';
 
+	if (type == 'input' && inputSubType == 'uppy') {
+		type = 'div';
+	}	
+
+	if (type == 'input' && inputType == 'file' && inputSubType != 'uppy') {
+		id = nuINPUTfileDatabase($fromId, obj, id, p);
+	}
+	
 	const inp = document.createElement(inputType == 'button' && objectType == 'input' ? 'button': type);
 	inp.setAttribute('id', id);
 
 	let $id = $(inp);
-
 
 	$fromId.append(inp);
 
@@ -1211,8 +1255,12 @@ function nuINPUT(w, i, l, p, prop) {
 	nuAddDataTab(id, obj.tab, p);
 	nuINPUTSetProperties($id, obj, inputType, objectType, wi, p);
 
-	if (type == 'input') {														//-- Input Object
+	if (type == 'input' && inputSubType != 'uppy') {				//-- Input Object
 		nuINPUTInput($id, inp, inputType, obj, objectType);
+	}
+
+	if (inputSubType == 'uppy') {
+		nuINPUTfileFileSystem($fromId, w, i, l, p, prop, id);
 	}
 
 	if (inputType == 'nuScroll') {
@@ -3463,7 +3511,7 @@ function nuGetOptionsList(f, t, p, a, type) {
 		Help : ['Help', nuFORMHELP[p], 'fa-question-circle', '?'],
 		ChangePassword : ['Change Password', 'nuPopup("nupassword", "", "")', 'fa-password', 'L'],
 		DebugResults : ['nuDebug Results', 'nuOptionsListAction("nudebug", "")', 'fa-bug', 'D'],
-		Database : ['Database', 'nuStartDatabaseAdmin();', 'fa-database', 'E'],
+		Database : ['Database', 'nuVendorLogin("PMA")', 'fa-database', 'E'],
 		Backup : ['Backup', 'nuRunBackup();', 'far fa-hdd', 'B'],
 		Setup : ['Setup', 'nuForm("nusetup","1","", "", 2)', 'fa-cogs', 'U'],
 		FormInfo : ['Form Info', 'nuShowFormInfo();', 'fa-info', 'M'],
@@ -5709,7 +5757,7 @@ function nuPortraitScreen(columns) {
 
 	const obj = nuSERVERRESPONSE.objects;
 	var lw = columns == 1 ? 0 : nuPortraitLabelWidth(obj);
-	var top = 10;
+	var top = 0;
 	var b = -1;
 	var width = 0;
 	let oWidth = 0;

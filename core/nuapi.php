@@ -1,7 +1,20 @@
 <?php
 	header("Content-Type: application/json");
 	header("Cache-Control: no-cache, must-revalidate");
-	$_POST['nuSTATE'] = json_decode($_POST['nuSTATE'], true);
+	
+	$nuState = isset($_POST['nuSTATE']) ? $_POST['nuSTATE'] : null; 
+	if ($nuState == null && !empty($_FILES["file"])) {
+		require_once('nuupload.php');
+		return nuUploadFile();
+	}
+
+	if ($nuState == null) {
+		http_response_code(400);
+		return;
+	}	
+
+	$_POST['nuSTATE'] = json_decode($nuState, true);
+
 	require_once('../nuconfig.php');
 	require_once('nusecurity.php');
 	require_once('nusession.php');
