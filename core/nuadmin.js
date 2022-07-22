@@ -238,6 +238,8 @@ function nuConsoleErrorsToMessage() {
 
 	window.onerror = function (msg, url, lineNo, columnNo, error) {
 
+		if (msg == "ResizeObserver loop limit exceeded") return; // ignore
+
 		if (msg.toLowerCase().indexOf('script error') > -1) {
 			alert('Script Error: See Browser Console for Details');
 		} else {
