@@ -333,6 +333,18 @@ function nuBuildForm(f) {
 
 function nuBrowseScrollbar() {
 
+	function nuAdjustBreadcrumbHolder() {
+
+		$('#nuBreadcrumbHolder').css({
+			'width': '100vw',
+			'display': 'flex',
+			'flex': '1',
+			'flex-flow': 'row wrap',
+			'align-items': 'baseline'
+		});
+
+	}
+
 	if (nuFormType() == 'browse') {
 
 		if (!nuIsIframe()) {
@@ -341,19 +353,19 @@ function nuBrowseScrollbar() {
 				'height': '100%',
 				'overflow-x': 'auto'
 			});
-			$('#nuBreadcrumbHolder').css({
-				'width': '100vw',
-				'display': 'flex',
-				'flex': '1',
-				'flex-flow': 'row wrap'
-			});
+
+			nuAdjustBreadcrumbHolder();
+
 			$('#nuActionHolder').css({
 				'width': '100vw'
 			});
 			document.body.style.overflow = 'hidden';
+		} else {
+			nuAdjustBreadcrumbHolder();
 		}
 
 	} else {
+		nuAdjustBreadcrumbHolder();
 		document.body.style.overflow = 'visible';
 	}
 
@@ -455,7 +467,7 @@ function nuAddIconToBreadCrumb(id, title, right, handler, _class) {
 		.css('position', 'absolute')
 		.css('right', right)
 		.attr('onclick', handler)
-		.html('<i class="' + _class + '" style="font-size:20px;"></i>')
+		.html('<i class="' + _class + '" style="font-size:17px;"></i>')
 		.attr('title', nuTranslate(title));
 
 }
@@ -899,7 +911,7 @@ function nuINPUTfileDatabase($fromId, obj, id, p) {
 	}
 
 	return id + '_file';
-	
+
 }
 
 function nuINPUTfileFileSystem($fromId, w, i, l, p, prop, id) {
@@ -916,7 +928,7 @@ function nuINPUTfileFileSystem($fromId, w, i, l, p, prop, id) {
 	$('#' + ef).append(inp);
 
 	nuAddDataTab(id, obj.tab, p);
-	
+
 	let html = w.objects[i].html;
 	html =  html.replaceAll('#uppy_drag_drop_area#', id + '_uppy_drag_drop_area');
 	html =  html.replaceAll('#parent_div#', id);
@@ -935,7 +947,7 @@ function nuINPUTfileFileSystem($fromId, w, i, l, p, prop, id) {
 	nuAddStyle(id, obj);
 
 	return Number(obj.width);
-	
+
 }
 
 function nuINPUTInput($id, inp, inputType, obj, objectType) {
@@ -1156,7 +1168,7 @@ function nuINPUTSetValue($id, wi, inputType) {
 function nuIPUTNuChangeEvent(obj, inputType, objectType) {
 
 	let change = 'nuChange(event)';
-	
+
 	if (inputType == 'file' && obj.file_target == '1') {
 		change = '';
 	} else if (inputType == 'file') {
@@ -1226,7 +1238,7 @@ function nuINPUT(w, i, l, p, prop) {
 	const $fromId = $('#' + p + 'nuRECORD');									//-- Edit Form Id
 	var type = 'textarea';
 	var vis = obj.display == 0 ? 'hidden' : 'visible';
-	var inputType = obj.input;	
+	var inputType = obj.input;
 	var objectType = obj.type;
 
 	if (objectType != 'textarea') {												//-- Input Object
@@ -1237,12 +1249,12 @@ function nuINPUT(w, i, l, p, prop) {
 
 	if (type == 'input' && inputSubType == 'uppy') {
 		type = 'div';
-	}	
+	}
 
 	if (type == 'input' && inputType == 'file' && inputSubType != 'uppy') {
 		id = nuINPUTfileDatabase($fromId, obj, id, p);
 	}
-	
+
 	const inp = document.createElement(inputType == 'button' && objectType == 'input' ? 'button': type);
 	inp.setAttribute('id', id);
 
