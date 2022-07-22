@@ -237,7 +237,7 @@ function nuShowObjectTooltip() {
 function nuConsoleErrorsToMessage() {
 
 	window.onerror = function (msg, url, lineNo, columnNo, error) {
-debugger;
+
 		if (msg.toLowerCase().indexOf('script error') > -1) {
 			alert('Script Error: See Browser Console for Details');
 		} else {
