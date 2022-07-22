@@ -55,7 +55,7 @@ function nuVendorGood($appId) {
 function nuVendorBad($appId) {
 
 	$time = time();
-	$page = "nupmalogout.php?$time=$time";
+	$page = "nuvendorlogout.php?$time=$time";
 	setcookie("nu_".$appId,	"bad");
 
 	return $page;
