@@ -127,10 +127,8 @@ if (isset($nuConfigIncludeQuill) && $nuConfigIncludeQuill == true) {
 	nuCSSIndexInclude('core/libs/quill/themes/quill.snow.css');
 }
 
-if (isset($nuConfigIncludeUppy) && $nuConfigIncludeUppy == true) {
-	nuCSSIndexInclude('core/libs/uppy/uppy.min.css');
-	nuJSIndexInclude('core/libs/uppy/uppy.min.js');
-}
+nuCSSIndexInclude('core/libs/uppy/uppy.min.css');
+nuJSIndexInclude('core/libs/uppy/uppy.min.js');
 
 nuJSIndexInclude('core/libs/select2/select2.min.js');
 
