@@ -345,6 +345,7 @@ function nuBrowseScrollbar() {
 
 	}
 
+	return;
 	if (nuFormType() == 'browse') {
 
 		if (!nuIsIframe()) {
