@@ -930,8 +930,8 @@ function nuINPUTfileFileSystem($fromId, w, i, l, p, prop, id) {
 	nuAddDataTab(id, obj.tab, p);
 
 	let html = w.objects[i].html;
-	html =  html.replaceAll('#uppy_drag_drop_area#', id + '_uppy_drag_drop_area');
-	html =  html.replaceAll('#parent_div#', id);
+	html =  html.replaceAll('#uppy_div#', id + '_uppy_div');
+	html =  html.replaceAll('#this_object_id#', id);
 
 	$('#' + id).css({
 		'top': Number(obj.top),
