@@ -19,6 +19,7 @@ function nuUploadFile()	 {
 	$sid = isset($_POST["session_id"]) ? $_POST["session_id"] : '';
 
 	$error = nuTranslate('Sorry, there was an error uploading your file.');
+	$result = json_encode('{}');
 
 	$t = nuRunQuery('SELECT * FROM `zzzzsys_session` where zzzzsys_session.zzzzsys_session_id = ?', array($sid));
 	if (db_num_rows($t) == 0) {
