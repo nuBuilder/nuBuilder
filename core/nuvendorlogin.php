@@ -40,7 +40,7 @@ function nuVendorGood($appId) {
 
 	$time = time();
 
-	$page = nuVendorBad();
+	$page = nuVendorBad($appId);
 	if ($appId == 'PMA') {
 		$page = "libs/nudb/index.php?route=/database/structure&server=1&db=".$_SESSION['nubuilder_session_data']['DB_NAME']."&$time=$time";
 	} elseif ($appId == 'TFM') {
