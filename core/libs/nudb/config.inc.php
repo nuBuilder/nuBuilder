@@ -5,7 +5,7 @@ require_once(dirname(__FILE__). '/../../../nuconfig.php');
 
 if (! isset($nuPmaNotAuth)) {
 
-	$sessionId = isset($_COOKIE['nuPMA']) ? $_COOKIE["nuPMA"] : '';
+	$sessionId = isset($_COOKIE['nu_PMA']) ? $_COOKIE["nu_PMA"] : '';
 	
 	if ($sessionId == '') {
 		nuAuthFailed();
