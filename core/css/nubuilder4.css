@@ -216,7 +216,7 @@
 	 padding:10px 0;
 	 background-color:white;
 	 height:22px;
-	 text-align:left 
+	 text-align:left
 }
  .nuBreadcrumbHolder {
 	 border-bottom-color: #393b4ab3;
@@ -226,6 +226,9 @@
 	 color:white;
 	 font-size:12px;
 	 padding:5px 0;
+	 position: sticky;
+	 top: 0;
+	 z-index: 999
 }
  .nuBreadcrumb {
 	 color:white;
@@ -533,7 +536,7 @@
 	 font-size:13px;
 	 overflow:visible;
 	 height:30px;
-	 padding:7px 10px 0 
+	 padding:7px 11px 0 
 }
  .nuBrowseTitleMultiline {
 	 background-color:white;
@@ -543,7 +546,7 @@
 	 font-size:13px;
 	 overflow:visible;
 	 height:50px;
-	 padding:7px 10px 0 
+	 padding:7px 11px 0 
 }
  .nuBrowseTable {
 	 height:70px;
