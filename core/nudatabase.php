@@ -304,6 +304,12 @@ function db_field_types($n){
 
 }
 
+function db_field_exists($tableName, $fieldName) {
+
+	$fields = db_field_names($tableName);
+	return array_search($fieldName, $fields) != false;
+
+}
 
 function db_primary_key($n){
 
