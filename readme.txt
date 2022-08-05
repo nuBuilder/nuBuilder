@@ -1,12 +1,12 @@
 === nuBuilder Forte ===
 Name: nuBuilder 4.5
 
-Contributors: Steven Copley, kev1n, Janusz, Neil, Ap.Muthu
+Contributors: Steven Copley, kev1n, Janusz, Neil, Nilesh, Ap.Muthu
 Donate link: https://www.nubuilder.com/#donate
 License: GPLv3
 Home Page: https://www.nubuilder.com
-Wiki: https://wiki.nubuilder.net/
-Forum: https://forums.nubuilder.com/
+Wiki: https://wiki.nubuilder.cloud/
+Forum: https://forums.nubuilder.cloud/
 
 Requires: PHP: 5.4.0 (phpMyAdmin that is shipped with nuBuilder will require PHP 7.1+)
 Requires: MySQL: 5.5. (or MariaDB)
