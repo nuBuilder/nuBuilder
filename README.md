@@ -4,7 +4,7 @@
 
 * ***Home Page:*** https://www.nubuilder.com
 * ***Wiki:*** https://wiki.nubuilder.cloud/
-* ***Forum:*** https://forums.nubuilder.com/
+* ***Forum:*** https://forums.nubuilder.cloud/
 * ***Requires PHP:*** 5.4.0 (phpMyAdmin that is shipped with nuBuilder will require PHP 7.1+)
 * ***Requires MySQL:*** 5.5. (or MariaDB)
 * ***Requires a web server:*** (e.g. Apache or Nginx)
@@ -52,10 +52,9 @@ Further customisation that can be done with JavaScript and PHP.
 
 **✪ Easy installation:**
 
-- Download and unzip the nuBuilder files from https://github.com/nuBuilder/nuBuilder-4.5/
+- Download and unzip the nuBuilder files
 - Upload to your webserver
-- Create a database (e.g. nubuilder4) and optionally a user
-- Make a copy of the nuconfig-sample.php file and save the new file as nuconfig.php
+- Create a database (e.g. nubuilder4 )
 - Edit nuconfig.php to set your database and globeadmin credentials
 - Open the URL that will look something like: http://yoursitename.com/nubuilder4/index.php
 - Done - you can now login as 'globeadmin'
