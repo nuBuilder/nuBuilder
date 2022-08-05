@@ -522,7 +522,6 @@ function nuGetUserJSONData($i, $u = ""){
 	}
 
 	$s			= "SELECT sus_json FROM zzzzsys_user WHERE zzzzsys_user_id = ? ";
-
 	$t			= nuRunQuery($s, array($u));
 
 	if (db_num_rows($t) == 1) {
@@ -535,6 +534,34 @@ function nuGetUserJSONData($i, $u = ""){
 
 }
 
+function nuGetSysJSONValue($tbl, $jk, $pk) {
+
+	$fld = $GLOBALS['sys_table_prefix'][$tbl]."_json";
+	$s = "SELECT $fld FROM zzzzsys_{$tbl} WHERE zzzzsys_{$tbl}_id = ? ";
+	$t = nuRunQuery($s, [$pk]);
+
+	if (db_num_rows($t) == 1) {
+		$r = db_fetch_row($t);
+		$j = json_decode($r[0], true);
+		return nuObjKey($j, $jk, '');
+	} else {
+		return '';
+	}
+}
+
+function nuSetSysJSONValue($tbl, $jk, $jv, $pk) {
+
+	$fld = $GLOBALS['sys_table_prefix'][$tbl]."_json";
+	$s = "SELECT $fld FROM zzzzsys_{$tbl} WHERE zzzzsys_{$tbl}_id = ? ";
+	$t = nuRunQuery($s, [$pk]);
+	$r = db_fetch_row($t);
+	$j = json_decode($r[0], true);
+	$j[$jk] = $jv;
+	$J = json_encode($j);
+	$s = "UPDATE zzzzsys_{$tbl} SET $fld = ? WHERE zzzzsys_{$tbl}_id = ? ";
+	$t = nuRunQuery($s, [$J, $pk]);
+
+}
 
 function nuGetProcedure($i){
 
