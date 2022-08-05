@@ -186,6 +186,19 @@ function nuAddNewSystemTables(){
 
 }
 
+function nuCreateJSONColumns() {
+
+    foreach ($GLOBALS['sys_table_prefix'] as $tbl => $prefix) {
+        $exists = (db_field_exists("zzzzsys_".$tbl, $prefix."_json") === true);
+
+        if ($exists !== true) {
+            nuRunQuery("ALTER TABLE zzzzsys_$tbl ADD {$prefix}_json MEDIUMTEXT NULL DEFAULT NULL;");
+            echo "Table : zzzzsys_{$tbl} - Prefix : {$prefix}_json  did not exist and so has been created <br>";
+        }
+    }
+
+}
+
 
 function nuAlterSystemTables(){
 
@@ -255,6 +268,8 @@ function nuAlterSystemTables(){
 
 	nuRunQueryNoDebug("ALTER TABLE `pdf_temp` ADD `pdf_code` VARCHAR(100) NULL DEFAULT NULL AFTER `pdf_added_by`;");
 	nuRunQueryNoDebug("ALTER TABLE `pdf_temp` ADD `pdf_tag` VARCHAR(100) NULL DEFAULT NULL AFTER `pdf_code`;");
+	
+	nuCreateJSONColumns();
 
 }
 

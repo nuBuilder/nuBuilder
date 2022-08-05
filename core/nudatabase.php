@@ -33,6 +33,36 @@ try {
 	die();
 }
 
+$GLOBALS['sys_table_prefix'] = array(
+    'access' => 'sal',
+    'access_form' => 'slf',
+    'access_php' => 'slp',
+    'access_report' => 'srp',
+    'browse' => 'sbr',
+    'cloner' => 'clo',
+    'code_snippet' => 'cot',
+    'config' => 'cfg',
+    'debug' => 'deb',
+    'event' => 'sev',
+    'file' => 'sfi',
+    'form' => 'sfo',
+    'format' => 'srm',
+    'info' => 'inf',
+    'note' => 'not',
+    'note_category' => 'hoc',
+    'object' => 'sob',
+    'php' => 'sph',
+    'report' => 'sre',
+    'select' => 'sse',
+    'select_clause' => 'ssc',
+    'session' => 'sss',
+    'setup' => 'set',
+    'tab' => 'syt',
+    'timezone' => 'stz',
+    'translate' => 'trl',
+    'user' => 'sus'
+);
+
 function nuRunQueryNoDebug($s, $a = array(), $isInsert = false){
 
 	global $nuDB;
