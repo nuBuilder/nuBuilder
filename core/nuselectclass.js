@@ -456,8 +456,8 @@ class nuSelectObject {
 
 		}
 
-		for (const item of j) {
-			J.push(item);
+		for (const k in j) {
+			J.push(j[k]);
 		}
 
 		return J;
@@ -747,6 +747,7 @@ class nuSelectObject {
 	getJoins() {
 
 		var a = [];
+		var j = [];
 		var r = this.joins;
 
 		for (var k in r) {
