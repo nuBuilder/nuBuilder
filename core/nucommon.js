@@ -795,6 +795,12 @@ function nuBindCtrlEvents() {
 
 	$(document).keydown(function (e) {
 
+		if((e.keyCode === 34 || e.keyCode === 33) && nuFormType() == 'browse'){ // Page Down, Page Up	
+			const $nuRecord = $("#nuRECORD");
+			const scrollBy = e.keyCode === 34 ? 400 : -400;
+			$nuRecord.scrollTop($nuRecord.scrollTop() + scrollBy);
+        }
+
 		if (e.keyCode == 27) {										//-- ESC
 
 			if (nuIsVisible('nuMessageDiv')) {

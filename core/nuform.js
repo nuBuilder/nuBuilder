@@ -325,7 +325,7 @@ function nuBuildForm(f) {
 
 	nuWindowPosition();
 
-//	nuFormModification();
+	nuFormModification();
 
 	nuRestoreScrollPositions();
 
@@ -339,7 +339,7 @@ function nuFormModification() {
 
 			$record = $('#nuRECORD');
 			$record.css({
-				'width': '100vw',
+				'width': '99.7vw',
 				'height': '80vh',
 				'overflow-x': 'auto',
 				'overflow-y': 'auto'
