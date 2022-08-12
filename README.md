@@ -16,7 +16,7 @@
 
 nuBuilder enables you to make any web-based database application that you want or need with the least amount of effort and learning.
 
-It gives its users the ability to do database operations like: 
+It gives its users the ability to do database operations like:
 
 * Search, Create, Insert, Read, Update, Delete
 
@@ -43,6 +43,8 @@ Further customisation that can be done with JavaScript and PHP.
 - Access Levels
 - 2FA
 - WYSIWYG Editor
+- File Manager
+- File Upload
 - Send emails
 - Translations
 - Import csv files
