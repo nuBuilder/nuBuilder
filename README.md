@@ -3,6 +3,7 @@
 ------------
 
 * ***Home Page:*** https://www.nubuilder.com
+* ***Demo:*** https://demo.nubuilder.cloud/
 * ***Wiki:*** https://wiki.nubuilder.cloud/
 * ***Forum:*** https://forums.nubuilder.cloud/
 * ***Requires PHP:*** 5.4.0 (phpMyAdmin that is shipped with nuBuilder will require PHP 7.1+)
