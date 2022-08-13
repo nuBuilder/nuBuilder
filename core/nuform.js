@@ -1817,27 +1817,28 @@ function nuRUN(w, i, l, p, prop) {
 
 function nuSELECT(w, i, l, p, prop) {
 
-	var obj = prop.objects[i];
-	var id = p + obj.id;
-	var ef = p + 'nuRECORD';					//-- Edit Form Id
+	let obj = prop.objects[i];
+	const id = p + obj.id;
+	const ef = p + 'nuRECORD';					//-- Edit Form Id
 
 	obj = nuLabelOrPosition(obj, w, i, l, p, prop);
 
-	var sel = document.createElement('select');
+	let sel = document.createElement('select');
 
 	sel.setAttribute('id', id);
 
 	$('#' + ef).append(sel);
 
-
+	$id = $('#' + id);
+	
 	if (w.objects[i].value != '' && nuRecordId() == '-1') {
-		$('#' + id).addClass('nuEdited');
+		$id.addClass('nuEdited');
 	}
 
 	nuAddDataTab(id, obj.tab, p);
 
 	if (obj.multiple == 1) {
-		$('#' + id).attr('multiple', 'multiple');
+		$id.attr('multiple', 'multiple');
 	}
 
 	if (obj.select2 == 1) {
@@ -1847,7 +1848,7 @@ function nuSELECT(w, i, l, p, prop) {
 
 	};
 
-	$('#' + id).css({
+	$id.css({
 		'top': Number(obj.top),
 		'left': Number(obj.left),
 		'width': Number(obj.width),
@@ -1864,7 +1865,7 @@ function nuSELECT(w, i, l, p, prop) {
 		.attr('data-nu-prefix', p);
 
 
-	$('#' + id).css('height', Number(obj.height));
+	$id.css('height', Number(obj.height));
 
 	var s = String(w.objects[i].value);
 	var a = [];
@@ -1877,7 +1878,7 @@ function nuSELECT(w, i, l, p, prop) {
 		eval('a = ' + s);
 	}
 
-	$('#' + id).append('<option value=""></option>');
+	$id.append('<option value=""></option>');
 
 	if (obj.options !== null) {
 
@@ -1886,9 +1887,9 @@ function nuSELECT(w, i, l, p, prop) {
 			const opt = String(obj.options[n][1]); // .replaceAll(' ', '&#160;');
 
 			if (a.indexOf(String(obj.options[n][0])) == -1) {
-				$('#' + id).append('<option value="' + obj.options[n][0] + '">' + opt + '</option>');
+				$id.append('<option value="' + obj.options[n][0] + '">' + opt + '</option>');
 			} else {
-				$('#' + id).append('<option selected="selected "value="' + obj.options[n][0] + '">' + opt + '</option>');
+				$id.append('<option selected="selected "value="' + obj.options[n][0] + '">' + opt + '</option>');
 			}
 
 		}
