@@ -1883,7 +1883,7 @@ function nuSELECT(w, i, l, p, prop) {
 
 		for (let n = 0; n < obj.options.length; n++) {
 
-			var opt = String(obj.options[n][1]).replaceAll(' ', '&#160;');
+			const opt = String(obj.options[n][1]); // .replaceAll(' ', '&#160;');
 
 			if (a.indexOf(String(obj.options[n][0])) == -1) {
 				$('#' + id).append('<option value="' + obj.options[n][0] + '">' + opt + '</option>');
