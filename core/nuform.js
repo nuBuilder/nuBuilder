@@ -1874,6 +1874,7 @@ function nuSELECT(w, i, l, p, prop) {
 
 	$id.append('<option value=""></option>');
 	
+	let hasSelected = false;
 	if (obj.options !== null) {
 
 		for (let n = 0; n < obj.options.length; n++) {
@@ -1884,6 +1885,7 @@ function nuSELECT(w, i, l, p, prop) {
 				$id.append('<option value="' + obj.options[n][0] + '">' + opt + '</option>');
 			} else {
 				$id.append('<option selected="selected "value="' + obj.options[n][0] + '">' + opt + '</option>');
+				hasSelected = true;
 			}
 
 		}
