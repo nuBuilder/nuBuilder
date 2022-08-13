@@ -120,13 +120,6 @@ nuJSChartsInclude();
 nuJSIndexInclude('core/libs/ctxmenu/ctxmenu.min.js');
 nuJSIndexInclude('core/libs/vanillajs-datepicker/datepicker-full.min.js');
 nuJSIndexInclude('core/libs/jquery/jquery-confirm.min.js');
-
-if (isset($nuConfigIncludeQuill) && $nuConfigIncludeQuill == true) {
-	nuJSIndexInclude('core/libs/quill/quill.min.js');
-	nuJSIndexInclude('core/libs/quill/modules/quill-divider.js');
-	nuCSSIndexInclude('core/libs/quill/themes/quill.snow.css');
-}
-
 nuCSSIndexInclude('core/libs/uppy/uppy.min.css');
 nuJSIndexInclude('core/libs/uppy/uppy.min.js');
 

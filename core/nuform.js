@@ -225,13 +225,7 @@ function nuBuildForm(f) {
 		nuOnEditorLoad();
 	} else {
 		$('.nuEditor').each((index, element) => {
-
-			if (nuUXOptions.nuDefaultUseQuill) {
-				nuQuill(element.id);
-			} else {
-				nuInitTinyMCE(element.id);
-			}
-
+			nuInitTinyMCE(element.id);
 		});
 	}
 
@@ -1879,7 +1873,7 @@ function nuSELECT(w, i, l, p, prop) {
 	}
 
 	$id.append('<option value=""></option>');
-
+	
 	if (obj.options !== null) {
 
 		for (let n = 0; n < obj.options.length; n++) {
