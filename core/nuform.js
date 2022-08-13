@@ -1881,11 +1881,11 @@ function nuSELECT(w, i, l, p, prop) {
 
 	if (obj.options !== null) {
 
-		for (var n = 0; n < obj.options.length; n++) {
+		for (let n = 0; n < obj.options.length; n++) {
 
 			var opt = String(obj.options[n][1]).replaceAll(' ', '&#160;');
 
-			if (a.indexOf(obj.options[n][0]) == -1) {
+			if (a.indexOf(String(obj.options[n][0])) == -1) {
 				$('#' + id).append('<option value="' + obj.options[n][0] + '">' + opt + '</option>');
 			} else {
 				$('#' + id).append('<option selected="selected "value="' + obj.options[n][0] + '">' + opt + '</option>');
