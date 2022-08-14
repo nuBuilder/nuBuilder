@@ -8,7 +8,6 @@
 <title>Ace Editor</title>
 
 <script src="<?php echo $jquery; ?>" type="text/javascript"></script>
-<script src="libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="libs/ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="libs/ace/src-min-noconflict/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
 <script src="libs/ace/src-min-noconflict/ext-beautify.js" type="text/javascript" charset="utf-8"></script>
