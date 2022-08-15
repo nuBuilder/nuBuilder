@@ -612,13 +612,21 @@ function nuGetLookupId(pk, id, setFocus) {
 
 
 function nuGetLookupCode(e) {
-
+	
+	const nuTarget = e.target.getAttribute('data-nu-target');
+	
+	if (e.currentTarget.value.length == 0) {
+		nuSetValue(nuTarget, '');
+		nuSetValue(nuTarget + 'description', '');
+		return;
+	}
+	
 	var last = window.nuFORM.getCurrent();
 
 	last.session_id = window.nuSESSION;
 	last.call_type = 'getlookupcode';
 	last.object_id = e.target.getAttribute('data-nu-object-id');
-	last.target = e.target.getAttribute('data-nu-target');
+	last.target = nuTarget;
 	last.code = e.target.value;
 	last.hash = nuHashFromEditForm();
 
