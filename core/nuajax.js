@@ -571,6 +571,8 @@ function nuAttachButtonImage(i, c, cssClass) {
 
 function nuGetLookupId(pk, id, setFocus) {
 
+	if (window.nuLOOKUPCLEARING) return;
+
 	$('#nuLookupList').remove();
 
 	var l = $('#' + id);
@@ -616,8 +618,10 @@ function nuGetLookupCode(e) {
 	const nuTarget = e.target.getAttribute('data-nu-target');
 	
 	if (e.currentTarget.value.length == 0) {
+		window.nuLOOKUPCLEARING = true;
 		nuSetValue(nuTarget, '');
 		nuSetValue(nuTarget + 'description', '');
+		window.nuLOOKUPCLEARING = false;
 		return;
 	}
 	
