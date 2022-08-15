@@ -936,15 +936,27 @@ function nuUnbindDragEvents() {
 	$(document).off('.nubindctrl');
 }
 
-function nuTranslate(str) {
+function nuTranslate(obj) {
 
-	if (!str) return '';
+	if (Array.isArray(obj)) {
+		
+		let arr = obj;
+		arr.forEach(function(item, index) {
+			const l = nuLANGUAGE.find(elem => elem.english === item);
+			arr[index] = !l ? item : l.translation;
+		})
+		
+		return arr;
 
-	str = String(str);
-	if (str.charAt(0) == '|') return str.substring(1);
+	} else {
+		if (!obj) return '';
 
-	let l = nuLANGUAGE.find(elem => elem.english === str);
-	return !l ? str : l.translation;
+		str = String(obj);
+		if (str.charAt(0) == '|') return str.substring(1);
+
+		const l = nuLANGUAGE.find(elem => elem.english === str);
+		return !l ? str : l.translation;
+	}
 
 }
 
