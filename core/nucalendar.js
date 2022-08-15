@@ -63,6 +63,19 @@ function nuPopupCalendarVanillaJs(pThis, d) {
 
 	let calendarOptions = Object.assign(calendarUserOptions, objCalendarOptionsDefault.options);
 
+	Datepicker.locales.en = {
+		days: nuTranslate(["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]),
+		daysShort: nuTranslate(["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]),
+		daysMin: nuTranslate(["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]),
+		months: nuTranslate(["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]),
+		monthsShort: nuTranslate(["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]),
+		today: nuTranslate("Today"),
+		clear: nuTranslate("Clear"),
+		titleFormat: "MM y",
+		format: $(pThis).attr('data-nu-format').replace('D|', ''),
+		weekStart: 0
+	}
+
 	datepicker = new Datepicker(pThis, calendarOptions);
 	window[id + '_datepicker'] = datepicker;
 
@@ -70,7 +83,6 @@ function nuPopupCalendarVanillaJs(pThis, d) {
 	datepicker.show();
 
 }
-
 
 function nuPopupCalendar(pThis, d) {
 
