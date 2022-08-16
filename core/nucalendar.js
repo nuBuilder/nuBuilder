@@ -86,7 +86,7 @@ function nuPopupCalendar(pThis, d) {
 	$('#nuCalendar').remove();
 	$('#nuLookupList').remove();
 
-	if (nuUXOptions['nuCalendarVanillaJS']) {
+	if (nuUXOptions['nuCalendarVanillaJS'] || nuUXOptions['nuCalendarType'] === 'VanillaJS') {
 		nuPopupCalendarVanillaJs(pThis, d);
 		return;
 	}
