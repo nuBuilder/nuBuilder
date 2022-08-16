@@ -40,18 +40,14 @@ function nuPopupCalendarVanillaJs(pThis, d) {
 	let optionWeekStart = {};
 	let weekStartNumber = nuCalendarWeekStartNumber();
 
-	if (weekStartNumber !== undefined) {
-		optionWeekStart = {
-			weekStart: weekStartNumber
-		}
-	}
-
 	let calendarOptionsDefault = {
 		autohide: true,
-		calendarWeeks: true,
+		calendarWeeks: false,
 		defaultViewDate: d,
 		format: $(pThis).attr('data-nu-format').replace('D|', ''),
-		optionWeekStart
+		todayHighlight: true,
+		clearBtn: true,
+		weekStart : (weekStartNumber !== undefined ? weekStartNumber : 0)
 	}
 
 	let objCalendarOptionsDefault = { options: calendarOptionsDefault };
@@ -71,15 +67,14 @@ function nuPopupCalendarVanillaJs(pThis, d) {
 		monthsShort: nuTranslate(["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]),
 		today: nuTranslate("Today"),
 		clear: nuTranslate("Clear"),
-		titleFormat: "MM y",
-		format: $(pThis).attr('data-nu-format').replace('D|', ''),
-		weekStart: 0
+		titleFormat: "MM y"
 	}
 
 	datepicker = new Datepicker(pThis, calendarOptions);
 	window[id + '_datepicker'] = datepicker;
 
 	datepicker.setOptions({ defaultViewDate: d });
+
 	datepicker.show();
 
 }
