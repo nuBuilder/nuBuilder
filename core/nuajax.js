@@ -617,7 +617,7 @@ function nuGetLookupCode(e) {
 	
 	const nuTarget = e.target.getAttribute('data-nu-target');
 	
-	if (e.currentTarget.value.length == 0) {
+	if (e.currentTarget && e.currentTarget.value.length == 0) {
 		window.nuLOOKUPCLEARING = true;
 		nuSetValue(nuTarget, '');
 		nuSetValue(nuTarget + 'description', '');
