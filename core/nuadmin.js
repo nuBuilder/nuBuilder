@@ -43,7 +43,7 @@ function nuShowFormInfo() {
 
 	const permalink = '<br><button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCopyPermalink()">Copy Permalink</button>';
 	const currentProp = '<button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCurrentProperties()">Current Properties</button>';
-	const recordId = nuFormType() == 'edit' && cp.form_type !== 'launch' ? "<b>Record ID:</b>" + cp.record_id + '<br>' : '';
+	const recordId = nuFormType() == 'edit' && cp.form_type !== 'launch' ? "<b>Record ID:</b> " + cp.record_id + '<br>' : '';
 	const browseCopyButton = '<button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCopyBrowseSQL()">Copy SQL</button><br>';
 
 	const browseSQL = nuFormType() == 'browse' && (!code.startsWith('nu') || devMode) ? '<br><b>Browse SQL:</b><br>' + '<pre class="nuFormInfoBrowseSQL"><code id="nuFormInfoBrowseSQL">' + cp.browse_sql + "</pre></code><br>" + browseCopyButton : '<br>';
