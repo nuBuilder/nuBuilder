@@ -708,9 +708,9 @@ function nuReformat(t) {
 
 		let a = nuReapplyFormat(v, f);
 		if (v != a) {
-			o.val('');debugger;
-			if (window.nuFormatCleared) {
-				nuFormatCleared(o, v);
+			o.val('');
+			if (window.nuFormatValueCleared) {
+				nuFormatCleared(o);
 			}
 
 		}
