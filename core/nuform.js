@@ -96,6 +96,7 @@ function nuBuildForm(f) {
 	window.nuOnSelectTab = null;
 	window.onSubformTitleClick = null;
 	window.nuOnMessage = null;
+	window.nuFormatValueCleared = null;
 	window.nuDisplayObjectRefreshed = null;
 	window.nuOnSetCalendarOptions = null;
 	window.nuCalculated = null;
