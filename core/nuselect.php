@@ -1,6 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
 <?php
 
 require_once('nucommon.php');
@@ -21,6 +18,10 @@ nuCSSInclude('css/nubuilder4.css');
 nuCSSInclude('css/nudrag.css');
 
 ?>
+
+<!DOCTYPE html>
+<html>
+<head>
 
 <style>
 
