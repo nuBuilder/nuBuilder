@@ -3056,7 +3056,9 @@ function nuLabel(w, i, p, prop) {
 	var lwidth = nuGetWordWidth(nuTranslate(obj.label), 'label');
 
 	lab.setAttribute('id', id);
-	lab.setAttribute('for', p + obj.id);
+
+	const forId = obj.type == 'lookup' ? p + obj.id + 'code' :p +  obj.id;
+	lab.setAttribute('for', forId);
 
 	$('#' + ef).append(lab);
 
