@@ -4460,7 +4460,7 @@ function nuChooseOneLookupRecord(e, fm) {
 
 	if (fm.lookup_values.length == 1) {
 
-		if (e.target.value.toUpperCase() == fm.lookup_values[0][1].toUpperCase()) {
+		if (e.target.value.toUpperCase() == String(fm.lookup_values[0][1]).toUpperCase()) {
 			nuGetLookupId(fm.lookup_values[0][0], i);
 		} else {
 			nuBuildLookup(t, e.target.value);
