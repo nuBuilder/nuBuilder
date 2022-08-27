@@ -710,7 +710,7 @@ function nuReformat(t) {
 		if (v != a) {
 			o.val('');
 			if (window.nuFormatValueCleared) {
-				nuFormatCleared(o);
+				nuFormatValueCleared(o, v);
 			}
 
 		}
