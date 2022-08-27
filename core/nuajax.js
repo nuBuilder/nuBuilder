@@ -756,6 +756,10 @@ function nuUpdateData(action, instruction, close) {
 
 				nuUpdateMessage('Record Deleted');
 
+				if (window.nuAfterDelete) {
+					nuAfterDelete();
+				}
+
 			} else {
 
 				nuForm(f, fm.record_id, fm.filter, fm.search, 1);		//-- go to saved or created record

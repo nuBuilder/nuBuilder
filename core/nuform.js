@@ -87,6 +87,7 @@ function nuBuildForm(f) {
 	window.nuBeforeSave = null;
 	window.nuAfterSave = null;
 	window.nuBeforeDelete = null;
+	window.nuAfterDelete = null;
 	window.nuOnSearchAction = null;
 	window.nuOnClone = null;
 	window.nuOnEditorLoad = null;

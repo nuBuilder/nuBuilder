@@ -3,7 +3,6 @@
 	header("Cache-Control: no-cache, must-revalidate");
 
 	$nuState = isset($_POST['nuSTATE']) ? $_POST['nuSTATE'] : null; 
-
 	if ($nuState == null && !empty($_FILES["file"])) {
 		require_once('nuupload.php');
 		echo nuUploadFile();
