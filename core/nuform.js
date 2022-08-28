@@ -56,6 +56,8 @@ function nuBuildForm(f) {
 
 	nuSetProperty('CLONED_RECORD', 0);
 	nuSetProperty('NEW_RECORD', 0);
+	
+	const formType = nuFormType();
 
 	if (f.tableSchema === null) {									//-- need to login again
 
@@ -69,7 +71,7 @@ function nuBuildForm(f) {
 
 	}
 
-	if (nuFormType() == 'browse') {
+	if (formType == 'browse') {
 		window.nuTimesSaved = -1;
 	} else {
 
@@ -162,7 +164,7 @@ function nuBuildForm(f) {
 	nuAddHomeLogout();
 	nuAddHolder('nuActionHolder');
 
-	if (nuFormType() == 'edit') {
+	if (formType == 'edit') {
 		nuAddHolder('nuTabHolder');
 	}
 
@@ -184,7 +186,7 @@ function nuBuildForm(f) {
 
 	let obj0 = null;
 
-	if (nuFormType() == 'edit') {
+	if (formType == 'edit') {
 
 		nuOptions('', f.form_id, 'form', f.global_access);
 		nuBuildEditObjects(f, '', '', f);
@@ -197,7 +199,7 @@ function nuBuildForm(f) {
 
 	nuGetStartingTab();
 
-	if (nuFormType() == 'edit' && nuIsNewRecord() && (obj0 !== null)) {
+	if (formType == 'edit' && nuIsNewRecord() && (obj0 !== null)) {
 		obj0.nuFocusWithoutScrolling();
 	}
 
@@ -233,11 +235,19 @@ function nuBuildForm(f) {
 
 	nuEvalnuOnLoadEvents();
 
-	if (window.nuOnLoad) {
-		nuOnLoad();
+	if (window.nuLoadEditGlobal && formType == 'edit') {
+		nuLoadEditGlobal(f.form_id);
 	}
 
-	if (nuFormType() == 'edit') {
+	if (window.nuLoadBrowseGlobal && formType == 'browse') {
+		nuLoadBrowseGlobal(f.form_id);
+	}
+
+	if (window.nuOnLoad) {
+		nuOnLoad(f.form_id);
+	}
+
+	if (formType == 'edit') {
 		window.nuRESPONSIVE.getStartPositions();
 	} else {
 
