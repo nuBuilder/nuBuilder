@@ -756,6 +756,10 @@ function nuUpdateData(action, instruction, close) {
 
 				nuUpdateMessage('Record Deleted');
 
+				if (window.nuAfterDeleteGlobal) {
+					nuAfterDeleteGlobal();
+				}
+
 				if (window.nuAfterDelete) {
 					nuAfterDelete();
 				}
