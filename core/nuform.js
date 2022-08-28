@@ -301,8 +301,11 @@ function nuBuildForm(f) {
 
 	}
 
-	if (window.nuTimesSaved > 0 && window.nuAfterSave) {
-		nuAfterSave();
+	if (window.nuTimesSaved > 0)
+
+		if(window.nuAfterSaveGlobal) nuAfterSaveGlobal();
+		if(window.nuAfterSave) nuAfterSave();
+
 	}
 
 	nuAddFormStyle(f.style);
