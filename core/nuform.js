@@ -311,7 +311,7 @@ function nuBuildForm(f) {
 
 	}
 
-	if (window.nuTimesSaved > 0)
+	if (window.nuTimesSaved > 0) {
 
 		if(window.nuAfterSaveGlobal) nuAfterSaveGlobal();
 		if(window.nuAfterSave) nuAfterSave();
