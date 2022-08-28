@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 25, 2022 at 01:37 PM
+-- Generation Time: Aug 28, 2022 at 06:56 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.2
 
@@ -693,8 +693,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`, `inf_json`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2022.08.25.00', NULL),
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2022.08.25.01', NULL);
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2022.08.28.00', NULL),
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2022.08.28.06', NULL);
 
 -- --------------------------------------------------------
 
@@ -1569,7 +1569,7 @@ CREATE TABLE `zzzzsys_setup` (
 --
 
 INSERT INTO `zzzzsys_setup` (`zzzzsys_setup_id`, `set_time_out_minutes`, `set_zzzzsys_timezone_id`, `set_language`, `set_languages_included`, `set_smtp_username`, `set_smtp_password`, `set_smtp_host`, `set_smtp_from_address`, `set_smtp_from_name`, `set_smtp_port`, `set_smtp_use_authentication`, `set_smtp_use_ssl`, `set_header`, `set_style`, `set_denied`, `set_json`) VALUES
-('1', 480, '5281a1220508372', NULL, '[\"Afrikaans\",\"Arabic\",\"Armenian\",\"Catalan\",\"Chinese\",\"Czech\",\"Danish\", \"Dutch\",\"French\",\"German\",\"Greek\",\"Hindi\",\"Italian\",\"Malay\",\"Polish\",\"Portuguese\",\"Romanian\",\"Russian\",\"Spanish\",\"Tamil\",\"Vietnamese\"]', '1', '1', '1', '1', '1', 1, '1', '1', 'function nuHeaderTest() {\n    console.log(\'Functions placed here are available anywhere in nuBuilder Forte.\');\n}\n\n// nuOnLoad() will be run after each Browse and Edit Form loads.\n\nfunction nuOnLoad() {\n\n    if (nuFormType() == \'edit\') {\n        // Edit Form loaded\n    } else\n        if (nuFormType() == \'browse\') {\n        // Browse Form loaded\n    }\n\n}', '/* Define your own styles, override styles from nubuilder4.css */\n\n/*\n .nuActionButton {\n     background-color: #579cb7\n}\n\n*/', '0', NULL);
+('1', 480, '5281a1220508372', NULL, '[\"Afrikaans\",\"Arabic\",\"Armenian\",\"Catalan\",\"Chinese\",\"Czech\",\"Danish\", \"Dutch\",\"French\",\"German\",\"Greek\",\"Hindi\",\"Italian\",\"Malay\",\"Polish\",\"Portuguese\",\"Romanian\",\"Russian\",\"Spanish\",\"Tamil\",\"Vietnamese\"]', '1', '1', '1', '1', '1', 1, '1', '1', 'function nuHeaderTest() {\n    console.log(\'Functions placed here are available anywhere in nuBuilder Forte.\');\n}\n\n// This function will be run after each Edit Form loads.\nfunction nuLoadEditGlobal(formId, formCode) {\n\n}\n\n// This function be run after each Browse Form loads.\nfunction nuLoadBrowseGlobal(formId, formCode) {\n\n}\n\n// This function be run after each Browse and Edit Form loads.\nfunction nuOnLoad(formId, formCode) {\n\n}\n\n/*\n\n// Include external resource\n</script>\n\n<link rel=\"stylesheet\" type=\"text/css\" href=\"path_to.css\"/>\n \n<script type=\"text/javascript\" src=\"path_to.js\"></script>\n\n<script>\n\n*/', '/* Define your own styles, override styles from nubuilder4.css */\n\n/*\n .nuActionButton {\n     background-color: #579cb7\n}\n\n*/', '0', NULL);
 
 -- --------------------------------------------------------
 
