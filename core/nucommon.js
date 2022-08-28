@@ -708,7 +708,13 @@ function nuReformat(t) {
 
 		let a = nuReapplyFormat(v, f);
 		if (v != a) {
+
 			o.val('');
+
+			if (window.nuFormatValueClearedGlobal) {
+				nuFormatValueClearedGlobal(o, v);
+			}
+
 			if (window.nuFormatValueCleared) {
 				nuFormatValueCleared(o, v);
 			}
