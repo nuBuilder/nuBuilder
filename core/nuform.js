@@ -236,15 +236,15 @@ function nuBuildForm(f) {
 	nuEvalnuOnLoadEvents();
 
 	if (window.nuLoadEditGlobal && formType == 'edit') {
-		nuLoadEditGlobal(f.form_id);
+		nuLoadEditGlobal(f.form_id, f.form_code);
 	}
 
 	if (window.nuLoadBrowseGlobal && formType == 'browse') {
-		nuLoadBrowseGlobal(f.form_id);
+		nuLoadBrowseGlobal(f.form_id, f.form_code);
 	}
 
 	if (window.nuOnLoad) {
-		nuOnLoad(f.form_id);
+		nuOnLoad(f.form_id, f.form_code);
 	}
 
 	if (formType == 'edit') {
