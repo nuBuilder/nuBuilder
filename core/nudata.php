@@ -551,7 +551,7 @@ function nuSubFormsEdited($nudata) {
 		$rows		= $sf->rows;
 
 		$countRows = count($rows);
-		for($r = 0 ; $r < $countRows) ; $r++){
+		for($r = 0 ; $r < $countRows ; $r++){
 			if(nuEditedRow($edited[$r])){
 				return true;
 			}
