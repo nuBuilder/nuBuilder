@@ -887,6 +887,7 @@ function nuGetUserAccess(){
 	$A['USER_POSITION']			= $j->session->sus_position;
 	$A['USER_ADDITIONAL1']		= $j->session->sus_additional1;
 	$A['USER_ADDITIONAL2']		= $j->session->sus_additional2;
+	$A['USER_A11Y']				= $j->session->sus_accessibility_features == '1' ? true : false;
 	$A['LANGUAGE']				= $j->session->language;
 
 	//-- update session time

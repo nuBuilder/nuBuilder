@@ -173,6 +173,8 @@ function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 	$sessionIds->sus_team =  '';
 	$sessionIds->sus_code =  '';
 	$sessionIds->sus_additional1 =  '';
+	$sessionIds->sus_accessibility_features =  '';
+
 	$sessionIds->sus_additional2 =  '';
 
 	if ($nuConfig2FAAdmin) {
@@ -307,6 +309,7 @@ function nuLoginSetupNOTGlobeadmin($new = true) {
 	$sessionIds->sus_code = isset($getAccessLevelOBJ->sus_code) ? $getAccessLevelOBJ->sus_code : null;
 	$sessionIds->sus_additional1 = isset($getAccessLevelOBJ->sus_additional1) ? $getAccessLevelOBJ->sus_additional1 : null;
 	$sessionIds->sus_additional2 = isset($getAccessLevelOBJ->sus_additional2) ? $getAccessLevelOBJ->sus_additional2 : null;
+	$sessionIds->sus_accessibility_features = isset($getAccessLevelOBJ->sus_accessibility_features) ? $getAccessLevelOBJ->sus_accessibility_features : null;
 
 	$sessionIds->global_access = '0';
 	$sessionIds->ip_address = nuGetIPAddress();

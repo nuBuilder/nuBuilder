@@ -1724,6 +1724,10 @@ function nuUserDepartment() {
 	return nuSERVERRESPONSE.user_department;
 }
 
+function nuUserA11Y() {
+	return nuSERVERRESPONSE.user_a11y;
+}
+
 function nuUserTeam() {
 	return nuSERVERRESPONSE.user_team;
 }

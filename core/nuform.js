@@ -319,8 +319,11 @@ function nuBuildForm(f) {
 	}
 
 	nuAddFormStyle(f.style);
-
-	if (nuGlobalAccess()) nuContextMenuUpdate();
+	
+	const globalAccess = nuGlobalAccess();
+	if (globalAccess) {
+		nuContextMenuUpdate();
+	}	
 
 	nuSetSaved(true);
 
@@ -337,6 +340,10 @@ function nuBuildForm(f) {
 	nuFormModification();
 
 	nuRestoreScrollPositions();
+	
+	if ((nuSERVERRESPONSE.user_a11y || globalAccess) && window.nuSetAccessibility) {
+		nuSetAccessibility(formType, globalAccess);
+	}
 
 }
 
