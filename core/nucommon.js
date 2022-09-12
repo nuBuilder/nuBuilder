@@ -1939,13 +1939,19 @@ function nuTransformScale() {
 
 function nuSetBrowserColumns(c) {
 
-	const p = nuTotalWidth('nucell_0_0') - $('#nucell_0_0').width();	//-- padding
+	const p = nuTotalWidth('nucell_0_0') - $('#nucell_0_0').width(); //-- padding
 	var l = 7;
 
 	for (let i = 0; i < c.length; i++) {
 
-		$('[data-nu-column="' + i + '"]').css({ 'left': l, 'width': c[i] });
-		$('#nuBrowseTitle' + i).css({ 'left': l, 'width': c[i] });
+		$('[data-nu-column="' + i + '"]').css({
+			'left': l,
+			'width': c[i]
+		});
+		$('#nuBrowseTitle' + i).css({
+			'left': l,
+			'width': c[i]
+		});
 		l = l + c[i] + (c[i] == 0 ? 0 : p);
 
 	}
@@ -1953,6 +1959,18 @@ function nuSetBrowserColumns(c) {
 	$('#nuBrowseFooter').css('width', l - 7);
 
 	nuFORM.breadcrumbs[nuFORM.breadcrumbs.length - 1].column_widths = c;
+
+	if (nuCurrentProperties().browse_filtered_rows == 0) {
+
+		$('#nucell_0_0').css({
+			'width': l - 10,
+			'z-index': '2'
+
+		});
+
+		$("div[id^='nucell_']").not('#nucell_0_0').hide();
+
+	}
 
 }
 
