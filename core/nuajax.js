@@ -569,7 +569,7 @@ function nuAttachButtonImage(i, c, cssClass) {
 }
 
 
-function nuGetLookupId(pk, id, setFocus) {
+function nuGetLookupId(pk, id, setFocus, setEdited) {
 
 	if (window.nuLOOKUPCLEARING) return;
 
@@ -596,7 +596,10 @@ function nuGetLookupId(pk, id, setFocus) {
 
 			nuPopulateLookup(data, id, setFocus);
 			$('#' + id).addClass('nuEdited');
-			nuHasBeenEdited();
+			
+			if (setEdited != false) {
+				nuHasBeenEdited();
+			}
 
 			var o = $('#' + id);
 
