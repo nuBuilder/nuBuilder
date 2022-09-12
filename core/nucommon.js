@@ -3005,3 +3005,6 @@ function nuEscapeHTML(string) {
 
 }
 
+function nuDelay(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
