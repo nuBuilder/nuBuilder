@@ -1963,7 +1963,7 @@ function nuSetBrowserColumns(c) {
 	if (nuCurrentProperties().browse_filtered_rows == 0) {
 
 		$('#nucell_0_0').css({
-			'width': l - 10,
+			'width': l - 20	,
 			'z-index': '2'
 
 		});
