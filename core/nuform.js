@@ -86,6 +86,8 @@ function nuBuildForm(f) {
 	window.nuLastForm = f.form_id;
 	window.nuLastRecordId = f.record_id;
 	window.nuSubformRow = -1;
+	window.nuBrowseNoData = false;
+	window.nuBrowseNoSearchResults = false;
 	window.nuBeforeSave = null;
 	window.nuAfterSave = null;
 	window.nuBeforeDelete = null;
@@ -4098,9 +4100,11 @@ function nuBrowseTable() {
 			if (nuCurrentProperties().search.length == 0) {
 				noData = 'No data to display';
 				firstCellClass = 'nuBrowseNoData';
+				window.nuBrowseNoData = true;
 			} else {
 				noData = 'No search results found';
 				firstCellClass = 'nuBrowseNoResults';
+				window.nuBrowseNoSearchResults = true;
 			}
 
 			$firstCell.html(nuTranslate(noData)).addClass(firstCellClass);
@@ -6399,4 +6403,12 @@ function nuAccessFormSetButtonIcons(force) {
 		setInnerHTML(title_accformslf_delete_button, 'fas fa-trash-alt');
 	}
 
+}
+
+function nuSetBrowseNoDataMessage(str) {
+	$('.nuBrowseNoData').html(nuTranslate(str));
+}
+
+function nuSetBrowseNoSearchResultsMessage(str) {
+	$('.nuBrowseNoResults').html(nuTranslate(str));
 }
