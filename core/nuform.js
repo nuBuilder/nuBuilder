@@ -4429,18 +4429,21 @@ function nuSortBrowse(c) {
 
 function nuGetPage(p) {
 
-	var P = parseInt('00' + p, 10);
-	var B = window.nuFORM.getCurrent();
+	let P = parseInt('00' + p, 10);
+	
+	if (p > nuCurrentProperties().pages || p === 0) return;
+	
+	let current = window.nuFORM.getCurrent();
 
 	if (P == 0) {
 		P = 1;
 	}
 
-	if (P > B.pages) {
-		P = B.pages;
+	if (P > current.pages) {
+		P = current.pages;
 	}
 
-	B.page_number = P - 1;
+	current.page_number = P - 1;
 
 	nuSearchAction();
 
