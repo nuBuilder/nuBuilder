@@ -41,7 +41,7 @@ if ( !isset($_SESSION['nubuilder_session_data']['NB_PATH']) || dirname($_SESSION
 
 <?php
 
-function nuInclude($pfile, $type){
+function nuInclude($pfile, $type, $refreshCache){
 
 	if ($pfile == '') return;
 
@@ -53,19 +53,19 @@ function nuInclude($pfile, $type){
 	}
 
 	foreach ($a as $value) {
-		$timestamp = date("YmdHis"); //-- Add timestamp so JavaScript changes are effective immediately
+		$timestamp = $refreshCache ? date("YmdHis") : 1; //-- Add timestamp so JavaScript changes are effective immediately if $refreshCache is true
 		if ($type == 'script') print "<script src='$value?ts=$timestamp' type='text/javascript'></script>\n";
 		if ($type == 'stylesheet') print "<link rel='stylesheet' href='$value?ts=$timestamp' />\n";
 	}
 
 }
 
-function nuJSIndexInclude($pfile){
-	nuInclude($pfile, 'script');
+function nuJSIndexInclude($pfile, $refreshCache = true){
+	nuInclude($pfile, 'script', $refreshCache);
 }
 
-function nuCSSIndexInclude($pfile){
-	nuInclude($pfile, 'stylesheet');
+function nuCSSIndexInclude($pfile, $refreshCache = true){
+	nuInclude($pfile, 'stylesheet', $refreshCache);
 }
 
 function nuJSChartsInclude(){
@@ -106,7 +106,7 @@ function nuHeader(){
 
 }
 
-nuJSIndexInclude('core/libs/jquery/jquery.js');
+nuJSIndexInclude('core/libs/jquery/jquery-3.6.1.min.js', false);
 nuJSIndexInclude('core/nuwysiwyg.js');
 nuJSIndexInclude('core/nuformclass.js');
 nuJSIndexInclude('core/nuform.js');
