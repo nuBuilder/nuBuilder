@@ -10,7 +10,7 @@
 
 <title>nuBuilder Update</title>
 <link rel="stylesheet" href="core/libs/bootstrap/bootstrap.min.css">
-<link href='core/css/font-awesome.min.css' rel='stylesheet'>
+<link href='core/libs/fontawesome/css/fontawesome.min.css' rel='stylesheet'>
 
 <style>* 
 {
@@ -251,7 +251,7 @@ p {
 }
 </style>
 
-<script type='text/javascript' src='core/libs/jquery/jquery.js'></script>
+<script type='text/javascript' src='core/libs/jquery/jquery-3.6.1.min.js'></script>
 <script type='text/javascript' src='core/libs/bootstrap/bootstrap.bundle.min.js'></script>
 <script type='text/javascript'>
 
@@ -262,7 +262,8 @@ $(document).ready(function() {
 	if (p === null) { 
 		$('#nulogo').show(); 
 		$('#heading_steps').show();
-		$('input[name ="next"]').prop('disabled', true);		
+		$('input[name ="next"]').prop('disabled', true);
+		$('#startupdateskip').prop('disabled', true);		
 	} else {
 		$('#nulogo').remove(); 
 		$('#heading_outside_nu').remove();
@@ -347,13 +348,12 @@ $(document).ready(function() {
 	function setProgressBar(curStep) {
 		var percent = parseFloat(100 / steps) * curStep;
 		percent = percent.toFixed();
-		$(".progress-bar")
-			.css("width", percent + "%")
+		$(".progress-bar").css("width", percent + "%");
 	}
 
 	$(".submit").click(function() {
 		return false;
-	})
+	});
 
 });
 
