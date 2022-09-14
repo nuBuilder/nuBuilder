@@ -41,7 +41,7 @@ if ( !isset($_SESSION['nubuilder_session_data']['NB_PATH']) || dirname($_SESSION
 
 <?php
 
-function nuInclude($pfile, $type, $refreshCache){
+function nuInclude($pfile, $type, $refreshCache = null){
 
 	if ($pfile == '') return;
 
@@ -60,11 +60,11 @@ function nuInclude($pfile, $type, $refreshCache){
 
 }
 
-function nuJSIndexInclude($pfile, $refreshCache = true){
+function nuJSIndexInclude($pfile, $refreshCache = null){
 	nuInclude($pfile, 'script', $refreshCache);
 }
 
-function nuCSSIndexInclude($pfile, $refreshCache = true){
+function nuCSSIndexInclude($pfile, $refreshCache = null){
 	nuInclude($pfile, 'stylesheet', $refreshCache);
 }
 
