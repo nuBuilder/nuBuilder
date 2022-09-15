@@ -1,6 +1,8 @@
 <?php
 
-// !! Important Note: You will need to restart your browser after modifying nuconfig.php in order for changes to be reflected !!
+// -> Important Note: You will need to restart your browser after modifying nuconfig.php in order for changes to be reflected
+
+// -> Rename nuconfig-sample.php to nuconfig.php
 
 
 // Database Settings:
@@ -65,17 +67,5 @@
 
 	";
 */
-
-
-/*
-
-	if(array_key_exists('REQUEST_URI', $_SERVER)){
-		if(strpos($_SERVER['REQUEST_URI'], basename(__FILE__)) !== false){
-			header('HTTP/1.0 404 Not Found', true, 404);
-			die();
-		}
-	}
-
-*/	
 
 ?>
