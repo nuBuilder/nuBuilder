@@ -8,7 +8,7 @@ Home Page: https://www.nubuilder.com
 Wiki: https://wiki.nubuilder.cloud/
 Forum: https://forums.nubuilder.cloud/
 
-Requires: PHP: 5.4.0 (phpMyAdmin that is shipped with nuBuilder will require PHP 7.1+)
+Requires: PHP: 5.6.0 (phpMyAdmin that is shipped with nuBuilder will require PHP 7.1+)
 Requires: MySQL: 5.5. (or MariaDB)
 Requires: Web Server: (e.g. Apache or Nginx)
 

@@ -2,10 +2,11 @@
 $nb_path = __DIR__;
 
 $nuconfig = "nuconfig.php";
-if(! is_file($nuconfig)){
+if (! is_file($nuconfig)) {
     die('nuconfig.php not found. Rename nuconfig-sample.php to nuconfig.php');
 }
 require_once('nuconfig.php');
+require_once('vendor/autoload.php');
 require_once('core/nudatabase.php');
 require_once('core/nusetuplibs.php');
 
@@ -19,13 +20,11 @@ nuImportNewDB();
 
 require_once('core/nusystemupdatelibs.php');
 
-if ( !isset($_SESSION['nubuilder_session_data']['NB_PATH']) || dirname($_SESSION['nubuilder_session_data']['NB_PATH']) != $nb_path ) {
-
-	$_SESSION['nubuilder_session_data']['NB_PATH'] = null;
-	nuLoadNewSession();
-	header('Location: '.$_SERVER['PHP_SELF']);
-	die;
-
+if (!isset($_SESSION['nubuilder_session_data']['NB_PATH']) || dirname($_SESSION['nubuilder_session_data']['NB_PATH']) != $nb_path) {
+    $_SESSION['nubuilder_session_data']['NB_PATH'] = null;
+    nuLoadNewSession();
+    header('Location: ' . $_SERVER['PHP_SELF']);
+    die;
 }
 
 ?>
@@ -41,69 +40,78 @@ if ( !isset($_SESSION['nubuilder_session_data']['NB_PATH']) || dirname($_SESSION
 
 <?php
 
-function nuInclude($pfile, $type, $refreshCache = null){
+function nuInclude($pfile, $type, $refreshCache = null)
+{
 
-	if ($pfile == '') return;
+    if ($pfile == '') {
+        return;
+    }
 
-	$a = array();
-	if (!is_array ($pfile)) {
-		array_push($a, $pfile);
-	} else {
-		$a = $pfile;
-	}
+    $a = array();
+    if (!is_array($pfile)) {
+        array_push($a, $pfile);
+    } else {
+        $a = $pfile;
+    }
 
-	foreach ($a as $value) {
-		$timestamp = $refreshCache ? date("YmdHis") : 1; //-- Add timestamp so JavaScript changes are effective immediately if $refreshCache is true
-		if ($type == 'script') print "<script src='$value?ts=$timestamp' type='text/javascript'></script>\n";
-		if ($type == 'stylesheet') print "<link rel='stylesheet' href='$value?ts=$timestamp' />\n";
-	}
-
+    foreach ($a as $value) {
+        $timestamp = $refreshCache ? date("YmdHis") : 1; //-- Add timestamp so JavaScript changes are effective immediately if $refreshCache is true
+        if ($type == 'script') {
+            print "<script src='$value?ts=$timestamp' type='text/javascript'></script>\n";
+        }
+        if ($type == 'stylesheet') {
+            print "<link rel='stylesheet' href='$value?ts=$timestamp' />\n";
+        }
+    }
 }
 
-function nuJSIndexInclude($pfile, $refreshCache = null){
-	nuInclude($pfile, 'script', $refreshCache);
+function nuJSIndexInclude($pfile, $refreshCache = null)
+{
+    nuInclude($pfile, 'script', $refreshCache);
 }
 
-function nuCSSIndexInclude($pfile, $refreshCache = null){
-	nuInclude($pfile, 'stylesheet', $refreshCache);
+function nuCSSIndexInclude($pfile, $refreshCache = null)
+{
+    nuInclude($pfile, 'stylesheet', $refreshCache);
 }
 
-function nuJSChartsInclude(){
+function nuJSChartsInclude()
+{
 
-	global $nuConfigIncludeGoogleCharts;
-	global $nuConfigIncludeApexCharts;
+    global $nuConfigIncludeGoogleCharts;
+    global $nuConfigIncludeApexCharts;
 
-	if ($nuConfigIncludeGoogleCharts != false) {
-		$pfile = "https://www.gstatic.com/charts/loader.js";
-		nuInclude($pfile, 'script');
-	}
+    if ($nuConfigIncludeGoogleCharts != false) {
+        $pfile = "https://www.gstatic.com/charts/loader.js";
+        nuInclude($pfile, 'script');
+    }
 
-	if ($nuConfigIncludeApexCharts != false) {
-		$pfile = "core/libs/apexcharts/apexcharts.min.js";
-		nuInclude($pfile, 'script');
-	}
+    if ($nuConfigIncludeApexCharts != false) {
+        $pfile = "core/libs/apexcharts/apexcharts.min.js";
+        nuInclude($pfile, 'script');
+    }
 }
 
-function nuEndsWithStyleTag($style) {
+function nuEndsWithStyleTag($style)
+{
 
-	$tag = '</style>';
-	$style = trim($style);
-	return strpos($style, $tag) === strlen($style) - strlen($tag);
-
+    $tag = '</style>';
+    $style = trim($style);
+    return strpos($style, $tag) === strlen($style) - strlen($tag);
 }
 
-function nuHeader(){
+function nuHeader()
+{
 
-	$sql				= "SELECT * FROM zzzzsys_setup WHERE zzzzsys_setup_id = 1 ";
-	$rs 				= nuRunQuery($sql);
-	$obj 				= db_fetch_object($rs);
-	$style				= isset($obj->set_style) ? $obj->set_style : '';
-	$style				= '</script>'. (nuEndsWithStyleTag($style) ? $style :  '<style>'.$style.'</style>') . '<script>';
-	$HTMLHeader 		= $obj->set_header . $style;
-	$j					= "\n\n" . $HTMLHeader . "\n\n";
+    $sql                = "SELECT * FROM zzzzsys_setup WHERE zzzzsys_setup_id = 1 ";
+    $rs                 = nuRunQuery($sql);
+    $obj                = db_fetch_object($rs);
+    $style              = isset($obj->set_style) ? $obj->set_style : '';
+    $style              = '</script>' . (nuEndsWithStyleTag($style) ? $style :  '<style>' . $style . '</style>') . '<script>';
+    $HTMLHeader         = $obj->set_header . $style;
+    $j                  = "\n\n" . $HTMLHeader . "\n\n";
 
-	return $j;
-
+    return $j;
 }
 
 nuJSIndexInclude('core/libs/jquery/jquery-3.6.1.min.js', false);
@@ -126,7 +134,7 @@ nuJSIndexInclude('core/libs/uppy/uppy.min.js');
 nuJSIndexInclude('core/libs/select2/select2.min.js');
 
 if (isset($nuConfigIncludeTinyMCE) && $nuConfigIncludeTinyMCE != false) {
-	nuJSIndexInclude('core/libs/tinymce/tinymce.min.js');
+    nuJSIndexInclude('core/libs/tinymce/tinymce.min.js');
 }
 
 nuCSSIndexInclude('core/css/nubuilder4.css');
@@ -149,95 +157,118 @@ nuCSSIndexInclude('core/libs/jquery/jquery-confirm.min.css');
 
 function nuValidCaller(o){
 
-	if(o === null){return false;}
-	return o.hasOwnProperty('nuVersion');
+    if(o === null){return false;}
+    return o.hasOwnProperty('nuVersion');
 }
 
 function nuLoginRequest(u, p){
 
-	$(":submit").nuDisable();
+    $(":submit").nuDisable();
 
-	var w = {
-				call_type		: 'login',
-				username		: arguments.length == 0 ? $('#nuusername').val() : u,
-				password		: arguments.length == 0 ? $('#nupassword').val() : p,
-				login_form_id	: nuLoginF,
-				login_record_id	: nuLoginR
-			};
+    var w = {
+                call_type       : 'login',
+                username        : arguments.length == 0 ? $('#nuusername').val() : u,
+                password        : arguments.length == 0 ? $('#nupassword').val() : p,
+                login_form_id   : nuLoginF,
+                login_record_id : nuLoginR
+            };
 
-	w	= JSON.stringify(w);
+    w   = JSON.stringify(w);
 
-	$.ajax({
-		async		: true,
-		dataType	: "json",
-		url			: "core/nuapi.php",
-		method		 : "POST",
-		data		 : {nuSTATE : w
-					},
-		dataType : "json",
-		success	: function(data,textStatus,jqXHR){
+    $.ajax({
+        async       : true,
+        dataType    : "json",
+        url         : "core/nuapi.php",
+        method       : "POST",
+        data         : {nuSTATE : w
+                    },
+        dataType : "json",
+        success : function(data,textStatus,jqXHR){
 
-			if(nuDisplayError(data)){
-				if(data.log_again == 1){location.reload();}
-			} else {
-				nuForm(data.form_id, data.record_id, data.filter, data.search);
-			}
-		},
-		error		: function(jqXHR,textStatus,errorThrown){
+            if(nuDisplayError(data)){
+                if(data.log_again == 1){location.reload();}
+            } else {
+                nuForm(data.form_id, data.record_id, data.filter, data.search);
+            }
+        },
+        error       : function(jqXHR,textStatus,errorThrown){
 
-			$(":submit").nuEnable();
-			window.test = jqXHR.responseText;
+            $(":submit").nuEnable();
+            window.test = jqXHR.responseText;
 
-			let err = nuFormatAjaxErrorMessage(jqXHR, errorThrown);
-			nuMessage(err);
+            let err = nuFormatAjaxErrorMessage(jqXHR, errorThrown);
+            nuMessage(err);
 
-		},
-	});
+        },
+    });
 }
 
-window.nuVersion 		= 'nuBuilder4.5';
-window.nuDocumentID		= Date.now();
+window.nuVersion        = 'nuBuilder4.5';
+window.nuDocumentID     = Date.now();
 
-window.nuHASH				= [];
+window.nuHASH               = [];
 
 <?php
-	$nuWelcomeBodyInnerHTML	= (isset($nuWelcomeBodyInnerHTML)?$nuWelcomeBodyInnerHTML:'');
-	$welcome				= addslashes($nuWelcomeBodyInnerHTML);
-	$nuHeader				= nuHeader();
-	$opener					= '';
-	$search					= '';
-	$iframe					= '';
-	$target					= '';
-	$l						= scandir('core/graphics');
-	$f						= json_encode($l);
-	$nuBrowseFunction		= 'browse';
-	$like					= '';
-	$nuUser					= '';
-	$nuPassword				= '';
-	$nuForm					= '';
-	$nuRecord				= '';
-	$nuHome					= '';
+    $nuWelcomeBodyInnerHTML = (isset($nuWelcomeBodyInnerHTML) ? $nuWelcomeBodyInnerHTML : '');
+    $welcome                = addslashes($nuWelcomeBodyInnerHTML);
+    $nuHeader               = nuHeader();
+    $opener                 = '';
+    $search                 = '';
+    $iframe                 = '';
+    $target                 = '';
+    $l                      = scandir('core/graphics');
+    $f                      = json_encode($l);
+    $nuBrowseFunction       = 'browse';
+    $like                   = '';
+    $nuUser                 = '';
+    $nuPassword             = '';
+    $nuForm                 = '';
+    $nuRecord               = '';
+    $nuHome                 = '';
 
-	function nuSanitize(&$item) {
-		$item = htmlspecialchars($item);
-	}
+function nuSanitize(&$item)
+{
+    $item = htmlspecialchars($item);
+}
 
-	array_walk($_GET, 'nuSanitize');
+    array_walk($_GET, 'nuSanitize');
 
-	if(isset($_GET['u']))				{$nuUser 		= $_GET['u'];}
-	if(isset($_GET['p']))				{$nuPassword 	= $_GET['p'];}
-	if(isset($_GET['f']))				{$nuForm 		= $_GET['f'];}
-	if(isset($_GET['r']))				{$nuRecord 		= $_GET['r'];}
-	if(isset($_GET['h']))				{$nuHome 		= $_GET['h'];}
+if (isset($_GET['u'])) {
+    $nuUser        = $_GET['u'];
+}
+if (isset($_GET['p'])) {
+    $nuPassword    = $_GET['p'];
+}
+if (isset($_GET['f'])) {
+    $nuForm        = $_GET['f'];
+}
+if (isset($_GET['r'])) {
+    $nuRecord      = $_GET['r'];
+}
+if (isset($_GET['h'])) {
+    $nuHome        = $_GET['h'];
+}
 
-	if(isset($_GET['opener']))			{$opener 		= $_GET['opener'];}
-	if(isset($_GET['search']))			{$search 		= $_GET['search'];}
-	if(isset($_GET['iframe']))			{$iframe 		= $_GET['iframe'];}
-	if(isset($_GET['target']))			{$target 		= $_GET['target'];}
-	if(isset($_GET['like']))			{$like	 		= $_GET['like'];}
-	if(isset($_GET['browsefunction']))	{$nuBrowseFunction 	= $_GET['browsefunction'];}
+if (isset($_GET['opener'])) {
+    $opener        = $_GET['opener'];
+}
+if (isset($_GET['search'])) {
+    $search        = $_GET['search'];
+}
+if (isset($_GET['iframe'])) {
+    $iframe        = $_GET['iframe'];
+}
+if (isset($_GET['target'])) {
+    $target        = $_GET['target'];
+}
+if (isset($_GET['like'])) {
+    $like          = $_GET['like'];
+}
+if (isset($_GET['browsefunction'])) {
+    $nuBrowseFunction  = $_GET['browsefunction'];
+}
 
-	$h1								= "
+    $h1                             = "
 	window.nuLoginU							= '$nuUser';
 	window.nuLoginP							= '$nuPassword';
 	window.nuLoginF							= '$nuForm';
@@ -248,25 +279,23 @@ window.nuHASH				= [];
 	window.nuImages							= [];
 	";
 
-	$isSession	= isset($_SESSION['nubuilder_session_data']['SESSION_ID']);
+    $isSession  = isset($_SESSION['nubuilder_session_data']['SESSION_ID']);
 
-	if ( $nuUser != '' && $nuPassword != '' ){
-		$h2 = nuUseUP($nuBrowseFunction, $target, $welcome, $nuUser, $nuPassword);
-	}else{
+if ($nuUser != '' && $nuPassword != '') {
+    $h2 = nuUseUP($nuBrowseFunction, $target, $welcome, $nuUser, $nuPassword);
+} else {
+    if ($opener == '') {
+            $h2 = nuGetJS_login($nuBrowseFunction, $target, $welcome, $nuForm, $nuRecord, $isSession);
+    } else {
+        $h2 = nuGetJS_action_screen($nuBrowseFunction, $target, $welcome, $opener, $search, $like);
+    }
+}
 
-		if($opener == ''){
-				$h2 = nuGetJS_login($nuBrowseFunction, $target, $welcome, $nuForm, $nuRecord, $isSession);
-			}else{
-				$h2 = nuGetJS_action_screen($nuBrowseFunction, $target, $welcome, $opener, $search, $like);
-		}
+    $sessionAlive = '';
 
-	}
-
-	$sessionAlive = '';
-
-	if (isset($nuConfigKeepSessionAlive) && $nuConfigKeepSessionAlive) {
-		$nuConfigKeepSessionAliveInterval = !isset($nuConfigKeepSessionAliveInterval) ? 600 : $nuConfigKeepSessionAliveInterval;
-		$sessionAlive = "
+if (isset($nuConfigKeepSessionAlive) && $nuConfigKeepSessionAlive) {
+    $nuConfigKeepSessionAliveInterval = !isset($nuConfigKeepSessionAliveInterval) ? 600 : $nuConfigKeepSessionAliveInterval;
+    $sessionAlive = "
 		if (nuMainForm()) {
 
 			function nuRunKeepAlive() {
@@ -281,11 +310,11 @@ window.nuHASH				= [];
 
 		}
 		";
-	}
+}
 
-	$h3 = isset($nuJSOptions) ? $nuJSOptions : '';
+    $h3 = isset($nuJSOptions) ? $nuJSOptions : '';
 
-	$h4 = "
+    $h4 = "
 
 	function nuResize(){
 
@@ -325,8 +354,8 @@ window.nuHASH				= [];
 	";
 
 
-	$h = $h1.$h2.$h3.$h4;
-	print $h;
+    $h = $h1 . $h2 . $h3 . $h4;
+    print $h;
 ?>
 </script>
 
@@ -336,7 +365,7 @@ window.nuHASH				= [];
 
 </head>
 <?php
-	nuLoadBody();
+    nuLoadBody();
 ?>
 </body>
 </html>

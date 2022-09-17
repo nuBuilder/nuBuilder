@@ -1,0 +1,10 @@
+{
+    "name": "nubuilder/nubuilder",
+    "description": "nuBuilder enables you to make any web-based database application that you want or need with the least amount of effort and learning.",
+    "type": "project",
+    "require": {
+        "phpmailer/phpmailer": "^6.6",
+        "ifsnop/mysqldump-php": "^2.9"
+    },
+    "license": "GPL V3"
+}
