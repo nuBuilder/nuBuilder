@@ -41,7 +41,7 @@ if ( !isset($_SESSION['nubuilder_session_data']['NB_PATH']) || dirname($_SESSION
 
 <?php
 
-function nuInclude($pfile, $type, $refreshCache = null){
+function nuInclude($pfile, $type, $refreshCache = true){
 
 	if ($pfile == '') return;
 
@@ -53,18 +53,18 @@ function nuInclude($pfile, $type, $refreshCache = null){
 	}
 
 	foreach ($a as $value) {
-		$timestamp = $refreshCache ? date("YmdHis") : 1; //-- Add timestamp so JavaScript changes are effective immediately if $refreshCache is true
+		$timestamp =  $refreshCache ? date("YmdHis") : 1; //-- Add timestamp so JavaScript changes are effective immediately if $refreshCache is true
 		if ($type == 'script') print "<script src='$value?ts=$timestamp' type='text/javascript'></script>\n";
 		if ($type == 'stylesheet') print "<link rel='stylesheet' href='$value?ts=$timestamp' />\n";
 	}
 
 }
 
-function nuJSIndexInclude($pfile, $refreshCache = null){
+function nuJSIndexInclude($pfile, $refreshCache = true){
 	nuInclude($pfile, 'script', $refreshCache);
 }
 
-function nuCSSIndexInclude($pfile, $refreshCache = null){
+function nuCSSIndexInclude($pfile, $refreshCache = true){
 	nuInclude($pfile, 'stylesheet', $refreshCache);
 }
 
