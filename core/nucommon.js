@@ -823,7 +823,13 @@ function nuBindCtrlEvents() {
 				let ae = document.activeElement;
 				$(ae).blur();
 				$(ae).focus();
-				if (nuFormsUnsaved() == 0) nuClosePopup();
+				if (nuFormsUnsaved() == 0) {
+					nuClosePopup();
+				} else {
+					if (confirm(nuTranslate('Leave this form without saving?'))) {
+						nuClosePopup();
+					}
+				}
 			} else if (nuFormType() == 'browse') {
 				nuSearchAction("");
 			}
