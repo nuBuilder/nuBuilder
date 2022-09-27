@@ -1534,13 +1534,37 @@ function nuIsValidEmail($email){
 	return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
 }
 
-function nuSendEmail($to, $from, $fromname, $content, $subject, $filelist, $html = false, $cc = "", $bcc = "", $reply_to_addresses = array(), $priority = "") {
+function nuSendEmail($args_to, $from_email = '', $from_name = '', $body = '', $subject = '', $attachments = array(), $html = false, $cc = '', $bcc = '', $reply_to = array() , $priority = '') {
 
-	$to_list	= explode(',',$to);
-	$cc_list	= explode(',',$cc);
-	$bcc_list	= explode(',',$bcc);
+	if (is_array($args_to) && strnatcmp(phpversion(),'7.1.0') >= 0) {				// Prior to PHP 7.1, this function only worked on numerical arrays.
 
-	return nuEmail($to_list,$from,$fromname,$content,$subject,$filelist,$html,$cc_list, $bcc_list,$reply_to_addresses,"0","SMTP",$priority);
+		$defaults = array(
+			'to' => '',
+			'from_email' => '',
+			'from_name' => '',
+			'cc' => '',
+			'bcc' => '',
+			'body' => '',
+			'subject' => 'test',
+			'reply_to' => array() ,
+			'attachments' => array() ,
+			'html' => true,
+			'priority' => ''
+		);
+
+		$args = array_merge($defaults, array_intersect_key($args_to, $defaults));
+		list($to, $from_email, $from_name, $cc, $bcc, $body, $subject, $reply_to, $attachments, $html, $priority) = array_values($args);
+
+	}
+	else {
+		$to = $args_to;
+	}
+
+	$to_list = explode(',', $to);
+	$cc_list = explode(',', $cc);
+	$bcc_list = explode(',', $bcc);
+
+	return nuEmail($to_list, $from_email, $from_name, $body, $subject, $attachments, $html, $cc_list, $bcc_list, $reply_to, "0", "SMTP", $priority);
 
 }
 
