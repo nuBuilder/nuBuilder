@@ -2048,6 +2048,10 @@ function nuGetSubformDimensions(SF) {
 	let rowTop = sfDimensions.rowTop;
 
 	var tabId = id + 'nuTabHolder';
+	var tabDiv = document.createElement('div');
+	tabDiv.setAttribute('id', tabId);
+	$('#' + id).prepend(tabDiv);
+
 	nuSUBFORMnuTabHolderAddCSS(tabId, rowTop, rowWidth);
 
 	if (SF.subform_type == 'f') {
