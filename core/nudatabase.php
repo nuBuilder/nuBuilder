@@ -281,6 +281,13 @@ function db_fetch_all_row($o){
 
 }
 
+function db_update_value($table, $pk, $recordId, $column, $newValue) {
+
+	$update = "UPDATE `$table` SET `$column` = ? WHERE `$pk` = ?";
+	nuRunQuery($update, array($newValue, $recordId));
+
+}
+
 function db_field_info($n){
 
 	$fields		= array();
