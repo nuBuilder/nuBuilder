@@ -104,6 +104,7 @@ function nuBuildForm(f) {
 	window.nuFormatValueCleared = null;
 	window.nuDisplayObjectRefreshed = null;
 	window.nuOnSetCalendarOptions = null;
+	window.nuOnLookupPopulated = null;
 	window.nuCalculated = null;
 	window.nuBrowseFunction = window.nuDefaultBrowseFunction;
 	window.nuCLONE = false;
@@ -4484,6 +4485,14 @@ function nuPopulateLookup(fm, target, setFocus) {
 				nuReformat($id[0]);
 				$id.addClass('nuEdited');
 				$('#' + p + 'nuDelete').prop('checked', false);
+
+				if (window.nuOnLookupPopulatedGlobal) {
+					nuOnLookupPopulatedGlobal(id, p);
+				}	
+
+				if (window.nuOnLookupPopulated) {
+					nuOnLookupPopulated(id, p);
+				}
 
 			}
 

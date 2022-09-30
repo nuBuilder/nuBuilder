@@ -4,6 +4,7 @@ window.nuRESPONSIVE = new nuResponseForm();
 window.nuOnLoad = null;
 window.nuLoadBrowseGlobal = null;
 window.nuLoadEditGlobal = null;
+window.nuOnLookupPopulatedGlobal = null;
 window.nuHideMessage = true;
 window.nuDragID = 1000;
 window.nuLastForm = '';
