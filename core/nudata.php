@@ -288,10 +288,11 @@ function nuUpdateDatabase(){
 		$countRows = count($rows);
 		for($r = 0 ; $r < $countRows ; $r++){
 
+
 			if ($d == 0 && $recordID == '-1') {		// Main form
-				$editedRow = nuEditedRow($edited[$r]) || nuSubFormsEdited($nudata);
+				$editedRow = nuEditedRow($edited[$r], $fields, $CTSTN) || nuSubFormsEdited($nudata, $CTSTN);
 			} else {
-				$editedRow = nuEditedRow($edited[$r]);
+				$editedRow = nuEditedRow($edited[$r], $fields, $CTSTN);
 			}
 
 			if($editedRow){
@@ -424,6 +425,7 @@ function nuUpdateDatabase(){
 
 	}
 
+
 	if(count($_POST['nuErrors']) > 0){return;}
 
 		if($S != null){
@@ -525,34 +527,35 @@ function nuBuildPrimaryKey($t, $p){
 
 }
 
-
-function nuEditedRow($e){
+function nuEditedRow($e, $fields, $CTSTN){
 
 	$t	= 0;
 
 	$count = count($e);
 	for($i = 0 ; $i < $count ; $i++){
-		$t	= $t + $e[$i];
+		if (array_search($fields[$i], $CTSTN) !== false) {
+			$t	= $t + $e[$i];
+		}
 	}
 
 	return $t > 0;			//-- something has been edited
 
 }
 
-function nuSubFormsEdited($nudata) {
+function nuSubFormsEdited($nudata, $CTSTN) {
 
 	$c = count($nudata);
-
 	if ($c == 1) return false; // no subforms
 
 	for($d = 1 ; $d < $c ; $d++){
 		$sf			= $nudata[$d];
 		$edited		= $sf->edited;
 		$rows		= $sf->rows;
+		$fields		= $sf->fields;
 
 		$countRows = count($rows);
 		for($r = 0 ; $r < $countRows ; $r++){
-			if(nuEditedRow($edited[$r])){
+			if(nuEditedRow($edited[$r], $fields, $CTSTN)){
 				return true;
 			}
 		}
