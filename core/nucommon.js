@@ -192,9 +192,9 @@ jQuery.fn.extend({
 	nuGetValue: function (method) {
 		return nuGetValue(this.attr('id'), method);
 	},
-	nuSetValue: function (v, method) {
+	nuSetValue: function (v, method, change) {
 		return this.each(function () {
-			return nuSetValue(this.id, v, method);
+			return nuSetValue(this.id, v, method, change);
 		});
 	},
 	nuGetText: function () {
@@ -2700,21 +2700,23 @@ function nuGetText(i, method) {
 	return nuGetValue(i, 'text');
 }
 
-function nuSetValue(i, v, method) {
+function nuSetValue(i, v, method, change) {
 
 	var obj = $('#' + i);
 
 	if (i === undefined || nuDebugOut(obj, i)) return false;
 
+	change = (change || change === undefined);
+
 	if (method === undefined && obj.is(':button')) {
 		obj.text(v);
 	} else if (obj.is(':checkbox')) {
-		obj.prop('checked', v).change();
+		if (change) obj.prop('checked', v).change();
 	} else if (obj.is('select') && method === 'text') {
 		$('#' + i + ' option').each(function () {
 			if ($(this).text().fixNbsp() === v) {
 				$(this).prop("selected", "selected");
-				obj.change();
+				if (change) obj.change();
 				return true;
 			}
 		});
@@ -2729,7 +2731,8 @@ function nuSetValue(i, v, method) {
 				obj.text(v);
 				break;
 			default:
-				obj.val(v).change();
+				obj.val(v);
+				if (change) obj.change();
 		}
 	}
 
