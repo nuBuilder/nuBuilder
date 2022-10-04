@@ -474,7 +474,7 @@ function nuImportLanguageFiles() {
 		for($i = 0 ; $i < $countLanguages ; $i++){
 
 			if (trim($l[$i]) != '') {
-				$file = dirname(__FILE__). '/languages/'. $l[$i].'.sql';
+				$file = __DIR__ . DIRECTORY_SEPARATOR . 'languages'. DIRECTORY_SEPARATOR . $l[$i]. '.sql';
 				$sql = file_get_contents($file);
 				if ($sql) {
 					nuRunQuery($sql);
