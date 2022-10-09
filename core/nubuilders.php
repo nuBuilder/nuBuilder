@@ -105,7 +105,7 @@ function nuFFNumber(){
 	$s = "
 
 		SELECT 
-			COALESCE(MAX(CAST(SUBSTRING(`sfo_code`, 3) as UNSIGNED)),1) as num
+			COALESCE(MAX(CAST(SUBSTRING(`sfo_code`, 3) as UNSIGNED)),0) + 1 as num
 		FROM (    
 		SELECT 
 			`sfo_code`
