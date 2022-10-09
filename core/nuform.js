@@ -6273,6 +6273,8 @@ function nuAddBrowseTitleSelect(index, data, w) {
 
 	$("#" + id).val(nuGetProperty(id));
 
+	return $('#' + id);
+
 }
 
 function nuDatalistValueRestoreValue(i) {
