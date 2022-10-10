@@ -252,9 +252,10 @@ function nuAskLogout() {
 
 function nuLogout(f, iframe) {
 
-	nuFORM.addBreadcrumb();
+	let top = window.top;
+    top.nuFORM.addBreadcrumb();
 
-	var last = nuFORM.getCurrent();
+	var last = top.nuFORM.getCurrent();
 
 	last.session_id = window.nuSESSION;
 	last.call_type = 'logout';
@@ -265,7 +266,7 @@ function nuLogout(f, iframe) {
 
 		if (!nuDisplayError(fm)) {
 			sessionStorage.removeItem('nukeepalive');
-			window.open('index.php', '_self');
+			top.window.open('index.php', '_self');
 		}
 
 	};
