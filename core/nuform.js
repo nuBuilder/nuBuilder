@@ -4362,6 +4362,7 @@ function nuArrowPressed(e) {
 
 }
 
+
 function nuSearchAction(S, F) {
 
 	if (arguments.length > 0) {
@@ -4375,6 +4376,13 @@ function nuSearchAction(S, F) {
 	var f = String($('#nuFilter').val()).nuReplaceAll("'", "&#39;", true);
 	const caller = arguments.callee.caller === null ? '' : arguments.callee.caller.name;
 
+	if (window.nuOnSearchActionGlobal) {
+		let o = { search: s, filter: f };
+		if (nuOnSearchActionGlobal(o) === false) { return; }
+		s = o.search;
+		f = o.filter;
+	}
+	
 	if (window.nuOnSearchAction) {
 		let o = { search: s, filter: f };
 		if (nuOnSearchAction(o) === false) { return; }
