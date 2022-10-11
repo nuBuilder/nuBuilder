@@ -371,7 +371,7 @@ function nuRunPHP(pCode, iframe, rbs) {
 }
 
 
-function nuRunPHPHidden(i, rbs) {
+function nuRunPHPHidden(i, rbs, params) {
 
 	if (arguments.length == 1) {
 
@@ -387,6 +387,7 @@ function nuRunPHPHidden(i, rbs) {
 	last.session_id = window.nuSESSION;
 	last.call_type = 'runhiddenphp';
 	last.form_id = 'doesntmatter';
+	last.params = params ? params: null;
 	last.hash_record_id = last.record_id;
 	last.record_id = i;					//-- php code
 	last.nuFORMdata = nuFORM.data();
@@ -616,13 +617,13 @@ function nuGetLookupId(pk, id, setFocus, setEdited) {
 
 }
 
-
 function nuGetLookupCode(e) {
 	
 	const nuTarget = e.target.getAttribute('data-nu-target');
 	
 	if (e.currentTarget && e.currentTarget.value.length == 0) {
 		window.nuLOOKUPCLEARING = true;
+		$('#' + nuTarget).addClass('nuEdited');
 		nuSetValue(nuTarget, '');
 		nuSetValue(nuTarget + 'description', '');
 		window.nuLOOKUPCLEARING = false;
