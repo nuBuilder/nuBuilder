@@ -3533,10 +3533,6 @@ function nuHideOptionsItemShortcutKeys() {
 	$('.nuOptionsItemShortcutKey').css('visibility','hidden');
 }
 
-
-
-
-
 function nuGetOptionsList(f, t, p, a, type) {
 
 	// f: form ID
@@ -5208,7 +5204,7 @@ function nuGetSearchList() {
 
 			});
 
-		if (i < 10) {
+		if (i < 9) {
 
 			var shortcut_key = document.createElement('div');
 			var shortcut_key_id = 'nuSearchTextShortcutKey' + i.toString();
@@ -5222,7 +5218,7 @@ function nuGetSearchList() {
 			$('#' + shortcut_key.id)
 				.css(prop)
 				.css({ 'top': 37 + (i * 25), 'right': 10 })
-				.html(nuCtrlCmdShiftName(i))
+				.html(nuCtrlCmdShiftName(i+1))
 				.addClass('nuOptionsItemShortcutKey');
 
 		}

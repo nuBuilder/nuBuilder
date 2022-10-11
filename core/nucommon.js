@@ -916,7 +916,7 @@ function nuBindCtrlEvents() {
 			//Numbers
 			const numberCode = e.code.replace('Digit','');
 			if (numberCode >= "1" && numberCode <= "9") {
-				searchIndex = Number(numberCode);
+				searchIndex = Number(numberCode) - 1;
 			}
 
 			if (searchIndex != -1) {
