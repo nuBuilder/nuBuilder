@@ -297,7 +297,7 @@ class nuFormObject {
 
 		var s = this.scroll[e.target.id];
 
-		if (e.keyCode == 38) {
+		if (e.key == 'ArrowUp') {
 
 			s.index--;
 
@@ -305,7 +305,7 @@ class nuFormObject {
 				this.scroll[e.target.id].index = s.list.length - 1;
 			}
 
-		} else if (e.keyCode == 40) {
+		} else if (e.key == 'ArrowDown') {
 
 			s.index++;
 

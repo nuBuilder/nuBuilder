@@ -4,7 +4,7 @@ function nuLoadReport(b) {
 
 	window.addEventListener("keydown", function (e) {
 
-		if ([38, 40].indexOf(e.keyCode) > -1) {					// space and arrow keys
+		if (['ArrowUp', 'ArrowDown'].indexOf(e.key) > -1) {
 			e.preventDefault();
 		}
 
@@ -497,13 +497,13 @@ function nuDragReport() {
 
 		}
 
-		if ((nuIsMacintosh() ? event.metaKey : event.ctrlKey) && event.keyCode == 90) {
+		if ((nuIsMacintosh() ? event.metaKey : event.ctrlKey) && event.key == 'z') {
 
 			nuUndo();
 
 		}
 
-		if (event.keyCode == 46) {
+		if (event.key == 'Delete') {
 
 			if ($('#nuDragDialog').length == 1) { return; }
 

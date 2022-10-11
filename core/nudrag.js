@@ -113,26 +113,26 @@ function nuCreateDrag() {
 			this.moveY = event.clientY - this.startY;
 		}
 
-		var k = event.keyCode;
+		const key = event.key;
 		var m = (event.buttons == 1 && this.classList.indexOf('nuDragSelected') != -1);
 
-		if (m || k == 37 || k == 38 || k == 39 || k == 40) {
+		if (m || key.startsWith('Arrow')) {
 
 			if ($('#nuDragDialog').is(":visible") == false) {
 
-				if (k == 38) {
+				if (key == 'ArrowUp') {
 					this.moveY = -1;
 					this.lastMoveY = 0;
 				}
-				if (k == 39) {
+				if (key == 'ArrowRight') {
 					this.moveX = 1;
 					this.lastMoveX = 0;
 				}
-				if (k == 40) {
+				if (key == 'ArrowDown') {
 					this.moveY = 1;
 					this.lastMoveY = 0;
 				}
-				if (k == 37) {
+				if (key == 'ArrowLeft') {
 					this.moveX = -1;
 					this.lastMoveX = 0;
 				}

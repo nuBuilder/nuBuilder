@@ -2379,25 +2379,18 @@ function nuSubformMoveFocus(activeElement, d) {
 
 function nuSubformHandleArrowKeyEvent(e) {
 
-	let keyCode = e.keyCode || e.which,
-		keys = {
-			up: 38,
-			down: 40,
-			enter: 13
-		};
-
 	let activeElement = $(document.activeElement);
 	let nuScroll = activeElement.hasClass('nuScroll');
 
 	var result;
-	switch (keyCode) {
-		case keys.up:
+	switch (e.key) {
+		case 'ArrowUp':
 			result = !nuScroll && nuSubformMoveFocus(activeElement, -1);
 			break;
-		case keys.enter:
+		case 'Enter':
 			result = nuSubformMoveFocus(activeElement, 1);
 			break;
-		case keys.down:
+		case 'ArrowDown':
 			result = !nuScroll && nuSubformMoveFocus(activeElement, 1);
 			break;
 		default:
@@ -4306,12 +4299,12 @@ function nuSearchPressed(e) {
 
 	if (!e) { e = window.event; }
 
-	if (e.keyCode == 13 && window.nuBROWSEROW == -1) {					//-- enter key
+	if (e.key == 'Enter' && window.nuBROWSEROW == -1) {					//-- enter key
 
 		e.preventDefault();
 		$('#nuSearchButton').click();
 
-	} else if (e.keyCode == 13 && window.nuBROWSEROW != -1) {				//-- enter key
+	} else if (e.key == 'Enter'  && window.nuBROWSEROW != -1) {				//-- enter key
 
 		e.preventDefault();
 		const i = '#nucell_' + window.nuBROWSEROW + '_0';
@@ -4334,7 +4327,7 @@ function nuArrowPressed(e) {
 
 	const rows = $("[data-nu-column='0'][data-nu-primary-key]").length - 1;
 
-	if (e.keyCode == 38) {					//-- up
+	if (e.key == 'ArrowUp') {
 
 		if (window.nuBROWSEROW == -1) {
 			window.nuBROWSEROW = rows;
@@ -4347,7 +4340,7 @@ function nuArrowPressed(e) {
 
 	}
 
-	if (e.keyCode == 40) {					//-- down
+	if (e.key == 'ArrowDown') {
 
 		if (window.nuBROWSEROW == rows) {
 			window.nuBROWSEROW = -1;

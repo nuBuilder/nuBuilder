@@ -115,13 +115,13 @@ function nuBindDragEvents(){
 
 		var keyDirection = '';
 
-		if(e.keyCode == 37){
+		if(e.key == 'ArrowLeft'){
 			keyDirection	= 'left';
-		} else if(e.keyCode == 39){
+		} else if(e.key == 'ArrowRight'){
 			keyDirection	= 'right';
-		} else if(e.keyCode == 38){
+		} else if(e.key == 'ArrowUp'){
 			keyDirection	= 'up';
-		} else if(e.keyCode == 40){
+		} else if(e.key == 'ArrowDown'){
 			keyDirection	= 'down';
 		}
 
