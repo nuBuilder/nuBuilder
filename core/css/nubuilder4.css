@@ -766,7 +766,7 @@
 	 background-color:#fafafa;
 	 background-image:none;
 	 color:var(--nu-black);
-	 border-color:rgb(159,165,169);
+	 border-color:#d4dbe1;
 	 text-shadow:none;
 	 border-radius:3px 
 }
@@ -1414,4 +1414,7 @@
 }
  .select2-container--default .select2-selection--single .select2-selection__rendered {
 	 color: black!important;
+}
+ .select2-selection--multiple {
+    border: 1px solid var(--nu-border)!important;
 }
