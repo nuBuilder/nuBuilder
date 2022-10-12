@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit5259ad0bc28f57e412715e94355ddbbf
+class ComposerStaticInitfc80cc5bed961211a42abaf838cb07a1
 {
     public static $files = array (
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
@@ -15,7 +15,6 @@ class ComposerStaticInit5259ad0bc28f57e412715e94355ddbbf
         '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
-        '3109cb1a231dcd04bee1f9f620d46975' => __DIR__ . '/..' . '/paragonie/sodium_compat/autoload.php',
         '5011c20a8c04dcdea9f79098d4afe025' => __DIR__ . '/..' . '/phpmyadmin/motranslator/src/functions.php',
     );
 
@@ -60,6 +59,8 @@ class ComposerStaticInit5259ad0bc28f57e412715e94355ddbbf
             'PragmaRX\\Google2FAQRCode\\Tests\\' => 31,
             'PragmaRX\\Google2FAQRCode\\' => 25,
             'PhpMyAdmin\\Twig\\Extensions\\' => 27,
+            'PhpMyAdmin\\Tests\\Selenium\\' => 26,
+            'PhpMyAdmin\\Tests\\' => 17,
             'PhpMyAdmin\\SqlParser\\' => 21,
             'PhpMyAdmin\\ShapeFile\\' => 21,
             'PhpMyAdmin\\MoTranslator\\' => 24,
@@ -192,6 +193,14 @@ class ComposerStaticInit5259ad0bc28f57e412715e94355ddbbf
         array (
             0 => __DIR__ . '/..' . '/phpmyadmin/twig-i18n-extension/src',
         ),
+        'PhpMyAdmin\\Tests\\Selenium\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/test/selenium',
+        ),
+        'PhpMyAdmin\\Tests\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/test/classes',
+        ),
         'PhpMyAdmin\\SqlParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpmyadmin/sql-parser/src',
@@ -317,7 +326,6 @@ class ComposerStaticInit5259ad0bc28f57e412715e94355ddbbf
         'DASPRiD\\Enum\\Exception\\SerializeNotSupportedException' => __DIR__ . '/..' . '/dasprid/enum/src/Exception/SerializeNotSupportedException.php',
         'DASPRiD\\Enum\\Exception\\UnserializeNotSupportedException' => __DIR__ . '/..' . '/dasprid/enum/src/Exception/UnserializeNotSupportedException.php',
         'DASPRiD\\Enum\\NullValue' => __DIR__ . '/..' . '/dasprid/enum/src/NullValue.php',
-        'Datamatrix' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/barcodes/datamatrix.php',
         'FastRoute\\BadRouteException' => __DIR__ . '/..' . '/nikic/fast-route/src/BadRouteException.php',
         'FastRoute\\DataGenerator' => __DIR__ . '/..' . '/nikic/fast-route/src/DataGenerator.php',
         'FastRoute\\DataGenerator\\CharCountBased' => __DIR__ . '/..' . '/nikic/fast-route/src/DataGenerator/CharCountBased.php',
@@ -338,7 +346,6 @@ class ComposerStaticInit5259ad0bc28f57e412715e94355ddbbf
         'Fig\\Http\\Message\\RequestMethodInterface' => __DIR__ . '/..' . '/fig/http-message-util/src/RequestMethodInterface.php',
         'Fig\\Http\\Message\\StatusCodeInterface' => __DIR__ . '/..' . '/fig/http-message-util/src/StatusCodeInterface.php',
         'JsonException' => __DIR__ . '/..' . '/symfony/polyfill-php73/Resources/stubs/JsonException.php',
-        'PDF417' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/barcodes/pdf417.php',
         'ParagonIE\\ConstantTime\\Base32' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/Base32.php',
         'ParagonIE\\ConstantTime\\Base32Hex' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/Base32Hex.php',
         'ParagonIE\\ConstantTime\\Base64' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/Base64.php',
@@ -442,6 +449,8 @@ class ComposerStaticInit5259ad0bc28f57e412715e94355ddbbf
         'PhpMyAdmin\\Controllers\\ColumnController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/ColumnController.php',
         'PhpMyAdmin\\Controllers\\Config\\GetConfigController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Config/GetConfigController.php',
         'PhpMyAdmin\\Controllers\\Config\\SetConfigController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Config/SetConfigController.php',
+        'PhpMyAdmin\\Controllers\\Console\\Bookmark\\AddController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Console/Bookmark/AddController.php',
+        'PhpMyAdmin\\Controllers\\Console\\Bookmark\\RefreshController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Console/Bookmark/RefreshController.php',
         'PhpMyAdmin\\Controllers\\DatabaseController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/DatabaseController.php',
         'PhpMyAdmin\\Controllers\\Database\\CentralColumnsController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Database/CentralColumnsController.php',
         'PhpMyAdmin\\Controllers\\Database\\CentralColumns\\PopulateColumnsController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Database/CentralColumns/PopulateColumnsController.php',
@@ -501,7 +510,22 @@ class ComposerStaticInit5259ad0bc28f57e412715e94355ddbbf
         'PhpMyAdmin\\Controllers\\LintController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/LintController.php',
         'PhpMyAdmin\\Controllers\\LogoutController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/LogoutController.php',
         'PhpMyAdmin\\Controllers\\NavigationController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/NavigationController.php',
-        'PhpMyAdmin\\Controllers\\NormalizationController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/NormalizationController.php',
+        'PhpMyAdmin\\Controllers\\Normalization\\AddNewPrimaryController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Normalization/AddNewPrimaryController.php',
+        'PhpMyAdmin\\Controllers\\Normalization\\CreateNewColumnController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Normalization/CreateNewColumnController.php',
+        'PhpMyAdmin\\Controllers\\Normalization\\FirstNormalForm\\FirstStepController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Normalization/FirstNormalForm/FirstStepController.php',
+        'PhpMyAdmin\\Controllers\\Normalization\\FirstNormalForm\\FourthStepController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Normalization/FirstNormalForm/FourthStepController.php',
+        'PhpMyAdmin\\Controllers\\Normalization\\FirstNormalForm\\SecondStepController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Normalization/FirstNormalForm/SecondStepController.php',
+        'PhpMyAdmin\\Controllers\\Normalization\\FirstNormalForm\\ThirdStepController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Normalization/FirstNormalForm/ThirdStepController.php',
+        'PhpMyAdmin\\Controllers\\Normalization\\GetColumnsController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Normalization/GetColumnsController.php',
+        'PhpMyAdmin\\Controllers\\Normalization\\MainController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Normalization/MainController.php',
+        'PhpMyAdmin\\Controllers\\Normalization\\MoveRepeatingGroup' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Normalization/MoveRepeatingGroup.php',
+        'PhpMyAdmin\\Controllers\\Normalization\\PartialDependenciesController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Normalization/PartialDependenciesController.php',
+        'PhpMyAdmin\\Controllers\\Normalization\\SecondNormalForm\\CreateNewTablesController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Normalization/SecondNormalForm/CreateNewTablesController.php',
+        'PhpMyAdmin\\Controllers\\Normalization\\SecondNormalForm\\FirstStepController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Normalization/SecondNormalForm/FirstStepController.php',
+        'PhpMyAdmin\\Controllers\\Normalization\\SecondNormalForm\\NewTablesController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Normalization/SecondNormalForm/NewTablesController.php',
+        'PhpMyAdmin\\Controllers\\Normalization\\ThirdNormalForm\\CreateNewTablesController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Normalization/ThirdNormalForm/CreateNewTablesController.php',
+        'PhpMyAdmin\\Controllers\\Normalization\\ThirdNormalForm\\FirstStepController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Normalization/ThirdNormalForm/FirstStepController.php',
+        'PhpMyAdmin\\Controllers\\Normalization\\ThirdNormalForm\\NewTablesController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Normalization/ThirdNormalForm/NewTablesController.php',
         'PhpMyAdmin\\Controllers\\PhpInfoController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/PhpInfoController.php',
         'PhpMyAdmin\\Controllers\\Preferences\\ExportController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Preferences/ExportController.php',
         'PhpMyAdmin\\Controllers\\Preferences\\FeaturesController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Preferences/FeaturesController.php',
@@ -551,7 +575,10 @@ class ComposerStaticInit5259ad0bc28f57e412715e94355ddbbf
         'PhpMyAdmin\\Controllers\\Setup\\ConfigController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Setup/ConfigController.php',
         'PhpMyAdmin\\Controllers\\Setup\\FormController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Setup/FormController.php',
         'PhpMyAdmin\\Controllers\\Setup\\HomeController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Setup/HomeController.php',
+        'PhpMyAdmin\\Controllers\\Setup\\MainController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Setup/MainController.php',
         'PhpMyAdmin\\Controllers\\Setup\\ServersController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Setup/ServersController.php',
+        'PhpMyAdmin\\Controllers\\Setup\\ShowConfigController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Setup/ShowConfigController.php',
+        'PhpMyAdmin\\Controllers\\Setup\\ValidateController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Setup/ValidateController.php',
         'PhpMyAdmin\\Controllers\\Sql\\ColumnPreferencesController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Sql/ColumnPreferencesController.php',
         'PhpMyAdmin\\Controllers\\Sql\\DefaultForeignKeyCheckValueController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Sql/DefaultForeignKeyCheckValueController.php',
         'PhpMyAdmin\\Controllers\\Sql\\EnumValuesController' => __DIR__ . '/../..' . '/libraries/classes/Controllers/Sql/EnumValuesController.php',
@@ -650,6 +677,7 @@ class ComposerStaticInit5259ad0bc28f57e412715e94355ddbbf
         'PhpMyAdmin\\Dbal\\Warning' => __DIR__ . '/../..' . '/libraries/classes/Dbal/Warning.php',
         'PhpMyAdmin\\Display\\DisplayParts' => __DIR__ . '/../..' . '/libraries/classes/Display/DisplayParts.php',
         'PhpMyAdmin\\Display\\Results' => __DIR__ . '/../..' . '/libraries/classes/Display/Results.php',
+        'PhpMyAdmin\\EditField' => __DIR__ . '/../..' . '/libraries/classes/EditField.php',
         'PhpMyAdmin\\Encoding' => __DIR__ . '/../..' . '/libraries/classes/Encoding.php',
         'PhpMyAdmin\\Engines\\Bdb' => __DIR__ . '/../..' . '/libraries/classes/Engines/Bdb.php',
         'PhpMyAdmin\\Engines\\Berkeleydb' => __DIR__ . '/../..' . '/libraries/classes/Engines/Berkeleydb.php',
@@ -1009,8 +1037,6 @@ class ComposerStaticInit5259ad0bc28f57e412715e94355ddbbf
         'PhpMyAdmin\\SqlParser\\Statements\\WithStatement' => __DIR__ . '/..' . '/phpmyadmin/sql-parser/src/Statements/WithStatement.php',
         'PhpMyAdmin\\SqlParser\\Token' => __DIR__ . '/..' . '/phpmyadmin/sql-parser/src/Token.php',
         'PhpMyAdmin\\SqlParser\\TokensList' => __DIR__ . '/..' . '/phpmyadmin/sql-parser/src/TokensList.php',
-        'PhpMyAdmin\\SqlParser\\Tools\\ContextGenerator' => __DIR__ . '/..' . '/phpmyadmin/sql-parser/src/Tools/ContextGenerator.php',
-        'PhpMyAdmin\\SqlParser\\Tools\\TestGenerator' => __DIR__ . '/..' . '/phpmyadmin/sql-parser/src/Tools/TestGenerator.php',
         'PhpMyAdmin\\SqlParser\\Translator' => __DIR__ . '/..' . '/phpmyadmin/sql-parser/src/Translator.php',
         'PhpMyAdmin\\SqlParser\\UtfString' => __DIR__ . '/..' . '/phpmyadmin/sql-parser/src/UtfString.php',
         'PhpMyAdmin\\SqlParser\\Utils\\BufferedQuery' => __DIR__ . '/..' . '/phpmyadmin/sql-parser/src/Utils/BufferedQuery.php',
@@ -1073,8 +1099,6 @@ class ComposerStaticInit5259ad0bc28f57e412715e94355ddbbf
         'PragmaRX\\Google2FAQRCode\\QRCode\\Bacon' => __DIR__ . '/..' . '/pragmarx/google2fa-qrcode/src/QRCode/Bacon.php',
         'PragmaRX\\Google2FAQRCode\\QRCode\\Chillerlan' => __DIR__ . '/..' . '/pragmarx/google2fa-qrcode/src/QRCode/Chillerlan.php',
         'PragmaRX\\Google2FAQRCode\\QRCode\\QRCodeServiceContract' => __DIR__ . '/..' . '/pragmarx/google2fa-qrcode/src/QRCode/QRCodeServiceContract.php',
-        'PragmaRX\\Google2FAQRCode\\Tests\\Constants' => __DIR__ . '/..' . '/pragmarx/google2fa-qrcode/tests/Constants.php',
-        'PragmaRX\\Google2FAQRCode\\Tests\\Google2FATest' => __DIR__ . '/..' . '/pragmarx/google2fa-qrcode/tests/Google2FATest.php',
         'PragmaRX\\Google2FA\\Exceptions\\Contracts\\Google2FA' => __DIR__ . '/..' . '/pragmarx/google2fa/src/Exceptions/Contracts/Google2FA.php',
         'PragmaRX\\Google2FA\\Exceptions\\Contracts\\IncompatibleWithGoogleAuthenticator' => __DIR__ . '/..' . '/pragmarx/google2fa/src/Exceptions/Contracts/IncompatibleWithGoogleAuthenticator.php',
         'PragmaRX\\Google2FA\\Exceptions\\Contracts\\InvalidAlgorithm' => __DIR__ . '/..' . '/pragmarx/google2fa/src/Exceptions/Contracts/InvalidAlgorithm.php',
@@ -1117,10 +1141,6 @@ class ComposerStaticInit5259ad0bc28f57e412715e94355ddbbf
         'Psr\\Log\\LoggerInterface' => __DIR__ . '/..' . '/psr/log/Psr/Log/LoggerInterface.php',
         'Psr\\Log\\LoggerTrait' => __DIR__ . '/..' . '/psr/log/Psr/Log/LoggerTrait.php',
         'Psr\\Log\\NullLogger' => __DIR__ . '/..' . '/psr/log/Psr/Log/NullLogger.php',
-        'Psr\\Log\\Test\\DummyTest' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/DummyTest.php',
-        'Psr\\Log\\Test\\LoggerInterfaceTest' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/LoggerInterfaceTest.php',
-        'Psr\\Log\\Test\\TestLogger' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/TestLogger.php',
-        'QRcode' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/barcodes/qrcode.php',
         'ReCaptcha\\ReCaptcha' => __DIR__ . '/..' . '/google/recaptcha/src/ReCaptcha/ReCaptcha.php',
         'ReCaptcha\\RequestMethod' => __DIR__ . '/..' . '/google/recaptcha/src/ReCaptcha/RequestMethod.php',
         'ReCaptcha\\RequestMethod\\Curl' => __DIR__ . '/..' . '/google/recaptcha/src/ReCaptcha/RequestMethod/Curl.php',
@@ -1507,7 +1527,6 @@ class ComposerStaticInit5259ad0bc28f57e412715e94355ddbbf
         'Symfony\\Contracts\\Service\\ServiceProviderInterface' => __DIR__ . '/..' . '/symfony/service-contracts/ServiceProviderInterface.php',
         'Symfony\\Contracts\\Service\\ServiceSubscriberInterface' => __DIR__ . '/..' . '/symfony/service-contracts/ServiceSubscriberInterface.php',
         'Symfony\\Contracts\\Service\\ServiceSubscriberTrait' => __DIR__ . '/..' . '/symfony/service-contracts/ServiceSubscriberTrait.php',
-        'Symfony\\Contracts\\Service\\Test\\ServiceLocatorTest' => __DIR__ . '/..' . '/symfony/service-contracts/Test/ServiceLocatorTest.php',
         'Symfony\\Polyfill\\Ctype\\Ctype' => __DIR__ . '/..' . '/symfony/polyfill-ctype/Ctype.php',
         'Symfony\\Polyfill\\Mbstring\\Mbstring' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/Mbstring.php',
         'Symfony\\Polyfill\\Php73\\Php73' => __DIR__ . '/..' . '/symfony/polyfill-php73/Php73.php',
@@ -1515,15 +1534,10 @@ class ComposerStaticInit5259ad0bc28f57e412715e94355ddbbf
         'Symfony\\Polyfill\\Php80\\PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/PhpToken.php',
         'Symfony\\Polyfill\\Php81\\Php81' => __DIR__ . '/..' . '/symfony/polyfill-php81/Php81.php',
         'TCPDF' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf.php',
-        'TCPDF2DBarcode' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_barcodes_2d.php',
-        'TCPDFBarcode' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_barcodes_1d.php',
         'TCPDF_COLORS' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_colors.php',
-        'TCPDF_FILTERS' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_filters.php',
         'TCPDF_FONTS' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_fonts.php',
         'TCPDF_FONT_DATA' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_font_data.php',
         'TCPDF_IMAGES' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_images.php',
-        'TCPDF_IMPORT' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_import.php',
-        'TCPDF_PARSER' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_parser.php',
         'TCPDF_STATIC' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_static.php',
         'Twig\\Cache\\CacheInterface' => __DIR__ . '/..' . '/twig/twig/src/Cache/CacheInterface.php',
         'Twig\\Cache\\FilesystemCache' => __DIR__ . '/..' . '/twig/twig/src/Cache/FilesystemCache.php',
@@ -1670,8 +1684,6 @@ class ComposerStaticInit5259ad0bc28f57e412715e94355ddbbf
         'Twig\\Source' => __DIR__ . '/..' . '/twig/twig/src/Source.php',
         'Twig\\Template' => __DIR__ . '/..' . '/twig/twig/src/Template.php',
         'Twig\\TemplateWrapper' => __DIR__ . '/..' . '/twig/twig/src/TemplateWrapper.php',
-        'Twig\\Test\\IntegrationTestCase' => __DIR__ . '/..' . '/twig/twig/src/Test/IntegrationTestCase.php',
-        'Twig\\Test\\NodeTestCase' => __DIR__ . '/..' . '/twig/twig/src/Test/NodeTestCase.php',
         'Twig\\Token' => __DIR__ . '/..' . '/twig/twig/src/Token.php',
         'Twig\\TokenParser\\AbstractTokenParser' => __DIR__ . '/..' . '/twig/twig/src/TokenParser/AbstractTokenParser.php',
         'Twig\\TokenParser\\ApplyTokenParser' => __DIR__ . '/..' . '/twig/twig/src/TokenParser/ApplyTokenParser.php',
@@ -1714,9 +1726,9 @@ class ComposerStaticInit5259ad0bc28f57e412715e94355ddbbf
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit5259ad0bc28f57e412715e94355ddbbf::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit5259ad0bc28f57e412715e94355ddbbf::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit5259ad0bc28f57e412715e94355ddbbf::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitfc80cc5bed961211a42abaf838cb07a1::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitfc80cc5bed961211a42abaf838cb07a1::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitfc80cc5bed961211a42abaf838cb07a1::$classMap;
 
         }, null, ClassLoader::class);
     }

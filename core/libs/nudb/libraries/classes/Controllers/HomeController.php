@@ -11,6 +11,7 @@ use PhpMyAdmin\ConfigStorage\Relation;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Git;
 use PhpMyAdmin\Html\Generator;
+use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\LanguageManager;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\RecentFavoriteTable;
@@ -64,7 +65,7 @@ class HomeController extends AbstractController
         $this->dbi = $dbi;
     }
 
-    public function __invoke(): void
+    public function __invoke(ServerRequest $request): void
     {
         $GLOBALS['server'] = $GLOBALS['server'] ?? null;
         $GLOBALS['collation_connection'] = $GLOBALS['collation_connection'] ?? null;
@@ -317,19 +318,23 @@ class HomeController extends AbstractController
          * Check if user does not have defined blowfish secret and it is being used.
          */
         if (! empty($_SESSION['encryption_key'])) {
-            if (empty($GLOBALS['cfg']['blowfish_secret'])) {
+            $encryptionKeyLength = mb_strlen($GLOBALS['cfg']['blowfish_secret'], '8bit');
+            if ($encryptionKeyLength < SODIUM_CRYPTO_SECRETBOX_KEYBYTES) {
                 $this->errors[] = [
                     'message' => __(
-                        'The configuration file now needs a secret passphrase (blowfish_secret).'
+                        'The configuration file needs a valid key for cookie encryption.'
+                        . ' A temporary key was automatically generated for you.'
+                        . ' Please refer to the [doc@cfg_blowfish_secret]documentation[/doc].'
                     ),
                     'severity' => 'warning',
                 ];
-            } elseif (mb_strlen($GLOBALS['cfg']['blowfish_secret'], '8bit') !== SODIUM_CRYPTO_SECRETBOX_KEYBYTES) {
+            } elseif ($encryptionKeyLength > SODIUM_CRYPTO_SECRETBOX_KEYBYTES) {
                 $this->errors[] = [
                     'message' => sprintf(
                         __(
-                            'The secret passphrase in configuration (blowfish_secret) is not the correct length.'
-                            . ' It should be %d bytes long.'
+                            'The cookie encryption key in the configuration file is longer than necessary.'
+                            . ' It should only be %d bytes long.'
+                            . ' Please refer to the [doc@cfg_blowfish_secret]documentation[/doc].'
                         ),
                         SODIUM_CRYPTO_SECRETBOX_KEYBYTES
                     ),

@@ -2853,6 +2853,10 @@ query string.</p>
 </div>
 <p>A secret key used to encrypt/decrypt the URL query string.
 Should be 32 bytes long.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="faq.html#faq2-10"><span class="std std-ref">2.10 How to generate a string of random bytes</span></a></p>
+</div>
 </dd></dl>
 
 </div>
@@ -2871,12 +2875,29 @@ Should be 32 bytes long.</p>
 </tr>
 </tbody>
 </table>
-<p>The &#8220;cookie&#8221; auth_type uses AES algorithm to encrypt the password. If you
-are using the &#8220;cookie&#8221; auth_type, enter here a random passphrase of your
-choice. It will be used internally by the AES algorithm: you won’t be
-prompted for this passphrase.</p>
-<p>The secret should be 32 characters long. Using shorter will lead to weaker security
-of encrypted cookies, using longer will cause no harm.</p>
+<p>The &#8220;cookie&#8221; auth_type uses the <a class="reference internal" href="glossary.html#term-sodium"><span class="xref std std-term">Sodium</span></a> extension to encrypt the cookies (see <a class="reference internal" href="glossary.html#term-cookie"><span class="xref std std-term">Cookie</span></a>). If you are
+using the &#8220;cookie&#8221; auth_type, enter here a generated string of random bytes to be used as an encryption key. It
+will be used internally by the <a class="reference internal" href="glossary.html#term-sodium"><span class="xref std std-term">Sodium</span></a> extension: you won&#8217;t be prompted for this encryption key.</p>
+<p>Since a binary string is usually not printable, it can be converted into a hexadecimal representation (using a
+function like <a class="reference external" href="https://www.php.net/sodium_bin2hex">sodium_bin2hex</a>) and then used in the configuration file. For
+example:</p>
+<div class="highlight-php"><div class="highlight"><pre><span></span><span class="c1">// The string is a hexadecimal representation of a 32-bytes long string of random bytes.</span>
+<span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;blowfish_secret&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nx">sodium_hex2bin</span><span class="p">(</span><span class="s1">&#39;f16ce59f45714194371b48fe362072dc3b019da7861558cd4ad29e4d6fb13851&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Using a binary string is recommended. However, if all 32 bytes of the string are visible
+characters, then a function like <a class="reference external" href="https://www.php.net/sodium_bin2hex">sodium_bin2hex</a> is not required. For
+example:</p>
+<div class="highlight-php"><div class="highlight"><pre><span></span><span class="c1">// A string of 32 characters.</span>
+<span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;blowfish_secret&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;JOFw435365IScA&amp;Q!cDugr!lSfuAz*OW&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The encryption key must be 32 bytes long. If it is longer than the length of bytes, only the first 32 bytes will
+be used, and if it is shorter, a new temporary key will be automatically generated for you. However, this
+temporary key will only last for the duration of the session.</p>
+</div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">The configuration is called blowfish_secret for historical reasons as
@@ -2887,6 +2908,16 @@ Blowfish algorithm was originally used to do the encryption.</p>
 makes a bit weaker security as this generated secret is stored in
 session and furthermore it makes impossible to recall user name from
 cookie.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">Changed in version 5.2.0: </span>Since version 5.2.0, phpMyAdmin uses the
+<a class="reference external" href="https://www.php.net/sodium_crypto_secretbox">sodium_crypto_secretbox</a> and
+<a class="reference external" href="https://www.php.net/sodium_crypto_secretbox_open">sodium_crypto_secretbox_open</a> PHP functions to encrypt
+and decrypt cookies, respectively.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="faq.html#faq2-10"><span class="std std-ref">2.10 How to generate a string of random bytes</span></a></p>
 </div>
 </dd></dl>
 
@@ -6326,8 +6357,8 @@ configuration options, only the most frequently used ones.</p>
 <span class="k">declare</span><span class="p">(</span><span class="nx">strict_types</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
 
 <span class="sd">/**</span>
-<span class="sd"> * This is needed for cookie based authentication to encrypt password in</span>
-<span class="sd"> * cookie. Needs to be 32 chars long.</span>
+<span class="sd"> * This is needed for cookie based authentication to encrypt the cookie.</span>
+<span class="sd"> * Needs to be a 32-bytes long string of random bytes. See FAQ 2.10.</span>
 <span class="sd"> */</span>
 <span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;blowfish_secret&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span> <span class="cm">/* YOU MUST FILL IN THIS FOR COOKIE AUTH! */</span>
 
@@ -6518,8 +6549,8 @@ only for local address.</p>
 <p>You can configure any number of servers using <span class="target" id="index-160"></span><a class="reference internal" href="#cfg_Servers"><code class="xref config config-option docutils literal"><span class="pre">$cfg['Servers']</span></code></a>,
 following example shows two of them:</p>
 <div class="highlight-php"><div class="highlight"><pre><span></span><span class="o">&lt;?</span><span class="nx">php</span>
-<span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;blowfish_secret&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;multiServerExample70518&#39;</span><span class="p">;</span>
-<span class="c1">// any string of your choice</span>
+<span class="c1">// The string is a hexadecimal representation of a 32-bytes long string of random bytes.</span>
+<span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;blowfish_secret&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nx">sodium_hex2bin</span><span class="p">(</span><span class="s1">&#39;f16ce59f45714194371b48fe362072dc3b019da7861558cd4ad29e4d6fb13851&#39;</span><span class="p">);</span>
 <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
 <span class="nv">$i</span><span class="o">++</span><span class="p">;</span> <span class="c1">// server 1 :</span>

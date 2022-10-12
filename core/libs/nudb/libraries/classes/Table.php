@@ -8,6 +8,7 @@ use PhpMyAdmin\ConfigStorage\Features\DisplayFeature;
 use PhpMyAdmin\ConfigStorage\Features\RelationFeature;
 use PhpMyAdmin\ConfigStorage\Features\UiPreferencesFeature;
 use PhpMyAdmin\ConfigStorage\Relation;
+use PhpMyAdmin\Database\Triggers;
 use PhpMyAdmin\Html\Generator;
 use PhpMyAdmin\Html\MySQLDocumentation;
 use PhpMyAdmin\Plugins\Export\ExportSql;
@@ -1497,11 +1498,7 @@ class Table implements Stringable
         }
 
         // If the table is moved to a different database drop its triggers first
-        $triggers = $this->dbi->getTriggers(
-            $this->getDbName(),
-            $this->getName(),
-            ''
-        );
+        $triggers = Triggers::getDetails($this->dbi, $this->getDbName(), $this->getName(), '');
         $handleTriggers = $this->getDbName() != $newDb && $triggers;
         if ($handleTriggers) {
             foreach ($triggers as $trigger) {
@@ -1869,7 +1866,7 @@ class Table implements Stringable
      */
     public function getUiProp($property)
     {
-        if (! isset($this->uiprefs)) {
+        if (empty($this->uiprefs)) {
             $this->loadUiPrefs();
         }
 
@@ -1939,7 +1936,7 @@ class Table implements Stringable
      */
     public function setUiProp($property, $value, $tableCreateTime = null)
     {
-        if (! isset($this->uiprefs)) {
+        if (empty($this->uiprefs)) {
             $this->loadUiPrefs();
         }
 
@@ -1986,7 +1983,7 @@ class Table implements Stringable
      */
     public function removeUiProp($property)
     {
-        if (! isset($this->uiprefs)) {
+        if (empty($this->uiprefs)) {
             $this->loadUiPrefs();
         }
 
@@ -2060,7 +2057,7 @@ class Table implements Stringable
      */
     public function getIndex($index)
     {
-        return Index::singleton($this->dbName, $this->name, $index);
+        return Index::singleton($this->dbi, $this->dbName, $this->name, $index);
     }
 
     /**

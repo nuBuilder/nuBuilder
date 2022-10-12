@@ -691,26 +691,59 @@ window.AJAX.registerOnload('export.js', function () {
  * Toggles display of options when quick and custom export are selected
  */
 
-Export.toggleQuickOrCustom = function () {
-  if (jquery__WEBPACK_IMPORTED_MODULE_0__('input[name=\'quick_or_custom\']').length === 0 // custom_no_form option
-  || jquery__WEBPACK_IMPORTED_MODULE_0__('#radio_custom_export').prop('checked') // custom
-  ) {
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#databases_and_tables').show();
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#rows').show();
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#output').show();
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#format_specific_opts').show();
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#output_quick_export').addClass('d-none');
-    var selectedPluginName = jquery__WEBPACK_IMPORTED_MODULE_0__('#plugins').find('option:selected').val();
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#' + selectedPluginName + '_options').removeClass('d-none');
-  } else {
-    // quick
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#databases_and_tables').hide();
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#rows').hide();
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#output').hide();
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#format_specific_opts').hide();
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#output_quick_export').removeClass('d-none');
+function toggleQuickOrCustom() {
+  const isCustomNoFormOption = !document.getElementById('quick_or_custom');
+  const radioCustomExportElement = document.getElementById('radio_custom_export');
+  const isCustomExport = isCustomNoFormOption || radioCustomExportElement instanceof HTMLInputElement && radioCustomExportElement.checked;
+  const databasesAndTablesElement = document.getElementById('databases_and_tables');
+
+  if (databasesAndTablesElement) {
+    databasesAndTablesElement.classList.toggle('d-none', !isCustomExport);
   }
-};
+
+  const rowsElement = document.getElementById('rows');
+
+  if (rowsElement) {
+    rowsElement.classList.toggle('d-none', !isCustomExport);
+  }
+
+  const outputElement = document.getElementById('output');
+
+  if (outputElement) {
+    outputElement.classList.toggle('d-none', !isCustomExport);
+  }
+
+  const formatSpecificOptionsElement = document.getElementById('format_specific_opts');
+
+  if (formatSpecificOptionsElement) {
+    formatSpecificOptionsElement.classList.toggle('d-none', !isCustomExport);
+  }
+
+  const outputQuickExportElement = document.getElementById('output_quick_export');
+
+  if (outputQuickExportElement) {
+    outputQuickExportElement.classList.toggle('d-none', isCustomExport);
+  }
+
+  if (!isCustomExport) {
+    return;
+  }
+
+  const selectedPluginElement = document.querySelector('#plugins > option[selected]');
+  const selectedPluginName = selectedPluginElement instanceof HTMLOptionElement ? selectedPluginElement.value : null;
+
+  if (selectedPluginName === null) {
+    return;
+  }
+
+  const pluginOptionsElement = document.getElementById(selectedPluginName + '_options');
+
+  if (!pluginOptionsElement) {
+    return;
+  }
+
+  pluginOptionsElement.classList.remove('d-none');
+}
 
 var timeOut;
 
@@ -832,9 +865,9 @@ Export.addAlias = function (type, name, field, value) {
 };
 
 window.AJAX.registerOnload('export.js', function () {
-  jquery__WEBPACK_IMPORTED_MODULE_0__('input[type=\'radio\'][name=\'quick_or_custom\']').on('change', Export.toggleQuickOrCustom);
+  jquery__WEBPACK_IMPORTED_MODULE_0__('input[type=\'radio\'][name=\'quick_or_custom\']').on('change', toggleQuickOrCustom);
   jquery__WEBPACK_IMPORTED_MODULE_0__('#format_specific_opts').find('div.format_specific_options').addClass('d-none').find('h3').remove();
-  Export.toggleQuickOrCustom();
+  toggleQuickOrCustom();
   Export.toggleStructureDataOpts();
   Export.toggleSqlIncludeComments();
   Export.checkTableSelectAll();

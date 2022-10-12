@@ -111,7 +111,7 @@ class Header
         $this->isAjax = false;
         $this->bodyId = '';
         $this->title = '';
-        $this->console = new Console();
+        $this->console = new Console(new Relation($GLOBALS['dbi']), $this->template);
         $this->menu = new Menu($GLOBALS['dbi'], $GLOBALS['db'] ?? '', $GLOBALS['table'] ?? '');
         $this->menuEnabled = true;
         $this->warningsEnabled = true;
@@ -141,7 +141,7 @@ class Header
         $this->scripts->addFile('vendor/jquery/jquery-ui-timepicker-addon.js');
         $this->scripts->addFile('menu_resizer.js');
         $this->scripts->addFile('cross_framing_protection.js');
-        $this->scripts->addFile('messages.php', ['l' => $GLOBALS['lang']]);
+        $this->scripts->addFile('index.php', ['route' => '/messages', 'l' => $GLOBALS['lang']]);
         $this->scripts->addFile('config.js');
         $this->scripts->addFile('functions.js');
         $this->scripts->addFile('navigation.js');

@@ -31,12 +31,11 @@ var primaryKey;
 var dataParsed = null;
 
 function appendHtmlColumnsList() {
-  jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/normalization', {
+  jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/normalization/get-columns', {
     'ajax_request': true,
     'db': window.CommonParams.get('db'),
     'table': window.CommonParams.get('table'),
-    'server': window.CommonParams.get('server'),
-    'getColumns': true
+    'server': window.CommonParams.get('server')
   }, function (data) {
     if (data.success === true) {
       jquery__WEBPACK_IMPORTED_MODULE_0__('select[name=makeAtomic]').html(data.message);
@@ -51,12 +50,11 @@ function goTo3NFStep1(newTables) {
     tables = [window.CommonParams.get('table')];
   }
 
-  jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/normalization', {
+  jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/normalization/3nf/step1', {
     'ajax_request': true,
     'db': window.CommonParams.get('db'),
     'server': window.CommonParams.get('server'),
-    'tables': tables,
-    'step': '3.1'
+    'tables': tables
   }, function (data) {
     jquery__WEBPACK_IMPORTED_MODULE_0__('#page_content').find('h3').html(window.Messages.str3NFNormalization);
     jquery__WEBPACK_IMPORTED_MODULE_0__('#mainContent').find('legend').html(data.legendText);
@@ -85,12 +83,11 @@ function goTo3NFStep1(newTables) {
 }
 
 function goTo2NFStep1() {
-  jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/normalization', {
+  jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/normalization/2nf/step1', {
     'ajax_request': true,
     'db': window.CommonParams.get('db'),
     'table': window.CommonParams.get('table'),
-    'server': window.CommonParams.get('server'),
-    'step': '2.1'
+    'server': window.CommonParams.get('server')
   }, function (data) {
     jquery__WEBPACK_IMPORTED_MODULE_0__('#page_content h3').html(window.Messages.str2NFNormalization);
     jquery__WEBPACK_IMPORTED_MODULE_0__('#mainContent legend').html(data.legendText);
@@ -130,16 +127,14 @@ function goToFinish1NF() {
   jquery__WEBPACK_IMPORTED_MODULE_0__('#mainContent #extra').html('');
   jquery__WEBPACK_IMPORTED_MODULE_0__('#mainContent #newCols').html('');
   jquery__WEBPACK_IMPORTED_MODULE_0__('.tblFooters').html('');
-} // eslint-disable-next-line no-unused-vars
-
+}
 
 function goToStep4() {
-  jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/normalization', {
+  jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/normalization/1nf/step4', {
     'ajax_request': true,
     'db': window.CommonParams.get('db'),
     'table': window.CommonParams.get('table'),
-    'server': window.CommonParams.get('server'),
-    'step4': true
+    'server': window.CommonParams.get('server')
   }, function (data) {
     jquery__WEBPACK_IMPORTED_MODULE_0__('#mainContent legend').html(data.legendText);
     jquery__WEBPACK_IMPORTED_MODULE_0__('#mainContent h4').html(data.headText);
@@ -154,13 +149,14 @@ function goToStep4() {
   });
 }
 
+window.goToStep4 = goToStep4;
+
 function goToStep3() {
-  jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/normalization', {
+  jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/normalization/1nf/step3', {
     'ajax_request': true,
     'db': window.CommonParams.get('db'),
     'table': window.CommonParams.get('table'),
-    'server': window.CommonParams.get('server'),
-    'step3': true
+    'server': window.CommonParams.get('server')
   }, function (data) {
     jquery__WEBPACK_IMPORTED_MODULE_0__('#mainContent legend').html(data.legendText);
     jquery__WEBPACK_IMPORTED_MODULE_0__('#mainContent h4').html(data.headText);
@@ -177,12 +173,11 @@ function goToStep3() {
 }
 
 function goToStep2(extra) {
-  jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/normalization', {
+  jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/normalization/1nf/step2', {
     'ajax_request': true,
     'db': window.CommonParams.get('db'),
     'table': window.CommonParams.get('table'),
-    'server': window.CommonParams.get('server'),
-    'step2': true
+    'server': window.CommonParams.get('server')
   }, function (data) {
     jquery__WEBPACK_IMPORTED_MODULE_0__('#mainContent legend').html(data.legendText);
     jquery__WEBPACK_IMPORTED_MODULE_0__('#mainContent h4').html(data.headText);
@@ -223,12 +218,11 @@ function goTo2NFFinish(pd) {
     'table': window.CommonParams.get('table'),
     'server': window.CommonParams.get('server'),
     'pd': JSON.stringify(pd),
-    'newTablesName': JSON.stringify(tables),
-    'createNewTables2NF': 1
+    'newTablesName': JSON.stringify(tables)
   };
   jquery__WEBPACK_IMPORTED_MODULE_0__.ajax({
     type: 'POST',
-    url: 'index.php?route=/normalization',
+    url: 'index.php?route=/normalization/2nf/create-new-tables',
     data: datastring,
     async: false,
     success: function (data) {
@@ -273,12 +267,11 @@ function goTo3NFFinish(newTables) {
     'ajax_request': true,
     'db': window.CommonParams.get('db'),
     'server': window.CommonParams.get('server'),
-    'newTables': JSON.stringify(newTables),
-    'createNewTables3NF': 1
+    'newTables': JSON.stringify(newTables)
   };
   jquery__WEBPACK_IMPORTED_MODULE_0__.ajax({
     type: 'POST',
-    url: 'index.php?route=/normalization',
+    url: 'index.php?route=/normalization/3nf/create-new-tables',
     data: datastring,
     async: false,
     success: function (data) {
@@ -328,12 +321,11 @@ function goTo2NFStep2(pd, primaryKey) {
       'db': window.CommonParams.get('db'),
       'table': window.CommonParams.get('table'),
       'server': window.CommonParams.get('server'),
-      'pd': JSON.stringify(pd),
-      'getNewTables2NF': 1
+      'pd': JSON.stringify(pd)
     };
     jquery__WEBPACK_IMPORTED_MODULE_0__.ajax({
       type: 'POST',
-      url: 'index.php?route=/normalization',
+      url: 'index.php?route=/normalization/2nf/new-tables',
       data: datastring,
       async: false,
       success: function (data) {
@@ -382,12 +374,11 @@ function goTo3NFStep2(pd, tablesTds) {
       'db': window.CommonParams.get('db'),
       'tables': JSON.stringify(tablesTds),
       'server': window.CommonParams.get('server'),
-      'pd': JSON.stringify(pd),
-      'getNewTables3NF': 1
+      'pd': JSON.stringify(pd)
     };
     jquery__WEBPACK_IMPORTED_MODULE_0__.ajax({
       type: 'POST',
-      url: 'index.php?route=/normalization',
+      url: 'index.php?route=/normalization/3nf/new-tables',
       data: datastring,
       async: false,
       success: function (data) {
@@ -500,7 +491,7 @@ function moveRepeatingGroup(repeatingCols) {
   };
   jquery__WEBPACK_IMPORTED_MODULE_0__.ajax({
     type: 'POST',
-    url: 'index.php?route=/normalization',
+    url: 'index.php?route=/normalization/move-repeating-group',
     data: datastring,
     async: false,
     success: function (data) {
@@ -546,12 +537,11 @@ window.AJAX.registerOnload('normalization.js', function () {
     }
 
     var numField = jquery__WEBPACK_IMPORTED_MODULE_0__('#numField').val();
-    jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/normalization', {
+    jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/normalization/create-new-column', {
       'ajax_request': true,
       'db': window.CommonParams.get('db'),
       'table': window.CommonParams.get('table'),
       'server': window.CommonParams.get('server'),
-      'splitColumn': true,
       'numFields': numField
     }, function (data) {
       if (data.success === true) {
@@ -616,12 +606,11 @@ window.AJAX.registerOnload('normalization.js', function () {
     });
   });
   jquery__WEBPACK_IMPORTED_MODULE_0__('#extra').on('click', '#addNewPrimary', function () {
-    jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/normalization', {
+    jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/normalization/add-new-primary', {
       'ajax_request': true,
       'db': window.CommonParams.get('db'),
       'table': window.CommonParams.get('table'),
-      'server': window.CommonParams.get('server'),
-      'addNewPrimary': true
+      'server': window.CommonParams.get('server')
     }, function (data) {
       if (data.success === true) {
         jquery__WEBPACK_IMPORTED_MODULE_0__('#newCols').html(data.message);
@@ -761,12 +750,11 @@ window.AJAX.registerOnload('normalization.js', function () {
 
     jquery__WEBPACK_IMPORTED_MODULE_0__('#newCols').insertAfter('#mainContent h4');
     jquery__WEBPACK_IMPORTED_MODULE_0__('#newCols').html('<div class="text-center">' + window.Messages.strLoading + '<br>' + window.Messages.strWaitForPd + '</div>');
-    jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/normalization', {
+    jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/normalization/partial-dependencies', {
       'ajax_request': true,
       'db': window.CommonParams.get('db'),
       'table': window.CommonParams.get('table'),
-      'server': window.CommonParams.get('server'),
-      'findPdl': true
+      'server': window.CommonParams.get('server')
     }, function (data) {
       jquery__WEBPACK_IMPORTED_MODULE_0__('#showPossiblePd').html('- ' + window.Messages.strHidePd);
       jquery__WEBPACK_IMPORTED_MODULE_0__('#showPossiblePd').addClass('hideList');

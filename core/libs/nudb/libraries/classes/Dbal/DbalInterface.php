@@ -231,7 +231,25 @@ interface DbalInterface
      * @param string $table    name of the table whose indexes are to be retrieved
      * @param mixed  $link     mysql link resource
      *
-     * @return array
+     * @return array<int, array<string, string|null>>
+     * @psalm-return array<int, array{
+     *   Table: string,
+     *   Non_unique: '0'|'1',
+     *   Key_name: string,
+     *   Seq_in_index: string,
+     *   Column_name: string|null,
+     *   Collation: 'A'|'D'|null,
+     *   Cardinality: string,
+     *   Sub_part: string|null,
+     *   Packed: string|null,
+     *   Null: string|null,
+     *   Index_type: 'BTREE'|'FULLTEXT'|'HASH'|'RTREE',
+     *   Comment: string,
+     *   Index_comment: string,
+     *   Ignored?: string,
+     *   Visible?: string,
+     *   Expression?: string|null
+     * }>
      */
     public function getTableIndexes(
         string $database,
@@ -410,71 +428,6 @@ interface DbalInterface
      * @return array warnings
      */
     public function getWarnings($link = DatabaseInterface::CONNECT_USER): array;
-
-    /**
-     * returns an array of PROCEDURE or FUNCTION names for a db
-     *
-     * @param string $db    db name
-     * @param string $which PROCEDURE | FUNCTION
-     * @param int    $link  link type
-     *
-     * @return array the procedure names or function names
-     */
-    public function getProceduresOrFunctions(
-        string $db,
-        string $which,
-        $link = DatabaseInterface::CONNECT_USER
-    ): array;
-
-    /**
-     * returns the definition of a specific PROCEDURE, FUNCTION, EVENT or VIEW
-     *
-     * @param string $db    db name
-     * @param string $which PROCEDURE | FUNCTION | EVENT | VIEW
-     * @param string $name  the procedure|function|event|view name
-     * @param int    $link  link type
-     *
-     * @return string|null the definition
-     */
-    public function getDefinition(
-        string $db,
-        string $which,
-        string $name,
-        $link = DatabaseInterface::CONNECT_USER
-    ): ?string;
-
-    /**
-     * returns details about the PROCEDUREs or FUNCTIONs for a specific database
-     * or details about a specific routine
-     *
-     * @param string      $db    db name
-     * @param string|null $which PROCEDURE | FUNCTION or null for both
-     * @param string      $name  name of the routine (to fetch a specific routine)
-     *
-     * @return array information about ROCEDUREs or FUNCTIONs
-     */
-    public function getRoutines(string $db, ?string $which = null, string $name = ''): array;
-
-    /**
-     * returns details about the EVENTs for a specific database
-     *
-     * @param string $db   db name
-     * @param string $name event name
-     *
-     * @return array information about EVENTs
-     */
-    public function getEvents(string $db, string $name = ''): array;
-
-    /**
-     * returns details about the TRIGGERs for a specific table or database
-     *
-     * @param string $db        db name
-     * @param string $table     table name
-     * @param string $delimiter the delimiter to use (may be empty)
-     *
-     * @return array information about triggers (may be empty)
-     */
-    public function getTriggers(string $db, string $table = '', string $delimiter = '//'): array;
 
     /**
      * gets the current user with host

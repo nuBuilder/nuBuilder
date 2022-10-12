@@ -94,7 +94,7 @@ function ajaxValidate(parent, id, values) {
   }
 
   $parent.data('ajax', jquery__WEBPACK_IMPORTED_MODULE_0__.ajax({
-    url: 'validate.php',
+    url: '../setup/index.php?route=/setup/validate',
     cache: false,
     type: 'POST',
     data: {
@@ -255,7 +255,7 @@ jquery__WEBPACK_IMPORTED_MODULE_0__(function () {
     e.preventDefault();
     var $this = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
     jquery__WEBPACK_IMPORTED_MODULE_0__.post($this.attr('href'), $this.attr('data-post'), function () {
-      window.location.replace('index.php');
+      window.location.replace('../setup/index.php?route=/setup');
     });
   });
 });

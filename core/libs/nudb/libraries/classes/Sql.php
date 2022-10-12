@@ -195,7 +195,7 @@ class Sql
             $resultSetColumnNames[] = $oneMeta->name;
         }
 
-        foreach (Index::getFromTable($table, $db) as $index) {
+        foreach (Index::getFromTable($this->dbi, $table, $db) as $index) {
             if (! $index->isUnique()) {
                 continue;
             }
@@ -502,9 +502,9 @@ class Sql
             && ($GLOBALS['cfg']['TablePrimaryKeyOrder'] !== 'NONE')
         ) {
             $primaryKey = null;
-            $primary = Index::getPrimary($table, $db);
+            $primary = Index::getPrimary($this->dbi, $table, $db);
 
-            if ($primary !== false) {
+            if ($primary !== null) {
                 $primarycols = $primary->getColumns();
 
                 foreach ($primarycols as $col) {
@@ -851,7 +851,7 @@ class Sql
             ) {
                 // to refresh the list of indexes (Ajax mode)
 
-                $indexes = Index::getFromTable($table, $db);
+                $indexes = Index::getFromTable($this->dbi, $table, $db);
                 $indexesDuplicates = Index::findDuplicates($table, $db);
                 $template = new Template();
 
@@ -1431,7 +1431,7 @@ class Sql
             }
         }
 
-        $hasUnique = $table && $this->resultSetContainsUniqueKey($db, $table, $fieldsMeta);
+        $hasUnique = $table !== null && $this->resultSetContainsUniqueKey($db, $table, $fieldsMeta);
 
         $editable = ($hasUnique
             || $GLOBALS['cfg']['RowActionLinksWithoutUnique']

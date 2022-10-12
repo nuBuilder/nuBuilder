@@ -8,6 +8,7 @@ use PhpMyAdmin\Controllers\CheckRelationsController;
 use PhpMyAdmin\Controllers\CollationConnectionController;
 use PhpMyAdmin\Controllers\ColumnController;
 use PhpMyAdmin\Controllers\Config;
+use PhpMyAdmin\Controllers\Console;
 use PhpMyAdmin\Controllers\Database;
 use PhpMyAdmin\Controllers\DatabaseController;
 use PhpMyAdmin\Controllers\ErrorReportController;
@@ -21,7 +22,7 @@ use PhpMyAdmin\Controllers\LicenseController;
 use PhpMyAdmin\Controllers\LintController;
 use PhpMyAdmin\Controllers\LogoutController;
 use PhpMyAdmin\Controllers\NavigationController;
-use PhpMyAdmin\Controllers\NormalizationController;
+use PhpMyAdmin\Controllers\Normalization;
 use PhpMyAdmin\Controllers\PhpInfoController;
 use PhpMyAdmin\Controllers\Preferences;
 use PhpMyAdmin\Controllers\RecentTablesListController;
@@ -94,6 +95,14 @@ return [
                 '$template' => '@template',
                 '$config' => '@config',
             ],
+        ],
+        Console\Bookmark\AddController::class => [
+            'class' => Console\Bookmark\AddController::class,
+            'arguments' => ['$response' => '@response', '$template' => '@template', '$dbi' => '@dbi'],
+        ],
+        Console\Bookmark\RefreshController::class => [
+            'class' => Console\Bookmark\RefreshController::class,
+            'arguments' => ['$response' => '@response', '$template' => '@template'],
         ],
         Database\CentralColumns\PopulateColumnsController::class => [
             'class' => Database\CentralColumns\PopulateColumnsController::class,
@@ -584,8 +593,124 @@ return [
                 '$relation' => '@relation',
             ],
         ],
-        NormalizationController::class => [
-            'class' => NormalizationController::class,
+        Normalization\FirstNormalForm\FirstStepController::class => [
+            'class' => Normalization\FirstNormalForm\FirstStepController::class,
+            'arguments' => [
+                '$response' => '@response',
+                '$template' => '@template',
+                '$normalization' => '@normalization',
+            ],
+        ],
+        Normalization\FirstNormalForm\FourthStepController::class => [
+            'class' => Normalization\FirstNormalForm\FourthStepController::class,
+            'arguments' => [
+                '$response' => '@response',
+                '$template' => '@template',
+                '$normalization' => '@normalization',
+            ],
+        ],
+        Normalization\FirstNormalForm\SecondStepController::class => [
+            'class' => Normalization\FirstNormalForm\SecondStepController::class,
+            'arguments' => [
+                '$response' => '@response',
+                '$template' => '@template',
+                '$normalization' => '@normalization',
+            ],
+        ],
+        Normalization\FirstNormalForm\ThirdStepController::class => [
+            'class' => Normalization\FirstNormalForm\ThirdStepController::class,
+            'arguments' => [
+                '$response' => '@response',
+                '$template' => '@template',
+                '$normalization' => '@normalization',
+            ],
+        ],
+        Normalization\SecondNormalForm\CreateNewTablesController::class => [
+            'class' => Normalization\SecondNormalForm\CreateNewTablesController::class,
+            'arguments' => [
+                '$response' => '@response',
+                '$template' => '@template',
+                '$normalization' => '@normalization',
+            ],
+        ],
+        Normalization\SecondNormalForm\FirstStepController::class => [
+            'class' => Normalization\SecondNormalForm\FirstStepController::class,
+            'arguments' => [
+                '$response' => '@response',
+                '$template' => '@template',
+                '$normalization' => '@normalization',
+            ],
+        ],
+        Normalization\SecondNormalForm\NewTablesController::class => [
+            'class' => Normalization\SecondNormalForm\NewTablesController::class,
+            'arguments' => [
+                '$response' => '@response',
+                '$template' => '@template',
+                '$normalization' => '@normalization',
+            ],
+        ],
+        Normalization\ThirdNormalForm\CreateNewTablesController::class => [
+            'class' => Normalization\ThirdNormalForm\CreateNewTablesController::class,
+            'arguments' => [
+                '$response' => '@response',
+                '$template' => '@template',
+                '$normalization' => '@normalization',
+            ],
+        ],
+        Normalization\ThirdNormalForm\FirstStepController::class => [
+            'class' => Normalization\ThirdNormalForm\FirstStepController::class,
+            'arguments' => [
+                '$response' => '@response',
+                '$template' => '@template',
+                '$normalization' => '@normalization',
+            ],
+        ],
+        Normalization\ThirdNormalForm\NewTablesController::class => [
+            'class' => Normalization\ThirdNormalForm\NewTablesController::class,
+            'arguments' => [
+                '$response' => '@response',
+                '$template' => '@template',
+                '$normalization' => '@normalization',
+            ],
+        ],
+        Normalization\AddNewPrimaryController::class => [
+            'class' => Normalization\AddNewPrimaryController::class,
+            'arguments' => [
+                '$response' => '@response',
+                '$template' => '@template',
+                '$normalization' => '@normalization',
+            ],
+        ],
+        Normalization\CreateNewColumnController::class => [
+            'class' => Normalization\CreateNewColumnController::class,
+            'arguments' => [
+                '$response' => '@response',
+                '$template' => '@template',
+                '$normalization' => '@normalization',
+            ],
+        ],
+        Normalization\GetColumnsController::class => [
+            'class' => Normalization\GetColumnsController::class,
+            'arguments' => [
+                '$response' => '@response',
+                '$template' => '@template',
+                '$normalization' => '@normalization',
+            ],
+        ],
+        Normalization\MainController::class => [
+            'class' => Normalization\MainController::class,
+            'arguments' => ['$response' => '@response', '$template' => '@template'],
+        ],
+        Normalization\MoveRepeatingGroup::class => [
+            'class' => Normalization\MoveRepeatingGroup::class,
+            'arguments' => [
+                '$response' => '@response',
+                '$template' => '@template',
+                '$normalization' => '@normalization',
+            ],
+        ],
+        Normalization\PartialDependenciesController::class => [
+            'class' => Normalization\PartialDependenciesController::class,
             'arguments' => [
                 '$response' => '@response',
                 '$template' => '@template',

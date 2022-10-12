@@ -6,8 +6,6 @@ namespace PhpMyAdmin;
 
 use PhpMyAdmin\ConfigStorage\Relation;
 use PhpMyAdmin\Dbal\DatabaseName;
-use PhpMyAdmin\Dbal\InvalidDatabaseName;
-use PhpMyAdmin\Dbal\InvalidTableName;
 use PhpMyAdmin\Dbal\TableName;
 use PhpMyAdmin\Http\Factory\ServerRequestFactory;
 use PhpMyAdmin\Http\ServerRequest;
@@ -25,7 +23,9 @@ use function defined;
 use function explode;
 use function extension_loaded;
 use function function_exists;
+use function gmdate;
 use function hash_equals;
+use function header;
 use function htmlspecialchars;
 use function implode;
 use function ini_get;
@@ -41,6 +41,7 @@ use function mb_substr;
 use function register_shutdown_function;
 use function session_id;
 use function strlen;
+use function time;
 use function trigger_error;
 use function urldecode;
 
@@ -81,9 +82,6 @@ final class Common
      */
     public static function run(): void
     {
-        $GLOBALS['containerBuilder'] = $GLOBALS['containerBuilder'] ?? null;
-        $GLOBALS['errorHandler'] = $GLOBALS['errorHandler'] ?? null;
-        $GLOBALS['config'] = $GLOBALS['config'] ?? null;
         $GLOBALS['server'] = $GLOBALS['server'] ?? null;
         $GLOBALS['lang'] = $GLOBALS['lang'] ?? null;
         $GLOBALS['isConfigLoading'] = $GLOBALS['isConfigLoading'] ?? null;
@@ -95,13 +93,25 @@ final class Common
         $request = self::getRequest();
         $route = $request->getRoute();
 
-        if ($route === '/import-status') {
+        if ($route === '/import-status' || $route === '/url' || $route === '/messages') {
             $GLOBALS['isMinimumCommon'] = true;
+        }
+
+        if ($route === '/messages') {
+            // Send correct type.
+            header('Content-Type: text/javascript; charset=UTF-8');
+            // Cache output in client
+            // the nocache query parameter makes sure that this file is reloaded when config changes.
+            header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 3600) . ' GMT');
+
+            define('PMA_NO_SESSION', true);
         }
 
         $GLOBALS['containerBuilder'] = Core::getContainerBuilder();
 
-        $GLOBALS['errorHandler'] = $GLOBALS['containerBuilder']->get('error_handler');
+        /** @var ErrorHandler $errorHandler */
+        $errorHandler = $GLOBALS['containerBuilder']->get('error_handler');
+        $GLOBALS['errorHandler'] = $errorHandler;
 
         self::checkRequiredPhpExtensions();
         self::configurePhpSettings();
@@ -114,17 +124,15 @@ final class Common
 
         register_shutdown_function([Config::class, 'fatalErrorHandler']);
 
-        /**
-         * Force reading of config file, because we removed sensitive values
-         * in the previous iteration.
-         */
-        $GLOBALS['config'] = $GLOBALS['containerBuilder']->get('config');
+        /** @var Config $config */
+        $config = $GLOBALS['containerBuilder']->get('config');
+        $GLOBALS['config'] = $config;
 
         /**
          * include session handling after the globals, to prevent overwriting
          */
         if (! defined('PMA_NO_SESSION')) {
-            Session::setUp($GLOBALS['config'], $GLOBALS['errorHandler']);
+            Session::setUp($config, $errorHandler);
         }
 
         $request = Core::populateRequestWithEncryptedQueryParams($request);
@@ -141,7 +149,7 @@ final class Common
         $GLOBALS['urlParams'] = [];
         $GLOBALS['containerBuilder']->setParameter('url_params', $GLOBALS['urlParams']);
 
-        self::setGotoAndBackGlobals($GLOBALS['containerBuilder'], $GLOBALS['config']);
+        self::setGotoAndBackGlobals($GLOBALS['containerBuilder'], $config);
         self::checkTokenRequestParam();
         self::setDatabaseAndTableFromRequest($GLOBALS['containerBuilder'], $request);
 
@@ -176,27 +184,27 @@ final class Common
          * check for errors occurred while loading configuration
          * this check is done here after loading language files to present errors in locale
          */
-        $GLOBALS['config']->checkPermissions();
-        $GLOBALS['config']->checkErrors();
+        $config->checkPermissions();
+        $config->checkErrors();
 
         self::checkServerConfiguration();
         self::checkRequest();
 
         /* setup servers                                       LABEL_setup_servers    */
 
-        $GLOBALS['config']->checkServers();
+        $config->checkServers();
 
         /**
          * current server
          *
          * @global integer $server
          */
-        $GLOBALS['server'] = $GLOBALS['config']->selectServer();
+        $GLOBALS['server'] = $config->selectServer();
         $GLOBALS['urlParams']['server'] = $GLOBALS['server'];
         $GLOBALS['containerBuilder']->setParameter('server', $GLOBALS['server']);
         $GLOBALS['containerBuilder']->setParameter('url_params', $GLOBALS['urlParams']);
 
-        $GLOBALS['cfg'] = $GLOBALS['config']->settings;
+        $GLOBALS['cfg'] = $config->settings;
 
         /* setup themes                                          LABEL_theme_setup    */
 
@@ -205,19 +213,21 @@ final class Common
         $GLOBALS['dbi'] = null;
 
         if (isset($GLOBALS['isMinimumCommon'])) {
-            $GLOBALS['config']->loadUserPreferences();
+            $config->loadUserPreferences();
             $GLOBALS['containerBuilder']->set('theme_manager', ThemeManager::getInstance());
             Tracker::enable();
+
+            if ($route === '/url') {
+                UrlRedirector::redirect();
+            }
 
             return;
         }
 
         /**
          * save some settings in cookies
-         *
-         * @todo should be done in PhpMyAdmin\Config
          */
-        $GLOBALS['config']->setCookie('pma_lang', (string) $GLOBALS['lang']);
+        $config->setCookie('pma_lang', (string) $GLOBALS['lang']);
 
         ThemeManager::getInstance()->setThemeCookie();
 
@@ -226,7 +236,7 @@ final class Common
         $GLOBALS['containerBuilder']->setAlias('dbi', DatabaseInterface::class);
 
         if (! empty($GLOBALS['cfg']['Server'])) {
-            $GLOBALS['config']->getLoginCookieValidityFromCache($GLOBALS['server']);
+            $config->getLoginCookieValidityFromCache($GLOBALS['server']);
 
             $GLOBALS['auth_plugin'] = Plugins::getAuthPlugin();
             $GLOBALS['auth_plugin']->authenticate();
@@ -292,7 +302,7 @@ final class Common
         $GLOBALS['containerBuilder']->set('response', ResponseRenderer::getInstance());
 
         // load user preferences
-        $GLOBALS['config']->loadUserPreferences();
+        $config->loadUserPreferences();
 
         $GLOBALS['containerBuilder']->set('theme_manager', ThemeManager::getInstance());
 
@@ -513,17 +523,11 @@ final class Common
     ): void {
         $GLOBALS['urlParams'] = $GLOBALS['urlParams'] ?? null;
 
-        try {
-            $GLOBALS['db'] = DatabaseName::fromValue($request->getParam('db'))->getName();
-        } catch (InvalidDatabaseName $exception) {
-            $GLOBALS['db'] = '';
-        }
+        $db = DatabaseName::tryFromValue($request->getParam('db'));
+        $table = TableName::tryFromValue($request->getParam('table'));
 
-        try {
-            $GLOBALS['table'] = TableName::fromValue($request->getParam('table'))->getName();
-        } catch (InvalidTableName $exception) {
-            $GLOBALS['table'] = '';
-        }
+        $GLOBALS['db'] = $db !== null ? $db->getName() : '';
+        $GLOBALS['table'] = $table !== null ? $table->getName() : '';
 
         if (! is_array($GLOBALS['urlParams'])) {
             $GLOBALS['urlParams'] = [];
