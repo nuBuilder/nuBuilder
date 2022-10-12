@@ -3489,7 +3489,7 @@ function nuOptions(p, f, t, access) {
 		img.setAttribute('id', id);
 
 		if (t == 'subform') {
-			if (nuAllowChanges(f)) {
+			if (nuAllowChanges(f) && nuGlobalAccess()) {
 
 				$('#' + p).prepend(img);
 
@@ -3536,7 +3536,7 @@ function nuHideOptionsItemShortcutKeys() {
 function nuGetOptionsList(f, t, p, a, type) {
 
 	// f: form ID
-	// a == 1: global_access
+	// a: global_access
 
 	const id = 'nuOptionsListBox';
 	if ($('#' + id).length !== 0) {
@@ -3550,11 +3550,13 @@ function nuGetOptionsList(f, t, p, a, type) {
 	const objects = nuSERVERRESPONSE.objects;
 	const canChange = nuAllowChanges(f);
 	const admin = a == 1;
+
 	const hasHelp = nuFORMHELP[p] != '' && nuFORMHELP[p] !== undefined && type != 'subform';
 	const formType = nuFormType()[0];
 	const typeEdit = formType == 'e';
 	const typeBrowse = formType == 'b';
 	const typeSf = type == 'subform';
+	
 	const typeLaunch = nuFORM.getCurrent().form_type != 'launch';
 	const labelId = '#label_' + $('#' + p + 'scrollDiv').parent().attr('id');
 
