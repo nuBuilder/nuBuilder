@@ -31,7 +31,8 @@ function nuInitJSOptions() {
 			'nuDebugMode': true,						// Debug Mode
 			'nuBrowserTabTitlePrefix': 'nuBuilder',		// Prefix in the Browser Tab
 			'nuCalendarStartOfWeek': 'Sunday',			// nuCalendar: Start of Week: Sunday (default) or Monday
-			'nuSelect2Theme': 'default'					// select2 theme (default, classic) Default: default
+			'nuSelect2Theme': 'default',				// select2 theme (default, classic) Default: default
+			'nuEditCloseAfterSave': 'None'				// Close forms after saving. Values: None, All, User, System
 		};
 
 	}
@@ -121,6 +122,20 @@ function nuBuildForm(f) {
 	window.global_access = f.global_access == '1';
 	nuFORM.edited = false;
 	window.nuVerticalTabs = false;
+
+	if (nuHasBeenSaved() >= 1 && nuGetProperty('nuEditCloseAfterSave') != '0') {
+
+		const closeAfterSave = nuUXOptions.nuEditCloseAfterSave;
+		let doClose = false;
+		if (closeAfterSave || nuGetProperty('nuEditCloseAfterSave') == '1') {
+			if (closeAfterSave == 'AllForms') doClose = nuCloseAfterSave();
+			if (closeAfterSave == 'UserForms' && !f.form_id.startsWith('nu')) nuCloseAfterSave();
+			if (closeAfterSave == 'SystemForms' && !f.form_id.startsWith('nu')) nuCloseAfterSave();
+		}
+
+		if (doClose) return;
+
+	}
 
 	nuFORM.scroll = [];
 	nuSetSuffix(1000);
@@ -384,6 +399,22 @@ function nuFormModification() {
 	} else {
 		document.body.style.overflow = 'visible';
 	}
+
+}
+
+function nuCloseAfterSave() {
+
+	nuDelay(100).then(() => {
+		nuHasNotBeenEdited();
+		if (nuIsIframe()) {
+			nuClosePopup();
+		} else {	
+			nuOpenPreviousBreadcrumb();
+		}			
+
+	})
+
+	return true;
 
 }
 
@@ -1100,6 +1131,8 @@ function nuINPUTLookup(id, objId, wi, obj, $fromId, p, vis) {
 	.css('visibility', vis)
 	.addClass('nuLookupCode');
 
+	nuAddJSObjectEvents(id, obj.js);
+
 	if (Number(obj.width) == 0) nuHide(id);
 
 	$('#' + id).enterKey(function () {
@@ -1143,8 +1176,6 @@ function nuINPUTLookup(id, objId, wi, obj, $fromId, p, vis) {
 		.css('visibility', vis);
 
 	if (obj.label === 'Insert-Snippet') $('#' + id).css('font-size', '18px');
-
-	nuAddJSObjectEvents(id, obj.js);
 
 	id = p + obj.id + 'description';
 	var desc = document.createElement('input');
@@ -4080,6 +4111,8 @@ function nuBrowseTable() {
 	var h = bc.row_height;
 	var t = parseInt($('#nuBrowseTitle0').css('height'), 10) - h - 2;
 	var l = 7;
+	var borderLeft;
+	var borderRight;
 
 	for (let r = 0; r < rows; r++) {
 
@@ -4123,9 +4156,13 @@ function nuBrowseTable() {
 
 			var $id = $('#' + id);
 
+		//	borderLeft = borderLeft !== true && w !== 0 ? true : false;
+
 			$id.attr('data-nu-row', rw)
 			.attr('data-nu-column', column)
 			.addClass('nuCell' + ((r / 2) == parseInt(r / 2, 10) ? 'Even' : 'Odd'))
+		//	.addClass(borderLeft ? 'nuBrowseBorderLeft' : '')
+		//	.addClass(c == col.length -1 ? 'nuBrowseBorderRight' : '')
 			.addClass(w == 0 ? '' : 'nuBrowseTable')
 			.css({
 				'text-align': a,
@@ -6335,6 +6372,7 @@ function nuSetSelect2(id, obj) {
 		selectionCssClass: select2Id,
 		theme: nuUXOptions.nuSelect2Theme ? nuUXOptions.nuSelect2Theme : 'default',
 		language: lang
+	//	placeholder: $id.attr('placeholder')
 	};
 
 	let objSelect2OptionsDefault = { options: select2OptionsDefault };
