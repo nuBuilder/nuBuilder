@@ -346,6 +346,9 @@ function nuRemoveNuRecords(){
 	$s = "DELETE FROM sys_zzzzsys_info WHERE zzzzsys_info_id LIKE 'nu%'";
 	nuRunQueryNoDebug($s);
 
+	$s = "DELETE FROM zzzzsys_email_template WHERE zzzzsys_email_template_id LIKE 'nu%'";
+	nuRunQueryNoDebug($s);
+
 	//-- delete all timezones
 	$s = "DELETE FROM sys_zzzzsys_timezone";
 	nuRunQueryNoDebug($s);
@@ -410,6 +413,7 @@ function nuSystemList(){
 		$t[]	= 'zzzzsys_cloner';
 		$t[]	= 'zzzzsys_code_snippet';
 		$t[]	= 'zzzzsys_note';
+		$t[]	= 'zzzzsys_email_template';
 		$t[]	= 'zzzzsys_note_category';
 		$t[]	= 'zzzzsys_info';
 		$t[]	= 'zzzzsys_config';

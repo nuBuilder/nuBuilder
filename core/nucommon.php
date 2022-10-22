@@ -398,7 +398,7 @@ function nuRunPHP($nuCode){
 
 }
 
-function nuRunPHPHidden($nuCode){
+function nuRunPHPHidden($nuCode, $params = null){
 
 	$aa						= nuAllowedActivities();
 	$p						= nuProcedureAccessList($aa);
@@ -2189,6 +2189,54 @@ function nuSanitizeFilename($file) {
 
 	$file = mb_ereg_replace("([^\w\s\d\-_~,;\[\]\(\).])", '', $file);
 	return mb_ereg_replace("([\.]{2,})", '', $file);
+
+}
+
+function nuGetEmailTemplateData($code, $language = '', $group = '') {
+
+    $sql = "
+			SELECT
+				`email_template_id`,
+				`emt_form_id`,
+				`emt_group`,
+				`emt_language`,
+				`emt_description`,
+				`emt_code`,
+				`emt_body`,
+				`emt_subject`,
+				`emt_to`,
+				`emt_cc`,
+				`emt_bcc`
+			FROM
+				`zzzzsys_email_template`
+			WHERE 
+				emt_code = ? 
+				AND ISNULL('emt_language','') = ?
+				AND ISNULL('emt_group','') = ?
+			LIMIT 1	
+		";
+
+	$qry = nuRunQuery($sql, array($code, $language, $group));
+
+	if (db_num_rows($qry) == 0) {
+		return false;
+	}
+
+	$row = db_fetch_object($qry);
+
+	return array(
+		"description" => $row->emt_description,
+		"body" => $row->emt_body,
+		"subject" => $row->emt_subject,
+		"to" => $row->tpl_to,
+		"group" => $row->emt_group,
+		"code" => $row->tpl_code,
+		"form_id" => $row->emt_form_id,
+		"cc" => $row->emt_cc,
+		"bcc" => $row->emt_bcc,
+		"language" => $row->emt_language,
+		"id" => $row->email_template_id
+	);
 
 }
 
