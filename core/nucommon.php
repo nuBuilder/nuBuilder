@@ -2196,7 +2196,7 @@ function nuGetEmailTemplateData($code, $language = '', $group = '') {
 
     $sql = "
 			SELECT
-				`email_template_id`,
+				`zzzzsys_email_template_id`,
 				`emt_form_id`,
 				`emt_group`,
 				`emt_language`,
@@ -2210,9 +2210,9 @@ function nuGetEmailTemplateData($code, $language = '', $group = '') {
 			FROM
 				`zzzzsys_email_template`
 			WHERE 
-				emt_code = ? 
-				AND ISNULL('emt_language','') = ?
-				AND ISNULL('emt_group','') = ?
+				`emt_code` = ? 
+				AND IFNULL(`emt_language`,'') = ?
+				AND IFNULL(`emt_group`,'') = ?
 			LIMIT 1	
 		";
 
@@ -2228,14 +2228,14 @@ function nuGetEmailTemplateData($code, $language = '', $group = '') {
 		"description" => $row->emt_description,
 		"body" => $row->emt_body,
 		"subject" => $row->emt_subject,
-		"to" => $row->tpl_to,
+		"to" => $row->emt_to,
 		"group" => $row->emt_group,
-		"code" => $row->tpl_code,
+		"code" => $row->emt_code,
 		"form_id" => $row->emt_form_id,
 		"cc" => $row->emt_cc,
 		"bcc" => $row->emt_bcc,
 		"language" => $row->emt_language,
-		"id" => $row->email_template_id
+		"id" => $row->zzzzsys_email_template_id
 	);
 
 }
