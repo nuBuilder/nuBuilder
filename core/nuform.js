@@ -100,6 +100,7 @@ function nuBuildForm(f) {
 	window.nuOnSetSaved = null;
 	window.nuOnTabSelected = null;
 	window.nuOnSelectTab = null;
+	window.nuOnAddAction = false;
 	window.onSubformTitleClick = null;
 	window.nuOnMessage = null;
 	window.nuFormatValueCleared = null;
@@ -4432,7 +4433,12 @@ function nuSearchAction(S, F) {
 
 function nuAddAction() {
 
-	var bc = window.nuFORM.getCurrent();
+	const bc = window.nuFORM.getCurrent();
+
+	if (window.nuOnAddAction) {
+		if (nuOnAddAction(bc) == false) return;
+	}
+
 	nuForm(bc.redirect_form_id, '-1');
 
 }
