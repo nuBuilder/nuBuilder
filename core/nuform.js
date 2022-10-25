@@ -4115,12 +4115,15 @@ function nuBrowseTable() {
 	var borderLeft;
 	var borderRight;
 
+	const brCount = bc.browse_rows;
+	const $record = $('#nuRECORD');
+	const colWidthCacheArray = new Array(col.length -1);
 	for (let r = 0; r < rows; r++) {
 
 		l = 7;
 		t = t + h + 7;
 
-		if (bc.browse_rows == 0 && r > 0) {
+		if (brCount == 0 && r > 0) {
 
 			let noData;
 			let firstCellClass;
@@ -4189,8 +4192,9 @@ function nuBrowseTable() {
 
 			if (r < row.length) {
 
+				const value = col[c].format == '' ? row[r][c + 1] : nuFORM.addFormatting(row[r][c + 1], col[c].format);																										   
 				$id
-				.html(nuFORM.addFormatting(row[r][c + 1], col[c].format))
+				.html(value)
 				.attr('data-nu-primary-key', row[r][0])
 				.attr('onclick', 'nuSelectBrowse(event, this)')
 				.hover(
@@ -4225,7 +4229,18 @@ function nuBrowseTable() {
 
 			}
 
-			l = l + (w == 0 ? 0 : nuTotalWidth(id));
+			
+			// Cache cell width of the first row
+			let divWidth;
+			if (r == 0) {
+				divWidth = nuTotalWidth(id);
+				colWidthCacheArray[c] = divWidth;
+			} else {		
+				divWidth = colWidthCacheArray[c];
+			}
+
+			l = l + (w == 0 ? 0 : divWidth);
+		
 
 		}
 
