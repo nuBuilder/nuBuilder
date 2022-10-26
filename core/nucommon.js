@@ -855,6 +855,10 @@ function nuBindCtrlEvents() {
 					nuShowFormInfo();
 				} else if (e.code == 'KeyE' && g) {					//-- e		Database
 					nuVendorLogin('PMA');
+				} else if (e.code == 'KeyI' && g) {					//-- e		Sessions
+					nuForm("nusession","","", "", 2);					
+				} else if (e.code == 'KeyQ' && g) {					//-- e		File Manager
+					nuVendorLogin("TFM");
 				} else if (e.code == 'KeyB' && g) {					//-- b		Backup
 					nuRunBackup();
 				} else if (e.code == 'KeyR') {						//-- r		Refresh

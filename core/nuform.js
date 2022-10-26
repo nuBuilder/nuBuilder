@@ -3611,6 +3611,8 @@ function nuGetOptionsList(f, t, p, a, type) {
 		ChangePassword : ['Change Password', 'nuPopup("nupassword", "", "")', 'fa-password', 'Q'],
 		DebugResults : ['nuDebug Results', 'nuOptionsListAction("nudebug", "")', 'fa-bug', 'D'],
 		Database : ['Database', 'nuVendorLogin("PMA")', 'fa-database', 'E'],
+		Sessions : ['Sessions', 'nuForm("nusession","","", "", 2)', 'fas fa-key', 'I'],
+		FileManager : ['File Manager', 'nuVendorLogin("TFM");', 'far fa-file-code', 'Q'],
 		Backup : ['Backup', 'nuRunBackup();', 'far fa-hdd', 'B'],
 		Setup : ['Setup', 'nuForm("nusetup","1","", "", 2)', 'fa-cogs', 'U'],
 		FormInfo : ['Form Info', 'nuShowFormInfo();', 'fa-info', 'M'],
@@ -3671,6 +3673,8 @@ function nuGetOptionsList(f, t, p, a, type) {
 		list.push(items.DebugResults);
 		list.push(items.Divider);
 		list.push(items.Database);
+		list.push(items.Sessions);
+		list.push(items.FileManager);
 		list.push(items.Backup);
 		list.push(items.Setup);
 		list.push(items.FormInfo);
