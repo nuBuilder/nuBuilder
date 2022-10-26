@@ -370,66 +370,84 @@ function nuAllowedActivities(){
 
 }
 
-function nuRunPHP($nuCode){
-
-	$aa									= nuAllowedActivities();
-	$p									= nuProcedureAccessList($aa);
-	$id									= nuID();
-	$s									= "SELECT sph_code, sph_description, zzzzsys_php_id, sph_php, sph_global FROM zzzzsys_php WHERE sph_code = ?";
-
-	$t									= nuRunQuery($s, array($nuCode));
-	$ob									= db_fetch_object($t);
-	$isGlobal							= $ob->sph_global == '1';
-
-	$_POST['nuHash']['code']			= $ob->sph_code;
-	$_POST['nuHash']['description']		= $ob->sph_description;
-	$_POST['nuHash']['parentID']		= $ob->zzzzsys_php_id;
-	$_POST['nuHash']['sph_php']			= $ob->sph_php;
-
-	$j									= json_encode($_POST['nuHash']);
-
-	if ( !($_SESSION['nubuilder_session_data']['isGlobeadmin'] or $isGlobal or in_array($ob->zzzzsys_php_id, $p))){
-		nuDisplayError(nuTranslate("Access To Procedure Denied...")." ($nuCode)");
-	}
-
-	nuSetJSONData($id, $j);
-
-	return $id;
-
+function nuRunPHPHidden($nuCode){ 
+	return nuRunPHP($nuCode, true);
 }
 
-function nuRunPHPHidden($nuCode, $params = null){
-
-	$aa						= nuAllowedActivities();
-	$p						= nuProcedureAccessList($aa);
-
-	$s						= "SELECT zzzzsys_php_id, sph_global FROM zzzzsys_php WHERE sph_code = ? ";
-	$t						= nuRunQuery($s, array($nuCode));
-	$r						= db_fetch_object($t);
+function nuRunPHP($nuCode, $hidden = false){
+										 
+					  
+																														  
 
 	if ($nuCode != 'nukeepalive') {
+								   
+										  
 
-	if (db_num_rows($t) == 0) {
+		$sql	= "SELECT sph_code, sph_description, zzzzsys_php_id, sph_php, sph_global FROM zzzzsys_php WHERE sph_code = ? ";
+		$query	= nuRunQuery($sql, array($nuCode));
+													 
+											  
 
-			$isSystem = substr($nuCode, 0, 2) == 'nu';
-			 if (! $isSystem) {
-				nuDisplayError(nuTranslate("The Procedure does not exist...")." ($nuCode)");
-			 }
-		} else {
-			$isGlobal			= $r->sph_global == '1';
-			if($_SESSION['nubuilder_session_data']['isGlobeadmin'] or $isGlobal or in_array($r->zzzzsys_php_id, $p)){
-				nuEval($r->zzzzsys_php_id);
-			}else{
-				nuDisplayError(nuTranslate("Access To Procedure Denied...")." ($nuCode)");
+		$exists = db_num_rows($query) == 1;
+		
+		if (!$exists) {
+
+				$isSystem = substr($nuCode, 0, 2) == 'nu';
+				 if (! $isSystem) {
+					nuDisplayError(nuTranslate("The Procedure does not exist...")." ($nuCode)");
+				 }
+
+			} else {
+
+				$row = db_fetch_object($query);
+				$allowRun = $row->sph_global == '1';
+
+				if (! $allowRun) {
+					$p	= nuProcedureAccessList(nuAllowedActivities());
+					$allowRun = in_array($row->zzzzsys_php_id, $p);
+				}
+
+				if($allowRun || $_SESSION['nubuilder_session_data']['isGlobeadmin']){
+					if ($hidden) nuEval($row->zzzzsys_php_id);
+				}else{
+					nuDisplayError(nuTranslate("Access To Procedure Denied...")." ($nuCode)");
+				}
 			}
-		}
+
+	}
+	
+	if ($hidden) {
+
+		$f			= new stdClass;
+		$f->id		= 1;
+		return $f;
+
+	} else {
+
+		$_POST['nuHash']['code']			= $exists ? $row->sph_code : null;
+		$_POST['nuHash']['description']		= $exists ? $row->sph_description : null;
+		$_POST['nuHash']['parentID']		= $exists ? $row->zzzzsys_php_id : null;
+		$_POST['nuHash']['sph_php']			= $exists ? $row->sph_php : null;
+
+		$json								= json_encode($_POST['nuHash']);
+		$id									= nuID();
+		nuSetJSONData($id, $json);
+		return $id;
+		  
+									   
+																											
+							   
+		 
+																			  
+	
+   
 
 	}
 
-	$f			= new stdClass;
-	$f->id		= 1;
+					 
+			 
 
-	return $f;
+		   
 }
 
 function nuJavascriptCallback($js){
