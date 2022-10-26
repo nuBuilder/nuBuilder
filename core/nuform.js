@@ -4116,8 +4116,9 @@ function nuBrowseTable() {
 	var borderRight;
 
 	const brCount = bc.browse_rows;
-	const $record = $('#nuRECORD');
-	const colWidthCacheArray = new Array(col.length -1);
+	const $record = $('#nuRECORD');	
+	let incWidth = 0;
+	
 	for (let r = 0; r < rows; r++) {
 
 		l = 7;
@@ -4229,18 +4230,11 @@ function nuBrowseTable() {
 
 			}
 
-			
-			// Cache cell width of the first row
-			let divWidth;
-			if (r == 0) {
-				divWidth = nuTotalWidth(id);
-				colWidthCacheArray[c] = divWidth;
-			} else {		
-				divWidth = colWidthCacheArray[c];
+			if (r == 0 && c == 0) {
+				incWidth = nuTotalWidth(id) - w;
 			}
 
-			l = l + (w == 0 ? 0 : divWidth);
-		
+			l = l + (w == 0 ? 0 : w + incWidth);
 
 		}
 
