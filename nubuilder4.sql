@@ -345,7 +345,7 @@ INSERT INTO `zzzzsys_config` (`zzzzsys_config_id`, `zzzzsys_setup_id`, `cfg_orde
 ('nu62a0a02105071cb', '1', 440, 'nuAdminButtons', 'nuObjects', 'true', 'Show Objects (Obj) icon for administrator', 2, '1', NULL),
 ('nu62a0a02105079da', '1', 450, 'nuAdminButtons', 'nuProperties', 'true', 'Show Properties (Prop) icon for administrator', 2, '1', NULL),
 ('nu62bdc792e1efb3a', '1', 41, 'Settings', '$nuConfigGlobeadminHome', 'nuhomecompact', 'Home form ID for administrator. Default: nuhome', 1, '3', NULL),
-('nu634795d35e9b070', '1', 400, 'nuUXOptions', 'nuEditCloseAfterSave', 'AllForms', 'Close forms after saving', 1, '1', NULL);
+('nu634795d35e9b070', '1', 400, 'nuUXOptions', 'nuEditCloseAfterSave', 'None', 'Close forms after saving', 1, '1', NULL);
 
 -- --------------------------------------------------------
 
