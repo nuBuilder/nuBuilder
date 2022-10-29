@@ -58,12 +58,12 @@ function nuRunUpdate($jsonId, $u = null, $p = null) {
 
 	$i = 1;
 
-	nuPrintUpdateMessage(null, 'nuBuilder Update');
+	nuPrintUpdateMessage('nuBuilder Update');
 
 	// Save configuration settings values
 	$config = nuRunQueryNoDebug("SELECT zzzzsys_config_id, cfg_value FROM zzzzsys_config WHERE zzzzsys_config_id like 'nu%'");
 	if (db_num_rows($config) > 0) {
-		nuPrintUpdateMessage($i, 'Saved CONFIGURATION SETTINGS');
+		nuPrintUpdateMessage('Saved CONFIGURATION SETTINGS', $i);
 		$i++;
 	} else {
 		unset($config);
@@ -71,42 +71,42 @@ function nuRunUpdate($jsonId, $u = null, $p = null) {
 
 	// Alter system tables (add new columns, change data types)
 	nuAlterSystemTables();
-	nuPrintUpdateMessage($i, 'Altered System Tables');
+	nuPrintUpdateMessage('Altered System Tables', $i);
 	$i++;
 
 	// Copy all zzzz-tables to temp sys-tables
 	nuCopySystemTables();
-	nuPrintUpdateMessage($i, 'Copied SYSTEM zzzz-TABLES to TEMP sys-TABLES');
+	nuPrintUpdateMessage('Copied SYSTEM zzzz-TABLES to TEMP sys-TABLES', $i);
 	$i++;
 
 	// Import nubuilder4.sql
 	nuImportSystemFiles();
-	nuPrintUpdateMessage($i, 'Imported nubuilder4.sql into the DATABASE');
+	nuPrintUpdateMessage('Imported nubuilder4.sql into the DATABASE', $i);
 	$i++;
 
 	nuAddNewSystemTables();
-	nuPrintUpdateMessage($i, 'Copied SYSTEM FILES to TEMP FILES for any new tables added from the import.');
+	nuPrintUpdateMessage('Copied SYSTEM FILES to TEMP FILES for any new tables added from the import.', $i);
 	$i++;
 
 	nuUpdateSystemRecords();
-	nuPrintUpdateMessage($i, 'Updated TEMP FILE table structure\'s to SYSTEM FILES');
+	nuPrintUpdateMessage('Updated TEMP FILE table structure\'s to SYSTEM FILES', $i);
 	$i++;
 
 	nuRemoveNuRecords();
-	nuPrintUpdateMessage($i, 'Removed all ids starting with nu from TEMP FILES');
+	nuPrintUpdateMessage('Removed all ids starting with nu from TEMP FILES', $i);
 	$i++;
 
 	nuJustNuRecords();
-	nuPrintUpdateMessage($i, 'Removed all ids not starting with nu from SYSTEM FILES');
+	nuPrintUpdateMessage('Removed all ids not starting with nu from SYSTEM FILES', $i);
 	$i++;
 
 	nuAppendToSystemTables();
-	nuPrintUpdateMessage($i, 'Inserted TEMP FILES into SYSTEM FILES');
+	nuPrintUpdateMessage('Inserted TEMP FILES into SYSTEM FILES', $i);
 	$i++;
 
 	// Import language files
 	nuImportLanguageFiles();
-	nuPrintUpdateMessage($i, 'Imported the LANGUAGE FILES into the DATABASE');
+	nuPrintUpdateMessage('Imported the LANGUAGE FILES into the DATABASE', $i);
 	$i++;
 
 
@@ -120,27 +120,27 @@ function nuRunUpdate($jsonId, $u = null, $p = null) {
 
 		}
 
-		nuPrintUpdateMessage($i, 'Restored CONFIGURATION SETTINGS');
+		nuPrintUpdateMessage('Restored CONFIGURATION SETTINGS', $i);
 		$i++;
 
 	}
 
 	// Set DB Collation
 	nuSetCollation();
-	nuPrintUpdateMessage($i, 'Set DB Collation');
+	nuPrintUpdateMessage('Set DB Collation', $i);
 	$i++;
 
 
 	// Run nuAfterUpdate
 	nuRunPHPHidden('nuAfterUpdate',0);
-	nuPrintUpdateMessage($i, 'Run nuAfterUpdate');
+	nuPrintUpdateMessage('Run nuAfterUpdate', $i);
 	$i++;
 
-	nuPrintUpdateMessage(null, 'You will need to log in again for the changes to take effect');
+	nuPrintUpdateMessage('You will need to log in again for the changes to take effect');
 
 }
 
-function nuPrintUpdateMessage($i = null, $msg) {
+function nuPrintUpdateMessage($msg, $i = null) {
 
 	if ($i == null) {
 		print '<br><br><span style="font-family:Helvetica;font-style:italic;font-size:20px;font-weight:bold;padding:10px">' . $msg . '</span><br>';
