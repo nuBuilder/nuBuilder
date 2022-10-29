@@ -5898,21 +5898,21 @@ function nuLookingUp() {
 
 function nuPortraitScreen(columns) {
 
-	function nuPortraitScreenObjDimensions(id, $id) {
+	function nuPortraitScreenObjDimensions(id, jId) {
 
-		let height = $id.outerHeight()
+		let height = jId.outerHeight()
 
-		if ($id.is('[data-select2-id]')) {
-			height = $id.data('nu-org-height') + 50;
+		if (jId.is('[data-select2-id]')) {
+			height = jId.data('nu-org-height') + 50;
 		}
 
-		if (!$id.is("[nu-mobileview-hidden]")) {
-			width = Math.max(width, $id.outerWidth());
+		if (!jId.is("[nu-mobileview-hidden]")) {
+			width = Math.max(width, jId.outerWidth());
 		}
 
 		let heightLabel = $('#label_' + id).length == 0 ? 0 : $('#label_' + id).outerHeight()
 
-		return {height, width, heightLabel}
+		return { height, width, heightLabel }
 
 	}
 
@@ -5938,19 +5938,19 @@ function nuPortraitScreen(columns) {
 		let oType = obj[i].type;
 
 		let id = obj[i].id;
-		let $id = $('#' + id);
+		let jId = $('#' + id);
 
 
-		let {height, width, heightLabel} = nuPortraitScreenObjDimensions(id, $id)
+		let { height, width, heightLabel } = nuPortraitScreenObjDimensions(id, jId)
 
-		const $tab = $('#nuTab' + obj[i].tab);
-		let tabVisible = $tab.nuIsVisible()
+		const jtab = $('#nuTab' + obj[i].tab);
+		let tabVisible = jtab.nuIsVisible()
 
 		if (obj[i].tab != b && tabVisible) {
 
 			if ($('.nuTab').length > 1) {
 				b = obj[i].tab;
-				const l = $tab.html();
+				const l = jtab.html();
 				const d = '<div class="nuPortraitTab" id="nuPort' + b + '" style="top:' + top + 'px" >' + l + '</div>';
 				$('#nuRECORD').append(d);
 				const OH = $('#nuPort' + b).outerHeight()
@@ -5960,62 +5960,69 @@ function nuPortraitScreen(columns) {
 
 		}
 
-		tabVisible = $tab.nuIsVisible() || $('.nuTab').length == 1;
+		tabVisible = jtab.nuIsVisible() || $('.nuTab').length == 1;
 
-		if ($id.is("[nu-mobileview-hidden]") || !tabVisible) {
+		if (jId.is("[nu-mobileview-hidden]") || !tabVisible) {
 
-				const objComponents = nuObjectComponents(id);
+			const objComponents = nuObjectComponents(id);
 
-				for (let c = 0; c < objComponents.length; c++) {
-					let comp = $('#' + objComponents[c]);
-					comp.attr('nu-mobileview-hidden','');
-					comp.hide();
-				}
+			for (let c = 0; c < objComponents.length; c++) {
+				let comp = $('#' + objComponents[c]);
+				comp.attr('nu-mobileview-hidden', '');
+				comp.hide();
+			}
 
 		} else {
 
 			if (obj[i].read != 2) {
 
-				$('#label_' + id).css({ 'top': top + 2, 'left': 7, 'text-align': 'left', 'font-weight': 700 });
-
-				const sameRow = $id.is('[data-nu-same-row]');
-				if (columns == 1 && !sameRow) {
-					top = top + heightLabel + 5;
-				}
-
-				if ($id.is('[data-select2-id]')) {
-					$id = $('#' + id + '_select2');
-				}
-
-				if (sameRow) {
-					const spacing = $id.attr('data-nu-same-row') || 0
-					$id.css({ 'top': oTop, 'left': Number(oWidth) + Number(spacing) });
+				if (oType == 'contentbox') {
+					jId.attr('nu-mobileview-hidden', '');
+					jId.hide();
 				} else {
-					$id.css({ 'top': top, 'left': lw + 10 });
-				}
 
-				if (oType == 'lookup') {
+					$('#label_' + id).css({ 'top': top + 2, 'left': 7, 'text-align': 'left', 'font-weight': 700 });
 
-					const w = $('#' + id + 'code').outerWidth()
-					const d = $('#' + id + 'description').outerWidth()
-					width = Math.max(width, w + d + 30);
+					const sameRow = jId.is('[data-nu-same-row]');
+					if (columns == 1 && !sameRow) {
+						top = top + heightLabel + 5;
+					}
 
-					$('#' + id + 'code').css({ 'top': top, 'left': lw + 10 });
-					$('#' + id + 'button').css({ 'top': top, 'left': lw + w + 15 });
-					top += 35;
-					$('#' + id + 'description').css({ 'top': top, 'left': lw + 10, 'width': w - 5 });
+					if (jId.is('[data-select2-id]')) {
+						jId = $('#' + id + '_select2');
+					}
 
-				} else if (obj[i].input == 'file') {
-					top += 5;
-					$('#' + id + '_file').css({ 'top': top, 'left': lw + 10 });
-					top += 5;
-				}
+					if (sameRow) {
+						const spacing = jId.attr('data-nu-same-row') || 0
+						jId.css({ 'top': oTop, 'left': Number(oWidth) + Number(spacing) });
+					} else {
+						jId.css({ 'top': top, 'left': lw + 10 });
+					}
 
-				oWidth = lw + 10 + Number(obj[i].width);
-				oTop = top;
+					if (oType == 'lookup') {
 
-				if (!sameRow) {
-					top = top + height + 5;
+						const w = $('#' + id + 'code').outerWidth()
+						const d = $('#' + id + 'description').outerWidth()
+						width = Math.max(width, w + d + 30);
+
+						$('#' + id + 'code').css({ 'top': top, 'left': lw + 10 });
+						$('#' + id + 'button').css({ 'top': top, 'left': lw + w + 15 });
+						top += 35;
+						$('#' + id + 'description').css({ 'top': top, 'left': lw + 10, 'width': w - 5 });
+
+					} else if (obj[i].input == 'file') {
+						top += 5;
+						$('#' + id + '_file').css({ 'top': top, 'left': lw + 10 });
+						top += 5;
+					}
+
+					oWidth = lw + 10 + Number(obj[i].width);
+					oTop = top;
+
+					if (!sameRow) {
+						top = top + height + 5;
+					}
+
 				}
 
 			}
