@@ -726,7 +726,7 @@ function nuAddActionButton(id, value, func, text, e) {
 	}
 
 	if (typeof(value) == 'object') {
-		value = nuUXOptions.nuMobileView ? value['valueMobile'] : nuTranslate(nuDefine(value('value')));
+		value = nuUXOptions.nuMobileView ? value['valueMobile'] : nuTranslate(nuDefine('value'));
 	} else {
 		value = nuTranslate(nuDefine(value));
 	}
