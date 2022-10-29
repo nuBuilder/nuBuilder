@@ -94,17 +94,18 @@ class Import[Name] extends ImportPlugin
     /**
      * Handles the whole import logic
      *
-     * @return array A list of SQL statements to be executed
+     * @param array &$sql_data 2-element array with sql data
+     *
+     * @return void
      */
-    public function doImport(?File $importHandle = null): array
+    public function doImport(&$sql_data = [])
     {
         // get globals (others are optional)
         global $error, $timeout_passed, $finished;
 
-        $sqlStatements = [];
         $buffer = '';
         while (! ($finished && $i >= $len) && ! $error && ! $timeout_passed) {
-            $data = $this->import->getNextChunk($importHandle);
+            $data = $this->import->getNextChunk();
             if ($data === false) {
                 // subtract data we didn't handle yet and stop processing
                 $GLOBALS['offset'] -= strlen($buffer);
@@ -118,12 +119,10 @@ class Import[Name] extends ImportPlugin
                 $buffer .= $data;
             }
             // PARSE $buffer here, post sql queries using:
-            $this->import->runQuery($sql, $sqlStatements);
+            $this->import->runQuery($sql, $verbose_sql_with_comments, $sql_data);
         } // End of import loop
         // Commit any possible data in buffers
-        $this->import->runQuery('', $sqlStatements);
-
-        return $sqlStatements;
+        $this->import->runQuery('', '', $sql_data);
     }
 
     /* optional:                                                     */

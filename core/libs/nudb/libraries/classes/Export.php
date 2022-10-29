@@ -14,7 +14,6 @@ use PhpMyAdmin\Plugins\ExportPlugin;
 use PhpMyAdmin\Plugins\SchemaPlugin;
 
 use function __;
-use function array_filter;
 use function array_merge_recursive;
 use function error_get_last;
 use function fclose;
@@ -26,7 +25,6 @@ use function gzencode;
 use function header;
 use function htmlentities;
 use function htmlspecialchars;
-use function http_build_query;
 use function implode;
 use function in_array;
 use function ini_get;
@@ -47,6 +45,9 @@ use function strtolower;
 use function substr;
 use function time;
 use function trim;
+use function urlencode;
+
+use const ENT_COMPAT;
 
 /**
  * PhpMyAdmin\Export class
@@ -126,8 +127,7 @@ class Export
      */
     public function outputHandler(?string $line): bool
     {
-        $GLOBALS['time_start'] = $GLOBALS['time_start'] ?? null;
-        $GLOBALS['save_filename'] = $GLOBALS['save_filename'] ?? null;
+        global $time_start, $save_filename;
 
         // Kanji encoding convert feature
         if ($GLOBALS['output_kanji_conversion']) {
@@ -159,7 +159,7 @@ class Export
                             $GLOBALS['message'] = Message::error(
                                 __('Insufficient space to save the file %s.')
                             );
-                            $GLOBALS['message']->addParam($GLOBALS['save_filename']);
+                            $GLOBALS['message']->addParam($save_filename);
 
                             return false;
                         }
@@ -172,8 +172,8 @@ class Export
                 }
             } else {
                 $timeNow = time();
-                if ($GLOBALS['time_start'] >= $timeNow + 30) {
-                    $GLOBALS['time_start'] = $timeNow;
+                if ($time_start >= $timeNow + 30) {
+                    $time_start = $timeNow;
                     header('X-pmaPing: Pong');
                 }
             }
@@ -195,14 +195,14 @@ class Export
                     $GLOBALS['message'] = Message::error(
                         __('Insufficient space to save the file %s.')
                     );
-                    $GLOBALS['message']->addParam($GLOBALS['save_filename']);
+                    $GLOBALS['message']->addParam($save_filename);
 
                     return false;
                 }
 
                 $timeNow = time();
-                if ($GLOBALS['time_start'] >= $timeNow + 30) {
-                    $GLOBALS['time_start'] = $timeNow;
+                if ($time_start >= $timeNow + 30) {
+                    $time_start = $timeNow;
                     header('X-pmaPing: Pong');
                 }
             } else {
@@ -211,7 +211,7 @@ class Export
             }
         } else {
             // We export as html - replace special chars
-            echo htmlspecialchars((string) $line);
+            echo htmlspecialchars((string) $line, ENT_COMPAT);
         }
 
         return true;
@@ -220,16 +220,14 @@ class Export
     /**
      * Returns HTML containing the footer for a displayed export
      *
-     * @param string $exportType the export type
-     * @param string $db         the database name
-     * @param string $table      the table name
+     * @param string $backButton    the link for going Back
+     * @param string $refreshButton the link for refreshing page
      *
      * @return string the HTML output
      */
     public function getHtmlForDisplayedExportFooter(
-        string $exportType,
-        string $db,
-        string $table
+        string $backButton,
+        string $refreshButton
     ): string {
         /**
          * Close the html tags and add the footers for on-screen export
@@ -238,8 +236,8 @@ class Export
             . '    </form>'
             . '<br>'
             // bottom back button
-            . $this->getHTMLForBackButton($exportType, $db, $table)
-            . $this->getHTMLForRefreshButton($exportType)
+            . $backButton
+            . $refreshButton
             . '</div>'
             . '<script type="text/javascript">' . "\n"
             . '//<![CDATA[' . "\n"
@@ -536,24 +534,88 @@ class Export
      * @param string $db         the database name
      * @param string $table      the table name
      *
-     * @return string the generated HTML and back button
+     * @return string[] the generated HTML and back button
      */
     public function getHtmlForDisplayedExportHeader(
         string $exportType,
         string $db,
         string $table
-    ): string {
+    ): array {
+        $html = '<div>';
+
         /**
          * Displays a back button with all the $_POST data in the URL
+         * (store in a variable to also display after the textarea)
          */
-        return '<div>'
-            . '<br>'
-            . $this->getHTMLForBackButton($exportType, $db, $table)
-            . $this->getHTMLForRefreshButton($exportType)
+        $backButton = '<p>[ <a href="';
+        if ($exportType === 'server') {
+            $backButton .= Url::getFromRoute('/server/export') . '" data-post="' . Url::getCommon([], '', false);
+        } elseif ($exportType === 'database') {
+            $backButton .= Url::getFromRoute('/database/export') . '" data-post="' . Url::getCommon(
+                ['db' => $db],
+                '',
+                false
+            );
+        } else {
+            $backButton .= Url::getFromRoute('/table/export') . '" data-post="' . Url::getCommon(
+                ['db' => $db, 'table' => $table],
+                '',
+                false
+            );
+        }
+
+        $postParams = $_POST;
+
+        // Convert the multiple select elements from an array to a string
+        if ($exportType === 'database') {
+            $structOrDataForced = empty($postParams['structure_or_data_forced']);
+            if ($structOrDataForced && ! isset($postParams['table_structure'])) {
+                $postParams['table_structure'] = [];
+            }
+
+            if ($structOrDataForced && ! isset($postParams['table_data'])) {
+                $postParams['table_data'] = [];
+            }
+        }
+
+        foreach ($postParams as $name => $value) {
+            if (is_array($value)) {
+                continue;
+            }
+
+            $backButton .= '&amp;' . urlencode((string) $name) . '=' . urlencode((string) $value);
+        }
+
+        $backButton .= '&amp;repopulate=1">' . __('Back') . '</a> ]</p>';
+        $html .= '<br>';
+        $html .= $backButton;
+        $refreshButton = '<form id="export_refresh_form" method="POST" action="'
+            . Url::getFromRoute('/export') . '" class="disableAjax">';
+        $refreshButton .= '[ <a class="disableAjax export_refresh_btn">' . __('Refresh') . '</a> ]';
+        foreach ($postParams as $name => $value) {
+            if (is_array($value)) {
+                foreach ($value as $val) {
+                    $refreshButton .= '<input type="hidden" name="' . htmlentities((string) $name)
+                        . '[]" value="' . htmlentities((string) $val) . '">';
+                }
+            } else {
+                $refreshButton .= '<input type="hidden" name="' . htmlentities((string) $name)
+                    . '" value="' . htmlentities((string) $value) . '">';
+            }
+        }
+
+        $refreshButton .= '</form>';
+        $html .= $refreshButton
             . '<br>'
             . '<form name="nofunction">'
             . '<textarea name="sqldump" cols="50" rows="30" '
             . 'id="textSQLDUMP" wrap="OFF">';
+
+        return [
+            $html,
+            $backButton,
+            $refreshButton,
+        ];
     }
 
     /**
@@ -562,6 +624,7 @@ class Export
      * @param string|array $dbSelect        the selected databases to export
      * @param string       $whatStrucOrData structure or data or both
      * @param ExportPlugin $exportPlugin    the selected export plugin
+     * @param string       $crlf            end of line character(s)
      * @param string       $errorUrl        the URL in case of error
      * @param string       $exportType      the export type
      * @param bool         $doRelation      whether to export relation info
@@ -575,6 +638,7 @@ class Export
         $dbSelect,
         string $whatStrucOrData,
         ExportPlugin $exportPlugin,
+        string $crlf,
         string $errorUrl,
         string $exportType,
         bool $doRelation,
@@ -603,6 +667,7 @@ class Export
                 $tables,
                 $tables,
                 $exportPlugin,
+                $crlf,
                 $errorUrl,
                 $exportType,
                 $doRelation,
@@ -629,6 +694,7 @@ class Export
      * @param array        $tableStructure  whether to export structure for each table
      * @param array        $tableData       whether to export data for each table
      * @param ExportPlugin $exportPlugin    the selected export plugin
+     * @param string       $crlf            end of line character(s)
      * @param string       $errorUrl        the URL in case of error
      * @param string       $exportType      the export type
      * @param bool         $doRelation      whether to export relation info
@@ -645,6 +711,7 @@ class Export
         array $tableStructure,
         array $tableData,
         ExportPlugin $exportPlugin,
+        string $crlf,
         string $errorUrl,
         string $exportType,
         bool $doRelation,
@@ -706,6 +773,7 @@ class Export
                         && ! $exportPlugin->exportStructure(
                             $db,
                             $table,
+                            $crlf,
                             $errorUrl,
                             'stand_in',
                             $exportType,
@@ -741,6 +809,7 @@ class Export
                         ! $exportPlugin->exportStructure(
                             $db,
                             $table,
+                            $crlf,
                             $errorUrl,
                             'create_table',
                             $exportType,
@@ -769,7 +838,7 @@ class Export
                     . ' FROM ' . Util::backquote($db)
                     . '.' . Util::backquote($table);
 
-                if (! $exportPlugin->exportData($db, $table, $errorUrl, $localQuery, $aliases)) {
+                if (! $exportPlugin->exportData($db, $table, $crlf, $errorUrl, $localQuery, $aliases)) {
                     break;
                 }
             }
@@ -793,6 +862,7 @@ class Export
                 ! $exportPlugin->exportStructure(
                     $db,
                     $table,
+                    $crlf,
                     $errorUrl,
                     'triggers',
                     $exportType,
@@ -824,6 +894,7 @@ class Export
                     ! $exportPlugin->exportStructure(
                         $db,
                         $view,
+                        $crlf,
                         $errorUrl,
                         'create_view',
                         $exportType,
@@ -887,6 +958,7 @@ class Export
      *
      * @param string       $whatStrucOrData whether to export structure for each table or raw
      * @param ExportPlugin $exportPlugin    the selected export plugin
+     * @param string       $crlf            end of line character(s)
      * @param string       $errorUrl        the URL in case of error
      * @param string       $sqlQuery        the query to be executed
      * @param string       $exportType      the export type
@@ -894,6 +966,7 @@ class Export
     public static function exportRaw(
         string $whatStrucOrData,
         ExportPlugin $exportPlugin,
+        string $crlf,
         string $errorUrl,
         string $sqlQuery,
         string $exportType
@@ -903,7 +976,7 @@ class Export
             return;
         }
 
-        if (! $exportPlugin->exportRawQuery($errorUrl, $sqlQuery)) {
+        if (! $exportPlugin->exportRawQuery($errorUrl, $sqlQuery, $crlf)) {
             $GLOBALS['message'] = Message::error(
                 // phpcs:disable Generic.Files.LineLength.TooLong
                 /* l10n: A query written by the user is a "raw query" that could be using no tables or databases in particular */
@@ -921,6 +994,7 @@ class Export
      * @param string       $table           the table to export
      * @param string       $whatStrucOrData structure or data or both
      * @param ExportPlugin $exportPlugin    the selected export plugin
+     * @param string       $crlf            end of line character(s)
      * @param string       $errorUrl        the URL in case of error
      * @param string       $exportType      the export type
      * @param bool         $doRelation      whether to export relation info
@@ -938,6 +1012,7 @@ class Export
         string $table,
         string $whatStrucOrData,
         ExportPlugin $exportPlugin,
+        string $crlf,
         string $errorUrl,
         string $exportType,
         bool $doRelation,
@@ -973,6 +1048,7 @@ class Export
                         ! $exportPlugin->exportStructure(
                             $db,
                             $table,
+                            $crlf,
                             $errorUrl,
                             'create_view',
                             $exportType,
@@ -991,6 +1067,7 @@ class Export
                     ! $exportPlugin->exportStructure(
                         $db,
                         $table,
+                        $crlf,
                         $errorUrl,
                         'create_table',
                         $exportType,
@@ -1029,7 +1106,7 @@ class Export
                     . '.' . Util::backquote($table) . $addQuery;
             }
 
-            if (! $exportPlugin->exportData($db, $table, $errorUrl, $localQuery, $aliases)) {
+            if (! $exportPlugin->exportData($db, $table, $crlf, $errorUrl, $localQuery, $aliases)) {
                 return;
             }
         }
@@ -1044,6 +1121,7 @@ class Export
                 ! $exportPlugin->exportStructure(
                     $db,
                     $table,
+                    $crlf,
                     $errorUrl,
                     'triggers',
                     $exportType,
@@ -1077,31 +1155,30 @@ class Export
      */
     public function showPage(string $exportType): void
     {
-        $GLOBALS['active_page'] = $GLOBALS['active_page'] ?? null;
-        $request = Common::getRequest();
-        $container = Core::getContainerBuilder();
+        global $active_page, $containerBuilder;
+
         if ($exportType === 'server') {
-            $GLOBALS['active_page'] = Url::getFromRoute('/server/export');
+            $active_page = Url::getFromRoute('/server/export');
             /** @var ServerExportController $controller */
-            $controller = $container->get(ServerExportController::class);
-            $controller($request);
+            $controller = $containerBuilder->get(ServerExportController::class);
+            $controller();
 
             return;
         }
 
         if ($exportType === 'database') {
-            $GLOBALS['active_page'] = Url::getFromRoute('/database/export');
+            $active_page = Url::getFromRoute('/database/export');
             /** @var DatabaseExportController $controller */
-            $controller = $container->get(DatabaseExportController::class);
-            $controller($request);
+            $controller = $containerBuilder->get(DatabaseExportController::class);
+            $controller();
 
             return;
         }
 
-        $GLOBALS['active_page'] = Url::getFromRoute('/table/export');
+        $active_page = Url::getFromRoute('/table/export');
         /** @var TableExportController $controller */
-        $controller = $container->get(TableExportController::class);
-        $controller($request);
+        $controller = $containerBuilder->get(TableExportController::class);
+        $controller();
     }
 
     /**
@@ -1261,75 +1338,5 @@ class Export
 
         $this->dbi->selectDb($_POST['db']);
         $exportPlugin->exportSchema($_POST['db']);
-    }
-
-    private function getHTMLForRefreshButton(string $exportType): string
-    {
-        $postParams = $this->getPostParams($exportType);
-
-        $refreshButton = '<form id="export_refresh_form" method="POST" action="'
-            . Url::getFromRoute('/export') . '" class="disableAjax">';
-        $refreshButton .= '[ <a class="disableAjax export_refresh_btn">' . __('Refresh') . '</a> ]';
-        foreach ($postParams as $name => $value) {
-            if (is_array($value)) {
-                foreach ($value as $val) {
-                    $refreshButton .= '<input type="hidden" name="' . htmlentities((string) $name)
-                        . '[]" value="' . htmlentities((string) $val) . '">';
-                }
-            } else {
-                $refreshButton .= '<input type="hidden" name="' . htmlentities((string) $name)
-                    . '" value="' . htmlentities((string) $value) . '">';
-            }
-        }
-
-        return $refreshButton . '</form>';
-    }
-
-    private function getHTMLForBackButton(string $exportType, string $db, string $table): string
-    {
-        $backButton = '<p>[ <a href="';
-        if ($exportType === 'server') {
-            $backButton .= Url::getFromRoute('/server/export') . '" data-post="' . Url::getCommon([], '', false);
-        } elseif ($exportType === 'database') {
-            $backButton .= Url::getFromRoute('/database/export') . '" data-post="' . Url::getCommon(
-                ['db' => $db],
-                '',
-                false
-            );
-        } else {
-            $backButton .= Url::getFromRoute('/table/export') . '" data-post="' . Url::getCommon(
-                ['db' => $db, 'table' => $table],
-                '',
-                false
-            );
-        }
-
-        $postParams = array_filter($this->getPostParams($exportType), static function ($value) {
-            return ! is_array($value);
-        });
-        $backButton .= '&amp;' . http_build_query($postParams);
-
-        $backButton .= '&amp;repopulate=1">' . __('Back') . '</a> ]</p>';
-
-        return $backButton;
-    }
-
-    private function getPostParams(string $exportType): array
-    {
-        $postParams = $_POST;
-
-        // Convert the multiple select elements from an array to a string
-        if ($exportType === 'database') {
-            $structOrDataForced = empty($postParams['structure_or_data_forced']);
-            if ($structOrDataForced && ! isset($postParams['table_structure'])) {
-                $postParams['table_structure'] = [];
-            }
-
-            if ($structOrDataForced && ! isset($postParams['table_data'])) {
-                $postParams['table_data'] = [];
-            }
-        }
-
-        return $postParams;
     }
 }

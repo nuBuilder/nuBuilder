@@ -93,6 +93,7 @@ class Generator
         $kbs = ServerVariablesProvider::getImplementation();
         $link = $useMariaDB ? $kbs->getDocLinkByNameMariaDb($name) :
                             $kbs->getDocLinkByNameMysql($name);
+        $link = $link !== null ? Core::linkURL($link) : $link;
 
         return MySQLDocumentation::show($name, false, $link, $text);
     }
@@ -165,8 +166,10 @@ class Generator
         $minimumVersion,
         $bugReference
     ): string {
+        global $dbi;
+
         $return = '';
-        if (($component === 'mysql') && ($GLOBALS['dbi']->getVersion() < $minimumVersion)) {
+        if (($component === 'mysql') && ($dbi->getVersion() < $minimumVersion)) {
             $return .= self::showHint(
                 sprintf(
                     __('The %s functionality is affected by a known bug, see %s'),
@@ -272,19 +275,19 @@ class Generator
      */
     public static function getDefaultFunctionForField(array $field, $insertMode): string
     {
-        $GLOBALS['data'] = $GLOBALS['data'] ?? null;
+        global $cfg, $data, $dbi;
 
         $defaultFunction = '';
 
         // Can we get field class based values?
-        $currentClass = $GLOBALS['dbi']->types->getTypeClass($field['True_Type']);
-        if (! empty($currentClass) && isset($GLOBALS['cfg']['DefaultFunctions']['FUNC_' . $currentClass])) {
-            $defaultFunction = $GLOBALS['cfg']['DefaultFunctions']['FUNC_' . $currentClass];
+        $currentClass = $dbi->types->getTypeClass($field['True_Type']);
+        if (! empty($currentClass) && isset($cfg['DefaultFunctions']['FUNC_' . $currentClass])) {
+            $defaultFunction = $cfg['DefaultFunctions']['FUNC_' . $currentClass];
             // Change the configured default function to include the ST_ prefix with MySQL 5.6 and later.
             // It needs to match the function listed in the select html element.
             if (
                 $currentClass === 'SPATIAL' &&
-                $GLOBALS['dbi']->getVersion() >= 50600 &&
+                $dbi->getVersion() >= 50600 &&
                 strtoupper(substr($defaultFunction, 0, 3)) !== 'ST_'
             ) {
                 $defaultFunction = 'ST_' . $defaultFunction;
@@ -301,11 +304,16 @@ class Generator
             ($field['True_Type'] === 'timestamp')
             && $field['first_timestamp']
             && empty($field['Default'])
-            && empty($GLOBALS['data'])
+            && empty($data)
             && $field['Extra'] !== 'on update CURRENT_TIMESTAMP'
             && $field['Null'] === 'NO'
         ) {
-            $defaultFunction = $GLOBALS['cfg']['DefaultFunctions']['first_timestamp'];
+            $defaultFunction = $cfg['DefaultFunctions']['first_timestamp'];
+        }
+
+        // For uuid field, no default function
+        if ($field['True_Type'] === 'uuid') {
+            return '';
         }
 
         // For primary keys of type char(36) or varchar(36) UUID if the default
@@ -316,7 +324,7 @@ class Generator
             && $field['Key'] === 'PRI'
             && ($field['Type'] === 'char(36)' || $field['Type'] === 'varchar(36)')
         ) {
-            $defaultFunction = $GLOBALS['cfg']['DefaultFunctions']['FUNC_UUID'];
+            $defaultFunction = $cfg['DefaultFunctions']['FUNC_UUID'];
         }
 
         return $defaultFunction;
@@ -333,13 +341,15 @@ class Generator
      */
     public static function getFunctionsForField(array $field, $insertMode, array $foreignData): string
     {
+        global $dbi;
+
         $defaultFunction = self::getDefaultFunctionForField($field, $insertMode);
 
         // Create the output
         $retval = '<option></option>' . "\n";
         // loop on the dropdown array and print all available options for that
         // field.
-        $functions = $GLOBALS['dbi']->types->getAllFunctions();
+        $functions = $dbi->types->getAllFunctions();
         foreach ($functions as $function) {
             $retval .= '<option';
             if ($function === $defaultFunction && ! isset($foreignData['foreign_field'])) {
@@ -455,11 +465,13 @@ class Generator
      */
     private static function generateRowQueryOutput($sqlQuery): string
     {
+        global $dbi;
+
         $ret = '';
-        $result = $GLOBALS['dbi']->query($sqlQuery);
+        $result = $dbi->query($sqlQuery);
         $devider = '+';
         $columnNames = '|';
-        $fieldsMeta = $GLOBALS['dbi']->getFieldsMeta($result);
+        $fieldsMeta = $dbi->getFieldsMeta($result);
         foreach ($fieldsMeta as $meta) {
             $devider .= '---+';
             $columnNames .= ' ' . $meta->name . ' |';
@@ -504,6 +516,8 @@ class Generator
         $sqlQuery = null,
         $type = 'notice'
     ): string {
+        global $cfg, $dbi;
+
         $retval = '';
 
         if ($sqlQuery === null) {
@@ -518,7 +532,7 @@ class Generator
             }
         }
 
-        $renderSql = $GLOBALS['cfg']['ShowSQL'] == true && ! empty($sqlQuery) && $sqlQuery !== ';';
+        $renderSql = $cfg['ShowSQL'] == true && ! empty($sqlQuery) && $sqlQuery !== ';';
 
         if (isset($GLOBALS['using_bookmark_message'])) {
             $retval .= $GLOBALS['using_bookmark_message']->getDisplay();
@@ -558,11 +572,11 @@ class Generator
             $queryTooBig = false;
 
             $queryLength = mb_strlen($sqlQuery);
-            if ($queryLength > $GLOBALS['cfg']['MaxCharactersInDisplayedSQL']) {
+            if ($queryLength > $cfg['MaxCharactersInDisplayedSQL']) {
                 // when the query is large (for example an INSERT of binary
                 // data), the parser chokes; so avoid parsing the query
                 $queryTooBig = true;
-                $queryBase = mb_substr($sqlQuery, 0, $GLOBALS['cfg']['MaxCharactersInDisplayedSQL']) . '[...]';
+                $queryBase = mb_substr($sqlQuery, 0, $cfg['MaxCharactersInDisplayedSQL']) . '[...]';
             } else {
                 $queryBase = $sqlQuery;
             }
@@ -613,7 +627,7 @@ class Generator
             /* SQL-Parser-Analyzer */
             $explainLink = '';
             $isSelect = preg_match('@^SELECT[[:space:]]+@i', $sqlQuery);
-            if (! empty($GLOBALS['cfg']['SQLQuery']['Explain']) && ! $queryTooBig) {
+            if (! empty($cfg['SQLQuery']['Explain']) && ! $queryTooBig) {
                 $explainParams = $urlParams;
                 if ($isSelect) {
                     $explainParams['sql_query'] = 'EXPLAIN ' . $sqlQuery;
@@ -636,8 +650,8 @@ class Generator
                         . urlencode(self::generateRowQueryOutput($sqlQuery));
                     $explainLink .= ' ['
                         . self::linkOrButton(
-                            Url::getFromRoute('/url'),
-                            ['url' => $url],
+                            htmlspecialchars('url.php?url=' . urlencode($url)),
+                            null,
                             sprintf(__('Analyze Explain at %s'), 'mariadb.org'),
                             [],
                             '_blank',
@@ -651,7 +665,7 @@ class Generator
 
             // even if the query is big and was truncated, offer the chance
             // to edit it (unless it's enormous, see linkOrButton() )
-            if (! empty($GLOBALS['cfg']['SQLQuery']['Edit']) && empty($GLOBALS['show_as_php'])) {
+            if (! empty($cfg['SQLQuery']['Edit']) && empty($GLOBALS['show_as_php'])) {
                 $editLink = ' [&nbsp;'
                     . self::linkOrButton($editLink, $urlParams, __('Edit'))
                     . '&nbsp;]';
@@ -661,7 +675,7 @@ class Generator
 
             // Also we would like to get the SQL formed in some nice
             // php-code
-            if (! empty($GLOBALS['cfg']['SQLQuery']['ShowAsPHP']) && ! $queryTooBig) {
+            if (! empty($cfg['SQLQuery']['ShowAsPHP']) && ! $queryTooBig) {
                 if (! empty($GLOBALS['show_as_php'])) {
                     $phpLink = ' [&nbsp;'
                         . self::linkOrButton(
@@ -695,7 +709,7 @@ class Generator
 
             // Refresh query
             if (
-                ! empty($GLOBALS['cfg']['SQLQuery']['Refresh'])
+                ! empty($cfg['SQLQuery']['Refresh'])
                 && ! isset($GLOBALS['show_as_php']) // 'Submit query' does the same
                 && preg_match('@^(SELECT|SHOW)[[:space:]]+@i', $sqlQuery)
             ) {
@@ -718,7 +732,7 @@ class Generator
 
             // avoid displaying a Profiling checkbox that could
             // be checked, which would re-execute an INSERT, for example
-            if (! empty($refreshLink) && Profiling::isSupported($GLOBALS['dbi'])) {
+            if (! empty($refreshLink) && Profiling::isSupported($dbi)) {
                 $retval .= '<input type="hidden" name="profiling_form" value="1">';
                 $retval .= '<input type="checkbox" name="profiling" id="profilingCheckbox" class="autosubmit"';
                 $retval .= isset($_SESSION['profiling']) ? ' checked' : '';
@@ -730,7 +744,7 @@ class Generator
             /**
              * TODO: Should we have $cfg['SQLQuery']['InlineEdit']?
              */
-            if (! empty($GLOBALS['cfg']['SQLQuery']['Edit']) && ! $queryTooBig && empty($GLOBALS['show_as_php'])) {
+            if (! empty($cfg['SQLQuery']['Edit']) && ! $queryTooBig && empty($GLOBALS['show_as_php'])) {
                 $inlineEditLink = ' [&nbsp;'
                     . self::linkOrButton(
                         '#',
@@ -805,6 +819,8 @@ class Generator
         $backUrl = '',
         $exit = true
     ): ?string {
+        global $table, $db, $dbi;
+
         /**
          * Error message to be built.
          */
@@ -812,7 +828,7 @@ class Generator
 
         // Checking for any server errors.
         if (empty($serverMessage)) {
-            $serverMessage = $GLOBALS['dbi']->getError();
+            $serverMessage = $dbi->getError();
         }
 
         // Finding the query that failed, if not specified.
@@ -890,12 +906,12 @@ class Generator
                     'sql_query' => $sqlQuery,
                     'show_query' => 1,
                 ];
-                if (strlen($GLOBALS['table']) > 0) {
-                    $urlParams['db'] = $GLOBALS['db'];
-                    $urlParams['table'] = $GLOBALS['table'];
+                if (strlen($table) > 0) {
+                    $urlParams['db'] = $db;
+                    $urlParams['table'] = $table;
                     $doEditGoto = '<a href="' . Url::getFromRoute('/table/sql', $urlParams) . '">';
-                } elseif (strlen($GLOBALS['db']) > 0) {
-                    $urlParams['db'] = $GLOBALS['db'];
+                } elseif (strlen($db) > 0) {
+                    $urlParams['db'] = $db;
                     $doEditGoto = '<a href="' . Url::getFromRoute('/database/sql', $urlParams) . '">';
                 } else {
                     $doEditGoto = '<a href="' . Url::getFromRoute('/server/sql', $urlParams) . '">';
@@ -1071,7 +1087,7 @@ class Generator
 
         if (! empty($target)) {
             $tagParams['target'] = $target;
-            if ($target === '_blank' && str_starts_with($url, 'index.php?route=/url&url=')) {
+            if ($target === '_blank' && str_starts_with($url, 'url.php?')) {
                 $tagParams['rel'] = 'noopener noreferrer';
             }
         }
@@ -1205,8 +1221,10 @@ class Generator
      */
     public static function formatSql($sqlQuery, $truncate = false): string
     {
-        if ($truncate && mb_strlen($sqlQuery) > $GLOBALS['cfg']['MaxCharactersInDisplayedSQL']) {
-            $sqlQuery = mb_substr($sqlQuery, 0, $GLOBALS['cfg']['MaxCharactersInDisplayedSQL']) . '[...]';
+        global $cfg;
+
+        if ($truncate && mb_strlen($sqlQuery) > $cfg['MaxCharactersInDisplayedSQL']) {
+            $sqlQuery = mb_substr($sqlQuery, 0, $cfg['MaxCharactersInDisplayedSQL']) . '[...]';
         }
 
         return '<code class="sql"><pre>' . "\n"
@@ -1223,10 +1241,12 @@ class Generator
      */
     public static function getSupportedDatatypes($selected): string
     {
+        global $dbi;
+
         // NOTE: the SELECT tag is not included in this snippet.
         $retval = '';
 
-        foreach ($GLOBALS['dbi']->types->getColumns() as $key => $value) {
+        foreach ($dbi->types->getColumns() as $key => $value) {
             if (is_array($value)) {
                 $retval .= '<optgroup label="' . htmlspecialchars($key) . '">';
                 foreach ($value as $subvalue) {
@@ -1237,12 +1257,12 @@ class Generator
                         continue;
                     }
 
-                    $isLengthRestricted = Compatibility::isIntegersSupportLength($subvalue, '2', $GLOBALS['dbi']);
+                    $isLengthRestricted = Compatibility::isIntegersSupportLength($subvalue, '2', $dbi);
                     $retval .= sprintf(
                         '<option data-length-restricted="%b" %s title="%s">%s</option>',
                         $isLengthRestricted ? 0 : 1,
                         $selected === $subvalue ? 'selected="selected"' : '',
-                        $GLOBALS['dbi']->types->getTypeDescription($subvalue),
+                        $dbi->types->getTypeDescription($subvalue),
                         $subvalue
                     );
                 }
@@ -1251,12 +1271,12 @@ class Generator
                 continue;
             }
 
-            $isLengthRestricted = Compatibility::isIntegersSupportLength($value, '2', $GLOBALS['dbi']);
+            $isLengthRestricted = Compatibility::isIntegersSupportLength($value, '2', $dbi);
             $retval .= sprintf(
                 '<option data-length-restricted="%b" %s title="%s">%s</option>',
                 $isLengthRestricted ? 0 : 1,
                 $selected === $value ? 'selected="selected"' : '',
-                $GLOBALS['dbi']->types->getTypeDescription($value),
+                $dbi->types->getTypeDescription($value),
                 $value
             );
         }

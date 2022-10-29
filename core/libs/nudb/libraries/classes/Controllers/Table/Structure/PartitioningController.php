@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace PhpMyAdmin\Controllers\Table\Structure;
 
 use PhpMyAdmin\Config\PageSettings;
-use PhpMyAdmin\Controllers\AbstractController;
+use PhpMyAdmin\Controllers\Table\AbstractController;
 use PhpMyAdmin\Controllers\Table\StructureController;
 use PhpMyAdmin\CreateAddField;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Html\Generator;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\Partitioning\TablePartitionDefinition;
 use PhpMyAdmin\ResponseRenderer;
@@ -42,22 +41,24 @@ final class PartitioningController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
+        string $db,
+        string $table,
         DatabaseInterface $dbi,
         CreateAddField $createAddField,
         StructureController $structureController
     ) {
-        parent::__construct($response, $template);
+        parent::__construct($response, $template, $db, $table);
         $this->dbi = $dbi;
         $this->createAddField = $createAddField;
         $this->structureController = $structureController;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
         if (isset($_POST['save_partitioning'])) {
-            $this->dbi->selectDb($GLOBALS['db']);
+            $this->dbi->selectDb($this->db);
             $this->updatePartitioning();
-            ($this->structureController)($request);
+            ($this->structureController)();
 
             return;
         }
@@ -77,8 +78,8 @@ final class PartitioningController extends AbstractController
 
         $partitionDetails = TablePartitionDefinition::getDetails($partitionDetails);
         $this->render('table/structure/partition_definition_form', [
-            'db' => $GLOBALS['db'],
-            'table' => $GLOBALS['table'],
+            'db' => $this->db,
+            'table' => $this->table,
             'partition_details' => $partitionDetails,
             'storage_engines' => $storageEngines,
         ]);
@@ -91,7 +92,7 @@ final class PartitioningController extends AbstractController
      */
     private function extractPartitionDetails(): ?array
     {
-        $createTable = (new Table($GLOBALS['table'], $GLOBALS['db']))->showCreate();
+        $createTable = (new Table($this->table, $this->db))->showCreate();
         if (! $createTable) {
             return null;
         }
@@ -252,7 +253,7 @@ final class PartitioningController extends AbstractController
 
     private function updatePartitioning(): void
     {
-        $sql_query = 'ALTER TABLE ' . Util::backquote($GLOBALS['table']) . ' '
+        $sql_query = 'ALTER TABLE ' . Util::backquote($this->table) . ' '
             . $this->createAddField->getPartitionsDefinition();
 
         // Execute alter query
@@ -273,7 +274,7 @@ final class PartitioningController extends AbstractController
         $message = Message::success(
             __('Table %1$s has been altered successfully.')
         );
-        $message->addParam($GLOBALS['table']);
+        $message->addParam($this->table);
         $this->response->addHTML(
             Generator::getMessage($message, $sql_query, 'success')
         );

@@ -125,19 +125,6 @@ div.null_div {
   text-align: center;
   font-style: normal;
   min-width: 50px;
-
-  label {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-
-    input {
-      cursor: pointer;
-    }
-  }
 }
 
 .pma-fieldset {
@@ -263,10 +250,6 @@ td .icon {
 #pma_footer {
   position: relative;
   padding: 0 0.5em;
-}
-
-#pma_demo {
-  z-index: -1;
 }
 
 .confirmation {
@@ -2732,4 +2715,8 @@ body .ui-dialog {
 
 .resize-vertical {
   resize: vertical;
+}
+
+.table-responsive-md .data {
+  z-index: 9;
 }

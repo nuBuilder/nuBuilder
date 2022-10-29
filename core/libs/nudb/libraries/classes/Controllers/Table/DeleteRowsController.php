@@ -6,9 +6,7 @@ namespace PhpMyAdmin\Controllers\Table;
 
 use PhpMyAdmin\ConfigStorage\Relation;
 use PhpMyAdmin\ConfigStorage\RelationCleanup;
-use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\DatabaseInterface;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\Operations;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Sql;
@@ -29,18 +27,17 @@ final class DeleteRowsController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
+        string $db,
+        string $table,
         DatabaseInterface $dbi
     ) {
-        parent::__construct($response, $template);
+        parent::__construct($response, $template, $db, $table);
         $this->dbi = $dbi;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['goto'] = $GLOBALS['goto'] ?? null;
-        $GLOBALS['disp_message'] = $GLOBALS['disp_message'] ?? null;
-        $GLOBALS['disp_query'] = $GLOBALS['disp_query'] ?? null;
-        $GLOBALS['active_page'] = $GLOBALS['active_page'] ?? null;
+        global $db, $goto, $sql_query, $table, $disp_message, $disp_query, $active_page;
 
         $mult_btn = $_POST['mult_btn'] ?? '';
         $original_sql_query = $_POST['original_sql_query'] ?? '';
@@ -58,52 +55,52 @@ final class DeleteRowsController extends AbstractController
 
         if ($mult_btn === __('Yes')) {
             $default_fk_check_value = ForeignKey::handleDisableCheckInit();
-            $GLOBALS['sql_query'] = '';
+            $sql_query = '';
 
             foreach ($selected as $row) {
                 $query = sprintf(
                     'DELETE FROM %s WHERE %s LIMIT 1;',
-                    Util::backquote($GLOBALS['table']),
+                    Util::backquote($table),
                     $row
                 );
-                $GLOBALS['sql_query'] .= $query . "\n";
-                $this->dbi->selectDb($GLOBALS['db']);
+                $sql_query .= $query . "\n";
+                $this->dbi->selectDb($db);
                 $this->dbi->query($query);
             }
 
             if (! empty($_REQUEST['pos'])) {
-                $_REQUEST['pos'] = $sql->calculatePosForLastPage($GLOBALS['db'], $GLOBALS['table'], $_REQUEST['pos']);
+                $_REQUEST['pos'] = $sql->calculatePosForLastPage($db, $table, $_REQUEST['pos']);
             }
 
             ForeignKey::handleDisableCheckCleanup($default_fk_check_value);
 
-            $GLOBALS['disp_message'] = __('Your SQL query has been executed successfully.');
-            $GLOBALS['disp_query'] = $GLOBALS['sql_query'];
+            $disp_message = __('Your SQL query has been executed successfully.');
+            $disp_query = $sql_query;
         }
 
         $_url_params = $GLOBALS['urlParams'];
         $_url_params['goto'] = Url::getFromRoute('/table/sql');
 
         if (isset($original_sql_query)) {
-            $GLOBALS['sql_query'] = $original_sql_query;
+            $sql_query = $original_sql_query;
         }
 
-        $GLOBALS['active_page'] = Url::getFromRoute('/sql');
+        $active_page = Url::getFromRoute('/sql');
 
         $this->response->addHTML($sql->executeQueryAndSendQueryResponse(
             null,
             false,
-            $GLOBALS['db'],
-            $GLOBALS['table'],
+            $db,
+            $table,
             null,
             null,
             null,
             null,
             null,
-            $GLOBALS['goto'],
-            $GLOBALS['disp_query'] ?? null,
-            $GLOBALS['disp_message'] ?? null,
-            $GLOBALS['sql_query'],
+            $goto,
+            null,
+            null,
+            $sql_query,
             null
         ));
     }

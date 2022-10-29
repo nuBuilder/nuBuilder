@@ -18,8 +18,10 @@ class Text_Plain_JsonEditor extends CodeMirrorEditorTransformationPlugin
 {
     /**
      * Gets the transformation description of the specific plugin
+     *
+     * @return string
      */
-    public static function getInfo(): string
+    public static function getInfo()
     {
         return __('Syntax highlighted CodeMirror editor for JSON.');
     }
@@ -46,24 +48,30 @@ class Text_Plain_JsonEditor extends CodeMirrorEditorTransformationPlugin
 
     /**
      * Gets the transformation name of the specific plugin
+     *
+     * @return string
      */
-    public static function getName(): string
+    public static function getName()
     {
         return 'JSON';
     }
 
     /**
      * Gets the plugin`s MIME type
+     *
+     * @return string
      */
-    public static function getMIMEType(): string
+    public static function getMIMEType()
     {
         return 'Text';
     }
 
     /**
      * Gets the plugin`s MIME subtype
+     *
+     * @return string
      */
-    public static function getMIMESubtype(): string
+    public static function getMIMESubtype()
     {
         return 'Plain';
     }

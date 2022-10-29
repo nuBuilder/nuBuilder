@@ -150,8 +150,7 @@ class FormDisplayTemplate
             }
 
             $vArgs = $vArgs ? ", ['" . implode("', '", $vArgs) . "']" : '';
-            $jsArray[] = "window.Config.registerFieldValidator('"
-                . $fieldId . "', '" . $vName . "', true" . $vArgs . ')';
+            $jsArray[] = "registerFieldValidator('" . $fieldId . "', '" . $vName . "', true" . $vArgs . ')';
         }
     }
 

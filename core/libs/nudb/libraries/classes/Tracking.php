@@ -138,6 +138,8 @@ class Tracking
         $textDir,
         $lastVersion = null
     ) {
+        global $cfg;
+
         $selectableTablesSqlResult = $this->getSqlResultForSelectableTables($db);
         $selectableTablesEntries = [];
         $selectableTablesNumRows = 0;
@@ -172,7 +174,7 @@ class Tracking
             'last_version' => $lastVersion,
             'versions' => $versions,
             'type' => $type,
-            'default_statements' => $GLOBALS['cfg']['Server']['tracking_default_statements'],
+            'default_statements' => $cfg['Server']['tracking_default_statements'],
             'text_dir' => $textDir,
         ]);
     }
@@ -1158,8 +1160,10 @@ class Tracking
      */
     public function extractTableNames(array $table_list, $db, $testing = false)
     {
+        global $cfg;
+
         $untracked_tables = [];
-        $sep = $GLOBALS['cfg']['NavigationTreeTableSeparator'];
+        $sep = $cfg['NavigationTreeTableSeparator'];
 
         foreach ($table_list as $value) {
             if (is_array($value) && array_key_exists('is' . $sep . 'group', $value) && $value['is' . $sep . 'group']) {

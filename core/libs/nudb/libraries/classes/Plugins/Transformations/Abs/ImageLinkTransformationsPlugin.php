@@ -21,8 +21,10 @@ abstract class ImageLinkTransformationsPlugin extends TransformationsPlugin
 {
     /**
      * Gets the transformation description of the specific plugin
+     *
+     * @return string
      */
-    public static function getInfo(): string
+    public static function getInfo()
     {
         return __('Displays a link to download this image.');
     }
@@ -52,8 +54,10 @@ abstract class ImageLinkTransformationsPlugin extends TransformationsPlugin
 
     /**
      * Gets the transformation name of the specific plugin
+     *
+     * @return string
      */
-    public static function getName(): string
+    public static function getName()
     {
         return 'ImageLink';
     }

@@ -1779,7 +1779,9 @@ class Relation
 
     public function getConfigurationStorageDbName(): string
     {
-        $cfgStorageDbName = $GLOBALS['cfg']['Server']['pmadb'] ?? '';
+        global $cfg;
+
+        $cfgStorageDbName = $cfg['Server']['pmadb'] ?? '';
 
         // Use "phpmyadmin" as a default database name to check to keep the behavior consistent
         return empty($cfgStorageDbName) ? 'phpmyadmin' : $cfgStorageDbName;

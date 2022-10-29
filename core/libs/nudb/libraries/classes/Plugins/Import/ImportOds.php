@@ -99,22 +99,19 @@ class ImportOds extends ImportPlugin
     /**
      * Handles the whole import logic
      *
-     * @return string[]
+     * @param array $sql_data 2-element array with sql data
      */
-    public function doImport(?File $importHandle = null): array
+    public function doImport(?File $importHandle = null, array &$sql_data = []): void
     {
-        $GLOBALS['error'] = $GLOBALS['error'] ?? null;
-        $GLOBALS['timeout_passed'] = $GLOBALS['timeout_passed'] ?? null;
-        $GLOBALS['finished'] = $GLOBALS['finished'] ?? null;
+        global $db, $error, $timeout_passed, $finished;
 
-        $sqlStatements = [];
         $buffer = '';
 
         /**
          * Read in the file via Import::getNextChunk so that
          * it can process compressed files
          */
-        while (! $GLOBALS['finished'] && ! $GLOBALS['error'] && ! $GLOBALS['timeout_passed']) {
+        while (! $finished && ! $error && ! $timeout_passed) {
             $data = $this->import->getNextChunk($importHandle);
             if ($data === false) {
                 /* subtract data we didn't handle yet and stop processing */
@@ -218,20 +215,18 @@ class ImportOds extends ImportPlugin
          */
 
         /* Set database name to the currently selected one, if applicable */
-        [$db_name, $options] = $this->getDbnameAndOptions($GLOBALS['db'], 'ODS_DB');
+        [$db_name, $options] = $this->getDbnameAndOptions($db, 'ODS_DB');
 
         /* Non-applicable parameters */
         $create = null;
 
         /* Created and execute necessary SQL statements from data */
-        $this->import->buildSql($db_name, $tables, $analyses, $create, $options, $sqlStatements);
+        $this->import->buildSql($db_name, $tables, $analyses, $create, $options, $sql_data);
 
         unset($tables, $analyses);
 
         /* Commit any possible data in buffers */
-        $this->import->runQuery('', $sqlStatements);
-
-        return $sqlStatements;
+        $this->import->runQuery('', '', $sql_data);
     }
 
     /**

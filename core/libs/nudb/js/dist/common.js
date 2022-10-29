@@ -1,22 +1,6 @@
-"use strict";
-(self["webpackChunkphpmyadmin"] = self["webpackChunkphpmyadmin"] || []).push([[3],[
-/* 0 */,
-/* 1 */
-/***/ (function(module) {
-
-module.exports = jQuery;
-
-/***/ }),
-/* 2 */,
-/* 3 */,
-/* 4 */
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-
-/* global Navigation */
-
+$(function () {
+  Functions.checkNumberOfFields();
+});
 /**
  * Holds common parameters such as server, db, table, etc
  *
@@ -26,7 +10,7 @@ __webpack_require__.r(__webpack_exports__);
  * @test-module CommonParams
  */
 
-window.CommonParams = function () {
+var CommonParams = function () {
   /**
    * @var {Object} params An associative array of key value pairs
    * @access private
@@ -55,7 +39,7 @@ window.CommonParams = function () {
         params[i] = obj[i];
       }
 
-      if (updateNavigation && jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_navigation_tree').hasClass('synced')) {
+      if (updateNavigation && $('#pma_navigation_tree').hasClass('synced')) {
         Navigation.showCurrent();
       }
     },
@@ -89,7 +73,7 @@ window.CommonParams = function () {
 
       params[name] = value;
 
-      if (updateNavigation && jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_navigation_tree').hasClass('synced')) {
+      if (updateNavigation && $('#pma_navigation_tree').hasClass('synced')) {
         Navigation.showCurrent();
       }
 
@@ -106,12 +90,12 @@ window.CommonParams = function () {
     getUrlQuery: function (separator) {
       var sep = typeof separator !== 'undefined' ? separator : '?';
       var common = this.get('common_query');
-      var argsep = window.CommonParams.get('arg_separator');
+      var argsep = CommonParams.get('arg_separator');
 
       if (typeof common === 'string' && common.length > 0) {
         // If the last char is the separator, do not add it
         // Else add it
-        common = common.endsWith(argsep) ? common : common + argsep;
+        common = common.substr(common.length - 1, common.length) === argsep ? common : common + argsep;
       }
 
       return Functions.sprintf('%s%sserver=%s' + argsep + 'db=%s' + argsep + 'table=%s', sep, common, encodeURIComponent(this.get('server')), encodeURIComponent(this.get('db')), encodeURIComponent(this.get('table')));
@@ -124,9 +108,10 @@ window.CommonParams = function () {
  * The content for this is normally loaded from Header.php or
  * Response.php and executed by ajax.js
  */
+// eslint-disable-next-line no-unused-vars
 
 
-window.CommonActions = {
+var CommonActions = {
   /**
    * Saves the database name when it's changed
    * and reloads the query window, if necessary
@@ -136,8 +121,8 @@ window.CommonActions = {
    * @return {void}
    */
   setDb: function (newDb) {
-    if (newDb !== window.CommonParams.get('db')) {
-      window.CommonParams.setAll({
+    if (newDb !== CommonParams.get('db')) {
+      CommonParams.setAll({
         'db': newDb,
         'table': ''
       });
@@ -152,8 +137,8 @@ window.CommonActions = {
    * @return {void}
    */
   openDb: function (newDb) {
-    window.CommonParams.set('db', newDb).set('table', '');
-    this.refreshMain(window.CommonParams.get('opendb_url'));
+    CommonParams.set('db', newDb).set('table', '');
+    this.refreshMain(CommonParams.get('opendb_url'));
   },
 
   /**
@@ -170,31 +155,22 @@ window.CommonActions = {
     var newUrl = url;
 
     if (!newUrl) {
-      newUrl = jquery__WEBPACK_IMPORTED_MODULE_0__('#selflink').find('a').attr('href') || window.location.pathname;
+      newUrl = $('#selflink').find('a').attr('href') || window.location.pathname;
       newUrl = newUrl.substring(0, newUrl.indexOf('?'));
     }
 
     if (newUrl.indexOf('?') !== -1) {
-      newUrl += window.CommonParams.getUrlQuery(window.CommonParams.get('arg_separator'));
+      newUrl += CommonParams.getUrlQuery(CommonParams.get('arg_separator'));
     } else {
-      newUrl += window.CommonParams.getUrlQuery('?');
+      newUrl += CommonParams.getUrlQuery('?');
     }
 
-    jquery__WEBPACK_IMPORTED_MODULE_0__('<a></a>', {
+    $('<a></a>', {
       href: newUrl
     }).appendTo('body').trigger('click').remove();
 
     if (typeof callback !== 'undefined') {
-      window.AJAX.callback = callback;
+      AJAX.callback = callback;
     }
   }
 };
-
-/***/ })
-],
-/******/ function(__webpack_require__) { // webpackRuntimeModules
-/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
-/******/ var __webpack_exports__ = (__webpack_exec__(4));
-/******/ }
-]);
-//# sourceMappingURL=common.js.map

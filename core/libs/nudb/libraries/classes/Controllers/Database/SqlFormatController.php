@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Database;
 
-use PhpMyAdmin\Controllers\AbstractController;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\SqlParser\Utils\Formatter;
 
 use function strlen;
@@ -15,7 +13,7 @@ use function strlen;
  */
 class SqlFormatController extends AbstractController
 {
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
         $params = ['sql' => $_POST['sql'] ?? null];
         $query = strlen((string) $params['sql']) > 0 ? $params['sql'] : '';

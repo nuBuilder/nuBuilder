@@ -53,7 +53,9 @@ class TwoFactor
      */
     public function __construct($user)
     {
-        (new Relation($GLOBALS['dbi']))->initRelationParamsCache();
+        global $dbi;
+
+        (new Relation($dbi))->initRelationParamsCache();
 
         $this->userPreferences = new UserPreferences();
         $this->user = $user;

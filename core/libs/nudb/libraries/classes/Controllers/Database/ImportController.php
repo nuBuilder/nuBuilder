@@ -6,10 +6,8 @@ namespace PhpMyAdmin\Controllers\Database;
 
 use PhpMyAdmin\Charsets;
 use PhpMyAdmin\Config\PageSettings;
-use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Encoding;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\Import;
 use PhpMyAdmin\Import\Ajax;
 use PhpMyAdmin\Message;
@@ -29,23 +27,16 @@ final class ImportController extends AbstractController
     /** @var DatabaseInterface */
     private $dbi;
 
-    public function __construct(ResponseRenderer $response, Template $template, DatabaseInterface $dbi)
+    public function __construct(ResponseRenderer $response, Template $template, string $db, DatabaseInterface $dbi)
     {
-        parent::__construct($response, $template);
+        parent::__construct($response, $template, $db);
         $this->dbi = $dbi;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['tables'] = $GLOBALS['tables'] ?? null;
-        $GLOBALS['num_tables'] = $GLOBALS['num_tables'] ?? null;
-        $GLOBALS['total_num_tables'] = $GLOBALS['total_num_tables'] ?? null;
-        $GLOBALS['tooltip_truename'] = $GLOBALS['tooltip_truename'] ?? null;
-        $GLOBALS['tooltip_aliasname'] = $GLOBALS['tooltip_aliasname'] ?? null;
-        $GLOBALS['pos'] = $GLOBALS['pos'] ?? null;
-        $GLOBALS['sub_part'] = $GLOBALS['sub_part'] ?? null;
-        $GLOBALS['SESSION_KEY'] = $GLOBALS['SESSION_KEY'] ?? null;
-        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
+        global $db, $table, $tables, $num_tables, $total_num_tables, $cfg;
+        global $tooltip_truename, $tooltip_aliasname, $pos, $sub_part, $SESSION_KEY, $errorUrl;
 
         $pageSettings = new PageSettings('Import');
         $pageSettingsErrorHtml = $pageSettings->getErrorHTML();
@@ -53,26 +44,26 @@ final class ImportController extends AbstractController
 
         $this->addScriptFiles(['import.js']);
 
-        $this->checkParameters(['db']);
+        Util::checkParameters(['db']);
 
-        $GLOBALS['errorUrl'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabDatabase'], 'database');
-        $GLOBALS['errorUrl'] .= Url::getCommon(['db' => $GLOBALS['db']], '&');
+        $errorUrl = Util::getScriptNameForOption($cfg['DefaultTabDatabase'], 'database');
+        $errorUrl .= Url::getCommon(['db' => $db], '&');
 
         if (! $this->hasDatabase()) {
             return;
         }
 
         [
-            $GLOBALS['tables'],
-            $GLOBALS['num_tables'],
-            $GLOBALS['total_num_tables'],
-            $GLOBALS['sub_part'],,,
-            $GLOBALS['tooltip_truename'],
-            $GLOBALS['tooltip_aliasname'],
-            $GLOBALS['pos'],
-        ] = Util::getDbInfo($GLOBALS['db'], $GLOBALS['sub_part'] ?? '');
+            $tables,
+            $num_tables,
+            $total_num_tables,
+            $sub_part,,,
+            $tooltip_truename,
+            $tooltip_aliasname,
+            $pos,
+        ] = Util::getDbInfo($db, $sub_part ?? '');
 
-        [$GLOBALS['SESSION_KEY'], $uploadId] = Ajax::uploadProgressSetup();
+        [$SESSION_KEY, $uploadId] = Ajax::uploadProgressSetup();
 
         $importList = Plugins::getImport('database');
 
@@ -93,13 +84,13 @@ final class ImportController extends AbstractController
         $localImportFile = $_REQUEST['local_import_file'] ?? null;
         $compressions = Import::getCompressions();
 
-        $charsets = Charsets::getCharsets($this->dbi, $GLOBALS['cfg']['Server']['DisableIS']);
+        $charsets = Charsets::getCharsets($this->dbi, $cfg['Server']['DisableIS']);
 
-        $idKey = $_SESSION[$GLOBALS['SESSION_KEY']]['handler']::getIdKey();
+        $idKey = $_SESSION[$SESSION_KEY]['handler']::getIdKey();
         $hiddenInputs = [
             $idKey => $uploadId,
             'import_type' => 'database',
-            'db' => $GLOBALS['db'],
+            'db' => $db,
         ];
 
         $default = isset($_GET['format']) ? (string) $_GET['format'] : Plugins::getDefault('Import', 'format');
@@ -113,10 +104,10 @@ final class ImportController extends AbstractController
             'page_settings_error_html' => $pageSettingsErrorHtml,
             'page_settings_html' => $pageSettingsHtml,
             'upload_id' => $uploadId,
-            'handler' => $_SESSION[$GLOBALS['SESSION_KEY']]['handler'],
+            'handler' => $_SESSION[$SESSION_KEY]['handler'],
             'hidden_inputs' => $hiddenInputs,
-            'db' => $GLOBALS['db'],
-            'table' => $GLOBALS['table'],
+            'db' => $db,
+            'table' => $table,
             'max_upload_size' => $maxUploadSize,
             'formatted_maximum_upload_size' => Util::getFormattedMaximumUploadSize($maxUploadSize),
             'plugins_choice' => $choice,
@@ -125,18 +116,18 @@ final class ImportController extends AbstractController
             'is_allow_interrupt_checked' => $isAllowInterruptChecked,
             'local_import_file' => $localImportFile,
             'is_upload' => $GLOBALS['config']->get('enable_upload'),
-            'upload_dir' => $GLOBALS['cfg']['UploadDir'] ?? null,
+            'upload_dir' => $cfg['UploadDir'] ?? null,
             'timeout_passed_global' => $GLOBALS['timeout_passed'] ?? null,
             'compressions' => $compressions,
             'is_encoding_supported' => Encoding::isSupported(),
             'encodings' => Encoding::listEncodings(),
-            'import_charset' => $GLOBALS['cfg']['Import']['charset'] ?? null,
+            'import_charset' => $cfg['Import']['charset'] ?? null,
             'timeout_passed' => $timeoutPassed,
             'offset' => $offset,
             'can_convert_kanji' => Encoding::canConvertKanji(),
             'charsets' => $charsets,
             'is_foreign_key_check' => ForeignKey::isCheckEnabled(),
-            'user_upload_dir' => Util::userDir((string) ($GLOBALS['cfg']['UploadDir'] ?? '')),
+            'user_upload_dir' => Util::userDir((string) ($cfg['UploadDir'] ?? '')),
             'local_files' => Import::getLocalFiles($importList),
         ]);
     }

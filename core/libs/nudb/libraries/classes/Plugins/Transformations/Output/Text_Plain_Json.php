@@ -36,8 +36,10 @@ class Text_Plain_Json extends TransformationsPlugin
 
     /**
      * Gets the transformation description of the specific plugin
+     *
+     * @return string
      */
-    public static function getInfo(): string
+    public static function getInfo()
     {
         return __('Formats text as JSON with syntax highlighting.');
     }
@@ -62,24 +64,30 @@ class Text_Plain_Json extends TransformationsPlugin
 
     /**
      * Gets the plugin`s MIME type
+     *
+     * @return string
      */
-    public static function getMIMEType(): string
+    public static function getMIMEType()
     {
         return 'Text';
     }
 
     /**
      * Gets the plugin`s MIME subtype
+     *
+     * @return string
      */
-    public static function getMIMESubtype(): string
+    public static function getMIMESubtype()
     {
         return 'Plain';
     }
 
     /**
      * Gets the transformation name of the specific plugin
+     *
+     * @return string
      */
-    public static function getName(): string
+    public static function getName()
     {
         return 'JSON';
     }

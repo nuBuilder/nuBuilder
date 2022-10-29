@@ -35,6 +35,8 @@ final class CreateController extends AbstractController
 
     public function __invoke(ServerRequest $request): void
     {
+        global $cfg;
+
         /** @var string $exportType */
         $exportType = $request->getParsedBodyParam('exportType', '');
         /** @var string $templateName */
@@ -50,7 +52,7 @@ final class CreateController extends AbstractController
         }
 
         $template = ExportTemplate::fromArray([
-            'username' => $GLOBALS['cfg']['Server']['user'],
+            'username' => $cfg['Server']['user'],
             'exportType' => $exportType,
             'name' => $templateName,
             'data' => $templateData,

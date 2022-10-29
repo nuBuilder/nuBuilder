@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Table\Structure;
 
-use PhpMyAdmin\Controllers\AbstractController;
-use PhpMyAdmin\Http\ServerRequest;
+use PhpMyAdmin\Controllers\Table\AbstractController;
 use PhpMyAdmin\SqlParser\Context;
 
 use function _ngettext;
@@ -16,7 +15,7 @@ use function trim;
 
 final class ReservedWordCheckController extends AbstractController
 {
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
         if ($GLOBALS['cfg']['ReservedWordDisableWarning'] !== false) {
             $this->response->setRequestStatus(false);
@@ -34,8 +33,8 @@ final class ReservedWordCheckController extends AbstractController
             $reserved_keywords_names[] = trim($column);
         }
 
-        if (Context::isKeyword(trim($GLOBALS['table']), true)) {
-            $reserved_keywords_names[] = trim($GLOBALS['table']);
+        if (Context::isKeyword(trim($this->table), true)) {
+            $reserved_keywords_names[] = trim($this->table);
         }
 
         if (count($reserved_keywords_names) === 0) {

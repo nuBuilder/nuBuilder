@@ -1,34 +1,16 @@
-"use strict";
-(self["webpackChunkphpmyadmin"] = self["webpackChunkphpmyadmin"] || []).push([[13],{
-
-/***/ 1:
-/***/ (function(module) {
-
-module.exports = jQuery;
-
-/***/ }),
-
-/***/ 18:
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-
-/* global Navigation */
-
-window.AJAX.registerTeardown('database/routines.js', function () {
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', 'a.ajax.add_anchor');
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', 'a.ajax.edit_anchor');
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', 'a.ajax.exec_anchor');
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', 'a.ajax.export_anchor');
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', '#bulkActionExportButton');
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', 'a.ajax.drop_anchor');
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', '#bulkActionDropButton');
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('change', 'select[name=item_type]');
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('change', 'select[name^=item_param_type]');
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('change', 'select[name=item_returntype]');
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', 'input[name=routine_addparameter]');
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', 'a.routine_param_remove_anchor');
+AJAX.registerTeardown('database/routines.js', function () {
+  $(document).off('click', 'a.ajax.add_anchor');
+  $(document).off('click', 'a.ajax.edit_anchor');
+  $(document).off('click', 'a.ajax.exec_anchor');
+  $(document).off('click', 'a.ajax.export_anchor');
+  $(document).off('click', '#bulkActionExportButton');
+  $(document).off('click', 'a.ajax.drop_anchor');
+  $(document).off('click', '#bulkActionDropButton');
+  $(document).off('change', 'select[name=item_type]');
+  $(document).off('change', 'select[name^=item_param_type]');
+  $(document).off('change', 'select[name=item_returntype]');
+  $(document).off('click', 'input[name=routine_addparameter]');
+  $(document).off('click', 'a.routine_param_remove_anchor');
 });
 const DatabaseRoutines = {
   /**
@@ -48,12 +30,6 @@ const DatabaseRoutines = {
   syntaxHiglighter: null,
 
   /**
-   * @var buttonOptions Object containing options for
-   *                    the jQueryUI dialog buttons
-   */
-  buttonOptions: {},
-
-  /**
    * Validate editor form fields.
    *
    * @return {bool}
@@ -66,24 +42,24 @@ const DatabaseRoutines = {
     var $elm = null; // Common validation. At the very least the name
     // and the definition must be provided for an item
 
-    $elm = jquery__WEBPACK_IMPORTED_MODULE_0__('table.rte_table').last().find('input[name=item_name]');
+    $elm = $('table.rte_table').last().find('input[name=item_name]');
 
     if ($elm.val() === '') {
       $elm.trigger('focus');
-      alert(window.Messages.strFormEmpty);
+      alert(Messages.strFormEmpty);
       return false;
     }
 
-    $elm = jquery__WEBPACK_IMPORTED_MODULE_0__('table.rte_table').find('textarea[name=item_definition]');
+    $elm = $('table.rte_table').find('textarea[name=item_definition]');
 
     if ($elm.val() === '') {
       if (this.syntaxHiglighter !== null) {
         this.syntaxHiglighter.focus();
       } else {
-        jquery__WEBPACK_IMPORTED_MODULE_0__('textarea[name=item_definition]').last().trigger('focus');
+        $('textarea[name=item_definition]').last().trigger('focus');
       }
 
-      alert(window.Messages.strFormEmpty);
+      alert(Messages.strFormEmpty);
       return false;
     } // The validation has so far passed, so now
     // we can validate item-specific fields.
@@ -97,24 +73,24 @@ const DatabaseRoutines = {
     if ($this.attr('id') === 'bulkActionExportButton') {
       var combined = {
         success: true,
-        title: window.Messages.strExport,
+        title: Messages.strExport,
         message: '',
         error: ''
       }; // export anchors of all selected rows
 
-      var exportAnchors = jquery__WEBPACK_IMPORTED_MODULE_0__('input.checkall:checked').parents('tr').find('.export_anchor');
+      var exportAnchors = $('input.checkall:checked').parents('tr').find('.export_anchor');
       var count = exportAnchors.length;
       var returnCount = 0; // No routine is exportable (due to privilege issues)
 
       if (count === 0) {
-        Functions.ajaxShowMessage(window.Messages.NoExportable);
+        Functions.ajaxShowMessage(Messages.NoExportable);
       }
 
-      var p = jquery__WEBPACK_IMPORTED_MODULE_0__.when();
+      var p = $.when();
       exportAnchors.each(function () {
-        var h = jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('href');
+        var h = $(this).attr('href');
         p = p.then(function () {
-          return jquery__WEBPACK_IMPORTED_MODULE_0__.get(h, {
+          return $.get(h, {
             'ajax_request': true
           }, function (data) {
             returnCount++;
@@ -138,7 +114,7 @@ const DatabaseRoutines = {
         });
       });
     } else {
-      jquery__WEBPACK_IMPORTED_MODULE_0__.get($this.attr('href'), {
+      $.get($this.attr('href'), {
         'ajax_request': true
       }, showExport);
     }
@@ -149,22 +125,28 @@ const DatabaseRoutines = {
       if (data.success === true) {
         Functions.ajaxRemoveMessage($msg);
         /**
-         * @var button_options Object containing options
+         * @var buttonOptions Object containing options
          *                     for jQueryUI dialog buttons
          */
 
-        var buttonOptions = {};
-
-        buttonOptions[window.Messages.strClose] = function () {
-          jquery__WEBPACK_IMPORTED_MODULE_0__(this).dialog('close').remove();
+        var buttonOptions = {
+          [Messages.strClose]: {
+            text: Messages.strClose,
+            class: 'btn btn-primary',
+            click: function () {
+              $(this).dialog('close').remove();
+            }
+          }
         };
         /**
          * Display the dialog to the user
          */
 
-
         data.message = '<textarea cols="40" rows="15" class="w-100">' + data.message + '</textarea>';
-        var $ajaxDialog = jquery__WEBPACK_IMPORTED_MODULE_0__('<div>' + data.message + '</div>').dialog({
+        var $ajaxDialog = $('<div>' + data.message + '</div>').dialog({
+          classes: {
+            'ui-dialog-titlebar-close': 'btn-close'
+          },
           width: 500,
           buttons: buttonOptions,
           title: data.title
@@ -207,18 +189,28 @@ const DatabaseRoutines = {
 
 
     var $msg = Functions.ajaxShowMessage();
-    jquery__WEBPACK_IMPORTED_MODULE_0__.get($this.attr('href'), {
+    $.get($this.attr('href'), {
       'ajax_request': true
     }, function (data) {
       if (data.success === true) {
-        // We have successfully fetched the editor form
+        var buttonOptions = {
+          [Messages.strGo]: {
+            text: Messages.strGo,
+            class: 'btn btn-primary'
+          },
+          [Messages.strClose]: {
+            text: Messages.strClose,
+            class: 'btn btn-secondary'
+          }
+        }; // We have successfully fetched the editor form
+
         Functions.ajaxRemoveMessage($msg); // Now define the function that is called when
         // the user presses the "Go" button
 
-        that.buttonOptions[window.Messages.strGo] = function () {
+        buttonOptions[Messages.strGo].click = function () {
           // Move the data from the codemirror editor back to the
           // textarea, where it can be used in the form submission.
-          if (typeof window.CodeMirror !== 'undefined') {
+          if (typeof CodeMirror !== 'undefined') {
             that.syntaxHiglighter.save();
           } // Validate editor and submit request, if passed.
 
@@ -227,10 +219,10 @@ const DatabaseRoutines = {
             /**
              * @var data Form data to be sent in the AJAX request
              */
-            var data = jquery__WEBPACK_IMPORTED_MODULE_0__('form.rte_form').last().serialize();
-            $msg = Functions.ajaxShowMessage(window.Messages.strProcessingRequest);
-            var url = jquery__WEBPACK_IMPORTED_MODULE_0__('form.rte_form').last().attr('action');
-            jquery__WEBPACK_IMPORTED_MODULE_0__.post(url, data, function (data) {
+            var data = $('form.rte_form').last().serialize();
+            $msg = Functions.ajaxShowMessage(Messages.strProcessingRequest);
+            var url = $('form.rte_form').last().attr('action');
+            $.post(url, data, function (data) {
               if (data.success === true) {
                 // Item created successfully
                 Functions.ajaxRemoveMessage($msg);
@@ -264,11 +256,11 @@ const DatabaseRoutines = {
                    */
 
                   var inserted = false;
-                  jquery__WEBPACK_IMPORTED_MODULE_0__(tableId + '.data').find('tr').each(function () {
-                    text = jquery__WEBPACK_IMPORTED_MODULE_0__(this).children('td').eq(0).find('strong').text().toUpperCase().trim();
+                  $(tableId + '.data').find('tr').each(function () {
+                    text = $(this).children('td').eq(0).find('strong').text().toUpperCase().trim();
 
                     if (text !== '' && text > data.name) {
-                      jquery__WEBPACK_IMPORTED_MODULE_0__(this).before(data.new_row);
+                      $(this).before(data.new_row);
                       inserted = true;
                       return false;
                     }
@@ -278,20 +270,20 @@ const DatabaseRoutines = {
                     // If we didn't manage to insert the row yet,
                     // it must belong at the end of the list,
                     // so we insert it there.
-                    jquery__WEBPACK_IMPORTED_MODULE_0__(tableId + '.data').append(data.new_row);
+                    $(tableId + '.data').append(data.new_row);
                   } // Fade-in the new row
 
 
-                  jquery__WEBPACK_IMPORTED_MODULE_0__('tr.ajaxInsert').show('slow').removeClass('ajaxInsert');
-                } else if (jquery__WEBPACK_IMPORTED_MODULE_0__(tableId + '.data').find('tr').has('td').length === 0) {
+                  $('tr.ajaxInsert').show('slow').removeClass('ajaxInsert');
+                } else if ($(tableId + '.data').find('tr').has('td').length === 0) {
                   // If we are not supposed to insert the new row,
                   // we will now check if the table is empty and
                   // needs to be hidden. This will be the case if
                   // we were editing the only item in the list,
                   // which we removed and will not be inserting
                   // something else in its place.
-                  jquery__WEBPACK_IMPORTED_MODULE_0__(tableId + '.data').hide('slow', function () {
-                    jquery__WEBPACK_IMPORTED_MODULE_0__('#nothing2display').show('slow');
+                  $(tableId + '.data').hide('slow', function () {
+                    $('#nothing2display').show('slow');
                   });
                 } // Now we have inserted the row at the correct
                 // position, but surely at least some row classes
@@ -310,16 +302,16 @@ const DatabaseRoutines = {
                  */
 
                 var rowclass = '';
-                jquery__WEBPACK_IMPORTED_MODULE_0__(tableId + '.data').find('tr').has('td').each(function () {
+                $(tableId + '.data').find('tr').has('td').each(function () {
                   rowclass = ct % 2 === 0 ? 'odd' : 'even';
-                  jquery__WEBPACK_IMPORTED_MODULE_0__(this).removeClass('odd even').addClass(rowclass);
+                  $(this).removeClass('odd even').addClass(rowclass);
                   ct++;
                 }); // If this is the first item being added, remove
                 // the "No items" message and show the list.
 
-                if (jquery__WEBPACK_IMPORTED_MODULE_0__(tableId + '.data').find('tr').has('td').length > 0 && jquery__WEBPACK_IMPORTED_MODULE_0__('#nothing2display').is(':visible')) {
-                  jquery__WEBPACK_IMPORTED_MODULE_0__('#nothing2display').hide('slow', function () {
-                    jquery__WEBPACK_IMPORTED_MODULE_0__(tableId + '.data').show('slow');
+                if ($(tableId + '.data').find('tr').has('td').length > 0 && $('#nothing2display').is(':visible')) {
+                  $('#nothing2display').hide('slow', function () {
+                    $(tableId + '.data').show('slow');
                   });
                 }
 
@@ -333,41 +325,44 @@ const DatabaseRoutines = {
         }; // end of function that handles the submission of the Editor
 
 
-        that.buttonOptions[window.Messages.strClose] = function () {
-          jquery__WEBPACK_IMPORTED_MODULE_0__(this).dialog('close');
+        buttonOptions[Messages.strClose].click = function () {
+          $(this).dialog('close');
         };
         /**
          * Display the dialog to the user
          */
 
 
-        that.$ajaxDialog = jquery__WEBPACK_IMPORTED_MODULE_0__('<div id="rteDialog">' + data.message + '</div>').dialog({
+        that.$ajaxDialog = $('<div id="rteDialog">' + data.message + '</div>').dialog({
+          classes: {
+            'ui-dialog-titlebar-close': 'btn-close'
+          },
           height: 400,
           width: 700,
           minWidth: 500,
-          buttons: that.buttonOptions,
+          buttons: buttonOptions,
           // Issue #15810 - use button titles for modals (eg: new procedure)
           // Respect the order: title on href tag, href content, title sent in response
-          title: $this.attr('title') || $this.text() || jquery__WEBPACK_IMPORTED_MODULE_0__(data.title).text(),
+          title: $this.attr('title') || $this.text() || $(data.title).text(),
           modal: true,
           open: function () {
-            jquery__WEBPACK_IMPORTED_MODULE_0__('#rteDialog').dialog('option', 'max-height', jquery__WEBPACK_IMPORTED_MODULE_0__(window).height());
+            $('#rteDialog').dialog('option', 'max-height', $(window).height());
 
-            if (jquery__WEBPACK_IMPORTED_MODULE_0__('#rteDialog').parents('.ui-dialog').height() > jquery__WEBPACK_IMPORTED_MODULE_0__(window).height()) {
-              jquery__WEBPACK_IMPORTED_MODULE_0__('#rteDialog').dialog('option', 'height', jquery__WEBPACK_IMPORTED_MODULE_0__(window).height());
+            if ($('#rteDialog').parents('.ui-dialog').height() > $(window).height()) {
+              $('#rteDialog').dialog('option', 'height', $(window).height());
             }
 
-            jquery__WEBPACK_IMPORTED_MODULE_0__(this).find('input[name=item_name]').trigger('focus');
-            jquery__WEBPACK_IMPORTED_MODULE_0__(this).find('input.datefield').each(function () {
-              Functions.addDatepicker(jquery__WEBPACK_IMPORTED_MODULE_0__(this).css('width', '95%'), 'date');
+            $(this).find('input[name=item_name]').trigger('focus');
+            $(this).find('input.datefield').each(function () {
+              Functions.addDatepicker($(this).css('width', '95%'), 'date');
             });
-            jquery__WEBPACK_IMPORTED_MODULE_0__(this).find('input.datetimefield').each(function () {
-              Functions.addDatepicker(jquery__WEBPACK_IMPORTED_MODULE_0__(this).css('width', '95%'), 'datetime');
+            $(this).find('input.datetimefield').each(function () {
+              Functions.addDatepicker($(this).css('width', '95%'), 'datetime');
             });
-            jquery__WEBPACK_IMPORTED_MODULE_0__.datepicker.initialized = false;
+            $.datepicker.initialized = false;
           },
           close: function () {
-            jquery__WEBPACK_IMPORTED_MODULE_0__(this).remove();
+            $(this).remove();
           }
         });
         /**
@@ -377,7 +372,7 @@ const DatabaseRoutines = {
 
         var mode = 'add';
 
-        if (jquery__WEBPACK_IMPORTED_MODULE_0__('input[name=editor_process_edit]').length > 0) {
+        if ($('input[name=editor_process_edit]').length > 0) {
           mode = 'edit';
         } // Attach syntax highlighted editor to the definition
 
@@ -387,7 +382,7 @@ const DatabaseRoutines = {
          */
 
 
-        var $elm = jquery__WEBPACK_IMPORTED_MODULE_0__('textarea[name=item_definition]').last();
+        var $elm = $('textarea[name=item_definition]').last();
         var linterOptions = {};
         linterOptions.routineEditor = true;
         that.syntaxHiglighter = Functions.getSqlEditor($elm, {}, 'both', linterOptions); // Execute item-specific code
@@ -407,16 +402,16 @@ const DatabaseRoutines = {
      * @var question String containing the question to be asked for confirmation
      */
 
-    var question = jquery__WEBPACK_IMPORTED_MODULE_0__('<div></div>').text($currRow.children('td').children('.drop_sql').html()); // We ask for confirmation first here, before submitting the ajax request
+    var question = $('<div></div>').text($currRow.children('td').children('.drop_sql').html()); // We ask for confirmation first here, before submitting the ajax request
 
     $this.confirm(question, $this.attr('href'), function (url) {
       /**
        * @var msg jQuery object containing the reference to
        *          the AJAX message shown to the user
        */
-      var $msg = Functions.ajaxShowMessage(window.Messages.strProcessingRequest);
+      var $msg = Functions.ajaxShowMessage(Messages.strProcessingRequest);
       var params = Functions.getJsConfirmCommonParam(this, $this.getPostData());
-      jquery__WEBPACK_IMPORTED_MODULE_0__.post(url, params, function (data) {
+      $.post(url, params, function (data) {
         if (data.success === true) {
           /**
            * @var $table Object containing reference
@@ -431,13 +426,13 @@ const DatabaseRoutines = {
             // about to remove, so after the removal there will be
             // nothing to show in the table, so we hide it.
             $table.hide('slow', function () {
-              jquery__WEBPACK_IMPORTED_MODULE_0__(this).find('tr.even, tr.odd').remove();
-              jquery__WEBPACK_IMPORTED_MODULE_0__('.withSelected').remove();
-              jquery__WEBPACK_IMPORTED_MODULE_0__('#nothing2display').show('slow');
+              $(this).find('tr.even, tr.odd').remove();
+              $('.withSelected').remove();
+              $('#nothing2display').show('slow');
             });
           } else {
             $currRow.hide('slow', function () {
-              jquery__WEBPACK_IMPORTED_MODULE_0__(this).remove(); // Now we have removed the row from the list, but maybe
+              $(this).remove(); // Now we have removed the row from the list, but maybe
               // some row classes are wrong now. So we will iterate
               // through all rows and assign correct classes to them.
 
@@ -454,7 +449,7 @@ const DatabaseRoutines = {
               var rowclass = '';
               $table.find('tr').has('td').each(function () {
                 rowclass = ct % 2 === 1 ? 'odd' : 'even';
-                jquery__WEBPACK_IMPORTED_MODULE_0__(this).removeClass('odd even').addClass(rowclass);
+                $(this).removeClass('odd even').addClass(rowclass);
                 ct++;
               });
             });
@@ -473,26 +468,26 @@ const DatabaseRoutines = {
   },
   dropMultipleDialog: function ($this) {
     // We ask for confirmation here
-    $this.confirm(window.Messages.strDropRTEitems, '', function () {
+    $this.confirm(Messages.strDropRTEitems, '', function () {
       /**
        * @var msg jQuery object containing the reference to
        *          the AJAX message shown to the user
        */
-      var $msg = Functions.ajaxShowMessage(window.Messages.strProcessingRequest); // drop anchors of all selected rows
+      var $msg = Functions.ajaxShowMessage(Messages.strProcessingRequest); // drop anchors of all selected rows
 
-      var dropAnchors = jquery__WEBPACK_IMPORTED_MODULE_0__('input.checkall:checked').parents('tr').find('.drop_anchor');
+      var dropAnchors = $('input.checkall:checked').parents('tr').find('.drop_anchor');
       var success = true;
       var count = dropAnchors.length;
       var returnCount = 0;
       dropAnchors.each(function () {
-        var $anchor = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
+        var $anchor = $(this);
         /**
          * @var $curr_row Object containing reference to the current row
          */
 
         var $currRow = $anchor.parents('tr');
         var params = Functions.getJsConfirmCommonParam(this, $anchor.getPostData());
-        jquery__WEBPACK_IMPORTED_MODULE_0__.post($anchor.attr('href'), params, function (data) {
+        $.post($anchor.attr('href'), params, function (data) {
           returnCount++;
 
           if (data.success === true) {
@@ -509,9 +504,9 @@ const DatabaseRoutines = {
               // about to remove, so after the removal there will be
               // nothing to show in the table, so we hide it.
               $table.hide('slow', function () {
-                jquery__WEBPACK_IMPORTED_MODULE_0__(this).find('tr.even, tr.odd').remove();
-                jquery__WEBPACK_IMPORTED_MODULE_0__('.withSelected').remove();
-                jquery__WEBPACK_IMPORTED_MODULE_0__('#nothing2display').show('slow');
+                $(this).find('tr.even, tr.odd').remove();
+                $('.withSelected').remove();
+                $('#nothing2display').show('slow');
               });
             } else {
               $currRow.hide('fast', function () {
@@ -530,7 +525,7 @@ const DatabaseRoutines = {
                 var rowclass = '';
                 $table.find('tr').has('td').each(function () {
                   rowclass = ct % 2 === 1 ? 'odd' : 'even';
-                  jquery__WEBPACK_IMPORTED_MODULE_0__(this).removeClass('odd even').addClass(rowclass);
+                  $(this).removeClass('odd even').addClass(rowclass);
                   ct++;
                 });
               });
@@ -541,7 +536,7 @@ const DatabaseRoutines = {
               if (success) {
                 // Get rid of the "Loading" message
                 Functions.ajaxRemoveMessage($msg);
-                jquery__WEBPACK_IMPORTED_MODULE_0__('#rteListForm_checkall').prop({
+                $('#rteListForm_checkall').prop({
                   checked: false,
                   indeterminate: false
                 });
@@ -572,19 +567,19 @@ const DatabaseRoutines = {
     DatabaseRoutines.paramTemplate = data.paramTemplate;
     var that = this; // Make adjustments in the dialog to make it AJAX compatible
 
-    jquery__WEBPACK_IMPORTED_MODULE_0__('td.routine_param_remove').show();
-    jquery__WEBPACK_IMPORTED_MODULE_0__('input[name=routine_removeparameter]').remove();
-    jquery__WEBPACK_IMPORTED_MODULE_0__('input[name=routine_addparameter]').css('width', '100%'); // Enable/disable the 'options' dropdowns for parameters as necessary
+    $('td.routine_param_remove').show();
+    $('input[name=routine_removeparameter]').remove();
+    $('input[name=routine_addparameter]').css('width', '100%'); // Enable/disable the 'options' dropdowns for parameters as necessary
 
-    jquery__WEBPACK_IMPORTED_MODULE_0__('table.routine_params_table').last().find('th[colspan=2]').attr('colspan', '1');
-    jquery__WEBPACK_IMPORTED_MODULE_0__('table.routine_params_table').last().find('tr').has('td').each(function () {
-      that.setOptionsForParameter(jquery__WEBPACK_IMPORTED_MODULE_0__(this).find('select[name^=item_param_type]'), jquery__WEBPACK_IMPORTED_MODULE_0__(this).find('input[name^=item_param_length]'), jquery__WEBPACK_IMPORTED_MODULE_0__(this).find('select[name^=item_param_opts_text]'), jquery__WEBPACK_IMPORTED_MODULE_0__(this).find('select[name^=item_param_opts_num]'));
+    $('table.routine_params_table').last().find('th[colspan=2]').attr('colspan', '1');
+    $('table.routine_params_table').last().find('tr').has('td').each(function () {
+      that.setOptionsForParameter($(this).find('select[name^=item_param_type]'), $(this).find('input[name^=item_param_length]'), $(this).find('select[name^=item_param_opts_text]'), $(this).find('select[name^=item_param_opts_num]'));
     }); // Enable/disable the 'options' dropdowns for
     // function return value as necessary
 
-    this.setOptionsForParameter(jquery__WEBPACK_IMPORTED_MODULE_0__('table.rte_table').last().find('select[name=item_returntype]'), jquery__WEBPACK_IMPORTED_MODULE_0__('table.rte_table').last().find('input[name=item_returnlength]'), jquery__WEBPACK_IMPORTED_MODULE_0__('table.rte_table').last().find('select[name=item_returnopts_text]'), jquery__WEBPACK_IMPORTED_MODULE_0__('table.rte_table').last().find('select[name=item_returnopts_num]')); // Allow changing parameter order
+    this.setOptionsForParameter($('table.rte_table').last().find('select[name=item_returntype]'), $('table.rte_table').last().find('input[name=item_returnlength]'), $('table.rte_table').last().find('select[name=item_returnopts_text]'), $('table.rte_table').last().find('select[name=item_returnopts_num]')); // Allow changing parameter order
 
-    jquery__WEBPACK_IMPORTED_MODULE_0__('.routine_params_table tbody').sortable({
+    $('.routine_params_table tbody').sortable({
       containment: '.routine_params_table tbody',
       handle: '.dragHandle',
       stop: function () {
@@ -602,27 +597,27 @@ const DatabaseRoutines = {
      *            fields in the routine parameters table
      */
     var index = 0;
-    jquery__WEBPACK_IMPORTED_MODULE_0__('table.routine_params_table tbody').find('tr').each(function () {
-      jquery__WEBPACK_IMPORTED_MODULE_0__(this).find(':input').each(function () {
+    $('table.routine_params_table tbody').find('tr').each(function () {
+      $(this).find(':input').each(function () {
         /**
          * @var inputname The value of the name attribute of
          *                the input field being reindexed
          */
-        var inputname = jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('name');
+        var inputname = $(this).attr('name');
 
-        if (inputname.startsWith('item_param_dir')) {
-          jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('name', inputname.substring(0, 14) + '[' + index + ']');
-        } else if (inputname.startsWith('item_param_name')) {
-          jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('name', inputname.substring(0, 15) + '[' + index + ']');
-        } else if (inputname.startsWith('item_param_type')) {
-          jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('name', inputname.substring(0, 15) + '[' + index + ']');
-        } else if (inputname.startsWith('item_param_length')) {
-          jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('name', inputname.substring(0, 17) + '[' + index + ']');
-          jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('id', 'item_param_length_' + index);
-        } else if (inputname.startsWith('item_param_opts_text')) {
-          jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('name', inputname.substring(0, 20) + '[' + index + ']');
-        } else if (inputname.startsWith('item_param_opts_num')) {
-          jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('name', inputname.substring(0, 19) + '[' + index + ']');
+        if (inputname.substr(0, 14) === 'item_param_dir') {
+          $(this).attr('name', inputname.substr(0, 14) + '[' + index + ']');
+        } else if (inputname.substr(0, 15) === 'item_param_name') {
+          $(this).attr('name', inputname.substr(0, 15) + '[' + index + ']');
+        } else if (inputname.substr(0, 15) === 'item_param_type') {
+          $(this).attr('name', inputname.substr(0, 15) + '[' + index + ']');
+        } else if (inputname.substr(0, 17) === 'item_param_length') {
+          $(this).attr('name', inputname.substr(0, 17) + '[' + index + ']');
+          $(this).attr('id', 'item_param_length_' + index);
+        } else if (inputname.substr(0, 20) === 'item_param_opts_text') {
+          $(this).attr('name', inputname.substr(0, 20) + '[' + index + ']');
+        } else if (inputname.substr(0, 19) === 'item_param_opts_num') {
+          $(this).attr('name', inputname.substr(0, 19) + '[' + index + ']');
         }
       });
       index++;
@@ -649,12 +644,12 @@ const DatabaseRoutines = {
       // Every parameter of a routine must have
       // a non-empty direction, name and type
       if (isSuccess) {
-        jquery__WEBPACK_IMPORTED_MODULE_0__(this).find(':input').each(function () {
-          inputname = jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('name');
+        $(this).find(':input').each(function () {
+          inputname = $(this).attr('name');
 
-          if (inputname.startsWith('item_param_dir') || inputname.startsWith('item_param_name') || inputname.startsWith('item_param_type')) {
-            if (jquery__WEBPACK_IMPORTED_MODULE_0__(this).val() === '') {
-              jquery__WEBPACK_IMPORTED_MODULE_0__(this).trigger('focus');
+          if (inputname.substr(0, 14) === 'item_param_dir' || inputname.substr(0, 15) === 'item_param_name' || inputname.substr(0, 15) === 'item_param_type') {
+            if ($(this).val() === '') {
+              $(this).trigger('focus');
               isSuccess = false;
               return false;
             }
@@ -666,17 +661,17 @@ const DatabaseRoutines = {
     });
 
     if (!isSuccess) {
-      alert(window.Messages.strFormEmpty);
+      alert(Messages.strFormEmpty);
       return false;
     }
 
     this.$ajaxDialog.find('table.routine_params_table').last().find('tr').each(function () {
       // SET, ENUM, VARCHAR and VARBINARY fields must have length/values
-      var $inputtyp = jquery__WEBPACK_IMPORTED_MODULE_0__(this).find('select[name^=item_param_type]');
-      var $inputlen = jquery__WEBPACK_IMPORTED_MODULE_0__(this).find('input[name^=item_param_length]');
+      var $inputtyp = $(this).find('select[name^=item_param_type]');
+      var $inputlen = $(this).find('input[name^=item_param_length]');
 
       if ($inputtyp.length && $inputlen.length) {
-        if (($inputtyp.val() === 'ENUM' || $inputtyp.val() === 'SET' || $inputtyp.val().startsWith('VAR')) && $inputlen.val() === '') {
+        if (($inputtyp.val() === 'ENUM' || $inputtyp.val() === 'SET' || $inputtyp.val().substr(0, 3) === 'VAR') && $inputlen.val() === '') {
           $inputlen.trigger('focus');
           isSuccess = false;
           return false;
@@ -685,7 +680,7 @@ const DatabaseRoutines = {
     });
 
     if (!isSuccess) {
-      alert(window.Messages.strFormEmpty);
+      alert(Messages.strFormEmpty);
       return false;
     }
 
@@ -695,18 +690,18 @@ const DatabaseRoutines = {
       var $returntyp = this.$ajaxDialog.find('select[name=item_returntype]');
       var $returnlen = this.$ajaxDialog.find('input[name=item_returnlength]');
 
-      if (($returntyp.val() === 'ENUM' || $returntyp.val() === 'SET' || $returntyp.val().startsWith('VAR')) && $returnlen.val() === '') {
+      if (($returntyp.val() === 'ENUM' || $returntyp.val() === 'SET' || $returntyp.val().substr(0, 3) === 'VAR') && $returnlen.val() === '') {
         $returnlen.trigger('focus');
-        alert(window.Messages.strFormEmpty);
+        alert(Messages.strFormEmpty);
         return false;
       }
     }
 
-    if (jquery__WEBPACK_IMPORTED_MODULE_0__('select[name=item_type]').find(':selected').val() === 'FUNCTION') {
+    if ($('select[name=item_type]').find(':selected').val() === 'FUNCTION') {
       // A function must contain a RETURN statement in its definition
       if (this.$ajaxDialog.find('table.rte_table').find('textarea[name=item_definition]').val().toUpperCase().indexOf('RETURN') < 0) {
         this.syntaxHiglighter.focus();
-        alert(window.Messages.MissingReturn);
+        alert(Messages.MissingReturn);
         return false;
       }
     }
@@ -809,30 +804,38 @@ const DatabaseRoutines = {
     }
   },
   executeDialog: function ($this) {
-    var that = this;
     /**
      * @var msg jQuery object containing the reference to
      *          the AJAX message shown to the user
      */
-
     var $msg = Functions.ajaxShowMessage();
     var params = Functions.getJsConfirmCommonParam($this[0], $this.getPostData());
-    jquery__WEBPACK_IMPORTED_MODULE_0__.post($this.attr('href'), params, function (data) {
+    $.post($this.attr('href'), params, function (data) {
       if (data.success === true) {
         Functions.ajaxRemoveMessage($msg); // If 'data.dialog' is true we show a dialog with a form
         // to get the input parameters for routine, otherwise
         // we just show the results of the query
 
         if (data.dialog) {
-          // Define the function that is called when
+          var buttonOptions = {
+            [Messages.strGo]: {
+              text: Messages.strGo,
+              class: 'btn btn-primary'
+            },
+            [Messages.strClose]: {
+              text: Messages.strClose,
+              class: 'btn btn-secondary'
+            }
+          }; // Define the function that is called when
           // the user presses the "Go" button
-          that.buttonOptions[window.Messages.strGo] = function () {
+
+          buttonOptions[Messages.strGo].click = function () {
             /**
              * @var data Form data to be sent in the AJAX request
              */
-            var data = jquery__WEBPACK_IMPORTED_MODULE_0__('form.rte_form').last().serialize();
-            $msg = Functions.ajaxShowMessage(window.Messages.strProcessingRequest);
-            jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php?route=/database/routines', data, function (data) {
+            var data = $('form.rte_form').last().serialize();
+            $msg = Functions.ajaxShowMessage(Messages.strProcessingRequest);
+            $.post('index.php?route=/database/routines', data, function (data) {
               if (data.success === true) {
                 // Routine executed successfully
                 Functions.ajaxRemoveMessage($msg);
@@ -844,21 +847,24 @@ const DatabaseRoutines = {
             });
           };
 
-          that.buttonOptions[window.Messages.strClose] = function () {
-            jquery__WEBPACK_IMPORTED_MODULE_0__(this).dialog('close');
+          buttonOptions[Messages.strClose].click = function () {
+            $(this).dialog('close');
           };
           /**
            * Display the dialog to the user
            */
 
 
-          var $ajaxDialog = jquery__WEBPACK_IMPORTED_MODULE_0__('<div>' + data.message + '</div>').dialog({
+          var $ajaxDialog = $('<div>' + data.message + '</div>').dialog({
+            classes: {
+              'ui-dialog-titlebar-close': 'btn-close'
+            },
             width: 650,
-            buttons: that.buttonOptions,
+            buttons: buttonOptions,
             title: data.title,
             modal: true,
             close: function () {
-              jquery__WEBPACK_IMPORTED_MODULE_0__(this).remove();
+              $(this).remove();
             }
           });
           $ajaxDialog.find('input[name^=params]').first().trigger('focus');
@@ -867,28 +873,28 @@ const DatabaseRoutines = {
            */
 
           $ajaxDialog.find('input.datefield, input.datetimefield').each(function () {
-            Functions.addDatepicker(jquery__WEBPACK_IMPORTED_MODULE_0__(this).css('width', '95%'));
+            Functions.addDatepicker($(this).css('width', '95%'));
           });
           /*
           * Define the function if the user presses enter
           */
 
-          jquery__WEBPACK_IMPORTED_MODULE_0__('form.rte_form').on('keyup', function (event) {
+          $('form.rte_form').on('keyup', function (event) {
             event.preventDefault();
 
             if (event.keyCode === 13) {
               /**
                * @var data Form data to be sent in the AJAX request
                */
-              var data = jquery__WEBPACK_IMPORTED_MODULE_0__(this).serialize();
-              $msg = Functions.ajaxShowMessage(window.Messages.strProcessingRequest);
-              var url = jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('action');
-              jquery__WEBPACK_IMPORTED_MODULE_0__.post(url, data, function (data) {
+              var data = $(this).serialize();
+              $msg = Functions.ajaxShowMessage(Messages.strProcessingRequest);
+              var url = $(this).attr('action');
+              $.post(url, data, function (data) {
                 if (data.success === true) {
                   // Routine executed successfully
                   Functions.ajaxRemoveMessage($msg);
                   Functions.slidingMessage(data.message);
-                  jquery__WEBPACK_IMPORTED_MODULE_0__('form.rte_form').off('keyup');
+                  $('form.rte_form').off('keyup');
                   $ajaxDialog.remove();
                 } else {
                   Functions.ajaxShowMessage(data.error, false);
@@ -906,55 +912,55 @@ const DatabaseRoutines = {
     }); // end $.post()
   }
 };
-window.AJAX.registerOnload('database/routines.js', function () {
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', 'a.ajax.add_anchor', function (event) {
+AJAX.registerOnload('database/routines.js', function () {
+  $(document).on('click', 'a.ajax.add_anchor', function (event) {
     event.preventDefault();
-    jquery__WEBPACK_IMPORTED_MODULE_0__.datepicker.initialized = false;
-    DatabaseRoutines.editorDialog(true, jquery__WEBPACK_IMPORTED_MODULE_0__(this));
+    $.datepicker.initialized = false;
+    DatabaseRoutines.editorDialog(true, $(this));
   });
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', 'a.ajax.edit_anchor', function (event) {
+  $(document).on('click', 'a.ajax.edit_anchor', function (event) {
     event.preventDefault();
-    DatabaseRoutines.editorDialog(false, jquery__WEBPACK_IMPORTED_MODULE_0__(this));
+    DatabaseRoutines.editorDialog(false, $(this));
   });
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', 'a.ajax.exec_anchor', function (event) {
+  $(document).on('click', 'a.ajax.exec_anchor', function (event) {
     event.preventDefault();
-    DatabaseRoutines.executeDialog(jquery__WEBPACK_IMPORTED_MODULE_0__(this));
+    DatabaseRoutines.executeDialog($(this));
   });
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', 'a.ajax.export_anchor', function (event) {
+  $(document).on('click', 'a.ajax.export_anchor', function (event) {
     event.preventDefault();
-    DatabaseRoutines.exportDialog(jquery__WEBPACK_IMPORTED_MODULE_0__(this));
+    DatabaseRoutines.exportDialog($(this));
   });
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', '#bulkActionExportButton', function (event) {
+  $(document).on('click', '#bulkActionExportButton', function (event) {
     event.preventDefault();
-    DatabaseRoutines.exportDialog(jquery__WEBPACK_IMPORTED_MODULE_0__(this));
+    DatabaseRoutines.exportDialog($(this));
   });
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', 'a.ajax.drop_anchor', function (event) {
+  $(document).on('click', 'a.ajax.drop_anchor', function (event) {
     event.preventDefault();
-    DatabaseRoutines.dropDialog(jquery__WEBPACK_IMPORTED_MODULE_0__(this));
+    DatabaseRoutines.dropDialog($(this));
   });
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', '#bulkActionDropButton', function (event) {
+  $(document).on('click', '#bulkActionDropButton', function (event) {
     event.preventDefault();
-    DatabaseRoutines.dropMultipleDialog(jquery__WEBPACK_IMPORTED_MODULE_0__(this));
+    DatabaseRoutines.dropMultipleDialog($(this));
   });
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('change', 'select[name=item_type]', function () {
-    jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('table').find('tr.routine_return_row, .routine_direction_cell').toggle();
+  $(document).on('change', 'select[name=item_type]', function () {
+    $(this).closest('table').find('tr.routine_return_row, .routine_direction_cell').toggle();
   });
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('change', 'select[name^=item_param_type]', function () {
-    const $row = jquery__WEBPACK_IMPORTED_MODULE_0__(this).parents('tr').first();
+  $(document).on('change', 'select[name^=item_param_type]', function () {
+    const $row = $(this).parents('tr').first();
     DatabaseRoutines.setOptionsForParameter($row.find('select[name^=item_param_type]'), $row.find('input[name^=item_param_length]'), $row.find('select[name^=item_param_opts_text]'), $row.find('select[name^=item_param_opts_num]'));
   });
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('change', 'select[name=item_returntype]', function () {
-    const $table = jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('table.rte_table');
+  $(document).on('change', 'select[name=item_returntype]', function () {
+    const $table = $(this).closest('table.rte_table');
     DatabaseRoutines.setOptionsForParameter($table.find('select[name=item_returntype]'), $table.find('input[name=item_returnlength]'), $table.find('select[name=item_returnopts_text]'), $table.find('select[name=item_returnopts_num]'));
   });
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', 'input[name=routine_addparameter]', function (event) {
+  $(document).on('click', 'input[name=routine_addparameter]', function (event) {
     event.preventDefault();
     /**
      * @var routine_params_table jQuery object containing the reference
      *                           to the routine parameters table
      */
 
-    const $routineParamsTable = jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('div.ui-dialog').find('.routine_params_table');
+    const $routineParamsTable = $(this).closest('div.ui-dialog').find('.routine_params_table');
     /**
      * @var new_param_row A string containing the HTML code for the
      *                    new row for the routine parameters table
@@ -964,9 +970,9 @@ window.AJAX.registerOnload('database/routines.js', function () {
 
     $routineParamsTable.append(newParamRow); // Make sure that the row is correctly shown according to the type of routine
 
-    if (jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('div.ui-dialog').find('table.rte_table select[name=item_type]').val() === 'FUNCTION') {
-      jquery__WEBPACK_IMPORTED_MODULE_0__('tr.routine_return_row').show();
-      jquery__WEBPACK_IMPORTED_MODULE_0__('td.routine_direction_cell').hide();
+    if ($(this).closest('div.ui-dialog').find('table.rte_table select[name=item_type]').val() === 'FUNCTION') {
+      $('tr.routine_return_row').show();
+      $('td.routine_direction_cell').hide();
     }
     /**
      * @var newrow jQuery object containing the reference to the newly
@@ -974,25 +980,15 @@ window.AJAX.registerOnload('database/routines.js', function () {
      */
 
 
-    const $newrow = jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('div.ui-dialog').find('table.routine_params_table').find('tr').has('td').last(); // Enable/disable the 'options' dropdowns for parameters as necessary
+    const $newrow = $(this).closest('div.ui-dialog').find('table.routine_params_table').find('tr').has('td').last(); // Enable/disable the 'options' dropdowns for parameters as necessary
 
     DatabaseRoutines.setOptionsForParameter($newrow.find('select[name^=item_param_type]'), $newrow.find('input[name^=item_param_length]'), $newrow.find('select[name^=item_param_opts_text]'), $newrow.find('select[name^=item_param_opts_num]'));
   });
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', 'a.routine_param_remove_anchor', function (event) {
+  $(document).on('click', 'a.routine_param_remove_anchor', function (event) {
     event.preventDefault();
-    jquery__WEBPACK_IMPORTED_MODULE_0__(this).parent().parent().remove(); // After removing a parameter, the indices of the name attributes in
+    $(this).parent().parent().remove(); // After removing a parameter, the indices of the name attributes in
     // the input fields lose the correct order and need to be reordered.
 
     DatabaseRoutines.reindexParameters();
   });
 });
-
-/***/ })
-
-},
-/******/ function(__webpack_require__) { // webpackRuntimeModules
-/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
-/******/ var __webpack_exports__ = (__webpack_exec__(18));
-/******/ }
-]);
-//# sourceMappingURL=routines.js.map

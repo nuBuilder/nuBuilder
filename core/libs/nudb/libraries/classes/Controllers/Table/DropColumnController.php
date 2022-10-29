@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace PhpMyAdmin\Controllers\Table;
 
 use PhpMyAdmin\ConfigStorage\RelationCleanup;
-use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\FlashMessages;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Template;
@@ -32,17 +30,19 @@ final class DropColumnController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
+        string $db,
+        string $table,
         DatabaseInterface $dbi,
         FlashMessages $flash,
         RelationCleanup $relationCleanup
     ) {
-        parent::__construct($response, $template);
+        parent::__construct($response, $template, $db, $table);
         $this->dbi = $dbi;
         $this->flash = $flash;
         $this->relationCleanup = $relationCleanup;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
         $selected = $_POST['selected'] ?? [];
 
@@ -56,15 +56,15 @@ final class DropColumnController extends AbstractController
         $selectedCount = count($selected);
         if (($_POST['mult_btn'] ?? '') === __('Yes')) {
             $i = 1;
-            $statement = 'ALTER TABLE ' . Util::backquote($GLOBALS['table']);
+            $statement = 'ALTER TABLE ' . Util::backquote($this->table);
 
             foreach ($selected as $field) {
-                $this->relationCleanup->column($GLOBALS['db'], $GLOBALS['table'], $field);
+                $this->relationCleanup->column($this->db, $this->table, $field);
                 $statement .= ' DROP ' . Util::backquote($field);
                 $statement .= $i++ === $selectedCount ? ';' : ',';
             }
 
-            $this->dbi->selectDb($GLOBALS['db']);
+            $this->dbi->selectDb($this->db);
             $result = $this->dbi->tryQuery($statement);
 
             if (! $result) {
@@ -86,6 +86,6 @@ final class DropColumnController extends AbstractController
         }
 
         $this->flash->addMessage($message->isError() ? 'danger' : 'success', $message->getMessage());
-        $this->redirect('/table/structure', ['db' => $GLOBALS['db'], 'table' => $GLOBALS['table']]);
+        $this->redirect('/table/structure', ['db' => $this->db, 'table' => $this->table]);
     }
 }

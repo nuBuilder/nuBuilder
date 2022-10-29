@@ -22,6 +22,7 @@ use function __;
 use function bin2hex;
 use function date;
 use function htmlspecialchars;
+use function stripslashes;
 use function strtotime;
 
 /**
@@ -187,6 +188,7 @@ class ExportOds extends ExportPlugin
      *
      * @param string $db       database name
      * @param string $table    table name
+     * @param string $crlf     the end of line sequence
      * @param string $errorUrl the url to go back in case of error
      * @param string $sqlQuery SQL query for obtaining data
      * @param array  $aliases  Aliases of db/table/columns
@@ -194,29 +196,26 @@ class ExportOds extends ExportPlugin
     public function exportData(
         $db,
         $table,
+        $crlf,
         $errorUrl,
         $sqlQuery,
         array $aliases = []
     ): bool {
-        $GLOBALS['what'] = $GLOBALS['what'] ?? null;
+        global $what, $dbi;
 
         $db_alias = $db;
         $table_alias = $table;
         $this->initAlias($aliases, $db_alias, $table_alias);
         // Gets the data from the database
-        $result = $GLOBALS['dbi']->query(
-            $sqlQuery,
-            DatabaseInterface::CONNECT_USER,
-            DatabaseInterface::QUERY_UNBUFFERED
-        );
+        $result = $dbi->query($sqlQuery, DatabaseInterface::CONNECT_USER, DatabaseInterface::QUERY_UNBUFFERED);
         $fields_cnt = $result->numFields();
         /** @var FieldMetadata[] $fieldsMeta */
-        $fieldsMeta = $GLOBALS['dbi']->getFieldsMeta($result);
+        $fieldsMeta = $dbi->getFieldsMeta($result);
 
         $GLOBALS['ods_buffer'] .= '<table:table table:name="' . htmlspecialchars($table_alias) . '">';
 
         // If required, get fields name at the first line
-        if (isset($GLOBALS[$GLOBALS['what'] . '_columns'])) {
+        if (isset($GLOBALS[$what . '_columns'])) {
             $GLOBALS['ods_buffer'] .= '<table:table-row>';
             foreach ($fieldsMeta as $field) {
                 $col_as = $field->name;
@@ -226,7 +225,9 @@ class ExportOds extends ExportPlugin
 
                 $GLOBALS['ods_buffer'] .= '<table:table-cell office:value-type="string">'
                     . '<text:p>'
-                    . htmlspecialchars($col_as)
+                    . htmlspecialchars(
+                        stripslashes($col_as)
+                    )
                     . '</text:p>'
                     . '</table:table-cell>';
             }
@@ -246,7 +247,7 @@ class ExportOds extends ExportPlugin
                 if (! isset($row[$j])) {
                     $GLOBALS['ods_buffer'] .= '<table:table-cell office:value-type="string">'
                         . '<text:p>'
-                        . htmlspecialchars($GLOBALS[$GLOBALS['what'] . '_null'])
+                        . htmlspecialchars($GLOBALS[$what . '_null'])
                         . '</text:p>'
                         . '</table:table-cell>';
                 } elseif ($fieldsMeta[$j]->isBinary && $fieldsMeta[$j]->isBlob) {
@@ -282,10 +283,7 @@ class ExportOds extends ExportPlugin
                         . '</text:p>'
                         . '</table:table-cell>';
                 } elseif (
-                    ($fieldsMeta[$j]->isNumeric
-                    && ! $fieldsMeta[$j]->isMappedTypeTimestamp
-                    && ! $fieldsMeta[$j]->isBlob)
-                    || $fieldsMeta[$j]->isType(FieldMetadata::TYPE_REAL)
+                    $fieldsMeta[$j]->isNumeric
                 ) {
                     $GLOBALS['ods_buffer'] .= '<table:table-cell office:value-type="float"'
                         . ' office:value="' . $row[$j] . '" >'
@@ -315,9 +313,10 @@ class ExportOds extends ExportPlugin
      *
      * @param string $errorUrl the url to go back in case of error
      * @param string $sqlQuery the rawquery to output
+     * @param string $crlf     the end of line sequence
      */
-    public function exportRawQuery(string $errorUrl, string $sqlQuery): bool
+    public function exportRawQuery(string $errorUrl, string $sqlQuery, string $crlf): bool
     {
-        return $this->exportData('', '', $errorUrl, $sqlQuery);
+        return $this->exportData('', '', $crlf, $errorUrl, $sqlQuery);
     }
 }

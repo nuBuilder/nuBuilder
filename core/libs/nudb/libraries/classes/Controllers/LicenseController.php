@@ -7,8 +7,6 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers;
 
-use PhpMyAdmin\Http\ServerRequest;
-
 use function __;
 use function is_readable;
 use function printf;
@@ -19,7 +17,7 @@ use function readfile;
  */
 class LicenseController extends AbstractController
 {
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
         $this->response->disable();
         $this->response->header('Content-type: text/plain; charset=utf-8');

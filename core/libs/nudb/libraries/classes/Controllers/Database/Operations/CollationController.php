@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Database\Operations;
 
-use PhpMyAdmin\Controllers\AbstractController;
+use PhpMyAdmin\Controllers\Database\AbstractController;
 use PhpMyAdmin\DatabaseInterface;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\Operations;
 use PhpMyAdmin\ResponseRenderer;
@@ -27,17 +26,18 @@ final class CollationController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
+        string $db,
         Operations $operations,
         DatabaseInterface $dbi
     ) {
-        parent::__construct($response, $template);
+        parent::__construct($response, $template, $db);
         $this->operations = $operations;
         $this->dbi = $dbi;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
+        global $db, $cfg, $errorUrl;
 
         if (! $this->response->isAjax()) {
             return;
@@ -50,16 +50,16 @@ final class CollationController extends AbstractController
             return;
         }
 
-        $this->checkParameters(['db']);
+        Util::checkParameters(['db']);
 
-        $GLOBALS['errorUrl'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabDatabase'], 'database');
-        $GLOBALS['errorUrl'] .= Url::getCommon(['db' => $GLOBALS['db']], '&');
+        $errorUrl = Util::getScriptNameForOption($cfg['DefaultTabDatabase'], 'database');
+        $errorUrl .= Url::getCommon(['db' => $db], '&');
 
         if (! $this->hasDatabase()) {
             return;
         }
 
-        $sql_query = 'ALTER DATABASE ' . Util::backquote($GLOBALS['db'])
+        $sql_query = 'ALTER DATABASE ' . Util::backquote($db)
             . ' DEFAULT' . Util::getCharsetQueryPart($_POST['db_collation'] ?? '');
         $this->dbi->query($sql_query);
         $message = Message::success();
@@ -68,16 +68,16 @@ final class CollationController extends AbstractController
          * Changes tables charset if requested by the user
          */
         if (isset($_POST['change_all_tables_collations']) && $_POST['change_all_tables_collations'] === 'on') {
-            [$tables] = Util::getDbInfo($GLOBALS['db'], '');
-            foreach ($tables as ['Name' => $tableName]) {
-                if ($this->dbi->getTable($GLOBALS['db'], $tableName)->isView()) {
+            [$tables] = Util::getDbInfo($db, '');
+            foreach ($tables as $tableName => $data) {
+                if ($this->dbi->getTable($db, $tableName)->isView()) {
                     // Skip views, we can not change the collation of a view.
                     // issue #15283
                     continue;
                 }
 
                 $sql_query = 'ALTER TABLE '
-                    . Util::backquote($GLOBALS['db'])
+                    . Util::backquote($db)
                     . '.'
                     . Util::backquote($tableName)
                     . ' DEFAULT '
@@ -94,7 +94,7 @@ final class CollationController extends AbstractController
                     continue;
                 }
 
-                $this->operations->changeAllColumnsCollation($GLOBALS['db'], $tableName, $_POST['db_collation']);
+                $this->operations->changeAllColumnsCollation($db, $tableName, $_POST['db_collation']);
             }
         }
 

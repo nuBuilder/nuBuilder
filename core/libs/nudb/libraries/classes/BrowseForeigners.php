@@ -39,12 +39,14 @@ class BrowseForeigners
      */
     public function __construct(Template $template)
     {
+        global $cfg;
+
         $this->template = $template;
 
-        $this->limitChars = (int) $GLOBALS['cfg']['LimitChars'];
-        $this->maxRows = (int) $GLOBALS['cfg']['MaxRows'];
-        $this->repeatCells = (int) $GLOBALS['cfg']['RepeatCells'];
-        $this->showAll = (bool) $GLOBALS['cfg']['ShowAll'];
+        $this->limitChars = (int) $cfg['LimitChars'];
+        $this->maxRows = (int) $cfg['MaxRows'];
+        $this->repeatCells = (int) $cfg['RepeatCells'];
+        $this->showAll = (bool) $cfg['ShowAll'];
     }
 
     /**
@@ -69,7 +71,7 @@ class BrowseForeigners
         int $indexByDescription,
         string $currentValue
     ): array {
-        $GLOBALS['theme'] = $GLOBALS['theme'] ?? null;
+        global $theme;
 
         $horizontalCount++;
         $output = '';
@@ -124,7 +126,7 @@ class BrowseForeigners
         ]);
 
         $output .= '<td width="20%"><img src="'
-            . ($GLOBALS['theme'] instanceof Theme ? $GLOBALS['theme']->getImgPath('spacer.png') : '')
+            . ($theme instanceof Theme ? $theme->getImgPath('spacer.png') : '')
             . '" alt="" width="1" height="1"></td>';
 
         $output .= $this->template->render('table/browse_foreigners/column_element', [

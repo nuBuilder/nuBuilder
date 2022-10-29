@@ -158,6 +158,8 @@ class Designer
      */
     private function getSideMenuParamsArray()
     {
+        global $dbi;
+
         $params = [];
 
         $databaseDesignerSettingsFeature = $this->relation->getRelationParameters()->databaseDesignerSettingsFeature;
@@ -166,7 +168,7 @@ class Designer
                 . Util::backquote($databaseDesignerSettingsFeature->database) . '.'
                 . Util::backquote($databaseDesignerSettingsFeature->designerSettings)
                 . ' WHERE ' . Util::backquote('username') . ' = "'
-                . $GLOBALS['dbi']->escapeString($GLOBALS['cfg']['Server']['user'])
+                . $dbi->escapeString($GLOBALS['cfg']['Server']['user'])
                 . '";';
 
             $result = $this->dbi->fetchSingleRow($query);
@@ -249,7 +251,7 @@ class Designer
         array $tables_all_keys,
         array $tables_pk_or_unique_keys
     ) {
-        $GLOBALS['text_dir'] = $GLOBALS['text_dir'] ?? null;
+        global $text_dir;
 
         $columns_type = [];
         foreach ($designerTables as $designerTable) {
@@ -286,7 +288,7 @@ class Designer
 
         return $this->template->render('database/designer/database_tables', [
             'db' => $GLOBALS['db'],
-            'text_dir' => $GLOBALS['text_dir'],
+            'text_dir' => $text_dir,
             'get_db' => $db,
             'has_query' => isset($_REQUEST['query']),
             'tab_pos' => $tab_pos,
@@ -335,7 +337,7 @@ class Designer
         array $tablesAllKeys,
         array $tablesPkOrUniqueKeys
     ): string {
-        $GLOBALS['text_dir'] = $GLOBALS['text_dir'] ?? null;
+        global $text_dir;
 
         $relationParameters = $this->relation->getRelationParameters();
         $columnsType = [];
@@ -391,7 +393,7 @@ class Designer
 
         return $this->template->render('database/designer/main', [
             'db' => $db,
-            'text_dir' => $GLOBALS['text_dir'],
+            'text_dir' => $text_dir,
             'get_db' => $getDb,
             'designer_config' => json_encode($designerConfig),
             'display_page' => (int) $displayPage,

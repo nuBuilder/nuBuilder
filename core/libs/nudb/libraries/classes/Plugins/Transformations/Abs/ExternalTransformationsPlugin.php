@@ -33,8 +33,10 @@ abstract class ExternalTransformationsPlugin extends TransformationsPlugin
 {
     /**
      * Gets the transformation description of the specific plugin
+     *
+     * @return string
      */
-    public static function getInfo(): string
+    public static function getInfo()
     {
         return __(
             'LINUX ONLY: Launches an external application and feeds it the column'
@@ -164,8 +166,10 @@ abstract class ExternalTransformationsPlugin extends TransformationsPlugin
 
     /**
      * Gets the transformation name of the specific plugin
+     *
+     * @return string
      */
-    public static function getName(): string
+    public static function getName()
     {
         return 'External';
     }

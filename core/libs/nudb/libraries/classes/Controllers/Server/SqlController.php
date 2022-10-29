@@ -7,7 +7,6 @@ namespace PhpMyAdmin\Controllers\Server;
 use PhpMyAdmin\Config\PageSettings;
 use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\DatabaseInterface;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\SqlQueryForm;
 use PhpMyAdmin\Template;
@@ -35,16 +34,16 @@ class SqlController extends AbstractController
         $this->dbi = $dbi;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
+        global $errorUrl;
 
         $this->addScriptFiles(['makegrid.js', 'vendor/jquery/jquery.uitablefilter.js', 'sql.js']);
 
         $pageSettings = new PageSettings('Sql');
         $this->response->addHTML($pageSettings->getErrorHTML());
         $this->response->addHTML($pageSettings->getHTML());
-        $GLOBALS['errorUrl'] = Url::getFromRoute('/');
+        $errorUrl = Url::getFromRoute('/');
 
         if ($this->dbi->isSuperUser()) {
             $this->dbi->selectDb('mysql');

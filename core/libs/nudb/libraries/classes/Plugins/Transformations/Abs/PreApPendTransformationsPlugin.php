@@ -20,8 +20,10 @@ abstract class PreApPendTransformationsPlugin extends TransformationsPlugin
 {
     /**
      * Gets the transformation description of the specific plugin
+     *
+     * @return string
      */
-    public static function getInfo(): string
+    public static function getInfo()
     {
         return __(
             'Prepends and/or Appends text to a string. First option is text'
@@ -53,8 +55,10 @@ abstract class PreApPendTransformationsPlugin extends TransformationsPlugin
 
     /**
      * Gets the transformation name of the specific plugin
+     *
+     * @return string
      */
-    public static function getName(): string
+    public static function getName()
     {
         return 'PreApPend';
     }

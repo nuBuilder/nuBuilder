@@ -16,16 +16,20 @@ class Image_PNG_Inline extends InlineTransformationsPlugin
 {
     /**
      * Gets the plugin`s MIME type
+     *
+     * @return string
      */
-    public static function getMIMEType(): string
+    public static function getMIMEType()
     {
         return 'Image';
     }
 
     /**
      * Gets the plugin`s MIME subtype
+     *
+     * @return string
      */
-    public static function getMIMESubtype(): string
+    public static function getMIMESubtype()
     {
         return 'PNG';
     }

@@ -15,7 +15,6 @@ use function explode;
 use function intval;
 use function is_numeric;
 use function is_object;
-use function is_string;
 use function json_decode;
 use function preg_match;
 use function strlen;
@@ -229,7 +228,7 @@ class VersionInformation
             $myVersion = $this->getMySQLVersion();
         }
 
-        if (is_string($myVersion) && is_string($version) && is_string($operator)) {
+        if ($myVersion !== null && $version !== null && $operator !== null) {
             return version_compare($myVersion, $version, $operator);
         }
 
@@ -253,8 +252,10 @@ class VersionInformation
      */
     protected function getMySQLVersion()
     {
-        if (isset($GLOBALS['dbi'])) {
-            return $GLOBALS['dbi']->getVersionString();
+        global $dbi;
+
+        if (isset($dbi)) {
+            return $dbi->getVersionString();
         }
 
         return null;

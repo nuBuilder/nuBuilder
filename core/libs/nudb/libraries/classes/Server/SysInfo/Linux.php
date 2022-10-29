@@ -32,7 +32,7 @@ class Linux extends Base
      *
      * @return array<string, int> with load data
      */
-    public function loadavg(): array
+    public function loadavg()
     {
         $buf = file_get_contents('/proc/stat');
         if ($buf === false) {
@@ -66,7 +66,7 @@ class Linux extends Base
     /**
      * Checks whether class is supported in this environment
      */
-    public static function isSupported(): bool
+    public function supported(): bool
     {
         return @is_readable('/proc/meminfo') && @is_readable('/proc/stat');
     }
@@ -74,9 +74,9 @@ class Linux extends Base
     /**
      * Gets information about memory usage
      *
-     * @return array<string, int> with memory usage data
+     * @return array with memory usage data
      */
-    public function memory(): array
+    public function memory()
     {
         $content = @file_get_contents('/proc/meminfo');
         if ($content === false) {

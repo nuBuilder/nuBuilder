@@ -1,22 +1,6 @@
-"use strict";
-(self["webpackChunkphpmyadmin"] = self["webpackChunkphpmyadmin"] || []).push([[1],[
-/* 0 */,
-/* 1 */
-/***/ (function(module) {
-
-module.exports = jQuery;
-
-/***/ }),
-/* 2 */
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-
 /**
  * Chart type enumerations
  */
-
 var ChartType = {
   LINE: 'line',
   SPLINE: 'spline',
@@ -27,7 +11,6 @@ var ChartType = {
   TIMELINE: 'timeline',
   SCATTER: 'scatter'
 };
-window.ChartType = ChartType;
 /**
  * Column type enumeration
  */
@@ -38,7 +21,6 @@ var ColumnType = {
   BOOLEAN: 'boolean',
   DATE: 'date'
 };
-window.ColumnType = ColumnType;
 /**
  * Abstract chart factory which defines the contract for chart factories
  */
@@ -193,6 +175,7 @@ ScatterChart.prototype.validateColumns = function (dataTable) {
 /**
  * The data table contains column information and data for the chart.
  */
+// eslint-disable-next-line no-unused-vars
 
 
 var DataTable = function () {
@@ -239,8 +222,6 @@ var DataTable = function () {
     }
   };
 };
-
-window.DataTable = DataTable;
 /** *****************************************************************************
  * JQPlot specific code
  ******************************************************************************/
@@ -251,6 +232,7 @@ window.DataTable = DataTable;
  * @param elementId
  *            id of the div element the chart is drawn in
  */
+
 
 var JQPlotChart = function (elementId) {
   Chart.call(this, elementId);
@@ -263,7 +245,7 @@ JQPlotChart.prototype.constructor = JQPlotChart;
 
 JQPlotChart.prototype.draw = function (data, options) {
   if (this.validator.validateColumns(data)) {
-    this.plot = jquery__WEBPACK_IMPORTED_MODULE_0__.jqplot(this.elementId, this.prepareData(data), this.populateOptions(data, options));
+    this.plot = $.jqplot(this.elementId, this.prepareData(data), this.populateOptions(data, options));
   }
 };
 
@@ -281,7 +263,7 @@ JQPlotChart.prototype.redraw = function (options) {
 
 JQPlotChart.prototype.toImageString = function () {
   if (this.plot !== null) {
-    return jquery__WEBPACK_IMPORTED_MODULE_0__('#' + this.elementId).jqplotToImageStr({});
+    return $('#' + this.elementId).jqplotToImageStr({});
   }
 };
 
@@ -314,12 +296,12 @@ JQPlotLineChart.prototype.populateOptions = function (dataTable, options) {
     axes: {
       xaxis: {
         label: columns[0].name,
-        renderer: jquery__WEBPACK_IMPORTED_MODULE_0__.jqplot.CategoryAxisRenderer,
+        renderer: $.jqplot.CategoryAxisRenderer,
         ticks: []
       },
       yaxis: {
         label: columns.length === 2 ? columns[1].name : 'Values',
-        labelRenderer: jquery__WEBPACK_IMPORTED_MODULE_0__.jqplot.CanvasAxisLabelRenderer
+        labelRenderer: $.jqplot.CanvasAxisLabelRenderer
       }
     },
     highlighter: {
@@ -329,7 +311,7 @@ JQPlotLineChart.prototype.populateOptions = function (dataTable, options) {
     },
     series: []
   };
-  jquery__WEBPACK_IMPORTED_MODULE_0__.extend(true, optional, options);
+  $.extend(true, optional, options);
 
   if (optional.series.length === 0) {
     for (var i = 1; i < columns.length; i++) {
@@ -398,7 +380,7 @@ JQPlotSplineChart.prototype.populateOptions = function (dataTable, options) {
       }
     }
   };
-  jquery__WEBPACK_IMPORTED_MODULE_0__.extend(true, optional, opt, compulsory);
+  $.extend(true, optional, opt, compulsory);
   return optional;
 };
 /**
@@ -426,7 +408,7 @@ JQPlotScatterChart.prototype.populateOptions = function (dataTable, options) {
       },
       yaxis: {
         label: columns.length === 2 ? columns[1].name : 'Values',
-        labelRenderer: jquery__WEBPACK_IMPORTED_MODULE_0__.jqplot.CanvasAxisLabelRenderer
+        labelRenderer: $.jqplot.CanvasAxisLabelRenderer
       }
     },
     highlighter: {
@@ -452,7 +434,7 @@ JQPlotScatterChart.prototype.populateOptions = function (dataTable, options) {
       }
     }
   };
-  jquery__WEBPACK_IMPORTED_MODULE_0__.extend(true, optional, options, compulsory);
+  $.extend(true, optional, options, compulsory);
   return optional;
 };
 
@@ -511,11 +493,11 @@ JQPlotTimelineChart.prototype.populateOptions = function (dataTable, options) {
   var compulsory = {
     axes: {
       xaxis: {
-        renderer: jquery__WEBPACK_IMPORTED_MODULE_0__.jqplot.DateAxisRenderer
+        renderer: $.jqplot.DateAxisRenderer
       }
     }
   };
-  jquery__WEBPACK_IMPORTED_MODULE_0__.extend(true, optional, opt, compulsory);
+  $.extend(true, optional, opt, compulsory);
   return optional;
 };
 
@@ -577,7 +559,7 @@ JQPlotAreaChart.prototype.populateOptions = function (dataTable, options) {
       fill: true
     }
   };
-  jquery__WEBPACK_IMPORTED_MODULE_0__.extend(true, optional, opt, compulsory);
+  $.extend(true, optional, opt, compulsory);
   return optional;
 };
 /**
@@ -604,10 +586,10 @@ JQPlotColumnChart.prototype.populateOptions = function (dataTable, options) {
   var opt = JQPlotLineChart.prototype.populateOptions.call(this, dataTable, options);
   var compulsory = {
     seriesDefaults: {
-      renderer: jquery__WEBPACK_IMPORTED_MODULE_0__.jqplot.BarRenderer
+      renderer: $.jqplot.BarRenderer
     }
   };
-  jquery__WEBPACK_IMPORTED_MODULE_0__.extend(true, optional, opt, compulsory);
+  $.extend(true, optional, opt, compulsory);
   return optional;
 };
 /**
@@ -631,13 +613,13 @@ JQPlotBarChart.prototype.populateOptions = function (dataTable, options) {
     axes: {
       yaxis: {
         label: columns[0].name,
-        labelRenderer: jquery__WEBPACK_IMPORTED_MODULE_0__.jqplot.CanvasAxisLabelRenderer,
-        renderer: jquery__WEBPACK_IMPORTED_MODULE_0__.jqplot.CategoryAxisRenderer,
+        labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+        renderer: $.jqplot.CategoryAxisRenderer,
         ticks: []
       },
       xaxis: {
         label: columns.length === 2 ? columns[1].name : 'Values',
-        labelRenderer: jquery__WEBPACK_IMPORTED_MODULE_0__.jqplot.CanvasAxisLabelRenderer
+        labelRenderer: $.jqplot.CanvasAxisLabelRenderer
       }
     },
     highlighter: {
@@ -652,13 +634,13 @@ JQPlotBarChart.prototype.populateOptions = function (dataTable, options) {
   };
   var compulsory = {
     seriesDefaults: {
-      renderer: jquery__WEBPACK_IMPORTED_MODULE_0__.jqplot.BarRenderer,
+      renderer: $.jqplot.BarRenderer,
       rendererOptions: {
         barDirection: 'horizontal'
       }
     }
   };
-  jquery__WEBPACK_IMPORTED_MODULE_0__.extend(true, optional, options, compulsory);
+  $.extend(true, optional, options, compulsory);
 
   if (optional.axes.yaxis.ticks.length === 0) {
     var data = dataTable.getData();
@@ -703,20 +685,20 @@ JQPlotPieChart.prototype.populateOptions = function (dataTable, options) {
       useAxesFormatters: false
     },
     legend: {
-      renderer: jquery__WEBPACK_IMPORTED_MODULE_0__.jqplot.EnhancedPieLegendRenderer
+      renderer: $.jqplot.EnhancedPieLegendRenderer
     }
   };
   var compulsory = {
     seriesDefaults: {
       shadow: false,
-      renderer: jquery__WEBPACK_IMPORTED_MODULE_0__.jqplot.PieRenderer,
+      renderer: $.jqplot.PieRenderer,
       rendererOptions: {
         sliceMargin: 1,
         showDataLabels: true
       }
     }
   };
-  jquery__WEBPACK_IMPORTED_MODULE_0__.extend(true, optional, options, compulsory);
+  $.extend(true, optional, options, compulsory);
   return optional;
 };
 
@@ -780,14 +762,3 @@ JQPlotChartFactory.prototype.createChart = function (type, elementId) {
 
   return chart;
 };
-
-window.JQPlotChartFactory = JQPlotChartFactory;
-
-/***/ })
-],
-/******/ function(__webpack_require__) { // webpackRuntimeModules
-/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
-/******/ var __webpack_exports__ = (__webpack_exec__(2));
-/******/ }
-]);
-//# sourceMappingURL=chart.js.map

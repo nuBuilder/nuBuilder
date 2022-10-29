@@ -96,6 +96,8 @@ abstract class TableStats
         $tableDimension,
         $offline
     ) {
+        global $dbi;
+
         $this->diagram = $diagram;
         $this->db = $db;
         $this->pageNumber = $pageNumber;
@@ -106,7 +108,7 @@ abstract class TableStats
 
         $this->offline = $offline;
 
-        $this->relation = new Relation($GLOBALS['dbi']);
+        $this->relation = new Relation($dbi);
         $this->font = new Font();
 
         // checks whether the table exists
@@ -125,15 +127,17 @@ abstract class TableStats
      */
     protected function validateTableAndLoadFields(): void
     {
+        global $dbi;
+
         $sql = 'DESCRIBE ' . Util::backquote($this->tableName);
-        $result = $GLOBALS['dbi']->tryQuery($sql);
+        $result = $dbi->tryQuery($sql);
         if (! $result || ! $result->numRows()) {
             $this->showMissingTableError();
             exit;
         }
 
         if ($this->showKeys) {
-            $indexes = Index::getFromTable($GLOBALS['dbi'], $this->tableName, $this->db);
+            $indexes = Index::getFromTable($this->tableName, $this->db);
             $all_columns = [];
             foreach ($indexes as $index) {
                 $all_columns = array_merge(
@@ -188,7 +192,9 @@ abstract class TableStats
      */
     protected function loadPrimaryKey(): void
     {
-        $result = $GLOBALS['dbi']->query('SHOW INDEX FROM ' . Util::backquote($this->tableName) . ';');
+        global $dbi;
+
+        $result = $dbi->query('SHOW INDEX FROM ' . Util::backquote($this->tableName) . ';');
         if ($result->numRows() <= 0) {
             return;
         }

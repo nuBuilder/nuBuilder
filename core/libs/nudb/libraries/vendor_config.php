@@ -73,5 +73,5 @@ return [
     /**
      * Suffix to add to the phpMyAdmin version
      */
-    'versionSuffix' => '+20221010.6785c97d22',
+    'versionSuffix' => '+20221028.64e273f305',
 ];

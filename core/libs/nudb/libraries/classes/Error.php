@@ -354,52 +354,62 @@ class Error extends Message
      */
     public function getBacktraceDisplay(): string
     {
-        return self::formatBacktrace($this->getBacktrace());
+        return self::formatBacktrace(
+            $this->getBacktrace(),
+            "<br>\n",
+            "<br>\n"
+        );
     }
 
     /**
      * return formatted backtrace field
      *
-     * @param array $backtrace Backtrace data
+     * @param array  $backtrace Backtrace data
+     * @param string $separator Arguments separator to use
+     * @param string $lines     Lines separator to use
      *
      * @return string formatted backtrace
      */
-    public static function formatBacktrace(array $backtrace): string
-    {
-        $retval = '<ol class="list-group">';
+    public static function formatBacktrace(
+        array $backtrace,
+        string $separator,
+        string $lines
+    ): string {
+        $retval = '';
 
         foreach ($backtrace as $step) {
-            $retval .= '<li class="list-group-item">';
             if (isset($step['file'], $step['line'])) {
-                $retval .= self::relPath($step['file']) . '#' . $step['line'] . ': ';
+                $retval .= self::relPath($step['file'])
+                    . '#' . $step['line'] . ': ';
             }
 
             if (isset($step['class'])) {
                 $retval .= $step['class'] . $step['type'];
             }
 
-            $retval .= self::getFunctionCall($step);
-            $retval .= '</li>';
+            $retval .= self::getFunctionCall($step, $separator);
+            $retval .= $lines;
         }
 
-        return $retval . '</ol>';
+        return $retval;
     }
 
     /**
      * Formats function call in a backtrace
      *
-     * @param array $step backtrace step
+     * @param array  $step      backtrace step
+     * @param string $separator Arguments separator to use
      */
-    public static function getFunctionCall(array $step): string
+    public static function getFunctionCall(array $step, string $separator): string
     {
         $retval = $step['function'] . '(';
         if (isset($step['args'])) {
             if (count($step['args']) > 1) {
-                $retval .= '<br>';
+                $retval .= $separator;
                 foreach ($step['args'] as $arg) {
                     $retval .= "\t";
                     $retval .= $arg;
-                    $retval .= ',<br>';
+                    $retval .= ',' . $separator;
                 }
             } elseif (count($step['args']) > 0) {
                 foreach ($step['args'] as $arg) {
@@ -467,17 +477,25 @@ class Error extends Message
             $context = 'danger';
         }
 
-        $template = new Template();
+        $retval = '<div class="alert alert-' . $context . '" role="alert">';
+        if (! $this->isUserError()) {
+            $retval .= '<strong>' . $this->getType() . '</strong>';
+            $retval .= ' in ' . $this->getFile() . '#' . $this->getLine();
+            $retval .= "<br>\n";
+        }
 
-        return $template->render('error/get_display', [
-            'context' => $context,
-            'is_user_error' => $this->isUserError(),
-            'type' => $this->getType(),
-            'file' => $this->getFile(),
-            'line' => $this->getLine(),
-            'message' => $this->getMessage(),
-            'formatted_backtrace' => $this->getBacktraceDisplay(),
-        ]);
+        $retval .= $this->getMessage();
+        if (! $this->isUserError()) {
+            $retval .= "<br>\n";
+            $retval .= "<br>\n";
+            $retval .= "<strong>Backtrace</strong><br>\n";
+            $retval .= "<br>\n";
+            $retval .= $this->getBacktraceDisplay();
+        }
+
+        $retval .= '</div>';
+
+        return $retval;
     }
 
     /**

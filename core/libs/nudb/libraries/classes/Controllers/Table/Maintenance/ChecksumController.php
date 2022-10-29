@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace PhpMyAdmin\Controllers\Table\Maintenance;
 
 use PhpMyAdmin\Config;
-use PhpMyAdmin\Controllers\AbstractController;
+use PhpMyAdmin\Controllers\Table\AbstractController;
 use PhpMyAdmin\Dbal\DatabaseName;
-use PhpMyAdmin\Dbal\InvalidIdentifierName;
 use PhpMyAdmin\Dbal\TableName;
 use PhpMyAdmin\Html\Generator;
 use PhpMyAdmin\Http\ServerRequest;
@@ -32,10 +31,12 @@ final class ChecksumController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
+        string $db,
+        string $table,
         Maintenance $model,
         Config $config
     ) {
-        parent::__construct($response, $template);
+        parent::__construct($response, $template, $db, $table);
         $this->model = $model;
         $this->config = $config;
     }
@@ -61,7 +62,7 @@ final class ChecksumController extends AbstractController
             foreach ($selectedTablesParam as $table) {
                 $selectedTables[] = TableName::fromValue($table);
             }
-        } catch (InvalidIdentifierName $exception) {
+        } catch (InvalidArgumentException $exception) {
             $message = Message::error($exception->getMessage());
             $this->response->setRequestStatus(false);
             $this->response->addJSON('message', $message->getDisplay());

@@ -178,6 +178,7 @@ class Export[Name] extends PhpMyAdmin\Plugins\ExportPlugin
      *
      * @param string $db       database name
      * @param string $table    table name
+     * @param string $crlf     the end of line sequence
      * @param string $errorUrl the url to go back in case of error
      * @param string $sqlQuery SQL query for obtaining data
      * @param array  $aliases  Aliases of db/table/columns
@@ -187,6 +188,7 @@ class Export[Name] extends PhpMyAdmin\Plugins\ExportPlugin
     public function exportData(
         $db,
         $table,
+        $crlf,
         $errorUrl,
         $sqlQuery,
         array $aliases = []

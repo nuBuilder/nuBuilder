@@ -6,7 +6,6 @@ namespace PhpMyAdmin\Controllers\Sql;
 
 use PhpMyAdmin\CheckUserPrivileges;
 use PhpMyAdmin\Controllers\AbstractController;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Sql;
 use PhpMyAdmin\Template;
@@ -38,13 +37,15 @@ final class EnumValuesController extends AbstractController
     /**
      * Get possible values for enum fields during grid edit.
      */
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
+        global $db, $table;
+
         $this->checkUserPrivileges->getPrivileges();
 
         $column = $_POST['column'];
         $curr_value = $_POST['curr_value'];
-        $values = $this->sql->getValuesForColumn($GLOBALS['db'], $GLOBALS['table'], $column);
+        $values = $this->sql->getValuesForColumn($db, $table, $column);
 
         if ($values === null) {
             $this->response->addJSON('message', __('Error in processing request'));

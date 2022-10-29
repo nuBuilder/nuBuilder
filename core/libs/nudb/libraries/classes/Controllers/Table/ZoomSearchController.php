@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace PhpMyAdmin\Controllers\Table;
 
 use PhpMyAdmin\ConfigStorage\Relation;
-use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\Core;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\DbTableExists;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Table\Search;
 use PhpMyAdmin\Template;
@@ -23,7 +21,6 @@ use function count;
 use function htmlspecialchars;
 use function in_array;
 use function intval;
-use function is_array;
 use function is_numeric;
 use function json_encode;
 use function mb_strtolower;
@@ -75,11 +72,13 @@ class ZoomSearchController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
+        string $db,
+        string $table,
         Search $search,
         Relation $relation,
         DatabaseInterface $dbi
     ) {
-        parent::__construct($response, $template);
+        parent::__construct($response, $template, $db, $table);
         $this->search = $search;
         $this->relation = $relation;
         $this->dbi = $dbi;
@@ -94,18 +93,17 @@ class ZoomSearchController extends AbstractController
         $this->loadTableInfo();
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['goto'] = $GLOBALS['goto'] ?? null;
-        $GLOBALS['urlParams'] = $GLOBALS['urlParams'] ?? null;
-        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
-        $this->checkParameters(['db', 'table']);
+        global $goto, $db, $table, $urlParams, $cfg, $errorUrl;
 
-        $GLOBALS['urlParams'] = ['db' => $GLOBALS['db'], 'table' => $GLOBALS['table']];
-        $GLOBALS['errorUrl'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabTable'], 'table');
-        $GLOBALS['errorUrl'] .= Url::getCommon($GLOBALS['urlParams'], '&');
+        Util::checkParameters(['db', 'table']);
 
-        DbTableExists::check($GLOBALS['db'], $GLOBALS['table']);
+        $urlParams = ['db' => $db, 'table' => $table];
+        $errorUrl = Util::getScriptNameForOption($cfg['DefaultTabTable'], 'table');
+        $errorUrl .= Url::getCommon($urlParams, '&');
+
+        DbTableExists::check();
 
         $this->addScriptFiles([
             'makegrid.js',
@@ -141,7 +139,7 @@ class ZoomSearchController extends AbstractController
 
         //Set default datalabel if not selected
         if (! isset($_POST['zoom_submit']) || $_POST['dataLabel'] == '') {
-            $dataLabel = $this->relation->getDisplayField($GLOBALS['db'], $GLOBALS['table']);
+            $dataLabel = $this->relation->getDisplayField($this->db, $this->table);
         } else {
             $dataLabel = $_POST['dataLabel'];
         }
@@ -162,11 +160,11 @@ class ZoomSearchController extends AbstractController
             return;
         }
 
-        if (! isset($GLOBALS['goto'])) {
-            $GLOBALS['goto'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabTable'], 'table');
+        if (! isset($goto)) {
+            $goto = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabTable'], 'table');
         }
 
-        $this->zoomSubmitAction($dataLabel, $GLOBALS['goto']);
+        $this->zoomSubmitAction($dataLabel, $goto);
     }
 
     /**
@@ -176,7 +174,7 @@ class ZoomSearchController extends AbstractController
     private function loadTableInfo(): void
     {
         // Gets the list and number of columns
-        $columns = $this->dbi->getColumns($GLOBALS['db'], $GLOBALS['table'], true);
+        $columns = $this->dbi->getColumns($this->db, $this->table, true);
         // Get details about the geometry functions
         $geom_types = Gis::getDataTypes();
 
@@ -219,7 +217,7 @@ class ZoomSearchController extends AbstractController
         }
 
         // Retrieve foreign keys
-        $this->foreigners = $this->relation->getForeigners($GLOBALS['db'], $GLOBALS['table']);
+        $this->foreigners = $this->relation->getForeigners($this->db, $this->table);
     }
 
     /**
@@ -229,8 +227,10 @@ class ZoomSearchController extends AbstractController
      */
     public function displaySelectionFormAction($dataLabel = null): void
     {
-        if (! isset($GLOBALS['goto'])) {
-            $GLOBALS['goto'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabTable'], 'table');
+        global $goto;
+
+        if (! isset($goto)) {
+            $goto = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabTable'], 'table');
         }
 
         $column_names = $this->columnNames;
@@ -249,9 +249,9 @@ class ZoomSearchController extends AbstractController
         }
 
         $this->render('table/zoom_search/index', [
-            'db' => $GLOBALS['db'],
-            'table' => $GLOBALS['table'],
-            'goto' => $GLOBALS['goto'],
+            'db' => $this->db,
+            'table' => $this->table,
+            'goto' => $goto,
             'self' => $this,
             'geom_column_flag' => $this->geomColumnFlag,
             'column_names' => $column_names,
@@ -370,37 +370,14 @@ class ZoomSearchController extends AbstractController
         unset($tmpData);
 
         $column_names_hashes = [];
-        $foreignDropdown = [];
-        $searchColumnInForeigners = [];
-        $foreignData = [];
 
-        foreach ($this->columnNames as $columnIndex => $columnName) {
+        foreach ($this->columnNames as $columnName) {
             $column_names_hashes[$columnName] = md5($columnName);
-            $foreignData[$columnIndex] = $this->relation->getForeignData($this->foreigners, $columnName, false, '', '');
-            $searchColumnInForeigners[$columnIndex] = $this->relation->searchColumnInForeigners(
-                $this->foreigners,
-                $columnName
-            );
-            if (
-                ! $this->foreigners
-                || ! $searchColumnInForeigners[$columnIndex]
-                || ! is_array($foreignData[$columnIndex]['disp_row'])
-            ) {
-                continue;
-            }
-
-            $foreignDropdown[$columnIndex] = $this->relation->foreignDropdown(
-                $foreignData[$columnIndex]['disp_row'],
-                (string) $foreignData[$columnIndex]['foreign_field'],
-                $foreignData[$columnIndex]['foreign_display'],
-                '',
-                $GLOBALS['cfg']['ForeignKeyMaxLimit']
-            );
         }
 
         $this->render('table/zoom_search/result_form', [
-            'db' => $GLOBALS['db'],
-            'table' => $GLOBALS['table'],
+            'db' => $this->db,
+            'table' => $this->table,
             'column_names' => $this->columnNames,
             'column_names_hashes' => $column_names_hashes,
             'foreigners' => $this->foreigners,
@@ -410,9 +387,7 @@ class ZoomSearchController extends AbstractController
             'data' => $data,
             'data_json' => json_encode($data),
             'zoom_submit' => isset($_POST['zoom_submit']),
-            'foreign_dropdown' => $foreignDropdown,
-            'search_columns_in_foreigners' => $searchColumnInForeigners,
-            'foreign_data' => $foreignData,
+            'foreign_max_limit' => $GLOBALS['cfg']['ForeignKeyMaxLimit'],
         ]);
     }
 
@@ -463,22 +438,6 @@ class ZoomSearchController extends AbstractController
         $htmlAttributes .= ' onfocus="return '
                         . 'verifyAfterSearchFieldChange(' . $search_index . ', \'#zoom_search_form\')"';
 
-        $foreignDropdown = '';
-
-        if (
-            $this->foreigners
-            && $this->relation->searchColumnInForeigners($this->foreigners, $this->columnNames[$column_index])
-            && is_array($foreignData['disp_row'])
-        ) {
-            $foreignDropdown = $this->relation->foreignDropdown(
-                $foreignData['disp_row'],
-                $foreignData['foreign_field'],
-                $foreignData['foreign_display'],
-                '',
-                $GLOBALS['cfg']['ForeignKeyMaxLimit']
-            );
-        }
-
         $value = $this->template->render('table/search/input_box', [
             'str' => '',
             'column_type' => (string) $type,
@@ -490,12 +449,12 @@ class ZoomSearchController extends AbstractController
             'column_name' => $this->columnNames[$column_index],
             'column_name_hash' => md5($this->columnNames[$column_index]),
             'foreign_data' => $foreignData,
-            'table' => $GLOBALS['table'],
+            'table' => $this->table,
             'column_index' => $search_index,
+            'foreign_max_limit' => $GLOBALS['cfg']['ForeignKeyMaxLimit'],
             'criteria_values' => $entered_value,
-            'db' => $GLOBALS['db'],
+            'db' => $this->db,
             'in_fbs' => true,
-            'foreign_dropdown' => $foreignDropdown,
         ]);
 
         return [

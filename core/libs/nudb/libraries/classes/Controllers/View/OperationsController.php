@@ -8,7 +8,6 @@ use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\DbTableExists;
 use PhpMyAdmin\Html\Generator;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\Operations;
 use PhpMyAdmin\ResponseRenderer;
@@ -40,26 +39,24 @@ class OperationsController extends AbstractController
         $this->dbi = $dbi;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['urlParams'] = $GLOBALS['urlParams'] ?? null;
-        $GLOBALS['reload'] = $GLOBALS['reload'] ?? null;
-        $GLOBALS['result'] = $GLOBALS['result'] ?? null;
-        $GLOBALS['warning_messages'] = $GLOBALS['warning_messages'] ?? null;
-        $tableObject = $this->dbi->getTable($GLOBALS['db'], $GLOBALS['table']);
+        global $sql_query, $urlParams, $reload, $result, $warning_messages;
+        global $db, $table, $cfg, $errorUrl;
 
-        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
+        $tableObject = $this->dbi->getTable($db, $table);
+
         $this->addScriptFiles(['table/operations.js']);
 
-        $this->checkParameters(['db', 'table']);
+        Util::checkParameters(['db', 'table']);
 
-        $GLOBALS['urlParams'] = ['db' => $GLOBALS['db'], 'table' => $GLOBALS['table']];
-        $GLOBALS['errorUrl'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabTable'], 'table');
-        $GLOBALS['errorUrl'] .= Url::getCommon($GLOBALS['urlParams'], '&');
+        $urlParams = ['db' => $db, 'table' => $table];
+        $errorUrl = Util::getScriptNameForOption($cfg['DefaultTabTable'], 'table');
+        $errorUrl .= Url::getCommon($urlParams, '&');
 
-        DbTableExists::check($GLOBALS['db'], $GLOBALS['table']);
+        DbTableExists::check();
 
-        $GLOBALS['urlParams']['goto'] = $GLOBALS['urlParams']['back'] = Url::getFromRoute('/view/operations');
+        $urlParams['goto'] = $urlParams['back'] = Url::getFromRoute('/view/operations');
 
         $message = new Message();
         $type = 'success';
@@ -67,25 +64,25 @@ class OperationsController extends AbstractController
             if (isset($_POST['new_name'])) {
                 if ($tableObject->rename($_POST['new_name'])) {
                     $message->addText($tableObject->getLastMessage());
-                    $GLOBALS['result'] = true;
-                    $GLOBALS['table'] = $tableObject->getName();
+                    $result = true;
+                    $table = $tableObject->getName();
                     /* Force reread after rename */
                     $tableObject->getStatusInfo(null, true);
-                    $GLOBALS['reload'] = true;
+                    $reload = true;
                 } else {
                     $message->addText($tableObject->getLastError());
-                    $GLOBALS['result'] = false;
+                    $result = false;
                 }
             }
 
-            $GLOBALS['warning_messages'] = $this->operations->getWarningMessagesArray();
+            $warning_messages = $this->operations->getWarningMessagesArray();
         }
 
-        if (isset($GLOBALS['result'])) {
+        if (isset($result)) {
             // set to success by default, because result set could be empty
             // (for example, a table rename)
             if (empty($message->getString())) {
-                if ($GLOBALS['result']) {
+                if ($result) {
                     $message->addText(
                         __('Your SQL query has been executed successfully.')
                     );
@@ -94,25 +91,25 @@ class OperationsController extends AbstractController
                 }
 
                 // $result should exist, regardless of $_message
-                $type = $GLOBALS['result'] ? 'success' : 'error';
+                $type = $result ? 'success' : 'error';
             }
 
-            if (! empty($GLOBALS['warning_messages'])) {
-                $message->addMessagesString($GLOBALS['warning_messages']);
+            if (! empty($warning_messages)) {
+                $message->addMessagesString($warning_messages);
                 $message->isError(true);
             }
 
             $this->response->addHTML(Generator::getMessage(
                 $message,
-                $GLOBALS['sql_query'],
+                $sql_query,
                 $type
             ));
         }
 
         $this->render('table/operations/view', [
-            'db' => $GLOBALS['db'],
-            'table' => $GLOBALS['table'],
-            'url_params' => $GLOBALS['urlParams'],
+            'db' => $db,
+            'table' => $table,
+            'url_params' => $urlParams,
         ]);
     }
 }

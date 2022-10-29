@@ -147,6 +147,7 @@ class ExportMediawiki extends ExportPlugin
      *
      * @param string $db          database name
      * @param string $table       table name
+     * @param string $crlf        the end of line sequence
      * @param string $errorUrl    the url to go back in case of error
      * @param string $exportMode  'create_table','triggers','create_view',
      *                             'stand_in'
@@ -165,6 +166,7 @@ class ExportMediawiki extends ExportPlugin
     public function exportStructure(
         $db,
         $table,
+        $crlf,
         $errorUrl,
         $exportMode,
         $exportType,
@@ -174,6 +176,8 @@ class ExportMediawiki extends ExportPlugin
         $dates = false,
         array $aliases = []
     ): bool {
+        global $dbi;
+
         $db_alias = $db;
         $table_alias = $table;
         $this->initAlias($aliases, $db_alias, $table_alias);
@@ -181,7 +185,7 @@ class ExportMediawiki extends ExportPlugin
         $output = '';
         switch ($exportMode) {
             case 'create_table':
-                $columns = $GLOBALS['dbi']->getColumns($db, $table);
+                $columns = $dbi->getColumns($db, $table);
                 $columns = array_values($columns);
                 $row_cnt = count($columns);
 
@@ -252,6 +256,7 @@ class ExportMediawiki extends ExportPlugin
      *
      * @param string $db       database name
      * @param string $table    table name
+     * @param string $crlf     the end of line sequence
      * @param string $errorUrl the url to go back in case of error
      * @param string $sqlQuery SQL query for obtaining data
      * @param array  $aliases  Aliases of db/table/columns
@@ -259,10 +264,13 @@ class ExportMediawiki extends ExportPlugin
     public function exportData(
         $db,
         $table,
+        $crlf,
         $errorUrl,
         $sqlQuery,
         array $aliases = []
     ): bool {
+        global $dbi;
+
         $db_alias = $db;
         $table_alias = $table;
         $this->initAlias($aliases, $db_alias, $table_alias);
@@ -288,7 +296,7 @@ class ExportMediawiki extends ExportPlugin
         // Add the table headers
         if (isset($GLOBALS['mediawiki_headers'])) {
             // Get column names
-            $column_names = $GLOBALS['dbi']->getColumnNames($db, $table);
+            $column_names = $dbi->getColumnNames($db, $table);
 
             // Add column names as table headers
             if ($column_names !== []) {
@@ -307,11 +315,7 @@ class ExportMediawiki extends ExportPlugin
         }
 
         // Get the table data from the database
-        $result = $GLOBALS['dbi']->query(
-            $sqlQuery,
-            DatabaseInterface::CONNECT_USER,
-            DatabaseInterface::QUERY_UNBUFFERED
-        );
+        $result = $dbi->query($sqlQuery, DatabaseInterface::CONNECT_USER, DatabaseInterface::QUERY_UNBUFFERED);
         $fields_cnt = $result->numFields();
 
         while ($row = $result->fetchRow()) {
@@ -334,10 +338,11 @@ class ExportMediawiki extends ExportPlugin
      *
      * @param string $errorUrl the url to go back in case of error
      * @param string $sqlQuery the rawquery to output
+     * @param string $crlf     the end of line sequence
      */
-    public function exportRawQuery(string $errorUrl, string $sqlQuery): bool
+    public function exportRawQuery(string $errorUrl, string $sqlQuery, string $crlf): bool
     {
-        return $this->exportData('', '', $errorUrl, $sqlQuery);
+        return $this->exportData('', '', $crlf, $errorUrl, $sqlQuery);
     }
 
     /**

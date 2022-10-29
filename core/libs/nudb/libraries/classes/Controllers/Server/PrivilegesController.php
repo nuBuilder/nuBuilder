@@ -8,10 +8,11 @@ use PhpMyAdmin\CheckUserPrivileges;
 use PhpMyAdmin\ConfigStorage\Relation;
 use PhpMyAdmin\ConfigStorage\RelationCleanup;
 use PhpMyAdmin\Controllers\AbstractController;
+use PhpMyAdmin\Controllers\Database\PrivilegesController as DatabaseController;
+use PhpMyAdmin\Controllers\Table\PrivilegesController as TableController;
 use PhpMyAdmin\Core;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Html\Generator;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Server\Plugins;
@@ -25,6 +26,8 @@ use function header;
 use function implode;
 use function is_array;
 use function is_string;
+use function ob_get_clean;
+use function ob_start;
 use function str_replace;
 use function urlencode;
 
@@ -50,38 +53,13 @@ class PrivilegesController extends AbstractController
         $this->dbi = $dbi;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
-        $GLOBALS['message'] = $GLOBALS['message'] ?? null;
-        $GLOBALS['text_dir'] = $GLOBALS['text_dir'] ?? null;
-        $GLOBALS['post_patterns'] = $GLOBALS['post_patterns'] ?? null;
-        $GLOBALS['username'] = $GLOBALS['username'] ?? null;
-        $GLOBALS['hostname'] = $GLOBALS['hostname'] ?? null;
-        $GLOBALS['dbname'] = $GLOBALS['dbname'] ?? null;
-        $GLOBALS['tablename'] = $GLOBALS['tablename'] ?? null;
-        $GLOBALS['routinename'] = $GLOBALS['routinename'] ?? null;
-        $GLOBALS['db_and_table'] = $GLOBALS['db_and_table'] ?? null;
-        $GLOBALS['dbname_is_wildcard'] = $GLOBALS['dbname_is_wildcard'] ?? null;
-        $GLOBALS['queries'] = $GLOBALS['queries'] ?? null;
-        $GLOBALS['password'] = $GLOBALS['password'] ?? null;
-        $GLOBALS['ret_message'] = $GLOBALS['ret_message'] ?? null;
-        $GLOBALS['ret_queries'] = $GLOBALS['ret_queries'] ?? null;
-        $GLOBALS['queries_for_display'] = $GLOBALS['queries_for_display'] ?? null;
-        $GLOBALS['_add_user_error'] = $GLOBALS['_add_user_error'] ?? null;
-        $GLOBALS['itemType'] = $GLOBALS['itemType'] ?? null;
-        $GLOBALS['tables'] = $GLOBALS['tables'] ?? null;
-        $GLOBALS['num_tables'] = $GLOBALS['num_tables'] ?? null;
-        $GLOBALS['total_num_tables'] = $GLOBALS['total_num_tables'] ?? null;
-        $GLOBALS['sub_part'] = $GLOBALS['sub_part'] ?? null;
-        $GLOBALS['tooltip_truename'] = $GLOBALS['tooltip_truename'] ?? null;
-        $GLOBALS['tooltip_aliasname'] = $GLOBALS['tooltip_aliasname'] ?? null;
-        $GLOBALS['pos'] = $GLOBALS['pos'] ?? null;
-        $GLOBALS['title'] = $GLOBALS['title'] ?? null;
-        $GLOBALS['export'] = $GLOBALS['export'] ?? null;
-        $GLOBALS['grants'] = $GLOBALS['grants'] ?? null;
-        $GLOBALS['one_grant'] = $GLOBALS['one_grant'] ?? null;
-        $GLOBALS['url_dbname'] = $GLOBALS['url_dbname'] ?? null;
+        global $db, $table, $errorUrl, $message, $text_dir, $post_patterns;
+        global $username, $hostname, $dbname, $tablename, $routinename, $db_and_table, $dbname_is_wildcard;
+        global $queries, $password, $ret_message, $ret_queries, $queries_for_display, $sql_query, $_add_user_error;
+        global $itemType, $tables, $num_tables, $total_num_tables, $sub_part;
+        global $tooltip_truename, $tooltip_aliasname, $pos, $title, $export, $grants, $one_grant, $url_dbname;
 
         $checkUserPrivileges = new CheckUserPrivileges($this->dbi);
         $checkUserPrivileges->getPrivileges();
@@ -99,7 +77,28 @@ class PrivilegesController extends AbstractController
             new Plugins($this->dbi)
         );
 
-        if ($relationParameters->configurableMenusFeature !== null) {
+        $databaseController = new DatabaseController(
+            $this->response,
+            $this->template,
+            $db,
+            $serverPrivileges,
+            $this->dbi
+        );
+
+        $tableController = new TableController(
+            $this->response,
+            $this->template,
+            $db,
+            $table,
+            $serverPrivileges,
+            $this->dbi
+        );
+
+        if (
+            (isset($_GET['viewing_mode'])
+                && $_GET['viewing_mode'] === 'server')
+            && $relationParameters->configurableMenusFeature !== null
+        ) {
             $this->response->addHTML('<div class="container-fluid">');
             $this->render('server/privileges/subnav', [
                 'active' => 'privileges',
@@ -110,32 +109,32 @@ class PrivilegesController extends AbstractController
         /**
          * Sets globals from $_POST patterns, for privileges and max_* vars
          */
-        $GLOBALS['post_patterns'] = [
+        $post_patterns = [
             '/_priv$/i',
             '/^max_/i',
         ];
 
-        Core::setPostAsGlobal($GLOBALS['post_patterns']);
+        Core::setPostAsGlobal($post_patterns);
 
-        $GLOBALS['errorUrl'] = Url::getFromRoute('/');
+        $errorUrl = Url::getFromRoute('/');
 
         if ($this->dbi->isSuperUser()) {
             $this->dbi->selectDb('mysql');
         }
 
-        $GLOBALS['_add_user_error'] = false;
+        $_add_user_error = false;
         /**
          * Get DB information: username, hostname, dbname,
          * tablename, db_and_table, dbname_is_wildcard
          */
         [
-            $GLOBALS['username'],
-            $GLOBALS['hostname'],
-            $GLOBALS['dbname'],
-            $GLOBALS['tablename'],
-            $GLOBALS['routinename'],
-            $GLOBALS['db_and_table'],
-            $GLOBALS['dbname_is_wildcard'],
+            $username,
+            $hostname,
+            $dbname,
+            $tablename,
+            $routinename,
+            $db_and_table,
+            $dbname_is_wildcard,
         ] = $serverPrivileges->getDataForDBInfo();
 
         /**
@@ -168,8 +167,8 @@ class PrivilegesController extends AbstractController
          * only to update the password
          */
         if (
-            isset($_POST['change_copy']) && $GLOBALS['username'] == $_POST['old_username']
-            && $GLOBALS['hostname'] == $_POST['old_hostname']
+            isset($_POST['change_copy']) && $username == $_POST['old_username']
+            && $hostname == $_POST['old_hostname']
         ) {
             $this->response->addHTML(
                 Message::error(
@@ -188,75 +187,71 @@ class PrivilegesController extends AbstractController
         /**
          * Changes / copies a user, part I
          */
-        [$GLOBALS['queries'], $GLOBALS['password']] = $serverPrivileges->getDataForChangeOrCopyUser();
+        [$queries, $password] = $serverPrivileges->getDataForChangeOrCopyUser();
 
         /**
          * Adds a user
          *   (Changes / copies a user, part II)
          */
         [
-            $GLOBALS['ret_message'],
-            $GLOBALS['ret_queries'],
-            $GLOBALS['queries_for_display'],
-            $GLOBALS['sql_query'],
-            $GLOBALS['_add_user_error'],
+            $ret_message,
+            $ret_queries,
+            $queries_for_display,
+            $sql_query,
+            $_add_user_error,
         ] = $serverPrivileges->addUser(
-            $GLOBALS['dbname'] ?? null,
-            $GLOBALS['username'] ?? '',
-            $GLOBALS['hostname'] ?? '',
-            $GLOBALS['password'] ?? null,
+            $dbname ?? null,
+            $username ?? '',
+            $hostname ?? '',
+            $password ?? null,
             $relationParameters->configurableMenusFeature !== null
         );
         //update the old variables
-        if (isset($GLOBALS['ret_queries'])) {
-            $GLOBALS['queries'] = $GLOBALS['ret_queries'];
-            unset($GLOBALS['ret_queries']);
+        if (isset($ret_queries)) {
+            $queries = $ret_queries;
+            unset($ret_queries);
         }
 
-        if (isset($GLOBALS['ret_message'])) {
-            $GLOBALS['message'] = $GLOBALS['ret_message'];
-            unset($GLOBALS['ret_message']);
+        if (isset($ret_message)) {
+            $message = $ret_message;
+            unset($ret_message);
         }
 
         /**
          * Changes / copies a user, part III
          */
-        if (isset($_POST['change_copy']) && $GLOBALS['username'] !== null && $GLOBALS['hostname'] !== null) {
-            $GLOBALS['queries'] = $serverPrivileges->getDbSpecificPrivsQueriesForChangeOrCopyUser(
-                $GLOBALS['queries'],
-                $GLOBALS['username'],
-                $GLOBALS['hostname']
-            );
+        if (isset($_POST['change_copy']) && $username !== null && $hostname !== null) {
+            $queries = $serverPrivileges->getDbSpecificPrivsQueriesForChangeOrCopyUser($queries, $username, $hostname);
         }
 
-        $GLOBALS['itemType'] = '';
-        if (! empty($GLOBALS['routinename']) && is_string($GLOBALS['dbname'])) {
-            $GLOBALS['itemType'] = $serverPrivileges->getRoutineType($GLOBALS['dbname'], $GLOBALS['routinename']);
+        $itemType = '';
+        if (! empty($routinename) && is_string($dbname)) {
+            $itemType = $serverPrivileges->getRoutineType($dbname, $routinename);
         }
 
         /**
          * Updates privileges
          */
         if (! empty($_POST['update_privs'])) {
-            if (is_array($GLOBALS['dbname'])) {
-                foreach ($GLOBALS['dbname'] as $key => $db_name) {
-                    [$GLOBALS['sql_query'][$key], $GLOBALS['message']] = $serverPrivileges->updatePrivileges(
-                        ($GLOBALS['username'] ?? ''),
-                        ($GLOBALS['hostname'] ?? ''),
-                        ($GLOBALS['tablename'] ?? ($GLOBALS['routinename'] ?? '')),
+            if (is_array($dbname)) {
+                foreach ($dbname as $key => $db_name) {
+                    [$sql_query[$key], $message] = $serverPrivileges->updatePrivileges(
+                        ($username ?? ''),
+                        ($hostname ?? ''),
+                        ($tablename ?? ($routinename ?? '')),
                         ($db_name ?? ''),
-                        $GLOBALS['itemType']
+                        $itemType
                     );
                 }
 
-                $GLOBALS['sql_query'] = implode("\n", $GLOBALS['sql_query']);
+                $sql_query = implode("\n", $sql_query);
             } else {
-                [$GLOBALS['sql_query'], $GLOBALS['message']] = $serverPrivileges->updatePrivileges(
-                    ($GLOBALS['username'] ?? ''),
-                    ($GLOBALS['hostname'] ?? ''),
-                    ($GLOBALS['tablename'] ?? ($GLOBALS['routinename'] ?? '')),
-                    ($GLOBALS['dbname'] ?? ''),
-                    $GLOBALS['itemType']
+                [$sql_query, $message] = $serverPrivileges->updatePrivileges(
+                    ($username ?? ''),
+                    ($hostname ?? ''),
+                    ($tablename ?? ($routinename ?? '')),
+                    ($dbname ?? ''),
+                    $itemType
                 );
             }
         }
@@ -268,20 +263,20 @@ class PrivilegesController extends AbstractController
             ! empty($_POST['changeUserGroup']) && $relationParameters->configurableMenusFeature !== null
             && $this->dbi->isSuperUser() && $this->dbi->isCreateUser()
         ) {
-            $serverPrivileges->setUserGroup($GLOBALS['username'] ?? '', $_POST['userGroup']);
-            $GLOBALS['message'] = Message::success();
+            $serverPrivileges->setUserGroup($username ?? '', $_POST['userGroup']);
+            $message = Message::success();
         }
 
         /**
          * Revokes Privileges
          */
         if (isset($_POST['revokeall'])) {
-            [$GLOBALS['message'], $GLOBALS['sql_query']] = $serverPrivileges->getMessageAndSqlQueryForPrivilegesRevoke(
-                (is_string($GLOBALS['dbname']) ? $GLOBALS['dbname'] : ''),
-                ($GLOBALS['tablename'] ?? ($GLOBALS['routinename'] ?? '')),
-                $GLOBALS['username'] ?? '',
-                $GLOBALS['hostname'] ?? '',
-                $GLOBALS['itemType']
+            [$message, $sql_query] = $serverPrivileges->getMessageAndSqlQueryForPrivilegesRevoke(
+                (is_string($dbname) ? $dbname : ''),
+                ($tablename ?? ($routinename ?? '')),
+                $username ?? '',
+                $hostname ?? '',
+                $itemType
             );
         }
 
@@ -289,11 +284,7 @@ class PrivilegesController extends AbstractController
          * Updates the password
          */
         if (isset($_POST['change_pw'])) {
-            $GLOBALS['message'] = $serverPrivileges->updatePassword(
-                $GLOBALS['errorUrl'],
-                $GLOBALS['username'] ?? '',
-                $GLOBALS['hostname'] ?? ''
-            );
+            $message = $serverPrivileges->updatePassword($errorUrl, $username ?? '', $hostname ?? '');
         }
 
         /**
@@ -301,9 +292,9 @@ class PrivilegesController extends AbstractController
          *   (Changes / copies a user, part IV)
          */
         if (isset($_POST['delete']) || (isset($_POST['change_copy']) && $_POST['mode'] < 4)) {
-            $GLOBALS['queries'] = $serverPrivileges->getDataForDeleteUsers($GLOBALS['queries']);
+            $queries = $serverPrivileges->getDataForDeleteUsers($queries);
             if (empty($_POST['change_copy'])) {
-                [$GLOBALS['sql_query'], $GLOBALS['message']] = $serverPrivileges->deleteUser($GLOBALS['queries']);
+                [$sql_query, $message] = $serverPrivileges->deleteUser($queries);
             }
         }
 
@@ -311,12 +302,9 @@ class PrivilegesController extends AbstractController
          * Changes / copies a user, part V
          */
         if (isset($_POST['change_copy'])) {
-            $GLOBALS['queries'] = $serverPrivileges->getDataForQueries(
-                $GLOBALS['queries'],
-                $GLOBALS['queries_for_display']
-            );
-            $GLOBALS['message'] = Message::success();
-            $GLOBALS['sql_query'] = implode("\n", $GLOBALS['queries']);
+            $queries = $serverPrivileges->getDataForQueries($queries, $queries_for_display);
+            $message = Message::success();
+            $sql_query = implode("\n", $queries);
         }
 
         /**
@@ -324,7 +312,7 @@ class PrivilegesController extends AbstractController
          */
         $message_ret = $serverPrivileges->updateMessageForReload();
         if ($message_ret !== null) {
-            $GLOBALS['message'] = $message_ret;
+            $message = $message_ret;
             unset($message_ret);
         }
 
@@ -342,15 +330,15 @@ class PrivilegesController extends AbstractController
             && ! isset($_GET['showall'])
         ) {
             $extra_data = $serverPrivileges->getExtraDataForAjaxBehavior(
-                ($GLOBALS['password'] ?? ''),
-                ($GLOBALS['sql_query'] ?? ''),
-                ($GLOBALS['hostname'] ?? ''),
-                ($GLOBALS['username'] ?? '')
+                ($password ?? ''),
+                ($sql_query ?? ''),
+                ($hostname ?? ''),
+                ($username ?? '')
             );
 
-            if (! empty($GLOBALS['message']) && $GLOBALS['message'] instanceof Message) {
-                $this->response->setRequestStatus($GLOBALS['message']->isSuccess());
-                $this->response->addJSON('message', $GLOBALS['message']);
+            if (! empty($message) && $message instanceof Message) {
+                $this->response->setRequestStatus($message->isSuccess());
+                $this->response->addJSON('message', $message);
                 $this->response->addJSON($extra_data);
 
                 return;
@@ -360,39 +348,71 @@ class PrivilegesController extends AbstractController
         /**
          * Displays the links
          */
-        if (! empty($GLOBALS['message'])) {
+        if (isset($_GET['viewing_mode']) && $_GET['viewing_mode'] === 'db') {
+            $db = $_REQUEST['db'] = $_GET['checkprivsdb'];
+
+            // Gets the database structure
+            $sub_part = '_structure';
+            ob_start();
+
+            [
+                $tables,
+                $num_tables,
+                $total_num_tables,
+                $sub_part,,,
+                $tooltip_truename,
+                $tooltip_aliasname,
+                $pos,
+            ] = Util::getDbInfo($db, $sub_part);
+
+            $content = ob_get_clean();
+            $this->response->addHTML($content . "\n");
+        } elseif (! empty($GLOBALS['message'])) {
             $this->response->addHTML(Generator::getMessage($GLOBALS['message']));
             unset($GLOBALS['message']);
         }
 
         // export user definition
         if (isset($_GET['export']) || (isset($_POST['submit_mult']) && $_POST['submit_mult'] === 'export')) {
-            [$GLOBALS['title'], $GLOBALS['export']] = $serverPrivileges->getListForExportUserDefinition(
-                $GLOBALS['username'] ?? '',
-                $GLOBALS['hostname'] ?? ''
-            );
+            [$title, $export] = $serverPrivileges->getListForExportUserDefinition($username ?? '', $hostname ?? '');
 
-            unset($GLOBALS['username'], $GLOBALS['hostname'], $GLOBALS['grants'], $GLOBALS['one_grant']);
+            unset($username, $hostname, $grants, $one_grant);
 
             if ($this->response->isAjax()) {
-                $this->response->addJSON('message', $GLOBALS['export']);
-                $this->response->addJSON('title', $GLOBALS['title']);
+                $this->response->addJSON('message', $export);
+                $this->response->addJSON('title', $title);
 
                 return;
             }
 
-            $this->response->addHTML('<h2>' . $GLOBALS['title'] . '</h2>' . $GLOBALS['export']);
+            $this->response->addHTML('<h2>' . $title . '</h2>' . $export);
         }
 
         // Show back the form if an error occurred
-        if (isset($_GET['adduser']) || $GLOBALS['_add_user_error'] === true) {
+        if (isset($_GET['adduser']) || $_add_user_error === true) {
             // Add user
-            $this->response->addHTML($serverPrivileges->getHtmlForAddUser(
-                Util::escapeMysqlWildcards(is_string($GLOBALS['dbname']) ? $GLOBALS['dbname'] : '')
-            ));
+            $this->response->addHTML(
+                $serverPrivileges->getHtmlForAddUser(Util::escapeMysqlWildcards(is_string($dbname) ? $dbname : ''))
+            );
+        } elseif (isset($_GET['checkprivsdb']) && is_string($_GET['checkprivsdb'])) {
+            if (isset($_GET['checkprivstable']) && is_string($_GET['checkprivstable'])) {
+                $this->response->addHTML($tableController([
+                    'checkprivsdb' => $_GET['checkprivsdb'],
+                    'checkprivstable' => $_GET['checkprivstable'],
+                ]));
+                $this->render('export_modal');
+            } elseif ($this->response->isAjax() === true && empty($_REQUEST['ajax_page_request'])) {
+                $message = Message::success(__('User has been added.'));
+                $this->response->addJSON('message', $message);
+
+                return;
+            } else {
+                $this->response->addHTML($databaseController(['checkprivsdb' => $_GET['checkprivsdb']]));
+                $this->render('export_modal');
+            }
         } else {
-            if (isset($GLOBALS['dbname']) && ! is_array($GLOBALS['dbname'])) {
-                $GLOBALS['url_dbname'] = urlencode(
+            if (isset($dbname) && ! is_array($dbname)) {
+                $url_dbname = urlencode(
                     str_replace(
                         [
                             '\_',
@@ -402,24 +422,24 @@ class PrivilegesController extends AbstractController
                             '_',
                             '%',
                         ],
-                        $GLOBALS['dbname']
+                        $dbname
                     )
                 );
             }
 
-            if (! isset($GLOBALS['username'])) {
+            if (! isset($username)) {
                 // No username is given --> display the overview
                 $this->response->addHTML(
-                    $serverPrivileges->getHtmlForUserOverview($GLOBALS['text_dir'])
+                    $serverPrivileges->getHtmlForUserOverview($text_dir)
                 );
-            } elseif (! empty($GLOBALS['routinename'])) {
+            } elseif (! empty($routinename)) {
                 $this->response->addHTML(
                     $serverPrivileges->getHtmlForRoutineSpecificPrivileges(
-                        $GLOBALS['username'],
-                        $GLOBALS['hostname'] ?? '',
-                        is_string($GLOBALS['dbname']) ? $GLOBALS['dbname'] : '',
-                        $GLOBALS['routinename'],
-                        Util::escapeMysqlWildcards($GLOBALS['url_dbname'] ?? '')
+                        $username,
+                        $hostname ?? '',
+                        is_string($dbname) ? $dbname : '',
+                        $routinename,
+                        Util::escapeMysqlWildcards($url_dbname ?? '')
                     )
                 );
             } else {
@@ -431,19 +451,22 @@ class PrivilegesController extends AbstractController
 
                 $this->response->addHTML(
                     $serverPrivileges->getHtmlForUserProperties(
-                        $GLOBALS['dbname_is_wildcard'],
-                        Util::escapeMysqlWildcards($GLOBALS['url_dbname'] ?? ''),
-                        $GLOBALS['username'],
-                        $GLOBALS['hostname'] ?? '',
-                        $GLOBALS['dbname'] ?? '',
-                        $GLOBALS['tablename'] ?? '',
-                        $request->getRoute()
+                        $dbname_is_wildcard,
+                        Util::escapeMysqlWildcards($url_dbname ?? ''),
+                        $username,
+                        $hostname ?? '',
+                        $dbname ?? '',
+                        $tablename ?? ''
                     )
                 );
             }
         }
 
-        if ($relationParameters->configurableMenusFeature === null) {
+        if (
+            ! isset($_GET['viewing_mode'])
+            || $_GET['viewing_mode'] !== 'server'
+            || $relationParameters->configurableMenusFeature === null
+        ) {
             return;
         }
 

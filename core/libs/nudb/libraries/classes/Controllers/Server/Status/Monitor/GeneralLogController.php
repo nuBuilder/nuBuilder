@@ -6,7 +6,6 @@ namespace PhpMyAdmin\Controllers\Server\Status\Monitor;
 
 use PhpMyAdmin\Controllers\Server\Status\AbstractController;
 use PhpMyAdmin\DatabaseInterface;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Server\Status\Data;
 use PhpMyAdmin\Server\Status\Monitor;
@@ -33,9 +32,9 @@ final class GeneralLogController extends AbstractController
         $this->dbi = $dbi;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
+        global $errorUrl;
 
         $params = [
             'time_start' => $_POST['time_start'] ?? null,
@@ -43,7 +42,7 @@ final class GeneralLogController extends AbstractController
             'limitTypes' => $_POST['limitTypes'] ?? null,
             'removeVariables' => $_POST['removeVariables'] ?? null,
         ];
-        $GLOBALS['errorUrl'] = Url::getFromRoute('/');
+        $errorUrl = Url::getFromRoute('/');
 
         if ($this->dbi->isSuperUser()) {
             $this->dbi->selectDb('mysql');

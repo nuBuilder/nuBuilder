@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use PhpMyAdmin\Common;
-use PhpMyAdmin\Core;
 use PhpMyAdmin\Routing;
 
 if (! defined('ROOT_PATH')) {
@@ -36,6 +35,9 @@ if (! @is_readable(AUTOLOAD_FILE)) {
 
 require AUTOLOAD_FILE;
 
+global $route, $containerBuilder, $request;
+
 Common::run();
 
-Routing::callControllerForRoute(Common::getRequest(), Routing::getDispatcher(), Core::getContainerBuilder());
+$dispatcher = Routing::getDispatcher();
+Routing::callControllerForRoute($request, $route, $dispatcher, $containerBuilder);

@@ -13,6 +13,7 @@ use PhpMyAdmin\Query\Compatibility;
 use PhpMyAdmin\StorageEngine;
 use PhpMyAdmin\Table;
 use PhpMyAdmin\Transformations;
+use PhpMyAdmin\Url;
 use PhpMyAdmin\Util;
 
 use function array_keys;
@@ -36,57 +37,58 @@ use function trim;
  */
 final class ColumnsDefinition
 {
-    /** @var DatabaseInterface */
-    private $dbi;
-
-    /** @var Relation */
-    private $relation;
-
-    /** @var Transformations */
-    private $transformations;
-
-    public function __construct(DatabaseInterface $dbi, Relation $relation, Transformations $transformations)
-    {
-        $this->dbi = $dbi;
-        $this->relation = $relation;
-        $this->transformations = $transformations;
-    }
-
     /**
-     * @param int         $num_fields  The number of fields
-     * @param string|null $regenerate  Use regeneration
-     * @param array|null  $selected    Selected
-     * @param array|null  $fields_meta Fields meta
-     * @psalm-param '/table/create'|'/table/add-field'|'/table/structure/save' $action
+     * @param Transformations   $transformations Transformations
+     * @param Relation          $relation        Relation
+     * @param DatabaseInterface $dbi             Database Interface instance
+     * @param string            $action          Action
+     * @param int               $num_fields      The number of fields
+     * @param string|null       $regenerate      Use regeneration
+     * @param array|null        $selected        Selected
+     * @param array|null        $fields_meta     Fields meta
      *
      * @return array<string, mixed>
      */
-    public function displayForm(
+    public static function displayForm(
+        Transformations $transformations,
+        Relation $relation,
+        DatabaseInterface $dbi,
         string $action,
         $num_fields = 0,
         $regenerate = null,
         ?array $selected = null,
         $fields_meta = null
     ): array {
-        $GLOBALS['col_priv'] = $GLOBALS['col_priv'] ?? null;
-        $GLOBALS['is_reload_priv'] = $GLOBALS['is_reload_priv'] ?? null;
-        $GLOBALS['mime_map'] = $GLOBALS['mime_map'] ?? null;
+        global $db, $table, $cfg, $col_priv, $is_reload_priv, $mime_map;
+
+        Util::checkParameters([
+            'server',
+            'db',
+            'table',
+            'action',
+            'num_fields',
+        ]);
 
         $length_values_input_size = 8;
         $content_cells = [];
-        $form_params = ['db' => $GLOBALS['db']];
+        $form_params = ['db' => $db];
 
-        if ($action === '/table/create') {
+        if ($action == Url::getFromRoute('/table/create')) {
             $form_params['reload'] = 1;
         } else {
-            if ($action === '/table/add-field') {
-                $form_params = array_merge($form_params, ['field_where' => $_POST['field_where'] ?? null]);
+            if ($action == Url::getFromRoute('/table/add-field')) {
+                $form_params = array_merge(
+                    $form_params,
+                    [
+                        'field_where' => Util::getValueByKey($_POST, 'field_where'),
+                    ]
+                );
                 if (isset($_POST['field_where'])) {
                     $form_params['after_field'] = $_POST['after_field'];
                 }
             }
 
-            $form_params['table'] = $GLOBALS['table'];
+            $form_params['table'] = $table;
         }
 
         $form_params['orig_num_fields'] = $num_fields;
@@ -94,8 +96,8 @@ final class ColumnsDefinition
         $form_params = array_merge(
             $form_params,
             [
-                'orig_field_where' => $_POST['field_where'] ?? null,
-                'orig_after_field' => $_POST['after_field'] ?? null,
+                'orig_field_where' => Util::getValueByKey($_POST, 'field_where'),
+                'orig_after_field' => Util::getValueByKey($_POST, 'after_field'),
             ]
         );
 
@@ -105,21 +107,22 @@ final class ColumnsDefinition
             }
         }
 
-        $is_backup = $action !== '/table/create' && $action !== '/table/add-field';
+        $is_backup = ($action != Url::getFromRoute('/table/create')
+            && $action != Url::getFromRoute('/table/add-field'));
 
-        $relationParameters = $this->relation->getRelationParameters();
+        $relationParameters = $relation->getRelationParameters();
 
-        $comments_map = $this->relation->getComments($GLOBALS['db'], $GLOBALS['table']);
+        $comments_map = $relation->getComments($db, $table);
 
         $move_columns = [];
         if (isset($fields_meta)) {
-            $move_columns = $this->dbi->getTable($GLOBALS['db'], $GLOBALS['table'])->getColumnsMeta();
+            $move_columns = $dbi->getTable($db, $table)->getColumnsMeta();
         }
 
         $available_mime = [];
-        if ($relationParameters->browserTransformationFeature !== null && $GLOBALS['cfg']['BrowseMIME']) {
-            $GLOBALS['mime_map'] = $this->transformations->getMime($GLOBALS['db'], $GLOBALS['table']);
-            $available_mime = $this->transformations->getAvailableMimeTypes();
+        if ($relationParameters->browserTransformationFeature !== null && $cfg['BrowseMIME']) {
+            $mime_map = $transformations->getMime($db, $table);
+            $available_mime = $transformations->getAvailableMimeTypes();
         }
 
         $mime_types = [
@@ -144,12 +147,12 @@ final class ColumnsDefinition
             $regenerate = 1;
         }
 
-        $foreigners = $this->relation->getForeigners($GLOBALS['db'], $GLOBALS['table'], '', 'foreign');
+        $foreigners = $relation->getForeigners($db, $table, '', 'foreign');
         $child_references = null;
         // From MySQL 5.6.6 onwards columns with foreign keys can be renamed.
         // Hence, no need to get child references
-        if ($this->dbi->getVersion() < 50606) {
-            $child_references = $this->relation->getChildReferences($GLOBALS['db'], $GLOBALS['table']);
+        if ($dbi->getVersion() < 50606) {
+            $child_references = $relation->getChildReferences($db, $table);
         }
 
         for ($columnNumber = 0; $columnNumber < $num_fields; $columnNumber++) {
@@ -251,8 +254,8 @@ final class ColumnsDefinition
                 $submit_attribute = Util::getValueByKey($_POST, 'field_attribute.' . $columnNumber, false);
                 $comments_map[$columnMeta['Field']] = Util::getValueByKey($_POST, 'field_comments.' . $columnNumber);
 
-                $GLOBALS['mime_map'][$columnMeta['Field']] = array_merge(
-                    $GLOBALS['mime_map'][$columnMeta['Field']] ?? [],
+                $mime_map[$columnMeta['Field']] = array_merge(
+                    $mime_map[$columnMeta['Field']] ?? [],
                     [
                         'mimetype' => Util::getValueByKey($_POST, 'field_mimetype.' . $columnNumber),
                         'transformation' => Util::getValueByKey(
@@ -274,7 +277,7 @@ final class ColumnsDefinition
                     'STORED GENERATED',
                 ];
                 if (in_array($columnMeta['Extra'], $virtual)) {
-                    $tableObj = new Table($GLOBALS['table'], $GLOBALS['db']);
+                    $tableObj = new Table($table, $db);
                     $expressions = $tableObj->getColumnGenerationExpression($columnMeta['Field']);
                     $columnMeta['Expression'] = is_array($expressions) ? $expressions[$columnMeta['Field']] : null;
                 }
@@ -330,8 +333,8 @@ final class ColumnsDefinition
 
             // Variable tell if current column is bound in a foreign key constraint or not.
             // MySQL version from 5.6.6 allow renaming columns with foreign keys
-            if (isset($columnMeta['Field'], $form_params['table']) && $this->dbi->getVersion() < 50606) {
-                $columnMeta['column_status'] = $this->relation->checkChildForeignReferences(
+            if (isset($columnMeta['Field'], $form_params['table']) && $dbi->getVersion() < 50606) {
+                $columnMeta['column_status'] = $relation->checkChildForeignReferences(
                     $form_params['db'],
                     $form_params['table'],
                     $columnMeta['Field'],
@@ -380,15 +383,49 @@ final class ColumnsDefinition
                 $form_params = array_merge(
                     $form_params,
                     [
-                        'field_default_value_orig[' . $columnNumber . ']' => $columnMeta['Default'] ?? '',
-                        'field_default_type_orig[' . $columnNumber . ']' => $columnMeta['DefaultType'] ?? '',
-                        'field_collation_orig[' . $columnNumber . ']' => $columnMeta['Collation'] ?? '',
-                        'field_attribute_orig[' . $columnNumber . ']' => trim($extracted_columnspec['attribute'] ?? ''),
-                        'field_null_orig[' . $columnNumber . ']' => $columnMeta['Null'] ?? '',
-                        'field_extra_orig[' . $columnNumber . ']' => $columnMeta['Extra'] ?? '',
-                        'field_comments_orig[' . $columnNumber . ']' => $columnMeta['Comment'] ?? '',
-                        'field_virtuality_orig[' . $columnNumber . ']' => $columnMeta['Virtuality'] ?? '',
-                        'field_expression_orig[' . $columnNumber . ']' => $columnMeta['Expression'] ?? '',
+                        'field_default_value_orig[' . $columnNumber . ']' => Util::getValueByKey(
+                            $columnMeta,
+                            'Default',
+                            ''
+                        ),
+                        'field_default_type_orig[' . $columnNumber . ']' => Util::getValueByKey(
+                            $columnMeta,
+                            'DefaultType',
+                            ''
+                        ),
+                        'field_collation_orig[' . $columnNumber . ']' => Util::getValueByKey(
+                            $columnMeta,
+                            'Collation',
+                            ''
+                        ),
+                        'field_attribute_orig[' . $columnNumber . ']' => trim(
+                            Util::getValueByKey($extracted_columnspec, 'attribute', '')
+                        ),
+                        'field_null_orig[' . $columnNumber . ']' => Util::getValueByKey(
+                            $columnMeta,
+                            'Null',
+                            ''
+                        ),
+                        'field_extra_orig[' . $columnNumber . ']' => Util::getValueByKey(
+                            $columnMeta,
+                            'Extra',
+                            ''
+                        ),
+                        'field_comments_orig[' . $columnNumber . ']' => Util::getValueByKey(
+                            $columnMeta,
+                            'Comment',
+                            ''
+                        ),
+                        'field_virtuality_orig[' . $columnNumber . ']' => Util::getValueByKey(
+                            $columnMeta,
+                            'Virtuality',
+                            ''
+                        ),
+                        'field_expression_orig[' . $columnNumber . ']' => Util::getValueByKey(
+                            $columnMeta,
+                            'Expression',
+                            ''
+                        ),
                     ]
                 );
             }
@@ -421,14 +458,14 @@ final class ColumnsDefinition
                 'is_backup' => $is_backup,
                 'move_columns' => $move_columns,
                 'available_mime' => $available_mime,
-                'mime_map' => $GLOBALS['mime_map'] ?? [],
+                'mime_map' => $mime_map ?? [],
             ];
         }
 
         $partitionDetails = TablePartitionDefinition::getDetails();
 
-        $charsets = Charsets::getCharsets($this->dbi, $GLOBALS['cfg']['Server']['DisableIS']);
-        $collations = Charsets::getCollations($this->dbi, $GLOBALS['cfg']['Server']['DisableIS']);
+        $charsets = Charsets::getCharsets($dbi, $cfg['Server']['DisableIS']);
+        $collations = Charsets::getCollations($dbi, $cfg['Server']['DisableIS']);
         $charsetsList = [];
         foreach ($charsets as $charset) {
             $collationsList = [];
@@ -447,7 +484,7 @@ final class ColumnsDefinition
         }
 
         $storageEngines = StorageEngine::getArray();
-        $isIntegersLengthRestricted = Compatibility::isIntegersLengthRestricted($this->dbi);
+        $isIntegersLengthRestricted = Compatibility::isIntegersLengthRestricted($dbi);
 
         return [
             'is_backup' => $is_backup,
@@ -470,20 +507,19 @@ final class ColumnsDefinition
             'storage_engines' => $storageEngines,
             'connection' => $_POST['connection'] ?? null,
             'change_column' => $_POST['change_column'] ?? $_GET['change_column'] ?? null,
-            'is_virtual_columns_supported' => Compatibility::isVirtualColumnsSupported($this->dbi->getVersion()),
+            'is_virtual_columns_supported' => Compatibility::isVirtualColumnsSupported($dbi->getVersion()),
             'is_integers_length_restricted' => $isIntegersLengthRestricted,
-            'browse_mime' => $GLOBALS['cfg']['BrowseMIME'] ?? null,
-            'supports_stored_keyword' => Compatibility::supportsStoredKeywordForVirtualColumns(
-                $this->dbi->getVersion()
-            ),
-            'server_version' => $this->dbi->getVersion(),
-            'max_rows' => intval($GLOBALS['cfg']['MaxRows']),
-            'char_editing' => $GLOBALS['cfg']['CharEditing'] ?? null,
-            'attribute_types' => $this->dbi->types->getAttributes(),
-            'privs_available' => ($GLOBALS['col_priv'] ?? false) && ($GLOBALS['is_reload_priv'] ?? false),
-            'max_length' => $this->dbi->getVersion() >= 50503 ? 1024 : 255,
+            'browse_mime' => $cfg['BrowseMIME'] ?? null,
+            'supports_stored_keyword' => Compatibility::supportsStoredKeywordForVirtualColumns($dbi->getVersion()),
+            'server_version' => $dbi->getVersion(),
+            'max_rows' => intval($cfg['MaxRows']),
+            'char_editing' => $cfg['CharEditing'] ?? null,
+            'attribute_types' => $dbi->types->getAttributes(),
+            'privs_available' => ($col_priv ?? false) && ($is_reload_priv ?? false),
+            'max_length' => $dbi->getVersion() >= 50503 ? 1024 : 255,
             'have_partitioning' => Partition::havePartitioning(),
-            'disable_is' => $GLOBALS['cfg']['Server']['DisableIS'],
+            'dbi' => $dbi,
+            'disable_is' => $cfg['Server']['DisableIS'],
         ];
     }
 }

@@ -11,7 +11,6 @@ use PhpMyAdmin\Template;
 use PhpMyAdmin\Tests\Stubs\DbiDummy;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use SplFileInfo;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -72,7 +71,7 @@ final class CacheWarmupCommand extends Command
         }
 
         $output->writeln('Warming up all caches.', OutputInterface::VERBOSITY_VERBOSE);
-        $twigCode = $this->warmUptwigCache($output, $env, false);
+        $twigCode = $this->warmUpTwigCache($output, $env, false);
         if ($twigCode !== 0) {
             $output->writeln('Twig cache generation had an error.');
 
@@ -118,13 +117,13 @@ final class CacheWarmupCommand extends Command
         string $environment,
         bool $writeReplacements
     ): int {
-        $GLOBALS['config'] = $GLOBALS['config'] ?? null;
+        global $cfg, $config, $dbi;
 
         $output->writeln('Warming up the twig cache', OutputInterface::VERBOSITY_VERBOSE);
-        $GLOBALS['config'] = new Config(CONFIG_FILE);
-        $GLOBALS['cfg']['environment'] = $environment;
-        $GLOBALS['config']->set('environment', $GLOBALS['cfg']['environment']);
-        $GLOBALS['dbi'] = new DatabaseInterface(new DbiDummy());
+        $config = new Config(CONFIG_FILE);
+        $cfg['environment'] = $environment;
+        $config->set('environment', $cfg['environment']);
+        $dbi = new DatabaseInterface(new DbiDummy());
         $tmpDir = ROOT_PATH . 'twig-templates';
         $twig = Template::getTwigEnvironment($tmpDir);
 
@@ -144,7 +143,6 @@ final class CacheWarmupCommand extends Command
         );
 
         $output->writeln('Warming templates', OutputInterface::VERBOSITY_VERY_VERBOSE);
-        /** @var SplFileInfo $file */
         foreach ($templates as $file) {
             // Skip test files
             if (str_contains($file->getPathname(), '/test/')) {

@@ -21,8 +21,10 @@ abstract class TextFileUploadTransformationsPlugin extends IOTransformationsPlug
 {
     /**
      * Gets the transformation description of the specific plugin
+     *
+     * @return string
      */
-    public static function getInfo(): string
+    public static function getInfo()
     {
         return __('File upload functionality for TEXT columns. It does not have a textarea for input.');
     }
@@ -86,8 +88,10 @@ abstract class TextFileUploadTransformationsPlugin extends IOTransformationsPlug
 
     /**
      * Gets the transformation name of the specific plugin
+     *
+     * @return string
      */
-    public static function getName(): string
+    public static function getName()
     {
         return 'Text file upload';
     }

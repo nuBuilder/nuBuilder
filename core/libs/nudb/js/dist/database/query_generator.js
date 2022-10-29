@@ -1,19 +1,3 @@
-"use strict";
-(self["webpackChunkphpmyadmin"] = self["webpackChunkphpmyadmin"] || []).push([[12],{
-
-/***/ 1:
-/***/ (function(module) {
-
-module.exports = jQuery;
-
-/***/ }),
-
-/***/ 17:
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-
 /**
  * @fileoverview    function used in QBE for DB
  * @name            Database Operations
@@ -24,6 +8,8 @@ __webpack_require__.r(__webpack_exports__);
  *
  */
 
+/* global sprintf */
+// js/vendor/sprintf.js
 function getFormatsText() {
   return {
     '=': ' = \'%s\'',
@@ -52,7 +38,7 @@ function generateCondition(criteriaDiv, table) {
 
   if (criteriaDiv.find('.criteria_rhs').first().val() === 'text') {
     var formatsText = getFormatsText();
-    query += window.sprintf(formatsText[criteriaDiv.find('.criteria_op').first().val()], Functions.escapeSingleQuote(criteriaDiv.find('.rhs_text_val').first().val()));
+    query += sprintf(formatsText[criteriaDiv.find('.criteria_op').first().val()], Functions.escapeSingleQuote(criteriaDiv.find('.rhs_text_val').first().val()));
   } else {
     query += ' ' + criteriaDiv.find('.criteria_op').first().val();
     query += ' `' + Functions.escapeBacktick(criteriaDiv.find('.tableNameSelect').first().val()) + '`.';
@@ -60,30 +46,31 @@ function generateCondition(criteriaDiv, table) {
   }
 
   return query;
-}
+} // eslint-disable-next-line no-unused-vars
 
-window.generateWhereBlock = function () {
+
+function generateWhereBlock() {
   var count = 0;
   var query = '';
-  jquery__WEBPACK_IMPORTED_MODULE_0__('.tableNameSelect').each(function () {
-    var criteriaDiv = jquery__WEBPACK_IMPORTED_MODULE_0__(this).siblings('.jsCriteriaOptions').first();
-    var useCriteria = jquery__WEBPACK_IMPORTED_MODULE_0__(this).siblings('.criteria_col').first();
+  $('.tableNameSelect').each(function () {
+    var criteriaDiv = $(this).siblings('.jsCriteriaOptions').first();
+    var useCriteria = $(this).siblings('.criteria_col').first();
 
-    if (jquery__WEBPACK_IMPORTED_MODULE_0__(this).val() !== '' && useCriteria.prop('checked')) {
+    if ($(this).val() !== '' && useCriteria.prop('checked')) {
       if (count > 0) {
         criteriaDiv.find('input.logical_op').each(function () {
-          if (jquery__WEBPACK_IMPORTED_MODULE_0__(this).prop('checked')) {
-            query += ' ' + jquery__WEBPACK_IMPORTED_MODULE_0__(this).val() + ' ';
+          if ($(this).prop('checked')) {
+            query += ' ' + $(this).val() + ' ';
           }
         });
       }
 
-      query += generateCondition(criteriaDiv, jquery__WEBPACK_IMPORTED_MODULE_0__(this));
+      query += generateCondition(criteriaDiv, $(this));
       count++;
     }
   });
   return query;
-};
+}
 
 function generateJoin(newTable, tableAliases, fk) {
   var query = '';
@@ -143,9 +130,10 @@ function appendTable(table, tableAliases, usedTables, foreignKeys) {
 
   usedTables.push(table);
   return query;
-}
+} // eslint-disable-next-line no-unused-vars
 
-window.generateFromBlock = (tableAliases, foreignKeys) => {
+
+function generateFromBlock(tableAliases, foreignKeys) {
   var usedTables = [];
   var query = '';
 
@@ -156,14 +144,4 @@ window.generateFromBlock = (tableAliases, foreignKeys) => {
   }
 
   return query;
-};
-
-/***/ })
-
-},
-/******/ function(__webpack_require__) { // webpackRuntimeModules
-/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
-/******/ var __webpack_exports__ = (__webpack_exec__(17));
-/******/ }
-]);
-//# sourceMappingURL=query_generator.js.map
+}

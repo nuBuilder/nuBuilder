@@ -1,27 +1,9 @@
-"use strict";
-(self["webpackChunkphpmyadmin"] = self["webpackChunkphpmyadmin"] || []).push([[17],{
-
-/***/ 1:
-/***/ (function(module) {
-
-module.exports = jQuery;
-
-/***/ }),
-
-/***/ 22:
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-
-/* global Navigation */
-
-window.AJAX.registerTeardown('database/triggers.js', function () {
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', 'a.ajax.add_anchor, a.ajax.edit_anchor');
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', 'a.ajax.export_anchor');
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', '#bulkActionExportButton');
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', 'a.ajax.drop_anchor');
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', '#bulkActionDropButton');
+AJAX.registerTeardown('database/triggers.js', function () {
+  $(document).off('click', 'a.ajax.add_anchor, a.ajax.edit_anchor');
+  $(document).off('click', 'a.ajax.export_anchor');
+  $(document).off('click', '#bulkActionExportButton');
+  $(document).off('click', 'a.ajax.drop_anchor');
+  $(document).off('click', '#bulkActionDropButton');
 });
 const DatabaseTriggers = {
   /**
@@ -36,12 +18,6 @@ const DatabaseTriggers = {
   syntaxHiglighter: null,
 
   /**
-   * @var buttonOptions Object containing options for
-   *                    the jQueryUI dialog buttons
-   */
-  buttonOptions: {},
-
-  /**
    * Validate editor form fields.
    *
    * @return {bool}
@@ -54,24 +30,24 @@ const DatabaseTriggers = {
     var $elm = null; // Common validation. At the very least the name
     // and the definition must be provided for an item
 
-    $elm = jquery__WEBPACK_IMPORTED_MODULE_0__('table.rte_table').last().find('input[name=item_name]');
+    $elm = $('table.rte_table').last().find('input[name=item_name]');
 
     if ($elm.val() === '') {
       $elm.trigger('focus');
-      alert(window.Messages.strFormEmpty);
+      alert(Messages.strFormEmpty);
       return false;
     }
 
-    $elm = jquery__WEBPACK_IMPORTED_MODULE_0__('table.rte_table').find('textarea[name=item_definition]');
+    $elm = $('table.rte_table').find('textarea[name=item_definition]');
 
     if ($elm.val() === '') {
       if (this.syntaxHiglighter !== null) {
         this.syntaxHiglighter.focus();
       } else {
-        jquery__WEBPACK_IMPORTED_MODULE_0__('textarea[name=item_definition]').last().trigger('focus');
+        $('textarea[name=item_definition]').last().trigger('focus');
       }
 
-      alert(window.Messages.strFormEmpty);
+      alert(Messages.strFormEmpty);
       return false;
     } // The validation has so far passed, so now
     // we can validate item-specific fields.
@@ -98,19 +74,19 @@ const DatabaseTriggers = {
     if ($this.attr('id') === 'bulkActionExportButton') {
       var combined = {
         success: true,
-        title: window.Messages.strExport,
+        title: Messages.strExport,
         message: '',
         error: ''
       }; // export anchors of all selected rows
 
-      var exportAnchors = jquery__WEBPACK_IMPORTED_MODULE_0__('input.checkall:checked').parents('tr').find('.export_anchor');
+      var exportAnchors = $('input.checkall:checked').parents('tr').find('.export_anchor');
       var count = exportAnchors.length;
       var returnCount = 0;
-      var p = jquery__WEBPACK_IMPORTED_MODULE_0__.when();
+      var p = $.when();
       exportAnchors.each(function () {
-        var h = jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('href');
+        var h = $(this).attr('href');
         p = p.then(function () {
-          return jquery__WEBPACK_IMPORTED_MODULE_0__.get(h, {
+          return $.get(h, {
             'ajax_request': true
           }, function (data) {
             returnCount++;
@@ -134,7 +110,7 @@ const DatabaseTriggers = {
         });
       });
     } else {
-      jquery__WEBPACK_IMPORTED_MODULE_0__.get($this.attr('href'), {
+      $.get($this.attr('href'), {
         'ajax_request': true
       }, showExport);
     }
@@ -145,14 +121,19 @@ const DatabaseTriggers = {
       if (data.success === true) {
         Functions.ajaxRemoveMessage($msg);
         /**
-         * @var button_options Object containing options
+         * @var buttonOptions Object containing options
          *                     for jQueryUI dialog buttons
          */
 
-        var buttonOptions = {};
+        var buttonOptions = {
+          [Messages.strClose]: {
+            text: Messages.strClose,
+            class: 'btn btn-primary'
+          }
+        };
 
-        buttonOptions[window.Messages.strClose] = function () {
-          jquery__WEBPACK_IMPORTED_MODULE_0__(this).dialog('close').remove();
+        buttonOptions[Messages.strClose].click = function () {
+          $(this).dialog('close').remove();
         };
         /**
          * Display the dialog to the user
@@ -160,7 +141,10 @@ const DatabaseTriggers = {
 
 
         data.message = '<textarea cols="40" rows="15" class="w-100">' + data.message + '</textarea>';
-        var $ajaxDialog = jquery__WEBPACK_IMPORTED_MODULE_0__('<div>' + data.message + '</div>').dialog({
+        var $ajaxDialog = $('<div>' + data.message + '</div>').dialog({
+          classes: {
+            'ui-dialog-titlebar-close': 'btn-close'
+          },
           width: 500,
           buttons: buttonOptions,
           title: data.title
@@ -203,18 +187,28 @@ const DatabaseTriggers = {
 
 
     var $msg = Functions.ajaxShowMessage();
-    jquery__WEBPACK_IMPORTED_MODULE_0__.get($this.attr('href'), {
+    $.get($this.attr('href'), {
       'ajax_request': true
     }, function (data) {
       if (data.success === true) {
-        // We have successfully fetched the editor form
+        var buttonOptions = {
+          [Messages.strGo]: {
+            text: Messages.strGo,
+            class: 'btn btn-primary'
+          },
+          [Messages.strClose]: {
+            text: Messages.strClose,
+            class: 'btn btn-secondary'
+          }
+        }; // We have successfully fetched the editor form
+
         Functions.ajaxRemoveMessage($msg); // Now define the function that is called when
         // the user presses the "Go" button
 
-        that.buttonOptions[window.Messages.strGo] = function () {
+        buttonOptions[Messages.strGo].click = function () {
           // Move the data from the codemirror editor back to the
           // textarea, where it can be used in the form submission.
-          if (typeof window.CodeMirror !== 'undefined') {
+          if (typeof CodeMirror !== 'undefined') {
             that.syntaxHiglighter.save();
           } // Validate editor and submit request, if passed.
 
@@ -223,10 +217,10 @@ const DatabaseTriggers = {
             /**
              * @var data Form data to be sent in the AJAX request
              */
-            var data = jquery__WEBPACK_IMPORTED_MODULE_0__('form.rte_form').last().serialize();
-            $msg = Functions.ajaxShowMessage(window.Messages.strProcessingRequest);
-            var url = jquery__WEBPACK_IMPORTED_MODULE_0__('form.rte_form').last().attr('action');
-            jquery__WEBPACK_IMPORTED_MODULE_0__.post(url, data, function (data) {
+            var data = $('form.rte_form').last().serialize();
+            $msg = Functions.ajaxShowMessage(Messages.strProcessingRequest);
+            var url = $('form.rte_form').last().attr('action');
+            $.post(url, data, function (data) {
               if (data.success === true) {
                 // Item created successfully
                 Functions.ajaxRemoveMessage($msg);
@@ -259,11 +253,11 @@ const DatabaseTriggers = {
                    */
 
                   var inserted = false;
-                  jquery__WEBPACK_IMPORTED_MODULE_0__('table.data').find('tr').each(function () {
-                    text = jquery__WEBPACK_IMPORTED_MODULE_0__(this).children('td').eq(0).find('strong').text().toUpperCase().trim();
+                  $('table.data').find('tr').each(function () {
+                    text = $(this).children('td').eq(0).find('strong').text().toUpperCase().trim();
 
                     if (text !== '' && text > data.name) {
-                      jquery__WEBPACK_IMPORTED_MODULE_0__(this).before(data.new_row);
+                      $(this).before(data.new_row);
                       inserted = true;
                       return false;
                     }
@@ -273,20 +267,20 @@ const DatabaseTriggers = {
                     // If we didn't manage to insert the row yet,
                     // it must belong at the end of the list,
                     // so we insert it there.
-                    jquery__WEBPACK_IMPORTED_MODULE_0__('table.data').append(data.new_row);
+                    $('table.data').append(data.new_row);
                   } // Fade-in the new row
 
 
-                  jquery__WEBPACK_IMPORTED_MODULE_0__('tr.ajaxInsert').show('slow').removeClass('ajaxInsert');
-                } else if (jquery__WEBPACK_IMPORTED_MODULE_0__('table.data').find('tr').has('td').length === 0) {
+                  $('tr.ajaxInsert').show('slow').removeClass('ajaxInsert');
+                } else if ($('table.data').find('tr').has('td').length === 0) {
                   // If we are not supposed to insert the new row,
                   // we will now check if the table is empty and
                   // needs to be hidden. This will be the case if
                   // we were editing the only item in the list,
                   // which we removed and will not be inserting
                   // something else in its place.
-                  jquery__WEBPACK_IMPORTED_MODULE_0__('table.data').hide('slow', function () {
-                    jquery__WEBPACK_IMPORTED_MODULE_0__('#nothing2display').show('slow');
+                  $('table.data').hide('slow', function () {
+                    $('#nothing2display').show('slow');
                   });
                 } // Now we have inserted the row at the correct
                 // position, but surely at least some row classes
@@ -305,16 +299,16 @@ const DatabaseTriggers = {
                  */
 
                 var rowclass = '';
-                jquery__WEBPACK_IMPORTED_MODULE_0__('table.data').find('tr').has('td').each(function () {
+                $('table.data').find('tr').has('td').each(function () {
                   rowclass = ct % 2 === 0 ? 'odd' : 'even';
-                  jquery__WEBPACK_IMPORTED_MODULE_0__(this).removeClass().addClass(rowclass);
+                  $(this).removeClass().addClass(rowclass);
                   ct++;
                 }); // If this is the first item being added, remove
                 // the "No items" message and show the list.
 
-                if (jquery__WEBPACK_IMPORTED_MODULE_0__('table.data').find('tr').has('td').length > 0 && jquery__WEBPACK_IMPORTED_MODULE_0__('#nothing2display').is(':visible')) {
-                  jquery__WEBPACK_IMPORTED_MODULE_0__('#nothing2display').hide('slow', function () {
-                    jquery__WEBPACK_IMPORTED_MODULE_0__('table.data').show('slow');
+                if ($('table.data').find('tr').has('td').length > 0 && $('#nothing2display').is(':visible')) {
+                  $('#nothing2display').hide('slow', function () {
+                    $('table.data').show('slow');
                   });
                 }
 
@@ -328,40 +322,43 @@ const DatabaseTriggers = {
         }; // end of function that handles the submission of the Editor
 
 
-        that.buttonOptions[window.Messages.strClose] = function () {
-          jquery__WEBPACK_IMPORTED_MODULE_0__(this).dialog('close');
+        buttonOptions[Messages.strClose].click = function () {
+          $(this).dialog('close');
         };
         /**
          * Display the dialog to the user
          */
 
 
-        that.$ajaxDialog = jquery__WEBPACK_IMPORTED_MODULE_0__('<div id="rteDialog">' + data.message + '</div>').dialog({
+        that.$ajaxDialog = $('<div id="rteDialog">' + data.message + '</div>').dialog({
+          classes: {
+            'ui-dialog-titlebar-close': 'btn-close'
+          },
           width: 700,
           minWidth: 500,
-          buttons: that.buttonOptions,
+          buttons: buttonOptions,
           // Issue #15810 - use button titles for modals (eg: new procedure)
           // Respect the order: title on href tag, href content, title sent in response
-          title: $this.attr('title') || $this.text() || jquery__WEBPACK_IMPORTED_MODULE_0__(data.title).text(),
+          title: $this.attr('title') || $this.text() || $(data.title).text(),
           modal: true,
           open: function () {
-            jquery__WEBPACK_IMPORTED_MODULE_0__('#rteDialog').dialog('option', 'max-height', jquery__WEBPACK_IMPORTED_MODULE_0__(window).height());
+            $('#rteDialog').dialog('option', 'max-height', $(window).height());
 
-            if (jquery__WEBPACK_IMPORTED_MODULE_0__('#rteDialog').parents('.ui-dialog').height() > jquery__WEBPACK_IMPORTED_MODULE_0__(window).height()) {
-              jquery__WEBPACK_IMPORTED_MODULE_0__('#rteDialog').dialog('option', 'height', jquery__WEBPACK_IMPORTED_MODULE_0__(window).height());
+            if ($('#rteDialog').parents('.ui-dialog').height() > $(window).height()) {
+              $('#rteDialog').dialog('option', 'height', $(window).height());
             }
 
-            jquery__WEBPACK_IMPORTED_MODULE_0__(this).find('input[name=item_name]').trigger('focus');
-            jquery__WEBPACK_IMPORTED_MODULE_0__(this).find('input.datefield').each(function () {
-              Functions.addDatepicker(jquery__WEBPACK_IMPORTED_MODULE_0__(this).css('width', '95%'), 'date');
+            $(this).find('input[name=item_name]').trigger('focus');
+            $(this).find('input.datefield').each(function () {
+              Functions.addDatepicker($(this).css('width', '95%'), 'date');
             });
-            jquery__WEBPACK_IMPORTED_MODULE_0__(this).find('input.datetimefield').each(function () {
-              Functions.addDatepicker(jquery__WEBPACK_IMPORTED_MODULE_0__(this).css('width', '95%'), 'datetime');
+            $(this).find('input.datetimefield').each(function () {
+              Functions.addDatepicker($(this).css('width', '95%'), 'datetime');
             });
-            jquery__WEBPACK_IMPORTED_MODULE_0__.datepicker.initialized = false;
+            $.datepicker.initialized = false;
           },
           close: function () {
-            jquery__WEBPACK_IMPORTED_MODULE_0__(this).remove();
+            $(this).remove();
           }
         });
         /**
@@ -371,7 +368,7 @@ const DatabaseTriggers = {
 
         var mode = 'add';
 
-        if (jquery__WEBPACK_IMPORTED_MODULE_0__('input[name=editor_process_edit]').length > 0) {
+        if ($('input[name=editor_process_edit]').length > 0) {
           mode = 'edit';
         } // Attach syntax highlighted editor to the definition
 
@@ -381,7 +378,7 @@ const DatabaseTriggers = {
          */
 
 
-        var $elm = jquery__WEBPACK_IMPORTED_MODULE_0__('textarea[name=item_definition]').last();
+        var $elm = $('textarea[name=item_definition]').last();
         var linterOptions = {};
         linterOptions.triggerEditor = true;
         that.syntaxHiglighter = Functions.getSqlEditor($elm, {}, 'both', linterOptions);
@@ -399,16 +396,16 @@ const DatabaseTriggers = {
      * @var question String containing the question to be asked for confirmation
      */
 
-    var question = jquery__WEBPACK_IMPORTED_MODULE_0__('<div></div>').text($currRow.children('td').children('.drop_sql').html()); // We ask for confirmation first here, before submitting the ajax request
+    var question = $('<div></div>').text($currRow.children('td').children('.drop_sql').html()); // We ask for confirmation first here, before submitting the ajax request
 
     $this.confirm(question, $this.attr('href'), function (url) {
       /**
        * @var msg jQuery object containing the reference to
        *          the AJAX message shown to the user
        */
-      var $msg = Functions.ajaxShowMessage(window.Messages.strProcessingRequest);
+      var $msg = Functions.ajaxShowMessage(Messages.strProcessingRequest);
       var params = Functions.getJsConfirmCommonParam(this, $this.getPostData());
-      jquery__WEBPACK_IMPORTED_MODULE_0__.post(url, params, function (data) {
+      $.post(url, params, function (data) {
         if (data.success === true) {
           /**
            * @var $table Object containing reference
@@ -423,13 +420,13 @@ const DatabaseTriggers = {
             // about to remove, so after the removal there will be
             // nothing to show in the table, so we hide it.
             $table.hide('slow', function () {
-              jquery__WEBPACK_IMPORTED_MODULE_0__(this).find('tr.even, tr.odd').remove();
-              jquery__WEBPACK_IMPORTED_MODULE_0__('.withSelected').remove();
-              jquery__WEBPACK_IMPORTED_MODULE_0__('#nothing2display').show('slow');
+              $(this).find('tr.even, tr.odd').remove();
+              $('.withSelected').remove();
+              $('#nothing2display').show('slow');
             });
           } else {
             $currRow.hide('slow', function () {
-              jquery__WEBPACK_IMPORTED_MODULE_0__(this).remove(); // Now we have removed the row from the list, but maybe
+              $(this).remove(); // Now we have removed the row from the list, but maybe
               // some row classes are wrong now. So we will iterate
               // through all rows and assign correct classes to them.
 
@@ -446,7 +443,7 @@ const DatabaseTriggers = {
               var rowclass = '';
               $table.find('tr').has('td').each(function () {
                 rowclass = ct % 2 === 1 ? 'odd' : 'even';
-                jquery__WEBPACK_IMPORTED_MODULE_0__(this).removeClass().addClass(rowclass);
+                $(this).removeClass().addClass(rowclass);
                 ct++;
               });
             });
@@ -465,26 +462,26 @@ const DatabaseTriggers = {
   },
   dropMultipleDialog: function ($this) {
     // We ask for confirmation here
-    $this.confirm(window.Messages.strDropRTEitems, '', function () {
+    $this.confirm(Messages.strDropRTEitems, '', function () {
       /**
        * @var msg jQuery object containing the reference to
        *          the AJAX message shown to the user
        */
-      var $msg = Functions.ajaxShowMessage(window.Messages.strProcessingRequest); // drop anchors of all selected rows
+      var $msg = Functions.ajaxShowMessage(Messages.strProcessingRequest); // drop anchors of all selected rows
 
-      var dropAnchors = jquery__WEBPACK_IMPORTED_MODULE_0__('input.checkall:checked').parents('tr').find('.drop_anchor');
+      var dropAnchors = $('input.checkall:checked').parents('tr').find('.drop_anchor');
       var success = true;
       var count = dropAnchors.length;
       var returnCount = 0;
       dropAnchors.each(function () {
-        var $anchor = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
+        var $anchor = $(this);
         /**
          * @var $curr_row Object containing reference to the current row
          */
 
         var $currRow = $anchor.parents('tr');
         var params = Functions.getJsConfirmCommonParam(this, $anchor.getPostData());
-        jquery__WEBPACK_IMPORTED_MODULE_0__.post($anchor.attr('href'), params, function (data) {
+        $.post($anchor.attr('href'), params, function (data) {
           returnCount++;
 
           if (data.success === true) {
@@ -501,9 +498,9 @@ const DatabaseTriggers = {
               // about to remove, so after the removal there will be
               // nothing to show in the table, so we hide it.
               $table.hide('slow', function () {
-                jquery__WEBPACK_IMPORTED_MODULE_0__(this).find('tr.even, tr.odd').remove();
-                jquery__WEBPACK_IMPORTED_MODULE_0__('.withSelected').remove();
-                jquery__WEBPACK_IMPORTED_MODULE_0__('#nothing2display').show('slow');
+                $(this).find('tr.even, tr.odd').remove();
+                $('.withSelected').remove();
+                $('#nothing2display').show('slow');
               });
             } else {
               $currRow.hide('fast', function () {
@@ -522,7 +519,7 @@ const DatabaseTriggers = {
                 var rowclass = '';
                 $table.find('tr').has('td').each(function () {
                   rowclass = ct % 2 === 1 ? 'odd' : 'even';
-                  jquery__WEBPACK_IMPORTED_MODULE_0__(this).removeClass().addClass(rowclass);
+                  $(this).removeClass().addClass(rowclass);
                   ct++;
                 });
               });
@@ -533,7 +530,7 @@ const DatabaseTriggers = {
               if (success) {
                 // Get rid of the "Loading" message
                 Functions.ajaxRemoveMessage($msg);
-                jquery__WEBPACK_IMPORTED_MODULE_0__('#rteListForm_checkall').prop({
+                $('#rteListForm_checkall').prop({
                   checked: false,
                   indeterminate: false
                 });
@@ -554,51 +551,41 @@ const DatabaseTriggers = {
     });
   }
 };
-window.AJAX.registerOnload('database/triggers.js', function () {
+AJAX.registerOnload('database/triggers.js', function () {
   /**
    * Attach Ajax event handlers for the Add/Edit functionality.
    */
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', 'a.ajax.add_anchor, a.ajax.edit_anchor', function (event) {
+  $(document).on('click', 'a.ajax.add_anchor, a.ajax.edit_anchor', function (event) {
     event.preventDefault();
 
-    if (jquery__WEBPACK_IMPORTED_MODULE_0__(this).hasClass('add_anchor')) {
-      jquery__WEBPACK_IMPORTED_MODULE_0__.datepicker.initialized = false;
+    if ($(this).hasClass('add_anchor')) {
+      $.datepicker.initialized = false;
     }
 
-    DatabaseTriggers.editorDialog(jquery__WEBPACK_IMPORTED_MODULE_0__(this).hasClass('add_anchor'), jquery__WEBPACK_IMPORTED_MODULE_0__(this));
+    DatabaseTriggers.editorDialog($(this).hasClass('add_anchor'), $(this));
   });
   /**
    * Attach Ajax event handlers for Export
    */
 
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', 'a.ajax.export_anchor', function (event) {
+  $(document).on('click', 'a.ajax.export_anchor', function (event) {
     event.preventDefault();
-    DatabaseTriggers.exportDialog(jquery__WEBPACK_IMPORTED_MODULE_0__(this));
+    DatabaseTriggers.exportDialog($(this));
   });
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', '#bulkActionExportButton', function (event) {
+  $(document).on('click', '#bulkActionExportButton', function (event) {
     event.preventDefault();
-    DatabaseTriggers.exportDialog(jquery__WEBPACK_IMPORTED_MODULE_0__(this));
+    DatabaseTriggers.exportDialog($(this));
   });
   /**
    * Attach Ajax event handlers for Drop functionality
    */
 
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', 'a.ajax.drop_anchor', function (event) {
+  $(document).on('click', 'a.ajax.drop_anchor', function (event) {
     event.preventDefault();
-    DatabaseTriggers.dropDialog(jquery__WEBPACK_IMPORTED_MODULE_0__(this));
+    DatabaseTriggers.dropDialog($(this));
   });
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', '#bulkActionDropButton', function (event) {
+  $(document).on('click', '#bulkActionDropButton', function (event) {
     event.preventDefault();
-    DatabaseTriggers.dropMultipleDialog(jquery__WEBPACK_IMPORTED_MODULE_0__(this));
+    DatabaseTriggers.dropMultipleDialog($(this));
   });
 });
-
-/***/ })
-
-},
-/******/ function(__webpack_require__) { // webpackRuntimeModules
-/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
-/******/ var __webpack_exports__ = (__webpack_exec__(22));
-/******/ }
-]);
-//# sourceMappingURL=triggers.js.map

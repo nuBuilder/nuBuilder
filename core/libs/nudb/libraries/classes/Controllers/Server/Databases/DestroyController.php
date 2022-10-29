@@ -7,7 +7,6 @@ namespace PhpMyAdmin\Controllers\Server\Databases;
 use PhpMyAdmin\ConfigStorage\RelationCleanup;
 use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\DatabaseInterface;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Template;
@@ -44,18 +43,15 @@ final class DestroyController extends AbstractController
         $this->relationCleanup = $relationCleanup;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['selected'] = $GLOBALS['selected'] ?? null;
-        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
-        $GLOBALS['dblist'] = $GLOBALS['dblist'] ?? null;
-        $GLOBALS['reload'] = $GLOBALS['reload'] ?? null;
+        global $selected, $errorUrl, $cfg, $dblist, $reload;
 
         $selected_dbs = $_POST['selected_dbs'] ?? null;
 
         if (
             ! $this->response->isAjax()
-            || (! $this->dbi->isSuperUser() && ! $GLOBALS['cfg']['AllowUserDropDatabase'])
+            || (! $this->dbi->isSuperUser() && ! $cfg['AllowUserDropDatabase'])
         ) {
             $message = Message::error();
             $json = ['message' => $message];
@@ -77,20 +73,20 @@ final class DestroyController extends AbstractController
             return;
         }
 
-        $GLOBALS['errorUrl'] = Url::getFromRoute('/server/databases');
-        $GLOBALS['selected'] = $selected_dbs;
+        $errorUrl = Url::getFromRoute('/server/databases');
+        $selected = $selected_dbs;
         $numberOfDatabases = count($selected_dbs);
 
         foreach ($selected_dbs as $database) {
             $this->relationCleanup->database($database);
             $aQuery = 'DROP DATABASE ' . Util::backquote($database);
-            $GLOBALS['reload'] = true;
+            $reload = true;
 
             $this->dbi->query($aQuery);
             $this->transformations->clear($database);
         }
 
-        $GLOBALS['dblist']->databases->build();
+        $dblist->databases->build();
 
         $message = Message::success(
             _ngettext(

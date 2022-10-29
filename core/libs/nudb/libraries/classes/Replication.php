@@ -49,6 +49,8 @@ class Replication
      */
     public function replicaControl(string $action, ?string $control, int $link)
     {
+        global $dbi;
+
         $action = mb_strtoupper($action);
         $control = $control !== null ? mb_strtoupper($control) : '';
 
@@ -60,7 +62,7 @@ class Replication
             return -1;
         }
 
-        return $GLOBALS['dbi']->tryQuery($action . ' SLAVE ' . $control . ';', $link);
+        return $dbi->tryQuery($action . ' SLAVE ' . $control . ';', $link);
     }
 
     /**
@@ -87,11 +89,13 @@ class Replication
         bool $start,
         int $link
     ) {
+        global $dbi;
+
         if ($stop) {
             $this->replicaControl('STOP', null, $link);
         }
 
-        $out = $GLOBALS['dbi']->tryQuery(
+        $out = $dbi->tryQuery(
             'CHANGE MASTER TO ' .
             'MASTER_HOST=\'' . $host . '\',' .
             'MASTER_PORT=' . ($port * 1) . ',' .
@@ -127,6 +131,8 @@ class Replication
         $port = null,
         $socket = null
     ) {
+        global $dbi;
+
         $server = [];
         $server['user'] = $user;
         $server['password'] = $password;
@@ -136,7 +142,7 @@ class Replication
 
         // 5th parameter set to true means that it's an auxiliary connection
         // and we must not go back to login page if it fails
-        return $GLOBALS['dbi']->connect(DatabaseInterface::CONNECT_AUXILIARY, $server);
+        return $dbi->connect(DatabaseInterface::CONNECT_AUXILIARY, $server);
     }
 
     /**
@@ -150,7 +156,9 @@ class Replication
      */
     public function replicaBinLogPrimary(int $link): array
     {
-        $data = $GLOBALS['dbi']->fetchResult('SHOW MASTER STATUS', null, null, $link);
+        global $dbi;
+
+        $data = $dbi->fetchResult('SHOW MASTER STATUS', null, null, $link);
         $output = [];
 
         if (! empty($data)) {

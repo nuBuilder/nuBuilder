@@ -47,9 +47,9 @@ abstract class ImportPlugin implements Plugin
     /**
      * Handles the whole import logic
      *
-     * @return string[]
+     * @param array $sql_data 2-element array with sql data
      */
-    abstract public function doImport(?File $importHandle = null): array;
+    abstract public function doImport(?File $importHandle = null, array &$sql_data = []): void;
 
     /**
      * Gets the import specific format plugin properties

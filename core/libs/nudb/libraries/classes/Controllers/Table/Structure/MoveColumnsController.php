@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Table\Structure;
 
-use PhpMyAdmin\Controllers\AbstractController;
+use PhpMyAdmin\Controllers\Table\AbstractController;
 use PhpMyAdmin\DatabaseInterface;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Table;
@@ -35,25 +34,27 @@ final class MoveColumnsController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
+        string $db,
+        string $table,
         DatabaseInterface $dbi
     ) {
-        parent::__construct($response, $template);
+        parent::__construct($response, $template, $db, $table);
         $this->dbi = $dbi;
-        $this->tableObj = $this->dbi->getTable($GLOBALS['db'], $GLOBALS['table']);
+        $this->tableObj = $this->dbi->getTable($this->db, $this->table);
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
         if (! isset($_POST['move_columns']) || ! is_array($_POST['move_columns']) || ! $this->response->isAjax()) {
             return;
         }
 
-        $this->dbi->selectDb($GLOBALS['db']);
+        $this->dbi->selectDb($this->db);
 
         /**
          * load the definitions for all columns
          */
-        $columns = $this->dbi->getColumnsFull($GLOBALS['db'], $GLOBALS['table']);
+        $columns = $this->dbi->getColumnsFull($this->db, $this->table);
         $column_names = array_keys($columns);
         $changes = [];
 
@@ -145,7 +146,7 @@ final class MoveColumnsController extends AbstractController
         // query for moving the columns
         $sql_query = sprintf(
             'ALTER TABLE %s %s',
-            Util::backquote($GLOBALS['table']),
+            Util::backquote($this->table),
             implode(', ', $changes)
         );
 

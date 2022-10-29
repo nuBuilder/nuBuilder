@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Table;
 
-use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\Core;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Gis\GisVisualization;
 use PhpMyAdmin\Html\Generator;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Template;
@@ -34,20 +32,22 @@ final class GisVisualizationController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
+        string $db,
+        string $table,
         DatabaseInterface $dbi
     ) {
-        parent::__construct($response, $template);
+        parent::__construct($response, $template, $db, $table);
         $this->dbi = $dbi;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['urlParams'] = $GLOBALS['urlParams'] ?? null;
-        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
-        $this->checkParameters(['db']);
+        global $cfg, $urlParams, $db, $errorUrl;
 
-        $GLOBALS['errorUrl'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabDatabase'], 'database');
-        $GLOBALS['errorUrl'] .= Url::getCommon(['db' => $GLOBALS['db']], '&');
+        Util::checkParameters(['db']);
+
+        $errorUrl = Util::getScriptNameForOption($cfg['DefaultTabDatabase'], 'database');
+        $errorUrl .= Url::getCommon(['db' => $db], '&');
 
         if (! $this->hasDatabase()) {
             return;
@@ -160,12 +160,12 @@ final class GisVisualizationController extends AbstractController
         /**
          * Displays the page
          */
-        $GLOBALS['urlParams']['goto'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabDatabase'], 'database');
-        $GLOBALS['urlParams']['back'] = Url::getFromRoute('/sql');
-        $GLOBALS['urlParams']['sql_query'] = $sqlQuery;
-        $GLOBALS['urlParams']['sql_signature'] = Core::signSqlQuery($sqlQuery);
+        $urlParams['goto'] = Util::getScriptNameForOption($cfg['DefaultTabDatabase'], 'database');
+        $urlParams['back'] = Url::getFromRoute('/sql');
+        $urlParams['sql_query'] = $sqlQuery;
+        $urlParams['sql_signature'] = Core::signSqlQuery($sqlQuery);
         $downloadUrl = Url::getFromRoute('/table/gis-visualization', array_merge(
-            $GLOBALS['urlParams'],
+            $urlParams,
             [
                 'saveToFile' => true,
                 'session_max_rows' => $rows,
@@ -178,7 +178,7 @@ final class GisVisualizationController extends AbstractController
         $startAndNumberOfRowsFieldset = Generator::getStartAndNumberOfRowsFieldsetData($sqlQuery);
 
         $html = $this->template->render('table/gis_visualization/gis_visualization', [
-            'url_params' => $GLOBALS['urlParams'],
+            'url_params' => $urlParams,
             'download_url' => $downloadUrl,
             'label_candidates' => $labelCandidates,
             'spatial_candidates' => $spatialCandidates,

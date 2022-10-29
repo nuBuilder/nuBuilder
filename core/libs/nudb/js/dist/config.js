@@ -1,26 +1,10 @@
-"use strict";
-(self["webpackChunkphpmyadmin"] = self["webpackChunkphpmyadmin"] || []).push([[4],{
-
-/***/ 1:
-/***/ (function(module) {
-
-module.exports = jQuery;
-
-/***/ }),
-
-/***/ 5:
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-
 /**
  * Functions used in configuration forms and on user preferences pages
  */
 
-window.Config = {};
-window.configInlineParams;
-window.configScriptLoaded;
+/* exported PASSIVE_EVENT_LISTENERS */
+var configInlineParams;
+var configScriptLoaded;
 /**
  * checks whether browser supports web storage
  *
@@ -30,7 +14,7 @@ window.configScriptLoaded;
  * @return {boolean}
  */
 
-window.Config.isStorageSupported = function (type) {
+function isStorageSupported(type) {
   let warn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
   try {
@@ -44,15 +28,33 @@ window.Config.isStorageSupported = function (type) {
   } catch (error) {
     // Not supported
     if (warn) {
-      Functions.ajaxShowMessage(window.Messages.strNoLocalStorage, false);
+      Functions.ajaxShowMessage(Messages.strNoLocalStorage, false);
     }
   }
 
   return false;
-}; // default values for fields
+}
+/**
+ * Unbind all event handlers before tearing down a page
+ */
 
 
-window.defaultValues = {};
+AJAX.registerTeardown('config.js', function () {
+  $('.optbox input[id], .optbox select[id], .optbox textarea[id]').off('change').off('keyup');
+  $('.optbox input[type=button][name=submit_reset]').off('click');
+  $('div.tab-content').off();
+  $('#import_local_storage, #export_local_storage').off('click');
+  $('form.prefs-form').off('change').off('submit');
+  $(document).off('click', 'div.click-hide-message');
+  $('#prefs_autoload').find('a').off('click');
+});
+AJAX.registerOnload('config.js', function () {
+  var $topmenuUpt = $('#user_prefs_tabs');
+  $topmenuUpt.find('a.active').attr('rel', 'samepage');
+  $topmenuUpt.find('a:not(.active)').attr('rel', 'newpage');
+}); // default values for fields
+
+var defaultValues = {};
 /**
  * Returns field type
  *
@@ -62,7 +64,7 @@ window.defaultValues = {};
  */
 
 function getFieldType(field) {
-  var $field = jquery__WEBPACK_IMPORTED_MODULE_0__(field);
+  var $field = $(field);
   var tagName = $field.prop('tagName');
 
   if (tagName === 'INPUT') {
@@ -86,7 +88,7 @@ function getFieldType(field) {
 
 
 function setRestoreDefaultBtn(field, display) {
-  var $el = jquery__WEBPACK_IMPORTED_MODULE_0__(field).closest('td').find('.restore-default img');
+  var $el = $(field).closest('td').find('.restore-default img');
   $el[display ? 'show' : 'hide']();
 }
 /**
@@ -99,7 +101,7 @@ function setRestoreDefaultBtn(field, display) {
 
 
 function markField(field) {
-  var $field = jquery__WEBPACK_IMPORTED_MODULE_0__(field);
+  var $field = $(field);
   var type = getFieldType($field);
   var isDefault = checkFieldDefault($field, type); // checkboxes uses parent <span> for marking
 
@@ -123,7 +125,7 @@ function markField(field) {
 
 
 function setFieldValue(field, fieldType, value) {
-  var $field = jquery__WEBPACK_IMPORTED_MODULE_0__(field);
+  var $field = $(field);
 
   switch (fieldType) {
     case 'text':
@@ -165,7 +167,7 @@ function setFieldValue(field, fieldType, value) {
 
 
 function getFieldValue(field, fieldType) {
-  var $field = jquery__WEBPACK_IMPORTED_MODULE_0__(field);
+  var $field = $(field);
 
   switch (fieldType) {
     case 'text':
@@ -197,10 +199,11 @@ function getFieldValue(field, fieldType) {
  *
  * @return {object}
  */
+// eslint-disable-next-line no-unused-vars
 
 
-window.Config.getAllValues = () => {
-  var $elements = jquery__WEBPACK_IMPORTED_MODULE_0__('fieldset input, fieldset select, fieldset textarea');
+function getAllValues() {
+  var $elements = $('fieldset input, fieldset select, fieldset textarea');
   var values = {};
   var type;
   var value;
@@ -220,7 +223,7 @@ window.Config.getAllValues = () => {
   }
 
   return values;
-};
+}
 /**
  * Checks whether field has its default value
  *
@@ -232,10 +235,10 @@ window.Config.getAllValues = () => {
 
 
 function checkFieldDefault(field, type) {
-  var $field = jquery__WEBPACK_IMPORTED_MODULE_0__(field);
+  var $field = $(field);
   var fieldId = $field.attr('id');
 
-  if (typeof window.defaultValues[fieldId] === 'undefined') {
+  if (typeof defaultValues[fieldId] === 'undefined') {
     return true;
   }
 
@@ -243,14 +246,14 @@ function checkFieldDefault(field, type) {
   var currentValue = getFieldValue($field, type);
 
   if (type !== 'select') {
-    isDefault = currentValue === window.defaultValues[fieldId];
+    isDefault = currentValue === defaultValues[fieldId];
   } else {
     // compare arrays, will work for our representation of select values
-    if (currentValue.length !== window.defaultValues[fieldId].length) {
+    if (currentValue.length !== defaultValues[fieldId].length) {
       isDefault = false;
     } else {
       for (var i = 0; i < currentValue.length; i++) {
-        if (currentValue[i] !== window.defaultValues[fieldId][i]) {
+        if (currentValue[i] !== defaultValues[fieldId][i]) {
           isDefault = false;
           break;
         }
@@ -266,19 +269,20 @@ function checkFieldDefault(field, type) {
  *
  * @return {string}
  */
+// eslint-disable-next-line no-unused-vars
 
 
-window.Config.getIdPrefix = function (element) {
-  return jquery__WEBPACK_IMPORTED_MODULE_0__(element).attr('id').replace(/[^-]+$/, '');
-}; // ------------------------------------------------------------------
+function getIdPrefix(element) {
+  return $(element).attr('id').replace(/[^-]+$/, '');
+} // ------------------------------------------------------------------
 // Form validation and field operations
 //
 // form validator assignments
 
 
-let validate = {}; // form validator list
+var validate = {}; // form validator list
 
-window.validators = {
+var validators = {
   // regexp: numeric value
   regExpNumeric: /^[0-9]+$/,
   // regexp: extract parts from PCRE expression
@@ -296,8 +300,8 @@ window.validators = {
       return true;
     }
 
-    var result = this.value !== '0' && window.validators.regExpNumeric.test(this.value);
-    return result ? true : window.Messages.error_nan_p;
+    var result = this.value !== '0' && validators.regExpNumeric.test(this.value);
+    return result ? true : Messages.error_nan_p;
   },
 
   /**
@@ -312,8 +316,8 @@ window.validators = {
       return true;
     }
 
-    var result = window.validators.regExpNumeric.test(this.value);
-    return result ? true : window.Messages.error_nan_nneg;
+    var result = validators.regExpNumeric.test(this.value);
+    return result ? true : Messages.error_nan_nneg;
   },
 
   /**
@@ -326,8 +330,8 @@ window.validators = {
       return true;
     }
 
-    var result = window.validators.regExpNumeric.test(this.value) && this.value !== '0';
-    return result && this.value <= 65535 ? true : window.Messages.error_incorrect_port;
+    var result = validators.regExpNumeric.test(this.value) && this.value !== '0';
+    return result && this.value <= 65535 ? true : Messages.error_incorrect_port;
   },
 
   /**
@@ -344,9 +348,9 @@ window.validators = {
     } // convert PCRE regexp
 
 
-    var parts = regexp.match(window.validators.regExpPcreExtract);
+    var parts = regexp.match(validators.regExpPcreExtract);
     var valid = this.value.match(new RegExp(parts[2], parts[3])) !== null;
-    return valid ? true : window.Messages.error_invalid_value;
+    return valid ? true : Messages.error_invalid_value;
   },
 
   /**
@@ -364,7 +368,7 @@ window.validators = {
       return true;
     }
 
-    return val <= maxValue ? true : Functions.sprintf(window.Messages.error_value_lte, maxValue);
+    return val <= maxValue ? true : Functions.sprintf(Messages.error_value_lte, maxValue);
   },
   // field validators
   field: {},
@@ -379,9 +383,10 @@ window.validators = {
  * @param {boolean} onKeyUp  whether fire on key up
  * @param {Array}   params   validation function parameters
  */
+// eslint-disable-next-line no-unused-vars
 
-window.Config.registerFieldValidator = (id, type, onKeyUp, params) => {
-  if (typeof window.validators[type] === 'undefined') {
+function registerFieldValidator(id, type, onKeyUp, params) {
+  if (typeof validators[type] === 'undefined') {
     return;
   }
 
@@ -392,7 +397,7 @@ window.Config.registerFieldValidator = (id, type, onKeyUp, params) => {
   if (validate[id].length === 0) {
     validate[id].push([type, params, onKeyUp]);
   }
-};
+}
 /**
  * Returns validation functions associated with form field
  *
@@ -407,8 +412,8 @@ function getFieldValidators(fieldId, onKeyUpOnly) {
   // look for field bound validator
   var name = fieldId && fieldId.match(/[^-]+$/)[0];
 
-  if (typeof window.validators.field[name] !== 'undefined') {
-    return [[window.validators.field[name], null]];
+  if (typeof validators.field[name] !== 'undefined') {
+    return [[validators.field[name], null]];
   } // look for registered validators
 
 
@@ -421,7 +426,7 @@ function getFieldValidators(fieldId, onKeyUpOnly) {
         continue;
       }
 
-      functions.push([window.validators[validate[fieldId][i][0]], validate[fieldId][i][1]]);
+      functions.push([validators[validate[fieldId][i][0]], validate[fieldId][i][1]]);
     }
   }
 
@@ -437,14 +442,14 @@ function getFieldValidators(fieldId, onKeyUpOnly) {
  */
 
 
-window.Config.displayErrors = function (errorList) {
+function displayErrors(errorList) {
   var tempIsEmpty = function (item) {
     return item !== '';
   };
 
   for (var fieldId in errorList) {
     var errors = errorList[fieldId];
-    var $field = jquery__WEBPACK_IMPORTED_MODULE_0__('#' + fieldId);
+    var $field = $('#' + fieldId);
     var isFieldset = $field.attr('tagName') === 'FIELDSET';
     var $errorCnt;
 
@@ -455,7 +460,7 @@ window.Config.displayErrors = function (errorList) {
     } // remove empty errors (used to clear error list)
 
 
-    errors = jquery__WEBPACK_IMPORTED_MODULE_0__.grep(errors, tempIsEmpty); // CSS error class
+    errors = $.grep(errors, tempIsEmpty); // CSS error class
 
     if (!isFieldset) {
       // checkboxes uses parent <span> for marking
@@ -467,10 +472,10 @@ window.Config.displayErrors = function (errorList) {
       // if error container doesn't exist, create it
       if ($errorCnt.length === 0) {
         if (isFieldset) {
-          $errorCnt = jquery__WEBPACK_IMPORTED_MODULE_0__('<dl class="errors"></dl>');
+          $errorCnt = $('<dl class="errors"></dl>');
           $field.find('table').before($errorCnt);
         } else {
-          $errorCnt = jquery__WEBPACK_IMPORTED_MODULE_0__('<dl class="inline_errors"></dl>');
+          $errorCnt = $('<dl class="inline_errors"></dl>');
           $field.closest('td').append($errorCnt);
         }
       }
@@ -487,14 +492,14 @@ window.Config.displayErrors = function (errorList) {
       $errorCnt.remove();
     }
   }
-};
+}
 /**
  * Validates fields and fieldsets and call displayError function as required
  */
 
 
 function setDisplayError() {
-  var elements = jquery__WEBPACK_IMPORTED_MODULE_0__('.optbox input[id], .optbox select[id], .optbox textarea[id]'); // run all field validators
+  var elements = $('.optbox input[id], .optbox select[id], .optbox textarea[id]'); // run all field validators
 
   var errors = {};
 
@@ -503,10 +508,10 @@ function setDisplayError() {
   } // run all fieldset validators
 
 
-  jquery__WEBPACK_IMPORTED_MODULE_0__('fieldset.optbox').each(function () {
+  $('fieldset.optbox').each(function () {
     validateFieldset(this, false, errors);
   });
-  window.Config.displayErrors(errors);
+  displayErrors(errors);
 }
 /**
  * Validates fieldset and puts errors in 'errors' object
@@ -518,10 +523,10 @@ function setDisplayError() {
 
 
 function validateFieldset(fieldset, isKeyUp, errors) {
-  var $fieldset = jquery__WEBPACK_IMPORTED_MODULE_0__(fieldset);
+  var $fieldset = $(fieldset);
 
-  if ($fieldset.length && typeof window.validators.fieldset[$fieldset.attr('id')] !== 'undefined') {
-    var fieldsetErrors = window.validators.fieldset[$fieldset.attr('id')].apply($fieldset[0], [isKeyUp]);
+  if ($fieldset.length && typeof validators.fieldset[$fieldset.attr('id')] !== 'undefined') {
+    var fieldsetErrors = validators.fieldset[$fieldset.attr('id')].apply($fieldset[0], [isKeyUp]);
 
     for (var fieldId in fieldsetErrors) {
       if (typeof errors[fieldId] === 'undefined') {
@@ -532,7 +537,7 @@ function validateFieldset(fieldset, isKeyUp, errors) {
         fieldsetErrors[fieldId] = [fieldsetErrors[fieldId]];
       }
 
-      jquery__WEBPACK_IMPORTED_MODULE_0__.merge(errors[fieldId], fieldsetErrors[fieldId]);
+      $.merge(errors[fieldId], fieldsetErrors[fieldId]);
     }
   }
 }
@@ -548,7 +553,7 @@ function validateFieldset(fieldset, isKeyUp, errors) {
 function validateField(field, isKeyUp, errors) {
   var args;
   var result;
-  var $field = jquery__WEBPACK_IMPORTED_MODULE_0__(field);
+  var $field = $(field);
   var fieldId = $field.attr('id');
   errors[fieldId] = [];
   var functions = getFieldValidators(fieldId, isKeyUp);
@@ -568,7 +573,7 @@ function validateField(field, isKeyUp, errors) {
         result = [result];
       }
 
-      jquery__WEBPACK_IMPORTED_MODULE_0__.merge(errors[fieldId], result);
+      $.merge(errors[fieldId], result);
     }
   }
 }
@@ -581,38 +586,38 @@ function validateField(field, isKeyUp, errors) {
 
 
 function validateFieldAndFieldset(field, isKeyUp) {
-  var $field = jquery__WEBPACK_IMPORTED_MODULE_0__(field);
+  var $field = $(field);
   var errors = {};
   validateField($field, isKeyUp, errors);
   validateFieldset($field.closest('fieldset.optbox'), isKeyUp, errors);
-  window.Config.displayErrors(errors);
+  displayErrors(errors);
 }
 
-window.Config.loadInlineConfig = () => {
-  if (!Array.isArray(window.configInlineParams)) {
+function loadInlineConfig() {
+  if (!Array.isArray(configInlineParams)) {
     return;
   }
 
-  for (var i = 0; i < window.configInlineParams.length; ++i) {
-    if (typeof window.configInlineParams[i] === 'function') {
-      window.configInlineParams[i]();
+  for (var i = 0; i < configInlineParams.length; ++i) {
+    if (typeof configInlineParams[i] === 'function') {
+      configInlineParams[i]();
     }
   }
-};
+}
 
-window.Config.setupValidation = function () {
+function setupValidation() {
   validate = {};
-  window.configScriptLoaded = true;
+  configScriptLoaded = true;
 
-  if (window.configScriptLoaded && typeof window.configInlineParams !== 'undefined') {
-    window.Config.loadInlineConfig();
+  if (configScriptLoaded && typeof configInlineParams !== 'undefined') {
+    loadInlineConfig();
   } // register validators and mark custom values
 
 
-  var $elements = jquery__WEBPACK_IMPORTED_MODULE_0__('.optbox input[id], .optbox select[id], .optbox textarea[id]');
+  var $elements = $('.optbox input[id], .optbox select[id], .optbox textarea[id]');
   $elements.each(function () {
     markField(this);
-    var $el = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
+    var $el = $(this);
     $el.on('change', function () {
       validateFieldAndFieldset(this, false);
       markField(this);
@@ -633,7 +638,7 @@ window.Config.setupValidation = function () {
   }); // check whether we've refreshed a page and browser remembered modified
   // form values
 
-  var $checkPageRefresh = jquery__WEBPACK_IMPORTED_MODULE_0__('#check_page_refresh');
+  var $checkPageRefresh = $('#check_page_refresh');
 
   if ($checkPageRefresh.length === 0 || $checkPageRefresh.val() === '1') {
     // run all field validators
@@ -644,27 +649,51 @@ window.Config.setupValidation = function () {
     } // run all fieldset validators
 
 
-    jquery__WEBPACK_IMPORTED_MODULE_0__('fieldset.optbox').each(function () {
+    $('fieldset.optbox').each(function () {
       validateFieldset(this, false, errors);
     });
-    window.Config.displayErrors(errors);
+    displayErrors(errors);
   } else if ($checkPageRefresh) {
     $checkPageRefresh.val('1');
   }
-}; //
+}
+
+AJAX.registerOnload('config.js', function () {
+  setupValidation();
+}); //
 // END: Form validation and field operations
 // ------------------------------------------------------------------
 
-
 function adjustPrefsNotification() {
-  var $prefsAutoLoad = jquery__WEBPACK_IMPORTED_MODULE_0__('#prefs_autoload');
-  var $tableNameControl = jquery__WEBPACK_IMPORTED_MODULE_0__('#table_name_col_no');
+  var $prefsAutoLoad = $('#prefs_autoload');
+  var $tableNameControl = $('#table_name_col_no');
   var $prefsAutoShowing = $prefsAutoLoad.css('display') !== 'none';
 
   if ($prefsAutoShowing && $tableNameControl.length) {
     $tableNameControl.css('top', '55px');
   }
-} // ------------------------------------------------------------------
+}
+
+AJAX.registerOnload('config.js', function () {
+  adjustPrefsNotification();
+}); // ------------------------------------------------------------------
+// Form reset buttons
+//
+
+AJAX.registerOnload('config.js', function () {
+  $('.optbox input[type=button][name=submit_reset]').on('click', function () {
+    var fields = $(this).closest('fieldset').find('input, select, textarea');
+
+    for (var i = 0, imax = fields.length; i < imax; i++) {
+      setFieldValue(fields[i], getFieldType(fields[i]), defaultValues[fields[i].id]);
+    }
+
+    setDisplayError();
+  });
+}); //
+// END: Form reset buttons
+// ------------------------------------------------------------------
+// ------------------------------------------------------------------
 // "Restore default" and "set value" buttons
 //
 
@@ -676,64 +705,130 @@ function adjustPrefsNotification() {
  * @return {void}
  */
 
-
 function restoreField(fieldId) {
-  var $field = jquery__WEBPACK_IMPORTED_MODULE_0__('#' + fieldId);
+  var $field = $('#' + fieldId);
 
-  if ($field.length === 0 || window.defaultValues[fieldId] === undefined) {
+  if ($field.length === 0 || defaultValues[fieldId] === undefined) {
     return;
   }
 
-  setFieldValue($field, getFieldType($field), window.defaultValues[fieldId]);
+  setFieldValue($field, getFieldType($field), defaultValues[fieldId]);
 }
 
-window.Config.setupRestoreField = function () {
-  jquery__WEBPACK_IMPORTED_MODULE_0__('div.tab-content').on('mouseenter', '.restore-default, .set-value', function () {
-    jquery__WEBPACK_IMPORTED_MODULE_0__(this).css('opacity', 1);
+function setupRestoreField() {
+  $('div.tab-content').on('mouseenter', '.restore-default, .set-value', function () {
+    $(this).css('opacity', 1);
   }).on('mouseleave', '.restore-default, .set-value', function () {
-    jquery__WEBPACK_IMPORTED_MODULE_0__(this).css('opacity', 0.25);
+    $(this).css('opacity', 0.25);
   }).on('click', '.restore-default, .set-value', function (e) {
     e.preventDefault();
-    var href = jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('href');
+    var href = $(this).attr('href');
     var fieldSel;
 
-    if (jquery__WEBPACK_IMPORTED_MODULE_0__(this).hasClass('restore-default')) {
+    if ($(this).hasClass('restore-default')) {
       fieldSel = href;
-      restoreField(fieldSel.substring(1));
+      restoreField(fieldSel.substr(1));
     } else {
       fieldSel = href.match(/^[^=]+/)[0];
       var value = href.match(/=(.+)$/)[1];
-      setFieldValue(jquery__WEBPACK_IMPORTED_MODULE_0__(fieldSel), 'text', value);
+      setFieldValue($(fieldSel), 'text', value);
     }
 
-    jquery__WEBPACK_IMPORTED_MODULE_0__(fieldSel).trigger('change');
+    $(fieldSel).trigger('change');
   }).find('.restore-default, .set-value') // inline-block for IE so opacity inheritance works
   .css({
     display: 'inline-block',
     opacity: 0.25
   });
-}; //
+}
+
+AJAX.registerOnload('config.js', function () {
+  setupRestoreField();
+}); //
 // END: "Restore default" and "set value" buttons
 // ------------------------------------------------------------------
+// ------------------------------------------------------------------
+// User preferences import/export
+//
 
+AJAX.registerOnload('config.js', function () {
+  offerPrefsAutoimport();
+  var $radios = $('#import_local_storage, #export_local_storage');
+
+  if (!$radios.length) {
+    return;
+  } // enable JavaScript dependent fields
+
+
+  $radios.prop('disabled', false).add('#export_text_file, #import_text_file').on('click', function () {
+    var enableId = $(this).attr('id');
+    var disableId;
+
+    if (enableId.match(/local_storage$/)) {
+      disableId = enableId.replace(/local_storage$/, 'text_file');
+    } else {
+      disableId = enableId.replace(/text_file$/, 'local_storage');
+    }
+
+    $('#opts_' + disableId).addClass('disabled').find('input').prop('disabled', true);
+    $('#opts_' + enableId).removeClass('disabled').find('input').prop('disabled', false);
+  }); // detect localStorage state
+
+  var lsSupported = isStorageSupported('localStorage', true);
+  var lsExists = lsSupported ? window.localStorage.config || false : false;
+  $('div.localStorage-' + (lsSupported ? 'un' : '') + 'supported').hide();
+  $('div.localStorage-' + (lsExists ? 'empty' : 'exists')).hide();
+
+  if (lsExists) {
+    updatePrefsDate();
+  }
+
+  $('form.prefs-form').on('change', function () {
+    var $form = $(this);
+    var disabled = false;
+
+    if (!lsSupported) {
+      disabled = $form.find('input[type=radio][value$=local_storage]').prop('checked');
+    } else if (!lsExists && $form.attr('name') === 'prefs_import' && $('#import_local_storage')[0].checked) {
+      disabled = true;
+    }
+
+    $form.find('input[type=submit]').prop('disabled', disabled);
+  }).on('submit', function (e) {
+    var $form = $(this);
+
+    if ($form.attr('name') === 'prefs_export' && $('#export_local_storage')[0].checked) {
+      e.preventDefault(); // use AJAX to read JSON settings and save them
+
+      savePrefsToLocalStorage($form);
+    } else if ($form.attr('name') === 'prefs_import' && $('#import_local_storage')[0].checked) {
+      // set 'json' input and submit form
+      $form.find('input[name=json]').val(window.localStorage.config);
+    }
+  });
+  $(document).on('click', 'div.click-hide-message', function () {
+    $(this).hide();
+    $(this).parent('.card-body').css('height', '');
+    $(this).parent('.card-body').find('.prefs-form').show();
+  });
+});
 /**
  * Saves user preferences to localStorage
  *
  * @param {Element} form
  */
 
-
 function savePrefsToLocalStorage(form) {
-  var $form = jquery__WEBPACK_IMPORTED_MODULE_0__(form);
+  var $form = $(form);
   var submit = $form.find('input[type=submit]');
   submit.prop('disabled', true);
-  jquery__WEBPACK_IMPORTED_MODULE_0__.ajax({
+  $.ajax({
     url: 'index.php?route=/preferences/manage',
     cache: false,
     type: 'POST',
     data: {
       'ajax_request': true,
-      'server': window.CommonParams.get('server'),
+      'server': CommonParams.get('server'),
       'submit_get_json': true
     },
     success: function (data) {
@@ -742,8 +837,8 @@ function savePrefsToLocalStorage(form) {
         window.localStorage.configMtime = data.mtime;
         window.localStorage.configMtimeLocal = new Date().toUTCString();
         updatePrefsDate();
-        jquery__WEBPACK_IMPORTED_MODULE_0__('div.localStorage-empty').hide();
-        jquery__WEBPACK_IMPORTED_MODULE_0__('div.localStorage-exists').show();
+        $('div.localStorage-empty').hide();
+        $('div.localStorage-exists').show();
         var group = $form.parent('.card-body');
         group.css('height', group.height() + 'px');
         $form.hide('fast');
@@ -764,8 +859,8 @@ function savePrefsToLocalStorage(form) {
 
 function updatePrefsDate() {
   var d = new Date(window.localStorage.configMtimeLocal);
-  var msg = window.Messages.strSavedOn.replace('@DATE@', Functions.formatDateTime(d));
-  jquery__WEBPACK_IMPORTED_MODULE_0__('#opts_import_local_storage').find('div.localStorage-exists').html(msg);
+  var msg = Messages.strSavedOn.replace('@DATE@', Functions.formatDateTime(d));
+  $('#opts_import_local_storage').find('div.localStorage-exists').html(msg);
 }
 /**
  * Prepares message which informs that localStorage preferences are available and can be imported or deleted
@@ -773,8 +868,8 @@ function updatePrefsDate() {
 
 
 function offerPrefsAutoimport() {
-  var hasConfig = window.Config.isStorageSupported('localStorage') && (window.localStorage.config || false);
-  var $cnt = jquery__WEBPACK_IMPORTED_MODULE_0__('#prefs_autoload');
+  var hasConfig = isStorageSupported('localStorage') && (window.localStorage.config || false);
+  var $cnt = $('#prefs_autoload');
 
   if (!$cnt.length || !hasConfig) {
     return;
@@ -782,20 +877,20 @@ function offerPrefsAutoimport() {
 
   $cnt.find('a').on('click', function (e) {
     e.preventDefault();
-    var $a = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
+    var $a = $(this);
 
     if ($a.attr('href') === '#no') {
       $cnt.remove();
-      jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php', {
-        'server': window.CommonParams.get('server'),
+      $.post('index.php', {
+        'server': CommonParams.get('server'),
         'prefs_autoload': 'hide'
       }, null, 'html');
       return;
     } else if ($a.attr('href') === '#delete') {
       $cnt.remove();
       localStorage.clear();
-      jquery__WEBPACK_IMPORTED_MODULE_0__.post('index.php', {
-        'server': window.CommonParams.get('server'),
+      $.post('index.php', {
+        'server': CommonParams.get('server'),
         'prefs_autoload': 'hide'
       }, null, 'html');
       return;
@@ -807,109 +902,23 @@ function offerPrefsAutoimport() {
   $cnt.show();
 }
 /**
- * @return {function}
+ * @type {boolean} Support for passive event listener option
  */
 
 
-window.Config.off = function () {
-  return function () {
-    jquery__WEBPACK_IMPORTED_MODULE_0__('.optbox input[id], .optbox select[id], .optbox textarea[id]').off('change').off('keyup');
-    jquery__WEBPACK_IMPORTED_MODULE_0__('.optbox input[type=button][name=submit_reset]').off('click');
-    jquery__WEBPACK_IMPORTED_MODULE_0__('div.tab-content').off();
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#import_local_storage, #export_local_storage').off('click');
-    jquery__WEBPACK_IMPORTED_MODULE_0__('form.prefs-form').off('change').off('submit');
-    jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', 'div.click-hide-message');
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#prefs_autoload').find('a').off('click');
-  };
-};
-/**
- * @return {function}
- */
+var PASSIVE_EVENT_LISTENERS = function () {
+  var passive = false;
 
-
-window.Config.on = function () {
-  return function () {
-    var $topmenuUpt = jquery__WEBPACK_IMPORTED_MODULE_0__('#user_prefs_tabs');
-    $topmenuUpt.find('a.active').attr('rel', 'samepage');
-    $topmenuUpt.find('a:not(.active)').attr('rel', 'newpage');
-    window.Config.setupValidation();
-    adjustPrefsNotification();
-    jquery__WEBPACK_IMPORTED_MODULE_0__('.optbox input[type=button][name=submit_reset]').on('click', function () {
-      var fields = jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('fieldset').find('input, select, textarea');
-
-      for (var i = 0, imax = fields.length; i < imax; i++) {
-        setFieldValue(fields[i], getFieldType(fields[i]), window.defaultValues[fields[i].id]);
-      }
-
-      setDisplayError();
-    });
-    window.Config.setupRestoreField();
-    offerPrefsAutoimport();
-    var $radios = jquery__WEBPACK_IMPORTED_MODULE_0__('#import_local_storage, #export_local_storage');
-
-    if (!$radios.length) {
-      return;
-    } // enable JavaScript dependent fields
-
-
-    $radios.prop('disabled', false).add('#export_text_file, #import_text_file').on('click', function () {
-      var enableId = jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('id');
-      var disableId;
-
-      if (enableId.match(/local_storage$/)) {
-        disableId = enableId.replace(/local_storage$/, 'text_file');
-      } else {
-        disableId = enableId.replace(/text_file$/, 'local_storage');
-      }
-
-      jquery__WEBPACK_IMPORTED_MODULE_0__('#opts_' + disableId).addClass('disabled').find('input').prop('disabled', true);
-      jquery__WEBPACK_IMPORTED_MODULE_0__('#opts_' + enableId).removeClass('disabled').find('input').prop('disabled', false);
-    }); // detect localStorage state
-
-    var lsSupported = window.Config.isStorageSupported('localStorage', true);
-    var lsExists = lsSupported ? window.localStorage.config || false : false;
-    jquery__WEBPACK_IMPORTED_MODULE_0__('div.localStorage-' + (lsSupported ? 'un' : '') + 'supported').hide();
-    jquery__WEBPACK_IMPORTED_MODULE_0__('div.localStorage-' + (lsExists ? 'empty' : 'exists')).hide();
-
-    if (lsExists) {
-      updatePrefsDate();
-    }
-
-    jquery__WEBPACK_IMPORTED_MODULE_0__('form.prefs-form').on('change', function () {
-      var $form = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
-      var disabled = false;
-
-      if (!lsSupported) {
-        disabled = $form.find('input[type=radio][value$=local_storage]').prop('checked');
-      } else if (!lsExists && $form.attr('name') === 'prefs_import' && jquery__WEBPACK_IMPORTED_MODULE_0__('#import_local_storage')[0].checked) {
-        disabled = true;
-      }
-
-      $form.find('input[type=submit]').prop('disabled', disabled);
-    }).on('submit', function (e) {
-      var $form = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
-
-      if ($form.attr('name') === 'prefs_export' && jquery__WEBPACK_IMPORTED_MODULE_0__('#export_local_storage')[0].checked) {
-        e.preventDefault(); // use AJAX to read JSON settings and save them
-
-        savePrefsToLocalStorage($form);
-      } else if ($form.attr('name') === 'prefs_import' && jquery__WEBPACK_IMPORTED_MODULE_0__('#import_local_storage')[0].checked) {
-        // set 'json' input and submit form
-        $form.find('input[name=json]').val(window.localStorage.config);
+  try {
+    var options = Object.defineProperty({}, 'passive', {
+      get: function () {
+        return passive = true;
       }
     });
-    jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', 'div.click-hide-message', function () {
-      jquery__WEBPACK_IMPORTED_MODULE_0__(this).hide().parent('.card-body').css('height', '').next('form').show();
-    });
-  };
-};
+    window.addEventListener('_', null, options);
+    window.removeEventListener('_', null, options);
+  } catch (error) {// passive not supported
+  }
 
-/***/ })
-
-},
-/******/ function(__webpack_require__) { // webpackRuntimeModules
-/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
-/******/ var __webpack_exports__ = (__webpack_exec__(5));
-/******/ }
-]);
-//# sourceMappingURL=config.js.map
+  return passive;
+}();

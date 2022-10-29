@@ -23,8 +23,10 @@ abstract class RegexValidationTransformationsPlugin extends IOTransformationsPlu
 {
     /**
      * Gets the transformation description of the specific plugin
+     *
+     * @return string
      */
-    public static function getInfo(): string
+    public static function getInfo()
     {
         return __(
             'Validates the string using regular expression '
@@ -61,8 +63,10 @@ abstract class RegexValidationTransformationsPlugin extends IOTransformationsPlu
 
     /**
      * Gets the transformation name of the specific plugin
+     *
+     * @return string
      */
-    public static function getName(): string
+    public static function getName()
     {
         return 'Regex Validation';
     }

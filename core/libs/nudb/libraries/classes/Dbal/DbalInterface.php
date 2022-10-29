@@ -21,25 +21,25 @@ interface DbalInterface
     /**
      * runs a query
      *
-     * @param string $query             SQL query to execute
-     * @param mixed  $link              optional database link to use
-     * @param int    $options           optional query options
-     * @param bool   $cacheAffectedRows whether to cache affected rows
+     * @param string $query               SQL query to execute
+     * @param mixed  $link                optional database link to use
+     * @param int    $options             optional query options
+     * @param bool   $cache_affected_rows whether to cache affected rows
      */
     public function query(
         string $query,
         $link = DatabaseInterface::CONNECT_USER,
         int $options = 0,
-        bool $cacheAffectedRows = true
+        bool $cache_affected_rows = true
     ): ResultInterface;
 
     /**
      * runs a query and returns the result
      *
-     * @param string $query             query to run
-     * @param mixed  $link              link type
-     * @param int    $options           query options
-     * @param bool   $cacheAffectedRows whether to cache affected row
+     * @param string $query               query to run
+     * @param mixed  $link                link type
+     * @param int    $options             query options
+     * @param bool   $cache_affected_rows whether to cache affected row
      *
      * @return mixed
      */
@@ -47,7 +47,7 @@ interface DbalInterface
         string $query,
         $link = DatabaseInterface::CONNECT_USER,
         int $options = 0,
-        bool $cacheAffectedRows = true
+        bool $cache_affected_rows = true
     );
 
     /**
@@ -87,12 +87,12 @@ interface DbalInterface
      *
      * @param string       $database     database
      * @param string|array $table        table name(s)
-     * @param bool         $tableIsGroup $table is a table group
-     * @param int          $limitOffset  zero-based offset for the count
-     * @param bool|int     $limitCount   number of tables to return
-     * @param string       $sortBy       table attribute to sort by
-     * @param string       $sortOrder    direction to sort (ASC or DESC)
-     * @param string|null  $tableType    whether table or view
+     * @param bool         $tbl_is_group $table is a table group
+     * @param int          $limit_offset zero-based offset for the count
+     * @param bool|int     $limit_count  number of tables to return
+     * @param string       $sort_by      table attribute to sort by
+     * @param string       $sort_order   direction to sort (ASC or DESC)
+     * @param string|null  $table_type   whether table or view
      * @param mixed        $link         link type
      *
      * @return array           list of tables in given db(s)
@@ -102,12 +102,12 @@ interface DbalInterface
     public function getTablesFull(
         string $database,
         $table = '',
-        bool $tableIsGroup = false,
-        int $limitOffset = 0,
-        $limitCount = false,
-        string $sortBy = 'Name',
-        string $sortOrder = 'ASC',
-        ?string $tableType = null,
+        bool $tbl_is_group = false,
+        int $limit_offset = 0,
+        $limit_count = false,
+        string $sort_by = 'Name',
+        string $sort_order = 'ASC',
+        ?string $table_type = null,
         $link = DatabaseInterface::CONNECT_USER
     ): array;
 
@@ -123,13 +123,14 @@ interface DbalInterface
     /**
      * returns array with databases containing extended infos about them
      *
-     * @param string|null $database    database
-     * @param bool        $forceStats  retrieve stats also for MySQL < 5
-     * @param int         $link        link type
-     * @param string      $sortBy      column to order by
-     * @param string      $sortOrder   ASC or DESC
-     * @param int         $limitOffset starting offset for LIMIT
-     * @param bool|int    $limitCount  row count for LIMIT or true for $GLOBALS['cfg']['MaxDbList']
+     * @param string|null $database     database
+     * @param bool        $force_stats  retrieve stats also for MySQL < 5
+     * @param int         $link         link type
+     * @param string      $sort_by      column to order by
+     * @param string      $sort_order   ASC or DESC
+     * @param int         $limit_offset starting offset for LIMIT
+     * @param bool|int    $limit_count  row count for LIMIT or true
+     *                                  for $GLOBALS['cfg']['MaxDbList']
      *
      * @return array
      *
@@ -137,23 +138,23 @@ interface DbalInterface
      */
     public function getDatabasesFull(
         ?string $database = null,
-        bool $forceStats = false,
+        bool $force_stats = false,
         $link = DatabaseInterface::CONNECT_USER,
-        string $sortBy = 'SCHEMA_NAME',
-        string $sortOrder = 'ASC',
-        int $limitOffset = 0,
-        $limitCount = false
+        string $sort_by = 'SCHEMA_NAME',
+        string $sort_order = 'ASC',
+        int $limit_offset = 0,
+        $limit_count = false
     ): array;
 
     /**
      * returns detailed array with all columns for sql
      *
-     * @param string $sqlQuery    target SQL query to get columns
-     * @param array  $viewColumns alias for columns
+     * @param string $sql_query    target SQL query to get columns
+     * @param array  $view_columns alias for columns
      *
      * @return array
      */
-    public function getColumnMapFromSql(string $sqlQuery, array $viewColumns = []): array;
+    public function getColumnMapFromSql(string $sql_query, array $view_columns = []): array;
 
     /**
      * returns detailed array with all columns for given table in database,
@@ -231,25 +232,7 @@ interface DbalInterface
      * @param string $table    name of the table whose indexes are to be retrieved
      * @param mixed  $link     mysql link resource
      *
-     * @return array<int, array<string, string|null>>
-     * @psalm-return array<int, array{
-     *   Table: string,
-     *   Non_unique: '0'|'1',
-     *   Key_name: string,
-     *   Seq_in_index: string,
-     *   Column_name: string|null,
-     *   Collation: 'A'|'D'|null,
-     *   Cardinality: string,
-     *   Sub_part: string|null,
-     *   Packed: string|null,
-     *   Null: string|null,
-     *   Index_type: 'BTREE'|'FULLTEXT'|'HASH'|'RTREE',
-     *   Comment: string,
-     *   Index_comment: string,
-     *   Ignored?: string,
-     *   Visible?: string,
-     *   Expression?: string|null
-     * }>
+     * @return array
      */
     public function getTableIndexes(
         string $database,
@@ -430,6 +413,71 @@ interface DbalInterface
     public function getWarnings($link = DatabaseInterface::CONNECT_USER): array;
 
     /**
+     * returns an array of PROCEDURE or FUNCTION names for a db
+     *
+     * @param string $db    db name
+     * @param string $which PROCEDURE | FUNCTION
+     * @param int    $link  link type
+     *
+     * @return array the procedure names or function names
+     */
+    public function getProceduresOrFunctions(
+        string $db,
+        string $which,
+        $link = DatabaseInterface::CONNECT_USER
+    ): array;
+
+    /**
+     * returns the definition of a specific PROCEDURE, FUNCTION, EVENT or VIEW
+     *
+     * @param string $db    db name
+     * @param string $which PROCEDURE | FUNCTION | EVENT | VIEW
+     * @param string $name  the procedure|function|event|view name
+     * @param int    $link  link type
+     *
+     * @return string|null the definition
+     */
+    public function getDefinition(
+        string $db,
+        string $which,
+        string $name,
+        $link = DatabaseInterface::CONNECT_USER
+    ): ?string;
+
+    /**
+     * returns details about the PROCEDUREs or FUNCTIONs for a specific database
+     * or details about a specific routine
+     *
+     * @param string      $db    db name
+     * @param string|null $which PROCEDURE | FUNCTION or null for both
+     * @param string      $name  name of the routine (to fetch a specific routine)
+     *
+     * @return array information about ROCEDUREs or FUNCTIONs
+     */
+    public function getRoutines(string $db, ?string $which = null, string $name = ''): array;
+
+    /**
+     * returns details about the EVENTs for a specific database
+     *
+     * @param string $db   db name
+     * @param string $name event name
+     *
+     * @return array information about EVENTs
+     */
+    public function getEvents(string $db, string $name = ''): array;
+
+    /**
+     * returns details about the TRIGGERs for a specific table or database
+     *
+     * @param string $db        db name
+     * @param string $table     table name
+     * @param string $delimiter the delimiter to use (may be empty)
+     *
+     * @return array information about triggers (may be empty)
+     */
+    public function getTriggers(string $db, string $table = '', string $delimiter = '//'): array;
+
+    /**
      * gets the current user with host
      *
      * @return string the current user i.e. user@host
@@ -560,13 +608,13 @@ interface DbalInterface
     /**
      * returns the number of rows affected by last query
      *
-     * @param int  $link         link type
-     * @param bool $getFromCache whether to retrieve from cache
+     * @param int  $link           link type
+     * @param bool $get_from_cache whether to retrieve from cache
      *
      * @return int|string
      * @psalm-return int|numeric-string
      */
-    public function affectedRows($link = DatabaseInterface::CONNECT_USER, bool $getFromCache = true);
+    public function affectedRows($link = DatabaseInterface::CONNECT_USER, bool $get_from_cache = true);
 
     /**
      * returns metainfo for fields in $result
@@ -585,7 +633,7 @@ interface DbalInterface
      *
      * @return string a MySQL escaped string
      */
-    public function escapeString(string $str, $link = DatabaseInterface::CONNECT_USER): string;
+    public function escapeString(string $str, $link = DatabaseInterface::CONNECT_USER);
 
     /**
      * returns properly escaped string for use in MySQL LIKE clauses
@@ -617,10 +665,10 @@ interface DbalInterface
     /**
      * Get a table with database name and table name
      *
-     * @param string $dbName    DB name
-     * @param string $tableName Table name
+     * @param string $db_name    DB name
+     * @param string $table_name Table name
      */
-    public function getTable(string $dbName, string $tableName): Table;
+    public function getTable(string $db_name, string $table_name): Table;
 
     /**
      * returns collation of given db

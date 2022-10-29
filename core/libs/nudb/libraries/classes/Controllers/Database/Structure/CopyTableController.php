@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Database\Structure;
 
-use PhpMyAdmin\Controllers\AbstractController;
+use PhpMyAdmin\Controllers\Database\AbstractController;
 use PhpMyAdmin\Controllers\Database\StructureController;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\Operations;
 use PhpMyAdmin\ResponseRenderer;
@@ -26,17 +25,18 @@ final class CopyTableController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
+        string $db,
         Operations $operations,
         StructureController $structureController
     ) {
-        parent::__construct($response, $template);
+        parent::__construct($response, $template, $db);
         $this->operations = $operations;
         $this->structureController = $structureController;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['message'] = $GLOBALS['message'] ?? null;
+        global $db, $message;
 
         $selected = $_POST['selected'] ?? [];
         $targetDb = $_POST['target_db'] ?? null;
@@ -44,7 +44,7 @@ final class CopyTableController extends AbstractController
 
         for ($i = 0; $i < $selectedCount; $i++) {
             Table::moveCopy(
-                $GLOBALS['db'],
+                $db,
                 $selected[$i],
                 $targetDb,
                 $selected[$i],
@@ -58,15 +58,15 @@ final class CopyTableController extends AbstractController
                 continue;
             }
 
-            $this->operations->adjustPrivilegesCopyTable($GLOBALS['db'], $selected[$i], $targetDb, $selected[$i]);
+            $this->operations->adjustPrivilegesCopyTable($db, $selected[$i], $targetDb, $selected[$i]);
         }
 
-        $GLOBALS['message'] = Message::success();
+        $message = Message::success();
 
         if (empty($_POST['message'])) {
-            $_POST['message'] = $GLOBALS['message'];
+            $_POST['message'] = $message;
         }
 
-        ($this->structureController)($request);
+        ($this->structureController)();
     }
 }

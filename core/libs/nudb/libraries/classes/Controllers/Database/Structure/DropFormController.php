@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Database\Structure;
 
-use PhpMyAdmin\Controllers\AbstractController;
+use PhpMyAdmin\Controllers\Database\AbstractController;
 use PhpMyAdmin\DatabaseInterface;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Template;
 use PhpMyAdmin\Util;
@@ -21,14 +20,16 @@ final class DropFormController extends AbstractController
     /** @var DatabaseInterface */
     private $dbi;
 
-    public function __construct(ResponseRenderer $response, Template $template, DatabaseInterface $dbi)
+    public function __construct(ResponseRenderer $response, Template $template, string $db, DatabaseInterface $dbi)
     {
-        parent::__construct($response, $template);
+        parent::__construct($response, $template, $db);
         $this->dbi = $dbi;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
+        global $db;
+
         $selected = $_POST['selected_tbl'] ?? [];
 
         if (empty($selected)) {
@@ -38,7 +39,7 @@ final class DropFormController extends AbstractController
             return;
         }
 
-        $views = $this->dbi->getVirtualTables($GLOBALS['db']);
+        $views = $this->dbi->getVirtualTables($db);
 
         $fullQueryViews = '';
         $fullQuery = '';
@@ -62,7 +63,7 @@ final class DropFormController extends AbstractController
             $fullQuery .= $fullQueryViews . ';<br>' . "\n";
         }
 
-        $urlParams = ['db' => $GLOBALS['db']];
+        $urlParams = ['db' => $db];
         foreach ($selected as $selectedValue) {
             $urlParams['selected'][] = $selectedValue;
         }

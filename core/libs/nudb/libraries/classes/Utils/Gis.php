@@ -22,18 +22,20 @@ final class Gis
      */
     public static function convertToWellKnownText($data, $includeSRID = false): string
     {
+        global $dbi;
+
         // Convert to WKT format
         $hex = bin2hex($data);
         $spatialAsText = 'ASTEXT';
         $spatialSrid = 'SRID';
         $axisOrder = '';
-        $mysqlVersionInt = $GLOBALS['dbi']->getVersion();
+        $mysqlVersionInt = $dbi->getVersion();
         if ($mysqlVersionInt >= 50600) {
             $spatialAsText = 'ST_ASTEXT';
             $spatialSrid = 'ST_SRID';
         }
 
-        if ($mysqlVersionInt >= 80001 && ! $GLOBALS['dbi']->isMariaDb()) {
+        if ($mysqlVersionInt >= 80001 && ! $dbi->isMariaDb()) {
             $axisOrder = ', \'axis-order=long-lat\'';
         }
 
@@ -42,7 +44,7 @@ final class Gis
             $wktsql .= ', ' . $spatialSrid . "(x'" . $hex . "')";
         }
 
-        $wktresult = $GLOBALS['dbi']->tryQuery($wktsql);
+        $wktresult = $dbi->tryQuery($wktsql);
         $wktarr = [];
         if ($wktresult) {
             $wktarr = $wktresult->fetchRow();
@@ -127,6 +129,8 @@ final class Gis
         $binary = true,
         $display = false
     ): array {
+        global $dbi;
+
         $funcs = [];
         if ($display) {
             $funcs[] = ['display' => ' '];
@@ -163,13 +167,20 @@ final class Gis
             $funcs[] = ['display' => '--------'];
         }
 
+        $spatialPrefix = '';
+        if ($dbi->getVersion() >= 50601) {
+            // If MySQL version is greater than or equal 5.6.1,
+            // use the ST_ prefix.
+            $spatialPrefix = 'ST_';
+        }
+
         // Unary functions that are specific to each geometry type
         if ($geomType === 'point') {
-            $funcs['X'] = [
+            $funcs[$spatialPrefix . 'X'] = [
                 'params' => 1,
                 'type' => 'float',
             ];
-            $funcs['Y'] = [
+            $funcs[$spatialPrefix . 'Y'] = [
                 'params' => 1,
                 'type' => 'float',
             ];
@@ -239,13 +250,6 @@ final class Gis
             // section separator
             if ($display) {
                 $funcs[] = ['display' => '--------'];
-            }
-
-            $spatialPrefix = '';
-            if ($GLOBALS['dbi']->getVersion() >= 50601) {
-                // If MySQL version is greater than or equal 5.6.1,
-                // use the ST_ prefix.
-                $spatialPrefix = 'ST_';
             }
 
             $funcs[$spatialPrefix . 'Crosses'] = [

@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace PhpMyAdmin\Controllers\Database;
 
 use PhpMyAdmin\Config\PageSettings;
-use PhpMyAdmin\Controllers\AbstractController;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\SqlQueryForm;
 use PhpMyAdmin\Template;
@@ -23,17 +21,15 @@ class SqlController extends AbstractController
     /** @var SqlQueryForm */
     private $sqlQueryForm;
 
-    public function __construct(ResponseRenderer $response, Template $template, SqlQueryForm $sqlQueryForm)
+    public function __construct(ResponseRenderer $response, Template $template, string $db, SqlQueryForm $sqlQueryForm)
     {
-        parent::__construct($response, $template);
+        parent::__construct($response, $template, $db);
         $this->sqlQueryForm = $sqlQueryForm;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['goto'] = $GLOBALS['goto'] ?? null;
-        $GLOBALS['back'] = $GLOBALS['back'] ?? null;
-        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
+        global $goto, $back, $db, $cfg, $errorUrl;
 
         $this->addScriptFiles(['makegrid.js', 'vendor/jquery/jquery.uitablefilter.js', 'sql.js']);
 
@@ -41,10 +37,10 @@ class SqlController extends AbstractController
         $this->response->addHTML($pageSettings->getErrorHTML());
         $this->response->addHTML($pageSettings->getHTML());
 
-        $this->checkParameters(['db']);
+        Util::checkParameters(['db']);
 
-        $GLOBALS['errorUrl'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabDatabase'], 'database');
-        $GLOBALS['errorUrl'] .= Url::getCommon(['db' => $GLOBALS['db']], '&');
+        $errorUrl = Util::getScriptNameForOption($cfg['DefaultTabDatabase'], 'database');
+        $errorUrl .= Url::getCommon(['db' => $db], '&');
 
         if (! $this->hasDatabase()) {
             return;
@@ -54,11 +50,11 @@ class SqlController extends AbstractController
          * After a syntax error, we return to this script
          * with the typed query in the textarea.
          */
-        $GLOBALS['goto'] = Url::getFromRoute('/database/sql');
-        $GLOBALS['back'] = $GLOBALS['goto'];
+        $goto = Url::getFromRoute('/database/sql');
+        $back = $goto;
 
         $this->response->addHTML($this->sqlQueryForm->getHtml(
-            $GLOBALS['db'],
+            $db,
             '',
             true,
             false,

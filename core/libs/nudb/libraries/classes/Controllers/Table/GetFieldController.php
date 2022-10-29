@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Table;
 
-use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\Core;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Html\Generator;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\Mime;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Template;
@@ -17,8 +15,8 @@ use PhpMyAdmin\Util;
 use function __;
 use function htmlspecialchars;
 use function ini_set;
-use function mb_strlen;
 use function sprintf;
+use function strlen;
 
 /**
  * Provides download to a given field defined in parameters.
@@ -31,29 +29,37 @@ class GetFieldController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
+        string $db,
+        string $table,
         DatabaseInterface $dbi
     ) {
-        parent::__construct($response, $template);
+        parent::__construct($response, $template, $db, $table);
         $this->dbi = $dbi;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
+        global $db, $table;
+
         $this->response->disable();
 
-        $this->checkParameters(['db', 'table']);
+        /* Check parameters */
+        Util::checkParameters([
+            'db',
+            'table',
+        ]);
 
         /* Select database */
-        if (! $this->dbi->selectDb($GLOBALS['db'])) {
+        if (! $this->dbi->selectDb($db)) {
             Generator::mysqlDie(
-                sprintf(__('\'%s\' database does not exist.'), htmlspecialchars($GLOBALS['db'])),
+                sprintf(__('\'%s\' database does not exist.'), htmlspecialchars($db)),
                 '',
                 false
             );
         }
 
         /* Check if table exists */
-        if (! $this->dbi->getColumns($GLOBALS['db'], $GLOBALS['table'])) {
+        if (! $this->dbi->getColumns($db, $table)) {
             Generator::mysqlDie(__('Invalid table name'));
         }
 
@@ -70,7 +76,7 @@ class GetFieldController extends AbstractController
 
         /* Grab data */
         $sql = 'SELECT ' . Util::backquote($_GET['transform_key'])
-            . ' FROM ' . Util::backquote($GLOBALS['table'])
+            . ' FROM ' . Util::backquote($table)
             . ' WHERE ' . $_GET['where_clause'] . ';';
         $result = $this->dbi->fetchValue($sql);
 
@@ -88,9 +94,9 @@ class GetFieldController extends AbstractController
         ini_set('url_rewriter.tags', '');
 
         Core::downloadHeader(
-            $GLOBALS['table'] . '-' . $_GET['transform_key'] . '.bin',
+            $table . '-' . $_GET['transform_key'] . '.bin',
             Mime::detect($result),
-            mb_strlen($result, '8bit')
+            strlen($result)
         );
         echo $result;
     }

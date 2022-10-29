@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace PhpMyAdmin\Plugins\Export\Helpers;
 
 use PhpMyAdmin\ConfigStorage\Relation;
-use PhpMyAdmin\Database\Triggers;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Dbal\ResultInterface;
 use PhpMyAdmin\FieldMetadata;
@@ -116,8 +115,10 @@ class Pdf extends PdfLib
         $diskcache = false,
         $pdfa = false
     ) {
+        global $dbi;
+
         parent::__construct($orientation, $unit, $format, $unicode, $encoding, $diskcache, $pdfa);
-        $this->relation = new Relation($GLOBALS['dbi']);
+        $this->relation = new Relation($dbi);
         $this->transformations = new Transformations();
     }
 
@@ -179,8 +180,7 @@ class Pdf extends PdfLib
     // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     public function Header(): void
     {
-        $GLOBALS['maxY'] = $GLOBALS['maxY'] ?? null;
-
+        global $maxY;
         // We don't want automatic page breaks while generating header
         // as this can lead to infinite recursion as auto generated page
         // will want header as well causing another page break
@@ -189,12 +189,12 @@ class Pdf extends PdfLib
         // Check if header for this page already exists
         // phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
         if (! isset($this->headerset[$this->page])) {
-            $this->SetY($this->tMargin - ($this->FontSizePt / $this->k) * 5);
+            $this->setY($this->tMargin - ($this->FontSizePt / $this->k) * 5);
             $this->cellFontSize = $this->FontSizePt;
-            $this->SetFont(PdfLib::PMA_PDF_FONT, '', ($this->titleFontSize ?: $this->FontSizePt));
+            $this->setFont(PdfLib::PMA_PDF_FONT, '', ($this->titleFontSize ?: $this->FontSizePt));
             $this->Cell(0, $this->FontSizePt, $this->titleText, 0, 1, 'C');
-            $this->SetFont(PdfLib::PMA_PDF_FONT, '', $this->cellFontSize);
-            $this->SetY($this->tMargin - ($this->FontSizePt / $this->k) * 2.5);
+            $this->setFont(PdfLib::PMA_PDF_FONT, '', $this->cellFontSize);
+            $this->setY($this->tMargin - ($this->FontSizePt / $this->k) * 2.5);
             $this->Cell(
                 0,
                 $this->FontSizePt,
@@ -207,31 +207,31 @@ class Pdf extends PdfLib
             );
             $l = $this->lMargin;
             foreach ($this->colTitles as $col => $txt) {
-                $this->SetXY($l, $this->tMargin);
+                $this->setXY($l, $this->tMargin);
                 $this->MultiCell($this->tablewidths[$col], $this->FontSizePt, $txt);
                 $l += $this->tablewidths[$col];
-                $GLOBALS['maxY'] = $GLOBALS['maxY'] < $this->GetY() ? $this->GetY() : $GLOBALS['maxY'];
+                $maxY = $maxY < $this->GetY() ? $this->GetY() : $maxY;
             }
 
-            $this->SetXY($this->lMargin, $this->tMargin);
-            $this->SetFillColor(200, 200, 200);
+            $this->setXY($this->lMargin, $this->tMargin);
+            $this->setFillColor(200, 200, 200);
             $l = $this->lMargin;
             foreach ($this->colTitles as $col => $txt) {
-                $this->SetXY($l, $this->tMargin);
-                $this->Cell($this->tablewidths[$col], $GLOBALS['maxY'] - $this->tMargin, '', 1, 0, 'L', true);
-                $this->SetXY($l, $this->tMargin);
+                $this->setXY($l, $this->tMargin);
+                $this->Cell($this->tablewidths[$col], $maxY - $this->tMargin, '', 1, 0, 'L', true);
+                $this->setXY($l, $this->tMargin);
                 $this->MultiCell($this->tablewidths[$col], $this->FontSizePt, $txt, 0, 'C');
                 $l += $this->tablewidths[$col];
             }
 
-            $this->SetFillColor(255, 255, 255);
+            $this->setFillColor(255, 255, 255);
             // set headerset
             $this->headerset[$this->page] = 1;
         }
 
         // phpcs:enable
 
-        $this->dataY = $GLOBALS['maxY'];
+        $this->dataY = $maxY;
         $this->setAutoPageBreak(true);
     }
 
@@ -265,7 +265,7 @@ class Pdf extends PdfLib
             // write the content and remember the height of the highest col
             foreach ($data as $col => $txt) {
                 $this->page = $currpage;
-                $this->SetXY($l, $h);
+                $this->setXY($l, $h);
                 if ($this->tablewidths[$col] > 0) {
                     $this->MultiCell($this->tablewidths[$col], $lineheight, $txt, 0, $this->colAlign[$col]);
                     $l += $this->tablewidths[$col];
@@ -336,7 +336,9 @@ class Pdf extends PdfLib
      */
     public function getTriggers($db, $table): void
     {
-        $triggers = Triggers::getDetails($GLOBALS['dbi'], $db, $table);
+        global $dbi;
+
+        $triggers = $dbi->getTriggers($db, $table);
         if ($triggers === []) {
             return; //prevents printing blank trigger list for any table
         }
@@ -370,9 +372,9 @@ class Pdf extends PdfLib
 
         // Starting to fill table with required info
 
-        $this->SetY($this->tMargin);
+        $this->setY($this->tMargin);
         $this->AddPage();
-        $this->SetFont(PdfLib::PMA_PDF_FONT, '', 9);
+        $this->setFont(PdfLib::PMA_PDF_FONT, '', 9);
 
         $l = $this->lMargin;
         $startheight = $h = $this->dataY;
@@ -400,7 +402,7 @@ class Pdf extends PdfLib
             // write the content and remember the height of the highest col
             foreach ($data as $col => $txt) {
                 $this->page = $currpage;
-                $this->SetXY($l, $h);
+                $this->setXY($l, $h);
                 if ($this->tablewidths[$col] > 0) {
                     $this->MultiCell(
                         $this->tablewidths[$col],
@@ -484,6 +486,8 @@ class Pdf extends PdfLib
         $view = false,
         array $aliases = []
     ): void {
+        global $dbi;
+
         $relationParameters = $this->relation->getRelationParameters();
 
         unset(
@@ -498,7 +502,7 @@ class Pdf extends PdfLib
         /**
          * Gets fields properties
          */
-        $GLOBALS['dbi']->selectDb($db);
+        $dbi->selectDb($db);
 
         /**
          * All these three checks do_relation, do_comment and do_mime is
@@ -557,9 +561,9 @@ class Pdf extends PdfLib
 
         // Starting to fill table with required info
 
-        $this->SetY($this->tMargin);
+        $this->setY($this->tMargin);
         $this->AddPage();
-        $this->SetFont(PdfLib::PMA_PDF_FONT, '', 9);
+        $this->setFont(PdfLib::PMA_PDF_FONT, '', 9);
 
         // Now let's start to write the table structure
 
@@ -571,7 +575,7 @@ class Pdf extends PdfLib
             $mime_map = $this->transformations->getMime($db, $table, true);
         }
 
-        $columns = $GLOBALS['dbi']->getColumns($db, $table);
+        $columns = $dbi->getColumns($db, $table);
 
         // some things to set and 'remember'
         $l = $this->lMargin;
@@ -636,7 +640,7 @@ class Pdf extends PdfLib
             // write the content and remember the height of the highest col
             foreach ($data as $col => $txt) {
                 $this->page = $currpage;
-                $this->SetXY($l, $h);
+                $this->setXY($l, $h);
                 if ($this->tablewidths[$col] > 0) {
                     $this->MultiCell(
                         $this->tablewidths[$col],
@@ -702,6 +706,8 @@ class Pdf extends PdfLib
      */
     public function mysqlReport($query): void
     {
+        global $dbi;
+
         unset(
             $this->tablewidths,
             $this->colTitles,
@@ -714,13 +720,9 @@ class Pdf extends PdfLib
         /**
          * Pass 1 for column widths
          */
-        $this->results = $GLOBALS['dbi']->query(
-            $query,
-            DatabaseInterface::CONNECT_USER,
-            DatabaseInterface::QUERY_UNBUFFERED
-        );
+        $this->results = $dbi->query($query, DatabaseInterface::CONNECT_USER, DatabaseInterface::QUERY_UNBUFFERED);
         $this->numFields = $this->results->numFields();
-        $this->fields = $GLOBALS['dbi']->getFieldsMeta($this->results);
+        $this->fields = $dbi->getFieldsMeta($this->results);
 
         // sColWidth = starting col width (an average size width)
         $availableWidth = $this->w - $this->lMargin - $this->rMargin;
@@ -847,14 +849,10 @@ class Pdf extends PdfLib
 
         // Pass 2
 
-        $this->results = $GLOBALS['dbi']->query(
-            $query,
-            DatabaseInterface::CONNECT_USER,
-            DatabaseInterface::QUERY_UNBUFFERED
-        );
-        $this->SetY($this->tMargin);
+        $this->results = $dbi->query($query, DatabaseInterface::CONNECT_USER, DatabaseInterface::QUERY_UNBUFFERED);
+        $this->setY($this->tMargin);
         $this->AddPage();
-        $this->SetFont(PdfLib::PMA_PDF_FONT, '', 9);
+        $this->setFont(PdfLib::PMA_PDF_FONT, '', 9);
         // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
         $this->morepagestable($this->FontSizePt);
     }

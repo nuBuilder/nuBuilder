@@ -6,7 +6,6 @@ namespace PhpMyAdmin\Controllers\Sql;
 
 use PhpMyAdmin\CheckUserPrivileges;
 use PhpMyAdmin\Controllers\AbstractController;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Template;
 use PhpMyAdmin\Utils\ForeignKey;
@@ -25,7 +24,7 @@ final class DefaultForeignKeyCheckValueController extends AbstractController
         $this->checkUserPrivileges = $checkUserPrivileges;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
         $this->checkUserPrivileges->getPrivileges();
         $this->response->addJSON('default_fk_check_value', ForeignKey::isCheckEnabled());

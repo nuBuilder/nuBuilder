@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace PhpMyAdmin\Controllers\Server\Status;
 
 use PhpMyAdmin\DatabaseInterface;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Server\Status\Data;
 use PhpMyAdmin\Server\SysInfo\SysInfo;
@@ -26,9 +25,11 @@ class MonitorController extends AbstractController
         $this->dbi = $dbi;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['errorUrl'] = Url::getFromRoute('/');
+        global $errorUrl;
+
+        $errorUrl = Url::getFromRoute('/');
 
         if ($this->dbi->isSuperUser()) {
             $this->dbi->selectDb('mysql');
@@ -48,6 +49,7 @@ class MonitorController extends AbstractController
             'jqplot/plugins/jqplot.byteFormatter.js',
             'server/status/monitor.js',
             'server/status/sorter.js',
+            'chart.js',// Needed by createProfilingChart in server/status/monitor.js
         ]);
 
         $form = [

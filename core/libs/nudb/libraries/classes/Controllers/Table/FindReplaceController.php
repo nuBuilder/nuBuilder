@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Table;
 
-use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\DbTableExists;
 use PhpMyAdmin\Html\Generator;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Template;
 use PhpMyAdmin\Url;
@@ -48,9 +46,11 @@ class FindReplaceController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
+        string $db,
+        string $table,
         DatabaseInterface $dbi
     ) {
-        parent::__construct($response, $template);
+        parent::__construct($response, $template, $db, $table);
         $this->dbi = $dbi;
 
         $this->columnNames = [];
@@ -59,17 +59,17 @@ class FindReplaceController extends AbstractController
         $this->connectionCharSet = (string) $this->dbi->fetchValue('SELECT @@character_set_connection');
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['urlParams'] = $GLOBALS['urlParams'] ?? null;
-        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
-        $this->checkParameters(['db', 'table']);
+        global $db, $table, $urlParams, $cfg, $errorUrl;
 
-        $GLOBALS['urlParams'] = ['db' => $GLOBALS['db'], 'table' => $GLOBALS['table']];
-        $GLOBALS['errorUrl'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabTable'], 'table');
-        $GLOBALS['errorUrl'] .= Url::getCommon($GLOBALS['urlParams'], '&');
+        Util::checkParameters(['db', 'table']);
 
-        DbTableExists::check($GLOBALS['db'], $GLOBALS['table']);
+        $urlParams = ['db' => $db, 'table' => $table];
+        $errorUrl = Util::getScriptNameForOption($cfg['DefaultTabTable'], 'table');
+        $errorUrl .= Url::getCommon($urlParams, '&');
+
+        DbTableExists::check();
 
         if (isset($_POST['find'])) {
             $this->findAction();
@@ -93,7 +93,7 @@ class FindReplaceController extends AbstractController
     private function loadTableInfo(): void
     {
         // Gets the list and number of columns
-        $columns = $this->dbi->getColumns($GLOBALS['db'], $GLOBALS['table'], true);
+        $columns = $this->dbi->getColumns($this->db, $this->table, true);
 
         foreach ($columns as $row) {
             // set column name
@@ -128,8 +128,10 @@ class FindReplaceController extends AbstractController
      */
     public function displaySelectionFormAction(): void
     {
-        if (! isset($GLOBALS['goto'])) {
-            $GLOBALS['goto'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabTable'], 'table');
+        global $goto;
+
+        if (! isset($goto)) {
+            $goto = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabTable'], 'table');
         }
 
         $column_names = $this->columnNames;
@@ -141,9 +143,9 @@ class FindReplaceController extends AbstractController
         }
 
         $this->render('table/find_replace/index', [
-            'db' => $GLOBALS['db'],
-            'table' => $GLOBALS['table'],
-            'goto' => $GLOBALS['goto'],
+            'db' => $this->db,
+            'table' => $this->table,
+            'goto' => $goto,
             'column_names' => $column_names,
             'types' => $types,
             'sql_types' => $this->dbi->types,
@@ -212,8 +214,8 @@ class FindReplaceController extends AbstractController
                 . $replaceWith
                 . "'),"
                 . ' COUNT(*)'
-                . ' FROM ' . Util::backquote($GLOBALS['db'])
-                . '.' . Util::backquote($GLOBALS['table'])
+                . ' FROM ' . Util::backquote($this->db)
+                . '.' . Util::backquote($this->table)
                 . ' WHERE ' . Util::backquote($column)
                 . " LIKE '%" . $find . "%' COLLATE " . $charSet . '_bin'; // here we
             // change the collation of the 2nd operand to a case sensitive
@@ -226,8 +228,8 @@ class FindReplaceController extends AbstractController
         }
 
         return $this->template->render('table/find_replace/replace_preview', [
-            'db' => $GLOBALS['db'],
-            'table' => $GLOBALS['table'],
+            'db' => $this->db,
+            'table' => $this->table,
             'column_index' => $columnIndex,
             'find' => $find,
             'replace_with' => $replaceWith,
@@ -257,8 +259,8 @@ class FindReplaceController extends AbstractController
             . Util::backquote($column) . ','
             . ' 1,' // to add an extra column that will have replaced value
             . ' COUNT(*)'
-            . ' FROM ' . Util::backquote($GLOBALS['db'])
-            . '.' . Util::backquote($GLOBALS['table'])
+            . ' FROM ' . Util::backquote($this->db)
+            . '.' . Util::backquote($this->table)
             . ' WHERE ' . Util::backquote($column)
             . " RLIKE '" . $this->dbi->escapeString($find) . "' COLLATE "
             . $charSet . '_bin'; // here we
@@ -321,7 +323,7 @@ class FindReplaceController extends AbstractController
         $column = $this->columnNames[$columnIndex];
         if ($useRegex) {
             $toReplace = $this->getRegexReplaceRows($columnIndex, $find, $replaceWith, $charSet);
-            $sql_query = 'UPDATE ' . Util::backquote($GLOBALS['table'])
+            $sql_query = 'UPDATE ' . Util::backquote($this->table)
                 . ' SET ' . Util::backquote($column);
 
             if (is_array($toReplace)) {
@@ -346,7 +348,7 @@ class FindReplaceController extends AbstractController
             // binary collation to make sure that the comparison
             // is case sensitive
         } else {
-            $sql_query = 'UPDATE ' . Util::backquote($GLOBALS['table'])
+            $sql_query = 'UPDATE ' . Util::backquote($this->table)
                 . ' SET ' . Util::backquote($column) . ' ='
                 . ' REPLACE('
                 . Util::backquote($column) . ", '" . $find . "', '"

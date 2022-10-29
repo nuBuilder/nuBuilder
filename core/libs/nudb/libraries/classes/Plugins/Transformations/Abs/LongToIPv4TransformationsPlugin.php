@@ -21,8 +21,10 @@ abstract class LongToIPv4TransformationsPlugin extends TransformationsPlugin
 {
     /**
      * Gets the transformation description of the specific plugin
+     *
+     * @return string
      */
-    public static function getInfo(): string
+    public static function getInfo()
     {
         return __(
             'Converts an (IPv4) Internet network address stored as a BIGINT'
@@ -48,8 +50,10 @@ abstract class LongToIPv4TransformationsPlugin extends TransformationsPlugin
 
     /**
      * Gets the transformation name of the specific plugin
+     *
+     * @return string
      */
-    public static function getName(): string
+    public static function getName()
     {
         return 'Long To IPv4';
     }

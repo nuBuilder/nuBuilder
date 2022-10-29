@@ -1,19 +1,3 @@
-"use strict";
-(self["webpackChunkphpmyadmin"] = self["webpackChunkphpmyadmin"] || []).push([[61],{
-
-/***/ 1:
-/***/ (function(module) {
-
-module.exports = jQuery;
-
-/***/ }),
-
-/***/ 67:
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-
 /**
  * @fileoverview    function used in table data manipulation pages
  *
@@ -26,7 +10,7 @@ __webpack_require__.r(__webpack_exports__);
 /* global extendingValidatorMessages */
 // templates/javascript/variables.twig
 
-/* global openGISEditor, loadJSAndGISEditor, loadGISEditor */
+/* global openGISEditor, gisEditorLoaded, loadJSAndGISEditor, loadGISEditor */
 // js/gis_data_editor.js
 
 /**
@@ -39,7 +23,6 @@ __webpack_require__.r(__webpack_exports__);
  *
  * @return {boolean} always true
  */
-
 function nullify(theType, urlField, md5Field, multiEdit) {
   var rowForm = document.forms.insertForm;
 
@@ -182,8 +165,8 @@ function isTime(val) {
 
 
 function checkForCheckbox(multiEdit) {
-  if (jquery__WEBPACK_IMPORTED_MODULE_0__('#insert_ignore_' + multiEdit).length) {
-    return jquery__WEBPACK_IMPORTED_MODULE_0__('#insert_ignore_' + multiEdit).is(':unchecked');
+  if ($('#insert_ignore_' + multiEdit).length) {
+    return $('#insert_ignore_' + multiEdit).is(':unchecked');
   }
 
   return true;
@@ -192,10 +175,10 @@ function checkForCheckbox(multiEdit) {
 
 
 function verifyAfterSearchFieldChange(index, searchFormId) {
-  var $thisInput = jquery__WEBPACK_IMPORTED_MODULE_0__('input[name=\'criteriaValues[' + index + ']\']'); // Add  data-skip-validators attribute to skip validation in changeValueFieldType function
+  var $thisInput = $('input[name=\'criteriaValues[' + index + ']\']'); // Add  data-skip-validators attribute to skip validation in changeValueFieldType function
 
-  if (jquery__WEBPACK_IMPORTED_MODULE_0__('#fieldID_' + index).data('data-skip-validators')) {
-    jquery__WEBPACK_IMPORTED_MODULE_0__(searchFormId).validate().destroy();
+  if ($('#fieldID_' + index).data('data-skip-validators')) {
+    $(searchFormId).validate().destroy();
     return;
   } // validation for integer type
 
@@ -206,23 +189,23 @@ function verifyAfterSearchFieldChange(index, searchFormId) {
     var hasMultiple = $thisInput.prop('multiple');
 
     if (hasMultiple) {
-      jquery__WEBPACK_IMPORTED_MODULE_0__(searchFormId).validate({
+      $(searchFormId).validate({
         // update errors as we write
         onkeyup: function (element) {
-          jquery__WEBPACK_IMPORTED_MODULE_0__(element).valid();
+          $(element).valid();
         }
       }); // validator method for IN(...), NOT IN(...)
       // BETWEEN and NOT BETWEEN
 
-      jquery__WEBPACK_IMPORTED_MODULE_0__.validator.addMethod('validationFunctionForMultipleInt', function (value) {
+      jQuery.validator.addMethod('validationFunctionForMultipleInt', function (value) {
         return value.match(/^(?:(?:\d\s*)|\s*)+(?:,\s*\d+)*$/i) !== null;
-      }, window.Messages.strEnterValidNumber);
+      }, Messages.strEnterValidNumber);
       validateMultipleIntField($thisInput, true);
     } else {
-      jquery__WEBPACK_IMPORTED_MODULE_0__(searchFormId).validate({
+      $(searchFormId).validate({
         // update errors as we write
         onkeyup: function (element) {
-          jquery__WEBPACK_IMPORTED_MODULE_0__(element).valid();
+          $(element).valid();
         }
       });
       validateIntField($thisInput, true);
@@ -232,14 +215,13 @@ function verifyAfterSearchFieldChange(index, searchFormId) {
     $thisInput.valid();
   }
 }
-
-window.verifyAfterSearchFieldChange = verifyAfterSearchFieldChange;
 /**
  * Validate the an input contains multiple int values
  * @param {jQuery} jqueryInput the Jquery object
  * @param {boolean} returnValueIfFine the value to return if the validator passes
  * @return {void}
  */
+
 
 function validateMultipleIntField(jqueryInput, returnValueIfFine) {
   // removing previous rules
@@ -299,9 +281,9 @@ function validateIntField(jqueryInput, returnValueIfIsNumber) {
 function verificationsAfterFieldChange(urlField, multiEdit, theType) {
   var evt = window.event || arguments.callee.caller.arguments[0];
   var target = evt.target || evt.srcElement;
-  var $thisInput = jquery__WEBPACK_IMPORTED_MODULE_0__(':input[name^=\'fields[multi_edit][' + multiEdit + '][' + urlField + ']\']'); // the function drop-down that corresponds to this input field
+  var $thisInput = $(':input[name^=\'fields[multi_edit][' + multiEdit + '][' + urlField + ']\']'); // the function drop-down that corresponds to this input field
 
-  var $thisFunction = jquery__WEBPACK_IMPORTED_MODULE_0__('select[name=\'funcs[multi_edit][' + multiEdit + '][' + urlField + ']\']');
+  var $thisFunction = $('select[name=\'funcs[multi_edit][' + multiEdit + '][' + urlField + ']\']');
   var functionSelected = false;
 
   if (typeof $thisFunction.val() !== 'undefined' && $thisFunction.val() !== null && $thisFunction.val().length > 0) {
@@ -309,24 +291,24 @@ function verificationsAfterFieldChange(urlField, multiEdit, theType) {
   } // To generate the textbox that can take the salt
 
 
-  var newSaltBox = '<br><input type=text name=salt[multi_edit][' + multiEdit + '][' + urlField + ']' + ' id=salt_' + target.id + ' placeholder=\'' + window.Messages.strEncryptionKey + '\'>'; // If encrypting or decrypting functions that take salt as input is selected append the new textbox for salt
+  var newSaltBox = '<br><input type=text name=salt[multi_edit][' + multiEdit + '][' + urlField + ']' + ' id=salt_' + target.id + ' placeholder=\'' + Messages.strEncryptionKey + '\'>'; // If encrypting or decrypting functions that take salt as input is selected append the new textbox for salt
 
   if (target.value === 'AES_ENCRYPT' || target.value === 'AES_DECRYPT' || target.value === 'DES_ENCRYPT' || target.value === 'DES_DECRYPT' || target.value === 'ENCRYPT') {
-    if (!jquery__WEBPACK_IMPORTED_MODULE_0__('#salt_' + target.id).length) {
+    if (!$('#salt_' + target.id).length) {
       $thisInput.after(newSaltBox);
     }
   } else {
     // Remove the textbox for salt
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#salt_' + target.id).prev('br').remove();
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#salt_' + target.id).remove();
+    $('#salt_' + target.id).prev('br').remove();
+    $('#salt_' + target.id).remove();
   } // Remove possible blocking rules if the user changed functions
 
 
-  jquery__WEBPACK_IMPORTED_MODULE_0__('#' + target.id).rules('remove', 'validationFunctionForMd5');
-  jquery__WEBPACK_IMPORTED_MODULE_0__('#' + target.id).rules('remove', 'validationFunctionForAesDesEncrypt');
+  $('#' + target.id).rules('remove', 'validationFunctionForMd5');
+  $('#' + target.id).rules('remove', 'validationFunctionForAesDesEncrypt');
 
   if (target.value === 'MD5') {
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#' + target.id).rules('add', {
+    $('#' + target.id).rules('add', {
       validationFunctionForMd5: {
         param: $thisInput,
         depends: function () {
@@ -337,7 +319,7 @@ function verificationsAfterFieldChange(urlField, multiEdit, theType) {
   }
 
   if (target.value === 'DES_ENCRYPT' || target.value === 'AES_ENCRYPT') {
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#' + target.id).rules('add', {
+    $('#' + target.id).rules('add', {
       validationFunctionForAesDesEncrypt: {
         param: $thisInput,
         depends: function () {
@@ -347,27 +329,27 @@ function verificationsAfterFieldChange(urlField, multiEdit, theType) {
     });
   }
 
-  if (target.value === 'HEX' && theType.startsWith('int')) {
+  if (target.value === 'HEX' && theType.substring(0, 3) === 'int') {
     // Add note when HEX function is selected on a int
-    var newHexInfo = '<br><p id="note' + target.id + '">' + window.Messages.HexConversionInfo + '</p>';
+    var newHexInfo = '<br><p id="note' + target.id + '">' + Messages.HexConversionInfo + '</p>';
 
-    if (!jquery__WEBPACK_IMPORTED_MODULE_0__('#note' + target.id).length) {
+    if (!$('#note' + target.id).length) {
       $thisInput.after(newHexInfo);
     }
   } else {
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#note' + target.id).prev('br').remove();
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#note' + target.id).remove();
+    $('#note' + target.id).prev('br').remove();
+    $('#note' + target.id).remove();
   } // Unchecks the corresponding "NULL" control
 
 
-  jquery__WEBPACK_IMPORTED_MODULE_0__('input[name=\'fields_null[multi_edit][' + multiEdit + '][' + urlField + ']\']').prop('checked', false); // Unchecks the Ignore checkbox for the current row
+  $('input[name=\'fields_null[multi_edit][' + multiEdit + '][' + urlField + ']\']').prop('checked', false); // Unchecks the Ignore checkbox for the current row
 
-  jquery__WEBPACK_IMPORTED_MODULE_0__('input[name=\'insert_ignore_' + multiEdit + '\']').prop('checked', false);
+  $('input[name=\'insert_ignore_' + multiEdit + '\']').prop('checked', false);
   var charExceptionHandling;
 
-  if (theType.startsWith('char')) {
+  if (theType.substring(0, 4) === 'char') {
     charExceptionHandling = theType.substring(5, 6);
-  } else if (theType.startsWith('varchar')) {
+  } else if (theType.substring(0, 7) === 'varchar') {
     charExceptionHandling = theType.substring(8, 9);
   }
 
@@ -378,7 +360,7 @@ function verificationsAfterFieldChange(urlField, multiEdit, theType) {
 
   if ($thisInput.data('rulesadded') === null && !functionSelected) {
     // call validate before adding rules
-    jquery__WEBPACK_IMPORTED_MODULE_0__($thisInput[0].form).validate(); // validate for date time
+    $($thisInput[0].form).validate(); // validate for date time
 
     if (theType === 'datetime' || theType === 'time' || theType === 'date' || theType === 'timestamp') {
       $thisInput.rules('add', {
@@ -432,21 +414,20 @@ function verificationsAfterFieldChange(urlField, multiEdit, theType) {
     $thisInput.data('rulesadded', null);
   }
 }
-
-window.verificationsAfterFieldChange = verificationsAfterFieldChange;
 /* End of fields validation*/
 
 /**
  * Unbind all event handlers before tearing down a page
  */
 
-window.AJAX.registerTeardown('table/change.js', function () {
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', 'span.open_gis_editor');
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', 'input[name^=\'insert_ignore_\']');
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', 'input[name=\'gis_data[save]\']');
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', 'input.checkbox_null');
-  jquery__WEBPACK_IMPORTED_MODULE_0__('select[name="submit_type"]').off('change');
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('change', '#insert_rows');
+
+AJAX.registerTeardown('table/change.js', function () {
+  $(document).off('click', 'span.open_gis_editor');
+  $(document).off('click', 'input[name^=\'insert_ignore_\']');
+  $(document).off('click', 'input[name=\'gis_data[save]\']');
+  $(document).off('click', 'input.checkbox_null');
+  $('select[name="submit_type"]').off('change');
+  $(document).off('change', '#insert_rows');
 });
 /**
  * Ajax handlers for Change Table page
@@ -456,17 +437,17 @@ window.AJAX.registerTeardown('table/change.js', function () {
  * Restart insertion with 'N' rows.
  */
 
-window.AJAX.registerOnload('table/change.js', function () {
-  if (jquery__WEBPACK_IMPORTED_MODULE_0__('#insertForm').length) {
+AJAX.registerOnload('table/change.js', function () {
+  if ($('#insertForm').length) {
     // validate the comment form when it is submitted
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#insertForm').validate();
-    jquery__WEBPACK_IMPORTED_MODULE_0__.validator.addMethod('validationFunctionForHex', function (value) {
+    $('#insertForm').validate();
+    jQuery.validator.addMethod('validationFunctionForHex', function (value) {
       return value.match(/^[a-f0-9]*$/i) !== null;
     });
-    jquery__WEBPACK_IMPORTED_MODULE_0__.validator.addMethod('validationFunctionForMd5', function (value, element, options) {
-      return !(value.startsWith('MD5') && typeof options.data('maxlength') !== 'undefined' && options.data('maxlength') < 32);
+    jQuery.validator.addMethod('validationFunctionForMd5', function (value, element, options) {
+      return !(value.substring(0, 3) === 'MD5' && typeof options.data('maxlength') !== 'undefined' && options.data('maxlength') < 32);
     });
-    jquery__WEBPACK_IMPORTED_MODULE_0__.validator.addMethod('validationFunctionForAesDesEncrypt', function (value, element, options) {
+    jQuery.validator.addMethod('validationFunctionForAesDesEncrypt', function (value, element, options) {
       var funType = value.substring(0, 3);
 
       if (funType !== 'AES' && funType !== 'DES') {
@@ -481,7 +462,7 @@ window.AJAX.registerOnload('table/change.js', function () {
 
       return false;
     });
-    jquery__WEBPACK_IMPORTED_MODULE_0__.validator.addMethod('validationFunctionForDateTime', function (value, element, options) {
+    jQuery.validator.addMethod('validationFunctionForDateTime', function (value, element, options) {
       var dtValue = value;
       var theType = options;
 
@@ -523,10 +504,10 @@ window.AJAX.registerOnload('table/change.js', function () {
 
 
   extendingValidatorMessages();
-  jquery__WEBPACK_IMPORTED_MODULE_0__.datepicker.initialized = false;
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', 'span.open_gis_editor', function (event) {
+  $.datepicker.initialized = false;
+  $(document).on('click', 'span.open_gis_editor', function (event) {
     event.preventDefault();
-    var $span = jquery__WEBPACK_IMPORTED_MODULE_0__(this); // Current value
+    var $span = $(this); // Current value
 
     var value = $span.parent('td').children('input[type=\'text\']').val(); // Field name
 
@@ -537,7 +518,7 @@ window.AJAX.registerOnload('table/change.js', function () {
     var inputName = $span.parent('td').children('input[type=\'text\']').attr('name');
     openGISEditor();
 
-    if (!window.gisEditorLoaded) {
+    if (!gisEditorLoaded) {
       loadJSAndGISEditor(value, field, type, inputName);
     } else {
       loadGISEditor(value, field, type, inputName);
@@ -547,21 +528,21 @@ window.AJAX.registerOnload('table/change.js', function () {
    * Forced validation check of fields
    */
 
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', 'input[name^=\'insert_ignore_\']', function () {
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#insertForm').valid();
+  $(document).on('click', 'input[name^=\'insert_ignore_\']', function () {
+    $('#insertForm').valid();
   });
   /**
    * Uncheck the null checkbox as geometry data is placed on the input field
    */
 
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', 'input[name=\'gis_data[save]\']', function () {
-    var inputName = jquery__WEBPACK_IMPORTED_MODULE_0__('form#gis_data_editor_form').find('input[name=\'input_name\']').val();
-    var currentRow = jquery__WEBPACK_IMPORTED_MODULE_0__('input[name=\'' + inputName + '\']').parents('tr');
+  $(document).on('click', 'input[name=\'gis_data[save]\']', function () {
+    var inputName = $('form#gis_data_editor_form').find('input[name=\'input_name\']').val();
+    var currentRow = $('input[name=\'' + inputName + '\']').parents('tr');
     var $nullCheckbox = currentRow.find('.checkbox_null');
     $nullCheckbox.prop('checked', false);
     var rowId = currentRow.find('.open_gis_editor').data('row-id'); // Unchecks the Ignore checkbox for the current row
 
-    jquery__WEBPACK_IMPORTED_MODULE_0__('input[name=\'insert_ignore_' + rowId + '\']').prop('checked', false);
+    $('input[name=\'insert_ignore_' + rowId + '\']').prop('checked', false);
   });
   /**
    * Handles all current checkboxes for Null; this only takes care of the
@@ -570,9 +551,9 @@ window.AJAX.registerOnload('table/change.js', function () {
    *
    */
 
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('click', 'input.checkbox_null', function () {
+  $(document).on('click', 'input.checkbox_null', function () {
     nullify( // use hidden fields populated by /table/change
-    jquery__WEBPACK_IMPORTED_MODULE_0__(this).siblings('.nullify_code').val(), jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('tr').find('input:hidden').first().val(), jquery__WEBPACK_IMPORTED_MODULE_0__(this).siblings('.hashed_field').val(), jquery__WEBPACK_IMPORTED_MODULE_0__(this).siblings('.multi_edit').val());
+    $(this).siblings('.nullify_code').val(), $(this).closest('tr').find('input:hidden').first().val(), $(this).siblings('.hashed_field').val(), $(this).siblings('.multi_edit').val());
   });
   /**
    * Reset the auto_increment column to 0 when selecting any of the
@@ -581,22 +562,22 @@ window.AJAX.registerOnload('table/change.js', function () {
    * available).
    */
 
-  jquery__WEBPACK_IMPORTED_MODULE_0__('select[name="submit_type"]').on('change', function () {
-    var thisElemSubmitTypeVal = jquery__WEBPACK_IMPORTED_MODULE_0__(this).val();
-    var $table = jquery__WEBPACK_IMPORTED_MODULE_0__('table.insertRowTable');
+  $('select[name="submit_type"]').on('change', function () {
+    var thisElemSubmitTypeVal = $(this).val();
+    var $table = $('table.insertRowTable');
     var autoIncrementColumn = $table.find('input[name^="auto_increment"]');
     autoIncrementColumn.each(function () {
-      var $thisElemAIField = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
+      var $thisElemAIField = $(this);
       var thisElemName = $thisElemAIField.attr('name');
       var prevValueField = $table.find('input[name="' + thisElemName.replace('auto_increment', 'fields_prev') + '"]');
       var valueField = $table.find('input[name="' + thisElemName.replace('auto_increment', 'fields') + '"]');
-      var previousValue = jquery__WEBPACK_IMPORTED_MODULE_0__(prevValueField).val();
+      var previousValue = $(prevValueField).val();
 
       if (previousValue !== undefined) {
         if (thisElemSubmitTypeVal === 'insert' || thisElemSubmitTypeVal === 'insertignore' || thisElemSubmitTypeVal === 'showinsert') {
-          jquery__WEBPACK_IMPORTED_MODULE_0__(valueField).val(null);
+          $(valueField).val(null);
         } else {
-          jquery__WEBPACK_IMPORTED_MODULE_0__(valueField).val(previousValue);
+          $(valueField).val(previousValue);
         }
       }
     });
@@ -605,7 +586,7 @@ window.AJAX.registerOnload('table/change.js', function () {
    * Handle ENTER key when press on Continue insert with field
    */
 
-  jquery__WEBPACK_IMPORTED_MODULE_0__('#insert_rows').on('keypress', function (e) {
+  $('#insert_rows').on('keypress', function (e) {
     var key = e.which;
 
     if (key === 13) {
@@ -616,7 +597,7 @@ window.AJAX.registerOnload('table/change.js', function () {
    * Continue Insertion form
    */
 
-  jquery__WEBPACK_IMPORTED_MODULE_0__(document).on('change', '#insert_rows', addNewContinueInsertionFields);
+  $(document).on('change', '#insert_rows', addNewContinueInsertionFields);
 });
 
 function addNewContinueInsertionFields(event) {
@@ -625,25 +606,25 @@ function addNewContinueInsertionFields(event) {
    * @var columnCount   Number of number of columns table has.
    */
 
-  var columnCount = jquery__WEBPACK_IMPORTED_MODULE_0__('table.insertRowTable').first().find('tr').has('input[name*=\'fields_name\']').length;
+  var columnCount = $('table.insertRowTable').first().find('tr').has('input[name*=\'fields_name\']').length;
   /**
    * @var curr_rows   Number of current insert rows already on page
    */
 
-  var currRows = jquery__WEBPACK_IMPORTED_MODULE_0__('table.insertRowTable').length;
+  var currRows = $('table.insertRowTable').length;
   /**
    * @var target_rows Number of rows the user wants
    */
 
-  var targetRows = jquery__WEBPACK_IMPORTED_MODULE_0__('#insert_rows').val(); // remove all datepickers
+  var targetRows = $('#insert_rows').val(); // remove all datepickers
 
-  jquery__WEBPACK_IMPORTED_MODULE_0__('input.datefield, input.datetimefield').each(function () {
-    jquery__WEBPACK_IMPORTED_MODULE_0__(this).datepicker('destroy');
+  $('input.datefield, input.datetimefield').each(function () {
+    $(this).datepicker('destroy');
   });
 
   if (currRows < targetRows) {
     var tempIncrementIndex = function () {
-      var $thisElement = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
+      var $thisElement = $(this);
       /**
        * Extract the index from the name attribute for all input/select fields and increment it
        * name is of format funcs[multi_edit][10][<long random string of alphanum chars>]
@@ -677,12 +658,12 @@ function addNewContinueInsertionFields(event) {
         var thisId = $thisElement.attr('id');
         var idParts = thisId.split(/_/);
         var oldIdIndex = idParts[1];
-        var prevSelectedValue = jquery__WEBPACK_IMPORTED_MODULE_0__('#field_' + oldIdIndex + '_1').val();
+        var prevSelectedValue = $('#field_' + oldIdIndex + '_1').val();
         var newIdIndex = parseInt(oldIdIndex) + columnCount;
         var newId = 'field_' + newIdIndex + '_1';
         $thisElement.attr('id', newId);
         $thisElement.find('option').filter(function () {
-          return jquery__WEBPACK_IMPORTED_MODULE_0__(this).text() === prevSelectedValue;
+          return $(this).text() === prevSelectedValue;
         }).attr('selected', 'selected'); // If salt field is there then update its id.
 
         var nextSaltInput = $thisElement.parent().next('td').next('td').find('input[name*=\'salt\']');
@@ -705,7 +686,7 @@ function addNewContinueInsertionFields(event) {
         .attr('onchange', null) // Keep these values to be used when the element
         // will change
         .data('hashed_field', hashedField).data('new_row_index', newRowIndex).on('change', function () {
-          var $changedElement = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
+          var $changedElement = $(this);
           verificationsAfterFieldChange($changedElement.data('hashed_field'), $changedElement.data('new_row_index'), $changedElement.closest('tr').find('span.column_type').html());
         });
       }
@@ -716,14 +697,14 @@ function addNewContinueInsertionFields(event) {
         .off('click') // Keep these values to be used when the element
         // will be clicked
         .data('hashed_field', hashedField).data('new_row_index', newRowIndex).on('click', function () {
-          var $changedElement = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
+          var $changedElement = $(this);
           nullify($changedElement.siblings('.nullify_code').val(), $thisElement.closest('tr').find('input:hidden').first().val(), $changedElement.data('hashed_field'), '[multi_edit][' + $changedElement.data('new_row_index') + ']');
         });
       }
     };
 
     var tempReplaceAnchor = function () {
-      var $anchor = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
+      var $anchor = $(this);
       var newValue = 'rownumber=' + newRowIndex; // needs improvement in case something else inside
       // the href contains this pattern
 
@@ -732,11 +713,11 @@ function addNewContinueInsertionFields(event) {
     };
 
     var restoreValue = function () {
-      if (jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('tr').find('span.column_type').html() === 'enum') {
-        if (jquery__WEBPACK_IMPORTED_MODULE_0__(this).val() === $checkedValue) {
-          jquery__WEBPACK_IMPORTED_MODULE_0__(this).prop('checked', true);
+      if ($(this).closest('tr').find('span.column_type').html() === 'enum') {
+        if ($(this).val() === $checkedValue) {
+          $(this).prop('checked', true);
         } else {
-          jquery__WEBPACK_IMPORTED_MODULE_0__(this).prop('checked', false);
+          $(this).prop('checked', false);
         }
       }
     };
@@ -745,7 +726,7 @@ function addNewContinueInsertionFields(event) {
       /**
        * @var $last_row    Object referring to the last row
        */
-      var $lastRow = jquery__WEBPACK_IMPORTED_MODULE_0__('#insertForm').find('.insertRowTable').last(); // need to access this at more than one level
+      var $lastRow = $('#insertForm').find('.insertRowTable').last(); // need to access this at more than one level
       // (also needs improvement because it should be calculated
       //  just once per cloned row, not once per column)
 
@@ -756,24 +737,24 @@ function addNewContinueInsertionFields(event) {
       var $oldRow = $lastRow.find('.textfield');
       $oldRow.each(restoreValue); // set the value of enum field of new row to default
 
-      var $newRow = jquery__WEBPACK_IMPORTED_MODULE_0__('#insertForm').find('.insertRowTable').last();
+      var $newRow = $('#insertForm').find('.insertRowTable').last();
       $newRow.find('.textfield').each(function () {
-        if (jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('tr').find('span.column_type').html() === 'enum') {
-          if (jquery__WEBPACK_IMPORTED_MODULE_0__(this).val() === jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('tr').find('span.default_value').html()) {
-            jquery__WEBPACK_IMPORTED_MODULE_0__(this).prop('checked', true);
+        if ($(this).closest('tr').find('span.column_type').html() === 'enum') {
+          if ($(this).val() === $(this).closest('tr').find('span.default_value').html()) {
+            $(this).prop('checked', true);
           } else {
-            jquery__WEBPACK_IMPORTED_MODULE_0__(this).prop('checked', false);
+            $(this).prop('checked', false);
           }
         }
       }); // Insert/Clone the ignore checkboxes
 
       if (currRows === 1) {
-        jquery__WEBPACK_IMPORTED_MODULE_0__('<input id="insert_ignore_1" type="checkbox" name="insert_ignore_1" checked="checked">').insertBefore(jquery__WEBPACK_IMPORTED_MODULE_0__('table.insertRowTable').last()).after('<label for="insert_ignore_1">' + window.Messages.strIgnore + '</label>');
+        $('<input id="insert_ignore_1" type="checkbox" name="insert_ignore_1" checked="checked">').insertBefore($('table.insertRowTable').last()).after('<label for="insert_ignore_1">' + Messages.strIgnore + '</label>');
       } else {
         /**
          * @var $last_checkbox   Object reference to the last checkbox in #insertForm
          */
-        var $lastCheckbox = jquery__WEBPACK_IMPORTED_MODULE_0__('#insertForm').children('input:checkbox').last();
+        var $lastCheckbox = $('#insertForm').children('input:checkbox').last();
         /** name of {@link $lastCheckbox} */
 
         var lastCheckboxName = $lastCheckbox.attr('name');
@@ -783,13 +764,13 @@ function addNewContinueInsertionFields(event) {
         /** name of new {@link $lastCheckbox} */
 
         var newName = lastCheckboxName.replace(/\d+/, lastCheckboxIndex + 1);
-        jquery__WEBPACK_IMPORTED_MODULE_0__('<br><div class="clearfloat"></div>').insertBefore(jquery__WEBPACK_IMPORTED_MODULE_0__('table.insertRowTable').last());
+        $('<br><div class="clearfloat"></div>').insertBefore($('table.insertRowTable').last());
         $lastCheckbox.clone().attr({
           'id': newName,
           'name': newName
-        }).prop('checked', true).insertBefore(jquery__WEBPACK_IMPORTED_MODULE_0__('table.insertRowTable').last());
-        jquery__WEBPACK_IMPORTED_MODULE_0__('label[for^=insert_ignore]').last().clone().attr('for', newName).insertBefore(jquery__WEBPACK_IMPORTED_MODULE_0__('table.insertRowTable').last());
-        jquery__WEBPACK_IMPORTED_MODULE_0__('<br>').insertBefore(jquery__WEBPACK_IMPORTED_MODULE_0__('table.insertRowTable').last());
+        }).prop('checked', true).insertBefore($('table.insertRowTable').last());
+        $('label[for^=insert_ignore]').last().clone().attr('for', newName).insertBefore($('table.insertRowTable').last());
+        $('<br>').insertBefore($('table.insertRowTable').last());
       }
 
       currRows++;
@@ -799,26 +780,26 @@ function addNewContinueInsertionFields(event) {
 
 
     var tabIndex = 0;
-    jquery__WEBPACK_IMPORTED_MODULE_0__('.textfield, .char, textarea').each(function () {
+    $('.textfield, .char, textarea').each(function () {
       tabIndex++;
-      jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('tabindex', tabIndex); // update the IDs of textfields to ensure that they are unique
+      $(this).attr('tabindex', tabIndex); // update the IDs of textfields to ensure that they are unique
 
-      jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('id', 'field_' + tabIndex + '_3');
+      $(this).attr('id', 'field_' + tabIndex + '_3');
     });
-    jquery__WEBPACK_IMPORTED_MODULE_0__('.control_at_footer').each(function () {
+    $('.control_at_footer').each(function () {
       tabIndex++;
-      jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('tabindex', tabIndex);
+      $(this).attr('tabindex', tabIndex);
     });
   } else if (currRows > targetRows) {
     /**
      * Displays alert if data loss possible on decrease
      * of rows.
      */
-    var checkLock = jquery__WEBPACK_IMPORTED_MODULE_0__.isEmptyObject(window.AJAX.lockedTargets);
+    var checkLock = jQuery.isEmptyObject(AJAX.lockedTargets);
 
-    if (checkLock || confirm(window.Messages.strConfirmRowChange) === true) {
+    if (checkLock || confirm(Messages.strConfirmRowChange) === true) {
       while (currRows > targetRows) {
-        jquery__WEBPACK_IMPORTED_MODULE_0__('input[id^=insert_ignore]').last().nextUntil('fieldset').addBack().remove();
+        $('input[id^=insert_ignore]').last().nextUntil('fieldset').addBack().remove();
         currRows--;
       }
     } else {
@@ -828,39 +809,28 @@ function addNewContinueInsertionFields(event) {
 
 
   Functions.addDateTimePicker();
-}
+} // eslint-disable-next-line no-unused-vars
+
 
 function changeValueFieldType(elem, searchIndex) {
-  var fieldsValue = jquery__WEBPACK_IMPORTED_MODULE_0__('input#fieldID_' + searchIndex);
+  var fieldsValue = $('input#fieldID_' + searchIndex);
 
   if (0 === fieldsValue.size()) {
     return;
   }
 
-  var type = jquery__WEBPACK_IMPORTED_MODULE_0__(elem).val();
+  var type = $(elem).val();
 
   if ('LIKE' === type || 'LIKE %...%' === type || 'NOT LIKE' === type || 'NOT LIKE %...%' === type) {
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#fieldID_' + searchIndex).data('data-skip-validators', true);
+    $('#fieldID_' + searchIndex).data('data-skip-validators', true);
     return;
   } else {
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#fieldID_' + searchIndex).data('data-skip-validators', false);
+    $('#fieldID_' + searchIndex).data('data-skip-validators', false);
   }
 
   if ('IN (...)' === type || 'NOT IN (...)' === type || 'BETWEEN' === type || 'NOT BETWEEN' === type) {
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#fieldID_' + searchIndex).prop('multiple', true);
+    $('#fieldID_' + searchIndex).prop('multiple', true);
   } else {
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#fieldID_' + searchIndex).prop('multiple', false);
+    $('#fieldID_' + searchIndex).prop('multiple', false);
   }
 }
-
-window.changeValueFieldType = changeValueFieldType;
-
-/***/ })
-
-},
-/******/ function(__webpack_require__) { // webpackRuntimeModules
-/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
-/******/ var __webpack_exports__ = (__webpack_exec__(67));
-/******/ }
-]);
-//# sourceMappingURL=change.js.map

@@ -385,7 +385,7 @@ class Monitor
             $return['sum'][$type] += $row['#'];
 
             switch ($type) {
-            /** @noinspection PhpMissingBreakStatementInspection */
+                /** @noinspection PhpMissingBreakStatementInspection */
                 case 'insert':
                     // Group inserts if selected
                     if (
@@ -395,6 +395,10 @@ class Monitor
                             $matches
                         )
                     ) {
+                        if (! isset($insertTables[$matches[2]])) {
+                            $insertTables[$matches[2]] = 0;
+                        }
+
                         $insertTables[$matches[2]]++;
                         if ($insertTables[$matches[2]] > 1) {
                             $return['rows'][$insertTablesFirst]['#'] = $insertTables[$matches[2]];
@@ -506,7 +510,7 @@ class Monitor
         string $database,
         string $query
     ): array {
-        $GLOBALS['cached_affected_rows'] = $GLOBALS['cached_affected_rows'] ?? null;
+        global $cached_affected_rows;
 
         $return = [];
 
@@ -524,7 +528,7 @@ class Monitor
         $sqlQuery = preg_replace('/^(\s*SELECT)/i', '\\1 SQL_NO_CACHE', $query);
 
         $this->dbi->tryQuery($sqlQuery);
-        $return['affectedRows'] = $GLOBALS['cached_affected_rows'];
+        $return['affectedRows'] = $cached_affected_rows;
 
         $result = $this->dbi->tryQuery('EXPLAIN ' . $sqlQuery);
         if ($result !== false) {

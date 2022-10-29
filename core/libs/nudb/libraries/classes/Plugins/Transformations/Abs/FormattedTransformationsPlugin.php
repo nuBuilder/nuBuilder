@@ -20,8 +20,10 @@ abstract class FormattedTransformationsPlugin extends TransformationsPlugin
 {
     /**
      * Gets the transformation description of the specific plugin
+     *
+     * @return string
      */
-    public static function getInfo(): string
+    public static function getInfo()
     {
         return __(
             'Displays the contents of the column as-is, without running it'
@@ -50,8 +52,10 @@ abstract class FormattedTransformationsPlugin extends TransformationsPlugin
 
     /**
      * Gets the transformation name of the specific plugin
+     *
+     * @return string
      */
-    public static function getName(): string
+    public static function getName()
     {
         return 'Formatted';
     }

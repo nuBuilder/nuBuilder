@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Table;
 
-use PhpMyAdmin\Common;
 use PhpMyAdmin\Controllers\Table\StructureController;
-use PhpMyAdmin\Core;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Html\Generator;
 use PhpMyAdmin\Index;
@@ -46,6 +44,8 @@ final class Indexes
      */
     public function doSaveData(Index $index, bool $renameMode, string $db, string $table): void
     {
+        global $containerBuilder;
+
         $error = false;
         if ($renameMode && Compatibility::isCompatibleRenameIndex($this->dbi->getVersion())) {
             $oldIndexName = $_POST['old_index'];
@@ -90,7 +90,7 @@ final class Indexes
                     Generator::getMessage($message, $sql_query, 'success')
                 );
 
-                $indexes = Index::getFromTable($this->dbi, $table, $db);
+                $indexes = Index::getFromTable($table, $db);
                 $indexesDuplicates = Index::findDuplicates($table, $db);
 
                 $this->response->addJSON(
@@ -106,8 +106,8 @@ final class Indexes
                 );
             } else {
                 /** @var StructureController $controller */
-                $controller = Core::getContainerBuilder()->get(StructureController::class);
-                $controller(Common::getRequest());
+                $controller = $containerBuilder->get(StructureController::class);
+                $controller();
             }
         } else {
             $this->response->setRequestStatus(false);

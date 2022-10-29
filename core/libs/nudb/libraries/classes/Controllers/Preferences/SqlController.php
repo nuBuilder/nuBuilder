@@ -9,7 +9,6 @@ use PhpMyAdmin\Config\ConfigFile;
 use PhpMyAdmin\Config\Forms\User\SqlForm;
 use PhpMyAdmin\ConfigStorage\Relation;
 use PhpMyAdmin\Controllers\AbstractController;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Template;
 use PhpMyAdmin\TwoFactor;
@@ -43,18 +42,14 @@ class SqlController extends AbstractController
         $this->config = $config;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['cf'] = $GLOBALS['cf'] ?? null;
-        $GLOBALS['error'] = $GLOBALS['error'] ?? null;
-        $GLOBALS['tabHash'] = $GLOBALS['tabHash'] ?? null;
-        $GLOBALS['hash'] = $GLOBALS['hash'] ?? null;
-        $GLOBALS['server'] = $GLOBALS['server'] ?? null;
+        global $cfg, $cf, $error, $tabHash, $hash, $server, $route;
 
-        $GLOBALS['cf'] = new ConfigFile($this->config->baseSettings);
-        $this->userPreferences->pageInit($GLOBALS['cf']);
+        $cf = new ConfigFile($this->config->baseSettings);
+        $this->userPreferences->pageInit($cf);
 
-        $formDisplay = new SqlForm($GLOBALS['cf'], 1);
+        $formDisplay = new SqlForm($cf, 1);
 
         if (isset($_POST['revert'])) {
             // revert erroneous fields to their default values
@@ -64,25 +59,25 @@ class SqlController extends AbstractController
             return;
         }
 
-        $GLOBALS['error'] = null;
+        $error = null;
         if ($formDisplay->process(false) && ! $formDisplay->hasErrors()) {
             // Load 2FA settings
-            $twoFactor = new TwoFactor($GLOBALS['cfg']['Server']['user']);
+            $twoFactor = new TwoFactor($cfg['Server']['user']);
             // save settings
-            $result = $this->userPreferences->save($GLOBALS['cf']->getConfigArray());
+            $result = $this->userPreferences->save($cf->getConfigArray());
             // save back the 2FA setting only
             $twoFactor->save();
             if ($result === true) {
                 // reload config
                 $this->config->loadUserPreferences();
-                $GLOBALS['tabHash'] = $_POST['tab_hash'] ?? null;
-                $GLOBALS['hash'] = ltrim($GLOBALS['tabHash'], '#');
-                $this->userPreferences->redirect('index.php?route=/preferences/sql', null, $GLOBALS['hash']);
+                $tabHash = $_POST['tab_hash'] ?? null;
+                $hash = ltrim($tabHash, '#');
+                $this->userPreferences->redirect('index.php?route=/preferences/sql', null, $hash);
 
                 return;
             }
 
-            $GLOBALS['error'] = $result;
+            $error = $result;
         }
 
         $this->addScriptFiles(['config.js']);
@@ -90,7 +85,7 @@ class SqlController extends AbstractController
         $relationParameters = $this->relation->getRelationParameters();
 
         $this->render('preferences/header', [
-            'route' => $request->getRoute(),
+            'route' => $route,
             'is_saved' => ! empty($_GET['saved']),
             'has_config_storage' => $relationParameters->userPreferencesFeature !== null,
         ]);
@@ -100,13 +95,13 @@ class SqlController extends AbstractController
         }
 
         $this->render('preferences/forms/main', [
-            'error' => $GLOBALS['error'] ? $GLOBALS['error']->getDisplay() : '',
+            'error' => $error ? $error->getDisplay() : '',
             'has_errors' => $formDisplay->hasErrors(),
             'errors' => $formErrors ?? null,
             'form' => $formDisplay->getDisplay(
                 true,
                 Url::getFromRoute('/preferences/sql'),
-                ['server' => $GLOBALS['server']]
+                ['server' => $server]
             ),
         ]);
 

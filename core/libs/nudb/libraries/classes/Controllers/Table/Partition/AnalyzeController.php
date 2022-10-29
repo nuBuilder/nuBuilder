@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Table\Partition;
 
-use PhpMyAdmin\Controllers\AbstractController;
+use PhpMyAdmin\Controllers\Table\AbstractController;
 use PhpMyAdmin\Dbal\DatabaseName;
-use PhpMyAdmin\Dbal\InvalidIdentifierName;
 use PhpMyAdmin\Dbal\TableName;
 use PhpMyAdmin\Html\Generator;
 use PhpMyAdmin\Http\ServerRequest;
@@ -27,9 +26,11 @@ final class AnalyzeController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
+        string $db,
+        string $table,
         Maintenance $maintenance
     ) {
-        parent::__construct($response, $template);
+        parent::__construct($response, $template, $db, $table);
         $this->model = $maintenance;
     }
 
@@ -38,10 +39,10 @@ final class AnalyzeController extends AbstractController
         $partitionName = $request->getParsedBodyParam('partition_name');
 
         try {
-            Assert::stringNotEmpty($partitionName, __('The partition name must be a non-empty string.'));
+            Assert::stringNotEmpty($partitionName);
             $database = DatabaseName::fromValue($request->getParam('db'));
             $table = TableName::fromValue($request->getParam('table'));
-        } catch (InvalidIdentifierName | InvalidArgumentException $exception) {
+        } catch (InvalidArgumentException $exception) {
             $message = Message::error($exception->getMessage());
             $this->response->addHTML($message->getDisplay());
 

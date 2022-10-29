@@ -1,10 +1,3 @@
-"use strict";
-(self["webpackChunkphpmyadmin"] = self["webpackChunkphpmyadmin"] || []).push([[19],{
-
-/***/ 23:
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
 var designerTables = [{
   name: 'pdf_pages',
   key: 'pgNr',
@@ -13,7 +6,7 @@ var designerTables = [{
   name: 'table_coords',
   key: 'id',
   autoIncrement: true
-}];
+}]; // eslint-disable-next-line no-unused-vars
 
 var DesignerOfflineDB = function () {
   var designerDB = {};
@@ -92,7 +85,7 @@ var DesignerOfflineDB = function () {
     };
 
     request.onerror = function () {
-      Functions.ajaxShowMessage(window.Messages.strIndexedDBNotWorking, null, 'error');
+      Functions.ajaxShowMessage(Messages.strIndexedDBNotWorking, null, 'error');
     };
   };
   /**
@@ -105,7 +98,7 @@ var DesignerOfflineDB = function () {
 
   designerDB.loadObject = function (table, id, callback) {
     if (datastore === null) {
-      Functions.ajaxShowMessage(window.Messages.strIndexedDBNotWorking, null, 'error');
+      Functions.ajaxShowMessage(Messages.strIndexedDBNotWorking, null, 'error');
       return;
     }
 
@@ -127,7 +120,7 @@ var DesignerOfflineDB = function () {
 
   designerDB.loadAllObjects = function (table, callback) {
     if (datastore === null) {
-      Functions.ajaxShowMessage(window.Messages.strIndexedDBNotWorking, null, 'error');
+      Functions.ajaxShowMessage(Messages.strIndexedDBNotWorking, null, 'error');
       return;
     }
 
@@ -161,7 +154,7 @@ var DesignerOfflineDB = function () {
 
   designerDB.loadFirstObject = function (table, callback) {
     if (datastore === null) {
-      Functions.ajaxShowMessage(window.Messages.strIndexedDBNotWorking, null, 'error');
+      Functions.ajaxShowMessage(Messages.strIndexedDBNotWorking, null, 'error');
       return;
     }
 
@@ -195,7 +188,7 @@ var DesignerOfflineDB = function () {
 
   designerDB.addObject = function (table, obj, callback) {
     if (datastore === null) {
-      Functions.ajaxShowMessage(window.Messages.strIndexedDBNotWorking, null, 'error');
+      Functions.ajaxShowMessage(Messages.strIndexedDBNotWorking, null, 'error');
       return;
     }
 
@@ -220,7 +213,7 @@ var DesignerOfflineDB = function () {
 
   designerDB.deleteObject = function (table, id, callback) {
     if (datastore === null) {
-      Functions.ajaxShowMessage(window.Messages.strIndexedDBNotWorking, null, 'error');
+      Functions.ajaxShowMessage(Messages.strIndexedDBNotWorking, null, 'error');
       return;
     }
 
@@ -249,15 +242,3 @@ var DesignerOfflineDB = function () {
 
   return designerDB;
 }();
-
-window.DesignerOfflineDB = DesignerOfflineDB;
-
-/***/ })
-
-},
-/******/ function(__webpack_require__) { // webpackRuntimeModules
-/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
-/******/ var __webpack_exports__ = (__webpack_exec__(23));
-/******/ }
-]);
-//# sourceMappingURL=database.js.map

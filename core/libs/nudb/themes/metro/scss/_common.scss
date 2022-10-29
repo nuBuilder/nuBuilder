@@ -367,19 +367,6 @@ div.null_div {
   text-align: center;
   font-style: normal;
   min-width: 50px;
-
-  label {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-
-    input {
-      cursor: pointer;
-    }
-  }
 }
 
 .pma-fieldset {
@@ -501,10 +488,6 @@ img.lightbulb {
 #pma_footer {
   position: relative;
   padding: 20px;
-}
-
-#pma_demo {
-  z-index: -1;
 }
 
 #pma_errors #pma_errors {
@@ -2853,4 +2836,8 @@ body {
 
 .resize-vertical {
   resize: vertical;
+}
+
+.table-responsive-md .data {
+  z-index: 9;
 }

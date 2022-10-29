@@ -23,10 +23,10 @@ use PhpMyAdmin\ConfigStorage\Features\TrackingFeature;
 use PhpMyAdmin\ConfigStorage\Features\UiPreferencesFeature;
 use PhpMyAdmin\ConfigStorage\Features\UserPreferencesFeature;
 use PhpMyAdmin\Dbal\DatabaseName;
-use PhpMyAdmin\Dbal\InvalidDatabaseName;
-use PhpMyAdmin\Dbal\InvalidTableName;
 use PhpMyAdmin\Dbal\TableName;
 use PhpMyAdmin\Version;
+use Webmozart\Assert\Assert;
+use Webmozart\Assert\InvalidArgumentException;
 
 use function is_string;
 
@@ -138,8 +138,9 @@ final class RelationParameters
         }
 
         try {
-            $db = DatabaseName::fromValue($params['db'] ?? null);
-        } catch (InvalidDatabaseName $exception) {
+            Assert::keyExists($params, 'db');
+            $db = DatabaseName::fromValue($params['db']);
+        } catch (InvalidArgumentException $exception) {
             return new self($user, null);
         }
 
@@ -464,7 +465,7 @@ final class RelationParameters
     {
         try {
             return TableName::fromValue($tableName);
-        } catch (InvalidTableName $exception) {
+        } catch (InvalidArgumentException $exception) {
             return null;
         }
     }

@@ -52,20 +52,23 @@ class SysInfo
 
         switch ($php_os) {
             case 'Linux':
-                if (Linux::isSupported()) {
-                    return new Linux();
+                $sysInfo = new Linux();
+                if ($sysInfo->supported()) {
+                    return $sysInfo;
                 }
 
                 break;
             case 'WINNT':
-                if (WindowsNt::isSupported()) {
-                    return new WindowsNt();
+                $sysInfo = new WindowsNt();
+                if ($sysInfo->supported()) {
+                    return $sysInfo;
                 }
 
                 break;
             case 'SunOS':
-                if (SunOs::isSupported()) {
-                    return new SunOs();
+                $sysInfo = new SunOs();
+                if ($sysInfo->supported()) {
+                    return $sysInfo;
                 }
 
                 break;

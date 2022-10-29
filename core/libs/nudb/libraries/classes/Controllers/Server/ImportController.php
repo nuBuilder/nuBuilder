@@ -9,7 +9,6 @@ use PhpMyAdmin\Config\PageSettings;
 use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Encoding;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\Import;
 use PhpMyAdmin\Import\Ajax;
 use PhpMyAdmin\Message;
@@ -35,23 +34,22 @@ final class ImportController extends AbstractController
         $this->dbi = $dbi;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['SESSION_KEY'] = $GLOBALS['SESSION_KEY'] ?? null;
-        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
+        global $db, $table, $SESSION_KEY, $cfg, $errorUrl;
 
         $pageSettings = new PageSettings('Import');
         $pageSettingsErrorHtml = $pageSettings->getErrorHTML();
         $pageSettingsHtml = $pageSettings->getHTML();
 
         $this->addScriptFiles(['import.js']);
-        $GLOBALS['errorUrl'] = Url::getFromRoute('/');
+        $errorUrl = Url::getFromRoute('/');
 
         if ($this->dbi->isSuperUser()) {
             $this->dbi->selectDb('mysql');
         }
 
-        [$GLOBALS['SESSION_KEY'], $uploadId] = Ajax::uploadProgressSetup();
+        [$SESSION_KEY, $uploadId] = Ajax::uploadProgressSetup();
 
         $importList = Plugins::getImport('server');
 
@@ -72,9 +70,9 @@ final class ImportController extends AbstractController
         $localImportFile = $_REQUEST['local_import_file'] ?? null;
         $compressions = Import::getCompressions();
 
-        $charsets = Charsets::getCharsets($this->dbi, $GLOBALS['cfg']['Server']['DisableIS']);
+        $charsets = Charsets::getCharsets($this->dbi, $cfg['Server']['DisableIS']);
 
-        $idKey = $_SESSION[$GLOBALS['SESSION_KEY']]['handler']::getIdKey();
+        $idKey = $_SESSION[$SESSION_KEY]['handler']::getIdKey();
         $hiddenInputs = [
             $idKey => $uploadId,
             'import_type' => 'server',
@@ -91,10 +89,10 @@ final class ImportController extends AbstractController
             'page_settings_error_html' => $pageSettingsErrorHtml,
             'page_settings_html' => $pageSettingsHtml,
             'upload_id' => $uploadId,
-            'handler' => $_SESSION[$GLOBALS['SESSION_KEY']]['handler'],
+            'handler' => $_SESSION[$SESSION_KEY]['handler'],
             'hidden_inputs' => $hiddenInputs,
-            'db' => $GLOBALS['db'],
-            'table' => $GLOBALS['table'],
+            'db' => $db,
+            'table' => $table,
             'max_upload_size' => $maxUploadSize,
             'formatted_maximum_upload_size' => Util::getFormattedMaximumUploadSize($maxUploadSize),
             'plugins_choice' => $choice,
@@ -103,18 +101,18 @@ final class ImportController extends AbstractController
             'is_allow_interrupt_checked' => $isAllowInterruptChecked,
             'local_import_file' => $localImportFile,
             'is_upload' => $GLOBALS['config']->get('enable_upload'),
-            'upload_dir' => $GLOBALS['cfg']['UploadDir'] ?? null,
+            'upload_dir' => $cfg['UploadDir'] ?? null,
             'timeout_passed_global' => $GLOBALS['timeout_passed'] ?? null,
             'compressions' => $compressions,
             'is_encoding_supported' => Encoding::isSupported(),
             'encodings' => Encoding::listEncodings(),
-            'import_charset' => $GLOBALS['cfg']['Import']['charset'] ?? null,
+            'import_charset' => $cfg['Import']['charset'] ?? null,
             'timeout_passed' => $timeoutPassed,
             'offset' => $offset,
             'can_convert_kanji' => Encoding::canConvertKanji(),
             'charsets' => $charsets,
             'is_foreign_key_check' => ForeignKey::isCheckEnabled(),
-            'user_upload_dir' => Util::userDir((string) ($GLOBALS['cfg']['UploadDir'] ?? '')),
+            'user_upload_dir' => Util::userDir((string) ($cfg['UploadDir'] ?? '')),
             'local_files' => Import::getLocalFiles($importList),
         ]);
     }

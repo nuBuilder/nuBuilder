@@ -79,17 +79,17 @@
             <td class="column_attribute text-nowrap">{{ attributes[rownum] }}</td>
             <td>{{ row['Null'] == 'YES' ? 'Yes'|trans : 'No'|trans }}</td>
             <td class="text-nowrap">
-                {% if row['Default'] is not null %}
-                    {% if extracted_columnspec['type'] == 'bit' %}
-                        {{ row['Default']|convert_bit_default_value }}
-                    {% else %}
-                        {{ row['Default'] }}
-                    {% endif %}
-                {% elseif row['Null'] == 'YES' %}
+                {%- if row['Default'] is not null -%}
+                    {%- if extracted_columnspec['type'] == 'bit' -%}
+                        {{- row['Default']|convert_bit_default_value -}}
+                    {%- else -%}
+                        {{- row['Default'] -}}
+                    {%- endif -%}
+                {%- elseif row['Null'] == 'YES' -%}
                     <em>NULL</em>
-                {% else %}
+                {%- else -%}
                     <em>{% trans %}None{% context %}None for default{% endtrans %}</em>
-                {% endif %}
+                {%- endif -%}
             </td>
             {% if show_column_comments %}
                 <td>
@@ -439,13 +439,13 @@
 {% endif %}
 
 {% if not tbl_is_view and not db_is_system_schema and tbl_storage_engine != 'ARCHIVE' %}
-  <div id="index_div" class="card mb-3 ajax">
-    <div class="card-header">
-      {% trans 'Indexes' %}
-      {{ show_mysql_docu('optimizing-database-structure') }}
-    </div>
+  <div id="index_div" class="w-100 ajax">
+    <fieldset class="pma-fieldset index_info">
+      <legend id="index_header">
+        {% trans 'Indexes' %}
+        {{ show_mysql_docu('optimizing-database-structure') }}
+      </legend>
 
-    <div class="card-body index_info">
       {% if indexes is not empty %}
         {{ indexes_duplicates|raw }}
 
@@ -467,8 +467,8 @@
               </tr>
             </thead>
 
+          <tbody class="row_span">
             {% for index in indexes %}
-              <tbody class="row_span">
                 {% set columns_count = index.getColumnCount() %}
                 <tr class="noclick">
                 <td rowspan="{{ columns_count }}" class="edit_index d-print-none ajax">
@@ -534,16 +534,16 @@
                   {% endif %}
                   </tr>
                 {% endfor %}
-              </tbody>
-            {% endfor %}
+              {% endfor %}
+            </tbody>
           </table>
         </div>
       {% else %}
         <div class="no_indexes_defined">{{ 'No index defined!'|trans|notice }}</div>
       {% endif %}
-    </div>
+    </fieldset>
 
-    <div class="card-footer d-print-none">
+    <fieldset class="pma-fieldset tblFooters d-print-none text-start">
       <form action="{{ url('/table/indexes') }}" method="post">
         {{ get_hidden_inputs(db, table) }}
         <input type="hidden" name="create_index" value="1">
@@ -554,7 +554,7 @@
 
         <input class="btn btn-primary add_index ajax" type="submit" value="{% trans 'Go' %}">
       </form>
-    </div>
+    </fieldset>
   </div>
   {{ include('modals/index_dialog_modal.twig') }}
 {% endif %}

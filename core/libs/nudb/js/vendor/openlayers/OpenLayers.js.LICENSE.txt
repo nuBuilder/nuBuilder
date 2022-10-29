@@ -1,5 +1,0 @@
-/*!
- * OpenLayers (https://openlayers.org/)
- * Copyright 2005-present, OpenLayers Contributors All rights reserved.
- * Licensed under BSD 2-Clause License (https://github.com/openlayers/openlayers/blob/main/LICENSE.md)
- */

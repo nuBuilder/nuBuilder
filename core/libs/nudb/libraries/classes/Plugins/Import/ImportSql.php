@@ -18,6 +18,7 @@ use PhpMyAdmin\Properties\Plugins\ImportPluginProperties;
 use PhpMyAdmin\SqlParser\Utils\BufferedQuery;
 
 use function __;
+use function count;
 use function implode;
 use function mb_strlen;
 use function preg_replace;
@@ -37,13 +38,15 @@ class ImportSql extends ImportPlugin
 
     protected function setProperties(): ImportPluginProperties
     {
+        global $dbi;
+
         $importPluginProperties = new ImportPluginProperties();
         $importPluginProperties->setText('SQL');
         $importPluginProperties->setExtension('sql');
         $importPluginProperties->setOptionsText(__('Options'));
 
-        $compats = $GLOBALS['dbi']->getCompatibilities();
-        if ($compats !== []) {
+        $compats = $dbi->getCompatibilities();
+        if (count($compats) > 0) {
             $values = [];
             foreach ($compats as $val) {
                 $values[$val] = $val;
@@ -94,15 +97,14 @@ class ImportSql extends ImportPlugin
     /**
      * Handles the whole import logic
      *
-     * @return string[]
+     * @param array $sql_data 2-element array with sql data
      */
-    public function doImport(?File $importHandle = null): array
+    public function doImport(?File $importHandle = null, array &$sql_data = []): void
     {
-        $GLOBALS['error'] = $GLOBALS['error'] ?? null;
-        $GLOBALS['timeout_passed'] = $GLOBALS['timeout_passed'] ?? null;
+        global $error, $timeout_passed, $dbi;
 
         // Handle compatibility options.
-        $this->setSQLMode($GLOBALS['dbi'], $_REQUEST);
+        $this->setSQLMode($dbi, $_REQUEST);
 
         $bq = new BufferedQuery();
         if (isset($_POST['sql_delimiter'])) {
@@ -116,15 +118,13 @@ class ImportSql extends ImportPlugin
          */
         $GLOBALS['finished'] = false;
 
-        $sqlStatements = [];
-
-        while (! $GLOBALS['error'] && ! $GLOBALS['timeout_passed']) {
+        while (! $error && (! $timeout_passed)) {
             // Getting the first statement, the remaining data and the last
             // delimiter.
             $statement = $bq->extract();
 
             // If there is no full statement, we are looking for more data.
-            if ($statement === false || $statement === '') {
+            if (empty($statement)) {
                 // Importing new data.
                 $newData = $this->import->getNextChunk($importHandle);
 
@@ -148,23 +148,21 @@ class ImportSql extends ImportPlugin
             }
 
             // Executing the query.
-            $this->import->runQuery($statement, $sqlStatements);
+            $this->import->runQuery($statement, $statement, $sql_data);
         }
 
         // Extracting remaining statements.
-        while (! $GLOBALS['error'] && ! $GLOBALS['timeout_passed'] && ! empty($bq->query)) {
+        while (! $error && ! $timeout_passed && ! empty($bq->query)) {
             $statement = $bq->extract(true);
-            if ($statement === false || $statement === '') {
+            if (empty($statement)) {
                 continue;
             }
 
-            $this->import->runQuery($statement, $sqlStatements);
+            $this->import->runQuery($statement, $statement, $sql_data);
         }
 
         // Finishing.
-        $this->import->runQuery('', $sqlStatements);
-
-        return $sqlStatements;
+        $this->import->runQuery('', '', $sql_data);
     }
 
     /**
@@ -173,7 +171,7 @@ class ImportSql extends ImportPlugin
      * @param DatabaseInterface $dbi     Database interface
      * @param array             $request Request array
      */
-    private function setSQLMode(DatabaseInterface $dbi, array $request): void
+    private function setSQLMode($dbi, array $request): void
     {
         $sql_modes = [];
         if (isset($request['sql_compatibility']) && $request['sql_compatibility'] !== 'NONE') {
@@ -184,10 +182,12 @@ class ImportSql extends ImportPlugin
             $sql_modes[] = 'NO_AUTO_VALUE_ON_ZERO';
         }
 
-        if ($sql_modes === []) {
+        if (count($sql_modes) <= 0) {
             return;
         }
 
-        $dbi->tryQuery('SET SQL_MODE="' . implode(',', $sql_modes) . '"');
+        $dbi->tryQuery(
+            'SET SQL_MODE="' . implode(',', $sql_modes) . '"'
+        );
     }
 }

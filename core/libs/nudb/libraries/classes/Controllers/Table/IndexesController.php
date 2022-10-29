@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Table;
 
-use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\DbTableExists;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\Index;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Table\Indexes;
@@ -35,27 +33,28 @@ class IndexesController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
+        string $db,
+        string $table,
         DatabaseInterface $dbi,
         Indexes $indexes
     ) {
-        parent::__construct($response, $template);
+        parent::__construct($response, $template, $db, $table);
         $this->dbi = $dbi;
         $this->indexes = $indexes;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['urlParams'] = $GLOBALS['urlParams'] ?? null;
-        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
+        global $db, $table, $urlParams, $cfg, $errorUrl;
 
         if (! isset($_POST['create_edit_table'])) {
-            $this->checkParameters(['db', 'table']);
+            Util::checkParameters(['db', 'table']);
 
-            $GLOBALS['urlParams'] = ['db' => $GLOBALS['db'], 'table' => $GLOBALS['table']];
-            $GLOBALS['errorUrl'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabTable'], 'table');
-            $GLOBALS['errorUrl'] .= Url::getCommon($GLOBALS['urlParams'], '&');
+            $urlParams = ['db' => $db, 'table' => $table];
+            $errorUrl = Util::getScriptNameForOption($cfg['DefaultTabTable'], 'table');
+            $errorUrl .= Url::getCommon($urlParams, '&');
 
-            DbTableExists::check($GLOBALS['db'], $GLOBALS['table']);
+            DbTableExists::check();
         }
 
         if (isset($_POST['index'])) {
@@ -63,14 +62,14 @@ class IndexesController extends AbstractController
                 // coming already from form
                 $index = new Index($_POST['index']);
             } else {
-                $index = $this->dbi->getTable($GLOBALS['db'], $GLOBALS['table'])->getIndex($_POST['index']);
+                $index = $this->dbi->getTable($this->db, $this->table)->getIndex($_POST['index']);
             }
         } else {
             $index = new Index();
         }
 
         if (isset($_POST['do_save_data'])) {
-            $this->indexes->doSaveData($index, false, $GLOBALS['db'], $GLOBALS['table']);
+            $this->indexes->doSaveData($index, false, $this->db, $this->table);
 
             return;
         }
@@ -122,13 +121,13 @@ class IndexesController extends AbstractController
             $index->set($index_params);
             $add_fields = count($fields);
         } else {
-            $fields = $this->dbi->getTable($GLOBALS['db'], $GLOBALS['table'])
+            $fields = $this->dbi->getTable($this->db, $this->table)
                 ->getNameAndTypeOfTheColumns();
         }
 
         $form_params = [
-            'db' => $GLOBALS['db'],
-            'table' => $GLOBALS['table'],
+            'db' => $this->db,
+            'table' => $this->table,
         ];
 
         if (isset($_POST['create_index'])) {

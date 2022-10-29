@@ -10,6 +10,7 @@ use PhpMyAdmin\Twig\Extensions\Node\TransNode;
 use PhpMyAdmin\Twig\FlashMessagesExtension;
 use PhpMyAdmin\Twig\I18nExtension;
 use PhpMyAdmin\Twig\MessageExtension;
+use PhpMyAdmin\Twig\RelationExtension;
 use PhpMyAdmin\Twig\SanitizeExtension;
 use PhpMyAdmin\Twig\TableExtension;
 use PhpMyAdmin\Twig\TrackerExtension;
@@ -63,6 +64,8 @@ class Template
 
     public static function getTwigEnvironment(?string $cacheDir): Environment
     {
+        global $cfg, $containerBuilder;
+
         /* Twig expects false when cache is not configured */
         if ($cacheDir === null) {
             $cacheDir = false;
@@ -74,9 +77,9 @@ class Template
             'cache' => $cacheDir,
         ]);
 
-        $twig->addRuntimeLoader(new ContainerRuntimeLoader(Core::getContainerBuilder()));
+        $twig->addRuntimeLoader(new ContainerRuntimeLoader($containerBuilder));
 
-        if (is_array($GLOBALS['cfg']) && ($GLOBALS['cfg']['environment'] ?? '') === 'development') {
+        if (is_array($cfg) && ($cfg['environment'] ?? '') === 'development') {
             $twig->enableDebug();
             $twig->addExtension(new DebugExtension());
             // This will enable debug for the extension to print lines
@@ -84,7 +87,7 @@ class Template
             TransNode::$enableAddDebugInfo = true;
         }
 
-        if ($GLOBALS['cfg']['environment'] === 'production') {
+        if ($cfg['environment'] === 'production') {
             $twig->disableDebug();
             TransNode::$enableAddDebugInfo = false;
         }
@@ -94,6 +97,7 @@ class Template
         $twig->addExtension(new FlashMessagesExtension());
         $twig->addExtension(new I18nExtension());
         $twig->addExtension(new MessageExtension());
+        $twig->addExtension(new RelationExtension());
         $twig->addExtension(new SanitizeExtension());
         $twig->addExtension(new TableExtension());
         $twig->addExtension(new TrackerExtension());

@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace PhpMyAdmin\Controllers\Database\Structure;
 
 use PhpMyAdmin\ConfigStorage\RelationCleanup;
-use PhpMyAdmin\Controllers\AbstractController;
+use PhpMyAdmin\Controllers\Database\AbstractController;
 use PhpMyAdmin\Controllers\Database\StructureController;
 use PhpMyAdmin\DatabaseInterface;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Template;
@@ -33,28 +32,29 @@ final class DropTableController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
+        string $db,
         DatabaseInterface $dbi,
         RelationCleanup $relationCleanup,
         StructureController $structureController
     ) {
-        parent::__construct($response, $template);
+        parent::__construct($response, $template, $db);
         $this->dbi = $dbi;
         $this->relationCleanup = $relationCleanup;
         $this->structureController = $structureController;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['message'] = $GLOBALS['message'] ?? null;
+        global $db, $message, $reload, $sql_query;
 
-        $GLOBALS['reload'] = $_POST['reload'] ?? $GLOBALS['reload'] ?? null;
+        $reload = $_POST['reload'] ?? $reload ?? null;
         $multBtn = $_POST['mult_btn'] ?? '';
         $selected = $_POST['selected'] ?? [];
 
-        $views = $this->dbi->getVirtualTables($GLOBALS['db']);
+        $views = $this->dbi->getVirtualTables($db);
 
         if ($multBtn !== __('Yes')) {
-            $GLOBALS['message'] = Message::success(__('No change'));
+            $message = Message::success(__('No change'));
 
             if (empty($_POST['message'])) {
                 $_POST['message'] = Message::success();
@@ -62,34 +62,33 @@ final class DropTableController extends AbstractController
 
             unset($_POST['mult_btn']);
 
-            ($this->structureController)($request);
+            ($this->structureController)();
 
             return;
         }
 
         $defaultFkCheckValue = ForeignKey::handleDisableCheckInit();
-        $GLOBALS['sql_query'] = '';
+        $sql_query = '';
         $sqlQueryViews = '';
         $selectedCount = count($selected);
 
         for ($i = 0; $i < $selectedCount; $i++) {
-            $this->relationCleanup->table($GLOBALS['db'], $selected[$i]);
+            $this->relationCleanup->table($db, $selected[$i]);
             $current = $selected[$i];
 
             if (! empty($views) && in_array($current, $views)) {
                 $sqlQueryViews .= (empty($sqlQueryViews) ? 'DROP VIEW ' : ', ') . Util::backquote($current);
             } else {
-                $GLOBALS['sql_query'] .= (empty($GLOBALS['sql_query']) ? 'DROP TABLE ' : ', ')
-                    . Util::backquote($current);
+                $sql_query .= (empty($sql_query) ? 'DROP TABLE ' : ', ') . Util::backquote($current);
             }
 
-            $GLOBALS['reload'] = 1;
+            $reload = 1;
         }
 
-        if (! empty($GLOBALS['sql_query'])) {
-            $GLOBALS['sql_query'] .= ';';
+        if (! empty($sql_query)) {
+            $sql_query .= ';';
         } elseif (! empty($sqlQueryViews)) {
-            $GLOBALS['sql_query'] = $sqlQueryViews . ';';
+            $sql_query = $sqlQueryViews . ';';
             unset($sqlQueryViews);
         }
 
@@ -104,29 +103,29 @@ final class DropTableController extends AbstractController
             }
         }
 
-        $this->dbi->selectDb($GLOBALS['db']);
-        $result = $this->dbi->tryQuery($GLOBALS['sql_query']);
+        $this->dbi->selectDb($db);
+        $result = $this->dbi->tryQuery($sql_query);
 
         if ($result && ! empty($sqlQueryViews)) {
-            $GLOBALS['sql_query'] .= ' ' . $sqlQueryViews . ';';
+            $sql_query .= ' ' . $sqlQueryViews . ';';
             $result = $this->dbi->tryQuery($sqlQueryViews);
             unset($sqlQueryViews);
         }
 
         if (! $result) {
-            $GLOBALS['message'] = Message::error($this->dbi->getError());
+            $message = Message::error($this->dbi->getError());
         }
 
         ForeignKey::handleDisableCheckCleanup($defaultFkCheckValue);
 
-        $GLOBALS['message'] = Message::success();
+        $message = Message::success();
 
         if (empty($_POST['message'])) {
-            $_POST['message'] = $GLOBALS['message'];
+            $_POST['message'] = $message;
         }
 
         unset($_POST['mult_btn']);
 
-        ($this->structureController)($request);
+        ($this->structureController)();
     }
 }

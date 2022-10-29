@@ -9,7 +9,6 @@ namespace PhpMyAdmin\Controllers\Server;
 
 use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\DatabaseInterface;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\ReplicationGui;
 use PhpMyAdmin\ReplicationInfo;
 use PhpMyAdmin\ResponseRenderer;
@@ -40,10 +39,9 @@ class ReplicationController extends AbstractController
         $this->dbi = $dbi;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['urlParams'] = $GLOBALS['urlParams'] ?? null;
-        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
+        global $urlParams, $errorUrl;
 
         $params = [
             'url_params' => $_POST['url_params'] ?? null,
@@ -51,7 +49,7 @@ class ReplicationController extends AbstractController
             'replica_configure' => $_POST['replica_configure'] ?? null,
             'repl_clear_scr' => $_POST['repl_clear_scr'] ?? null,
         ];
-        $GLOBALS['errorUrl'] = Url::getFromRoute('/');
+        $errorUrl = Url::getFromRoute('/');
 
         if ($this->dbi->isSuperUser()) {
             $this->dbi->selectDb('mysql');
@@ -66,7 +64,7 @@ class ReplicationController extends AbstractController
         $this->addScriptFiles(['server/privileges.js', 'replication.js', 'vendor/zxcvbn-ts.js']);
 
         if (isset($params['url_params']) && is_array($params['url_params'])) {
-            $GLOBALS['urlParams'] = $params['url_params'];
+            $urlParams = $params['url_params'];
         }
 
         if ($this->dbi->isSuperUser()) {
@@ -95,7 +93,7 @@ class ReplicationController extends AbstractController
         }
 
         $this->render('server/replication/index', [
-            'url_params' => $GLOBALS['urlParams'],
+            'url_params' => $urlParams,
             'is_super_user' => $this->dbi->isSuperUser(),
             'error_messages' => $errorMessages,
             'is_primary' => $primaryInfo['status'],

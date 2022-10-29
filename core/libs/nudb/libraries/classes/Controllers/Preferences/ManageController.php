@@ -11,7 +11,6 @@ use PhpMyAdmin\ConfigStorage\Relation;
 use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\Core;
 use PhpMyAdmin\File;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Template;
@@ -24,6 +23,7 @@ use function array_merge;
 use function define;
 use function file_exists;
 use function is_array;
+use function is_string;
 use function is_uploaded_file;
 use function json_decode;
 use function json_encode;
@@ -65,31 +65,20 @@ class ManageController extends AbstractController
         $this->config = $config;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['cf'] = $GLOBALS['cf'] ?? null;
-        $GLOBALS['error'] = $GLOBALS['error'] ?? null;
-        $GLOBALS['filename'] = $GLOBALS['filename'] ?? null;
-        $GLOBALS['json'] = $GLOBALS['json'] ?? null;
-        $GLOBALS['lang'] = $GLOBALS['lang'] ?? null;
-        $GLOBALS['new_config'] = $GLOBALS['new_config'] ?? null;
-        $GLOBALS['return_url'] = $GLOBALS['return_url'] ?? null;
-        $GLOBALS['form_display'] = $GLOBALS['form_display'] ?? null;
-        $GLOBALS['all_ok'] = $GLOBALS['all_ok'] ?? null;
-        $GLOBALS['params'] = $GLOBALS['params'] ?? null;
-        $GLOBALS['query'] = $GLOBALS['query'] ?? null;
+        global $cf, $error, $filename, $json, $lang;
+        global $new_config, $return_url, $form_display, $all_ok, $params, $query, $route;
 
-        $route = $request->getRoute();
+        $cf = new ConfigFile($this->config->baseSettings);
+        $this->userPreferences->pageInit($cf);
 
-        $GLOBALS['cf'] = new ConfigFile($this->config->baseSettings);
-        $this->userPreferences->pageInit($GLOBALS['cf']);
-
-        $GLOBALS['error'] = '';
+        $error = '';
         if (isset($_POST['submit_export'], $_POST['export_type']) && $_POST['export_type'] === 'text_file') {
             // export to JSON file
             $this->response->disable();
-            $GLOBALS['filename'] = 'phpMyAdmin-config-' . urlencode(Core::getenv('HTTP_HOST')) . '.json';
-            Core::downloadHeader($GLOBALS['filename'], 'application/json');
+            $filename = 'phpMyAdmin-config-' . urlencode(Core::getenv('HTTP_HOST')) . '.json';
+            Core::downloadHeader($filename, 'application/json');
             $settings = $this->userPreferences->load();
             echo json_encode($settings['config_data'], JSON_PRETTY_PRINT);
 
@@ -99,8 +88,8 @@ class ManageController extends AbstractController
         if (isset($_POST['submit_export'], $_POST['export_type']) && $_POST['export_type'] === 'php_file') {
             // export to JSON file
             $this->response->disable();
-            $GLOBALS['filename'] = 'phpMyAdmin-config-' . urlencode(Core::getenv('HTTP_HOST')) . '.php';
-            Core::downloadHeader($GLOBALS['filename'], 'application/php');
+            $filename = 'phpMyAdmin-config-' . urlencode(Core::getenv('HTTP_HOST')) . '.php';
+            Core::downloadHeader($filename, 'application/php');
             $settings = $this->userPreferences->load();
             echo '/* ' . __('phpMyAdmin configuration snippet') . " */\n\n";
             echo '/* ' . __('Paste it to your config.inc.php') . " */\n\n";
@@ -122,61 +111,64 @@ class ManageController extends AbstractController
 
         if (isset($_POST['submit_import'])) {
             // load from JSON file
-            $GLOBALS['json'] = '';
+            $json = '';
             if (
                 isset($_POST['import_type'], $_FILES['import_file'])
                 && $_POST['import_type'] === 'text_file'
+                && is_array($_FILES['import_file'])
                 && $_FILES['import_file']['error'] == UPLOAD_ERR_OK
+                && isset($_FILES['import_file']['tmp_name'])
+                && is_string($_FILES['import_file']['tmp_name'])
                 && is_uploaded_file($_FILES['import_file']['tmp_name'])
             ) {
                 $importHandle = new File($_FILES['import_file']['tmp_name']);
                 $importHandle->checkUploadedFile();
                 if ($importHandle->isError()) {
-                    $GLOBALS['error'] = $importHandle->getError();
+                    $error = $importHandle->getError();
                 } else {
                     // read JSON from uploaded file
-                    $GLOBALS['json'] = $importHandle->getRawContent();
+                    $json = $importHandle->getRawContent();
                 }
             } else {
                 // read from POST value (json)
-                $GLOBALS['json'] = $_POST['json'] ?? null;
+                $json = $_POST['json'] ?? null;
             }
 
             // hide header message
             $_SESSION['userprefs_autoload'] = true;
 
-            $configuration = json_decode($GLOBALS['json'], true);
-            $GLOBALS['return_url'] = $_POST['return_url'] ?? null;
+            $configuration = json_decode($json, true);
+            $return_url = $_POST['return_url'] ?? null;
             if (! is_array($configuration)) {
-                if (! isset($GLOBALS['error'])) {
-                    $GLOBALS['error'] = __('Could not import configuration');
+                if (! isset($error)) {
+                    $error = __('Could not import configuration');
                 }
             } else {
                 // sanitize input values: treat them as though
                 // they came from HTTP POST request
-                $GLOBALS['form_display'] = new UserFormList($GLOBALS['cf']);
-                $GLOBALS['new_config'] = $GLOBALS['cf']->getFlatDefaultConfig();
+                $form_display = new UserFormList($cf);
+                $new_config = $cf->getFlatDefaultConfig();
                 if (! empty($_POST['import_merge'])) {
-                    $GLOBALS['new_config'] = array_merge($GLOBALS['new_config'], $GLOBALS['cf']->getConfigArray());
+                    $new_config = array_merge($new_config, $cf->getConfigArray());
                 }
 
-                $GLOBALS['new_config'] = array_merge($GLOBALS['new_config'], $configuration);
+                $new_config = array_merge($new_config, $configuration);
                 $_POST_bak = $_POST;
-                foreach ($GLOBALS['new_config'] as $k => $v) {
+                foreach ($new_config as $k => $v) {
                     $_POST[str_replace('/', '-', (string) $k)] = $v;
                 }
 
-                $GLOBALS['cf']->resetConfigData();
-                $GLOBALS['all_ok'] = $GLOBALS['form_display']->process(true, false);
-                $GLOBALS['all_ok'] = $GLOBALS['all_ok'] && ! $GLOBALS['form_display']->hasErrors();
+                $cf->resetConfigData();
+                $all_ok = $form_display->process(true, false);
+                $all_ok = $all_ok && ! $form_display->hasErrors();
                 $_POST = $_POST_bak;
 
-                if (! $GLOBALS['all_ok'] && isset($_POST['fix_errors'])) {
-                    $GLOBALS['form_display']->fixErrors();
-                    $GLOBALS['all_ok'] = true;
+                if (! $all_ok && isset($_POST['fix_errors'])) {
+                    $form_display->fixErrors();
+                    $all_ok = true;
                 }
 
-                if (! $GLOBALS['all_ok']) {
+                if (! $all_ok) {
                     // mimic original form and post json in a hidden field
                     $relationParameters = $this->relation->getRelationParameters();
 
@@ -187,17 +179,17 @@ class ManageController extends AbstractController
                     ]);
 
                     echo $this->template->render('preferences/manage/error', [
-                        'form_errors' => $GLOBALS['form_display']->displayErrors(),
-                        'json' => $GLOBALS['json'],
+                        'form_errors' => $form_display->displayErrors(),
+                        'json' => $json,
                         'import_merge' => $_POST['import_merge'] ?? null,
-                        'return_url' => $GLOBALS['return_url'],
+                        'return_url' => $return_url,
                     ]);
 
                     return;
                 }
 
                 // check for ThemeDefault
-                $GLOBALS['params'] = [];
+                $params = [];
                 $tmanager = ThemeManager::getInstance();
                 if (
                     isset($configuration['ThemeDefault'])
@@ -208,50 +200,50 @@ class ManageController extends AbstractController
                     $tmanager->setThemeCookie();
                 }
 
-                if (isset($configuration['lang']) && $configuration['lang'] != $GLOBALS['lang']) {
-                    $GLOBALS['params']['lang'] = $configuration['lang'];
+                if (isset($configuration['lang']) && $configuration['lang'] != $lang) {
+                    $params['lang'] = $configuration['lang'];
                 }
 
                 // save settings
-                $result = $this->userPreferences->save($GLOBALS['cf']->getConfigArray());
+                $result = $this->userPreferences->save($cf->getConfigArray());
                 if ($result === true) {
-                    if ($GLOBALS['return_url']) {
-                        $GLOBALS['query'] = Util::splitURLQuery($GLOBALS['return_url']);
-                        $GLOBALS['return_url'] = parse_url($GLOBALS['return_url'], PHP_URL_PATH);
+                    if ($return_url) {
+                        $query = Util::splitURLQuery($return_url);
+                        $return_url = parse_url($return_url, PHP_URL_PATH);
 
-                        foreach ($GLOBALS['query'] as $q) {
+                        foreach ($query as $q) {
                             $pos = mb_strpos($q, '=');
                             $k = mb_substr($q, 0, (int) $pos);
                             if ($k === 'token') {
                                 continue;
                             }
 
-                            $GLOBALS['params'][$k] = mb_substr($q, $pos + 1);
+                            $params[$k] = mb_substr($q, $pos + 1);
                         }
                     } else {
-                        $GLOBALS['return_url'] = 'index.php?route=/preferences/manage';
+                        $return_url = 'index.php?route=/preferences/manage';
                     }
 
                     // reload config
                     $this->config->loadUserPreferences();
-                    $this->userPreferences->redirect($GLOBALS['return_url'] ?? '', $GLOBALS['params']);
+                    $this->userPreferences->redirect($return_url ?? '', $params);
 
                     return;
                 }
 
-                $GLOBALS['error'] = $result;
+                $error = $result;
             }
         } elseif (isset($_POST['submit_clear'])) {
             $result = $this->userPreferences->save([]);
             if ($result === true) {
-                $GLOBALS['params'] = [];
+                $params = [];
                 $this->config->removeCookie('pma_collaction_connection');
                 $this->config->removeCookie('pma_lang');
-                $this->userPreferences->redirect('index.php?route=/preferences/manage', $GLOBALS['params']);
+                $this->userPreferences->redirect('index.php?route=/preferences/manage', $params);
 
                 return;
             } else {
-                $GLOBALS['error'] = $result;
+                $error = $result;
             }
 
             return;
@@ -267,16 +259,16 @@ class ManageController extends AbstractController
             'has_config_storage' => $relationParameters->userPreferencesFeature !== null,
         ]);
 
-        if ($GLOBALS['error']) {
-            if (! $GLOBALS['error'] instanceof Message) {
-                $GLOBALS['error'] = Message::error($GLOBALS['error']);
+        if ($error) {
+            if (! $error instanceof Message) {
+                $error = Message::error($error);
             }
 
-            $GLOBALS['error']->getDisplay();
+            $error->getDisplay();
         }
 
         echo $this->template->render('preferences/manage/main', [
-            'error' => $GLOBALS['error'],
+            'error' => $error,
             'max_upload_size' => $GLOBALS['config']->get('max_upload_size'),
             'exists_setup_and_not_exists_config' => @file_exists(ROOT_PATH . 'setup/index.php')
                 && ! @file_exists(CONFIG_FILE),

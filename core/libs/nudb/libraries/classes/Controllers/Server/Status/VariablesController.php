@@ -9,7 +9,6 @@ namespace PhpMyAdmin\Controllers\Server\Status;
 
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Html\Generator;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Server\Status\Data;
 use PhpMyAdmin\Template;
@@ -31,9 +30,9 @@ class VariablesController extends AbstractController
         $this->dbi = $dbi;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
+        global $errorUrl;
 
         $params = [
             'flush' => $_POST['flush'] ?? null,
@@ -42,7 +41,7 @@ class VariablesController extends AbstractController
             'filterCategory' => $_POST['filterCategory'] ?? null,
             'dontFormat' => $_POST['dontFormat'] ?? null,
         ];
-        $GLOBALS['errorUrl'] = Url::getFromRoute('/');
+        $errorUrl = Url::getFromRoute('/');
 
         if ($this->dbi->isSuperUser()) {
             $this->dbi->selectDb('mysql');

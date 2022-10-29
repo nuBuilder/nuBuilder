@@ -64,15 +64,11 @@ class ImportMediawiki extends ImportPlugin
     /**
      * Handles the whole import logic
      *
-     * @return string[]
+     * @param array $sql_data 2-element array with sql data
      */
-    public function doImport(?File $importHandle = null): array
+    public function doImport(?File $importHandle = null, array &$sql_data = []): void
     {
-        $GLOBALS['error'] = $GLOBALS['error'] ?? null;
-        $GLOBALS['timeout_passed'] = $GLOBALS['timeout_passed'] ?? null;
-        $GLOBALS['finished'] = $GLOBALS['finished'] ?? null;
-
-        $sqlStatements = [];
+        global $error, $timeout_passed, $finished;
 
         // Defaults for parser
 
@@ -101,7 +97,7 @@ class ImportMediawiki extends ImportPlugin
 
         $in_table_header = false;
 
-        while (! $GLOBALS['finished'] && ! $GLOBALS['error'] && ! $GLOBALS['timeout_passed']) {
+        while (! $finished && ! $error && ! $timeout_passed) {
             $data = $this->import->getNextChunk($importHandle);
 
             if ($data === false) {
@@ -133,7 +129,7 @@ class ImportMediawiki extends ImportPlugin
             $full_buffer_lines_count = count($buffer_lines);
             // If the reading is not finalized, the final line of the current chunk
             // will not be complete
-            if (! $GLOBALS['finished']) {
+            if (! $finished) {
                 $last_chunk_line = $buffer_lines[--$full_buffer_lines_count];
             }
 
@@ -235,7 +231,7 @@ class ImportMediawiki extends ImportPlugin
                         ];
 
                         // Import the current table data into the database
-                        $this->importDataOneTable($current_table, $sqlStatements);
+                        $this->importDataOneTable($current_table, $sql_data);
 
                         // Reset table name
                         $cur_table_name = '';
@@ -279,29 +275,27 @@ class ImportMediawiki extends ImportPlugin
                         __('Invalid format of mediawiki input on line: <br>%s.')
                     );
                     $message->addParam($cur_buffer_line);
-                    $GLOBALS['error'] = true;
+                    $error = true;
                 }
             }
         }
-
-        return $sqlStatements;
     }
 
     /**
      * Imports data from a single table
      *
-     * @param array    $table         containing all table info:
-     *                                <code> $table[0] - string
-     *                                containing table name
-     *                                $table[1] - array[]   of
-     *                                table headers $table[2] -
-     *                                array[][] of table content
-     *                                rows </code>
-     * @param string[] $sqlStatements List of SQL statements to be executed
+     * @param array $table    containing all table info:
+     *                        <code> $table[0] - string
+     *                        containing table name
+     *                        $table[1] - array[]   of
+     *                        table headers $table[2] -
+     *                        array[][] of table content
+     *                        rows </code>
+     * @param array $sql_data 2-element array with sql data
      *
      * @global bool $analyze whether to scan for column types
      */
-    private function importDataOneTable(array $table, array &$sqlStatements): void
+    private function importDataOneTable(array $table, array &$sql_data): void
     {
         $analyze = $this->getAnalyze();
         if ($analyze) {
@@ -323,11 +317,11 @@ class ImportMediawiki extends ImportPlugin
             $analyses = [];
             $analyses[] = $this->import->analyzeTable($tables[0]);
 
-            $this->executeImportTables($tables, $analyses, $sqlStatements);
+            $this->executeImportTables($tables, $analyses, $sql_data);
         }
 
         // Commit any possible data in buffers
-        $this->import->runQuery('', $sqlStatements);
+        $this->import->runQuery('', '', $sql_data);
     }
 
     /**
@@ -337,11 +331,13 @@ class ImportMediawiki extends ImportPlugin
      */
     private function setTableName(&$table_name): void
     {
+        global $dbi;
+
         if (! empty($table_name)) {
             return;
         }
 
-        $result = $GLOBALS['dbi']->fetchResult('SHOW TABLES');
+        $result = $dbi->fetchResult('SHOW TABLES');
         // todo check if the name below already exists
         $table_name = 'TABLE ' . (count($result) + 1);
     }
@@ -371,32 +367,34 @@ class ImportMediawiki extends ImportPlugin
      * Sets the database name and additional options and calls Import::buildSql()
      * Used in PMA_importDataAllTables() and $this->importDataOneTable()
      *
-     * @param array    $tables        structure:
-     *                                array(
-     *                                array(table_name, array() column_names, array()()
-     *                                rows)
-     *                                )
-     * @param array    $analyses      structure:
-     *                                $analyses = array(
-     *                                array(array() column_types, array() column_sizes)
-     *                                )
-     * @param string[] $sqlStatements List of SQL statements to be executed
+     * @param array $tables   structure:
+     *                        array(
+     *                        array(table_name, array() column_names, array()()
+     *                        rows)
+     *                        )
+     * @param array $analyses structure:
+     *                        $analyses = array(
+     *                        array(array() column_types, array() column_sizes)
+     *                        )
+     * @param array $sql_data 2-element array with sql data
      *
      * @global string $db      name of the database to import in
      */
-    private function executeImportTables(array &$tables, array &$analyses, array &$sqlStatements): void
+    private function executeImportTables(array &$tables, array &$analyses, array &$sql_data): void
     {
+        global $db;
+
         // $db_name : The currently selected database name, if applicable
         //            No backquotes
         // $options : An associative array of options
-        [$db_name, $options] = $this->getDbnameAndOptions($GLOBALS['db'], 'mediawiki_DB');
+        [$db_name, $options] = $this->getDbnameAndOptions($db, 'mediawiki_DB');
 
         // Array of SQL strings
         // Non-applicable parameters
         $create = null;
 
         // Create and execute necessary SQL statements from data
-        $this->import->buildSql($db_name, $tables, $analyses, $create, $options, $sqlStatements);
+        $this->import->buildSql($db_name, $tables, $analyses, $create, $options, $sql_data);
     }
 
     /**

@@ -1,19 +1,3 @@
-"use strict";
-(self["webpackChunkphpmyadmin"] = self["webpackChunkphpmyadmin"] || []).push([[20],{
-
-/***/ 1:
-/***/ (function(module) {
-
-module.exports = jQuery;
-
-/***/ }),
-
-/***/ 24:
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-
 /**
  * @fileoverview    function used in this file builds history tab and generates query.
  *
@@ -21,11 +5,15 @@ __webpack_require__.r(__webpack_exports__);
  * @requires    move.js
  */
 
+/* global contr */
+// js/designer/init.js
+
+/* global fromArray:writable */
+// js/designer/move.js
+
 /* global themeImagePath */
 // templates/javascript/variables.twig
-
 var DesignerHistory = {};
-window.DesignerHistory = DesignerHistory;
 var historyArray = []; // Global array to store history objects
 
 var selectField = []; // Global array to store information for columns which are used in select clause
@@ -125,14 +113,14 @@ DesignerHistory.display = function (init, finit) {
         str += '<img src="' + themeImagePath + 'designer/and_icon.png" onclick="DesignerHistory.andOr(' + i + ')" title="AND"></td>';
       }
 
-      str += '<td style="padding-left: 5px;" class="text-end">' + Functions.getImage('b_sbrowse', window.Messages.strColumnName) + '</td>' + '<td width="175" style="padding-left: 5px">' + jquery__WEBPACK_IMPORTED_MODULE_0__('<div/>').text(historyArray[i].getColumnName()).html() + '<td>';
+      str += '<td style="padding-left: 5px;" class="text-end">' + Functions.getImage('b_sbrowse', Messages.strColumnName) + '</td>' + '<td width="175" style="padding-left: 5px">' + $('<div/>').text(historyArray[i].getColumnName()).html() + '<td>';
 
       if (historyArray[i].getType() === 'GroupBy' || historyArray[i].getType() === 'OrderBy') {
-        var detailDescGroupBy = jquery__WEBPACK_IMPORTED_MODULE_0__('<div/>').text(DesignerHistory.detail(i)).html();
-        str += '<td class="text-center">' + Functions.getImage('s_info', DesignerHistory.detail(i)) + '</td>' + '<td title="' + detailDescGroupBy + '">' + historyArray[i].getType() + '</td>' + '<td onclick=DesignerHistory.historyDelete(' + i + ')>' + Functions.getImage('b_drop', window.Messages.strDelete) + '</td>';
+        var detailDescGroupBy = $('<div/>').text(DesignerHistory.detail(i)).html();
+        str += '<td class="text-center">' + Functions.getImage('s_info', DesignerHistory.detail(i)) + '</td>' + '<td title="' + detailDescGroupBy + '">' + historyArray[i].getType() + '</td>' + '<td onclick=DesignerHistory.historyDelete(' + i + ')>' + Functions.getImage('b_drop', Messages.strDelete) + '</td>';
       } else {
-        var detailDesc = jquery__WEBPACK_IMPORTED_MODULE_0__('<div/>').text(DesignerHistory.detail(i)).html();
-        str += '<td class="text-center">' + Functions.getImage('s_info', DesignerHistory.detail(i)) + '</td>' + '<td title="' + detailDesc + '">' + historyArray[i].getType() + '</td>' + '<td onclick=DesignerHistory.historyEdit(' + i + ')>' + Functions.getImage('b_edit', window.Messages.strEdit) + '</td>' + '<td onclick=DesignerHistory.historyDelete(' + i + ')>' + Functions.getImage('b_drop', window.Messages.strDelete) + '</td>';
+        var detailDesc = $('<div/>').text(DesignerHistory.detail(i)).html();
+        str += '<td class="text-center">' + Functions.getImage('s_info', DesignerHistory.detail(i)) + '</td>' + '<td title="' + detailDesc + '">' + historyArray[i].getType() + '</td>' + '<td onclick=DesignerHistory.historyEdit(' + i + ')>' + Functions.getImage('b_edit', Messages.strEdit) + '</td>' + '<td onclick=DesignerHistory.historyDelete(' + i + ')>' + Functions.getImage('b_drop', Messages.strDelete) + '</td>';
       }
 
       str += '</tr></thead>';
@@ -169,7 +157,7 @@ DesignerHistory.andOr = function (index) {
 
   var existingDiv = document.getElementById('ab');
   existingDiv.innerHTML = DesignerHistory.display(0, 0);
-  jquery__WEBPACK_IMPORTED_MODULE_0__('#ab').accordion('refresh');
+  $('#ab').accordion('refresh');
 };
 /**
  * Deletes entry in historyArray
@@ -180,11 +168,11 @@ DesignerHistory.andOr = function (index) {
 
 
 DesignerHistory.historyDelete = function (index) {
-  var fromArrayLength = window.fromArray.length;
+  var fromArrayLength = fromArray.length;
 
   for (var k = 0; k < fromArrayLength; k++) {
-    if (window.fromArray[k] === historyArray[index].getTab()) {
-      window.fromArray.splice(k, 1);
+    if (fromArray[k] === historyArray[index].getTab()) {
+      fromArray.splice(k, 1);
       break;
     }
   }
@@ -192,7 +180,7 @@ DesignerHistory.historyDelete = function (index) {
   historyArray.splice(index, 1);
   var existingDiv = document.getElementById('ab');
   existingDiv.innerHTML = DesignerHistory.display(0, 0);
-  jquery__WEBPACK_IMPORTED_MODULE_0__('#ab').accordion('refresh');
+  $('#ab').accordion('refresh');
 };
 /**
  * @param {string} elementId
@@ -281,7 +269,7 @@ DesignerHistory.edit = function (type) {
 
   var existingDiv = document.getElementById('ab');
   existingDiv.innerHTML = DesignerHistory.display(0, 0);
-  jquery__WEBPACK_IMPORTED_MODULE_0__('#ab').accordion('refresh');
+  $('#ab').accordion('refresh');
 };
 /**
  * history object closure
@@ -605,7 +593,7 @@ DesignerHistory.queryGroupBy = function () {
     }
   }
 
-  str = str.substring(0, str.length - 2);
+  str = str.substr(0, str.length - 2);
   return str;
 };
 /**
@@ -633,7 +621,7 @@ DesignerHistory.queryHaving = function () {
   if (and === '(') {
     and = '';
   } else {
-    and = and.substring(0, and.length - 2) + ')';
+    and = and.substr(0, and.length - 2) + ')';
   }
 
   return and;
@@ -655,7 +643,7 @@ DesignerHistory.queryOrderBy = function () {
     }
   }
 
-  str = str.substring(0, str.length - 2);
+  str = str.substr(0, str.length - 2);
   return str;
 };
 /**
@@ -748,7 +736,7 @@ DesignerHistory.queryFrom = function () {
   var quer = '';
   var parts = [];
   var tArray = [];
-  tArray = window.fromArray;
+  tArray = fromArray;
   var K = 0;
   var k;
   var key;
@@ -760,36 +748,36 @@ DesignerHistory.queryFrom = function () {
   var historyArrayLength = historyArray.length;
 
   for (i = 0; i < historyArrayLength; i++) {
-    window.fromArray.push(historyArray[i].getTab());
+    fromArray.push(historyArray[i].getTab());
   }
 
-  window.fromArray = DesignerHistory.unique(window.fromArray);
-  tabLeft = window.fromArray;
+  fromArray = DesignerHistory.unique(fromArray);
+  tabLeft = fromArray;
   temp = tabLeft.shift();
   quer = '`' + temp + '`';
   tabUsed.push(temp); // if master table (key2) matches with tab used get all keys and check if tab_left matches
   // after this check if master table (key2) matches with tab left then check if any foreign matches with master .
 
   for (i = 0; i < 2; i++) {
-    for (K in window.contr) {
-      for (key in window.contr[K]) {
+    for (K in contr) {
+      for (key in contr[K]) {
         // contr name
-        for (key2 in window.contr[K][key]) {
+        for (key2 in contr[K][key]) {
           // table name
           parts = key2.split('.');
 
           if (DesignerHistory.found(tabUsed, parts[1]) > 0) {
-            for (key3 in window.contr[K][key][key2]) {
-              parts1 = window.contr[K][key][key2][key3][0].split('.');
+            for (key3 in contr[K][key][key2]) {
+              parts1 = contr[K][key][key2][key3][0].split('.');
 
               if (DesignerHistory.found(tabLeft, parts1[1]) > 0) {
                 if (DesignerHistory.found(constraintsAdded, key) > 0) {
                   query += ' AND ' + '`' + parts[1] + '`.`' + key3 + '` = ';
-                  query += '`' + parts1[1] + '`.`' + window.contr[K][key][key2][key3][1] + '` ';
+                  query += '`' + parts1[1] + '`.`' + contr[K][key][key2][key3][1] + '` ';
                 } else {
                   query += '\n' + 'LEFT JOIN ';
                   query += '`' + parts[1] + '` ON ';
-                  query += '`' + parts1[1] + '`.`' + window.contr[K][key][key2][key3][1] + '` = ';
+                  query += '`' + parts1[1] + '`.`' + contr[K][key][key2][key3][1] + '` = ';
                   query += '`' + parts[1] + '`.`' + key3 + '` ';
                   constraintsAdded.push(key);
                 }
@@ -808,24 +796,24 @@ DesignerHistory.queryFrom = function () {
     tabLeft = DesignerHistory.removeArray(tTabLeft, tabLeft);
     tTabLeft = [];
 
-    for (K in window.contr) {
-      for (key in window.contr[K]) {
-        for (key2 in window.contr[K][key]) {
+    for (K in contr) {
+      for (key in contr[K]) {
+        for (key2 in contr[K][key]) {
           // table name
           parts = key2.split('.');
 
           if (DesignerHistory.found(tabLeft, parts[1]) > 0) {
-            for (key3 in window.contr[K][key][key2]) {
-              parts1 = window.contr[K][key][key2][key3][0].split('.');
+            for (key3 in contr[K][key][key2]) {
+              parts1 = contr[K][key][key2][key3][0].split('.');
 
               if (DesignerHistory.found(tabUsed, parts1[1]) > 0) {
                 if (DesignerHistory.found(constraintsAdded, key) > 0) {
                   query += ' AND ' + '`' + parts[1] + '`.`' + key3 + '` = ';
-                  query += '`' + parts1[1] + '`.`' + window.contr[K][key][key2][key3][1] + '` ';
+                  query += '`' + parts1[1] + '`.`' + contr[K][key][key2][key3][1] + '` ';
                 } else {
                   query += '\n' + 'LEFT JOIN ';
                   query += '`' + parts[1] + '` ON ';
-                  query += '`' + parts1[1] + '`.`' + window.contr[K][key][key2][key3][1] + '` = ';
+                  query += '`' + parts1[1] + '`.`' + contr[K][key][key2][key3][1] + '` = ';
                   query += '`' + parts[1] + '`.`' + key3 + '` ';
                   constraintsAdded.push(key);
                 }
@@ -849,7 +837,7 @@ DesignerHistory.queryFrom = function () {
   }
 
   query = quer + query;
-  window.fromArray = tArray;
+  fromArray = tArray;
   return query;
 };
 /**
@@ -912,25 +900,25 @@ DesignerHistory.buildQuery = function () {
     qSelect += '\nORDER BY ' + qOrderBy;
   }
 
-  jquery__WEBPACK_IMPORTED_MODULE_0__('#buildQuerySubmitButton').on('click', function () {
+  $('#buildQuerySubmitButton').on('click', function () {
     if (vqbEditor) {
-      var $elm = jquery__WEBPACK_IMPORTED_MODULE_0__('#buildQueryModal').find('textarea');
+      var $elm = $('#buildQueryModal').find('textarea');
       vqbEditor.save();
       $elm.val(vqbEditor.getValue());
     }
 
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#vqb_form').trigger('submit');
+    $('#vqb_form').trigger('submit');
   });
-  jquery__WEBPACK_IMPORTED_MODULE_0__('#buildQueryModal').modal('show');
-  jquery__WEBPACK_IMPORTED_MODULE_0__('#buildQueryModalLabel').first().text('SELECT');
-  jquery__WEBPACK_IMPORTED_MODULE_0__('#buildQueryModal').on('shown.bs.modal', function () {
+  $('#buildQueryModal').modal('show');
+  $('#buildQueryModalLabel').first().text('SELECT');
+  $('#buildQueryModal').on('shown.bs.modal', function () {
     // Attach syntax highlighted editor to query dialog
 
     /**
      * @var $elm jQuery object containing the reference
      *           to the query textarea.
      */
-    var $elm = jquery__WEBPACK_IMPORTED_MODULE_0__('#buildQueryModal').find('textarea');
+    var $elm = $('#buildQueryModal').find('textarea');
 
     if (!vqbEditor) {
       vqbEditor = Functions.getSqlEditor($elm);
@@ -946,40 +934,30 @@ DesignerHistory.buildQuery = function () {
   });
 };
 
-window.AJAX.registerTeardown('designer/history.js', function () {
+AJAX.registerTeardown('designer/history.js', function () {
   vqbEditor = null;
   historyArray = [];
   selectField = [];
-  jquery__WEBPACK_IMPORTED_MODULE_0__('#ok_edit_rename').off('click');
-  jquery__WEBPACK_IMPORTED_MODULE_0__('#ok_edit_having').off('click');
-  jquery__WEBPACK_IMPORTED_MODULE_0__('#ok_edit_Aggr').off('click');
-  jquery__WEBPACK_IMPORTED_MODULE_0__('#ok_edit_where').off('click');
+  $('#ok_edit_rename').off('click');
+  $('#ok_edit_having').off('click');
+  $('#ok_edit_Aggr').off('click');
+  $('#ok_edit_where').off('click');
 });
-window.AJAX.registerOnload('designer/history.js', function () {
-  jquery__WEBPACK_IMPORTED_MODULE_0__('#ok_edit_rename').on('click', function () {
+AJAX.registerOnload('designer/history.js', function () {
+  $('#ok_edit_rename').on('click', function () {
     DesignerHistory.edit('Rename');
   });
-  jquery__WEBPACK_IMPORTED_MODULE_0__('#ok_edit_having').on('click', function () {
+  $('#ok_edit_having').on('click', function () {
     DesignerHistory.edit('Having');
   });
-  jquery__WEBPACK_IMPORTED_MODULE_0__('#ok_edit_Aggr').on('click', function () {
+  $('#ok_edit_Aggr').on('click', function () {
     DesignerHistory.edit('Aggregate');
   });
-  jquery__WEBPACK_IMPORTED_MODULE_0__('#ok_edit_where').on('click', function () {
+  $('#ok_edit_where').on('click', function () {
     DesignerHistory.edit('Where');
   });
-  jquery__WEBPACK_IMPORTED_MODULE_0__('#ab').accordion({
+  $('#ab').accordion({
     collapsible: true,
     active: 'none'
   });
 });
-
-/***/ })
-
-},
-/******/ function(__webpack_require__) { // webpackRuntimeModules
-/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
-/******/ var __webpack_exports__ = (__webpack_exec__(24));
-/******/ }
-]);
-//# sourceMappingURL=history.js.map

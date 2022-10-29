@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Database;
 
-use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\Database\Designer;
 use PhpMyAdmin\Database\Designer\Common as DesignerCommon;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Template;
 use PhpMyAdmin\Url;
@@ -29,39 +27,21 @@ class DesignerController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
+        string $db,
         Designer $databaseDesigner,
         DesignerCommon $designerCommon
     ) {
-        parent::__construct($response, $template);
+        parent::__construct($response, $template, $db);
         $this->databaseDesigner = $databaseDesigner;
         $this->designerCommon = $designerCommon;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['script_display_field'] = $GLOBALS['script_display_field'] ?? null;
-        $GLOBALS['tab_column'] = $GLOBALS['tab_column'] ?? null;
-        $GLOBALS['tables_all_keys'] = $GLOBALS['tables_all_keys'] ?? null;
-        $GLOBALS['tables_pk_or_unique_keys'] = $GLOBALS['tables_pk_or_unique_keys'] ?? null;
-        $GLOBALS['success'] = $GLOBALS['success'] ?? null;
-        $GLOBALS['page'] = $GLOBALS['page'] ?? null;
-        $GLOBALS['message'] = $GLOBALS['message'] ?? null;
-        $GLOBALS['display_page'] = $GLOBALS['display_page'] ?? null;
-        $GLOBALS['selected_page'] = $GLOBALS['selected_page'] ?? null;
-        $GLOBALS['tab_pos'] = $GLOBALS['tab_pos'] ?? null;
-        $GLOBALS['fullTableNames'] = $GLOBALS['fullTableNames'] ?? null;
-        $GLOBALS['script_tables'] = $GLOBALS['script_tables'] ?? null;
-        $GLOBALS['script_contr'] = $GLOBALS['script_contr'] ?? null;
-        $GLOBALS['params'] = $GLOBALS['params'] ?? null;
-        $GLOBALS['tables'] = $GLOBALS['tables'] ?? null;
-        $GLOBALS['num_tables'] = $GLOBALS['num_tables'] ?? null;
-        $GLOBALS['total_num_tables'] = $GLOBALS['total_num_tables'] ?? null;
-        $GLOBALS['sub_part'] = $GLOBALS['sub_part'] ?? null;
-        $GLOBALS['tooltip_truename'] = $GLOBALS['tooltip_truename'] ?? null;
-        $GLOBALS['tooltip_aliasname'] = $GLOBALS['tooltip_aliasname'] ?? null;
-        $GLOBALS['pos'] = $GLOBALS['pos'] ?? null;
-        $GLOBALS['classes_side_menu'] = $GLOBALS['classes_side_menu'] ?? null;
-        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
+        global $db, $script_display_field, $tab_column, $tables_all_keys, $tables_pk_or_unique_keys;
+        global $success, $page, $message, $display_page, $selected_page, $tab_pos, $fullTableNames, $script_tables;
+        global $script_contr, $params, $tables, $num_tables, $total_num_tables, $sub_part;
+        global $tooltip_truename, $tooltip_aliasname, $pos, $classes_side_menu, $cfg, $errorUrl;
 
         if (isset($_POST['dialog'])) {
             if ($_POST['dialog'] === 'edit') {
@@ -74,21 +54,19 @@ class DesignerController extends AbstractController
                 $html = $this->databaseDesigner->getHtmlForSchemaExport($_POST['db'], $_POST['selected_page']);
             } elseif ($_POST['dialog'] === 'add_table') {
                 // Pass the db and table to the getTablesInfo so we only have the table we asked for
-                $GLOBALS['script_display_field'] = $this->designerCommon->getTablesInfo($_POST['db'], $_POST['table']);
-                $GLOBALS['tab_column'] = $this->designerCommon->getColumnsInfo($GLOBALS['script_display_field']);
-                $GLOBALS['tables_all_keys'] = $this->designerCommon->getAllKeys($GLOBALS['script_display_field']);
-                $GLOBALS['tables_pk_or_unique_keys'] = $this->designerCommon->getPkOrUniqueKeys(
-                    $GLOBALS['script_display_field']
-                );
+                $script_display_field = $this->designerCommon->getTablesInfo($_POST['db'], $_POST['table']);
+                $tab_column = $this->designerCommon->getColumnsInfo($script_display_field);
+                $tables_all_keys = $this->designerCommon->getAllKeys($script_display_field);
+                $tables_pk_or_unique_keys = $this->designerCommon->getPkOrUniqueKeys($script_display_field);
 
                 $html = $this->databaseDesigner->getDatabaseTables(
                     $_POST['db'],
-                    $GLOBALS['script_display_field'],
+                    $script_display_field,
                     [],
                     -1,
-                    $GLOBALS['tab_column'],
-                    $GLOBALS['tables_all_keys'],
-                    $GLOBALS['tables_pk_or_unique_keys']
+                    $tab_column,
+                    $tables_all_keys,
+                    $tables_pk_or_unique_keys
                 );
             }
 
@@ -101,11 +79,11 @@ class DesignerController extends AbstractController
 
         if (isset($_POST['operation'])) {
             if ($_POST['operation'] === 'deletePage') {
-                $GLOBALS['success'] = $this->designerCommon->deletePage($_POST['selected_page']);
-                $this->response->setRequestStatus($GLOBALS['success']);
+                $success = $this->designerCommon->deletePage($_POST['selected_page']);
+                $this->response->setRequestStatus($success);
             } elseif ($_POST['operation'] === 'savePage') {
                 if ($_POST['save_page'] === 'same') {
-                    $GLOBALS['page'] = $_POST['selected_page'];
+                    $page = $_POST['selected_page'];
                 } elseif ($this->designerCommon->getPageExists($_POST['selected_value'])) {
                     $this->response->addJSON(
                         'message',
@@ -119,21 +97,21 @@ class DesignerController extends AbstractController
 
                     return;
                 } else {
-                    $GLOBALS['page'] = $this->designerCommon->createNewPage($_POST['selected_value'], $_POST['db']);
-                    $this->response->addJSON('id', $GLOBALS['page']);
+                    $page = $this->designerCommon->createNewPage($_POST['selected_value'], $_POST['db']);
+                    $this->response->addJSON('id', $page);
                 }
 
-                $GLOBALS['success'] = $this->designerCommon->saveTablePositions($GLOBALS['page']);
-                $this->response->setRequestStatus($GLOBALS['success']);
+                $success = $this->designerCommon->saveTablePositions($page);
+                $this->response->setRequestStatus($success);
             } elseif ($_POST['operation'] === 'setDisplayField') {
                 [
-                    $GLOBALS['success'],
-                    $GLOBALS['message'],
+                    $success,
+                    $message,
                 ] = $this->designerCommon->saveDisplayField($_POST['db'], $_POST['table'], $_POST['field']);
-                $this->response->setRequestStatus($GLOBALS['success']);
-                $this->response->addJSON('message', $GLOBALS['message']);
+                $this->response->setRequestStatus($success);
+                $this->response->addJSON('message', $message);
             } elseif ($_POST['operation'] === 'addNewRelation') {
-                [$GLOBALS['success'], $GLOBALS['message']] = $this->designerCommon->addNewRelation(
+                [$success, $message] = $this->designerCommon->addNewRelation(
                     $_POST['db'],
                     $_POST['T1'],
                     $_POST['F1'],
@@ -144,88 +122,86 @@ class DesignerController extends AbstractController
                     $_POST['DB1'],
                     $_POST['DB2']
                 );
-                $this->response->setRequestStatus($GLOBALS['success']);
-                $this->response->addJSON('message', $GLOBALS['message']);
+                $this->response->setRequestStatus($success);
+                $this->response->addJSON('message', $message);
             } elseif ($_POST['operation'] === 'removeRelation') {
-                [$GLOBALS['success'], $GLOBALS['message']] = $this->designerCommon->removeRelation(
+                [$success, $message] = $this->designerCommon->removeRelation(
                     $_POST['T1'],
                     $_POST['F1'],
                     $_POST['T2'],
                     $_POST['F2']
                 );
-                $this->response->setRequestStatus($GLOBALS['success']);
-                $this->response->addJSON('message', $GLOBALS['message']);
+                $this->response->setRequestStatus($success);
+                $this->response->addJSON('message', $message);
             } elseif ($_POST['operation'] === 'save_setting_value') {
-                $GLOBALS['success'] = $this->designerCommon->saveSetting($_POST['index'], $_POST['value']);
-                $this->response->setRequestStatus($GLOBALS['success']);
+                $success = $this->designerCommon->saveSetting($_POST['index'], $_POST['value']);
+                $this->response->setRequestStatus($success);
             }
 
             return;
         }
 
-        $this->checkParameters(['db']);
+        Util::checkParameters(['db']);
 
-        $GLOBALS['errorUrl'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabDatabase'], 'database');
-        $GLOBALS['errorUrl'] .= Url::getCommon(['db' => $GLOBALS['db']], '&');
+        $errorUrl = Util::getScriptNameForOption($cfg['DefaultTabDatabase'], 'database');
+        $errorUrl .= Url::getCommon(['db' => $db], '&');
 
         if (! $this->hasDatabase()) {
             return;
         }
 
-        $GLOBALS['script_display_field'] = $this->designerCommon->getTablesInfo();
+        $script_display_field = $this->designerCommon->getTablesInfo();
 
-        $GLOBALS['display_page'] = -1;
-        $GLOBALS['selected_page'] = null;
+        $display_page = -1;
+        $selected_page = null;
 
         $visualBuilderMode = isset($_GET['query']);
 
         if ($visualBuilderMode) {
-            $GLOBALS['display_page'] = $this->designerCommon->getDefaultPage($_GET['db']);
+            $display_page = $this->designerCommon->getDefaultPage($_GET['db']);
         } elseif (! empty($_GET['page'])) {
-            $GLOBALS['display_page'] = $_GET['page'];
+            $display_page = $_GET['page'];
         } else {
-            $GLOBALS['display_page'] = $this->designerCommon->getLoadingPage($_GET['db']);
+            $display_page = $this->designerCommon->getLoadingPage($_GET['db']);
         }
 
-        if ($GLOBALS['display_page'] != -1) {
-            $GLOBALS['selected_page'] = $this->designerCommon->getPageName($GLOBALS['display_page']);
+        if ($display_page != -1) {
+            $selected_page = $this->designerCommon->getPageName($display_page);
         }
 
-        $GLOBALS['tab_pos'] = $this->designerCommon->getTablePositions($GLOBALS['display_page']);
+        $tab_pos = $this->designerCommon->getTablePositions($display_page);
 
-        $GLOBALS['fullTableNames'] = [];
+        $fullTableNames = [];
 
-        foreach ($GLOBALS['script_display_field'] as $designerTable) {
-            $GLOBALS['fullTableNames'][] = $designerTable->getDbTableString();
+        foreach ($script_display_field as $designerTable) {
+            $fullTableNames[] = $designerTable->getDbTableString();
         }
 
-        foreach ($GLOBALS['tab_pos'] as $position) {
-            if (in_array($position['dbName'] . '.' . $position['tableName'], $GLOBALS['fullTableNames'])) {
+        foreach ($tab_pos as $position) {
+            if (in_array($position['dbName'] . '.' . $position['tableName'], $fullTableNames)) {
                 continue;
             }
 
             $designerTables = $this->designerCommon->getTablesInfo($position['dbName'], $position['tableName']);
             foreach ($designerTables as $designerTable) {
-                $GLOBALS['script_display_field'][] = $designerTable;
+                $script_display_field[] = $designerTable;
             }
         }
 
-        $GLOBALS['tab_column'] = $this->designerCommon->getColumnsInfo($GLOBALS['script_display_field']);
-        $GLOBALS['script_tables'] = $this->designerCommon->getScriptTabs($GLOBALS['script_display_field']);
-        $GLOBALS['tables_pk_or_unique_keys'] = $this->designerCommon->getPkOrUniqueKeys(
-            $GLOBALS['script_display_field']
-        );
-        $GLOBALS['tables_all_keys'] = $this->designerCommon->getAllKeys($GLOBALS['script_display_field']);
-        $GLOBALS['classes_side_menu'] = $this->databaseDesigner->returnClassNamesFromMenuButtons();
+        $tab_column = $this->designerCommon->getColumnsInfo($script_display_field);
+        $script_tables = $this->designerCommon->getScriptTabs($script_display_field);
+        $tables_pk_or_unique_keys = $this->designerCommon->getPkOrUniqueKeys($script_display_field);
+        $tables_all_keys = $this->designerCommon->getAllKeys($script_display_field);
+        $classes_side_menu = $this->databaseDesigner->returnClassNamesFromMenuButtons();
 
-        $GLOBALS['script_contr'] = $this->designerCommon->getScriptContr($GLOBALS['script_display_field']);
+        $script_contr = $this->designerCommon->getScriptContr($script_display_field);
 
-        $GLOBALS['params'] = ['lang' => $GLOBALS['lang']];
+        $params = ['lang' => $GLOBALS['lang']];
         if (isset($_GET['db'])) {
-            $GLOBALS['params']['db'] = $_GET['db'];
+            $params['db'] = $_GET['db'];
         }
 
-        $this->response->setMinimalFooter();
+        $this->response->getFooter()->setMinimal();
         $header = $this->response->getHeader();
         $header->setBodyId('designer_body');
 
@@ -239,33 +215,33 @@ class DesignerController extends AbstractController
         ]);
 
         [
-            $GLOBALS['tables'],
-            $GLOBALS['num_tables'],
-            $GLOBALS['total_num_tables'],
-            $GLOBALS['sub_part'],,,
-            $GLOBALS['tooltip_truename'],
-            $GLOBALS['tooltip_aliasname'],
-            $GLOBALS['pos'],
-        ] = Util::getDbInfo($GLOBALS['db'], $GLOBALS['sub_part'] ?? '');
+            $tables,
+            $num_tables,
+            $total_num_tables,
+            $sub_part,,,
+            $tooltip_truename,
+            $tooltip_aliasname,
+            $pos,
+        ] = Util::getDbInfo($db, $sub_part ?? '');
 
         // Embed some data into HTML, later it will be read
         // by designer/init.js and converted to JS variables.
         $this->response->addHTML(
             $this->databaseDesigner->getHtmlForMain(
-                $GLOBALS['db'],
+                $db,
                 $_GET['db'],
-                $GLOBALS['script_display_field'],
-                $GLOBALS['script_tables'],
-                $GLOBALS['script_contr'],
-                $GLOBALS['script_display_field'],
-                $GLOBALS['display_page'],
+                $script_display_field,
+                $script_tables,
+                $script_contr,
+                $script_display_field,
+                $display_page,
                 $visualBuilderMode,
-                $GLOBALS['selected_page'],
-                $GLOBALS['classes_side_menu'],
-                $GLOBALS['tab_pos'],
-                $GLOBALS['tab_column'],
-                $GLOBALS['tables_all_keys'],
-                $GLOBALS['tables_pk_or_unique_keys']
+                $selected_page,
+                $classes_side_menu,
+                $tab_pos,
+                $tab_column,
+                $tables_all_keys,
+                $tables_pk_or_unique_keys
             )
         );
 

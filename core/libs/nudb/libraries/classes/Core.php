@@ -90,6 +90,8 @@ class Core
         string $error_message,
         $message_args = null
     ): void {
+        global $dbi;
+
         /* Use format string if applicable */
         if (is_string($message_args)) {
             $error_message = sprintf($error_message, $message_args);
@@ -102,7 +104,7 @@ class Core
          * (this can happen on early fatal error)
          */
         if (
-            isset($GLOBALS['dbi'], $GLOBALS['config'])
+            isset($dbi, $GLOBALS['config'])
             && $GLOBALS['config']->get('is_setup') === false
             && ResponseRenderer::getInstance()->isAjax()
         ) {
@@ -193,7 +195,7 @@ class Core
         bool $fatal = false,
         string $extra = ''
     ): void {
-        $GLOBALS['errorHandler'] = $GLOBALS['errorHandler'] ?? null;
+        global $errorHandler;
 
         $message = 'The %s extension is missing. Please check your PHP configuration.';
 
@@ -214,7 +216,7 @@ class Core
             return;
         }
 
-        $GLOBALS['errorHandler']->addError($message, E_USER_WARNING, '', 0, false);
+        $errorHandler->addError($message, E_USER_WARNING, '', 0, false);
     }
 
     /**
@@ -226,7 +228,9 @@ class Core
      */
     public static function getTableCount(string $db): int
     {
-        $tables = $GLOBALS['dbi']->tryQuery('SHOW TABLES FROM ' . Util::backquote($db) . ';');
+        global $dbi;
+
+        $tables = $dbi->tryQuery('SHOW TABLES FROM ' . Util::backquote($db) . ';');
 
         if ($tables) {
             return $tables->numRows();
@@ -633,10 +637,10 @@ class Core
         $query = http_build_query(['url' => $vars['url']]);
 
         if ($GLOBALS['config'] !== null && $GLOBALS['config']->get('is_setup')) {
-            return '../index.php?route=/url&' . $query;
+            return '../url.php?' . $query;
         }
 
-        return 'index.php?route=/url&' . $query;
+        return './url.php?' . $query;
     }
 
     /**
@@ -647,17 +651,30 @@ class Core
      */
     public static function isAllowedDomain(string $url): bool
     {
-        $parsedUrl = parse_url($url);
-        if (
-            ! is_array($parsedUrl)
-            || ! isset($parsedUrl['host'])
-            || isset($parsedUrl['user'])
-            || isset($parsedUrl['pass'])
-            || isset($parsedUrl['port'])
-        ) {
+        $arr = parse_url($url);
+
+        if (! is_array($arr)) {
+            $arr = [];
+        }
+
+        // We need host to be set
+        if (! isset($arr['host']) || strlen($arr['host']) == 0) {
             return false;
         }
 
+        // We do not want these to be present
+        $blocked = [
+            'user',
+            'pass',
+            'port',
+        ];
+        foreach ($blocked as $part) {
+            if (isset($arr[$part]) && strlen((string) $arr[$part]) != 0) {
+                return false;
+            }
+        }
+
+        $domain = $arr['host'];
         $domainAllowList = [
             /* Include current domain */
             $_SERVER['SERVER_NAME'],
@@ -685,7 +702,7 @@ class Core
             'mysqldatabaseadministration.blogspot.com',
         ];
 
-        return in_array($parsedUrl['host'], $domainAllowList, true);
+        return in_array($domain, $domainAllowList);
     }
 
     /**
@@ -758,7 +775,8 @@ class Core
      */
     public static function setPostAsGlobal(array $post_patterns): void
     {
-        $container = self::getContainerBuilder();
+        global $containerBuilder;
+
         foreach (array_keys($_POST) as $post_key) {
             foreach ($post_patterns as $one_post_pattern) {
                 if (! preg_match($one_post_pattern, $post_key)) {
@@ -766,7 +784,7 @@ class Core
                 }
 
                 $GLOBALS[$post_key] = $_POST[$post_key];
-                $container->setParameter($post_key, $GLOBALS[$post_key]);
+                $containerBuilder->setParameter($post_key, $GLOBALS[$post_key]);
             }
         }
     }
@@ -943,9 +961,11 @@ class Core
      */
     public static function signSqlQuery($sqlQuery)
     {
+        global $cfg;
+
         $secret = $_SESSION[' HMAC_secret '] ?? '';
 
-        return hash_hmac('sha256', $sqlQuery, $secret . $GLOBALS['cfg']['blowfish_secret']);
+        return hash_hmac('sha256', $sqlQuery, $secret . $cfg['blowfish_secret']);
     }
 
     /**
@@ -956,19 +976,19 @@ class Core
      */
     public static function checkSqlQuerySignature($sqlQuery, $signature): bool
     {
+        global $cfg;
+
         $secret = $_SESSION[' HMAC_secret '] ?? '';
-        $hmac = hash_hmac('sha256', $sqlQuery, $secret . $GLOBALS['cfg']['blowfish_secret']);
+        $hmac = hash_hmac('sha256', $sqlQuery, $secret . $cfg['blowfish_secret']);
 
         return hash_equals($hmac, $signature);
     }
 
+    /**
+     * Get the container builder
+     */
     public static function getContainerBuilder(): ContainerBuilder
     {
-        $containerBuilder = $GLOBALS['containerBuilder'] ?? null;
-        if ($containerBuilder instanceof ContainerBuilder) {
-            return $containerBuilder;
-        }
-
         $containerBuilder = new ContainerBuilder();
         $loader = new PhpFileLoader($containerBuilder, new FileLocator(ROOT_PATH . 'libraries'));
         $loader->load('services_loader.php');

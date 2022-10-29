@@ -22,8 +22,10 @@ abstract class DownloadTransformationsPlugin extends TransformationsPlugin
 {
     /**
      * Gets the transformation description of the specific plugin
+     *
+     * @return string
      */
-    public static function getInfo(): string
+    public static function getInfo()
     {
         return __(
             'Displays a link to download the binary data of the column. You can'
@@ -45,14 +47,13 @@ abstract class DownloadTransformationsPlugin extends TransformationsPlugin
      */
     public function applyTransformation($buffer, array $options = [], ?FieldMetadata $meta = null)
     {
-        $GLOBALS['row'] = $GLOBALS['row'] ?? null;
-        $GLOBALS['fields_meta'] = $GLOBALS['fields_meta'] ?? null;
+        global $row, $fields_meta;
 
         if (isset($options[0]) && ! empty($options[0])) {
             $cn = $options[0]; // filename
         } else {
             if (isset($options[1]) && ! empty($options[1])) {
-                foreach ($GLOBALS['fields_meta'] as $key => $val) {
+                foreach ($fields_meta as $key => $val) {
                     if ($val->name == $options[1]) {
                         $pos = $key;
                         break;
@@ -60,7 +61,7 @@ abstract class DownloadTransformationsPlugin extends TransformationsPlugin
                 }
 
                 if (isset($pos)) {
-                    $cn = $GLOBALS['row'][$pos];
+                    $cn = $row[$pos];
                 }
             }
 
@@ -87,8 +88,10 @@ abstract class DownloadTransformationsPlugin extends TransformationsPlugin
 
     /**
      * Gets the transformation name of the specific plugin
+     *
+     * @return string
      */
-    public static function getName(): string
+    public static function getName()
     {
         return 'Download';
     }

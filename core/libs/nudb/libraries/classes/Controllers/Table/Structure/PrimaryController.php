@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Table\Structure;
 
-use PhpMyAdmin\Controllers\AbstractController;
+use PhpMyAdmin\Controllers\Table\AbstractController;
 use PhpMyAdmin\Controllers\Table\StructureController;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\DbTableExists;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Template;
@@ -29,19 +28,19 @@ final class PrimaryController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
+        string $db,
+        string $table,
         DatabaseInterface $dbi,
         StructureController $structureController
     ) {
-        parent::__construct($response, $template);
+        parent::__construct($response, $template, $db, $table);
         $this->dbi = $dbi;
         $this->structureController = $structureController;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['message'] = $GLOBALS['message'] ?? null;
-        $GLOBALS['urlParams'] = $GLOBALS['urlParams'] ?? null;
-        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
+        global $db, $table, $message, $sql_query, $urlParams, $errorUrl, $cfg;
 
         $selected = $_POST['selected'] ?? [];
         $selected_fld = $_POST['selected_fld'] ?? [];
@@ -63,17 +62,17 @@ final class PrimaryController extends AbstractController
         $mult_btn = $_POST['mult_btn'] ?? $mult_btn ?? '';
 
         if (! empty($selected_fld) && ! empty($primary)) {
-            $this->checkParameters(['db', 'table']);
+            Util::checkParameters(['db', 'table']);
 
-            $GLOBALS['urlParams'] = ['db' => $GLOBALS['db'], 'table' => $GLOBALS['table']];
-            $GLOBALS['errorUrl'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabTable'], 'table');
-            $GLOBALS['errorUrl'] .= Url::getCommon($GLOBALS['urlParams'], '&');
+            $urlParams = ['db' => $db, 'table' => $table];
+            $errorUrl = Util::getScriptNameForOption($cfg['DefaultTabTable'], 'table');
+            $errorUrl .= Url::getCommon($urlParams, '&');
 
-            DbTableExists::check($GLOBALS['db'], $GLOBALS['table']);
+            DbTableExists::check();
 
             $this->render('table/structure/primary', [
-                'db' => $GLOBALS['db'],
-                'table' => $GLOBALS['table'],
+                'db' => $db,
+                'table' => $table,
                 'selected' => $selected_fld,
             ]);
 
@@ -81,33 +80,33 @@ final class PrimaryController extends AbstractController
         }
 
         if ($mult_btn === __('Yes')) {
-            $GLOBALS['sql_query'] = 'ALTER TABLE ' . Util::backquote($GLOBALS['table']);
+            $sql_query = 'ALTER TABLE ' . Util::backquote($table);
             if (! empty($primary)) {
-                $GLOBALS['sql_query'] .= ' DROP PRIMARY KEY,';
+                $sql_query .= ' DROP PRIMARY KEY,';
             }
 
-            $GLOBALS['sql_query'] .= ' ADD PRIMARY KEY(';
+            $sql_query .= ' ADD PRIMARY KEY(';
 
             $i = 1;
             $selectedCount = count($selected);
             foreach ($selected as $field) {
-                $GLOBALS['sql_query'] .= Util::backquote($field);
-                $GLOBALS['sql_query'] .= $i++ === $selectedCount ? ');' : ', ';
+                $sql_query .= Util::backquote($field);
+                $sql_query .= $i++ === $selectedCount ? ');' : ', ';
             }
 
-            $this->dbi->selectDb($GLOBALS['db']);
-            $result = $this->dbi->tryQuery($GLOBALS['sql_query']);
+            $this->dbi->selectDb($db);
+            $result = $this->dbi->tryQuery($sql_query);
 
             if (! $result) {
-                $GLOBALS['message'] = Message::error($this->dbi->getError());
+                $message = Message::error($this->dbi->getError());
             }
         }
 
-        if (empty($GLOBALS['message'])) {
-            $GLOBALS['message'] = Message::success();
+        if (empty($message)) {
+            $message = Message::success();
         }
 
-        ($this->structureController)($request);
+        ($this->structureController)();
     }
 
     /**
@@ -117,9 +116,9 @@ final class PrimaryController extends AbstractController
      */
     private function getKeyForTablePrimary()
     {
-        $this->dbi->selectDb($GLOBALS['db']);
+        $this->dbi->selectDb($this->db);
         $result = $this->dbi->query(
-            'SHOW KEYS FROM ' . Util::backquote($GLOBALS['table']) . ';'
+            'SHOW KEYS FROM ' . Util::backquote($this->table) . ';'
         );
         $primary = '';
         foreach ($result as $row) {

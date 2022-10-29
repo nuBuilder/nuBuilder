@@ -47,7 +47,7 @@ class Url
         $indent = 0,
         $skip = []
     ) {
-        $GLOBALS['config'] = $GLOBALS['config'] ?? null;
+        global $config;
 
         if (is_array($db)) {
             $params =& $db;
@@ -66,7 +66,7 @@ class Url
             $params['server'] = $GLOBALS['server'];
         }
 
-        if (empty($GLOBALS['config']->getCookie('pma_lang')) && ! empty($GLOBALS['lang'])) {
+        if (empty($config->getCookie('pma_lang')) && ! empty($GLOBALS['lang'])) {
             $params['lang'] = $GLOBALS['lang'];
         }
 
@@ -211,22 +211,20 @@ class Url
      */
     public static function getCommonRaw(array $params = [], $divider = '?', $encrypt = true)
     {
-        $GLOBALS['config'] = $GLOBALS['config'] ?? null;
+        global $config;
 
         // avoid overwriting when creating navigation panel links to servers
         if (
             isset($GLOBALS['server'])
             && $GLOBALS['server'] != $GLOBALS['cfg']['ServerDefault']
             && ! isset($params['server'])
-            && ! $GLOBALS['config']->get('is_setup')
+            && ! $config->get('is_setup')
         ) {
             $params['server'] = $GLOBALS['server'];
         }
 
         // Can be null when the user is missing an extension.
-        if (
-            $GLOBALS['config'] !== null && empty($GLOBALS['config']->getCookie('pma_lang')) && ! empty($GLOBALS['lang'])
-        ) {
+        if ($config !== null && empty($config->getCookie('pma_lang')) && ! empty($GLOBALS['lang'])) {
             $params['lang'] = $GLOBALS['lang'];
         }
 
@@ -247,11 +245,11 @@ class Url
      */
     public static function buildHttpQuery($params, $encrypt = true)
     {
-        $GLOBALS['config'] = $GLOBALS['config'] ?? null;
+        global $config;
 
         $separator = self::getArgSeparator();
 
-        if (! $encrypt || ! $GLOBALS['config']->get('URLQueryEncryption')) {
+        if (! $encrypt || ! $config->get('URLQueryEncryption')) {
             return http_build_query($params, '', $separator);
         }
 
@@ -270,6 +268,8 @@ class Url
             'hostname',
             'dbname',
             'tablename',
+            'checkprivsdb',
+            'checkprivstable',
         ];
         $paramsToEncrypt = [];
         foreach ($params as $paramKey => $paramValue) {

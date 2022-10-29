@@ -7,7 +7,6 @@ namespace PhpMyAdmin\Controllers\Sql;
 use PhpMyAdmin\CheckUserPrivileges;
 use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\DatabaseInterface;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Sql;
@@ -37,11 +36,13 @@ final class ColumnPreferencesController extends AbstractController
         $this->dbi = $dbi;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
+        global $db, $table;
+
         $this->checkUserPrivileges->getPrivileges();
 
-        $tableObject = $this->dbi->getTable($GLOBALS['db'], $GLOBALS['table']);
+        $tableObject = $this->dbi->getTable($db, $table);
         $status = false;
 
         // set column order

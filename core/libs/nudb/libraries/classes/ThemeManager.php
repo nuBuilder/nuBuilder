@@ -179,11 +179,11 @@ class ThemeManager
      */
     public function getThemeCookie()
     {
-        $GLOBALS['config'] = $GLOBALS['config'] ?? null;
+        global $config;
 
         $name = $this->getThemeCookieName();
-        if ($GLOBALS['config']->issetCookie($name)) {
-            return $GLOBALS['config']->getCookie($name);
+        if ($config->issetCookie($name)) {
+            return $config->getCookie($name);
         }
 
         return false;

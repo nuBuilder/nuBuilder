@@ -32,7 +32,9 @@ final class ShowEngineController extends AbstractController
      */
     public function __invoke(ServerRequest $request, array $params): void
     {
-        $GLOBALS['errorUrl'] = Url::getFromRoute('/');
+        global $errorUrl;
+
+        $errorUrl = Url::getFromRoute('/');
 
         if ($this->dbi->isSuperUser()) {
             $this->dbi->selectDb('mysql');

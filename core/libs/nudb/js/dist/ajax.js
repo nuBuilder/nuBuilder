@@ -1,21 +1,10 @@
-"use strict";
-(self["webpackChunkphpmyadmin"] = self["webpackChunkphpmyadmin"] || []).push([[0],[
-/* 0 */
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-
-/* global Navigation */
-
 /**
  * This object handles ajax requests for pages. It also
  * handles the reloading of the main menu and scripts.
  *
  * @test-module AJAX
  */
-
-window.AJAX = {
+var AJAX = {
   /**
    * @var {boolean} active Whether we are busy
    */
@@ -39,7 +28,7 @@ window.AJAX = {
 
   /**
    * @var {Function} callback Callback to execute after a successful request
-   *                          Used by window.CommonActions from common.js
+   *                          Used by CommonActions from common.js
    */
   callback: function () {},
 
@@ -92,8 +81,8 @@ window.AJAX = {
    * @return {self} For chaining
    */
   registerOnload: function (file, func) {
-    var eventName = 'onload_' + window.AJAX.hash(file);
-    jquery__WEBPACK_IMPORTED_MODULE_0__(document).on(eventName, func);
+    var eventName = 'onload_' + AJAX.hash(file);
+    $(document).on(eventName, func);
 
     if (this.debug) {
       // eslint-disable-next-line no-console
@@ -115,8 +104,8 @@ window.AJAX = {
    * @return {self} For chaining
    */
   registerTeardown: function (file, func) {
-    var eventName = 'teardown_' + window.AJAX.hash(file);
-    jquery__WEBPACK_IMPORTED_MODULE_0__(document).on(eventName, func);
+    var eventName = 'teardown_' + AJAX.hash(file);
+    $(document).on(eventName, func);
 
     if (this.debug) {
       // eslint-disable-next-line no-console
@@ -136,8 +125,8 @@ window.AJAX = {
    * @return {void}
    */
   fireOnload: function (file) {
-    var eventName = 'onload_' + window.AJAX.hash(file);
-    jquery__WEBPACK_IMPORTED_MODULE_0__(document).trigger(eventName);
+    var eventName = 'onload_' + AJAX.hash(file);
+    $(document).trigger(eventName);
 
     if (this.debug) {
       // eslint-disable-next-line no-console
@@ -155,8 +144,8 @@ window.AJAX = {
    * @return {void}
    */
   fireTeardown: function (file) {
-    var eventName = 'teardown_' + window.AJAX.hash(file);
-    jquery__WEBPACK_IMPORTED_MODULE_0__(document).triggerHandler(eventName);
+    var eventName = 'teardown_' + AJAX.hash(file);
+    $(document).triggerHandler(eventName);
 
     if (this.debug) {
       // eslint-disable-next-line no-console
@@ -194,7 +183,7 @@ window.AJAX = {
         return;
       }
 
-      lockId = jquery__WEBPACK_IMPORTED_MODULE_0__(this).data('lock-id');
+      lockId = $(this).data('lock-id');
 
       if (typeof lockId === 'undefined') {
         return;
@@ -206,28 +195,28 @@ window.AJAX = {
 
 
       if (event.data.value === 1) {
-        newHash = window.AJAX.hash(jquery__WEBPACK_IMPORTED_MODULE_0__(this).val());
+        newHash = AJAX.hash($(this).val());
       } else {
-        newHash = window.AJAX.hash(jquery__WEBPACK_IMPORTED_MODULE_0__(this).is(':checked'));
+        newHash = AJAX.hash($(this).is(':checked'));
       }
 
-      oldHash = jquery__WEBPACK_IMPORTED_MODULE_0__(this).data('val-hash');
+      oldHash = $(this).data('val-hash');
     } // Set lock if old value !== new value
     // otherwise release lock
 
 
     if (oldHash !== newHash) {
-      window.AJAX.lockedTargets[lockId] = true;
+      AJAX.lockedTargets[lockId] = true;
     } else {
-      delete window.AJAX.lockedTargets[lockId];
+      delete AJAX.lockedTargets[lockId];
     } // Show lock icon if locked targets is not empty.
     // otherwise remove lock icon
 
 
-    if (!jquery__WEBPACK_IMPORTED_MODULE_0__.isEmptyObject(window.AJAX.lockedTargets)) {
-      jquery__WEBPACK_IMPORTED_MODULE_0__('#lock_page_icon').html(Functions.getImage('s_lock', window.Messages.strLockToolTip).toString());
+    if (!jQuery.isEmptyObject(AJAX.lockedTargets)) {
+      $('#lock_page_icon').html(Functions.getImage('s_lock', Messages.strLockToolTip).toString());
     } else {
-      jquery__WEBPACK_IMPORTED_MODULE_0__('#lock_page_icon').html('');
+      $('#lock_page_icon').html('');
     }
   },
 
@@ -237,15 +226,15 @@ window.AJAX = {
    * @return {void}
    */
   resetLock: function () {
-    window.AJAX.lockedTargets = {};
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#lock_page_icon').html('');
+    AJAX.lockedTargets = {};
+    $('#lock_page_icon').html('');
   },
   handleMenu: {
     replace: function (content) {
-      jquery__WEBPACK_IMPORTED_MODULE_0__('#floating_menubar').html(content) // Remove duplicate wrapper
+      $('#floating_menubar').html(content) // Remove duplicate wrapper
       // TODO: don't send it in the response
       .children().first().remove();
-      jquery__WEBPACK_IMPORTED_MODULE_0__('#topmenu').menuResizer(Functions.mainMenuResizerCallback);
+      $('#topmenu').menuResizer(Functions.mainMenuResizerCallback);
     }
   },
 
@@ -260,21 +249,21 @@ window.AJAX = {
     // In some cases we don't want to handle the request here and either
     // leave the browser deal with it natively (e.g: file download)
     // or leave an existing ajax event handler present elsewhere deal with it
-    var href = jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('href');
+    var href = $(this).attr('href');
 
     if (typeof event !== 'undefined' && (event.shiftKey || event.ctrlKey || event.metaKey)) {
       return true;
-    } else if (jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('target')) {
+    } else if ($(this).attr('target')) {
       return true;
-    } else if (jquery__WEBPACK_IMPORTED_MODULE_0__(this).hasClass('ajax') || jquery__WEBPACK_IMPORTED_MODULE_0__(this).hasClass('disableAjax')) {
+    } else if ($(this).hasClass('ajax') || $(this).hasClass('disableAjax')) {
       // reset the lockedTargets object, as specified AJAX operation has finished
-      window.AJAX.resetLock();
+      AJAX.resetLock();
       return true;
     } else if (href && href.match(/^#/)) {
       return true;
     } else if (href && href.match(/^mailto/)) {
       return true;
-    } else if (jquery__WEBPACK_IMPORTED_MODULE_0__(this).hasClass('ui-datepicker-next') || jquery__WEBPACK_IMPORTED_MODULE_0__(this).hasClass('ui-datepicker-prev')) {
+    } else if ($(this).hasClass('ui-datepicker-next') || $(this).hasClass('ui-datepicker-prev')) {
       return true;
     }
 
@@ -287,27 +276,27 @@ window.AJAX = {
     // the click event is not triggered by script
 
 
-    if (typeof event !== 'undefined' && event.type === 'click' && event.isTrigger !== true && !jquery__WEBPACK_IMPORTED_MODULE_0__.isEmptyObject(window.AJAX.lockedTargets) && confirm(window.Messages.strConfirmNavigation) === false) {
+    if (typeof event !== 'undefined' && event.type === 'click' && event.isTrigger !== true && !jQuery.isEmptyObject(AJAX.lockedTargets) && confirm(Messages.strConfirmNavigation) === false) {
       return false;
     }
 
-    window.AJAX.resetLock();
+    AJAX.resetLock();
     var isLink = !!href || false;
     var previousLinkAborted = false;
 
-    if (window.AJAX.active === true) {
+    if (AJAX.active === true) {
       // Cancel the old request if abortable, when the user requests
       // something else. Otherwise silently bail out, as there is already
       // a request well in progress.
-      if (window.AJAX.xhr) {
+      if (AJAX.xhr) {
         // In case of a link request, attempt aborting
-        window.AJAX.xhr.abort();
+        AJAX.xhr.abort();
 
-        if (window.AJAX.xhr.status === 0 && window.AJAX.xhr.statusText === 'abort') {
+        if (AJAX.xhr.status === 0 && AJAX.xhr.statusText === 'abort') {
           // If aborted
-          window.AJAX.$msgbox = Functions.ajaxShowMessage(window.Messages.strAbortedRequest);
-          window.AJAX.active = false;
-          window.AJAX.xhr = null;
+          AJAX.$msgbox = Functions.ajaxShowMessage(Messages.strAbortedRequest);
+          AJAX.active = false;
+          AJAX.xhr = null;
           previousLinkAborted = true;
         } else {
           // If can't abort
@@ -319,32 +308,32 @@ window.AJAX = {
       }
     }
 
-    window.AJAX.source = jquery__WEBPACK_IMPORTED_MODULE_0__(this);
-    jquery__WEBPACK_IMPORTED_MODULE_0__('html, body').animate({
+    AJAX.source = $(this);
+    $('html, body').animate({
       scrollTop: 0
     }, 'fast');
-    var url = isLink ? href : jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('action');
-    var argsep = window.CommonParams.get('arg_separator');
+    var url = isLink ? href : $(this).attr('action');
+    var argsep = CommonParams.get('arg_separator');
     var params = 'ajax_request=true' + argsep + 'ajax_page_request=true';
-    var dataPost = window.AJAX.source.getPostData();
+    var dataPost = AJAX.source.getPostData();
 
     if (!isLink) {
-      params += argsep + jquery__WEBPACK_IMPORTED_MODULE_0__(this).serialize();
+      params += argsep + $(this).serialize();
     } else if (dataPost) {
       params += argsep + dataPost;
       isLink = false;
     }
 
-    if (window.AJAX.debug) {
+    if (AJAX.debug) {
       // eslint-disable-next-line no-console
       console.log('Loading: ' + url); // no need to translate
     }
 
     if (isLink) {
-      window.AJAX.active = true;
-      window.AJAX.$msgbox = Functions.ajaxShowMessage(); // Save reference for the new link request
+      AJAX.active = true;
+      AJAX.$msgbox = Functions.ajaxShowMessage(); // Save reference for the new link request
 
-      window.AJAX.xhr = jquery__WEBPACK_IMPORTED_MODULE_0__.get(url, params, window.AJAX.responseHandler);
+      AJAX.xhr = $.get(url, params, AJAX.responseHandler);
       var state = {
         url: href
       };
@@ -362,17 +351,17 @@ window.AJAX = {
        * The event was saved in the jQuery data object by an onload
        * handler defined below. Workaround for bug #3583316
        */
-      var onsubmit = jquery__WEBPACK_IMPORTED_MODULE_0__(this).data('onsubmit'); // Submit the request if there is no onsubmit handler
+      var onsubmit = $(this).data('onsubmit'); // Submit the request if there is no onsubmit handler
       // or if it returns a value that evaluates to true
 
       if (typeof onsubmit !== 'function' || onsubmit.apply(this, [event])) {
-        window.AJAX.active = true;
-        window.AJAX.$msgbox = Functions.ajaxShowMessage();
+        AJAX.active = true;
+        AJAX.$msgbox = Functions.ajaxShowMessage();
 
-        if (jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('id') === 'login_form') {
-          jquery__WEBPACK_IMPORTED_MODULE_0__.post(url, params, window.AJAX.loginResponseHandler);
+        if ($(this).attr('id') === 'login_form') {
+          $.post(url, params, AJAX.loginResponseHandler);
         } else {
-          jquery__WEBPACK_IMPORTED_MODULE_0__.post(url, params, window.AJAX.responseHandler);
+          $.post(url, params, AJAX.responseHandler);
         }
       }
     }
@@ -381,7 +370,7 @@ window.AJAX = {
   /**
    * Response handler to handle login request from login modal after session expiration
    *
-   * To refer to self use 'window.AJAX', instead of 'this' as this function
+   * To refer to self use 'AJAX', instead of 'this' as this function
    * is called in the jQuery context.
    *
    * @param {object} data Event data
@@ -393,16 +382,16 @@ window.AJAX = {
       return;
     }
 
-    Functions.ajaxRemoveMessage(window.AJAX.$msgbox);
-    window.CommonParams.set('token', data.new_token);
-    window.AJAX.scriptHandler.load([]);
+    Functions.ajaxRemoveMessage(AJAX.$msgbox);
+    CommonParams.set('token', data.new_token);
+    AJAX.scriptHandler.load([]);
 
     if (data.displayMessage) {
-      jquery__WEBPACK_IMPORTED_MODULE_0__('#page_content').prepend(data.displayMessage);
-      Functions.highlightSql(jquery__WEBPACK_IMPORTED_MODULE_0__('#page_content'));
+      $('#page_content').prepend(data.displayMessage);
+      Functions.highlightSql($('#page_content'));
     }
 
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_errors').remove();
+    $('#pma_errors').remove();
     var msg = '';
 
     if (data.errSubmitMsg) {
@@ -410,81 +399,81 @@ window.AJAX = {
     }
 
     if (data.errors) {
-      jquery__WEBPACK_IMPORTED_MODULE_0__('<div></div>', {
+      $('<div></div>', {
         id: 'pma_errors',
         class: 'clearfloat d-print-none'
       }).insertAfter('#selflink').append(data.errors); // bind for php error reporting forms (bottom)
 
-      jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_ignore_errors_bottom').on('click', function (e) {
+      $('#pma_ignore_errors_bottom').on('click', function (e) {
         e.preventDefault();
         Functions.ignorePhpErrors();
       });
-      jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_ignore_all_errors_bottom').on('click', function (e) {
+      $('#pma_ignore_all_errors_bottom').on('click', function (e) {
         e.preventDefault();
         Functions.ignorePhpErrors(false);
       }); // In case of 'sendErrorReport'='always'
       // submit the hidden error reporting form.
 
       if (data.sendErrorAlways === '1' && data.stopErrorReportLoop !== '1') {
-        jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_report_errors_form').trigger('submit');
-        Functions.ajaxShowMessage(window.Messages.phpErrorsBeingSubmitted, false);
-        jquery__WEBPACK_IMPORTED_MODULE_0__('html, body').animate({
-          scrollTop: jquery__WEBPACK_IMPORTED_MODULE_0__(document).height()
+        $('#pma_report_errors_form').trigger('submit');
+        Functions.ajaxShowMessage(Messages.phpErrorsBeingSubmitted, false);
+        $('html, body').animate({
+          scrollTop: $(document).height()
         }, 'slow');
       } else if (data.promptPhpErrors) {
         // otherwise just prompt user if it is set so.
-        msg = msg + window.Messages.phpErrorsFound; // scroll to bottom where all the errors are displayed.
+        msg = msg + Messages.phpErrorsFound; // scroll to bottom where all the errors are displayed.
 
-        jquery__WEBPACK_IMPORTED_MODULE_0__('html, body').animate({
-          scrollTop: jquery__WEBPACK_IMPORTED_MODULE_0__(document).height()
+        $('html, body').animate({
+          scrollTop: $(document).height()
         }, 'slow');
       }
     }
 
     Functions.ajaxShowMessage(msg, false); // bind for php error reporting forms (popup)
 
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_ignore_errors_popup').on('click', function () {
+    $('#pma_ignore_errors_popup').on('click', function () {
       Functions.ignorePhpErrors();
     });
-    jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_ignore_all_errors_popup').on('click', function () {
+    $('#pma_ignore_all_errors_popup').on('click', function () {
       Functions.ignorePhpErrors(false);
     });
 
     if (typeof data.success !== 'undefined' && data.success) {
       // reload page if user trying to login has changed
-      if (window.CommonParams.get('user') !== data.params.user) {
+      if (CommonParams.get('user') !== data.params.user) {
         window.location = 'index.php';
-        Functions.ajaxShowMessage(window.Messages.strLoading, false);
-        window.AJAX.active = false;
-        window.AJAX.xhr = null;
+        Functions.ajaxShowMessage(Messages.strLoading, false);
+        AJAX.active = false;
+        AJAX.xhr = null;
         return;
       } // remove the login modal if the login is successful otherwise show error.
 
 
       if (typeof data.logged_in !== 'undefined' && data.logged_in === 1) {
-        if (jquery__WEBPACK_IMPORTED_MODULE_0__('#modalOverlay').length) {
-          jquery__WEBPACK_IMPORTED_MODULE_0__('#modalOverlay').remove();
+        if ($('#modalOverlay').length) {
+          $('#modalOverlay').remove();
         }
 
-        jquery__WEBPACK_IMPORTED_MODULE_0__('fieldset.disabled_for_expiration').removeAttr('disabled').removeClass('disabled_for_expiration');
-        window.AJAX.fireTeardown('functions.js');
-        window.AJAX.fireOnload('functions.js');
+        $('fieldset.disabled_for_expiration').removeAttr('disabled').removeClass('disabled_for_expiration');
+        AJAX.fireTeardown('functions.js');
+        AJAX.fireOnload('functions.js');
       }
 
       if (typeof data.new_token !== 'undefined') {
-        jquery__WEBPACK_IMPORTED_MODULE_0__('input[name=token]').val(data.new_token);
+        $('input[name=token]').val(data.new_token);
       }
     } else if (typeof data.logged_in !== 'undefined' && data.logged_in === 0) {
-      jquery__WEBPACK_IMPORTED_MODULE_0__('#modalOverlay').replaceWith(data.error);
+      $('#modalOverlay').replaceWith(data.error);
     } else {
       Functions.ajaxShowMessage(data.error, false);
-      window.AJAX.active = false;
-      window.AJAX.xhr = null;
+      AJAX.active = false;
+      AJAX.xhr = null;
       Functions.handleRedirectAndReload(data);
 
       if (data.fieldWithError) {
-        jquery__WEBPACK_IMPORTED_MODULE_0__(':input.error').removeClass('error');
-        jquery__WEBPACK_IMPORTED_MODULE_0__('#' + data.fieldWithError).addClass('error');
+        $(':input.error').removeClass('error');
+        $('#' + data.fieldWithError).addClass('error');
       }
     }
   },
@@ -495,7 +484,7 @@ window.AJAX = {
    * failed requests or requests with uncaught errors, see the .ajaxError
    * handler at the bottom of this file.
    *
-   * To refer to self use 'window.AJAX', instead of 'this' as this function
+   * To refer to self use 'AJAX', instead of 'this' as this function
    * is called in the jQuery context.
    *
    * @param {object} data Event data
@@ -509,33 +498,33 @@ window.AJAX = {
 
 
     if (typeof data === 'string') {
-      Functions.ajaxRemoveMessage(window.AJAX.$msgbox);
-      Functions.ajaxShowMessage(jquery__WEBPACK_IMPORTED_MODULE_0__(data).text(), false, 'error');
-      window.AJAX.active = false;
-      window.AJAX.xhr = null;
+      Functions.ajaxRemoveMessage(AJAX.$msgbox);
+      Functions.ajaxShowMessage($(data).text(), false, 'error');
+      AJAX.active = false;
+      AJAX.xhr = null;
       return;
     }
 
     if (typeof data.success !== 'undefined' && data.success) {
-      jquery__WEBPACK_IMPORTED_MODULE_0__('html, body').animate({
+      $('html, body').animate({
         scrollTop: 0
       }, 'fast');
-      Functions.ajaxRemoveMessage(window.AJAX.$msgbox);
+      Functions.ajaxRemoveMessage(AJAX.$msgbox);
 
       if (data.redirect) {
         Functions.ajaxShowMessage(data.redirect, false);
-        window.AJAX.active = false;
-        window.AJAX.xhr = null;
+        AJAX.active = false;
+        AJAX.xhr = null;
         return;
       }
 
-      window.AJAX.scriptHandler.reset(function () {
+      AJAX.scriptHandler.reset(function () {
         if (data.reloadNavigation) {
           Navigation.reload();
         }
 
         if (data.title) {
-          jquery__WEBPACK_IMPORTED_MODULE_0__('title').replaceWith(data.title);
+          $('title').replaceWith(data.title);
         }
 
         if (data.menu) {
@@ -544,7 +533,7 @@ window.AJAX = {
             menu: data.menu
           };
           history.replaceState(state, null);
-          window.AJAX.handleMenu.replace(data.menu);
+          AJAX.handleMenu.replace(data.menu);
         }
 
         if (data.disableNaviSettings) {
@@ -555,11 +544,11 @@ window.AJAX = {
         // been added outside of #page_content
 
 
-        jquery__WEBPACK_IMPORTED_MODULE_0__('body').children().not('#pma_navigation').not('#floating_menubar').not('#page_nav_icons').not('#page_content').not('#selflink').not('#pma_header').not('#pma_footer').not('#pma_demo').not('#pma_console_container').not('#prefs_autoload').remove(); // Replace #page_content with new content
+        $('body').children().not('#pma_navigation').not('#floating_menubar').not('#page_nav_icons').not('#page_content').not('#selflink').not('#pma_header').not('#pma_footer').not('#pma_demo').not('#pma_console_container').not('#prefs_autoload').remove(); // Replace #page_content with new content
 
         if (data.message && data.message.length > 0) {
-          jquery__WEBPACK_IMPORTED_MODULE_0__('#page_content').replaceWith('<div id=\'page_content\'>' + data.message + '</div>');
-          Functions.highlightSql(jquery__WEBPACK_IMPORTED_MODULE_0__('#page_content'));
+          $('#page_content').replaceWith('<div id=\'page_content\'>' + data.message + '</div>');
+          Functions.highlightSql($('#page_content'));
           Functions.checkNumberOfFields();
         }
 
@@ -577,23 +566,23 @@ window.AJAX = {
             data.selflink = data.selflink.replace(source, replacement);
           }
 
-          jquery__WEBPACK_IMPORTED_MODULE_0__('#selflink').find('> a').attr('href', data.selflink);
+          $('#selflink').find('> a').attr('href', data.selflink);
         }
 
         if (data.params) {
-          window.CommonParams.setAll(data.params);
+          CommonParams.setAll(data.params);
         }
 
         if (data.scripts) {
-          window.AJAX.scriptHandler.load(data.scripts);
+          AJAX.scriptHandler.load(data.scripts);
         }
 
         if (data.displayMessage) {
-          jquery__WEBPACK_IMPORTED_MODULE_0__('#page_content').prepend(data.displayMessage);
-          Functions.highlightSql(jquery__WEBPACK_IMPORTED_MODULE_0__('#page_content'));
+          $('#page_content').prepend(data.displayMessage);
+          Functions.highlightSql($('#page_content'));
         }
 
-        jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_errors').remove();
+        $('#pma_errors').remove();
         var msg = '';
 
         if (data.errSubmitMsg) {
@@ -601,71 +590,71 @@ window.AJAX = {
         }
 
         if (data.errors) {
-          jquery__WEBPACK_IMPORTED_MODULE_0__('<div></div>', {
+          $('<div></div>', {
             id: 'pma_errors',
             class: 'clearfloat d-print-none'
           }).insertAfter('#selflink').append(data.errors); // bind for php error reporting forms (bottom)
 
-          jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_ignore_errors_bottom').on('click', function (e) {
+          $('#pma_ignore_errors_bottom').on('click', function (e) {
             e.preventDefault();
             Functions.ignorePhpErrors();
           });
-          jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_ignore_all_errors_bottom').on('click', function (e) {
+          $('#pma_ignore_all_errors_bottom').on('click', function (e) {
             e.preventDefault();
             Functions.ignorePhpErrors(false);
           }); // In case of 'sendErrorReport'='always'
           // submit the hidden error reporting form.
 
           if (data.sendErrorAlways === '1' && data.stopErrorReportLoop !== '1') {
-            jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_report_errors_form').trigger('submit');
-            Functions.ajaxShowMessage(window.Messages.phpErrorsBeingSubmitted, false);
-            jquery__WEBPACK_IMPORTED_MODULE_0__('html, body').animate({
-              scrollTop: jquery__WEBPACK_IMPORTED_MODULE_0__(document).height()
+            $('#pma_report_errors_form').trigger('submit');
+            Functions.ajaxShowMessage(Messages.phpErrorsBeingSubmitted, false);
+            $('html, body').animate({
+              scrollTop: $(document).height()
             }, 'slow');
           } else if (data.promptPhpErrors) {
             // otherwise just prompt user if it is set so.
-            msg = msg + window.Messages.phpErrorsFound; // scroll to bottom where all the errors are displayed.
+            msg = msg + Messages.phpErrorsFound; // scroll to bottom where all the errors are displayed.
 
-            jquery__WEBPACK_IMPORTED_MODULE_0__('html, body').animate({
-              scrollTop: jquery__WEBPACK_IMPORTED_MODULE_0__(document).height()
+            $('html, body').animate({
+              scrollTop: $(document).height()
             }, 'slow');
           }
         }
 
         Functions.ajaxShowMessage(msg, false); // bind for php error reporting forms (popup)
 
-        jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_ignore_errors_popup').on('click', function () {
+        $('#pma_ignore_errors_popup').on('click', function () {
           Functions.ignorePhpErrors();
         });
-        jquery__WEBPACK_IMPORTED_MODULE_0__('#pma_ignore_all_errors_popup').on('click', function () {
+        $('#pma_ignore_all_errors_popup').on('click', function () {
           Functions.ignorePhpErrors(false);
         });
 
-        if (typeof window.AJAX.callback === 'function') {
-          window.AJAX.callback.call();
+        if (typeof AJAX.callback === 'function') {
+          AJAX.callback.call();
         }
 
-        window.AJAX.callback = function () {};
+        AJAX.callback = function () {};
       });
     } else {
       Functions.ajaxShowMessage(data.error, false);
-      Functions.ajaxRemoveMessage(window.AJAX.$msgbox);
-      var $ajaxError = jquery__WEBPACK_IMPORTED_MODULE_0__('<div></div>');
+      Functions.ajaxRemoveMessage(AJAX.$msgbox);
+      var $ajaxError = $('<div></div>');
       $ajaxError.attr({
         'id': 'ajaxError'
       });
-      jquery__WEBPACK_IMPORTED_MODULE_0__('#page_content').append($ajaxError);
+      $('#page_content').append($ajaxError);
       $ajaxError.html(data.error);
-      jquery__WEBPACK_IMPORTED_MODULE_0__('html, body').animate({
-        scrollTop: jquery__WEBPACK_IMPORTED_MODULE_0__(document).height()
+      $('html, body').animate({
+        scrollTop: $(document).height()
       }, 200);
-      window.AJAX.active = false;
-      window.AJAX.xhr = null;
+      AJAX.active = false;
+      AJAX.xhr = null;
       Functions.handleRedirectAndReload(data);
 
       if (data.fieldWithError) {
-        jquery__WEBPACK_IMPORTED_MODULE_0__(':input.error').removeClass('error');
-        jquery__WEBPACK_IMPORTED_MODULE_0__('#' + data.fieldWithError).addClass('error');
+        $(':input.error').removeClass('error');
+        $('#' + data.fieldWithError).addClass('error');
       }
     }
   },
@@ -735,10 +724,10 @@ window.AJAX = {
       // Depends on common params being set before loading scripts in responseHandler
 
       if (self.scriptsVersion === null) {
-        self.scriptsVersion = window.CommonParams.get('version');
-      } else if (self.scriptsVersion !== window.CommonParams.get('version')) {
+        self.scriptsVersion = CommonParams.get('version');
+      } else if (self.scriptsVersion !== CommonParams.get('version')) {
         self.scripts = [];
-        self.scriptsVersion = window.CommonParams.get('version');
+        self.scriptsVersion = CommonParams.get('version');
       }
 
       self.scriptsCompleted = false;
@@ -758,7 +747,7 @@ window.AJAX = {
       for (i in files) {
         var script = files[i].name; // Only for scripts that we don't already have
 
-        if (jquery__WEBPACK_IMPORTED_MODULE_0__.inArray(script, self.scripts) === -1) {
+        if ($.inArray(script, self.scripts) === -1) {
           this.add(script);
           this.appendScript(script, callback);
         } else {
@@ -779,12 +768,12 @@ window.AJAX = {
      * @return {void}
      */
     done: function (script, callback) {
-      if (jquery__WEBPACK_IMPORTED_MODULE_0__.inArray(script, this.scriptsToBeFired)) {
-        window.AJAX.fireOnload(script);
+      if ($.inArray(script, this.scriptsToBeFired)) {
+        AJAX.fireOnload(script);
       }
 
-      if (jquery__WEBPACK_IMPORTED_MODULE_0__.inArray(script, this.scriptsToBeLoaded)) {
-        this.scriptsToBeLoaded.splice(jquery__WEBPACK_IMPORTED_MODULE_0__.inArray(script, this.scriptsToBeLoaded), 1);
+      if ($.inArray(script, this.scriptsToBeLoaded)) {
+        this.scriptsToBeLoaded.splice($.inArray(script, this.scriptsToBeLoaded), 1);
       }
 
       if (script === null) {
@@ -793,10 +782,10 @@ window.AJAX = {
       /* We need to wait for last signal (with null) or last script load */
 
 
-      window.AJAX.active = this.scriptsToBeLoaded.length > 0 || !this.scriptsCompleted;
+      AJAX.active = this.scriptsToBeLoaded.length > 0 || !this.scriptsCompleted;
       /* Run callback on last script */
 
-      if (!window.AJAX.active && typeof callback === 'function') {
+      if (!AJAX.active && typeof callback === 'function') {
         callback();
       }
     },
@@ -815,7 +804,7 @@ window.AJAX = {
       var self = this;
       script.type = 'text/javascript';
       var file = name.indexOf('vendor/') !== -1 ? name : 'dist/' + name;
-      script.src = 'js/' + file + '?' + 'v=' + encodeURIComponent(window.CommonParams.get('version'));
+      script.src = 'js/' + file + '?' + 'v=' + encodeURIComponent(CommonParams.get('version'));
       script.async = false;
 
       script.onload = function () {
@@ -835,7 +824,7 @@ window.AJAX = {
      */
     reset: function (callback) {
       for (var i in this.scriptsToBeFired) {
-        window.AJAX.fireTeardown(this.scriptsToBeFired[i]);
+        AJAX.fireTeardown(this.scriptsToBeFired[i]);
       }
 
       this.scriptsToBeFired = [];
@@ -844,160 +833,140 @@ window.AJAX = {
        * on pages and submissions of forms
        */
 
-      jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('click', 'a').on('click', 'a', window.AJAX.requestHandler);
-      jquery__WEBPACK_IMPORTED_MODULE_0__(document).off('submit', 'form').on('submit', 'form', window.AJAX.requestHandler);
+      $(document).off('click', 'a').on('click', 'a', AJAX.requestHandler);
+      $(document).off('submit', 'form').on('submit', 'form', AJAX.requestHandler);
       callback();
     }
-  },
-
-  /**
-   * Here we register a function that will remove the onsubmit event from all
-   * forms that will be handled by the generic page loader. We then save this
-   * event handler in the "jQuery data", so that we can fire it up later in
-   * window.AJAX.requestHandler().
-   *
-   * See bug #3583316
-   */
-  removeSubmitEvents: function () {
-    // Registering the onload event for functions.js
-    // ensures that it will be fired for all pages
-    jquery__WEBPACK_IMPORTED_MODULE_0__('form').not('.ajax').not('.disableAjax').each(function () {
-      if (jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('onsubmit')) {
-        jquery__WEBPACK_IMPORTED_MODULE_0__(this).data('onsubmit', this.onsubmit).attr('onsubmit', '');
-      }
-    });
-    var $pageContent = jquery__WEBPACK_IMPORTED_MODULE_0__('#page_content');
-    /**
-     * Workaround for passing submit button name,value on ajax form submit
-     * by appending hidden element with submit button name and value.
-     */
-
-    $pageContent.on('click', 'form input[type=submit]', function () {
-      var buttonName = jquery__WEBPACK_IMPORTED_MODULE_0__(this).attr('name');
-
-      if (typeof buttonName === 'undefined') {
-        return;
-      }
-
-      jquery__WEBPACK_IMPORTED_MODULE_0__(this).closest('form').append(jquery__WEBPACK_IMPORTED_MODULE_0__('<input>', {
-        'type': 'hidden',
-        'name': buttonName,
-        'value': jquery__WEBPACK_IMPORTED_MODULE_0__(this).val()
-      }));
-    });
-    /**
-     * Attach event listener to events when user modify visible
-     * Input,Textarea and select fields to make changes in forms
-     */
-
-    $pageContent.on('keyup change', 'form.lock-page textarea, ' + 'form.lock-page input[type="text"], ' + 'form.lock-page input[type="number"], ' + 'form.lock-page select', {
-      value: 1
-    }, window.AJAX.lockPageHandler);
-    $pageContent.on('change', 'form.lock-page input[type="checkbox"], ' + 'form.lock-page input[type="radio"]', {
-      value: 2
-    }, window.AJAX.lockPageHandler);
-    /**
-     * Reset lock when lock-page form reset event is fired
-     * Note: reset does not bubble in all browser so attach to
-     * form directly.
-     */
-
-    jquery__WEBPACK_IMPORTED_MODULE_0__('form.lock-page').on('reset', function () {
-      window.AJAX.resetLock();
-    });
-  },
-
-  /**
-   * Page load event handler
-   * @return {function}
-   */
-  loadEventHandler: function () {
-    return function () {
-      var menuContent = jquery__WEBPACK_IMPORTED_MODULE_0__('<div></div>').append(jquery__WEBPACK_IMPORTED_MODULE_0__('#server-breadcrumb').clone()).append(jquery__WEBPACK_IMPORTED_MODULE_0__('#topmenucontainer').clone()).html(); // set initial state reload
-
-      var initState = 'state' in window.history && window.history.state !== null;
-      var initURL = jquery__WEBPACK_IMPORTED_MODULE_0__('#selflink').find('> a').attr('href') || location.href;
-      var state = {
-        url: initURL,
-        menu: menuContent
-      };
-      history.replaceState(state, null);
-      jquery__WEBPACK_IMPORTED_MODULE_0__(window).on('popstate', function (event) {
-        var initPop = !initState && location.href === initURL;
-        initState = true; // check if popstate fired on first page itself
-
-        if (initPop) {
-          return;
-        }
-
-        var state = event.originalEvent.state;
-
-        if (state && state.menu) {
-          window.AJAX.$msgbox = Functions.ajaxShowMessage();
-          var params = 'ajax_request=true' + window.CommonParams.get('arg_separator') + 'ajax_page_request=true';
-          var url = state.url || location.href;
-          jquery__WEBPACK_IMPORTED_MODULE_0__.get(url, params, window.AJAX.responseHandler); // TODO: Check if sometimes menu is not retrieved from server,
-          // Not sure but it seems menu was missing only for printview which
-          // been removed lately, so if it's right some dead menu checks/fallbacks
-          // may need to be removed from this file and Header.php
-          // window.AJAX.handleMenu.replace(event.originalEvent.state.menu);
-        }
-      });
-    };
-  },
-
-  /**
-   * Gracefully handle fatal server errors (e.g: 500 - Internal server error)
-   * @return {function}
-   */
-  getFatalErrorHandler: function () {
-    return function (event, request) {
-      if (window.AJAX.debug) {
-        // eslint-disable-next-line no-console
-        console.log('AJAX error: status=' + request.status + ', text=' + request.statusText);
-      } // Don't handle aborted requests
-
-
-      if (request.status !== 0 || request.statusText !== 'abort') {
-        var details = '';
-        var state = request.state();
-
-        if ('responseJSON' in request && 'isErrorResponse' in request.responseJSON && request.responseJSON.isErrorResponse) {
-          Functions.ajaxShowMessage('<div class="alert alert-danger" role="alert">' + Functions.escapeHtml(request.responseJSON.error) + '</div>', false);
-          window.AJAX.active = false;
-          window.AJAX.xhr = null;
-          return;
-        }
-
-        if (request.status !== 0) {
-          details += '<div>' + Functions.escapeHtml(Functions.sprintf(window.Messages.strErrorCode, request.status)) + '</div>';
-        }
-
-        details += '<div>' + Functions.escapeHtml(Functions.sprintf(window.Messages.strErrorText, request.statusText + ' (' + state + ')')) + '</div>';
-
-        if (state === 'rejected' || state === 'timeout') {
-          details += '<div>' + Functions.escapeHtml(window.Messages.strErrorConnection) + '</div>';
-        }
-
-        Functions.ajaxShowMessage('<div class="alert alert-danger" role="alert">' + window.Messages.strErrorProcessingRequest + details + '</div>', false);
-        window.AJAX.active = false;
-        window.AJAX.xhr = null;
-      }
-    };
   }
 };
+/**
+ * Here we register a function that will remove the onsubmit event from all
+ * forms that will be handled by the generic page loader. We then save this
+ * event handler in the "jQuery data", so that we can fire it up later in
+ * AJAX.requestHandler().
+ *
+ * See bug #3583316
+ */
 
-/***/ }),
-/* 1 */
-/***/ (function(module) {
+AJAX.registerOnload('functions.js', function () {
+  // Registering the onload event for functions.js
+  // ensures that it will be fired for all pages
+  $('form').not('.ajax').not('.disableAjax').each(function () {
+    if ($(this).attr('onsubmit')) {
+      $(this).data('onsubmit', this.onsubmit).attr('onsubmit', '');
+    }
+  });
+  var $pageContent = $('#page_content');
+  /**
+   * Workaround for passing submit button name,value on ajax form submit
+   * by appending hidden element with submit button name and value.
+   */
 
-module.exports = jQuery;
+  $pageContent.on('click', 'form input[type=submit]', function () {
+    var buttonName = $(this).attr('name');
 
-/***/ })
-],
-/******/ function(__webpack_require__) { // webpackRuntimeModules
-/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
-/******/ var __webpack_exports__ = (__webpack_exec__(0));
-/******/ }
-]);
-//# sourceMappingURL=ajax.js.map
+    if (typeof buttonName === 'undefined') {
+      return;
+    }
+
+    $(this).closest('form').append($('<input>', {
+      'type': 'hidden',
+      'name': buttonName,
+      'value': $(this).val()
+    }));
+  });
+  /**
+   * Attach event listener to events when user modify visible
+   * Input,Textarea and select fields to make changes in forms
+   */
+
+  $pageContent.on('keyup change', 'form.lock-page textarea, ' + 'form.lock-page input[type="text"], ' + 'form.lock-page input[type="number"], ' + 'form.lock-page select', {
+    value: 1
+  }, AJAX.lockPageHandler);
+  $pageContent.on('change', 'form.lock-page input[type="checkbox"], ' + 'form.lock-page input[type="radio"]', {
+    value: 2
+  }, AJAX.lockPageHandler);
+  /**
+   * Reset lock when lock-page form reset event is fired
+   * Note: reset does not bubble in all browser so attach to
+   * form directly.
+   */
+
+  $('form.lock-page').on('reset', function () {
+    AJAX.resetLock();
+  });
+});
+/**
+ * Page load event handler
+ */
+
+$(function () {
+  var menuContent = $('<div></div>').append($('#server-breadcrumb').clone()).append($('#topmenucontainer').clone()).html(); // set initial state reload
+
+  var initState = 'state' in window.history && window.history.state !== null;
+  var initURL = $('#selflink').find('> a').attr('href') || location.href;
+  var state = {
+    url: initURL,
+    menu: menuContent
+  };
+  history.replaceState(state, null);
+  $(window).on('popstate', function (event) {
+    var initPop = !initState && location.href === initURL;
+    initState = true; // check if popstate fired on first page itself
+
+    if (initPop) {
+      return;
+    }
+
+    var state = event.originalEvent.state;
+
+    if (state && state.menu) {
+      AJAX.$msgbox = Functions.ajaxShowMessage();
+      var params = 'ajax_request=true' + CommonParams.get('arg_separator') + 'ajax_page_request=true';
+      var url = state.url || location.href;
+      $.get(url, params, AJAX.responseHandler); // TODO: Check if sometimes menu is not retrieved from server,
+      // Not sure but it seems menu was missing only for printview which
+      // been removed lately, so if it's right some dead menu checks/fallbacks
+      // may need to be removed from this file and Header.php
+      // AJAX.handleMenu.replace(event.originalEvent.state.menu);
+    }
+  });
+});
+/**
+ * Attach a generic event handler to clicks
+ * on pages and submissions of forms
+ */
+
+$(document).on('click', 'a', AJAX.requestHandler);
+$(document).on('submit', 'form', AJAX.requestHandler);
+/**
+ * Gracefully handle fatal server errors
+ * (e.g: 500 - Internal server error)
+ */
+
+$(document).on('ajaxError', function (event, request) {
+  if (AJAX.debug) {
+    // eslint-disable-next-line no-console
+    console.log('AJAX error: status=' + request.status + ', text=' + request.statusText);
+  } // Don't handle aborted requests
+
+
+  if (request.status !== 0 || request.statusText !== 'abort') {
+    var details = '';
+    var state = request.state();
+
+    if (request.status !== 0) {
+      details += '<div>' + Functions.escapeHtml(Functions.sprintf(Messages.strErrorCode, request.status)) + '</div>';
+    }
+
+    details += '<div>' + Functions.escapeHtml(Functions.sprintf(Messages.strErrorText, request.statusText + ' (' + state + ')')) + '</div>';
+
+    if (state === 'rejected' || state === 'timeout') {
+      details += '<div>' + Functions.escapeHtml(Messages.strErrorConnection) + '</div>';
+    }
+
+    Functions.ajaxShowMessage('<div class="alert alert-danger" role="alert">' + Messages.strErrorProcessingRequest + details + '</div>', false);
+    AJAX.active = false;
+    AJAX.xhr = null;
+  }
+});

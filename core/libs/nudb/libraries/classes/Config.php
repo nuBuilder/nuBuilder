@@ -344,7 +344,7 @@ class Config
      */
     public function load(?string $source = null): bool
     {
-        $GLOBALS['isConfigLoading'] = $GLOBALS['isConfigLoading'] ?? null;
+        global $isConfigLoading;
 
         $this->loadDefaults();
 
@@ -369,10 +369,10 @@ class Config
         }
 
         ob_start();
-        $GLOBALS['isConfigLoading'] = true;
+        $isConfigLoading = true;
         /** @psalm-suppress UnresolvableInclude */
         $eval_result = include $this->getSource();
-        $GLOBALS['isConfigLoading'] = false;
+        $isConfigLoading = false;
         ob_end_clean();
 
         if ($canUseErrorReporting) {
@@ -415,12 +415,14 @@ class Config
      */
     private function setConnectionCollation(): void
     {
+        global $dbi;
+
         $collation_connection = $this->get('DefaultConnectionCollation');
         if (empty($collation_connection) || $collation_connection == $GLOBALS['collation_connection']) {
             return;
         }
 
-        $GLOBALS['dbi']->setCollation($collation_connection);
+        $dbi->setCollation($collation_connection);
     }
 
     /**
@@ -429,13 +431,15 @@ class Config
      */
     public function loadUserPreferences(): void
     {
+        global $isMinimumCommon;
+
         // index.php should load these settings, so that phpmyadmin.css.php
         // will have everything available in session cache
         $server = $GLOBALS['server'] ?? (! empty($GLOBALS['cfg']['ServerDefault'])
                 ? $GLOBALS['cfg']['ServerDefault']
                 : 0);
         $cache_key = 'server_' . $server;
-        if ($server > 0 && ! isset($GLOBALS['isMinimumCommon'])) {
+        if ($server > 0 && ! isset($isMinimumCommon)) {
             // cache user preferences, use database only when needed
             if (
                 ! isset($_SESSION['cache'][$cache_key]['userprefs'])
@@ -463,7 +467,7 @@ class Config
         $this->settings = array_replace_recursive($this->settings, $config_data);
         $GLOBALS['cfg'] = array_replace_recursive($GLOBALS['cfg'], $config_data);
 
-        if (isset($GLOBALS['isMinimumCommon'])) {
+        if (isset($isMinimumCommon)) {
             return;
         }
 
@@ -1032,7 +1036,9 @@ class Config
      */
     public static function fatalErrorHandler(): void
     {
-        if (! isset($GLOBALS['isConfigLoading']) || ! $GLOBALS['isConfigLoading']) {
+        global $isConfigLoading;
+
+        if (! isset($isConfigLoading) || ! $isConfigLoading) {
             return;
         }
 
@@ -1252,29 +1258,31 @@ class Config
      */
     public static function getConnectionParams(int $mode, ?array $server = null): array
     {
+        global $cfg;
+
         $user = null;
         $password = null;
 
         if ($mode == DatabaseInterface::CONNECT_USER) {
-            $user = $GLOBALS['cfg']['Server']['user'];
-            $password = $GLOBALS['cfg']['Server']['password'];
-            $server = $GLOBALS['cfg']['Server'];
+            $user = $cfg['Server']['user'];
+            $password = $cfg['Server']['password'];
+            $server = $cfg['Server'];
         } elseif ($mode == DatabaseInterface::CONNECT_CONTROL) {
-            $user = $GLOBALS['cfg']['Server']['controluser'];
-            $password = $GLOBALS['cfg']['Server']['controlpass'];
+            $user = $cfg['Server']['controluser'];
+            $password = $cfg['Server']['controlpass'];
 
             $server = [];
 
-            $server['hide_connection_errors'] = $GLOBALS['cfg']['Server']['hide_connection_errors'];
+            $server['hide_connection_errors'] = $cfg['Server']['hide_connection_errors'];
 
-            if (! empty($GLOBALS['cfg']['Server']['controlhost'])) {
-                $server['host'] = $GLOBALS['cfg']['Server']['controlhost'];
+            if (! empty($cfg['Server']['controlhost'])) {
+                $server['host'] = $cfg['Server']['controlhost'];
             } else {
-                $server['host'] = $GLOBALS['cfg']['Server']['host'];
+                $server['host'] = $cfg['Server']['host'];
             }
 
             // Share the settings if the host is same
-            if ($server['host'] == $GLOBALS['cfg']['Server']['host']) {
+            if ($server['host'] == $cfg['Server']['host']) {
                 $shared = [
                     'port',
                     'socket',
@@ -1288,21 +1296,21 @@ class Config
                     'ssl_verify',
                 ];
                 foreach ($shared as $item) {
-                    if (! isset($GLOBALS['cfg']['Server'][$item])) {
+                    if (! isset($cfg['Server'][$item])) {
                         continue;
                     }
 
-                    $server[$item] = $GLOBALS['cfg']['Server'][$item];
+                    $server[$item] = $cfg['Server'][$item];
                 }
             }
 
             // Set configured port
-            if (! empty($GLOBALS['cfg']['Server']['controlport'])) {
-                $server['port'] = $GLOBALS['cfg']['Server']['controlport'];
+            if (! empty($cfg['Server']['controlport'])) {
+                $server['port'] = $cfg['Server']['controlport'];
             }
 
             // Set any configuration with control_ prefix
-            foreach ($GLOBALS['cfg']['Server'] as $key => $val) {
+            foreach ($cfg['Server'] as $key => $val) {
                 if (substr($key, 0, 8) !== 'control_') {
                     continue;
                 }
@@ -1367,6 +1375,8 @@ class Config
      */
     public function getLoginCookieValidityFromCache(int $server): void
     {
+        global $cfg;
+
         $cacheKey = 'server_' . $server;
 
         if (! isset($_SESSION['cache'][$cacheKey]['userprefs']['LoginCookieValidity'])) {
@@ -1375,6 +1385,6 @@ class Config
 
         $value = $_SESSION['cache'][$cacheKey]['userprefs']['LoginCookieValidity'];
         $this->set('LoginCookieValidity', $value);
-        $GLOBALS['cfg']['LoginCookieValidity'] = $value;
+        $cfg['LoginCookieValidity'] = $value;
     }
 }

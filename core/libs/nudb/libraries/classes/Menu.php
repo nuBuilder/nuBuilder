@@ -162,26 +162,28 @@ class Menu
      */
     private function getBreadcrumbs(): string
     {
+        global $cfg;
+
         $server = [];
         $database = [];
         $table = [];
 
-        if (empty($GLOBALS['cfg']['Server']['host'])) {
-            $GLOBALS['cfg']['Server']['host'] = '';
+        if (empty($cfg['Server']['host'])) {
+            $cfg['Server']['host'] = '';
         }
 
-        $server['name'] = ! empty($GLOBALS['cfg']['Server']['verbose'])
-            ? $GLOBALS['cfg']['Server']['verbose'] : $GLOBALS['cfg']['Server']['host'];
-        $server['name'] .= empty($GLOBALS['cfg']['Server']['port'])
-            ? '' : ':' . $GLOBALS['cfg']['Server']['port'];
-        $server['url'] = Util::getUrlForOption($GLOBALS['cfg']['DefaultTabServer'], 'server');
+        $server['name'] = ! empty($cfg['Server']['verbose'])
+            ? $cfg['Server']['verbose'] : $cfg['Server']['host'];
+        $server['name'] .= empty($cfg['Server']['port'])
+            ? '' : ':' . $cfg['Server']['port'];
+        $server['url'] = Util::getUrlForOption($cfg['DefaultTabServer'], 'server');
 
         if ($this->db !== '') {
             $database['name'] = $this->db;
-            $database['url'] = Util::getUrlForOption($GLOBALS['cfg']['DefaultTabDatabase'], 'database');
+            $database['url'] = Util::getUrlForOption($cfg['DefaultTabDatabase'], 'database');
             if ($this->table !== '') {
                 $table['name'] = $this->table;
-                $table['url'] = Util::getUrlForOption($GLOBALS['cfg']['DefaultTabTable'], 'table');
+                $table['url'] = Util::getUrlForOption($cfg['DefaultTabTable'], 'table');
                 $tableObj = $this->dbi->getTable($this->db, $this->table);
                 $table['is_view'] = $tableObj->isView();
                 $table['comment'] = '';
@@ -218,7 +220,7 @@ class Menu
      */
     private function getTableTabs(): array
     {
-        $route = Common::getRequest()->getRoute();
+        global $route;
 
         $isSystemSchema = Utilities::isSystemSchema($this->db);
         $tableIsView = $this->dbi->getTable($this->db, $this->table)
@@ -286,11 +288,14 @@ class Menu
         }
 
         if (($isSuperUser || $isCreateOrGrantUser) && ! $isSystemSchema) {
-            $tabs['privileges']['route'] = '/table/privileges';
+            $tabs['privileges']['route'] = '/server/privileges';
+            $tabs['privileges']['args']['checkprivsdb'] = $this->db;
+            $tabs['privileges']['args']['checkprivstable'] = $this->table;
             // stay on table view
+            $tabs['privileges']['args']['viewing_mode'] = 'table';
             $tabs['privileges']['text'] = __('Privileges');
             $tabs['privileges']['icon'] = 's_rights';
-            $tabs['privileges']['active'] = $route === '/table/privileges';
+            $tabs['privileges']['active'] = $route === '/server/privileges';
         }
 
         /**
@@ -337,7 +342,7 @@ class Menu
      */
     private function getDbTabs(): array
     {
-        $route = Common::getRequest()->getRoute();
+        global $route;
 
         $isSystemSchema = Utilities::isSystemSchema($this->db);
         $numTables = count($this->dbi->getTables($this->db));
@@ -394,11 +399,13 @@ class Menu
             $tabs['operation']['active'] = $route === '/database/operations';
 
             if ($isSuperUser || $isCreateOrGrantUser) {
-                $tabs['privileges']['route'] = '/database/privileges';
+                $tabs['privileges']['route'] = '/server/privileges';
+                $tabs['privileges']['args']['checkprivsdb'] = $this->db;
                 // stay on database view
+                $tabs['privileges']['args']['viewing_mode'] = 'db';
                 $tabs['privileges']['text'] = __('Privileges');
                 $tabs['privileges']['icon'] = 's_rights';
-                $tabs['privileges']['active'] = $route === '/database/privileges';
+                $tabs['privileges']['active'] = $route === '/server/privileges';
             }
 
             $tabs['routines']['route'] = '/database/routines';
@@ -452,7 +459,7 @@ class Menu
      */
     private function getServerTabs(): array
     {
-        $route = Common::getRequest()->getRoute();
+        global $route;
 
         $isSuperUser = $this->dbi->isSuperUser();
         $isCreateOrGrantUser = $this->dbi->isGrantUser() || $this->dbi->isCreateUser();
@@ -498,6 +505,7 @@ class Menu
                 '/server/privileges',
                 '/server/user-groups',
             ]);
+            $tabs['rights']['args']['viewing_mode'] = 'server';
         }
 
         $tabs['export']['icon'] = 'b_export';

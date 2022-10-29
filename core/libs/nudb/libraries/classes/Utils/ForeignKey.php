@@ -18,6 +18,8 @@ final class ForeignKey
      */
     public static function isSupported($engine): bool
     {
+        global $dbi;
+
         $engine = strtoupper((string) $engine);
         if (($engine === 'INNODB') || ($engine === 'PBXT')) {
             return true;
@@ -25,7 +27,7 @@ final class ForeignKey
 
         if ($engine === 'NDBCLUSTER' || $engine === 'NDB') {
             $ndbver = strtolower(
-                $GLOBALS['dbi']->fetchValue('SELECT @@ndb_version_string') ?: ''
+                $dbi->fetchValue('SELECT @@ndb_version_string') ?: ''
             );
             if (substr($ndbver, 0, 4) === 'ndb-') {
                 $ndbver = substr($ndbver, 4);
@@ -42,6 +44,8 @@ final class ForeignKey
      */
     public static function isCheckEnabled(): bool
     {
+        global $dbi;
+
         if ($GLOBALS['cfg']['DefaultForeignKeyChecks'] === 'enable') {
             return true;
         }
@@ -50,7 +54,7 @@ final class ForeignKey
             return false;
         }
 
-        return $GLOBALS['dbi']->getVariable('FOREIGN_KEY_CHECKS') === 'ON';
+        return $dbi->getVariable('FOREIGN_KEY_CHECKS') === 'ON';
     }
 
     /**
@@ -58,14 +62,16 @@ final class ForeignKey
      */
     public static function handleDisableCheckInit(): bool
     {
-        $defaultCheckValue = $GLOBALS['dbi']->getVariable('FOREIGN_KEY_CHECKS') === 'ON';
+        global $dbi;
+
+        $defaultCheckValue = $dbi->getVariable('FOREIGN_KEY_CHECKS') === 'ON';
         if (isset($_REQUEST['fk_checks'])) {
             if (empty($_REQUEST['fk_checks'])) {
                 // Disable foreign key checks
-                $GLOBALS['dbi']->setVariable('FOREIGN_KEY_CHECKS', 'OFF');
+                $dbi->setVariable('FOREIGN_KEY_CHECKS', 'OFF');
             } else {
                 // Enable foreign key checks
-                $GLOBALS['dbi']->setVariable('FOREIGN_KEY_CHECKS', 'ON');
+                $dbi->setVariable('FOREIGN_KEY_CHECKS', 'ON');
             }
         }
 
@@ -79,6 +85,8 @@ final class ForeignKey
      */
     public static function handleDisableCheckCleanup(bool $defaultCheckValue): void
     {
-        $GLOBALS['dbi']->setVariable('FOREIGN_KEY_CHECKS', $defaultCheckValue ? 'ON' : 'OFF');
+        global $dbi;
+
+        $dbi->setVariable('FOREIGN_KEY_CHECKS', $defaultCheckValue ? 'ON' : 'OFF');
     }
 }

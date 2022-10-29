@@ -76,7 +76,8 @@ class AuthenticationHttp extends AuthenticationPlugin
         $response->setHttpResponseCode(401);
 
         /* HTML header */
-        $response->setMinimalFooter();
+        $footer = $response->getFooter();
+        $footer->setMinimal();
         $header = $response->getHeader();
         $header->setTitle(__('Access denied!'));
         $header->disableMenuAndConsole();
@@ -195,8 +196,10 @@ class AuthenticationHttp extends AuthenticationPlugin
      */
     public function showFailure($failure): void
     {
+        global $dbi;
+
         parent::showFailure($failure);
-        $error = $GLOBALS['dbi']->getError();
+        $error = $dbi->getError();
         if ($error && $GLOBALS['errno'] != 1045) {
             Core::fatalError($error);
         } else {

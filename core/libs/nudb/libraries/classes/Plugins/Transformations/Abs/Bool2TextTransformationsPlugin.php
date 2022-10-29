@@ -19,8 +19,10 @@ abstract class Bool2TextTransformationsPlugin extends TransformationsPlugin
 {
     /**
      * Gets the transformation description of the specific plugin
+     *
+     * @return string
      */
-    public static function getInfo(): string
+    public static function getInfo()
     {
         return __(
             'Converts Boolean values to text (default \'T\' and \'F\').'
@@ -53,8 +55,10 @@ abstract class Bool2TextTransformationsPlugin extends TransformationsPlugin
 
     /**
      * Gets the transformation name of the specific plugin
+     *
+     * @return string
      */
-    public static function getName(): string
+    public static function getName()
     {
         return 'Bool2Text';
     }

@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Database\CentralColumns;
 
-use PhpMyAdmin\Controllers\AbstractController;
+use PhpMyAdmin\Controllers\Database\AbstractController;
 use PhpMyAdmin\Database\CentralColumns;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Template;
 
@@ -18,15 +17,16 @@ final class PopulateColumnsController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
+        string $db,
         CentralColumns $centralColumns
     ) {
-        parent::__construct($response, $template);
+        parent::__construct($response, $template, $db);
         $this->centralColumns = $centralColumns;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $columns = $this->centralColumns->getColumnsNotInCentralList($GLOBALS['db'], $_POST['selectedTable']);
+        $columns = $this->centralColumns->getColumnsNotInCentralList($this->db, $_POST['selectedTable']);
         $this->render('database/central_columns/populate_columns', ['columns' => $columns]);
     }
 }

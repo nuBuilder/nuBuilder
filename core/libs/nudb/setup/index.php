@@ -1,12 +1,18 @@
 <?php
+/**
+ * Front controller for setup script
+ */
 
 declare(strict_types=1);
 
-use PhpMyAdmin\Common;
-use PhpMyAdmin\Controllers\Setup\MainController;
-use PhpMyAdmin\Controllers\Setup\ShowConfigController;
-use PhpMyAdmin\Controllers\Setup\ValidateController;
+use PhpMyAdmin\Controllers\Setup\ConfigController;
+use PhpMyAdmin\Controllers\Setup\FormController;
+use PhpMyAdmin\Controllers\Setup\HomeController;
+use PhpMyAdmin\Controllers\Setup\ServersController;
 use PhpMyAdmin\Core;
+use PhpMyAdmin\Header;
+use PhpMyAdmin\Template;
+use PhpMyAdmin\Url;
 
 if (! defined('ROOT_PATH')) {
     // phpcs:disable PSR1.Files.SideEffects
@@ -14,30 +20,67 @@ if (! defined('ROOT_PATH')) {
     // phpcs:enable
 }
 
+/** @psalm-suppress InvalidGlobal */
+global $cfg;
+
 // phpcs:disable PSR1.Files.SideEffects
 define('PHPMYADMIN', true);
 // phpcs:enable
 
 require ROOT_PATH . 'setup/lib/common.inc.php';
 
-$request = Common::getRequest();
-$route = $request->getRoute();
-if ($route === '/setup' || $route === '/') {
-    (new MainController())($request);
-    exit;
+if (@file_exists(CONFIG_FILE) && ! $cfg['DBG']['demo']) {
+    Core::fatalError(__('Configuration already exists, setup is disabled!'));
 }
 
-if ($route === '/setup/show-config') {
-    (new ShowConfigController())($request);
-    exit;
+$page = 'index';
+if (isset($_GET['page']) && in_array($_GET['page'], ['form', 'config', 'servers'], true)) {
+    $page = $_GET['page'];
 }
 
-if ($route === '/setup/validate') {
-    (new ValidateController())($request);
-    exit;
+Core::noCacheHeader();
+
+// Sent security-related headers
+(new Header())->sendHttpHeaders();
+
+if ($page === 'form') {
+    echo (new FormController($GLOBALS['ConfigFile'], new Template()))([
+        'formset' => $_GET['formset'] ?? null,
+    ]);
+
+    return;
 }
 
-Core::fatalError(sprintf(
-    __('Error 404! The page %s was not found.'),
-    '[code]' . htmlspecialchars($route) . '[/code]'
-));
+if ($page === 'config') {
+    echo (new ConfigController($GLOBALS['ConfigFile'], new Template()))([
+        'formset' => $_GET['formset'] ?? null,
+        'eol' => $_GET['eol'] ?? null,
+    ]);
+
+    return;
+}
+
+if ($page === 'servers') {
+    $controller = new ServersController($GLOBALS['ConfigFile'], new Template());
+    if (isset($_GET['mode']) && $_GET['mode'] === 'remove' && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
+        $controller->destroy([
+            'id' => $_GET['id'] ?? null,
+        ]);
+        header('Location: index.php' . Url::getCommonRaw());
+
+        return;
+    }
+
+    echo $controller->index([
+        'formset' => $_GET['formset'] ?? null,
+        'mode' => $_GET['mode'] ?? null,
+        'id' => $_GET['id'] ?? null,
+    ]);
+
+    return;
+}
+
+echo (new HomeController($GLOBALS['ConfigFile'], new Template()))([
+    'formset' => $_GET['formset'] ?? null,
+    'version_check' => $_GET['version_check'] ?? null,
+]);

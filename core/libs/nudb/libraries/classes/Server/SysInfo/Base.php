@@ -21,9 +21,9 @@ class Base
     /**
      * Gets load information
      *
-     * @return array<string, int> with load data
+     * @return array with load data
      */
-    public function loadavg(): array
+    public function loadavg()
     {
         return ['loadavg' => 0];
     }
@@ -31,9 +31,9 @@ class Base
     /**
      * Gets information about memory usage
      *
-     * @return array<string, int> with memory usage data
+     * @return array with memory usage data
      */
-    public function memory(): array
+    public function memory()
     {
         return [];
     }
@@ -41,7 +41,7 @@ class Base
     /**
      * Checks whether class is supported in this environment
      */
-    public static function isSupported(): bool
+    public function supported(): bool
     {
         return true;
     }

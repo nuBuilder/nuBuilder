@@ -6,11 +6,9 @@ namespace PhpMyAdmin\Controllers\Table;
 
 use PhpMyAdmin\ConfigStorage\Relation;
 use PhpMyAdmin\ConfigStorage\RelationCleanup;
-use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\Core;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\DbTableExists;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\Operations;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Sql;
@@ -23,7 +21,6 @@ use PhpMyAdmin\Utils\Gis;
 
 use function in_array;
 use function intval;
-use function is_array;
 use function mb_strtolower;
 use function md5;
 use function preg_match;
@@ -96,11 +93,13 @@ class SearchController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
+        string $db,
+        string $table,
         Search $search,
         Relation $relation,
         DatabaseInterface $dbi
     ) {
-        parent::__construct($response, $template);
+        parent::__construct($response, $template, $db, $table);
         $this->search = $search;
         $this->relation = $relation;
         $this->dbi = $dbi;
@@ -122,7 +121,7 @@ class SearchController extends AbstractController
     private function loadTableInfo(): void
     {
         // Gets the list and number of columns
-        $columns = $this->dbi->getColumns($GLOBALS['db'], $GLOBALS['table'], true);
+        $columns = $this->dbi->getColumns($this->db, $this->table, true);
         // Get details about the geometry functions
         $geom_types = Gis::getDataTypes();
 
@@ -165,21 +164,23 @@ class SearchController extends AbstractController
         }
 
         // Retrieve foreign keys
-        $this->foreigners = $this->relation->getForeigners($GLOBALS['db'], $GLOBALS['table']);
+        $this->foreigners = $this->relation->getForeigners($this->db, $this->table);
     }
 
     /**
      * Index action
      */
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $this->checkParameters(['db', 'table']);
+        global $db, $table, $urlParams, $cfg, $errorUrl;
 
-        $GLOBALS['urlParams'] = ['db' => $GLOBALS['db'], 'table' => $GLOBALS['table']];
-        $GLOBALS['errorUrl'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabTable'], 'table');
-        $GLOBALS['errorUrl'] .= Url::getCommon($GLOBALS['urlParams'], '&');
+        Util::checkParameters(['db', 'table']);
 
-        DbTableExists::check($GLOBALS['db'], $GLOBALS['table']);
+        $urlParams = ['db' => $db, 'table' => $table];
+        $errorUrl = Util::getScriptNameForOption($cfg['DefaultTabTable'], 'table');
+        $errorUrl .= Url::getCommon($urlParams, '&');
+
+        DbTableExists::check();
 
         $this->addScriptFiles([
             'makegrid.js',
@@ -260,10 +261,10 @@ class SearchController extends AbstractController
         );
 
         $this->response->addHTML($sql->executeQueryAndSendQueryResponse(
-            null,
+            null, // analyzed_sql_results
             false, // is_gotofile
-            $GLOBALS['db'], // db
-            $GLOBALS['table'], // table
+            $this->db, // db
+            $this->table, // table
             null, // find_real_end
             null, // sql_query_for_bookmark
             null, // extra_data
@@ -282,21 +283,23 @@ class SearchController extends AbstractController
      */
     public function displaySelectionFormAction(): void
     {
-        if (! isset($GLOBALS['goto'])) {
-            $GLOBALS['goto'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabTable'], 'table');
+        global $goto, $cfg;
+
+        if (! isset($goto)) {
+            $goto = Util::getScriptNameForOption($cfg['DefaultTabTable'], 'table');
         }
 
         $this->render('table/search/index', [
-            'db' => $GLOBALS['db'],
-            'table' => $GLOBALS['table'],
-            'goto' => $GLOBALS['goto'],
+            'db' => $this->db,
+            'table' => $this->table,
+            'goto' => $goto,
             'self' => $this,
             'geom_column_flag' => $this->geomColumnFlag,
             'column_names' => $this->columnNames,
             'column_types' => $this->columnTypes,
             'column_collations' => $this->columnCollations,
-            'default_sliders_state' => $GLOBALS['cfg']['InitialSlidersState'],
-            'max_rows' => intval($GLOBALS['cfg']['MaxRows']),
+            'default_sliders_state' => $cfg['InitialSlidersState'],
+            'max_rows' => intval($cfg['MaxRows']),
         ]);
     }
 
@@ -320,8 +323,8 @@ class SearchController extends AbstractController
     {
         $sql_query = 'SELECT MIN(' . Util::backquote($column) . ') AS `min`, '
             . 'MAX(' . Util::backquote($column) . ') AS `max` '
-            . 'FROM ' . Util::backquote($GLOBALS['db']) . '.'
-            . Util::backquote($GLOBALS['table']);
+            . 'FROM ' . Util::backquote($this->db) . '.'
+            . Util::backquote($this->table);
 
         return $this->dbi->fetchSingleRow($sql_query);
     }
@@ -373,27 +376,6 @@ class SearchController extends AbstractController
         $htmlAttributes .= ' onfocus="return '
                         . 'verifyAfterSearchFieldChange(' . $search_index . ', \'#tbl_search_form\')"';
 
-        $foreignDropdown = '';
-
-        $searchColumnInForeigners = $this->relation->searchColumnInForeigners(
-            $this->foreigners,
-            $this->columnNames[$column_index]
-        );
-
-        if (
-            $this->foreigners
-            && $searchColumnInForeigners
-            && is_array($foreignData['disp_row'])
-        ) {
-            $foreignDropdown = $this->relation->foreignDropdown(
-                $foreignData['disp_row'],
-                $foreignData['foreign_field'],
-                $foreignData['foreign_display'],
-                '',
-                $GLOBALS['cfg']['ForeignKeyMaxLimit']
-            );
-        }
-
         $value = $this->template->render('table/search/input_box', [
             'str' => '',
             'column_type' => (string) $type,
@@ -405,13 +387,12 @@ class SearchController extends AbstractController
             'column_name' => $this->columnNames[$column_index],
             'column_name_hash' => md5($this->columnNames[$column_index]),
             'foreign_data' => $foreignData,
-            'table' => $GLOBALS['table'],
+            'table' => $this->table,
             'column_index' => $search_index,
+            'foreign_max_limit' => $GLOBALS['cfg']['ForeignKeyMaxLimit'],
             'criteria_values' => $entered_value,
-            'db' => $GLOBALS['db'],
+            'db' => $this->db,
             'in_fbs' => true,
-            'foreign_dropdown' => $foreignDropdown,
-            'search_column_in_foreigners' => $searchColumnInForeigners,
         ]);
 
         return [

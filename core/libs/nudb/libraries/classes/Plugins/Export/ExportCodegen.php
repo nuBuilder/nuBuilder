@@ -23,8 +23,6 @@ use function preg_replace;
 use function sprintf;
 use function ucfirst;
 
-use const PHP_EOL;
-
 /**
  * Handles the export for the CodeGen class
  */
@@ -146,6 +144,7 @@ class ExportCodegen extends ExportPlugin
      *
      * @param string $db       database name
      * @param string $table    table name
+     * @param string $crlf     the end of line sequence
      * @param string $errorUrl the url to go back in case of error
      * @param string $sqlQuery SQL query for obtaining data
      * @param array  $aliases  Aliases of db/table/columns
@@ -153,6 +152,7 @@ class ExportCodegen extends ExportPlugin
     public function exportData(
         $db,
         $table,
+        $crlf,
         $errorUrl,
         $sqlQuery,
         array $aliases = []
@@ -160,11 +160,11 @@ class ExportCodegen extends ExportPlugin
         $format = (int) $GLOBALS['codegen_format'];
 
         if ($format === self::HANDLER_NHIBERNATE_CS) {
-            return $this->export->outputHandler($this->handleNHibernateCSBody($db, $table, $aliases));
+            return $this->export->outputHandler($this->handleNHibernateCSBody($db, $table, $crlf, $aliases));
         }
 
         if ($format === self::HANDLER_NHIBERNATE_XML) {
-            return $this->export->outputHandler($this->handleNHibernateXMLBody($db, $table, $aliases));
+            return $this->export->outputHandler($this->handleNHibernateXMLBody($db, $table, $crlf, $aliases));
         }
 
         return $this->export->outputHandler(sprintf('%s is not supported.', $format));
@@ -199,17 +199,20 @@ class ExportCodegen extends ExportPlugin
      *
      * @param string $db      database name
      * @param string $table   table name
+     * @param string $crlf    line separator
      * @param array  $aliases Aliases of db/table/columns
      *
      * @return string containing C# code lines, separated by "\n"
      */
-    private function handleNHibernateCSBody($db, $table, array $aliases = [])
+    private function handleNHibernateCSBody($db, $table, $crlf, array $aliases = [])
     {
+        global $dbi;
+
         $db_alias = $db;
         $table_alias = $table;
         $this->initAlias($aliases, $db_alias, $table_alias);
 
-        $result = $GLOBALS['dbi']->query(
+        $result = $dbi->query(
             sprintf(
                 'DESC %s.%s',
                 Util::backquote($db),
@@ -293,7 +296,7 @@ class ExportCodegen extends ExportPlugin
         $lines[] = '    #endregion';
         $lines[] = '}';
 
-        return implode(PHP_EOL, $lines);
+        return implode($crlf, $lines);
     }
 
     /**
@@ -301,6 +304,7 @@ class ExportCodegen extends ExportPlugin
      *
      * @param string $db      database name
      * @param string $table   table name
+     * @param string $crlf    line separator
      * @param array  $aliases Aliases of db/table/columns
      *
      * @return string containing XML code lines, separated by "\n"
@@ -308,8 +312,11 @@ class ExportCodegen extends ExportPlugin
     private function handleNHibernateXMLBody(
         $db,
         $table,
+        $crlf,
         array $aliases = []
     ) {
+        global $dbi;
+
         $db_alias = $db;
         $table_alias = $table;
         $this->initAlias($aliases, $db_alias, $table_alias);
@@ -321,7 +328,7 @@ class ExportCodegen extends ExportPlugin
         $lines[] = '    <class '
             . 'name="' . self::cgMakeIdentifier($table_alias) . '" '
             . 'table="' . self::cgMakeIdentifier($table_alias) . '">';
-        $result = $GLOBALS['dbi']->query(
+        $result = $dbi->query(
             sprintf(
                 'DESC %s.%s',
                 Util::backquote($db),
@@ -360,7 +367,7 @@ class ExportCodegen extends ExportPlugin
         $lines[] = '    </class>';
         $lines[] = '</hibernate-mapping>';
 
-        return implode(PHP_EOL, $lines);
+        return implode($crlf, $lines);
     }
 
     /**

@@ -11,7 +11,6 @@ use PhpMyAdmin\ConfigStorage\Relation;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Git;
 use PhpMyAdmin\Html\Generator;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\LanguageManager;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\RecentFavoriteTable;
@@ -65,13 +64,9 @@ class HomeController extends AbstractController
         $this->dbi = $dbi;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['server'] = $GLOBALS['server'] ?? null;
-        $GLOBALS['collation_connection'] = $GLOBALS['collation_connection'] ?? null;
-        $GLOBALS['message'] = $GLOBALS['message'] ?? null;
-        $GLOBALS['show_query'] = $GLOBALS['show_query'] ?? null;
-        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
+        global $cfg, $server, $collation_connection, $message, $show_query, $db, $table, $errorUrl;
 
         if ($this->response->isAjax() && ! empty($_REQUEST['access_time'])) {
             return;
@@ -82,20 +77,20 @@ class HomeController extends AbstractController
         // This is for $cfg['ShowDatabasesNavigationAsTree'] = false;
         // See: https://github.com/phpmyadmin/phpmyadmin/issues/16520
         // The DB is defined here and sent to the JS front-end to refresh the DB tree
-        $GLOBALS['db'] = $_POST['db'] ?? '';
-        $GLOBALS['table'] = '';
-        $GLOBALS['show_query'] = '1';
-        $GLOBALS['errorUrl'] = Url::getFromRoute('/');
+        $db = $_POST['db'] ?? '';
+        $table = '';
+        $show_query = '1';
+        $errorUrl = Url::getFromRoute('/');
 
-        if ($GLOBALS['server'] > 0 && $this->dbi->isSuperUser()) {
+        if ($server > 0 && $this->dbi->isSuperUser()) {
             $this->dbi->selectDb('mysql');
         }
 
         $languageManager = LanguageManager::getInstance();
 
-        if (! empty($GLOBALS['message'])) {
-            $displayMessage = Generator::getMessage($GLOBALS['message']);
-            unset($GLOBALS['message']);
+        if (! empty($message)) {
+            $displayMessage = Generator::getMessage($message);
+            unset($message);
         }
 
         if (isset($_SESSION['partial_logout'])) {
@@ -109,22 +104,22 @@ class HomeController extends AbstractController
         $syncFavoriteTables = RecentFavoriteTable::getInstance('favorite')
             ->getHtmlSyncFavoriteTables();
 
-        $hasServer = $GLOBALS['server'] > 0 || count($GLOBALS['cfg']['Servers']) > 1;
+        $hasServer = $server > 0 || count($cfg['Servers']) > 1;
         if ($hasServer) {
-            $hasServerSelection = $GLOBALS['cfg']['ServerDefault'] == 0
-                || (! $GLOBALS['cfg']['NavigationDisplayServers']
-                && (count($GLOBALS['cfg']['Servers']) > 1
-                || ($GLOBALS['server'] == 0 && count($GLOBALS['cfg']['Servers']) === 1)));
+            $hasServerSelection = $cfg['ServerDefault'] == 0
+                || (! $cfg['NavigationDisplayServers']
+                && (count($cfg['Servers']) > 1
+                || ($server == 0 && count($cfg['Servers']) === 1)));
             if ($hasServerSelection) {
                 $serverSelection = Select::render(true, true);
             }
 
-            if ($GLOBALS['server'] > 0) {
+            if ($server > 0) {
                 $checkUserPrivileges = new CheckUserPrivileges($this->dbi);
                 $checkUserPrivileges->getPrivileges();
 
-                $charsets = Charsets::getCharsets($this->dbi, $GLOBALS['cfg']['Server']['DisableIS']);
-                $collations = Charsets::getCollations($this->dbi, $GLOBALS['cfg']['Server']['DisableIS']);
+                $charsets = Charsets::getCharsets($this->dbi, $cfg['Server']['DisableIS']);
+                $collations = Charsets::getCollations($this->dbi, $cfg['Server']['DisableIS']);
                 $charsetsList = [];
                 foreach ($charsets as $charset) {
                     $collationsList = [];
@@ -132,7 +127,7 @@ class HomeController extends AbstractController
                         $collationsList[] = [
                             'name' => $collation->getName(),
                             'description' => $collation->getDescription(),
-                            'is_selected' => $GLOBALS['collation_connection'] === $collation->getName(),
+                            'is_selected' => $collation_connection === $collation->getName(),
                         ];
                     }
 
@@ -146,23 +141,25 @@ class HomeController extends AbstractController
         }
 
         $availableLanguages = [];
-        if (empty($GLOBALS['cfg']['Lang']) && $languageManager->hasChoice()) {
+        if (empty($cfg['Lang']) && $languageManager->hasChoice()) {
             $availableLanguages = $languageManager->sortedLanguages();
         }
 
         $databaseServer = [];
-        if ($GLOBALS['server'] > 0 && $GLOBALS['cfg']['ShowServerInfo']) {
+        if ($server > 0 && $cfg['ShowServerInfo']) {
             $hostInfo = '';
-            if (! empty($GLOBALS['cfg']['Server']['verbose'])) {
-                $hostInfo .= $GLOBALS['cfg']['Server']['verbose'] . ' (';
+            if (! empty($cfg['Server']['verbose'])) {
+                $hostInfo .= $cfg['Server']['verbose'];
+                $hostInfo .= ' (';
             }
 
             $hostInfo .= $this->dbi->getHostInfo();
-            if (! empty($GLOBALS['cfg']['Server']['verbose'])) {
+
+            if (! empty($cfg['Server']['verbose'])) {
                 $hostInfo .= ')';
             }
 
-            $serverCharset = Charsets::getServerCharset($this->dbi, $GLOBALS['cfg']['Server']['DisableIS']);
+            $serverCharset = Charsets::getServerCharset($this->dbi, $cfg['Server']['DisableIS']);
             $databaseServer = [
                 'host' => $hostInfo,
                 'type' => Util::getServerType(),
@@ -175,10 +172,10 @@ class HomeController extends AbstractController
         }
 
         $webServer = [];
-        if ($GLOBALS['cfg']['ShowServerInfo']) {
+        if ($cfg['ShowServerInfo']) {
             $webServer['software'] = $_SERVER['SERVER_SOFTWARE'] ?? null;
 
-            if ($GLOBALS['server'] > 0) {
+            if ($server > 0) {
                 $clientVersion = $this->dbi->getClientInfo();
                 if (preg_match('#\d+\.\d+\.\d+#', $clientVersion)) {
                     $clientVersion = 'libmysql - ' . $clientVersion;
@@ -191,15 +188,15 @@ class HomeController extends AbstractController
         }
 
         $relation = new Relation($this->dbi);
-        if ($GLOBALS['server'] > 0) {
+        if ($server > 0) {
             $relationParameters = $relation->getRelationParameters();
-            if (! $relationParameters->hasAllFeatures() && $GLOBALS['cfg']['PmaNoRelation_DisableWarning'] == false) {
+            if (! $relationParameters->hasAllFeatures() && $cfg['PmaNoRelation_DisableWarning'] == false) {
                 $messageText = __(
                     'The phpMyAdmin configuration storage is not completely '
                     . 'configured, some extended features have been deactivated. '
                     . '%sFind out why%s. '
                 );
-                if ($GLOBALS['cfg']['ZeroConf'] == true) {
+                if ($cfg['ZeroConf'] == true) {
                     $messageText .= '<br>' .
                         __('Or alternately go to \'Operations\' tab of any database to set it up there.');
                 }
@@ -211,7 +208,7 @@ class HomeController extends AbstractController
                 );
                 $messageInstance->addParamHtml('</a>');
                 /* Show error if user has configured something, notice elsewhere */
-                if (! empty($GLOBALS['cfg']['Servers'][$GLOBALS['server']]['pmadb'])) {
+                if (! empty($cfg['Servers'][$server]['pmadb'])) {
                     $messageInstance->isError(true);
                 }
 
@@ -224,29 +221,28 @@ class HomeController extends AbstractController
         $git = new Git($this->config->get('ShowGitRevision') ?? true);
 
         $this->render('home/index', [
-            'db' => $GLOBALS['db'],
-            'table' => $GLOBALS['table'],
+            'db' => $db,
+            'table' => $table,
             'message' => $displayMessage ?? '',
             'partial_logout' => $partialLogout ?? '',
             'is_git_revision' => $git->isGitRevision(),
-            'server' => $GLOBALS['server'],
+            'server' => $server,
             'sync_favorite_tables' => $syncFavoriteTables,
             'has_server' => $hasServer,
-            'is_demo' => $GLOBALS['cfg']['DBG']['demo'],
+            'is_demo' => $cfg['DBG']['demo'],
             'has_server_selection' => $hasServerSelection ?? false,
             'server_selection' => $serverSelection ?? '',
-            'has_change_password_link' => $GLOBALS['cfg']['Server']['auth_type'] !== 'config'
-                && $GLOBALS['cfg']['ShowChgPassword'],
+            'has_change_password_link' => $cfg['Server']['auth_type'] !== 'config' && $cfg['ShowChgPassword'],
             'charsets' => $charsetsList ?? [],
             'available_languages' => $availableLanguages,
             'database_server' => $databaseServer,
             'web_server' => $webServer,
-            'show_php_info' => $GLOBALS['cfg']['ShowPhpInfo'],
-            'is_version_checked' => $GLOBALS['cfg']['VersionCheck'],
+            'show_php_info' => $cfg['ShowPhpInfo'],
+            'is_version_checked' => $cfg['VersionCheck'],
             'phpmyadmin_version' => Version::VERSION,
             'phpmyadmin_major_version' => Version::SERIES,
             'config_storage_message' => $configStorageMessage ?? '',
-            'has_theme_manager' => $GLOBALS['cfg']['ThemeManager'],
+            'has_theme_manager' => $cfg['ThemeManager'],
             'themes' => $this->themeManager->getThemesArray(),
             'errors' => $this->errors,
         ]);
@@ -254,16 +250,16 @@ class HomeController extends AbstractController
 
     private function checkRequirements(): void
     {
-        $GLOBALS['server'] = $GLOBALS['server'] ?? null;
+        global $cfg, $server;
 
         $this->checkPhpExtensionsRequirements();
 
-        if ($GLOBALS['cfg']['LoginCookieValidityDisableWarning'] == false) {
+        if ($cfg['LoginCookieValidityDisableWarning'] == false) {
             /**
              * Check whether session.gc_maxlifetime limits session validity.
              */
             $gc_time = (int) ini_get('session.gc_maxlifetime');
-            if ($gc_time < $GLOBALS['cfg']['LoginCookieValidity']) {
+            if ($gc_time < $cfg['LoginCookieValidity']) {
                 $this->errors[] = [
                     'message' => __(
                         'Your PHP parameter [a@https://www.php.net/manual/en/session.' .
@@ -280,10 +276,7 @@ class HomeController extends AbstractController
         /**
          * Check whether LoginCookieValidity is limited by LoginCookieStore.
          */
-        if (
-            $GLOBALS['cfg']['LoginCookieStore'] != 0
-            && $GLOBALS['cfg']['LoginCookieStore'] < $GLOBALS['cfg']['LoginCookieValidity']
-        ) {
+        if ($cfg['LoginCookieStore'] != 0 && $cfg['LoginCookieStore'] < $cfg['LoginCookieValidity']) {
             $this->errors[] = [
                 'message' => __(
                     'Login cookie store is lower than cookie validity configured in ' .
@@ -298,10 +291,10 @@ class HomeController extends AbstractController
          * Warning if using the default MySQL controluser account
          */
         if (
-            isset($GLOBALS['cfg']['Server']['controluser'], $GLOBALS['cfg']['Server']['controlpass'])
-            && $GLOBALS['server'] != 0
-            && $GLOBALS['cfg']['Server']['controluser'] === 'pma'
-            && $GLOBALS['cfg']['Server']['controlpass'] === 'pmapass'
+            isset($cfg['Server']['controluser'], $cfg['Server']['controlpass'])
+            && $server != 0
+            && $cfg['Server']['controluser'] === 'pma'
+            && $cfg['Server']['controlpass'] === 'pmapass'
         ) {
             $this->errors[] = [
                 'message' => __(
@@ -318,7 +311,7 @@ class HomeController extends AbstractController
          * Check if user does not have defined blowfish secret and it is being used.
          */
         if (! empty($_SESSION['encryption_key'])) {
-            $encryptionKeyLength = mb_strlen($GLOBALS['cfg']['blowfish_secret'], '8bit');
+            $encryptionKeyLength = mb_strlen($cfg['blowfish_secret'], '8bit');
             if ($encryptionKeyLength < SODIUM_CRYPTO_SECRETBOX_KEYBYTES) {
                 $this->errors[] = [
                     'message' => __(
@@ -364,7 +357,7 @@ class HomeController extends AbstractController
          * Warning about Suhosin only if its simulation mode is not enabled
          */
         if (
-            $GLOBALS['cfg']['SuhosinDisableWarning'] == false
+            $cfg['SuhosinDisableWarning'] == false
             && ini_get('suhosin.request.max_value_length')
             && ini_get('suhosin.simulation') == '0'
         ) {
@@ -400,7 +393,7 @@ class HomeController extends AbstractController
 
     private function checkLanguageStats(): void
     {
-        $GLOBALS['lang'] = $GLOBALS['lang'] ?? null;
+        global $cfg, $lang;
 
         /**
          * Warning about incomplete translations.
@@ -419,8 +412,8 @@ class HomeController extends AbstractController
          * speaking users.
          */
         if (
-            ! isset($GLOBALS['language_stats'][$GLOBALS['lang']])
-            || $GLOBALS['language_stats'][$GLOBALS['lang']] >= $GLOBALS['cfg']['TranslationWarningThreshold']
+            ! isset($GLOBALS['language_stats'][$lang])
+            || $GLOBALS['language_stats'][$lang] >= $cfg['TranslationWarningThreshold']
         ) {
             return;
         }

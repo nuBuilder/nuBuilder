@@ -24,14 +24,14 @@ class Console
      *
      * @var bool
      */
-    private $isEnabled = true;
+    private $isEnabled;
 
     /**
      * Whether we are servicing an ajax request.
      *
      * @var bool
      */
-    private $isAjax = false;
+    private $isAjax;
 
     /** @var Relation */
     private $relation;
@@ -39,10 +39,16 @@ class Console
     /** @var Template */
     public $template;
 
-    public function __construct(Relation $relation, Template $template)
+    /**
+     * Creates a new class instance
+     */
+    public function __construct()
     {
-        $this->relation = $relation;
-        $this->template = $template;
+        global $dbi;
+
+        $this->isEnabled = true;
+        $this->relation = new Relation($dbi);
+        $this->template = new Template();
     }
 
     /**
@@ -69,14 +75,16 @@ class Console
      */
     public static function getBookmarkContent(): string
     {
+        global $dbi;
+
         $template = new Template();
-        $relation = new Relation($GLOBALS['dbi']);
+        $relation = new Relation($dbi);
         $bookmarkFeature = $relation->getRelationParameters()->bookmarkFeature;
         if ($bookmarkFeature === null) {
             return '';
         }
 
-        $bookmarks = Bookmark::getList($bookmarkFeature, $GLOBALS['dbi'], $GLOBALS['cfg']['Server']['user']);
+        $bookmarks = Bookmark::getList($bookmarkFeature, $dbi, $GLOBALS['cfg']['Server']['user']);
         $count_bookmarks = count($bookmarks);
         if ($count_bookmarks > 0) {
             $welcomeMessage = sprintf(
@@ -117,11 +125,13 @@ class Console
         }
 
         $bookmarkFeature = $this->relation->getRelationParameters()->bookmarkFeature;
+        $image = Html\Generator::getImage('console', __('SQL Query Console'));
         $_sql_history = $this->relation->getHistory($GLOBALS['cfg']['Server']['user']);
         $bookmarkContent = static::getBookmarkContent();
 
         return $this->template->render('console/display', [
             'has_bookmark_feature' => $bookmarkFeature !== null,
+            'image' => $image,
             'sql_history' => $_sql_history,
             'bookmark_content' => $bookmarkContent,
         ]);

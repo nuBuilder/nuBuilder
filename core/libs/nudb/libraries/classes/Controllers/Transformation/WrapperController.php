@@ -8,11 +8,7 @@ use PhpMyAdmin\ConfigStorage\Relation;
 use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\Core;
 use PhpMyAdmin\DatabaseInterface;
-use PhpMyAdmin\Dbal\DatabaseName;
-use PhpMyAdmin\Dbal\InvalidIdentifierName;
-use PhpMyAdmin\Dbal\TableName;
 use PhpMyAdmin\DbTableExists;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\Image\ImageWrapper;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Template;
@@ -20,16 +16,14 @@ use PhpMyAdmin\Transformations;
 use PhpMyAdmin\Util;
 
 use function __;
+use function define;
 use function htmlspecialchars;
+use function in_array;
 use function intval;
-use function is_numeric;
-use function is_string;
 use function round;
-use function sprintf;
-use function str_contains;
 use function str_replace;
-use function str_starts_with;
-use function strtolower;
+use function stripos;
+use function substr;
 
 /**
  * Wrapper script for rendering transformations
@@ -58,176 +52,168 @@ class WrapperController extends AbstractController
         $this->dbi = $dbi;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $this->response->getHeader()->setIsTransformationWrapper(true);
+        global $cn, $db, $table, $transform_key, $request_params, $size_params, $where_clause, $row;
+        global $default_ct, $mime_map, $mime_options, $ct, $mime_type, $srcImage, $srcWidth, $srcHeight;
+        global $ratioWidth, $ratioHeight, $destWidth, $destHeight, $destImage;
 
-        try {
-            $db = DatabaseName::fromValue($request->getParam('db'));
-            $table = TableName::fromValue($request->getParam('table'));
-        } catch (InvalidIdentifierName $exception) {
-            return;
+        define('IS_TRANSFORMATION_WRAPPER', true);
+
+        $relationParameters = $this->relation->getRelationParameters();
+
+        DbTableExists::check();
+
+        /**
+         * Sets globals from $_REQUEST
+         */
+        $request_params = [
+            'cn',
+            'ct',
+            'sql_query',
+            'transform_key',
+            'where_clause',
+        ];
+        $size_params = [
+            'newHeight',
+            'newWidth',
+        ];
+        foreach ($request_params as $one_request_param) {
+            if (! isset($_REQUEST[$one_request_param])) {
+                continue;
+            }
+
+            if (in_array($one_request_param, $size_params)) {
+                $GLOBALS[$one_request_param] = intval($_REQUEST[$one_request_param]);
+                if ($GLOBALS[$one_request_param] > 2000) {
+                    $GLOBALS[$one_request_param] = 2000;
+                }
+            } else {
+                $GLOBALS[$one_request_param] = $_REQUEST[$one_request_param];
+            }
         }
 
-        DbTableExists::check($db->getName(), $table->getName(), true);
+        /**
+         * Get the list of the fields of the current table
+         */
         $this->dbi->selectDb($db);
+        if (isset($where_clause)) {
+            if (! Core::checkSqlQuerySignature($where_clause, $_GET['where_clause_sign'] ?? '')) {
+                /* l10n: In case a SQL query did not pass a security check  */
+                Core::fatalError(__('There is an issue with your request.'));
 
-        $query = $this->getQuery($table, $request->getParam('where_clause'), $request->getParam('where_clause_sign'));
-        if ($query === null) {
-            /* l10n: In case a SQL query did not pass a security check  */
-            Core::fatalError(__('There is an issue with your request.'));
+                return;
+            }
 
-            return;
+            $result = $this->dbi->query(
+                'SELECT * FROM ' . Util::backquote($table)
+                . ' WHERE ' . $where_clause . ';'
+            );
+            $row = $result->fetchAssoc();
+        } else {
+            $result = $this->dbi->query(
+                'SELECT * FROM ' . Util::backquote($table) . ' LIMIT 1;'
+            );
+            $row = $result->fetchAssoc();
         }
 
-        $row = $this->dbi->query($query)->fetchAssoc();
+        // No row returned
         if ($row === []) {
             return;
         }
 
-        $transformKey = $request->getParam('transform_key');
-        if (
-            ! is_string($transformKey) || $transformKey === ''
-            || ! isset($row[$transformKey]) || $row[$transformKey] === ''
-        ) {
-            return;
-        }
+        $default_ct = 'application/octet-stream';
 
-        $mediaTypeMap = [];
-        $mediaTypeOptions = [];
-        $relationParameters = $this->relation->getRelationParameters();
         if (
             $relationParameters->columnCommentsFeature !== null
             && $relationParameters->browserTransformationFeature !== null
         ) {
-            $mediaTypeMap = $this->transformations->getMime($db->getName(), $table->getName()) ?? [];
-            $mediaTypeOptions = $this->transformations->getOptions(
-                $mediaTypeMap[$transformKey]['transformation_options'] ?? ''
+            $mime_map = $this->transformations->getMime($db, $table) ?? [];
+
+            $mime_options = $this->transformations->getOptions(
+                $mime_map[$transform_key]['transformation_options'] ?? ''
             );
 
-            foreach ($mediaTypeOptions as $option) {
-                if (! str_starts_with($option, '; charset=')) {
+            foreach ($mime_options as $option) {
+                if (substr($option, 0, 10) !== '; charset=') {
                     continue;
                 }
 
-                $mediaTypeOptions['charset'] = $option;
+                $mime_options['charset'] = $option;
             }
         }
 
         $this->response->getHeader()->sendHttpHeaders();
 
-        /** @psalm-suppress MixedAssignment */
-        $contentType = $request->getParam('ct');
-        if (is_string($contentType) && $contentType !== '') {
-            $contentMediaType = $contentType;
+        // [MIME]
+        if (isset($ct) && ! empty($ct)) {
+            $mime_type = $ct;
         } else {
-            $contentMediaType = 'application/octet-stream';
-            if (! empty($mediaTypeMap[$transformKey]['mimetype'])) {
-                $contentMediaType = str_replace('_', '/', $mediaTypeMap[$transformKey]['mimetype']);
-            }
-
-            $contentMediaType .= $mediaTypeOptions['charset'] ?? '';
+            $mime_type = (! empty($mime_map[$transform_key]['mimetype'])
+                    ? str_replace('_', '/', $mime_map[$transform_key]['mimetype'])
+                    : $default_ct)
+                . ($mime_options['charset'] ?? '');
         }
 
-        /** @psalm-suppress MixedAssignment */
-        $contentName = $request->getParam('cn');
-        $contentName = is_string($contentName) ? $contentName : '';
+        Core::downloadHeader($cn ?? '', $mime_type ?? '');
 
-        Core::downloadHeader($contentName, $contentMediaType);
+        if (! isset($_REQUEST['resize'])) {
+            if (stripos($mime_type ?? '', 'html') === false) {
+                echo $row[$transform_key];
+            } else {
+                echo htmlspecialchars($row[$transform_key]);
+            }
+        } else {
+            // if image_*__inline.inc.php finds that we can resize,
+            // it sets the resize parameter to jpeg or png
 
-        $resize = $request->getParam('resize');
-        if ($resize !== 'jpeg' && $resize !== 'png') {
-            if (str_contains(strtolower($contentMediaType), 'html')) {
-                echo htmlspecialchars($row[$transformKey]);
-
+            $srcImage = ImageWrapper::fromString($row[$transform_key]);
+            if ($srcImage === null) {
                 return;
             }
 
-            echo $row[$transformKey];
+            $srcWidth = $srcImage->width();
+            $srcHeight = $srcImage->height();
 
-            return;
-        }
+            // Check to see if the width > height or if width < height
+            // if so adjust accordingly to make sure the image
+            // stays smaller than the new width and new height
 
-        $srcImage = ImageWrapper::fromString($row[$transformKey]);
-        if ($srcImage === null) {
-            return;
-        }
+            $ratioWidth = $srcWidth / $_REQUEST['newWidth'];
+            $ratioHeight = $srcHeight / $_REQUEST['newHeight'];
 
-        $newHeight = $this->formatSize($request->getParam('newHeight'));
-        $newWidth = $this->formatSize($request->getParam('newWidth'));
+            if ($ratioWidth < $ratioHeight) {
+                $destWidth = intval(round($srcWidth / $ratioHeight));
+                $destHeight = intval($_REQUEST['newHeight']);
+            } else {
+                $destWidth = intval($_REQUEST['newWidth']);
+                $destHeight = intval(round($srcHeight / $ratioWidth));
+            }
 
-        $srcWidth = $srcImage->width();
-        $srcHeight = $srcImage->height();
+            if ($_REQUEST['resize']) {
+                $destImage = ImageWrapper::create($destWidth, $destHeight);
+                if ($destImage === null) {
+                    $srcImage->destroy();
 
-        $ratioWidth = $srcWidth / $newWidth;
-        $ratioHeight = $srcHeight / $newHeight;
+                    return;
+                }
 
-        /**
-         * Check to see if the width > height or if width < height
-         * if so adjust accordingly to make sure the image
-         * stays smaller than the new width and new height
-         */
-        if ($ratioWidth < $ratioHeight) {
-            $destWidth = intval(round($srcWidth / $ratioHeight));
-            $destHeight = $newHeight;
-        } else {
-            $destWidth = $newWidth;
-            $destHeight = intval(round($srcHeight / $ratioWidth));
-        }
+                // ImageCopyResized($destImage, $srcImage, 0, 0, 0, 0,
+                // $destWidth, $destHeight, $srcWidth, $srcHeight);
+                // better quality but slower:
+                $destImage->copyResampled($srcImage, 0, 0, 0, 0, $destWidth, $destHeight, $srcWidth, $srcHeight);
+                if ($_REQUEST['resize'] === 'jpeg') {
+                    $destImage->jpeg(null, 75);
+                }
 
-        $destImage = ImageWrapper::create($destWidth, $destHeight);
-        if ($destImage === null) {
+                if ($_REQUEST['resize'] === 'png') {
+                    $destImage->png();
+                }
+
+                $destImage->destroy();
+            }
+
             $srcImage->destroy();
-
-            return;
         }
-
-        $destImage->copyResampled($srcImage, 0, 0, 0, 0, $destWidth, $destHeight, $srcWidth, $srcHeight);
-
-        if ($resize === 'jpeg') {
-            $destImage->jpeg(null, 75);
-        } else {
-            $destImage->png();
-        }
-
-        $destImage->destroy();
-        $srcImage->destroy();
-    }
-
-    /**
-     * @param mixed $size
-     */
-    private function formatSize($size): int
-    {
-        if (! is_numeric($size) || $size < 2) {
-            return 1;
-        }
-
-        if ($size >= 2000) {
-            return 2000;
-        }
-
-        return (int) $size;
-    }
-
-    /**
-     * @param mixed $whereClause
-     * @param mixed $whereClauseSign
-     */
-    private function getQuery(TableName $table, $whereClause, $whereClauseSign): ?string
-    {
-        if ($whereClause === null) {
-            return sprintf('SELECT * FROM %s LIMIT 1;', Util::backquote($table));
-        }
-
-        if (
-            ! is_string($whereClause) || $whereClause === ''
-            || ! is_string($whereClauseSign) || $whereClauseSign === ''
-            || ! Core::checkSqlQuerySignature($whereClause, $whereClauseSign)
-        ) {
-            return null;
-        }
-
-        return sprintf('SELECT * FROM %s WHERE %s;', Util::backquote($table), $whereClause);
     }
 }

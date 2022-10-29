@@ -238,6 +238,8 @@ class IpAllowDeny
      */
     private function allowDeny($type): bool
     {
+        global $cfg;
+
         // Grabs true IP of the user and returns if it can't be found
         $remote_ip = Core::getIp();
         if (empty($remote_ip)) {
@@ -245,11 +247,11 @@ class IpAllowDeny
         }
 
         // copy username
-        $username = $GLOBALS['cfg']['Server']['user'];
+        $username = $cfg['Server']['user'];
 
         // copy rule database
-        if (isset($GLOBALS['cfg']['Server']['AllowDeny']['rules'])) {
-            $rules = $GLOBALS['cfg']['Server']['AllowDeny']['rules'];
+        if (isset($cfg['Server']['AllowDeny']['rules'])) {
+            $rules = $cfg['Server']['AllowDeny']['rules'];
             if (! is_array($rules)) {
                 $rules = [];
             }

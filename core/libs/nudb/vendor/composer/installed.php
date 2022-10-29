@@ -1,7 +1,7 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '5.3+snapshot',
-        'version' => '5.3.0.0',
+        'pretty_version' => '5.2+snapshot',
+        'version' => '5.2.0.0',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -29,12 +29,12 @@
             'dev_requirement' => false,
         ),
         'composer/ca-bundle' => array(
-            'pretty_version' => '1.3.3',
-            'version' => '1.3.3.0',
+            'pretty_version' => '1.3.4',
+            'version' => '1.3.4.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/./ca-bundle',
             'aliases' => array(),
-            'reference' => '30897edbfb15e784fe55587b4f73ceefd3c4d98c',
+            'reference' => '69098eca243998b53eed7a48d82dedd28b447cd5',
             'dev_requirement' => false,
         ),
         'dasprid/enum' => array(
@@ -82,6 +82,24 @@
             'reference' => '58c3f47f650c94ec05a151692652a868995d2938',
             'dev_requirement' => false,
         ),
+        'paragonie/random_compat' => array(
+            'pretty_version' => 'v9.99.100',
+            'version' => '9.99.100.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../paragonie/random_compat',
+            'aliases' => array(),
+            'reference' => '996434e5492cb4c3edcb9168db6fbb1359ef965a',
+            'dev_requirement' => false,
+        ),
+        'paragonie/sodium_compat' => array(
+            'pretty_version' => 'v1.19.0',
+            'version' => '1.19.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../paragonie/sodium_compat',
+            'aliases' => array(),
+            'reference' => 'cb15e403ecbe6a6cc515f855c310eb6b1872a933',
+            'dev_requirement' => false,
+        ),
         'phpmyadmin/motranslator' => array(
             'pretty_version' => '5.3.0',
             'version' => '5.3.0.0',
@@ -92,8 +110,8 @@
             'dev_requirement' => false,
         ),
         'phpmyadmin/phpmyadmin' => array(
-            'pretty_version' => '5.3+snapshot',
-            'version' => '5.3.0.0',
+            'pretty_version' => '5.2+snapshot',
+            'version' => '5.2.0.0',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -245,12 +263,12 @@
             'dev_requirement' => false,
         ),
         'symfony/cache' => array(
-            'pretty_version' => 'v5.4.13',
-            'version' => '5.4.13.0',
+            'pretty_version' => 'v5.4.15',
+            'version' => '5.4.15.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/cache',
             'aliases' => array(),
-            'reference' => '89bb6a0fe27205636d80e568ffaf9bbb52f691e3',
+            'reference' => '60e87188abbacd29ccde44d69c5392a33e888e98',
             'dev_requirement' => false,
         ),
         'symfony/cache-contracts' => array(
@@ -296,12 +314,12 @@
             'dev_requirement' => false,
         ),
         'symfony/expression-language' => array(
-            'pretty_version' => 'v5.4.11',
-            'version' => '5.4.11.0',
+            'pretty_version' => 'v5.4.14',
+            'version' => '5.4.14.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/expression-language',
             'aliases' => array(),
-            'reference' => 'eb59000eb72c9681502cb501af3c666be42d215e',
+            'reference' => '2f27d5b1e7926bba18e87719af75f696977cd58b',
             'dev_requirement' => false,
         ),
         'symfony/filesystem' => array(

@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace PhpMyAdmin\Controllers\Table;
 
 use PhpMyAdmin\Config;
-use PhpMyAdmin\Controllers\AbstractController;
+use PhpMyAdmin\ConfigStorage\Relation;
 use PhpMyAdmin\Core;
 use PhpMyAdmin\CreateAddField;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Html\Generator;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Table\ColumnsDefinition;
 use PhpMyAdmin\Template;
 use PhpMyAdmin\Transformations;
 use PhpMyAdmin\Url;
+use PhpMyAdmin\Util;
 
 use function __;
 use function htmlspecialchars;
@@ -35,35 +35,39 @@ class CreateController extends AbstractController
     /** @var Config */
     private $config;
 
+    /** @var Relation */
+    private $relation;
+
     /** @var DatabaseInterface */
     private $dbi;
-
-    /** @var ColumnsDefinition */
-    private $columnsDefinition;
 
     public function __construct(
         ResponseRenderer $response,
         Template $template,
+        string $db,
+        string $table,
         Transformations $transformations,
         Config $config,
-        DatabaseInterface $dbi,
-        ColumnsDefinition $columnsDefinition
+        Relation $relation,
+        DatabaseInterface $dbi
     ) {
-        parent::__construct($response, $template);
+        parent::__construct($response, $template, $db, $table);
         $this->transformations = $transformations;
         $this->config = $config;
+        $this->relation = $relation;
         $this->dbi = $dbi;
-        $this->columnsDefinition = $columnsDefinition;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $this->checkParameters(['db']);
+        global $num_fields, $action, $sql_query, $result, $db, $table;
+
+        Util::checkParameters(['db']);
 
         $cfg = $this->config->settings;
 
         /* Check if database name is empty */
-        if ($GLOBALS['db'] === '') {
+        if (strlen($db) === 0) {
             Generator::mysqlDie(
                 __('The database name is empty!'),
                 '',
@@ -75,28 +79,30 @@ class CreateController extends AbstractController
         /**
          * Selects the database to work with
          */
-        if (! $this->dbi->selectDb($GLOBALS['db'])) {
+        if (! $this->dbi->selectDb($db)) {
             Generator::mysqlDie(
-                sprintf(__('\'%s\' database does not exist.'), htmlspecialchars($GLOBALS['db'])),
+                sprintf(__('\'%s\' database does not exist.'), htmlspecialchars($db)),
                 '',
                 false,
                 'index.php'
             );
         }
 
-        if ($this->dbi->getColumns($GLOBALS['db'], $GLOBALS['table'])) {
+        if ($this->dbi->getColumns($db, $table)) {
             // table exists already
             Generator::mysqlDie(
-                sprintf(__('Table %s already exists!'), htmlspecialchars($GLOBALS['table'])),
+                sprintf(__('Table %s already exists!'), htmlspecialchars($table)),
                 '',
                 false,
-                Url::getFromRoute('/database/structure', ['db' => $GLOBALS['db']])
+                Url::getFromRoute('/database/structure', ['db' => $db])
             );
         }
 
         $createAddField = new CreateAddField($this->dbi);
 
-        $numFields = $createAddField->getNumberOfFieldsFromRequest();
+        $num_fields = $createAddField->getNumberOfFieldsFromRequest();
+
+        $action = Url::getFromRoute('/table/create');
 
         /**
          * The form used to define the structure of the table has been submitted
@@ -104,21 +110,21 @@ class CreateController extends AbstractController
         if (isset($_POST['do_save_data'])) {
             // lower_case_table_names=1 `DB` becomes `db`
             if ($this->dbi->getLowerCaseNames() === '1') {
-                $GLOBALS['db'] = mb_strtolower($GLOBALS['db']);
-                $GLOBALS['table'] = mb_strtolower($GLOBALS['table']);
+                $db = mb_strtolower($db);
+                $table = mb_strtolower($table);
             }
 
-            $GLOBALS['sql_query'] = $createAddField->getTableCreationQuery($GLOBALS['db'], $GLOBALS['table']);
+            $sql_query = $createAddField->getTableCreationQuery($db, $table);
 
             // If there is a request for SQL previewing.
             if (isset($_POST['preview_sql'])) {
-                Core::previewSQL($GLOBALS['sql_query']);
+                Core::previewSQL($sql_query);
 
                 return;
             }
 
             // Executes the query
-            $result = $this->dbi->tryQuery($GLOBALS['sql_query']);
+            $result = $this->dbi->tryQuery($sql_query);
 
             if ($result) {
                 // Update comment table for mime types [MIME]
@@ -132,8 +138,8 @@ class CreateController extends AbstractController
                         }
 
                         $this->transformations->setMime(
-                            $GLOBALS['db'],
-                            $GLOBALS['table'],
+                            $db,
+                            $table,
                             $_POST['field_name'][$fieldindex],
                             $mimetype,
                             $_POST['field_transformation'][$fieldindex],
@@ -156,9 +162,13 @@ class CreateController extends AbstractController
 
         $this->addScriptFiles(['vendor/jquery/jquery.uitablefilter.js', 'indexes.js']);
 
-        $this->checkParameters(['server', 'db']);
-
-        $templateData = $this->columnsDefinition->displayForm('/table/create', $numFields);
+        $templateData = ColumnsDefinition::displayForm(
+            $this->transformations,
+            $this->relation,
+            $this->dbi,
+            $action,
+            $num_fields
+        );
 
         $this->render('columns_definitions/column_definitions_form', $templateData);
     }

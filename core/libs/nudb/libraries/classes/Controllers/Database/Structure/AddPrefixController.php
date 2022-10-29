@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Database\Structure;
 
-use PhpMyAdmin\Controllers\AbstractController;
-use PhpMyAdmin\Http\ServerRequest;
+use PhpMyAdmin\Controllers\Database\AbstractController;
 
 use function __;
 
 final class AddPrefixController extends AbstractController
 {
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
+        global $db;
+
         $selected = $_POST['selected_tbl'] ?? [];
 
         if (empty($selected)) {
@@ -22,7 +23,7 @@ final class AddPrefixController extends AbstractController
             return;
         }
 
-        $params = ['db' => $GLOBALS['db']];
+        $params = ['db' => $db];
         foreach ($selected as $selectedValue) {
             $params['selected'][] = $selectedValue;
         }

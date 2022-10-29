@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace PhpMyAdmin\Controllers\Database;
 
 use PhpMyAdmin\CheckUserPrivileges;
-use PhpMyAdmin\Controllers\AbstractController;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Html\Generator;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Template;
@@ -36,63 +34,56 @@ class TrackingController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
+        string $db,
         Tracking $tracking,
         DatabaseInterface $dbi
     ) {
-        parent::__construct($response, $template);
+        parent::__construct($response, $template, $db);
         $this->tracking = $tracking;
         $this->dbi = $dbi;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['text_dir'] = $GLOBALS['text_dir'] ?? null;
-        $GLOBALS['urlParams'] = $GLOBALS['urlParams'] ?? null;
-        $GLOBALS['tables'] = $GLOBALS['tables'] ?? null;
-        $GLOBALS['num_tables'] = $GLOBALS['num_tables'] ?? null;
-        $GLOBALS['total_num_tables'] = $GLOBALS['total_num_tables'] ?? null;
-        $GLOBALS['sub_part'] = $GLOBALS['sub_part'] ?? null;
-        $GLOBALS['pos'] = $GLOBALS['pos'] ?? null;
-        $GLOBALS['data'] = $GLOBALS['data'] ?? null;
-        $GLOBALS['tooltip_truename'] = $GLOBALS['tooltip_truename'] ?? null;
-        $GLOBALS['tooltip_aliasname'] = $GLOBALS['tooltip_aliasname'] ?? null;
-        $GLOBALS['errorUrl'] = $GLOBALS['errorUrl'] ?? null;
+        global $db, $text_dir, $urlParams, $tables, $num_tables;
+        global $total_num_tables, $sub_part, $pos, $data, $cfg;
+        global $tooltip_truename, $tooltip_aliasname, $errorUrl;
 
         $this->addScriptFiles(['vendor/jquery/jquery.tablesorter.js', 'database/tracking.js']);
 
-        $this->checkParameters(['db']);
+        Util::checkParameters(['db']);
 
-        $GLOBALS['errorUrl'] = Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabDatabase'], 'database');
-        $GLOBALS['errorUrl'] .= Url::getCommon(['db' => $GLOBALS['db']], '&');
+        $errorUrl = Util::getScriptNameForOption($cfg['DefaultTabDatabase'], 'database');
+        $errorUrl .= Url::getCommon(['db' => $db], '&');
 
         if (! $this->hasDatabase()) {
             return;
         }
 
-        $GLOBALS['urlParams']['goto'] = Url::getFromRoute('/table/tracking');
-        $GLOBALS['urlParams']['back'] = Url::getFromRoute('/database/tracking');
+        $urlParams['goto'] = Url::getFromRoute('/table/tracking');
+        $urlParams['back'] = Url::getFromRoute('/database/tracking');
 
         // Get the database structure
-        $GLOBALS['sub_part'] = '_structure';
+        $sub_part = '_structure';
 
         [
-            $GLOBALS['tables'],
-            $GLOBALS['num_tables'],
-            $GLOBALS['total_num_tables'],
-            $GLOBALS['sub_part'],,
+            $tables,
+            $num_tables,
+            $total_num_tables,
+            $sub_part,,
             $isSystemSchema,
-            $GLOBALS['tooltip_truename'],
-            $GLOBALS['tooltip_aliasname'],
-            $GLOBALS['pos'],
-        ] = Util::getDbInfo($GLOBALS['db'], $GLOBALS['sub_part']);
+            $tooltip_truename,
+            $tooltip_aliasname,
+            $pos,
+        ] = Util::getDbInfo($db, $sub_part);
 
         if (isset($_POST['delete_tracking'], $_POST['table'])) {
-            Tracker::deleteTracking($GLOBALS['db'], $_POST['table']);
+            Tracker::deleteTracking($db, $_POST['table']);
             echo Message::success(
                 __('Tracking data deleted successfully.')
             )->getDisplay();
         } elseif (isset($_POST['submit_create_version'])) {
-            $this->tracking->createTrackingForMultipleTables($GLOBALS['db'], $_POST['selected']);
+            $this->tracking->createTrackingForMultipleTables($db, $_POST['selected']);
             echo Message::success(
                 sprintf(
                     __(
@@ -105,7 +96,7 @@ class TrackingController extends AbstractController
             if (! empty($_POST['selected_tbl'])) {
                 if ($_POST['submit_mult'] === 'delete_tracking') {
                     foreach ($_POST['selected_tbl'] as $table) {
-                        Tracker::deleteTracking($GLOBALS['db'], $table);
+                        Tracker::deleteTracking($db, $table);
                     }
 
                     echo Message::success(
@@ -114,12 +105,12 @@ class TrackingController extends AbstractController
                 } elseif ($_POST['submit_mult'] === 'track') {
                     echo $this->template->render('create_tracking_version', [
                         'route' => '/database/tracking',
-                        'url_params' => $GLOBALS['urlParams'],
+                        'url_params' => $urlParams,
                         'last_version' => 0,
-                        'db' => $GLOBALS['db'],
+                        'db' => $db,
                         'selected' => $_POST['selected_tbl'],
                         'type' => 'both',
-                        'default_statements' => $GLOBALS['cfg']['Server']['tracking_default_statements'],
+                        'default_statements' => $cfg['Server']['tracking_default_statements'],
                     ]);
 
                     return;
@@ -132,31 +123,31 @@ class TrackingController extends AbstractController
         }
 
         // Get tracked data about the database
-        $GLOBALS['data'] = Tracker::getTrackedData($GLOBALS['db'], '', '1');
+        $data = Tracker::getTrackedData($db, '', '1');
 
         // No tables present and no log exist
-        if ($GLOBALS['num_tables'] == 0 && count($GLOBALS['data']['ddlog']) === 0) {
+        if ($num_tables == 0 && count($data['ddlog']) === 0) {
             echo '<p>' , __('No tables found in database.') , '</p>' , "\n";
 
             if (empty($isSystemSchema)) {
                 $checkUserPrivileges = new CheckUserPrivileges($this->dbi);
                 $checkUserPrivileges->getPrivileges();
 
-                echo $this->template->render('database/create_table', ['db' => $GLOBALS['db']]);
+                echo $this->template->render('database/create_table', ['db' => $db]);
             }
 
             return;
         }
 
-        echo $this->tracking->getHtmlForDbTrackingTables($GLOBALS['db'], $GLOBALS['urlParams'], $GLOBALS['text_dir']);
+        echo $this->tracking->getHtmlForDbTrackingTables($db, $urlParams, $text_dir);
 
         // If available print out database log
-        if (count($GLOBALS['data']['ddlog']) <= 0) {
+        if (count($data['ddlog']) <= 0) {
             return;
         }
 
         $log = '';
-        foreach ($GLOBALS['data']['ddlog'] as $entry) {
+        foreach ($data['ddlog'] as $entry) {
             $log .= '# ' . $entry['date'] . ' ' . $entry['username'] . "\n"
                 . $entry['statement'] . "\n";
         }

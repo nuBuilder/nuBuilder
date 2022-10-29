@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Database\Structure;
 
-use PhpMyAdmin\Controllers\AbstractController;
+use PhpMyAdmin\Controllers\Database\AbstractController;
 use PhpMyAdmin\Controllers\Database\StructureController;
 use PhpMyAdmin\DatabaseInterface;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Template;
@@ -26,21 +25,22 @@ final class AddPrefixTableController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
+        string $db,
         DatabaseInterface $dbi,
         StructureController $structureController
     ) {
-        parent::__construct($response, $template);
+        parent::__construct($response, $template, $db);
         $this->dbi = $dbi;
         $this->structureController = $structureController;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['message'] = $GLOBALS['message'] ?? null;
+        global $db, $message, $sql_query;
 
         $selected = $_POST['selected'] ?? [];
 
-        $GLOBALS['sql_query'] = '';
+        $sql_query = '';
         $selectedCount = count($selected);
 
         for ($i = 0; $i < $selectedCount; $i++) {
@@ -48,17 +48,17 @@ final class AddPrefixTableController extends AbstractController
             $aQuery = 'ALTER TABLE ' . Util::backquote($selected[$i])
                 . ' RENAME ' . Util::backquote($newTableName);
 
-            $GLOBALS['sql_query'] .= $aQuery . ';' . "\n";
-            $this->dbi->selectDb($GLOBALS['db']);
+            $sql_query .= $aQuery . ';' . "\n";
+            $this->dbi->selectDb($db);
             $this->dbi->query($aQuery);
         }
 
-        $GLOBALS['message'] = Message::success();
+        $message = Message::success();
 
         if (empty($_POST['message'])) {
-            $_POST['message'] = $GLOBALS['message'];
+            $_POST['message'] = $message;
         }
 
-        ($this->structureController)($request);
+        ($this->structureController)();
     }
 }

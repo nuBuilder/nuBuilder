@@ -2,11 +2,10 @@
 
   <input type="hidden" name="grant_count" value="{{ row|length }}">
   <input type="hidden" name="column_count" value="{{ columns|length }}">
-  <div class="card mb-3" id="fieldset_user_priv">
-    <div class="card-header js-submenu-label" data-submenu-label="{% trans 'Table' %}">
+  <fieldset class="pma-fieldset" id="fieldset_user_priv">
+    <legend data-submenu-label="{% trans 'Table' %}">
       {% trans 'Table-specific privileges' %}
-    </div>
-    <div class="card-body">
+    </legend>
     <p>
       <small><em>{% trans 'Note: MySQL privilege names are expressed in English.' %}</em></small>
     </p>
@@ -244,14 +243,14 @@
         </div>
       {% endif %}
     </div>
-    </div>
-  </div>
+    <div class="clearfloat"></div>
+  </fieldset>
 
 {% else %}
 
 {% set grant_count = 0 %}
-<div class="card mb-3">
-  <div class="card-header js-submenu-label" data-submenu-label="
+<fieldset class="pma-fieldset" id="fieldset_user_global_rights">
+  <legend data-submenu-label="
     {%- if is_global %}
       {%- trans 'Global' -%}
     {% elseif is_database %}
@@ -268,19 +267,17 @@
     {% endif %}
     <input type="checkbox" id="addUsersForm_checkall" class="checkall_box" title="{% trans 'Check all' %}">
     <label for="addUsersForm_checkall">{% trans 'Check all' %}</label>
-  </div>
-  <div class="card-body row g-3">
-  <p class="col-12">
+  </legend>
+  <p>
     <small><em>{% trans 'Note: MySQL privilege names are expressed in English.' %}</em></small>
   </p>
-    <div class="col">
-  <div class="card">
-    <div class="card-header">
+
+  <fieldset class="pma-fieldset">
+    <legend>
       <input type="checkbox" class="sub_checkall_box" id="checkall_Data_priv" title="{% trans 'Check all' %}">
       <label for="checkall_Data_priv">{% trans 'Data' %}</label>
-    </div>
+    </legend>
 
-    <div class="card-body">
     <div class="item">
       {% set grant_count = grant_count + 1 %}
       <input type="checkbox" class="checkall" name="Select_priv" id="checkbox_Select_priv" value="Y" title="
@@ -347,17 +344,14 @@
         </label>
       </div>
     {% endif %}
-    </div>
-  </div>
-    </div>
-    <div class="col">
-  <div class="card">
-    <div class="card-header">
+  </fieldset>
+
+  <fieldset class="pma-fieldset">
+    <legend>
       <input type="checkbox" class="sub_checkall_box" id="checkall_Structure_priv" title="{% trans 'Check all' %}">
       <label for="checkall_Structure_priv">{% trans 'Structure' %}</label>
-    </div>
+    </legend>
 
-    <div class="card-body">
     <div class="item">
       {% set grant_count = grant_count + 1 %}
       <input type="checkbox" class="checkall" name="Create_priv" id="checkbox_Create_priv" value="Y" title="
@@ -550,18 +544,13 @@
         </label>
       </div>
     {% endif %}
-    </div>
-  </div>
-    </div>
-    <div class="col">
+  </fieldset>
 
-  <div class="card">
-    <div class="card-header">
+  <fieldset class="pma-fieldset">
+    <legend>
       <input type="checkbox" class="sub_checkall_box" id="checkall_Administration_priv" title="{% trans 'Check all' %}">
       <label for="checkall_Administration_priv">{% trans 'Administration' %}</label>
-    </div>
-
-    <div class="card-body">
+    </legend>
 
     {% if is_global %}
       <div class="item">
@@ -725,15 +714,11 @@
         </label>
       </div>
     {% endif %}
-    </div>
-  </div>
-    </div>
+  </fieldset>
 
   {% if is_global %}
-    <div class="col">
-    <div class="card">
-      <div class="card-header">{% trans 'Resource limits' %}</div>
-      <div class="card-body">
+    <fieldset class="pma-fieldset">
+      <legend>{% trans 'Resource limits' %}</legend>
       <p>
         <small><em>{% trans 'Note: Setting these options to 0 (zero) removes the limit.' %}</em></small>
       </p>
@@ -789,14 +774,10 @@
           {{- row.max_user_connections ?? '0' }}" title="
           {%- trans 'Limits the number of simultaneous connections the user may have.' %}">
       </div>
-      </div>
-    </div>
-    </div>
-    <div class="col">
+    </fieldset>
 
-    <div class="card">
-      <div class="card-header">SSL</div>
-      <div class="card-body">
+    <fieldset class="pma-fieldset">
+      <legend>SSL</legend>
       <div id="require_ssl_div">
         <div class="item">
           <input type="radio" name="ssl_type" id="ssl_type_NONE" title="
@@ -862,19 +843,18 @@
           </div>
         </div>
       </div>
-      </div>
-    </div>
-    </div>
+    </fieldset>
   {% endif %}
-  </div>
-</div>
+
+  <div class="clearfloat"></div>
+</fieldset>
 <input type="hidden" name="grant_count" value="{{ grant_count - (row['Grant_priv'] is defined ? 1 : 0) }}">
 
 {% endif %}
 
 {% if has_submit %}
-  <div>
+  <fieldset id="fieldset_user_privtable_footer" class="pma-fieldset tblFooters">
     <input type="hidden" name="update_privs" value="1">
-    <input class="btn btn-primary" type="submit" value="{% trans 'Update user privileges' %}">
-  </div>
+    <input class="btn btn-primary" type="submit" value="{% trans 'Go' %}">
+  </fieldset>
 {% endif %}

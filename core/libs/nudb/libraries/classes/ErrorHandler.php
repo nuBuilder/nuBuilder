@@ -195,6 +195,8 @@ class ErrorHandler
         string $errfile,
         int $errline
     ): void {
+        global $cfg;
+
         if (Util::isErrorReportingAvailable()) {
             /**
             * Check if Error Control Operator (@) was used, but still show
@@ -206,11 +208,7 @@ class ErrorHandler
                 $isSilenced = error_reporting() == 0;
             }
 
-            if (
-                isset($GLOBALS['cfg']['environment'])
-                && $GLOBALS['cfg']['environment'] === 'development'
-                && ! $isSilenced
-            ) {
+            if (isset($cfg['environment']) && $cfg['environment'] === 'development' && ! $isSilenced) {
                 throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
             }
 
@@ -601,7 +599,7 @@ class ErrorHandler
                 // send the error reports asynchronously & without asking user
                 $jsCode .= '$("#pma_report_errors_form").submit();'
                         . 'Functions.ajaxShowMessage(
-                            window.Messages.phpErrorsBeingSubmitted, false
+                            Messages.phpErrorsBeingSubmitted, false
                         );';
                 // js code to appropriate focusing,
                 $jsCode .= '$("html, body").animate({
@@ -612,7 +610,7 @@ class ErrorHandler
             //ask user whether to submit errors or not.
             if (! $response->isAjax()) {
                 // js code to show appropriate msgs, event binding & focusing.
-                $jsCode = 'Functions.ajaxShowMessage(window.Messages.phpErrorsFound);'
+                $jsCode = 'Functions.ajaxShowMessage(Messages.phpErrorsFound);'
                         . '$("#pma_ignore_errors_popup").on("click", function() {
                             Functions.ignorePhpErrors()
                         });'
@@ -637,6 +635,6 @@ class ErrorHandler
 
         // The errors are already sent from the response.
         // Just focus on errors division upon load event.
-        $response->getFooterScripts()->addCode($jsCode);
+        $response->getFooter()->getScripts()->addCode($jsCode);
     }
 }

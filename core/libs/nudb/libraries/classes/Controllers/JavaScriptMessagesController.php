@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers;
 
+use PhpMyAdmin\Theme;
+
 use function __;
 use function _pgettext;
 use function json_encode;
-use function json_last_error_msg;
 
 /**
  * Exporting of translated messages from PHP to JavaScript.
@@ -15,32 +16,27 @@ use function json_last_error_msg;
 final class JavaScriptMessagesController
 {
     /** @var array<string, string> */
-    private $messages;
+    private $messages = [];
 
     public function __construct()
     {
-        $this->messages = $this->setMessages();
+        $this->setMessages();
     }
 
     public function __invoke(): void
     {
-        $messages = json_encode($this->messages);
-        if ($messages === false) {
-            echo '// Error when encoding messages: ' . json_last_error_msg();
-
-            return;
-        }
-
-        echo 'window.Messages = ' . $messages . ';';
+        echo 'var Messages = ' . json_encode($this->messages) . ';';
     }
 
-    /**
-     * @return array<string, string>
-     */
-    private function setMessages(): array
+    private function setMessages(): void
     {
-        return [
+        global $cfg, $theme;
+
+        $ajaxClockSmallGifPath = $theme instanceof Theme ? $theme->getImgPath('ajax_clock_small.gif') : '';
+
+        $this->messages = [
             /* For confirmations */
+            'strConfirm' => __('Confirm'),
             'strDoYouReally' => __('Do you really want to execute "%s"?'),
             'strDropDatabaseStrongWarning' => __('You are about to DESTROY a complete database!'),
             'strDatabaseRenameToSameName' => __(
@@ -582,11 +578,19 @@ final class JavaScriptMessagesController
             'dropImportDropFiles' => __('Drop files here'),
             'dropImportSelectDB' => __('Select database first'),
 
+            // this approach does not work when the parameter is changed via user prefs
+            'strGridEditFeatureHint' => $cfg['GridEditing'] === 'double-click'
+                ? __('You can also edit most values<br>by double-clicking directly on them.')
+                : ($cfg['GridEditing'] === 'click'
+                    ? __('You can also edit most values<br>by clicking directly on them.')
+                    : ''),
+
             'strGoToLink' => __('Go to link:'),
 
             /* password generation */
             'strGeneratePassword' => __('Generate password'),
             'strGenerate' => __('Generate'),
+            'strChangePassword' => __('Change password'),
 
             /* navigation tabs */
             'strMore' => __('More'),
@@ -636,7 +640,9 @@ final class JavaScriptMessagesController
                 . '<br>'
                 . __('As per your settings, they are being submitted currently, please be patient.')
                 . '<br>'
-                . '<img src="themes/dot.gif" alt="" class="icon ic_ajax_clock_small">'
+                . '<img src="'
+                . $ajaxClockSmallGifPath
+                . '" width="16" height="16" alt="ajax clock">'
                 . '</div>',
             'strCopyColumnSuccess' => __('Column name successfully copied to clipboard!'),
             'strCopyColumnFailure' => __('Column name copying to clipboard failed!'),
@@ -698,148 +704,6 @@ final class JavaScriptMessagesController
             'strHide' => __('Hide'),
             'strShow' => __('Show'),
             'strStructure' => __('Structure'),
-
-            /* DateTime Picker */
-            // l10n: Month name
-            'strMonthNameJan' => __('January'),
-            // l10n: Month name
-            'strMonthNameFeb' => __('February'),
-            // l10n: Month name
-            'strMonthNameMar' => __('March'),
-            // l10n: Month name
-            'strMonthNameApr' => __('April'),
-            // l10n: Month name
-            'strMonthNameMay' => __('May'),
-            // l10n: Month name
-            'strMonthNameJun' => __('June'),
-            // l10n: Month name
-            'strMonthNameJul' => __('July'),
-            // l10n: Month name
-            'strMonthNameAug' => __('August'),
-            // l10n: Month name
-            'strMonthNameSep' => __('September'),
-            // l10n: Month name
-            'strMonthNameOct' => __('October'),
-            // l10n: Month name
-            'strMonthNameNov' => __('November'),
-            // l10n: Month name
-            'strMonthNameDec' => __('December'),
-            /* l10n: Short month name for January */
-            'strMonthNameJanShort' => __('Jan'),
-            /* l10n: Short month name for February */
-            'strMonthNameFebShort' => __('Feb'),
-            /* l10n: Short month name for March */
-            'strMonthNameMarShort' => __('Mar'),
-            /* l10n: Short month name for April */
-            'strMonthNameAprShort' => __('Apr'),
-            /* l10n: Short month name for May */
-            'strMonthNameMayShort' => __('May'),
-            /* l10n: Short month name for June */
-            'strMonthNameJunShort' => __('Jun'),
-            /* l10n: Short month name for July */
-            'strMonthNameJulShort' => __('Jul'),
-            /* l10n: Short month name for August */
-            'strMonthNameAugShort' => __('Aug'),
-            /* l10n: Short month name for September */
-            'strMonthNameSepShort' => __('Sep'),
-            /* l10n: Short month name for October */
-            'strMonthNameOctShort' => __('Oct'),
-            /* l10n: Short month name for November */
-            'strMonthNameNovShort' => __('Nov'),
-            /* l10n: Short month name for December */
-            'strMonthNameDecShort' => __('Dec'),
-            /* l10n: Week day name */
-            'strDayNameSun' => __('Sunday'),
-            /* l10n: Week day name */
-            'strDayNameMon' => __('Monday'),
-            /* l10n: Week day name */
-            'strDayNameTue' => __('Tuesday'),
-            /* l10n: Week day name */
-            'strDayNameWed' => __('Wednesday'),
-            /* l10n: Week day name */
-            'strDayNameThu' => __('Thursday'),
-            /* l10n: Week day name */
-            'strDayNameFri' => __('Friday'),
-            /* l10n: Week day name */
-            'strDayNameSat' => __('Saturday'),
-            /* l10n: Short week day name for Sunday */
-            'strDayNameSunShort' => __('Sun'),
-            /* l10n: Short week day name for Monday */
-            'strDayNameMonShort' => __('Mon'),
-            /* l10n: Short week day name for Tuesday */
-            'strDayNameTueShort' => __('Tue'),
-            /* l10n: Short week day name for Wednesday */
-            'strDayNameWedShort' => __('Wed'),
-            /* l10n: Short week day name for Thursday */
-            'strDayNameThuShort' => __('Thu'),
-            /* l10n: Short week day name for Friday */
-            'strDayNameFriShort' => __('Fri'),
-            /* l10n: Short week day name for Saturday */
-            'strDayNameSatShort' => __('Sat'),
-            /* l10n: Minimal week day name for Sunday */
-            'strDayNameSunMin' => __('Su'),
-            /* l10n: Minimal week day name for Monday */
-            'strDayNameMonMin' => __('Mo'),
-            /* l10n: Minimal week day name for Tuesday */
-            'strDayNameTueMin' => __('Tu'),
-            /* l10n: Minimal week day name for Wednesday */
-            'strDayNameWedMin' => __('We'),
-            /* l10n: Minimal week day name for Thursday */
-            'strDayNameThuMin' => __('Th'),
-            /* l10n: Minimal week day name for Friday */
-            'strDayNameFriMin' => __('Fr'),
-            /* l10n: Minimal week day name for Saturday */
-            'strDayNameSatMin' => __('Sa'),
-            /* l10n: Column header for week of the year in calendar */
-            'strWeekHeader' => __('Wk'),
-            // phpcs:ignore Generic.Files.LineLength.TooLong
-            /* l10n: The month-year order in a calendar. Do not translate! Use either "calendar-month-year" or "calendar-year-month". */
-            'strMonthAfterYear' => __('calendar-month-year'),
-            /* l10n: Year suffix for calendar, "none" is empty. */
-            'strYearSuffix' => __('none'),
-            /* l10n: A specific point in the day, as shown on a clock. */
-            'strCalendarTime' => __('Time'),
-            /* l10n: Period of time. */
-            'strCalendarHour' => __('Hour'),
-            /* l10n: Period of time. */
-            'strCalendarMinute' => __('Minute'),
-            /* l10n: Period of time. */
-            'strCalendarSecond' => __('Second'),
-            /* l10n: Display text for calendar close link */
-            'strCalendarClose' => __('Done'),
-            /* l10n: Previous month. Display text for previous month link in calendar */
-            'strCalendarPrevious' => __('Prev'),
-            /* l10n: Next month. Display text for next month link in calendar */
-            'strCalendarNext' => __('Next'),
-            /* l10n: Display text for current month link in calendar */
-            'strCalendarCurrent' => __('Today'),
-
-            /* Validator */
-            'strValidatorRequired' => __('This field is required'),
-            'strValidatorRemote' => __('Please fix this field'),
-            'strValidatorEmail' => __('Please enter a valid email address'),
-            'strValidatorUrl' => __('Please enter a valid URL'),
-            'strValidatorDate' => __('Please enter a valid date'),
-            'strValidatorDateIso' => __('Please enter a valid date ( ISO )'),
-            'strValidatorNumber' => __('Please enter a valid number'),
-            'strValidatorCreditCard' => __('Please enter a valid credit card number'),
-            'strValidatorDigits' => __('Please enter only digits'),
-            'strValidatorEqualTo' => __('Please enter the same value again'),
-            'strValidatorMaxLength' => __('Please enter no more than {0} characters'),
-            'strValidatorMinLength' => __('Please enter at least {0} characters'),
-            'strValidatorRangeLength' => __('Please enter a value between {0} and {1} characters long'),
-            'strValidatorRange' => __('Please enter a value between {0} and {1}'),
-            'strValidatorMax' => __('Please enter a value less than or equal to {0}'),
-            'strValidatorMin' => __('Please enter a value greater than or equal to {0}'),
-            'strValidationFunctionForDateTime' => __('Please enter a valid date or time'),
-            'strValidationFunctionForHex' => __('Please enter a valid HEX input'),
-            /* l10n: To validate the usage of a MD5 function on the column */
-            'strValidationFunctionForMd5' => __('This column can not contain a 32 chars value'),
-            /* l10n: To validate the usage of an AES_ENCRYPT/DES_ENCRYPT function on the column */
-            'strValidationFunctionForAesDesEncrypt' => __(
-                'These functions are meant to return a binary result; to avoid inconsistent results you should store'
-                . ' it in a BINARY, VARBINARY, or BLOB column.'
-            ),
         ];
     }
 }

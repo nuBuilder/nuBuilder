@@ -19,10 +19,9 @@ use PhpMyAdmin\Version;
 use function __;
 use function preg_match;
 use function preg_replace;
+use function stripslashes;
 use function strtr;
 use function var_export;
-
-use const PHP_EOL;
 
 /**
  * Handles the export for the PHP Array class
@@ -82,11 +81,11 @@ class ExportPhparray extends ExportPlugin
     public function exportHeader(): bool
     {
         $this->export->outputHandler(
-            '<?php' . PHP_EOL
-            . '/**' . PHP_EOL
-            . ' * Export to PHP Array plugin for PHPMyAdmin' . PHP_EOL
-            . ' * @version ' . Version::VERSION . PHP_EOL
-            . ' */' . PHP_EOL . PHP_EOL
+            '<?php' . $GLOBALS['crlf']
+            . '/**' . $GLOBALS['crlf']
+            . ' * Export to PHP Array plugin for PHPMyAdmin' . $GLOBALS['crlf']
+            . ' * @version ' . Version::VERSION . $GLOBALS['crlf']
+            . ' */' . $GLOBALS['crlf'] . $GLOBALS['crlf']
         );
 
         return true;
@@ -113,9 +112,9 @@ class ExportPhparray extends ExportPlugin
         }
 
         $this->export->outputHandler(
-            '/**' . PHP_EOL
+            '/**' . $GLOBALS['crlf']
             . ' * Database ' . $this->commentString(Util::backquote($dbAlias))
-            . PHP_EOL . ' */' . PHP_EOL
+            . $GLOBALS['crlf'] . ' */' . $GLOBALS['crlf']
         );
 
         return true;
@@ -148,6 +147,7 @@ class ExportPhparray extends ExportPlugin
      *
      * @param string $db       database name
      * @param string $table    table name
+     * @param string $crlf     the end of line sequence
      * @param string $errorUrl the url to go back in case of error
      * @param string $sqlQuery SQL query for obtaining data
      * @param array  $aliases  Aliases of db/table/columns
@@ -155,19 +155,18 @@ class ExportPhparray extends ExportPlugin
     public function exportData(
         $db,
         $table,
+        $crlf,
         $errorUrl,
         $sqlQuery,
         array $aliases = []
     ): bool {
+        global $dbi;
+
         $db_alias = $db;
         $table_alias = $table;
         $this->initAlias($aliases, $db_alias, $table_alias);
 
-        $result = $GLOBALS['dbi']->query(
-            $sqlQuery,
-            DatabaseInterface::CONNECT_USER,
-            DatabaseInterface::QUERY_UNBUFFERED
-        );
+        $result = $dbi->query($sqlQuery, DatabaseInterface::CONNECT_USER, DatabaseInterface::QUERY_UNBUFFERED);
 
         $columns_cnt = $result->numFields();
         $columns = [];
@@ -176,7 +175,7 @@ class ExportPhparray extends ExportPlugin
                 $col_as = $aliases[$db]['tables'][$table]['columns'][$col_as];
             }
 
-            $columns[$i] = $col_as;
+            $columns[$i] = stripslashes($col_as);
         }
 
         $tablefixed = $table;
@@ -197,9 +196,9 @@ class ExportPhparray extends ExportPlugin
         $buffer = '';
         $record_cnt = 0;
         // Output table name as comment
-        $buffer .= PHP_EOL . '/* '
+        $buffer .= $crlf . '/* '
             . $this->commentString(Util::backquote($db_alias)) . '.'
-            . $this->commentString(Util::backquote($table_alias)) . ' */' . PHP_EOL;
+            . $this->commentString(Util::backquote($table_alias)) . ' */' . $crlf;
         $buffer .= '$' . $tablefixed . ' = array(';
         if (! $this->export->outputHandler($buffer)) {
             return false;
@@ -211,9 +210,9 @@ class ExportPhparray extends ExportPlugin
             $record_cnt++;
 
             if ($record_cnt == 1) {
-                $buffer .= PHP_EOL . '  array(';
+                $buffer .= $crlf . '  array(';
             } else {
-                $buffer .= ',' . PHP_EOL . '  array(';
+                $buffer .= ',' . $crlf . '  array(';
             }
 
             for ($i = 0; $i < $columns_cnt; $i++) {
@@ -231,7 +230,7 @@ class ExportPhparray extends ExportPlugin
             $buffer = '';
         }
 
-        $buffer .= PHP_EOL . ');' . PHP_EOL;
+        $buffer .= $crlf . ');' . $crlf;
 
         return $this->export->outputHandler($buffer);
     }
@@ -241,9 +240,10 @@ class ExportPhparray extends ExportPlugin
      *
      * @param string $errorUrl the url to go back in case of error
      * @param string $sqlQuery the rawquery to output
+     * @param string $crlf     the end of line sequence
      */
-    public function exportRawQuery(string $errorUrl, string $sqlQuery): bool
+    public function exportRawQuery(string $errorUrl, string $sqlQuery, string $crlf): bool
     {
-        return $this->exportData('', '', $errorUrl, $sqlQuery);
+        return $this->exportData('', '', $crlf, $errorUrl, $sqlQuery);
     }
 }

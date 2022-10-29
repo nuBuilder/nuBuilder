@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace PhpMyAdmin\Controllers;
 
 use PhpMyAdmin\Core;
-use PhpMyAdmin\Http\ServerRequest;
-use PhpMyAdmin\ResponseRenderer;
-use PhpMyAdmin\Template;
 use PhpMyAdmin\VersionInformation;
 
 use function json_encode;
@@ -17,16 +14,7 @@ use function json_encode;
  */
 class VersionCheckController extends AbstractController
 {
-    /** @var VersionInformation */
-    private $versionInformation;
-
-    public function __construct(ResponseRenderer $response, Template $template, VersionInformation $versionInformation)
-    {
-        parent::__construct($response, $template);
-        $this->versionInformation = $versionInformation;
-    }
-
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
         $_GET['ajax_request'] = 'true';
 
@@ -36,7 +24,8 @@ class VersionCheckController extends AbstractController
         // Always send the correct headers
         Core::headerJSON();
 
-        $versionDetails = $this->versionInformation->getLatestVersion();
+        $versionInformation = new VersionInformation();
+        $versionDetails = $versionInformation->getLatestVersion();
 
         if (empty($versionDetails)) {
             echo json_encode([]);
@@ -44,7 +33,7 @@ class VersionCheckController extends AbstractController
             return;
         }
 
-        $latestCompatible = $this->versionInformation->getLatestCompatibleVersion($versionDetails->releases);
+        $latestCompatible = $versionInformation->getLatestCompatibleVersion($versionDetails->releases);
         $version = '';
         $date = '';
         if ($latestCompatible != null) {

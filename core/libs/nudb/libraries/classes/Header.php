@@ -97,22 +97,21 @@ class Header
     /** @var Template */
     private $template;
 
-    /** @var bool */
-    private $isTransformationWrapper = false;
-
     /**
      * Creates a new class instance
      */
     public function __construct()
     {
+        global $db, $table, $dbi;
+
         $this->template = new Template();
 
         $this->isEnabled = true;
         $this->isAjax = false;
         $this->bodyId = '';
         $this->title = '';
-        $this->console = new Console(new Relation($GLOBALS['dbi']), $this->template);
-        $this->menu = new Menu($GLOBALS['dbi'], $GLOBALS['db'] ?? '', $GLOBALS['table'] ?? '');
+        $this->console = new Console();
+        $this->menu = new Menu($dbi, $db ?? '', $table ?? '');
         $this->menuEnabled = true;
         $this->warningsEnabled = true;
         $this->scripts = new Scripts();
@@ -127,9 +126,9 @@ class Header
      */
     private function addDefaultScripts(): void
     {
-        $this->scripts->addFile('runtime.js');
+        // Localised strings
         $this->scripts->addFile('vendor/jquery/jquery.min.js');
-        $this->scripts->addFile('vendor/jquery/jquery-migrate.js');
+        $this->scripts->addFile('vendor/jquery/jquery-migrate.min.js');
         $this->scripts->addFile('vendor/sprintf.js');
         $this->scripts->addFile('ajax.js');
         $this->scripts->addFile('keyhandler.js');
@@ -139,16 +138,27 @@ class Header
         $this->scripts->addFile('vendor/js.cookie.js');
         $this->scripts->addFile('vendor/jquery/jquery.validate.js');
         $this->scripts->addFile('vendor/jquery/jquery-ui-timepicker-addon.js');
+        $this->scripts->addFile('vendor/jquery/jquery.debounce-1.0.6.js');
         $this->scripts->addFile('menu_resizer.js');
-        $this->scripts->addFile('cross_framing_protection.js');
-        $this->scripts->addFile('index.php', ['route' => '/messages', 'l' => $GLOBALS['lang']]);
+
+        // Cross-framing protection
+        // At this point browser settings are not merged
+        // this is good that we only use file configuration for this protection
+        if ($GLOBALS['cfg']['AllowThirdPartyFraming'] === false) {
+            $this->scripts->addFile('cross_framing_protection.js');
+        }
+
+        // Here would not be a good place to add CodeMirror because
+        // the user preferences have not been merged at this point
+
+        $this->scripts->addFile('messages.php', ['l' => $GLOBALS['lang']]);
         $this->scripts->addFile('config.js');
+        $this->scripts->addFile('doclinks.js');
         $this->scripts->addFile('functions.js');
         $this->scripts->addFile('navigation.js');
         $this->scripts->addFile('indexes.js');
         $this->scripts->addFile('common.js');
         $this->scripts->addFile('page_settings.js');
-        $this->scripts->addFile('main.js');
 
         $this->scripts->addCode($this->getJsParamsCode());
     }
@@ -161,6 +171,8 @@ class Header
      */
     public function getJsParams(): array
     {
+        global $db, $table, $dbi;
+
         $pftext = $_SESSION['tmpval']['pftext'] ?? '';
 
         $params = [
@@ -169,8 +181,8 @@ class Header
             'opendb_url' => Util::getScriptNameForOption($GLOBALS['cfg']['DefaultTabDatabase'], 'database'),
             'lang' => $GLOBALS['lang'],
             'server' => $GLOBALS['server'],
-            'table' => $GLOBALS['table'] ?? '',
-            'db' => $GLOBALS['db'] ?? '',
+            'table' => $table ?? '',
+            'db' => $db ?? '',
             'token' => $_SESSION[' PMA_token '],
             'text_dir' => $GLOBALS['text_dir'],
             'LimitChars' => $GLOBALS['cfg']['LimitChars'],
@@ -178,7 +190,7 @@ class Header
             'confirm' => $GLOBALS['cfg']['Confirm'],
             'LoginCookieValidity' => $GLOBALS['cfg']['LoginCookieValidity'],
             'session_gc_maxlifetime' => (int) ini_get('session.gc_maxlifetime'),
-            'logged_in' => isset($GLOBALS['dbi']) ? $GLOBALS['dbi']->isConnected() : false,
+            'logged_in' => isset($dbi) ? $dbi->isConnected() : false,
             'is_https' => $GLOBALS['config']->isHttps(),
             'rootPath' => $GLOBALS['config']->getRootPath(),
             'arg_separator' => Url::getArgSeparator(),
@@ -209,7 +221,7 @@ class Header
             }
         }
 
-        return 'window.CommonParams.setAll({' . implode(',', $params) . '});';
+        return 'CommonParams.setAll({' . implode(',', $params) . '});';
     }
 
     /**
@@ -296,7 +308,7 @@ class Header
      */
     public function getDisplay(): string
     {
-        $GLOBALS['theme'] = $GLOBALS['theme'] ?? null;
+        global $db, $table, $theme, $dbi;
 
         if ($this->headerIsSent || ! $this->isEnabled) {
             return '';
@@ -304,7 +316,7 @@ class Header
 
         $recentTable = '';
         if (empty($_REQUEST['recent_table'])) {
-            $recentTable = $this->addRecentTable($GLOBALS['db'], $GLOBALS['table']);
+            $recentTable = $this->addRecentTable($db, $table);
         }
 
         if ($this->isAjax) {
@@ -314,7 +326,7 @@ class Header
         $this->sendHttpHeaders();
 
         $baseDir = defined('PMA_PATH_TO_BASEDIR') ? PMA_PATH_TO_BASEDIR : '';
-        $themePath = $GLOBALS['theme'] instanceof Theme ? $GLOBALS['theme']->getPath() : '';
+        $themePath = $theme instanceof Theme ? $theme->getPath() : '';
         $version = self::getVersionParameter();
 
         // The user preferences have been merged at this point
@@ -367,8 +379,8 @@ class Header
         if ($this->menuEnabled && $GLOBALS['server'] > 0) {
             $nav = new Navigation(
                 $this->template,
-                new Relation($GLOBALS['dbi']),
-                $GLOBALS['dbi']
+                new Relation($dbi),
+                $dbi
             );
             $navigation = $nav->getDisplay();
         }
@@ -386,9 +398,6 @@ class Header
 
         $console = $this->console->getDisplay();
         $messages = $this->getMessage();
-
-        $this->scripts->addFile('datetimepicker.js');
-        $this->scripts->addFile('validator-messages.js');
 
         return $this->template->render('header', [
             'lang' => $GLOBALS['lang'],
@@ -515,10 +524,7 @@ class Header
 
         $headers = array_merge($headers, Core::getNoCacheHeaders());
 
-        /**
-         * A different Content-Type is set in {@see \PhpMyAdmin\Controllers\Transformation\WrapperController}.
-         */
-        if (! $this->isTransformationWrapper) {
+        if (! defined('IS_TRANSFORMATION_WRAPPER')) {
             // Define the charset to be used
             $headers['Content-Type'] = 'text/html; charset=utf-8';
         }
@@ -562,18 +568,20 @@ class Header
      */
     private function getCspHeaders(): array
     {
+        global $cfg;
+
         $mapTileUrls = ' *.tile.openstreetmap.org';
         $captchaUrl = '';
-        $cspAllow = $GLOBALS['cfg']['CSPAllow'];
+        $cspAllow = $cfg['CSPAllow'];
 
         if (
-            ! empty($GLOBALS['cfg']['CaptchaLoginPrivateKey'])
-            && ! empty($GLOBALS['cfg']['CaptchaLoginPublicKey'])
-            && ! empty($GLOBALS['cfg']['CaptchaApi'])
-            && ! empty($GLOBALS['cfg']['CaptchaRequestParam'])
-            && ! empty($GLOBALS['cfg']['CaptchaResponseParam'])
+            ! empty($cfg['CaptchaLoginPrivateKey'])
+            && ! empty($cfg['CaptchaLoginPublicKey'])
+            && ! empty($cfg['CaptchaApi'])
+            && ! empty($cfg['CaptchaRequestParam'])
+            && ! empty($cfg['CaptchaResponseParam'])
         ) {
-            $captchaUrl = ' ' . $GLOBALS['cfg']['CaptchaCsp'] . ' ';
+            $captchaUrl = ' ' . $cfg['CaptchaCsp'] . ' ';
         }
 
         $headers = [];
@@ -654,17 +662,14 @@ class Header
 
     private function getVariablesForJavaScript(): string
     {
+        global $cfg;
+
         $maxInputVars = ini_get('max_input_vars');
         $maxInputVarsValue = $maxInputVars === false || $maxInputVars === '' ? 'false' : (int) $maxInputVars;
 
         return $this->template->render('javascript/variables', [
-            'first_day_of_calendar' => $GLOBALS['cfg']['FirstDayOfCalendar'] ?? 0,
+            'first_day_of_calendar' => $cfg['FirstDayOfCalendar'] ?? 0,
             'max_input_vars' => $maxInputVarsValue,
         ]);
-    }
-
-    public function setIsTransformationWrapper(bool $isTransformationWrapper): void
-    {
-        $this->isTransformationWrapper = $isTransformationWrapper;
     }
 }

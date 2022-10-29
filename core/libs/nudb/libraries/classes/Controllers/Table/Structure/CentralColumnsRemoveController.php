@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Table\Structure;
 
-use PhpMyAdmin\Controllers\AbstractController;
+use PhpMyAdmin\Controllers\Table\AbstractController;
 use PhpMyAdmin\Controllers\Table\StructureController;
 use PhpMyAdmin\Database\CentralColumns;
-use PhpMyAdmin\Http\ServerRequest;
 use PhpMyAdmin\Message;
 use PhpMyAdmin\ResponseRenderer;
 use PhpMyAdmin\Template;
@@ -25,17 +24,19 @@ final class CentralColumnsRemoveController extends AbstractController
     public function __construct(
         ResponseRenderer $response,
         Template $template,
+        string $db,
+        string $table,
         CentralColumns $centralColumns,
         StructureController $structureController
     ) {
-        parent::__construct($response, $template);
+        parent::__construct($response, $template, $db, $table);
         $this->centralColumns = $centralColumns;
         $this->structureController = $structureController;
     }
 
-    public function __invoke(ServerRequest $request): void
+    public function __invoke(): void
     {
-        $GLOBALS['message'] = $GLOBALS['message'] ?? null;
+        global $db, $message;
 
         $selected = $_POST['selected_fld'] ?? [];
 
@@ -46,16 +47,16 @@ final class CentralColumnsRemoveController extends AbstractController
             return;
         }
 
-        $centralColsError = $this->centralColumns->deleteColumnsFromList($GLOBALS['db'], $selected, false);
+        $centralColsError = $this->centralColumns->deleteColumnsFromList($db, $selected, false);
 
         if ($centralColsError instanceof Message) {
-            $GLOBALS['message'] = $centralColsError;
+            $message = $centralColsError;
         }
 
-        if (empty($GLOBALS['message'])) {
-            $GLOBALS['message'] = Message::success();
+        if (empty($message)) {
+            $message = Message::success();
         }
 
-        ($this->structureController)($request);
+        ($this->structureController)();
     }
 }

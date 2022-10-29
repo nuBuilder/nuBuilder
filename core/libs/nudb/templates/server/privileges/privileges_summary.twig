@@ -3,12 +3,11 @@
     <input type="hidden" name="username" value="{{ username }}">
     <input type="hidden" name="hostname" value="{{ hostname }}">
 
-    <div class="card mb-3">
-        <div class="card-header js-submenu-label" data-submenu-label="{{ sub_menu_label }}">
+    <fieldset class="pma-fieldset">
+        <legend data-submenu-label="{{ sub_menu_label }}">
             {{ legend }}
-        </div>
+        </legend>
 
-        <div class="card-body">
         <table class="table table-striped table-hover w-auto">
             <thead>
                 <tr>
@@ -97,10 +96,9 @@
 
             <input type="text" id="text_routinename" name="routinename">
         {% endif %}
-        </div>
-    </div>
+    </fieldset>
 
-    <div>
+    <fieldset class="pma-fieldset tblFooters">
         <input class="btn btn-primary" type="submit" value="{% trans 'Go' %}">
-    </div>
+    </fieldset>
 </form>

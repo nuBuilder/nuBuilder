@@ -107,7 +107,9 @@ class PageSettings
         if ($result === true) {
             // reload page
             $response = ResponseRenderer::getInstance();
-            Core::sendHeaderLocation($response->getSelfUrl());
+            Core::sendHeaderLocation(
+                $response->getFooter()->getSelfUrl()
+            );
             exit;
         }
 
@@ -156,7 +158,13 @@ class PageSettings
 
         $retval .= '<div id="' . $this->elemId . '">';
         $retval .= '<div class="page_settings">';
-        $retval .= $formDisplay->getDisplay(false, $response->getSelfUrl(), ['submit_save' => $this->groupName]);
+        $retval .= $formDisplay->getDisplay(
+            false,
+            $response->getFooter()->getSelfUrl(),
+            [
+                'submit_save' => $this->groupName,
+            ]
+        );
         $retval .= '</div>';
         $retval .= '</div>';
 
