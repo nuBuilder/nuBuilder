@@ -116,7 +116,7 @@ function nuCreateDrag() {
 		const key = event.key;
 		var m = (event.buttons == 1 && this.classList.indexOf('nuDragSelected') != -1);
 
-		if (m || key.startsWith('Arrow')) {
+		if (m || (key && key.startsWith('Arrow'))) {
 
 			if ($('#nuDragDialog').is(":visible") == false) {
 
@@ -406,7 +406,7 @@ function nuCreateDrag() {
 		if (arguments.length == 1) {
 			return $('#nuDragArea').css('left', a);
 		}
-		return parseInt($('#nuDragArea', 10).css('left'));
+		return parseInt($('#nuDragArea').css('left'), 10);
 
 	}
 
@@ -415,7 +415,7 @@ function nuCreateDrag() {
 		if (arguments.length == 1) {
 			return $('#nuDragArea').css('top', a);
 		}
-		return parseInt($('#nuDragArea', 10).css('top'));
+		return parseInt($('#nuDragArea').css('top'), 10);
 
 	}
 
@@ -424,7 +424,7 @@ function nuCreateDrag() {
 		if (arguments.length == 1) {
 			return $('#nuDragArea').css('width', a);
 		}
-		return parseInt($('#nuDragArea', 10).css('width'));
+		return parseInt($('#nuDragArea').css('width'), 10);
 
 	}
 
@@ -433,7 +433,7 @@ function nuCreateDrag() {
 		if (arguments.length == 1) {
 			return $('#nuDragArea').css('height', a);
 		}
-		return parseInt($('#nuDragArea', 10).css('height'));
+		return parseInt($('#nuDragArea').css('height'), 10);
 
 	}
 
