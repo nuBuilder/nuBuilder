@@ -86,6 +86,7 @@
 
 		if($CT == 'logout')																	nuLogout();
 		if($CT == 'login')																	nuRunLoginProcedure('nuStartup');
+		if($CT == 'ssologin')																nuSsoLoginCheckParams();
 
 		if($CT == 'getform' || $CT == 'getphp' || $CT == 'login' || $CT == 'getreport') {
 			nuBeforeEdit($F, $R);$f->forms[0] =												nuGetFormObject($F, $R, 0);

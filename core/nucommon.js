@@ -399,25 +399,40 @@ function nuFormatAjaxErrorMessage(jqXHR, exception) {
 
 }
 
-function nuLogin(nuconfigNuWelcomeBodyInnerHTML) {
+function nuLogin(topLoginRow, nuconfigNuWelcomeBodyInnerHTML, logonMode='normal', onlySsoExcept={}, lastuser="") {
 
 	var HTML = String(nuconfigNuWelcomeBodyInnerHTML).trim();
+	topLoginRow = String(topLoginRow).trim();
 	window.nuSESSION = '';
 	window.nuFORM = new nuFormObject();
 
 	$('body').html('');
 
-	var h = `
-
-			<div id='outer' style='width:100%'>
-			<form id='nuLoginForm' action='#' method='post' onsubmit='return false'>
-				<div id='login' class='nuLogin'>
-					<table>
+	var defaulTopRow = `
 						<tr>
 							<td align='center' style='padding:0px 0px 0px 33px; text-align:center;'>
 							<img src='core/graphics/logo.png'><br><br>
 							</td>
 						</tr>
+			`;
+
+	var topRow = topLoginRow == '' ? defaulTopRow : topLoginRow;
+
+	var h1 = `
+			<div id='outer' style='width:100%'>
+			<form id='nuLoginForm' action='#' method='post' onsubmit='return false'>
+				<div id='login' class='nuLogin'>
+					<table>`
+					    + topRow + `
+			`;
+	var h2sso = `						
+						<tr>
+							<td align='center' style='text-align:center' colspan='2'>
+								<input id='submitSSO' style='width:90px' type='submit' class='nuButton' onclick='nuSSOLoginRequest()' value='SSO Log in'/>
+								<br><br>
+							</td>
+						</tr>`;
+	var h3normal = `
 						<tr>
 							<td><div style='width:90px; margin-bottom: 5px;'>Username</div><input class='nuLoginInput' id='nuusername' autocomplete='off' /><br><br></td>
 						</tr>
@@ -428,14 +443,28 @@ function nuLogin(nuconfigNuWelcomeBodyInnerHTML) {
 							<td style='text-align:center' colspan='2'><br><br>
 								<input id='submit' style='width:90px' type='submit' class='nuButton' onclick='nuLoginRequest()' value='Log in'/>
 							</td>
-						</tr>
+						</tr>`;
+	var h4 = `
 					</table>
 				</div>
 			</form>
 			</div>
-
-
 	`;
+
+
+    if(logonMode == 'normal') {
+	    var h = h1 + h3normal + h4;
+	} else if (logonMode == 'sso') {
+        var h = h1 + h2sso + h4;
+    } else if (logonMode == 'both') {
+		if (lastuser in onlySsoExcept || "allusers" in onlySsoExcept) {  // Selectively show username/password login option if found in 'onlySsoExcept' dictionary - most users only see SSO button
+		    var h = h1 + h2sso + h3normal + h4;
+		} else {
+			var h = h1 + h2sso + h4;
+		}
+	} else {  // Original/normal mode
+	    var h = h1 + h3normal + h4;
+	}
 
 	var H = HTML == '' ? h : HTML;
 

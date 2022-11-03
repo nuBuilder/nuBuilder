@@ -24,6 +24,17 @@
 	$nuConfigDBGlobeadminUsername	 	= "globeadmin";				//-- Administrator username. You can choose any username you like.
 	$nuConfigDBGlobeadminPassword		= "nu";						//-- Administrator password. Please choose a stronger password!
 
+// SSO:
+
+	$nuConfigLogonMode			        = 'normal';	 		        // normal/sso/both->Leave as 'normal' unless you want to enable SSO.
+										                            // The sso/both options include a single sign on button.
+										                            // See SSO_README.txt
+	$onlySsoExcept		                = array('globeadmin');		// If $nuConfigLogonMode=='both', only the SSO login option is displayed *unless* the last user to
+										                            // log in (from this browser) matches one of the listed users in this setting.
+										                            // For SSO users, use the full email address in the array, here.
+                                                                	// E.g. array('globeadmin','user@example.com');
+                                                                	// This causes the username/password to be displayed (otherwise it is hidden).
+
 // Includes:
 
 	$nuConfigIncludeJS					= '';						//-- Include one or more JavaScript File(s).  E.g. 'myjslib.js' or ['myjslib1.js','myjslib2.js']
@@ -35,7 +46,20 @@
 	$nuConfigSettingsFromDB				= true;						//-- Use settings from setup->settings if set to true (default)	
 
 
-// Uncomment this block to customise the login form:
+
+// Uncomment this block to customise just the top line of the login form (default = nuBuilder Forte logo)
+// This must be one (or could be more) table rows inside <tr> and </tr> :-
+/*
+    $nuConfigLoginScreenTopRow = "
+							<tr>
+								<td align='center' style='padding:0px 0px 0px 33px; text-align:center;'>
+								<img src='core/graphics/logo.png'><br><br>
+								</td>
+							</tr>
+	";
+*/
+
+// Alternatively, uncomment this block to customise the whole login form (note: $nuConfigLogonMode will be ignored):
 
 /*
 	$nuWelcomeBodyInnerHTML = " 
@@ -49,6 +73,14 @@
 								<img src='core/graphics/logo.png'><br><br>
 								</td>
 							</tr>
+				<!-- SSO Log in part
+						<tr>
+							<td align='center' style='text-align:center' colspan='2'>
+								<input id='submitSSO' style='width:90px' type='submit' class='nuButton' onclick='nuSSOLoginRequest()' value='SSO Log in'/>
+								<br><br>
+							</td>
+						</tr>
+				End of SSO Log in part -->
 							<tr>
 								<td><div style='width:90px; margin-bottom: 5px;'>Username</div><input class='nuLoginInput' id='nuusername' autocomplete='off' /><br><br></td>
 							</tr>

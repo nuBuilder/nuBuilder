@@ -843,7 +843,21 @@ function nuGetFile(){
 
 }
 
+function nuSetLastLoggedInUser() {
+    if($_SESSION['nubuilder_session_data']['isGlobeadmin']) {
+        $_SESSION['nuLastUser']['user_id'] = "globeadmin";
+    } else {
+        $_SESSION['nuLastUser']['user_id'] = $_SESSION['nubuilder_session_data']['user_id'];
+    }
+}
+
 function nuLogout(){
+
+    // Keep a record of the user that last logged in on this session.
+    // This is a hook to enable the login screen to be varied according to who is using the system.
+    // For example, when using Single Sign On (SSO), most users will sign on via the "SSO Login" button and should never see the username/password/login button.
+    // A few administrators need to be able to log into the system via the username/password/login button as an alternative to SSO.
+    nuSetLastLoggedInUser();
 
 	$i		= $_SESSION['nubuilder_session_data']['SESSION_ID'];
 	unset($_SESSION['nubuilder_session_data']['SESSION_ID']);
