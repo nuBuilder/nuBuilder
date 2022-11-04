@@ -3,6 +3,7 @@
 require_once('nuchoosesetup.php');
 require_once('nucommon.php');
 require_once('nuprocesslogins.php');
+require_once('nuprocessssologins.php');
 require_once('nusecurity.php');
 
 function nuRunLoginProcedure($procedure) {
@@ -14,6 +15,8 @@ function nuRunLoginProcedure($procedure) {
 		if ($error != '') nuDie($error);
 	}
 }
+
+
 
 if ( nuCheckIsLoginRequest() ) {
 
@@ -41,6 +44,35 @@ if ( nuCheckIsLoginRequest() ) {
 		if ($result == "-1") nuDie('This account is disabled.');
 	}
 
+} elseif ( nuCheckIsSsoLoginRequest() ) {
+
+    $check = true;
+
+    $sso_d = ssoGetloginRequestData();
+    if($sso_d["name"] == "" or $sso_d["email"] == "" or $sso_d["code"] == "") $check = false;
+    $check or nuDie("Error during SSO login.  Internal information: sso_d was incomplete.");
+
+    // Check the POSTed data against the database entry that was created when the user SSO-logged-in (just now)
+    $ssodb_d = ssoCheckloginDataAgainstDb($sso_d);
+    // $ssodb_d["email"] and $ssodb_d["name"] are now set.
+    
+    ssoMarkRowInDbAsProcessed($sso_d);
+
+    $matches = array();
+    $check = preg_match("/^([^@]+)\@/", $ssodb_d["email"], $matches);
+    $check or nuDie("Error during SSO login.  Internal information: Could not extract local part of email.");
+    $emailLocalPart = $matches[1];  // The part of the email address before the "@"
+    
+    $veryFirstLogin = ssoVeryFirstLogin($ssodb_d["email"]);
+    if($veryFirstLogin) {
+        ssoAddSysUserEntryForFirstLogin($emailLocalPart, $ssodb_d);
+    }
+
+    ssoCheckSysUserEntryIsInOrder($ssodb_d["email"]);
+    
+    // No nuDie() has been executed, if we made it this far...
+    nuLoginSetupNOTGlobeadmin(true, $ssodb_d["email"]);
+    
 } else {
 
 	nuCheckExistingSession();
@@ -61,3 +93,5 @@ if ( $_SESSION['nubuilder_session_data']['SESSION_ID'] == 'tempanonreport' ) {
 	nuDie(nuTranslate('Your session has timed out.'));
 
 }
+
+?>

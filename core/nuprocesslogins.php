@@ -123,6 +123,22 @@ function nuCheckIsLoginRequest() {
 
 }
 
+function nuCheckIsSsoLoginRequest() {
+
+    if (array_key_exists('nuSTATE', $_POST)) {
+
+        if (array_key_exists('call_type', $_POST['nuSTATE'])) {
+
+            if ($_POST['nuSTATE']['call_type'] == 'ssologin') {
+                return true;
+            }
+        }
+    }
+
+    return false;
+
+}
+
 function nuGetIPAddress() {
 
 	if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
@@ -233,7 +249,7 @@ function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 	return true;
 }
 
-function nuLoginSetupNOTGlobeadmin($new = true) {
+function nuLoginSetupNOTGlobeadmin($new = true, $sso_username = "") {
 
 	global $nuConfig2FAUser;
 
@@ -245,27 +261,37 @@ function nuLoginSetupNOTGlobeadmin($new = true) {
 
 		$sql = "SELECT * FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id WHERE sus_login_name = ?";
 
-		$this_username = $_POST['nuSTATE']['username'];
-		$this_password = $_POST['nuSTATE']['password'];
+		if($sso_username) {
+		    $this_username = $sso_username;
+		} else {
+		    $this_username = $_POST['nuSTATE']['username'];
+		    $this_password = $_POST['nuSTATE']['password'];
+		}
 
 		$rs = nuRunQuery($sql, array($this_username));
 		$checkLoginDetailsOBJ = db_fetch_object($rs);
 
-		if ($_SESSION['nubuilder_session_data']['USE_MD5_PASSWORD_HASH'] != true) {
+		if ($sso_username) {
+		    $check = true;
+		} elseif ($_SESSION['nubuilder_session_data']['USE_MD5_PASSWORD_HASH'] != true) {
 			$check = password_verify($this_password, $checkLoginDetailsOBJ->sus_login_password);
 		} else {
 			$check = md5($this_password) == $checkLoginDetailsOBJ->sus_login_password;
 		}
-		
-		$login_token = nuGetUserJSONData("LOGIN_TOKEN",  $checkLoginDetailsOBJ->zzzzsys_user_id );
-		
-		$checkToken = ($this_password == $login_token && strlen($this_password) >= 20);
-		// the token must match and be at least 10 chars
-		if ($checkToken == true) {
-	 		// generate a new token for next time if the use-once token has been used
-			nuSetUserJSONData("LOGIN_TOKEN", nuGenerateToken(20), $checkLoginDetailsOBJ->zzzzsys_user_id );
-		}
-		
+
+		if (!$sso_username) {
+
+            $login_token = nuGetUserJSONData("LOGIN_TOKEN",  $checkLoginDetailsOBJ->zzzzsys_user_id );
+
+            $checkToken = ($this_password == $login_token && strlen($this_password) >= 20);
+            // the token must match and be at least 10 chars
+            if ($checkToken == true) {
+                // generate a new token for next time if the use-once token has been used
+                nuSetUserJSONData("LOGIN_TOKEN", nuGenerateToken(20), $checkLoginDetailsOBJ->zzzzsys_user_id );
+            }
+
+        }
+
 		if ($check == false && $checkToken == false) nuDie();
 
 	}

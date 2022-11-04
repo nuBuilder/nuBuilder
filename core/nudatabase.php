@@ -57,6 +57,7 @@ $GLOBALS['sys_table_prefix'] = array(
     'select_clause' => 'ssc',
     'session' => 'sss',
     'setup' => 'set',
+    'sso_login' => 'sso',
     'tab' => 'syt',
     'timezone' => 'stz',
     'translate' => 'trl',
