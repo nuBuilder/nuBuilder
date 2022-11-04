@@ -844,11 +844,13 @@ function nuGetFile(){
 }
 
 function nuSetLastLoggedInUser() {
+
     if($_SESSION['nubuilder_session_data']['isGlobeadmin']) {
         $_SESSION['nuLastUser']['user_id'] = "globeadmin";
     } else {
         $_SESSION['nuLastUser']['user_id'] = $_SESSION['nubuilder_session_data']['user_id'];
     }
+
 }
 
 function nuLogout(){

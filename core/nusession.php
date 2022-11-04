@@ -16,8 +16,6 @@ function nuRunLoginProcedure($procedure) {
 	}
 }
 
-
-
 if ( nuCheckIsLoginRequest() ) {
 
 	$result = "1";
@@ -46,35 +44,34 @@ if ( nuCheckIsLoginRequest() ) {
 
 } elseif ( nuCheckIsSsoLoginRequest() ) {
 
-    $check = true;
+	$check = true;
 
-    $sso_d = ssoGetloginRequestData();
-    if($sso_d["name"] == "" or $sso_d["email"] == "" or $sso_d["code"] == "") $check = false;
-    $check or nuDie("Error during SSO login.  Internal information: sso_d was incomplete.");
+	$sso_d = nuSsoGetloginRequestData();
+	if($sso_d["name"] == "" or $sso_d["email"] == "" or $sso_d["code"] == "") $check = false;
+	$check or nuDie("Error during SSO login.  Internal information: sso_d was incomplete.");
 
-    // Check the POSTed data against the database entry that was created when the user SSO-logged-in (just now)
-    $ssodb_d = ssoCheckloginDataAgainstDb($sso_d);
-    // $ssodb_d["email"] and $ssodb_d["name"] are now set.
-    
-    ssoMarkRowInDbAsProcessed($sso_d);
+	// Check the POSTed data against the database entry that was created when the user SSO-logged-in (just now)
+	$ssodb_d = nuSsoCheckloginDataAgainstDb($sso_d);
+	// $ssodb_d["email"] and $ssodb_d["name"] are now set.
 
-    $matches = array();
-    $check = preg_match("/^([^@]+)\@/", $ssodb_d["email"], $matches);
-    $check or nuDie("Error during SSO login.  Internal information: Could not extract local part of email.");
-    $emailLocalPart = $matches[1];  // The part of the email address before the "@"
-    
-    $veryFirstLogin = ssoVeryFirstLogin($ssodb_d["email"]);
-    if($veryFirstLogin) {
-        ssoAddSysUserEntryForFirstLogin($emailLocalPart, $ssodb_d);
-    }
+	nuSsoMarkRowInDbAsProcessed($sso_d);
 
-    ssoCheckSysUserEntryIsInOrder($ssodb_d["email"]);
-    
-    // No nuDie() has been executed, if we made it this far...
-    nuLoginSetupNOTGlobeadmin(true, $ssodb_d["email"]);
-    
+	$matches = array();
+	$check = preg_match("/^([^@]+)\@/", $ssodb_d["email"], $matches);
+	$check or nuDie("Error during SSO login.  Internal information: Could not extract local part of email.");
+	$emailLocalPart = $matches[1];  // The part of the email address before the "@"
+
+	$veryFirstLogin = nuSsoVeryFirstLogin($ssodb_d["email"]);
+	if($veryFirstLogin) {
+		nuSsoAddSysUserEntryForFirstLogin($emailLocalPart, $ssodb_d);
+	}
+
+	nuSsoCheckSysUserEntryIsInOrder($ssodb_d["email"]);
+
+	// No nuDie() has been executed, if we made it this far...
+	nuLoginSetupNOTGlobeadmin(true, $ssodb_d["email"]);
+
 } else {
-
 	nuCheckExistingSession();
 }
 

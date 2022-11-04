@@ -15,7 +15,7 @@ function nuLoadBody($debug = false) {
 }
 
 
-function nuGetJS_login($nuBrowseFunction, $target, $topLoginRow, $welcome, $formId, $recordId, $isSession, $logonMode, $onlySsoExcept, $lastuser) {
+function nuGetJS_login($nuBrowseFunction, $target, $loginTopRow, $welcome, $formId, $recordId, $isSession, $logonMode, $onlySsoExcept, $lastUser) {
 
 	$h2 = "function nuLoad(){
 		nuBindCtrlEvents();
@@ -29,19 +29,19 @@ function nuGetJS_login($nuBrowseFunction, $target, $topLoginRow, $welcome, $form
 	if ($isSession) {
 		$h3 = "nuForm('$formId','$recordId','','','','');";
 	} else {
-	    // Lines below take a PHP array and create a JS dictionary - example:
-	    // Input:  PHP:    $onlySsoExcept = array("globeadmin", "fred")
-	    // Output:  JS: var onlySsoExcept = { "globeadmin": true, "fred": true };
-	    $colonTrueAdded = array_map(function($item) {  // Append ": true' but also put double quotes around the keys
-	        return '"'.$item.'": true';
-	    }, $onlySsoExcept);
-	    $dictLiteral = join(", ", $colonTrueAdded);
-	    $jsDict  = 'var onlySsoExcept = { '.$dictLiteral.' }';
+		// Lines below take a PHP array and create a JS dictionary - example:
+		// Input:  PHP:	$onlySsoExcept = array("globeadmin", "fred")
+		// Output:  JS: var onlySsoExcept = { "globeadmin": true, "fred": true };
+		$colonTrueAdded = array_map(function($item) {  // Append ": true' but also put double quotes around the keys
+			return '"'.$item.'": true';
+		}, $onlySsoExcept);
+		$dictLiteral = join(", ", $colonTrueAdded);
+		$jsDict  = 'var onlySsoExcept = { '.$dictLiteral.' }';
 		$h3 = "
-			var topLoginRow				= `$topLoginRow`;
-            var welcome					= `$welcome`;
-            $jsDict;
-			nuLogin(topLoginRow, welcome, '$logonMode', onlySsoExcept, '$lastuser');
+			var loginTopRow				= `$loginTopRow`;
+			var welcome					= `$welcome`;
+			$jsDict;
+			nuLogin(loginTopRow, welcome, '$logonMode', onlySsoExcept, '$lastUser');
 		";
 	}
 

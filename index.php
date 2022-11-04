@@ -218,7 +218,7 @@ window.nuHASH				= [];
     global $nuConfigLogonMode;
     global $nuConfigHideNonSsoLogonExcept;
     $nuConfigLoginScreenTopRow = (isset($nuConfigLoginScreenTopRow)?$nuConfigLoginScreenTopRow:'');
-    $topLoginRow            = addslashes($nuConfigLoginScreenTopRow);
+    $loginTopRow            = addslashes($nuConfigLoginScreenTopRow);
 	$nuWelcomeBodyInnerHTML	= (isset($nuWelcomeBodyInnerHTML)?$nuWelcomeBodyInnerHTML:'');
 	$welcome				= addslashes($nuWelcomeBodyInnerHTML);
 	$nuHeader				= nuHeader();
@@ -273,8 +273,8 @@ window.nuHASH				= [];
 	}else{
 
 		if($opener == ''){
-		    $lastuser = nuLastLoggedInUser();
-		    $h2 = nuGetJS_login($nuBrowseFunction, $target, $topLoginRow, $welcome, $nuForm, $nuRecord, $isSession, $nuConfigLogonMode, $onlySsoExcept, $lastuser);
+		    $lastUser = nuLastLoggedInUser();
+		    $h2 = nuGetJS_login($nuBrowseFunction, $target, $loginTopRow, $welcome, $nuForm, $nuRecord, $isSession, $nuConfigLogonMode, $onlySsoExcept, $lastUser);
         } else {
 			$h2 = nuGetJS_action_screen($nuBrowseFunction, $target, $welcome, $opener, $search, $like);
 	   }

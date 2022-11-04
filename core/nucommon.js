@@ -399,10 +399,10 @@ function nuFormatAjaxErrorMessage(jqXHR, exception) {
 
 }
 
-function nuLogin(topLoginRow, nuconfigNuWelcomeBodyInnerHTML, logonMode='normal', onlySsoExcept={}, lastuser="") {
+function nuLogin(loginTopRow, nuconfigNuWelcomeBodyInnerHTML, logonMode='normal', onlySsoExcept={}, lastUser="") {
 
 	var HTML = String(nuconfigNuWelcomeBodyInnerHTML).trim();
-	topLoginRow = String(topLoginRow).trim();
+	loginTopRow = String(loginTopRow).trim();
 	window.nuSESSION = '';
 	window.nuFORM = new nuFormObject();
 
@@ -416,16 +416,16 @@ function nuLogin(topLoginRow, nuconfigNuWelcomeBodyInnerHTML, logonMode='normal'
 						</tr>
 			`;
 
-	var topRow = topLoginRow == '' ? defaulTopRow : topLoginRow;
+	var topRow = loginTopRow == '' ? defaulTopRow : loginTopRow;
 
 	var h1 = `
 			<div id='outer' style='width:100%'>
 			<form id='nuLoginForm' action='#' method='post' onsubmit='return false'>
 				<div id='login' class='nuLogin'>
-					<table>`
-					    + topRow + `
+					<table align="center">`
+						+ topRow + `
 			`;
-	var h2sso = `						
+	var h2sso = `
 						<tr>
 							<td align='center' style='text-align:center' colspan='2'>
 								<input id='submitSSO' style='width:90px' type='submit' class='nuButton' onclick='nuSSOLoginRequest()' value='SSO Log in'/>
@@ -452,18 +452,18 @@ function nuLogin(topLoginRow, nuconfigNuWelcomeBodyInnerHTML, logonMode='normal'
 	`;
 
 
-    if(logonMode == 'normal') {
-	    var h = h1 + h3normal + h4;
+	if(logonMode == 'normal') {
+		var h = h1 + h3normal + h4;
 	} else if (logonMode == 'sso') {
-        var h = h1 + h2sso + h4;
-    } else if (logonMode == 'both') {
-		if (lastuser in onlySsoExcept || "allusers" in onlySsoExcept) {  // Selectively show username/password login option if found in 'onlySsoExcept' dictionary - most users only see SSO button
-		    var h = h1 + h2sso + h3normal + h4;
+		var h = h1 + h2sso + h4;
+	} else if (logonMode == 'both') {
+		if (lastUser in onlySsoExcept || "allusers" in onlySsoExcept) {  // Selectively show username/password login option if found in 'onlySsoExcept' dictionary - most users only see SSO button
+			var h = h1 + h2sso + h3normal + h4;
 		} else {
 			var h = h1 + h2sso + h4;
 		}
 	} else {  // Original/normal mode
-	    var h = h1 + h3normal + h4;
+		var h = h1 + h3normal + h4;
 	}
 
 	var H = HTML == '' ? h : HTML;
@@ -840,7 +840,7 @@ function nuBindCtrlEvents() {
 			const $nuRecord = $("#nuRECORD");
 			const scrollBy = e.key === 'PageDown' ? 400 : -400;
 			$nuRecord.scrollTop($nuRecord.scrollTop() + scrollBy);
-        }
+		}
 
 		if (e.key == 'Escape') {
 
@@ -885,7 +885,7 @@ function nuBindCtrlEvents() {
 				} else if (e.code == 'KeyE' && g) {					//-- e		Database
 					nuVendorLogin('PMA');
 				} else if (e.code == 'KeyI' && g) {					//-- e		Sessions
-					nuForm("nusession","","", "", 2);					
+					nuForm("nusession","","", "", 2);
 				} else if (e.code == 'KeyQ' && g) {					//-- e		File Manager
 					nuVendorLogin("TFM");
 				} else if (e.code == 'KeyB' && g) {					//-- b		Backup
@@ -990,13 +990,13 @@ function nuUnbindDragEvents() {
 function nuTranslate(obj) {
 
 	if (Array.isArray(obj)) {
-		
+
 		let arr = obj;
 		arr.forEach(function(item, index) {
 			const l = nuLANGUAGE.find(elem => elem.english === item);
 			arr[index] = !l ? item : l.translation;
 		})
-		
+
 		return arr;
 
 	} else {
