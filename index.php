@@ -328,9 +328,10 @@ window.nuHASH				= [];
 
 	}
 
-	// focus select2 search field when clicked
-	$(document).on('select2:open', () => {
-		document.querySelector('.select2-search__field').focus();
+	$(document).on('select2:open', (element) => {
+		const targetId = element.target.id;
+		const searchField = document.querySelector(\"[aria-controls='select2-\"+targetId+\"-results']\");
+		searchField.focus();
 	});
 
 	document.addEventListener('focus', nuOnFocus, true);
