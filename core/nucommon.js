@@ -884,7 +884,7 @@ function nuBindCtrlEvents() {
 					nuShowFormInfo();
 				} else if (e.code == 'KeyE' && g) {					//-- e		Database
 					nuVendorLogin('PMA');
-				} else if (e.code == 'KeyI' && g) {					//-- e		Sessions
+				} else if (e.code == 'KeyI' && g) {					//-- i		Sessions
 					nuForm("nusession","","", "", 2);
 				} else if (e.code == 'KeyQ' && g) {					//-- e		File Manager
 					nuVendorLogin("TFM");
@@ -898,7 +898,7 @@ function nuBindCtrlEvents() {
 					nuPopup("nudebug", "");
 				} else if (e.code == 'KeyY' && g) {					//-- y		Current Properties
 					nuPrettyPrintMessage(e, nuCurrentProperties());
-				} else if (e.code == 'Keyl') {						//-- l		Log out
+				} else if (e.code == 'KeyL') {						//-- l		Log out
 					nuAskLogout();
 				}
 
@@ -937,7 +937,7 @@ function nuBindCtrlEvents() {
 					nuDeleteAction();
 				} else if (e.code == 'ArrowRight') {				//-- ->		Select next tab
 					nuSelectNextTab(1);
-				} else if (e.code == 'ArrowLeft') {				//-- <-		Select previous tab
+				} else if (e.code == 'ArrowLeft') {					//-- <-		Select previous tab
 					nuSelectNextTab(-1);
 				}
 
