@@ -29,7 +29,7 @@
 	$nuConfigLogonMode			        = 'normal';	 		        // normal/sso/both->Leave as 'normal' unless you want to enable SSO.
 										                            // The sso/both options include a single sign on button.
 										                            // See SSO_README.txt
-	$onlySsoExcept		                = array('globeadmin');		// If $nuConfigLogonMode=='both', only the SSO login option is displayed *unless* the last user to
+	$nuConfigSsoOnlyExcept		         = array('globeadmin');		// If $nuConfigLogonMode=='both', only the SSO login option is displayed *unless* the last user to
 										                            // log in (from this browser) matches one of the listed users in this setting.
 										                            // For SSO users, use the full email address in the array, here.
                                                                 	// E.g. array('globeadmin','user@example.com');
