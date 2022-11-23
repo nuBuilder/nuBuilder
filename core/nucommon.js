@@ -574,6 +574,11 @@ function nuPopup(f, r, filter) {
 		.css('visibility', 'hidden')
 		.append('<iframe style="border-style:none;right:5px;top:35px;width:400px;height:400px;position:absolute" id="nuWindow" src="index.php?opener=' + id + '&browsefunction=browse&iframe=1"></iframe>')
 		.prepend('<div id="nuDraggingBox" style="position:absolute; bottom:0px; right:0px; width:20px; height:20px; z-index:200"></div>');
+		
+
+	if (window.nuOnPopupOpenedGlobal) {
+		nuOnPopupOpenedGlobal(f, r, filter);
+	}
 
 }
 
