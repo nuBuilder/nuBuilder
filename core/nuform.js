@@ -108,6 +108,7 @@ function nuBuildForm(f) {
 	window.nuOnSetCalendarOptions = null;
 	window.nuOnLookupPopulated = null;
 	window.nuCalculated = null;
+	window.nuOnPropertySet = null;
 	window.nuBrowseFunction = window.nuDefaultBrowseFunction;
 	window.nuCLONE = false;
 	window.nuSERVERRESPONSELU = [];
@@ -6203,7 +6204,7 @@ function nuAddBrowseAdditionalNavButtons() {
 		var currentPage = Number($('#browsePage').val());
 		var lastPage = nuCurrentProperties().pages;
 
-		var html = '<span id="nuFirst" class="nuBrowsePage" style="font-size: 15px;"><i class="fa fa-step-backward ml-5 mr-5" onclick="nuGetPage(0)">&nbsp;&nbsp;&nbsp;&nbsp;</i></span>';
+		var html = '<span id="nuFirst" class="nuBrowsePage" style="font-size: 15px;"><i class="fa fa-step-backward ml-5 mr-5" onclick="nuGetPage(1)">&nbsp;&nbsp;&nbsp;&nbsp;</i></span>';
 		$(html).insertBefore("#nuLast");
 
 		html = '<span id="nuEnd" class="nuBrowsePage" style="font-size: 15px;">&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-step-forward ml-5 mr-5" onclick="nuGetPage(' + lastPage + ')"></i></span>';
