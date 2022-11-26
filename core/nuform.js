@@ -72,9 +72,7 @@ function nuBuildForm(f) {
 
 	}
 
-	if (formType == 'browse') {
-		window.nuTimesSaved = -1;
-	} else {
+	if (formType == 'edit' && nuCurrentProperties().form_type !== 'Launch') {
 
 		window.nuTimesSaved = window.nuTimesSaved + 1;
 
@@ -82,6 +80,8 @@ function nuBuildForm(f) {
 			window.nuTimesSaved = 0;
 		}
 
+	} else {
+		window.nuTimesSaved = -1;
 	}
 
 	window.nuLastForm = f.form_id;
