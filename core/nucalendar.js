@@ -72,9 +72,11 @@ function nuPopupCalendarVanillaJs(pThis, d) {
 
 	datepicker = new Datepicker(pThis, calendarOptions);
 
-	pThis.addEventListener('changeDate', (ev) => {
-		$(ev.target).addClass('nuEdited');
-	});
+	const nuChangeDate = function (e) {
+		$(e.target).addClass('nuEdited');
+	}
+
+	$(pThis).off('changeDate.vanillajspicker').on('changeDate.vanillajspicker', nuChangeDate);
 
 	window[id + '_datepicker'] = datepicker;
 
