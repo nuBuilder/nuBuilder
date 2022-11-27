@@ -1568,7 +1568,7 @@ function nuSendEmail($args_to, $from_email = '', $from_name = '', $body = '', $s
 			'attachments' => array() ,
 			'html' => true,
 			'priority' => '',
-			$smtp_options => array()
+			'smtp_options' => array()
 		);
 
 		$args = array_merge($defaults, array_intersect_key($args_to, $defaults));
