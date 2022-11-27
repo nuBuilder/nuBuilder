@@ -71,6 +71,11 @@ function nuPopupCalendarVanillaJs(pThis, d) {
 	}
 
 	datepicker = new Datepicker(pThis, calendarOptions);
+
+	pThis.addEventListener('changeDate', (ev) => {
+		$(ev.target).addClass('nuEdited');
+	});
+
 	window[id + '_datepicker'] = datepicker;
 
 	datepicker.setOptions({ defaultViewDate: d });
