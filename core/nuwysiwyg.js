@@ -12,7 +12,7 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 	}
 
 	if (!tinymce) {
-		nuMessage(["<h2>TinyMCE is not included</h2>","Set $nuConfigIncludeTinyMCE = true in nuconfig.php"]);
+		nuMessage(["<h2>TinyMCE is not included</h2>", "Set $nuConfigIncludeTinyMCE = true in nuconfig.php"]);
 		return;
 	}
 
@@ -23,7 +23,7 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 
 	var _plugins;
 	if (!plugins) {
-		_plugins = 'code print preview importcss searchreplace autolink autosave save directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor insertdatetime advlist lists textpattern noneditable help charmap emoticons';
+		_plugins = 'code preview importcss searchreplace autolink autosave save directionality visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists help charmap emoticons';
 	} else {
 		_plugins = plugins;
 	}
@@ -31,7 +31,7 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 	var _mobile;
 	if (!mobile) {
 		_mobile = {
-			plugins: 'print preview importcss searchreplace autolink autosave save directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor insertdatetime advlist lists textpattern noneditable help charmap emoticons'
+			plugins: 'preview importcss searchreplace autolink autosave save directionality visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists help charmap emoticons'
 		}
 	} else {
 		_mobile = mobile;
@@ -70,7 +70,6 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 		_contextmenu = contextmenu;
 	}
 
-
 	var _quickbars;
 	if (!quickbars) {
 		_quickbars = 'bold italic | quicklink h2 h3 blockquote quickimage quicktable';
@@ -78,8 +77,7 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 		_quickbars = quickbars;
 	}
 
-	let defaultOptions =
-	{
+	let defaultOptions = {
 		selector: "#" + idContainer,
 		plugins: _plugins,
 		mobile: _mobile,
@@ -89,7 +87,9 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 				items: 'addcomment showcomments deleteallconversations'
 			}
 		},
+		external_plugins: {},
 		menubar: _menubar,
+		resize: true,
 		toolbar: _toolbar,
 		toolbar_groups: _toolbar_groups,
 		autosave_ask_before_unload: true,
@@ -110,9 +110,11 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 		contextmenu: _contextmenu,
 		skin: useDarkMode ? 'oxide-dark' : 'oxide',
 		content_css: useDarkMode ? 'dark' : 'default',
+		cache_suffix: '?v=6.3.0',
 		setup: function (editor) {
 
 			editor.on('init', function (e) {
+
 				e.target.setContent(nuGetValue(id));
 				if (window.nuTinyMCEOnInit) {
 					nuTinyMCEOnInit(e, editor);
@@ -132,15 +134,11 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 		mergedOptions = $.extend(defaultOptions, options)
 	}
 
-	tinymce.init( mergedOptions );
-
-	if (tinymce.editors.length > 0) {
-
-		tinymce.execCommand('mceFocus', true, idContainer);
-		tinymce.execCommand('mceRemoveEditor',true, idContainer);
-		tinymce.execCommand('mceAddEditor',true, idContainer);
-
+	if (tinymce.get(id)) {
+		tinymce.remove("#" + idContainer);
 	}
+
+	tinymce.init(mergedOptions);
 
 }
 
@@ -152,7 +150,7 @@ function nuSaveEditor() {
 
 	$('.nuTinyMCE').each((index, element) => {
 		let myContent = tinymce.get(element.id).getContent();
-		let id = element.id.slice(0,-10);
+		let id = element.id.slice(0, -10);
 		nuSetValue(id, myContent);
 	});
 
