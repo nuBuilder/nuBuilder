@@ -1431,30 +1431,34 @@ function nuDialogInput(cap, id, top, left, val, fun, sel) {
 
 function nuUpdateGroup(t) {
 
-	const dataGroup = $('#' + t.id).attr('data-dataGroup');
-	const s = nuREPORT.group[dataGroup].sections.length;
-
-	let group = nuREPORT.group[dataGroup];
+	const dataGroup = $('#' + t.id).attr('data-group');
+	let group = nuREPORT.groups[dataGroup];
+	const sectionLength = nuREPORT.groups[dataGroup].sections.length;
 
 	group.groupBy = $('#sortBy' + dataGroup).val();
 	group.sortField = $('#sortField' + dataGroup).val();
 
-	for (let i = 0; i < s.length; i++) {
+	for (let i = 0; i < sectionLength.length; i++) {
 		group.sections[i].color = $('#height' + i).val();
 		group.sections[i].height = $('#color' + i).val();
 		group.sections[i].label = 'Header ' + $('#label' + i).val();
 		group.sections[i].page_break = $('#page_break' + i).val();
 
-		if (dataGroup == 0) { group.sections[i].label = 'Detail'; }
-		if (dataGroup == 1 && s == 0) { group.sections[i].label = $('#label' + i).val() + ' Header'; }
-		if (s == 1) { group.sections[i].label = $('#label' + i).val() + ' Footer'; }
+		if (dataGroup == 0) {
+			group.sections[i].label = 'Detail';
+		}
+		if (dataGroup == 1 && sectionLength == 0) {
+			group.sections[i].label = $('#label' + i).val() + ' Header';
+		}
+		if (sectionLength == 1) {
+			group.sections[i].label = $('#label' + i).val() + ' Footer';
+		}
 
 	}
 
 	nuREPORT.setFocus = t.id;
 
 	nuLoadReport();
-
 
 }
 
