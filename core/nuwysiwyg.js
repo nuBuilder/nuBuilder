@@ -134,7 +134,7 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 		mergedOptions = $.extend(defaultOptions, options)
 	}
 
-	if (tinymce.get(id)) {
+	if (tinymce.get(idContainer)) {
 		tinymce.remove("#" + idContainer);
 	}
 
