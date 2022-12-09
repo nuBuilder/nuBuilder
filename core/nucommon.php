@@ -249,8 +249,8 @@ function nuSetHashList($p){
 
 	if (! is_null($p)) {
 
-		$fid		= addslashes(nuObjKey($p,'form_id'));
-		$rid		= addslashes(nuObjKey($p,'record_id'));
+		$fid		= addslashes(nuObjKey($p,'form_id', ''));
+		$rid		= addslashes(nuObjKey($p,'record_id', ''));
 
 		$A			= nuGetUserAccess();
 
@@ -274,6 +274,9 @@ function nuSetHashList($p){
 						if(is_object($f) ){
 
 							foreach ($f as $fld => $value ){								//-- This Edit Form's Object Values
+								if ($value == null) {
+									$value='';
+								}
 								$r[$fld] = addslashes($value);
 							}
 
@@ -312,9 +315,9 @@ function nuSetHashList($p){
 		$h['PREVIOUS_RECORD_ID']	= addslashes($rid);
 		$h['RECORD_ID']				= addslashes($rid);
 		$h['FORM_ID']				= addslashes($fid);
-		$h['SUBFORM_ID']			= addslashes(nuObjKey($_POST['nuSTATE'],'object_id'));
-		$h['ID']					= addslashes(nuObjKey($_POST['nuSTATE'],'primary_key'));
-		$h['CODE']					= addslashes(nuObjKey($_POST['nuSTATE'],'code'));
+		$h['SUBFORM_ID']			= addslashes(nuObjKey($_POST['nuSTATE'],'object_id', ''));
+		$h['ID']					= addslashes(nuObjKey($_POST['nuSTATE'],'primary_key', ''));
+		$h['CODE']					= addslashes(nuObjKey($_POST['nuSTATE'],'code', ''));
 
 	}
 
@@ -619,7 +622,8 @@ function nuRunHTML(){
 
 function nuReplaceHashVariables($s){
 
-	$s	= trim($s);
+	$s	= isset($s) ? trim($s) : '';
+
 	if($s == ''){
 		return '';
 	}
@@ -649,9 +653,10 @@ function nuReplaceHashVariables($s){
 
 	foreach ($a as $k => $v) {
 
-		 if(!is_object ($a[$k]) && !is_array ($a[$k])) {
+		 if(!is_object ($a[$k]) && !is_array ($a[$k]) && $v != null) {
 			$s	= str_replace ('#' . $k . '#', $v, $s);
 		}
+
 	}
 
 	return $s;
@@ -1385,11 +1390,14 @@ function nuGetPHP($phpid) {
 
 	$s						= "SELECT sph_php, sph_code FROM zzzzsys_php WHERE zzzzsys_php_id = ? ";
 	$t						= nuRunQuery($s, array($phpid));
-	$r						= db_fetch_object($t);
 
-	if(is_bool($r) || trim($r->sph_php) == ''){return '';}
+	$php = '';
+	if (db_num_rows($t) == 1) {
+		$php = db_fetch_object($t);	
+	}
 
-	return $r;
+	return $php;
+
 }
 
 function nuEval($phpid){

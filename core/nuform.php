@@ -1141,8 +1141,8 @@ function nuBrowseRows($f){
 	$page_number	= isset($P['page_number']) ? $P['page_number'] : 0;
 	$nosearch_columns = isset($_POST['nuSTATE']['nosearch_columns']) ? $_POST['nuSTATE']['nosearch_columns'] : null;
 	$start			= $page_number * $rows;
-	$search			= str_replace('&#39;', "'", nuObjKey($P,'search'));
-	$filter			= str_replace('&#39;', "'", nuObjKey($P,'filter'));
+	$search			= str_replace('&#39;', "'", nuObjKey($P,'search',''));
+	$filter			= str_replace('&#39;', "'", nuObjKey($P,'filter',''));
 	$s				= "SELECT sfo_browse_sql FROM zzzzsys_form WHERE zzzzsys_form_id = ?";
 	$t				= nuRunQuery($s, array($f->id));
 	$r				= db_fetch_object($t);
