@@ -60,11 +60,11 @@ function nuBuildFastForm($table, $formType){
 
 	// -------- Insert Sample Object in temporary table ---
 
-	nuFFTempInsertSampleObjects($SF, $TT);
+	nuFFTempInsertSampleObjects($SF, $formType, $TT);
 
 	// -------- Update temporary table --------------------
 
-	nuFFTempUpdate($SF, $TT, $table, $formId, $tabId);
+	nuFFTempUpdate($SF, $formType, $TT, $table, $formId, $tabId);
 
 	// -------- Create FF table ---------------------------
 	if ($isNew) nuFFCreateNewTable($SF, $formType, $table, $isNew);
@@ -296,9 +296,11 @@ function nuFFTempCreate($TT) {
 
 }
 	
-function nuFFTempInsertSampleObjects($SF, $TT) {
+function nuFFTempInsertSampleObjects($SF, $formType, $TT) {
 
 	nuFFTempCreate($TT);
+
+	if ($formType == 'browse') return;
 
 	for($i = 0 ; $i < count($SF->rows) ; $i++){
 
@@ -320,7 +322,9 @@ function nuFFTempInsertSampleObjects($SF, $TT) {
 
 }
 
-function nuFFTempUpdate($SF, $TT, $table, $formId, $tabId) {
+function nuFFTempUpdate($SF, $formType, $TT, $table, $formId, $tabId) {
+	
+	if ($formType == 'browse') return;
 
 	$sql			= "
 
@@ -419,11 +423,13 @@ function nuFFInsertBrowse($SF, $formId, $formType) {
 
 function nuFFInsertObjects($table, $TT, $formType, $formId) {
 
-	nuFFInsertRunButton($table, $TT, $formType, $formId);
-
-	if ($formType !== 'browse'){
-		nuRunQuery("INSERT INTO zzzzsys_object SELECT * FROM $TT");
+	if ($formType !== 'subform'){
+		nuFFInsertRunButton($table, $TT, $formType, $formId);
 	}
+
+	//if ($formType !== 'browse'){
+		nuRunQuery("INSERT INTO zzzzsys_object SELECT * FROM $TT");
+	//}
 
 }	
 
@@ -494,9 +500,8 @@ function nuFFGetLink($formId, $recordId, $text) {
 function nuFFCreatedMessage($table, $TT, $isNew, $formId, $formType, $formCode) {
 
 	$msg = ($isNew) ? 'Table and Form have' : 'Form has';
-	$sfOrBrowse = $formType == 'subform' || $formType == 'browse';
 
-	if ($sfOrBrowse) {
+	if ($formType == 'subform') {
 
 		$link = nuFFGetLink('nuform', $formId, $formCode);
 		$js = "
