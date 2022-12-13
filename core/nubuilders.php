@@ -421,7 +421,7 @@ function nuFFInsertObjects($table, $TT, $formType, $formId) {
 
 	nuFFInsertRunButton($table, $TT, $formType, $formId);
 
-	if ($formType !== 'subform'){
+	if ($formType !== 'browse'){
 		nuRunQuery("INSERT INTO zzzzsys_object SELECT * FROM $TT");
 	}
 
