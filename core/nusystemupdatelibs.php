@@ -496,4 +496,100 @@ function nuImportLanguageFiles() {
 
 }
 
+
+function nuCreateViewsOrTables() {
+	
+	$canCreateView = nuCanCreateView();
+
+	$sqlCreateObjectListTable = "
+		CREATE TABLE IF NOT EXISTS `zzzzsys_object_list` (
+		`zzzzsys_object_list_id` varchar(64)
+		);
+
+		DELETE FROM zzzzsys_object_list;
+
+		INSERT INTO zzzzsys_object_list
+		SELECT `information_schema`.`tables`.`TABLE_NAME` AS `zzzzsys_object_list_id` FROM `information_schema`.`tables` WHERE `information_schema`.`tables`.`TABLE_SCHEMA` = database();
+	";
+
+	$sqlCreateObjectListView = "	
+		DROP TABLE IF EXISTS `zzzzsys_object_list`;
+		CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `zzzzsys_object_list`  AS SELECT `information_schema`.`tables`.`TABLE_NAME` AS `zzzzsys_object_list_id` FROM `information_schema`.`tables` WHERE `information_schema`.`tables`.`TABLE_SCHEMA` = database()  ;
+	";
+
+	if (!nuViewExists('zzzzsys_object_list')) {
+
+		if ($canCreateView) {
+			nuRunQuery($sqlCreateObjectListView);
+		}
+		else {
+			nuRunQuery($sqlCreateObjectListTable);
+		}
+
+	}
+
+	$sqlCreateRunListView = "
+		DROP TABLE IF EXISTS `zzzzsys_run_list`;
+		CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `zzzzsys_run_list`  AS SELECT `zzzzsys_form`.`zzzzsys_form_id` AS `id`, 'Form' AS `run`, `zzzzsys_form`.`sfo_code` AS `code`, `zzzzsys_form`.`sfo_description` AS `description` FROM `zzzzsys_form` union select `zzzzsys_report`.`zzzzsys_report_id` AS `id`,'Report' AS `run`,`zzzzsys_report`.`sre_code` AS `code`,`zzzzsys_report`.`sre_description` AS `description` from `zzzzsys_report` union select `zzzzsys_php`.`zzzzsys_php_id` AS `id`,'Procedure' AS `run`,`zzzzsys_php`.`sph_code` AS `code`,`zzzzsys_php`.`sph_description` AS `description` from `zzzzsys_php` where `zzzzsys_php`.`sph_system` <> 1 order by `code`  ;
+	";
+
+	$sqlCreateRunListTable = "
+		CREATE TABLE IF NOT EXISTS `zzzzsys_run_list` (
+		`id` varchar(25)
+		,`run` varchar(9)
+		,`code` varchar(300)
+		,`description` varchar(300)
+		);
+
+		DELETE FROM zzzzsys_run_list;
+
+		INSERT INTO zzzzsys_run_list
+		SELECT `zzzzsys_form`.`zzzzsys_form_id` AS `id`, 'Form' AS `run`, `zzzzsys_form`.`sfo_code` AS `code`, `zzzzsys_form`.`sfo_description` AS `description` FROM `zzzzsys_form` union select `zzzzsys_report`.`zzzzsys_report_id` AS `id`,'Report' AS `run`,`zzzzsys_report`.`sre_code` AS `code`,`zzzzsys_report`.`sre_description` AS `description` from `zzzzsys_report` union select `zzzzsys_php`.`zzzzsys_php_id` AS `id`,'Procedure' AS `run`,`zzzzsys_php`.`sph_code` AS `code`,`zzzzsys_php`.`sph_description` AS `description` from `zzzzsys_php` where `zzzzsys_php`.`sph_system` <> 1 order by `code`  ;
+	";
+
+	if (!nuViewExists('zzzzsys_run_list')) {
+
+		if ($canCreateView) {
+			nuRunQuery($sqlCreateRunListView);
+		}
+		else {
+			nuRunQuery($sqlCreateRunListTable);
+		}
+
+	}
+
+	$sqlCreateReportDataView = "
+		DROP TABLE IF EXISTS `zzzzsys_report_data`;
+		CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `zzzzsys_report_data`  AS SELECT concat('PROCEDURE:',`zzzzsys_php`.`zzzzsys_php_id`) AS `id`, `zzzzsys_php`.`sph_code` AS `code`, `zzzzsys_php`.`sph_description` AS `description` FROM `zzzzsys_php` WHERE `zzzzsys_php`.`sph_system` <> '1' AND locate('#TABLE_ID#',`zzzzsys_php`.`sph_php`) > '0' union select concat('SQL:',`zzzzsys_select`.`zzzzsys_select_id`) AS `id`,'nuSQL' AS `code`,`zzzzsys_select`.`sse_description` AS `description` from `zzzzsys_select` where `zzzzsys_select`.`sse_system` is null or `zzzzsys_select`.`sse_system` = '' union select concat('TABLE:',`zzzzsys_object_list`.`zzzzsys_object_list_id`) AS `id`,'nuTABLE' AS `code`,`zzzzsys_object_list`.`zzzzsys_object_list_id` AS `description` from `zzzzsys_object_list`  ;
+	";
+
+	$sqlCreateReportDataTable = "
+
+		CREATE TABLE IF NOT EXISTS `zzzzsys_report_data` (
+		`id` varchar(70)
+		,`code` varchar(300)
+		,`description` varchar(300)
+		);
+
+		DELETE FROM zzzzsys_report_data;
+
+		INSERT INTO zzzzsys_report_data
+		SELECT concat('PROCEDURE:',`zzzzsys_php`.`zzzzsys_php_id`) AS `id`, `zzzzsys_php`.`sph_code` AS `code`, `zzzzsys_php`.`sph_description` AS `description` FROM `zzzzsys_php` WHERE `zzzzsys_php`.`sph_system` <> '1' AND locate('#TABLE_ID#',`zzzzsys_php`.`sph_php`) > '0' union select concat('SQL:',`zzzzsys_select`.`zzzzsys_select_id`) AS `id`,'nuSQL' AS `code`,`zzzzsys_select`.`sse_description` AS `description` from `zzzzsys_select` where `zzzzsys_select`.`sse_system` is null or `zzzzsys_select`.`sse_system` = '' union select concat('TABLE:',`zzzzsys_object_list`.`zzzzsys_object_list_id`) AS `id`,'nuTABLE' AS `code`,`zzzzsys_object_list`.`zzzzsys_object_list_id` AS `description` from `zzzzsys_object_list`  ;
+
+		";
+
+	if (!nuViewExists('zzzzsys_report_data')) {
+
+		if ($canCreateView) {
+			nuRunQuery($sqlCreateReportDataView);
+		}
+		else {
+			nuRunQuery($sqlCreateReportDataTable);
+		}
+
+	}
+
+}
+
+
 ?>
