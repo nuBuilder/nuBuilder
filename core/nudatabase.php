@@ -408,6 +408,33 @@ function db_quote($s) {
 
 }
 
+
+function nuViewExists($view) {
+
+	$sql = "SELECT table_name as TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'VIEW' AND table_schema = DATABASE() AND TABLE_NAME = ?";
+	$qry = nuRunQuery($sql, array($view));
+
+	return db_num_rows($qry);
+
+}
+
+function nuCanCreateView() {
+
+	$qry = nuRunQuery("SHOW GRANTS FOR CURRENT_USER()");
+	$canCreateView = false;
+
+	while ($row = db_fetch_row($qry)) {
+		if (strpos($row[0], 'CREATE VIEW') !== false) {
+			$canCreateView = true;
+			break;
+		}
+	}
+
+	return $canCreateView;
+
+}
+
+
 function nuDebugResult($msg){
 
 	if(is_object($msg)){
