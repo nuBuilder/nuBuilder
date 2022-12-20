@@ -1319,10 +1319,10 @@ function nuListSystemTables(){
 	$a				= array();
 	$t				= nuRunQuery("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = DATABASE()");
 
-	while($r = db_fetch_object($t)){
-
-		if(substr($r->table_name, 0, 8) == 'zzzzsys_'){
-			$a[]	= $r->table_name;
+	while($r = db_fetch_row($t)){
+ 
+		if(nuStringStartsWith('zzzzsys_', $r[0])){
+			$a[]	= $r[0];
 		}
 
 	}
@@ -2129,6 +2129,7 @@ function nuSetProperty($i, $nj, $global = false) {
 	if ($global) {
 		$s = "SELECT sss_hashcookies FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
 		$t = nuRunQuery($s, array($_SESSION['nubuilder_session_data']['SESSION_ID']));
+
 		$r = db_fetch_object($t);
 		$j = json_decode($r->sss_hashcookies, true);
 
