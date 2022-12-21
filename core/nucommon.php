@@ -2127,17 +2127,19 @@ function nuGetProperty($p, $a = null) {
 function nuSetProperty($i, $nj, $global = false) {
 
 	if ($global) {
-		$s = "SELECT sss_hashcookies FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
+		$s = "SELECT IFNULL(sss_hashcookies,'') AS sss_hashcookies FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
 		$t = nuRunQuery($s, array($_SESSION['nubuilder_session_data']['SESSION_ID']));
 
-		$r = db_fetch_object($t);
-		$j = json_decode($r->sss_hashcookies, true);
+		if (db_num_rows($t) == 1) {
+			$r = db_fetch_object($t);
+			$j = json_decode($r->sss_hashcookies, true);
 
-		$j[$i] = $nj;
+			$j[$i] = $nj;
 
-		$J = json_encode($j);
-		$s = "UPDATE zzzzsys_session SET sss_hashcookies = ? WHERE zzzzsys_session_id = ? ";
-		$t = nuRunQuery($s, array($J, $_SESSION['nubuilder_session_data']['SESSION_ID']));
+			$J = json_encode($j);
+			$s = "UPDATE zzzzsys_session SET sss_hashcookies = ? WHERE zzzzsys_session_id = ? ";
+			$t = nuRunQuery($s, array($J, $_SESSION['nubuilder_session_data']['SESSION_ID']));
+		}
 	} else {
 		$_POST['nuHash'][$i] = $nj;
 	}
