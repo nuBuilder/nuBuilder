@@ -317,7 +317,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 						$htmlj	= "\nnuChart('$r->sob_all_id', 'BarChart', '$htmljs', '$title', '$h', '$v', 'bars', true);";
 					}
 
-					nuAddJavascript($htmlj);
+					nuAddJavaScript($htmlj);
 
 				}
 
@@ -1776,7 +1776,7 @@ function nuAddPrintButtons($f, $t, $a){
 
 }
 
-function nuAddJavascript($js, $bc = false){
+function nuAddJavaScript($js, $bc = false){
 
 	if ($bc == true) {
 		if (isset($GLOBALS['EXTRAJS_BC'])) {
@@ -1810,7 +1810,7 @@ function nuPreloadImages($a){
 
 	}
 
-	nuAddJavascript($js);
+	nuAddJavaScript($js);
 
 }
 

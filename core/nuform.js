@@ -46,10 +46,10 @@ var promot;
 function nuBuildForm(f) {
 
 	window.nuOnSetSelect2Options = null;
-	window.nuSERVERRESPONSE = f;						// can be overwritten by nuAddJavascript()
+	window.nuSERVERRESPONSE = f;						// can be overwritten by nuAddJavaScript()
 
 	if (f.record_id != '-2') {
-		nuAddJavascript(f.javascript_bc);
+		nuAddJavaScript(f.javascript_bc);
 	}
 
 	$('#nubody').off('.nuresizecolumn').css('transform', 'scale(1)');
@@ -226,7 +226,7 @@ function nuBuildForm(f) {
 	if (f.record_id == '-2') {			// Arrange Objects
 		nuCreateDragOptionsBox(f);
 	} else {
-		nuAddJavascript(f.javascript);
+		nuAddJavaScript(f.javascript);
 	}
 
 	nuDragTitleEvents();
@@ -5063,7 +5063,7 @@ function nuFormsUnsaved() {
 
 }
 
-function nuAddJavascript(js) {
+function nuAddJavaScript(js) {
 
 	var s = document.createElement('script');
 	s.innerHTML = "\n\n" + js + "\n\n";

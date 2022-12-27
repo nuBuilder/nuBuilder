@@ -2172,7 +2172,7 @@ function nuSetGlobalPropertiesJS() {
 		$js .= "nuSetProperty('". $p ."','" . addslashes($v) ."');\n";
 	}
 
-	if ($js != '') nuAddJavascript($js);
+	if ($js != '') nuAddJavaScript($js);
 
 }
 
