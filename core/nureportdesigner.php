@@ -8,7 +8,7 @@
 
 require_once('nucommon.php');
 
-$jquery = "libs/jquery/jquery-3.6.1.min.js";
+$jquery = "libs/jquery/jquery-3.6.3.min.js";
 
 nuJSInclude($jquery);
 nuJSInclude('nuformclass.js');
