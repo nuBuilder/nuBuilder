@@ -12,15 +12,15 @@
 	7: "nuDelete"	
 */
 
-function nuBuildFastForm($table, $formType){
+function nuBuildFastForm($table, $formType, $Pk){
 
 	if (nuDemo()) return;
 
 	$formId		= nuID();
-	$PK			= $table . '_id';
-	$isNew 		= nuFFIsNewTable($table, $PK, $formType);
+						
+	$isNew 		= nuFFIsNewTable($table, $Pk, $formType);
 	$TT			= nuTT();
-	$SF			= nuSubformObject('obj_sf');
+	$sF			= nuSubformObject('obj_sf');
 	$tabId		= nuID();
 	$FFNumber	= nuFFNumber();
 
@@ -30,14 +30,14 @@ function nuBuildFastForm($table, $formType){
 
 	//--------- Test table creation -----------------------
 
-	if (!$isNew && $PK == null) {
+	if (!$isNew && $Pk == null) {
 		nuDisplayError('<h2>' . nuTranslate('Error') . '</h2>' . nuTranslate('The table has no primary key'));
 		return;
 	}
 
 	//--------- Test table creation -----------------------
 
-	$test = nuFFCreateTable($SF, $formType, $table, $isNew, true);
+	$test = nuFFCreateTable($sF, $formType, $table, $Pk, $isNew, true);
 
 	if ($test != '') { 
 		nuDisplayError($test);
@@ -56,22 +56,22 @@ function nuBuildFastForm($table, $formType){
 
 	//--------- Insert new form ---------------------------
 
-	nuFFInsertForm($formId, $formType, $formCode, $formDesc, $table, $PK);
+	nuFFInsertForm($formId, $formType, $formCode, $formDesc, $table, $Pk);
 
 	// -------- Insert Sample Object in temporary table ---
 
-	nuFFTempInsertSampleObjects($SF, $formType, $TT);
+	nuFFTempInsertSampleObjects($sF, $formType, $TT);
 
 	// -------- Update temporary table --------------------
 
-	nuFFTempUpdate($SF, $formType, $TT, $table, $formId, $tabId);
+	nuFFTempUpdate($sF, $formType, $TT, $table, $formId, $tabId);
 
 	// -------- Create FF table ---------------------------
-	if ($isNew) nuFFCreateNewTable($SF, $formType, $table, $isNew);
+	if ($isNew) nuFFCreateNewTable($sF, $formType, $table, $Pk, $isNew);
 
 	// -------- Insert Browse -----------------------------
 
-	nuFFInsertBrowse($SF, $formId, $formType);
+	nuFFInsertBrowse($sF, $formId, $formType);
 
 	// -------- Insert Objects ----------------------------
 
@@ -122,12 +122,12 @@ function nuFFNumber(){
 
 }
 
-function nuFFNewTableSQL($tab, $columns, $isNew){
+function nuFFNewTableSQL($table, $pk, $columns, $isNew){
 
-	$id		= $tab . '_id';
-	$start	= "CREATE TABLE $tab";
+					 
+	$start	= "CREATE TABLE $table";
 	$a		= Array();
-	$a[]	= "`$id` VARCHAR(25) NOT NULL";
+	$a[]	= "`$pk` VARCHAR(25) NOT NULL";
 	$h		= nuHash();
 	$fk		= $h['fastform_fk'];
 
@@ -149,10 +149,10 @@ function nuFFNewTableSQL($tab, $columns, $isNew){
 	}
 
 	if ($h['check_nulog'] == '1') {
-		$a[] = $tab."_nulog VARCHAR(1000) DEFAULT NULL";
+		$a[] = $table."_nulog VARCHAR(1000) DEFAULT NULL";
 	}
 
-	$a[]	= "PRIMARY KEY ($id)";
+	$a[]	= "PRIMARY KEY ($pk)";
 	$im		= implode(',', $a);
 
 	return "$start ($im)";
@@ -167,22 +167,22 @@ function nuFFError($err, $sql) {
 
 }
 
-function nuFFCreateTable($SF, $formType, $table, $isNew, $drop) {
+function nuFFCreateTable($sF, $formType, $table, $Pk, $isNew, $drop) {
 
 	if ($formType == 'launch' || ! $isNew) return '';
 
 	$columns = Array();
-	for($i = 0 ; $i < count($SF->rows) ; $i++){
+	for($i = 0 ; $i < count($sF->rows) ; $i++){
 
-		if($SF->deleted[$i] == 0){
-			$type = $SF->rows[$i][5];												//-- ff_datatype
+		if($sF->deleted[$i] == 0){
+			$type = $sF->rows[$i][5];												//-- ff_datatype
 			if (trim($type) !== '') {
-				$columns[] = Array('name'=>$SF->rows[$i][2], 'type'=>$type);		//-- ff_field
+				$columns[] = Array('name'=>$sF->rows[$i][2], 'type'=>$type);		//-- ff_field
 			}
 		}
 	}
 
-	$sql		= nuFFNewTableSQL($table, $columns, $isNew);
+	$sql		= nuFFNewTableSQL($table, $Pk, $columns, $isNew);
 
 	if ($drop) {
 		$test	= nuRunQueryTest($sql);
@@ -216,7 +216,7 @@ function nuFFInsertTab($tabId, $formId) {
 
 }
 
-function nuFFInsertForm($formId, $formType, $formCode, $formDesc, $table, $PK) {
+function nuFFInsertForm($formId, $formType, $formCode, $formDesc, $table, $Pk) {
 
 	$insert = "
 		INSERT INTO zzzzsys_form
@@ -237,7 +237,7 @@ function nuFFInsertForm($formId, $formType, $formCode, $formDesc, $table, $PK) {
 	";
 
 	$table	= $formType == 'launch' ? '' : $table;
-	$PK		= $formType == 'launch' ? '' : $PK;
+	$Pk		= $formType == 'launch' ? '' : $Pk;
 	$sql	= $formType == 'launch' ? '' : "SELECT * FROM $table"; 
 
 	$arg = Array(
@@ -246,7 +246,7 @@ function nuFFInsertForm($formId, $formType, $formCode, $formDesc, $table, $PK) {
 		$formCode,								// -- sfo_code
 		ucfirst($formDesc),						// -- sfo_description
 		$table,									// -- sfo_table
-		$PK,									// -- sfo_primary_key
+		$Pk,									// -- sfo_primary_key
 		$sql,									// -- sfo_browse_sql
 		'',										// -- sfo_browse_redirect_form_id
 		'0',									// -- sfo_browse_row_height
@@ -267,17 +267,17 @@ function nuFFFormProperties($FFNumber){
 
 }
 
-function nuFFIsNewTable($table, &$PK, $formType) {
+function nuFFIsNewTable($table, &$Pk, $formType) {
 
 	if ($formType == 'launch') return false;
 
-	$t								= nuRunQuery("SELECT table_name AS 'table_name' FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = DATABASE()");
-	while($s = db_fetch_object($t)){
+	$t								= nuRunQuery("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = DATABASE()");
+	while($obj = db_fetch_row($t)){
 
-		if($s->table_name == $table){
+		if($obj[0] == $table){
 
 			$_POST['tableSchema']	= nuBuildTableSchema();
-			$PK						= isset($_POST['tableSchema'][$table]['primary_key'][0]) ? $_POST['tableSchema'][$table]['primary_key'][0] : null;
+			$Pk						= isset($_POST['tableSchema'][$table]['primary_key'][0]) ? $_POST['tableSchema'][$table]['primary_key'][0] : $Pk;
 
 			return false;
 
@@ -296,19 +296,19 @@ function nuFFTempCreate($TT) {
 
 }
 	
-function nuFFTempInsertSampleObjects($SF, $formType, $TT) {
+function nuFFTempInsertSampleObjects($sF, $formType, $TT) {
 
 	nuFFTempCreate($TT);
 
 	if ($formType == 'browse') return;
 
-	for($i = 0 ; $i < count($SF->rows) ; $i++){
+	for($i = 0 ; $i < count($sF->rows) ; $i++){
 
-		if($SF->deleted[$i] == 0){																					//-- not ticked as deleted
+		if($sF->deleted[$i] == 0){																					//-- not ticked as deleted
 
-			$r					= $SF->rows[$i][3]; 																//-- ff_type
+			$r					= $sF->rows[$i][3]; 																//-- ff_type
 			$newid				= nuID();
-			$SF->rows[$i][3]	= $newid;
+			$sF->rows[$i][3]	= $newid;
 
 			$sql				= "INSERT INTO $TT SELECT * FROM zzzzsys_object WHERE zzzzsys_object_id = ?";		//-- Insert sample object
 			nuRunQuery($sql, array($r));
@@ -322,7 +322,7 @@ function nuFFTempInsertSampleObjects($SF, $formType, $TT) {
 
 }
 
-function nuFFTempUpdate($SF, $formType, $TT, $table, $formId, $tabId) {
+function nuFFTempUpdate($sF, $formType, $TT, $table, $formId, $tabId) {
 	
 	if ($formType == 'browse') return;
 
@@ -346,14 +346,14 @@ function nuFFTempUpdate($SF, $formType, $TT, $table, $formId, $tabId) {
 
 	$top		= 10;
 
-	for($i = 0 ; $i < count($SF->rows) ; $i++){
+	for($i = 0 ; $i < count($sF->rows) ; $i++){
 
-		if($SF->deleted[$i] == 0){								//-- not ticked as deleted
+		if($sF->deleted[$i] == 0){								//-- not ticked as deleted
 
 			$newid	= nuID();
-			$label	= $SF->rows[$i][1];
-			$field	= $SF->rows[$i][2];
-			$oldid	= $SF->rows[$i][3];
+			$label	= $sF->rows[$i][1];
+			$field	= $sF->rows[$i][2];
+			$oldid	= $sF->rows[$i][3];
 
 			$array	= Array($field, $label, $i * 5, $top, 150, $table, $formId, $tabId, $newid, $oldid);
 			nuRunQuery($sql, $array);
@@ -367,7 +367,7 @@ function nuFFTempUpdate($SF, $formType, $TT, $table, $formId, $tabId) {
 
 }
 
-function nuFFCreateNewTable($SF, $formType, $table, $isNew) {
+function nuFFCreateNewTable($sF, $formType, $table, $Pk, $isNew) {
 
 	global $nuConfigDBEngine;
 	global $nuConfigDBCollate;
@@ -377,23 +377,23 @@ function nuFFCreateNewTable($SF, $formType, $table, $isNew) {
 	if (!isset($nuConfigDBCollate)) 		$nuConfigDBCollate = "utf8_general_ci";
 	if (!isset($nuConfigDBCharacterSet))	$nuConfigDBCharacterSet = "utf8";
 
-	nuFFCreateTable($SF, $formType, $table, $isNew, false);
+	nuFFCreateTable($sF, $formType, $table, $Pk, $isNew, false);
 
 	nuRunQuery("ALTER TABLE $table ENGINE = $nuConfigDBEngine;");
 	nuRunQuery("ALTER TABLE $table CONVERT TO CHARACTER SET $nuConfigDBCharacterSet COLLATE $nuConfigDBCollate");
 
 }
 
-function nuFFInsertBrowse($SF, $formId, $formType) {
+function nuFFInsertBrowse($sF, $formId, $formType) {
 
 	if (!nuStringStartsWith('browse', $formType)) return;
 
-	for($i = 0 ; $i < count($SF->rows) ; $i++){
+	for($i = 0 ; $i < count($sF->rows) ; $i++){
 
-		if($SF->rows[$i][6] == 1 and $SF->deleted[$i] == 0){	//-- ff_browse ticked and not set as deleted
+		if($sF->rows[$i][6] == 1 and $sF->deleted[$i] == 0){	//-- ff_browse ticked and not set as deleted
 
-			$label	= $SF->rows[$i][1];							//-- ff_label
-			$id		= $SF->rows[$i][2];							//-- ff_field	
+			$label	= $sF->rows[$i][1];							//-- ff_label
+			$id		= $sF->rows[$i][2];							//-- ff_field	
 
 			$sql	= "
 
@@ -500,6 +500,7 @@ function nuFFGetLink($formId, $recordId, $text) {
 function nuFFCreatedMessage($table, $TT, $isNew, $formId, $formType, $formCode) {
 
 	$msg = ($isNew) ? 'Table and Form have' : 'Form has';
+															   
 
 	if ($formType == 'subform') {
 
