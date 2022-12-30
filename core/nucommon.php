@@ -346,10 +346,20 @@ function nuSetHashList($p){
 function nuRunReport($report_id){
 
 	$id									= nuID();
-	$s									= "SELECT sre_zzzzsys_php_id, sre_code, sre_description, sre_layout FROM zzzzsys_report WHERE sre_code = '$report_id'";
-	$t									= nuRunQuery($s);
+	$s									= "SELECT zzzzsys_report_id, sre_zzzzsys_php_id, sre_code, sre_description, sre_layout FROM zzzzsys_report WHERE sre_code = ?";
+	$t									= nuRunQuery($s, array($report_id));
 	$ob									= db_fetch_object($t);
-	$_POST['nuHash']['code']			= $ob->sre_code;
+
+	$nuCode								= $ob->sre_code;
+	$phpId								= $ob->zzzzsys_report_id;
+
+	$accessList	= nuReportAccessList(nuAllowedActivities());
+	if(!nuGlobalAccess() && !in_array($phpId, $accessList)) {
+		nuDisplayError(nuTranslate("Access To Report Denied...")." ($nuCode)");
+		return null;
+	}
+
+	$_POST['nuHash']['code']			= $nuCode;
 	$_POST['nuHash']['description']		= $ob->sre_description;
 	unset($_POST['nuHash']['pages']);
 	$_POST['nuHash']['sre_layout']		= nuReplaceHashVariables($ob->sre_layout);
@@ -378,9 +388,6 @@ function nuRunPHPHidden($nuCode){
 }
 
 function nuRunPHP($nuCode, $hidden = false){
-										 
-					  
-																														  
 
 	if ($nuCode != 'nukeepalive') {
 								   
@@ -436,19 +443,8 @@ function nuRunPHP($nuCode, $hidden = false){
 		$id									= nuID();
 		nuSetJSONData($id, $json);
 		return $id;
-		  
-									   
-																											
-							   
-		 
-																			  
-	
-   
 
 	}
-
-					 
-			 
 
 		   
 }
