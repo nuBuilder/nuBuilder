@@ -210,6 +210,31 @@ function nuUpdateDatabaseDelete($table, $pk, $deleted, $rows, $action, &$S) {
 
 function nuUpdateDatabase(){
 
+	global $nuConfigDBTypesSetNullWhenEmpty;
+
+	if (! is_array($nuConfigDBTypesSetNullWhenEmpty)) {
+
+		$nuConfigDBTypesSetNullWhenEmpty = [
+			"integer",
+			"int",
+			"mediumint",
+			"longint",
+			"decimal",
+			"float",
+			"real",
+			"double",
+		//	"tinyint",
+		//	"bit",
+		//	"boolean",
+			"serial",
+			"date",
+			"datetime",
+			"timestamp",
+			"year",
+		];
+
+	}
+							
 	$form_id		= $_POST['nuHash']['form_id'];
 	$nuDelAll		= $_POST['nuHash']['deleteAll'];
 
@@ -368,9 +393,13 @@ function nuUpdateDatabase(){
 							}
 
 							$fld	= $fields[$R];
+							$type = $cts[$table]['types'][$idx];
 
-							$type = $cts[$table]['types'][$idx];													//-- date types: null if empty
-							if (in_array($type, array('date','datetime','timestamp','year')) && $v == '') {
+							$filteredNullableTypes = array_filter($nuConfigDBTypesSetNullWhenEmpty, function($value) use ($type) {
+							  return nuStringStartsWith($value, $type);
+							});
+
+							if (!empty($filteredNullableTypes) && $v == '') { //-- numeric and date types: null if empty
 								$V[]	= "null";
 								$F[]	= "`$fld` = null";
 							} else
