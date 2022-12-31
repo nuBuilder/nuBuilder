@@ -961,6 +961,7 @@ function nuAddFormatting($v, $f){
 
 	if($f[0] == 'N'){												//-- number  '456.789','N|€ 1,000.00'
 		$CF				= nuGetNumberFormat(substr($f,2));			//-- CF[0]=sign, CF[1]=separator, CF[2]=decimal, CF[3]=places
+				
 		$nf				= number_format ($v , $CF[3] , $CF[2] , $CF[1]);
 		$nm				= str_replace('-', '', $nf);
 
@@ -974,9 +975,9 @@ function nuAddFormatting($v, $f){
 
 		$split	= explode(' ', $v);
 		$d		= explode('-', $split[0]);
-		$t		= explode(':', $split[1]);
+		$t		= count($split) > 1 ? explode(':', $split[1]) : '';
 
-		if($t[0] == ''){
+		if($t == '' || $t[0] == ''){
 			$t	= array(0, 0, 0);
 		}
 
