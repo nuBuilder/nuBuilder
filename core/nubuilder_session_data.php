@@ -15,7 +15,7 @@ class nuBuilderSessionData {
 	'GLOBEADMIN_PASS'			=> '',
 	'GLOBEADMIN_DEMO_NAME'		=> '',
 	'GLOBEADMIN_DEMO_PASS'		=> '',
-	'GLOBEADMIN_HOME'			=> 'nuhome',
+	'GLOBEADMIN_HOME'			=> 'nuhomecompact',
 	'DEMO_SAVING_ALLOWED_IDS'	=> '',
 	'USER_LOGIN'				=> '',
 	'USER_NAME'					=> '',
