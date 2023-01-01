@@ -2214,10 +2214,10 @@ function nuPreventButtonDblClick() {
 		}
 
 		const id = button.attr("id");
-		disableButton(id);
+		nuDisable(id);
 
 		setTimeout(function () {
-			enableButton(id);
+			nuEnable(id);
 		}, 1300);
 	});
 
