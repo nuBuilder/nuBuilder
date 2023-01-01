@@ -2203,22 +2203,22 @@ function nuIsIframe() {
 
 }
 
-// After clicking a nuActionButton (Save, Delete, Print, Clone etc.), disable it for 1.3 secs to prevent a user from double-clicking it.
+// After clicking a button (Save, Delete, Print, Clone etc.), disable it for 1.3 secs to prevent a user from double-clicking it.
 
 function nuPreventButtonDblClick() {
 
 	$('.nuActionButton, .nuButton, #nuLogout').not(".nuAllowDblClick").click(function () {
+		const button = $(this);
+		if (button.hasClass('nuReadonly') || button.hasClass('nuAllowDblClick')) {
+			return;
+		}
 
-		if ($(this).hasClass('nuReadonly') || $(this).hasClass('nuAllowDblClick')) return;
+		const id = button.attr("id");
+		disableButton(id);
 
-		var id = $(this).attr("id");
-
-		$('#' + id).prop('disabled', true);
-
-		setTimeout(
-			function () {
-				$('#' + id).prop('disabled', false);
-			}, 1300);
+		setTimeout(function () {
+			enableButton(id);
+		}, 1300);
 	});
 
 }
