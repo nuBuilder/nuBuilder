@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 27, 2022 at 03:20 PM
+-- Generation Time: Jan 04, 2023 at 09:44 AM
 -- Server version: 8.0.27
 -- PHP Version: 8.1.0
 
@@ -730,8 +730,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`, `inf_json`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2022.12.27.00', NULL),
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2022.12.27.03', NULL);
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2023.01.04.00', NULL),
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2023.01.04.00', NULL);
 
 -- --------------------------------------------------------
 
@@ -1505,7 +1505,7 @@ INSERT INTO `zzzzsys_php` (`zzzzsys_php_id`, `sph_code`, `sph_description`, `sph
 ('nusetup_BS', 'nusetup_BS', 'System PHP', 'nubuilder', 'function nuConfigValueToTable($line, $setting, $oldValue) {\n\n    $parts = explode(\"=\", $line);\n\n    $newValue = $parts[1];\n    $newValue = str_replace(\'\"\', \"\", $newValue);\n    $newValue = str_replace(\"\'\", \"\", $newValue);\n\n    $partsValue = explode(\";\", $newValue);\n    $newValue = trim($partsValue[0]);\n\n    $update = $newValue != $oldValue;\n\n    if ($setting == \'nuCalendarStartOfWeek\' && strlen($newValue) > 1) {\n        $newValue = str_replace(\"Monday\", \"1\", $newValue);\n        $newValue = str_replace(\"Sunday\", \"0\", $newValue);\n    }\n\n    if ($update) nuRunQuery(\'UPDATE zzzzsys_config SET cfg_value = ? WHERE cfg_setting = ?\', array($newValue, $setting));\n\n    return $update;\n\n}\n\nif (\"#configImport#\" == \'1\') {\n\n    // Import config settings form nuconfig.php\n    $s = \"SELECT cfg_setting, cfg_value AS old_value FROM zzzzsys_config \";\n    $t = nuRunQuery($s);\n    $config = file(__DIR__ .\"/../nuconfig.php\");\n\n    while ($r = db_fetch_object($t)) {\n\n        foreach ($config as $line) {\n            if (trim($line) !== \'\' && nuStringContains($r->cfg_setting, $line) == true) {\n                nuConfigValueToTable($line, $r->cfg_setting, $r->old_value);\n                break;\n            }\n\n        }\n\n    }\n\n}', NULL, NULL, '1', '0', NULL, NULL),
 ('nu62bdc77f2dc0351', 'GENERATEUIDLIST', 'Generate nuID List', 'nubuilder', '// Call: nuRunPHP(\'GENERATEUIDLIST\',\'\',0)\n\nfor ($x = 0; $x <= 500; $x++) {\n  echo nuID().\"<br>\";\n}\n\n', 'window', '', '1', '1', '', NULL),
 ('nu62c488df22285ea', 'NUDUMPFORMCODES', 'Dump form js and php codes  to files', 'nubuilder', '$s = \"SELECT sph_code, sph_php FROM `zzzzsys_php`\";\n$t = nuRunQuery($s);\n\nwhile ($r = db_fetch_object($t)) {\n\n    dumpFile(\'php_codes\', $r->sph_code, $r->sph_php, \'\', \"php\");\n}\n\n\n$s = \"SELECT sfo_code, sfo_javascript, sfo_browse_javascript, sfo_edit_javascript FROM `zzzzsys_form`\";\n$t = nuRunQuery($s);\n\nwhile ($r = db_fetch_object($t)) {\n\n    dumpFile(\'js_codes\', $r->sfo_code, $r->sfo_javascript, \'sfo_javascript\', \"js\");\n    dumpFile(\'js_codes\', $r->sfo_code, $r->sfo_edit_javascript, \'sfo_edit_javascript\', \"js\");\n    dumpFile(\'js_codes\', $r->sfo_code, $r->sfo_browse_javascript, \'sfo_browse_javascript\', \"js\");\n\n}\n\n\nfunction dumpFile($folder, $sfoCode, $code, $postfix, $extension) {\n\n    $postfix = $postfix == \'\' ? \'\' : \"_\" . $postfix;\n\n    $file = $sfoCode . $postfix . \".\" . $extension;\n\n\n    if (strlen($code) > 0) {\n        $dir = dirname(__DIR__, 1) . DIRECTORY_SEPARATOR. \"form_codes\". DIRECTORY_SEPARATOR .$folder . DIRECTORY_SEPARATOR . $file;\n        file_put_contents($dir, $code);\n    }\n}', 'hide', '', '1', '0', '', NULL),
-('nu62da72900a02b9a', 'NUUPLOADFILE_TEMPLATE', 'Upload Files Template', 'nubuilder', '// Allowed file extensions\n$allowed = array(\'png\', \'jpg\', \'jpeg\', \'pdf\', \'xlsx\', \'docx\');\n\n// Maximum file size\n$maxfilesize = 5 * 1024 * 1024; // (5 MB)\n\n$filename = nuSanitizeFilename(basename($_FILES[\'file\'][\'name\']));\n$target_dir = $_SERVER[\'DOCUMENT_ROOT\']. \'/\';\n$target_file = $target_dir . $filename;\n\n$error = nuTranslate(\'Sorry, there was an error uploading your file.\');\n\n$ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));\nif (!in_array($ext, $allowed)) {\n    $data = [\'error\' => $error,\n        \'message\' => \'Invalid File Type\'];\n    $result = json_encode($data);\n}\n\n$filesize = $_FILES[\"file\"][\"size\"];\n\nif ($filesize > $maxfilesize) {\n    $data = [\'error\' => $error,\n        \'message\' => \'File size exceeded\'];\n    $result = json_encode($data);\n}\n\ntry {\n    if (move_uploaded_file($_FILES[\'file\'][\'tmp_name\'], $target_file)) {\n        $data = [\'url\' => $target_file,\n            \'file\' => $filename,\n            \'message\' => \'The file \' . $filename . \' has been uploaded.\'];\n        http_response_code(201);\n        $result = json_encode($data);\n    } else {\n        throw new Exception(\'Unable to move the uploaded file to its final location:\' . $target_file);\n    }\n\n} catch (\\Throwable $th) {\n    $data = [\'message\' => $error,\n        \'error\' => $th->getMessage()];\n    $result = json_encode($data);\n}', 'hide', NULL, '0', '1', '', NULL);
+('nu62da72900a02b9a', 'NUUPLOADFILE_TEMPLATE', 'Upload Files Template', 'nubuilder', '// Allowed file types\n$allowedTypes = [\n    \'image/png\',\n    \'image/jpeg\',\n    \'application/pdf\',\n    \'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\',\n    \'application/vnd.openxmlformats-officedocument.wordprocessingml.document\',\n    \'application/vnd.openxmlformats-officedocument.presentationml.presentation\',\n    \'text/plain\',\n    \'text/csv\'\n];\n\n// Maximum file size\n$maxFileSize = 5 * 1024 * 1024; // (5 MB)\n\n// Target directory\n$targetDirectory = $_SERVER[\'DOCUMENT_ROOT\'] . \'/\';\n\ntry {\n\n	// Sanitize file name\n	$fileName = nuSanitizeFilename(basename($_FILES[\'file\'][\'name\']));\n\n	// Check file size\n	if ($_FILES[\'file\'][\'size\'] > $maxFileSize) {\n		throw new Exception(\'Exceeded file size limit\');\n	}\n\n	// Check file type\n	$finfo = new finfo(FILEINFO_MIME_TYPE);\n	if (!in_array($finfo->file($_FILES[\'file\'][\'tmp_name\']), $allowedTypes)) {\n		throw new Exception(\'Invalid file type\');\n	}\n\n	// Build target file path\n	$targetFile = $targetDirectory . $fileName;\n\n    if (move_uploaded_file($_FILES[\'file\'][\'tmp_name\'], $targetFile)) {\n        $data = [\'url\' => $targetFile, \'file\' => $fileName, \'message\' => \'The file \' . $fileName . \' has been uploaded.\'];\n        http_response_code(201);\n        $result = json_encode($data);\n    }\n    else {\n        throw new Exception(nuTranslate(\'Unable to move the uploaded file to its final location:\') . $targetFile);\n    }\n\n} catch(\\Throwable $th) {\n\n    $result = nuSetUploadError(\'Sorry, there was an error uploading your file.\');\n\n}', 'hide', NULL, '0', '1', '', NULL);
 
 -- --------------------------------------------------------
 
@@ -1531,9 +1531,9 @@ CREATE TABLE `zzzzsys_report` (
 -- (See below for the actual view)
 --
 CREATE TABLE `zzzzsys_report_data` (
-`id` varchar(70)
-,`code` varchar(300)
+`code` varchar(300)
 ,`description` varchar(300)
+,`id` varchar(70)
 );
 
 -- --------------------------------------------------------
@@ -1543,10 +1543,10 @@ CREATE TABLE `zzzzsys_report_data` (
 -- (See below for the actual view)
 --
 CREATE TABLE `zzzzsys_run_list` (
-`id` varchar(25)
-,`run` varchar(9)
-,`code` varchar(300)
+`code` varchar(300)
 ,`description` varchar(300)
+,`id` varchar(25)
+,`run` varchar(9)
 );
 
 -- --------------------------------------------------------

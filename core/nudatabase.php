@@ -441,8 +441,12 @@ function nuDebugResult($msg){
 		$msg = print_r($msg,1);
 	}
 
-	$u = isset(nuHash()['USER_ID']) ? nuHash()['USER_ID'] : null;
-	$u = $u == null && isset($_POST['nuSTATE']['username']) ? $_POST['nuSTATE']['username'] : $u;
+	$userId = null;
+	if (function_exists('nuHash')) {
+		$userId = isset($h) && isset($h['USER_ID']) ? $h()['USER_ID'] : null;
+		$userId = $userId == null && isset($_POST['nuSTATE']['username']) ? $_POST['nuSTATE']['username'] : $userId;
+	}
+
 	$id = nuID();
 
 	$s = "INSERT INTO zzzzsys_debug (zzzzsys_debug_id, deb_message, deb_added, deb_user_id) VALUES (:id , :message, :added, :user_id)";
@@ -451,7 +455,7 @@ function nuDebugResult($msg){
 		"id"		=> $id,
 		"message"	=> $msg,
 		"added"		=> time(),
-		"user_id"	=> $u
+		"user_id"	=> $userId
 	);
 
 	nuRunQuery($s, $params);
