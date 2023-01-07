@@ -1,10 +1,10 @@
 <?php
-
-require_once('nucommon.php');
-require_once('nudatabase.php');
-
-function nuUploadFile()	 {
 	
+require_once ('nucommon.php');
+require_once ('nudatabase.php');
+
+function nuUploadFile() {
+
 	ini_set('display_errors', 1);
 	ini_set('display_startup_errors', 1);
 	error_reporting(E_ALL);
@@ -14,32 +14,65 @@ function nuUploadFile()	 {
 	header('Content-Type: text/plain; charset=utf-8');
 
 	// error_log(print_r($_POST,true));
-
 	$proc = isset($_POST["procedure"]) ? $_POST["procedure"] : 'NUUPLOADFILE_TEMPLATE';
-	$sid = isset($_POST["session_id"]) ? $_POST["session_id"] : '';
+	$sessionId = isset($_POST["session_id"]) ? $_POST["session_id"] : '';
 
-	$error = nuTranslate('Sorry, there was an error uploading your file.');
 	$result = json_encode('{}');
 
-	$t = nuRunQuery('SELECT * FROM `zzzzsys_session` where zzzzsys_session.zzzzsys_session_id = ?', array($sid));
-	if (db_num_rows($t) == 0) {
-		http_response_code(401);
-		$data = ['error' => $error,
-				'message' => 'Invalid Session Id'];
-		$result = json_encode($data);
-		return;
+	try {
+
+		// Validate file data
+		if (!isset($_FILES['file']['error']) || is_array($_FILES['file']['error'])) {
+			throw new Exception('Invalid file data');
+		}
+
+		// Check file error
+		switch ($_FILES['file']['error']) {
+			case UPLOAD_ERR_OK:
+			break;
+			case UPLOAD_ERR_NO_FILE:
+				throw new Exception('No file uploaded');
+			case UPLOAD_ERR_INI_SIZE:
+			case UPLOAD_ERR_FORM_SIZE:
+				throw new Exception('Exceeded file size limit');
+			default:
+				throw new Exception('Unknown file error');
+		}
+
+		// Check if valid Session Id
+		$t = nuRunQuery('SELECT * FROM `zzzzsys_session` where `zzzzsys_session_id` = ?', array(
+			$sessionId
+		));
+
+		if (db_num_rows($t) == 0) {
+			throw new Exception('Invalid Session Id');
+		}
+
+		$code = nuProcedure($proc);
+		if ($code != '') {
+			eval($code);
+			return $result;
+		}
+		else {
+			throw new Exception('Unknown Procedure Name');
+		}
+
 	}
-		
-	$code	= nuProcedure($proc);
-	if($code != '') { 
-		eval($code); 
-		return $result;
-	} else {
-		http_response_code(401);
-		$data = ['error' => $error,
-				'message' => 'Unknown Procedure Name'];
-		$result = json_encode($data);
+	catch(\Throwable $th) {
+		$result = nuSetUploadError($th->getMessage());
 	}
+
+}
+
+function nuSetUploadError($message, $error = null) {
+
+	if ($error == null) {
+		$error = nuTranslate('Sorry, there was an error uploading your file.');
+	}
+
+	http_response_code(401);
+	$data = ['error' => $error, 'message' => $message];
+	return json_encode($data);
 
 }
 
