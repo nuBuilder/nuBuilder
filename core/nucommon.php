@@ -650,7 +650,7 @@ function nuReplaceHashVariables($s){
 	foreach ($a as $k => $v) {
 
 		 if(!is_object ($a[$k]) && !is_array ($a[$k]) ) {
-			$v === null ? '' : $v; 
+			$v = $v == null ? '' : $v; 
 			$s	= str_replace ('#' . $k . '#', $v, $s);
 		}
 
