@@ -27,7 +27,7 @@ def getNuConfig():
         if nuConfigItems[item] == None:
             notFound.append(item)
     if len(notFound) != 0:
-        notFoundTxt = f"Error: could not find required nuConfig item(s) in file ${filename}: "+", ".join(notFound)
+        notFoundTxt = "Error: could not find required nuConfig item(s) in file " + filename + ": " + ", ".join(notFound)
         raise Exception(notFoundTxt)
     return nuConfigItems
 
