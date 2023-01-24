@@ -94,16 +94,47 @@ function nuSsoVeryFirstLogin($sus_login_name) {
 	return ($numRows != 1);
 }
 
+function nuSsoDetermineAccessLevelForFirstLogin($ssodb_d) {
+
+    $error	= '';
+    $accessLevel = 'Unset';
+    $email = $ssodb_d["email"];
+    // Optionally add php code in nuBuilder: Builders->Procedure with
+    // Code = DETERMINE_ACCESS_LEVEL_FOR_FIRST_SSO_LOGIN
+    // PHP = The php code to run: instructions:
+    // On entry: $error is '', $accessLevel is 'Unset' and $email is the email address
+    // of the user performing the SSO login.
+    // The code must set $error to a string describing the error if one occurs.
+    // The code must set $accessLevel, otherwise 'Default' will be assumed.
+    // Set $accessLevel to 'Denied' to deny SSO login or set $error.
+    // Once this PHP code has finished running:
+    // The $accessLevel returned should be:
+    // 'Unset'(->'Default')
+    // 'Denied'
+    // Or should already match the "Description" of an existing entry in nuBuilder Setup->Access Levels.
+    // (If it does not exist, an error will be generated).
+    $p		= nuProcedure("DETERMINE_ACCESS_LEVEL_FOR_FIRST_SSO_LOGIN");
+    if($p != ''){
+        eval($p);
+        if ($error != '') nuDie($error);
+    }
+    if($accessLevel == 'Unset') $accessLevel = 'Default';
+    return $accessLevel;
+}
+
 function nuSsoAddSysUserEntryForFirstLogin($emailLocalPart, $ssodb_d) {  // $ssodb_d["email"] and $ssodb_d["name"]
+    // First figure out which access level we should give this user based on their email address
+    $accessLevel = nuSsoDetermineAccessLevelForFirstLogin($ssodb_d);
+    $accessLevel == 'Denied' and nuDie("Error during SSO login.  Internal information: Access Level returned was 'Denied'");
 
 	// First find the FK matching the PK in sys_access for the access level to give to this user (default: read only)
 	$sql = "
-		SELECT zzzzsys_access_id FROM zzzzsys_access WHERE sal_description = 'Default'
+		SELECT zzzzsys_access_id FROM zzzzsys_access WHERE sal_description = ?
 		";
-	$rs = nuRunQuery($sql, array());
+	$rs = nuRunQuery($sql, array($accessLevel));
 	$rowCount = db_num_rows($rs);
 	$check = ($rowCount == 1);
-	$check or nuDie('Error during SSO login.  Internal information: There must be exactly one entry in "Access Levels" with "Description" of "Default" but found '."$rowCount");
+	$check or nuDie('Error during SSO login.  Internal information: There must be exactly one entry in "Access Levels" with "Description" of '.$accessLevel.' but found '."$rowCount");
 
 	$r = db_fetch_object($rs);
 	if (!isset($r->zzzzsys_access_id)) $check = false;
