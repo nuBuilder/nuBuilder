@@ -4,9 +4,9 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
 
-require './libs/phpmailer/PHPMailer.php';
-require './libs/phpmailer/Exception.php';
-require './libs/phpmailer/SMTP.php';
+require __DIR__ . '/libs/phpmailer/PHPMailer.php';
+require __DIR__ . '/libs/phpmailer/Exception.php';
+require __DIR__ . '/libs/phpmailer/SMTP.php';
 
 // Send email using the built in PHP function
 function nuEmailPHP($sendTo, $fromAddress, $fromName, $content, $subject){
