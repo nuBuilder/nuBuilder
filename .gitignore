@@ -1,0 +1,5 @@
+nuconfig.php
+wsgi_sso/
+!wsgi_sso/templates
+!wsgi_sso/nuSsoDbFunctions.py
+!wsgi_sso/sso.wsgi
