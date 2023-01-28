@@ -1,6 +1,7 @@
 <?php
 
 require_once ('nucommon.php');
+require_once ('nuemailer.php');
 
 $p = isset($_GET['p']) ? $_GET['p'] : $argv[1]; 		// PHP Procedure code
 $acc = isset($_GET['acc']) ? $_GET['acc'] : $argv[2];	// Access Level code (May not be assigned to a user for security reasons)
