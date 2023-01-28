@@ -2268,6 +2268,24 @@ function nuGetEmailTemplateData($code, $language = '', $group = '') {
 
 }
 
+function sendEmailFromTemplate($template) {
+
+	$params = array(
+		'to' => $template['to'],
+		'cc' => $template['cc'],
+		'bcc' => $template['bcc'],
+		'body' => nl2br($template['body']),
+		'subject' => $template['subject']
+	);
+
+	foreach ($params as $key => $value) {
+		$params[$key] = nuReplaceHashVariables($value);
+	}
+
+	return nuSendEmail($params);
+
+}
+
 function nuIncludeConfigPHPFiles() {
 	
 	global $nuConfigIncludePHP;
