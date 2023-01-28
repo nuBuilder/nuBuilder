@@ -2268,4 +2268,20 @@ function nuGetEmailTemplateData($code, $language = '', $group = '') {
 
 }
 
+function nuIncludeConfigPHPFiles() {
+	
+	global $nuConfigIncludePHP;
+
+	if (isset($nuConfigIncludePHP) && $nuConfigIncludePHP != '') {
+		if (!is_array($nuConfigIncludePHP)) {
+			require_once($nuConfigIncludePHP);
+		} else {
+			foreach ($nuConfigIncludePHP as $file) {
+				require_once($file);
+			}
+		}
+	}
+
+}
+
 ?>
