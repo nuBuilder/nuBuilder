@@ -8,9 +8,9 @@ function nuSsoLoginCheckParams() {
 	// elseif ( nuCheckIsSsoLoginRequest() ) { ... }
 
 	$check = true;
-	(array_key_exists('ssousersname',  $_POST['nuSTATE'])) or $check = false;
-	(array_key_exists('ssousersemail', $_POST['nuSTATE'])) or $check = false;
-	(array_key_exists('code',		  $_POST['nuSTATE'])) or $check = false;
+	(array_key_exists('ssousersname',	$_POST['nuSTATE'])) or $check = false;
+	(array_key_exists('ssousersemail',	$_POST['nuSTATE'])) or $check = false;
+	(array_key_exists('code',			$_POST['nuSTATE'])) or $check = false;
 
 	if($check) {
 		if (($_POST['nuSTATE']['ssousersname'] == "") || ($_POST['nuSTATE']['ssousersemail'] == "") ||
@@ -25,9 +25,9 @@ function nuSsoLoginCheckParams() {
 function nuSsoGetloginRequestData() {
 
 	$return = array();
-	if (array_key_exists('ssousersname',  $_POST['nuSTATE']))   $nameFromPost  = $_POST['nuSTATE']['ssousersname'];
-	if (array_key_exists('ssousersemail', $_POST['nuSTATE']))   $emailFromPost = $_POST['nuSTATE']['ssousersemail'];
-	if (array_key_exists('code',		  $_POST['nuSTATE']))   $codeFromPost   = $_POST['nuSTATE']['code'];
+	if (array_key_exists('ssousersname',	$_POST['nuSTATE']))	$nameFromPost  = $_POST['nuSTATE']['ssousersname'];
+	if (array_key_exists('ssousersemail',	$_POST['nuSTATE']))	$emailFromPost = $_POST['nuSTATE']['ssousersemail'];
+	if (array_key_exists('code',			$_POST['nuSTATE']))	$codeFromPost	= $_POST['nuSTATE']['code'];
 
 	$nameFromPost  and $return["name"]  = $nameFromPost;
 	$emailFromPost and $return["email"] = $emailFromPost;
@@ -84,11 +84,11 @@ function nuSsoMarkRowInDbAsProcessed($sso_d) {
 function nuSsoVeryFirstLogin($sus_login_name) {
 	// Check whether we already have a sys_user entry for this user, based on the username:-
 	$sql = "
-	   SELECT IF (sus_expires_on < CURDATE() AND NOT sus_expires_on IS NULL, 1, 0) AS expired,
-	   sus_login_name, sus_name
-	   FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id
-	   WHERE sus_login_name = ?
-	   ";
+		SELECT IF (sus_expires_on < CURDATE() AND NOT sus_expires_on IS NULL, 1, 0) AS expired,
+		sus_login_name, sus_name
+		FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id
+		WHERE sus_login_name = ?
+		";
 	$rs = nuRunQuery($sql, array($sus_login_name));
 	$numRows = db_num_rows($rs);
 	return ($numRows != 1);
@@ -96,36 +96,36 @@ function nuSsoVeryFirstLogin($sus_login_name) {
 
 function nuSsoDetermineAccessLevelForFirstLogin($ssodb_d) {
 
-    $error	= '';
-    $accessLevel = 'Unset';
-    $email = $ssodb_d["email"];
-    // Optionally add php code in nuBuilder: Builders->Procedure with
-    // Code = DETERMINE_ACCESS_LEVEL_FOR_FIRST_SSO_LOGIN
-    // PHP = The php code to run: instructions:
-    // On entry: $error is '', $accessLevel is 'Unset' and $email is the email address
-    // of the user performing the SSO login.
-    // The code must set $error to a string describing the error if one occurs.
-    // The code must set $accessLevel, otherwise 'Default' will be assumed.
-    // Set $accessLevel to 'Denied' to deny SSO login or set $error.
-    // Once this PHP code has finished running:
-    // The $accessLevel returned should be:
-    // 'Unset'(->'Default')
-    // 'Denied'
-    // Or should already match the "Description" of an existing entry in nuBuilder Setup->Access Levels.
-    // (If it does not exist, an error will be generated).
-    $p		= nuProcedure("DETERMINE_ACCESS_LEVEL_FOR_FIRST_SSO_LOGIN");
-    if($p != ''){
-        eval($p);
-        if ($error != '') nuDie($error);
-    }
-    if($accessLevel == 'Unset') $accessLevel = 'Default';
-    return $accessLevel;
+	$error	= '';
+	$accessLevel = 'Unset';
+	$email = $ssodb_d["email"];
+	// Optionally add php code in nuBuilder: Builders->Procedure with
+	// Code = DETERMINE_ACCESS_LEVEL_FOR_FIRST_SSO_LOGIN
+	// PHP = The php code to run: instructions:
+	// On entry: $error is '', $accessLevel is 'Unset' and $email is the email address
+	// of the user performing the SSO login.
+	// The code must set $error to a string describing the error if one occurs.
+	// The code must set $accessLevel, otherwise 'Default' will be assumed.
+	// Set $accessLevel to 'Denied' to deny SSO login or set $error.
+	// Once this PHP code has finished running:
+	// The $accessLevel returned should be:
+	// 'Unset'(->'Default')
+	// 'Denied'
+	// Or should already match the "Description" of an existing entry in nuBuilder Setup->Access Levels.
+	// (If it does not exist, an error will be generated).
+	$p		= nuProcedure("DETERMINE_ACCESS_LEVEL_FOR_FIRST_SSO_LOGIN");
+	if($p != ''){
+		eval($p);
+		if ($error != '') nuDie($error);
+	}
+	if($accessLevel == 'Unset') $accessLevel = 'Default';
+	return $accessLevel;
 }
 
 function nuSsoAddSysUserEntryForFirstLogin($emailLocalPart, $ssodb_d) {  // $ssodb_d["email"] and $ssodb_d["name"]
-    // First figure out which access level we should give this user based on their email address
-    $accessLevel = nuSsoDetermineAccessLevelForFirstLogin($ssodb_d);
-    $accessLevel == 'Denied' and nuDie("Error during SSO login.  Internal information: Access Level returned was 'Denied'");
+	// First figure out which access level we should give this user based on their email address
+	$accessLevel = nuSsoDetermineAccessLevelForFirstLogin($ssodb_d);
+	$accessLevel == 'Denied' and nuDie("Error during SSO login.  Internal information: Access Level returned was 'Denied'");
 
 	// First find the FK matching the PK in sys_access for the access level to give to this user (default: read only)
 	$sql = "
@@ -154,11 +154,11 @@ function nuSsoAddSysUserEntryForFirstLogin($emailLocalPart, $ssodb_d) {  // $sso
 function nuSsoCheckSysUserEntryIsInOrder($sus_login_name) {
 	// Call nuDie if we do not have a non-expired sys_user entry for this user, based on the $username.
 	$sql = "
-	   SELECT IF (sus_expires_on < CURDATE() AND NOT sus_expires_on IS NULL, 1, 0) AS expired,
-	   sus_login_name, sus_name
-	   FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id
-	   WHERE sus_login_name = ?
-	   ";
+		SELECT IF (sus_expires_on < CURDATE() AND NOT sus_expires_on IS NULL, 1, 0) AS expired,
+		sus_login_name, sus_name
+		FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id
+		WHERE sus_login_name = ?
+		";
 	$rs = nuRunQuery($sql, array($sus_login_name));
 	$numRows = db_num_rows($rs);
 	($numRows == 1) or nuDie("Error during SSO login.  Internal information: Entry for user was not found.");
