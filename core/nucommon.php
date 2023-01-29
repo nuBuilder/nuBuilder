@@ -2268,7 +2268,7 @@ function nuGetEmailTemplateData($code, $language = '', $group = '') {
 
 }
 
-function sendEmailFromTemplate($template) {
+function nuSendEmailFromTemplate($template) {
 
 	$params = array(
 		'to' => $template['to'],
