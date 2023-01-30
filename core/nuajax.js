@@ -685,7 +685,22 @@ function nuPrintAction() {
 
 function nuUpdateData(action, instruction, close) {
 
-	if (action == 'save' && window.nuBeforeSave) { if (nuBeforeSave() === false) { return; } }
+	if (action == 'save') {
+
+		if (window.nuBeforeSaveGlobal) {
+			if (nuBeforeSaveGlobal() === false) { 
+				return; 
+			}
+		}
+
+		if (window.nuBeforeSave) { 
+			if (nuBeforeSave() === false) { 
+				return; 
+			} 
+		}
+
+	}
+
 	if (action != 'save' && window.nuBeforeDelete) {
 		if (nuBeforeDelete() === false) {
 			$('#nuDelete').prop('checked', false);

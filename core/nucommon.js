@@ -2,6 +2,7 @@ window.nuDialog = new nuCreateDialog('');
 window.nuFORM = new nuFormObject();
 window.nuRESPONSIVE = new nuResponseForm();
 window.nuOnLoad = null;
+window.nuBeforeSaveGlobal = null;
 window.nuLoadBrowseGlobal = null;
 window.nuLoadEditGlobal = null;
 window.nuOnLookupPopulatedGlobal = null;
