@@ -443,6 +443,7 @@ function nuDebugResult($msg){
 
 	$userId = null;
 	if (function_exists('nuHash')) {
+		$h = nuHash();
 		$userId = isset($h) && isset($h['USER_ID']) ? $h()['USER_ID'] : null;
 		$userId = $userId == null && isset($_POST['nuSTATE']['username']) ? $_POST['nuSTATE']['username'] : $userId;
 	}
