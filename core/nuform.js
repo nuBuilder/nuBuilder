@@ -109,6 +109,7 @@ function nuBuildForm(f) {
 	window.nuOnLookupPopulated = null;
 	window.nuCalculated = null;
 	window.nuOnPropertySet = null;
+	window.nuPortraitScreenShowTabTitles = true;
 	window.nuBrowseFunction = window.nuDefaultBrowseFunction;
 	window.nuCLONE = false;
 	window.nuSERVERRESPONSELU = [];
@@ -5947,7 +5948,7 @@ function nuPortraitScreen(columns) {
 		const jtab = $('#nuTab' + obj[i].tab);
 		let tabVisible = jtab.nuIsVisible()
 
-		if (obj[i].tab != b && tabVisible) {
+		if (obj[i].tab != b && tabVisible && ! window.nuPortraitScreenShowTabTitles == false ) {
 
 			if ($('.nuTab').length > 1) {
 				b = obj[i].tab;
