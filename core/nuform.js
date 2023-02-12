@@ -3353,12 +3353,20 @@ function nuSetTitle(t, browse) {
 	if (nuFormType() == 'browse' && !browse == true) {
 		return;
 	}
+	
+	t = nuEscapeHTML(t);
 
 	nuFORM.setProperty('title', t);
 
-	let b = $('.nuBreadcrumb').length;
-	if (b === 0 && !nuIsIframe()) {
-		$('#nuHomeGap').append(nuEscapeHTML(t));
+	let $notBreadcrumb = $('.nuNotBreadcrumb');
+
+	if ($('.nuBreadcrumb').length === 0 && !nuIsIframe()) {
+		
+		if ($notBreadcrumb.length > 0) {
+			$notBreadcrumb.html(t);
+		} else {
+			$('#nuHomeGap').append(t);
+		}
 	} else {
 		let h = '<div id="nuarrow' + (b - 1) + '" class="nuBreadcrumbArrow">&nbsp;<i class="fa fa-caret-right"></i>&nbsp;</div>';
 
@@ -3366,7 +3374,7 @@ function nuSetTitle(t, browse) {
 			h = '';
 		}
 
-		$('#nuBreadcrumb' + b).html(h + nuEscapeHTML(t));
+		$('#nuBreadcrumb' + b).html(h + t);
 	}
 
 }
