@@ -3344,37 +3344,34 @@ function nuMainForm() {
 
 }
 
-function nuSetBrowseTitle(t) {
-	nuSetTitle(t, true);
+function nuSetBrowseTitle(title) {
+	nuSetTitle(title, true);
 }
 
-function nuSetTitle(t, browse) {
+function nuSetTitle(title, browse) {
 
 	if (nuFormType() == 'browse' && !browse == true) {
 		return;
 	}
 	
-	t = nuEscapeHTML(t);
+	title = nuEscapeHTML(title);
 
-	nuFORM.setProperty('title', t);
+	nuFORM.setProperty('title', title);
 
-	let $notBreadcrumb = $('.nuNotBreadcrumb');
+	const $notBreadcrumb = $('.nuNotBreadcrumb');
 
 	if ($('.nuBreadcrumb').length === 0 && !nuIsIframe()) {
 		
 		if ($notBreadcrumb.length > 0) {
-			$notBreadcrumb.html(t);
+			$notBreadcrumb.html(title);
 		} else {
-			$('#nuHomeGap').append(t);
+			$('#nuHomeGap').append(title);
 		}
 	} else {
-		let h = '<div id="nuarrow' + (b - 1) + '" class="nuBreadcrumbArrow">&nbsp;<i class="fa fa-caret-right"></i>&nbsp;</div>';
+		const bc  = $('.nuBreadcrumb').length;
+		const h =  bc == 1 ? '' : '<div id="nuarrow' + (bc - 1) + '" class="nuBreadcrumbArrow">&nbsp;<i class="fa fa-caret-right"></i>&nbsp;</div>';
 
-		if (nuFORM.breadcrumbs.length == 1) {
-			h = '';
-		}
-
-		$('#nuBreadcrumb' + b).html(h + t);
+		$('#nuBreadcrumb' + bc).html(h + title);
 	}
 
 }
