@@ -371,7 +371,7 @@ function nuRunPHP(pCode, iframe, rbs) {
 }
 
 
-function nuRunPHPHidden(i, rbs, params) {
+function nuRunPHPHidden(code, rbs, params) {
 
 	if (arguments.length == 1) {
 
@@ -389,7 +389,7 @@ function nuRunPHPHidden(i, rbs, params) {
 	last.form_id = 'doesntmatter';
 	last.params = params ? params: null;
 	last.hash_record_id = last.record_id;
-	last.record_id = i;					//-- php code
+	last.record_id = code;					//-- php code
 	last.nuFORMdata = nuFORM.data();
 	last.hash = nuHashFromEditForm();
 
@@ -408,9 +408,9 @@ function nuRunPHPHidden(i, rbs, params) {
 
 }
 
-function nuRunPHPHiddenWithParams(i, paramName, paramValue, rbs) {
+function nuRunPHPHiddenWithParams(code, paramName, paramValue, rbs) {
 	nuSetProperty(paramName, btoa(JSON.stringify(paramValue)));
-	nuRunPHPHidden(i, rbs);
+	nuRunPHPHidden(code, rbs);
 }
 
 function nuSystemUpdate() {
