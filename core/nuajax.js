@@ -409,10 +409,9 @@ function nuRunPHPHidden(i, rbs, params) {
 }
 
 function nuRunPHPHiddenWithParams(i, paramName, paramValue, rbs) {
-	nuSetProperty(paramName, nuBase64encode(JSON.stringify(paramValue)));
+	nuSetProperty(paramName, btoa(JSON.stringify(paramValue)));
 	nuRunPHPHidden(i, rbs);
 }
-
 
 function nuSystemUpdate() {
 
