@@ -580,6 +580,10 @@
 	 line-height:150%;
 	 white-space:nowrap 
 }
+
+ .nuBrowseResize {
+	background-color: #badeeb
+ }
  .nuBrowseSearch {
 	 color:red 
 }

@@ -2122,7 +2122,7 @@ function nuDownBrowseResize(e, p) {
 	window.nuBROWSERESIZE.moving_element = target;
 	window.nuBROWSERESIZE.x_position = e.clientX;
 
-	$('#' + target).css('background-color', '#badeeb');
+	$('#' + target).addClass('nuBrowseResize');
 
 }
 
@@ -2132,7 +2132,7 @@ function nuEndBrowseResize(e) {
 
 	window.nuBROWSERESIZE.mouse_down = false;
 	window.nuBROWSERESIZE.moving_element = '';
-	$('.nuBrowseTitle').css('background-color', '');
+	$('.nuBrowseTitle').removeClass('nuBrowseResize');
 
 }
 
