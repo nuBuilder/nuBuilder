@@ -917,65 +917,65 @@ function nuDataListOptions($sql) {
 
 }
 
+function nuSelectAddOption($text, $value) {
+	
+	$arr	= array();
+	$arr[0]	= $text;
+	$arr[1]	= $value;	
+
+	return $arr;
+
+}
+
 function nuSelectOptions($sql) {
 
-	$a				= array();
+	$options = array();
+	
+	$sqlFirstChars = substr($sql, 0, 15);
 
-	if (substr(strtoupper(trim($sql)), 0, 11) == '%LANGUAGES%') {					//-- language Files
+	if (nuStringStartsWith('SELECT', $sqlFirstChars, true) || nuStringStartsWith('WIDTH', $sqlFirstChars, true)) {	//-- sql statement
+
+		$stmt = nuRunQuery($sql);
+
+		if (nuErrorFound()) {
+			return;
+		}
+
+		while ($row = db_fetch_row($stmt)) {
+			$options[] = $row;
+		}
+
+	} elseif (nuStringStartsWith('%LANGUAGES%', $sqlFirstChars, true)) {											//-- language Files
 
 		foreach(glob("languages/*.sql") as $file)  {
 
-			$f	= basename($file, '.sql');
-
-			$r		= array();
-			$r[0]	= $f;
-			$r[1]	= $f;
-			$a[]	= $r;
+			$baseName	= basename($file, '.sql');
+			$options[]	= nuSelectAddOption($baseName, $baseName);
 
 		}
 
-	} elseif (substr(strtoupper(trim($sql)), 0, 6) == 'SELECT' || substr(strtoupper($sql), 0, 5) == 'WITH ') {						//-- sql statement
-
-			$t		= nuRunQuery($sql);
-
-			if (nuErrorFound()) {
-				return;
-			}
-
-			while ($r = db_fetch_row($t)) {
-				$a[]	= $r;
-			}
-
-	} elseif (nuStringStartsWith('[', $sql) && is_array(json_decode($sql))) {	
+	} elseif (nuStringStartsWith('[', $sqlFirstChars) && is_array(json_decode($sql))) {								//-- Array style
 			
 			$arr = json_decode($sql);
 			foreach($arr as $item) {
-
-				$r		= array();
-				$r[0]	= $item;
-				$r[1]	= $item;
-				$a[]	= $r;
-
+				$options[] = nuSelectAddOption($item, $item);
 			}
 
-	} else {																	//-- comma delimited string
+	} else {																										//-- comma delimited string
 
-		$t			= explode('|', nuRemoveNonCharacters($sql));
+		$parts = explode('|', nuRemoveNonCharacters($sql));
 
-		$countt = count($t);
-		for ($i = 0; $i < $countt; $i++) {
+		$count = count($parts);
+		for ($i = 0; $i < $count; $i++) {
 
-			$r		= array();
-			$r[0]	= $t[$i];
-			$r[1]	= $t[$i + 1];
-			$a[]	= $r;
+			$options[]	= nuSelectAddOption($parts[$i], $parts[$i + 1]);
 			$i++;
 
 		}
 
 	}
-
-	return $a;
+	
+	return $options;
 
 }
 
