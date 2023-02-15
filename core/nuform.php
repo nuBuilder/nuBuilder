@@ -961,6 +961,15 @@ function nuSelectOptions($sql) {
 				$options[] = nuSelectAddOption($item, $item);
 			}
 
+	} elseif (nuStringStartsWith('SHOW TABLES', $sqlFirstChars)) {
+
+		$stmt = nuRunQuery($sql);
+		while ($row = db_fetch_row($stmt)) {		
+			if (!nuStringStartsWith('__', $row[0])) {
+				$options[] = nuSelectAddOption($row[0], $row[0]);
+			}
+		}
+
 	} else {																										//-- comma delimited string
 
 		$parts = explode('|', nuRemoveNonCharacters($sql));
