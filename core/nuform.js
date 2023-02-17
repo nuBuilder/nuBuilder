@@ -4322,7 +4322,7 @@ function nuSetNoSearchColumns(columnsArr) {    
 		$('#nusort_' + columnsArr[i]).addClass('nuNoSearch');   
 	}    
   
-	nuFORM.setProperty('nosearch_columns', a); 
+	nuFORM.setProperty('nosearch_columns', columnsArr); 
 
 }
 
