@@ -4313,6 +4313,31 @@ function nuClickSearchColumn(e) {
 
 }
 
+function nuSetSearchColumn() {
+
+	var nosearch = [];
+
+	$('.nuSearchCheckbox').each(function (index) {
+
+		if (!$(this).is(':checked')) {
+
+			nosearch.push(index);
+
+			$('#nusort_' + index)
+				.addClass('nuNoSearch');
+
+		} else {
+
+			$('#nusort_' + index)
+				.removeClass('nuNoSearch');
+		}
+
+	});
+
+	window.nuFORM.setProperty('nosearch_columns', nosearch);
+
+}
+
 function nuSetNoSearchColumns(columnsArr) {    
 
 	const s = nuFORM.getCurrent().nosearch_columns;   
