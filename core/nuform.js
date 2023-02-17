@@ -72,7 +72,7 @@ function nuBuildForm(f) {
 
 	}
 
-	if (formType == 'edit' && nuCurrentProperties().form_type !== 'Launch') {
+	if (formType == 'edit' && nuCurrentProperties().form_type !== 'launch') {
 
 		window.nuTimesSaved = window.nuTimesSaved + 1;
 
