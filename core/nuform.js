@@ -4341,6 +4341,16 @@ function nuSetSearchColumns(columnsArr) {    
   
 }
 
+function nuSearchColumnsReset() {    
+
+	for (let i = 0; i < $(".nuBrowseTitle").length; i++) {
+		$('#nusort_' + i).removeClass('nuNoSearch');   
+	}    
+  
+	nuFORM.setProperty('nosearch_columns', []); 
+
+}
+
 function nuArrowPressed(e) {
 
 	if (!e) { e = window.event; }
