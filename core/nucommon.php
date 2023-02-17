@@ -449,7 +449,7 @@ function nuRunPHP($nuCode, $hidden = false){
 		   
 }
 
-function nuJavascriptCallback($js){
+function nuJavaScriptCallback($js){
 	$_POST['nuCallback']	= $js;
 }
 
