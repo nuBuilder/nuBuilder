@@ -931,7 +931,7 @@ function nuSelectOptions($sql) {
 
 	$options = array();
 	
-	$sqlFirstChars = substr($sql, 0, 15);
+	$sqlFirstChars = trim(substr($sql, 0, 20));
 
 	if (nuStringStartsWith('SELECT', $sqlFirstChars, true) || nuStringStartsWith('WIDTH', $sqlFirstChars, true)) {	//-- sql statement
 
@@ -945,6 +945,13 @@ function nuSelectOptions($sql) {
 			$options[] = $row;
 		}
 
+	} elseif (nuStringStartsWith('[', $sqlFirstChars) && is_array(json_decode($sql))) {								//-- Array style
+			
+			$arr = json_decode($sql);
+			foreach($arr as $item) {
+				$options[] = nuSelectAddOption($item, $item);
+			}
+
 	} elseif (nuStringStartsWith('%LANGUAGES%', $sqlFirstChars, true)) {											//-- language Files
 
 		foreach(glob("languages/*.sql") as $file)  {
@@ -954,14 +961,7 @@ function nuSelectOptions($sql) {
 
 		}
 
-	} elseif (nuStringStartsWith('[', $sqlFirstChars) && is_array(json_decode($sql))) {								//-- Array style
-			
-			$arr = json_decode($sql);
-			foreach($arr as $item) {
-				$options[] = nuSelectAddOption($item, $item);
-			}
-
-	} elseif (nuStringStartsWith('SHOW TABLES', $sqlFirstChars)) {
+	} elseif (nuStringStartsWith('SHOW TABLES', $sqlFirstChars) || nuStringStartsWith('SHOW FULL TABLES', $sqlFirstChars)) {
 
 		$stmt = nuRunQuery($sql);
 		while ($row = db_fetch_row($stmt)) {		
