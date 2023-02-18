@@ -931,7 +931,7 @@ function nuBindCtrlEvents() {
 					nuPopup(formId, "-2");
 				} else if (e.code == 'KeyQ' && !g) {				//-- q		Change Password
 					nuPopup("nupassword", "5b6bb7108a75efc", "");
-				} else if (e.code == 'KeyT' && g) {					//-- t		Add Object
+				} else if (e.code == 'KeyH' && g) {					//-- t		Add Object
 					nuPopup('nuobject', '-1', '');
 				} else if (e.code == 'KeyG' && g) {					//-- G		Object Grid
 					nuForm("nuobjectgrid", formId, "", "", 2);
