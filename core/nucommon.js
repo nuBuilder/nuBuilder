@@ -1962,7 +1962,7 @@ function nuEmbedObject(f, d, w, h) {
 }
 
 function nuVendorLogin(appId) {
-	window.open("core/nuvendorlogin.php?sessid=" + window.nuSESSION + "&appId=" + appId);
+	window.open("core/nuvendorlogin.php?sessid=" + window.nuSESSION + "&appId=" + appId + "&table=" + nuSERVERRESPONSE.table);
 }
 
 function nuIsMobile() {
