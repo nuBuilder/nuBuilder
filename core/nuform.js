@@ -4376,6 +4376,32 @@ function nuSearchColumnsReset() {    
 
 }
 
+function nuSearchPressed(e) {
+
+	if (!e) { e = window.event; }
+
+	if (e.key == 'Enter' && window.nuBROWSEROW == -1) {
+
+		e.preventDefault();
+		$('#nuSearchButton').click();
+
+	} else if (e.key == 'Enter'  && window.nuBROWSEROW != -1) {
+
+		e.preventDefault();
+		const i = '#nucell_' + window.nuBROWSEROW + '_0';
+
+		nuSelectBrowse('', $(i)[0]);
+
+	} else {
+
+		window.nuBROWSEROW = -1;
+		$("[data-nu-row]").addClass('nuBrowseTable');
+		$("[data-nu-row]").removeClass('nuSelectBrowse');
+
+	}
+
+}
+
 function nuArrowPressed(e) {
 
 	if (!e) { e = window.event; }
