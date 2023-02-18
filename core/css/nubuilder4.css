@@ -87,30 +87,25 @@
  .php {
 	 background-color:var(--nu-php);
 	 font-family:var(--nu-font-code);
-	 padding:2px;
 	 font-size:12px 
 }
  .js {
 	 background-color:var(--nu-js);
 	 font-family:var(--nu-font-code);
-	 padding:0 2px;
 	 font-size:12px 
 }
  .html {
 	 background-color:var(--nu-html);
 	 font-family:var(--nu-font-code);
-	 padding:5px;
 	 font-size:12px 
 }
  .sql {
 	 background-color:var(--nu-sql);
 	 font-family:var(--nu-font-code);
-	 padding:2px 
 }
  textarea.css {
 	 background-color:var(--nu-css);
 	 font-family:var(--nu-font-code);
-	 padding:5px;
 	 font-size:12px 
 }
  input.css {
@@ -147,7 +142,8 @@
 	 border: 1px solid var(--nu-border);
 	 border-radius: 0.25rem;
 	 font-family:var(--nu-font-sans-serif);
-	 font-size:13.3333px 
+	 font-size:13.3333px;
+	 padding: 0.375rem 0.45rem
 }
  body {
 	 background-color:var(--nu-body);
