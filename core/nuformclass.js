@@ -1121,21 +1121,17 @@ function nuCurrentProperties() {
 	return nuFORM.getCurrent();
 }
 
-function nuSetProperty(f, v, p) {
+function nuSetProperty(name, value, persist) {
 
-	nuFORM.setProperty(f, v);
-	if (p === true) {
-		// set the hash cookie to persist / global scope
-		nuSetProperty('hcname', f);
-		nuSetProperty('hcvalue', v);
+	nuFORM.setProperty(name, value);
+	if (persist === true) { // global scope
+		nuSetProperty('NUSETHASHCOOKIE_NAME', name);
+		nuSetProperty('NUSETHASHCOOKIE_VALUE', value);
 		nuRunPHPHidden('NUSETHASHCOOKIE', 0);
 	}
 
 }
 
-function nuGetProperty(f) {
-
-	let v = nuFORM.getProperty(f);
-	return v;
-
+function nuGetProperty(name) {
+	return nuFORM.getProperty(name);
 }
