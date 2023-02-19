@@ -167,6 +167,10 @@
 	 background:darkgrey;
 	 cursor:pointer 
 }
+ input:focus,select:focus,textarea:focus {
+	outline: none;
+	box-shadow: 0 0 0 1px rgb(220 237 244)
+}
  .nuCellOdd {
 	 background-color:#fcfcfc;
 	 border-style:solid;
