@@ -420,20 +420,26 @@ function nuViewExists($view) {
 
 function nuCanCreateView() {
 
-	$qry = nuRunQuery("SHOW GRANTS FOR CURRENT_USER()");
-	$canCreateView = false;
+	$dbName = $_SESSION['nubuilder_session_data']['DB_NAME'];
 
+	$qry = nuRunQuery("SHOW GRANTS FOR CURRENT_USER()");
 	while ($row = db_fetch_row($qry)) {
-		if (strpos($row[0], 'CREATE VIEW') !== false) {
-			$canCreateView = true;
-			break;
+
+		$grants = $row[0];
+
+		$createView = "CREATE VIEW";
+		$grantAllDb = "ALL PRIVILEGES ON `$dbName`.*";
+		$grantAll = "ALL PRIVILEGES ON *.*";
+
+		if (nuStringContains($createView, $grants, true) || nuStringContains($grantAllDb, $grants, true) || nuStringContains($grantAll, $grants, true) ) {
+			return true;
 		}
+
 	}
 
-	return $canCreateView;
+	return false;
 
 }
-
 
 function nuDebugResult($msg){
 
