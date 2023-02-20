@@ -3,6 +3,7 @@
 
 :root {
   --nu-black: rgba(0, 0, 0, 0.8);
+  --nu-label: #253858;
   --nu-php: #f3f0f7;
   --nu-js: #fffced;
   --nu-html: #faf3ef;
@@ -121,8 +122,9 @@
 	 margin:0 
 }
  label {
+	 color:var(--nu-label);
 	 text-align:right;
-	 position:absolute 
+	 position:absolute
 }
  iframe {
 	 padding:0;
@@ -772,7 +774,7 @@
 	 margin-bottom:10px;
 	 background-color:#fafafa;
 	 background-image:none;
-	 color:var(--nu-black);
+	 color:var(--nu-label);
 	 border-color:rgb(159,165,169);
 	 text-shadow:none;
 	 border-radius:3px 
@@ -1246,7 +1248,7 @@
 	 line-height:4px;
 	 border-top-left-radius:7px;
 	 border-top-right-radius:7px;
-	 color:#333;
+	 color:var(--nu-label);
 	 font-size:14px;
 	 font-weight:700;
 	 font-family:var(--nu-font-sans-serif);
