@@ -509,8 +509,6 @@ function nuAttachImage(i, code, fit) {
 
 function nuAttachButtonImage(i, c, cssClass = 'nuButtonImage') {
 
-	cssClass = cssClass === undefined ? 'nuButtonImage' : cssClass;
-
 	c = String(c).toLowerCase();
 
 	if (window.nuGraphics.indexOf(c + '.png') != -1) {						//-- check filenames in graphics dir.
