@@ -30,6 +30,7 @@ function nuLoad(){
 	window.beautify = ace.require("ace/ext/beautify");
 	window.editor = ace.edit("nu_editor");
 
+	editor.setShowPrintMargin(false);
 	editor.setTheme("ace/theme/monokai");
 	editor.setOptions({
 		enableBasicAutocompletion: true,
