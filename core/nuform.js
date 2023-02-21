@@ -686,8 +686,13 @@ function nuAddActionButtons(form) {
 
 		nuAddActionButton("Search", "<i class='fa fa-search'></i>" + searchCaption, 'nuSearchAction()');
 
-		if (button.Add == 1) { nuAddActionButton('Add', addCaption, 'nuAddAction()'); }
-		if (button.Print == 1) { nuAddActionButton('Print', printCaption, 'nuPrintAction()'); }
+		if (button.Add == 1) { 
+			nuAddActionButton('Add', addCaption, 'nuAddAction()'); 
+		}
+
+		if (button.Print == 1 && nuFORM.getCurrent().browse_rows.length > 0) { 
+			nuAddActionButton('Print', printCaption, 'nuPrintAction()'); 
+		}
 
 		nuSearchFieldSetSearchType(isMobile);
 
@@ -3648,7 +3653,7 @@ function nuGetOptionsList(f, t, p, a, type) {
 	if (typeBrowse) {
 		list.push(items.Search);
 		if (buttons.Add == '1') { list.push(items.Add); }
-		if (buttons.Print == '1') { list.push(items.Print); }
+		if (buttons.Print == '1' && nuFORM.getCurrent().browse_rows.length > 0) { list.push(items.Print); }
 	}
 
 	if (typeLaunch && typeEdit && type != 'subform') {
