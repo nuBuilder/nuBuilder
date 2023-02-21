@@ -427,11 +427,12 @@ function nuCanCreateView() {
 
 		$grants = $row[0];
 
-		$createView = "CREATE VIEW";
-		$grantAllDb = "ALL PRIVILEGES ON `$dbName`.*";
-		$grantAll = "ALL PRIVILEGES ON *.*";
+		$createView	= nuStringContains("CREATE VIEW", $grants, true);
+		$grant1		= nuStringContains("ALL PRIVILEGES ON `$dbName`.*", $grants, true);
+		$grant2		= nuStringContains("ALL PRIVILEGES ON *.*", $grants, true);
+		$grant3		= nuStringContains("ALL PRIVILEGES ON %", $grants, true);
 
-		if (nuStringContains($createView, $grants, true) || nuStringContains($grantAllDb, $grants, true) || nuStringContains($grantAll, $grants, true) ) {
+		if ($createView || $grant1 || $grant2 || grant3) {
 			return true;
 		}
 
