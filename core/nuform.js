@@ -4449,7 +4449,6 @@ function nuSearchAction(S, F) {
 
 	var s = String($('#nuSearchField').val()).nuReplaceAll("'", "&#39;", true);
 	var f = String($('#nuFilter').val()).nuReplaceAll("'", "&#39;", true);
-	const caller = arguments.callee.caller === null ? '' : arguments.callee.caller.name;
 
 	if (window.nuOnSearchActionGlobal) {
 		let o = { search: s, filter: f };
@@ -4468,6 +4467,7 @@ function nuSearchAction(S, F) {
 	window.nuFORM.setProperty('search', s);
 	window.nuFORM.setProperty('filter', f);
 
+	const caller = nuSearchAction.caller === null ? '' : nuSearchAction.caller.name;
 	if ((arguments.length === 0 && caller != 'nuGetPage') || arguments.length >= 1) {
 		window.nuFORM.setProperty('page_number', 0);
 	}
