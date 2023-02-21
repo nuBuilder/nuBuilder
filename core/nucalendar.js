@@ -103,7 +103,7 @@ function nuPopupCalendar(pThis, d) {
 	var o = $('#' + window.nuCalendarCaller);
 	var f = o.attr('data-nu-format');
 
-	var v = d === undefined ?  = o.val() : d;
+	var v = d === undefined ? o.val() : d;
 	var u = nuFORM.removeFormatting(v, f);
 
 	var i = pThis.id; 					//-- Object ID;
