@@ -366,8 +366,10 @@ function nuRemoveNuRecords(){
 function nuAppendToSystemTables(){
 
 	try{
-		$t = nuSystemList();
-		for($i = 0 ; $i < count($t) ; $i++){
+		$t		= nuSystemList();
+		$count	= count($t);
+
+		for($i = 0 ; $i < $count ; $i++){
 			$table = $t[$i];
 
 			//-- if duplicate records, use latest record from zzzzsys_object

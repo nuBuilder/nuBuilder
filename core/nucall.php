@@ -39,7 +39,8 @@ if(!array_key_exists('TEMPORARY_SESSION', $_SESSION)){
 	$accessArray = json_decode($getAccessOBJ->sss_access, true);
 	if ($accessArray['session']['global_access'] != 1) {
 		$hasAccess = false;
-		for ($i = 0; $i < count($accessArray['procedures']); $i++) {
+		$count = count($accessArray['procedures']);
+		for ($i = 0; $i < $count; $i++) {
 			if ($accessArray['procedures'][$i][0] == $PHPID)
 				$hasAccess = true;
 		}

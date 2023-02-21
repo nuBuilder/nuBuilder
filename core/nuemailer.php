@@ -24,11 +24,13 @@ function nuEmailPHP($sendTo, $fromAddress, $fromName, $content, $subject){
 
 // Send email using PHPMailer
 function nuEmail($to_list=[],$from_address='',$from_name='',$content='',$subject='',$file_list=[],$html=false,$cc_list=[],$bcc_list=[],$reply_to_list=[],$debug=0,$method='SMTP',$priority='', $smtp_options = []){
-
+	
+	/* DEV: null to empty string
 	$args = get_defined_vars();
 	foreach ($args as $key => $val) {
-		$$key = $val === null ? "" : $val;
+		$$key = $val === null && !is_array($key) ? "" : $val;
 	}
+	*/
 
 	ob_start();
 
@@ -159,7 +161,8 @@ function _nuEmailHelperAddOrdinal(&$mail, $names_addresses, $method) {
 	if ( !is_array($names_addresses) ) {
 		return;
 	}
-	for ( $x=0; $x<count($names_addresses); $x++ ) {
+	$count = count($names_addresses);
+	for ( $x=0; $x<$count; $x++ ) {
 		$mail->$method($names_addresses[$x], '');
 	}
 }

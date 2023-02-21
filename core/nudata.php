@@ -39,7 +39,7 @@ function nuValidateSubforms(){
 			for($i = 0 ; $i < $countRows ; $i++){
 
 				$countFields = count($sf->fields);
-				for($I = 1 ; $I < count($sf->fields) ; $I++){
+				for($I = 1 ; $I < $countFields ; $I++){
 
 					$fld			= $sf->fields[$I];
 					$val			= nuObjKey($a,$fld);

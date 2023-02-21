@@ -134,8 +134,9 @@ function nuFFNewTableSQL($table, $pk, $columns, $isNew){
 	if($h['fastform_type'] == 'subform' && $isNew){
 		$a[]	= "`$fk` VARCHAR(25) DEFAULT NULL";
 	}
-
-	for($i = 0 ; $i < count($columns) ; $i++){
+	
+	$count = count($columns);
+	for($i = 0 ; $i < $count ; $i++){
 
 		$n = $columns[$i]['name'];
 		$t = $columns[$i]['type'];
@@ -172,7 +173,8 @@ function nuFFCreateTable($sF, $formType, $table, $Pk, $isNew, $drop) {
 	if ($formType == 'launch' || ! $isNew) return '';
 
 	$columns = [];
-	for($i = 0 ; $i < count($sF->rows) ; $i++){
+	$count = count($sF->rows);
+	for($i = 0 ; $i < $count ; $i++){
 
 		if($sF->deleted[$i] == 0){
 			$type = $sF->rows[$i][5];												//-- ff_datatype
@@ -301,8 +303,9 @@ function nuFFTempInsertSampleObjects($sF, $formType, $TT) {
 	nuFFTempCreate($TT);
 
 	if ($formType == 'browse') return;
-
-	for($i = 0 ; $i < count($sF->rows) ; $i++){
+	
+	$count = count($sF->rows);
+	for($i = 0 ; $i < $count ; $i++){
 
 		if($sF->deleted[$i] == 0){																					//-- not ticked as deleted
 
@@ -345,8 +348,9 @@ function nuFFTempUpdate($sF, $formType, $TT, $table, $formId, $tabId) {
 	";
 
 	$top		= 10;
-
-	for($i = 0 ; $i < count($sF->rows) ; $i++){
+	
+	$count = count($sF->rows);
+	for($i = 0 ; $i < $count ; $i++){
 
 		if($sF->deleted[$i] == 0){								//-- not ticked as deleted
 
@@ -388,9 +392,10 @@ function nuFFInsertBrowse($sF, $formId, $formType) {
 
 	if (!nuStringStartsWith('browse', $formType)) return;
 
-	for($i = 0 ; $i < count($sF->rows) ; $i++){
+	$count = count($sF->rows);
+	for($i = 0 ; $i < $count ; $i++){
 
-		if($sF->rows[$i][6] == 1 and $sF->deleted[$i] == 0){	//-- ff_browse ticked and not set as deleted
+		if($sF->rows[$i][6] == 1 && $sF->deleted[$i] == 0){	//-- ff_browse ticked and not set as deleted
 
 			$label	= $sF->rows[$i][1];							//-- ff_label
 			$id		= $sF->rows[$i][2];							//-- ff_field	

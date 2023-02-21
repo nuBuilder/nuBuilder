@@ -1335,7 +1335,8 @@ function nuBrowseWhereClause($searchFields, $searchString, $returnArray = false)
 		$include = [];
 		$exclude = [];
 
-		for ($SF = 0; $SF < count($searchFields); $SF++) {												//-- loop through searchable fields
+		$countSearchFields = count($searchFields);
+		for ($SF = 0; $SF < $countSearchFields; $SF++) {												//-- loop through searchable fields
 
 			if ($task[$i] == 'include') {																//-- changed by KEE
 				$include[] = 'CONVERT(' . $searchFields[$SF] . ' USING utf8) LIKE ' . $SEARCHES[$i];
