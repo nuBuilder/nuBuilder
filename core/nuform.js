@@ -542,7 +542,7 @@ function nuAddHomeLogout() {
 
 }
 
-function nuAddIconToBreadCrumb(id, title, right, handler, _class) {
+function nuAddIconToBreadCrumb(id, title, right, handler, iconClass) {
 
 	var l = document.createElement('div');
 	l.setAttribute('id', id);
@@ -550,13 +550,10 @@ function nuAddIconToBreadCrumb(id, title, right, handler, _class) {
 	$('#nuBreadcrumbHolder').append(l);
 
 	$('#' + id)
-		.addClass('nuNotBreadcrumb')
-		.css('cursor', "pointer")
-		.css('font-size', 16)
-		.css('position', 'absolute')
-		.css('right', right)
+		.addClass('nuBreadcrumbIcon')
 		.attr('onclick', handler)
-		.html('<i class="' + _class + '" style="font-size:17px;"></i>')
+		.css('right', right)
+		.html('<i class="' + iconClass + '" style="font-size:17px;"></i>')
 		.attr('title', nuTranslate(title));
 
 }

@@ -249,6 +249,15 @@
  .nuBreadcrumb:hover {
 	 cursor:pointer 
 }
+ .nuBreadcrumbIcon {
+	font-size: 17px; 
+	display: inline-block; 
+	cursor : pointer; 
+	padding-right:12px; 
+	padding-left:0px;
+	position:absolute;
+	color:white;
+ }
  .nuCalendar {
 	 position:absolute;
 	 width:210px;
