@@ -7,7 +7,7 @@ require_once('nudata.php');
 print "<meta charset='utf-8'>";
 
 $s					= "SELECT deb_message AS json FROM zzzzsys_debug WHERE zzzzsys_debug_id = ? ";		//-- created by nuRunHTML()
-$t					= nuRunQuery($s, array($_GET['i']));
+$t					= nuRunQuery($s, [$_GET['i']]);
 
 if (db_num_rows($t) == 0) {
 	print nuTranslate("Use the Print button to refresh the table.");
@@ -30,7 +30,7 @@ unset($hash);
 
 print "<style>\n";
 
-$class = array();
+$class = [];
 
 
 
@@ -89,7 +89,7 @@ $h	.= "</TABLE>";
 
 print $h;
 
-nuRunQuery("DELETE FROM zzzzsys_debug WHERE zzzzsys_debug_id = ? ", array($_GET['i']));
+nuRunQuery("DELETE FROM zzzzsys_debug WHERE zzzzsys_debug_id = ? ", [$_GET['i']]);
 $hash = nuHash();
 nuRunQuery("DROP TABLE IF EXISTS " . $hash['browse_table_id']);
 unset($hash);

@@ -23,7 +23,13 @@ function nuEmailPHP($sendTo, $fromAddress, $fromName, $content, $subject){
 }
 
 // Send email using PHPMailer
-function nuEmail($to_list=array(),$from_address='',$from_name='',$content='',$subject='',$file_list=array(),$html=false,$cc_list=array(),$bcc_list=array(),$reply_to_list=array(),$debug=0,$method='SMTP',$priority='', $smtp_options = array()){
+function nuEmail($to_list=[],$from_address='',$from_name='',$content='',$subject='',$file_list=[],$html=false,$cc_list=[],$bcc_list=[],$reply_to_list=[],$debug=0,$method='SMTP',$priority='', $smtp_options = []){
+
+	$args = get_defined_vars();
+	foreach ($args as $key => $val) {
+		$$key = $val === null ? "" : $val;
+	}
+
 	ob_start();
 
 	$nuEmailSettings = nuMarshallEmailSettings($from_address, $from_name, $html, $reply_to_list);
@@ -62,7 +68,7 @@ function nuEmail($to_list=array(),$from_address='',$from_name='',$content='',$su
 	_nuEmailHelperAdd($mail, $nuEmailSettings->reply_to_list, 'AddReplyTo');
 	_nuEmailHelperAttach($mail, $file_list);
 
-	$result = array();
+	$result = [];
 
 	try {
 
@@ -103,7 +109,7 @@ function _nuMarshallEmailSettingsHelper($obj, $key, $default = '') {
 	return $a;
 }
 
-function nuMarshallEmailSettings( $from_address = '', $from_name = '', $html = false, $reply_to_list = array() ) {
+function nuMarshallEmailSettings( $from_address = '', $from_name = '', $html = false, $reply_to_list = [] ) {
 
 	$setup = db_setup();
 	$nuEmailSettings = new stdClass();
@@ -120,7 +126,7 @@ function nuMarshallEmailSettings( $from_address = '', $from_name = '', $html = f
 	$nuEmailSettings->charset					= 'UTF-8';
 	$nuEmailSettings->html						= $html;
 
-	$nuEmailSettings->reply_to_list		= array();
+	$nuEmailSettings->reply_to_list		= [];
 	$nuEmailSettings->smtp_secure		= '';
 	if ( $nuEmailSettings->smtp_port	== '587' ) {
 		$nuEmailSettings->smtp_secure	= 'tls';
@@ -132,7 +138,7 @@ function nuMarshallEmailSettings( $from_address = '', $from_name = '', $html = f
 	}
 	if ( empty($reply_to_list) ) {
 		if ( $from_address != '' ) {
-					$nuEmailSettings->reply_to_list = array($from_address => $from_name);
+					$nuEmailSettings->reply_to_list = [$from_address => $from_name];
 		}
 	} else {
 		$nuEmailSettings->reply_to_list = $reply_to_list;
@@ -150,6 +156,9 @@ function _nuEmailHelperAdd(&$mail, $names_addresses, $method) {
 }
 
 function _nuEmailHelperAddOrdinal(&$mail, $names_addresses, $method) {
+	if ( !is_array($names_addresses) ) {
+		return;
+	}
 	for ( $x=0; $x<count($names_addresses); $x++ ) {
 		$mail->$method($names_addresses[$x], '');
 	}
@@ -161,7 +170,7 @@ function _nuEmailHelperAddAssociative(&$mail, $names_addresses, $method) {
 	}
 }
 
-function _nuEmailHelperAttach(&$mail, $file_list = array() ) {
+function _nuEmailHelperAttach(&$mail, $file_list = [] ) {
 	if ( !is_array($file_list) ) {
 		return;
 	}

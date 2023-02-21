@@ -38,7 +38,7 @@ function nuPasswordHash($pw) {
 
 function nuOutput2FATokenToConsole($code) {
 	$js = "nuMessage(['<h2>' + nuTranslate('Info')+'</h2>Your 2FA Code: ' + nuTranslate('$code') + '<br><br><b>TEST MODE<b></br>']); ";
-	nuJavascriptCallback($js);
+	nuJavaScriptCallback($js);
 }
 
 function nuGetLoginUserId($vars) {
@@ -80,7 +80,7 @@ function nuShow2FAAuthenticationError($js = null) {
 		$js = "nuMessage(['<h2>' + nuTranslate('Error')+'</h2>' + nuTranslate('Your Authentication token is invalid or has expired') ]); ";
 	}
 
-	nuJavascriptCallback($js);
+	nuJavaScriptCallback($js);
 
 }
 
@@ -150,13 +150,13 @@ function nuRedirectToForm($token) {
 	} else {
 		$js .= "nuMessage(['<h2>' + nuTranslate('Info')+'</h2>' + nuTranslate('No redirect Form ID defined (SESSION_2FA_REDIRECT_FORM_ID)') ]); ";
 	}
-	nuJavascriptCallback($js);
+	nuJavaScriptCallback($js);
 }
 
 function nu2FAGetStoredTokens($uid) { 		// retrieve the array of valid 2FA tokens for this user
 
 	$st = nuGetUserJSONData("2FA_COOKIES",$uid);
-	return (strlen($st) > 0 ? explode(";",$st) : array() );
+	return (strlen($st) > 0 ? explode(";",$st) : [] );
 
 }
 
@@ -181,7 +181,7 @@ function nu2FAStoreToken($newtoken) {
 function nu2FARemoveOldTokens($arrtokens) {
 
 	$currts = (int)date_timestamp_get(date_create());
-	$newtokens = array();
+	$newtokens = [];
 	foreach ($arrtokens as $t) {
 		$expdate = (int)explode('_',$t)[0];
 			if ($expdate > $currts){

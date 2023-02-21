@@ -8,7 +8,7 @@ eval($config['code']);
 
 class nuBuilderSessionData {
 
-	public $nubuilder	= array(
+	public $nubuilder	= [
 	'NB_PATH'					=> __DIR__,
 	'GLOBEADMIN'				=> false,
 	'GLOBEADMIN_NAME'			=> '',
@@ -30,7 +30,7 @@ class nuBuilderSessionData {
 	'DB_PASSWORD'				=> '',
 	'DB_HOST'					=> '',
 	'DB_CHARSET'				=> '',
-	'DB_OPTIONS'				=> array(),
+	'DB_OPTIONS'				=> [],
 	'NU_SITE_URL'				=> '',
 	'IS_DEMO'					=> false,
 	'2FA_ADMIN'					=> false,
@@ -45,7 +45,7 @@ class nuBuilderSessionData {
 	'USER_ADDITIONAL1_LABEL'	=> null,
 	'USER_ADDITIONAL2_LABEL'	=> null,
 	'USER_CODE_LABEL'			=> null
-	);
+	];
 
 	public function getNubuilderSessionData() {
 

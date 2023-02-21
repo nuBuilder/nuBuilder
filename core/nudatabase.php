@@ -15,7 +15,7 @@ $DBPassword				= isset($sessionData['DB_PASSWORD'])	? $sessionData['DB_PASSWORD'
 $DBCharset				= isset($sessionData['DB_CHARSET'])		? $sessionData['DB_CHARSET']	: 'utf8';
 $DBOptions				= isset($sessionData['DB_OPTIONS'])		? $sessionData['DB_OPTIONS']	: (isset($nuConfigDBOptions) ? $nuConfigDBOptions : null);
 
-$charSet				= array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $DBCharset");
+$charSet				= [PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $DBCharset"];
 
 if (is_array($DBOptions)) {
 	array_merge($charSet, $DBOptions);
@@ -33,7 +33,7 @@ try {
 	die();
 }
 
-$GLOBALS['sys_table_prefix'] = array(
+$GLOBALS['sys_table_prefix'] = [
 	'access' => 'sal',
 	'access_form' => 'slf',
 	'access_php' => 'slp',
@@ -62,9 +62,9 @@ $GLOBALS['sys_table_prefix'] = array(
 	'timezone' => 'stz',
 	'translate' => 'trl',
 	'user' => 'sus'
-);
+];
 
-function nuRunQueryNoDebug($s, $a = array(), $isInsert = false){
+function nuRunQueryNoDebug($s, $a = [], $isInsert = false){
 
 	global $nuDB;
 
@@ -83,7 +83,7 @@ function nuRunQueryNoDebug($s, $a = array(), $isInsert = false){
 
 }
 
-function nuRunQueryTest($s, $a = array()){
+function nuRunQueryTest($s, $a = []){
 
 	global $nuDB;
 
@@ -124,7 +124,7 @@ function nuDebugMessageString($user, $message, $sql, $trace) {
 
 }
 
-function nuRunQuery($sql, $a = array(), $isInsert = false){
+function nuRunQuery($sql, $a = [], $isInsert = false){
 
 	global $DBHost;
 	global $DBName;
@@ -134,7 +134,7 @@ function nuRunQuery($sql, $a = array(), $isInsert = false){
 	global $DBCharset;
 
 	if($sql == ''){
-		$a			= array();
+		$a			= [];
 		$a[0]		= $DBHost;
 		$a[1]		= $DBName;
 		$a[2]		= $DBUser;
@@ -207,7 +207,7 @@ function db_fetch_array($o){
 	if (is_object($o)) {
 		return $o->fetch(PDO::FETCH_ASSOC);
 	} else {
-		return array();
+		return [];
 	}
 
 }
@@ -217,7 +217,7 @@ function db_fetch_all_array($o){
 	if (is_object($o)) {
 		return $o->fetchAll(PDO::FETCH_ASSOC);
 	} else {
-		return array();
+		return [];
 	}
 
 }
@@ -227,7 +227,7 @@ function db_fetch_key_pair_array($o){
 	if (is_object($o)) {
 		return $o->fetchAll(PDO::FETCH_KEY_PAIR);
 	} else {
-		return array();
+		return [];
 	}
 
 }
@@ -247,7 +247,7 @@ function db_fetch_all_column($o){
 	if (is_object($o)) {
 		return $o->fetchAll(PDO::FETCH_COLUMN);
 	} else {
-		return array();
+		return [];
 	}
 
 }
@@ -285,14 +285,14 @@ function db_fetch_all_row($o){
 function db_update_value($table, $pk, $recordId, $column, $newValue) {
 
 	$update = "UPDATE `$table` SET `$column` = ? WHERE `$pk` = ?";
-	nuRunQuery($update, array($newValue, $recordId));
+	nuRunQuery($update, [$newValue, $recordId]);
 
 }
 
 function db_fetch_value($table, $pk, $recordId, $column) {
 
 	$select = "SELECT `$column` FROM `$table` WHERE `$pk` = ?";
-	$result = nuRunQuery($select, array($recordId));
+	$result = nuRunQuery($select, [$recordId]);
 	if (db_num_rows($result) == 1) {
 		$arr = db_fetch_array($result);
 		return $arr[$column];
@@ -304,9 +304,9 @@ function db_fetch_value($table, $pk, $recordId, $column) {
 
 function db_field_info($n){
 
-	$fields		= array();
-	$types		= array();
-	$pk			= array();
+	$fields		= [];
+	$types		= [];
+	$pk			= [];
 
 	$s			= "DESCRIBE `$n`";
 	$t			= nuRunQueryNoDebug($s);
@@ -322,13 +322,13 @@ function db_field_info($n){
 
 	}
 
-	return array($fields, $types, $pk);
+	return [$fields, $types, $pk];
 
 }
 
 function db_field_names($n){
 
-	$a	= array();
+	$a	= [];
 	$s	= "DESCRIBE `$n`";
 	$t	= nuRunQuery($s);
 
@@ -343,7 +343,7 @@ function db_field_names($n){
 
 function db_field_types($n){
 
-	$a		= array();
+	$a		= [];
 	$s		= "DESCRIBE `$n`";
 	$t		= nuRunQuery($s);
 
@@ -364,7 +364,7 @@ function db_field_exists($tableName, $fieldName) {
 
 function db_primary_key($n){
 
-	$a		= array();
+	$a		= [];
 	$s		= "DESCRIBE `$n`";
 	$t		= nuRunQuery($s);
 
@@ -412,7 +412,7 @@ function db_quote($s) {
 function nuViewExists($view) {
 
 	$sql = "SELECT table_name as TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'VIEW' AND table_schema = DATABASE() AND TABLE_NAME = ?";
-	$qry = nuRunQuery($sql, array($view));
+	$qry = nuRunQuery($sql, [$view]);
 
 	return db_num_rows($qry);
 
@@ -459,12 +459,12 @@ function nuDebugResult($msg){
 
 	$s = "INSERT INTO zzzzsys_debug (zzzzsys_debug_id, deb_message, deb_added, deb_user_id) VALUES (:id , :message, :added, :user_id)";
 
-	$params = array(
+	$params = [
 		"id"		=> $id,
 		"message"	=> $msg,
 		"added"		=> time(),
 		"user_id"	=> $userId
-	);
+	];
 
 	nuRunQuery($s, $params);
 
@@ -517,7 +517,7 @@ function nuDebug($a){
 
 function nuLog($s1, $s2 = '', $s3 = '') {
 
-	$dataToLog = array(date("Y-m-d H:i:s"), $s1, $s2, $s3);
+	$dataToLog = [date("Y-m-d H:i:s"), $s1, $s2, $s3];
 
 	$data = implode(" - ", $dataToLog);
 	// $data = print_r($dataToLog, true);

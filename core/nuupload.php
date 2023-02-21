@@ -40,10 +40,7 @@ function nuUploadFile() {
 		}
 
 		// Check if valid Session Id
-		$t = nuRunQuery('SELECT * FROM `zzzzsys_session` where `zzzzsys_session_id` = ?', array(
-			$sessionId
-		));
-
+		$t = nuRunQuery('SELECT * FROM `zzzzsys_session` where `zzzzsys_session_id` = ?', [$sessionId]);
 		if (db_num_rows($t) == 0) {
 			throw new Exception('Invalid Session Id');
 		}

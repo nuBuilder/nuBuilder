@@ -24,7 +24,7 @@ function nuSsoLoginCheckParams() {
 
 function nuSsoGetloginRequestData() {
 
-	$return = array();
+	$return = [];
 	if (array_key_exists('ssousersname',	$_POST['nuSTATE']))	$nameFromPost  = $_POST['nuSTATE']['ssousersname'];
 	if (array_key_exists('ssousersemail',	$_POST['nuSTATE']))	$emailFromPost = $_POST['nuSTATE']['ssousersemail'];
 	if (array_key_exists('code',			$_POST['nuSTATE']))	$codeFromPost	= $_POST['nuSTATE']['code'];
@@ -45,7 +45,7 @@ function nuSsoCheckloginDataAgainstDb($sso_d) {
 		FROM zzzzsys_sso_login
 		WHERE sso_processed = 0 AND sso_code = ?
 		";
-	$rs = nuRunQuery($sql, array($sso_d["code"]));
+	$rs = nuRunQuery($sql, [$sso_d["code"]]);
 
 	(db_num_rows($rs) == 1) or nuDie("Error during SSO login.  Internal information: did not find an unprocessed row matching the ssologin data.");
 
@@ -61,7 +61,7 @@ function nuSsoCheckloginDataAgainstDb($sso_d) {
 	if($sso_d["name"] != $nameFromDB or $sso_d["email"] != $emailFromDB) $check = false;
 	$check or nuDie("Error during SSO login.  Data did not match ssologin request.");
 
-	$return = array();
+	$return = [];
 	$return["email"] = $emailFromDB;
 	$return["name"]  = $nameFromDB;
 	return $return;
@@ -74,7 +74,7 @@ function nuSsoMarkRowInDbAsProcessed($sso_d) {
 		SET sso_processed = 1
 		WHERE sso_processed = 0 AND sso_code = ?
 		";
-	$rs = nuRunQuery($sql, array($sso_d["code"]));
+	$rs = nuRunQuery($sql, [$sso_d["code"]]);
 	$numRows = db_num_rows($rs);
 
 	$check = ($numRows == 1);
@@ -89,7 +89,7 @@ function nuSsoVeryFirstLogin($sus_login_name) {
 		FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id
 		WHERE sus_login_name = ?
 		";
-	$rs = nuRunQuery($sql, array($sus_login_name));
+	$rs = nuRunQuery($sql, [$sus_login_name]);
 	$numRows = db_num_rows($rs);
 	return ($numRows != 1);
 }
@@ -131,7 +131,7 @@ function nuSsoAddSysUserEntryForFirstLogin($emailLocalPart, $ssodb_d) {  // $sso
 	$sql = "
 		SELECT zzzzsys_access_id FROM zzzzsys_access WHERE sal_description = ?
 		";
-	$rs = nuRunQuery($sql, array($accessLevel));
+	$rs = nuRunQuery($sql, [$accessLevel]);
 	$rowCount = db_num_rows($rs);
 	$check = ($rowCount == 1);
 	$check or nuDie('Error during SSO login.  Internal information: There must be exactly one entry in "Access Levels" with "Description" of '.$accessLevel.' but found '."$rowCount");
@@ -143,7 +143,7 @@ function nuSsoAddSysUserEntryForFirstLogin($emailLocalPart, $ssodb_d) {  // $sso
 
 	// Then insert a new entry into sys_user for this user, with the default access level
 	$sql = "INSERT INTO zzzzsys_user (zzzzsys_user_id, sus_zzzzsys_access_id, sus_name, sus_code, sus_login_name) VALUES (?, ?, ?, ?, ?)";
-	$array = array($ssodb_d["email"], $fk_ro_access_id, $ssodb_d["name"], $emailLocalPart, $ssodb_d["email"]);
+	$array = [$ssodb_d["email"], $fk_ro_access_id, $ssodb_d["name"], $emailLocalPart, $ssodb_d["email"]];
 	$rs = nuRunQuery($sql, $array, true);
 
 //	 $rowCount = db_num_rows($rs);
@@ -159,7 +159,7 @@ function nuSsoCheckSysUserEntryIsInOrder($sus_login_name) {
 		FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id
 		WHERE sus_login_name = ?
 		";
-	$rs = nuRunQuery($sql, array($sus_login_name));
+	$rs = nuRunQuery($sql, [$sus_login_name]);
 	$numRows = db_num_rows($rs);
 	($numRows == 1) or nuDie("Error during SSO login.  Internal information: Entry for user was not found.");
 

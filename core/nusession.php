@@ -56,7 +56,7 @@ if ( nuCheckIsLoginRequest() ) {
 
 	nuSsoMarkRowInDbAsProcessed($sso_d);
 
-	$matches = array();
+	$matches = [];
 	$check = preg_match("/^([^@]+)\@/", $ssodb_d["email"], $matches);
 	$check or nuDie("Error during SSO login.  Internal information: Could not extract local part of email.");
 	$emailLocalPart = $matches[1];  // The part of the email address before the "@"

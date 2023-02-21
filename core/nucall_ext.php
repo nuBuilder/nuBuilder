@@ -27,7 +27,7 @@ $qry = "
 		zzzzsys_access.sal_code = ?
 ";
 
-$rs = nuRunQuery($qry, array($p, $acc));
+$rs = nuRunQuery($qry, [$p, $acc]);
 
 if (db_num_rows($rs) != 1) {
 	setError('Procedure not found for the access level and procedure code given.');

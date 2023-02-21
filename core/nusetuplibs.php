@@ -74,16 +74,16 @@ function nuConfigScript() {
 
 	}
 
-    return array(
+    return [
         'code' => $code,
         'js' => $js
-    );
+    ];
 
 }
 
 function nuCleanConfigValue($v) {
 
-    if (in_array(strtolower($v), array("true", "false"))) {
+    if (in_array(strtolower($v), ["true", "false"])) {
         return strtolower($v);
     } else {
         if (is_numeric($v)) {

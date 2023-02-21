@@ -116,7 +116,7 @@ function nuRunUpdate($jsonId, $u = null, $p = null) {
 		while($r = db_fetch_object($config)){
 
 			$update = "UPDATE zzzzsys_config SET cfg_value = ? WHERE zzzzsys_config_id = ?";
-			nuRunQuery($update, array($r->cfg_value, $r->zzzzsys_config_id));
+			nuRunQuery($update, [$r->cfg_value, $r->zzzzsys_config_id]);
 
 		}
 

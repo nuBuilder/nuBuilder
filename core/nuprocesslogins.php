@@ -53,17 +53,17 @@ function nuCheckUserLoginRequest() {
 	$sqlMd5   = $sql." AND sus_login_password = ?";
 	$sqlToken = $sql." AND sus_json LIKE ? ";
 
-	$rs = nuRunQuery($sqlMd5, array(
+	$rs = nuRunQuery($sqlMd5, [
 		$_POST['nuSTATE']['username'],
 		md5($_POST['nuSTATE']['password'])
-	));
+	]);
 
 	$check = db_num_rows($rs) == 1 ;
 
-	$ts = nuRunQuery($sqlToken, array(
+	$ts = nuRunQuery($sqlToken, [
 		$_POST['nuSTATE']['username'],
 		'%"LOGIN_TOKEN":"' . $_POST['nuSTATE']['password'] .'"%'
-	));
+	]);
 
 	$checkToken =  db_num_rows($ts) == 1 ;
 
@@ -75,16 +75,16 @@ function nuCheckUserLoginRequest() {
 		if ($_SESSION['nubuilder_session_data']['USE_MD5_PASSWORD_HASH'] != true) {
 
 			$sql = 'UPDATE zzzzsys_user SET sus_login_password = ? WHERE sus_login_name = ?';
-			nuRunQuery($sql, array(
+			nuRunQuery($sql, [
 						nuPasswordHash($_POST['nuSTATE']['password']),
 						$_POST['nuSTATE']['username']
-					)
+					]
 			);
 		}
 
 	} else {
 
-		$rs = nuRunQuery($sql, array($_POST['nuSTATE']['username']));
+		$rs = nuRunQuery($sql, [$_POST['nuSTATE']['username']]);
 		$check = db_num_rows($rs) == 1;
 
 		$r = db_fetch_object($rs);
@@ -101,7 +101,7 @@ function nuCheckUserLoginRequest() {
 		$result = "0";
 	}
 
-	return array('result' => $result, 'user_id' => ($check ? $r->user_id : ''), 'login_name' => ($check ? $r->login_name : ''), 'user_name' => ($check ? $r->user_name : ''));
+	return ['result' => $result, 'user_id' => ($check ? $r->user_id : ''), 'login_name' => ($check ? $r->login_name : ''), 'user_name' => ($check ? $r->user_name : '')];
 
 }
 
@@ -213,25 +213,25 @@ function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 
 	// forms
 	$getAllFormsQRY = nuRunQuery("SELECT zzzzsys_form_id AS id FROM zzzzsys_form");
-	$formAccess = array();
+	$formAccess = [];
 	while ($getAllFormsOBJ = db_fetch_object($getAllFormsQRY)) {
-		$formAccess[] = array($getAllFormsOBJ->id);
+		$formAccess[] = [$getAllFormsOBJ->id];
 	}
 	$storeSessionInTable->forms = $formAccess;
 
 	// reports
 	$getAllReportsQRY = nuRunQuery("SELECT zzzzsys_report_id AS id, sre_zzzzsys_form_id AS form_id FROM zzzzsys_report");
-	$reportAccess = array();
+	$reportAccess = [];
 	while ($getAllReportsOBJ = db_fetch_object($getAllReportsQRY)) {
-		$reportAccess[] = array($getAllReportsOBJ->id, $getAllReportsOBJ->form_id);
+		$reportAccess[] = [$getAllReportsOBJ->id, $getAllReportsOBJ->form_id];
 	}
 	$storeSessionInTable->reports = $reportAccess;
 
 	// procedures
 	$getAllPHPsQRY = nuRunQuery("SELECT zzzzsys_php_id AS id, sph_zzzzsys_form_id AS form_id FROM zzzzsys_php");
-	$phpAccess = array();
+	$phpAccess = [];
 	while ($getAllPHPsOBJ = db_fetch_object($getAllPHPsQRY)) {
-		$phpAccess[] = array($getAllPHPsOBJ->id, $getAllPHPsOBJ->form_id);
+		$phpAccess[] = [$getAllPHPsOBJ->id, $getAllPHPsOBJ->form_id];
 	}
 	$storeSessionInTable->procedures = $phpAccess;
 	$storeSessionInTable->access_level_code = '';
@@ -239,10 +239,10 @@ function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 	$storeSessionInTableJSON = json_encode($storeSessionInTable);
 
 	$sql = "INSERT INTO zzzzsys_session SET sss_access = ?, zzzzsys_session_id = ?";
-	$values = array(
+	$values = [
 		$storeSessionInTableJSON,
 		$_SESSION['nubuilder_session_data']['SESSION_ID']
-	);
+	];
 
 	nuRunQuery($sql, $values);
 	
@@ -270,7 +270,7 @@ function nuLoginSetupNOTGlobeadmin($new = true, $sSoUserName = "") {
 			$thisPassword = $_POST['nuSTATE']['password'];
 		}
 
-		$rs = nuRunQuery($sql, array($thisUsername));
+		$rs = nuRunQuery($sql, [$thisUsername]);
 		$checkLoginDetailsOBJ = db_fetch_object($rs);
 
 		if ($sSoUserName) {
@@ -309,7 +309,7 @@ function nuLoginSetupNOTGlobeadmin($new = true, $sSoUserName = "") {
 		$_SESSION['nubuilder_session_data']['isGlobeadmin'] = false;
 	}
 
-	$translationQRY = nuRunQuery("SELECT * FROM zzzzsys_translate WHERE trl_language = ? ORDER BY trl_english", array($language));
+	$translationQRY = nuRunQuery("SELECT * FROM zzzzsys_translate WHERE trl_language = ? ORDER BY trl_english", [$language]);
 	$getAccessLevelSQL = "SELECT zzzzsys_access.*, zzzzsys_user.* FROM zzzzsys_user ";
 	$getAccessLevelSQL .= "INNER JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id ";
 	$getAccessLevelSQL .= "WHERE zzzzsys_user_id = '$userId' ";
@@ -375,9 +375,9 @@ function nuLoginSetupNOTGlobeadmin($new = true, $sSoUserName = "") {
 	$getFormsSQL .= "JOIN zzzzsys_access_form ON zzzzsys_access_id = slf_zzzzsys_access_id ";
 	$getFormsSQL .= "WHERE zzzzsys_user_id = '$userId' ";
 	$getFormsQRY = nuRunQuery($getFormsSQL);
-	$formAccess = array();
+	$formAccess = [];
 	while ($getFormsOBJ = db_fetch_object($getFormsQRY)) {
-		$formAccess[] = array($getFormsOBJ->id, $getFormsOBJ->a, $getFormsOBJ->p, $getFormsOBJ->s, $getFormsOBJ->c, $getFormsOBJ->d);
+		$formAccess[] = [$getFormsOBJ->id, $getFormsOBJ->a, $getFormsOBJ->p, $getFormsOBJ->s, $getFormsOBJ->c, $getFormsOBJ->d];
 	}
 	$storeSessionInTable->forms = $formAccess;
 
@@ -390,9 +390,9 @@ function nuLoginSetupNOTGlobeadmin($new = true, $sSoUserName = "") {
 	$getReportsSQL .= "WHERE zzzzsys_user_id = '$userId' ";
 	$getReportsSQL .= "GROUP BY sre_zzzzsys_report_id ";
 	$getReportsQRY = nuRunQuery($getReportsSQL);
-	$reportAccess = array();
+	$reportAccess = [];
 	while ($getReportsOBJ = db_fetch_object($getReportsQRY)) {
-		$reportAccess[] = array($getReportsOBJ->id, $getReportsOBJ->form_id);
+		$reportAccess[] = [$getReportsOBJ->id, $getReportsOBJ->form_id];
 	}
 	$storeSessionInTable->reports = $reportAccess;
 
@@ -408,18 +408,18 @@ function nuLoginSetupNOTGlobeadmin($new = true, $sSoUserName = "") {
 	$getPHPsSQL .= "WHERE zzzzsys_user_id = '$userId' ";
 	$getPHPsSQL .= "GROUP BY slp_zzzzsys_php_id ";
 	$getPHPsQRY = nuRunQuery($getPHPsSQL);
-	$phpAccess = array();
+	$phpAccess = [];
 	while ($getPHPsOBJ = db_fetch_object($getPHPsQRY)) {
-		$phpAccess[] = array($getPHPsOBJ->id, $getPHPsOBJ->form_id);
+		$phpAccess[] = [$getPHPsOBJ->id, $getPHPsOBJ->form_id];
 	}
 	$storeSessionInTable->procedures = $phpAccess;
 
 	$storeSessionInTableJSON = json_encode($storeSessionInTable);
 
-	nuRunQuery("REPLACE INTO zzzzsys_session SET sss_access = ?, zzzzsys_session_id = ?", array(
+	nuRunQuery("REPLACE INTO zzzzsys_session SET sss_access = ?, zzzzsys_session_id = ?", [
 		$storeSessionInTableJSON,
 		$_SESSION['nubuilder_session_data']['SESSION_ID']
-	));
+	]);
 
 	return true;
 }
@@ -462,13 +462,13 @@ function nuDie($msg = 'Invalid login!') {
 function nuAccessLevelInfo($u) {
 
 	$s = "SELECT * FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id WHERE zzzzsys_user_id = ? ";
-	$t = nuRunQuery($s,  array($u));
+	$t = nuRunQuery($s, [$u]);
 	$r = db_fetch_object($t);
 
-	return array(
+	return [
 		'group' => isset($r->sal_group) ? $r->sal_group : '',
 		'code' => $r->sal_code
-	);
+	];
 
 }
 
@@ -494,11 +494,11 @@ function nuIDTEMP() {
 
 function nuGetTranslation($l) {
 
-	$a = array();
+	$a = [];
 	$s = "SELECT trl_english, trl_translation FROM zzzzsys_translate WHERE trl_language = ? ORDER BY trl_english, CASE WHEN zzzzsys_translate_id like 'nu%' THEN 1 ELSE 0 END ";
-	$t = nuRunQuery($s, array($l));
+	$t = nuRunQuery($s, [$l]);
 	while ($r = db_fetch_object($t)) {
-		$a[] = array('english' => $r->trl_english, 'translation' => $r->trl_translation);
+		$a[] = ['english' => $r->trl_english, 'translation' => $r->trl_translation];
 	}
 
 	return $a;

@@ -126,7 +126,7 @@ function nuFFNewTableSQL($table, $pk, $columns, $isNew){
 
 					 
 	$start	= "CREATE TABLE $table";
-	$a		= Array();
+	$a		= [];
 	$a[]	= "`$pk` VARCHAR(25) NOT NULL";
 	$h		= nuHash();
 	$fk		= $h['fastform_fk'];
@@ -171,13 +171,13 @@ function nuFFCreateTable($sF, $formType, $table, $Pk, $isNew, $drop) {
 
 	if ($formType == 'launch' || ! $isNew) return '';
 
-	$columns = Array();
+	$columns = [];
 	for($i = 0 ; $i < count($sF->rows) ; $i++){
 
 		if($sF->deleted[$i] == 0){
 			$type = $sF->rows[$i][5];												//-- ff_datatype
 			if (trim($type) !== '') {
-				$columns[] = Array('name'=>$sF->rows[$i][2], 'type'=>$type);		//-- ff_field
+				$columns[] = ['name'=>$sF->rows[$i][2], 'type'=>$type];				//-- ff_field
 			}
 		}
 	}
@@ -211,7 +211,7 @@ function nuFFInsertTab($tabId, $formId) {
 			(?, ?, ?, ?)
 	";
 
-	$arg = Array($tabId, $formId, 'Main', 10);
+	$arg = [$tabId, $formId, 'Main', 10];
 	nuRunQuery($sql, $arg);
 
 }
@@ -240,7 +240,7 @@ function nuFFInsertForm($formId, $formType, $formCode, $formDesc, $table, $Pk) {
 	$Pk		= $formType == 'launch' ? '' : $Pk;
 	$sql	= $formType == 'launch' ? '' : "SELECT * FROM $table"; 
 
-	$arg = Array(
+	$arg = [
 		$formId,								// -- zzzzsys_form_id
 		$formType,								// -- sfo_type
 		$formCode,								// -- sfo_code
@@ -252,7 +252,7 @@ function nuFFInsertForm($formId, $formType, $formCode, $formDesc, $table, $Pk) {
 		'0',									// -- sfo_browse_row_height
 		'0',									// -- sfo_browse_rows_per_page
 		'0'										// -- sfo_browse_title_multiline
-	);
+	];
 
 	nuRunQuery($insert, $arg);
 
@@ -260,10 +260,10 @@ function nuFFInsertForm($formId, $formType, $formCode, $formDesc, $table, $Pk) {
 
 function nuFFFormProperties($FFNumber){
 
-	return array(
+	return [
 		'form_code' => 'FF' . $FFNumber,
 		'form_desc' => 'Fast Form ' . $FFNumber
-	);
+	];
 
 }
 
@@ -311,10 +311,10 @@ function nuFFTempInsertSampleObjects($sF, $formType, $TT) {
 			$sF->rows[$i][3]	= $newid;
 
 			$sql				= "INSERT INTO $TT SELECT * FROM zzzzsys_object WHERE zzzzsys_object_id = ?";		//-- Insert sample object
-			nuRunQuery($sql, array($r));
+			nuRunQuery($sql, [$r]);
 
 			$sql				= "UPDATE $TT SET zzzzsys_object_id = ? WHERE zzzzsys_object_id = ?";
-			nuRunQuery($sql, array($newid, $r));
+			nuRunQuery($sql, [$newid, $r]);
 
 		}
 
@@ -355,10 +355,10 @@ function nuFFTempUpdate($sF, $formType, $TT, $table, $formId, $tabId) {
 			$field	= $sF->rows[$i][2];
 			$oldid	= $sF->rows[$i][3];
 
-			$array	= Array($field, $label, $i * 5, $top, 150, $table, $formId, $tabId, $newid, $oldid);
+			$array	= [$field, $label, $i * 5, $top, 150, $table, $formId, $tabId, $newid, $oldid];
 			nuRunQuery($sql, $array);
 
-			$OT		= nuRunQuery("SELECT * FROM $TT WHERE zzzzsys_object_id = ? ", array($newid));
+			$OT		= nuRunQuery("SELECT * FROM $TT WHERE zzzzsys_object_id = ? ", [$newid]);
 			$top	= $top + db_fetch_object($OT)->sob_all_height + 10;
 
 		}
@@ -411,7 +411,7 @@ function nuFFInsertBrowse($sF, $formId, $formType) {
 			
 			";
 
-			$array = Array(nuID(), $formId, $label, $id, 'l', '', ($i+1) * 10, 250);
+			$array = [nuID(), $formId, $label, $id, 'l', '', ($i+1) * 10, 250];
 
 			nuRunQuery($sql, $array);
 
@@ -487,7 +487,7 @@ function nuFFInsertRunButton($table, $TT, $formType, $formId) {
 	";
 
 	$recordId	= substr($formType, 0, 6) == 'browse' ? '' : '-1';
-	$array		= Array(nuID(), 'nuuserhome', 'nufastforms', "ff".$formId, ucfirst($table), '', 11, nuFFObjectMaxTop(), 30, 150, 30, $formId, $recordId, 'b', 0, 0, 0, 'center', 'run');
+	$array		= [nuID(), 'nuuserhome', 'nufastforms', "ff".$formId, ucfirst($table), '', 11, nuFFObjectMaxTop(), 30, 150, 30, $formId, $recordId, 'b', 0, 0, 0, 'center', 'run'];
 
 	nuRunQuery($sql, $array);
 
@@ -528,7 +528,7 @@ function nuFFCreatedMessage($table, $TT, $isNew, $formId, $formType, $formCode) 
 		$('#nunuRunPHPHiddenButton').remove();
 	";
 
-	nuJavascriptCallback($js);
+	nuJavaScriptCallback($js);
 
 }
 
@@ -573,7 +573,7 @@ function nuBuildFastReport(){
 
 	";
 
-	nuRunQuery($s, array($i, $c, $d, $g, $t, $f, $j));
+	nuRunQuery($s, [$i, $c, $d, $g, $t, $f, $j]);
 
 
 	$js		= "
@@ -587,7 +587,7 @@ function nuBuildFastReport(){
 
 	";
 
-	nuJavascriptCallback($js);
+	nuJavaScriptCallback($js);
 
 }
 

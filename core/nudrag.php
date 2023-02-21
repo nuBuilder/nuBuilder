@@ -23,7 +23,7 @@ function nuDragSave($data){
 					sob_all_height = ?,
 					sob_all_zzzzsys_tab_id = ?
 					WHERE zzzzsys_object_id = ?
-				", array($field['tab_order'], $field['left'], $field['top'], $field['width'], $field['height'], $tabID, $field['object_id']));
+				", [$field['tab_order'], $field['left'], $field['top'], $field['width'], $field['height'], $tabID, $field['object_id']]);
 
 			}
 

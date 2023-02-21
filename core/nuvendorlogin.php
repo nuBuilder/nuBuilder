@@ -7,7 +7,7 @@ $sessionId		= $_REQUEST['sessid'];
 $appId = isset($_GET['appId']) ? $_GET['appId'] : "";
 $table = isset($_GET['table']) ? $_GET['table'] : "";
 
-$values			= array($sessionId);
+$values			= [$sessionId];
 $sql			= "SELECT * FROM zzzzsys_session WHERE zzzzsys_session_id = ?";
 $obj			= nuRunQuery($sql, $values);
 $result			= db_num_rows($obj);
@@ -25,7 +25,7 @@ if ( $result == 1 ) {
 	$_user			= $logon_info->session->zzzzsys_user_id;
 	$_extra_check	= $logon_info->session->global_access;
 
-	if ( $_user == $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'] AND $_extra_check == '1' ) {
+	if ( $_user == $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'] && $_extra_check == '1' ) {
 		$page	= nuVendorGood($appId, $table);
 	} else {
 		$page	= nuVendorBad($appId);
