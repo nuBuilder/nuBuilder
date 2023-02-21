@@ -103,12 +103,7 @@ function nuPopupCalendar(pThis, d) {
 	var o = $('#' + window.nuCalendarCaller);
 	var f = o.attr('data-nu-format');
 
-	if (d === undefined) {
-		var v = o.val();
-	} else {
-		var v = d;
-	}
-
+	var v = d === undefined ?  = o.val() : d;
 	var u = nuFORM.removeFormatting(v, f);
 
 	var i = pThis.id; 					//-- Object ID;
@@ -220,7 +215,7 @@ function nuPopupCalendar(pThis, d) {
 	c = $('#nuCalMonth');
 
 	let m = nuMonthNames();
-	for (var i = 0; i < 12; i++) {
+	for (let i = 0; i < 12; i++) {
 		c.append('<option value="' + m[i] + '">' + nuTranslate(m[i]) + '</option>');
 	}
 
@@ -287,7 +282,7 @@ function nuPopupCalendar(pThis, d) {
 	var t = 100;
 	var l = 0;
 
-	for (var i = 0; i < 42; i++) {
+	for (let i = 0; i < 42; i++) {
 
 		if (t == 100) { nuTitleBox(i, l); }
 
@@ -304,7 +299,7 @@ function nuPopupCalendar(pThis, d) {
 
 	}
 
-	var d = String(u).split('-');
+	d = String(u).split('-');
 
 	if (u == '') {
 
@@ -422,11 +417,11 @@ function nuPopulateCalendar(id, y, m, d) {
 		firstDay = weekDay;
 	}
 
-	for (var i = 0; i < 42; i++) {
+	for (let i = 0; i < 42; i++) {
 		document.getElementById('nuCalDay' + i).innerHTML = '';
 	}
 
-	for (var i = firstDay; i < 42; i++) {
+	for (let i = firstDay; i < 42; i++) {
 
 		day++;
 		s.setDate(day);
