@@ -3313,13 +3313,13 @@ function nuAddBreadcrumb(i) {
 	var $id = $('#' + id);
 
 	$id.css('font-size', 14)
-		.attr('onclick', 'nuGetBreadcrumb(' + i + ')')
 		.html(h + nuTranslate(bc.title));
 
 	if (isLast) {
 		$id.addClass('nuNotBreadcrumb');
 	} else {
-		$id.addClass('nuBreadcrumb');
+		$id.addClass('nuBreadcrumb')
+			.attr('onclick', 'nuGetBreadcrumb(' + i + ')')
 	}
 
 	if (i == 0) {
@@ -3358,9 +3358,10 @@ function nuSetTitle(title, browse) {
 
 	nuFORM.setProperty('title', title);
 
+	const $breadcrumb = $('.nuBreadcrumb');
 	const $notBreadcrumb = $('.nuNotBreadcrumb');
 
-	if ($('.nuBreadcrumb').length === 0 && !nuIsIframe()) {
+	if ($breadcrumb.length === 0 && !nuIsIframe()) {
 		
 		if ($notBreadcrumb.length > 0) {
 			$notBreadcrumb.html(title);
@@ -3368,8 +3369,8 @@ function nuSetTitle(title, browse) {
 			$('#nuHomeGap').append(title);
 		}
 	} else {
-		const bc  = $('.nuBreadcrumb').length;
-		const h =  bc == 1 ? '' : '<div id="nuarrow' + (bc - 1) + '" class="nuBreadcrumbArrow">&nbsp;<i class="fa fa-caret-right"></i>&nbsp;</div>';
+		const bc = $breadcrumb.length + $notBreadcrumb.length -1;
+		const h = '<div id="nuarrow' + (bc - 1) + '" class="nuBreadcrumbArrow">&nbsp;<i class="fa fa-caret-right"></i>&nbsp;</div>';
 
 		$('#nuBreadcrumb' + bc).html(h + title);
 	}
