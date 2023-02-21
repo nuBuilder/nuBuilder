@@ -972,7 +972,7 @@ function nuPrintField($PDF, $S, $contents, $O, $LAY, $isHTML){
 
 	$t = implode("\n", $contents->lines);
 
-	if (str_replace(["\r\n", "\r", "\n", "\t"]), ' ', $t] == 'KEEP EXACT HEIGHT'){
+	if (str_replace(["\r\n", "\r", "\n", "\t"], ' ', $t) == 'KEEP EXACT HEIGHT'){
 		$PDF->Rect($left, $top, $width, $height, 'DF');
 	}else{
 		$PDF->MultiCell($width, $height, $t, $hasBorder, $textAlign, 1, 0, '', '', true, 0, $isHTML, false);
