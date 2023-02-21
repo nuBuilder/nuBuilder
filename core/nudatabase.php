@@ -432,7 +432,7 @@ function nuCanCreateView() {
 		$grant2		= nuStringContains("ALL PRIVILEGES ON *.*", $grants, true);
 		$grant3		= nuStringContains("ALL PRIVILEGES ON %", $grants, true);
 
-		if ($createView || $grant1 || $grant2 || grant3) {
+		if ($createView || $grant1 || $grant2 || $grant3) {
 			return true;
 		}
 
