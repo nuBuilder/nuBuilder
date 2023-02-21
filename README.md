@@ -6,8 +6,8 @@
 * ***Demo:*** https://demo.nubuilder.cloud/
 * ***Wiki:*** https://wiki.nubuilder.cloud/
 * ***Forum:*** https://forums.nubuilder.cloud/
-* ***Requires PHP:*** 5.4.0 (phpMyAdmin that is shipped with nuBuilder will require PHP 7.1+)
-* ***Requires MySQL:*** 5.5. (or MariaDB)
+* ***Requires PHP:*** 7.0.33 (older versions untested). phpMyAdmin that is shipped with nuBuilder will require PHP 7.2.5+
+* ***Requires MySQL/MariaDB:*** MySQL 5.7 or greater OR MariaDB 10.3 or greater
 * ***Requires a web server:*** (e.g. Apache or Nginx)
 * ***License:*** [GPLv3](https://www.gnu.org/licenses/old-licenses/gpl-3.0.html)
 
@@ -30,7 +30,7 @@ It gives its users the ability to do database operations like:
 - customised date and number formats with the Format Builder
 - calculated fields with the Formula Builder
 
-Further customisation that can be done with JavaScript and PHP.
+Further customisation that can be done with JavaScript, PHP, HTML, CSS 
 
 ------------
 
@@ -44,12 +44,20 @@ Further customisation that can be done with JavaScript and PHP.
 - Access Levels
 - 2FA
 - WYSIWYG Editor
+- Send Emails
+- Translations
+- Import CSV Files
+- Create Graphs
+- Code Snippets
 - File Manager
 - File Upload
-- Send emails
-- Translations
-- Import csv files
-- Create graphs
+- Email Templates
+- SSO (Single sign-on)
+- Calculated Fields
+- Subforms
+- Embedded Forms
+- Visually Arrange Objects
+- Mobile View
 
 ------------
 
@@ -58,6 +66,7 @@ Further customisation that can be done with JavaScript and PHP.
 - Download and unzip the nuBuilder files
 - Upload to your webserver
 - Create a database (e.g. nubuilder4 )
+- Make a copy of the nuconfig-sample.php file and save the new file as nuconfig.php 
 - Edit nuconfig.php to set your database and globeadmin credentials
 - Open the URL that will look something like: http://yoursitename.com/nubuilder4/index.php
 - Done - you can now login as 'globeadmin'

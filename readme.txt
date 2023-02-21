@@ -2,14 +2,13 @@
 Name: nuBuilder 4.5
 
 Contributors: Steven Copley, kev1n, Janusz, Neil, Nilesh, Ap.Muthu
-Donate link: https://www.nubuilder.com/#donate
-License: GPLv3
+License: [GPLv3](https://www.gnu.org/licenses/old-licenses/gpl-3.0.html)
 Home Page: https://www.nubuilder.com
 Wiki: https://wiki.nubuilder.cloud/
 Forum: https://forums.nubuilder.cloud/
 
-Requires: PHP: 5.4.0 (phpMyAdmin that is shipped with nuBuilder will require PHP 7.1+)
-Requires: MySQL: 5.5. (or MariaDB)
+Requires: PHP 7.0.33 (older versions untested). phpMyAdmin that is shipped with nuBuilder will require PHP 7.2.5+
+Requires: MySQL 5.7 or greater OR MariaDB 10.3 or greater
 Requires: Web Server: (e.g. Apache or Nginx)
 
 nuBuilder is the world's best open-source, low-code application and report builder.
@@ -60,12 +59,15 @@ nuBuilder is a enterprise level application builder but with no limitations on d
 
 1. Upload the unzipped nuBuilder files to your webroot
 2. Create a database (e.g. nubuilder4)
-3. Edit nuconfig.php to set your database credentials and globeadmin credentials
+3. Make a copy of the nuconfig-sample.php file and save the new file as nuconfig.php 
+4. Edit nuconfig.php to set your database credentials and globeadmin credentials
 
-Detailed installation instructions can be found here:  https://github.com/smalos/nuBuilder4-Code-Library/wiki/Installing-nuBuilder
+Detailed installation instructions can be found here: 
+https://github.com/nuBuilder/nuBuilder-4.5/wiki/nuBuilder-Installation-Guide
 
 == Documentation ==
 
-Here is a link to PDF instructions to get started as a nuBuilder developer [nuBuilder-Forte-User-Guide](https://www.nubuilder.com/storage/pdf/nuBuilderForte_UserGuide.pdf "nuBuilder Forte User Guide")
+Here is a link to PDF instructions to get started as a nuBuilder developer:
+https://www.nubuilder.com/storage/pdf/nuBuilderForte_UserGuide.pdf
 
 Here is a link to the nuBuilder Forte Wiki Documentation [nuBuilder-Forte-Wiki-Documentation](https://wiki.nubuilder.net/nubuilderforte/index.php/Main_Page "nuBuilder Forte Wiki Documentation")
