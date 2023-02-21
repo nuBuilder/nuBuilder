@@ -933,7 +933,7 @@ function nuSelectOptions($sql) {
 	
 	$sqlFirstChars = trim(substr($sql, 0, 20));
 
-	if (nuStringStartsWith('SELECT', $sqlFirstChars, true) || nuStringStartsWith('WIDTH', $sqlFirstChars, true)) {	//-- sql statement
+	if (nuStringStartsWith('SELECT', $sqlFirstChars, true) || nuStringStartsWith('WITH', $sqlFirstChars, true)) {	//-- sql statement
 
 		$stmt = nuRunQuery($sql);
 
