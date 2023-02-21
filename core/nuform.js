@@ -4124,8 +4124,8 @@ function nuBrowseTable() {
 	var h = bc.row_height;
 	var t = parseInt($('#nuBrowseTitle0').css('height'), 10) - h - 2;
 	var l = 7;
-	var borderLeft;
-	var borderRight;
+	// var borderLeft;
+	// var borderRight;
 
 	const brCount = bc.browse_rows;
 	const $record = $('#nuRECORD');	
@@ -4169,7 +4169,7 @@ function nuBrowseTable() {
 			var div = document.createElement('div');
 			div.setAttribute('id', id);
 
-			$('#nuRECORD').append(div);
+			$record.append(div);
 
 			var $id = $('#' + id);
 
@@ -4263,7 +4263,7 @@ function nuBrowseTable() {
 	var divFooter = document.createElement('div');
 	divFooter.setAttribute('id', 'nuBrowseFooter');
 
-	$('#nuRECORD').append(divFooter);
+	$record.append(divFooter);
 
 	$(divFooter)
 	.addClass('nuBrowseFooter')
@@ -4294,7 +4294,7 @@ function nuBrowseTable() {
 	});
 
 	$('body').css('height', h - 30);
-	$('#nuRECORD').css('height', 0).css('width', 0);
+	$record.css('height', 0).css('width', 0);
 
 }
 
