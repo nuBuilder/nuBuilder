@@ -507,9 +507,9 @@ function nuAttachImage(i, code, fit) {
 
 }
 
-function nuAttachButtonImage(i, c, cssClass) {
+function nuAttachButtonImage(i, c, cssClass = 'nuButtonImage') {
 
-	var cssClass = cssClass === undefined ? 'nuButtonImage' : cssClass;
+	cssClass = cssClass === undefined ? 'nuButtonImage' : cssClass;
 
 	c = String(c).toLowerCase();
 
