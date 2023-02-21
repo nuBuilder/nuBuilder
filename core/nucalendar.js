@@ -449,7 +449,7 @@ function nuPopulateCalendar(id, y, m, d) {
 }
 
 
-function nuPreviousMonth(y, m, d) {
+function nuPreviousMonth(y, m) {
 
 	m = nuMonthScope(m - 1);
 
