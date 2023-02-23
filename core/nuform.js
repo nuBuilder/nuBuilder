@@ -1023,6 +1023,7 @@ function nuINPUTfileFileSystem($fromId, w, i, l, p, prop, id) {
 	let html = w.objects[i].html;
 	html =  html.replaceAll('#uppy_div#', id + '_uppy_div');
 	html =  html.replaceAll('#this_object_id#', id);
+	html =  html.replaceAll('nuInitUppy()','nuInitUppy' + '_' + id + '()');
 
 	$('#' + id).css({
 		'top': Number(obj.top),
