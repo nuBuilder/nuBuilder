@@ -899,7 +899,7 @@
  .nuDragSelected {
 	 outline:1px solid red 
 }
-.nuDragHidden {
+ .nuDragHidden {
 	 border-style: dotted;
 	 border-width: 2px;
 	 border-color: red
@@ -1312,7 +1312,7 @@
 	 position:fixed;
 	 border: 1px solid rgba(0,0,0,.2);
 	 width:510px;
-	 z-index:10;
+	 z-index:1000;
 	 border-radius:6px 
 }
  #nuprompt div{
