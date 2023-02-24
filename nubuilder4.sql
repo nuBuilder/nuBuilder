@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 23, 2023 at 04:33 PM
+-- Generation Time: Feb 24, 2023 at 03:38 AM
 -- Server version: 8.0.27
 -- PHP Version: 8.1.0
 
@@ -745,7 +745,7 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`, `inf_json`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2023.02.23.00', NULL),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2023.02.24.00', NULL),
 ('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2023.02.23.00', NULL);
 
 -- --------------------------------------------------------
@@ -1557,9 +1557,9 @@ CREATE TABLE `zzzzsys_report` (
 -- (See below for the actual view)
 --
 CREATE TABLE `zzzzsys_report_data` (
-`id` varchar(70)
-,`code` varchar(300)
+`code` varchar(300)
 ,`description` varchar(300)
+,`id` varchar(70)
 );
 
 -- --------------------------------------------------------
@@ -1569,10 +1569,10 @@ CREATE TABLE `zzzzsys_report_data` (
 -- (See below for the actual view)
 --
 CREATE TABLE `zzzzsys_run_list` (
-`id` varchar(25)
-,`run` varchar(9)
-,`code` varchar(300)
+`code` varchar(300)
 ,`description` varchar(300)
+,`id` varchar(25)
+,`run` varchar(9)
 );
 
 -- --------------------------------------------------------
@@ -2416,7 +2416,7 @@ CREATE TABLE `zzzzsys_user` (
 --
 DROP TABLE IF EXISTS `zzzzsys_object_list`;
 
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `zzzzsys_object_list`  AS SELECT `information_schema`.`tables`.`TABLE_NAME` AS `zzzzsys_object_list_id` FROM `information_schema`.`TABLES` WHERE (`information_schema`.`tables`.`TABLE_SCHEMA` = database())  ;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `zzzzsys_object_list`  AS SELECT `information_schema`.`tables`.`TABLE_NAME` AS `zzzzsys_object_list_id` FROM `information_schema`.`tables` WHERE (`information_schema`.`tables`.`TABLE_SCHEMA` = database())  ;
 
 -- --------------------------------------------------------
 
