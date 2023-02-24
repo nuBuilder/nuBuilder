@@ -580,7 +580,8 @@ function nuCreateDragOptionsBox(form){
 							'<td>&nbsp;</td>'+
 						'</tr>'+
 						'<tr>'+
-							'<td><input type="checkbox" id="nuShowDragLabels" value="Show Labels" onclick="nuToggleDragLabels();"><label for="nuShowDragLabels">Show Labels</label></td>'+
+							'<td><input type="checkbox" checked id="nuShowDragLabels" title="Show Labels" onclick="nuToggleDragLabels();"><label for="nuShowDragLabels"><i class="fas fa-text-slash"></i></label>'+
+							'<input type="checkbox" id="nuShowHiddenObjects" style="margin-left: 30px;" title="Show Hidden Objects" onclick="nuToggleHiddenObjects();"><label for="nuShowHiddenObjects"><i class="fas fa-eye-slash"></i></label></td>'+							
 							'<td><button id="save_btn" class="nuDragOptionsButton nuButton nuSaveButtonEdited" style="font-weight: bold; text-align: center;" onclick="nuSaveNuDrag();">Save</button></td>'+
 						'</tr>'+
 					'</tbody>'+
@@ -602,7 +603,6 @@ function nuCreateDragOptionsBox(form){
 
 	let tabSelected = $('.nuTabSelected');
 	let t = tabSelected.length > 0 ? tabSelected.attr('id').replace('nuTab','') : 0;
-
 	nuPopulateFieldsList(t);
 	nuPopulateTabDropdown(t);
 
@@ -643,6 +643,7 @@ function nuCreateDragOptionsBox(form){
 
 	nuAddContentBoxFrames();
 	nuShowContentBoxFrames();
+	nuToggleHiddenObjects(); // hide hidden objects by dafault
 
 	if ($('div.nuTab[id^="nuTab"]').length == 1) {
 		$('#move_tab_btn', window.parent.document.body).css('visibility', 'hidden');
@@ -651,6 +652,21 @@ function nuCreateDragOptionsBox(form){
 
 	$('#nuRECORD').css('height', window.innerHeight);
 	$('.nuRECORD').css("width", "99.3%");
+
+}
+
+
+function nuToggleHiddenObjects() {
+
+	$('.nuDragHidden',$('#nuDragDialog iframe').contents()).each(function(){
+		let obj = $(this);
+		if (obj.css('visibility') ==='visible'){
+			obj.css('visibility', 'hidden')
+		} else {
+			obj.css('visibility', 'visible')
+		}
+	});
+
 
 }
 
@@ -1254,7 +1270,6 @@ function nuClearFieldsList(){
 
 }
 
-
 function nuPopulateFieldsList(currentlySelectedTabNo){
 
 	var tabOrderSearch	= nuGetMinTabOrderInTab(currentlySelectedTabNo);
@@ -1268,6 +1283,10 @@ function nuPopulateFieldsList(currentlySelectedTabNo){
 
 			if(field.tab_order == tabOrderSearch){
 				$('#nuDragOptionsFields',window.parent.document.body).append('<option id="drag_'+field.id+'">'+field.id+'</option>');
+				
+				if ($('#' + field.id).css('visibility') !=='visible') {
+					$('#nuDragOptionsFields option[id="drag_'+field.id	+'"]',window.parent.document.body).css('color','grey');
+				}
 			}
 
 		}

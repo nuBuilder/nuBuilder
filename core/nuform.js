@@ -929,7 +929,7 @@ function nuDRAG(w, i, l, p, prop) {
 	}).addClass('nu_' + nuObjectType);
 
 	if (obj.read == '2') {	// hidden
-		$id.addClass('nuDragHidden');
+		$id.addClass('nuDragHidden').css('visibility', 'hidden')
 	}
 
 	$id.text(id);
