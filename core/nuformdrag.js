@@ -602,6 +602,7 @@ function nuCreateDragOptionsBox(form){
 
 	let tabSelected = $('.nuTabSelected');
 	let t = tabSelected.length > 0 ? tabSelected.attr('id').replace('nuTab','') : 0;
+
 	nuPopulateFieldsList(t);
 	nuPopulateTabDropdown(t);
 

@@ -928,6 +928,10 @@ function nuDRAG(w, i, l, p, prop) {
 		'padding-left': '4px'
 	}).addClass('nu_' + nuObjectType);
 
+	if (obj.read == '2') {	// hidden
+		$id.addClass('nuDragHidden');
+	}
+
 	$id.text(id);
 	$id.attr('data-drag', 1)
 		.attr('data-nu-object-id', obj.object_id);

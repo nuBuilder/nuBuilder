@@ -650,7 +650,8 @@
 }
  .nuTab:hover {
 	 cursor:pointer;
-	 background-color:#f4f4f4 
+	 background-color:#f4f4f4;
+	 border-radius: 4px 4px 0px 0px
 }
  .nuTabSelected {
 	 background-color:transparent;
@@ -897,6 +898,11 @@
 }
  .nuDragSelected {
 	 outline:1px solid red 
+}
+.nuDragHidden {
+	 border-style: dotted;
+	 border-width: 2px;
+	 border-color: red
 }
  .nuDragSelected:hover {
 	 cursor:move 
