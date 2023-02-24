@@ -228,7 +228,17 @@ jQuery.fn.extend({
 	},
 	nuSetPlaceholder: function(placeholder, translate) {
 		return nuSetPlaceholder(this.attr('id'), placeholder, translate);
-	}
+	},
+	nuTogglePassword: function(show) {
+		return this.each(function() {
+			let $input = $(this);
+			let type = $input.attr('type') === 'password' ? 'text' : 'password';
+			if (show !== undefined) {
+				type = show ? 'text' : 'password';
+			}
+			$input.attr('type', type);
+		});
+  }	
 
 });
 
