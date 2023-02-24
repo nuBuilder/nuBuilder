@@ -166,12 +166,19 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 
 	$s = "
 
-	SELECT *
-	FROM zzzzsys_form
-	INNER JOIN zzzzsys_object ON sob_all_zzzzsys_form_id = zzzzsys_form_id
-	INNER JOIN zzzzsys_tab ON zzzzsys_tab_id = sob_all_zzzzsys_tab_id
-	WHERE zzzzsys_form_id = ?
-	ORDER BY sob_all_order, syt_order, (sob_all_type = 'run'), sob_all_zzzzsys_tab_id
+		SELECT
+			*
+		FROM
+			zzzzsys_form
+		INNER JOIN zzzzsys_object ON sob_all_zzzzsys_form_id = zzzzsys_form_id
+		INNER JOIN zzzzsys_tab ON zzzzsys_tab_id = sob_all_zzzzsys_tab_id
+		WHERE
+			zzzzsys_form_id = ?
+		ORDER BY
+			IF(sob_all_type = 'contentbox', -1, sob_all_order),
+			syt_order,
+			(sob_all_type = 'run'),
+			sob_all_zzzzsys_tab_id
 
 	";
 
