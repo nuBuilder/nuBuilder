@@ -1640,20 +1640,16 @@ function nuHTML(w, i, l, p, prop, id) {
 
 function nuEDITOR(w, i, l, p, prop) {
 
-	let obj = prop.objects[i];
+	const obj = prop.objects[i];
 
 	prop.objects[i].type = 'textarea';
 	nuINPUT(w, i, l, p, prop);
 	$('#' + obj.id).addClass('nuEditor');
 
-	let mce = !prop.objects[i].attributes.includes('nuquiljs');
-
-	if (!mce) nuSetAccess(obj.id, 2);
-	let id = obj.id + '_parent_container';
+	const id = obj.id + '_parent_container';
 	nuHTML(w, i, l, p, prop, id);
 
-	let nuClass = mce ? "nuTinyMCE" : "nuQuiljs";
-	$('#' + id).html('<div style="width:' + obj.width + 'px;height:' + obj.height + 'px" id="' + obj.id + '_container" class="' + nuClass + '"> </div>');
+	$('#' + id).html('<div style="width:' + obj.width + 'px;height:' + obj.height + 'px" id="' + obj.id + '_container" class="' + "nuTinyMCE" + '"> </div>');
 	nuAddStyle(id, obj);
 
 	return Number(obj.width);
