@@ -1594,6 +1594,7 @@ function nuLabelOrPosition(obj, w, i, l, p, prop) {
 
 }
 
+
 function nuSetObjectBounds(obj, top = null, left = null, width = null, height = null, absolute = null) {
 
 	if (top)
@@ -1613,30 +1614,24 @@ function nuSetObjectBounds(obj, top = null, left = null, width = null, height = 
 
 function nuHTML(w, i, l, p, prop, id) {
 
-	var obj = prop.objects[i];
+	let obj = prop.objects[i];
 	id = id !== undefined ? id : p + obj.id;
-	var ef = p + 'nuRECORD';							//-- Edit Form Id
-	var inp = document.createElement('div');
+						
+	let div = document.createElement('div');
 
-	inp.setAttribute('id', id);
+	div.setAttribute('id', id);
 
 	obj = nuLabelOrPosition(obj, w, i, l, p, prop);
 
-	$('#' + ef).append(inp);
+	$('#' + p + 'nuRECORD').append(div);		// //-- Edit Form Id
 
 	nuAddDataTab(id, obj.tab, p);
-
-	$('#' + id).css({
-		'top': Number(obj.top),
-		'left': Number(obj.left),
-		'width': Number(obj.width),
-		'height': Number(obj.height),
-		'position': 'absolute'
-	})
-		.addClass('nuHtml').html(w.objects[i].html);
+	
+	$div = $('#' + id);
+	nuSetObjectBounds($div,obj.top, obj.left, obj.width, obj.height);
+	$div.addClass('nuHtml').html(w.objects[i].html);
 
 	nuSetAccess(id, obj.read);
-
 	nuAddStyle(id, obj);
 
 	return Number(obj.width);
