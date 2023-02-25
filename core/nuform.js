@@ -1628,7 +1628,7 @@ function nuHTML(w, i, l, p, prop, id) {
 	nuAddDataTab(id, obj.tab, p);
 	
 	$div = $('#' + id);
-	nuSetObjectBounds($div,obj.top, obj.left, obj.width, obj.height);
+	nuSetObjectBounds($div, obj.top, obj.left, obj.width, obj.height);
 	$div.addClass('nuHtml').html(w.objects[i].html);
 
 	nuSetAccess(id, obj.read);
@@ -1663,36 +1663,31 @@ function nuEDITOR(w, i, l, p, prop) {
 function nuCONTENTBOX(w, i, l, p, prop) {
 
 	const obj = prop.objects[i];
-	var id = p + obj.id;
-	var ef = p + 'nuRECORD';							//-- Edit Form Id
-	var inp = document.createElement('div');
+	const id = p + obj.id;
 
-	inp.setAttribute('id', id);
+	let div = document.createElement('div');
 
-	$('#' + ef).append(inp);
+	div.setAttribute('id', id);
+
+	$('#' + p + 'nuRECORD').append(div);	//-- Edit Form Id
 
 	nuAddDataTab(id, obj.tab, p);
 
-	const $id = $('#' + id);
+	const $div = $('#' + id);
+	nuSetObjectBounds($div, obj.top, obj.left, obj.width, obj.height).css('z-index', '-1');
 
-	$id.css({
-		'top': Number(obj.top),
-		'left': Number(obj.left),
-		'width': Number(obj.width),
-		'height': Number(obj.height),
-		'position': 'absolute',
-		'z-index': '-1'
-	}).attr('data-nu-object-id', w.objects[i].object_id)
+	$div.attr('data-nu-object-id', w.objects[i].object_id)
 		.attr('data-nu-prefix', p)
 		.addClass('nuContentBoxContainer').html(w.objects[i].html);
 
-	if (nuGlobalAccess()) $('#label_' + id).attr('ondblclick', 'nuOptionsListAction("nuobject", "' + obj.object_id + '")');
+	if (nuGlobalAccess()) {
+		$('#label_' + id).attr('ondblclick', 'nuOptionsListAction("nuobject", "' + obj.object_id + '")');
+	}
 
 	nuSetAccess(id, obj.read);
-
 	nuAddStyle(id, obj);
 
-	return Number($id.width());
+	return Number($div.width());
 
 }
 
