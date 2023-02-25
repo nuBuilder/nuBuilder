@@ -1693,43 +1693,32 @@ function nuCONTENTBOX(w, i, l, p, prop) {
 
 function nuIMAGE(w, i, l, p, prop) {
 
-	var obj = prop.objects[i];
-	var id = p + obj.id;
-	var ef = p + 'nuRECORD';						//-- Edit Form Id
-	var inp = document.createElement('img');
+	let obj = prop.objects[i];
+	const id = p + obj.id;
 
-	inp.setAttribute('id', id);
+	let img = document.createElement('img');
+	img.setAttribute('id', id);
 
 	obj = nuLabelOrPosition(obj, w, i, l, p, prop);
 
-	$('#' + ef).append(inp);
+	$('#' + p + 'nuRECORD').append(img);
 
 	nuAddDataTab(id, obj.tab, p);
 
-	let objId = $('#' + id);
-	objId.css({
-		'top': Number(obj.top),
-		'left': Number(obj.left),
-		'position': 'absolute'
-	}).addClass('nuImage');
+	let $img = $('#' + id);
 
-	let width = obj.width;
-	let height = obj.height;
-
-	if (height !== "-1" && width !== "-1") {
-		objId.css('height', Number(height));
-		objId.css('width', Number(width));
+	nuSetObjectBounds($img, obj.top, obj.left, obj.width).addClass('nuImage');
+	if (obj.height !== "-1" && obj.width !== "-1") {
+		nuSetObjectBounds($img, null, null, obj.width, obj.height)
 	}
 
-	objId.attr('src', atob(w.objects[i].src));
+	$img.attr('src', atob(w.objects[i].src));
 
 	nuSetAccess(id, obj.read);
-
 	nuAddJSObjectEvents(id, obj.js);
-
 	nuAddStyle(id, obj);
 
-	return Number(objId.width());
+	return Number($img.width());
 
 }
 
