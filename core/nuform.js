@@ -1722,40 +1722,34 @@ function nuWORD(w, i, l, p, prop) {
 
 	const obj = prop.objects[i];
 	const id = p + obj.id;
-	const ef = p + 'nuRECORD';							//-- Edit Form Id
-	var inp = document.createElement('div');
 
-	inp.setAttribute('id', id);
+	let div = document.createElement('div');
+	div.setAttribute('id', id);
 
-	$('#' + ef).append(inp);
+	$('#' + p + 'nuRECORD').append(div);
 
 	nuAddDataTab(id, obj.tab, p);
 
-	var t = w.objects[i].word;
+	let t = w.objects[i].word;
 	const r = /<n>(.*?)<\/n>/g.exec(t);
 	t = r === null ? t : r[1];
 
-	var objId = $('#' + id);
-
-	objId.css({
-		'top': Number(obj.top),
-		'left': Number(obj.left),
-		'width': Number(obj.width),
-		'height': Number(obj.height),
-		'position': 'absolute',
-		'text-align': obj.align
-	})
+	let $div = $('#' + id);
+	nuSetObjectBounds($div, obj.top, obj.left, obj.width, obj.height)
+		.css('text-align', obj.align)
 		.addClass('nuWord')
 		.html(nuTranslate(t));
 
-	if (nuGlobalAccess()) objId.attr('ondblclick', 'nuOptionsListAction("nuobject", "' + obj.object_id + '")');
+	if (nuGlobalAccess()) {
+		$div.attr('ondblclick', 'nuOptionsListAction("nuobject", "' + obj.object_id + '")');
+	}
 
-	if (r !== null) objId.css('font-weight', 'normal');
+	if (r !== null) {
+		$div.css('font-weight', 'normal');
+	}
 
 	nuAddInputIcon(id, obj.input_icon);
-
 	nuSetAccess(id, obj.read);
-
 	nuAddStyle(id, obj);
 
 	return Number(obj.width);
