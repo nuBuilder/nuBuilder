@@ -1594,6 +1594,23 @@ function nuLabelOrPosition(obj, w, i, l, p, prop) {
 
 }
 
+function nuSetObjectBounds(obj, top = null, left = null, width = null, height = null, absolute = null) {
+
+	if (top)
+		obj.css('top', Number(top));
+	if (left)
+		obj.css('left', Number(left));
+	if (height)
+		obj.css('height', Number(height));
+	if (width)
+		obj.css('width', Number(width));
+	if (!absolute)
+		obj.css('position', 'absolute');
+	
+	return obj;
+
+}
+
 function nuHTML(w, i, l, p, prop, id) {
 
 	var obj = prop.objects[i];
