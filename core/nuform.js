@@ -3106,48 +3106,61 @@ function nuAddSubformRow(t, e) {
 
 }
 
+function nuLabelGetValidationClass(validationId) {
+
+	const classMap = {
+		0: 'nuNone',
+		1: 'nuBlank',
+		2: 'nuDuplicate',
+		3: 'nuDuplicateOrBlank'
+	};
+
+	return classMap[validationId];
+
+}
+
 function nuLabel(w, i, p, prop) {
 
 	let obj = prop.objects[i];
-	if (obj.label == '' || obj.display == 0 || obj.label == "Insert-Snippet") { return; }
+	if (obj.label == '' || obj.display == 0 || obj.label == "Insert-Snippet") {
+		return;
+	}
 
-	var id = 'label_' + p + obj.id;
-	var ef = p + 'nuRECORD';						//-- Edit Form Id
+	const id = 'label_' + p + obj.id;
+	let objLabel = document.createElement('label');
+	const label = 	nuTranslate(String(obj.label));
+	const lwidth = nuGetWordWidth(label, 'label');
 
-	var lab = document.createElement('label');
-	var lwidth = nuGetWordWidth(nuTranslate(obj.label), 'label');
+	objLabel.setAttribute('id', id);
 
-	lab.setAttribute('id', id);
+	const forId = obj.type == 'lookup' ? p + obj.id + 'code' : p + obj.id;
+	objLabel.setAttribute('for', forId);
 
-	const forId = obj.type == 'lookup' ? p + obj.id + 'code' :p +  obj.id;
-	lab.setAttribute('for', forId);
-
-	$('#' + ef).append(lab);
+	$('#' + p + 'nuRECORD').append(objLabel); //-- Edit Form Id
 
 	nuAddDataTab(id, obj.tab, p);
 
-	var l = String(nuTranslate(obj.label));
-
-	var o = $('#' + id);
-	o.css({
+	let $label = $('#' + id);
+	$label.css({
 		'top': Number(obj.top),
 		'left': Number(obj.left) - lwidth + -17,
 		'width': Number(lwidth + 12)
 	})
-		.html(l);
+	.html(label);
 
-	if (nuGlobalAccess()) o.attr('ondblclick', 'nuOptionsListAction("nuobject", "' + obj.object_id + '")');
+	if (nuGlobalAccess())
+		$label.attr('ondblclick', 'nuOptionsListAction("nuobject", "' + obj.object_id + '")');
 
-	if (l == ' ') lab.innerHTML = '&#8199;';
+	if (label == ' ') {
+		label.innerHTML = '&#8199;';
+	}
 
-	if (obj.valid == 0) { o.addClass('nuNone'); }
-	if (obj.valid == 1) { o.addClass('nuBlank'); }
-	if (obj.valid == 2) { o.addClass('nuDuplicate'); }
-	if (obj.valid == 3) { o.addClass('nuDuplicateOrBlank'); }
+	$label.addClass(nuLabelGetValidationClass(obj.valid));
 
-	return lab;
+	return objLabel;
 
 }
+
 
 function nuPopulateLookup3(v, p) {
 
