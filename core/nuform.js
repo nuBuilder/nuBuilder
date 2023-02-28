@@ -958,6 +958,7 @@ function nuDRAG(w, i, l, p, prop) {
 
 }
 
+
 function getDBColumnLengh(w, id) {
 
 	const tableSchema = nuSERVERRESPONSE.tableSchema;
@@ -1762,76 +1763,69 @@ function nuWORD(w, i, l, p, prop) {
 
 }
 
+function nuRUNGetOnClickEvent(obj) {
+
+	let result = '';
+	const runTarget = obj.run_target || '0';
+
+	const stopClick = runTarget == '0' ? 'nuStopClick(event);' : '';
+	const runAction = runTarget == '3' ? "nuPopup('" + obj.form_id + "','" + obj.record_id + "','" + obj.filter + "')" : "nuForm('" + obj.form_id + "','" + obj.record_id + "','" + obj.filter + "', '','" + runTarget + "')";
+
+	const runType  = obj.run_type;
+	if (runType == 'F') {
+		result = stopClick + runAction;
+	} else
+	if (runType == 'R') {
+		result = "nuRunReport('" + obj.record_id + "')";
+	} else
+	if (runType == 'P') {
+
+		const result = obj.run_hidden
+		  ? `nuRunPHPHidden('${obj.record_id}')`
+		  : `nuRunPHP('${obj.record_id}')`;
+
+	}
+
+	return result;
+
+}
+
 function nuRUN(w, i, l, p, prop) {
 
-	var obj = prop.objects[i];
-	var id = p + obj.id;
-	var ef = p + 'nuRECORD';					//-- Edit Form Id
-	var ele = 'button';
+	let obj = prop.objects[i];
+	let id = p + obj.id;
+	let tagName = 'button';
 
 	if (obj.parent_type == 'g') {
-
 		obj.left = l;
 		obj.top = 3;
-
 	}
 
 	if (obj.run_method != 'b') {
-
-		ele = 'iframe';
-
+		tagName = 'iframe';
 		if (obj.parent_type !== 'g') {
-
 			nuLabel(w, i, p, prop);
-
 		}
-
 	}
 
-	var inp = document.createElement(ele);
+	let div = document.createElement(tagName);
+	div.setAttribute('id', id);
+	$div = $(div);
 
-	inp.setAttribute('id', id);
-
-	$('#' + ef).append(inp);
+	$('#' + p + 'nuRECORD').append(div);
 
 	nuAddDataTab(id, obj.tab, p);
 
-	$('#' + id).css({
-		'top': Number(obj.top),
-		'left': Number(obj.left),
-		'width': Number(obj.width),
-		'height': Number(obj.height),
-		'position': 'absolute',
-		'text-align': obj.align
-	})
+	nuSetObjectBounds($div, obj.top, obj.left, obj.width, obj.height).css('text-align', obj.align)
 		.attr('data-nu-object-id', w.objects[i].object_id)
 		.attr('data-nu-prefix', p);
 
 	if (obj.run_method == 'b') {
 
-		let clicker = '';
-		var runTarget = obj.run_target;
-		runTarget = runTarget == '' || runTarget === null ? '0' : runTarget;
-
-		var stopClick = runTarget == '0' ? 'nuStopClick(event);' : '';
-		var runAction = runTarget == '3' ? "nuPopup('" + obj.form_id + "','" + obj.record_id + "','" + obj.filter + "')" : "nuForm('" + obj.form_id + "','" + obj.record_id + "','" + obj.filter + "', '','" + runTarget + "')";
-
-		if (obj.run_type == 'F') { clicker = stopClick + runAction; }
-		if (obj.run_type == 'R') { clicker = "nuRunReport('" + obj.record_id + "')"; }
-		if (obj.run_type == 'P') {
-
-			if (obj.run_hidden) {
-				clicker = "nuRunPHPHidden('" + obj.record_id + "')";
-			} else {
-				clicker = "nuRunPHP('" + obj.record_id + "')";
-			}
-
-		}
-
-		$('#' + id).attr({
+		$div.attr({
 			'type': 'button',
 			'value': nuTranslate(obj.label),
-			'onclick': clicker
+			'onclick': nuRUNGetOnClickEvent(obj)
 		})
 			.html(nuTranslate(obj.label))
 			.addClass('nuButton');
@@ -1840,27 +1834,17 @@ function nuRUN(w, i, l, p, prop) {
 
 	} else {
 
-		var F = obj.form_id;
-		var R = obj.record_id;
-		var L = obj.filter;
-		var PA = obj.parameters;
-		var P = window.location.pathname;
+		window.nuOPENER.push(new nuOpener(obj.run_type, obj.form_id, obj.record_id, obj.filter, obj.parameters));
 
-		window.nuOPENER.push(new nuOpener(obj.run_type, F, R, L, PA));
+		const open = window.nuOPENER[window.nuOPENER.length - 1];
+		const url = window.location.pathname + '?i=2&opener=' + open.id;
 
-		var open = window.nuOPENER[window.nuOPENER.length - 1];
-		// var f = P.substring(0, P.lastIndexOf('/') + 1)
-		// var u = window.location.origin + f + obj.src + '&opener=' + open.id;
-		var u = P + '?i=2&opener=' + open.id;
-
-		$('#' + id).attr('src', u).removeClass('').addClass('nuIframe');
+		$div.attr('src', url).removeClass('').addClass('nuIframe');
 
 	}
 
 	nuAddJSObjectEvents(id, obj.js);
-
 	nuSetAccess(id, obj.read);
-
 	nuAddStyle(id, obj);
 
 	return Number(obj.width);
@@ -3311,6 +3295,20 @@ function nuAddBreadcrumbs() {
 }
 
 
+function nuGetTitleNew(bc, title = 'New') {
+
+	if (nuFormType() == 'edit' && bc.form_type != 'launch' && nuIsNewRecord()) {
+
+		const fId = bc.form_id;
+		const breadcrumbLength = nuFORM.breadcrumbs.length;
+		const pId = breadcrumbLength < 2 ? '' : nuFORM.breadcrumbs[breadcrumbLength - 2].form_id;
+		return fId !== pId ? `${nuTranslate(bc.form_description)} (${title})` : title;
+	}
+	
+	return false;
+
+}
+
 function nuAddBreadcrumb(i) {
 
 	const isLast = (i + 1 == window.nuFORM.breadcrumbs.length);					//-- last breadcrumb
@@ -3324,8 +3322,16 @@ function nuAddBreadcrumb(i) {
 	$('#nuBreadcrumbHolder').append(div);
 	var $id = $('#' + id);
 
+	let title = bc.title;
+	
+	/* DEV
+	if (bc.form_code.startsWith('nu')) {
+		title = nuGetTitleNew('New') || title;
+	}
+	*/
+
 	$id.css('font-size', 14)
-		.html(h + nuTranslate(bc.title));
+		.html(h + nuTranslate(title));
 
 	if (isLast) {
 		$id.addClass('nuNotBreadcrumb');
@@ -3339,7 +3345,6 @@ function nuAddBreadcrumb(i) {
 	}
 
 }
-
 
 function nuMainForm() {
 
@@ -4358,7 +4363,7 @@ function nuSetNoSearchColumns(columnsArr) {
 
 	for (let i = 0; i < columnsArr.length; i++) {
 		$('#nusort_' + columnsArr[i]).addClass('nuNoSearch');
-	}    
+	}
   
 	nuFORM.setProperty('nosearch_columns', columnsArr);
 
@@ -4367,15 +4372,15 @@ function nuSetNoSearchColumns(columnsArr) {
 function nuSetSearchColumns(columnsArr) {
 
 	const numBrowseColumns = $(".nuBrowseTitle").length;
-	let arr = [];   
+	let arr = [];
 
 	for (let i = 0; i <= numBrowseColumns; i++) {
 		if (!columnsArr.includes(i)) {
 			arr.push(i);
-		}    
-	}    
+		}
+	}
 
-	nuSetNoSearchColumns(arr); 
+	nuSetNoSearchColumns(arr);
   
 }
 
@@ -4383,8 +4388,9 @@ function nuSearchColumnsReset() {
 
 	for (let i = 0; i < $(".nuBrowseTitle").length; i++) {
 		$('#nusort_' + i).removeClass('nuNoSearch');
-
-	nuFORM.setProperty('nosearch_columns', []); 
+	}    
+  
+	nuFORM.setProperty('nosearch_columns', []);
 
 }
 
