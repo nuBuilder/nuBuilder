@@ -938,10 +938,15 @@ function nuDRAG(w, i, l, p, prop) {
 	if (obj.read == '2') {	// hidden
 		$id.addClass('nuDragHidden').css('visibility', 'hidden')
 	}
-
-	$id.text(id);
+	
 	$id.attr('data-drag', 1)
 		.attr('data-nu-object-id', obj.object_id);
+	
+	if (tagType == 'div') {
+		$id.text(id);
+	} else {
+		$id.val(id).attr('spellcheck','false').prop('readonly', true);
+	}
 
 	if (obj.input == 'button' || nuObjectType == 'run') {
 		$id.attr('data-drag-button-label', obj.label);
