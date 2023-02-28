@@ -169,7 +169,7 @@
 	 background:darkgrey;
 	 cursor:pointer 
 }
- input:focus,select:focus,textarea:focus {
+ input:not(.nuDragSelected):focus,select:not(.nuDragSelected):focus,textarea:not(.nuDragSelected):focus {
 	outline: none;
 	box-shadow: 0 0 0 1px rgb(220 237 244)
 }
