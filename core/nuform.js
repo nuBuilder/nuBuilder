@@ -908,7 +908,13 @@ function nuDRAG(w, i, l, p, prop) {
 	const obj = prop.objects[i];
 	const id = p + obj.id;
 	const nuObjectType = p + obj.type;
-	let drgDiv = document.createElement('div');
+
+	let tagType = 'div';
+	if (nuObjectType == 'textarea' || nuObjectType == 'input') {
+		tagType = nuObjectType;	
+	}
+
+	let drgDiv = document.createElement(tagType);
 	drgDiv.setAttribute('id', id);
 
 	$('#' + p + 'nuRECORD').append(drgDiv);
@@ -925,7 +931,8 @@ function nuDRAG(w, i, l, p, prop) {
 		'overflow': 'hidden',
 		'display': 'flex',
 		'align-items': 'center',
-		'padding-left': '4px'
+		'padding-left': '4px',
+		'caret-color' : 'transparent'
 	}).addClass('nu_' + nuObjectType);
 
 	if (obj.read == '2') {	// hidden
@@ -950,7 +957,6 @@ function nuDRAG(w, i, l, p, prop) {
 	return Number(obj.width);
 
 }
-
 
 function getDBColumnLengh(w, id) {
 
@@ -4345,41 +4351,40 @@ function nuSetSearchColumn() {
 
 }
 
-function nuSetNoSearchColumns(columnsArr) {    
+function nuSetNoSearchColumns(columnsArr) {
 
-	const s = nuFORM.getCurrent().nosearch_columns;   
-	columnsArr = s.concat(columnsArr);    
+	const s = nuFORM.getCurrent().nosearch_columns;
+	columnsArr = s.concat(columnsArr);
 
-	for (let i = 0; i < columnsArr.length; i++) {       
-		$('#nusort_' + columnsArr[i]).addClass('nuNoSearch');   
-	}    
+	for (let i = 0; i < columnsArr.length; i++) {
+		$('#nusort_' + columnsArr[i]).addClass('nuNoSearch');
+	}    
   
-	nuFORM.setProperty('nosearch_columns', columnsArr); 
+	nuFORM.setProperty('nosearch_columns', columnsArr);
 
 }
 
-function nuSetSearchColumns(columnsArr) {    
+function nuSetSearchColumns(columnsArr) {
 
-	const numBrowseColumns = $(".nuBrowseTitle").length;    
-	let arr = [];   
+	const numBrowseColumns = $(".nuBrowseTitle").length;
+	let arr = [];   
 
-	for (let i = 0; i <= numBrowseColumns; i++) {        
-		if (!columnsArr.includes(i)) {           
-			arr.push(i);       
-		}    
-	}    
+	for (let i = 0; i <= numBrowseColumns; i++) {
+		if (!columnsArr.includes(i)) {
+			arr.push(i);
+		}    
+	}    
 
-	nuSetNoSearchColumns(arr); 
+	nuSetNoSearchColumns(arr); 
   
 }
 
-function nuSearchColumnsReset() {    
+function nuSearchColumnsReset() {
 
 	for (let i = 0; i < $(".nuBrowseTitle").length; i++) {
-		$('#nusort_' + i).removeClass('nuNoSearch');   
-	}    
-  
-	nuFORM.setProperty('nosearch_columns', []); 
+		$('#nusort_' + i).removeClass('nuNoSearch');
+
+	nuFORM.setProperty('nosearch_columns', []); 
 
 }
 

@@ -127,7 +127,7 @@ function nuBindDragEvents(){
 
 		if(keyDirection != ''){
 
-			$('div.nuDragSelected').each(function(){
+			$('.nuDragSelected').each(function(){
 
 				var prop	= '';
 				var val	= '';
@@ -389,7 +389,7 @@ function nuInitialiseDragState(){
 
 	window.nuDragOptionsState		= {'tabs': []};
 
-	var tabOrderCounter				= 10;
+	let tabOrderCounter				= 10;
 
 	$('div.nuTab[id^="nuTab"]').each(function(){
 
@@ -398,24 +398,28 @@ function nuInitialiseDragState(){
 			'objects': []
 		};
 
-		$('div#nuRECORD div[data-nu-tab="'+$(this).prop('id').replace('nuTab','')+'"]').each(function(){
+		$('div#nuRECORD [data-nu-tab="'+$(this).prop('id').replace('nuTab','')+'"]').each(function(){
+			
+			if (this.tagName != 'LABEL') {
 
-			var objectPosition		= $(this).position();
+				const objectPosition		= $(this).position();
 
-			var objectProperties	= {
+				const objectProperties	= {
 
-				'object_id': $(this).attr('data-nu-object-id'),
-				'id': $(this).prop('id'),
-				'left': objectPosition.left,
-				'top': objectPosition.top,
-				'width': $(this).width(),
-				'height': $(this).height(),
-				'tab_order': tabOrderCounter
+					'object_id': $(this).attr('data-nu-object-id'),
+					'id': $(this).prop('id'),
+					'left': objectPosition.left,
+					'top': objectPosition.top,
+					'width': $(this).width(),
+					'height': $(this).height(),
+					'tab_order': tabOrderCounter
 
-			};
+				};
 
-			objects.objects.push(objectProperties);
-			tabOrderCounter		= tabOrderCounter + 10;
+				objects.objects.push(objectProperties);
+				tabOrderCounter		= tabOrderCounter + 10;
+			
+			}
 
 		});
 
@@ -730,7 +734,7 @@ function nuAddContentBoxFrames() {
 }
 
 function nuDragSelected() {
-	return $('div.nuDragSelected',$('#nuDragDialog iframe').contents());
+	return $('.nuDragSelected',$('#nuDragDialog iframe').contents());
 }
 
 function nuThisContentBox(t) {
@@ -848,7 +852,7 @@ function nuSortObjAsc(a,b) {
 
 function nuSpacingNotSupported() {
 
-	var supported = $('div.nuDragSelected',$('#nuDragDialog iframe').contents()).filter('.nu_contentbox').length == 0;
+	var supported = $('.nuDragSelected',$('#nuDragDialog iframe').contents()).filter('.nu_contentbox').length == 0;
 	if (!supported) {
 		nuMessage('Vertical spacing of ContentBox is not supported yet.');
 	}
@@ -863,7 +867,7 @@ function nuSpaceHorizontally(){
 
 	var selectedFields		= [];
 
-	$('div.nuDragSelected',$('#nuDragDialog iframe').contents()).each(function(){
+	$('.nuDragSelected',$('#nuDragDialog iframe').contents()).each(function(){
 
 		selectedFields.push({
 			left: $(this).position().left,
@@ -910,7 +914,7 @@ function nuSpaceVertically(){
 
 	var selectedFields	= [];
 
-	$('div.nuDragSelected',$('#nuDragDialog iframe').contents()).each(function(){
+	$('.nuDragSelected',$('#nuDragDialog iframe').contents()).each(function(){
 
 		selectedFields.push({
 
@@ -1152,7 +1156,7 @@ function nuPutFieldDimensionsIntoState(){
 
 			var field = $('#nuDragDialog iframe')[0].contentWindow.nuDragOptionsState.tabs[tabNo].objects[fieldNo];
 
-			var contents = $('div#'+field.id,$('#nuDragDialog iframe').contents());
+			var contents = $('#' + field.id,$('#nuDragDialog iframe').contents());
 			var cb = $('div#frame_'+field.id,$('#nuDragDialog iframe').contents());
 
 			if(contents.length == 1){
