@@ -518,12 +518,9 @@ function nuAddHomeLogout() {
 
 		if (window.nuFORM.breadcrumbs.length > 1) {
 
-			var c = document.createElement('div');
-			c.setAttribute('id', 'nuBreadcrumb0');
+			const div =  nuCreateElementWithId('div', 'nuBreadcrumb0', 'nuBreadcrumbHolder');
 
-			$('#nuBreadcrumbHolder').append(c);
-
-			$('#nuBreadcrumb0')
+			$(div)
 				.addClass('nuBreadcrumb')
 				.css('cursor', "pointer")
 				.css('font-size', 16)
@@ -544,12 +541,9 @@ function nuAddHomeLogout() {
 
 function nuAddIconToBreadCrumb(id, title, right, handler, iconClass) {
 
-	var l = document.createElement('div');
-	l.setAttribute('id', id);
+	const div =  nuCreateElementWithId('div', 'nuBreadcrumb0', 'nuBreadcrumbHolder');
 
-	$('#nuBreadcrumbHolder').append(l);
-
-	$('#' + id)
+	$(div)
 		.addClass('nuBreadcrumbIcon')
 		.attr('onclick', handler)
 		.css('right', right)
@@ -853,16 +847,15 @@ function nuAddJSObjectEvents(i, j) {
 function nuRecordProperties(w, p, l) {
 
 	var del = p + 'nuDelete';
-	var fh = p + 'nuRECORD';						//-- Edit Form Id
-	var chk = document.createElement('input');
 	var sf = p.substr(0, p.length - 3);
 
-	chk.setAttribute('id', del);
+	const chk =  nuCreateElementWithId('input', del);
+
 	chk.setAttribute('title', nuTranslate('Delete This Row When Saved'));
 	chk.setAttribute('type', w.deletable == '0' ? 'text' : 'checkbox');
 	chk.setAttribute('onclick', 'nuChange(event)');
 
-	$('#' + fh)
+	$('#' + p + 'nuRECORD')
 		.append(chk)
 		.addClass('nuSection')
 		.attr('data-nu-form-id', w.id)
@@ -914,10 +907,7 @@ function nuDRAG(w, i, l, p, prop) {
 		tagType = nuObjectType;	
 	}
 
-	let drgDiv = document.createElement(tagType);
-	drgDiv.setAttribute('id', id);
-
-	$('#' + p + 'nuRECORD').append(drgDiv);
+	const drgDiv =  nuCreateElementWithId(tagType, id, p + 'nuRECORD');
 
 	let $id = $('#' + id);
 
@@ -999,12 +989,10 @@ function getDBColumnLengh(w, id) {
 
 function nuINPUTfileDatabase($fromId, obj, id, p) {
 
-	const inp = document.createElement('textarea');
+	const newElement = nuCreateElementWithId('textarea', id);
+	$fromId.append(newElement);
 
-	inp.setAttribute('id', id);
-
-	$fromId.append(inp);
-	const $id = $('#' + id);
+	const $id = $(newElement);
 
 	$id
 		.css('visibility', 'hidden')
@@ -1025,14 +1013,10 @@ function nuINPUTfileFileSystem($fromId, w, i, l, p, prop, id) {
 
 	var obj = prop.objects[i];
 	id = id !== undefined ? id : p + obj.id;
-	var ef = p + 'nuRECORD';
-	var inp = document.createElement('div');
 
-	inp.setAttribute('id', id);
+	const inp =  nuCreateElementWithId('div', 'nuBreadcrumb0', p + 'nuRECORD');
 
 	obj = nuLabelOrPosition(obj, w, i, l, p, prop);
-
-	$('#' + ef).append(inp);
 
 	nuAddDataTab(id, obj.tab, p);
 
@@ -1629,17 +1613,13 @@ function nuHTML(w, i, l, p, prop, id) {
 	let obj = prop.objects[i];
 	id = id !== undefined ? id : p + obj.id;
 						
-	let div = document.createElement('div');
-
-	div.setAttribute('id', id);
+	const div =  nuCreateElementWithId('div', id, p + 'nuRECORD');							
+	$div = $(div);
 
 	obj = nuLabelOrPosition(obj, w, i, l, p, prop);
 
-	$('#' + p + 'nuRECORD').append(div);		// //-- Edit Form Id
-
 	nuAddDataTab(id, obj.tab, p);
 	
-	$div = $('#' + id);
 	nuSetObjectBounds($div, obj.top, obj.left, obj.width, obj.height);
 	$div.addClass('nuHtml').html(w.objects[i].html);
 
@@ -1673,15 +1653,11 @@ function nuCONTENTBOX(w, i, l, p, prop) {
 	const obj = prop.objects[i];
 	const id = p + obj.id;
 
-	let div = document.createElement('div');
-
-	div.setAttribute('id', id);
-
-	$('#' + p + 'nuRECORD').append(div);	//-- Edit Form Id
+	const div =  nuCreateElementWithId('div', id, p + 'nuRECORD');
 
 	nuAddDataTab(id, obj.tab, p);
 
-	const $div = $('#' + id);
+	const $div = $(div);
 	nuSetObjectBounds($div, obj.top, obj.left, obj.width, obj.height).css('z-index', '-1');
 
 	$div.attr('data-nu-object-id', w.objects[i].object_id)
@@ -1704,17 +1680,13 @@ function nuIMAGE(w, i, l, p, prop) {
 	let obj = prop.objects[i];
 	const id = p + obj.id;
 
-	let img = document.createElement('img');
-	img.setAttribute('id', id);
+	const img =  nuCreateElementWithId('img', id, p + 'nuRECORD');
 
 	obj = nuLabelOrPosition(obj, w, i, l, p, prop);
 
-	$('#' + p + 'nuRECORD').append(img);
-
 	nuAddDataTab(id, obj.tab, p);
 
-	let $img = $('#' + id);
-
+	let $img = $(img);
 	nuSetObjectBounds($img, obj.top, obj.left, obj.width).addClass('nuImage');
 	if (obj.height !== "-1" && obj.width !== "-1") {
 		nuSetObjectBounds($img, null, null, obj.width, obj.height)
@@ -1735,10 +1707,7 @@ function nuWORD(w, i, l, p, prop) {
 	const obj = prop.objects[i];
 	const id = p + obj.id;
 
-	let div = document.createElement('div');
-	div.setAttribute('id', id);
-
-	$('#' + p + 'nuRECORD').append(div);
+	const div =  nuCreateElementWithId('div', id, p + 'nuRECORD');
 
 	nuAddDataTab(id, obj.tab, p);
 
@@ -1746,7 +1715,7 @@ function nuWORD(w, i, l, p, prop) {
 	const r = /<n>(.*?)<\/n>/g.exec(t);
 	t = r === null ? t : r[1];
 
-	let $div = $('#' + id);
+	let $div = $(div);
 	nuSetObjectBounds($div, obj.top, obj.left, obj.width, obj.height)
 		.css('text-align', obj.align)
 		.addClass('nuWord')
@@ -1813,11 +1782,8 @@ function nuRUN(w, i, l, p, prop) {
 		}
 	}
 
-	let div = document.createElement(tagName);
-	div.setAttribute('id', id);
-	$div = $(div);
-
-	$('#' + p + 'nuRECORD').append(div);
+	const div =  nuCreateElementWithId(tagName, id, p + 'nuRECORD');
+	const $div = $(div);
 
 	nuAddDataTab(id, obj.tab, p);
 
@@ -1860,26 +1826,21 @@ function nuSELECT(w, i, l, p, prop) {
 
 	let obj = prop.objects[i];
 	const id = p + obj.id;
-	const ef = p + 'nuRECORD';					//-- Edit Form Id
 
 	obj = nuLabelOrPosition(obj, w, i, l, p, prop);
 
-	let sel = document.createElement('select');
+	const sel =  nuCreateElementWithId('select', id, p + 'nuRECORD');
 
-	sel.setAttribute('id', id);
-
-	$('#' + ef).append(sel);
-
-	$id = $('#' + id);
+	$sel = $(sel);
 	
 	if (w.objects[i].value != '' && nuRecordId() == '-1') {
-		$id.addClass('nuEdited');
+		$sel.addClass('nuEdited');
 	}
 
 	nuAddDataTab(id, obj.tab, p);
 
 	if (obj.multiple == 1) {
-		$id.attr('multiple', 'multiple');
+		$sel.attr('multiple', 'multiple');
 	}
 
 	if (obj.select2 == 1) {
@@ -1889,7 +1850,7 @@ function nuSELECT(w, i, l, p, prop) {
 
 	};
 
-	$id.css({
+	$sel.css({
 		'top': Number(obj.top),
 		'left': Number(obj.left),
 		'width': Number(obj.width),
@@ -1906,7 +1867,7 @@ function nuSELECT(w, i, l, p, prop) {
 		.attr('data-nu-prefix', p);
 
 
-	$id.css('height', Number(obj.height));
+	$sel.css('height', Number(obj.height));
 
 	var s = String(w.objects[i].value);
 	var a = [];
@@ -1919,7 +1880,7 @@ function nuSELECT(w, i, l, p, prop) {
 		eval('a = ' + s);
 	}
 
-	$id.append('<option value=""></option>');
+	$sel.append('<option value=""></option>');
 	
 	let hasSelected = false;
 	if (obj.options !== null) {
@@ -1929,9 +1890,9 @@ function nuSELECT(w, i, l, p, prop) {
 			const opt = String(obj.options[n][1]); // .replaceAll(' ', '&#160;');
 
 			if (a.indexOf(String(obj.options[n][0])) == -1) {
-				$id.append('<option value="' + obj.options[n][0] + '">' + opt + '</option>');
+				$sel.append('<option value="' + obj.options[n][0] + '">' + opt + '</option>');
 			} else {
-				$id.append('<option selected="selected "value="' + obj.options[n][0] + '">' + opt + '</option>');
+				$sel.append('<option selected="selected "value="' + obj.options[n][0] + '">' + opt + '</option>');
 				hasSelected = true;
 			}
 
@@ -2026,13 +1987,15 @@ function nuSUBFORMnuRECORDAddCSS(frmId, rowTop, rowWidth, rowHeight, even) {
 
 }
 
-function nuCreateElementAppend(type, id, selector) {
+function nuCreateElementWithId(tagName, id, parentElement) {
 
-	let ele = document.createElement(type);
-	ele.setAttribute('id', id);
-	$('#' + selector).append(ele);
+	const newElement = document.createElement(tagName);
+	newElement.setAttribute('id', id);
+	if (parentElement !== undefined) {
+		document.getElementById(parentElement).appendChild(newElement);
+	}
 
-	return ele;
+	return newElement;
 
 }
 
@@ -2054,7 +2017,7 @@ function nuGetSubformDimensions(SF) {
 	var subformRows = w.objects[i];							//-- All rows
 
 	let id = p + SF.id;
-	nuCreateElementAppend('div', id, p + 'nuRECORD');  		//-- Edit Form Id
+	nuCreateElementWithId('div', id, p + 'nuRECORD');  		//-- Edit Form Id
 
 	nuLabelOrPosition(SF, w, i, l, p, prop)
 	nuAddDataTab(id, SF.tab, p);
@@ -2094,7 +2057,7 @@ function nuGetSubformDimensions(SF) {
 	nuOptions(id, SF.sf_form_id, 'subform', w.global_access);
 
 	var scrId = id + 'scrollDiv';
-	let scrDiv = nuCreateElementAppend('div', scrId, id);
+	let scrDiv = nuCreateElementWithId('div', scrId, id);
 	scrDiv.setAttribute('class', 'nuSubformScrollDiv');
 
 	nuSUBFORMScrollDivAddCSS(id, SF, scrId, rowTop, rowWidth);
@@ -2106,7 +2069,7 @@ function nuGetSubformDimensions(SF) {
 
 		prefix = id + nuPad3(c);
 		const frmId = prefix + 'nuRECORD';
-		nuCreateElementAppend('div', frmId, scrId);
+		nuCreateElementWithId('div', frmId, scrId);
 
 		nuSUBFORMnuRECORDAddCSS(frmId, rowTop, rowWidth, rowHeight, c%2 == 0 ? '1' : '0');
 		nuBuildEditObjects(subformRows.forms[c], prefix, SF, SF.forms[0]);
