@@ -3067,3 +3067,18 @@ function nuEscapeHTML(string) {
 function nuDelay(ms) {
 	return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+function nuInsertAtCaret(id, string) {
+
+	const txt = $('#' + id);
+	const caretPos = txt[0].selectionStart;
+	const value = txt.val();
+
+	txt.val(value.substring(0, caretPos) + string + value.substring(caretPos));
+	txt.focus();
+
+	const endOfText = caretPos + string.length;
+	txt.prop('selectionStart', endOfText);
+	txt.prop('selectionEnd', endOfText);
+
+}
