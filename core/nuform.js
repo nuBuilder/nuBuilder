@@ -4799,6 +4799,8 @@ function nuChangeFile(e) {
 
 function nuCalculateForm(setAsEdited) {	//-- calculate subform 'calcs' first
 
+	if (window.nuEnableCalculation == false) return;
+		
 	var subformFirst = function (a, b) {
 
 		var A = $('#' + a.id).hasClass('nuSubformObject') ? 0 : 1000;
