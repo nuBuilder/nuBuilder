@@ -1916,14 +1916,11 @@ function nuSELECT(w, i, l, p, prop) {
 
 function nuSUBFORMAddCSS(id, SF) {
 
-	$('#' + id).css({
-		'top': Number(SF.top),
-		'left': Number(SF.left),
-		'width': Number(SF.width),
-		'height': Number(SF.height) + 2,
-		'overflow-x': 'hidden',
-		'overflow-y': 'hidden'
-	})
+	nuSetObjectBounds($('#' + id), SF.top, SF.left, SF.width, Number(SF.height) + 2)
+		.css({
+			'overflow-x': 'hidden',
+			'overflow-y': 'hidden'
+		})
 		.attr('data-nu-object-id', SF.object_id)
 		.attr('data-nu-foreign-key-name', SF.foreign_key_name)
 		.attr('data-nu-primary-key-name', SF.primary_key_name)
@@ -1936,11 +1933,8 @@ function nuSUBFORMAddCSS(id, SF) {
 
 function nuSUBFORMScrollDivAddCSS(id, SF, scrId, rowTop, rowWidth) {
 
-	$('#' + scrId).css({
-		'top': rowTop,
-		'left': 0,
-		'width': Number(rowWidth) + 1,
-		'height': Number(SF.height) - rowTop + 1,
+	nuSetObjectBounds($('#' + scrId), rowTop, 0, Number(rowWidth) + 1, Number(SF.height) - rowTop + 1)
+	.css({
 		'border-width': 10,
 		'overflow-x': 'hidden',
 		'overflow-y': 'scroll',
@@ -1958,16 +1952,13 @@ function nuSUBFORMScrollDivAddCSS(id, SF, scrId, rowTop, rowWidth) {
 
 function nuSUBFORMnuTabHolderAddCSS(tabId, rowTop, rowWidth) {
 
-	$('#' + tabId).css({
-		'top': 0,
-		'left': 0,
-		'width': rowWidth,
-		'height': rowTop,
-		'overflow-x': 'hidden',
-		'overflow-y': 'hidden',
-		'position': 'absolute',
-		'padding': '12px 0px 0px 0px'
-	})
+	nuSetObjectBounds($('#' + tabId), 0, 0, rowWidth, rowTop)
+		.css({
+			'overflow-x': 'hidden',
+			'overflow-y': 'hidden',
+			'position': 'absolute',
+			'padding': '12px 0px 0px 0px'
+		})
 		.addClass('nuTabHolder')
 		.attr('data-nu-subform', tabId)
 		.prepend('&nbsp;&nbsp;&nbsp;');
@@ -1976,13 +1967,7 @@ function nuSUBFORMnuTabHolderAddCSS(tabId, rowTop, rowWidth) {
 
 function nuSUBFORMnuRECORDAddCSS(frmId, rowTop, rowWidth, rowHeight, even) {
 
-	$('#' + frmId).css({
-		'top': Number(rowTop),
-		'left': 0,
-		'width': Number(rowWidth),
-		'height': Number(rowHeight),
-		'position': 'absolute'
-	})
+	nuSetObjectBounds($('#' + frmId), rowTop, 0, rowWidth, rowHeight)
 	.addClass('nuSubform' + even);
 
 }
@@ -2100,13 +2085,14 @@ function nuGetSubformDimensions(SF) {
 
 function nuNewRowObject(p) {
 
-	var sf = p.substr(0, p.length - 3);
+	const sf = p.substr(0, p.length - 3);
+	if ($('#' + p + 'nuRECORD').length == 0) { 
+		return; 
+	}
 
-	if ($('#' + p + 'nuRECORD').length == 0) { return; }
+	let html = document.getElementById(p + 'nuRECORD').outerHTML;
 
-	var h = document.getElementById(p + 'nuRECORD').outerHTML;
-
-	window.nuSUBFORMROW[sf] = String(h.nuReplaceAll(p, '#nuSubformRowNumber#', true));
+	window.nuSUBFORMROW[sf] = String(html.nuReplaceAll(p, '#nuSubformRowNumber#', true));
 
 	$("[id^='" + p + "']").addClass('nuEdit');
 
@@ -2127,15 +2113,13 @@ function nuSubformRowNumber(id) {
 function nuSubformRowObject(id, column) {
 
 	let formCode = $('#' + id).attr('data-nu-form');
-
 	return $('#' + formCode + nuSubformRowNumber(id) + column);
 
 }
 
 function nuSubformValue(t, id) {
 
-	var p = $(t).attr('data-nu-prefix');
-
+	const p = $(t).attr('data-nu-prefix');
 	return $('#' + p + id).val();
 
 }
@@ -2152,7 +2136,9 @@ function nuSubformColumnArray(id, column, includeDeleted = false) {
 			a.push(rv);
 		}
 	}
+
 	return a;
+
 }
 
 function nuSubformDisable(sf, ob) {
@@ -2207,12 +2193,17 @@ function nuSubformShow(sf, ob, show) {
 
 }
 
+function nuSubformHideHeader(id) {
+	const scrollDiv = $('#' + id + 'scrollDiv');
+	scrollDiv.css({top: 0, height: $('#' + id).cssNumber('height')});
+}
+
 function nuSubformLastRow(t) {
 
-	var i = String($('#' + t.id).parent().attr('id'));
-	var p = i.substr(0, i.length - 17);
-	var s = parseInt(i.substr(11, 3), 10) + 1;
-	var n = $('#' + p + nuPad3(s) + 'nuRECORD').length;
+	const i = String($('#' + t.id).parent().attr('id'));
+	const p = i.substr(0, i.length - 17);
+	const s = parseInt(i.substr(11, 3), 10) + 1;
+	const n = $('#' + p + nuPad3(s) + 'nuRECORD').length;
 
 	return n == 0;
 
@@ -2220,9 +2211,9 @@ function nuSubformLastRow(t) {
 
 function nuSubformFocusLastRow(id, f) {
 
-	var sf = nuSubformObject(id);
-	var c = f === undefined ? sf.fields[1] : sf.fields.indexOf(f);
-	var r = sf.rows.length - 1;
+	const sf = nuSubformObject(id);
+	const c = f === undefined ? sf.fields[1] : sf.fields.indexOf(f);
+	const r = sf.rows.length - 1;
 
 	$('#' + id + nuPad3(r) + c).focus();
 
