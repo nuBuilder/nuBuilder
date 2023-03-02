@@ -1023,7 +1023,7 @@ class nuFormObject {
 			var o = Date().toString().split(' ', 6);								//-- Tue Sep 07 2004 11:11:12 GMT+0930 (Cen. Australia Standard Time)
 			var time = String(o[4]).split(':');
 
-			var d = { 'y': o[3], 'm': FMT[nuTranslateToEnglish(o[1])].jsmonth, 'd': o[2], 'h': time[0], 'n': time[1], 's': time[2] };	//-- today's date time[2]};	//-- today's date
+			var d = { 'y': o[3], 'm': FMT[o[1]].jsmonth, 'd': o[2], 'h': time[0], 'n': time[1], 's': time[2] };	//-- today's date time[2]};	//-- today's date
 			for (var i = 0; i < f.length; i++) {
 
 				var fmt = String(f[i]);
