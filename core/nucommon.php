@@ -1934,14 +1934,20 @@ function nuGetHttpOrigin() {
 	return $origin;
 }
 
-function nuGetRecordURL($origin = '', $subFolder = '', $homepageId = '', $formId = '') {
+function nuGetRecordURL($origin = null, $subFolder = null, $homepageId = null, $formId = null) {
 
-	$homepageId = $homepageId != '' ? '&h='. $homepageId : '';
-	$origin = $origin == '' ? nuGetHttpOrigin() : $origin;
-	$formId = $formId == '' ? nuHash() ['form_id'] : $formId;
+	$homepageId = $homepageId ? '&h='. $homepageId : '';
+	$origin = $origin ? $origin : nuGetHttpOrigin();
 
-	$recordId = nuReplaceHashVariables('#record_id#');
-	if ($recordId == '-1' && "#RECORD_ID#" != '-1') $recordId = nuReplaceHashVariables('#RECORD_ID#');
+	if (!$formId) {
+		$hash = nuHash();
+		$formId = $hash['form_id'] == '' ? $hash['FORM_ID'] : $hash['form_id'];
+	}
+
+	$recordIdL = nuReplaceHashVariables('#record_id#');
+	$recordIdC = nuReplaceHashVariables('#RECORD_ID#');
+
+	$recordId = $recordIdL ? $recordIdL : $recordIdC;
 
 	return $origin. $subFolder . '/index.php?f=' . $formId . '&r=' . $recordId . $homepageId;
 
