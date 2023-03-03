@@ -109,6 +109,7 @@ function nuBuildForm(f) {
 	window.nuOnLookupPopulated = null;
 	window.nuCalculated = null;
 	window.nuOnPropertySet = null;
+	window.nuEnableCalculation = null;
 	window.nuPortraitScreenShowTabTitles = true;
 	window.nuBrowseFunction = window.nuDefaultBrowseFunction;
 	window.nuCLONE = false;
