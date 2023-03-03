@@ -102,10 +102,6 @@ function nuRunQueryTest($s, $a = []){
 function nuDebugMessageString($user, $message, $sql, $trace) {
 
 		$debug	= "
-		===USER==========
-
-		$user
-
 		===PDO MESSAGE===
 
 		$message
@@ -446,33 +442,38 @@ function nuCanCreateView() {
 
 }
 
-function nuDebugResult($msg){
+function nuDebugResult($nuDebugMsg){
 
-	if(is_object($msg)){
-		$msg = print_r($msg,1);
+	if(is_object($nuDebugMsg)){
+		$nuDebugMsg = print_r($nuDebugMsg,1);
 	}
 
-	$userId = null;
+	$nuDebugUserId = null;
 	if (function_exists('nuHash')) {
-		$h = nuHash();
-		$userId = isset($h) && isset($h['USER_ID']) ? $h['USER_ID'] : null;
-		$userId = $userId == null && isset($_POST['nuSTATE']['username']) ? $_POST['nuSTATE']['username'] : $userId;
+		$hash = nuHash();
+		$nuDebugUserId = isset($hash) && isset($hash['USER_ID']) ? $hash['USER_ID'] : null;
+		$nuDebugUserId = $nuDebugUserId == null && isset($_POST['nuSTATE']['username']) ? $_POST['nuSTATE']['username'] : $nuDebugUserId;
 	}
 
-	$id = nuID();
+	$nuDebugId = nuID();
 
-	$s = "INSERT INTO zzzzsys_debug (zzzzsys_debug_id, deb_message, deb_added, deb_user_id) VALUES (:id , :message, :added, :user_id)";
+	$insert = "INSERT INTO zzzzsys_debug (zzzzsys_debug_id, deb_message, deb_added, deb_user_id) VALUES (:id , :message, :added, :user_id)";
 
 	$params = [
-		"id"		=> $id,
-		"message"	=> $msg,
+		"id"		=> $nuDebugId,
+		"message"	=> $nuDebugMsg,
 		"added"		=> time(),
-		"user_id"	=> $userId
+		"user_id"	=> $nuDebugUserId
 	];
 
-	nuRunQuery($s, $params);
+	nuRunQuery($insert, $params);
 
-	return $id;
+	$proc	= nuProcedure('NUDEBUGRESULTADDED');
+	if($proc != '') { 
+		eval($proc); 
+	}
+
+	return $nuDebugId;
 
 }
 
