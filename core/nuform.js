@@ -3512,12 +3512,7 @@ function nuOptions(p, f, t, access) {
 				$('#' + id)
 					.attr('title', nuTranslate('Options'))
 					.attr('onclick', 'nuGetOptionsList("' + f + '", this, "' + p + '", "' + access + '", "' + t + '")')
-					.addClass('nuIcon nuOptionsSubform')
-					.hover(function () {
-						$(this).css('color', 'red');
-					}, function () {
-						$(this).css('color', '');
-					});
+					.addClass('nuIcon nuOptionsSubform');
 
 			}
 
@@ -3528,12 +3523,7 @@ function nuOptions(p, f, t, access) {
 			$('#' + id)
 				.attr('title', 'Options')
 				.attr('onclick', 'nuGetOptionsList("' + f + '", this, "' + p + '", "' + access + '", "' + t + '")')
-				.addClass('nuIcon nuOptions')
-				.hover(function () {
-					$(this).css('color', 'red');
-				}, function () {
-					$(this).css('color', '');
-				});
+				.addClass('nuIcon nuOptions');
 
 		}
 

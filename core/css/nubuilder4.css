@@ -310,27 +310,33 @@
 	 top: 5px;
 	 width: 15px 
 }
-
+ .nuOptions:hover {
+	 color:red
+}
  .nuOptions::before {
-	content: "\f0c9";
-	font-family: "Font Awesome 5 Free";
-	font-weight: 900;
-	margin-left: 5px
+	 content: "\f0c9";
+	 font-family: "Font Awesome 5 Free";
+	 font-weight: 900;
+	 margin-left: 5px
 }
 .nuSubformFilter {
-	top: 1px;
-	left: 0px;
-	background-color: #afe9ff;
-	position: relative
+	 top: 1px;
+	 left: 0px;
+	 background-color: #afe9ff;
+	 position: relative
 }
  .nuOptionsSubform {
 	 border-style: none;
+	 color:transparent!important;
 	 font-size: 20px!important;
 	 left: 3px;
 	 position: relative !important;
 	 text-align: center;
 	 top: 4px;
 	 z-index : 1 
+}
+ .nuOptionsSubform:hover {
+	 color:red!important;
 }
  .nuOptionsSubform::before {
 	content: "\f0c9";
