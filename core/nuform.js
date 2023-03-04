@@ -1755,7 +1755,7 @@ function nuRUNGetOnClickEvent(obj) {
 	} else
 	if (runType == 'P') {
 
-		const result = obj.run_hidden
+		result = obj.run_hidden
 		  ? `nuRunPHPHidden('${obj.record_id}')`
 		  : `nuRunPHP('${obj.record_id}')`;
 
