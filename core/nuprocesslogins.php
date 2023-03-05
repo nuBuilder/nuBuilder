@@ -4,8 +4,8 @@ function nuCheckExistingSession() {
 
 	global $nuConfigTitle;
 
-	if (!isset($_SESSION['nubuilder_session_data']['SESSION_ID']) || !isset($_SESSION['nubuilder_session_data'])) {
-		nuDie(nuTranslate('You must be logged into ').$nuConfigTitle);
+	if (!($_SESSION['nubuilder_session_data']['SESSION_ID'] ?? false)) {
+		nuDie(nuTranslate('You must be logged into ') . $nuConfigTitle);
 	}
 
 }
@@ -175,7 +175,7 @@ function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 	$_SESSION['nubuilder_session_data']['isGlobeadmin'] = true;
 	$_SESSION['nubuilder_session_data']['translation'] = nuGetTranslation($lang);
 	$_SESSION['nubuilder_session_data']['language'] = $lang;
-	$_SESSION['nubuilder_session_data']['HOME_ID'] = isset($_SESSION['nubuilder_session_data']['GLOBEADMIN_HOME']) ? $_SESSION['nubuilder_session_data']['GLOBEADMIN_HOME'] : 'nuhome';
+	$_SESSION['nubuilder_session_data']['HOME_ID'] = $_SESSION['nubuilder_session_data']['GLOBEADMIN_HOME'] ?? 'nuhome';
 
 
 	$sessionIds = new stdClass;
@@ -331,13 +331,14 @@ function nuLoginSetupNOTGlobeadmin($new = true, $sSoUserName = "") {
 	$sessionIds->sus_name = $getAccessLevelOBJ->sus_name;
 	$sessionIds->language = $language;
 
-	$sessionIds->sus_position = isset($getAccessLevelOBJ->sus_position) ? $getAccessLevelOBJ->sus_position : null;
-	$sessionIds->sus_department = isset($getAccessLevelOBJ->sus_department) ? $getAccessLevelOBJ->sus_department : null;
-	$sessionIds->sus_team = isset($getAccessLevelOBJ->sus_team) ? $getAccessLevelOBJ->sus_team : null;
-	$sessionIds->sus_code = isset($getAccessLevelOBJ->sus_code) ? $getAccessLevelOBJ->sus_code : null;
-	$sessionIds->sus_additional1 = isset($getAccessLevelOBJ->sus_additional1) ? $getAccessLevelOBJ->sus_additional1 : null;
-	$sessionIds->sus_additional2 = isset($getAccessLevelOBJ->sus_additional2) ? $getAccessLevelOBJ->sus_additional2 : null;
-	$sessionIds->sus_accessibility_features = isset($getAccessLevelOBJ->sus_accessibility_features) ? $getAccessLevelOBJ->sus_accessibility_features : null;
+	$sessionIds->sus_position = $getAccessLevelOBJ->sus_position ?? null;
+	$sessionIds->sus_department = $getAccessLevelOBJ->sus_department ?? null;
+	$sessionIds->sus_team = $getAccessLevelOBJ->sus_team ?? null;
+	$sessionIds->sus_code = $getAccessLevelOBJ->sus_code ?? null;
+	$sessionIds->sus_additional1 = $getAccessLevelOBJ->sus_additional1 ?? null;
+	$sessionIds->sus_additional2 = $getAccessLevelOBJ->sus_additional2 ?? null;
+	$sessionIds->sus_accessibility_features = $getAccessLevelOBJ->sus_accessibility_features ?? null;
+
 
 	$sessionIds->global_access = '0';
 	$sessionIds->ip_address = nuGetIPAddress();
@@ -466,7 +467,7 @@ function nuAccessLevelInfo($u) {
 	$r = db_fetch_object($t);
 
 	return [
-		'group' => isset($r->sal_group) ? $r->sal_group : '',
+		'group' => $r->sal_group ?? '',
 		'code' => $r->sal_code
 	];
 
