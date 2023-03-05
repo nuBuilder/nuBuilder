@@ -2115,7 +2115,7 @@ function nuSubformRowNumber(id) {
 
 function nuSubformRowObject(id, column) {
 
-	let formCode = $('#' + id).attr('data-nu-form');
+	const formCode = $('#' + id).attr('data-nu-form');
 	return $('#' + formCode + nuSubformRowNumber(id) + column);
 
 }
@@ -2337,12 +2337,10 @@ function nuSubformColumnUnique(id, column, label) {
 
 function nuSubformTitleArray(sfName) {
 
-	let arr =
+	return
 		$('#' + sfName).children().filter('.nuSubformTitle').map(function () {
 			return this.getAttribute("data-nu-field");
 		}).get();
-
-	return arr;
 
 }
 
@@ -3147,11 +3145,13 @@ function nuGetSubformRowSize(o, SF, id) {
 
 	for (var i = 0; i < o.length; i++) {
 
-		var d = Number(o[i].description_width);
-		var B = o[i].type == 'lookup' ? 26 : 0;					//-- lookup button
-		var D = o[i].type == 'lookup' ? d : 0;					//-- lookup description
+		var descriptionWidth = Number(o[i].description_width);
+		const oType = o[i].type;
 
-		if (o[i].type == 'select') {
+		var B = oType == 'lookup' ? 26 : 0;						//-- lookup button
+		var D = oType == 'lookup' ? descriptionWidth : 0;		//-- lookup description
+
+		if (oType == 'select') {
 			w = Number(o[i].width) + B + D - 4;
 		} else {
 			w = Number(o[i].width) + B + D;
@@ -3246,11 +3246,10 @@ function nuBuildSubformDeleteTitle(l, id, subform_id) {
 
 function nuAddBreadcrumbs() {
 
-	var b = window.nuFORM.breadcrumbs.length;
-
+	const breadcrumbLength = window.nuFORM.breadcrumbs.length;
 	const iStart = nuMainForm() ? 1 : 0;
 
-	for (var i = iStart; i < b; i++) {
+	for (let i = iStart; i < breadcrumbLength; i++) {
 		nuAddBreadcrumb(i);
 	}
 
