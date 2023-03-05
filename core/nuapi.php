@@ -2,7 +2,7 @@
 	header("Content-Type: application/json");
 	header("Cache-Control: no-cache, must-revalidate");
 
-	$nuState = isset($_POST['nuSTATE']) ? $_POST['nuSTATE'] : null;
+	$nuState = $_POST['nuSTATE'] ?? null;
 	if ($nuState == null && !empty($_FILES["file"])) {
 		require_once('nuupload.php');
 		echo nuUploadFile();
@@ -118,7 +118,7 @@
 		$f->forms[0]->access_level_group		= $U['ACCESS_LEVEL_GROUP'];
 
 		$f->forms[0]->database					= $_SESSION['nubuilder_session_data']['DB_NAME'];
-		$f->forms[0]->dimensions				= isset($formAndSessionData->dimensions) ? $formAndSessionData->dimensions : null;
+		$f->forms[0]->dimensions				= $formAndSessionData->dimensions ?? null;
 		$f->forms[0]->translation				= $formAndSessionData->translation;
 
 		$f->forms[0]->tableSchema				= nuUpdateTableSchema($CT, $refreshCache && $globalAccess);
