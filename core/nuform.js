@@ -1744,7 +1744,9 @@ function nuRUNGetOnClickEvent(obj) {
 	const runTarget = obj.run_target || '0';
 
 	const stopClick = runTarget == '0' ? 'nuStopClick(event);' : '';
-	const runAction = runTarget == '3' ? "nuPopup('" + obj.form_id + "','" + obj.record_id + "','" + obj.filter + "')" : "nuForm('" + obj.form_id + "','" + obj.record_id + "','" + obj.filter + "', '','" + runTarget + "')";
+	const jsPopup = `nuPopup('${obj.form_id}','${obj.record_id}','${obj.filter}')`;
+	const jsForm = `nuForm('${obj.form_id}','${obj.record_id}','${obj.filter}', '','${runTarget}')`;
+	const runAction = runTarget == '3' ? jsPopup : jsForm;
 
 	const runType  = obj.run_type;
 	if (runType == 'F') {
