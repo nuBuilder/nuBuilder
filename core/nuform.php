@@ -38,7 +38,7 @@ function nuBeforeEdit($FID, $RID){
 	if($ct == 'getreport' and $r == ''){return;}
 	if($ct == 'getform' and $r == ''){return;}
 
-	$recordID				= isset($_POST['nuSTATE']['record_id']) ? $_POST['nuSTATE']['record_id'] : '';
+	$recordID = $_POST['nuSTATE']['record_id'] ?? '';
 
 	if($ct == 'getform'){
 
@@ -119,27 +119,26 @@ function nuBeforeEdit($FID, $RID){
 	}
 
 	$js = $r->sfo_javascript;
-	$jb = isset($r->sfo_browse_javascript) ? $r->sfo_browse_javascript : '';
-	$je = isset($r->sfo_edit_javascript) ? $r->sfo_edit_javascript : '';
+	$jb = $r->sfo_browse_javascript ?? '';
+	$je = $r->sfo_edit_javascript ?? '';
+
 	$js .= $recordID == '' ? ' '.$jb : ' '.$je;
 
-	$GLOBALS['STYLE']		= isset($r->sfo_style) ? $r->sfo_style : '';
-	$GLOBALS['EXTRAJS']		.= $js;
+	$GLOBALS['STYLE']	= $r->sfo_style ?? '';
+	$GLOBALS['EXTRAJS']	.= $js;
 
 }
 
 function nuFormCode($f){
-
 	return nuFormProperties($f,'sfo_code')->sfo_code;
-
 }
 
 function nuRunType($r) {
-	return isset($r->sob_run_type) ? $r->sob_run_type : '';
+	return $r->sob_run_type ?? '';
 }
 
 function nuEvents($r) {
-	return isset($r->sob_all_event) ? $r->sob_all_event : '';
+	return $r->sob_all_event ?? '';
 }
 
 function nuGetFormObject($F, $R, $OBJS, $tabs = null){
@@ -299,9 +298,9 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 					$o->html		= '';
 					$htmljs			= addslashes($r->sob_html_javascript);
 
-					$v = isset($r->sob_html_vertictal_label) ? $r->sob_html_vertictal_label : '';
-					$h = isset($r->sob_html_horizontal_label) ? $r->sob_html_horizontal_label : '';
-					$title = isset($r->sob_html_title) ? $r->sob_html_title : '';
+					$v = $r->sob_html_vertictal_label ?? '';
+					$h = $r->sob_html_horizontal_label ?? '';
+					$title = $r->sob_html_title ?? '';
 					$htmlj = "";
 
 					if($r->sob_html_chart_type == 'p'){
@@ -341,7 +340,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 			if($r->sob_all_type == 'select'){
 
 				$o->multiple		= $r->sob_select_multiple;
-				$o->select2			= isset($r->sob_select_2) ? $r->sob_select_2 : null;
+				$o->select2			= $r->sob_select_2 ?? null;
 				$o->options			= nuSelectOptions(nuReplaceHashVariables($r->sob_select_sql));
 
 			}
@@ -383,7 +382,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 
 				$o->filter			= nuReplaceHashVariables($r->sob_run_filter);
 				$o->run_method		= $r->sob_run_method;
-				$o->run_target		= isset($r->sob_run_target) ? $r->sob_run_target : '0';
+				$o->run_target		= $r->sob_run_target ?? '0';
 
 			}
 
@@ -426,8 +425,8 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 			}
 
 			$o->tab_order				= $r->sob_all_order;
-			$o->style_type				= isset($r->sob_all_style_type) ? $r->sob_all_style_type : '';
-			$o->style					= isset($r->sob_all_style) ? $r->sob_all_style : '';
+			$o->style_type 				= $r->sob_all_style_type ?? '';
+			$o->style 					= $r->sob_all_style ?? '';
 
 			if (isset($r->sob_input_attribute) && $r->sob_input_attribute != ''){
 				$o->attributes	= $r->sob_input_attribute;
@@ -477,7 +476,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 	$f->browse_table_id		= $__x['TABLE_ID'];
 	unset($__x);
 
-	$rows					= isset($f->rows) ? $f->rows : 1;
+	$rows					= $f->rows ?? 1;
 	$f->pages				= ceil($f->browse_height/$rows);
 	$f->objects				= $a;
 	$f->number_formats		= nuBuildCurrencyFormats();
@@ -647,9 +646,9 @@ function nuGetEditForm($F, $R){
 	$f->form_code					= $r->sfo_code;
 	$f->form_description			= $r->sfo_description;
 	$f->form_type					= $r->sfo_type;
-	$f->browse_title_multiline		= isset($r->sfo_browse_title_multiline) ? $r->sfo_browse_title_multiline : false;
-	$f->browse_autoresize_columns	= isset($r->sfo_browse_autoresize_columns) ? $r->sfo_browse_autoresize_columns : null;
-	$f->mobile_view					= isset($r->sfo_mobile_view) ? $r->sfo_mobile_view : null;	
+	$f->browse_title_multiline 		= $r->sfo_browse_title_multiline ?? false;
+	$f->browse_autoresize_columns	= $r->sfo_browse_autoresize_columns ?? null;
+	$f->mobile_view					= $r->sfo_mobile_view ?? null;	
 	$f->table						= nuReplaceHashVariables($r->sfo_table);
 	$f->primary_key					= $r->sfo_primary_key;
 	$f->redirect_form_id			= $r->sfo_browse_redirect_form_id	== '' ? $r->zzzzsys_form_id : $r->sfo_browse_redirect_form_id;
@@ -658,8 +657,8 @@ function nuGetEditForm($F, $R){
 	$f->where						= $SQL->where;
 	$f->from						= $SQL->from;
 	$f->javascript					= $r->sfo_javascript;
-	$f->javascript_edit				= isset($r->sfo_edit_javascript) ? $r->sfo_edit_javascript : '';
-	$f->javascript_browse			= isset($r->sfo_browse_javascript) ? $r->sfo_browse_javascript : '';
+	$f->javascript_edit				= $r->sfo_edit_javascript ?? '';
+	$f->javascript_browse			= $r->sfo_browse_javascript ?? '';
 
 	if(intval($r->sfo_browse_row_height) == 0){
 		$f->row_height	= 18;
@@ -810,9 +809,9 @@ function nuGetLookupValues($R, $O){
 	$_POST['nuHash']['TABLE_ID'] = $was;
 
 	$v			= [];
-	$v[]		= [$f,					isset($l[0]) ? $l[0] : ''];
-	$v[]		= [$f . 'code',			isset($l[1]) ? $l[1] : ''];
-	$v[]		= [$f . 'description',	isset($l[2]) ? $l[2] : ''];
+	$v[]		= [$f,					$l[0] ?? ''];
+	$v[]		= [$f . 'code',			$l[1] ?? ''];
+	$v[]		= [$f . 'description',	$l[2] ?? ''];
 
 	return $v;
 
@@ -1082,7 +1081,7 @@ function nuRefineTabList($t){
 	$count = count($t);
 	for($i = 0 ; $i < $count ; $i++){
 
-		$a[]	= ['title' => $t[$i]->syt_title, 'id' => $t[$i]->zzzzsys_tab_id, 'help' => $t[$i]->syt_help, 'access' => isset($t[$i]->syt_access) ? $t[$i]->syt_access : null];
+		$a[]	= ['title' => $t[$i]->syt_title, 'id' => $t[$i]->zzzzsys_tab_id, 'help' => $t[$i]->syt_help, 'access' => $t[$i]->syt_access ?? null];
 
 	}
 
@@ -1152,14 +1151,14 @@ function nuBrowseRows($f){
 
 	$P				= $_POST['nuSTATE'];
 
-	$rows			= isset($P['rows']) ? $P['rows'] : 0;
+	$rows			= $P['rows'] ?? 0;
 	if($rows == -1){
 		$rows		= nuFormProperties($f->form_id,'sfo_browse_rows_per_page')->sfo_browse_rows_per_page;
 	}
 	$rows			= nuRowsPerPage($rows);
 
-	$page_number	= isset($P['page_number']) ? $P['page_number'] : 0;
-	$nosearch_columns = isset($_POST['nuSTATE']['nosearch_columns']) ? $_POST['nuSTATE']['nosearch_columns'] : null;
+	$page_number	= $P['page_number'] ?? 0;
+	$nosearch_columns = $_POST['nuSTATE']['nosearch_columns'] ?? null;
 	$start			= $page_number * $rows;
 	$search			= str_replace('&#39;', "'", nuObjKey($P,'search',''));
 	$filter			= str_replace('&#39;', "'", nuObjKey($P,'filter',''));
@@ -1202,7 +1201,7 @@ function nuBrowseRows($f){
 
 	$where			= trim(nuBrowseWhereClause($flds, $filter . ' ' . $search));
 	$__x			= nuHash();
-	$like			= isset($__x['like']) ? $__x['like'] : '';
+	$like			= $__x['like'] ?? '';
 	unset($__x);
 	$like			= str_replace('\\"','"',$like);
 	$haswhere		= $where != '()';
@@ -1377,7 +1376,7 @@ function nuGatherFormAndSessionData($home){
 	$nuState								= $_POST['nuSTATE'];
 	$sessionId								= $_SESSION['nubuilder_session_data']['SESSION_ID'];
 
-	$formAndSessionData->record_id			= isset($nuState['record_id']) ? $nuState['record_id'] : "-1";
+	$formAndSessionData->record_id			= $nuState['record_id'] ?? "-1";
 
 	if(isset($nuState['form_id']) && !$nuState['form_id'] == ''){
 		$formAndSessionData->form_id		= $nuState['form_id'];
@@ -1403,7 +1402,7 @@ function nuGatherFormAndSessionData($home){
 
 	$formAndSessionData->session_id		= $sessionId;
 	$formAndSessionData->call_type		= $nuState['call_type'];
-	$formAndSessionData->filter			= isset($_POST['nuFilter']) ? $_POST['nuFilter'] : '';
+	$formAndSessionData->filter			= $_POST['nuFilter'] ?? '';
 	$formAndSessionData->errors			= [];
 	$formAndSessionData->translation	= $_SESSION['nubuilder_session_data']['translation'];
 
@@ -1674,8 +1673,8 @@ function nuFormDimensions($f){
 	$t			= nuRunQuery("SELECT sfo_browse_row_height, sfo_browse_rows_per_page FROM zzzzsys_form WHERE zzzzsys_form_id = ?", [$f]);
 	$r			= db_fetch_object($t);
 
-	$brh = isset($r->sfo_browse_row_height) ? $r->sfo_browse_row_height : 0;
-	$brp = isset($r->sfo_browse_rows_per_page) ? $r->sfo_browse_rows_per_page : 0;
+	$brh = $r->sfo_browse_row_height ?? 0;
+	$brp = $r->sfo_browse_rows_per_page ?? 0;
 
 	$bt		 = 57;	//-- browse title
 	$rh		 = intval($brh)	== 0 ? 25 : $brh;
