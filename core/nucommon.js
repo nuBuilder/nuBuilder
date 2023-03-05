@@ -2019,7 +2019,7 @@ function nuSetBrowserColumns(c) {
 	if (nuCurrentProperties().browse_filtered_rows == 0) {
 
 		$('#nucell_0_0').css({
-			'width': l - 20	,
+			'width': l - 22,
 			'z-index': '2'
 
 		});
