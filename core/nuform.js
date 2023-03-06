@@ -912,17 +912,14 @@ function nuDRAG(w, i, l, p, prop) {
 
 	let $id = $('#' + id);
 
-	$id.css({
-		'top': Number(obj.top),
-		'left': Number(obj.left),
-		'width': Number(obj.width),
-		'height': Number(obj.height),
+	nuSetObjectBounds($id, obj.top, obj.left, obj.width, obj.height)
+	.css({
 		'text-align': obj.align,
-		'position': 'absolute',
 		'overflow': 'hidden',
 		'display': 'flex',
 		'align-items': 'center',
 		'padding-left': '4px',
+		'cursor': 'pointer',
 		'caret-color' : 'transparent'
 	}).addClass('nu_' + nuObjectType);
 
@@ -1026,17 +1023,10 @@ function nuINPUTfileFileSystem($fromId, w, i, l, p, prop, id) {
 	html =  html.replaceAll('#this_object_id#', id);
 	html =  html.replaceAll('nuInitUppy()','nuInitUppy' + '_' + id + '()');
 
-	$('#' + id).css({
-		'top': Number(obj.top),
-		'left': Number(obj.left),
-		'width': Number(obj.width),
-		'height': Number(obj.height),
-		'position': 'absolute'
-	})
-		.addClass('nuFileUppy').html(html);
+	nuSetObjectBounds($('#' + id), obj.top, obj.left, obj.width, obj.height)
+	.addClass('nuFileUppy').html(html);
 
 	nuSetAccess(id, obj.read);
-
 	nuAddStyle(id, obj);
 
 	return Number(obj.width);
@@ -1114,35 +1104,29 @@ function nuINPUTLookup(id, objId, wi, obj, $fromId, p, vis) {
 	const target = id;
 	id = target + 'code';
 	var inp = document.createElement('input');
-
 	inp.setAttribute('id', id);
-
 	$fromId.append(inp);
 
 	nuAddDataTab(id, obj.tab, p);
-
-	$('#' + id).css({
-		'top': Number(obj.top),
-		'left': Number(obj.left),
-		'width': Number(obj.width),
-		'height': Number(obj.height)
-	})
-	.attr('data-nu-form-id', wi.form_id)
-	.attr('data-nu-object-id', wi.object_id)
-	.attr("data-nu-prefix", p)
-	.attr('data-nu-target', target)
-	.attr('data-nu-type', 'lookup')
-	.attr('data-nu-subform-sort', 1)
-	.attr('onchange', 'nuGetLookupCode(event)')
-	.attr('onfocus', 'nuLookupFocus(event)')
-	.css('visibility', vis)
-	.addClass('nuLookupCode');
+	
+	$id = $('#' + id);
+	nuSetObjectBounds($id, obj.top, obj.left, obj.width, obj.height)
+		.attr('data-nu-form-id', wi.form_id)
+		.attr('data-nu-object-id', wi.object_id)
+		.attr("data-nu-prefix", p)
+		.attr('data-nu-target', target)
+		.attr('data-nu-type', 'lookup')
+		.attr('data-nu-subform-sort', 1)
+		.attr('onchange', 'nuGetLookupCode(event)')
+		.attr('onfocus', 'nuLookupFocus(event)')
+		.css('visibility', vis)
+		.addClass('nuLookupCode');
 
 	nuAddJSObjectEvents(id, obj.js);
 
 	if (Number(obj.width) == 0) nuHide(id);
 
-	$('#' + id).enterKey(function () {
+	$id.enterKey(function () {
 		if ($(this).val().length == 0) {
 			let element = $('#' + target + 'button')[0];
 			nuBuildLookup(element, "");
@@ -1166,12 +1150,8 @@ function nuINPUTLookup(id, objId, wi, obj, $fromId, p, vis) {
 
 	nuAddJSObjectEvents(id, obj.js);
 
-	$('#' + id).css({
-		'top': Number(obj.top),
-		'left': Number(obj.left) + Number(obj.width) + 6,
-		'width': 15,
-		'height': Number(obj.height - 2)
-	})
+	$id = $('#' + id);
+	nuSetObjectBounds($id, obj.top, Number(obj.left) + Number(obj.width) + 6, 15, Number(obj.height - 2))
 		.attr('type', 'button')
 		.attr("data-nu-prefix", p)
 		.attr('data-nu-form-id', wi.form_id)
