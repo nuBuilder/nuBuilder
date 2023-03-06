@@ -1386,6 +1386,40 @@ function nuDuplicates(arr) {
 
 function nuResizeWindow(e) {
 
+	if (e.target.id !== 'dialogTitleWords') return;
+
+	const dialog = $('#nuDragDialog');
+	const dialogLeft = parseInt(dialog.css('left'), 10);
+	const win = $('#nuWindow');
+	const dragOptionsBox = $('.nuDragOptionsBox');
+	
+	if (dialogLeft === 2) {
+		const contentWin = $('#nuDragDialog iframe')[0].contentWindow;
+		dialog.css(contentWin.nuDialogSize);
+		win.css(contentWin.nuWindowSize);
+	} else {
+
+		dialog.css({
+			top: 0,
+			left: 2,
+			width: window.innerWidth - 30,
+			height: window.innerHeight
+		});
+
+		const dialogWidth = dragOptionsBox.length ? parseInt(dragOptionsBox.css('width'), 10) : 0;
+
+		win.css({
+			top: 30,
+			width: parseInt(dialog.css('width'), 10) - dialogWidth - 10,
+			height: parseInt(dialog.css('height'), 10) - 50
+		});
+
+	}
+}
+
+
+function nuResizeWindow_x(e) {
+
 	if (e.target.id != 'dialogTitleWords') { return; }
 
 	var d = $('#nuDragDialog');
