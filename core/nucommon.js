@@ -1643,11 +1643,12 @@ function nuAttachFile(j, c) {
 
 function nuButtonIcon(j) {
 
-	$(j)
-		.css('text-align', 'left')
-		.css('padding', '0px 0px 0px 35px')
-		.css('background-size', '30px')
-		.css('background-repeat', 'no-repeat')
+    $(j).css({
+        'text-align': 'left',
+        'padding': '0px 0px 0px 35px',
+        'background-size': '30px',
+        'background-repeat': 'no-repeat'
+    });
 
 }
 
