@@ -1993,7 +1993,7 @@ function nuTransformScale() {
 
 }
 
-function nuSetBrowserColumns(c) {
+function nuSetBrowseColumns(c) {
 
 	const p = nuTotalWidth('nucell_0_0') - $('#nucell_0_0').width(); //-- padding
 	var l = 7;
@@ -2081,7 +2081,7 @@ function nuResizeBrowseColumns(force) {
 
 	if (nuFORM.getCurrent().refreshed != 0 && force !== true) { return; }
 
-	nuSetBrowserColumns(w);
+	nuSetBrowseColumns(w);
 
 }
 
@@ -2090,7 +2090,7 @@ function nuDragTitleEvents() {
 	if (nuFormType() != 'browse') { return; }
 
 	const colWidths = nuFORM.getCurrent().column_widths == 0 ? nuGetColumWidths() : nuFORM.getCurrent().column_widths;
-	nuSetBrowserColumns(colWidths);
+	nuSetBrowseColumns(colWidths);
 
 	$('#nubody').on('mousemove.nuresizecolumn', function (event) { nuDragBrowseColumn(event, 'pointer'); });
 
@@ -2180,7 +2180,7 @@ function nuDragBrowseColumn(e, p) {
 				if (m < 40) { m = 40; }
 
 				nuFORM.breadcrumbs[nuFORM.breadcrumbs.length - 1].column_widths[c] = m;
-				nuSetBrowserColumns(nuFORM.breadcrumbs[nuFORM.breadcrumbs.length - 1].column_widths)
+				nuSetBrowseColumns(nuFORM.breadcrumbs[nuFORM.breadcrumbs.length - 1].column_widths)
 
 			} else {
 				console.log('Offset size exceeds limit');
@@ -2279,7 +2279,7 @@ function nuSetBrowseColumnWidth(column, width) {
 		cw = parent.$("#" + window.frameElement.id)[0].contentWindow;
 	}
 	cw.nuFORM.breadcrumbs[cw.nuFORM.breadcrumbs.length - 1].column_widths[column] = width;
-	cw.nuSetBrowserColumns(cw.nuFORM.breadcrumbs[cw.nuFORM.breadcrumbs.length - 1].column_widths);
+	cw.nuSetBrowseColumns(cw.nuFORM.breadcrumbs[cw.nuFORM.breadcrumbs.length - 1].column_widths);
 
 }
 
@@ -2525,7 +2525,7 @@ function nuSetBrowseColumnSize(column, size) {
 		cw = parent.$("#" + window.frameElement.id)[0].contentWindow;
 	}
 	cw.nuFORM.breadcrumbs[cw.nuFORM.breadcrumbs.length - 1].column_widths[column] = size;
-	cw.nuSetBrowserColumns(cw.nuFORM.breadcrumbs[cw.nuFORM.breadcrumbs.length - 1].column_widths)
+	cw.nuSetBrowseColumns(cw.nuFORM.breadcrumbs[cw.nuFORM.breadcrumbs.length - 1].column_widths)
 
 }
 
