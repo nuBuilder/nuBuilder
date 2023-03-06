@@ -4296,9 +4296,13 @@ function nuDragBrowseColumn(e, p) {
 
 function nuAlign(a) {
 
-	if (a == 'l') { return 'left'; }
-	if (a == 'r') { return 'right'; }
-	if (a == 'c') { return 'center'; }
+	const alignmentMap = {
+		l: 'left',
+		r: 'right',
+		c: 'center'
+	};
+
+	return alignmentMap[a] || '';
 
 }
 
