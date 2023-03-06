@@ -2354,16 +2354,17 @@ jQuery.fn.nuHighlight = function (pat) {
 	}) : this;
 };
 
+function nuInputMaxLength(id, maxLength, labelId) {
 
-function nuInputMaxLength(id, maxLength, label) {
+	const $input = $('#' + id);
+	$input.attr('maxlength', maxLength);
 
-	$('#' + id).attr('maxlength', maxLength);
-
-	if (label) {
-		$('#' + label).html(maxLength + '/' + maxLength);
-		$('#' + id).keyup(function () {
-			var textlen = maxLength - $(this).val().length;
-			$('#' + label).html(textlen + '/' + maxLength);
+	if (labelId) {
+		const $label = $('#' + labelId);
+		$label.html(`${maxLength}/${maxLength}`);
+		$input.on('input', function() {
+			const textLen = maxLength - this.value.length;
+			$label.html(`${textLen}/${maxLength}`);
 		});
 	}
 
