@@ -1034,10 +1034,10 @@ function nuTranslateToEnglish(str) {
 	if (!str) return '';
 
 	str = String(str);
-	if (str.charAt(0) == '|') return str.substring(1);
+	if (str.charAt(0) === '|') return str.substring(1);
 
-	let l = nuLANGUAGE.find(elem => elem.translation === str);
-	return !l ? str : l.english;
+	const l = nuLANGUAGE.find(({translation}) => translation === str);
+	return l ? l.english : str;
 
 }
 
