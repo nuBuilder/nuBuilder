@@ -1297,21 +1297,17 @@ function nuHide(i) {
 
 }
 
+
 function nuRemove(i) {
 
-	let arr = [];
-	if (!$.isArray(i)) {
-		arr.push(i);
-	} else {
-		arr = i;
-	}
+	const arr = Array.isArray(i) ? i : [i];
 
-	for (let s = 0; s < arr.length; s++) {
+	for (const s of arr) {
 
-		const o = nuObjectComponents(arr[s]);
+		const o = nuObjectComponents(s);
 
-		for (let c = 0; c < o.length; c++) {
-			$('#' + o[c]).remove();
+		for (const c of o) {
+			$('#' + c).remove();
 		}
 	}
 
