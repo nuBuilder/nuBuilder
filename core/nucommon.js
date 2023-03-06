@@ -1537,10 +1537,11 @@ function nuSelectedTabTitle(parent = null) {
 
 function nuSelectNextTab(i) {
 
-	const selectedTab = $('.nuTabSelected')[0].id.substring(5);
-	const nextTab = parseInt(selectedTab, 10) + i;
-	const e = document.getElementById('nuTab' + nextTab);
-	if (e !== null) {
+	const selectedTab = $('.nuTabSelected')[0];
+	const selectedTabId = selectedTab.id.substring(5);
+	const nextTabId = parseInt(selectedTabId, 10) + i;
+	const e = document.getElementById('nuTab' + nextTabId);
+	if (e) {
 		nuSelectTab(e);
 	}
 
