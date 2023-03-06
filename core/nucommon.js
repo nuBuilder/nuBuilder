@@ -1049,7 +1049,7 @@ function nuPreview(a) {
 
 	const r = nuRecordId();
 
-	if (r == '-1') {
+	if (r === '-1') {
 
 		alert(nuTranslate('Form must be saved first..'));
 		return;
@@ -1109,27 +1109,20 @@ function nuPopJS() {				//-- used in database
 
 function nuGetLookupFields(id) {
 
-	var i = id.substr(0, id.length - 4);
-	var o = $('#' + id);
-	var a = [];
+	const prefix = id.slice(0, -4);
+	const $id = $('#' + id);
+	const lookupFields = [];
 
-	if (o.length == 1) {
-
-		if (o.attr('data-nu-type') == 'subform') {
-
-			a.push(i);
-			a.push(id);
-			a.push(i + 'description');
-
+	if ($id.length === 1) {
+		const type = $id.attr('data-nu-type');
+		if (type === 'subform') {
+			lookupFields.push(prefix, id, prefix + 'description');
 		} else {
-			a.push('nunosuchfield');
-			a.push(id);
-			a.push('nunosuchfield');
+			lookupFields.push('nunosuchfield', id, 'nunosuchfield');
 		}
-
 	}
 
-	return a;
+	return lookupFields;
 
 }
 
