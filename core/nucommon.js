@@ -1156,9 +1156,9 @@ function nuEnable(i, enable) {
 			if (c === 1) {
 				continue;
 			} // skip label
-			
+
 			$currentComponent = $('#' + components[c]);
-			
+
 			$currentComponent
 				.removeClass('nuReadonly')
 				.prop('readonly', false)
@@ -1172,6 +1172,33 @@ function nuEnable(i, enable) {
 
 	});
  
+}
+
+function nuDisable(i) { //-- Disable Edit Form Object
+  
+	const ids = Array.isArray(i) ? i : [i];
+
+	$.each(ids, function(index) {
+		const id = ids[index];
+		const components = nuObjectComponents(id);
+
+		for (let c = 0; c < components.length; c++) {
+			if (c === 1) {
+				continue;
+			} // skip label
+
+			$currentComponent = $('#' + components[c]);
+			$currentComponent
+				.addClass('nuReadonly')
+				.prop('readonly', true)
+				.prop('disabled', true);
+
+			if (c === 2) { //-- button
+				$currentComponent.off();
+			}
+		}
+	});
+
 }
 
 function nuReadonly(i) {					//-- set Edit Form Object to readonly
@@ -1188,42 +1215,6 @@ function nuReadonly(i) {					//-- set Edit Form Object to readonly
 			.prop('readonly', true);
 
 	}
-
-}
-
-function nuDisable(i) {					//-- Disable Edit Form Object
-
-	var a = [];
-	if (!$.isArray(i)) {
-		a.push(i);
-	} else {
-		a = i;
-	}
-
-	$.each(a, function (index) {
-
-		i = a[index];
-
-		var o = nuObjectComponents(i);
-
-		for (var c = 0; c < o.length; c++) {
-
-			if (c === 1) { continue; }		// skip label
-
-			$('#' + o[c])
-				.addClass('nuReadonly')
-				.prop('readonly', true)
-				.prop('disabled', true);
-
-			if (c == 2) { //-- button
-
-				$('#' + o[c]).off();
-
-			}
-
-		}
-
-	});
 
 }
 
