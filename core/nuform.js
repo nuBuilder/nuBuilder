@@ -1164,6 +1164,8 @@ function nuINPUTLookup(id, objId, wi, obj, $fromId, p, vis) {
 
 	var luClass = obj.label === 'Insert-Snippet' ? 'fa fa-code' : 'fa fa-search';
 
+	nuAddJSObjectEvents(id, obj.js);
+
 	$('#' + id).css({
 		'top': Number(obj.top),
 		'left': Number(obj.left) + Number(obj.width) + 6,
