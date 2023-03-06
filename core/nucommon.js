@@ -1147,6 +1147,7 @@ function nuEnable(i, enable) {
 	const ids = Array.isArray(i) ? i : [i];
 
 	$.each(ids, function(index) {
+
 		const id = ids[index];
 		const components = nuObjectComponents(id);
 
@@ -1166,52 +1167,11 @@ function nuEnable(i, enable) {
 			if (c === 2) { //-- button
 				$currentComponent.on("click", () => nuBuildLookup(components[c], ""));
 			}
+
 		}
+
 	});
  
-}
-
-function nuEnable(i, enable) {					//-- Enable Edit Form Object
-
-	if (enable === false) {
-		nuDisable(i);
-		return;
-	}
-
-
-	var a = [];
-	if (!$.isArray(i)) {
-		a.push(i);
-	} else {
-		a = i;
-	}
-
-	$.each(a, function (index) {
-
-		i = a[index];
-
-		var o = nuObjectComponents(i);
-
-		for (var c = 0; c < o.length; c++) {
-
-			if (c === 1) { continue; }		// skip label
-
-			$('#' + o[c])
-				.removeClass('nuReadonly')
-				.prop('readonly', false)
-				.prop('disabled', false);
-
-			if (c == 2) { //-- button
-
-				$('#' + o[c])
-					.on("click", function () {
-						nuBuildLookup(this, "");
-					})
-
-			}
-		}
-	});
-
 }
 
 function nuReadonly(i) {					//-- set Edit Form Object to readonly
