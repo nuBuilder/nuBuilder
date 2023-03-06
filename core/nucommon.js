@@ -355,22 +355,21 @@ function nuGetBreadcrumb(bc) {
 
 function nuOpenPreviousBreadcrumb(b) {
 
-	// If a popup is open, close it
-	if (parent.$('#nuModal').length > 0) {
+	const breadcrumbs = window.nuFORM.breadcrumbs;
+	const modal = parent.$('#nuModal');
+
+	if (modal.length) {
 		nuClosePopup();
 		return;
 	}
 
-	if (b === undefined) {
-		var b = 2;
-	} else {
-		b = b + 1;
-	}
-
-	var l = window.nuFORM.breadcrumbs.length;
+	b = b ? b + 1 : 2;
+	
+	const l = breadcrumbs.length;
 	if (l > 1) {
 		nuGetBreadcrumb(l - b);
 	}
+
 }
 
 function nuDisplayError(e) {
