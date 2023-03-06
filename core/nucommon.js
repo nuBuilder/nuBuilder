@@ -1417,42 +1417,6 @@ function nuResizeWindow(e) {
 	}
 }
 
-
-function nuResizeWindow_x(e) {
-
-	if (e.target.id != 'dialogTitleWords') { return; }
-
-	var d = $('#nuDragDialog');
-	var D = $('.nuDragOptionsBox');
-	var W = 0;
-	var w = $('#nuWindow');
-	var f = $('#nuDragDialog iframe')[0].contentWindow;
-	var l = parseInt(d.css('left'), 10);
-
-	if (D.length != 0) {
-		W = parseInt(D.css('width'), 10);
-	}
-
-	if (l == 2) {
-
-		d.css(f.nuDialogSize);
-		w.css(f.nuWindowSize);
-
-	} else {
-
-		d.css({ top: 0, left: 2, width: window.innerWidth - 30, height: window.innerHeight });
-
-		var dh = parseInt(d.css('height'), 10) - 50;
-		var dw = parseInt(d.css('width'), 10) - W - 10;
-
-		w.css({ top: 30, width: dw, height: dh });
-
-	}
-
-	window.frames[window.frames.length - 1].frameElement.contentWindow.nuResize();
-
-}
-
 function nuGetFunctionList() {
 
 	var f = '';
