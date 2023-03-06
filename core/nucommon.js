@@ -1042,12 +1042,7 @@ function nuTranslateToEnglish(str) {
 }
 
 function nuIsOpener() {
-
-	if (window.opener !== null) {
-		return true;
-	}
-
-	return false;
+	return window.opener !== null;
 }
 
 function nuPreview(a) {
