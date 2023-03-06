@@ -1201,20 +1201,17 @@ function nuDisable(i) { //-- Disable Edit Form Object
 
 }
 
-function nuReadonly(i) {					//-- set Edit Form Object to readonly
+function nuReadonly(i) {
 
-	var o = nuObjectComponents(i);
+	const o = nuObjectComponents(i);
 
-	for (var c = 0; c < o.length; c++) {
-
-		if (c === 1) { continue; }		// skip label
-
-		$('#' + o[c])
+	o.forEach((component, index) => {
+		if (index === 1) return; 		// Skip label
+		$('#' + component)
 			.addClass('nuReadonly')
 			.attr('onclick', "return false")
 			.prop('readonly', true);
-
-	}
+	});
 
 }
 
