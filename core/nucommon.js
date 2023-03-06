@@ -1462,14 +1462,13 @@ function nuSetSuffix(a) {
 
 }
 
-function nuWhen(w) {
+function nuWhen(timestamp) {
+	
+	if (!timestamp) return;
 
-	const numax = (Date.now() / 1000) - Number(w);
-	const numin = numax;
-	const nusec = String(Math.ceil(numin));
-	var nuhtm = nusec + (nusec == 1 ? ' second ago' : ' seconds ago');
-
-	return nuhtm;
+	const secondsElapsed = Math.ceil((Date.now() / 1000) - timestamp);
+	const timeUnit = secondsElapsed === 1 ? 'second' : 'seconds';
+	return `${secondsElapsed} ${timeUnit} ago`;
 
 }
 
