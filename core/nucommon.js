@@ -1137,12 +1137,47 @@ function nuObjectComponents(i) {
 
 }
 
+function nuEnable(i, enable) {
+  
+	if (enable === false) {
+		nuDisable(i);
+		return;
+	}
+
+	const ids = Array.isArray(i) ? i : [i];
+
+	$.each(ids, function(index) {
+		const id = ids[index];
+		const components = nuObjectComponents(id);
+
+		for (let c = 0; c < components.length; c++) {
+
+			if (c === 1) {
+				continue;
+			} // skip label
+			
+			$currentComponent = $('#' + components[c]);
+			
+			$currentComponent
+				.removeClass('nuReadonly')
+				.prop('readonly', false)
+				.prop('disabled', false);
+
+			if (c === 2) { //-- button
+				$currentComponent.on("click", () => nuBuildLookup(components[c], ""));
+			}
+		}
+	});
+ 
+}
+
 function nuEnable(i, enable) {					//-- Enable Edit Form Object
 
 	if (enable === false) {
 		nuDisable(i);
 		return;
 	}
+
 
 	var a = [];
 	if (!$.isArray(i)) {
