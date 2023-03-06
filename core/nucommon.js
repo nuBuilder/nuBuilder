@@ -391,24 +391,26 @@ function nuDisplayError(e) {
 
 function nuFormatAjaxErrorMessage(jqXHR, exception) {
 
-	if (jqXHR.status === 0) {
-		return nuTranslate('Not connected. Please verify your network connection.');
-	} else if (jqXHR.status == 403) {
-		return ['<h3>' + nuTranslate('Access Forbidden.') + '</h3>', jqXHR.responseText];
-	} else if (jqXHR.status == 404) {
-		return nuTranslate('The requested page was not found.') + ' [404]';
-	} else if (jqXHR.status == 500) {
-		return nuTranslate('Internal Server Error.') + ' [500]';
-	} else if (exception === 'parsererror') {
-		return nuTranslate('Requested JSON parse failed.');
-	} else if (exception === 'timeout') {
-		return nuTranslate('Time out error.');
-	} else if (exception === 'abort') {
-		return nuTranslate('Ajax request aborted.');
-	}
+	const errorMessages = {
+		0: nuTranslate('Not connected. Please verify your network connection.'),
+		403: {
+			message: `<h3>${nuTranslate('Access Forbidden.')}</h3>`,
+			response: jqXHR.responseText,
+		},
+		404: nuTranslate('The requested page was not found.') + ' [404]',
+		500: nuTranslate('Internal Server Error.') + ' [500]',
+		parsererror: nuTranslate('Requested JSON parse failed.'),
+		timeout: nuTranslate('Time out error.'),
+		abort: nuTranslate('Ajax request aborted.'),
+	};
 
-	return ['<h3>' + nuTranslate('Uncaught Error.') + '</h3>', jqXHR.responseText];
+	const errorMessage = errorMessages[jqXHR.status] || errorMessages[exception] || {
+		message: `<h3>${nuTranslate('Uncaught Error.')}</h3>`,
+		response: jqXHR.responseText,
+	};
 
+	return errorMessage;
+ 
 }
 
 function nuLogin(loginTopRow, nuconfigNuWelcomeBodyInnerHTML, logonMode='normal', onlySsoExcept={}, lastUser="") {
