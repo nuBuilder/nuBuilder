@@ -345,7 +345,7 @@ function nuGetBreadcrumb(bc) {
 	var c = window.nuFORM.getCurrent();
 
 	if (c === undefined) {
-		$('#nuDragDialog iframe').remove();
+		getNuDragDialogIframes().remove();
 	} else {
 		nuForm(c.form_id, c.record_id, c.filter, c.search, 1);
 	}
@@ -1362,7 +1362,7 @@ function nuResizeWindow(e) {
 	const dragOptionsBox = $('.nuDragOptionsBox');
 	
 	if (dialogLeft === 2) {
-		const contentWin = $('#nuDragDialog iframe')[0].contentWindow;
+		const contentWin = getNuDragDialogIframes[0].contentWindow;
 		dialog.css(contentWin.nuDialogSize);
 		win.css(contentWin.nuWindowSize);
 	} else {
