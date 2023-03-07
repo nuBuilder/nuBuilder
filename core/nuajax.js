@@ -801,12 +801,11 @@ function nuUpdateData(action, instruction, close) {
 
 function nuSaveAfterDrag() {
 
-	const f = getNuDragDialogIframes[0].contentWindow.nuFORM;
-
-	var last = f.getCurrent();
+	const contentWin = getNuDragDialogIframes[0].contentWindow;
+	let last = contentWin.nuFORM.getCurrent();
 
 	last.call_type = 'nudragsave';
-	last.nuDragState = getNuDragDialogIframes[0].contentWindow.nuDragOptionsState;
+	last.nuDragState = contentWin.nuDragOptionsState;
 
 	var successCallback = function (data, textStatus, jqXHR) {
 
