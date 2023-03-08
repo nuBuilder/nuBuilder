@@ -631,23 +631,18 @@ function nuGetLookupCode(e) {
 
 function nuPrintAction() {
 
-	var last = window.nuFORM.getCurrent();
+	let last = window.nuFORM.getCurrent();
 
 	last.call_type = 'runhtml';
 	last.browse_columns = nuSERVERRESPONSE.browse_columns;
 	last.browse_sql = nuSERVERRESPONSE.browse_sql;
 	last.session_id = window.nuSESSION;
 
-	var successCallback = function (data, textStatus, jqXHR) {
+	const successCallback = function (data, textStatus, jqXHR) {
 
-		var fm = data;
-
-		if (!nuDisplayError(fm)) {
-
-			var p = 'core/nurunhtml.php?i=' + fm.id;
-
+		if (!nuDisplayError(data)) {
+			var p = 'core/nurunhtml.php?i=' + data.id;
 			window.open(p);
-
 		}
 
 	};
