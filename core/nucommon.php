@@ -1038,28 +1038,19 @@ function nuAddThousandSpaces($s, $c){
 
 }
 
-function nuPunctuation($f){
+function nuPunctuation($text) {
 
-	$c			= '';
-	$d			= '';
+    $punctuation = ['1,' => ',', '1.' => '.', '0,' => ',', '0.' => '.'];
 
-	if(strpos($f , '1,' ) !== false){
-		$c		= ',';
-	}
+    $result = ['', ''];
 
-	if(strpos($f , '1.' ) !== false){
-		$c		= '.';
-	}
+    foreach ($punctuation as $key => $value) {
+        if (strpos($text, $key) !== false) {
+            $result[$key[0]] = $value;
+        }
+    }
 
-	if(strpos($f , '0,' ) !== false){
-		$d		= ',';
-	}
-
-	if(strpos($f , '0.' ) !== false){
-		$d		= '.';
-	}
-
-	return [$c, $d];
+    return $result;
 
 }
 
