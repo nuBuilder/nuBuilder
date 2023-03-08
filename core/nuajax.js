@@ -132,60 +132,50 @@ function nuForm(f, r, filter, search, n, like) {
 }
 
 
-function nuGetReport(f, r) {
+function nuGetReport(formId, recordId) {
 
-	if (nuOpenNewBrowserTab('getreport', f, r, '')) { return; }
-
-	var last = window.nuFORM.addBreadcrumb();
-
-	last.session_id = window.nuSESSION;
-	last.call_type = 'getreport';
-	last.form_id = f;
-	last.record_id = r;
-
-	if (parent['nuHashFromEditForm'] === undefined) {
-		last.hash = [];
-	} else {
-		last.hash = parent.nuHashFromEditForm();
+	if (nuOpenNewBrowserTab('getreport', formId, recordId, '')) { 
+		return; 
 	}
 
-	var successCallback = function (data, textStatus, jqXHR) {
+	let last = window.nuFORM.addBreadcrumb();
+	last.session_id = window.nuSESSION;
+	last.call_type = 'getreport';
+	last.form_id = formId;
+	last.record_id = recordId;
 
-		var fm = data;
+	const hash = parent.nuHashFromEditForm ? parent.nuHashFromEditForm() : [];
 
-		if (!nuDisplayError(fm)) {
-			nuBuildForm(fm);
+	let successCallback = function (data, textStatus, jqXHR) {
+		if (!nuDisplayError(data)) {
+			nuBuildForm(data);
 		}
-
 	};
 
 	nuAjax(last, successCallback);
 
 }
 
+function nuRunReport(formId, iFrame) {
 
-function nuRunReport(f, iframe) {
-
-	var current = nuFORM.getCurrent();
-	var last = $.extend(true, {}, current);
+	const current = nuFORM.getCurrent();
+	let last = $.extend(true, {}, current);
 
 	last.session_id = window.nuSESSION;
 	last.call_type = 'runreport';
-	last.form_id = f;
-	last.hash = parent.nuHashFromEditForm();
+	last.form_id = formId;
+	last.hash = parent.nuHashFromEditForm ? parent.nuHashFromEditForm() : [];
 
-	var successCallback = function (data, textStatus, jqXHR) {
+	const successCallback = function (data, textStatus, jqXHR) {
 
-		var fm = data;
+		if (!nuDisplayError(data)) {
 
-		if (!nuDisplayError(fm)) {
+			const pdfUrl = 'core/nurunpdf.php?i=' + data.id;
 
-			var pdfUrl = 'core/nurunpdf.php?i=' + fm.id;
-
-			if (iframe === undefined) {
+			if (iFrame === undefined) {
 				window.open(pdfUrl);
 			} else {
-				parent.$('#' + iframe).attr('src', pdfUrl);
+				parent.$('#' + iFrame).attr('src', pdfUrl);
 			}
 
 		}
