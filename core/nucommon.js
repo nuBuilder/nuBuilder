@@ -1157,15 +1157,15 @@ function nuEnable(i, enable) {
 				continue;
 			} // skip label
 
-			$currentComponent = $('#' + components[c]);
+			let $current = $('#' + components[c]);
 
-			$currentComponent
+			$current
 				.removeClass('nuReadonly')
 				.prop('readonly', false)
 				.prop('disabled', false);
 
 			if (c === 2) { //-- button
-				$currentComponent.on("click", () => nuBuildLookup(components[c], ""));
+				$current.on("click", () => nuBuildLookup(components[c], ""));
 			}
 
 		}
@@ -1187,14 +1187,14 @@ function nuDisable(i) { //-- Disable Edit Form Object
 				continue;
 			} // skip label
 
-			$currentComponent = $('#' + components[c]);
-			$currentComponent
+			let $current = = $('#' + components[c]);
+			$current
 				.addClass('nuReadonly')
 				.prop('readonly', true)
 				.prop('disabled', true);
 
 			if (c === 2) { //-- button
-				$currentComponent.off();
+				$current.off();
 			}
 		}
 	});
