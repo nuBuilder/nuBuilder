@@ -186,24 +186,26 @@ function nuRunReport(formId, iFrame) {
 
 }
 
-function nuRunReportSave(f, tag = null, callback = null) {
+function nuRunReportSave(formId, tag = null, callback = null) {
 
-	var current = nuFORM.getCurrent();
-	var last = $.extend(true, {}, current);
+	const current = nuFORM.getCurrent();
+	const last = $.extend(true, {}, current);
+
 	last.session_id = window.nuSESSION;
 	last.call_type = 'runreport';
-	last.form_id = f;
+	last.form_id = formId;
 	last.hash = nuHashFromEditForm();
-	var successCallback = function (data, textStatus, jqXHR) {
 
-		var fm = data;
+	const successCallback = function (data, textStatus, jqXHR) {
+
+		const fm = data;
 
 		if (!nuDisplayError(fm)) {
 
-			var fd = new FormData();
+			let fd = new FormData();
 			fd.append('ID', fm.id);
 			fd.append('tag', tag);
-			var xhr = new XMLHttpRequest();
+			let xhr = new XMLHttpRequest();
 
 			if (callback !== null) {
 				xhr.onreadystatechange = function () {
