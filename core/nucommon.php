@@ -576,21 +576,12 @@ function nuSetSysJSONValue($tbl, $jk, $jv, $pk) {
 
 }
 
-function nuGetProcedure($i){
+function nuGetProcedure($id) {
 
-	$a		= [];
-	$a[]	= $i;
-	$s		= "
-
-	SELECT sph_php
-	FROM zzzzsys_php
-	WHERE zzzzsys_php_id = ?
-
-	";
-	$t		= nuRunQuery($s, $a);
-	$r		= db_fetch_row($t);
-
-	return $r[0];
+	$query = "SELECT sph_php FROM zzzzsys_php WHERE zzzzsys_php_id = ?";
+	$result = nuRunQuery($query, [$id]);
+	$row = db_fetch_row($result);
+	return isset($row[0]) ? $row[0] : false;
 
 }
 
