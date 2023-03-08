@@ -28,9 +28,8 @@ function nuAjax(w, successCallback, errorCallback) {
 	});
 }
 
-function nuAjaxShowError() {
+function nuAjaxShowError(jqXHR, errorThrown) {
 
-	// Format error message and display it
 	const err = nuFormatAjaxErrorMessage(jqXHR, errorThrown);
 	let msgDiv;
 	if (nuHasHiddenModalDragDialog()) {
