@@ -801,21 +801,20 @@ function nuSaveAfterDrag() {
 
 }
 
-function nuOpenNewBrowserTab(c, f, r, filter) {
+function nuOpenNewBrowserTab(type, formId, recordId, filter) {
 
 	if (window.nuNEW == 1) {
 
 		window.nuNEW = 0;
+		window.nuOPENER.push(new nuOpener('F', formId, recordId, filter));
 
-		window.nuOPENER.push(new nuOpener('F', f, r, filter));
-
-		nuOpenerAppend('type', c);
+		nuOpenerAppend('type', type);
 
 		const len = window.nuOPENER.length - 1;
-		const id = window.nuOPENER[window.nuOPENER.length - 1].id;
-		const u = window.location.origin + window.location.pathname + '?i=' + len + '&opener=' + id;
+		const openerId = window.nuOPENER[len].id;
+		const url = `${window.location.origin}${window.location.pathname}?i=${len}&opener=${openerId}`;
 
-		window.open(u);
+		window.open(url);
 
 		return true;
 
