@@ -1353,18 +1353,20 @@ function nuFontList(){
 	return json_encode($fonts);
 }
 
-function nuEventName($e){
+function nuEventName($eventName) {
 
-	$event['BB']	= 'Before Browse';
-	$event['AB']	= 'After Browse';
-	$event['BE']	= 'Before Edit';
-	$event['BS']	= 'Before Save';
-	$event['AS']	= 'After Save';
-	$event['BD']	= 'Before Delete';
-	$event['AD']	= 'After Delete';
-	$event['OS']	= 'On Submit';
+	$events = [
+		'BB' => 'Before Browse',
+		'AB' => 'After Browse',
+		'BE' => 'Before Edit',
+		'BS' => 'Before Save',
+		'AS' => 'After Save',
+		'BD' => 'Before Delete',
+		'AD' => 'After Delete',
+		'OS' => 'On Submit'
+	];
 
-	return $event[$e];
+	return $events[$eventName];
 
 }
 
