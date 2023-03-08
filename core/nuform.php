@@ -897,28 +897,28 @@ function nuSetFormValue($f, $v){
 
 function nuDataListOptions($sql) {
 
-	$a				= [];
+	$result				= [];
 
 	$s = strtoupper(trim($sql));
 
 	if (substr($s, 0, 6) == 'SELECT' || substr($s, 0, 4) == 'SHOW') {	//-- sql statement
 
-			$t		= nuRunQuery($sql);
+			$stmt		= nuRunQuery($sql);
 
 			if (nuErrorFound()) {
 				return;
 			}
 
-			while ($r = db_fetch_row($t)) {
-				$a[]	= $r;
+			while ($row = db_fetch_row($stmt)) {
+				$result[]	= $row;
 			}
 	} else if (substr(trim($s), 0, 1) == '[') {
-		$a = json_decode($sql);
+		$result = json_decode($sql);
 	} else {
 		return $sql;
 	}
 
-	return $a;
+	return $result;
 
 }
 
