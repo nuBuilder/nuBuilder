@@ -909,8 +909,7 @@ function nuDRAG(w, i, l, p, prop) {
 	}
 
 	const drgDiv =  nuCreateElementWithId(tagType, id, p + 'nuRECORD');
-
-	let $id = $('#' + id);
+	let $id = $(drgDiv);
 
 	nuSetObjectBounds($id, obj.top, obj.left, obj.width, obj.height)
 	.css({

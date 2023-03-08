@@ -1187,7 +1187,7 @@ function nuDisable(i) { //-- Disable Edit Form Object
 				continue;
 			} // skip label
 
-			let $current = = $('#' + components[c]);
+			let $current = $('#' + components[c]);
 			$current
 				.addClass('nuReadonly')
 				.prop('readonly', true)
