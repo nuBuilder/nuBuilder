@@ -1012,7 +1012,7 @@ function nuINPUTfileFileSystem($fromId, w, i, l, p, prop, id) {
 	var obj = prop.objects[i];
 	id = id !== undefined ? id : p + obj.id;
 
-	const inp =  nuCreateElementWithId('div', 'nuBreadcrumb0', p + 'nuRECORD');
+	nuCreateElementWithId('div', 'nuBreadcrumb0', p + 'nuRECORD');
 
 	obj = nuLabelOrPosition(obj, w, i, l, p, prop);
 
