@@ -1049,14 +1049,13 @@ function nuMakeSummaryTable($REPORT, $TABLE_ID){
 	$countGroups = count($REPORT->groups);
 	for($g = 0 ; $g < $countGroups; $g++){
 
-		$countGroupSections = count($REPORT->groups[$g]->sections)
+		$countGroupSections = count($REPORT->groups[$g]->sections);
 		for($s = 0 ; $s < $countGroupSections; $s++){
 
-			$countGroupSectionObjects = count($REPORT->groups[$g]->sections[$s]->objects)
+			$countGroupSectionObjects = count($REPORT->groups[$g]->sections[$s]->objects);
 			for($o = 0 ; $o < $countGroupSectionObjects; $o++){
 
 				$obj = $REPORT->groups[$g]->sections[$s]->objects[$o];
-
 				if($obj->objectType == 'field'){
 					if(strtoupper(substr($obj->fieldName,0,4)) == 'SUM('){
 						$sum[substr($obj->fieldName,4, -1)] = substr($obj->fieldName,4, -1);
