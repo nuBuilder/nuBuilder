@@ -2318,10 +2318,12 @@ function nuSubformColumnUnique(id, column, label) {
 
 function nuSubformTitleArray(sfName) {
 
-	return
-		$('#' + sfName).children().filter('.nuSubformTitle').map(function () {
+	$arr =
+		$('#' + sfName).children().filter('.nuSubformTitle').map(function() {
 			return this.getAttribute("data-nu-field");
 		}).get();
+
+	return $arr;
 
 }
 
