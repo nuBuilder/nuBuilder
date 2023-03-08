@@ -745,27 +745,27 @@ function nuGetOtherLookupValues($o){
 
 function nuGetAllLookupValues(){
 
-	$OID					= $_POST['nuSTATE']['object_id'];
-	$PK						= $_POST['nuSTATE']['primary_key'];
-	$s						= "SELECT * FROM zzzzsys_object WHERE zzzzsys_object_id = ?";
-	$t						= nuRunQuery($s, [$OID]);
-	$r						= db_fetch_object($t);
-	$o						= nuDefaultObject($r, []);
-	$o->description_width	= $r->sob_lookup_description_width;
-	$o->form_id				= $r->sob_lookup_zzzzsys_form_id;
-	$o->value				= $PK;
+	$objectId 						= $_POST['nuSTATE']['object_id'];
+	$primaryKey 					= $_POST['nuSTATE']['primary_key'];
+	$query 							= "SELECT * FROM `zzzzsys_object` WHERE `zzzzsys_object_id` = ?";
+	$stmt 							= nuRunQuery($query, [$objectId]);
+	$row 							= db_fetch_object($stmt);
+	$object 						= nuDefaultObject($row, []);
+	$object->description_width		= $row->sob_lookup_description_width;
+	$object->form_id 				= $row->sob_lookup_zzzzsys_form_id;
+	$object->value 					= $primaryKey;
 
-	$l						= nuGetLookupValues($r, $o);
+	$lookupValues = nuGetLookupValues($row, $object);
 
-	$_POST['nuHash']['LOOKUP_RECORD_ID'] = $l[0][1];
+	$_POST['nuHash']['LOOKUP_RECORD_ID'] = $lookupValues[0][1];
 
-	$e						= nuGetOtherLookupValues($o);
+	$otherLookupValues 				= nuGetOtherLookupValues($object);
 
-	$f						= new stdClass;
-	$f->lookup_values		= array_merge($l, $e);
-	$f->lookup_javascript	= nuObjKey($GLOBALS,'EXTRAJS', '') . ";$r->sob_lookup_javascript";
+	$result 						= new stdClass;
+	$result->lookup_values 			= array_merge($lookupValues, $otherLookupValues);
+	$result->lookup_javascript		= nuObjKey($GLOBALS, 'EXTRAJS', '') . ";$row->sob_lookup_javascript";
 
-	return $f;
+	return $result;
 
 }
 
