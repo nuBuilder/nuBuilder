@@ -237,23 +237,20 @@ function nuAskLogout() {
 
 }
 
-function nuLogout(f, iframe) {
+function nuLogout() {
 
-	let top = window.top;
-    top.nuFORM.addBreadcrumb();
+	const winTop = window.top;
+    winTop.nuFORM.addBreadcrumb();
 
-	var last = top.nuFORM.getCurrent();
-
+	const last = winTop.nuFORM.getCurrent();
 	last.session_id = window.nuSESSION;
 	last.call_type = 'logout';
 
-	var successCallback = function (data, textStatus, jqXHR) {
+	const successCallback = function (data, textStatus, jqXHR) {
 
-		var fm = data;
-
-		if (!nuDisplayError(fm)) {
+		if (!nuDisplayError(data)) {
 			sessionStorage.removeItem('nukeepalive');
-			top.window.open('index.php', '_self');
+			winTop.window.open('index.php', '_self');
 		}
 
 	};
