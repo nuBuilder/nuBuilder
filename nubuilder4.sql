@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 05, 2023 at 08:53 AM
+-- Generation Time: Mar 08, 2023 at 06:55 AM
 -- Server version: 8.0.27
 -- PHP Version: 8.0.13
 
@@ -36,6 +36,7 @@ CREATE TABLE `zzzzsys_access` (
   `sal_use_2fa` varchar(1) DEFAULT NULL,
   `sal_json` mediumtext
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
+
 
 -- --------------------------------------------------------
 
@@ -645,7 +646,7 @@ INSERT INTO `zzzzsys_form` (`zzzzsys_form_id`, `sfo_type`, `sfo_code`, `sfo_desc
 ('nu5fee9ffd45efe', 'subform', 'nuaccesssubform_php', 'Accessible PHP procs', NULL, 'zzzzsys_access_php', 'zzzzsys_access_php_id', '', 0, 0, '0', NULL, 'SELECT * FROM zzzzsys_access_php', NULL, NULL, NULL, NULL, NULL, NULL),
 ('nu61e9969a239c033', 'subform', 'nuobjectjsonsubform', 'Object JSON', NULL, 'zzzzsys_object_json', 'zzzzsys_object_json_id', '', 0, 0, '0', NULL, 'SELECT * FROM zzzzsys_object_json', NULL, NULL, NULL, NULL, NULL, NULL),
 ('nu62aee4493239e3a', 'subform', 'nuconfigsettingssubform', 'config settings subform', NULL, 'zzzzsys_config', 'zzzzsys_config_id', '', 0, 0, '0', NULL, 'SELECT * FROM zzzzsys_config \nORDER BY cfg_order', NULL, NULL, NULL, NULL, NULL, NULL),
-('nuaccess', 'browseedit', 'nuaccess', 'Access Levels', '#sal_code#|New', 'zzzzsys_access', 'zzzzsys_access_id', '', 0, 17, '0', NULL, 'SELECT zzzzsys_access.*, zzzzsys_form.sfo_code FROM zzzzsys_access\nLEFT JOIN zzzzsys_form \nON sal_zzzzsys_form_id = zzzzsys_form_id\nORDER BY sal_code\n', NULL, NULL, 'function nuBeforeSave() {\n\n    const dupF = nuSubformColumnUnique(\'accform\', \'slf_zzzzsys_form_id\', \'Forms\');\n    const dupP = nuSubformColumnUnique(\'accphp\', \'slp_zzzzsys_php_id\', \'Procedures\');\n    const dupR = nuSubformColumnUnique(\'accreport\', \'sre_zzzzsys_report_id\', \'Reports\');\n\n    if (dupF !== true || dupP !== true || dupR !== true) {\n        \n        let a = [];\n        if (!dupF) a.push(dupF);\n        if (!dupP) a.push(dupP);\n        if (!dupR) a.push(dupR);\n        \n        nuMessage(a);\n        return false;\n    }\n\n    return true;\n\n}\n\nfunction addSfFilter() {\n\n    let sfFilter = {};\n    sfFilter.accform = {\n        \'slf_zzzzsys_form_id\': {\n            type: \'search\',\n            float: \'left\',\n            placeholder: nuTranslate(\'Search\')}\n    };\n\n    nuSubformAddFilter(sfFilter);\n\n}\n\n\n$(\'#sal_zzzzsys_form_id_open_button\').toggleClass(\'input_button nuButton nuLookupButton\');\nif (nuIsNewRecord()) nuHide(\'sal_zzzzsys_form_id_open_button\');\n\nnuAccessFormSetButtonIcons();\naddSfFilter();', '', '1', NULL),
+('nuaccess', 'browseedit', 'nuaccess', 'Access Levels', '#sal_code#|New', 'zzzzsys_access', 'zzzzsys_access_id', '', 0, 17, '0', NULL, 'SELECT zzzzsys_access.*, zzzzsys_form.sfo_code FROM zzzzsys_access\nLEFT JOIN zzzzsys_form \nON sal_zzzzsys_form_id = zzzzsys_form_id\nORDER BY sal_code\n', NULL, NULL, '\nfunction nuBeforeSave() {\n    const subforms = [\n        {name: \'accform\', column: \'slf_zzzzsys_form_id\', title: \'Forms\'},\n        {name: \'accphp\', column: \'slp_zzzzsys_php_id\', title: \'Procedures\'},\n        {name: \'accreport\', column: \'sre_zzzzsys_report_id\', title: \'Reports\'}\n    ];\n    const duplicates = subforms.filter(subform => !nuSubformColumnUnique(subform.name, subform.column, subform.title));\n    if (duplicates.length) {\n        const duplicateTitles = duplicates.map(subform => subform.title);\n        nuMessage(`Duplicate ${duplicateTitles.join(\', \')} found`);\n        return false;\n    }\n    return true;\n}\n\nfunction addSfFilter() {\n\n    let sfFilter = {};\n    sfFilter.accform = {\n        \'slf_zzzzsys_form_id\': {\n            type: \'search\',\n            float: \'left\',\n            placeholder: nuTranslate(\'Search\')}\n    };\n\n    nuSubformAddFilter(sfFilter);\n\n}\n\n\n$(\'#sal_zzzzsys_form_id_open_button\').toggleClass(\'input_button nuButton nuLookupButton\');\nif (nuIsNewRecord()) nuHide(\'sal_zzzzsys_form_id_open_button\');\n\nnuAccessFormSetButtonIcons();\naddSfFilter();', '', '1', NULL),
 ('nuaccessforms', 'edit', 'nuaccessforms', 'Accessible Forms', NULL, 'zzzzsys_access_form', 'zzzzsys_access_form_id', '', 0, 0, '0', NULL, 'SELECT * FROM zzzzsys_access_form\nLEFT JOIN zzzzsys_form ON zzzzsys_form_id = slf_zzzzsys_form_id\nORDER BY sfo_code\n', NULL, NULL, NULL, NULL, NULL, NULL),
 ('nuaccessgroup', 'subform', 'nuaccessgroup', 'Groups Access Level', NULL, 'zzzzsys_user_group_access_level', 'zzzzsys_user_group_access_level_id', '', 0, 0, '0', NULL, 'SELECT * FROM zzzzsys_user_group_access_level', NULL, NULL, NULL, NULL, NULL, NULL),
 ('nuaccesslevelreport', 'browseedit', 'nuaccesslevelreport', 'Access To Report', NULL, 'zzzzsys_access_report', 'zzzzsys_access_report_id', '', 0, 0, '0', NULL, 'SELECT * \nFROM zzzzsys_access_report\nJOIN zzzzsys_report ON zzzzsys_report_id = sre_zzzzsys_report_id\nORDER BY sre_code', NULL, NULL, NULL, NULL, NULL, NULL),
@@ -747,8 +748,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`, `inf_json`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2023.03.05.02', NULL),
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2023.03.05.04', NULL);
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2023.03.08.00', NULL),
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2023.03.07.01', NULL);
 
 -- --------------------------------------------------------
 
