@@ -150,10 +150,9 @@ function nuGetReport(formId, recordId) {
 	last.call_type = 'getreport';
 	last.form_id = formId;
 	last.record_id = recordId;
+	last.hash = parent.nuHashFromEditForm ? parent.nuHashFromEditForm() : [];
 
-	const hash = parent.nuHashFromEditForm ? parent.nuHashFromEditForm() : [];
-
-	let successCallback = function (data, textStatus, jqXHR) {
+	let successCallback = function (data) {
 		if (!nuDisplayError(data)) {
 			nuBuildForm(data);
 		}
