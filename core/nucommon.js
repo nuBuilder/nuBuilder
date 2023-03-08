@@ -2340,6 +2340,7 @@ jQuery.fn.nuHighlight = function (pat) {
 				const middleclone = middlebit.cloneNode(true);
 				spannode.appendChild(middleclone);
 				middlebit.parentNode.replaceChild(spannode, middlebit);
+				spannode.setAttribute("onclick", "nuSelectBrowse(event, this.parentElement)");
 				skip = 1;
 			}
 		} else if (node.nodeType == 1 && node.childNodes && !/(script|style)/i.test(node.tagName)) {
