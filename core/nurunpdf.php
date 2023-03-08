@@ -598,7 +598,7 @@ class nuSECTION{
 		$newOs			= [];
 
 		$count			= count($O);
-		for($i = 0 ; $i < count($O) ; $i ++){
+		for($i = 0 ; $i < $count ; $i ++){
 
 			$newO			= pdfObject($O[$i]->id, $O[$i]->top);				//-- create Object
 			$newO->lines	= $O[$i]->LINES;
@@ -1010,9 +1010,11 @@ function nuGetTotalPages(){
 
 function nuReplaceLabelHashVariables($LAY, $hashData){
 
-	for($i = 0 ; $i < count($GLOBALS['nu_report']) ; $i++){
+	$countNuReport = count($GLOBALS['nu_report']);
+	for($i = 0 ; $i <  $countNuReport; $i++){
 
-		for($o = 0 ; $o < count($GLOBALS['nu_report'][$i]->objects) ; $o++){
+		$countObj = count($GLOBALS['nu_report'][$i]->objects);
+		for($o = 0 ; $o <  $countObj ; $o++){
 
 			$O = nuGetObjectProperties($LAY, $GLOBALS['nu_report'][$i]->objects[$o]->id);
 
@@ -1044,11 +1046,14 @@ function nuMakeSummaryTable($REPORT, $TABLE_ID){
 
 	}
 
-	for($g = 0 ; $g < count($REPORT->groups) ; $g++){
+	$countGroups = count($REPORT->groups);
+	for($g = 0 ; $g < $countGroups; $g++){
 
-		for($s = 0 ; $s < count($REPORT->groups[$g]->sections) ; $s++){
+		$countGroupSections = count($REPORT->groups[$g]->sections)
+		for($s = 0 ; $s < $countGroupSections; $s++){
 
-			for($o = 0 ; $o < count($REPORT->groups[$g]->sections[$s]->objects) ; $o++){
+			$countGroupSectionObjects = count($REPORT->groups[$g]->sections[$s]->objects)
+			for($o = 0 ; $o < $countGroupSectionObjects; $o++){
 
 				$obj = $REPORT->groups[$g]->sections[$s]->objects[$o];
 
