@@ -590,11 +590,11 @@ function nuGetLookupId(pk, id, setFocus, setEdited) {
 
 }
 
-function nuGetLookupCode(e) {
+function nuGetLookupCode(event) {
 	
-	const nuTarget = e.target.getAttribute('data-nu-target');
+	const nuTarget = event.target.getAttribute('data-nu-target');
 	
-	if (e.currentTarget && e.currentTarget.value.length == 0) {
+	if (event.currentTarget && event.currentTarget.value.length == 0) {
 		window.nuLOOKUPCLEARING = true;
 		$('#' + nuTarget).addClass('nuEdited');
 		nuSetValue(nuTarget, '');
@@ -603,23 +603,23 @@ function nuGetLookupCode(e) {
 		return;
 	}
 	
-	var last = window.nuFORM.getCurrent();
+	let last = window.nuFORM.getCurrent();
 
 	last.session_id = window.nuSESSION;
 	last.call_type = 'getlookupcode';
-	last.object_id = e.target.getAttribute('data-nu-object-id');
+	last.object_id = event.target.getAttribute('data-nu-object-id');
 	last.target = nuTarget;
-	last.code = e.target.value;
+	last.code = event.target.value;
 	last.hash = nuHashFromEditForm();
 
 	window.nuLOOKUPSTATE[last.object_id] = 'looking';
 
-	var successCallback = function (data, textStatus, jqXHR) {
+	const successCallback = function (data) {
 
 		nuSERVERRESPONSELU = data;
 
 		if (!nuDisplayError(data)) {
-			nuChooseOneLookupRecord(e, data);
+			nuChooseOneLookupRecord(event, data);
 		}
 
 	};
