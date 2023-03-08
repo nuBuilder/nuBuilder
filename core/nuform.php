@@ -1791,14 +1791,17 @@ function nuAddPrintButtons($f, $t, $a){
 
 }
 
-function nuAddJavaScript($js, $bc = false){
+function nuAddJavaScript($js, $bc = false, $first = false){
 
-	if ($bc == true) {
-		if (isset($GLOBALS['EXTRAJS_BC'])) {
-			$GLOBALS['EXTRAJS_BC'] = $GLOBALS['EXTRAJS_BC'] . "\n\n" . $js;
+	$extraJSKey = $bc ? 'EXTRAJS_BC' : 'EXTRAJS';
+	if (isset($GLOBALS[$extraJSKey])) {
+		$extraJS = $GLOBALS[$extraJSKey];
+		if ($first) {
+			$extraJS = $js . "\n\n" . $extraJS;
+		} else {
+			$extraJS .= "\n\n" . $js;
 		}
-	} else if (isset($GLOBALS['EXTRAJS'])) {
-		$GLOBALS['EXTRAJS'] = $GLOBALS['EXTRAJS'] . "\n\n" . $js;
+		$GLOBALS[$extraJSKey] = $extraJS;
 	}
 
 }
