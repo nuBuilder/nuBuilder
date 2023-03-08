@@ -303,28 +303,23 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 					$title = $r->sob_html_title ?? '';
 					$htmlj = "";
 
-					if($r->sob_html_chart_type == 'p'){
-						$htmlj	= "\nnuChart('$r->sob_all_id', 'PieChart', '$htmljs', '$title', '$h', '$v', 'bars', false);";
-					}
+					$chart_options = [
+						'p' => ['type' => 'PieChart', 'stacked' => false],
+						'l' => ['type' => 'ComboChart', 'stacked' => false, 'chart_type' => 'lines'],
+						'b' => ['type' => 'ComboChart', 'stacked' => false, 'chart_type' => 'bars'],
+						'bs' => ['type' => 'ComboChart', 'stacked' => true, 'chart_type' => 'bars'],
+						'bh' => ['type' => 'BarChart', 'stacked' => false, 'chart_type' => 'bars'],
+						'bhs' => ['type' => 'BarChart', 'stacked' => true, 'chart_type' => 'bars'],
+					];
 
-					if($r->sob_html_chart_type == 'l'){
-						$htmlj	= "\nnuChart('$r->sob_all_id', 'ComboChart', '$htmljs', '$title', '$h', '$v', 'lines', false);";
-					}
+					$chart_type = $r->sob_html_chart_type ?? '';
 
-					if($r->sob_html_chart_type == 'b'){
-						$htmlj	= "\nnuChart('$r->sob_all_id', 'ComboChart', '$htmljs', '$title', '$h', '$v', 'bars', false);";
-					}
+					if (array_key_exists($chart_type, $chart_options)) {
+						$type = $chart_options[$chart_type]['type'];
+						$stacked = $chart_options[$chart_type]['stacked'];
+						$chart_type = $chart_options[$chart_type]['chart_type'];
 
-					if($r->sob_html_chart_type == 'bs'){
-						$htmlj	= "\nnuChart('$r->sob_all_id', 'ComboChart', '$htmljs', '$title', '$h', '$v', 'bars', true);";
-					}
-
-					if($r->sob_html_chart_type == 'bh'){
-						$htmlj	= "\nnuChart('$r->sob_all_id', 'BarChart', '$htmljs', '$title', '$h', '$v', 'bars', false);";
-					}
-
-					if($r->sob_html_chart_type == 'bhs'){
-						$htmlj	= "\nnuChart('$r->sob_all_id', 'BarChart', '$htmljs', '$title', '$h', '$v', 'bars', true);";
+						$htmlj = "\nnuChart('$r->sob_all_id', '$type', '$htmljs', '$title', '$h', '$v', '$chart_type', $stacked);";
 					}
 
 					nuAddJavaScript($htmlj);
