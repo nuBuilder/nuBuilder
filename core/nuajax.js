@@ -19,23 +19,30 @@ function nuAjax(w, successCallback, errorCallback) {
 				errorCallback(jqXHR, textStatus, errorThrown);
 			}
 
-			// Format error message and display it
-			const err = nuFormatAjaxErrorMessage(jqXHR, errorThrown);
-			let msgDiv;
-			if (nuHasHiddenModalDragDialog()) {
-				msgDiv = parent.nuMessage(err);
-				nuClosePopup(); 
-			} else {
-				msgDiv = nuMessage(err);
-			}
-			if (window.nuOnMessage) {
-				nuOnMessage(msgDiv, err);
-			}
+			nuAjaxShowError(jqXHR, errorThrown);
+
 		},
 		complete: (jqXHR, textStatus) => {
 			// Do something when the request completes
 		},
 	});
+}
+
+function nuAjaxShowError() {
+
+	// Format error message and display it
+	const err = nuFormatAjaxErrorMessage(jqXHR, errorThrown);
+	let msgDiv;
+	if (nuHasHiddenModalDragDialog()) {
+		msgDiv = parent.nuMessage(err);
+		nuClosePopup(); 
+	} else {
+		msgDiv = nuMessage(err);
+	}
+	if (window.nuOnMessage) {
+		nuOnMessage(msgDiv, err);
+	}
+
 }
 
 function nuHasHiddenModalDragDialog() {
