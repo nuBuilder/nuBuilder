@@ -688,13 +688,13 @@ function nuUpdateData(action, instruction, close) {
 
 	if (nuFORM.getCurrent().record_id == -1) { nuSetProperty('NEW_RECORD', 1); }
 
-	var current = window.nuFORM.getCurrent();
-	var last = $.extend(true, {}, current);
+	const current = window.nuFORM.getCurrent();
+	let last = $.extend(true, {}, current);
 
-	var f = last.form_id;
+	const formId = last.form_id;
 	window.nuLASTRECORD = last.record_id;
 
-	if (arguments.length == 2) {
+	if (instruction !== undefined) {
 		last.instruction = instruction;
 	}
 
@@ -706,25 +706,22 @@ function nuUpdateData(action, instruction, close) {
 
 	$('.nuActionButton').hide();
 
-	var successCallback = function (data, textStatus, jqXHR) {
+	const successCallback = function (data, textStatus, jqXHR) {
 
-		var fm = data;
-
-		if (nuDisplayError(fm)) {
+		if (nuDisplayError(data)) {
 
 			$('.nuActionButton').show();
-
 			nuAbortSave();
 
 		} else {
 
-			if (fm.after_event) {
-				nuMESSAGES = fm.errors;
+			if (data.after_event) {
+				nuMESSAGES = data.errors;
 			}
 
 			if ($('#nuDelete').prop('checked')) {
 
-				if (action == "delete" && instruction == "all" && fm.record_id == "") {
+				if (action == "delete" && instruction == "all" && data.record_id == "") {
 
 					nuSearchAction();
 					nuGetBreadcrumb();
@@ -733,7 +730,6 @@ function nuUpdateData(action, instruction, close) {
 				}
 
 				window.nuFORM.removeLast();						//-- return to browse
-
 				if ($('.nuBreadcrumb').length == 0) {
 					window.close();
 				} else {
@@ -759,10 +755,10 @@ function nuUpdateData(action, instruction, close) {
 
 			} else {
 
-				nuForm(f, fm.record_id, fm.filter, fm.search, 1);		//-- go to saved or created record
+				nuForm(formId, data.record_id, data.filter, data.search, 1);		//-- go to saved or created record
 				nuUpdateMessage('Record Saved');
 
-				if (instruction == 'close') {
+				if (instruction === 'close') {
 					nuFORM.edited = false;
 					nuOpenPreviousBreadcrumb();
 				}
@@ -783,7 +779,7 @@ function nuSaveAfterDrag() {
 	last.call_type = 'nudragsave';
 	last.nuDragState = contentWin.nuDragOptionsState;
 
-	var successCallback = function (data, textStatus, jqXHR) {
+	const successCallback = function (data, textStatus, jqXHR) {
 
 		if (nuDisplayError(data.errors)) {
 			alert(data.errors[0]);
