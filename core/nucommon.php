@@ -1134,17 +1134,21 @@ function nuBuildTempTable($name_id, $tt, $rd = 0){
 
 }
 
-function nuJSInclude($pfile){
+function nuJSInclude($filePath) {
 
-	$timestamp		= date("YmdHis", filemtime($pfile));										//-- Add timestamp so javascript changes are effective immediately
-	print "<script src='$pfile?ts=$timestamp' type='text/javascript'></script>\n";
+    $timestamp = filemtime($filePath);
+    $url = "{$filePath}?ts={$timestamp}";
+
+    echo '<script src="' . htmlspecialchars($url, ENT_QUOTES) . '" type="text/javascript"></script>' . PHP_EOL;
 
 }
 
-function nuCSSInclude($pfile){
+function nuCSSInclude($file) {
 
-	$timestamp		= date("YmdHis", filemtime($pfile));										//-- Add timestamp so javascript changes are effective immediately
-	print "<link rel='stylesheet' href='$pfile?ts=$timestamp' />\n";
+    $timestamp = filemtime($file);
+    $url = "{$file}?ts={$timestamp}";
+
+    echo '<link rel="stylesheet" href="' . htmlspecialchars($url, ENT_QUOTES) . '">' . PHP_EOL;
 
 }
 
