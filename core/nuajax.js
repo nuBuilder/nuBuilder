@@ -1,50 +1,45 @@
-
 function nuAjax(w, successCallback, errorCallback) {
 
-	w = nuAddEditFieldsToHash(w);
-	w = JSON.stringify(w);
+	// Serialize data
+	const data = JSON.stringify(nuAddEditFieldsToHash(w));
 
+	// Send AJAX request
 	$.ajax({
-
 		async: true,
 		dataType: "json",
 		url: "core/nuapi.php",
 		method: "POST",
-		data: { nuSTATE: w },
-		success: function (data, textStatus, jqXHR) {
-			successCallback(data, textStatus, jqXHR);
+		data: {
+			nuSTATE: data
 		},
-		error: function (jqXHR, textStatus, errorThrown) {
-
-			window.test = jqXHR.responseText;
-
-			if (errorCallback !== undefined) {
+		success: (data, textStatus, jqXHR) => successCallback(data, textStatus, jqXHR),
+		error: (jqXHR, textStatus, errorThrown) => {
+			// Call error callback if defined
+			if (errorCallback) {
 				errorCallback(jqXHR, textStatus, errorThrown);
-			};
+			}
 
-			let err = nuFormatAjaxErrorMessage(jqXHR, errorThrown);
-
+			// Format error message and display it
+			const err = nuFormatAjaxErrorMessage(jqXHR, errorThrown);
 			let msgDiv;
-
-			if (parent.$('#nuModal').length > 0 && parent.$('#nuModal').siblings(".nuDragDialog").css("visibility") == "hidden") {
+			if (nuHasHiddenModalDragDialog()) {
 				msgDiv = parent.nuMessage(err);
-				nuClosePopup();
+				nuClosePopup(); 
 			} else {
 				msgDiv = nuMessage(err);
 			}
-
 			if (window.nuOnMessage) {
 				nuOnMessage(msgDiv, err);
 			}
-
 		},
-
-		complete: function (jqXHR, textStatus) {
-			//--
-		}
-
+		complete: (jqXHR, textStatus) => {
+			// Do something when the request completes
+		},
 	});
+}
 
+function nuHasHiddenModalDragDialog() {
+	return parent.$('#nuModal').length > 0 && parent.$('#nuModal').siblings(".nuDragDialog").css("visibility") == "hidden";
 }
 
 function nuForm(f, r, filter, search, n, like) {
