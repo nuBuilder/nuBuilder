@@ -132,7 +132,7 @@ function nuRunUpdate($jsonId, $u = null, $p = null) {
 
 
 	// Run nuAfterUpdate
-	nuRunPHPHidden('nuAfterUpdate',0);
+	nuRunPHPHidden('nuAfterUpdate');
 	nuPrintUpdateMessage('Run nuAfterUpdate', $i);
 	$i++;
 
