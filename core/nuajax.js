@@ -328,7 +328,7 @@ function nuRunPHP(code, iFrame, runBeforeSave) {
 
 		if (!nuDisplayError(data)) {
 
-			const pdfUrl = `core/nurunphp.php?i=${fm.id}`;
+			const pdfUrl = `core/nurunphp.php?i=${data.id}`;
 
 			if (!iFrame) {
 				window.open(pdfUrl);
