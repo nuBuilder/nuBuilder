@@ -820,7 +820,7 @@ function nuAddJSObjectEvents(id, events) {
 
 	for (let eventObj of events) {
 		let code = element.getAttribute(eventObj.event) || '';
-		const ev = eventObj.event;
+		let ev = eventObj.event;
 		if (['beforeinsertrow', 'afterinsertrow', 'clickdelete'].includes(ev)) {
 			ev = 'data-nu-' + ev;
 		} else if (element.classList.contains('nuLookupCode') && ev === 'onclick') {
