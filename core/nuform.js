@@ -814,33 +814,22 @@ function nuBuildEditObjects(f, p, o, prop) {
 
 }
 
-function nuAddJSObjectEvents(i, j) {
+function nuAddJSObjectEvents(id, events) {
 
-	const o = document.getElementById(i);
+	const element = document.getElementById(id);
 
-	for (let J = 0; J < j.length; J++) {
-
-		let code = o.getAttribute(j[J].event);
-		let ev = j[J].event;
-
-		code = code === null ? '' : code + ';';
-
-		if (ev == 'beforeinsertrow' || ev == 'afterinsertrow' || ev == 'clickdelete') {
-			{ ev = 'data-nu-' + ev; }
+	for (let eventObj of events) {
+		let code = element.getAttribute(eventObj.event) || '';
+		const ev = eventObj.event;
+		if (['beforeinsertrow', 'afterinsertrow', 'clickdelete'].includes(ev)) {
+			ev = 'data-nu-' + ev;
+		} else if (element.classList.contains('nuLookupCode') && ev === 'onclick') {
+			continue;
+		} else if (element.classList.contains('nuLookupButton') && ev !== 'onclick') {
+			continue;
 		}
-
-		if (o.classList.contains('nuLookupButton')) {
-
-			if (ev == 'onclick') {
-				o.setAttribute(ev, code + j[J].js);
-			} else {
-				$('#' + o.id.slice(0, -6) + 'code')[0].setAttribute(ev, code + j[J].js);
-			}
-
-		} else {
-			o.setAttribute(ev, code + j[J].js);
-		}
-
+		code += ';' + eventObj.js;
+		element.setAttribute(ev, code);
 	}
 
 }
@@ -1147,8 +1136,6 @@ function nuINPUTLookup(id, objId, wi, obj, $fromId, p, vis) {
 
 	var luClass = obj.label === 'Insert-Snippet' ? 'fa fa-code' : 'fa fa-search';
 
-	nuAddJSObjectEvents(id, obj.js);
-
 	$id = $('#' + id);
 	nuSetObjectBounds($id, obj.top, Number(obj.left) + Number(obj.width) + 6, 15, Number(obj.height - 2))
 		.attr('type', 'button')
@@ -1164,6 +1151,8 @@ function nuINPUTLookup(id, objId, wi, obj, $fromId, p, vis) {
 		.css('visibility', vis);
 
 	if (obj.label === 'Insert-Snippet') $('#' + id).css('font-size', '18px');
+	
+	nuAddJSObjectEvents(id, obj.js);
 
 	id = p + obj.id + 'description';
 	var desc = document.createElement('input');
