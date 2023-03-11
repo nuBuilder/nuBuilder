@@ -94,10 +94,11 @@ function nuAddAdminButtons() {
 			if (nuAdminButtons["nuProperties"]) { c++; nuAddAdminButton("AdminProperties", "Prop", 'nuOpenCurrentFormProperties();', nuTranslate('Form Properties')); }
 			if (nuAdminButtons["nuObjects"]) { c++; nuAddAdminButton("AdminObjectList", "Obj", 'nuOpenCurrentObjectList();', nuTranslate('Object List')); }
 
-			if (e || l) { c++; nuAddAdminButton("AdminBE", "BE", 'nuEditPHP("BE");', 'Before Edit'); }
-			if (b) { c++; nuAddAdminButton("AdminBB", "BB", 'nuEditPHP("BB");', 'Before Browse'); }
-			if (e) { c++; nuAddAdminButton("AdminBS", "BS", 'nuEditPHP("BS");', 'Before Save'); }
-			if (e) { c++; nuAddAdminButton("AdminAS", "AS", 'nuEditPHP("AS");', 'After Save'); }
+			const nuPHP = nuAdminButtons["nuPHP"];
+			if ((e || l) && nuPHP) { c++; nuAddAdminButton("AdminBE", "BE", 'nuEditPHP("BE");', 'Before Edit'); }
+			if (b && nuPHP) { c++; nuAddAdminButton("AdminBB", "BB", 'nuEditPHP("BB");', 'Before Browse'); }
+			if (e && nuPHP) { c++; nuAddAdminButton("AdminBS", "BS", 'nuEditPHP("BS");', 'Before Save'); }
+			if (e && nuPHP) { c++; nuAddAdminButton("AdminAS", "AS", 'nuEditPHP("AS");', 'After Save'); }
 
 		}
 
