@@ -1938,8 +1938,7 @@ function nuGetRecordURL($origin = null, $subFolder = null, $homepageId = null, $
 
 	$recordIdL = nuReplaceHashVariables('#record_id#');
 	$recordIdC = nuReplaceHashVariables('#RECORD_ID#');
-
-	$recordId = $recordIdL ? $recordIdL : $recordIdC;
+	$recordId = $recordIdL && $recordIdL != '-1'  ? $recordIdL : $recordIdC;
 
 	return $origin. $subFolder . '/index.php?f=' . $formId . '&r=' . $recordId . $homepageId;
 
