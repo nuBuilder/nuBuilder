@@ -1362,7 +1362,7 @@ function nuResizeWindow(e) {
 	const dragOptionsBox = $('.nuDragOptionsBox');
 	
 	if (dialogLeft === 2) {
-		const contentWin = getNuDragDialogIframes[0].contentWindow;
+		const contentWin = getNuDragDialogIframes()[0].contentWindow;
 		dialog.css(contentWin.nuDialogSize);
 		win.css(contentWin.nuWindowSize);
 	} else {
