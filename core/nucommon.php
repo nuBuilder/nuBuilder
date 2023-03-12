@@ -386,63 +386,64 @@ function nuRunPHPHidden($nuCode){
 	return nuRunPHP($nuCode, true);
 }
 
-function nuRunPHP($nuCode, $hidden = false){
+function nuRunPHP($nuCode, $hidden = false) {
 
-	if ($nuCode != 'nukeepalive') {
-								   
-
-		$sql	= "SELECT sph_code, sph_description, zzzzsys_php_id, sph_php, sph_global FROM zzzzsys_php WHERE sph_code = ? ";
-		$query	= nuRunQuery($sql, [$nuCode]);
-
-		$exists = db_num_rows($query) == 1;
-		
-		if (!$exists) {
-
-				$isSystem = substr($nuCode, 0, 2) == 'nu';
-				 if (! $isSystem) {
-					nuDisplayError(nuTranslate("The Procedure does not exist...")." ($nuCode)");
-				 }
-
-			} else {
-
-				$row = db_fetch_object($query);
-				$allowRun = $row->sph_global == '1';
-
-				if (! $allowRun) {
-					$p	= nuProcedureAccessList(nuAllowedActivities());
-					$allowRun = in_array($row->zzzzsys_php_id, $p);
-				}
-
-				if($allowRun || $_SESSION['nubuilder_session_data']['isGlobeadmin']){
-					if ($hidden) nuEval($row->zzzzsys_php_id);
-				}else{
-					nuDisplayError(nuTranslate("Access To Procedure Denied...")." ($nuCode)");
-				}
-			}
-
+	if ($nuCode === 'nukeepalive') {
+		return;
 	}
-	
+
+	$sql = "SELECT sph_code, sph_description, zzzzsys_php_id, sph_php, sph_global
+				FROM zzzzsys_php
+				WHERE sph_code = ?
+		";
+
+	$stmt = nuRunQuery($sql, [$nuCode]);
+	$exists = db_num_rows($stmt) == 1;
+
+	if (!$exists) {
+		if (substr($nuCode, 0, 2) !== 'nu') {
+			nuDisplayError(nuTranslate("The Procedure does not exist...") . " ($nuCode)");
+		}
+	}
+	else {
+
+		$row = db_fetch_object($stmt);
+		$hasAccess = $row->sph_global == '1';
+
+		if (!$hasAccess) {
+			$procList = nuProcedureAccessList(nuAllowedActivities());
+			$hasAccess = in_array($row->zzzzsys_php_id, $procList);
+		}
+
+		if ($hasAccess || $_SESSION['nubuilder_session_data']['isGlobeadmin']) {
+			if ($hidden) nuEval($row->zzzzsys_php_id);
+		}
+		else {
+			nuDisplayError(nuTranslate("Access To Procedure Denied...") . " ($nuCode)");
+		}
+	}
+
 	if ($hidden) {
 
-		$f			= new stdClass;
-		$f->id		= 1;
+		$f = new stdClass;
+		$f->id = 1;
 		return $f;
 
-	} else {
+	}
+	else {
 
-		$_POST['nuHash']['code']			= $exists ? $row->sph_code : null;
-		$_POST['nuHash']['description']		= $exists ? $row->sph_description : null;
-		$_POST['nuHash']['parentID']		= $exists ? $row->zzzzsys_php_id : null;
-		$_POST['nuHash']['sph_php']			= $exists ? $row->sph_php : null;
+		$_POST['nuHash']['code'] = $exists ? $row->sph_code : null;
+		$_POST['nuHash']['description'] = $exists ? $row->sph_description : null;
+		$_POST['nuHash']['parentID'] = $exists ? $row->zzzzsys_php_id : null;
+		$_POST['nuHash']['sph_php'] = $exists ? $row->sph_php : null;
 
-		$json								= json_encode($_POST['nuHash']);
-		$id									= nuID();
+		$json = json_encode($_POST['nuHash']);
+		$id = nuID();
 		nuSetJSONData($id, $json);
 		return $id;
 
 	}
 
-		   
 }
 
 function nuJavaScriptCallback($js){
@@ -1040,17 +1041,17 @@ function nuAddThousandSpaces($s, $c){
 
 function nuPunctuation($text) {
 
-    $punctuation = ['1,' => ',', '1.' => '.', '0,' => ',', '0.' => '.'];
+	$punctuation = ['1,' => ',', '1.' => '.', '0,' => ',', '0.' => '.'];
 
-    $result = ['', ''];
+	$result = ['', ''];
 
-    foreach ($punctuation as $key => $value) {
-        if (strpos($text, $key) !== false) {
-            $result[$key[0]] = $value;
-        }
-    }
+	foreach ($punctuation as $key => $value) {
+		if (strpos($text, $key) !== false) {
+			$result[$key[0]] = $value;
+		}
+	}
 
-    return $result;
+	return $result;
 
 }
 
@@ -1127,19 +1128,19 @@ function nuBuildTempTable($name_id, $tt, $rd = 0){
 
 function nuJSInclude($filePath) {
 
-    $timestamp = filemtime($filePath);
-    $url = "{$filePath}?ts={$timestamp}";
+	$timestamp = filemtime($filePath);
+	$url = "{$filePath}?ts={$timestamp}";
 
-    echo '<script src="' . htmlspecialchars($url, ENT_QUOTES) . '" type="text/javascript"></script>' . PHP_EOL;
+	echo '<script src="' . htmlspecialchars($url, ENT_QUOTES) . '" type="text/javascript"></script>' . PHP_EOL;
 
 }
 
 function nuCSSInclude($file) {
 
-    $timestamp = filemtime($file);
-    $url = "{$file}?ts={$timestamp}";
+	$timestamp = filemtime($file);
+	$url = "{$file}?ts={$timestamp}";
 
-    echo '<link rel="stylesheet" href="' . htmlspecialchars($url, ENT_QUOTES) . '">' . PHP_EOL;
+	echo '<link rel="stylesheet" href="' . htmlspecialchars($url, ENT_QUOTES) . '">' . PHP_EOL;
 
 }
 
