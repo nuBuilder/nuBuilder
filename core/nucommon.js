@@ -2598,6 +2598,14 @@ function nuAddCSSStyle(styleString, id) {
 
 }
 
+function nuSetElementStyles(element, stylesObj) {
+	for (const property in stylesObj) {
+		if (stylesObj.hasOwnProperty(property)) {
+			element.style[property] = stylesObj[property];
+		}
+	}
+}
+
 function nuObjectClassList(i) {
 
 	let c = $('#' + i).attr('class');
