@@ -1091,8 +1091,8 @@ function nuINPUTLookup(id, objId, wi, obj, $fromId, p, vis) {
 
 	const target = id;
 	id = target + 'code';
-	var inp = document.createElement('input');
-	inp.setAttribute('id', id);
+
+	const inp =  nuCreateElementWithId('input', id);
 	$fromId.append(inp);
 
 	nuAddDataTab(id, obj.tab, p);
@@ -1126,10 +1126,8 @@ function nuINPUTLookup(id, objId, wi, obj, $fromId, p, vis) {
 	wi.values[2][0] = p + obj.id + 'description';
 
 	id = target + 'button';
-	var div = document.createElement('div');
-
-	div.setAttribute('id', id);
-
+	
+	const div =  nuCreateElementWithId('div', id);
 	$fromId.append(div);
 
 	nuAddDataTab(id, obj.tab, p);
@@ -1155,8 +1153,8 @@ function nuINPUTLookup(id, objId, wi, obj, $fromId, p, vis) {
 	nuAddJSObjectEvents(id, obj.js);
 
 	id = p + obj.id + 'description';
-	var desc = document.createElement('input');
-	desc.setAttribute('id', id);
+	const desc =  nuCreateElementWithId('input', id);
+	$fromId.append(desc);
 
 	$fromId.append(desc);
 	nuAddDataTab(id, obj.tab, p);
@@ -4353,14 +4351,10 @@ function nuBrowseTable() {
 			$record.append(div);
 
 			var $id = $('#' + id);
-
-		//	borderLeft = borderLeft !== true && w !== 0 ? true : false;
-
 			$id.attr('data-nu-row', rw)
 			.attr('data-nu-column', column)
 			.addClass('nuCell' + ((r / 2) == parseInt(r / 2, 10) ? 'Even' : 'Odd'))
-		//	.addClass(borderLeft ? 'nuBrowseBorderLeft' : '')
-		//	.addClass(c == col.length -1 ? 'nuBrowseBorderRight' : '')
+
 			.addClass(w == 0 ? '' : 'nuBrowseTable')
 			.css({
 				'text-align': a,
