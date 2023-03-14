@@ -4294,23 +4294,42 @@ function nuAlign(a) {
 
 }
 
+function nuBrowseTableHover() {
+
+    const moving_element = window.nuBROWSERESIZE.moving_element;
+    const dataRow = $(this).attr('data-nu-row');
+
+    if (!moving_element) {
+        $("[data-nu-row]").addClass('nuBrowseTable').removeClass('nuSelectBrowse');
+
+        if (dataRow) {
+            $("[data-nu-row='" + dataRow + "']").not('.nuCellColored').addClass('nuSelectBrowse').removeClass('nuBrowseTable');
+        }
+
+        window.nuBROWSEROW = dataRow || -1;
+
+        if (this.offsetWidth < this.scrollWidth && !$(this).attr('title')) {
+            $(this).attr('title', $(this).html().replace(/(<([^>]+)>)/ig, ''));
+        }
+    }
+
+}
+
 function nuBrowseTable() {
 
-	var bc = window.nuFORM.getCurrent();
-	var col = bc.browse_columns;
-	var row = bc.browse_rows;
-	var rows = bc.rows;
+	const bc = window.nuFORM.getCurrent();
+	const col = bc.browse_columns;
+	const row = bc.browse_rows;
+
 	var h = bc.row_height;
 	var t = parseInt($('#nuBrowseTitle0').css('height'), 10) - h - 2;
 	var l = 7;
-	// var borderLeft;
-	// var borderRight;
 
 	const brCount = bc.browse_rows;
 	const $record = $('#nuRECORD');	
 	let incWidth = 0;
 	
-	for (let r = 0; r < rows; r++) {
+	for (let r = 0; r < bc.rows; r++) {
 
 		l = 7;
 		t = t + h + 7;
@@ -4319,7 +4338,6 @@ function nuBrowseTable() {
 
 			let noData;
 			let firstCellClass;
-
 			let $firstCell = $('#nucell_0_0');
 
 			if (nuCurrentProperties().search.length == 0) {
@@ -4340,42 +4358,29 @@ function nuBrowseTable() {
 
 		for (let c = 0; c < col.length; c++) {
 
-			var w = Number(col[c].width);
-			var a = nuAlign(col[c].align);
-			var rw = r;
-			var column = c;
-			var id = 'nucell_' + rw + '_' + c;
-			var div = document.createElement('div');
-			div.setAttribute('id', id);
-
-			$record.append(div);
+			const w = Number(col[c].width);
+			const id = 'nucell_' + r + '_' + c;
+			let div = nuCreateElementWithId('div', id, 'nuRECORD');
 
 			var $id = $('#' + id);
-			$id.attr('data-nu-row', rw)
-			.attr('data-nu-column', column)
+			$id.attr('data-nu-row', r)
+			.attr('data-nu-column', c)
 			.addClass('nuCell' + ((r / 2) == parseInt(r / 2, 10) ? 'Even' : 'Odd'))
-
 			.addClass(w == 0 ? '' : 'nuBrowseTable')
 			.css({
-				'text-align': a,
+				'text-align': nuAlign(col[c].align),
 				'overflow': 'hidden',
 				'width': w,
 				'top': t,
 				'left': l,
 				'height': h,
-				'position': 'absolute'
+				'position': 'absolute',
+				'padding': (w < 0 ? 0 : undefined),
+				'border-width': (w < 0 ? 0 : undefined)				
 			});
 
 			if (w == 0) {
 				$id.hide();
-			}
-
-			if (w < 0) {
-
-				$id
-				.css('padding', 0)
-				.css('border-width', 0);
-
 			}
 
 			if (r < row.length) {
@@ -4385,35 +4390,7 @@ function nuBrowseTable() {
 				.html(value)
 				.attr('data-nu-primary-key', row[r][0])
 				.attr('onclick', 'nuSelectBrowse(event, this)')
-				.hover(
-
-					function () {
-
-					if (window.nuBROWSERESIZE.moving_element == '') {
-						if (this.offsetWidth < this.scrollWidth && !$(this).is('[title]')) {
-							$(this).attr('title', $(this).html().replace(/(<([^>]+)>)/ig, '')); // Remove HTML tags
-						}
-
-						$("[data-nu-row]").addClass('nuBrowseTable').removeClass('nuSelectBrowse');
-
-						window.nuBROWSEROW = -1;
-
-						const dataRow = $(this).attr('data-nu-row');
-						$("[data-nu-row='" + dataRow + "']").not('.nuCellColored').addClass('nuSelectBrowse').removeClass('nuBrowseTable');
-					}
-
-				}, function () {
-
-					if (window.nuBROWSERESIZE.moving_element == '') {
-						$("[data-nu-row]").addClass('nuBrowseTable').removeClass('nuSelectBrowse');
-
-						window.nuBROWSEROW = -1;
-
-						const dataRow = $(this).attr('data-nu-row');
-						$("[data-nu-row='" + dataRow + "']").addClass('nuBrowseTable').removeClass('nuSelectBrowse');
-					}
-
-				});
+				.hover(nuBrowseTableHover, nuBrowseTableHover)
 
 			}
 
@@ -4435,10 +4412,7 @@ function nuBrowseTable() {
 	const pagesOf = '&nbsp;/&nbsp;' + (bc.pages == 0 ? 1 : bc.pages) + '&nbsp;';
 
 	var footerTop = t + h + 10;
-	var divFooter = document.createElement('div');
-	divFooter.setAttribute('id', 'nuBrowseFooter');
-
-	$record.append(divFooter);
+	const divFooter = nuCreateElementWithId('div', 'nuBrowseFooter', 'nuRECORD');
 
 	$(divFooter)
 	.addClass('nuBrowseFooter')
