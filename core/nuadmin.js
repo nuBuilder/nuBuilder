@@ -76,7 +76,7 @@ function nuDevMode(m) {
 function nuAddAdminButton(id, obj) {
 
 	title = nuDefine(obj.title);
-
+debugger;
 	const button = `
 	<input id="nu${id}Button" type="button" title="${nuTranslate(obj.title)}" class="nuActionButton nuAdminButton" value="${nuTranslate(obj.value)}" onclick="${obj.func}">
   `;
@@ -90,42 +90,34 @@ function nuAddAdminButtons() {
 
 	const adminButtons = {
 		nuProperties: {
-			title: nuTranslate('Form Properties'),
-			value: 'Prop',
-			func: nuOpenCurrentFormProperties
+			title: nuTranslate("Form Properties"),
+			value: "Prop",
+			func: "nuOpenCurrentFormProperties();"
 		},
 		nuObjects: {
-			title: nuTranslate('Object List'),
-			value: 'Obj',
-			func: nuOpenCurrentObjectList
+			title: nuTranslate("Object List"),
+			value: "Obj",
+			func: "nuOpenCurrentObjectList();"
 		},
 		AdminBE: {
 			title: "Before Edit",
-			value: 'BE',
-			func: function () {
-				nuEditPHP("BE");
-			}
+			value: "BE",
+			func: "nuEditPHP('BE');"
 		},
 		AdminBB: {
 			title: "Before Browse",
-			value: 'BB',
-			func: function () {
-				nuEditPHP("BB");
-			}
+			value: "BB",
+			func: "nuEditPHP('BB');"
 		},
 		AdminBS: {
 			title: "Before Save",
-			value: 'BS',
-			func: function () {
-				nuEditPHP("BS");
-			}
+			value: "BS",
+			func: "nuEditPHP('BS');"
 		},
 		AdminAS: {
 			title: "After Save",
-			value: 'AS',
-			func: function () {
-				nuEditPHP("AS");
-			}
+			value: "AS",
+			func: "nuEditPHP('AS');"
 		},
 	};
 
@@ -195,78 +187,6 @@ function nuAddAdminButtons() {
 		$('<br style="user-select:none">').insertAfter(lastAdminButton);
 	}
 
-}
-
-function nuAddAdminButtons_X() {
-	if (!nuGlobalAccess())
-		return;
-
-	const {
-		form_type,
-		form_code
-	} = nuCurrentProperties();
-	if (!form_type)
-		return;
-
-	const devMode = nuDevMode();
-	const hasBrowse = form_type.includes("browse");
-	const hasEdit = form_type.includes("edit");
-	const hasLaunch = form_type.includes("launch");
-
-	if ((nuAdminButtons["nuDebug"] || devMode) && nuMainForm()) {
-		nuAddIconToBreadcrumbHolder('nuDebugButton', 'nuDebug Results', 'nuOpenNuDebug(2)', 'fa fa-bug', '0px');
-	}
-
-	if (nuAdminButtons["nuRefresh"]) {
-		nuAddIconToBreadcrumbHolder('nuRefreshButton', 'Refresh', 'nuGetBreadcrumb()', 'fas fa-sync-alt', '7px');
-	}
-
-	let buttonCount = 0;
-	const code = nuCurrentProperties().form_code;
-
-	if (!code.startsWith('nu') || devMode) {
-
-		if (nuAdminButtons["nuProperties"]) {
-			buttonCount++;
-			nuAddAdminButton("AdminProperties", "Prop", 'nuOpenCurrentFormProperties();', nuTranslate('Form Properties'));
-		}
-
-		if (nuAdminButtons["nuObjects"]) {
-			buttonCount++;
-			nuAddAdminButton("AdminObjectList", "Obj", 'nuOpenCurrentObjectList();', nuTranslate('Object List'));
-		}
-
-		const nuPHP = nuAdminButtons["nuPHP"];
-		if ((hasEdit || hasLaunch) && nuPHP) {
-			buttonCount++;
-			nuAddAdminButton("AdminBE", "BE", 'nuEditPHP("BE");', 'Before Edit');
-		}
-
-		if (hasBrowse && nuPHP) {
-			buttonCount++;
-			nuAddAdminButton("AdminBB", "BB", 'nuEditPHP("BB");', 'Before Browse');
-		}
-
-		if (hasEdit && nuPHP) {
-			buttonCount++;
-			nuAddAdminButton("AdminBS", "BS", 'nuEditPHP("BS");', 'Before Save');
-			buttonCount++;
-			nuAddAdminButton("AdminAS", "AS", 'nuEditPHP("AS");', 'After Save');
-		}
-	}
-
-	if (buttonCount > 0) {
-		$('#nuActionHolder').css('height', '50px');
-		const frame = parent.$('#nuDragDialog iframe');
-		const dragDialog = parent.$('#nuDragDialog');
-		if (frame.length !== 0) {
-			frame.css('height', frame.cssNumber("height") + 50);
-		}
-		if (dragDialog.length !== 0) {
-			dragDialog.css('height', dragDialog.cssNumber("height") + 50);
-		}
-		$('<br style="user-select:none">').insertAfter($("#nuAdminPropertiesButton"));
-	}
 }
 
 // Set Browse Column Widths in a Browse Screen
