@@ -1639,32 +1639,33 @@ function nuUserLanguage($e = ''){
 
 }
 
-function nuTranslate($englishStr) {
+function nuTranslate($str, /*optional arguments*/) {
 
 	$language = nuUserLanguage();
-	if (empty($language)) {
-		return $englishStr;
+
+	if (!empty($language)) {
+
+		$query = "
+					SELECT trl_translation
+					FROM zzzzsys_translate
+					WHERE trl_language = ?
+					AND trl_english = ?
+					ORDER BY trl_english, IF(zzzzsys_translate_id like 'nu%', 1, 0)
+
+		";
+
+		$stmt = nuRunQuery($query, [$language, $str]);
+		$str = db_num_rows($stmt) == 0 ? $str : db_fetch_object($stmt)->trl_translation;
+
 	}
 
-	$query = "
-				SELECT trl_translation
-				FROM zzzzsys_translate
-				WHERE trl_language = ?
-				AND trl_english = ?
-				ORDER BY trl_english, IF(zzzzsys_translate_id like 'nu%', 1, 0)
-
-	";
-
-	$stmt = nuRunQuery($query, [$language, $englishStr]);
-	$translatedStr = db_num_rows($stmt) == 0 ? $englishStr : db_fetch_object($stmt)->trl_translation;
-
-	if (func_num_args() > 1 && nuStringContains('%', $translatedStr)) {
+	if (func_num_args() > 1 && nuStringContains('%', $str)) {
 		$args = func_get_args();
 		array_shift($args);
-		$translatedStr = vsprintf($translatedStr, $args);
+		$str = vsprintf($str, $args);
 	}
 
-	return $translatedStr;
+	return $str;
 
 }
 
