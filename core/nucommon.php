@@ -540,7 +540,7 @@ function nuGetUserJSONData($key, $userId = ""){
 	if (db_num_rows($stmt) == 1) {
 		$row		= db_fetch_row($stmt);
 		$json		= json_decode($row[0], true);
-		return nuObjKey($json,$key,'');
+		return nuObjKey($json, $key, '');
 	} else {
 		return '';
 	}
