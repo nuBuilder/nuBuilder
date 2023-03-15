@@ -10,25 +10,20 @@ function nuOpenCurrentObjectList() {
 	nuForm('nuobject', '', nuFormId(), '', 2);
 }
 
-function nuAddAdminButton(i, v, f, t) {
-
-	t = nuDefine(t);
-
-	const button = "<input id='nu" + i + "Button' type='button' type='button' title='" + nuTranslate(t) + "' class='nuActionButton nuAdminButton' value='" + nuTranslate(v) + "' onclick='" + f + "'>";
-	$('#nuActionHolder').prepend(button);
-
-}
-
 function nuFormInfoCopyBrowseSQL() {
 	nuCopyToClipboard(nuFormInfoBrowseSQL.innerText);
 }
 
 function nuFormInfoCopyPermalink() {
 
-	const cp = nuCurrentProperties();
-	const href = window.location.href.split('?')[0] + '?f=' + cp.form_id + '&r=' + cp.record_id + '&h=' + nuSERVERRESPONSE.home_id;
-	nuCopyToClipboard(href);
+	const {
+		form_id,
+		record_id
+	} = nuCurrentProperties();
+	const home_id = nuSERVERRESPONSE.home_id;
+	const href = `${window.location.href.split('?')[0]}?f=${form_id}&r=${record_id}&h=${home_id}`;
 
+	nuCopyToClipboard(href);
 }
 
 function nuFormInfoCurrentProperties() {
@@ -37,87 +32,241 @@ function nuFormInfoCurrentProperties() {
 
 function nuShowFormInfo() {
 
-	const cp = nuCurrentProperties();
-	const code = nuCurrentProperties().form_code;
-	const devMode = nuDevMode();
-
-	const permalink = '<br><button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCopyPermalink()">Copy Permalink</button>';
-	const currentProp = '<button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCurrentProperties()">Current Properties</button>';
-	const recordId = nuFormType() == 'edit' && cp.form_type !== 'launch' ? "<b>Record ID:</b> " + cp.record_id + '<br>' : '';
-	const browseCopyButton = '<button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCopyBrowseSQL()">Copy SQL</button><br>';
-
-	const browseSQL = nuFormType() == 'browse' && (!code.startsWith('nu') || devMode) ? '<br><b>Browse SQL:</b><br>' + '<pre class="nuFormInfoBrowseSQL"><code id="nuFormInfoBrowseSQL">' + cp.browse_sql + "</pre></code><br>" + browseCopyButton : '<br>';
-	const table = nuSERVERRESPONSE.table !== '' && (!code.startsWith('nu') || devMode) ? "<b>Table:</b> " + nuSERVERRESPONSE.table : '';
-
-	nuMessage(["<h2><u>" + cp.form_description + "</u></h2>", "<b>Form ID:</b> " + cp.form_id, "<b>Form Code:</b> " + cp.form_code, table, recordId, currentProp, permalink, browseSQL]);
+	const currProps = nuCurrentProperties();
+	const formCode = currProps.form_code;
+	const isDevMode = nuDevMode();
+	const permalinkButton = `<br><button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCopyPermalink()">Copy Permalink</button>`;
+	const currPropsButton = `<button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCurrentProperties()">Current Properties</button>`;
+	const recordId = nuFormType() === "edit" && currProps.form_type !== "launch" ? `<b>Record ID:</b> ${currProps.record_id}<br>` : "";
+	const browseCopyButton = `<button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCopyBrowseSQL()">Copy SQL</button><br>`;
+	const showSQL = !formCode.startsWith("nu") || isDevMode;
+	const browseSQL = nuFormType() === "browse" && (showSQL) ? `<br><b>Browse SQL:</b><br><pre class="nuFormInfoBrowseSQL"><code id="nuFormInfoBrowseSQL">${currProps.browse_sql}</pre></code><br>${browseCopyButton}` : "<br>";
+	const table = nuSERVERRESPONSE.table !== "" && (showSQL) ? `<b>Table:</b> ${nuSERVERRESPONSE.table}` : "";
+	const formInfo = [
+		`<h2><u>${currProps.form_description}</u></h2>`, 
+		`<b>Form ID:</b> ${currProps.form_id}`, `<b>Form Code:</b> ${formCode}`,
+		table,
+		recordId,
+		currPropsButton,
+		permalinkButton,
+		browseSQL,
+	];
+	nuMessage(formInfo);
 
 }
 
 function nuDevMode(m) {
 
-	if (m === true) localStorage.setItem("nuDevMode", '1');
-	if (m === false) localStorage.setItem("nuDevMode", '0');
+	localStorage.setItem('nuDevMode', m ? '1' : '0');
 
 	const d = localStorage.getItem("nuDevMode");
-	if ((d === '1' || d === true) && nuGlobalAccess()) {
+	if ((d === '1' || d) && nuGlobalAccess()) {
 		nuSetProperty('nuDevMode', '1', true);
 		nuConsoleErrorsToMessage();
 		return true;
 	}
-	if (m === false) {
+	if (!m) {
 		nuSetProperty('nuDevMode', '0', true);
 	}
 
 	return false;
+
 }
 
+function nuAddAdminButton(id, obj) {
+
+	title = nuDefine(obj.title);
+
+	const button = `
+	<input id="nu${id}Button" type="button" title="${nuTranslate(obj.title)}" class="nuActionButton nuAdminButton" value="${nuTranslate(obj.value)}" onclick="${obj.func}">
+  `;
+
+	$('#nuActionHolder').prepend(button);
+
+	return 1;
+
+}
 function nuAddAdminButtons() {
 
-	if (nuGlobalAccess()) {
+	const adminButtons = {
+		nuProperties: {
+			title: nuTranslate('Form Properties'),
+			value: 'Prop',
+			func: nuOpenCurrentFormProperties
+		},
+		nuObjects: {
+			title: nuTranslate('Object List'),
+			value: 'Obj',
+			func: nuOpenCurrentObjectList
+		},
+		AdminBE: {
+			title: "Before Edit",
+			value: 'BE',
+			func: function () {
+				nuEditPHP("BE");
+			}
+		},
+		AdminBB: {
+			title: "Before Browse",
+			value: 'BB',
+			func: function () {
+				nuEditPHP("BB");
+			}
+		},
+		AdminBS: {
+			title: "Before Save",
+			value: 'BS',
+			func: function () {
+				nuEditPHP("BS");
+			}
+		},
+		AdminAS: {
+			title: "After Save",
+			value: 'AS',
+			func: function () {
+				nuEditPHP("AS");
+			}
+		},
+	};
 
-		const ft = nuCurrentProperties().form_type;
-		if (ft === null || !ft) return;
+	if (!nuGlobalAccess())
+		return;
 
-		const devMode = nuDevMode();
+	const {form_type, form_code} = nuCurrentProperties();
 
-		const b = ft.indexOf("browse") >= 0;
-		const e = ft.indexOf("edit") >= 0;
-		const l = ft.indexOf("launch") >= 0;
+	if (!form_type)
+		return;
 
-		if ((nuAdminButtons["nuDebug"] || devMode) && nuMainForm()) nuAddIconToBreadcrumbHolder('nuDebugButton', 'nuDebug Results', 'nuOpenNuDebug(2)', 'fa fa-bug', '0px');
-		if (nuAdminButtons["nuRefresh"]) nuAddIconToBreadcrumbHolder('nuRefreshButton', 'Refresh', 'nuGetBreadcrumb()', 'fas fa-sync-alt', '7px');
+	const devMode = nuDevMode();
+	const isBrowse = form_type.includes("browse");
+	const isEdit = form_type.includes("edit");
+	const isLaunch = form_type.includes("launch");
 
-		var c = 0;
-		const code = nuCurrentProperties().form_code;
-		if (!code.startsWith('nu') || devMode) {
+	if ((nuAdminButtons["nuDebug"] || devMode) && nuMainForm()) {
+		nuAddIconToBreadcrumbHolder('nuDebugButton', 'nuDebug Results', 'nuOpenNuDebug(2)', 'fa fa-bug', '0px');
+	}
 
-			if (nuAdminButtons["nuProperties"]) { c++; nuAddAdminButton("AdminProperties", "Prop", 'nuOpenCurrentFormProperties();', nuTranslate('Form Properties')); }
-			if (nuAdminButtons["nuObjects"]) { c++; nuAddAdminButton("AdminObjectList", "Obj", 'nuOpenCurrentObjectList();', nuTranslate('Object List')); }
+	if (nuAdminButtons["nuRefresh"]) {
+		nuAddIconToBreadcrumbHolder('nuRefreshButton', 'Refresh', 'nuGetBreadcrumb()', 'fas fa-sync-alt', '7px');
+	}
 
-			const nuPHP = nuAdminButtons["nuPHP"];
-			if ((e || l) && nuPHP) { c++; nuAddAdminButton("AdminBE", "BE", 'nuEditPHP("BE");', 'Before Edit'); }
-			if (b && nuPHP) { c++; nuAddAdminButton("AdminBB", "BB", 'nuEditPHP("BB");', 'Before Browse'); }
-			if (e && nuPHP) { c++; nuAddAdminButton("AdminBS", "BS", 'nuEditPHP("BS");', 'Before Save'); }
-			if (e && nuPHP) { c++; nuAddAdminButton("AdminAS", "AS", 'nuEditPHP("AS");', 'After Save'); }
+	let buttonCount = 0;
+	const code = nuCurrentProperties().form_code;
 
+	if (!code.startsWith('nu') || devMode) {
+
+		if (nuAdminButtons["nuProperties"]) {
+			buttonCount += nuAddAdminButton('nuProperties', adminButtons['nuProperties']);
 		}
 
-		if (c > 0) $('#nuActionHolder').css('height', '50px');
+		if (nuAdminButtons["nuObjects"]) {
+			buttonCount += nuAddAdminButton('nuObjects', adminButtons['nuObjects']);
+		}
 
-		let frame = parent.$('#nuDragDialog iframe');
+		if (nuAdminButtons["nuPHP"]) {
+			if (isEdit || isLaunch) {
+				buttonCount += nuAddAdminButton('AdminBE', adminButtons['AdminBE']);
+			}
+
+			if (isBrowse) {
+				buttonCount += nuAddAdminButton('AdminBB', adminButtons['AdminBB']);
+			}
+
+			if (isEdit) {
+				buttonCount += nuAddAdminButton('AdminBS', adminButtons['AdminBS']);
+				buttonCount += nuAddAdminButton('AdminAS', adminButtons['AdminAS']);
+			}
+		}
+	}
+
+	const heightToAdd = 50;
+	if (buttonCount > 0) {
+		
+		$('#nuActionHolder').css('height', `+=${heightToAdd}px`);
+		const frame = parent.$('#nuDragDialog iframe');
+		const dragDialog = parent.$('#nuDragDialog');
+		if (frame.length !== 0) {
+			frame.outerHeight((i, h) => h + heightToAdd);
+		}
+		if (dragDialog.length !== 0) {
+			dragDialog.outerHeight((i, h) => h + heightToAdd);
+		}
+		const lastAdminButton = $('.nuAdminButton').last();
+		$('<br style="user-select:none">').insertAfter(lastAdminButton);
+	}
+
+}
+
+function nuAddAdminButtons_X() {
+	if (!nuGlobalAccess())
+		return;
+
+	const {
+		form_type,
+		form_code
+	} = nuCurrentProperties();
+	if (!form_type)
+		return;
+
+	const devMode = nuDevMode();
+	const hasBrowse = form_type.includes("browse");
+	const hasEdit = form_type.includes("edit");
+	const hasLaunch = form_type.includes("launch");
+
+	if ((nuAdminButtons["nuDebug"] || devMode) && nuMainForm()) {
+		nuAddIconToBreadcrumbHolder('nuDebugButton', 'nuDebug Results', 'nuOpenNuDebug(2)', 'fa fa-bug', '0px');
+	}
+
+	if (nuAdminButtons["nuRefresh"]) {
+		nuAddIconToBreadcrumbHolder('nuRefreshButton', 'Refresh', 'nuGetBreadcrumb()', 'fas fa-sync-alt', '7px');
+	}
+
+	let buttonCount = 0;
+	const code = nuCurrentProperties().form_code;
+
+	if (!code.startsWith('nu') || devMode) {
+
+		if (nuAdminButtons["nuProperties"]) {
+			buttonCount++;
+			nuAddAdminButton("AdminProperties", "Prop", 'nuOpenCurrentFormProperties();', nuTranslate('Form Properties'));
+		}
+
+		if (nuAdminButtons["nuObjects"]) {
+			buttonCount++;
+			nuAddAdminButton("AdminObjectList", "Obj", 'nuOpenCurrentObjectList();', nuTranslate('Object List'));
+		}
+
+		const nuPHP = nuAdminButtons["nuPHP"];
+		if ((hasEdit || hasLaunch) && nuPHP) {
+			buttonCount++;
+			nuAddAdminButton("AdminBE", "BE", 'nuEditPHP("BE");', 'Before Edit');
+		}
+
+		if (hasBrowse && nuPHP) {
+			buttonCount++;
+			nuAddAdminButton("AdminBB", "BB", 'nuEditPHP("BB");', 'Before Browse');
+		}
+
+		if (hasEdit && nuPHP) {
+			buttonCount++;
+			nuAddAdminButton("AdminBS", "BS", 'nuEditPHP("BS");', 'Before Save');
+			buttonCount++;
+			nuAddAdminButton("AdminAS", "AS", 'nuEditPHP("AS");', 'After Save');
+		}
+	}
+
+	if (buttonCount > 0) {
+		$('#nuActionHolder').css('height', '50px');
+		const frame = parent.$('#nuDragDialog iframe');
+		const dragDialog = parent.$('#nuDragDialog');
 		if (frame.length !== 0) {
 			frame.css('height', frame.cssNumber("height") + 50);
 		}
-
-		let dragDialog = parent.$('#nuDragDialog');
 		if (dragDialog.length !== 0) {
 			dragDialog.css('height', dragDialog.cssNumber("height") + 50);
 		}
-
 		$('<br style="user-select:none">').insertAfter($("#nuAdminPropertiesButton"));
-
 	}
-
 }
 
 // Set Browse Column Widths in a Browse Screen
@@ -150,7 +299,8 @@ function nuSetBrowseColumnWidths() {
 
 function nuInitSetBrowseWidthHelper() {
 
-	if (parent.window.nuDocumentID === undefined) return;
+	if (parent.window.nuDocumentID === undefined)
+		return;
 
 	if (!nuMainForm() && nuFormId() == 'nuform' && window.parent.nuFormType() == 'browse') {
 		if (window.location != window.parent.location) {
@@ -239,7 +389,8 @@ function nuConsoleErrorsToMessage() {
 
 	window.onerror = function (msg, url, lineNo, columnNo, error) {
 
-		if (msg == "ResizeObserver loop limit exceeded") return; // ignore
+		if (msg == "ResizeObserver loop limit exceeded")
+			return; // ignore
 
 		if (msg.toLowerCase().indexOf('script error') > -1) {
 			alert('Script Error: See Browser Console for Details');
@@ -262,24 +413,20 @@ function nuConsoleErrorsToMessage() {
 
 var contextMenuCurrentTarget = null;
 
-var menuAlign =
-{
+var menuAlign = {
 	text: "Align",
 	tag: "Align",
-	subMenu: [
-		{
+	subMenu: [{
 			text: nuContextMenuItemText("Left", "fa fa-align-left"),
 			tag: "Left",
 			faicon: "fa fa-align-left",
 			action: () => nuContextMenuUpdateAlign("left")
-		},
-		{
+		}, {
 			text: nuContextMenuItemText("Right", "fa fa-align-right"),
 			tag: "Right",
 			faicon: "fa fa-align-right",
 			action: () => nuContextMenuUpdateAlign("right")
-		},
-		{
+		}, {
 			text: nuContextMenuItemText("Center", "fa fa-align-center"),
 			tag: "Center",
 			faicon: "fa fa-align-center",
@@ -288,75 +435,65 @@ var menuAlign =
 	],
 };
 
-var menuObject =
-{
+var menuObject = {
 	text: "",
 	tag: "Object",
-	action: function (e) { nuContextMenuCopyIdToClipboard(); }
+	action: function (e) {
+		nuContextMenuCopyIdToClipboard();
+	}
 };
 
-var menuClone =
-{
+var menuClone = {
 	text: "",
 	tag: "Clone",
-	action: function (e) { nuContextMenuClone(); }
+	action: function (e) {
+		nuContextMenuClone();
+	}
 };
 
-var menuProperties =
-{
+var menuProperties = {
 	text: "Properties...",
 	tag: "Properties",
-	action: function (e) { nuContextMenuObjectPopup(e); }
+	action: function (e) {
+		nuContextMenuObjectPopup(e);
+	}
 };
 
-var menuRename =
-{
+var menuRename = {
 	text: "Rename...",
 	action: () => nuContextMenuLabelPrompt(),
 };
 
-var subMenuHidden =
-
-{
+var subMenuHidden = {
 	text: nuContextMenuItemText("Hidden", "fa fa-eye-slash"),
 	tag: "Hidden",
 	faicon: "fa fa-eye-slash",
 	action: () => nuContextMenuUpdateAccess(2)
 };
 
-var subMenuHiddenUser =
-
-{
+var subMenuHiddenUser = {
 	text: nuContextMenuItemText("Hidden (User)", "fa fa-eye-slash"),
 	tag: "Hidden (User)",
 	faicon: "fa fa-eye-slash",
 	action: () => nuContextMenuUpdateAccess(3)
 }
 
-
-var subMenuHiddenUserReadonly =
-
-{
+var subMenuHiddenUserReadonly = {
 	text: nuContextMenuItemText("Hidden (User) + Readonly", "fa fa-eye-slash"),
 	tag: "Hidden (User) + Readonly",
 	faicon: "fa fa-eye-slash",
 	action: () => nuContextMenuUpdateAccess(4)
 }
 
-
-
-var menuAccess =
-{
+var menuAccess = {
 	text: "Access",
 	tag: "Access",
-	subMenu: [
-		{
+	subMenu: [{
 			text: nuContextMenuItemText("Editable", "fa fa-pencil-square-o"),
 			tag: "Editable",
 			faicon: "far fa-edit",
 			action: () => nuContextMenuUpdateAccess(0),
-		},
-		{
+		}, {
 			text: nuContextMenuItemText("Readonly", "fa fa-lock"),
 			tag: "Readonly",
 			faicon: "fa fa-lock",
@@ -368,31 +505,26 @@ var menuAccess =
 	]
 };
 
-var menuValidation =
-{
+var menuValidation = {
 	text: "Validation",
 	tag: "Validation",
 	disabled: false,
-	subMenu: [
-		{
+	subMenu: [{
 			text: nuContextMenuItemText("None", "fa fa-globe"),
 			tag: "None",
 			faicon: "fa fa-globe",
 			action: () => nuContextMenuUpdateValidation(0)
-		},
-		{
+		}, {
 			text: nuContextMenuItemText("No Blanks", "fa fa-battery-full"),
 			tag: "No Blanks",
 			faicon: "fa fa-battery-full",
 			action: () => nuContextMenuUpdateValidation(1)
-		},
-		{
+		}, {
 			text: nuContextMenuItemText("No Duplicates", "far fa-gem"),
 			tag: "No Duplicates",
 			faicon: "fa fa-diamond",
 			action: () => nuContextMenuUpdateValidation(2)
-		},
-		{
+		}, {
 			text: nuContextMenuItemText("No Duplicates/Blanks", "fa fa-star"),
 			tag: "No Duplicates/Blanks",
 			faicon: "fa fa-star",
@@ -403,62 +535,70 @@ var menuValidation =
 
 var nuContextMenuDefinitionEdit = [
 
-	menuObject,
-	{ isDivider: true },
+	menuObject, {
+		isDivider: true
+	},
 	menuProperties,
-	menuRename,
-	{ isDivider: true },
+	menuRename, {
+		isDivider: true
+	},
 	menuAccess,
 	menuAlign,
-	menuValidation,
-	{ isDivider: true },
-
-	{
+	menuValidation, {
+		isDivider: true
+	}, {
 		html: "",
 		tag: "Top",
-		action: function (e) { e.stopImmediatePropagation(); }
-	}
-	,
-	{
+		action: function (e) {
+			e.stopImmediatePropagation();
+		}
+	}, {
 		html: "",
 		tag: "Left",
-		action: function (e) { e.stopImmediatePropagation(); }
-	},
-	{
+		action: function (e) {
+			e.stopImmediatePropagation();
+		}
+	}, {
 		html: "",
 		tag: "Width",
-		action: function (e) { e.stopImmediatePropagation(); }
-	},
-	{
+		action: function (e) {
+			e.stopImmediatePropagation();
+		}
+	}, {
 		html: "",
 		tag: "Height",
-		action: function (e) { e.stopImmediatePropagation(); }
+		action: function (e) {
+			e.stopImmediatePropagation();
+		}
 	}
 ];
 
 var nuContextMenuDefinitionBrowse = [
 
-	menuObject,
-	{ isDivider: true },
-	menuRename,
-	{ isDivider: true },
-	menuAlign,
-	{ isDivider: true },
-	{
+	menuObject, {
+		isDivider: true
+	},
+	menuRename, {
+		isDivider: true
+	},
+	menuAlign, {
+		isDivider: true
+	}, {
 		html: "",
 		tag: "Width",
-		action: function (e) { e.stopImmediatePropagation(); }
+		action: function (e) {
+			e.stopImmediatePropagation();
+		}
 	}
 
 ];
 
 var nuContextMenuDefinitionTab = [
 
-	menuObject,
-	{ isDivider: true },
-	menuRename,
-
-	{
+	menuObject, {
+		isDivider: true
+	},
+	menuRename, {
 		text: "Access",
 		tag: "Access",
 		subMenu: [
@@ -472,19 +612,17 @@ var nuContextMenuDefinitionTab = [
 
 var nuContextMenuDefinitionSubform = [
 
-	menuObject,
-	{ isDivider: true },
+	menuObject, {
+		isDivider: true
+	},
 	menuRename
 
 	/*
-		menuAlign
-
-		{ isDivider: true },
-		{
-			html: "",
-			tag: "Width"
-		}
-	*/
+	menuAlign{ isDivider: true },{
+	html: "",
+	tag: "Width"
+	}
+	 */
 
 ];
 
@@ -498,7 +636,8 @@ function nuContextLabelHasClass(id, className) {
 
 function nuContextMenuIdHasAlgin(id, align) {
 
-	if (nuFormType() == 'browse') id = nuContextMenuCurrentTargetBrowseId();
+	if (nuFormType() == 'browse')
+		id = nuContextMenuCurrentTargetBrowseId();
 	id = $('#' + id).hasClass('nuContentBoxContainer') ? 'label_' + id : id;
 
 	return $('#' + id).css('text-align').toLowerCase() == align.toLowerCase();
@@ -515,7 +654,8 @@ function nuContextMenuAccessText(id, sub, access) {
 
 function nuContextMenuPositionText(id, position) {
 
-	if (nuFormType() == 'browse') id = nuContextMenuCurrentTargetBrowseId();
+	if (nuFormType() == 'browse')
+		id = nuContextMenuCurrentTargetBrowseId();
 
 	if ($('#' + id).hasClass('nuContentBoxContainer') && (position == 'Height' || position == 'Width')) {
 		id = 'content_' + id;
@@ -532,72 +672,50 @@ function nuContextMenuValidationText(id, sub, validation) {
 function nuContextMenuBeforeRender(menu, event) {
 
 	contextMenuCurrentTarget = event.currentTarget;
-	let id = contextMenuCurrentTargetId();
-	let isButton = $('#' + contextMenuCurrentTarget.id).is(":button");
-	let isSelect = $('#' + contextMenuCurrentTargetUpdateId()).is("select");
+	const id = contextMenuCurrentTargetId();
+	const $currentTarget = $('#' + contextMenuCurrentTarget.id);
+	const isButton = $currentTarget.is(":button");
+	const isSelect = $('#' + contextMenuCurrentTargetUpdateId()).is("select");
 
-	for (let i = 0; i < menu.length; i++) {
-
-		if (Object.prototype.hasOwnProperty.call(menu[i], "tag")) {
-
-			if (menu[i].tag == 'Top') menu[i].html = nuContextMenuPositionText(id, 'Top');
-			if (menu[i].tag == 'Left') menu[i].html = nuContextMenuPositionText(id, 'Left');
-			if (menu[i].tag == 'Width') menu[i].html = nuContextMenuPositionText(id, 'Width');
-			if (menu[i].tag == 'Height') menu[i].html = nuContextMenuPositionText(id, 'Height');
-			if (menu[i].tag == 'Object') menu[i].text = "Object: " + (nuFormType() == 'edit' ? contextMenuCurrentTargetUpdateId() : nuContextMenuCurrentTargetBrowseId());
-
-			if (menu[i].tag == 'Access') {
-				for (let j = 0; j < menu[i].subMenu.length; j++) {
-					let sub = menu[i].subMenu[j];
-					if (sub.tag == 'Editable') {
-						sub.text = nuContextMenuAccessText(id, sub, '0');
-					} else if (sub.tag == 'Readonly') {
-						sub.text = nuContextMenuAccessText(id, sub, '1');
-					} else if (sub.tag == 'Hidden') {
-						sub.text = nuContextMenuAccessText(id, sub, '2');
-					} else if (sub.tag == 'Hidden (User)') {
-						sub.text = nuContextMenuAccessText(id, sub, '3');
-					} else if (sub.tag == 'Hidden (User) + Readonly') {
-						sub.text = nuContextMenuAccessText(id, sub, '4');
-					}
-				}
-			} else if (menu[i].tag == 'Align') {
+	menu.forEach((item) => {
+		if (Object.prototype.hasOwnProperty.call(item, "tag")) {
+			switch (item.tag) {
+			case 'Top': case 'Left': case 'Width': case 'Height':
+				item.html = nuContextMenuPositionText(id, item.tag);
+				break;
+			case 'Object':
+				item.text = `Object: ${(nuFormType() === 'edit' ? contextMenuCurrentTargetUpdateId() : nuContextMenuCurrentTargetBrowseId())}`;
+				break;
+			case 'Access':
+				item.subMenu.forEach((sub) => {
+					sub.text = nuContextMenuAccessText(id, sub, sub.tag === 'Editable' ? '0' : sub.tag === 'Readonly' ? '1' : sub.tag === 'Hidden' ? '2' : sub.tag === 'Hidden (User)' ? '3' : '4');
+				});
+				break;
+			case 'Align':
 				if (isSelect) {
-					menu.splice(i, 1);
+					menu.splice(menu.indexOf(item), 1);
 				} else {
-					for (let j = 0; j < menu[i].subMenu.length; j++) {
-						let sub = menu[i].subMenu[j];
+					item.subMenu.forEach((sub) => {
 						sub.text = nuContextMenuAlignText(id, sub, sub.tag);
-					}
+					});
 				}
-			} else if (menu[i].tag == 'Validation') {
+				break;
+			case 'Validation':
 				if (isButton) {
-					menu.splice(i, 1);
+					menu.splice(menu.indexOf(item), 1);
 				} else {
-					for (let j = 0; j < menu[i].subMenu.length; j++) {
-						let sub = menu[i].subMenu[j];
-						if (sub.tag == 'No Blanks') {
-							sub.text = nuContextMenuValidationText(id, sub, 'nuBlank');
-						} else if (sub.tag == 'No Duplicates') {
-							sub.text = nuContextMenuValidationText(id, sub, 'nuDuplicate');
-						} else if (sub.tag == 'No Duplicates/Blanks') {
-							sub.text = nuContextMenuValidationText(id, sub, 'nuDuplicateOrBlank');
-						} else if (sub.tag == 'None') {
-							sub.text = nuContextMenuValidationText(id, sub, 'nuNone');
-						}
-					}
+					item.subMenu.forEach((sub) => {
+						sub.text = nuContextMenuValidationText(id, sub, sub.tag === 'No Blanks' ? 'nuBlank' : sub.tag === 'No Duplicates' ? 'nuDuplicate' : sub.tag === 'No Duplicates/Blanks' ? 'nuDuplicateOrBlank' : 'nuNone');
+					});
 				}
+				break;
 			}
-
 		}
-	}
+	});
 
 	$('#' + id).focus();
 
-	//	setTimeout(function(){ $('.ctxmenu').css('top', $('.ctxmenu').cssNumber('top') + 20 + 'px');}, 5);
-
 	return menu;
-
 }
 
 function nuContextMenuItemText(label, iconClass) {
@@ -618,7 +736,8 @@ function nuContextMenuGetWordWidth(w) {
 
 function nuContextMenuItemPositionChanged(t, update) {
 
-	if (t.value.trim() == '' || Number(t.value) < 0) return;
+	if (t.value.trim() == '' || Number(t.value) < 0)
+		return;
 
 	let id = contextMenuCurrentTargetId();
 	let prop = $(t).attr("data-property").toLowerCase();
@@ -671,26 +790,29 @@ function nuContextMenuItemPosition(label, v) {
 
 	const lwidth = nuContextMenuGetWordWidth(label);
 	let left = 70 - lwidth + 17;
-	if (label == 'Top') left += 2;
-	if (label == 'Left') left += 1;
-	if (label == 'Height') left -= 1;
+	if (label == 'Top')
+		left += 2;
+	if (label == 'Left')
+		left += 1;
+	if (label == 'Height')
+		left -= 1;
 
 	return '<span style="width: 100px; padding-left:20px; font-family: font-family: Verdana, sans-serif;white-space:nowrap; display: inline;">' + label + '</span>' +
-		' <input data-property="' + label + '" onChange="nuContextMenuItemPositionChanged(this, false)" onBlur="nuContextMenuItemPositionChanged(this, true)" style="text-align: right; margin: 3px 10px 3px ' + left + 'px; width: 50px; height: 22px" type="number" min="0" class="input_number" value="' + v + '"> </input>';
+	' <input data-property="' + label + '" onChange="nuContextMenuItemPositionChanged(this, false)" onBlur="nuContextMenuItemPositionChanged(this, true)" style="text-align: right; margin: 3px 10px 3px ' + left + 'px; width: 50px; height: 22px" type="number" min="0" class="input_number" value="' + v + '"> </input>';
 
 }
 
 function nuContextMenuUpdateAccess(v) {
 
 	const id = contextMenuCurrentTargetId();
-	if (v == 0) { 				//-- editable
+	if (v == 0) { //-- editable
 		nuEnable(id);
 		nuShow(id);
-	} else if (v == 1) { 		//-- readonly
+	} else if (v == 1) { //-- readonly
 		nuDisable(id);
-	} else if (v == 2) { 		//-- hidden
+	} else if (v == 2) { //-- hidden
 		nuHide(id);
-	} else if (v == 4) { 		//-- hidden (user) / readonly
+	} else if (v == 4) { //-- hidden (user) / readonly
 		nuDisable(id);
 	}
 
@@ -726,16 +848,16 @@ function nuContextMenuUpdateValidation(v) {
 	let id = contextMenuCurrentTargetId();
 	let objLabel = $('#label_' + id);
 
-	if (v == 0) {														//-- none
+	if (v == 0) { //-- none
 		objLabel.removeClass('nuBlank nuDuplicate nuDuplicateOrBlank');
 		objLabel.addClass('nuNone');
-	} else if (v == 1) {												//-- no blanks
+	} else if (v == 1) { //-- no blanks
 		objLabel.removeClass('nuNone nuDuplicate nuDuplicateOrBlank');
 		objLabel.addClass('nuBlank');
-	} else if (v == 2) {												//-- no duplicates
+	} else if (v == 2) { //-- no duplicates
 		objLabel.addClass('nuDuplicate');
 		objLabel.removeClass('nuNone nuBlank nuDuplicateOrBlank');
-	} else if (v == 3) {												//-- no duplicates/blanks
+	} else if (v == 3) { //-- no duplicates/blanks
 		objLabel.addClass('nuDuplicateOrBlank');
 		objLabel.removeClass('nuNone nuBlank nuDuplicate');
 	}
@@ -749,12 +871,12 @@ function nuContextMenuUpdateLabel(id) {
 
 	const objLabel = $('#label_' + id);
 
-	if (objLabel.hasClass('nuContentBoxTitle')) return;
+	if (objLabel.hasClass('nuContentBoxTitle'))
+		return;
 
 	nuSetLabelText(id, objLabel.html(), true);
 
 }
-
 
 function nuContextMenuGetFormId(id) {
 
@@ -774,7 +896,6 @@ function nuContextMenuGetFormId(id) {
 	return nuFormId();
 
 }
-
 
 function nuContextMenuLabelPromptCallback(value, ok) {
 
@@ -799,16 +920,17 @@ function nuContextMenuLabelPromptCallback(value, ok) {
 
 function nuContextMenuLabelPrompt() {
 
-	let label = contextMenuCurrentTarget.id;
-	let id = contextMenuCurrentTargetId();
-	let obj = $('#' + contextMenuCurrentTarget.id);
+	const targetId = contextMenuCurrentTargetId();
+	const targetElement = $('#' + contextMenuCurrentTarget.id);
 
-	let value = obj.is(":button") ? obj.val() : $('#' + label).html();
-	value = obj.is(":button") && obj.attr('data-nu-label') ? obj.html() : value;
+	const label = contextMenuCurrentTarget.id;
+	const objectId = targetId;
+	const initialValue = targetElement.text();
 
-	value = nuFormType() == 'edit' ? value : value.trim();
+	const promptTitle = `${nuTranslate("Object")}: ${objectId}`;
+	const promptMessage = `${nuTranslate("Label")}:`;
 
-	nuPrompt(nuTranslate("Label") + ':', nuTranslate("Object") + ': ' + id, value, '', 'nuContextMenuLabelPromptCallback');
+	nuPrompt(promptMessage, promptTitle, initialValue, '', 'nuContextMenuLabelPromptCallback');
 
 }
 
@@ -841,7 +963,7 @@ function contextMenuCurrentTargetId() {
 	let t = $('#' + contextMenuCurrentTarget.id);
 	let hasClass = nuObjectClassList(contextMenuCurrentTarget.id).containsAny(['nuWord', 'nu_run', 'nuImage', 'nuTab', 'nuSubformTitle', 'nuSort']) && !t.hasClass('nuTabHolder')
 
-	return t.is(":button") || hasClass ? contextMenuCurrentTarget.id : contextMenuCurrentTarget.id.substring(6);
+		return t.is(":button") || hasClass ? contextMenuCurrentTarget.id : contextMenuCurrentTarget.id.substring(6);
 
 }
 
@@ -860,9 +982,7 @@ function nuContextMenuCopyIdToClipboard() {
 
 }
 
-function nuContextMenuClone() {
-
-}
+function nuContextMenuClone() {}
 
 function nuContextMenuObjectPopup(e) {
 
@@ -931,7 +1051,6 @@ function nuContextMenuClose() {
 
 }
 
-
 /*
 Copyright (c) 2009 James Padolsey.  All rights reserved.
 
@@ -939,12 +1058,12 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
 are met:
 
-   1. Redistributions of source code must retain the above copyright
-	  notice, this list of conditions and the following disclaimer.
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
 
-   2. Redistributions in binary form must reproduce the above copyright
-	  notice, this list of conditions and the following disclaimer in the
-	  documentation and/or other materials provided with the distribution.
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
 
 THIS SOFTWARE IS PROVIDED BY James Padolsey ``AS IS'' AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -962,26 +1081,27 @@ The views and conclusions contained in the software and documentation are
 those of the authors and should not be interpreted as representing official
 policies, either expressed or implied, of James Padolsey.
 
- AUTHOR James Padolsey (http://james.padolsey.com)
- VERSION 1.03.0
- UPDATED 29-10-2011
- CONTRIBUTORS
-	David Waller
-	Benjamin Drucker
+AUTHOR James Padolsey (http://james.padolsey.com)
+VERSION 1.03.0
+UPDATED 29-10-2011
+CONTRIBUTORS
+David Waller
+Benjamin Drucker
 
-*/
+ */
 
 var nuPrettyPrint = (function () {
 
 	/* These "util" functions are not part of the core
-	   functionality but are  all necessary - mostly DOM helpers */
+	functionality but are  all necessary - mostly DOM helpers */
 
 	var util = {
 
 		el: function (type, attrs) {
 
 			/* Create new element */
-			var el = document.createElement(type), attr;
+			var el = document.createElement(type),
+			attr;
 
 			/*Copy to single object */
 			attrs = util.merge({}, attrs);
@@ -1022,29 +1142,36 @@ var nuPrettyPrint = (function () {
 
 			/* colSpan is calculated by length of null items in array */
 			var colSpan = util.count(cells, null) + 1,
-				tr = util.el('tr'), td,
-				attrs = {
-					style: util.getStyles(cellType, type),
-					colSpan: colSpan,
-					onmouseover: function () {
-						var tds = this.parentNode.childNodes;
-						util.forEach(tds, function (cell) {
-							if (cell.nodeName.toLowerCase() !== 'td') { return; }
-							util.applyCSS(cell, util.getStyles('td_hover', type));
-						});
-					},
-					onmouseout: function () {
-						var tds = this.parentNode.childNodes;
-						util.forEach(tds, function (cell) {
-							if (cell.nodeName.toLowerCase() !== 'td') { return; }
-							util.applyCSS(cell, util.getStyles('td', type));
-						});
-					}
-				};
+			tr = util.el('tr'),
+			td,
+			attrs = {
+				style: util.getStyles(cellType, type),
+				colSpan: colSpan,
+				onmouseover: function () {
+					var tds = this.parentNode.childNodes;
+					util.forEach(tds, function (cell) {
+						if (cell.nodeName.toLowerCase() !== 'td') {
+							return;
+						}
+						util.applyCSS(cell, util.getStyles('td_hover', type));
+					});
+				},
+				onmouseout: function () {
+					var tds = this.parentNode.childNodes;
+					util.forEach(tds, function (cell) {
+						if (cell.nodeName.toLowerCase() !== 'td') {
+							return;
+						}
+						util.applyCSS(cell, util.getStyles('td', type));
+					});
+				}
+			};
 
 			util.forEach(cells, function (cell) {
 
-				if (cell === null) { return; }
+				if (cell === null) {
+					return;
+				}
 				/* Default cell type is <td> */
 				td = util.el(cellType, attrs);
 
@@ -1083,9 +1210,9 @@ var nuPrettyPrint = (function () {
 					style: util.getStyles('table', type)
 				}
 			},
-				tbl = util.el('table', attrs.table),
-				thead = util.el('thead', attrs.thead),
-				tbody = util.el('tbody', attrs.tbody);
+			tbl = util.el('table', attrs.table),
+			thead = util.el('thead', attrs.thead),
+			tbody = util.el('tbody', attrs.tbody);
 
 			if (headings.length) {
 				tbl.appendChild(thead);
@@ -1095,7 +1222,7 @@ var nuPrettyPrint = (function () {
 
 			return {
 				/* Facade for dealing with table/tbody
-				   Actual table node is this.node: */
+				Actual table node is this.node: */
 				node: tbl,
 				tbody: tbody,
 				thead: thead,
@@ -1122,7 +1249,7 @@ var nuPrettyPrint = (function () {
 		merge: function (target, source) {
 
 			/* Merges two (or more) objects,
-			   giving the last one precedence */
+			giving the last one precedence */
 
 			if (typeof target !== 'object') {
 				target = {};
@@ -1174,8 +1301,7 @@ var nuPrettyPrint = (function () {
 
 			/* Helper: iteration */
 			var len = arr.length,
-				index = -1;
-
+			index = -1;
 			while (++index < len) {
 				if (fn(arr[index], index, arr) === false) {
 					break;
@@ -1188,9 +1314,13 @@ var nuPrettyPrint = (function () {
 		type: function (v) {
 			try {
 				/* Returns type, e.g. "string", "number", "array" etc.
-				   Note, this is only used for precise typing. */
-				if (v === null) { return 'null'; }
-				if (v === undefined) { return 'undefined'; }
+				Note, this is only used for precise typing. */
+				if (v === null) {
+					return 'null';
+				}
+				if (v === undefined) {
+					return 'undefined';
+				}
 				var oType = Object.prototype.toString.call(v).match(/\s(.+?)\]/)[1].toLowerCase();
 				if (v.nodeType) {
 					if (v.nodeType === 1) {
@@ -1218,7 +1348,7 @@ var nuPrettyPrint = (function () {
 
 		within: function (ref) {
 			/* Check existence of a val within an object
-			   RETURNS KEY */
+			RETURNS KEY */
 			return {
 				is: function (o) {
 					for (var i in ref) {
@@ -1237,32 +1367,31 @@ var nuPrettyPrint = (function () {
 					'[POINTS BACK TO <strong>' + (key) + '</strong>]',
 					'Click to show this item anyway',
 					function () {
-						this.parentNode.appendChild(prettyPrintThis(obj, { maxDepth: 1 }));
-					}
-				);
+					this.parentNode.appendChild(prettyPrintThis(obj, {
+							maxDepth: 1
+						}));
+				});
 			},
 			depthReached: function (obj, settings) {
 				return util.expander(
 					'[EXPAND]',
 					'Click to show this item anyway',
 					function () {
-						try {
-							this.parentNode.appendChild(prettyPrintThis(obj, { maxDepth: 1 }));
-						} catch (e) {
-							this.parentNode.appendChild(
-								util.table(['ERROR OCCURED DURING OBJECT RETRIEVAL'], 'error').addRow([e.message]).node
-							);
-						}
+					try {
+						this.parentNode.appendChild(prettyPrintThis(obj, {
+								maxDepth: 1
+							}));
+					} catch (e) {
+						this.parentNode.appendChild(
+							util.table(['ERROR OCCURED DURING OBJECT RETRIEVAL'], 'error').addRow([e.message]).node);
 					}
-				);
+				});
 			}
 		},
 
 		getStyles: function (el, type) {
 			type = prettyPrintThis.settings.styles[type] || {};
-			return util.merge(
-				{}, prettyPrintThis.settings.styles['default'][el], type[el]
-			);
+			return util.merge({}, prettyPrintThis.settings.styles['default'][el], type[el]);
 		},
 
 		expander: function (text, title, clickFn) {
@@ -1289,12 +1418,13 @@ var nuPrettyPrint = (function () {
 		stringify: function (obj) {
 
 			/* Bit of an ugly duckling!
-			   - This fn returns an ATTEMPT at converting an object/array/anyType
-				 into a string, kinda like a JSON-deParser
-			   - This is used for when |settings.expanded === false| */
+			- This fn returns an ATTEMPT at converting an object/array/anyType
+			into a string, kinda like a JSON-deParser
+			- This is used for when |settings.expanded === false| */
 
 			var type = util.type(obj),
-				str, first = true;
+			str,
+			first = true;
 			if (type === 'array') {
 				str = '[';
 				util.forEach(obj, function (item, i) {
@@ -1324,7 +1454,9 @@ var nuPrettyPrint = (function () {
 		headerGradient: (function () {
 
 			var canvas = document.createElement('canvas');
-			if (!canvas.getContext) { return ''; }
+			if (!canvas.getContext) {
+				return '';
+			}
 			var cx = canvas.getContext('2d');
 			canvas.height = 30;
 			canvas.width = 1;
@@ -1347,22 +1479,22 @@ var nuPrettyPrint = (function () {
 	var prettyPrintThis = function (obj, options) {
 
 		/*
-		*	  obj :: Object to be printed
-		*  options :: Options (merged with config)
-		*/
+		 *	  obj :: Object to be printed
+		 *  options :: Options (merged with config)
+		 */
 
 		options = options || {};
 
 		var settings = util.merge({}, prettyPrintThis.config, options),
-			container = util.el('div'),
-			config = prettyPrintThis.config,
-			currentDepth = 0,
-			stack = {},
-			hasRunOnce = false;
+		container = util.el('div'),
+		config = prettyPrintThis.config,
+		currentDepth = 0,
+		stack = {},
+		hasRunOnce = false;
 
 		/* Expose per-call settings.
-		   Note: "config" is overwritten (where necessary) by options/"settings"
-		   So, if you need to access/change *DEFAULT* settings then go via ".config" */
+		Note: "config" is overwritten (where necessary) by options/"settings"
+		So, if you need to access/change *DEFAULT* settings then go via ".config" */
 		prettyPrintThis.settings = settings;
 
 		var typeDealer = {
@@ -1377,29 +1509,29 @@ var nuPrettyPrint = (function () {
 				var miniTable = util.table(['RegExp', null], 'regexp');
 				var flags = util.table();
 				var span = util.expander(
-					'/' + item.source + '/',
-					'Click to show more',
-					function () {
+						'/' + item.source + '/',
+						'Click to show more',
+						function () {
 						this.parentNode.appendChild(miniTable.node);
-					}
-				);
+					});
 
 				flags
-					.addRow(['g', item.global])
-					.addRow(['i', item.ignoreCase])
-					.addRow(['m', item.multiline]);
+				.addRow(['g', item.global])
+				.addRow(['i', item.ignoreCase])
+				.addRow(['m', item.multiline]);
 
 				miniTable
-					.addRow(['source', '/' + item.source + '/'])
-					.addRow(['flags', flags.node])
-					.addRow(['lastIndex', item.lastIndex]);
+				.addRow(['source', '/' + item.source + '/'])
+				.addRow(['flags', flags.node])
+				.addRow(['lastIndex', item.lastIndex]);
 
 				return settings.expanded ? miniTable.node : span;
 			},
 			domelement: function (element, depth) {
 
 				var miniTable = util.table(['DOMElement', null], 'domelement'),
-					props = ['id', 'className', 'innerHTML', 'src', 'href'], elname = element.nodeName || '';
+				props = ['id', 'className', 'innerHTML', 'src', 'href'],
+				elname = element.nodeName || '';
 
 				miniTable.addRow(['tag', '&lt;' + elname.toLowerCase() + '&gt;']);
 
@@ -1413,26 +1545,24 @@ var nuPrettyPrint = (function () {
 					'DOMElement (' + elname.toLowerCase() + ')',
 					'Click to show more',
 					function () {
-						this.parentNode.appendChild(miniTable.node);
-					}
-				);
+					this.parentNode.appendChild(miniTable.node);
+				});
 			},
 			domnode: function (node) {
 
 				/* Deals with all DOMNodes that aren't elements (nodeType !== 1) */
 				var miniTable = util.table(['DOMNode', null], 'domelement'),
-					data = util.htmlentities((node.data || 'UNDEFINED').replace(/\n/g, '\\n'));
+				data = util.htmlentities((node.data || 'UNDEFINED').replace(/\n/g, '\\n'));
 				miniTable
-					.addRow(['nodeType', node.nodeType + ' (' + node.nodeName + ')'])
-					.addRow(['data', data]);
+				.addRow(['nodeType', node.nodeType + ' (' + node.nodeName + ')'])
+				.addRow(['data', data]);
 
 				return settings.expanded ? miniTable.node : util.expander(
 					'DOMNode',
 					'Click to show more',
 					function () {
-						this.parentNode.appendChild(miniTable.node);
-					}
-				);
+					this.parentNode.appendChild(miniTable.node);
+				});
 			},
 			jquery: function (obj, depth, key) {
 				return typeDealer['array'](obj, depth, key, true);
@@ -1451,7 +1581,7 @@ var nuPrettyPrint = (function () {
 				}
 
 				var table = util.table([(obj.constructor && obj.constructor.name) || 'Object', null], 'object'),
-					isEmpty = true;
+				isEmpty = true;
 
 				var keys = [];
 				for (var i in obj) {
@@ -1468,8 +1598,8 @@ var nuPrettyPrint = (function () {
 
 				for (var j = 0; j < len; j++) {
 					var i = keys[j],
-						item = obj[i],
-						type = util.type(item);
+					item = obj[i],
+					type = util.type(item);
 
 					isEmpty = false;
 					try {
@@ -1485,8 +1615,7 @@ var nuPrettyPrint = (function () {
 
 				if (obj instanceof Error) {
 					table.thead.appendChild(
-						util.hRow(['key', 'value'], 'colHeader')
-					);
+						util.hRow(['key', 'value'], 'colHeader'));
 					table.addRow(['name', obj.name]);
 					table.addRow(['message', obj.message]);
 				} else
@@ -1494,17 +1623,15 @@ var nuPrettyPrint = (function () {
 						table.addRow(['<small>[empty]</small>']);
 					} else {
 						table.thead.appendChild(
-							util.hRow(['key', 'value'], 'colHeader')
-						);
+							util.hRow(['key', 'value'], 'colHeader'));
 					}
 
 				var ret = (settings.expanded || !hasRunOnce) ? table.node : util.expander(
 					util.stringify(obj),
 					'Click to show more',
 					function () {
-						this.parentNode.appendChild(table.node);
-					}
-				);
+					this.parentNode.appendChild(table.node);
+				});
 
 				hasRunOnce = true;
 
@@ -1525,8 +1652,9 @@ var nuPrettyPrint = (function () {
 				}
 
 				/* Accepts a table and modifies it */
-				var me = jquery ? 'jQuery' : 'Array', table = util.table([((arr.constructor && arr.constructor.name) || me) + '(' + arr.length + ')', null], jquery ? 'jquery' : me.toLowerCase()),
-					isEmpty = true;
+				var me = jquery ? 'jQuery' : 'Array',
+				table = util.table([((arr.constructor && arr.constructor.name) || me) + '(' + arr.length + ')', null], jquery ? 'jquery' : me.toLowerCase()),
+				isEmpty = true;
 
 				if (jquery) {
 					table.addRow(['selector', arr.selector]);
@@ -1537,27 +1665,27 @@ var nuPrettyPrint = (function () {
 						(function (i) {
 							var until = Math.min(i + settings.maxArray, length);
 							table.addRow([
-								i + '..' + (until - 1),
-								util.expander(
-									'[EXPAND]',
-									'Click to show items from this slice',
-									function () {
+									i + '..' + (until - 1),
+									util.expander(
+										'[EXPAND]',
+										'Click to show items from this slice',
+										function () {
 										let obj = {};
 										for (var j = i; j < until; j++) {
 											obj[j] = arr[j];
 										}
 										try {
-											const child = prettyPrintThis(obj, { maxDepth: 1 });
+											const child = prettyPrintThis(obj, {
+												maxDepth: 1
+											});
 											child.getElementsByTagName('th')[0].style.display = 'none';
 											this.parentNode.appendChild(child);
 										} catch (e) {
 											this.parentNode.appendChild(
-												util.table(['ERROR OCCURED DURING OBJECT RETRIEVAL'], 'error').addRow([e.message]).node
-											);
+												util.table(['ERROR OCCURED DURING OBJECT RETRIEVAL'], 'error').addRow([e.message]).node);
 										}
-									}
-								)
-							]);
+									})
+								]);
 							isEmpty = false;
 						})(i);
 				} else {
@@ -1579,50 +1707,49 @@ var nuPrettyPrint = (function () {
 					util.stringify(arr),
 					'Click to show more',
 					function () {
-						this.parentNode.appendChild(table.node);
-					}
-				);
+					this.parentNode.appendChild(table.node);
+				});
 
 			},
 			'function': function (fn, depth, key) {
 
 				/* Checking JUST circular refs */
 				var stackKey = util.within(stack).is(fn);
-				if (stackKey) { return util.common.circRef(fn, stackKey); }
+				if (stackKey) {
+					return util.common.circRef(fn, stackKey);
+				}
 				stack[key || 'TOP'] = fn;
 				var miniTable = util.table(['Function', null], 'function'),
-					args = fn.toString().match(/\((.+?)\)/),
-					body = fn.toString().match(/\(.*?\)\s+?\{?([\S\s]+)/)[1].replace(/\}?$/, '');
+				args = fn.toString().match(/\((.+?)\)/),
+				body = fn.toString().match(/\(.*?\)\s+?\{?([\S\s]+)/)[1].replace(/\}?$/, '');
 
 				miniTable
-					.addRow(['arguments', args ? args[1].replace(/[^\w_,\s]/g, '') : '<small>[none/native]</small>'])
-					.addRow(['body', body]);
+				.addRow(['arguments', args ? args[1].replace(/[^\w_,\s]/g, '') : '<small>[none/native]</small>'])
+				.addRow(['body', body]);
 
 				return settings.expanded ? miniTable.node : util.expander(
 					'function(){...}',
 					'Click to see more about this function.',
 					function () {
-						this.parentNode.appendChild(miniTable.node);
-					}
-				);
+					this.parentNode.appendChild(miniTable.node);
+				});
 			},
 			'date': function (date) {
 
 				var miniTable = util.table(['Date', null], 'date'),
-					sDate = date.toString().split(/\s/);
+				sDate = date.toString().split(/\s/);
 
 				/* TODO: Make this work well in IE! */
 				miniTable
-					.addRow(['Time', sDate[4]])
-					.addRow(['Date', sDate.slice(0, 4).join('-')]);
+				.addRow(['Time', sDate[4]])
+				.addRow(['Date', sDate.slice(0, 4).join('-')]);
 
 				return settings.expanded ? miniTable.node : util.expander(
 					'Date (timestamp): ' + Number(date),
 					'Click to see a little more info about this date',
 					function () {
-						this.parentNode.appendChild(miniTable.node);
-					}
-				);
+					this.parentNode.appendChild(miniTable.node);
+				});
 
 			},
 			'boolean': function (bool) {
@@ -1649,16 +1776,16 @@ var nuPrettyPrint = (function () {
 	/* Configuration */
 
 	/* All items can be overridden by passing an
-	   "options" object when calling prettyPrint */
+	"options" object when calling prettyPrint */
 	prettyPrintThis.config = {
 
 		/* Try setting this to false to save space */
 		expanded: true,
-		sortKeys: false,  // if true, will sort object keys
+		sortKeys: false, // if true, will sort object keys
 		forceObject: false,
 		maxDepth: 3,
 		maxStringLength: 40,
-		maxArray: Infinity,  // default is unlimited
+		maxArray: Infinity, // default is unlimited
 		filter: Object.prototype.hasOwnProperty,
 		maxTextLen: 40,
 		styles: {
@@ -1729,7 +1856,7 @@ var nuPrettyPrint = (function () {
 				},
 				td_hover: {
 					/* Styles defined here will apply to all tr:hover > td,
-						- Be aware that "inheritable" properties (e.g. fontWeight) WILL BE INHERITED */
+					- Be aware that "inheritable" properties (e.g. fontWeight) WILL BE INHERITED */
 				},
 				th: {
 					padding: '5px',
@@ -1760,23 +1887,26 @@ function nuPrettyPrintMessage(e, obj) {
 
 	obj = Object.fromEntries(Object.entries(obj).sort())
 
-	let ppTable = nuPrettyPrint(obj, {
-		// Config
-		maxArray: 20,
-		expanded: false,
-		maxDepth: 1,
-	})
+		let ppTable = nuPrettyPrint(obj, {
+			// Config
+			maxArray: 20,
+			expanded: false,
+			maxDepth: 1,
+		})
 
-
-	let btnClose = '<button class="nuClose" onclick=" nuClosePropertiesMsgDiv() " style="height:25px;float:right;">&#10006;</button><br>';
+		let btnClose = '<button class="nuClose" onclick=" nuClosePropertiesMsgDiv() " style="height:25px;float:right;">&#10006;</button><br>';
 
 	if (e !== undefined && (nuIsMacintosh() ? e.metaKey : e.ctrlKey)) {
 		let w = window.open();
 		w.document.title = nuTranslate('Current Properties') + ' : ' + nuGetProperty('form_code')
-		$(w.document.body).html(ppTable);
+			$(w.document.body).html(ppTable);
 	} else {
 		let msg = nuMessage([btnClose, ppTable]);
-		msg.css({ 'width': 700, 'text-align': 'left', 'background-color': 'white' }).attr("id", "nuPropertiesMsgDiv");
+		msg.css({
+			'width': 700,
+			'text-align': 'left',
+			'background-color': 'white'
+		}).attr("id", "nuPropertiesMsgDiv");
 		nuDragElement(document.getElementById('nuPropertiesMsgDiv'), 40);
 	}
 
