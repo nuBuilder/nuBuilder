@@ -526,21 +526,21 @@ function nuSetUserJSONData($key, $value, $userId = "") {
 
 }
 
-function nuGetUserJSONData($i, $u = ""){
+function nuGetUserJSONData($key, $userId = ""){
 
 	$gu = $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'];  //  or  $gu = '';
 
-	if ($u == "") {
-		$u 		= nuGlobalAccess() ? $gu  : nuHash()['USER_ID'];
+	if ($userId == "") {
+		$userId 	= nuGlobalAccess() ? $gu  : nuHash()['USER_ID'];
 	}
 
-	$s			= "SELECT sus_json FROM zzzzsys_user WHERE zzzzsys_user_id = ? ";
-	$t			= nuRunQuery($s, [$u]);
+	$query		= "SELECT sus_json FROM zzzzsys_user WHERE zzzzsys_user_id = ? ";
+	$stmt		= nuRunQuery($query, [$userId]);
 
-	if (db_num_rows($t) == 1) {
-		$r		= db_fetch_row($t);
-		$j		= json_decode($r[0], true);
-		return nuObjKey($j,$i,'');
+	if (db_num_rows($stmt) == 1) {
+		$row		= db_fetch_row($stmt);
+		$json		= json_decode($row[0], true);
+		return nuObjKey($json,$key,'');
 	} else {
 		return '';
 	}
