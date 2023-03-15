@@ -500,30 +500,29 @@ function nuGetJSONData($name){
 
 }
 
-function nuSetUserJSONData($i, $nj, $u = ""){
+function nuSetUserJSONData($key, $value, $userId = "") {
 
-	$gu = $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'];  //  or  $gu = '';
+	$globeAdminName = $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'];
 
-	if ($u == "") {
-		$u = nuGlobalAccess()  ? $gu  : nuHash()['USER_ID'];
+	if ($userId == "") {
+		$userId = nuGlobalAccess() ? $globeAdminName : nuHash()['USER_ID'];
 	}
 
 	if (nuGlobalAccess()) {
-		$s = "INSERT IGNORE INTO zzzzsys_user (zzzzsys_user_id) VALUES (?)";
-		nuRunQuery($s, [$gu]);
+		$sql = "INSERT IGNORE INTO zzzzsys_user (zzzzsys_user_id) VALUES (?)";
+		nuRunQuery($sql, [$globeAdminName]);
 	}
 
-	$s			= "SELECT sus_json FROM zzzzsys_user WHERE zzzzsys_user_id = ?";
-	$t			= nuRunQuery($s, [$u]);
+	$sql = "SELECT sus_json FROM zzzzsys_user WHERE zzzzsys_user_id = ?";
+	$result = nuRunQuery($sql, [$userId]);
+	$row = db_fetch_row($result);
 
-	$r			= db_fetch_row($t);
-	$j			= json_decode($r[0], true);
+	$jsonData = $row[0] != '' ? json_decode($row[0], true) : [];
+	$jsonData[$key] = $value;
+	$updatedJsonData = json_encode($jsonData);
 
-	$j[$i]		= $nj;
-	$J			= json_encode($j);
-
-	$s			= "UPDATE zzzzsys_user SET sus_json = ? WHERE zzzzsys_user_id = ?";
-	$t			= nuRunQuery($s, [$J, $u]);
+	$sql = "UPDATE zzzzsys_user SET sus_json = ? WHERE zzzzsys_user_id = ?";
+	nuRunQuery($sql, [$updatedJsonData, $userId]);
 
 }
 
