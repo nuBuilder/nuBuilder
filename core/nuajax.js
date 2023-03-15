@@ -31,15 +31,22 @@ function nuAjax(w, successCallback, errorCallback) {
 function nuAjaxShowError(jqXHR, errorThrown) {
 
 	const err = nuFormatAjaxErrorMessage(jqXHR, errorThrown);
+	
+	if (typeof err === 'object') {
+		errMsg = [err.message, err.response];
+	} else {
+		errMsg = err;
+	}
+
 	let msgDiv;
 	if (nuHasHiddenModalDragDialog()) {
-		msgDiv = parent.nuMessage(err);
+		msgDiv = parent.nuMessage(errMsg);
 		nuClosePopup(); 
 	} else {
-		msgDiv = nuMessage(err);
+		msgDiv = nuMessage(errMsg);
 	}
 	if (window.nuOnMessage) {
-		nuOnMessage(msgDiv, err);
+		nuOnMessage(msgDiv, errMsg);
 	}
 
 }
