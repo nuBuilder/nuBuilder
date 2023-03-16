@@ -5012,49 +5012,47 @@ function nuChangeFile(e) {
 
 }
 
-function nuCalculateForm(setAsEdited) {	//-- calculate subform 'calcs' first
+function nuCalculateForm(setAsEdited) {
 
 	if (window.nuEnableCalculation == false) return;
-		
-	var subformFirst = function (a, b) {
 
-		var A = $('#' + a.id).hasClass('nuSubformObject') ? 0 : 1000;
-		var B = $('#' + b.id).hasClass('nuSubformObject') ? 0 : 1000;
-		a = parseInt($('#' + a.id).attr('data-nu-calc-order'), 10);
-		b = parseInt($('#' + b.id).attr('data-nu-calc-order'), 10);
+	const subformFirst = (a, b) => {
+		const A = $('#' + a.id).hasClass('nuSubformObject') ? 0 : 1000;
+		const B = $('#' + b.id).hasClass('nuSubformObject') ? 0 : 1000;
+		const orderA = parseInt($('#' + a.id).attr('data-nu-calc-order'), 10);
+		const orderB = parseInt($('#' + b.id).attr('data-nu-calc-order'), 10);
 
 		if (setAsEdited === undefined) {
 			$('#' + a.id).addClass('nuEdited');
 		}
 
-		return (a + A) - (b + B);
+		return (orderA + A) - (orderB + B);
+	};
 
-	}
+	const formulas = $("[data-nu-formula]").toArray();
 
-	var f = $("[data-nu-formula]");
+	formulas.sort(subformFirst);
 
-	f.sort(subformFirst);
+	formulas.forEach((formula) => {
+		$(formula).addClass('nuEdited');
 
-	f.each(function (index) {		//-- start with calculations inside a subform
+		const formulaString = $(formula).attr('data-nu-formula');
+		const format = $(formula).attr('data-nu-format');
 
-		$(this).addClass('nuEdited');
+		let value = 0;
 
-		var formula = $(this).attr('data-nu-formula');
-		var fmt = $(this).attr('data-nu-format');
-		var v = 0;
-
-		if (formula != '') {
-			eval('var v = ' + formula);
+		if (formulaString) {
+			const computeFormula = new Function('return ' + formulaString);
+			value = computeFormula();
 		}
 
-		var fixed = nuFORM.addFormatting(v, fmt);
+		const formattedValue = nuFORM.addFormatting(value, format);
 
-		$(this).val(fixed);
+		$(formula).val(formattedValue);
 
 		if (window.nuCalculated) {
-			nuCalculated(this, v, fixed);
+			nuCalculated(formula, value, formattedValue);
 		}
-
 	});
 
 }
