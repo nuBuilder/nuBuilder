@@ -3500,21 +3500,21 @@ function nuGetStartingTab() {
 
 function nuSetTab(pthis) {
 
-	var t = window.nuFORM.getProperty('tab_start');
+	const tabStart = window.nuFORM.getProperty('tab_start');
+	const prefix = pthis.getAttribute('data-nu-form-filter');
 
-	for (var i = 0; i < t.length; i++) {
+	for (let i = 0; i < tabStart.length; i++) {
+		if (tabStart[i].prefix === prefix) {
+			const tabSelector = `#${tabStart[i].prefix}nuTab${tabStart[i].tabNumber}`;
+			const ts = document.querySelector(tabSelector);
 
-		if (t[i].prefix == $('#' + pthis.id).attr('data-nu-form-filter')) {
-
-			let ts = $('#' + t[i].prefix + 'nuTab' + t[i].tabNumber);
-
-			ts.addClass('nuTabSelected');
-			ts.attr('nu-data-clicked-by-system');
+			ts.classList.add('nuTabSelected');
+			ts.setAttribute('nu-data-clicked-by-system', '');
 
 			ts.click();
 
+			break;
 		}
-
 	}
 
 }
