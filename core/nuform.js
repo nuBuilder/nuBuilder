@@ -4579,30 +4579,16 @@ function nuSearchPressed(e) {
 
 function nuArrowPressed(e) {
 
-	if (!e) { e = window.event; }
-
-	const rows = $("[data-nu-column='0'][data-nu-primary-key]").length - 1;
-
-	if (e.key == 'ArrowUp') {
-
-		if (window.nuBROWSEROW == -1) {
-			window.nuBROWSEROW = rows;
-		} else {
-			window.nuBROWSEROW = window.nuBROWSEROW - 1;
-		}
-
-		$("[data-nu-row]").addClass('nuBrowseTable').removeClass('nuSelectBrowse');
-		$("[data-nu-row='" + window.nuBROWSEROW + "']").addClass('nuSelectBrowse').removeClass('nuBrowseTable');
-
+	if (!e) {
+		e = window.event;
 	}
 
-	if (e.key == 'ArrowDown') {
+	if (e.key == 'ArrowUp' || e.key == 'ArrowDown') {
 
-		if (window.nuBROWSEROW == rows) {
-			window.nuBROWSEROW = -1;
-		} else {
-			window.nuBROWSEROW = window.nuBROWSEROW + 1;
-		}
+		const rows = $("[data-nu-column='0'][data-nu-primary-key]").length - 1;
+		const targetRow = window.nuBROWSEROW + (e.key === 'ArrowUp' ? -1 : 1);
+
+		window.nuBROWSEROW = (targetRow < 0 || targetRow > rows) ? window.nuBROWSEROW : targetRow;
 
 		$("[data-nu-row]").addClass('nuBrowseTable').removeClass('nuSelectBrowse');
 		$("[data-nu-row='" + window.nuBROWSEROW + "']").addClass('nuSelectBrowse').removeClass('nuBrowseTable');
@@ -4610,7 +4596,6 @@ function nuArrowPressed(e) {
 	}
 
 }
-
 
 function nuSearchAction(S, F) {
 
