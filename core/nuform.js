@@ -255,7 +255,7 @@ function nuBuildForm(f) {
 		});
 	}
 
-	nunuEvaluateOnLoadEventsoadEvents();
+	nuEvaluateOnLoadEvents();
 
 	if (window.nuLoadEditGlobal && formType == 'edit') {
 		nuLoadEditGlobal(f.form_id, f.form_code);
@@ -584,50 +584,71 @@ function nuSetBody(f) {
 }
 
 function nuCSSPropertySum(id, arr) {
-
-	let $id = $('#' + id);
-	if ($id.length == 0) { return 0; }
+	let elem = document.getElementById(id);
+	if (!elem) {
+		return 0;
+	}
 
 	let sum = 0;
-	arr.forEach(function(element){
-		sum += parseInt($id.css(element), 10);
-	 });
+	arr.forEach(function(property) {
+		sum += parseInt(getComputedStyle(elem).getPropertyValue(property), 10);
+	});
 
 	return sum;
-
 }
 
 function nuDialogHeadersHeight() {
-
 	let height = 0;
-	const arr = ['nuBreadcrumbHolder','nuActionHolder','nuTabHolder','nuBrowseTitle0','nuBrowseFooter'];
-	arr.forEach(function(element){
-		height += nuTotalHeight(element);
-	 });
+	const arr = [
+		"nuBreadcrumbHolder",
+		"nuActionHolder",
+		"nuTabHolder",
+		"nuBrowseTitle0",
+		"nuBrowseFooter",
+	];
+	arr.forEach(function(elem) {
+		height += nuTotalHeight(elem);
+	});
 
 	return height;
-
 }
 
 function nuTotalHeight(id) {
-
-	const arrProperties = ['height','padding-top','padding-bottom','border-top-width','border-bottom-width','margin-top','margin-bottom'];
+	const arrProperties = [
+		"height",
+		"padding-top",
+		"padding-bottom",
+		"border-top-width",
+		"border-bottom-width",
+		"margin-top",
+		"margin-bottom",
+	];
 	return nuCSSPropertySum(id, arrProperties);
-
 }
 
 function nuTotalWidth(id) {
-
-	const arrProperties = ['width','padding-left','padding-right','border-left-width','border-right-width','margin-left','margin-right'];
+	const arrProperties = [
+		"width",
+		"padding-left",
+		"padding-right",
+		"border-left-width",
+		"border-right-width",
+		"margin-left",
+		"margin-right",
+	];
 	return nuCSSPropertySum(id, arrProperties);
-
 }
 
 function nuTotalHolderWidth(id) {
-
-	const arrProperties = ['padding-left','padding-right','border-left-width','border-right-width','margin-left','margin-right'];
+	const arrProperties = [
+		"padding-left",
+		"padding-right",
+		"border-left-width",
+		"border-right-width",
+		"margin-left",
+		"margin-right",
+	];
 	return nuCSSPropertySum(id, arrProperties);
-
 }
 
 function nuDefine(v, defaultValue = '') {
