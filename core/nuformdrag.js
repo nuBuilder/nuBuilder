@@ -568,11 +568,11 @@ function nuCreateDragOptionsBox(form){
 							'<td><button id="move_bottom_btn" class="nuDragOptionsButton nuButton" onclick="nuAlignBottom();"><i class="nuDragOptionsIcon90 fa fa-step-forward fa-fw"></i> Bottom</button></td>'+
 						'</tr>'+
 						'<tr>'+
-							'<td><button id="move_ver_btn" class="nuDragOptionsButton nuButton" onclick="nuSpaceVertically();"><i class="nuDragOptionsIcon90 fa fa-bars fa-fw"></i> Vertical</button></td>'+
+							'<td><button id="move_ver_btn" class="nuDragOptionsButton nuButton" onclick="nuSpaceVertically();"><i class="nuDragOptionsIcon fa fa-bars fa-fw"></i> Vertical</button></td>'+
 							'<td><button id="move_left_btn" class="nuDragOptionsButton nuButton" onclick="nuAlignLeft();"><i class="nuDragOptionsIcon180 fa fa-step-forward fa-fw"></i> Left</button></td>'+
 						'</tr>'+
 						'<tr>'+
-							'<td><button id="move_hor_btn" class="nuDragOptionsButton nuButton" onclick="nuSpaceHorizontally();"><i class="nuDragOptionsIcon fa fa-bars fa-fw"></i> Horizontal</button></td>'+
+							'<td><button id="move_hor_btn" class="nuDragOptionsButton nuButton" onclick="nuSpaceHorizontally();"><i class="nuDragOptionsIcon90 fa fa-bars fa-fw"></i> Horizontal</button></td>'+
 							'<td><button id="move_right_btn" class="nuDragOptionsButton nuButton" onclick="nuAlignRight();"><i class="nuDragOptionsIcon fa fa-step-forward fa-fw"></i> Right</button></td>'+
 						'</tr>'+
 						'<tr>'+
