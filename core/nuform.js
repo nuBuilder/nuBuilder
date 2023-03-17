@@ -4847,35 +4847,26 @@ function nuValidLookupId(id, fld) {
 }
 
 function nuHighlightSearch() {
+	const bc = window.nuFORM.getCurrent().search;
 
-	var bc = window.nuFORM.getCurrent();
+	if (!bc || !bc.length) {
+		return;
+	}
 
-	if (bc.search === undefined) return;
-	if (bc.search.length == 0) return;
+	const exclude = new Set(window.nuFORM.getCurrent().nosearch_columns || []);
 
-	var exclude = bc.nosearch_columns;
-
-	var search = String(bc.search)
+	const search = bc
 		.split(' ')
-		.filter(function (a) { return (a != '' && a.substr(0, 1) != '-') })
-		.sort(function (a, b) { return (a.length > b.length) });
+		.filter(a => a && a[0] !== '-')
+		.sort((a, b) => a.length - b.length);
 
-	$('.nuBrowseTable').each(function (index) {
+	$('.nuBrowseTable').each(function() {
+		const col = Number($(this).attr('data-nu-column'));
 
-		var col = Number(String($(this).attr('data-nu-column')));
-
-		if (exclude.indexOf(col) == -1) {
-
-			for (var i = 0; i < search.length; i++) {
-
-				$(this).nuHighlight(search[i]);
-
-			}
-
+		if (!exclude.has(col)) {
+			search.forEach(term => $(this).nuHighlight(term));
 		}
-
 	});
-
 }
 
 function nuChange(e) {
