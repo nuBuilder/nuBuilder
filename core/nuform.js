@@ -4828,21 +4828,18 @@ function nuLookupObject(id, set, value) {
 
 function nuValidLookupId(id, fld) {
 
-	var i = String(id);
-	var f = String(fld);
-	var il = i.length;
-	var fl = f.length;
+	const i = String(id);
+	const f = String(fld);
+	const fl = f.length;
 
-	if (i.substr(il - fl) === f) {
+	if (i.endsWith(f)) {
+		const iWithoutF = i.slice(0, -fl);
+		const elWithF = $('#' + i + f);
+		const elWithFF = $('#' + i + f + f);
 
-		i = i.substr(0, il - fl);
-
-		if ($('#' + i + f).length == 1 && $('#' + i + f + f).length == 1) {
-
-			i = i + f;
-
+		if (elWithF.length === 1 && elWithFF.length === 1) {
+			return iWithoutF + f;
 		}
-
 	}
 
 	return i;
