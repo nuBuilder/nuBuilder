@@ -1002,14 +1002,15 @@ function nuSelectOptions($sql) {
 
 function nuRemoveNonCharacters($s){
 
-	$snip = str_replace("\t", '', $s); // remove tabs
-	$snip = str_replace("\n", '', $snip); // remove new lines
-	$snip = str_replace("\r", '', $snip); // remove carriage returns
-
-	return $snip;
+	$replace_pairs = array(
+		"\t" => '',
+		"\n" => '',
+		"\r" => ''
+	);
+	
+	return strtr($s, $replace_pairs);
 
 }
-
 
 function nuGetSubformRecords($R, $A){
 
