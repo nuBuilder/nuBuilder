@@ -4147,38 +4147,40 @@ function nuBrowseColumnSize(e) {
 }
 
 function nuResizeBrowseColumns(force) {
+ 
+	const browseColumns = nuSERVERRESPONSE.browse_columns;
+	const columnWidths = nuArrayColumn(browseColumns, 'width').map(Number);
+	const padding = nuTotalWidth('nucell_0_0') - document.getElementById('nucell_0_0').offsetWidth;
+	const isMainForm = nuMainForm();
+	const currentForm = nuFORM.getCurrent();
 
-	var w = nuArrayColumn(nuSERVERRESPONSE.browse_columns, 'width').map(Number);
-	var t = 0;
-	const p = nuTotalWidth('nucell_0_0') - $('#nucell_0_0').width();	//-- padding
-
-	if ((nuFORM.getCurrent().refreshed != 0 && force !== true) && nuMainForm()) { return; }
-
-	if (nuMainForm()) {
-
-		for (var i = 0; i < w.length; i++) {
-			t = t + w[i];
-		}
-
-		for (var i = 0; i < w.length; i++) {
-			w[i] = parseInt((window.innerWidth - 30) * w[i] / t, 10) - p;
-		}
-
-	} else {
-
-		var W = nuTotalWidth('nuBrowseFooter') + 22;
-
-		$('#nuDragDialog', window.parent.document).css('width', W + 14);
-		$('#nuWindow', window.parent.document).css('width', W);
-
-		$('body').css('width', W);
-
+	if ((currentForm.refreshed !== 0 && force !== true) && isMainForm) {
+		return;
 	}
 
-	if (nuFORM.getCurrent().refreshed != 0 && force !== true) { return; }
+	if (isMainForm) {
+		const totalWidth = columnWidths.reduce((total, width) => total + width, 0);
+		const newWidths = columnWidths.map(width => parseInt((window.innerWidth - 30) * width / totalWidth, 10) - padding);
 
-	nuSetBrowseColumns(w);
+		columnWidths.forEach((_, i) => {
+			nuSetBrowseColumnWidth(i, newWidths[i]);
+		});
+	} else {
+		const browseFooterWidth = nuTotalWidth('nuBrowseFooter') + 22;
+		const bodyWidth = `${browseFooterWidth}px`;
 
+		$('#nuDragDialog', window.parent.document).css('width', browseFooterWidth + 14);
+		$('#nuWindow', window.parent.document).css('width', browseFooterWidth);
+
+		document.body.style.width = bodyWidth;
+	}
+
+	if (currentForm.refreshed !== 0 && force !== true) {
+		return;
+	}
+
+	nuSetBrowseColumns(columnWidths);
+ 
 }
 
 function nuSetBrowseColumns(c) {
