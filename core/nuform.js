@@ -4183,41 +4183,36 @@ function nuResizeBrowseColumns(force) {
  
 }
 
-function nuSetBrowseColumns(c) {
+function nuSetBrowseColumns(columnWidths) {
+ 
+	const padding = nuTotalWidth('nucell_0_0') - $('#nucell_0_0').width(); //-- padding
+	let left = 7;
 
-	const p = nuTotalWidth('nucell_0_0') - $('#nucell_0_0').width(); //-- padding
-	var l = 7;
+	columnWidths.forEach((width, i) => {
+		const columnElements = document.querySelectorAll(`[data-nu-column="${i}"], #nuBrowseTitle${i}`);
 
-	for (let i = 0; i < c.length; i++) {
-
-		$('[data-nu-column="' + i + '"]').css({
-			'left': l,
-			'width': c[i]
+		columnElements.forEach(element => {
+			element.style.left = `${left}px`;
+			element.style.width = `${width}px`;
 		});
-		$('#nuBrowseTitle' + i).css({
-			'left': l,
-			'width': c[i]
-		});
-		l = l + c[i] + (c[i] == 0 ? 0 : p);
 
-	}
+		left += width + (width === 0 ? 0 : padding);
+	});
 
-	$('#nuBrowseFooter').css('width', l - 7);
+	const browseFooterWidth = left - 7;
 
-	nuFORM.breadcrumbs[nuFORM.breadcrumbs.length - 1].column_widths = c;
+	$('#nuBrowseFooter').css('width', `${browseFooterWidth}px`);
 
-	if (nuCurrentProperties().browse_filtered_rows == 0) {
+	nuFORM.breadcrumbs[nuFORM.breadcrumbs.length - 1].column_widths = columnWidths;
 
-		$('#nucell_0_0').css({
-			'width': l - 22,
-			'z-index': '2'
-
-		});
+	if (nuCurrentProperties().browse_filtered_rows === 0) {
+		const nucell00 = document.getElementById('nucell_0_0');
+		nucell00.style.width = `${browseFooterWidth - 22}px`;
+		nucell00.style.zIndex = '2';
 
 		$("div[id^='nucell_']").not('#nucell_0_0').hide();
-
 	}
-
+ 
 }
 
 function nuGetColumWidths() {
