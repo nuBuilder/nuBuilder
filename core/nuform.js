@@ -255,7 +255,7 @@ function nuBuildForm(f) {
 		});
 	}
 
-	nuEvalnuOnLoadEvents();
+	nunuEvaluateOnLoadEventsoadEvents();
 
 	if (window.nuLoadEditGlobal && formType == 'edit') {
 		nuLoadEditGlobal(f.form_id, f.form_code);
@@ -481,24 +481,22 @@ function nuSaveScrollPositions() {
 
 }
 
-function nuEvalnuOnLoadEvents() {
+function nuEvaluateOnLoadEvents() {
 
-	const r = JSON.parse(JSON.stringify(nuSERVERRESPONSE));
-	for (let i = 0; i < r.objects.length; i++) {
-		let obj = r.objects[i];
+	const serverResponse = JSON.parse(JSON.stringify(nuSERVERRESPONSE));
+
+	for (const obj of serverResponse.objects) {
 		if (obj.js.length > 0) {
+			for (const jsEvent of obj.js) {
+				if (jsEvent.event === 'onnuload') {
+					let modifiedJS = jsEvent.js
+						.replaceAll('(this)', `("#${obj.id}")`)
+						.replaceAll('this.', `${obj.id}.`);
 
-			for (let j = 0; j < obj.js.length; j++) {
-
-				if (obj.js[j].event == 'onnuload') {
-					let js = obj.js[j].js;
-					js = js.replaceAll('(this)', '("#' + obj.id + '")');
-					js = js.replaceAll('this.', obj.id + '.');
-					eval(js);
+					eval(modifiedJS);
 				}
 			}
 		}
-
 	}
 
 }
