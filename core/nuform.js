@@ -4790,37 +4790,39 @@ function nuChooseOneLookupRecord(e, fm) {
 
 function nuLookupObject(id, set, value) {
 
-	if ($('#' + id).length == 0) {
+    const el = $('#' + id);
 
-		this.id_id = '';
-		this.code_id = '';
-		this.description_id = '';
-		this.id_value = '';
-		this.code_value = '';
-		this.description_value = '';
+    if (!el.length) {
+        nuReesetLookupProperties(this);
+        return;
+    }
 
-		return;
+    const i = nuValidLookupId(nuValidLookupId(id, 'code'), 'description');
+    nuUpdateLookupProperties(this, i);
 
-	}
+    if (nuLookupShouldSetValue(value)) {
+        $('#' + this[set]).val(value);
+    }
 
-	var i = nuValidLookupId(id, 'code');
-	i = nuValidLookupId(i, 'description');
-	this.id_id = i;
-	this.code_id = i + 'code';
-	this.description_id = i + 'description';
-	this.id_value = $('#' + this.id_id).val();
-	this.code_value = $('#' + this.code_id).val();
-	this.description_value = $('#' + this.description_id).val();
+    function nuReesetLookupProperties(obj) {
+        const props = ['id_id', 'code_id', 'description_id', 'id_value', 'code_value', 'description_value'];
+        props.forEach(prop => obj[prop] = '');
+    }
 
-	if (arguments.length == 3 && set == 'id') {
-		$('#' + this.id).val(value);
-	}
-	if (arguments.length == 3 && set == 'code') {
-		$('#' + this.code).val(value);
-	}
-	if (arguments.length == 3 && set == 'description') {
-		$('#' + this.description).val(value);
-	}
+    function nuUpdateLookupProperties(obj, i) {
+        Object.assign(obj, {
+            id_id: i,
+            code_id: i + 'code',
+            description_id: i + 'description',
+            id_value: $('#' + i).val(),
+            code_value: $('#' + i + 'code').val(),
+            description_value: $('#' + i + 'description').val()
+        });
+    }
+
+    function nuLookupShouldSetValue(value) {
+        return value !== undefined && ['id', 'code', 'description'].includes(set);
+    }
 
 }
 
