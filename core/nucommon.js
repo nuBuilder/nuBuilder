@@ -150,6 +150,11 @@ $.fn.enterKey = function (fnc) {
 $.fn.nuFocusWithoutScrolling = function () {
 
 	let t = $(this)[0];
+
+	if (t === undefined) {
+		return;
+	}
+
 	let x = t.scrollX, y = t.scrollY;
 
 	this.focus();
