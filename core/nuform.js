@@ -4556,29 +4556,25 @@ function nuSearchColumnsReset() {
 }
 
 function nuSearchPressed(e) {
+ 
+	e = e || window.event;
 
-	if (!e) { e = window.event; }
-
-	if (e.key == 'Enter' && window.nuBROWSEROW == -1) {
-
-		e.preventDefault();
-		$('#nuSearchButton').click();
-
-	} else if (e.key == 'Enter'  && window.nuBROWSEROW != -1) {
-
-		e.preventDefault();
-		const i = '#nucell_' + window.nuBROWSEROW + '_0';
-
-		nuSelectBrowse('', $(i)[0]);
-
-	} else {
-
+	if (e.key !== 'Enter') {
 		window.nuBROWSEROW = -1;
-		$("[data-nu-row]").addClass('nuBrowseTable');
-		$("[data-nu-row]").removeClass('nuSelectBrowse');
-
+		$('[data-nu-row]').addClass('nuBrowseTable').removeClass('nuSelectBrowse');
+		return;
 	}
 
+	e.preventDefault();
+
+	if (window.nuBROWSEROW === -1) {
+		$('#nuSearchButton').click();
+		return;
+	}
+
+	const cellId = `#nucell_${window.nuBROWSEROW}_0`;
+	nuSelectBrowse('', $(cellId)[0]);
+ 
 }
 
 function nuArrowPressed(e) {
