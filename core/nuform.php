@@ -3,13 +3,10 @@
 function nuFormProperties($f, $columns = ''){
 
 	$columns = $columns == '' ? '*' : $columns;
+	$query	= "SELECT $columns FROM zzzzsys_form WHERE zzzzsys_form_id = ? ";
+	$stmt	= nuRunQuery($query, [$f]);
 
-	$s	= "SELECT $columns FROM zzzzsys_form WHERE zzzzsys_form_id = ? ";
-
-	$t	= nuRunQuery($s, [$f]);
-	$r	= db_fetch_object($t);
-
-	return $r;
+	return db_num_rows($stmt) == 0 ? false : db_fetch_object($stmt);
 
 }
 
