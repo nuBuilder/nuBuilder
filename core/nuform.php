@@ -1410,8 +1410,9 @@ function nuGatherFormAndSessionData($home){
 		$getAccessFromSessionTableQRY	= nuRunQuery("SELECT sss_access FROM zzzzsys_session WHERE zzzzsys_session_id = ? ", [$sessionId]);
 		$getAccessFromSessionTableOBJ	= db_fetch_object($getAccessFromSessionTableQRY);
 		$access 						= json_decode($getAccessFromSessionTableOBJ->sss_access);
+		$callType						= $formAndSessionData->call_type;
 
-		if($formAndSessionData->call_type == 'getreport'){
+		if($callType == 'getreport'){
 
 			$r							= nuReportAccessList($access);
 
@@ -1422,13 +1423,13 @@ function nuGatherFormAndSessionData($home){
 				$nuT					= nuRunQuery("SELECT sph_code FROM zzzzsys_report WHERE zzzzsys_report_id = ?", [$formAndSessionData->record_id]);
 				$nuR					= db_fetch_object($nuT);
 
-				nuDisplayError("Access To Report Denied... ($nuR->sre_code)");
+				nuDisplayErrorAccessDenied($callType, $nuR);
 
 			}
 
 		}
 
-		if($formAndSessionData->call_type == 'getphp'){
+		if($callType == 'getphp'){
 
 			$p							= nuProcedureAccessList($access);
 
@@ -1437,19 +1438,19 @@ function nuGatherFormAndSessionData($home){
 				$nuT					= nuRunQuery("SELECT sph_code FROM zzzzsys_php WHERE zzzzsys_php_id = ?", [$formAndSessionData->record_id]);
 				$nuR					= db_fetch_object($nuT);
 
-				nuDisplayError("Access To Procedure Denied... ($nuR->sph_code)");
+				nuDisplayErrorAccessDenied($callType, $nuR);
 			}
 
 		}
 
 		$f = nuFormAccessList($access); //-- form list including forms id used in reports and procedures
 
-		if(!in_array($formAndSessionData->form_id, $f) && ($formAndSessionData->call_type == 'getform' || $formAndSessionData->call_type == 'login')){
+		if(!in_array($formAndSessionData->form_id, $f) && ($callType == 'getform' || $formAndSessionData->call_type == 'login')){
 
 			$nuT						= nuRunQuery("SELECT sfo_code FROM zzzzsys_form WHERE zzzzsys_form_id = ?", [$formAndSessionData->form_id]);
 			$nuR						= db_fetch_object($nuT);
 
-			nuDisplayError("Access To Form Denied... ($nuR->sfo_code)");
+			nuDisplayErrorAccessDenied($callType, $nuR);
 
 		}
 
@@ -1458,6 +1459,20 @@ function nuGatherFormAndSessionData($home){
 	$formAndSessionData->errors			= $_POST['nuErrors'];
 
 	return $formAndSessionData;
+
+}
+
+function nuDisplayErrorAccessDenied($callType, $nuR) {
+	
+	$code =  db_fetch_row($nuR) === 1 ? " ({$nuR->sfo_code})" : '';
+		
+	if ($callType == 'getform') {
+		nuDisplayError("Access To Form Denied". $code);
+	} elseif ($callType == 'getphp') {
+		nuDisplayError("Access To Procedure Denied". $code);
+	} elseif ($callType == 'getreport') {
+		nuDisplayError("Access To Report Denied". $code);
+	}
 
 }
 
