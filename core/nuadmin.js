@@ -76,7 +76,7 @@ function nuDevMode(m) {
 function nuAddAdminButton(id, obj) {
 
 	title = nuDefine(obj.title);
-debugger;
+
 	const button = `
 	<input id="nu${id}Button" type="button" title="${nuTranslate(obj.title)}" class="nuActionButton nuAdminButton" value="${nuTranslate(obj.value)}" onclick="${obj.func}">
   `;
