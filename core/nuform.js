@@ -3423,40 +3423,37 @@ function nuSetTitle(title, browse) {
 
 function nuAddEditTabs(p, w) {
 
-	if (nuFormType() == 'edit') {
+	if (nuFormType() === 'edit') {
 		nuSetStartingTab(p, w);
 	}
 
-	for (let i = 0; i < w.tabs.length; i++) {
-		nuEditTab(p, w.tabs[i], i);
-	}
+	w.tabs.forEach(function(tab, i) {
+		nuEditTab(p, tab, i);
+	});
 
-	var l = 7;
+	let browseTitleMaxLength = 7;
 
-	for (let i = 0; i < w.browse_columns.length; i++) {
-		l = nuBrowseTitle(w.browse_columns, i, l, w.browse_title_multiline);
+	w.browse_columns.forEach(function(column, i) {
+		browseTitleMaxLength = nuBrowseTitle(w.browse_columns, i, browseTitleMaxLength, w.browse_title_multiline);
 
-		if (w.browse_columns[i].width != '0') {
+		if (column.width !== '0') {
 			p = i;
 		}
+	});
 
-	}
+	const noSearchColumns = nuFORM.getProperty('nosearch_columns');
 
-	const f = nuFORM.getProperty('nosearch_columns');
+	noSearchColumns.forEach(function(column) {
+		document.getElementById(`nusort_${column}`).classList.add('nuNoSearch');
+	});
 
-	for (let i = 0; i < f.length; i++) {
-		$('#nusort_' + f[i]).addClass('nuNoSearch');
-	}
-
-	window.nuBrowseWidth = l;
+	window.nuBrowseWidth = browseTitleMaxLength;
 
 	nuDetach();
 
 	if (w.browse_columns.length > 0) {
-
 		nuBrowseTable();
-		nuOptions('nuBrowseTitle' + p, w.form_id, 'browse', w.global_access);
-
+		nuOptions(`nuBrowseTitle${p}`, w.form_id, 'browse', w.global_access);
 	}
 
 }
