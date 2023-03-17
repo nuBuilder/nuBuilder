@@ -540,13 +540,13 @@ function nuAddHomeLogout() {
 
 function nuAddIconToBreadCrumb(id, title, right, handler, iconClass) {
 
-	const div =  nuCreateElementWithId('div', 'nuBreadcrumb0', 'nuBreadcrumbHolder');
+	const div = nuCreateElementWithId('div', 'nuBreadcrumb0', 'nuBreadcrumbHolder');
 
 	$(div)
 		.addClass('nuBreadcrumbIcon')
 		.attr('onclick', handler)
 		.css('right', right)
-		.html('<i class="' + iconClass + '" style="font-size:17px;"></i>')
+		.html(`<i class="${iconClass}" style="font-size:17px;"></i>`)
 		.attr('title', nuTranslate(title));
 
 }
