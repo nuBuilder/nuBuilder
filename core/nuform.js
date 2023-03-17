@@ -4455,35 +4455,33 @@ function nuSetBrowseColumnWidth(column, width) {
 }
 
 function nuBrowseAdditionalNavButtons() {
-
-	if (nuFormType() == 'browse') {
-
-		const disabled = {
-			'opacity': '0.3',
-			'pointer-events': 'none'
-		};
-
-		const currentPage = Number($('#browsePage').val());
-		const lastPage = nuCurrentProperties().pages;
-
-		let html = '<span id="nuFirst" class="nuBrowsePage"><i class="fa fa-step-backward" style="font-size: 16px" onclick="nuGetPage(1)">&nbsp;&nbsp;&nbsp;&nbsp;</i></span>';
-		$(html).insertBefore("#nuLast");
-
-		html = '<span id="nuEnd" class="nuBrowsePage">&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-step-forward nuBrowsePage" style="font-size: 16px" onclick="nuGetPage(' + lastPage + ')"></i></span>';
-		$(html).insertAfter("#nuNext");
-
-
-		if (currentPage == 1) {
-			$('#nuFirst').css(disabled);
-			$('#nuLast').css(disabled);
-		}
-
-		if (currentPage == lastPage) {
-			$('#nuNext').css(disabled);
-			$('#nuEnd').css(disabled);
-		}
+ 
+	if (nuFormType() !== 'browse') {
+		return;
 	}
 
+	const currentPage = Number($('#browsePage').val());
+	const lastPage = nuCurrentProperties().pages;
+
+	const disabledStyle = {
+		opacity: '0.3',
+		'pointer-events': 'none'
+	};
+
+	const firstBtn = `<span id="nuFirst" class="nuBrowsePage"><i class="fa fa-step-backward" style="font-size: 16px" onclick="nuGetPage(1)">&nbsp;&nbsp;&nbsp;&nbsp;</i></span>`;
+	$(firstBtn).insertBefore('#nuLast');
+
+	const endBtn = `<span id="nuEnd" class="nuBrowsePage">&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-step-forward nuBrowsePage" style="font-size: 16px" onclick="nuGetPage(${lastPage})"></i></span>`;
+	$(endBtn).insertAfter('#nuNext');
+
+	if (currentPage === 1) {
+		$('#nuFirst, #nuLast').css(disabledStyle);
+	}
+
+	if (currentPage === lastPage) {
+		$('#nuNext, #nuEnd').css(disabledStyle);
+	}
+ 
 }
 
 function nuClickSearchColumn(e) {
