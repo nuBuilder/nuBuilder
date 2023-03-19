@@ -1638,7 +1638,7 @@ function nuUserLanguage($e = ''){
 
 }
 
-function nuTranslate($str, /*optional arguments*/) {
+function nuTranslate($str /*optional arguments*/) {
 
 	$language = nuUserLanguage();
 
