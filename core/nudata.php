@@ -803,10 +803,6 @@ function nuCheckAccess($f, $r = ''){
 
 		}
 
-		nuDisplayError(nuTranslate("Access Denied")."..");
-
-		return 4;
-
 	}
 
 }
