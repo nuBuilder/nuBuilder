@@ -149,7 +149,6 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 	if ($f === null) {
 		return;
 	}
-
 	$f->form_id		= $F;
 
 	if ($R == '' && $f->form_type == 'launch') $R = '-1';
@@ -338,7 +337,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 
 				$o->multiple		= $r->sob_select_multiple;
 				$o->select2			= $r->sob_select_2 ?? null;
-				$o->options			= nuSelectOptions(nuReplaceHashVariables($r->sob_select_sql));
+				$o->options			= nuSelectOptions($r->sob_select_sql);
 
 			}
 
@@ -637,11 +636,9 @@ function nuGetEditForm($F, $R){
 	if ($F == '') return $f;
 
 	$r								= nuFormProperties($F);
-
 	if (!$r) {
 		return; // form does not exist
 	}
-
 	$SQL							= new nuSqlString(nuReplaceHashVariables($r->sfo_browse_sql));
 
 	$f->id							= $r->zzzzsys_form_id;
@@ -942,12 +939,15 @@ function nuSelectAddOption($text, $value) {
 function nuSelectOptions($sql) {
 
 	$options = [];
-	
+
+	$sqlWithHk = $sql;
+	$sql = nuReplaceHashVariables($sql);
+
 	$sqlFirstChars = trim(substr($sql, 0, 20));
 
 	if (nuStringStartsWith('SELECT', $sqlFirstChars, true) || nuStringStartsWith('WITH', $sqlFirstChars, true)) {	//-- sql statement
-
-		$stmt = nuRunQuery($sql);
+		
+		$stmt = nuRunQueryString($sql, $sqlWithHk);
 
 		if (nuErrorFound()) {
 			return;
@@ -1471,7 +1471,7 @@ function nuGatherFormAndSessionData($home){
 }
 
 function nuDisplayErrorAccessDenied($callType, $nuR) {
-	
+
 	$code =  db_fetch_row($nuR) === 1 ? " ({$nuR->sfo_code})" : '';
 		
 	if ($callType == 'getform') {
@@ -1483,7 +1483,6 @@ function nuDisplayErrorAccessDenied($callType, $nuR) {
 	}
 
 }
-
 function nuGetFormPermission($f, $field) {
 
 	$s = "SELECT $field FROM zzzzsys_access_form WHERE slf_zzzzsys_access_id = ? AND slf_zzzzsys_form_id = ?";
@@ -1531,8 +1530,6 @@ function nuFormAccessList($j){
 	return $a;
 
 }
-
-
 
 function nuProcedureAccessList($j){
 

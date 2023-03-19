@@ -31,7 +31,7 @@ function nuAjax(w, successCallback, errorCallback) {
 function nuAjaxShowError(jqXHR, errorThrown) {
 
 	const err = nuFormatAjaxErrorMessage(jqXHR, errorThrown);
-	
+
 	if (typeof err === 'object') {
 		errMsg = [err.message, err.response];
 	} else {

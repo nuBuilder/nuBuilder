@@ -182,6 +182,29 @@ function nuRunQuery($sql, $a = [], $isInsert = false){
 
 }
 
+function nuRunQueryString($sql, $sqlWithHK) {
+
+	global $nuDevSelectQueryRunParameterised;
+
+	if ($nuDevSelectQueryRunParameterised) {
+		$args = [];
+		$sqlWithHK = preg_replace_callback('/#(\'?)(.*?)(\'?)#/', function($match) use(&$count, &$args) {
+			$args[] = $match[2];
+			return '?';
+		}, $sqlWithHK);
+		$sqlWithHK = str_replace("'?'", "?", $sqlWithHK);
+		
+		foreach ($args as &$value) {
+			$value = nuReplaceHashVariables('#' . $value. '#');
+		}
+
+		return nuRunQuery($sqlWithHK, $args);
+
+	} else {
+		return nuRunQuery($sql);
+	}
+
+}
 
 function db_is_auto_id($table, $pk){
 
