@@ -4759,6 +4759,10 @@ function nuPopulateLookup(fm, target, setFocus) {
 
 	$('#dialogClose').click();
 
+	if (window.nuaction == 'save' && !nuLookingUp()) {
+		nuSaveAction();
+	}
+
 }
 
 function nuChooseOneLookupRecord(e, fm) {
@@ -5158,13 +5162,22 @@ function nuIsNewRecord() {
 
 function nuSaveAction(close) {
 
-	if (nuCurrentProperties().form_type == 'launch' || nuLookingUp()) return;
+	if (nuCurrentProperties().form_type == 'launch') {
+		return;
+	}
+
+	window.nuaction = 'save';
+	if (nuLookingUp()) {
+		return;
+	}
 
 	if (nuNoDuplicates()) {
 
 		nuSaveScrollPositions();
 		nuUpdateData('save', close ? 'close' : null);
 
+	} else {
+		window.nuaction = '';
 	}
 
 }
@@ -6066,7 +6079,7 @@ function nuLookingUp() {
 
 		if (window.nuLOOKUPSTATE[lu] == 'looking') {
 
-			nuMessage([nuTranslate('A Lookup is still being populated...')]);
+			// nuMessage([nuTranslate('A Lookup is still being populated...')]);
 			return true;
 
 		}
