@@ -1810,18 +1810,12 @@ function nuAddPrintButtons($f, $t, $a){
 	$f->forms[0]->buttons[$i][1] = $t.$a;
 
 }
-
 function nuAddJavaScript($js, $bc = false, $first = false){
 
 	$extraJSKey = $bc ? 'EXTRAJS_BC' : 'EXTRAJS';
 	if (isset($GLOBALS[$extraJSKey])) {
 		$extraJS = $GLOBALS[$extraJSKey];
-		if ($first) {
-			$extraJS = $js . "\n\n" . $extraJS;
-		} else {
-			$extraJS .= "\n\n" . $js;
-		}
-		$GLOBALS[$extraJSKey] = $extraJS;
+		$GLOBALS[$extraJSKey] = ($first) ? $js . "\n\n" . $extraJS : "\n\n" . $js;
 	}
 
 }
