@@ -23,7 +23,7 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 
 	var _plugins;
 	if (!plugins) {
-		_plugins = 'code preview importcss searchreplace autolink autosave save directionality visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists help charmap emoticons';
+		_plugins = 'code preview importcss searchreplace autolink autosave save directionality visualblocks visualchars fullscreen image link media codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists help charmap emoticons';
 	} else {
 		_plugins = plugins;
 	}
@@ -31,7 +31,7 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 	var _mobile;
 	if (!mobile) {
 		_mobile = {
-			plugins: 'preview importcss searchreplace autolink autosave save directionality visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists help charmap emoticons'
+			plugins: 'preview importcss searchreplace autolink autosave save directionality visualblocks visualchars fullscreen image link media codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists help charmap emoticons'
 		}
 	} else {
 		_mobile = mobile;
@@ -39,7 +39,7 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 
 	var _toolbar;
 	if (!toolbar) {
-		_toolbar = 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |	numlist bullist checklist | forecolor backcolor casechange	formatpainter removeformat | pagebreak | charmap emoticons | fullscreen	preview save print | insertfile image media pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments addcomment';
+		_toolbar = 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |	numlist bullist checklist | forecolor backcolor casechange	formatpainter removeformat | pagebreak | charmap emoticons | fullscreen	preview save print | insertfile image media pageembed link anchor codesample | a11ycheck ltr rtl | showcomments addcomment';
 	} else {
 
 		if (toolbar == 'minimal') {
