@@ -388,39 +388,39 @@ function nuRunPHPHidden($nuCode){
 
 function nuRunPHP($nuCode, $hidden = false) {
 
-	if ($nuCode === 'nukeepalive') {
-		return;
-	}
+	if ($nuCode !== 'nukeepalive') {
 
-	$sql = "SELECT sph_code, sph_description, zzzzsys_php_id, sph_php, sph_global
-				FROM zzzzsys_php
-				WHERE sph_code = ?
-		";
+		$sql = "SELECT sph_code, sph_description, zzzzsys_php_id, sph_php, sph_global
+					FROM zzzzsys_php
+					WHERE sph_code = ?
+			";
 
-	$stmt = nuRunQuery($sql, [$nuCode]);
-	$exists = db_num_rows($stmt) == 1;
+		$stmt = nuRunQuery($sql, [$nuCode]);
+		$exists = db_num_rows($stmt) == 1;
 
-	if (!$exists) {
-		if (substr($nuCode, 0, 2) !== 'nu') {
-			nuDisplayError(nuTranslate("The Procedure does not exist...") . " ($nuCode)");
-		}
-	}
-	else {
-
-		$row = db_fetch_object($stmt);
-		$hasAccess = $row->sph_global == '1';
-
-		if (!$hasAccess) {
-			$procList = nuProcedureAccessList(nuAllowedActivities());
-			$hasAccess = in_array($row->zzzzsys_php_id, $procList);
-		}
-
-		if ($hasAccess || $_SESSION['nubuilder_session_data']['isGlobeadmin']) {
-			if ($hidden) nuEval($row->zzzzsys_php_id);
+		if (!$exists) {
+			if (substr($nuCode, 0, 2) !== 'nu') {
+				nuDisplayError(nuTranslate("The Procedure does not exist...") . " ($nuCode)");
+			}
 		}
 		else {
-			nuDisplayError(nuTranslate("Access To Procedure Denied...") . " ($nuCode)");
+
+			$row = db_fetch_object($stmt);
+			$hasAccess = $row->sph_global == '1';
+
+			if (!$hasAccess) {
+				$procList = nuProcedureAccessList(nuAllowedActivities());
+				$hasAccess = in_array($row->zzzzsys_php_id, $procList);
+			}
+
+			if ($hasAccess || $_SESSION['nubuilder_session_data']['isGlobeadmin']) {
+				if ($hidden) nuEval($row->zzzzsys_php_id);
+			}
+			else {
+				nuDisplayError(nuTranslate("Access To Procedure Denied...") . " ($nuCode)");
+			}
 		}
+	
 	}
 
 	if ($hidden) {
