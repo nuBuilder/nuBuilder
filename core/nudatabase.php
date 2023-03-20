@@ -188,6 +188,10 @@ function nuRunQuery($sql, $a = [], $isInsert = false){
 
 }
 
+function nuGetLastError() {
+	return $GLOBALS['LAST_ERROR'] ?? null;
+}
+
 function nuRunQueryString($sql, $sqlWithHK) {
 
 	global $nuDevSelectQueryRunParameterised;
