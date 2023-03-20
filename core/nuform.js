@@ -5176,9 +5176,9 @@ function nuSaveAction(close) {
 		nuSaveScrollPositions();
 		nuUpdateData('save', close ? 'close' : null);
 
-	} else {
-		window.nuaction = '';
 	}
+
+	window.nuaction = '';
 
 }
 
