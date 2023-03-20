@@ -130,13 +130,13 @@ function nuRunQuery($sql, $a = [], $isInsert = false){
 	global $DBCharset;
 
 	if($sql == ''){
-		$a			= [];
-		$a[0]		= $DBHost;
-		$a[1]		= $DBName;
-		$a[2]		= $DBUser;
-		$a[3]		= $DBPassword;
-		$a[4]		= $nuDB;
-		$a[4]		= $DBCharset;
+		$a 		= [];
+		$a[0] 	= $DBHost;
+		$a[1] 	= $DBName;
+		$a[2] 	= $DBUser;
+		$a[3] 	= $DBPassword;
+		$a[4] 	= $nuDB;
+		$a[4] 	= $DBCharset;
 		return $a;
 	}
 
@@ -147,10 +147,10 @@ function nuRunQuery($sql, $a = [], $isInsert = false){
 		$stmt->execute($a);
 	}catch(PDOException $ex){
 
-		$user		= 'globeadmin';
+		$user 		= 'globeadmin';
 		$message	= $ex->getMessage();
-		$array		= debug_backtrace();
-		$trace		= '';
+		$array 		= debug_backtrace();
+		$trace 		= '';
 
 		$count = count($array);
 		for($i = 0 ; $i < $count; $i ++){
@@ -163,8 +163,14 @@ function nuRunQuery($sql, $a = [], $isInsert = false){
 		nuDebug($debug);
 		$_POST['RunQuery']		= 0;
 
-		$id						= $nuDB->lastInsertId();
 		$GLOBALS['ERRORS'][]	= $debug;
+
+		$error = new stdClass();
+		$error->user = $user;
+		$error->message = $message;
+		$error->sql = $sql;
+		$error->trace = $trace;
+		$GLOBALS['LAST_ERROR'] = $error;
 
 		return -1;
 
