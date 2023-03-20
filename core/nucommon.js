@@ -1711,15 +1711,17 @@ function nuDecode(s) {
 	return decodeURIComponent(escape(window.atob(s)))
 }
 
-function nuAddRow(s) {
+function nuAddRow(id, setFocus = true) {
 
-	const o = nuSubformObject(s);
-	let i = s + nuPad3(o.rows.length - 1) + o.fields[1];
-	$('#' + i).change();
+	const o = nuSubformObject(id);
+	const index = nuPad3(o.rows.length - 1) + o.fields[1];
+	$(`#${id}${index}`).change();
 
-	i = s + nuPad3(o.rows.length) + o.fields[1];
-
-	$('#' + i).focus();
+	if (setFocus) {
+		const newIndex = nuPad3(o.rows.length) + o.fields[1];
+		const $newInput = $(`#${id}${newIndex}`);
+		$newInput.focus();
+	}
 
 }
 
