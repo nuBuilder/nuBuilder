@@ -394,25 +394,21 @@ function nuDisplayError(e) {
 
 function nuFormatAjaxErrorMessage(jqXHR, exception) {
 
-	const errorMessages = {
-		0: nuTranslate('Not connected. Please verify your network connection.'),
-		403: {
-			message: `<h3>${nuTranslate('Access Forbidden.')}</h3>`,
-			response: jqXHR.responseText,
-		},
-		404: nuTranslate('The requested page was not found.') + ' [404]',
-		500: nuTranslate('Internal Server Error.') + ' [500]',
-		parsererror: nuTranslate('Requested JSON parse failed.'),
-		timeout: nuTranslate('Time out error.'),
-		abort: nuTranslate('Ajax request aborted.'),
-	};
+    const errorMessages = {
+        0: nuTranslate('Not connected. Please verify your network connection.'),
+        403: [`<h3>${nuTranslate('Access Forbidden.')}</h3>`, jqXHR.responseText],
+        404: nuTranslate('The requested page was not found.') + ' [404]',
+        500: nuTranslate('Internal Server Error.') + ' [500]',
+        parsererror: nuTranslate('Requested JSON parse failed.'),
+        timeout: nuTranslate('Time out error.'),
+        abort: nuTranslate('Ajax request aborted.'),
+    };
 
-	const errorMessage = errorMessages[jqXHR.status] || errorMessages[exception] || {
-		message: `<h3>${nuTranslate('Uncaught Error.')}</h3>`,
-		response: jqXHR.responseText,
-	};
+    const errorMessage = errorMessages[jqXHR.status] || errorMessages[exception] ||
+        [`<h3>${nuTranslate('Uncaught Error.')}</h3>`, jqXHR.responseText]
 
-	return errorMessage;
+
+    return errorMessage;
 
 }
 
@@ -1647,12 +1643,12 @@ function nuAttachFile(j, c) {
 
 function nuButtonIcon(j) {
 
-    $(j).css({
-        'text-align': 'left',
-        'padding': '0px 0px 0px 35px',
-        'background-size': '30px',
-        'background-repeat': 'no-repeat'
-    });
+	$(j).css({
+		'text-align': 'left',
+		'padding': '0px 0px 0px 35px',
+		'background-size': '30px',
+		'background-repeat': 'no-repeat'
+	});
 
 }
 
