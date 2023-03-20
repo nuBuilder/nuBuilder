@@ -30,27 +30,20 @@ function nuAjax(w, successCallback, errorCallback) {
 
 function nuAjaxShowError(jqXHR, errorThrown) {
 
-	const err = nuFormatAjaxErrorMessage(jqXHR, errorThrown);
+	const errMsg = nuFormatAjaxErrorMessage(jqXHR, errorThrown);
 
-	if (typeof err === 'object') {
-		errMsg = [err.message, err.response];
-	} else {
-		errMsg = err;
-	}
-
-	let msgDiv;
-	if (nuHasHiddenModalDragDialog()) {
-		msgDiv = parent.nuMessage(errMsg);
-		nuClosePopup(); 
-	} else {
-		msgDiv = nuMessage(errMsg);
-	}
-	if (window.nuOnMessage) {
+	let msgDiv;  
+	if (nuHasHiddenModalDragDialog()) {    
+		msgDiv = parent.nuMessage(errMsg);    
+		nuClosePopup();   
+	} else {    
+		msgDiv = nuMessage(errMsg);  
+	}  
+	if (window.nuOnMessage) {    
 		nuOnMessage(msgDiv, errMsg);
 	}
 
 }
-
 function nuHasHiddenModalDragDialog() {
 	return parent.$('#nuModal').length > 0 && parent.$('#nuModal').siblings(".nuDragDialog").css("visibility") == "hidden";
 }
@@ -252,7 +245,7 @@ function nuAskLogout() {
 function nuLogout() {
 
 	const winTop = window.top;
-    winTop.nuFORM.addBreadcrumb();
+	winTop.nuFORM.addBreadcrumb();
 
 	const last = winTop.nuFORM.getCurrent();
 	last.session_id = window.nuSESSION;
