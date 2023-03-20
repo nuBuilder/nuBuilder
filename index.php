@@ -113,7 +113,7 @@ function nuLastLoggedInUser() {
     }
 }
 
-nuJSIndexInclude('core/libs/jquery/jquery-3.6.3.min.js', false);
+nuJSIndexInclude('core/libs/jquery/jquery-3.6.4.min.js', false);
 nuJSIndexInclude('core/nuwysiwyg.js');
 nuJSIndexInclude('core/nuformclass.js');
 nuJSIndexInclude('core/nuform.js');
