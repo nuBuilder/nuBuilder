@@ -4,18 +4,15 @@ mb_internal_encoding('UTF-8');
 
 $_POST['RunQuery']		= 0;
 
-if (isset($_SESSION['nubuilder_session_data'])) {
-	$sessionData		= $_SESSION['nubuilder_session_data'];
-}
+$sessionData = $_SESSION['nubuilder_session_data'] ?? null;
 
-$DBHost					= isset($sessionData['DB_HOST'])		? $sessionData['DB_HOST']		: $nuConfigDBHost;
-$DBName					= isset($sessionData['DB_NAME'])		? $sessionData['DB_NAME']		: $nuConfigDBName;
-$DBUser					= isset($sessionData['DB_USER'])		? $sessionData['DB_USER']		: $nuConfigDBUser;
-$DBPassword				= isset($sessionData['DB_PASSWORD'])	? $sessionData['DB_PASSWORD']	: $nuConfigDBPassword;
-$DBCharset				= isset($sessionData['DB_CHARSET'])		? $sessionData['DB_CHARSET']	: 'utf8';
-$DBOptions				= isset($sessionData['DB_OPTIONS'])		? $sessionData['DB_OPTIONS']	: (isset($nuConfigDBOptions) ? $nuConfigDBOptions : null);
-
-$charSet				= [PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $DBCharset"];
+$DBHost			= $sessionData['DB_HOST'] ?? $nuConfigDBHost;
+$DBName			= $sessionData['DB_NAME'] ?? $nuConfigDBName;
+$DBUser			= $sessionData['DB_USER'] ?? $nuConfigDBUser;
+$DBPassword		= $sessionData['DB_PASSWORD'] ?? $nuConfigDBPassword;
+$DBCharset		= $sessionData['DB_CHARSET'] ?? 'utf8';
+$DBOptions		= $sessionData['DB_OPTIONS'] ?? $nuConfigDBOptions ?? null;
+$charSet		= [PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $DBCharset"];
 
 if (is_array($DBOptions)) {
 	array_merge($charSet, $DBOptions);
