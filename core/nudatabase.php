@@ -291,27 +291,25 @@ function db_fetch_value($table, $pk, $recordId, $column) {
 
 }
 
-function db_field_info($n){
+function db_field_info($tableName) {
 
-	$fields		= [];
-	$types		= [];
-	$pk			= [];
+    $fields = [];
+    $types = [];
+    $primaryKeys = [];
 
-	$s			= "DESCRIBE `$n`";
-	$t			= nuRunQueryNoDebug($s);
+    $query = "DESCRIBE `$tableName`";
+    $result = nuRunQueryNoDebug($query);
 
-	while($r = db_fetch_row($t)){
+	while ($row = db_fetch_row($result)) {
+		$fields[] = $row[0];
+		$types[] = $row[1];
 
-		$fields[] = $r[0];
-		$types[] = $r[1];
-
-		if($r[3] == 'PRI'){
-			$pk[] = $r[0];
+		if ($row[3] === 'PRI') {
+			$primaryKeys[] = $row[0];
 		}
-
 	}
 
-	return [$fields, $types, $pk];
+	return [$fields, $types, $primaryKeys];
 
 }
 
