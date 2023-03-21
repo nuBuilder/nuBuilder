@@ -64,33 +64,29 @@ $GLOBALS['sys_table_prefix'] = [
 	'user' => 'sus'
 ];
 
-function nuRunQueryNoDebug($s, $a = [], $isInsert = false){
+function nuRunQueryNoDebug($query, $params = [], $isInsert = false){
 
 	global $nuDB;
 
-	$object = $nuDB->prepare($s);
+	$stmt = $nuDB->prepare($query);
 
 	try {
-		$object->execute($a);
+		$stmt->execute($params);
 	}catch(PDOException $ex){
 	}
 
-	if($isInsert){
-		return $nuDB->lastInsertId();
-	}else{
-		return $object;
-	}
+	return $isInsert ? $nuDB->lastInsertId() : $stmt;
 
 }
 
-function nuRunQueryTest($s, $a = []){
+function nuRunQueryTest($query, $params = []){
 
 	global $nuDB;
 
-	$object = $nuDB->prepare($s);
+	$stmt = $nuDB->prepare($query);
 
 	try {
-		$object->execute($a);
+		$stmt->execute($params);
 	}catch(PDOException $ex){
 		return $ex->getMessage();
 	}
@@ -116,11 +112,11 @@ function nuDebugMessageString($user, $message, $sql, $trace) {
 
 		";
 
-		return  trim(preg_replace('/\t/', '', $debug));
+		return trim(preg_replace('/\t/', '', $debug));
 
 }
 
-function nuRunQuery($sql, $a = [], $isInsert = false){
+function nuRunQuery($sql, $params = [], $isInsert = false){
 
 	global $DBHost;
 	global $DBName;
@@ -130,21 +126,21 @@ function nuRunQuery($sql, $a = [], $isInsert = false){
 	global $DBCharset;
 
 	if($sql == ''){
-		$a 		= [];
-		$a[0] 	= $DBHost;
-		$a[1] 	= $DBName;
-		$a[2] 	= $DBUser;
-		$a[3] 	= $DBPassword;
-		$a[4] 	= $nuDB;
-		$a[4] 	= $DBCharset;
-		return $a;
+		$params 		= [];
+		$params[0] 	= $DBHost;
+		$params[1] 	= $DBName;
+		$params[2] 	= $DBUser;
+		$params[3] 	= $DBPassword;
+		$params[4] 	= $nuDB;
+		$params[4] 	= $DBCharset;
+		return $params;
 	}
 
-	// nuLog($s, count($a)> 0 ? $a[0] : '');
+	// nuLog($s, count($params)> 0 ? $params[0] : '');
 	$stmt = $nuDB->prepare($sql);
 
 	try {
-		$stmt->execute($a);
+		$stmt->execute($params);
 	}catch(PDOException $ex){
 
 		$user 		= 'globeadmin';
@@ -176,15 +172,7 @@ function nuRunQuery($sql, $a = [], $isInsert = false){
 
 	}
 
-	if($isInsert){
-
-		return $nuDB->lastInsertId();
-
-	}else{
-
-		return $stmt;
-
-	}
+	return $isInsert ? $nuDB->lastInsertId() : $stmt;
 
 }
 
