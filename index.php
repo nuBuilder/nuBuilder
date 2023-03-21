@@ -222,19 +222,8 @@ window.nuHASH				= [];
 	$nuWelcomeBodyInnerHTML	= (isset($nuWelcomeBodyInnerHTML)?$nuWelcomeBodyInnerHTML:'');
 	$welcome				= addslashes($nuWelcomeBodyInnerHTML);
 	$nuHeader				= nuHeader();
-	$opener					= '';
-	$search					= '';
-	$iframe					= '';
-	$target					= '';
-	$l						= scandir('core/graphics');
-	$f						= json_encode($l);
+	$graphics				= json_encode(scandir('core/graphics'));
 	$nuBrowseFunction		= 'browse';
-	$like					= '';
-	$nuUser					= '';
-	$nuPassword				= '';
-	$nuForm					= '';
-	$nuRecord				= '';
-	$nuHome					= '';
 
 	function nuSanitize(&$item) {
 		$item = htmlspecialchars($item);
@@ -242,28 +231,28 @@ window.nuHASH				= [];
 
 	array_walk($_GET, 'nuSanitize');
 
-	if(isset($_GET['u']))				{$nuUser 		= $_GET['u'];}
-	if(isset($_GET['p']))				{$nuPassword 	= $_GET['p'];}
-	if(isset($_GET['f']))				{$nuForm 		= $_GET['f'];}
-	if(isset($_GET['r']))				{$nuRecord 		= $_GET['r'];}
-	if(isset($_GET['h']))				{$nuHome 		= $_GET['h'];}
+	$nuUser			 	= $_GET['u'] ?? '';
+	$nuPassword		 	= $_GET['p'] ?? '';
+	$nuForm			 	= $_GET['f'] ?? '';
+	$nuRecord		 	= $_GET['r'] ?? '';
+	$nuHome			 	= $_GET['h'] ?? '';
 
-	if(isset($_GET['opener']))			{$opener 		= $_GET['opener'];}
-	if(isset($_GET['search']))			{$search 		= $_GET['search'];}
-	if(isset($_GET['iframe']))			{$iframe 		= $_GET['iframe'];}
-	if(isset($_GET['target']))			{$target 		= $_GET['target'];}
-	if(isset($_GET['like']))			{$like	 		= $_GET['like'];}
-	if(isset($_GET['browsefunction']))	{$nuBrowseFunction 	= $_GET['browsefunction'];}
+	$opener			 	= $_GET['opener'] ?? '';
+	$search			 	= $_GET['search'] ?? '';
+	$iframe			 	= $_GET['iframe'] ?? '';
+	$target			 	= $_GET['target'] ?? '';
+	$like			 	= $_GET['like'] ?? '';
+	$nuBrowseFunction	= $_GET['browsefunction'] ?? 'browse';
 
 	$h1								= "
-	window.nuLoginU							= '$nuUser';
-	window.nuLoginP							= '$nuPassword';
-	window.nuLoginF							= '$nuForm';
-	window.nuLoginR							= '$nuRecord';
-	window.nuLoginH							= '$nuHome';
-	window.nuGraphics						= $f;
-	window.nuIsWindow						= '$iframe';
-	window.nuImages							= [];
+		window.nuLoginU		= '$nuUser';
+		window.nuLoginP		= '$nuPassword';
+		window.nuLoginF		= '$nuForm';
+		window.nuLoginR		= '$nuRecord';
+		window.nuLoginH		= '$nuHome';
+		window.nuGraphics	= $graphics;
+		window.nuIsWindow	= '$iframe';
+		window.nuImages		= [];
 	";
 
 	$isSession	= isset($_SESSION['nubuilder_session_data']['SESSION_ID']);
