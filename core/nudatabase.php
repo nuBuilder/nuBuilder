@@ -201,18 +201,18 @@ function nuRunQueryString($sql, $sqlWithHK) {
 
 }
 
-function db_is_auto_id($table, $pk){
+function db_is_auto_id($table, $primaryKey) {
 
-	$s		= "SHOW COLUMNS FROM `$table` WHERE `Field` = '$pk'";
-	$t		= nuRunQuery($s);									//-- mysql's way of checking if its an auto-incrementing id primary key
+	$query = "SHOW COLUMNS FROM `$table` WHERE `Field` = ?";
+	$stmt = nuRunQuery($query, [$primaryKey]);
 
-	if (db_num_rows($t) == 0) {
-		nuDisplayError(nuTranslate("The Primary Key is invalid"). ": ". $pk);
+	if (db_num_rows($stmt) == 0) {
+		nuDisplayError(nuTranslate("The primary key is invalid"). ": ". $primaryKey);
 		return false;
 	}
 
-	$r		= db_fetch_object($t);
-	return $r->Extra == 'auto_increment';
+	$row = db_fetch_object($stmt);
+	return $row->Extra == 'auto_increment';
 
 }
 
