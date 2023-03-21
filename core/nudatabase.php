@@ -216,84 +216,59 @@ function db_is_auto_id($table, $primaryKey) {
 
 }
 
-function db_fetch_array($o){
+function db_fetch($obj, $style = 'object', $fetchAll = false) {
 
-	if (is_object($o)) {
-		return $o->fetch(PDO::FETCH_ASSOC);
-	} else {
-		return [];
-	}
+	$fetchStyles = [
+		'array' => [PDO::FETCH_ASSOC, 'array'],
+		'keypairarray' => [PDO::FETCH_KEY_PAIR, 'array'],
+		'object' => [PDO::FETCH_OBJ, 'boolean'],
+		'row' => [PDO::FETCH_NUM, 'boolean']
+	];
 
-}
-
-function db_fetch_all_array($o){
-
-	if (is_object($o)) {
-		return $o->fetchAll(PDO::FETCH_ASSOC);
-	} else {
-		return [];
-	}
-
-}
-
-function db_fetch_key_pair_array($o){
-
-	if (is_object($o)) {
-		return $o->fetchAll(PDO::FETCH_KEY_PAIR);
-	} else {
-		return [];
-	}
-
-}
-
-function db_fetch_object($o){
-
-	if (is_object($o)) {
-		return $o->fetch(PDO::FETCH_OBJ);
-	} else {
+	if (!isset($fetchStyles[$style])) {
 		return false;
 	}
 
-}
+	[$fetchStyle, $returnType] = $fetchStyles[$style];
 
-function db_fetch_all_column($o){
-
-	if (is_object($o)) {
-		return $o->fetchAll(PDO::FETCH_COLUMN);
-	} else {
-		return [];
+	if (!is_object($obj)) {
+		if ($returnType === 'array') {
+			return [];
+		} elseif ($returnType === 'boolean') {
+			return false;
+		}
 	}
 
-}
-
-function db_fetch_all_object($o){
-
-	if (is_object($o)) {
-		return $o->fetchAll(PDO::FETCH_OBJ);
-	} else {
-		return false;
-	}
+	return $fetchAll ? $obj->fetchAll($fetchStyle) : $obj->fetch($fetchStyle);
 
 }
 
-function db_fetch_row($o){
-
-	if (is_object($o)) {
-		return $o->fetch(PDO::FETCH_NUM);
-	} else {
-		return false;
-	}
-
+function db_fetch_array($obj){
+	return db_fetch($obj, 'array');
 }
 
-function db_fetch_all_row($o){
+function db_fetch_all_array($obj){
+	return db_fetch($obj, 'array', true);
+}
 
-	if (is_object($o)) {
-		return $o->fetchAll(PDO::FETCH_NUM);
-	} else {
-		return false;
-	}
+function db_fetch_key_pair_array($obj){
+	return db_fetch($obj, 'keypairarray');
+}
 
+function db_fetch_object($obj){
+	return db_fetch($obj, 'object');
+}
+
+function db_fetch_all_column($obj){
+	return db_fetch($obj, 'column', true);
+}
+
+function db_fetch_all_object($obj){
+	return db_fetch($obj, 'object', true);
+}
+
+function db_fetch_row($obj){
+	return db_fetch($obj, 'row');
 }
 
 function db_update_value($table, $pk, $recordId, $column, $newValue) {
