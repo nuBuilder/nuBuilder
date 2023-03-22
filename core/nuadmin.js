@@ -840,17 +840,16 @@ function nuContextMenuLabelPromptCallback(value, ok) {
 
 function nuContextMenuLabelPrompt() {
 
-	const targetId = contextMenuCurrentTargetId();
-	const targetElement = $('#' + contextMenuCurrentTarget.id);
-
 	const label = contextMenuCurrentTarget.id;
-	const objectId = targetId;
-	const initialValue = targetElement.text();
+	const id = contextMenuCurrentTargetId();
+	const obj = $('#' + contextMenuCurrentTarget.id);
 
-	const promptTitle = `${nuTranslate("Object")}: ${objectId}`;
-	const promptMessage = `${nuTranslate("Label")}:`;
+	let value = obj.is(":button") ? obj.val() : $('#' + label).html();
+	value = obj.is(":button") && obj.attr('data-nu-label') ? obj.html() : value;
 
-	nuPrompt(promptMessage, promptTitle, initialValue, '', 'nuContextMenuLabelPromptCallback');
+	value = nuFormType() == 'edit' ? value : value.trim();
+
+	nuPrompt(nuTranslate("Label") + ':', nuTranslate("Object") + ': ' + id, value, '', 'nuContextMenuLabelPromptCallback');
 
 }
 
