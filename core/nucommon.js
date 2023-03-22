@@ -563,12 +563,16 @@ function nuBuildLookup(t, s, like) {
 
 }
 
+function nuCanArrangeObjects() {
+	return nuGlobalAccess() && nuSERVERRESPONSE.objects.length > 0;
+}
+
 function nuPopup(f, r, filter) {
 
 	nuCursor('progress');
 
 	if (!nuGlobalAccess() && f == 'nuobject') { return; }
-	if (nuSERVERRESPONSE.objects.length == 0 && r == '-2') { return; }
+	if (r == '-2' && !nuCanArrangeObjects()) { return; }
 
 	$('#nuCalendar').remove();
 
@@ -938,7 +942,7 @@ function nuBindCtrlEvents() {
 
 			if (nuFormType() == 'edit') {
 
-				if (e.code == 'KeyA' && g) {						//-- a		Arrange
+				if (e.code == 'KeyA' && nuCanArrangeObjects()) {	//-- a		Arrange Objects
 					nuPopup(formId, "-2");
 				} else if (e.code == 'KeyQ' && !g) {				//-- q		Change Password
 					nuPopup("nupassword", "5b6bb7108a75efc", "");
