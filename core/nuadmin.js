@@ -282,11 +282,13 @@ function nuOpenNuDebug(w) {
 
 function nuAddIconToBreadcrumbHolder(i, title, oClick, iClass, paddingLeft) {
 
-	let h = "<div id='" + i + "' title='" + title + "' style='font-size: 17px; display: inline-block; cursor : pointer; padding-right:12px; padding-left:" + paddingLeft + "' onclick='" + oClick + "'><i class='" + iClass + "'></i>" + '' + "</div>";
-
-	let fragment = nuCreateAppendHTML(h);
-	let options = $('#nuBreadcrumbHolder').find("[id$=nuOptions]");
-
+	const h = `
+	<div id="${i}" title="${title}" style="font-size: 17px; display: inline-block; cursor: pointer; padding-right: 12px; padding-left: ${paddingLeft}" onclick="${oClick}">
+		<i class="${iClass}"></i>
+	</div>
+  `;
+	const fragment = nuCreateAppendHTML(h);
+	const options = $('#nuBreadcrumbHolder').find("[id$=nuOptions]");
 	$(fragment).insertAfter(options);
 
 }
