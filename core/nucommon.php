@@ -1661,10 +1661,39 @@ function nuTranslate($str /*optional arguments*/) {
 	if (func_num_args() > 1 && nuStringContains('%', $str)) {
 		$args = func_get_args();
 		array_shift($args);
-		$str = vsprintf($str, $args);
+		$str = nuFormatVarArgs($str, $args);
 	}
 
 	return $str;
+
+}
+
+function nuFormatVarArgs($format, $values) {
+
+	// Check if there are custom placeholders in the format string
+	if (!preg_match('/%s(\d+)/', $format)) {
+		return vsprintf($format, $values);
+	}
+
+	// Extract placeholder names from the format string
+	preg_match_all('/%s(\d+)/', $format, $matches);
+
+	// Create an array for the ordered values
+	$ordered_values = [];
+
+	// Loop through the placeholder names and fill the ordered values array
+	foreach ($matches[1] as $placeholder_number) {
+		$index = (int)$placeholder_number - 1; // Convert to zero-based index
+		if (isset($values[$index])) {
+			$ordered_values[] = $values[$index];
+		}
+	}
+
+	// Replace the custom placeholders with standard %s placeholders
+	$new_format = preg_replace('/%s(\d+)/', '%s', $format);
+
+	// Use vsprintf with the new format string and ordered values array
+	return vsprintf($new_format, $ordered_values);
 
 }
 
