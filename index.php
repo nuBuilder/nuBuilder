@@ -3,7 +3,7 @@ $nb_path = __DIR__;
 
 $nuconfig = "nuconfig.php";
 if(! is_file($nuconfig)){
-    die('nuconfig.php not found. Rename nuconfig-sample.php to nuconfig.php');
+	die('nuconfig.php not found. Rename nuconfig-sample.php to nuconfig.php');
 }
 require_once('nuconfig.php');
 require_once('core/nudatabase.php');
@@ -91,26 +91,20 @@ function nuEndsWithStyleTag($style) {
 
 }
 
-function nuHeader(){
+function nuHeader() {
 
-	$sql				= "SELECT * FROM zzzzsys_setup WHERE zzzzsys_setup_id = 1 ";
-	$rs 				= nuRunQuery($sql);
-	$obj 				= db_fetch_object($rs);
-	$style				= isset($obj->set_style) ? $obj->set_style : '';
-	$style				= '</script>'. (nuEndsWithStyleTag($style) ? $style :  '<style>'.$style.'</style>') . '<script>';
-	$HTMLHeader 		= $obj->set_header . $style;
-	$j					= "\n\n" . $HTMLHeader . "\n\n";
+	$sql = "SELECT set_style, set_header FROM zzzzsys_setup WHERE zzzzsys_setup_id = ?";
+	$stmt = nuRunQuery($sql, [1]);
 
-	return $j;
+	$obj = db_fetch_object($stmt);
+	$style = $obj->set_style ?? '';
+	$style = '</script>' . (nuEndsWithStyleTag($style) ? $style : '<style>' . $style . '</style>') . '<script>';
 
+	return "\n\n" . $obj->set_header . $style . "\n\n";
 }
 
 function nuLastLoggedInUser() {
-    if(isset($_SESSION['nuLastUser']['user_id'])) {
-        return $_SESSION['nuLastUser']['user_id'];
-    } else {
-        return "";
-    }
+	return $_SESSION['nuLastUser']['user_id'] ?? "";
 }
 
 nuJSIndexInclude('core/libs/jquery/jquery-3.6.4.min.js', false);
@@ -161,52 +155,48 @@ function nuValidCaller(o){
 }
 
 function nuSSOLoginRequest(u, p) {
-  const btn = document.getElementById('submitSSO');
-  btn.style.opacity = 0.5;
-  btn.style.cursor = "wait";
-  location.replace("/sso/login");
+	const btn = document.getElementById('submitSSO');
+	btn.style.opacity = 0.5;
+	btn.style.cursor = "wait";
+	location.replace("/sso/login");
 }
 
-function nuLoginRequest(u, p){
-
+function nuLoginRequest(u, p) {
+  
 	$(":submit").nuDisable();
 
-	var w = {
-				call_type		: 'login',
-				username		: arguments.length == 0 ? $('#nuusername').val() : u,
-				password		: arguments.length == 0 ? $('#nupassword').val() : p,
-				login_form_id	: nuLoginF,
-				login_record_id	: nuLoginR
-			};
-
-	w	= JSON.stringify(w);
+	const data = {
+		call_type: 'login',
+		username: arguments.length == 0 ? $('#nuusername').val() : u,
+		password: arguments.length == 0 ? $('#nupassword').val() : p,
+		login_form_id: nuLoginF,
+		login_record_id: nuLoginR
+	};
 
 	$.ajax({
-		async		: true,
-		dataType	: "json",
-		url			: "core/nuapi.php",
-		method		 : "POST",
-		data		 : {nuSTATE : w
-					},
-		dataType : "json",
-		success	: function(data,textStatus,jqXHR){
-
-			if(nuDisplayError(data)){
-				if(data.log_again == 1){location.reload();}
+		async: true,
+		dataType: "json",
+		url: "core/nuapi.php",
+		method: "POST",
+		data: { nuSTATE: JSON.stringify(data) },
+		success: ({ form_id, record_id, filter, search }) => {
+			if (nuDisplayError({ form_id, record_id, filter, search })) {
+				if (data.log_again == 1) {
+					location.reload();
+				}
 			} else {
-				nuForm(data.form_id, data.record_id, data.filter, data.search);
+				nuForm(form_id, record_id, filter, search);
 			}
 		},
-		error		: function(jqXHR,textStatus,errorThrown){
-
+		error: (jqXHR, textStatus, errorThrown) => {
 			$(":submit").nuEnable();
 			window.test = jqXHR.responseText;
 
 			let err = nuFormatAjaxErrorMessage(jqXHR, errorThrown);
 			nuMessage(err);
-
 		},
 	});
+  
 }
 
 window.nuVersion 		= 'nuBuilder4.5';
@@ -215,10 +205,10 @@ window.nuDocumentID		= Date.now();
 window.nuHASH				= [];
 
 <?php
-    global $nuConfigLogonMode;
-    global $nuConfigHideNonSsoLogonExcept;
-    $nuConfigLoginScreenTopRow = (isset($nuConfigLoginScreenTopRow)?$nuConfigLoginScreenTopRow:'');
-    $loginTopRow            = addslashes($nuConfigLoginScreenTopRow);
+	global $nuConfigLogonMode;
+	global $nuConfigHideNonSsoLogonExcept;
+	$nuConfigLoginScreenTopRow = (isset($nuConfigLoginScreenTopRow)?$nuConfigLoginScreenTopRow:'');
+	$loginTopRow			= addslashes($nuConfigLoginScreenTopRow);
 	$nuWelcomeBodyInnerHTML	= (isset($nuWelcomeBodyInnerHTML)?$nuWelcomeBodyInnerHTML:'');
 	$welcome				= addslashes($nuWelcomeBodyInnerHTML);
 	$nuHeader				= nuHeader();
@@ -262,10 +252,10 @@ window.nuHASH				= [];
 	}else{
 
 		if($opener == ''){
-		    $lastUser = nuLastLoggedInUser();
+			$lastUser = nuLastLoggedInUser();
 			$onlySsoExcept = (isset($nuConfigSsoOnlyExcept) ? $nuConfigSsoOnlyExcept : array());
-		    $h2 = nuGetJS_login($nuBrowseFunction, $target, $loginTopRow, $welcome, $nuForm, $nuRecord, $isSession, $nuConfigLogonMode, $onlySsoExcept, $lastUser);
-        } else {
+			$h2 = nuGetJS_login($nuBrowseFunction, $target, $loginTopRow, $welcome, $nuForm, $nuRecord, $isSession, $nuConfigLogonMode, $onlySsoExcept, $lastUser);
+		} else {
 			$h2 = nuGetJS_action_screen($nuBrowseFunction, $target, $welcome, $opener, $search, $like);
 	   }
 
