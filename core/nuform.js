@@ -4307,24 +4307,33 @@ function nuAlign(a) {
 
 }
 
-function nuBrowseTableHover() {
+function nuBrowseTableHoverIn() {
+	
+	if (window.nuBROWSERESIZE.moving_element == '') {
+		if (this.offsetWidth < this.scrollWidth && !$(this).is('[title]')) {
+			$(this).attr('title', $(this).html().replace(/(<([^>]+)>)/ig, '')); // Remove HTML tags
+		}
 
-    const moving_element = window.nuBROWSERESIZE.moving_element;
-    const dataRow = $(this).attr('data-nu-row');
+		$("[data-nu-row]").addClass('nuBrowseTable').removeClass('nuSelectBrowse');
+		window.nuBROWSEROW = -1;
 
-    if (!moving_element) {
-        $("[data-nu-row]").addClass('nuBrowseTable').removeClass('nuSelectBrowse');
+		const dataRow = $(this).attr('data-nu-row');
+		$("[data-nu-row='" + dataRow + "']").not('.nuCellColored').addClass('nuSelectBrowse').removeClass('nuBrowseTable');
+	}
+	
+}
 
-        if (dataRow) {
-            $("[data-nu-row='" + dataRow + "']").not('.nuCellColored').addClass('nuSelectBrowse').removeClass('nuBrowseTable');
-        }
 
-        window.nuBROWSEROW = dataRow || -1;
+function nuBrowseTableHoverOut() {
 
-        if (this.offsetWidth < this.scrollWidth && !$(this).attr('title')) {
-            $(this).attr('title', $(this).html().replace(/(<([^>]+)>)/ig, ''));
-        }
-    }
+	if (window.nuBROWSERESIZE.moving_element == '') {
+		$("[data-nu-row]").addClass('nuBrowseTable').removeClass('nuSelectBrowse');
+
+		window.nuBROWSEROW = -1;
+
+		const dataRow = $(this).attr('data-nu-row');
+		$("[data-nu-row='" + dataRow + "']").addClass('nuBrowseTable').removeClass('nuSelectBrowse');
+	}
 
 }
 
@@ -4383,7 +4392,7 @@ function nuBrowseTable() {
 				$id.html(value)
 					.attr('data-nu-primary-key', row[r][0])
 					.attr('onclick', 'nuSelectBrowse(event, this)')
-					.hover(nuBrowseTableHover, nuBrowseTableHover);
+					.hover(nuBrowseTableHoverIn, nuBrowseTableHoverOut);
 			}
 
 			if (r === 0 && c === 0) {
@@ -4549,7 +4558,7 @@ function nuSearchColumnsReset() {
 
 	for (let i = 0; i < $(".nuBrowseTitle").length; i++) {
 		$('#nusort_' + i).removeClass('nuNoSearch');
-	}    
+	}
 
 	nuFORM.setProperty('nosearch_columns', []);
 
@@ -5176,10 +5185,9 @@ function nuSaveAction(close) {
 		nuSaveScrollPositions();
 		nuUpdateData('save', close ? 'close' : null);
 
-	}
+	} 
 
-	window.nuaction = '';
-
+	window.nuaction = '';				  
 }
 
 function nuSavingProgressMessage() {
