@@ -4365,8 +4365,8 @@ function nuBrowseTable() {
 		for (let c = 0; c < col.length; c++) {
 			const w = Number(col[c].width);
 			const id = `nucell_${r}_${c}`;
-			let div = nuCreateElementWithId('div', id, 'nuRECORD');
-			const $id = $('#' + id);
+			const div = nuCreateElementWithId('div', id, 'nuRECORD');
+			const $id = $(div);
 			$id.attr('data-nu-row', r)
 				.attr('data-nu-column', c)
 				.addClass(`nuCell${(r / 2 === parseInt(r / 2, 10)) ? 'Even' : 'Odd'}`)
