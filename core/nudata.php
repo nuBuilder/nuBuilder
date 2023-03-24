@@ -878,10 +878,13 @@ function nuCheckAccess($f, $r = '') {
 
 }
 
-function nuSubformObject($id = 'nuBuilder4EditForm') {
+function nuSubformObject($id = '') {
+
+	if (empty($id)) {
+		$id = 'nuBuilder4EditForm';
+	}
 
 	$formData = $_POST['nuHash']['nuFORMdata'];
-
 	foreach ($formData as $subform) {
 		if ($subform->id === $id) {
 			return $subform;
@@ -889,34 +892,6 @@ function nuSubformObject($id = 'nuBuilder4EditForm') {
 	}
 
 	return false;
-
- 
-
-							   
-
-																  
-						   
-															   
-						   
-																		  
-						   
-																															  
-						   
-																		
-					 
-
-								   
-
-						  
-																	
-							
-																		  
-							
-
-  
-
-																															  
-						   
 
 }
 

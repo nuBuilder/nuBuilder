@@ -175,8 +175,7 @@ function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 	$_SESSION['nubuilder_session_data']['isGlobeadmin'] = true;
 	$_SESSION['nubuilder_session_data']['translation'] = nuGetTranslation($lang);
 	$_SESSION['nubuilder_session_data']['language'] = $lang;
-	$_SESSION['nubuilder_session_data']['HOME_ID'] = $_SESSION['nubuilder_session_data']['GLOBEADMIN_HOME'] ?? 'nuhome';
-
+	$_SESSION['nubuilder_session_data']['HOME_ID'] = $_SESSION['nubuilder_session_data']['GLOBEADMIN_HOME'] ?? 'nuhomecompact';
 
 	$sessionIds = new stdClass;
 	$sessionIds->zzzzsys_access_id = '';
