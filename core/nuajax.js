@@ -736,8 +736,8 @@ function nuUpdateData(action, instruction, close) {
 
 				}
 
-				nuUpdateMessage('Record Deleted');
 
+				window.last_action = 'delete';
 				if (window.nuAfterDeleteGlobal) {
 					nuAfterDeleteGlobal();
 				}
@@ -748,8 +748,8 @@ function nuUpdateData(action, instruction, close) {
 
 			} else {
 
+				window.last_action = 'save';
 				nuForm(formId, data.record_id, data.filter, data.search, 1);		//-- go to saved or created record
-				nuUpdateMessage('Record Saved');
 
 				if (instruction === 'close') {
 					nuFORM.edited = false;

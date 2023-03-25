@@ -62,6 +62,8 @@ function nuBuildForm(f) {
 
 	const formType = nuFormType();
 	nuSetDefaultWindowProperties(f, formType);
+
+
 	nuFORM.edited = false;
 	
 	if (nuHasBeenSaved() >= 1 && nuGetProperty('nuEditCloseAfterSave') != '0') {
@@ -81,7 +83,7 @@ function nuBuildForm(f) {
 	nuFORM.scroll = [];
 	nuSetSuffix(1000);
 	nuSetBody(f);
-
+	
 	nuRedefine_nuSelectBrowse();
 
 	nuFORM.tableSchema = f.tableSchema;
@@ -176,6 +178,8 @@ function nuBuildForm(f) {
 	nuDragTitleEvents();
 	
 	nuAddHome();
+
+	nuShowLastUpdatedMessage();
 
 	if (window.nuOnEditorLoad) {
 		nuOnEditorLoad();
@@ -316,8 +320,7 @@ function nuAddHome() {
 	}
 
 }	
-	
-	
+
 function nuNeedToLoginAgain(f) {
 	
 	let result = f.tableSchema === null;
@@ -5230,21 +5233,39 @@ function nuSavingProgressMessage() {
 
 }
 
-function nuUpdateMessage(msg) {
+function nuShowLastUpdatedMessage() {
+
+	if (window.last_action) {
+		nuUpdateMessage(window.last_action);
+		window.last_action = "";
+	}
+
+}
+
+function nuUpdateMessage(actionMessage) {
+
+	let msgClass = '';
+	let msg = actionMessage;
+	
+	if (actionMessage === 'delete') {
+		msg = 'Record Deleted';
+		msgClass = 'nuUpdateMessageDelete';
+	} else if (actionMessage === 'save') {
+		msg = 'Record Saved';
+		msgClass = 'nuUpdateMessageSave';
+	}
 
 	$("#nuProgressUpdate").hide();
 
-	var e = document.createElement('div');
+	let div = nuCreateElementWithId('div', 'nuNowUpdated','nuActionHolder');
+	$div = $(div);
+	$div.html(nuTranslate(msg));
+	$div.addClass('nuUpdateMessage').addClass(msgClass);
 
-	e.setAttribute('id', 'nuNowUpdated');
+	const left = ($('#nuActionHolder').width() / 2) - ($div.width() / 2);
+	nuSetObjectBounds($div, null, left, null, null, true);
 
-	$('#nuActionHolder').append(e);
-	$('#' + e.id).html(nuTranslate(msg));
-	$('#' + e.id).addClass('nuUpdateMessage');
-	$('#' + e.id).css('position', 'absolute');
-	$('#' + e.id).css('left', (($('#nuActionHolder').width() / 2) - ($('#nuNowUpdated').width() / 2)) + 'px');
 	$("#nuNowUpdated").fadeToggle(3000);
-
 	$('.nuActionButton').show();
 
 }
