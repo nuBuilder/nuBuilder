@@ -45,8 +45,8 @@ var promot;
 
 function nuBuildForm(f) {
 
-	window.nuOnSetSelect2Options = null;
-	window.nuSERVERRESPONSE = f;						// can be overwritten by nuAddJavaScript()
+	window.nuOnSetSelect2Options = null;		// can be overwritten by nuAddJavaScript()
+	window.nuSERVERRESPONSE = f;						
 
 	if (f.record_id != '-2') {
 		nuAddJavaScript(f.javascript_bc);
@@ -58,75 +58,12 @@ function nuBuildForm(f) {
 	nuSetProperty('CLONED_RECORD', 0);
 	nuSetProperty('NEW_RECORD', 0);
 
+	if (nuNeedToLoginAgain(f)) return;
+
 	const formType = nuFormType();
-
-	if (f.tableSchema === null) {									//-- need to login again
-
-		$('body').addClass('nuBrowseBody').removeClass('nuEditBody');
-
-		sessionStorage.logout = 'true';
-		parent.parent.parent.parent.parent.location.reload();
-
-		nuCursor('default');
-		return;
-
-	}
-
-	if (formType == 'edit' && nuCurrentProperties().form_type !== 'launch') {
-
-		window.nuTimesSaved = window.nuTimesSaved + 1;
-
-		if (window.nuLastForm != f.form_id || (nuLastRecordId != f.record_id && nuLastRecordId !== "-1")) {
-			window.nuTimesSaved = 0;
-		}
-
-	} else {
-		window.nuTimesSaved = -1;
-	}
-
-	window.nuLastForm = f.form_id;
-	window.nuLastRecordId = f.record_id;
-	window.nuSubformRow = -1;
-	window.nuBrowseNoData = false;
-	window.nuBrowseNoSearchResults = false;
-	window.nuBeforeSave = null;
-	window.nuAfterSave = null;
-	window.nuBeforeDelete = null;
-	window.nuAfterDelete = null;
-	window.nuOnSearchAction = null;
-	window.nuOnClone = null;
-	window.nuOnEditorLoad = null;
-	window.nuOnBeforeGetBreadcrumb = null;
-	window.nuOnSetSaved = null;
-	window.nuOnTabSelected = null;
-	window.nuOnSelectTab = null;
-	window.nuOnAddAction = false;
-	window.onSubformTitleClick = null;
-	window.nuOnMessage = null;
-	window.nuFormatValueCleared = null;
-	window.nuDisplayObjectRefreshed = null;
-	window.nuOnSetCalendarOptions = null;
-	window.nuOnLookupPopulated = null;
-	window.nuCalculated = null;
-	window.nuOnPropertySet = null;
-	window.nuEnableCalculation = null;
-	window.nuPortraitScreenShowTabTitles = true;
-	window.nuBrowseFunction = window.nuDefaultBrowseFunction;
-	window.nuCLONE = false;
-	window.nuSERVERRESPONSELU = [];
-	window.nuSESSION = f.session_id;
-	window.nuSUBFORMROW = [];
-	window.nuHASH = [];					//-- remove any hash variables previously set.
-	window.nuTABHELP = [];
-	window.nuFORMHELP = [];
-	window.nuLOOKUPSTATE = [];
-	window.nuBROWSEROW = -1;
-	window.nuBROWSECLICKED = false;
-	window.nuUniqueID = 'c' + String(Date.now());
-	window.global_access = f.global_access == '1';
+	nuSetDefaultWindowProperties(f, formType);
 	nuFORM.edited = false;
-	window.nuVerticalTabs = false;
-
+	
 	if (nuHasBeenSaved() >= 1 && nuGetProperty('nuEditCloseAfterSave') != '0') {
 
 		const closeAfterSave = nuUXOptions.nuEditCloseAfterSave;
@@ -157,30 +94,36 @@ function nuBuildForm(f) {
 
 	nuAddedByLookup(f);
 
-	b.form_id = f.form_id;
-	b.record_id = f.record_id;
-	b.session_id = f.session_id;
-	b.user_id = f.user_id;
-	b.redirect_form_id = f.redirect_form_id;
-	b.redirect_other_form_id = f.redirect_other_form_id;
-	b.title = f.title;
-	b.row_height = f.row_height;
-	b.rows = f.rows;
-	b.browse_columns = f.browse_columns;
-	b.browse_sql = f.browse_sql;
-	b.browse_rows = f.browse_rows;
-	b.browse_table_id = f.browse_table_id;
-	b.browse_filtered_rows = f.browse_height;
-	b.browse_title_multiline = f.browse_title_multiline;
-	b.browse_autoresize_columns = f.browse_autoresize_columns;
-	b.mobile_view = f.mobile_view;
-	b.pages = f.pages;
-	b.form_code = f.form_code;
-	b.form_description = f.form_description;
-	b.form_type = f.form_type;
-	b.run_code = f.run_code;
-	b.run_description = f.run_description;
-	b.data_mode = f.data_mode;
+	const {
+		browse_autoresize_columns
+		,browse_columns
+		,browse_filtered_rows
+		,browse_rows
+		,browse_sql
+		,browse_table_id
+		,browse_title_multiline
+		,data_mode
+		,form_code
+		,form_description
+		,form_id
+		,form_type
+		,mobile_view
+		,pages
+		,record_id
+		,redirect_form_id
+		,redirect_other_form_id
+		,row_height
+		,rows
+		,run_code
+		,run_description
+		,session_id
+		,title
+		,user_id
+	} = f;
+
+	for (const prop in f) {
+	    b[prop] = f[prop];
+	}
 
 	nuAddHolder('nuBreadcrumbHolder');
 	nuAddHomeLogout();
@@ -190,8 +133,7 @@ function nuBuildForm(f) {
 		nuAddHolder('nuTabHolder');
 	}
 
-	nuAddHolder('nuRECORD');
-	$('#nuRECORD')
+	nuAddHolder('nuRECORD')
 		.attr('data-nu-table', f.table)
 		.attr('data-nu-primary-key-name', f.primary_key);
 
@@ -232,20 +174,8 @@ function nuBuildForm(f) {
 	}
 
 	nuDragTitleEvents();
-
-	if (window.nuLoginH != '') {
-
-		let bc = $('#nuBreadcrumb0').length > 0 ? $('#nuBreadcrumb0') : $('#nuHomeGap');
-		bc
-			.html('<i class="fa fa-home" style="font-size:17px;padding:0px 5px 0px 0px"></i>')
-			.attr('title', nuTranslate('Home'))
-			.attr('onclick', '')
-			.attr('onclick', 'nuForm("' + window.nuLoginH + '", -1, "", "", 1);')
-			.css('cursor', 'pointer');
-
-		window.nuLoginH = '';
-
-	}
+	
+	nuAddHome();
 
 	if (window.nuOnEditorLoad) {
 		nuOnEditorLoad();
@@ -366,6 +296,97 @@ function nuBuildForm(f) {
 	if ((nuSERVERRESPONSE.user_a11y || globalAccess) && window.nuSetAccessibility) {
 		nuSetAccessibility(formType, globalAccess);
 	}
+
+}
+
+function nuAddHome() {
+
+	if (window.nuLoginH != '') {
+
+		let breadCrumb = $('#nuBreadcrumb0').length > 0 ? $('#nuBreadcrumb0') : $('#nuHomeGap');
+		breadCrumb
+			.html('<i class="fa fa-home" style="font-size:17px;padding:0px 5px 0px 0px"></i>')
+			.attr('title', nuTranslate('Home'))
+			.attr('onclick', '')
+			.attr('onclick', 'nuForm("' + window.nuLoginH + '", -1, "", "", 1);')
+			.css('cursor', 'pointer');
+
+		window.nuLoginH = '';
+
+	}
+
+}	
+	
+	
+function nuNeedToLoginAgain(f) {
+	
+	let result = f.tableSchema === null;
+	if (result) {
+		$('body').addClass('nuBrowseBody').removeClass('nuEditBody');
+		sessionStorage.logout = 'true';
+		window.top.location.reload();
+		nuCursor('default');
+	}
+	
+	return result;
+
+}
+
+function nuSetDefaultWindowProperties(f, formType) {
+
+	if (formType == 'edit' && nuCurrentProperties().form_type !== 'launch') {
+
+		window.nuTimesSaved ++;
+
+		if (window.nuLastForm != f.form_id || (window.nuLastRecordId != f.record_id && window.nuLastRecordId !== "-1")) {
+			window.nuTimesSaved = 0;
+		}
+
+	} else {
+		window.nuTimesSaved = -1;
+	}
+
+	window.nuLastForm = f.form_id;
+	window.nuLastRecordId = f.record_id;
+	window.nuSubformRow = -1;
+	window.nuBrowseNoData = false;
+	window.nuBrowseNoSearchResults = false;
+	window.nuBeforeSave = null;
+	window.nuAfterSave = null;
+	window.nuBeforeDelete = null;
+	window.nuAfterDelete = null;
+	window.nuOnSearchAction = null;
+	window.nuOnClone = null;
+	window.nuOnEditorLoad = null;
+	window.nuOnBeforeGetBreadcrumb = null;
+	window.nuOnSetSaved = null;
+	window.nuOnTabSelected = null;
+	window.nuOnSelectTab = null;
+	window.nuOnAddAction = false;
+	window.onSubformTitleClick = null;
+	window.nuOnMessage = null;
+	window.nuFormatValueCleared = null;
+	window.nuDisplayObjectRefreshed = null;
+	window.nuOnSetCalendarOptions = null;
+	window.nuOnLookupPopulated = null;
+	window.nuCalculated = null;
+	window.nuOnPropertySet = null;
+	window.nuEnableCalculation = null;
+	window.nuPortraitScreenShowTabTitles = true;
+	window.nuBrowseFunction = window.nuDefaultBrowseFunction;
+	window.nuCLONE = false;
+	window.nuSERVERRESPONSELU = [];
+	window.nuSESSION = f.session_id;
+	window.nuSUBFORMROW = [];
+	window.nuHASH = [];					//-- remove any hash variables previously set.
+	window.nuTABHELP = [];
+	window.nuFORMHELP = [];
+	window.nuLOOKUPSTATE = [];
+	window.nuBROWSEROW = -1;
+	window.nuBROWSECLICKED = false;
+	window.nuUniqueID = 'c' + String(Date.now());
+	window.global_access = f.global_access == '1';
+	window.nuVerticalTabs = false;
 
 }
 
@@ -3183,6 +3204,8 @@ function nuAddHolder(t) {
 
 	$('body').append(d);
 	$('#' + t).addClass(t);
+	
+	return $('#' + t);
 
 }
 

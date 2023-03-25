@@ -461,10 +461,10 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 	$B						= nuBrowseRows($f);
 
 	$f->browse_rows			= nuObjKey($B,0,0);
-	$f->browse_height		= nuObjKey($B,1,0);
+	$f->browse_filtered_rows		= nuObjKey($B,1,0);
 	$f->browse_sql			= nuObjKey($B,2,0);
 
-	if ($f->browse_height > 0) {
+	if ($f->browse_filtered_rows > 0) {
 		nuOnProcess($F, $f, 'BB', 'nuOnProcessBrowseRows');
 	}
 
@@ -473,12 +473,12 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 	unset($__x);
 
 	$rows					= $f->rows ?? 1;
-	$f->pages				= ceil($f->browse_height/$rows);
+	$f->pages				= ceil($f->browse_filtered_rows/$rows);
 	$f->objects				= $a;
 	$f->number_formats		= nuBuildCurrencyFormats();
 	$O						= new stdClass();
 
-	if ($f->browse_height == 0) {
+	if ($f->browse_filtered_rows == 0) {
 		nuOnProcess($F, $f, 'BE', 'nuOnProcessObjects');
 	}
 
