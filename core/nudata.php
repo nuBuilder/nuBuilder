@@ -895,28 +895,38 @@ function nuSubformObject($id = '') {
 
 }
 
-function nuDeleteForm($formId) {
+function nuDeleteForm($formId){
 
-	// delete records from zzzzsys_browse and zzzzsys_tab tables
-	$query = "DELETE FROM zzzzsys_browse WHERE sbr_zzzzsys_form_id = ?; 
-			  DELETE FROM zzzzsys_tab WHERE syt_zzzzsys_form_id = ?";
-	nuRunQuery($query, [$formId, $formId]);
+	$query		= "DELETE FROM zzzzsys_browse WHERE sbr_zzzzsys_form_id = ? ";
+	$stmt		= nuRunQuery($query, [$formId]);
+	$query		= "DELETE FROM zzzzsys_tab WHERE syt_zzzzsys_form_id = ? ";
+	$stmt		= nuRunQuery($query, [$formId]);
+	$query		= "DELETE FROM zzzzsys_php WHERE zzzzsys_php_id LIKE CONCAT(?, '_') ";
+	$stmt		= nuRunQuery($query, [$formId]);
+	$query		= "DELETE FROM zzzzsys_select WHERE zzzzsys_select_id LIKE ?";
+	$stmt		= nuRunQuery($query, [$formId]);
+	$query		= "DELETE FROM ssc_zzzzsys_select WHERE ssc_zzzzsys_select_id LIKE ?";
+	$stmt		= nuRunQuery($query, [$formId]);		
+	$query		= "DELETE FROM zzzzsys_object WHERE sob_all_type = ? AND sob_run_zzzzsys_form_id = ? ";
+	$stmt		= nuRunQuery($query, ['run', $formId]);
+	$query		= "SELECT * FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = ? ";
+	$stmt		= nuRunQuery($query);
 
-	// delete records from zzzzsys_php and zzzzsys_event tables for each object
-	$query = "SELECT zzzzsys_object FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = ?";
-	$result = nuRunQuery($query, [$formId]);
+	while($row = db_fetch_object($stmt)){
 
-	foreach ($result as $row) {
-		$object_id = $row->zzzzsys_object;
+		$object	= $row->zzzzsys_object;
+		$query	= "DELETE FROM zzzzsys_event WHERE sev_zzzzsys_object_id = ? ";
+		$stmt	= nuRunQuery($query, [$object]);
+		$query	= "DELETE FROM zzzzsys_php WHERE zzzzsys_php_id LIKE CONCAT(?, '_')";
+		$stmt	= nuRunQuery($query, [$object]);
 
-		$query = "DELETE FROM zzzzsys_php WHERE zzzzsys_php_id LIKE CONCAT(?, '_');
-				  DELETE FROM zzzzsys_event WHERE sev_zzzzsys_object_id = ?";
-		nuRunQuery($query, [$object_id, $object_id]);
 	}
 
-	// delete records from zzzzsys_object table
-	$query = "DELETE FROM zzzzsys_object WHERE sob_all_type = 'run' AND sob_run_zzzzsys_form_id = ?";
-	nuRunQuery($query, [$formId]);
+	$query		= "DELETE FROM zzzzsys_object WHERE sob_all_type = ? AND sob_run_zzzzsys_form_id = ? ";
+	$stmt		= nuRunQuery($query, ['run', $formId]);
+
+	$query		= "DELETE FROM zzzzsys_form WHERE zzzzsys_form_id LIKE ?";
+	$stmt		= nuRunQuery($query, [$formId]);
 
 }
 
