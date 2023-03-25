@@ -6676,6 +6676,21 @@ function nuSetSelect2(id, obj) {
 
 }
 
+function nuSelectAddEnglishOption(id) {
+
+	var lang = $('#' + id);
+	if (lang.val() === '') {
+		lang.append($('<option>', {
+			value: 1,
+			text: nuTranslate("English"),
+			disabled: true,
+			selected: true,
+			hidden: true
+		}));
+	}
+
+}
+
 function nuGetFirstObject(objects, tabNr) {
 
 	if (objects.length > 0) {
