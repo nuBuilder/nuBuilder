@@ -201,6 +201,24 @@ function nuRunQueryString($sql, $sqlWithHK) {
 
 }
 
+function nuSanitizeSqlQuery($query) {
+
+	// List of SQL commands to remove
+	$patterns = array(
+		'/DROP\s+TABLE/i',
+		'/CREATE\s+TABLE/i',
+		'/ALTER\s+TABLE/i',
+		'/TRUNCATE\s+TABLE/i',
+		'/INSERT\s+INTO\s+.*\s+SELECT/i',
+		'/DELETE\s+FROM/i',
+		'/UPDATE/i'
+	);
+
+	// Sanitize the query by removing the specified SQL commands
+	return preg_replace($patterns, '', $query);
+
+}
+
 function db_is_auto_id($table, $primaryKey) {
 
 	$query = "SHOW COLUMNS FROM `$table` WHERE `Field` = ?";
