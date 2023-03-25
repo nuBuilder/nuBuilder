@@ -364,7 +364,7 @@ function nuOpenPreviousBreadcrumb(b) {
 
 	if (modal.length) {
 		nuClosePopup();
-		return;
+		return true;
 	}
 
 	b = b ? b + 1 : 2;
@@ -372,7 +372,10 @@ function nuOpenPreviousBreadcrumb(b) {
 	const l = breadcrumbs.length;
 	if (l > 1) {
 		nuGetBreadcrumb(l - b);
+		return true;
 	}
+	
+	return false;
 
 }
 
