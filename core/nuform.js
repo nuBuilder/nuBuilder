@@ -72,8 +72,8 @@ function nuBuildForm(f) {
 		let doClose = false;
 		if (closeAfterSave || nuGetProperty('nuEditCloseAfterSave') == '1') {
 			if (closeAfterSave == 'AllForms') doClose = nuCloseAfterSave();
-			if (closeAfterSave == 'UserForms' && !f.form_id.startsWith('nu')) nuCloseAfterSave();
-			if (closeAfterSave == 'SystemForms' && !f.form_id.startsWith('nu')) nuCloseAfterSave();
+			if (closeAfterSave == 'UserForms' && !f.form_id.startsWith('nu')) doClose = nuCloseAfterSave();
+			if (closeAfterSave == 'SystemForms' && !f.form_id.startsWith('nu')) doClose = nuCloseAfterSave();
 		}
 
 		if (doClose) return;
@@ -437,7 +437,9 @@ function nuCloseAfterSave() {
 		if (nuIsIframe()) {
 			nuClosePopup();
 		} else {
-			nuOpenPreviousBreadcrumb();
+			if (! nuOpenPreviousBreadcrumb()) {
+				window.close();
+			}
 		}
 
 	})
