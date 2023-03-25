@@ -910,7 +910,7 @@ function nuDeleteForm($formId){
 	$query		= "DELETE FROM zzzzsys_object WHERE sob_all_type = ? AND sob_run_zzzzsys_form_id = ? ";
 	$stmt		= nuRunQuery($query, ['run', $formId]);
 	$query		= "SELECT * FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = ? ";
-	$stmt		= nuRunQuery($query);
+	$stmt		= nuRunQuery($query, $formId]);
 
 	while($row = db_fetch_object($stmt)){
 
