@@ -193,10 +193,10 @@ function nuRunQueryString($sql, $sqlWithHK) {
 			$value = nuReplaceHashVariables('#' . $value. '#');
 		}
 
-		return nuRunQuery($sqlWithHK, $args);
+		return nuRunQuery(nuSanitizeSqlQuery($sqlWithHK), $args);
 
 	} else {
-		return nuRunQuery($sql);
+		return nuRunQuery(nuSanitizeSqlQuery($sql));
 	}
 
 }
