@@ -5082,6 +5082,20 @@ function nuDeleteAction() {
 
 }
 
+function nuDeleteAction() {
+
+	const formCode = nuCurrentProperties().form_code;
+	const confirmMessage = formCode === 'nuform' ?
+		nuTranslate("Are you sure you want to delete this form and all its associated objects, events and codes?") :
+		nuTranslate("Delete This Record?");
+
+	if (confirm(confirmMessage)) {
+		$('#nuDelete').prop('checked', true);
+		nuUpdateData('delete');
+	}
+ 
+}
+
 function nuDeleteAllAction() {
 
 	if (confirm(nuTranslate("Delete All Records?"))) {

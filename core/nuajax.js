@@ -692,7 +692,7 @@ function nuUpdateData(action, instruction, close) {
 	}
 
 	last.call_type = 'update';
-	last.deleteAll = $('#nuDelete').is(":checked") ? 'Yes' : 'No';
+	last.delete_action = $('#nuDelete').is(":checked") ? '1' : '0';
 	last.nuFORMdata = nuFORM.data(action);
 	last.hash = nuHashFromEditForm();
 	last.session_id = window.nuSESSION;

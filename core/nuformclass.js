@@ -644,7 +644,7 @@ class nuFormObject {
 	subform(sf, action = 'save') {
 
 		var id = sf;
-		var deleteAll = action == 'delete';
+		var deleteAction = action == 'delete';
 		var sel;
 		var oi;
 		var table;
@@ -705,7 +705,7 @@ class nuFormObject {
 
 				let $this = $('#' + this.id);
 				if (this.id.substr(-8) == 'nuDelete') {
-					chk = ($this.prop("checked") || deleteAll) ? 1 : 0;
+					chk = ($this.prop("checked") || deleteAction) ? 1 : 0;
 				}
 
 				if (sf == 'nuRECORD') {						//-- the main Form
