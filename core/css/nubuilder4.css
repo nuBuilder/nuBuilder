@@ -366,7 +366,8 @@
 }
 
  .nuOptionsItem {
-	 color: #00223e
+	 color: #00223e;
+	 user-select: none
 }
 
  .nuOptionsItem:hover {
@@ -395,7 +396,8 @@
 
  .nuOptionsListTitle {
 	 color: #00223e;
-	 font-weight:bold 
+	 font-weight:bold;
+	 user-select:none
 }
 
  .nuOptionsList {
@@ -427,7 +429,8 @@
 	 height:20px;
 	 display:inline-block;
 	 padding: 4px 10px 0 0;
-	 font-size:10px 
+	 font-size:10px;
+	 user-select: none
 }
  .nuRECORD {
 	 display:inline;
