@@ -914,7 +914,7 @@ function nuDeleteForm($formId){
 
 	while($row = db_fetch_object($stmt)){
 
-		$object	= $row->zzzzsys_object;
+		$object	= $row->zzzzsys_object_id;
 		$query	= "DELETE FROM zzzzsys_event WHERE sev_zzzzsys_object_id = ? ";
 		$stmt	= nuRunQuery($query, [$object]);
 		$query	= "DELETE FROM zzzzsys_php WHERE zzzzsys_php_id LIKE CONCAT(?, '_')";
