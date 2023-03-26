@@ -417,6 +417,16 @@ function db_quote($s) {
 
 }
 
+function nuEncodeQueryRowResults($sql, $args = [], $prefixedData = []) {
+
+	$stmt = nuRunQuery($sql, $args);
+	$results = $prefixedData;
+	while ($row = db_fetch_row($stmt)) {
+		$results[] = $row;
+	}
+	return base64_encode(json_encode($results));
+
+};
 
 function nuViewExists($view) {
 
