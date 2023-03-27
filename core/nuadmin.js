@@ -60,7 +60,7 @@ function nuDevMode(m) {
 	localStorage.setItem('nuDevMode', m ? '1' : '0');
 
 	const d = localStorage.getItem("nuDevMode");
-	if ((d === '1' || d) && nuGlobalAccess()) {
+	if ((d === '1' || m) && nuGlobalAccess()) {
 		nuSetProperty('nuDevMode', '1', true);
 		nuConsoleErrorsToMessage();
 		return true;
