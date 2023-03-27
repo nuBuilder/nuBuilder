@@ -2071,26 +2071,20 @@ function nuAddDatalist(i, arr, showAllOnArrowClick) {
 
 function nuLabelOnTop(include, exclude, offsetTop = -18, offsetLeft = 0) {
 
-	if (include === undefined) {
-		include = [];
-		for (var i = 0; i < nuSERVERRESPONSE.objects.length; i++) {
-			include.push(nuSERVERRESPONSE.objects[i].id);
-		}
-	}
+	include = include || nuSERVERRESPONSE.objects.map(obj => obj.id);
+	exclude = exclude || [];
 
-	if (exclude === undefined) var exclude = [];
-
-	for (var i = 0; i < include.length; i++) {
+	for (let i = 0; i < include.length; i++) {
 
 		if (jQuery.inArray(include[i], exclude) == -1) {
-
+			$element = $('#' + include[i]);
 			$('#' + 'label_' + include[i]).css({
-				'top': $('#' + include[i]).cssNumber('top') + offsetTop
-				, 'left': $('#' + include[i]).cssNumber('left') + offsetLeft
+				'top': $element.cssNumber('top') + offsetTop
+				, 'left': $element.cssNumber('left') + offsetLeft
 				, 'text-align': 'left'
 			});
 
-			$('#' + include[i]).attr('data-nu-label-position', 'top');
+		$element.attr('data-nu-label-position', 'top');
 
 		}
 	}
@@ -2101,13 +2095,14 @@ jQuery.fn.nuLabelOnTop = function (offsetTop = -18, offsetLeft = 0) {
 
 	return this.each(function () {
 
+		$element = $(this);
 		$('#' + 'label_' + this.id).css({
-			'top': $(this).cssNumber("top") + offsetTop
-			, 'left': $(this).cssNumber("left") + offsetLeft
+			'top': $element.cssNumber("top") + offsetTop
+			, 'left': $element.cssNumber("left") + offsetLeft
 			, 'text-align': 'left'
 		});
 
-		$(this).attr('data-nu-label-position', 'top');
+		$element.attr('data-nu-label-position', 'top');
 
 	});
 
