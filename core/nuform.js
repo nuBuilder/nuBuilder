@@ -1636,7 +1636,6 @@ function nuHTML(w, i, l, p, prop, id) {
 	id = id !== undefined ? id : p + obj.id;
 
 	const div =  nuCreateElementWithId('div', id, p + 'nuRECORD');
-	$div = $(div);
 
 	obj = nuLabelOrPosition(obj, w, i, l, p, prop);
 
@@ -5078,17 +5077,6 @@ function nuHasNotBeenEdited() {
 	$('.nuSaveButton').removeClass('nuSaveButtonEdited');
 	nuFORM.edited = false;
 	nuSetSaved(true);
-
-}
-
-function nuDeleteAction() {
-
-	if (confirm(nuTranslate("Delete This Record?"))) {
-
-		$('#nuDelete').prop('checked', true);
-		nuUpdateData('delete');
-
-	}
 
 }
 
