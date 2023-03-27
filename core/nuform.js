@@ -1433,7 +1433,7 @@ function nuAddAttributes(id, attr) {
 
 		attr.trim().replace(/\"/g, "").split(",").forEach(attr => {
 
-			let arr = attr.split('=');
+			const arr = attr.split('=');
 			let key;
 			let value;
 
@@ -1445,7 +1445,13 @@ function nuAddAttributes(id, attr) {
 			}
 
 			if (arr.length == 1 || arr.length == 2) {
-				$('#' + id)[0].setAttribute(key.trim(), value);
+				
+				if (key.trim() === 'nu-label-position' && value === 'top') {
+					$('#' + id).nuLabelOnTop();
+				} else {
+					$('#' + id)[0].setAttribute(key.trim(), value);
+				}
+				
 			}
 
 		});
@@ -1536,10 +1542,6 @@ function nuAddStyle(id, obj) {
 			}
 
 		}
-	}
-
-	if (obj.attributes.includes('nu-label-on-top')) {
-		$id.nuLabelOnTop();
 	}
 
 }
