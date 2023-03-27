@@ -76,6 +76,10 @@ function nuBuildForm(f) {
 			if (closeAfterSave == 'SystemForms' && !f.form_id.startsWith('nu')) doClose = nuCloseAfterSave();
 		}
 
+		if (window.nuCloseAfterSaveGlobal) {
+			doClose = window.nuCloseAfterSaveGlobal(doClose);
+		}
+
 		if (doClose) return;
 
 	}
