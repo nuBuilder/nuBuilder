@@ -96,36 +96,30 @@ function nuBuildForm(f) {
 
 	nuAddedByLookup(f);
 
-	const {
-		browse_autoresize_columns
-		,browse_columns
-		,browse_filtered_rows
-		,browse_rows
-		,browse_sql
-		,browse_table_id
-		,browse_title_multiline
-		,data_mode
-		,form_code
-		,form_description
-		,form_id
-		,form_type
-		,mobile_view
-		,pages
-		,record_id
-		,redirect_form_id
-		,redirect_other_form_id
-		,row_height
-		,rows
-		,run_code
-		,run_description
-		,session_id
-		,title
-		,user_id
-	} = f;
-
-	for (const prop in f) {
-	    b[prop] = f[prop];
-	}
+	b.form_id = f.form_id;
+	b.record_id = f.record_id;
+	b.session_id = f.session_id;
+	b.user_id = f.user_id;
+	b.redirect_form_id = f.redirect_form_id;
+	b.redirect_other_form_id = f.redirect_other_form_id;
+	b.title = f.title;
+	b.row_height = f.row_height;
+	b.rows = f.rows;
+	b.browse_columns = f.browse_columns;
+	b.browse_sql = f.browse_sql;
+	b.browse_rows = f.browse_rows;
+	b.browse_table_id = f.browse_table_id;
+	b.browse_filtered_rows = f.browse_height;
+	b.browse_title_multiline = f.browse_title_multiline;
+	b.browse_autoresize_columns = f.browse_autoresize_columns;
+	b.mobile_view = f.mobile_view;
+	b.pages = f.pages;
+	b.form_code = f.form_code;
+	b.form_description = f.form_description;
+	b.form_type = f.form_type;
+	b.run_code = f.run_code;
+	b.run_description = f.run_description;
+	b.data_mode = f.data_mode;
 
 	nuAddHolder('nuBreadcrumbHolder');
 	nuAddHomeLogout();
