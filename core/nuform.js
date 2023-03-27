@@ -5279,9 +5279,11 @@ function nuUpdateMessage(actionMessage) {
 	$div.addClass('nuUpdateMessage').addClass(msgClass);
 
 	const left = ($('#nuActionHolder').width() / 2) - ($div.width() / 2);
-	nuSetObjectBounds($div, null, left, null, null, true);
+	const top = ($('#nuBreadcrumbHolder').outerHeight() - $div.outerHeight()) / 2;
 
-	$("#nuNowUpdated").fadeToggle(3000);
+	nuSetObjectBounds($div, top, left, null, null, true);
+
+	$("#nuNowUpdated").fadeToggle(2500);
 	$('.nuActionButton').show();
 
 }
