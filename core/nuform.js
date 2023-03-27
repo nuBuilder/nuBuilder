@@ -76,10 +76,6 @@ function nuBuildForm(f) {
 			if (closeAfterSave == 'SystemForms' && !f.form_id.startsWith('nu')) doClose = nuCloseAfterSave();
 		}
 
-		if (window.nuCloseAfterSaveGlobal) {
-			doClose = window.nuCloseAfterSaveGlobal(doClose);
-		}
-
 		if (doClose) return;
 
 	}
@@ -429,6 +425,12 @@ function nuFormModification() {
 }
 
 function nuCloseAfterSave() {
+
+	if (window.nuCloseAfterSaveGlobal) {
+		if (!window.nuCloseAfterSaveGlobal(doClose)) {
+			return false;
+		}
+	}
 
 	nuDelay(100).then(() => {
 		nuHasNotBeenEdited();
