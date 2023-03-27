@@ -945,7 +945,7 @@ function nuDRAG(w, i, l, p, prop) {
 	const drgDiv =  nuCreateElementWithId(tagType, id, p + 'nuRECORD');
 	let $id = $(drgDiv);
 
-	nuSetObjectBounds($id, obj.top, obj.left, obj.width, obj.height)
+	nuSetObjectBounds(drgDiv, obj.top, obj.left, obj.width, obj.height)
 	.css({
 		'text-align': obj.align,
 		'overflow': 'hidden',
@@ -1179,8 +1179,7 @@ function nuINPUTLookup(id, objId, wi, obj, $fromId, p, vis) {
 
 	var luClass = obj.label === 'Insert-Snippet' ? 'fa fa-code' : 'fa fa-search';
 
-	$id = $('#' + id);
-	nuSetObjectBounds($id, obj.top, Number(obj.left) + Number(obj.width) + 6, 15, Number(obj.height - 2))
+	nuSetObjectBounds(div, obj.top, Number(obj.left) + Number(obj.width) + 6, 15, Number(obj.height - 2))
 		.attr('type', 'button')
 		.attr("data-nu-prefix", p)
 		.attr('data-nu-form-id', wi.form_id)
@@ -1604,21 +1603,22 @@ function nuLabelOrPosition(obj, w, i, l, p, prop) {
 
 }
 
-
 function nuSetObjectBounds(obj, top = null, left = null, width = null, height = null, absolute = null) {
 
-	if (top !== null)
-		obj.css('top', Number(top));
-	if (left !== null)
-		obj.css('left', Number(left));
-	if (height !== null)
-		obj.css('height', Number(height));
-	if (width !== null)
-		obj.css('width', Number(width));
-	if (!absolute)
-		obj.css('position', 'absolute');
+	obj = obj.jquery ? obj[0]: obj;
 
-	return obj;
+    if (top !== null)
+        obj.style.top = top + 'px';
+    if (left !== null)
+        obj.style.left = left + 'px';
+    if (height !== null)
+        obj.style.height = height + 'px';
+    if (width !== null)
+        obj.style.width = width + 'px';
+    if (!absolute)
+        obj.style.position = 'absolute';
+
+    return $(obj);
 
 }
 
@@ -1634,8 +1634,8 @@ function nuHTML(w, i, l, p, prop, id) {
 
 	nuAddDataTab(id, obj.tab, p);
 
-	nuSetObjectBounds($div, obj.top, obj.left, obj.width, obj.height);
-	$div.addClass('nuHtml').html(w.objects[i].html);
+	nuSetObjectBounds(div, obj.top, obj.left, obj.width, obj.height)
+	.addClass('nuHtml').html(w.objects[i].html);
 
 	nuSetAccess(id, obj.read);
 	nuAddStyle(id, obj);
@@ -1671,10 +1671,8 @@ function nuCONTENTBOX(w, i, l, p, prop) {
 
 	nuAddDataTab(id, obj.tab, p);
 
-	const $div = $(div);
-	nuSetObjectBounds($div, obj.top, obj.left, obj.width, obj.height).css('z-index', '-1');
-
-	$div.attr('data-nu-object-id', w.objects[i].object_id)
+	nuSetObjectBounds(div, obj.top, obj.left, obj.width, obj.height).css('z-index', '-1')
+		.attr('data-nu-object-id', w.objects[i].object_id)
 		.attr('data-nu-prefix', p)
 		.addClass('nuContentBoxContainer').html(w.objects[i].html);
 
@@ -1685,7 +1683,7 @@ function nuCONTENTBOX(w, i, l, p, prop) {
 	nuSetAccess(id, obj.read);
 	nuAddStyle(id, obj);
 
-	return Number($div.width());
+	return Number($(div).width());
 
 }
 
@@ -1701,7 +1699,7 @@ function nuIMAGE(w, i, l, p, prop) {
 	nuAddDataTab(id, obj.tab, p);
 
 	let $img = $(img);
-	nuSetObjectBounds($img, obj.top, obj.left, obj.width).addClass('nuImage');
+	nuSetObjectBounds(img, obj.top, obj.left, obj.width).addClass('nuImage');
 	if (obj.height !== "-1" && obj.width !== "-1") {
 		nuSetObjectBounds($img, null, null, obj.width, obj.height)
 	}
@@ -1730,7 +1728,7 @@ function nuWORD(w, i, l, p, prop) {
 	t = r === null ? t : r[1];
 
 	let $div = $(div);
-	nuSetObjectBounds($div, obj.top, obj.left, obj.width, obj.height)
+	nuSetObjectBounds(div, obj.top, obj.left, obj.width, obj.height)
 		.css('text-align', obj.align)
 		.addClass('nuWord')
 		.html(nuTranslate(t));
@@ -1803,7 +1801,7 @@ function nuRUN(w, i, l, p, prop) {
 
 	nuAddDataTab(id, obj.tab, p);
 
-	nuSetObjectBounds($div, obj.top, obj.left, obj.width, obj.height).css('text-align', obj.align)
+	nuSetObjectBounds(div, obj.top, obj.left, obj.width, obj.height).css('text-align', obj.align)
 		.attr('data-nu-object-id', w.objects[i].object_id)
 		.attr('data-nu-prefix', p);
 
@@ -5244,7 +5242,7 @@ function nuSavingProgressMessage() {
 
 	const left = ($('#nuActionHolder').width() / 2) - ($div.width() / 2);
 	const top = ($('#nuBreadcrumbHolder').outerHeight() - $div.outerHeight()) / 2;
-	nuSetObjectBounds($div, top, left, null, null, true);
+	nuSetObjectBounds(div, top, left, null, null, true);
 
 	$('.nuActionButton').hide();
 
@@ -5282,7 +5280,7 @@ function nuUpdateMessage(actionMessage) {
 	const left = ($('#nuActionHolder').width() / 2) - ($div.width() / 2);
 	const top = ($('#nuBreadcrumbHolder').outerHeight() - $div.outerHeight()) / 2;
 
-	nuSetObjectBounds($div, top, left, null, null, true);
+	nuSetObjectBounds(div, top, left, null, null, true);
 
 	$("#nuNowUpdated").fadeToggle(3000);
 	$('.nuActionButton').show();
