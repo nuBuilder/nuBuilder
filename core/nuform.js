@@ -1514,6 +1514,8 @@ function nuAddStyleFromArray(id, obj) {
 
 function nuAddStyle(id, obj) {
 
+	const $id = $('#' + id);
+
 	if (obj.style_type !== '' && obj.style !== '') {
 
 		if (obj.style_type == 'CSS') {
@@ -1523,17 +1525,21 @@ function nuAddStyle(id, obj) {
 			} else {
 				let css = $('#' + id)[0].getAttribute("style");
 				css = css === null ? obj.style : css += obj.style;
-				$('#' + id)[0].setAttribute("style", css);
+				$id[0].setAttribute("style", css);
 			}
 		} else if (obj.style_type == 'Class') {
 
 			if (obj.style.startsWith('{')) {
 				nuAddStyleFromArray(id, obj);
 			} else {
-				$('#' + id).addClass(obj.style);
+				$id.addClass(obj.style);
 			}
 
 		}
+	}
+
+	if (obj.attributes.includes('nu-label-on-top')) {
+		$id.nuLabelOnTop();
 	}
 
 }
