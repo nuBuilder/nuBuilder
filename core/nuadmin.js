@@ -57,7 +57,9 @@ function nuShowFormInfo() {
 
 function nuDevMode(m) {
 
-	localStorage.setItem('nuDevMode', m ? '1' : '0');
+	if (m !== undefined) {
+		localStorage.setItem('nuDevMode', m ? '1' : '0');
+	}
 
 	const d = localStorage.getItem("nuDevMode");
 	if ((d === '1' || m) && nuGlobalAccess()) {
@@ -70,7 +72,6 @@ function nuDevMode(m) {
 	}
 
 	return false;
-
 }
 
 function nuAddAdminButton(id, obj) {
