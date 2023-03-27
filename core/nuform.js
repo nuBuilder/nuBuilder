@@ -5234,16 +5234,13 @@ function nuSaveAction(close) {
 
 function nuSavingProgressMessage() {
 
-	var e = document.createElement('div');
-
-	e.setAttribute('id', 'nuProgressUpdate');
-
-	$('#nuActionHolder').append(e);
-	$('#' + e.id).html('<img src=\'core/ajax-loader.gif\'/>');
-	$('#' + e.id).addClass('nuUpdateMessageProgress');
-	$('#' + e.id).css('position', 'absolute');
-	$('#' + e.id).css('left', (($('#nuActionHolder').width() / 2) - ($('#nuProgressUpdate').width() / 2)) + 'px');
-	$('#' + e.id).show();
+	let div = nuCreateElementWithId('div', 'nuProgressUpdate','nuActionHolder');
+	$div = $(div);
+	$div.html('<img src="core/graphics/ajax-loader.gif">')
+	.addClass('nuUpdateMessageProgress')
+	.css('position', 'absolute')
+	.css('left', (($('#nuActionHolder').width() / 2) - ($div.width() / 2)) + 'px')
+	.show();
 
 	$('.nuActionButton').hide();
 
@@ -5283,7 +5280,7 @@ function nuUpdateMessage(actionMessage) {
 
 	nuSetObjectBounds($div, top, left, null, null, true);
 
-	$("#nuNowUpdated").fadeToggle(2500);
+	$("#nuNowUpdated").fadeToggle(3000);
 	$('.nuActionButton').show();
 
 }
