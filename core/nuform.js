@@ -109,7 +109,7 @@ function nuBuildForm(f) {
 	b.browse_sql = f.browse_sql;
 	b.browse_rows = f.browse_rows;
 	b.browse_table_id = f.browse_table_id;
-	b.browse_filtered_rows = f.browse_height;
+	b.browse_filtered_rows = f.browse_filtered_rows;
 	b.browse_title_multiline = f.browse_title_multiline;
 	b.browse_autoresize_columns = f.browse_autoresize_columns;
 	b.mobile_view = f.mobile_view;
