@@ -2241,9 +2241,9 @@ function nuSelectRemoveEmpty(i = 'select', setIndex) {
 
 }
 
-function nuSelectRemoveOption(i, value) {
+function nuSelectRemoveOption(id, value) {
 
-	const $select = typeof i === 'object' ? i : $('#' + i);
+	const $select = typeof id === 'object' ? id : $('#' + id);
 	const $option = $select.find(`[value="${value}"]`);
 	$option.remove();
 
