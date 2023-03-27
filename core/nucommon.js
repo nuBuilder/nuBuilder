@@ -2243,15 +2243,11 @@ function nuSelectRemoveEmpty(i = 'select', setIndex) {
 
 function nuSelectRemoveOption(i, value) {
 
-	var o;
-	if (typeof i !== 'object') {
-		o = $('#' + i) || i;
-	} else {
-		o = i;
-	}
+	const $select = typeof i === 'object' ? i : $('#' + i);
+	const $option = $select.find(`[value="${value}"]`);
+	$option.remove();
 
-	o.find('[value="' + value + '"]').remove();
-	return o;
+	return $select;
 
 }
 
