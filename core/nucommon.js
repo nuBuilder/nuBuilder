@@ -2007,19 +2007,19 @@ function nuSetBrowserTabTitle(prefix) {
 
 }
 
-function nuSetPlaceholder(i, placeholder, translate) {
+function nuSetPlaceholder(i, placeholder = null, translate = true) {
 
-	var $i = $('#' + i);
-
-	translate = nuDefine(translate, true);
+	const $i = $('#' + i);
 
 	if (!placeholder) {
 		placeholder = $i.attr('data-nu-format').substring(2);
-	} else {
-		placeholder = translate ? nuTranslate(placeholder) : placeholder;
 	}
 
-	$i.attr("placeholder", placeholder);
+	if (translate) {
+		placeholder = nuTranslate(placeholder);
+	}
+
+	$i.attr('placeholder', placeholder);
 
 }
 
