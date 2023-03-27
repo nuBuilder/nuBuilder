@@ -5240,11 +5240,11 @@ function nuSavingProgressMessage() {
 
 	let div = nuCreateElementWithId('div', 'nuProgressUpdate','nuActionHolder');
 	$div = $(div);
-	$div.html('<img src="core/graphics/ajax-loader.gif">')
-	.addClass('nuUpdateMessageProgress')
-	.css('position', 'absolute')
-	.css('left', (($('#nuActionHolder').width() / 2) - ($div.width() / 2)) + 'px')
-	.show();
+	$div.html('<img src="core/graphics/ajax-loader.gif">').addClass('nuUpdateMessageProgress');
+
+	const left = ($('#nuActionHolder').width() / 2) - ($div.width() / 2);
+	const top = ($('#nuBreadcrumbHolder').outerHeight() - $div.outerHeight()) / 2;
+	nuSetObjectBounds($div, top, left, null, null, true);
 
 	$('.nuActionButton').hide();
 

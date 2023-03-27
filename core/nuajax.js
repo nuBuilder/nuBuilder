@@ -675,7 +675,7 @@ function nuUpdateData(action, instruction, close) {
 	}
 
 	if (action == 'save') {
-		// nuSavingProgressMessage();
+		nuSavingProgressMessage();
 		nuSaveEditor();
 	}
 
