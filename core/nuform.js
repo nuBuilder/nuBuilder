@@ -1066,19 +1066,20 @@ function nuINPUTfileFileSystem($fromId, w, i, l, p, prop, id) {
 
 }
 
-function nuINPUTInput($id, inp, inputType, obj, objectType) {
+function nuINPUTInput(inp, inputType, obj, objectType) {
 
 	inp.setAttribute('type', inputType);
 
 	const className = objectType == 'lookup' ? 'nuHiddenLookup' : 'input_' + inputType;
-	$id.addClass(className);
-
+	inp.classList.add(className);
+	
 	if (obj.datalist !== null && obj.datalist !== '' && typeof obj.datalist !== "undefined") {
 		let dl = obj.datalist;
 		if (!$.isArray(dl)) dl = JSON.parse(dl);
 		if (!$.isArray(dl)) dl = eval(dl);
-		nuAddDatalist($id.attr('id'), dl);
+		nuAddDatalist(inp.id, dl);
 	}
+
 }
 
 function nuINPUTnuScroll($id, wi) {
@@ -1373,7 +1374,7 @@ function nuINPUT(w, i, l, p, prop) {
 	nuINPUTSetProperties($id, obj, inputType, objectType, wi, p);
 
 	if (type == 'input' && inputSubType != 'uppy') {				//-- Input Object
-		nuINPUTInput($id, inp, inputType, obj, objectType);
+		nuINPUTInput(inp, inputType, obj, objectType);
 	}
 
 	if (inputSubType == 'uppy') {
