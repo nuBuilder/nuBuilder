@@ -3161,35 +3161,23 @@ function nuLabel(w, i, p, prop) {
 	}
 
 	const id = 'label_' + p + obj.id;
-	let objLabel = document.createElement('label');
+	const objLabel =  nuCreateElementWithId('label', id, p + 'nuRECORD');	
 	const label = 	nuTranslate(String(obj.label));
 	const lwidth = nuGetWordWidth(label, 'label');
-
-	objLabel.setAttribute('id', id);
-
 	const forId = obj.type == 'lookup' ? p + obj.id + 'code' : p + obj.id;
 	objLabel.setAttribute('for', forId);
 
-	$('#' + p + 'nuRECORD').append(objLabel); //-- Edit Form Id
-
 	nuAddDataTab(id, obj.tab, p);
-
-	let $label = $('#' + id);
-	$label.css({
-		'top': Number(obj.top),
-		'left': Number(obj.left) - lwidth + -17,
-		'width': Number(lwidth + 12)
-	})
-	.html(label);
+	nuSetObjectBounds(objLabel, obj.top, Number(obj.left) - lwidth + -17, Number(lwidth + 12)).html(label);
 
 	if (nuGlobalAccess())
-		$label.attr('ondblclick', 'nuOptionsListAction("nuobject", "' + obj.object_id + '")');
+		$('#' + id).attr('ondblclick', 'nuOptionsListAction("nuobject", "' + obj.object_id + '")');
 
 	if (label == ' ') {
 		label.innerHTML = '&#8199;';
 	}
 
-	$label.addClass(nuLabelGetValidationClass(obj.valid));
+	objLabel.classList.add(nuLabelGetValidationClass(obj.valid));
 
 	return objLabel;
 
