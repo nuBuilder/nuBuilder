@@ -3161,7 +3161,13 @@ function nuLabel(w, i, p, prop) {
 	}
 
 	const id = 'label_' + p + obj.id;
-	const objLabel =  nuCreateElementWithId('label', id, p + 'nuRECORD');	
+	// Workaround: Prevent label from being added twice for Editor
+	let objLabel = document.getElementById(id);
+	if (objLabel) {
+		return objLabel;
+	}
+		
+	objLabel =  nuCreateElementWithId('label', id, p + 'nuRECORD');	
 	const label = 	nuTranslate(String(obj.label));
 	const lwidth = nuGetWordWidth(label, 'label');
 	const forId = obj.type == 'lookup' ? p + obj.id + 'code' : p + obj.id;
