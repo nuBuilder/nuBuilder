@@ -20,8 +20,8 @@ function nuFormInfoCopyPermalink() {
 		form_id,
 		record_id
 	} = nuCurrentProperties();
-	const home_id = nuSERVERRESPONSE.home_id;
-	const href = `${window.location.href.split('?')[0]}?f=${form_id}&r=${record_id}&h=${home_id}`;
+
+	const href = `${window.location.href.split('?')[0]}?f=${form_id}&r=${record_id}&h=home_id`;
 
 	nuCopyToClipboard(href);
 }
