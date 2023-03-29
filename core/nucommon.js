@@ -1914,26 +1914,26 @@ function nuDisableBrowseResize() {
 
 function nuDragTitleEvents() {
 
-	if (nuFormType() != 'browse') { return; }
+	if (nuFormType() != 'browse') { 
+	return; 
+	}
+    
+	let colWidths = nuFORM.getCurrent().column_widths || nuGetColumWidths();
 
-	const colWidths = nuFORM.getCurrent().column_widths == 0 ? nuGetColumWidths() : nuFORM.getCurrent().column_widths;
 	nuSetBrowseColumns(colWidths);
 
 	$('#nubody').on('mousemove.nuresizecolumn', function (event) { nuDragBrowseColumn(event, 'pointer'); });
-
-	$('.nuBrowseTitle').on('mousedown.nuresizecolumn', function (event) { nuDownBrowseResize(event, 'pointer') });
-
+	$browseTitle = $('.nuBrowseTitle');
+ 
 	$('#nubody').on('mouseup.nuresizecolumn', function (event) { nuEndBrowseResize(); });
-
-	$('.nuBrowseTitle').on('touchstart.nuresizecolumn', function (event) { nuDownBrowseResize(event, 'finger_touch'); });
-
-	$('.nuBrowseTitle').on('touchmove.nuresizecolumn', function (event) { nuDragBrowseColumn(event, 'finger_touch'); });
-
-	$('.nuBrowseTitle').on('touchend.nuresizecolumn', function (event) { nuEndBrowseResize(event); });
-
-	$('.nuBrowseTitle').on('touchcancel.nuresizecolumn', function (event) { nuEndBrowseResize(event); });
+	$browseTitle.on('mousedown.nuresizecolumn', function (event) { nuDownBrowseResize(event, 'pointer') });
+	$browseTitle.on('touchstart.nuresizecolumn', function (event) { nuDownBrowseResize(event, 'finger_touch'); });
+	$browseTitle.on('touchmove.nuresizecolumn', function (event) { nuDragBrowseColumn(event, 'finger_touch'); });
+	$browseTitle.on('touchend.nuresizecolumn', function (event) { nuEndBrowseResize(event); });
+	$browseTitle.on('touchcancel.nuresizecolumn', function (event) { nuEndBrowseResize(event); });
 
 }
+
 
 function nuRemovePX(s) {
 	return Number(String(s).split('px')[0]);
