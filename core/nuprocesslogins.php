@@ -18,22 +18,25 @@ function isDemoGlobadmin() {
 //Check for Globeadmin login
 function nuCheckGlobeadminLoginRequest() {
 
-	if ($_POST['nuSTATE']['username'] == $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'] && $_POST['nuSTATE']['password'] == $_SESSION['nubuilder_session_data']['GLOBEADMIN_PASS']) {
+	$username = $_POST['nuSTATE']['username'];
+	$password = $_POST['nuSTATE']['password'];
+	$sessionData = $_SESSION['nubuilder_session_data'];
+
+	if ($username === $sessionData['GLOBEADMIN_NAME'] && $password === $sessionData['GLOBEADMIN_PASS']) {
 		return true;
 	}
 
-	$isDemo = isDemoGlobadmin();
-	if ($isDemo && !isset($_SESSION['nubuilder_session_data']['GLOBEADMIN_DEMO_NAME'])) {
-		return false;
-	}
-
-	if ($isDemo && $_POST['nuSTATE']['password'] == $_SESSION['nubuilder_session_data']['GLOBEADMIN_DEMO_PASS']) {
-		return true;
+	if (isDemoGlobadmin()) {
+		if (!isset($sessionData['GLOBEADMIN_DEMO_NAME'])) {
+			return false;
+		}
+		if ($password === $sessionData['GLOBEADMIN_DEMO_PASS']) {
+			return true;
+		}
 	}
 
 	return false;
 }
-
 
 //Check for Standlone User login
 function nuCheckUserLoginRequest() {
