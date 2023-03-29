@@ -1388,18 +1388,24 @@ function nuBrowseRemoveFieldAlias($field) {
 
 }
 
-function nuGatherFormAndSessionData($home){
+function nuGatherFormAndSessionData($home, $globalAccess){
 
 	$formAndSessionData						= new stdClass;
 	$nuState								= $_POST['nuSTATE'];
-	$sessionId								= $_SESSION['nubuilder_session_data']['SESSION_ID'];
+	$sessionData							= $_SESSION['nubuilder_session_data'];
+	$sessionId								= $sessionData['SESSION_ID'];
 
 	$formAndSessionData->record_id			= $nuState['record_id'] ?? "-1";
 
-	if(isset($nuState['form_id']) && !$nuState['form_id'] == ''){
-		$formAndSessionData->form_id		= $nuState['form_id'];
+	$formId = $nuState['form_id'] ?? '';
+	if ($formId == 'home_id') {
+		$formId = $globalAccess ? $sessionData['GLOBEADMIN_HOME'] : $sessionData['HOME_ID'];
+	}
+
+	if($formId !== ''){
+		$formAndSessionData->form_id		= $formId;
 	} else {
-		$formAndSessionData->form_id		= $home == '' ? $_SESSION['nubuilder_session_data']['GLOBEADMIN_HOME'] : $home;
+		$formAndSessionData->form_id		= $home == '' ? $sessionData['GLOBEADMIN_HOME'] : $home;
 	}
 
 	if(isset($nuState['login_form_id'])){
@@ -1410,7 +1416,7 @@ function nuGatherFormAndSessionData($home){
 
 	}
 
-	if(isset($nuState['login_form_id'])){//-- check empty form_id not empty record_id
+	if(isset($nuState['login_form_id'])){			//-- check empty form_id not empty record_id
 
 		if($nuState['login_form_id'] != ''){
 			$formAndSessionData->record_id = $nuState['login_record_id'];
@@ -1422,13 +1428,13 @@ function nuGatherFormAndSessionData($home){
 	$formAndSessionData->call_type		= $nuState['call_type'];
 	$formAndSessionData->filter			= $_POST['nuFilter'] ?? '';
 	$formAndSessionData->errors			= [];
-	$formAndSessionData->translation	= $_SESSION['nubuilder_session_data']['translation'];
+	$formAndSessionData->translation	= $sessionData['translation'];
 
 	if($formAndSessionData->form_id != null){
 		$formAndSessionData->dimensions	= nuFormDimensions($formAndSessionData->form_id);
 	}
 
-	if(!$_SESSION['nubuilder_session_data']['isGlobeadmin'] && $formAndSessionData->form_id != 'nuhome') {
+	if(!$globalAccess && $formAndSessionData->form_id != 'nuhome') {
 
 		$getAccessFromSessionTableQRY	= nuRunQuery("SELECT sss_access FROM zzzzsys_session WHERE zzzzsys_session_id = ? ", [$sessionId]);
 		$getAccessFromSessionTableOBJ	= db_fetch_object($getAccessFromSessionTableQRY);

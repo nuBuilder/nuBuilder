@@ -47,7 +47,7 @@
 
 	if (empty($user)) nuDie(nuTranslate('Your session has timed out.'));
 
-	$formAndSessionData						= nuGatherFormAndSessionData($user['HOME_ID']);
+	$formAndSessionData						= nuGatherFormAndSessionData($user['HOME_ID'], $globalAccess);
 	$sessionData							= $_SESSION['nubuilder_session_data'];
 	$formId									= $formAndSessionData->form_id;
 	$recordId								= $formAndSessionData->record_id;
