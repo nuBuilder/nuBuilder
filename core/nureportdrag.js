@@ -1295,22 +1295,22 @@ function nuGroupDialog() {
 	top = 120;
 	left = left + 210;
 
-	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[3], 'nuDoNothing', [['a', 'Ascending'], ['d', 'Descending']]);
-	$('#sortBy').attr('id', 'sortBy3').css('width', 105);
-	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[4], 'nuDoNothing', [['a', 'Ascending'], ['d', 'Descending']]);
-	$('#sortBy').attr('id', 'sortBy4').css('width', 105);
-	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[5], 'nuDoNothing', [['a', 'Ascending'], ['d', 'Descending']]);
-	$('#sortBy').attr('id', 'sortBy5').css('width', 105);
-	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[6], 'nuDoNothing', [['a', 'Ascending'], ['d', 'Descending']]);
-	$('#sortBy').attr('id', 'sortBy6').css('width', 105);
-	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[7], 'nuDoNothing', [['a', 'Ascending'], ['d', 'Descending']]);
-	$('#sortBy').attr('id', 'sortBy7').css('width', 105);
-	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[8], 'nuDoNothing', [['a', 'Ascending'], ['d', 'Descending']]);
-	$('#sortBy').attr('id', 'sortBy8').css('width', 105);
-	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[9], 'nuDoNothing', [['a', 'Ascending'], ['d', 'Descending']]);
-	$('#sortBy').attr('id', 'sortBy9').css('width', 105);
-	nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[10], 'nuDoNothing', [['a', 'Ascending'], ['d', 'Descending']]);
-	$('#sortBy').attr('id', 'sortBy10').css('width', 105);
+	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[3], fun, [['a', 'Ascending'], ['d', 'Descending']]);
+	$('#sortBy').attr({'id': 'sortBy3', 'data-group': 3}).css('width', 105);
+	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[4], fun, [['a', 'Ascending'], ['d', 'Descending']]);
+	$('#sortBy').attr({'id': 'sortBy4', 'data-group': 4}).css('width', 105);
+	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[5], fun, [['a', 'Ascending'], ['d', 'Descending']]);
+	$('#sortBy').attr({'id': 'sortBy5', 'data-group': 5}).css('width', 105);
+	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[6], fun, [['a', 'Ascending'], ['d', 'Descending']]);
+	$('#sortBy').attr({'id': 'sortBy6', 'data-group': 6}).css('width', 105);
+	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[7], fun, [['a', 'Ascending'], ['d', 'Descending']]);
+	$('#sortBy').attr({'id': 'sortBy7', 'data-group': 7}).css('width', 105);
+	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[8], fun, [['a', 'Ascending'], ['d', 'Descending']]);
+	$('#sortBy').attr({'id': 'sortBy8', 'data-group': 8}).css('width', 105);
+	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[9], fun, [['a', 'Ascending'], ['d', 'Descending']]);
+	$('#sortBy').attr({'id': 'sortBy9', 'data-group': 9}).css('width', 105);
+	nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[10], fun, [['a', 'Ascending'], ['d', 'Descending']]);
+	$('#sortBy').attr({'id': 'sortBy10', 'data-group': 10}).css('width', 105);
 
 	top = 430;
 	left = left - 100;
@@ -1435,7 +1435,7 @@ function nuUpdateGroup(t) {
 	let group = nuREPORT.groups[dataGroup];
 	const sectionLength = nuREPORT.groups[dataGroup].sections.length;
 
-	group.groupBy = $('#sortBy' + dataGroup).val();
+	group.sortBy = $('#sortBy' + dataGroup).val();
 	group.sortField = $('#sortField' + dataGroup).val();
 
 	for (let i = 0; i < sectionLength.length; i++) {
