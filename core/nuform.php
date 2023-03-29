@@ -1347,10 +1347,10 @@ function nuBrowseWhereClause($searchFields, $searchString, $returnArray = false)
 		$countSearchFields = count($searchFields);
 		for ($SF = 0; $SF < $countSearchFields; $SF++) {												//-- loop through searchable fields
 
-			if ($task[$i] == 'include') {																//-- changed by KEE
-				$include[] = 'CONVERT(' . $searchFields[$SF] . ' USING utf8) LIKE ' . $SEARCHES[$i];
+			if ($task[$i] == 'include') {
+				$include[] = 'CONVERT(' . nuBrowseRemoveFieldAlias($searchFields[$SF]) . ' USING utf8) LIKE ' . $SEARCHES[$i];
 			} else {
-				$exclude[] = 'CONVERT(' . $searchFields[$SF] . ' USING utf8) NOT LIKE ' . $SEARCHES[$i];
+				$exclude[] = 'CONVERT(' . nuBrowseRemoveFieldAlias($searchFields[$SF]) . ' USING utf8) NOT LIKE ' . $SEARCHES[$i];
 			}
 
 		}
@@ -1370,6 +1370,21 @@ function nuBrowseWhereClause($searchFields, $searchString, $returnArray = false)
 	} else {
 		return ' (' . implode(' AND ', $where) . ') ';
 	}
+
+}
+
+function nuBrowseRemoveFieldAlias($field) {
+
+	$field = preg_replace_callback('/\sAS\s/i', function($match) {
+		return strtolower($match[0]);
+	}, $field);
+
+	$pos = strrpos(strtolower($field), " as ");
+	if ($pos !== false) {
+		return substr($field, 0, $pos);
+	}
+
+	return $field;
 
 }
 
