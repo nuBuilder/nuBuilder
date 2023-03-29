@@ -4512,7 +4512,7 @@ function nuBrowseAdditionalNavButtons() {
 		'pointer-events': 'none'
 	};
 
-	const firstBtn = `<span id="nuFirst" class="nuBrowsePage"><i class="fa fa-step-backward" style="font-size: 16px" onclick="nuGetPage(1)">&nbsp;&nbsp;&nbsp;&nbsp;</i></span>`;
+	const firstBtn = <span id="nuFirst" class="nuBrowsePage"><i class="fa fa-step-backward" style="font-size: 16px" onclick="nuGetPage(1)">&nbsp;&nbsp;&nbsp;&nbsp;</i></span>';
 	$(firstBtn).insertBefore('#nuLast');
 
 	const endBtn = `<span id="nuEnd" class="nuBrowsePage">&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-step-forward nuBrowsePage" style="font-size: 16px" onclick="nuGetPage(${lastPage})"></i></span>`;
