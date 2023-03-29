@@ -8,18 +8,20 @@ function nuSsoLoginCheckParams() {
 	// elseif ( nuCheckIsSsoLoginRequest() ) { ... }
 
 	$check = true;
-	(array_key_exists('ssousersname',	$_POST['nuSTATE'])) or $check = false;
-	(array_key_exists('ssousersemail',	$_POST['nuSTATE'])) or $check = false;
-	(array_key_exists('code',			$_POST['nuSTATE'])) or $check = false;
+	$nuState = $_POST['nuSTATE'];
+
+	(array_key_exists('ssousersname',	$nuState)) || $check = false;
+	(array_key_exists('ssousersemail',	$nuState)) || $check = false;
+	(array_key_exists('code',			$nuState)) || $check = false;
 
 	if($check) {
-		if (($_POST['nuSTATE']['ssousersname'] == "") || ($_POST['nuSTATE']['ssousersemail'] == "") ||
-			($_POST['nuSTATE']['code'] == "")) {
+		if (($nuState['ssousersname'] == "") || ($nuState['ssousersemail'] == "") ||
+			($nuState['code'] == "")) {
 			$check = false;
 		}
 	}
 
-	$check or nuDie("Error during SSO login.  Internal information: Did not get parameters for ssologin call or they were blank");
+	$check || nuDie("Error during SSO login.  Internal information: Did not get parameters for ssologin call or they were blank");
 }
 
 function nuSsoGetloginRequestData() {
