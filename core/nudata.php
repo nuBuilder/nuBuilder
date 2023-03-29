@@ -506,7 +506,7 @@ function nuUpdateDatabaseGetUpdateValue($field, $value, $formId, $table, $tableC
 	$idx = array_search($field, $tableColumns);
 	$isNulog = $log && nuStringEndsWith("_nulog", $field);
 	
-	if ($idx && ! $isNulog) { 								//-- valid field name and not nulog column
+	if ($idx !== false && ! $isNulog) { //-- valid field name and not nulog column
 		$v = $isAutoNumber ? nuAutoNumber($formId, $field, $value) : $value;
 
 		$type = $clientTableSchema[$table]['types'][$idx];
