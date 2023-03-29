@@ -4389,7 +4389,7 @@ function nuBrowseTable() {
 		l = 7;
 		t += h + 7;
 
-		if (brCount === 0 && r > 0) {
+		if (brCount.length === 0 && r > 0) {
 			const noData = nuCurrentProperties().search.length === 0 ? 'No data to display' : 'No search results found';
 			const firstCellClass = nuCurrentProperties().search.length === 0 ? 'nuBrowseNoData' : 'nuBrowseNoResults';
 			$('#nucell_0_0').html(nuTranslate(noData)).addClass(firstCellClass);
