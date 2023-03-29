@@ -35,10 +35,10 @@ function nuShowFormInfo() {
 	const currProps = nuCurrentProperties();
 	const formCode = currProps.form_code;
 	const isDevMode = nuDevMode();
-	const permalinkButton = `<br><button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCopyPermalink()">Copy Permalink</button>`;
-	const currPropsButton = `<button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCurrentProperties()">Current Properties</button>`;
+	const permalinkButton = '<br><button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCopyPermalink()">Copy Permalink</button>';
+	const currPropsButton = '<button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCurrentProperties()">Current Properties</button>';
 	const recordId = nuFormType() === "edit" && currProps.form_type !== "launch" ? `<b>Record ID:</b> ${currProps.record_id}<br>` : "";
-	const browseCopyButton = `<button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCopyBrowseSQL()">Copy SQL</button><br>`;
+	const browseCopyButton = '<button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCopyBrowseSQL()">Copy SQL</button><br>';
 	const showSQL = !formCode.startsWith("nu") || isDevMode;
 	const browseSQL = nuFormType() === "browse" && (showSQL) ? `<br><b>Browse SQL:</b><br><pre class="nuFormInfoBrowseSQL"><code id="nuFormInfoBrowseSQL">${currProps.browse_sql}</pre></code><br>${browseCopyButton}` : "<br>";
 	const table = nuSERVERRESPONSE.table !== "" && (showSQL) ? `<b>Table:</b> ${nuSERVERRESPONSE.table}` : "";
