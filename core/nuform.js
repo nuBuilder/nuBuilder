@@ -4257,10 +4257,9 @@ function nuGetColumWidths() {
 
 function nuDownBrowseResize(e, source) {
 
-	let id = e.target.id;
-	if (id == 'nuSortIcon') {
+	if (e.target.tagName === 'I') {
 		return;
-	}	
+	}
 
 	e.preventDefault();
 
