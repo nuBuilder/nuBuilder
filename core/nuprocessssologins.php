@@ -5,7 +5,7 @@ function nuSsoLoginCheckParams() {
 	// This function is called from nuapi.php.
 	// All it does is checks that we were passed non-blank parameters.
 	// Later, in nusession.php, there is section that uses this data, wrapped in:-
-	// elseif ( nuCheckIsSsoLoginRequest() ) { ... }
+	// elseif ( nuCheckIsLoginRequest('ssologin') ) { ... }
 
 	$check = true;
 	$nuState = $_POST['nuSTATE'];

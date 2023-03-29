@@ -42,7 +42,7 @@ if ( nuCheckIsLoginRequest() ) {
 		if ($result == "-1") nuDie('This account is disabled.');
 	}
 
-} elseif ( nuCheckIsSsoLoginRequest() ) {
+} elseif ( nuCheckIsLoginRequest('ssologin') ) {
 
 	$check = true;
 

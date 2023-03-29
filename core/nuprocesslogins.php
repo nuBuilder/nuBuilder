@@ -105,32 +105,16 @@ function nuCheckUserLoginRequest() {
 
 }
 
-function nuCheckIsLoginRequest() {
+function nuCheckIsLoginRequest($callType = 'login') {
 
 	if (array_key_exists('nuSTATE', $_POST)) {
 
 		if (array_key_exists('call_type', $_POST['nuSTATE'])) {
 
-			if ($_POST['nuSTATE']['call_type'] == 'login') {
+			if ($_POST['nuSTATE']['call_type'] == $callType) {
 
 				return true;
 
-			}
-		}
-	}
-
-	return false;
-
-}
-
-function nuCheckIsSsoLoginRequest() {
-
-	if (array_key_exists('nuSTATE', $_POST)) {
-
-		if (array_key_exists('call_type', $_POST['nuSTATE'])) {
-
-			if ($_POST['nuSTATE']['call_type'] == 'ssologin') {
-				return true;
 			}
 		}
 	}
