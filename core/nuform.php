@@ -1432,63 +1432,55 @@ function nuGatherFormAndSessionData($home){
 
 		$getAccessFromSessionTableQRY	= nuRunQuery("SELECT sss_access FROM zzzzsys_session WHERE zzzzsys_session_id = ? ", [$sessionId]);
 		$getAccessFromSessionTableOBJ	= db_fetch_object($getAccessFromSessionTableQRY);
-		$access 						= json_decode($getAccessFromSessionTableOBJ->sss_access);
+		$access 						= nuJsonDecode($getAccessFromSessionTableOBJ->sss_access);
 		$callType						= $formAndSessionData->call_type;
 
 		if($callType == 'getreport'){
 
-			$r							= nuReportAccessList($access);
+			$r = nuReportAccessList($access);
 
-			if(!in_array($formAndSessionData->record_id, $r)) { //form_id is record_id for getreport
-
-
-
-				$nuT					= nuRunQuery("SELECT sph_code FROM zzzzsys_report WHERE zzzzsys_report_id = ?", [$formAndSessionData->record_id]);
-				$nuR					= db_fetch_object($nuT);
-
-				nuDisplayErrorAccessDenied($callType, $nuR);
-
+			if(!in_array($formAndSessionData->record_id, $r)) { 		//form_id is record_id for getreport
+				$stmt = nuRunQuery("SELECT sph_code FROM zzzzsys_report WHERE zzzzsys_report_id = ?", [$formAndSessionData->record_id]);
+				nuDisplayErrorAccessDenied($callType, $stmt);
 			}
 
 		}
 
 		if($callType == 'getphp'){
 
-			$p							= nuProcedureAccessList($access);
+			$p = nuProcedureAccessList($access);
 
-			if(!in_array($formAndSessionData->record_id, $p)) { //form_id is record_id for getphp
-
-				$nuT					= nuRunQuery("SELECT sph_code FROM zzzzsys_php WHERE zzzzsys_php_id = ?", [$formAndSessionData->record_id]);
-				$nuR					= db_fetch_object($nuT);
-
-				nuDisplayErrorAccessDenied($callType, $nuR);
+			if(!in_array($formAndSessionData->record_id, $p)) { 		//form_id is record_id for getphp^
+				$stmt = nuRunQuery("SELECT sph_code FROM zzzzsys_php WHERE zzzzsys_php_id = ?", [$formAndSessionData->record_id]);
+				nuDisplayErrorAccessDenied($callType, $stmt);
 			}
 
 		}
 
-		$f = nuFormAccessList($access); //-- form list including forms id used in reports and procedures
+		$f = nuFormAccessList($access); 		//-- form list including forms id used in reports and procedures
 
 		if(!in_array($formAndSessionData->form_id, $f) && ($callType == 'getform' || $formAndSessionData->call_type == 'login')){
-
-			$nuT						= nuRunQuery("SELECT sfo_code FROM zzzzsys_form WHERE zzzzsys_form_id = ?", [$formAndSessionData->form_id]);
-			$nuR						= db_fetch_object($nuT);
-
-			nuDisplayErrorAccessDenied($callType, $nuR);
-
+			$stmt = nuRunQuery("SELECT sfo_code FROM zzzzsys_form WHERE zzzzsys_form_id = ?", [$formAndSessionData->form_id]);							
+			nuDisplayErrorAccessDenied($callType, $stmt);
 		}
 
 	}
 
-	$formAndSessionData->errors			= $_POST['nuErrors'];
+	$formAndSessionData->errors = $_POST['nuErrors'];
 
 	return $formAndSessionData;
 
 }
 
-function nuDisplayErrorAccessDenied($callType, $nuR) {
+function nuDisplayErrorAccessDenied($callType, $stmt) {
 
-	$code =  db_fetch_row($nuR) === 1 ? " ({$nuR->sfo_code})" : '';
-		
+	if (db_num_rows($stmt) === 1) {
+		$obj = db_fetch_row($stmt);
+		$code = " ({$obj[0]})";
+	} else {
+		$code = '';
+	}
+
 	if ($callType == 'getform') {
 		nuDisplayError("Access To Form Denied". $code);
 	} elseif ($callType == 'getphp') {
@@ -1498,6 +1490,7 @@ function nuDisplayErrorAccessDenied($callType, $nuR) {
 	}
 
 }
+
 function nuGetFormPermission($f, $field) {
 
 	$s = "SELECT $field FROM zzzzsys_access_form WHERE slf_zzzzsys_access_id = ? AND slf_zzzzsys_form_id = ?";
