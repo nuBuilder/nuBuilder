@@ -240,7 +240,8 @@ function db_fetch($obj, $style = 'object', $fetchAll = false) {
 		'array' => [PDO::FETCH_ASSOC, 'array'],
 		'keypairarray' => [PDO::FETCH_KEY_PAIR, 'array'],
 		'object' => [PDO::FETCH_OBJ, 'boolean'],
-		'row' => [PDO::FETCH_NUM, 'boolean']
+		'row' => [PDO::FETCH_NUM, 'boolean'],
+		'column' => [PDO::FETCH_COLUMN, 'array']
 	];
 
 	if (!isset($fetchStyles[$style])) {
