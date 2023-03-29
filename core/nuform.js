@@ -3420,6 +3420,7 @@ function nuSetBrowseTitle(title) {
 	nuSetTitle(title, true);
 }
 
+
 function nuSetTitle(title, browse) {
 
 	if (nuFormType() == 'browse' && !browse == true) {
@@ -3430,22 +3431,14 @@ function nuSetTitle(title, browse) {
 
 	nuFORM.setProperty('title', title);
 
-	const $breadcrumb = $('.nuBreadcrumb');
-	const $notBreadcrumb = $('.nuNotBreadcrumb');
+	const b = $('.nuBreadcrumb').length;
+	let h = '<div id="nuarrow' + (b - 1) + '" class="nuBreadcrumbArrow">&nbsp;<i class="fa fa-caret-right"></i>&nbsp;</div>';
 
-	if ($breadcrumb.length === 0 && !nuIsIframe()) {
-
-		if ($notBreadcrumb.length > 0) {
-			$notBreadcrumb.html(title);
-		} else {
-			$('#nuHomeGap').append(title);
-		}
-	} else {
-		const bc = $breadcrumb.length + $notBreadcrumb.length -1;
-		const h = '<div id="nuarrow' + (bc - 1) + '" class="nuBreadcrumbArrow">&nbsp;<i class="fa fa-caret-right"></i>&nbsp;</div>';
-
-		$('#nuBreadcrumb' + bc).html(h + title);
+	if (nuFORM.breadcrumbs.length == 1) {
+		h = '';
 	}
+
+	$('#nuBreadcrumb' + b).html(h + title);
 
 }
 
