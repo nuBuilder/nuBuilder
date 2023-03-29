@@ -151,7 +151,7 @@ class nuSqlString{
 
 	public function getTableName(){
 
-		return trim(substr($this->from, 5));
+		return nuTrim(substr($this->from, 5));
 
 	}
 
@@ -223,7 +223,7 @@ class nuSqlString{
 
 function nuSQLTrim($s, $noCR = 0){
 
-	if(trim($s) == ''){
+	if(nuTrim($s) == ''){
 		return '';
 	}else{
 		if($noCR == 0){
@@ -239,6 +239,14 @@ function nuObjKey($o, $k, $d = null) {
 
 	return isset($o[$k]) ? $o[$k] : $d;
 
+}
+
+function nuTrim($s) {
+	return trim($s ?? '');
+}
+
+function nuJsonDecode($json, $associative = null) {
+	return json_decode($json ?? '', $associative);
 }
 
 function nuSetHashList($p){
@@ -265,7 +273,7 @@ function nuSetHashList($p){
 
 				if($p['call_type'] == 'getform'){
 
-					if(trim($R->sfo_table) != ''){
+					if(!empty(nuTrim($R->sfo_table))){
 
 						$s		= "SELECT * FROM $R->sfo_table WHERE $R->sfo_primary_key = '$rid'";
 						$t		= nuRunQuery($s);
@@ -277,7 +285,7 @@ function nuSetHashList($p){
 								if ($value == null) {
 									$value='';
 								}
-								$r[$fld] = addslashes($value);
+								$r[$fld] = addslashes($value ?? '');
 							}
 
 						}
@@ -291,7 +299,7 @@ function nuSetHashList($p){
 		foreach ($p as $key => $value){														//-- The 'opener' Form's properties
 
 			if(gettype($value) == 'string' or is_numeric ($value)){
-				$h[$key]			= addslashes($value);
+				$h[$key]			= addslashes($value ?? '');
 			}else{
 				$h[$key]			= '';
 			}
@@ -303,7 +311,7 @@ function nuSetHashList($p){
 			foreach ($p['hash'] as $key => $value){											//-- The 'opener' Form's hash variables
 
 				if(gettype($value) == 'string' or is_numeric ($value)){
-					$h[$key]			= addslashes($value);
+					$h[$key]			= addslashes($value ?? '');
 				}else{
 					$h[$key]			= '';
 				}
@@ -312,9 +320,9 @@ function nuSetHashList($p){
 
 		}
 
-		$h['PREVIOUS_RECORD_ID']	= addslashes($rid);
-		$h['RECORD_ID']				= addslashes($rid);
-		$h['FORM_ID']				= addslashes($fid);
+		$h['PREVIOUS_RECORD_ID']	= addslashes($rid ?? '');
+		$h['RECORD_ID']				= addslashes($rid ?? '');
+		$h['FORM_ID']				= addslashes($fid ?? '');
 		$h['SUBFORM_ID']			= addslashes(nuObjKey($_POST['nuSTATE'],'object_id', ''));
 		$h['ID']					= addslashes(nuObjKey($_POST['nuSTATE'],'primary_key', ''));
 		$h['CODE']					= addslashes(nuObjKey($_POST['nuSTATE'],'code', ''));
@@ -334,7 +342,7 @@ function nuSetHashList($p){
 	}
 
 	if (db_num_rows($ct) > 0) {
-		$cj = json_decode($cr->sss_hashcookies, true);
+		$cj = nuJsonDecode($cr->sss_hashcookies, true);
 		return array_merge($cj, $h, $r, $A);
 	} else {
 		return array_merge($h, $r, $A);
@@ -376,7 +384,7 @@ function nuAllowedActivities(){
 
 	$t	= nuRunQuery("SELECT sss_access FROM zzzzsys_session WHERE zzzzsys_session_id = ? ", [$_SESSION['nubuilder_session_data']['SESSION_ID']]);
 	$r	= db_fetch_object($t);
-	$a	= json_decode($r->sss_access);
+	$a	= nuJsonDecode($r->sss_access);
 
 	return $a;
 
@@ -456,7 +464,7 @@ function nuSetJSONDataAll($i, $nj){
 
 	while($r = db_fetch_object($t)){
 
-		$j					= json_decode($r->sss_access, true);
+		$j					= nuJsonDecode($r->sss_access, true);
 
 		$j[$i]				= $nj;
 		$J					= json_encode($j);
@@ -470,12 +478,28 @@ function nuSetJSONDataAll($i, $nj){
 }
 
 
-function nuSetJSONData($name, $newJson){
+function nuSetJSONDataX($name, $newJson){
 
 	$sessionId			= $_SESSION['nubuilder_session_data']['SESSION_ID'];
 	$stmt				= nuRunQuery("SELECT sss_access FROM zzzzsys_session WHERE zzzzsys_session_id = ? ", [$sessionId]);
 	$row				= db_fetch_object($stmt);
-	$access				= json_decode($row->sss_access, true);
+	$access				= nuJsonDecode($row->sss_acces, true);
+
+	$access[$name]		= $newJson;
+	$update				= json_encode($access);
+
+	nuRunQuery("UPDATE zzzzsys_session SET sss_access = ? WHERE zzzzsys_session_id = ? ", [$update, $sessionId]);
+
+}
+
+
+function nuSetJSONData($name, $newJson){
+
+	$sessionId			= $_SESSION['nubuilder_session_data']['SESSION_ID'];
+	$stmt				= nuRunQuery("SELECT sss_access FROM zzzzsys_session WHERE zzzzsys_session_id = ? ", [$sessionId]);
+
+	$row				= db_fetch_object($stmt);
+	$access				= nuJsonDecode($row->sss_access, true);
 
 	$access[$name]		= $newJson;
 	$update				= json_encode($access);
@@ -491,7 +515,7 @@ function nuGetJSONData($name){
 
 	if (db_num_rows($stmt) > 0) {
 		$row			= db_fetch_object($stmt);
-		$access			= json_decode($row->sss_access, true);
+		$access			= nuJsonDecode($row->sss_access, true);
 	} else {
 		return '';
 	}
@@ -517,7 +541,7 @@ function nuSetUserJSONData($key, $value, $userId = "") {
 	$result = nuRunQuery($sql, [$userId]);
 	$row = db_fetch_row($result);
 
-	$jsonData = $row[0] != '' ? json_decode($row[0], true) : [];
+	$jsonData = $row[0] != '' ? nuJsonDecode($row[0], true) : [];
 	$jsonData[$key] = $value;
 	$updatedJsonData = json_encode($jsonData);
 
@@ -539,7 +563,7 @@ function nuGetUserJSONData($key, $userId = ""){
 
 	if (db_num_rows($stmt) == 1) {
 		$row		= db_fetch_row($stmt);
-		$json		= json_decode($row[0], true);
+		$json		= nuJsonDecode($row[0], true);
 		return nuObjKey($json, $key, '');
 	} else {
 		return '';
@@ -555,7 +579,7 @@ function nuGetSysJSONValue($tbl, $jk, $pk) {
 
 	if (db_num_rows($t) == 1) {
 		$r = db_fetch_row($t);
-		$j = json_decode($r[0], true);
+		$j = nuJsonDecode($r[0], true);
 		return nuObjKey($j, $jk, '');
 	} else {
 		return '';
@@ -568,7 +592,7 @@ function nuSetSysJSONValue($tbl, $jk, $jv, $pk) {
 	$s = "SELECT $fld FROM zzzzsys_{$tbl} WHERE zzzzsys_{$tbl}_id = ? ";
 	$t = nuRunQuery($s, [$pk]);
 	$r = db_fetch_row($t);
-	$j = json_decode($r[0], true);
+	$j = nuJsonDecode($r[0], true);
 	$j[$jk] = $jv;
 	$J = json_encode($j);
 	$s = "UPDATE zzzzsys_{$tbl} SET $fld = ? WHERE zzzzsys_{$tbl}_id = ? ";
@@ -605,7 +629,7 @@ function nuRunHTML(){
 
 function nuReplaceHashVariables($s){
 
-	$s	= isset($s) ? trim($s) : '';
+	$s	= isset($s) ? nuTrim($s) : '';
 
 	if($s == ''){
 		return '';
@@ -621,7 +645,7 @@ function nuReplaceHashVariables($s){
 
 		if (isset($r->sss_hashcookies)) {
 
-			$j	= json_decode($r->sss_hashcookies, true);
+			$j	= nuJsonDecode($r->sss_hashcookies, true);
 
 			if (is_array($j)) {
 				$a = array_merge($j, $a);
@@ -880,7 +904,7 @@ function nuGetUserAccess(){
 
 	if (db_num_rows($t) == 0) return $A;
 
-	$j							= json_decode($r->sss_access);
+	$j							= nuJsonDecode($r->sss_access);
 
 	$A['USER_ID']				= $j->session->zzzzsys_user_id;
 	$A['USER_GROUP_ID']			= $j->session->zzzzsys_access_id;
@@ -1007,7 +1031,7 @@ function nuGetNumberFormat($f){
 
 	while($r = db_fetch_object($t)){
 		if($r->srm_format == $f){
-			return json_decode($r->srm_currency);
+			return nuJsonDecode($r->srm_currency);
 		}
 	}
 
@@ -1113,8 +1137,7 @@ function nuBuildTempTable($name_id, $tt, $rd = 0){
 		}
 
 		$p			= nuReplaceHashVariables($c);
-		//$p			= addslashes($p);
-		$tt			= addslashes($tt);
+		$tt			= addslashes($tt ?? '');
 
 		$P			 = '$sql = "CREATE TABLE '.$tt.' '.$p.'";';
 		$P			.= 'nuRunQuery($sql);';
@@ -1184,7 +1207,7 @@ function nuCreateFile($data) {
 		file_put_contents($file, $content);
 	}
 	else {
-		$f = json_decode($data);
+		$f = nuJsonDecode($data);
 		$type = explode('/', $f->type);
 		$type = $type[1];
 		$file = nuCreateTempFile($type);
@@ -1327,7 +1350,7 @@ function nuFontList(){
 
 				if ( !in_array($list[$x], $exclude) )  {
 
-						$item				= trim($folder . DIRECTORY_SEPARATOR . $list[$x]);
+						$item				= nuTrim($folder . DIRECTORY_SEPARATOR . $list[$x]);
 
 			if ( is_file($item) ){
 							$path_parts		= pathinfo($item);
@@ -1936,7 +1959,7 @@ function nuBuildCurrencyFormats(){
 	$t = nuRunQuery("SELECT srm_format, srm_currency FROM zzzzsys_format WHERE srm_type = 'Number'");
 	$a = [];
 	while($r = db_fetch_object($t)){
-		$a[]		= ['N|'. trim($r->srm_format), $r->srm_currency];
+		$a[]		= ['N|'. nuTrim($r->srm_format), $r->srm_currency];
 	}
 
 	return $a;
@@ -1975,7 +1998,7 @@ function nuGetRecordURL($origin = null, $subFolder = null, $homepageId = null, $
 }
 
 function hashCookieNotSetOrEmpty($h) {
-	return (preg_match('/\#(.*)\#/', $h) || trim($h) == "");
+	return (preg_match('/\#(.*)\#/', $h) || nuTrim($h) == "");
 }
 
 function nuTranslateWriteSQL($f, $row, $counter, $total) {
@@ -2100,7 +2123,7 @@ function nuGlobalAccess($post = false) {
 
 function nuFormatDate($d, $format){
 
-	if (trim($d) == "") return "";
+	if (nuTrim($d) == "") return "";
 
 	$date = DateTime::createFromFormat('Y-m-d', $d);
 	return $date->format($format);
@@ -2109,7 +2132,7 @@ function nuFormatDate($d, $format){
 
 function nuFormatDateTime($d, $format){
 
-	if (trim($d) == "") return "";
+	if (nuTrim($d) == "") return "";
 
 	$date = DateTime::createFromFormat('Y-m-d H:i:s', $d);
 	return $date->format($format);
@@ -2126,7 +2149,7 @@ function nuGetProperties() {
 		$r = db_fetch_object($t);
 
 		if (isset($r->sss_hashcookies)) {
-			$j = json_decode($r->sss_hashcookies, true);
+			$j = nuJsonDecode($r->sss_hashcookies, true);
 			if (is_array($j)) {
 				$a = array_merge($j, $a);
 			}
@@ -2155,7 +2178,7 @@ function nuSetProperty($i, $nj, $global = false) {
 
 		if (db_num_rows($t) == 1) {
 			$r = db_fetch_object($t);
-			$j = json_decode($r->sss_hashcookies, true);
+			$j = nuJsonDecode($r->sss_hashcookies, true);
 
 			$j[$i] = $nj;
 
@@ -2177,7 +2200,7 @@ function nuGetGlobalProperties() {
 	$r = db_fetch_object($t);
 
 	if (isset($r->sss_hashcookies)) {
-		$j = json_decode($r->sss_hashcookies, true);
+		$j = nuJsonDecode($r->sss_hashcookies, true);
 		if (is_array($j)) {
 			$a = array_merge($j, $a);
 		}
@@ -2193,7 +2216,7 @@ function nuSetGlobalPropertiesJS() {
 	$js = '';
 
 	foreach ($gp as $property => $value) {
-		$js .= "nuSetProperty('$property', '" . addslashes($value) . "');\n";
+		$js .= "nuSetProperty('$property', '" . addslashes($value ?? '') . "');\n";
 	}
 	if ($js !== '') {
 		nuAddJavaScript($js, false, true);

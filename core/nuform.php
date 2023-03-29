@@ -78,7 +78,7 @@ function nuBeforeEdit($FID, $RID){
 					$J			= db_fetch_row($T);
 					$J			= $J[0];
 					$_POST['nuLog'] = $J;
-					$jd	= json_decode($J);
+					$jd	= nuJsonDecode($J);
 				}
 
 				if(gettype($jd) == 'object'){
@@ -520,7 +520,7 @@ function nuGetSrc($i){
 
 	if (db_num_rows($t) == 1) {
 		$r		= db_fetch_object($t);
-		$json	= json_decode($r->sfi_json);
+		$json	= nuJsonDecode($r->sfi_json);
 		$j		= $json->file;
 	} else {
 		$j	= null;
@@ -568,7 +568,7 @@ function nuDefaultObject($r, $t){
 		$json = $r->sob_all_json;
 		if ($json != '') {
 
-			$obj	= json_decode($json, true);
+			$obj	= nuJsonDecode($json, true);
 
 			$type		= nuObjKey($obj,'type', null);
 
@@ -685,7 +685,7 @@ function nuRowsPerPage($rows) {
 
 function nuBreadcrumbDescriptionPart($bt){
 
-	if(strtolower(substr(trim($bt), 0, 6)) == 'select'){
+	if(strtolower(substr(nuTrim($bt), 0, 6)) == 'select'){
 		$t	= nuRunQuery($bt);
 		return db_fetch_row($t)[0];
 	}
@@ -697,7 +697,7 @@ function nuBreadcrumbDescription($r, $R){
 
 	if($R == '') {return $r->sfo_description;}																			//-- Browse Form, new record
 
-	if(!isset($r->sfo_breadcrumb_title) || trim($r->sfo_breadcrumb_title) == '')	{return $r->sfo_description;}		//-- no breadcrumb
+	if(!isset($r->sfo_breadcrumb_title) || nuTrim($r->sfo_breadcrumb_title) == '')	{return $r->sfo_description;}		//-- no breadcrumb
 
 	$bt = $r->sfo_breadcrumb_title;
 
@@ -903,7 +903,7 @@ function nuDataListOptions($sql) {
 
 	$result				= [];
 
-	$s = strtoupper(trim($sql));
+	$s = strtoupper(nuTrim($sql));
 
 	if (substr($s, 0, 6) == 'SELECT' || substr($s, 0, 4) == 'SHOW') {	//-- sql statement
 
@@ -916,8 +916,8 @@ function nuDataListOptions($sql) {
 			while ($row = db_fetch_row($stmt)) {
 				$result[]	= $row;
 			}
-	} else if (substr(trim($s), 0, 1) == '[') {
-		$result = json_decode($sql);
+	} else if (substr(nuTrim($s), 0, 1) == '[') {
+		$result = nuJsonDecode($sql);
 	} else {
 		return $sql;
 	}
@@ -943,7 +943,7 @@ function nuSelectOptions($sql) {
 	$sqlWithHk = $sql;
 	$sql = nuReplaceHashVariables($sql);
 
-	$sqlFirstChars = trim(substr($sql, 0, 20));
+	$sqlFirstChars = nuTrim(substr($sql, 0, 20));
 
 	if (nuStringStartsWith('SELECT', $sqlFirstChars, true) || nuStringStartsWith('WITH', $sqlFirstChars, true)) {	//-- sql statement
 		
@@ -957,9 +957,9 @@ function nuSelectOptions($sql) {
 			$options[] = $row;
 		}
 
-	} elseif (nuStringStartsWith('[', $sqlFirstChars) && is_array(json_decode($sql))) {								//-- Array style
+	} elseif (nuStringStartsWith('[', $sqlFirstChars) && is_array(nuJsonDecode($sql))) {								//-- Array style
 			
-			$arr = json_decode($sql);
+			$arr = nuJsonDecode($sql);
 			foreach($arr as $item) {
 				$options[] = nuSelectAddOption($item, $item);
 			}
@@ -1095,9 +1095,9 @@ function nuRefineTabList($t){
 
 function nuGetSQLValue($s){
 
-	$s		= nuReplaceHashVariables(trim($s));
+	$s		= nuReplaceHashVariables(nuTrim($s));
 
-	if(trim($s) == ''){
+	if(nuTrim($s) == ''){
 		return '';
 	}else{
 
@@ -1150,7 +1150,7 @@ function nuBrowseColumns($f){
 
 function nuBrowseRows($f){
 
-	if(trim($f->record_id) != ''){return [];}
+	if(nuTrim($f->record_id) != ''){return [];}
 
 	$P				= $_POST['nuSTATE'];
 
@@ -1169,7 +1169,7 @@ function nuBrowseRows($f){
 	$t				= nuRunQuery($s, [$f->id]);
 	$r				= db_fetch_object($t);
 
-	if(trim($r->sfo_browse_sql) == ''){
+	if(nuTrim($r->sfo_browse_sql) == ''){
 		return [[], 0];
 	}
 
@@ -1202,7 +1202,7 @@ function nuBrowseRows($f){
 
 	}
 
-	$where			= trim(nuBrowseWhereClause($flds, $filter . ' ' . $search));
+	$where			= nuTrim(nuBrowseWhereClause($flds, $filter . ' ' . $search));
 	$__x			= nuHash();
 	$like			= $__x['like'] ?? '';
 	unset($__x);
@@ -1570,7 +1570,7 @@ function nuButtons($formid, $POST){
 
 	$t						= nuRunQuery("SELECT sss_access FROM zzzzsys_session WHERE zzzzsys_session_id = ? ", [$_SESSION['nubuilder_session_data']['SESSION_ID']]);
 	$r						= db_fetch_object($t);
-	$nuJ					= json_decode($r->sss_access);
+	$nuJ					= nuJsonDecode($r->sss_access);
 	$_POST['forms']			= $nuJ->forms;
 	$_POST['reports']		= $nuJ->reports;
 	$_POST['procedures']	= $nuJ->procedures;
@@ -1851,7 +1851,7 @@ function nuPreloadImages($a){
 		$t  = nuRunQuery($s, [$a[$i]]);
 		$r	= db_fetch_object($t);
 
-		$tr	= trim($r->sfi_code);
+		$tr	= nuTrim($r->sfi_code);
 		$js = $js . "\nnuImages['$tr'] = '" . addslashes($r->sfi_json) . "';";
 
 	}
