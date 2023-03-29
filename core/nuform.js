@@ -4283,8 +4283,12 @@ function nuEndBrowseResize(e) {
 }
 
 function nuDragBrowseColumn(e, p) {
+	
+	const targetId = e.target.id;
 
-	if (e.target.id === '') return; 	//  not on ctxmenu
+	if (targetId === '' || targetId === 'nuSearchField') { //  ctxmenu or Search field
+		return; 	
+	}	
 
 	e.preventDefault();
 
