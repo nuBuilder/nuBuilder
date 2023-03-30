@@ -126,6 +126,7 @@ function nuAddAdminButtons() {
 		return;
 
 	const {form_type, form_code} = nuCurrentProperties();
+	const formCode = form_code;
 
 	if (!form_type)
 		return;
@@ -144,9 +145,8 @@ function nuAddAdminButtons() {
 	}
 
 	let buttonCount = 0;
-	const code = nuCurrentProperties().form_code;
 
-	if (!code.startsWith('nu') || devMode) {
+	if (!formCode.startsWith('nu') || devMode) {
 
 		if (nuAdminButtons["nuProperties"]) {
 			buttonCount += nuAddAdminButton('nuProperties', adminButtons['nuProperties']);
