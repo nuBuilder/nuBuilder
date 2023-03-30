@@ -1111,7 +1111,8 @@
 	 line-height:18px;
 	 text-align:left;
 	 text-shadow:0 1px 1px rgba(255,255,255,0.75);
-	 vertical-align:middle 
+	 vertical-align:middle;
+	 z-index: 1000
 }
  .nuUpdateMessage {
 	 font-family:var(--nu-font-sans-serif);
