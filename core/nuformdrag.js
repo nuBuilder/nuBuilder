@@ -916,51 +916,53 @@ function nuSpaceHorizontally(){
 
 }
 
-function nuSpaceVertically(){
+function nuSpaceVertically() {
 
 	if (!nuSpacingNotSupported()) return;
 
-	var selectedFields	= [];
+	const $dialogIframes = getNuDragDialogIframes(true);
+	const selectedFields = [];
 
-	$('.nuDragSelected',getNuDragDialogIframes(true)).each(function(){
-
+	$('.nuDragSelected', $dialogIframes).each(function() {
+		const $this = $(this);
 		selectedFields.push({
-
-			top: $(this).position().top,
-			height: $(this).height(),
-			id: $(this).prop('id')
-
+			top: $this.position().top
+			, height: $this.height()
+			, id: $this.prop('id')
 		});
-
 	});
 
 	selectedFields.sort(nuSortObjAsc);
 
-	var gapTotal	= 0;
-	var topTotal	= 0;
+	let gapTotal = 0;
+	let topTotal = 0;
+	const selectedFieldsLength = selectedFields.length;
 
-	for(var i=1; i<selectedFields.length; i++){
+	for (let i = 1; i < selectedFieldsLength; i++) {
+		const currentField = selectedFields[i];
+		const previousField = selectedFields[i - 1];
+		const prevFieldTopPlusHeight = previousField.top + previousField.height;
 
-		gapTotal	+= selectedFields[i].top-(selectedFields[i-1].top+selectedFields[i-1].height);
-		topTotal	+= selectedFields[i].top-selectedFields[i-1].top;
-
+		gapTotal += currentField.top - prevFieldTopPlusHeight;
+		topTotal += currentField.top - previousField.top;
 	}
 
-	var gapAvg		= Math.round(gapTotal/(selectedFields.length-1));
-	var topAvg		= Math.round(topTotal/(selectedFields.length-1));
+	const gapAvg = Math.round(gapTotal / (selectedFieldsLength - 1));
+	const topAvg = Math.round(topTotal / (selectedFieldsLength - 1));
 
-	if(gapAvg < 0){
-
-		for(var i=1; i<selectedFields.length; i++){
-			$('#'+selectedFields[i].id,getNuDragDialogIframes(true)).css('top',($('#'+selectedFields[i-1].id,getNuDragDialogIframes(true)).position().top+topAvg)+'px');
+	if (gapAvg < 0) {
+		let top = 0;
+		for (let i = 1; i < selectedFieldsLength; i++) {
+			top = $('#' + selectedFields[i - 1].id, $dialogIframes).position().top + topAvg;
+			$('#' + selectedFields[i].id, $dialogIframes).css('top', `${top}px`);
 		}
-
 	} else {
-
-		for(var i=1; i<selectedFields.length; i++){
-			$('#'+selectedFields[i].id,getNuDragDialogIframes(true)).css('top',($('#'+selectedFields[i-1].id,getNuDragDialogIframes(true)).position().top+$('#'+selectedFields[i-1].id,getNuDragDialogIframes(true)).height()+gapAvg)+'px');
+		let top = 0;
+		for (let i = 1; i < selectedFieldsLength; i++) {
+			const $prevField = $('#' + selectedFields[i - 1].id, $dialogIframes);
+			top = $prevField.position().top + $prevField.height() + gapAvg;
+			$('#' + selectedFields[i].id, $dialogIframes).css('top', `${top}px`);
 		}
-
 	}
 
 }
