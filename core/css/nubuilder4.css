@@ -798,6 +798,11 @@
 	 text-shadow:none;
 	 border-radius:3px 
 }
+ .nuAdminButtonActive {
+	 background-color: #ebe9e9;
+	 border-color: #b3b3b3;
+	 color: var(--nu-label)
+}
  #nuBackBtnButton.nuActionButton {
 	 background-color:#28A251 
 }
