@@ -4367,108 +4367,116 @@ function nuBrowseTableHoverOut() {
 
 function nuBrowseTable() {
 
-	const bc = window.nuFORM.getCurrent();
-	const col = bc.browse_columns;
-	const row = bc.browse_rows;
-	const h = bc.row_height;
+	const currentForm = window.nuFORM.getCurrent();
+	const browseColumns = currentForm.browse_columns;
+	const browseRows = currentForm.browse_rows;
+	const browseRowCount = browseRows.length;		
+	const rowHeight = currentForm.row_height;
 	const $record = $('#nuRECORD');
-	let incWidth = 0;
-	let t = parseInt($('#nuBrowseTitle0').css('height'), 10) - h - 2;
-	let l = 7;
 
-	const brCount = bc.browse_rows;
+	let incrementalWidth = 0;
+	let topOffset = parseInt($('#nuBrowseTitle0').css('height'), 10) - rowHeight - 2;
+	let leftOffset = 7;
 
-	for (let r = 0; r < bc.rows; r++) {
-		l = 7;
-		t += h + 7;
+	for (let rowIndex = 0; rowIndex < currentForm.rows; rowIndex++) {
 
-		if (brCount.length === 0 && r > 0) {
-			const noData = nuCurrentProperties().search.length === 0 ? 'No data to display' : 'No search results found';
-			const firstCellClass = nuCurrentProperties().search.length === 0 ? 'nuBrowseNoData' : 'nuBrowseNoResults';
-			$('#nucell_0_0').html(nuTranslate(noData)).addClass(firstCellClass);
+		leftOffset = 7;
+		topOffset += rowHeight + 7;
+
+		if (browseRowCount === 0 && rowIndex > 0) {
+
+			const searchLengthZero = nuCurrentProperties().search.length === 0;
+			const noDataMessage = searchLengthZero ? 'No data to display' : 'No search results found';
+			const firstCellClass = searchLengthZero ? 'nuBrowseNoData' : 'nuBrowseNoResults';
+			$('#nucell_0_0').html(nuTranslate(noDataMessage)).addClass(firstCellClass);
 			window[`nuBrowseNo${firstCellClass === 'nuBrowseNoData' ? 'Data' : 'SearchResults'}`] = true;
 			break;
+
 		}
 
-		for (let c = 0; c < col.length; c++) {
-			const w = Number(col[c].width);
-			const id = `nucell_${r}_${c}`;
+		for (let colIndex = 0; colIndex < browseColumns.length; colIndex++) {
+
+			const columnWidth = Number(browseColumns[colIndex].width);
+			const id = `nucell_${rowIndex}_${colIndex}`;
+
 			const div = nuCreateElementWithId('div', id, 'nuRECORD');
-			const $id = $(div);
-			$id.attr('data-nu-row', r)
-				.attr('data-nu-column', c)
-				.addClass(`nuCell${(r / 2 === parseInt(r / 2, 10)) ? 'Even' : 'Odd'}`)
-				.addClass(w === 0 ? '' : 'nuBrowseTable')
-				.css({
-					'text-align': nuAlign(col[c].align),
-					overflow: 'hidden',
-					width: w,
-					top: t,
-					left: l,
-					height: h,
-					position: 'absolute',
-					padding: (w < 0 ? 0 : undefined),
-					'border-width': (w < 0 ? 0 : undefined)
-				});
+			const $div = nuSetObjectBounds(div, topOffset, leftOffset, columnWidth, rowHeight, true);
+			div.setAttribute('data-nu-row', rowIndex);
+			div.setAttribute('data-nu-column', colIndex);
+			div.style.textAlign = nuAlign(browseColumns[colIndex].align);
+			div.style.overflow = 'hidden';
+			div.style.padding = (columnWidth < 0 ? 0 : undefined) + 'px';
+			div.style.borderWidth = (columnWidth < 0 ? 0 : undefined) + 'px';
+			div.classList.add(`nuCell${(rowIndex / 2 === parseInt(rowIndex / 2, 10)) ? 'Even' : 'Odd'}`);
 
-			if (w === 0) {
-				$id.hide();
+			if (columnWidth === 0) {
+				$div.hide();
+			} else {
+				div.classList.add('nuBrowseTable', 'nuCell');
 			}
 
-			if (r < row.length) {
-				const value = col[c].format === '' ? row[r][c + 1] : nuFORM.addFormatting(row[r][c + 1], col[c].format);
-				$id.html(value)
-					.attr('data-nu-primary-key', row[r][0])
-					.attr('onclick', 'nuSelectBrowse(event, this)')
+			if (rowIndex < browseRows.length) {
+
+				const currentColumn = browseColumns[colIndex];
+				const value = currentColumn.format === '' ? browseRows[rowIndex][colIndex + 1] : nuFORM.addFormatting(browseRows[rowIndex][colIndex + 1], currentColumn.format);
+
+				$div.html(value)
+					.attr('data-nu-primary-key', browseRows[rowIndex][0])
+					.on('click', (event) => nuSelectBrowse(event, $div[0]))
 					.hover(nuBrowseTableHoverIn, nuBrowseTableHoverOut);
+
 			}
 
-			if (r === 0 && c === 0) {
-				incWidth = nuTotalWidth(id) - w;
+			if (rowIndex === 0 && colIndex === 0) {
+				incrementalWidth = nuTotalWidth(id) - columnWidth;
 			}
 
-			l += (w === 0 ? 0 : w + incWidth);
+			leftOffset += (columnWidth === 0 ? 0 : columnWidth + incrementalWidth);
 		}
+
 	}
 
-	const last = '<span id="nuLast" onclick="nuGetPage(' + bc.page_number + ')" class="nuBrowsePage">&#9668;</span>';
-	const next = '<span id="nuNext" onclick="nuGetPage(' + (bc.page_number + 2) + ')" class="nuBrowsePage">&#9658;</span>';
-	const pg = '&nbsp;Page&nbsp;';
-	const cu = `<input id="browsePage" style="text-align:center;margin:3px 0px 0px 0px;width:40px" onchange="nuGetPage(this.value)" value="${bc.page_number + 1}" class="browsePage"/>`;
 
-	const pagesOf = ' / ' + (bc.pages === 0 ? 1 : bc.pages) + ' ';
-	const footerTop = t + h + 10;
+	const last = `<span id="nuLast" onclick="nuGetPage(${currentForm.page_number})" class="nuBrowsePage">&#9668;</span>`;
+	const next = `<span id="nuNext" onclick="nuGetPage(${currentForm.page_number + 2})" class="nuBrowsePage">►</span>;`;
+	const pageLabel = '&nbsp;Page&nbsp;';
+	const currentPageInput = `<input id="browsePage" style="text-align:center;margin:3px 0px 0px 0px;width:40px" onchange="nuGetPage(this.value)" value="${currentForm.page_number + 1}" class="browsePage"/>`;	
+	const totalPagesLabel = ' / ' + (currentForm.pages === 0 ? 1 : currentForm.pages) + ' ';
+	const footerTopOffset = topOffset + rowHeight + 10;
 	const divFooter = nuCreateElementWithId('div', 'nuBrowseFooter', 'nuRECORD');
+
 	$(divFooter)
 		.addClass('nuBrowseFooter')
-		.html(last + pg + cu + pagesOf + next)
+		.html(last + pageLabel + currentPageInput + totalPagesLabel + next)
 		.css({
-			'text-align': 'center',
-			width: l - 7,
-			top: footerTop,
-			left: 7,
-			height: 25,
-			position: 'absolute',
-			padding: '5px 0px'
+			'text-align': 'center'
+			, width: leftOffset - 7
+			, top: footerTopOffset
+			, left: 7
+			, height: 25
+			, position: 'absolute'
+			, padding: '5px 0px'
 		});
 
 	nuHighlightSearch();
 	nuBrowseBorders();
 
-	const height = footerTop + 130;
-	const pDoc = window.parent.document;
-	$('#nuDragDialog', pDoc).css({
-		height: height + 30,
-		visibility: 'visible',
-		overflow: 'hidden'
+	const totalHeight = footerTopOffset + 130;
+	const parentDocument = window.parent.document;
+	$('#nuDragDialog', parentDocument).css({
+		height: totalHeight + 30
+		, visibility: 'visible'
+		, overflow: 'hidden'
 	});
-	$('#nuWindow', pDoc).css({
-		height: height - 14
+
+	$('#nuWindow', parentDocument).css({
+		height: totalHeight - 14
 	});
-	$('body').css('height', height - 30);
+
+	$('body').css('height', totalHeight - 30);
 	$record.css({
-		height: 0,
-		width: 0
+		height: 0
+		, width: 0
 	});
 
 }
