@@ -76,17 +76,27 @@ function nuDevMode(m) {
 
 function nuAddAdminButton(id, obj) {
 
-	title = nuDefine(obj.title);
+	const title = nuDefine(obj.title);
+	const inputId = `nu${id}Button`;
 
 	const button = `
-	<input id="nu${id}Button" type="button" title="${nuTranslate(obj.title)}" class="nuActionButton nuAdminButton" value="${nuTranslate(obj.value)}" onclick="${obj.func}">
+	<input id="${inputId}" type="button" title="${nuTranslate(obj.title)}" class="nuActionButton nuAdminButton" value="${nuTranslate(obj.value)}" onclick="${obj.func}">
   `;
-
+ 
 	$('#nuActionHolder').prepend(button);
+
+	const events = nuSERVERRESPONSE.events;
+	if (events) {
+		const eventName = id.slice(-2);
+		if (events[eventName]) {
+			$('#' + inputId).addClass('nuAdminButtonActive')
+		}
+	}
 
 	return 1;
 
 }
+
 function nuAddAdminButtons() {
 
 	const adminButtons = {
@@ -149,11 +159,11 @@ function nuAddAdminButtons() {
 	if (!formCode.startsWith('nu') || devMode) {
 
 		if (nuAdminButtons["nuProperties"]) {
-			buttonCount += nuAddAdminButton('nuProperties', adminButtons['nuProperties']);
+			buttonCount += nuAddAdminButton('Properties', adminButtons['nuProperties']);
 		}
 
 		if (nuAdminButtons["nuObjects"]) {
-			buttonCount += nuAddAdminButton('nuObjects', adminButtons['nuObjects']);
+			buttonCount += nuAddAdminButton('Objects', adminButtons['nuObjects']);
 		}
 
 		if (nuAdminButtons["nuPHP"]) {
