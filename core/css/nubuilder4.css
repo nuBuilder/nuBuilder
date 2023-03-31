@@ -798,7 +798,7 @@
 	 text-shadow:none;
 	 border-radius:3px 
 }
- .nuAdminButtonActive {
+ .nuAdminButtonUsed {
 	 background-color: #ebe9e9;
 	 border-color: #b3b3b3;
 	 color: var(--nu-label)

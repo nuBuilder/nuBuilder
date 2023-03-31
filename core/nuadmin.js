@@ -89,7 +89,7 @@ function nuAddAdminButton(id, obj) {
 	if (events) {
 		const eventName = id.slice(-2);
 		if (events[eventName]) {
-			$('#' + inputId).addClass('nuAdminButtonActive')
+			$('#' + inputId).addClass('nuAdminButtonUsed')
 		}
 	}
 
