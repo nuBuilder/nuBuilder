@@ -144,7 +144,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 		$tabs = nuBuildTabList($F);
 	}
 
-	$f				= nuGetEditForm($F, $R);
+	$f = nuGetEditForm($F, $R);
 
 	if ($f === null) {
 		return;
@@ -455,14 +455,14 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 
 	}
 
-	$f->tabs				= nuRefineTabList($tabs);
-	$f->noclone				= $cloneable;
-	$f->browse_columns		= nuBrowseColumns($f);
-	$B						= nuBrowseRows($f);
+	$f->tabs					= nuRefineTabList($tabs);
+	$f->noclone					= $cloneable;
+	$f->browse_columns			= nuBrowseColumns($f);
+	$B							= nuBrowseRows($f);
 
-	$f->browse_rows			= nuObjKey($B,0,0);
-	$f->browse_filtered_rows		= nuObjKey($B,1,0);
-	$f->browse_sql			= nuObjKey($B,2,0);
+	$f->browse_rows				= nuObjKey($B,0,0);
+	$f->browse_filtered_rows	= nuObjKey($B,1,0);
+	$f->browse_sql				= nuObjKey($B,2,0);
 
 	if ($f->browse_filtered_rows > 0) {
 		nuOnProcess($F, $f, 'BB', 'nuOnProcessBrowseRows');
@@ -630,6 +630,21 @@ function nuDefaultObject($r, $t){
 
 }
 
+function nuFormEvents($formId){
+
+	$o		= [];
+	$query	= "SELECT RIGHT(zzzzsys_php_id, 2) as event FROM zzzzsys_php WHERE zzzzsys_php_id LIKE ?";
+	$stmt	= nuRunQuery($query, [$formId.'_'.'%']);
+
+	while($row = db_fetch_object($stmt)){
+		$o[$row->event] = true;
+	}
+
+	return $o;
+
+}
+
+
 function nuGetEditForm($F, $R){
 
 	$f = new stdClass();
@@ -658,6 +673,7 @@ function nuGetEditForm($F, $R){
 	$f->javascript					= $r->sfo_javascript;
 	$f->javascript_edit				= $r->sfo_edit_javascript ?? '';
 	$f->javascript_browse			= $r->sfo_browse_javascript ?? '';
+	$f->events						= nuFormEvents($F);
 
 	if(intval($r->sfo_browse_row_height) == 0){
 		$f->row_height	= 18;
