@@ -2226,18 +2226,18 @@ function nuSelectMultiWithoutCtrl(i, active) {
 
 }
 
-function nuSelectRemoveEmpty(i = 'select', setIndex) {
+function nuSelectRemoveEmpty(elementId, setIndex) { 
 
-	const $select = $(`#${i}`);
+	const selector = elementId === undefined ? 'select' : `#${elementId}`;
 
-	$select.find('option').filter(function() {
-		const $option = $(this);
-		return $option.val().trim() === "" || $option.text().trim() === "";
-	}).remove();
+	 
+	$(`${selector}    option`).each(function() {  
+		if ($(this).val().trim() === "" && $(this).text().trim() === "") {   
+			$(this).remove();  
+		} 
+	});
 
-	if (setIndex) {
-		$select.prop('selectedIndex', setIndex);
-	}
+	if (setIndex !== undefined) $(`#${elementId}`).prop('selectedIndex', setIndex);
 
 }
 
