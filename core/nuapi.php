@@ -117,6 +117,12 @@
 	}
 
 	if($callType != 'logout')	{
+
+		if (!isset($f->forms[0])) { // Form deleted etc.
+			json_encode($f);
+			return;
+		}
+
 		$f->forms[0]->after_event				= nuObjKey($_POST, 'nuAfterEvent');
 		$f->forms[0]->user_id					= nuObjKey($user, 'USER_ID', null);
 		$f->forms[0]->login_name				= nuObjKey($user, 'LOGIN_NAME', null);
