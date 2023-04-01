@@ -80,7 +80,7 @@ function nuAddAdminButton(id, obj) {
 	const inputId = `nu${id}Button`;
 
 	const button = `
-	<input id="${inputId}" type="button" title="${nuTranslate(obj.title)}" class="nuActionButton nuAdminButton" value="${nuTranslate(obj.value)}" onclick="${obj.func}">
+	<input id="${inputId}" type="button" title="${nuTranslate(title)}" class="nuActionButton nuAdminButton" value="${nuTranslate(obj.value)}" onclick="${obj.func}">
   `;
  
 	$('#nuActionHolder').prepend(button);
