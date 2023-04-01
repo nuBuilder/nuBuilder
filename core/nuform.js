@@ -5075,7 +5075,15 @@ function nuHasNotBeenEdited() {
 function nuDeleteAction() {
 
 	const formCode = nuCurrentProperties().form_code;
-	const confirmMessage = formCode === 'nuform' ?
+	const isNuRecord = nuRecordId().startsWith('nu');
+	const isNuForm =  formCode === 'nuform';
+
+	if (isNuForm && isNuRecord) {
+		nuMessage(nuTranslate("nuBuilder's core forms cannot be deleted."));
+		return ;
+	}	
+
+	const confirmMessage = isNuForm ?
 		nuTranslate("Are you sure you want to delete this form and all its associated objects, events and codes?") :
 		nuTranslate("Delete This Record?");
 
