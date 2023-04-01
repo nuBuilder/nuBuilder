@@ -303,7 +303,7 @@ function nuAddHome() {
 
 		let breadCrumb = $('#nuBreadcrumb0').length > 0 ? $('#nuBreadcrumb0') : $('#nuHomeGap');
 		breadCrumb
-			.html('<i class="fa fa-home" style="font-size:17px;padding:0px 5px 0px 0px"></i>')
+			.html('<i class="fa fa-home fa-fw" style="font-size:17px;"></i>')
 			.attr('title', nuTranslate('Home'))
 			.attr('onclick', '')
 			.attr('onclick', 'nuForm("' + window.nuLoginH + '", -1, "", "", 1);')
@@ -401,13 +401,6 @@ function nuFormModification() {
 				'overflow-y': 'auto'
 			});
 
-			$('#nuBreadcrumbHolder').css({
-				'width': '100vw',
-				'display': 'flex',
-				'flex': '1',
-				'flex-flow': 'row wrap',
-				'align-items' : 'baseline'
-			});
 			$('#nuActionHolder').css({
 				'width': '100vw'
 			});
@@ -419,7 +412,7 @@ function nuFormModification() {
 			document.body.style.overflow = 'hidden';
 		}
 	} else {
-		document.body.style.overflow = 'visible';
+		document.body.style.overflow = 'visible';			
 	}
 
 }
@@ -3598,7 +3591,7 @@ function nuOptions(p, f, t, access) {
 				$('#' + id)
 					.attr('title', nuTranslate('Options'))
 					.attr('onclick', 'nuGetOptionsList("' + f + '", this, "' + p + '", "' + access + '", "' + t + '")')
-					.addClass('nuIcon nuOptionsSubform');
+					.addClass('nuIcon nuOptionsSubform fa-fw');
 
 			}
 
@@ -3609,7 +3602,7 @@ function nuOptions(p, f, t, access) {
 			$('#' + id)
 				.attr('title', 'Options')
 				.attr('onclick', 'nuGetOptionsList("' + f + '", this, "' + p + '", "' + access + '", "' + t + '")')
-				.addClass('nuIcon nuOptions');
+				.addClass('nuIcon nuOptions fa-fw');
 
 		}
 
@@ -4436,8 +4429,9 @@ function nuBrowseTable() {
 
 	}
 
+
 	const last = `<span id="nuLast" onclick="nuGetPage(${currentForm.page_number})" class="nuBrowsePage">&#9668;</span>`;
-	const next = `<span id="nuNext" onclick="nuGetPage(${currentForm.page_number + 2})" class="nuBrowsePage">►</span>`;
+	const next = `<span id="nuNext" onclick="nuGetPage(${currentForm.page_number + 2})" class="nuBrowsePage">►</span>;`;
 	const pageLabel = '&nbsp;Page&nbsp;';
 	const currentPageInput = `<input id="browsePage" style="text-align:center;margin:3px 0px 0px 0px;width:40px" onchange="nuGetPage(this.value)" value="${currentForm.page_number + 1}" class="browsePage"/>`;	
 	const totalPagesLabel = ' / ' + (currentForm.pages === 0 ? 1 : currentForm.pages) + ' ';

@@ -147,11 +147,11 @@ function nuAddAdminButtons() {
 	const isLaunch = form_type.includes("launch");
 
 	if ((nuAdminButtons["nuDebug"] || devMode) && nuMainForm()) {
-		nuAddIconToBreadcrumbHolder('nuDebugButton', 'nuDebug Results', 'nuOpenNuDebug(2)', 'fa fa-bug', '0px');
+		nuAddIconToBreadcrumbHolder('nuDebugButton', 'nuDebug Results', 'nuOpenNuDebug(2)', 'fa fa-bug', '3px');
 	}
 
 	if (nuAdminButtons["nuRefresh"]) {
-		nuAddIconToBreadcrumbHolder('nuRefreshButton', 'Refresh', 'nuGetBreadcrumb()', 'fas fa-sync-alt', '7px');
+		nuAddIconToBreadcrumbHolder('nuRefreshButton', 'Refresh', 'nuGetBreadcrumb()', 'fas fa-sync-alt', '3px');
 	}
 
 	let buttonCount = 0;
@@ -294,8 +294,8 @@ function nuOpenNuDebug(w) {
 function nuAddIconToBreadcrumbHolder(i, title, oClick, iClass, paddingLeft) {
 
 	const h = `
-	<div id="${i}" title="${title}" style="font-size: 17px; display: inline-block; cursor: pointer; padding-right: 12px; padding-left: ${paddingLeft}" onclick="${oClick}">
-		<i class="${iClass}"></i>
+	<div id="${i}" title="${title}" style="font-size: 17px; display: inline-block; cursor: pointer; padding-left: ${paddingLeft}" onclick="${oClick}">
+		<i class="${iClass} fa-fw"></i>
 	</div>
   `;
 	const fragment = nuCreateAppendHTML(h);
