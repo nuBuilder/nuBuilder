@@ -302,9 +302,9 @@ function nuGetPHP(formId, recordId) {
 
 function nuRunPHP(code, iFrame, runBeforeSave) {
 
-	if (!runBeforeSave) {
-		if (nuBeforeSave && nuBeforeSave() === false) {
-			return;
+	if (runBeforeSave == undefined) {
+		if (window.nuBeforeSave) {
+			if (nuBeforeSave() === false) { return; }
 		}
 	}
 
