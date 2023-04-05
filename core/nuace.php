@@ -18,8 +18,6 @@
 
 window.c = opener.window.nuAce[0];
 window.o = opener.window.nuAce[1];
-window.t = opener.window.nuFORM.tableSchema;
-window.f = opener.window.nuFORM.formSchema;
 window.l = $('#' + o, window.opener.document).attr('data-nu-label');
 document.title = l + " - Ace Editor";
 
@@ -147,26 +145,6 @@ function nuWarning(){
 	}
 
 }
-
-
-function nuUpdateDrag(t){
-	document.getElementById('nuDrag').value = document.getElementById('nuField')[t.value].innerHTML;
-}
-
-function nuChooseFields(){
-
-	var n = document.getElementById('nuTable').value;
-	var t = window.s[n];
-	var f = document.getElementById('nuField').value;
-
-	document.getElementById('nuDrag').value = t.fields[f];
-
-}
-
-function nuChooseSnips(t){
-	document.getElementById('nuDrag').value = t.value;
-}
-
 
 window.nuWarn = 1;
 window.onbeforeunload = nuWarning;
