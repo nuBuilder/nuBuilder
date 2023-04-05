@@ -4160,26 +4160,31 @@ function nuBrowseColumnSize(e) {
 
 }
 
-function nuResizeBrowseColumns(force) {
+function nuResizeBrowseColumns(force){
 
-	const browseColumns = nuSERVERRESPONSE.browse_columns;
-	const columnWidths = nuArrayColumn(browseColumns, 'width').map(Number);
-	const padding = nuTotalWidth('nucell_0_0') - document.getElementById('nucell_0_0').offsetWidth;
-	const isMainForm = nuMainForm();
 	const currentForm = nuFORM.getCurrent();
+	const columnWidths	= nuArrayColumn(nuSERVERRESPONSE.browse_columns,'width').map(Number);
+	const padding	= nuTotalWidth('nucell_0_0') - $('#nucell_0_0').width();
 
-	if ((currentForm.refreshed !== 0 && force !== true) && isMainForm) {
+	if((currentForm.refreshed != 0 && force !== true)  && nuMainForm()){
 		return;
 	}
 
-	if (isMainForm) {
-		const totalWidth = columnWidths.reduce((total, width) => total + width, 0);
-		const newWidths = columnWidths.map(width => parseInt((window.innerWidth - 30) * width / totalWidth, 10) - padding);
+	if(nuMainForm()){
 
-		columnWidths.forEach((_, i) => {
-			nuSetBrowseColumnWidth(i, newWidths[i]);
-		});
-	} else {
+		let totalWidth	= 0;
+		for(let i = 0 ; i < columnWidths.length ; i++){
+			totalWidth = totalWidth + columnWidths[i];
+		}
+
+		for(let i = 0 ; i < columnWidths.length ; i++){
+			columnWidths[i] = parseInt((window.innerWidth - 30) * columnWidths[i] / totalWidth) - padding;
+		}
+
+		nuSetBrowseColumns(columnWidths);
+
+	}else{
+
 		const browseFooterWidth = nuTotalWidth('nuBrowseFooter') + 22;
 		const bodyWidth = `${browseFooterWidth}px`;
 
@@ -4187,13 +4192,8 @@ function nuResizeBrowseColumns(force) {
 		$('#nuWindow', window.parent.document).css('width', browseFooterWidth);
 
 		document.body.style.width = bodyWidth;
-	}
 
-	if (currentForm.refreshed !== 0 && force !== true) {
-		return;
 	}
-
-	nuSetBrowseColumns(columnWidths);
 
 }
 
