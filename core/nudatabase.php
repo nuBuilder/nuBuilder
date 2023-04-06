@@ -8,6 +8,7 @@ $sessionData = $_SESSION['nubuilder_session_data'] ?? null;
 
 $DBHost			= $sessionData['DB_HOST'] ?? $nuConfigDBHost;
 $DBName			= $sessionData['DB_NAME'] ?? $nuConfigDBName;
+$DBPort			= $sessionData['DB_PORT'] ?? $nuConfigDBPort;
 $DBUser			= $sessionData['DB_USER'] ?? $nuConfigDBUser;
 $DBPassword		= $sessionData['DB_PASSWORD'] ?? $nuConfigDBPassword;
 $DBCharset		= $sessionData['DB_CHARSET'] ?? 'utf8';
@@ -21,7 +22,7 @@ if (is_array($DBOptions)) {
 }
 
 try {
-	$nuDB 				= new PDO("mysql:host=$DBHost;dbname=$DBName;charset=$DBCharset", $DBUser, $DBPassword, $DBOptions);
+	$nuDB 				= new PDO("mysql:host=$DBHost;dbname=$DBName;charset=$DBCharset;port=$DBPort", $DBUser, $DBPassword, $DBOptions);
 	$nuDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
 	echo 'Connection to the nuBuilder database failed: ' . $e->getMessage();

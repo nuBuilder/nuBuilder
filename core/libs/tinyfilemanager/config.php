@@ -13,7 +13,7 @@ if (! isset($nuTfmNotAuth)) {
 	$DBCharset	= 'utf8';
 
 	try {
-		$pdo 				= new PDO("mysql:host=$nuConfigDBHost;dbname=$nuConfigDBName;charset=$DBCharset", $nuConfigDBUser, $nuConfigDBPassword);
+		$pdo 				= new PDO("mysql:host=$nuConfigDBHost;dbname=$nuConfigDBName;charset=$DBCharset;port=$nuConfigDBPort", $nuConfigDBUser, $nuConfigDBPassword);
 		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	} catch (PDOException $e) {
 		echo 'Connection failed: ' . $e->getMessage();
