@@ -133,7 +133,7 @@ function nuDisplayErrorRequiredFields($formIndex, $row, $label, $formDescription
 		// nuDisplayError(nuTranslate($errorMf, $label)); 
 	}
 	else {
-		nuDisplayError("$label " . nuTranslate('on row') . " " . $row + 1 . " " . nuTranslate("$errorSf") . " " .$formDescription);
+		nuDisplayError("$label " . nuTranslate('on row') . " " . ($row + 1) . " " . nuTranslate("$errorSf") . " " .$formDescription);
 	}
 
 }
