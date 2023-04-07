@@ -1266,7 +1266,7 @@ function nuBuildViewSchema(){
 		$a[]		= $r->TABLE_NAME;
 	}
 
-	return $a;
+	return nuGlobalAccess() ? $a : [];
 
 }
 
