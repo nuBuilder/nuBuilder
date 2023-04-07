@@ -4208,11 +4208,11 @@ function nuResizeBrowseColumns(force){
 
 function nuSetBrowseColumns(columnWidths) {
 
-	const padding = nuTotalWidth('nucell_0_0') - $('#nucell_0_0').width(); //-- padding
+	const padding = nuTotalWidth('nucell_0_0') - $('#nucell_0_0').width();
 	let left = 7;
 
 	columnWidths.forEach((width, i) => {
-		const columnElements = document.querySelectorAll(`[data-nu-column="${i}"], #nuBrowseTitle${i}`);
+		const columnElements = document.querySelectorAll(`[data-nu-column="${i}"], #nuBrowseTitle${i},#nuBrowseTitle${i}_select`);
 
 		columnElements.forEach(element => {
 			element.style.left = `${left}px`;
