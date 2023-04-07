@@ -1855,7 +1855,7 @@ function nuProcessImportedUsers($pw = true) {
 
 function nuImportUsersFromCSV($csvfile, $fieldseparator, $lineseparator) {
 
-	global $DBCharset;
+	global $DBCharset,$DBPort;
 
 
 	if(!file_exists($csvfile)) {
@@ -1866,7 +1866,7 @@ function nuImportUsersFromCSV($csvfile, $fieldseparator, $lineseparator) {
 	 $db = nuRunQuery('');
 	try {
 
-		$cn = new PDO("mysql:host=$db[0];dbname=$db[1];charset=$DBCharset", $db[2], $db[3], [
+		$cn = new PDO("mysql:host=$db[0];dbname=$db[1];charset=$DBCharset;port=$DBPort", $db[2], $db[3], [
 			PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $DBCharset", PDO::MYSQL_ATTR_LOCAL_INFILE => true
 		]);
 

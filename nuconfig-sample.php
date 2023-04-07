@@ -9,6 +9,7 @@
 
 	$nuConfigDBHost						= "127.0.0.1";				//-- Database Host / IP. You may try localhost if 127.0.0.1 does not work.
 	$nuConfigDBName						= "nubuilder4";				//-- Database Name. You can change the name, if desired. The database must exist or must be created on your server.
+	$nuConfigDBPort						= 3306;						//-- Database port.
 
 	$nuConfigDBUser						= "root";					//-- Database User.  It is strongly recommended to use a different user than root The user must exist or must be created.
 	$nuConfigDBPassword					= "";						//-- Database Password. We strongly recommend you to use any strong password.
