@@ -22,7 +22,7 @@ if (is_array($DBOptions)) {
 }
 
 try {
-	$nuDB 				= new PDO("mysql:host=$DBHost;dbname=$DBName;charset=$DBCharset;port=$DBPort", $DBUser, $DBPassword, $DBOptions);
+	$nuDB = new PDO("mysql:host=$DBHost;dbname=$DBName;charset=$DBCharset;port=$DBPort", $DBUser, $DBPassword, $DBOptions);
 	$nuDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
 	echo 'Connection to the nuBuilder database failed: ' . $e->getMessage();
@@ -141,7 +141,7 @@ function nuRunQuery($sql, $params = [], $isInsert = false){
 		$stmt->execute($params);
 	}catch(PDOException $ex){
 
-		$user 		= 'globeadmin';
+		$user 		= nuDebugUserId();
 		$message	= $ex->getMessage();
 		$array 		= debug_backtrace();
 		$trace 		= '';
@@ -463,17 +463,23 @@ function nuCanCreateView() {
 
 }
 
-function nuDebugResult($nuDebugMsg){
-
-	if(is_object($nuDebugMsg)){
-		$nuDebugMsg = print_r($nuDebugMsg,1);
-	}
+function nuDebugUserId() {
 
 	$nuDebugUserId = null;
 	if (function_exists('nuHash')) {
 		$hash = nuHash();
 		$nuDebugUserId = isset($hash) && isset($hash['USER_ID']) ? $hash['USER_ID'] : null;
 		$nuDebugUserId = $nuDebugUserId == null && isset($_POST['nuSTATE']['username']) ? $_POST['nuSTATE']['username'] : $nuDebugUserId;
+	}
+
+	return $nuDebugUserId;
+
+}
+
+function nuDebugResult($nuDebugMsg){
+
+	if(is_object($nuDebugMsg)){
+		$nuDebugMsg = print_r($nuDebugMsg,1);
 	}
 
 	$nuDebugId = nuID();
@@ -484,7 +490,7 @@ function nuDebugResult($nuDebugMsg){
 		"id"		=> $nuDebugId,
 		"message"	=> $nuDebugMsg,
 		"added"		=> time(),
-		"user_id"	=> $nuDebugUserId
+		"user_id"	=> nuDebugUserId()
 	];
 
 	nuRunQuery($insert, $params);
