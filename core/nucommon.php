@@ -1273,17 +1273,14 @@ function nuBuildViewSchema(){
 function nuUpdateFormSchema($force_update = false){
 
 	$json		= nuGetJSONData('clientFormSchema');
-
 	if($json == '' || $force_update){
 
 		$json	= nuBuildFormSchema();
 		nuSetJSONData('clientFormSchema', $json);
 
-		return $json;
-
-	}else{
-		return nuGlobalAccess() ? $json : [];
 	}
+
+	return nuGlobalAccess() ? $json : [];
 
 }
 
