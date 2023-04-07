@@ -1855,7 +1855,7 @@ function nuProcessImportedUsers($pw = true) {
 
 function nuImportUsersFromCSV($csvfile, $fieldseparator, $lineseparator) {
 
-	global $DBCharset;
+	global $DBCharset,$DBPort;
 
 
 	if(!file_exists($csvfile)) {
