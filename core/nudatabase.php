@@ -8,7 +8,7 @@ $sessionData = $_SESSION['nubuilder_session_data'] ?? null;
 
 $DBHost			= $sessionData['DB_HOST'] ?? $nuConfigDBHost;
 $DBName			= $sessionData['DB_NAME'] ?? $nuConfigDBName;
-$DBPort			= $sessionData['DB_PORT'] ?? $nuConfigDBPort;
+$DBPort			= $sessionData['DB_PORT'] ?? ($nuConfigDBPort ?? '3306');
 $DBUser			= $sessionData['DB_USER'] ?? $nuConfigDBUser;
 $DBPassword		= $sessionData['DB_PASSWORD'] ?? $nuConfigDBPassword;
 $DBCharset		= $sessionData['DB_CHARSET'] ?? 'utf8';

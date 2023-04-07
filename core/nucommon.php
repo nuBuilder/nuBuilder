@@ -1855,15 +1855,14 @@ function nuProcessImportedUsers($pw = true) {
 
 function nuImportUsersFromCSV($csvfile, $fieldseparator, $lineseparator) {
 
-	global $DBCharset,$DBPort;
-
+	global $DBCharset, $DBPort;
 
 	if(!file_exists($csvfile)) {
 		 echo nuTranslate("File not found") . "($csvfile). ". nuTranslate("Make sure the file exists").".";
 		 return;
 	}
 
-	 $db = nuRunQuery('');
+	$db = nuRunQuery('');
 	try {
 
 		$cn = new PDO("mysql:host=$db[0];dbname=$db[1];charset=$DBCharset;port=$DBPort", $db[2], $db[3], [
