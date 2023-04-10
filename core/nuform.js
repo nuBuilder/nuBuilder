@@ -2869,29 +2869,34 @@ function nuSubformUndoPaste(t) {
 
 function nuSubformPaste(e, jsonObj) {
 
-	var id = e.target.id;
+	const id = e.target.id;
+	$id = $('#' + id);
 
-	var sfId = $('#' + id).attr('data-nu-form');
-	var field = $('#' + id).attr('data-nu-field');
-	var dRow = parseInt($('#' + String(id)).attr('data-nu-prefix').slice(-3), 10);
+	const sfId = $id.attr('data-nu-form');
+	const field = $id.attr('data-nu-field');
+	const dRow = parseInt($('#' + String(id)).attr('data-nu-prefix').slice(-3), 10);
+	const obj = nuSubformObject(sfId);
+	const dColStart = obj.fields.indexOf(field);
+	const sNumRows = jsonObj.length;
+	const sNumCols = Object.keys(jsonObj[0]).length;
 
-	var obj = nuSubformObject(sfId);
-	var dColStart = obj.fields.indexOf(field);
-
-	var sNumRows = jsonObj.length;
-	var sNumCols = Object.keys(jsonObj[0]).length;
-
-	var sc = 0;
+	let sc = 0;
+	
+	let modifiedObjects = [];
 	for (let c = dColStart; c < (dColStart + sNumCols); c++) {
 		var sr = 0;
 		for (let r = dRow; r < parseInt(dRow + sNumRows, 10); r++) {
 			var dest = $('#' + sfId + nuPad3(r) + obj.fields[c]);
 			dest.attr("data-prevalue", dest.val());
 			dest.val(jsonObj[sr][sc]).change();
+			modifiedObjects.push(dest);
 			sr++;
 		}
 		sc++;
 	}
+	
+	return modifiedObjects;
+
 }
 
 function nuGetClipboardRows(clipText) {
@@ -2920,7 +2925,7 @@ function nuGetClipboardJson(clipRows) {
 
 }
 
-function nuSubformEnableMultiPaste(subformId, selector, undoButton) {
+function nuSubformEnableMultiPaste(subformId, selector, undoButton, callback) {
 
 	$(selector).not(".nuReadonly").on('paste', function (e) {
 		var clipText = nuGetClipboardText(e);
@@ -2935,10 +2940,14 @@ function nuSubformEnableMultiPaste(subformId, selector, undoButton) {
 
 			if (confirm(nuTranslate("Paste Data? Existing data might get overwritten"))) {
 				$('[data-nu-form="' + subformId + '"]').removeAttr("data-prevalue");
-				nuSubformPaste(e, jsonObj);
+				const modifiedObjects = nuSubformPaste(e, jsonObj);
 
 				if (undoButton) {
 					nuShow(undoButton);
+				}
+
+				if (callback !== undefined) {
+					callback(modifiedObjects);
 				}
 
 				window.nuNEW = 0;
@@ -4199,11 +4208,11 @@ function nuResizeBrowseColumns(force){
 
 function nuSetBrowseColumns(columnWidths) {
 
-	const padding = nuTotalWidth('nucell_0_0') - $('#nucell_0_0').width(); //-- padding
+	const padding = nuTotalWidth('nucell_0_0') - $('#nucell_0_0').width();
 	let left = 7;
 
 	columnWidths.forEach((width, i) => {
-		const columnElements = document.querySelectorAll(`[data-nu-column="${i}"], #nuBrowseTitle${i}`);
+		const columnElements = document.querySelectorAll(`[data-nu-column="${i}"], #nuBrowseTitle${i},#nuBrowseTitle${i}_select`);
 
 		columnElements.forEach(element => {
 			element.style.left = `${left}px`;

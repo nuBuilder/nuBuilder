@@ -423,9 +423,9 @@ class nuSelectObject {
 		var j = [];
 		var J = [];
 
-		for (const value of r) {
+		for (var k in r) {
 
-			var R = value;
+			var R = r[k];
 			var T = R.fromtable;
 			var t = R.totable;
 			var A = R.fromalias;

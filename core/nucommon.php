@@ -1266,24 +1266,21 @@ function nuBuildViewSchema(){
 		$a[]		= $r->TABLE_NAME;
 	}
 
-	return $a;
+	return nuGlobalAccess() ? $a : [];
 
 }
 
 function nuUpdateFormSchema($force_update = false){
 
 	$json		= nuGetJSONData('clientFormSchema');
-
 	if($json == '' || $force_update){
 
 		$json	= nuBuildFormSchema();
 		nuSetJSONData('clientFormSchema', $json);
 
-		return $json;
-
-	}else{
-		return nuGlobalAccess() ? $json : [];
 	}
+
+	return nuGlobalAccess() ? $json : [];
 
 }
 
