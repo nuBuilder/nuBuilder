@@ -266,7 +266,7 @@ function nuAlterSystemTables(){
 	$setupColumns = db_field_names('zzzzsys_setup');
 	if(array_search('set_languages_included', $setupColumns) == false){
 		nuRunQueryNoDebug("ALTER TABLE `zzzzsys_setup` ADD `set_languages_included` VARCHAR(1000) NULL DEFAULT NULL AFTER `set_language`;");
-		nuRunQuery('UPDATE `zzzzsys_setup` SET set_languages_included = ?', ['["Afrikaans","Arabic","Armenian","Catalan","Chinese","Czech","Danish","Dutch", "French","German","Greek","Hindi","Italian","Malay","Polish","Portuguese","Romanian","Russian","Slovak","Spanish","Tamil","Vietnamese"]']);
+		nuRunQuery('UPDATE `zzzzsys_setup` SET set_languages_included = ?', ['["Afrikaans","Arabic","Armenian","Catalan","Chinese","Czech","Danish","Dutch", "French","German","Greek","Hindi","Italian","Japanese","Malay","Polish","Portuguese","Romanian","Russian","Slovak","Spanish","Tamil","Vietnamese"]']);
 	}
 
 	if(array_search('set_style', $setupColumns) == false){
