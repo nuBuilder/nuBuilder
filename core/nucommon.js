@@ -729,12 +729,15 @@ function nuCreateDialog(t) {
 			})
 			.html('<div id="dialogTitle" class="nuDialogTitle"><div id="dialogTitleWords">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + translation + '</div><img id="dialogClose" src="' + subDir + 'graphics/close.png" style="position:absolute; top:2px; left:0px"></div>')
 
-		$('body')
-			.off('mousemove.popup').on('mousemove.popup', function (event) { nuDialog.move(event); })
-			.off('click.popup').on('click.popup', function (event) { nuDialog.click(event); })
-			.off('mousedown.popup').on('mousedown.popup', function (event) { nuDialog.down(event); })
-			.off('mouseup.popup').on('mouseup.popup', function (event) { window.nuCurrentID = ''; $('#nuPopupModal').remove(); })
-			.off('dblclick.popup').on('dblclick.popup', function (event) { nuResizeWindow(event); })
+		const $body = $('body');
+		if (!$body.attr('data-nu-popup-events')) {
+			$body.attr('data-nu-popup-events', '')
+				.on('mousemove.popup', function (event) { nuDialog.move(event); })
+				.on('click.popup', function (event) { nuDialog.click(event); })
+				.on('mousedown.popup', function (event) { nuDialog.down(event); })
+				.on('mouseup.popup', function (event) { window.nuCurrentID = ''; $('#nuPopupModal').remove(); })
+				.on('dblclick.popup', function (event) { nuResizeWindow(event); })
+		}
 
 		this.startX = l;
 		this.startY = t;
