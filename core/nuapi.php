@@ -79,7 +79,8 @@
 		if($callType == 'logout') nuLogout();
 		elseif($callType == 'login') nuRunLoginProcedure('nuStartup');
 		elseif($callType == 'ssologin') nuSsoLoginCheckParams();
-		elseif($callType == 'getform' || $callType == 'getphp' || $callType == 'login' || $callType == 'getreport') {
+
+		if($callType == 'getform' || $callType == 'getphp' || $callType == 'login' || $callType == 'getreport') {
 		   nuBeforeEdit($formId, $recordId);
 		   $f->forms[0] = nuGetFormObject($formId, $recordId, 0);
 		}
