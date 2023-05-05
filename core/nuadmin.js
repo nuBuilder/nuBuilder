@@ -30,6 +30,10 @@ function nuFormInfoCurrentProperties() {
 	nuPrettyPrintMessage(undefined, nuCurrentProperties());
 }
 
+function nuShowVersionInfo() {
+	nuRunPHPHidden('NUVERSIONINFO', 0);
+}
+
 function nuShowFormInfo() {
 
 	const currProps = nuCurrentProperties();

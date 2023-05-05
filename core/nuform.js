@@ -3678,6 +3678,7 @@ function nuGetOptionsList(f, t, p, a, type) {
 		Backup : ['Backup', 'nuRunBackup();', 'far fa-hdd', 'B'],
 		Setup : ['Setup', 'nuForm("nusetup","1","", "", 2)', 'fa-cogs', 'U'],
 		FormInfo : ['Form Info', 'nuShowFormInfo();', 'fa-info', 'M'],
+		VersionInfo : ['Version Info', 'nuShowVersionInfo();', 'fa-info', 'V'],
 		Logout: ['Log out', 'nuAskLogout();', 'fas fa-sign-out-alt', 'L']
 	};
 
@@ -3740,6 +3741,7 @@ function nuGetOptionsList(f, t, p, a, type) {
 		list.push(items.Backup);
 		list.push(items.Setup);
 		list.push(items.FormInfo);
+		list.push(items.VersionInfo);
 	}
 
 	if (!typeSf && nuIsMobile()) {

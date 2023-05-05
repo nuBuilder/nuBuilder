@@ -910,6 +910,8 @@ function nuBindCtrlEvents() {
 					nuPopup("nuobject", "", formId);
 				} else if (e.code == 'KeyM' && g) {					//-- m		Form Info
 					nuShowFormInfo();
+				} else if (e.code == 'KeyV' && g) {					//-- v		Version Info
+					nuShowVersionInfo();					
 				} else if (e.code == 'KeyE' && g) {					//-- e		Database
 					nuVendorLogin('PMA');
 				} else if (e.code == 'KeyI' && g) {					//-- i		Sessions
