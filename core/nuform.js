@@ -4008,6 +4008,12 @@ function nuHideTabByTitle(s) {
 	nuShowTabByTitle(s, false);
 }
 
+function nuRemoveTabByTitle(s) {
+	let tabs = JSON.parse(JSON.stringify(nuSERVERRESPONSE)).tabs;
+	let i = tabs.findIndex(data => data.title.replace(/\|/g, "") === s);
+	if (i > -1) $('#nuTab' + i).remove();
+}
+
 function nuShowTabByTitle(s, visible) {
 
 	let tabs = JSON.parse(JSON.stringify(nuSERVERRESPONSE)).tabs;
