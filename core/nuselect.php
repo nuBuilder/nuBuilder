@@ -2,7 +2,7 @@
 
 require_once('nucommon.php');
 
-nuJSInclude('libs/jquery/jquery-3.6.4.min.js');
+nuJSInclude('libs/jquery/jquery-3.7.0.min.js');
 nuJSInclude('nuselectclass.js');
 nuJSInclude('nuformclass.js');
 nuJSInclude('nuform.js');
