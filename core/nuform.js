@@ -4022,17 +4022,23 @@ function nuRemoveTabs(t) {
 
 }
 
-function nuShowTabById(id, visible) {
+function nuRemoveTabById(id) {
 
 	let obj = $('div#' + id);
 	if (obj.length == 1) {
-		obj.nuShow(visible);
+		obj.remove();
 	} else {
-		$('div[data-nu-tab-id=' + id + ']').filter('.nuTab').nuShow(visible);
+		$('div[data-nu-tab-id=' + id + ']').filter('.nuTab').remove();
 	}
 
 }
 
+function nuRemoveTabByTitle(title) {
+	const index = getTabIndexByTitle(title);
+	if (index > -1) {
+		$('#nuTab' + index).remove();
+	}
+}
 function nuHideTabById(id) {
 	nuShowTabById(id, false);
 }
