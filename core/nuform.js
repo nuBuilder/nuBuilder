@@ -3988,12 +3988,30 @@ function nuSelectTab(tab, byUser) {
 
 }
 
-function nuSelectTabByTitle(s) {
+function getTabIndexByTitle(title) {
+	const tabs = nuSERVERRESPONSE.tabs;
+	return tabs.findIndex(data => data.title.replace(/\|/g, "") === title);
+}
 
-	var tabs = JSON.parse(JSON.stringify(nuSERVERRESPONSE)).tabs;
-	var l = tabs.findIndex(data => data.title.replace(/\|/g, "") === s);
-	if (l > -1) nuSelectTab($('#' + 'nuTab' + l)[0]);
+function nuSelectTabByTitle(title) {
+	const index = getTabIndexByTitle(title);
+	if (index > -1) {
+		nuSelectTab($('#nuTab' + index)[0]);
+	}
+}
 
+function nuRemoveTabByTitle(title) {
+	const index = getTabIndexByTitle(title);
+	if (index > -1) {
+		$('#nuTab' + index).remove();
+	}
+}
+
+function nuShowTabByTitle(title, visible) {
+	const index = getTabIndexByTitle(title);
+	if (index > -1) {
+		nuShow('nuTab' + index, visible);
+	}
 }
 
 function nuRemoveTabs(t) {
@@ -4001,24 +4019,6 @@ function nuRemoveTabs(t) {
 	for (var i = 0; i < arguments.length; i++) {
 		$('#nuTab' + arguments[i]).remove();
 	}
-
-}
-
-function nuHideTabByTitle(s) {
-	nuShowTabByTitle(s, false);
-}
-
-function nuRemoveTabByTitle(s) {
-	let tabs = JSON.parse(JSON.stringify(nuSERVERRESPONSE)).tabs;
-	let i = tabs.findIndex(data => data.title.replace(/\|/g, "") === s);
-	if (i > -1) $('#nuTab' + i).remove();
-}
-
-function nuShowTabByTitle(s, visible) {
-
-	let tabs = JSON.parse(JSON.stringify(nuSERVERRESPONSE)).tabs;
-	let l = tabs.findIndex(data => data.title.replace(/\|/g, "") === s);
-	if (l > -1) nuShow('nuTab' + l, visible);
 
 }
 
