@@ -4043,6 +4043,17 @@ function nuHideTabById(id) {
 	nuShowTabById(id, false);
 }
 
+function nuShowTabById(id, visible) {
+
+	let obj = $('div#' + id);
+	if (obj.length == 1) {
+		obj.nuShow(visible);
+	} else {
+		$('div[data-nu-tab-id=' + id + ']').filter('.nuTab').nuShow(visible);
+	}
+
+}
+
 function nuHideTabs() {
 
 	for (var i = 0; i < arguments.length; i++) {
