@@ -2692,3 +2692,8 @@ function nuInsertAtCaret(id, string) {
 	txt.prop('selectionEnd', endOfText);
 
 }
+
+function nuGetURLParameterValue(parameterName) {
+	const urlParams = new URLSearchParams(window.location.search);
+	return urlParams.get(parameterName);
+}
