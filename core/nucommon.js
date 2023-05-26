@@ -2697,3 +2697,23 @@ function nuGetURLParameterValue(parameterName) {
 	const urlParams = new URLSearchParams(window.location.search);
 	return urlParams.get(parameterName);
 }
+
+function nuSetURLPermaLink() {
+
+	const cProperties = nuCurrentProperties();
+	
+	if (window.top === window.self) {
+
+		let home = nuGetURLParameterValue('h');
+		home = home === null ? '' : '&h=' + home;
+
+		const urlParams = '?f=' + cProperties.form_id + '&r=' + cProperties.record_id + home;
+
+		if (window.location.search.includes('?i=')) {
+			window.history.replaceState('', document.title, urlParams);
+		} else {
+			window.history.pushState('', document.title, urlParams);
+		}
+	}
+
+}
