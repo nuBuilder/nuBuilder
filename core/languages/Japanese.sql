@@ -1,4 +1,4 @@
-REPLACE INTO zzzzsys_translate (zzzzsys_translate_id, trl_language, trl_english, trl_translation) VALUES
+REPLACE INTO zzzzsys_translate (zzzzsys_translate_id, trl_language, trl_english, trl_translation) VALUES 
 ('nuja61d9ed1658f01ca', 'Japanese', '\"New Password\" must be the same as \"Confirm New Password\"', '新しいパスワード」は「新しいパスワード確認」と同じでなければなりません。'),
 ('nuja5bad6cb40164214', 'Japanese', 'A table called', 'テーブル名前が'),
 ('nuja5ec114f258addb1', 'Japanese', 'Access', '使用権'),
@@ -8,7 +8,7 @@ REPLACE INTO zzzzsys_translate (zzzzsys_translate_id, trl_language, trl_english,
 ('nuja5bad6cb37f58f6f', 'Japanese', 'Access Levels', 'アクセス権限'),
 ('nuja60c438f8006d9f3', 'Japanese', 'Access levels that can use this procedure', 'このプロシージャを使用できるアクセス権限'),
 ('nuja5bad6cb40164216', 'Japanese', 'Access levels that can use this report', 'このレポートを使用できるアクセス権限'),
-('nuja5ec114f258e49a2', 'Japanese', 'Access To Procedure Denied…', '手順へのアクセスが拒否されました…'),
+('nuja5ec114f258e49a2', 'Japanese', 'Access To Procedure Denied...', '手順へのアクセスが拒否されました…'),
 ('nuja64070fb5cda42e1', 'Japanese', 'Accessibility Features', 'アクセシビリティ機能'),
 ('nuja5bad6cb40164218', 'Japanese', 'Action', 'アクション'),
 ('nuja60f428fe77d3fe8', 'Japanese', 'Action successfully completed', 'アクションが正常に完了しました'),
