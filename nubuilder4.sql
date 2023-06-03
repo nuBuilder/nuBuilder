@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 05, 2023 at 09:18 AM
+-- Generation Time: Jun 03, 2023 at 02:21 PM
 -- Server version: 8.0.27
 -- PHP Version: 8.1.0
 
@@ -204,13 +204,13 @@ INSERT INTO `zzzzsys_browse` (`zzzzsys_browse_id`, `sbr_zzzzsys_form_id`, `sbr_t
 ('nu5fd8ed3051616cd', 'nusession', 'Login Name', 'login', 'l', '', 20, 150, NULL),
 ('nu5fd8ed305162c77', 'nusession', 'Username', 'user', 'l', '', 30, 150, NULL),
 ('nu5fd8ed3051639e7', 'nusession', 'Login Time', 'login_time', 'l', '', 10, 150, NULL),
-('nu5fdb1b5b3fd1be7', 'nucodesnippet', 'Code', 'cot_code', 'l', '', 20, 210, NULL),
-('nu5fdb1b5b407a6f1', 'nucodesnippet', 'Description', 'cot_description', 'l', '', 30, 1060, NULL),
-('nu5fdb1b5b408a860', 'nucodesnippet', 'Language', 'cot_language', 'l', '', 10, 110, NULL),
+('nu5fdb1b5b3fd1be7', 'nucodesnippet', 'Code', 'cot_code', 'l', '', 20, 200, NULL),
+('nu5fdb1b5b407a6f1', 'nucodesnippet', 'Description', 'cot_description', 'l', '', 40, 590, NULL),
+('nu5fdb1b5b408a860', 'nucodesnippet', 'Language', 'cot_language', 'l', '', 10, 95, NULL),
 ('nu5fdb668a2947958', 'nuobject', 'Access', 'REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(sob_all_access,0,\'Editable\'),1,\'Readonly\'),2,\'Hidden\'),3,\'Hidden (User)\'),\'4\',\'Hidden (User) + Readonly\')', 'l', '', 80, 95, NULL),
 ('nu5fdb67accbbfa6d', 'nuobject', 'Validation', 'REPLACE(REPLACE(REPLACE(REPLACE(sob_all_validate, 0,\'None\'),1,\'No Blanks\'),2,\'No Duplicates\'),3,\'No Duplicates/Blanks\')', 'l', '', 90, 150, NULL),
 ('nu5fdb689731ed0db', 'nuobject', 'Align', 'CONCAT(UCASE(LEFT(sob_all_align, 1)),SUBSTRING(LOWER(sob_all_align),2))', 'l', '', 100, 60, NULL),
-('nu5fdcc69ceb26325', 'nucodesnippet', 'Changed On', 'cot_updated_on', 'l', '', 40, 235, NULL),
+('nu5fdcc69ceb26325', 'nucodesnippet', 'Changed On', 'cot_updated_on', 'l', '', 50, 135, NULL),
 ('nu5fdfd91ab3a0d63', 'nusession', 'IP Address', 'ip', 'l', '', 40, 120, NULL),
 ('nu5fe0352637b2e4f', 'nuuser', 'Expires On', 'sus_expires_on', 'l', 'D|yyyy-mm-dd', 100, 105, NULL),
 ('nu5fe035b0d058339', 'nuuser', 'Department', 'sus_department', 'l', '', 80, 120, NULL),
@@ -236,7 +236,8 @@ INSERT INTO `zzzzsys_browse` (`zzzzsys_browse_id`, `sbr_zzzzsys_form_id`, `sbr_t
 ('nu63f0aec187a8b7f', 'nunuobjectevent', 'Tab', 'IF (LEFT(syt_title,1) = \'|\', SUBSTR(syt_title, 2), syt_title)', 'l', NULL, 10, 100, NULL),
 ('nu63f0aec188423bf', 'nunuobjectevent', 'Object', 'sob_all_id', 'l', NULL, 20, 225, NULL),
 ('nu63f0aec188c5610', 'nunuobjectevent', 'Event', 'sev_event', 'l', NULL, 30, 110, NULL),
-('nu63f0aec18949fac', 'nunuobjectevent', 'JavaScript', 'sev_javascript', 'l', NULL, 40, 620, NULL);
+('nu63f0aec18949fac', 'nunuobjectevent', 'JavaScript', 'sev_javascript', 'l', NULL, 40, 620, NULL),
+('nu647b47e3943fc57', 'nucodesnippet', 'Group', 'cot_group', 'l', NULL, 30, 135, NULL);
 
 -- --------------------------------------------------------
 
@@ -747,8 +748,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`, `inf_json`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2023.05.05.00', NULL),
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2023.05.05.00', NULL);
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2023.06.03.01', NULL),
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2023.05.27.00', NULL);
 
 -- --------------------------------------------------------
 
@@ -1563,9 +1564,9 @@ CREATE TABLE `zzzzsys_report` (
 -- (See below for the actual view)
 --
 CREATE TABLE `zzzzsys_report_data` (
-`id` varchar(70)
-,`code` varchar(300)
+`code` varchar(300)
 ,`description` varchar(300)
+,`id` varchar(70)
 );
 
 -- --------------------------------------------------------
@@ -1575,10 +1576,10 @@ CREATE TABLE `zzzzsys_report_data` (
 -- (See below for the actual view)
 --
 CREATE TABLE `zzzzsys_run_list` (
-`id` varchar(25)
-,`run` varchar(9)
-,`code` varchar(300)
+`code` varchar(300)
 ,`description` varchar(300)
+,`id` varchar(25)
+,`run` varchar(9)
 );
 
 -- --------------------------------------------------------
