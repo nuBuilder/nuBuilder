@@ -3173,7 +3173,10 @@ function nuLabel(w, i, p, prop) {
 	const label = 	nuTranslate(String(obj.label));
 	const lwidth = nuGetWordWidth(label, 'label');
 	const forId = obj.type == 'lookup' ? p + obj.id + 'code' : p + obj.id;
-	objLabel.setAttribute('for', forId);
+
+	if(!['subform','html'].includes(obj.type)){
+		objLabel.setAttribute('for', forId);
+	}
 
 	nuAddDataTab(id, obj.tab, p);
 	nuSetObjectBounds(objLabel, obj.top, Number(obj.left) - lwidth + -17, Number(lwidth + 12)).html(label);
