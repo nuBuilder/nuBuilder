@@ -2298,11 +2298,14 @@ function nuSelectSelectedTextArray(id) {
 
 }
 
-function nuPasteText(id) {
+function nuPasteText(id, callback) {
 
 	navigator.clipboard.readText()
 		.then(text => {
 			nuSetValue(id, text);
+			if (typeof callback === 'function') {
+				callback();
+			}
 		});
 
 }
