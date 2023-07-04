@@ -3985,6 +3985,10 @@ function nuSelectTab(tab, byUser) {
 
 	}
 
+	if (window.nuOnTabSelectedGlobal) {
+		nuOnTabSelectedGlobal(tab);
+	}
+
 	if (window.nuOnTabSelected) {
 		nuOnTabSelected(tab);
 	}

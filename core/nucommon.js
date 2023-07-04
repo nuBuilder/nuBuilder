@@ -6,6 +6,7 @@ window.nuBeforeSaveGlobal = null;
 window.nuLoadBrowseGlobal = null;
 window.nuLoadEditGlobal = null;
 window.nuOnLookupPopulatedGlobal = null;
+window.nuOnTabSelectedGlobal = null;
 window.nuOnPopupOpenedGlobal = null;
 window.nuHideMessage = true;
 window.nuDragID = 1000;
@@ -2236,7 +2237,7 @@ function nuSelectRemoveEmpty(elementId, setIndex) { 
 	const selector = elementId === undefined ? 'select' : `#${elementId}`;
 
 	 
-	$(`${selector}    option`).each(function() {  
+	$(`${selector} option`).each(function() {  
 		if ($(this).val().trim() === "" && $(this).text().trim() === "") {   
 			$(this).remove();  
 		} 
