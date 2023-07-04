@@ -966,9 +966,9 @@ function nuBindCtrlEvents() {
 				} else if (e.code == 'KeyY') {						//-- y		Delete
 					nuDeleteAction();
 				} else if (e.code == 'ArrowRight') {				//-- ->		Select next tab
-					nuSelectNextTab(1);
+					nuSelectNextTab(1, true);
 				} else if (e.code == 'ArrowLeft') {					//-- <-		Select previous tab
-					nuSelectNextTab(-1);
+					nuSelectNextTab(-1, true);
 				}
 
 			}
@@ -1547,14 +1547,14 @@ function nuSelectedTabTitle(parent = null) {
 
 }
 
-function nuSelectNextTab(i) {
+function nuSelectNextTab(i, byUser) {
 
 	const selectedTab = $('.nuTabSelected')[0];
 	const selectedTabId = selectedTab.id.substring(5);
 	const nextTabId = parseInt(selectedTabId, 10) + i;
 	const e = document.getElementById('nuTab' + nextTabId);
 	if (e) {
-		nuSelectTab(e);
+		nuSelectTab(e, byUser);
 	}
 
 }
