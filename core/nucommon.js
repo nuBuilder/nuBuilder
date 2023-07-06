@@ -234,6 +234,11 @@ jQuery.fn.extend({
 	nuSetPlaceholder: function(placeholder, translate) {
 		return nuSetPlaceholder(this.attr('id'), placeholder, translate);
 	},
+	nuSetLabelText: function(str, translate) {
+		return this.each(function () {
+			nuSetLabelText(this.id, str, translate);
+		});
+	},
 	nuTogglePassword: function(show) {
 		return this.each(function() {
 			let $input = $(this);
