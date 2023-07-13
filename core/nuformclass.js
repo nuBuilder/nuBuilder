@@ -886,7 +886,7 @@ class nuFormObject {
 		if (v == undefined) { return ''; }
 		if (f == undefined) { return v; }
 		if (f == '') { return v; }
-		if (v == '') { return v; }
+		if (v === '') { return v; }
 
 		v = String(v);
 		f = String(f);
