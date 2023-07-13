@@ -4061,6 +4061,10 @@ function nuShowTabById(id, visible) {
 
 }
 
+function nuHideTabByTitle(s) {
+	nuShowTabByTitle(s, false);
+}
+
 function nuHideTabs() {
 
 	for (var i = 0; i < arguments.length; i++) {
