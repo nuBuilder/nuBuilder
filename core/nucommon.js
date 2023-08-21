@@ -232,7 +232,9 @@ jQuery.fn.extend({
 		return nuIsEnabled(this.attr('id'));
 	},
 	nuSetPlaceholder: function(placeholder, translate) {
-		return nuSetPlaceholder(this.attr('id'), placeholder, translate);
+		return this.each(function () {
+			return nuSetPlaceholder(this.id, placeholder, translate);
+		});			
 	},
 	nuSetLabelText: function(str, translate) {
 		return this.each(function () {
