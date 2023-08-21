@@ -5277,6 +5277,7 @@ function nuSaveAction(close) {
 
 function nuSavingProgressMessage() {
 
+	$('.nuUpdateMessageProgress').remove();
 	let div = nuCreateElementWithId('div', 'nuProgressUpdate','nuActionHolder');
 	$div = $(div);
 	$div.html('<img src="core/graphics/ajax-loader.gif">').addClass('nuUpdateMessageProgress');
