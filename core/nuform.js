@@ -1350,6 +1350,8 @@ function nuINPUT(w, i, l, p, prop) {
 		type = 'div';
 	}
 
+	obj = nuLabelOrPosition(obj, w, i, l, p, prop);
+
 	if (type == 'input' && inputType == 'file' && inputSubType != 'uppy') {
 		id = nuINPUTfileDatabase($fromId, obj, id, p);
 	}
@@ -1360,8 +1362,6 @@ function nuINPUT(w, i, l, p, prop) {
 	let $id = $(inp);
 
 	$fromId.append(inp);
-
-	obj = nuLabelOrPosition(obj, w, i, l, p, prop);
 
 	nuAddDataTab(id, obj.tab, p);
 	nuINPUTSetProperties($id, obj, inputType, objectType, wi, p);
