@@ -35,7 +35,7 @@ function nuBeforeEdit($FID, $RID){
 	if($ct == 'getreport' and $r == ''){return;}
 	if($ct == 'getform' and $r == ''){return;}
 
-	$recordID = $_POST['nuSTATE']['record_id'] ?? '';
+	$recordID = $_POST['nuSTATE']['record_id'] ?? '-1';
 
 	if($ct == 'getform'){
 
@@ -103,17 +103,15 @@ function nuBeforeEdit($FID, $RID){
 
 	}
 
-	if ($recordID != '') {
-		$p = nuProcedure('nuBeforeEdit');
-		if($p != '') { 
-			eval($p); 
-		}
-		if(count($_POST['nuErrors']) > 0){
-			return;
-		}
-
-		nuEval($FID . '_BE');
+	$p = nuProcedure('nuBeforeEdit');
+	if($p != '') { 
+		eval($p); 
 	}
+	if(count($_POST['nuErrors']) > 0){
+		return;
+	}
+
+	nuEval($FID . '_BE');
 
 	$js = $r->sfo_javascript;
 	$jb = $r->sfo_browse_javascript ?? '';
