@@ -1830,29 +1830,23 @@ function nuFromCSV($file, $table, $d, $delete){
 
 }
 
-function nuProcessImportedUsers($pw = true) {
-
-	$s	= "SELECT zzzzsys_user_id as id, sus_login_password as pw FROM  `zzzzsys_user` WHERE `zzzzsys_user_id` REGEXP '^-?[0-9]+$';";
-	$t	= nuRunQuery($s);
-
-	while($r = db_fetch_object($t)){
-
-		$s	= "UPDATE  `zzzzsys_user` SET `zzzzsys_user_id` = ? WHERE `zzzzsys_user_id` = ?";
-		$newId = nuID();
-		nuRunQuery($s, [$newId, $r->id]);
-
-		if ($pw) {
-			$s	= "UPDATE  `zzzzsys_user` SET `sus_login_password` = ? WHERE `zzzzsys_user_id` = ?";
-			nuRunQuery($s, [nuPasswordHash($r->pw),  $newId]);
-		}
-
+function nuGetCSVDelimiterFromValue($value) {
+	if ($value == 44) {
+		return ",";
+	} elseif ($value == 9) {
+		return "\t"; // Tab character
+	} elseif ($value == 59) {
+		return ";";
+	} else {
+		return ","; // default
 	}
-
 }
 
 function nuImportUsersFromCSV($csvfile, $fieldseparator, $lineseparator) {
 
 	global $DBCharset, $DBPort;
+
+	$fieldseparator = nuGetCSVDelimiterFromValue($fieldseparator);
 
 	if(!file_exists($csvfile)) {
 		 echo nuTranslate("File not found") . "($csvfile). ". nuTranslate("Make sure the file exists").".";
@@ -1860,29 +1854,54 @@ function nuImportUsersFromCSV($csvfile, $fieldseparator, $lineseparator) {
 	}
 
 	$db = nuRunQuery('');
-	try {
+	$pdo = new PDO("mysql:host=$db[0];dbname=$db[1];charset=$DBCharset;port=$DBPort", $db[2], $db[3], [
+		PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $DBCharset", PDO::MYSQL_ATTR_LOCAL_INFILE => true
+	]);
 
-		$cn = new PDO("mysql:host=$db[0];dbname=$db[1];charset=$DBCharset;port=$DBPort", $db[2], $db[3], [
-			PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $DBCharset", PDO::MYSQL_ATTR_LOCAL_INFILE => true
-		]);
+	// Open and read the CSV file
+	if (($handle = fopen($csvfile, 'r')) !== false) {
+		$pdo->beginTransaction();
 
-	$affectedRows = $cn->exec
-	(
-		"LOAD DATA LOCAL INFILE "
-		.$cn->quote($csvfile)
-		." INTO TABLE `zzzzsys_user` FIELDS TERMINATED BY "
-		.$cn->quote($fieldseparator)
-		."LINES TERMINATED BY "
-		.$cn->quote($lineseparator)
-		."IGNORE 1 LINES "
-	);
+		try {
 
-	echo nuTranslate("Loaded a total of $affectedRows records from this csv file.\n");
+			 // Skip the first row (header)
+			fgetcsv($handle);
+				
+			// Prepare the SQL statement
+			$insert = "INSERT INTO zzzzsys_user (zzzzsys_user_id, sus_zzzzsys_access_id, sus_language, sus_name, sus_code, sus_position, sus_department, sus_team, sus_email, sus_additional1, sus_additional2, sus_login_name, sus_login_password, sus_expires_on, sus_accessibility_features, sus_json) 
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
+			$stmt = $pdo->prepare("$insert");
+
+			// Process each CSV row
+			$affectedRows = 0;
+			while (($data = fgetcsv($handle, 0, $fieldseparator)) !== false) {
+
+				$data[0]	= nuID();						// Replace zzzzsys_user_id with unique id.
+				$data[12]	= nuPasswordHash($data[12]);	// Encrypt password
+
+				$data = array_map(function ($value) {
+					return ($value === "NULL") ? null : $value;
+				}, $data);
+
+				// Bind CSV data to the prepared statement
+				$stmt->execute($data);
+				$affectedRows++;
+			}
+
+			$pdo->commit();
+			echo nuTranslate("Loaded a total of $affectedRows records from this csv file.\n");
+		} catch (PDOException $e) {
+			$pdo->rollBack();
+			echo "Error: " . $e->getMessage();
+		}
+
+		fclose($handle);
+		
+	} else {
+		echo nuTranslate('Failed to open the CSV-file');
 	}
-	catch(PDOException $ex) {
-		echo $ex->getMessage();
-	}
+
 }
 
 function nuListTables(){
