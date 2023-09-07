@@ -236,9 +236,11 @@ function nuSQLTrim($s, $noCR = 0){
 }
 
 function nuObjKey($o, $k, $d = null) {
-
 	return isset($o[$k]) ? $o[$k] : $d;
+}
 
+function nuStrPos($haystack, $needle, $offset = 0) {
+	return strpos($haystack ?? '', $needle ?? '', $offset);
 }
 
 function nuTrim($s) {
