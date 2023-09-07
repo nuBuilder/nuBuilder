@@ -26,7 +26,7 @@ if ( nuCheckIsLoginRequest() ) {
 		$request = nuCheckUserLoginRequest();
 		$result = $request['result'];
 		if ($result == "1" ) {
-				if (strpos($_SESSION['nubuilder_session_data']['GLOBEADMIN_USERS'], $request['user_id'] ) !== false) {
+				if (nuStrPos($_SESSION['nubuilder_session_data']['GLOBEADMIN_USERS'], $request['user_id'] ) !== false) {
 					nuLoginSetupGlobeadmin($request['login_name'],$request['user_id'], $request['user_name']);
 				} else {
 					nuLoginSetupNOTGlobeadmin();
