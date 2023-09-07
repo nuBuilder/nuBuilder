@@ -409,4 +409,5 @@ REPLACE INTO zzzzsys_translate (zzzzsys_translate_id, trl_language, trl_english,
 ('nupt5bad6cb40164295', 'Portuguese', 'Without Objects', 'Sem Objectos'),
 ('nupt60a020ec531bc0c', 'Portuguese', 'You will need to log in again for the changes to take effect', 'Precisará fazer login novamente para que as alterações tenham efeito'),
 ('nupt61d9ed66cb06291', 'Portuguese', 'Your password has been successfully changed', 'A sua Password foi alterada com sucesso'),
+('nupt64f94e9309fed55', 'Portuguese', 'Your password has expired and must be changed.', 'O Acesso para esta conta não é atualmente permitido.'),
 ('nupt5bad6cb38a32389', 'Portuguese', 'Z Index', 'Índice Z');

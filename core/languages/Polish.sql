@@ -416,4 +416,5 @@ REPLACE INTO zzzzsys_translate (zzzzsys_translate_id, trl_language, trl_english,
 ('nupl5bad6cb40164295', 'Polish', 'Without Objects', 'Bez obiektów'),
 ('nupl60a020ec531bc0c', 'Polish', 'You will need to log in again for the changes to take effect', 'Musisz się przelogować żeby zmiany były widoczne'),
 ('nupl61d9ed66cb06291', 'Polish', 'Your password has been successfully changed', 'Twoje hasło zostało pomyślnie zmienione'),
+('nupl64f94e9309fed55', 'Polish', 'Your password has expired and must be changed.', 'Twoje hasło wygasło i należy je zresetować.'),
 ('nupl5bad6cb38a32389', 'Polish', 'Z Index', 'Indeks Z');

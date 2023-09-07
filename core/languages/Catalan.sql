@@ -396,4 +396,5 @@ REPLACE INTO zzzzsys_translate (zzzzsys_translate_id, trl_language, trl_english,
 ('nuca5bad6cb40164295', 'Catalan', 'Without Objects', 'Sense objectes'),
 ('nuca60a020ec531bc0c', 'Catalan', 'You will need to log in again for the changes to take effect', 'Haureu de tornar a conectar-vos perque els  canvis surtin efecte'),
 ('nuca61d9ed66cb06291', 'Catalan', 'Your password has been successfully changed', 'La copntrasenya ha estat guardada correctament'),
+('nuca64f94e9309fed55', 'Catalan', 'Your password has expired and must be changed.', 'La vostra contrasenya ha caducat i s\'ha de restablir.'),
 ('nuca5bad6cb38a32389', 'Catalan', 'Z Index', 'Z Index');

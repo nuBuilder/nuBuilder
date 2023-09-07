@@ -410,4 +410,5 @@ REPLACE INTO zzzzsys_translate (zzzzsys_translate_id, trl_language, trl_english,
 ('nuru5bad6cb40164295', 'Russian', 'Without Objects', 'Без Объектов'),
 ('nuru60a020ec531bc0c', 'Russian', 'You will need to log in again for the changes to take effect', 'Вы должны снова войти в систему, чтобы изменения вступили в силу'),
 ('nuru61d9ed66cb06291', 'Russian', 'Your password has been successfully changed', 'Ваш пароль был успешно изменен'),
+('nuru64f94e9309fed55', 'Russian', 'Your password has expired and must be changed.', 'Ваш пароль просрочен и требует смены.'),
 ('nuru5bad6cb38a32389', 'Russian', 'Z Index', 'Z индекс');

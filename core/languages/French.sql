@@ -413,4 +413,5 @@ REPLACE INTO zzzzsys_translate (zzzzsys_translate_id, trl_language, trl_english,
 ('nufr5bad6cb40164295', 'French', 'Without Objects', 'Sans objets'),
 ('nufr60a020ec531bc0c', 'French', 'You will need to log in again for the changes to take effect', 'Redémarrez votre navigateur pour que les modifications prennent effet.'),
 ('nufr61d9ed66cb06291', 'French', 'Your password has been successfully changed', 'Votre mot de passe a été changé avec succès'),
+('nufr64f94e9309fed55', 'French', 'Your password has expired and must be changed.', 'Votre mot de passe a expiré et doit être changé.'),
 ('nufr5bad6cb38a32389', 'French', 'Z Index', 'Z Index');

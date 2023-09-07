@@ -416,4 +416,5 @@ REPLACE INTO zzzzsys_translate (zzzzsys_translate_id, trl_language, trl_english,
 ('nuja5bad6cb40164295', 'Japanese', 'Without Objects', 'オブジェクトなし'),
 ('nuja60a020ec531bc0c', 'Japanese', 'You will need to log in again for the changes to take effect', '変更を有効するために、再度ログインする必要があります'),
 ('nuja61d9ed66cb06291', 'Japanese', 'Your password has been successfully changed', 'パスワードが正常に変更されました'),
+('nuja64f94e9309fed55', 'Japanese', 'Your password has expired and must be changed.', 'あなたのパスワードは無効なため、リセットが必要です。'),
 ('nuja5bad6cb38a32389', 'Japanese', 'Z Index', 'Z インデックス');

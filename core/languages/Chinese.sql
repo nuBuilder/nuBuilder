@@ -416,4 +416,5 @@ REPLACE INTO zzzzsys_translate (zzzzsys_translate_id, trl_language, trl_english,
 ('nuzh5bad6cb40164295', 'Chinese', 'Without Objects', '没有对象'),
 ('nuzh60a020ec531bc0c', 'Chinese', 'You will need to log in again for the changes to take effect', '您需要重新登录才能使更改生效'),
 ('nuzh61d9ed66cb06291', 'Chinese', 'Your password has been successfully changed', '你的密码已修改成功'),
+('nuzh64f94e9309fed55', 'Chinese', 'Your password has expired and must be changed.', '您的密码已过期，必须重新设置。'),
 ('nuzh5bad6cb38a32389', 'Chinese', 'Z Index', 'Z顺序');
