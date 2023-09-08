@@ -1418,6 +1418,19 @@ function nuEval($phpid){
 
 }
 
+function nuRunProcedure($procedure) {
+
+	$procResult = nuProcedure($procedure);
+	$error	= '';
+
+	if($procResult){
+		eval($procResult);
+		return $error === '' ? true : $error;
+	}
+
+	return false;
+
+}
 
 function nuProcedure($c){
 
