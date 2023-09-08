@@ -37,6 +37,7 @@ class nuBuilderSessionData {
 	'2FA_ADMIN'					=> false,
 	'2FA_USER'					=> false,
 	'2FA_FORM_ID'				=> '',
+	'CHANGE_PW_FORM_ID'			=> '',	
 	'2FA_TOKEN_VALIDITY_TIME'	=> '',
 	'2FA_REMEMBER_ME'			=> false,
 	'USE_MD5_PASSWORD_HASH'		=> false,
@@ -89,6 +90,7 @@ class nuBuilderSessionData {
 		$this->nubuilder['2FA_TOKEN_VALIDITY_TIME']	= $nuConfig2FATokenValidityTime == '' ? 168 : $nuConfig2FATokenValidityTime;
 		$this->nubuilder['2FA_REMEMBER_ME']			= $nuConfig2FAShowRememberMe;
 
+		$this->nubuilder['CHANGE_PW_FORM_ID']		= 'nupassword';
 		$this->nubuilder['USE_MD5_PASSWORD_HASH']	= $nuUseMd5PasswordHash;
 
 		$this->nubuilder['USER_ADDITIONAL1_LABEL']	= $nuConfigUserAdditional1Label;

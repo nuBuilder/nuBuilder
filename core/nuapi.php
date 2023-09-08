@@ -54,13 +54,20 @@
 
 	$_POST['FORM_ID'] 						= $formId;
 
-	// 2FA, check authentication status.
+	// 2FA: Check authentication status.
 	if ((($globalAccess && nuObjKey($sessionData,'2FA_ADMIN')) || (!$globalAccess && nuObjKey($sessionData,'2FA_USER'))) && nuObjKey($sessionData,'SESSION_2FA_STATUS') == 'PENDING') {
 		if ($formAndSessionData->form_id != $sessionData['2FA_FORM_ID'] && $callType != 'runhiddenphp') {
 			nuDisplayError(nuTranslate('Access denied. Authentication Pending.'));
 		}
 	}
 
+	// Change Password: Check authentication status.
+	if (!$globalAccess  && nuObjKey($sessionData,'SESSION_CHANGE_PW_STATUS') == 'PENDING') {
+		if ($formAndSessionData->form_id != $sessionData['CHANGE_PW_FORM_ID'] && $callType != 'runhiddenphp') {
+			nuDisplayError(nuTranslate('Access denied. Password Change Pending.'));
+		}
+	}
+	
 	$_POST['nuHash']['PREVIOUS_RECORD_ID'] 	= $recordId;
 	$_POST['nuHash']['RECORD_ID'] 			= $recordId;
 	$_POST['nuHash']['FORM_ID'] 			= $formId;

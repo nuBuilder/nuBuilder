@@ -45,10 +45,14 @@ function nuCheckUserLoginRequest() {
 		nuRunQuery("ALTER TABLE zzzzsys_user ADD sus_json MEDIUMTEXT NULL DEFAULT NULL;");
 	}
 
+	if (db_field_exists("zzzzsys_user","sus_change_password") == false) {
+		nuRunQuery("ALTER TABLE `zzzzsys_user` ADD `sus_change_password` VARCHAR(1) NULL DEFAULT NULL AFTER `sus_expires_on`;");
+	}
+
 	$sql = "
 		SELECT IF (sus_expires_on < CURDATE() AND NOT sus_expires_on IS NULL, 1, 0) AS expired,
 		zzzzsys_user_id AS user_id, sus_login_name AS login_name, sus_name AS user_name,
-		sus_login_password as user_password, sus_json
+		sus_login_password as user_password, sus_json, sus_change_password as change_password
 		FROM zzzzsys_user JOIN zzzzsys_access  ON zzzzsys_access_id = sus_zzzzsys_access_id
 		WHERE sus_login_name = ?
 		";
@@ -61,20 +65,21 @@ function nuCheckUserLoginRequest() {
 		md5($_POST['nuSTATE']['password'])
 	]);
 
-	$check = db_num_rows($rs) == 1 ;
+	$check = db_num_rows($rs) == 1;
 
 	$ts = nuRunQuery($sqlToken, [
 		$_POST['nuSTATE']['username'],
 		'%"LOGIN_TOKEN":"' . $_POST['nuSTATE']['password'] .'"%'
 	]);
 
+	$changePassword = false;
 	$checkToken =  db_num_rows($ts) == 1 ;
-
 
 	if ($check == true) {
 
 		$r = db_fetch_object($rs);
-
+		$changePassword = $r->change_password == '1';
+	
 		if ($_SESSION['nubuilder_session_data']['USE_MD5_PASSWORD_HASH'] != true) {
 
 			$sql = 'UPDATE zzzzsys_user SET sus_login_password = ? WHERE sus_login_name = ?';
@@ -93,6 +98,7 @@ function nuCheckUserLoginRequest() {
 		$r = db_fetch_object($rs);
 		if ($check == true) {
 			$check = password_verify($_POST['nuSTATE']['password'], $r->user_password);
+			$changePassword = $r->change_password == '1';
 		}
 
 	}
@@ -104,7 +110,7 @@ function nuCheckUserLoginRequest() {
 		$result = "0";
 	}
 
-	return ['result' => $result, 'user_id' => ($check ? $r->user_id : ''), 'login_name' => ($check ? $r->login_name : ''), 'user_name' => ($check ? $r->user_name : '')];
+	return ['result' => $result, 'change_password' => ($check ? $changePassword : false), 'user_id' => ($check ? $r->user_id : ''), 'login_name' => ($check ? $r->login_name : ''), 'user_name' => ($check ? $r->user_name : '')];
 
 }
 
@@ -237,7 +243,7 @@ function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 	return true;
 }
 
-function nuLoginSetupNOTGlobeadmin($new = true, $sSoUserName = "") {
+function nuLoginSetupNOTGlobeadmin($new = true, $sSoUserName = "", $changePassword = false) {
 
 	global $nuConfig2FAUser;
 
@@ -325,24 +331,27 @@ function nuLoginSetupNOTGlobeadmin($new = true, $sSoUserName = "") {
 	$sessionIds->sus_additional2 = $getAccessLevelOBJ->sus_additional2 ?? null;
 	$sessionIds->sus_accessibility_features = $getAccessLevelOBJ->sus_accessibility_features ?? null;
 
-
 	$sessionIds->global_access = '0';
 	$sessionIds->ip_address = nuGetIPAddress();
+	$sessionIds->zzzzsys_form_id = $getAccessLevelOBJ->sal_zzzzsys_form_id;
 
-	$salUse2FA = isset($getAccessLevelOBJ->sal_use_2fa) && $getAccessLevelOBJ->sal_use_2fa;
-
-	if ($nuConfig2FAUser && $new && $salUse2FA) {
-		if (nu2FALocalTokenOK($sessionIds->zzzzsys_user_id)) {
-			$sessionIds->zzzzsys_form_id = $getAccessLevelOBJ->sal_zzzzsys_form_id;
-		} else {
-			$sessionIds->zzzzsys_form_id = $_SESSION['nubuilder_session_data']['2FA_FORM_ID'];
-			$_SESSION['nubuilder_session_data']['SESSION_2FA_STATUS'] = 'PENDING';
-			$_SESSION['nubuilder_session_data']['SESSION_2FA_REDIRECT_FORM_ID'] = $getAccessLevelOBJ->sal_zzzzsys_form_id;
-		}
+	if ($changePassword) {
+		$sessionIds->zzzzsys_form_id = $_SESSION['nubuilder_session_data']['CHANGE_PW_FORM_ID'];
+		$_SESSION['nubuilder_session_data']['SESSION_CHANGE_PW_STATUS'] = 'PENDING';
+		$_SESSION['nubuilder_session_data']['SESSION_2FA_REDIRECT_FORM_ID'] = $getAccessLevelOBJ->sal_zzzzsys_form_id;
 	} else {
-		$sessionIds->zzzzsys_form_id = $getAccessLevelOBJ->sal_zzzzsys_form_id;
-	}
 
+		$salUse2FA = isset($getAccessLevelOBJ->sal_use_2fa) && $getAccessLevelOBJ->sal_use_2fa;
+		if ($nuConfig2FAUser && $new && $salUse2FA) {
+			if (! nu2FALocalTokenOK($sessionIds->zzzzsys_user_id)) {
+				$sessionIds->zzzzsys_form_id = $_SESSION['nubuilder_session_data']['2FA_FORM_ID'];
+				$_SESSION['nubuilder_session_data']['SESSION_2FA_STATUS'] = 'PENDING';
+				$_SESSION['nubuilder_session_data']['SESSION_2FA_REDIRECT_FORM_ID'] = $getAccessLevelOBJ->sal_zzzzsys_form_id;
+			}
+		} 
+
+	}
+	
 	$storeSessionInTable = new stdClass;
 	$storeSessionInTable->session = $sessionIds;
 

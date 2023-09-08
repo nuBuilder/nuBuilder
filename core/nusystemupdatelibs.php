@@ -240,7 +240,8 @@ function nuAlterSystemTables(){
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_additional2` varchar(100) DEFAULT NULL AFTER `sus_additional1`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_expires_on` datetime DEFAULT NULL AFTER `sus_login_password`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_json` MEDIUMTEXT NULL DEFAULT NULL AFTER `sus_expires_on`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_accessibility_features` VARCHAR(1) NULL DEFAULT NULL AFTER `sus_expires_on`;");	
+	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_accessibility_features` VARCHAR(1) NULL DEFAULT NULL AFTER `sus_expires_on`;");
+	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_change_password` VARCHAR(1) NULL DEFAULT NULL AFTER `sus_expires_on`;");
 
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_access` ADD `sal_use_2fa` VARCHAR(1) NULL DEFAULT NULL AFTER `sal_zzzzsys_form_id`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_access` ADD `sal_group` VARCHAR(100) NULL DEFAULT NULL AFTER `sal_description`;");
@@ -355,7 +356,7 @@ function nuRemoveNuRecords(){
 	$s = "DELETE FROM sys_zzzzsys_info WHERE zzzzsys_info_id LIKE 'nu%'";
 	nuRunQueryNoDebug($s);
 
-	$s = "DELETE FROM zzzzsys_email_template WHERE zzzzsys_email_template_id LIKE 'nu%'";
+	$s = "DELETE FROM sys_email_template WHERE zzzzsys_email_template_id LIKE 'nu%'";
 	nuRunQueryNoDebug($s);
 
 	//-- delete all timezones

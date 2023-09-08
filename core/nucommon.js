@@ -2732,3 +2732,37 @@ function nuSetURLPermaLink() {
 	}
 
 }
+
+function nuShuffleArray(arr) {
+	for (let i = arr.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[arr[i],
+			arr[j]] = [arr[j],
+			arr[i]];
+	}
+}
+
+function nuCharacterArray(symbols = true, numbers = true, lowerAlpha = true, upperAlpha  = true) {
+
+	const LOWER_ALPHA = 'abcdefghijklmnopqrstuvwxyz';
+	const UPPER_ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	const NUMBERS = '0123456789';
+	const SYMBOLS = '!@#%&*()-_+={}[]|:;<>.?';
+
+	let characters = [];
+	if (upperAlpha) characters.push(...UPPER_ALPHA);
+	if (lowerAlpha) characters.push(...LOWER_ALPHA);
+	if (numbers) characters.push(...NUMBERS);
+	if (symbols) characters.push(...SYMBOLS);
+	return characters;
+
+}
+
+
+function nuRandomPassword(characterArray, size) {
+
+	let shuffled = characterArray.slice();
+	nuShuffleArray(shuffled);
+	return shuffled.slice(0, size).join("");
+
+}

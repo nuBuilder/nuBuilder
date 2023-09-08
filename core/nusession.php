@@ -29,7 +29,7 @@ if ( nuCheckIsLoginRequest() ) {
 				if (nuStrPos($_SESSION['nubuilder_session_data']['GLOBEADMIN_USERS'], $request['user_id'] ) !== false) {
 					nuLoginSetupGlobeadmin($request['login_name'],$request['user_id'], $request['user_name']);
 				} else {
-					nuLoginSetupNOTGlobeadmin();
+					nuLoginSetupNOTGlobeadmin(true, '', $request['change_password']);
 				}
 		}
 	}
@@ -69,7 +69,7 @@ if ( nuCheckIsLoginRequest() ) {
 	nuSsoCheckSysUserEntryIsInOrder($ssodb_d["email"]);
 
 	// No nuDie() has been executed, if we made it this far...
-	nuLoginSetupNOTGlobeadmin(true, $ssodb_d["email"]);
+	nuLoginSetupNOTGlobeadmin(true, $ssodb_d["email"], false);
 
 } else {
 	nuCheckExistingSession();
