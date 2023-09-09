@@ -536,16 +536,17 @@
  .nuNoSearch {
 	 color:#959595 
 }
- .nuBlank {
-	 font-weight:700 
+.nuBlank::after,
+.nuDuplicateOrBlank::after {
+	 content: "*";
+	 color: #e53600;
+	 margin-left: 4px;
 }
  .nuDuplicate {
 	 font-style:italic;
-	 font-weight:900 
 }
  .nuDuplicateOrBlank {
 	 font-style:italic;
-	 font-weight:900 
 }
  .nuBrowseTitle {
 	 background-color:white;
