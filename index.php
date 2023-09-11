@@ -107,7 +107,7 @@ function nuLastLoggedInUser() {
 	return $_SESSION['nuLastUser']['user_id'] ?? "";
 }
 
-nuJSIndexInclude('core/libs/jquery/jquery-3.7.0.min.js', false);
+nuJSIndexInclude('core/libs/jquery/jquery-3.7.1.min.js', false);
 nuJSIndexInclude('core/nuwysiwyg.js');
 nuJSIndexInclude('core/nuformclass.js');
 nuJSIndexInclude('core/nuform.js');
