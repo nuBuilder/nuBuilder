@@ -113,6 +113,10 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 		cache_suffix: '?v=6.3.0',
 		setup: function (editor) {
 
+			editor.addShortcut('ctrl+shift+S', 'Save', function () {
+			  nuSaveAction();
+			});
+
 			editor.on('init', function (e) {
 
 				e.target.setContent(nuGetValue(id));
