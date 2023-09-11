@@ -476,7 +476,7 @@
 	 left:3px;
 	 top:4px 
 }
- .nuLookupButton:hover {
+ .nuLookupButton:not(.nuReadonly):hover {
 	 cursor:pointer 
 }
  .nuLookupDescription {
@@ -720,9 +720,9 @@
 	 padding:0 6px;
 	 text-shadow:0 1px 2px rgba(0,0,0,0.25) 
 }
- .nuButton:hover {
-	 background-color:#2e73b1;
-	 color:#E2EAFF
+ .nuButton:not(.nuReadonly):hover {
+	 background-color: #2e73b1;
+	 color: #e2eaff;
 }
 .nuUserHomeButton {
 	 color:white;
@@ -770,7 +770,7 @@
 	 border-width:0 0 1px;
 	 margin:0 0 0 10px 
 }
- .nuActionButton:hover {
+ .nuActionButton:not(.nuReadonly):hover {
 	 color:#E2EAFF 
 }
  .nuQuickButton {
@@ -783,7 +783,7 @@
 	 padding-left:10px;
 	 border-radius:9px 
 }
- .nuQuickButton:hover {
+ .nuQuickButton:not(.nuReadonly):hover {
 	 background-color:#3c92de;
 	 color:white 
 }
@@ -807,7 +807,7 @@
  #nuBackBtnButton.nuActionButton:disabled {
 	 background-color:#f0f0f0 
 }
- .nuAdminButton:hover {
+ .nuAdminButton:not(.nuReadonly):hover {
 	 background-color:#00ADEF;
 	 color:white 
 }
