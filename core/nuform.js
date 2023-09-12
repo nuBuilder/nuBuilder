@@ -204,7 +204,7 @@ function nuBuildForm(f) {
 		if (b.browse_autoresize_columns !== '0' || nuDocumentID !== parent.nuDocumentID) {
 
 			if (nuUXOptions.nuAutosizeBrowseColumns || b.browse_autoresize_columns === '1' || nuDocumentID !== parent.nuDocumentID) {
-				nuResizeBrowseColumns();
+				nuResizeBrowseColumns(true);
 			}
 
 		}
