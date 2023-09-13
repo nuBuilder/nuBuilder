@@ -8,6 +8,7 @@ window.nuLoadEditGlobal = null;
 window.nuOnLookupPopulatedGlobal = null;
 window.nuOnTabSelectedGlobal = null;
 window.nuOnPopupOpenedGlobal = null;
+window.nuOnDisableGlobal = null;
 window.nuHideMessage = true;
 window.nuDragID = 1000;
 window.nuLastForm = '';
@@ -1194,9 +1195,9 @@ function nuEnable(i, enable) {
 
 }
 
-function nuDisable(i) { //-- Disable Edit Form Object
+function nuDisable(id) { //-- Disable Edit Form Object
 
-	const ids = Array.isArray(i) ? i : [i];
+	const ids = Array.isArray(id) ? id : [id];
 
 	$.each(ids, function(index) {
 		const id = ids[index];
@@ -1207,15 +1208,24 @@ function nuDisable(i) { //-- Disable Edit Form Object
 				continue;
 			} // skip label
 
-			let $current = $('#' + components[c]);
-			$current
-				.addClass('nuReadonly')
-				.prop('readonly', true)
-				.prop('disabled', true);
+			let $component = $('#' + components[c]);
+			$component.addClass('nuReadonly')
+
+			let result = true;
+			if (window.nuOnDisableGlobal) {
+				result = nuOnDisableGlobal(id, $component);
+			}
+
+			if (result !== false) {
+				$component
+					.prop('readonly', true)
+					.prop('disabled', true);
+			}
 
 			if (c === 2) { //-- button
-				$current.off();
+				$component.off();
 			}
+
 		}
 	});
 
