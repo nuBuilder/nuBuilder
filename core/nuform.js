@@ -5,7 +5,7 @@ function nuInitJSOptions() {
 
 		window.nuAdminButtons =
 		{
-			'nuDebug': true,
+			'nuppDebug': true,
 			'nuPHP': true,
 			'nuRefresh': true,
 			'nuObjects': true,
@@ -1058,6 +1058,7 @@ function nuINPUTfileFileSystem($fromId, w, i, l, p, prop, id) {
 	html =  html.replaceAll('#uppy_div#', id + '_uppy_div');
 	html =  html.replaceAll('#this_object_id#', id);
 	html =  html.replaceAll('nuInitUppy()','nuInitUppy' + '_' + id + '()');
+	html =  html.replaceAll('new Uppy.Core()','new Uppy.Uppy()');	
 
 	nuSetObjectBounds($('#' + id), obj.top, obj.left, obj.width, obj.height)
 	.addClass('nuFileUppy').html(html);
