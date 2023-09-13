@@ -866,8 +866,18 @@ function nuAddJSObjectEvents(id, events) {
 		} else if (element.classList.contains('nuLookupButton') && ev !== 'onclick') {
 			continue;
 		}
+
 		code += ';' + eventObj.js;
 		element.setAttribute(ev, code);
+	}
+
+	if (element.tagName === "BUTTON") {
+		let ele = $(element);
+		var existingOnclick = ele.attr('onclick');
+		if (existingOnclick) {
+			const newOnclick = `if (nuIsDisabled(this.id)) return; ${existingOnclick}`;
+			ele.attr('onclick', newOnclick);
+		}
 	}
 
 }
