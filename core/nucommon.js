@@ -2659,15 +2659,36 @@ function nuGetStorageItem(key, storage) {
 
 }
 
-function nuSetStorageItem(key, value, storage, ttl) {
+function nuGetStorageItem(key, storageType = 'session') {
 
-	var storage = storage === undefined || storage === 'session' ? window.sessionStorage : window.localStorage;
+	const storage = storageType === 'session' ? window.sessionStorage : window.localStorage;
+	const itemStr = storage.getItem(key);
 
-	const now = new Date()
-	const item = {
-		value: value,
-		expiry: ttl === undefined ? null : now.getTime() + ttl * 1000,
+	if (!itemStr) {
+		return null;
 	}
+
+	const item = JSON.parse(itemStr);
+	const now = new Date();
+
+	if (item.expiry !== null && now.getTime() > item.expiry) {
+		storage.removeItem(key);
+		return null;
+	}
+
+	return item.value;
+ 
+}
+
+function nuSetStorageItem(key, value, storageType = 'session', ttl = undefined) {
+
+	const storage = storageType === 'session' ? window.sessionStorage : window.localStorage;
+	const now = new Date();
+	const item = {
+		value: value
+		, expiry: ttl === undefined ? null : now.getTime() + ttl * 1000
+	, };
+
 	storage.setItem(key, JSON.stringify(item));
 
 }
