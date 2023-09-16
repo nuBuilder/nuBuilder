@@ -1343,12 +1343,12 @@ function nuRemove(i) {
 
 }
 
-function nuIsVisible(i) {
-	return $('#' + i).is(':visible');
+function nuIsVisible(id) {
+	return $('#' + id).is(':visible');
 }
 
-function nuIsHidden(i) {
-	return !$('#' + i).is(':visible');
+function nuIsHidden(id) {
+	return !nuIsVisible(id);
 }
 
 function nuIsEnabled(i) {
@@ -2767,7 +2767,6 @@ function nuCharacterArray(symbols = true, numbers = true, lowerAlpha = true, upp
 	return characters;
 
 }
-
 
 function nuRandomPassword(characterArray, size) {
 
