@@ -23,7 +23,7 @@ function nuBeforeBrowse($f){
 }
 
 function nuBeforeEdit($FID, $RID){
-
+	
 	$r						= nuFormProperties($FID);
 
 	$GLOBALS['EXTRAJS']		= '';
@@ -35,7 +35,8 @@ function nuBeforeEdit($FID, $RID){
 	if($ct == 'getreport' and $r == ''){return;}
 	if($ct == 'getform' and $r == ''){return;}
 
-	$recordID = $_POST['nuSTATE']['record_id'] ?? '-1';
+	$formType = $_POST['nuSTATE']['form_type'] ?? '';
+    $recordID = $_POST['nuSTATE']['record_id'] ?? '';
 
 	if($ct == 'getform'){
 
@@ -43,17 +44,6 @@ function nuBeforeEdit($FID, $RID){
 		$cts						= nuGetJSONData('clientTableSchema');
 		$user						= $_POST['nuHash']['USER_ID'];
 		$globalAccess				= nuGlobalAccess(true);
-
-		/*
-		To-Do: Check if not Launch Form
-		if ($globalAccess) {
-			$dm = nuGetFormPermission($FID,'slf_data_mode');
-			if ($dm == "2" && RECORD_ID != '-1') {
-					nuDisplayError('Existing Records cannot be viewed.');
-					return;
-			}
-		}
-		*/
 
 
 		if (! $globalAccess) {
@@ -63,7 +53,6 @@ function nuBeforeEdit($FID, $RID){
 					return;
 			}
 		}
-
 
 		if(( nuObjKey($cts,$r->sfo_table) != NULL && $recordID != '' )){
 
@@ -103,16 +92,20 @@ function nuBeforeEdit($FID, $RID){
 
 	}
 
-	$p = nuProcedure('nuBeforeEdit');
-	if($p != '') { 
-		eval($p); 
-	}
-	if(count($_POST['nuErrors']) > 0){
-		return;
-	}
 
-	nuEval($FID . '_BE');
-
+	if ($recordID != '' || $formType == 'launch') {
+		$p = nuProcedure('nuBeforeEdit');
+		if($p != '') { 	
+			eval($p); 
+		}
+		if(count($_POST['nuErrors']) > 0){
+			return;
+		}
+		
+		nuEval($FID . '_BE');
+	}
+	
+	
 	$js = $r->sfo_javascript;
 	$jb = $r->sfo_browse_javascript ?? '';
 	$je = $r->sfo_edit_javascript ?? '';
