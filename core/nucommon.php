@@ -1016,7 +1016,7 @@ function nuGetNumberFormat($f){
 	$t = nuRunQuery($s);
 
 	while($r = db_fetch_object($t)){
-		if($r->srm_format === $f){
+		if($r->srm_format == $f){
 			return nuJsonDecode($r->srm_currency);
 		}
 	}
@@ -1405,10 +1405,15 @@ function nuEval($phpid){
 	$nudata = $nuDataSet ? $_POST['nudata'] : '';
 
 	try{
-		eval($php);
+		$result = eval($php);
+		if ($result === false) {
+			nuExceptionHandler($e, $code);
+		}
 	}catch(Throwable $e){
 		nuExceptionHandler($e, $code);
 	}catch(Exception $e){
+		nuExceptionHandler($e, $code);
+	} catch (ParseError $e) {
 		nuExceptionHandler($e, $code);
 	}
 
