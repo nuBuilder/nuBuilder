@@ -73,7 +73,14 @@ while($r = db_fetch_array($t)){
 	for($col = 0 ; $col < $colCount ; $col++){
 
 		if(!($c[$col]->width == 0 && $includeHiddenColumns != true)) {
-			$v = $c[$col]->display == 'null' || $c[$col]->display == '""' ? '' : $r[$c[$col]->display];
+			
+			$display = $c[$col]->display;
+			$alias = nuGetColumnAlias($display);			
+			$display = $alias ? $alias : $display;	
+			
+			$rValue = $r[$display] ?? "";
+			
+			$v = $display == 'null' || $display == '""' ? '' : $rValue;
 			$st	= $class[$col];
 			$h	.= "<TD $st>" . $v . "</TD>\n";
 		}
@@ -93,5 +100,14 @@ nuRunQuery("DELETE FROM zzzzsys_debug WHERE zzzzsys_debug_id = ? ", [$_GET['i']]
 $hash = nuHash();
 nuRunQuery("DROP TABLE IF EXISTS " . $hash['browse_table_id']);
 unset($hash);
+
+
+function nuGetColumnAlias($column) {
+	if (preg_match('/\bAS\s+(\w+)\b/i', $column, $matches)) {
+		return $matches[1];
+	} else {
+		return false;
+	}
+}
 
 ?>
