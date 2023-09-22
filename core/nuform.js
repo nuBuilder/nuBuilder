@@ -3697,7 +3697,7 @@ function nuGetOptionsList(f, t, p, a, type) {
 	};
 
 	if (typeEdit && admin && canChange) {
-		if (objects.length > 0) {
+		if (nuCanArrangeObjects()) {
 			list.push(items.ArrangeObjects);
 		}
 		if (!typeSf) {
