@@ -227,6 +227,12 @@ window.nuHASH				= [];
 	$nuRecord		 	= $_GET['r'] ?? '';
 	$nuHome			 	= $_GET['h'] ?? '';
 
+	$URLParams = $_GET;
+	unset($URLParams['p']);
+	if (!isset($_SESSION['nubuilder_session_data']['URL_PARAMS'])) {
+		$_SESSION['nubuilder_session_data']['URL_PARAMS'] = $URLParams;
+	}
+
 	$opener			 	= $_GET['opener'] ?? '';
 	$search			 	= $_GET['search'] ?? '';
 	$iframe			 	= $_GET['iframe'] ?? '';

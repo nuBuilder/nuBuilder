@@ -1985,6 +1985,10 @@ function nuBuildCurrencyFormats(){
 
 }
 
+function nuGetURLParams() {
+	return $_SESSION['nubuilder_session_data']['URL_PARAMS'];
+}
+
 function nuGetHttpOrigin() {
 	if (array_key_exists('HTTP_ORIGIN', $_SERVER)) {
 		$origin = $_SERVER['HTTP_ORIGIN'];
