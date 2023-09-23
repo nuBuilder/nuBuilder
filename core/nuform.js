@@ -3199,7 +3199,7 @@ function nuLabel(w, i, p, prop) {
 		label.innerHTML = '&#8199;';
 	}
 
-	objLabel.classList.add(nuLabelGetValidationClass(obj.valid));
+	objLabel.classList.add(nuLabelGetValidationClass(obj.valid), 'nuLabel');
 
 	return objLabel;
 
