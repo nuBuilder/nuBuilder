@@ -121,11 +121,6 @@
 	 padding:0;
 	 margin:0 
 }
- label {
-	 color:var(--nu-label);
-	 text-align:right;
-	 position:absolute
-}
  iframe {
 	 padding:0;
 	 margin:0;
@@ -824,6 +819,9 @@
  .nuRefreshButton {
 }
  .nuLabel {
+	color:var(--nu-label);
+	text-align:right;
+	position:absolute
 }
  .nuCloning {
 	 background-color: rgb(226,234,255,0.8);
