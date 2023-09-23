@@ -32,7 +32,7 @@ function nuLoad(){
 
 	editor.setShowPrintMargin(false);
 	const theme = "ace/theme/" + (window.theme ? window.theme : 'monokai');
-	alert(theme);
+
 	editor.setTheme(theme);
 	editor.setOptions({
 		enableBasicAutocompletion: true,
