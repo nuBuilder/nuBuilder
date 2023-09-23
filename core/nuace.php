@@ -14,10 +14,12 @@
 <link rel="stylesheet" href="css/nubuilder4.css">
 <link rel="stylesheet" href="libs/fontawesome/css/all.min.css">
 
+
 <script>
 
 window.c = opener.window.nuAce[0];
 window.o = opener.window.nuAce[1];
+window.theme = opener.window.nuAce[2];
 window.l = $('#' + o, window.opener.document).attr('data-nu-label');
 document.title = l + " - Ace Editor";
 
@@ -29,7 +31,9 @@ function nuLoad(){
 	window.editor = ace.edit("nu_editor");
 
 	editor.setShowPrintMargin(false);
-	editor.setTheme("ace/theme/monokai");
+	const theme = "ace/theme/" + (window.theme ? window.theme : 'monokai');
+	alert(theme);
+	editor.setTheme(theme);
 	editor.setOptions({
 		enableBasicAutocompletion: true,
 		enableSnippets: true,
@@ -69,9 +73,31 @@ function nuLoad(){
 	editor.setValue(window.startValue);
 	editor.focus();
 	editor.navigateFileStart();
+	
+	// Disable Ace Ctrl+, shortcut
+	editor.commands.addCommand({
+		name: 'showSettingsMenu',
+		bindKey: {},
+		exec: editor.commands.byName['showSettingsMenu'].exec
+	});
+
+	document.addEventListener('keydown', handleCtrlComma);
 
 	nuRemoveButtonBgColor();
 
+}
+
+
+function handleCtrlComma(event) {
+  // Check if the Ctrl + , combination is pressed (Ace menu opens)
+  if ((event.metaKey || event.ctrlKey) && event.keyCode == 188) {
+	  editor.execCommand("showSettingsMenu");
+      document.title = Date.now();
+      setTimeout(function () {
+		$('#ace_settingsmenu').parent().css('background-color','');
+	}, 50);
+
+  }
 }
 
 function nuRemoveButtonBgColor() {

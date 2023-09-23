@@ -804,7 +804,10 @@ function nuReformat(t) {
 function nuOpenAce(lang, obj) {
 
 	var ts = new Date().getTime();
-	window.nuAce = [lang, obj];
+	
+	const theme = nuUXOptions.nuAceTheme ? nuUXOptions.nuAceTheme : 'default';
+	
+	window.nuAce = [lang, obj, theme];
 
 	window.open('core/nuace.php?' + ts);
 
