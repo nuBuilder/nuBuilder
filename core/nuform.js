@@ -1628,7 +1628,7 @@ function nuSetObjectBounds(obj, top = null, left = null, width = null, height = 
         obj.style.height = height + 'px';
     if (width !== null)
         obj.style.width = width + 'px';
-    if (!absolute)
+    if (absolute || absolute === null)
         obj.style.position = 'absolute';
 
     return $(obj);
@@ -4449,6 +4449,7 @@ function nuBrowseTable() {
 			const id = `nucell_${rowIndex}_${colIndex}`;
 
 			const div = nuCreateElementWithId('div', id, 'nuRECORD');
+
 			const $div = nuSetObjectBounds(div, topOffset, leftOffset, columnWidth, rowHeight, true);
 			div.setAttribute('data-nu-row', rowIndex);
 			div.setAttribute('data-nu-column', colIndex);
