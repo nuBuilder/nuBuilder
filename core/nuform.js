@@ -55,9 +55,6 @@ function nuBuildForm(f) {
 	$('#nubody').off('.nuresizecolumn').css('transform', 'scale(1)');
 	$('html,body').scrollTop(0).scrollLeft(0);
 
-	nuSetProperty('CLONED_RECORD', 0);
-	nuSetProperty('NEW_RECORD', 0);
-
 	if (nuNeedToLoginAgain(f)) return;
 
 	const formType = nuFormType();

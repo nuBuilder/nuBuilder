@@ -679,7 +679,7 @@ function nuUpdateData(action, instruction, close) {
 		nuSaveEditor();
 	}
 
-	if (nuFORM.getCurrent().record_id == -1) { nuSetProperty('NEW_RECORD', 1); }
+	// if (nuFORM.getCurrent().record_id == -1) { nuSetProperty('NEW_RECORD', 1); }
 
 	const current = window.nuFORM.getCurrent();
 	let last = $.extend(true, {}, current);

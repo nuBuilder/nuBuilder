@@ -645,6 +645,7 @@ function nuGetEditForm($F, $R){
 	if (!$r) {
 		return; // form does not exist
 	}
+
 	$SQL							= new nuSqlString(nuReplaceHashVariables($r->sfo_browse_sql));
 
 	$f->id							= $r->zzzzsys_form_id;

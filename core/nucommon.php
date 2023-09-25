@@ -324,6 +324,7 @@ function nuSetHashList($p){
 
 		$h['PREVIOUS_RECORD_ID']	= addslashes($rid ?? '');
 		$h['RECORD_ID']				= addslashes($rid ?? '');
+		// $h['NEW_RECORD']			= addslashes($rid == -1 ? '1' : '0');
 		$h['FORM_ID']				= addslashes($fid ?? '');
 		$h['SUBFORM_ID']			= addslashes(nuObjKey($_POST['nuSTATE'],'object_id', ''));
 		$h['ID']					= addslashes(nuObjKey($_POST['nuSTATE'],'primary_key', ''));
