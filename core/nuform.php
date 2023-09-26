@@ -605,8 +605,10 @@ function nuDefaultObject($r, $t){
 	$o->height			= $height	== null ? $r->sob_all_height : $height;
 
 	$o->valid			= $r->sob_all_validate;
-	$o->read			= $r->sob_all_access;
 	$o->format			= '';
+
+	$accessCondition	= $r->sob_all_access_condition ?? null;
+	$o->read			= nuGetObjectAccess($r->sob_all_access, $accessCondition);
 
 	$countt = count($t);
 	for($i = 0 ; $i < $countt ; $i++){
@@ -618,6 +620,25 @@ function nuDefaultObject($r, $t){
 	}
 
 	return $o;
+
+}
+
+function nuGetObjectAccess($access, $condition) {
+
+	if ($access == 9 && !empty(trim($condition))) {
+
+		$condition	= nuReplaceHashVariables($condition);
+		$stmt		= nuRunQuery($condition);
+		if (db_num_rows($stmt) == 1) {
+			$value = db_fetch_row($stmt)[0];
+			return $value;
+		} else {
+			return 0; 	// read/visible
+		}
+
+	} else {
+		return $access;
+	}
 
 }
 

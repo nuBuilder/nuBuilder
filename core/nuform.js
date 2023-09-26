@@ -5161,9 +5161,6 @@ function nuDeleteAllAction() {
 
 function nuCloneAction() {
 
-	nuSetProperty('CLONED_RECORD', 1);
-	nuSetProperty('CLONED_RECORD_ID', nuRecordId());
-
 	window.nuTimesSaved = 0;
 
 	$('[data-nu-primary-key]').each(function () {
