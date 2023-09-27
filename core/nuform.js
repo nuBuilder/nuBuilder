@@ -482,7 +482,8 @@ function nuRestoreScrollPositions() {
 	$(function () {
 
 		$('textarea').each(function () {
-			$(this).scrollTop(window['nuScrollTop_' + this.id]);
+			const position = window['nuScrollTop_' + this.id] || 0;
+			$(this).scrollTop(position);
 		});
 
 	});

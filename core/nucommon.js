@@ -331,6 +331,8 @@ function nuGetBreadcrumb(bc) {
 		if (nuOnBeforeGetBreadcrumb(bc) == false) return;
 	}
 
+	nuSaveScrollPositions();
+
 	nuCursor('progress');
 
 	var a = arguments.length;
