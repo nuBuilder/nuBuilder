@@ -276,6 +276,7 @@ function nuBuildForm(f) {
 
 	nuCursor('default');
 
+	window.nuPORTRAITSCREEN = false;
 	if (!nuIsMobile()) {
 		$('#nuSearchField').focus();
 	} else {
@@ -6231,6 +6232,8 @@ function nuPortraitScreen(columns) {
 	$('#nubody').css('transform', 'scale(1)');
 
 	if (nuFormType() == 'browse') { return; }
+
+	window.nuPORTRAITSCREEN = true;
 
 	$('.nuBuilderLink').remove();
 	if (arguments.length == 0) { columns = 1; }

@@ -578,7 +578,7 @@ function nuBuildLookup(t, s, like) {
 }
 
 function nuCanArrangeObjects() {
-	return nuGlobalAccess() && nuSERVERRESPONSE.objects.length > 0 && !(nuIsMobile() && nuCurrentProperties().mobile_view);
+	return nuGlobalAccess() && nuSERVERRESPONSE.objects.length > 0 &&  !window.nuPORTRAITSCREEN && !(nuIsMobile() && nuCurrentProperties().mobile_view);
 }
 
 function nuPopup(f, r, filter) {
