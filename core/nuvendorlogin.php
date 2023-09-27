@@ -18,40 +18,41 @@ if($_SESSION['nubuilder_session_data']['IS_DEMO']){
 	return;
 }
 
-if ( $result == 1 ) {
+$page = null;
+if ($result == 1) {
 
 	$recordObj		= db_fetch_object($obj);
 	$logon_info		= json_decode($recordObj->sss_access);
-	$_user			= $logon_info->session->zzzzsys_user_id;
-	$_extra_check	= $logon_info->session->global_access;
+	$globalAccess	= $logon_info->session->global_access == '1';
 
-	if ( $_user == $_SESSION['nubuilder_session_data']['GLOBEADMIN_NAME'] && $_extra_check == '1' ) {
-		$page	= nuVendorGood($appId, $table);
-	} else {
-		$page	= nuVendorBad($appId);
+	if ($globalAccess) {
+		$page		= nuGetVendorURL($appId, $table);
 	}
 
-} else {
-		$page   = nuVendorBad($appId);
 }
 
-header("Location: $page");
+if ($page) {
+	header("Location: $page");
+} else {
+	echo "Acess Denied.";
+}
 
-function nuVendorGood($appId, $table) {
+function nuGetVendorURL($appId, $table) {
 
 	$time = time();
 
-	$page = nuVendorBad($appId);
+	$page = null;
 	if ($appId == 'PMA') {
 
 		$dbName = $_SESSION['nubuilder_session_data']['DB_NAME'];
 		$table = $table == "" ? "" : "&table=$table";
 
-		if ($table != '') {
+		if ($table) {
 			$page = "libs/nudb/index.php?route=/sql&pos=0&db=$dbName&table=$table&$time=$time";
 		} else {
 			$page = "libs/nudb/index.php?route=/database/structure&server=1&db=$dbName&$time=$time";
 		}
+
 	} elseif ($appId == 'TFM') {
 		$page = "libs/tinyfilemanager/tinyfilemanager.php";
 	}
@@ -60,15 +61,6 @@ function nuVendorGood($appId, $table) {
 
 	return $page;
 	
-}
-
-function nuVendorBad($appId) {
-
-	$time = time();
-	$page = "nuvendorlogout.php?$time=$time";
-	setcookie("nu_".$appId,	"bad");
-
-	return $page;
 }
 
 ?>
