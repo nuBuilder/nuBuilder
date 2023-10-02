@@ -3480,7 +3480,10 @@ function nuAddEditTabs(p, w) {
 	const noSearchColumns = nuFORM.getProperty('nosearch_columns');
 
 	noSearchColumns.forEach(function(column) {
-		document.getElementById(`nusort_${column}`).classList.add('nuNoSearch');
+		const nuSortElement = document.getElementById(`nusort_${column}`);
+		if (nuSortElement) {
+			nuSortElement.classList.add('nuNoSearch');
+		}
 	});
 
 	window.nuBrowseWidth = browseTitleMaxLength;
