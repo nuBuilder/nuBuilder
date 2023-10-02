@@ -5,7 +5,7 @@ function nuInitJSOptions() {
 
 		window.nuAdminButtons =
 		{
-			'nuppDebug': true,
+			'nuDebug': true,
 			'nuPHP': true,
 			'nuRefresh': true,
 			'nuObjects': true,
