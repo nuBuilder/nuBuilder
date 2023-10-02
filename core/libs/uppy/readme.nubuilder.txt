@@ -1,1 +1,2 @@
-Removed .map reference.
+- Removed .map reference.
+- Locales: https://www.jsdelivr.com/package/npm/@uppy/locales?tab=files&path=dist
