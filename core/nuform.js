@@ -6936,15 +6936,20 @@ function nuUppySetLanguage(uppy, language) {
 
 	const userLanguage = language || nuUserLanguage();
 	let langResult = nuUppyGetLanguageCodeAndLocale(userLanguage);
-	if (langResult) {
-		$.getScript(`/core/libs/uppy/locales/${langResult.code}.min.js`, function(data, textStatus, jqxhr) {
+
+	const setUppyLanguage = (locale) => {
+		if (locale) {
+			uppy.setOptions({ locale });
+		}
+	};
+
+	if (langResult && !langResult.locale) {
+		$.getScript(`/core/libs/uppy/locales/${langResult.code}.min.js`, function (data, textStatus, jqxhr) {
 			langResult = nuUppyGetLanguageCodeAndLocale(userLanguage);
-			if (langResult) {
-				uppy.setOptions({
-					locale: langResult.locale
-				});
-			}
+			setUppyLanguage(langResult.locale);
 		});
+	} else {
+		setUppyLanguage(langResult.locale);
 	}
 
 	return langResult;
