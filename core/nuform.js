@@ -1057,7 +1057,7 @@ function nuINPUTfileFileSystem($fromId, w, i, l, p, prop, id) {
 	html =  html.replaceAll('#uppy_div#', id + '_uppy_div');
 	html =  html.replaceAll('#this_object_id#', id);
 	html =  html.replaceAll('nuInitUppy()','nuInitUppy' + '_' + id + '()');
-	html =  html.replaceAll('new Uppy.Core()','new Uppy.Uppy()');	
+	html =  html.replaceAll('new Uppy.Core()','new Uppy.Uppy()');
 
 	nuSetObjectBounds($('#' + id), obj.top, obj.left, obj.width, obj.height)
 	.addClass('nuFileUppy').html(html);
@@ -6885,5 +6885,61 @@ function nuAttachSaveButtonTo(i, dx, dy, h, w, fs) {
 	if (nuSelectedTabNumber() !== '0') sb.css('display', 'none');
 
 	return sb;
+
+}
+
+function nuUppyGetLanguageCodeAndLocale(language) {
+
+	const languagesData = [
+		{ language: 'Vietnamese', code: 'vi_VN', locale: Uppy.locales.vi_VN },
+		{ language: 'Turkish', code: 'tr_TR', locale: Uppy.locales.tr_TR },
+		{ language: 'Spanish', code: 'es_ES', locale: Uppy.locales.es_ES },
+		{ language: 'Slovak', code: 'sk_SK', locale: Uppy.locales.sk_SK },
+		{ language: 'Russian', code: 'ru_RU', locale: Uppy.locales.ru_RU },
+		{ language: 'Romanian', code: 'ro_RO', locale: Uppy.locales.ro_RO },
+		{ language: 'Portuguese', code: 'pt_PT', locale: Uppy.locales.pt_PT },
+		{ language: 'Polish', code: 'pl_PL', locale: Uppy.locales.pl_PL },
+		{ language: 'Japanese', code: 'ja_JP', locale: Uppy.locales.ja_JP },
+		{ language: 'Italian', code: 'it_IT', locale: Uppy.locales.it_IT },
+		{ language: 'Hindi', code: 'hi_IN', locale: Uppy.locales.hi_IN },
+		{ language: 'Greek', code: 'el_GR', locale: Uppy.locales.el_GR },
+		{ language: 'German', code: 'de_DE', locale: Uppy.locales.de_DE },
+		{ language: 'French', code: 'fr_FR', locale: Uppy.locales.fr_FR },
+		{ language: 'Dutch', code: 'nl_NL', locale: Uppy.locales.nl_NL },
+		{ language: 'Danish', code: 'da_DK', locale: Uppy.locales.da_DK },
+		{ language: 'Czech', code: 'cs_CZ', locale: Uppy.locales.cs_CZ },
+		{ language: 'Chinese', code: 'zh_CN', locale: Uppy.locales.zh_CN },
+		{ language: 'Catalan', code: 'ca_ES', locale: Uppy.locales.ca_ES },
+		{ language: 'Armenian', code: 'hy_AM', locale: Uppy.locales.hy_AM },
+		{ language: 'Arabic', code: 'ar_SA', locale: Uppy.locales.ar_SA },
+		{ language: 'Afrikaans', code: 'af_ZA', locale: Uppy.locales.af_ZA }
+    ];
+
+	const languageData = languagesData.find(data => data.language === language);
+
+	if (languageData) {
+		return { code: languageData.code, locale: languageData.locale };
+	} else {
+		return null;
+	}
+
+}
+
+function nuUppySetLanguage(uppy, language) {
+
+	const userLanguage = language || nuUserLanguage();
+	let langResult = nuUppyGetLanguageCodeAndLocale(userLanguage);
+	if (langResult) {
+		$.getScript(`/core/libs/uppy/locales/${langResult.code}.min.js`, function(data, textStatus, jqxhr) {
+			langResult = nuUppyGetLanguageCodeAndLocale(userLanguage);
+			if (langResult) {
+				uppy.setOptions({
+					locale: langResult.locale
+				});
+			}
+		});
+	}
+
+	return langResult;
 
 }
