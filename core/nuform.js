@@ -6925,6 +6925,13 @@ function nuUppyGetLanguageCodeAndLocale(language) {
 
 }
 
+function nuUppyCreate(language) {
+
+	let uppy = new Uppy.Uppy();
+	nuUppySetLanguage(uppy, language)
+	return uppy;
+}
+
 function nuUppySetLanguage(uppy, language) {
 
 	const userLanguage = language || nuUserLanguage();
