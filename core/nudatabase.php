@@ -231,7 +231,7 @@ function db_is_auto_id($table, $primaryKey) {
 	}
 
 	$row = db_fetch_object($stmt);
-	return $row->Extra == 'auto_increment';
+	return ($row->Extra == 'auto_increment' || ($nuConfigIntegerPKsAuto && str_contains($row->Type, 'int')));
 
 }
 
