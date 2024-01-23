@@ -627,8 +627,8 @@ function nuGetObjectAccess($access, $condition) {
 
 	if ($access == 9 && !empty(trim($condition))) {
 
-		$condition	= nuReplaceHashVariables($condition);
-		$stmt		= nuRunQueryString($condition);
+		$sql	= nuReplaceHashVariables($condition);
+		$stmt	= nuRunQueryString($sql, $condition);
 		if (db_num_rows($stmt) == 1) {
 			$value = db_fetch_row($stmt)[0];
 			return $value;
