@@ -222,6 +222,8 @@ function nuSanitizeSqlQuery($query) {
 
 function db_is_auto_id($table, $primaryKey) {
 
+	global $nuConfigIntegerPKsAuto;
+
 	$query = "SHOW COLUMNS FROM `$table` WHERE `Field` = ?";
 	$stmt = nuRunQuery($query, [$primaryKey]);
 
