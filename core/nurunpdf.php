@@ -549,10 +549,11 @@ class nuSECTION{
 			$countSectionObjects = count($sectionObjects);
 			for($obj = 0 ; $obj < $countSectionObjects ; $obj++){
 
-				if(count($objectParts[$sectionObjects[$obj]]) <= $pages){
-					$os[]					 = $objectParts[$sectionObjects[$obj]][$i];
-				}
-
+//				if(count($objectParts[$sectionObjects[$obj]]) <= $pages){
+					if($i < count($objectParts[$sectionObjects[$obj]])){
+						$os[]					 = $objectParts[$sectionObjects[$obj]][$i];
+					}
+//				}
 			}
 
 			$s->objects						= $os;																		//-- add objects to section
