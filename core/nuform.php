@@ -1251,7 +1251,7 @@ function nuBrowseRows($f){
 	if(!$haslike	&& $haswhere){	$S->setWhere(" $hardwhere AND $where");}
 
 	if(isset($P['sort']) && $P['sort'] != '-1'){
-		$S->setOrderBy(' ORDER BY ' . $S->fields[$P['sort'] + 1] . ' ' . $P['sort_direction']);
+		$S->setOrderBy(' ORDER BY ' . nuBrowseRemoveFieldAlias($S->fields[$P['sort'] + 1]) . ' ' . $P['sort_direction']);
 	}
 
 	$a				= [];
