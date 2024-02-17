@@ -1474,7 +1474,7 @@ function nuAddInputIcon(id, icon) {
 		}
 	}
 
-	if (icon !== undefined && icon !== null && icon !== '') {
+	if (icon !== undefined && icon !== null && icon !== '' && !nuUserA11Y()) {
 
 		if (!icon.includes('|')) {
 			addIcon(id, icon, false);
