@@ -973,8 +973,10 @@ function nuSelectOptions($sql) {
 	$sql = nuReplaceHashVariables($sql);
 
 	$sqlFirstChars = nuTrim(substr($sql, 0, 20));
+	$sqlFirstCharsNoSpacesNoLineBreaks = preg_replace('/\s+/', '', $sqlFirstChars);
 
-	if (nuStringStartsWith('SELECT', $sqlFirstChars, true) || nuStringStartsWith('WITH', $sqlFirstChars, true)) {	//-- sql statement
+	//-- sql statement
+	if (nuStringStartsWith('SELECT', $sqlFirstChars, true) || nuStringStartsWith('(SELECT', $sqlFirstCharsNoSpacesNoLineBreaks, true) || nuStringStartsWith('WITH', $sqlFirstChars, true)) {
 		
 		$stmt = nuRunQueryString($sql, $sqlWithHk);
 
@@ -986,14 +988,16 @@ function nuSelectOptions($sql) {
 			$options[] = $row;
 		}
 
-	} elseif (nuStringStartsWith('[', $sqlFirstChars) && is_array(nuJsonDecode($sql))) {								//-- Array style
+	//-- Array style
+	} elseif (nuStringStartsWith('[', $sqlFirstChars) && is_array(nuJsonDecode($sql))) {
 			
 			$arr = nuJsonDecode($sql);
 			foreach($arr as $item) {
 				$options[] = nuSelectAddOption($item, $item);
 			}
 
-	} elseif (nuStringStartsWith('%LANGUAGES%', $sqlFirstChars, true)) {											//-- language Files
+	//-- language Files
+	} elseif (nuStringStartsWith('%LANGUAGES%', $sqlFirstChars, true)) {
 
 		foreach(glob("languages/*.sql") as $file)  {
 
@@ -1002,6 +1006,7 @@ function nuSelectOptions($sql) {
 
 		}
 
+		//-- SHOW (FULL) TABLES
 	} elseif (nuStringStartsWith('SHOW TABLES', $sqlFirstChars) || nuStringStartsWith('SHOW FULL TABLES', $sqlFirstChars)) {
 
 		$stmt = nuRunQuery($sql);
@@ -1011,7 +1016,8 @@ function nuSelectOptions($sql) {
 			}
 		}
 
-	} else {																										//-- comma delimited string
+	//-- comma delimited string
+	} else {
 
 		$parts = explode('|', nuRemoveNonCharacters($sql));
 
