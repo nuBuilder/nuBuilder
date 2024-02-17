@@ -550,7 +550,11 @@ class nuSECTION{
 			for($obj = 0 ; $obj < $countSectionObjects ; $obj++){
 
 				if(count($objectParts[$sectionObjects[$obj]]) <= $pages){
-					$os[]					 = $objectParts[$sectionObjects[$obj]][$i];
+					
+					if($i < count($objectParts[$sectionObjects[$obj]])){
+						$os[]					 = $objectParts[$sectionObjects[$obj]][$i];
+					}
+					
 				}
 
 			}
