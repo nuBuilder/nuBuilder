@@ -672,6 +672,7 @@ function nuGetEditForm($F, $R){
 	$f->id							= $r->zzzzsys_form_id;
 	$f->form_code					= $r->sfo_code;
 	$f->form_description			= $r->sfo_description;
+	$f->form_group					= $r->sfo_group ?? '';
 	$f->form_type					= $r->sfo_type;
 	$f->browse_title_multiline 		= $r->sfo_browse_title_multiline ?? false;
 	$f->browse_autoresize_columns	= $r->sfo_browse_autoresize_columns ?? null;

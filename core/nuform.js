@@ -113,6 +113,7 @@ function nuBuildForm(f) {
 	b.pages = f.pages;
 	b.form_code = f.form_code;
 	b.form_description = f.form_description;
+	b.form_group = f.form_group;
 	b.form_type = f.form_type;
 	b.run_code = f.run_code;
 	b.run_description = f.run_description;
