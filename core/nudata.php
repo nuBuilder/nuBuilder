@@ -339,7 +339,7 @@ function nuUpdateDatabase() {
 	class UpdateData {
 		public $columns = [];
 		public $values = [];
-		public $insert = [];
+		public $inserts = [];
 	}
 
 	$nudata = $nuHash['nuFORMdata'];
