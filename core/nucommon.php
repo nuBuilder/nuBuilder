@@ -261,6 +261,7 @@ function nuSetHashList($p){
 
 		$fid		= addslashes(nuObjKey($p,'form_id', ''));
 		$rid		= addslashes(nuObjKey($p,'record_id', ''));
+		$formGroup	= addslashes(nuObjKey($p,'form_group', ''));
 
 		$A			= nuGetUserAccess();
 
@@ -326,6 +327,7 @@ function nuSetHashList($p){
 		$h['RECORD_ID']				= addslashes($rid ?? '');
 		$h['NEW_RECORD']			= addslashes($rid == -1 ? '1' : '0');
 		$h['FORM_ID']				= addslashes($fid ?? '');
+		$h['FORM_GROUP']			= addslashes($formGroup ?? '');
 		$h['SUBFORM_ID']			= addslashes(nuObjKey($_POST['nuSTATE'],'object_id', ''));
 		$h['ID']					= addslashes(nuObjKey($_POST['nuSTATE'],'primary_key', ''));
 		$h['CODE']					= addslashes(nuObjKey($_POST['nuSTATE'],'code', ''));
