@@ -2801,3 +2801,18 @@ function nuRandomPassword(characterArray, size) {
 	return shuffled.slice(0, size).join("");
 
 }
+
+function nuMonthArray(options = {month: 'long'}, locale = 'en-US') {
+
+	const arr = [];
+
+	for (let i = 0; i < 12; i++) {
+		const date = new Date(Date.UTC(2000, i, 1));
+		const item = date.toLocaleString(locale, options);
+		arr.push(item);
+	}
+
+	return arr;
+
+}
+
