@@ -2377,4 +2377,8 @@ function nuIncludeConfigPHPFiles() {
 
 }
 
+function nuPad($i, $length, $pad = 0) {
+	return str_pad((string)$i, $length, (string)$pad, STR_PAD_LEFT);
+}
+
 ?>
