@@ -736,14 +736,14 @@ class nuSECTION{
 //-- 0 = a line that fits within the width of the Object
 //-- 1 = remaining part of the paragraph
 
-		$this->PDF->SetFont($O->fontFamily, $O->fontWeight, $O->fontSize);
+		$this->PDF->SetFont($O->fontFamily, $O->fontWeight, $O->fontSize);;
 
-		if($O->width - 2 > $this->PDF->GetStringWidth((utf8_encode($text)))){						//-- all paragraph fits in 1 line
+		if($O->width - 2 > $this->PDF->GetStringWidth((mb_convert_encoding($text, 'UTF-8', 'ISO-8859-1')))){						//-- all paragraph fits in 1 line
 			return [$text, ''];
 		}
-
+ 
 		$to			 = 1;
-		while($O->width - 2 > $this->PDF->GetStringWidth(utf8_encode(substr(($text), 0, $to)))){	//-- keep getting wider until too wide
+		while($O->width - 2 > $this->PDF->GetStringWidth(mb_convert_encoding(substr(($text), 0, $to), 'UTF-8', 'ISO-8859-1'))){	//-- keep getting wider until too wide
 			$to++;
 		}
 
@@ -753,7 +753,7 @@ class nuSECTION{
 		$wordSplit			= $to;
 
 		for($i = strlen($widestLine) - 1 ; $i > 1 ; $i--){
-			if (!$foundLongestWord && $this->PDF->GetStringWidth(utf8_encode(substr($widestLine, 0, $i))) < $O->width - 2) {
+			if (!$foundLongestWord && $this->PDF->GetStringWidth(mb_convert_encoding(substr($widestLine, 0, $i), 'UTF-8', 'ISO-8859-1')) < $O->width - 2) {
 				$wordSplit			= $i;
 				$foundLongestWord	= true;
 			}
@@ -765,7 +765,7 @@ class nuSECTION{
 				break;
 			}
 
-		}
+		}	
 
 		if (!$foundSeperator)
 			$to = $wordSplit;
