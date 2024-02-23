@@ -881,6 +881,40 @@ function nuAddToHashList($J, $run){
 
 }
 
+function nuGetUserPermissionItems($userId = null){
+	
+	if ($userId === null) {
+		$userId = $_POST['nuHash']['USER_ID'];
+	}
+
+	$query		= "
+					SELECT
+						pme_ident
+					FROM
+						`zzzzsys_user_permission`
+					LEFT JOIN zzzzsys_permission_item ON zzzzsys_permission_item_id = upe_ident
+					WHERE
+						upe_zzzzsys_user_id = ?
+				";
+
+	$stmt		= nuRunQuery($query, [$userId]);
+
+	$permissions = array();
+
+	while ($row = db_fetch_row($stmt)) {
+		$permissions[] = $row[0];
+	}
+
+	return $permissions;
+}
+
+function nuUserHasPermission($item, $userId = null) {
+
+	$permissions = nuGetUserPermissionItems($userId);
+	return nuArrayContains($item, $permissions);
+
+}
+
 function nuGetUserAccess(){
 
 	$A							= [];
@@ -909,6 +943,7 @@ function nuGetUserAccess(){
 	$A['USER_POSITION']			= $j->session->sus_position;
 	$A['USER_ADDITIONAL1']		= $j->session->sus_additional1;
 	$A['USER_ADDITIONAL2']		= $j->session->sus_additional2;
+	$A['USER_PERMISSION_ITEMS']	= $j->session->user_permission_items;
 	$A['USER_A11Y']				= $j->session->sus_accessibility_features == '1' ? true : false;
 	$A['LANGUAGE']				= $j->session->language;
 
@@ -2130,6 +2165,20 @@ function nuStringRight($str, $length) {
 	 return substr($str, -$length);
 }
 
+function nuArrayContains($needle, $haystack) {
+	return in_array($needle, $haystack);
+}
+
+function nuArrayToSeparated($array, $separator = ', ') {
+
+	if (!is_array($array)) {
+		return "";
+	}
+
+	return implode($separator, $array);
+
+}
+
 function nuStringAddTrailingCharacter($str, $char = "/") {
 
 	if(substr($str, -1) != $char) {
@@ -2137,20 +2186,6 @@ function nuStringAddTrailingCharacter($str, $char = "/") {
 	}
 
 	return $str;
-
-}
-
-function nuArrayContains($needle, $haystack) {
-	return in_array($needle, $haystack);
-}
-
-function nuArrayToSeparated($array, $separator = ',') {
-
-	if (!is_array($array)) {
-		return "";
-	}
-
-	return implode($separator, $array);
 
 }
 

@@ -243,6 +243,7 @@ function nuAlterSystemTables(){
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_json` MEDIUMTEXT NULL DEFAULT NULL AFTER `sus_expires_on`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_accessibility_features` VARCHAR(1) NULL DEFAULT NULL AFTER `sus_expires_on`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_change_password` VARCHAR(1) NULL DEFAULT NULL AFTER `sus_expires_on`;");
+	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_permission` VARCHAR(1000) NULL DEFAULT NULL AFTER `sus_additional2`;");
 
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_access` ADD `sal_use_2fa` VARCHAR(1) NULL DEFAULT NULL AFTER `sal_zzzzsys_form_id`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_access` ADD `sal_group` VARCHAR(100) NULL DEFAULT NULL AFTER `sal_description`;");
@@ -359,6 +360,12 @@ function nuRemoveNuRecords(){
 
 	$s = "DELETE FROM sys_email_template WHERE zzzzsys_email_template_id LIKE 'nu%'";
 	nuRunQueryNoDebug($s);
+	
+	$s = "DELETE FROM zzzzsys_permission_item WHERE zzzzsys_permission_item_id LIKE 'nu%'";
+	nuRunQueryNoDebug($s);
+
+	$s = "DELETE FROM zzzzsys_user_permission WHERE zzzzsys_permission_id LIKE 'nu%'";
+	nuRunQueryNoDebug($s);
 
 	//-- delete all timezones
 	$s = "DELETE FROM sys_zzzzsys_timezone";
@@ -430,6 +437,8 @@ function nuSystemList(){
 		$t[]	= 'zzzzsys_note_category';
 		$t[]	= 'zzzzsys_info';
 		$t[]	= 'zzzzsys_config';
+		$t[]	= 'zzzzsys_permission_item_id';
+		$t[]	= 'zzzzsys_permission_item';
 
 	return $t;
 }
