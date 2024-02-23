@@ -2140,7 +2140,11 @@ function nuStringAddTrailingCharacter($str, $char = "/") {
 
 }
 
-function nuArrayToSeparated($array, $separator = ', ') {
+function nuArrayContains($needle, $haystack) {
+	return in_array($needle, $haystack);
+}
+
+function nuArrayToSeparated($array, $separator = ',') {
 
 	if (!is_array($array)) {
 		return "";
