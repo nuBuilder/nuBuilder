@@ -1019,7 +1019,7 @@ function nuGetNumberFormat($f){
 	$t = nuRunQuery($s);
 
 	while($r = db_fetch_object($t)){
-		if($r->srm_format == $f){
+		if($r->srm_format === $f){
 			return nuJsonDecode($r->srm_currency);
 		}
 	}
