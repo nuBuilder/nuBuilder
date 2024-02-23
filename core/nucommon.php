@@ -1019,7 +1019,7 @@ function nuGetNumberFormat($f){
 	$t = nuRunQuery($s);
 
 	while($r = db_fetch_object($t)){
-		if($r->srm_format == $f){
+		if($r->srm_format === $f){
 			return nuJsonDecode($r->srm_currency);
 		}
 	}
@@ -2137,6 +2137,16 @@ function nuStringAddTrailingCharacter($str, $char = "/") {
 	}
 
 	return $str;
+
+}
+
+function nuArrayToSeparated($array, $separator = ', ') {
+
+	if (!is_array($array)) {
+		return "";
+	}
+
+	return implode($separator, $array);
 
 }
 
