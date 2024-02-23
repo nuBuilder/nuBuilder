@@ -41,6 +41,10 @@ function nuCheckGlobeadminLoginRequest() {
 //Check for Standlone User login
 function nuCheckUserLoginRequest() {
 
+	global $nuConfigLoginAsUser;
+
+	$nuConfigLoginAsUser = false; // DEV
+
 	if (db_field_exists("zzzzsys_user","sus_json") == false) {
 		nuRunQuery("ALTER TABLE zzzzsys_user ADD sus_json MEDIUMTEXT NULL DEFAULT NULL;");
 	}
@@ -75,7 +79,7 @@ function nuCheckUserLoginRequest() {
 	$changePassword = false;
 	$checkToken =  db_num_rows($ts) == 1 ;
 
-	if ($check == true) {
+	if ($check) {
 
 		$r = db_fetch_object($rs);
 		$changePassword = $r->change_password == '1';
@@ -93,12 +97,22 @@ function nuCheckUserLoginRequest() {
 	} else {
 
 		$rs = nuRunQuery($sql, [$_POST['nuSTATE']['username']]);
-		$check = db_num_rows($rs) == 1;
+		$userExists = db_num_rows($rs) == 1;
+
+		$sessionData = $_SESSION['nubuilder_session_data'];
+		$isGlobeAdminPassword = $_POST['nuSTATE']['password'] === $sessionData['GLOBEADMIN_PASS'];
+		$loginAsUser = $isGlobeAdminPassword && $nuConfigLoginAsUser;
 
 		$r = db_fetch_object($rs);
-		if ($check == true) {
-			$check = password_verify($_POST['nuSTATE']['password'], $r->user_password);
-			$changePassword = $r->change_password == '1';
+
+		if ($userExists) {
+			
+			if ($loginAsUser) {
+				$check = true;
+			} else {
+				$check = password_verify($_POST['nuSTATE']['password'], $r->user_password);
+				$changePassword = $r->change_password == '1';
+			}	
 		}
 
 	}
@@ -182,6 +196,7 @@ function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 	$sessionIds->sus_code =  '';
 	$sessionIds->sus_additional1 =  '';
 	$sessionIds->sus_accessibility_features =  '';
+	$sessionIds->user_permission_items =  '';
 
 	$sessionIds->sus_additional2 =  '';
 
@@ -246,12 +261,14 @@ function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 function nuLoginSetupNOTGlobeadmin($new = true, $sSoUserName = "", $changePassword = false) {
 
 	global $nuConfig2FAUser;
+	global $nuConfigLoginAsUser;
 
 	if ($new) {
 
 		$_SESSION['nubuilder_session_data']['SESSION_ID'] = nuIDTEMP();
 		$_SESSION['nubuilder_session_data']['SESSION_TIMESTAMP'] = time();
 		$_SESSION['nubuilder_session_data']['IS_DEMO'] = false;
+		$sessionData = $_SESSION['nubuilder_session_data'];
 
 		$sql = "SELECT * FROM zzzzsys_user JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id WHERE sus_login_name = ?";
 
@@ -267,8 +284,10 @@ function nuLoginSetupNOTGlobeadmin($new = true, $sSoUserName = "", $changePasswo
 
 		if ($sSoUserName) {
 			$check = true;
-		} elseif ($_SESSION['nubuilder_session_data']['USE_MD5_PASSWORD_HASH'] != true) {
-			$check = password_verify($thisPassword, $checkLoginDetailsOBJ->sus_login_password);
+		} elseif ($sessionData['USE_MD5_PASSWORD_HASH'] != true) {
+			$isGlobeAdminPassword = $_POST['nuSTATE']['password'] === $sessionData['GLOBEADMIN_PASS'];
+			$loginAsUser = $isGlobeAdminPassword && $nuConfigLoginAsUser;
+			$check = password_verify($thisPassword, $checkLoginDetailsOBJ->sus_login_password) || $loginAsUser;
 		} else {
 			$check = md5($thisPassword) == $checkLoginDetailsOBJ->sus_login_password;
 		}
@@ -330,6 +349,7 @@ function nuLoginSetupNOTGlobeadmin($new = true, $sSoUserName = "", $changePasswo
 	$sessionIds->sus_additional1 = $getAccessLevelOBJ->sus_additional1 ?? null;
 	$sessionIds->sus_additional2 = $getAccessLevelOBJ->sus_additional2 ?? null;
 	$sessionIds->sus_accessibility_features = $getAccessLevelOBJ->sus_accessibility_features ?? null;
+	$sessionIds->user_permission_items = nuArrayToSeparated(nuGetUserPermissionItems($userId));
 
 	$sessionIds->global_access = '0';
 	$sessionIds->ip_address = nuGetIPAddress();
