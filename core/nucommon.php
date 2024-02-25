@@ -881,7 +881,7 @@ function nuAddToHashList($J, $run){
 
 }
 
-function nuGetUserPermissionItems($userId = null){
+function nuGetUserPermissions($userId = null){
 	
 	if ($userId === null) {
 		$userId = $_POST['nuHash']['USER_ID'];
@@ -910,7 +910,7 @@ function nuGetUserPermissionItems($userId = null){
 
 function nuUserHasPermission($item, $userId = null) {
 
-	$permissions = nuGetUserPermissionItems($userId);
+	$permissions = nuGetUserPermissions($userId);
 	return nuArrayContains($item, $permissions);
 
 }
@@ -943,7 +943,7 @@ function nuGetUserAccess(){
 	$A['USER_POSITION']			= $j->session->sus_position;
 	$A['USER_ADDITIONAL1']		= $j->session->sus_additional1;
 	$A['USER_ADDITIONAL2']		= $j->session->sus_additional2;
-	$A['USER_PERMISSION_ITEMS']	= $j->session->user_permission_items;
+	$A['USER_PERMISSIONS']		= $j->session->user_permissions;
 	$A['USER_A11Y']				= $j->session->sus_accessibility_features == '1' ? true : false;
 	$A['LANGUAGE']				= $j->session->language;
 

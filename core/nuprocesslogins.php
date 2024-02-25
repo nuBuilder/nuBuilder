@@ -195,11 +195,10 @@ function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 	$sessionIds->sus_team =  '';
 	$sessionIds->sus_code =  '';
 	$sessionIds->sus_additional1 =  '';
-	$sessionIds->sus_accessibility_features =  '';
-	$sessionIds->user_permission_items =  '';
-
 	$sessionIds->sus_additional2 =  '';
-
+	$sessionIds->sus_accessibility_features =  '';
+	$sessionIds->user_permissions =  '';
+	
 	if ($nuConfig2FAAdmin) {
 		if (nu2FALocalTokenOK($sessionIds->sus_login_name)) {
 			$sessionIds->zzzzsys_form_id = $_SESSION['nubuilder_session_data']['HOME_ID'];
@@ -349,7 +348,7 @@ function nuLoginSetupNOTGlobeadmin($new = true, $sSoUserName = "", $changePasswo
 	$sessionIds->sus_additional1 = $getAccessLevelOBJ->sus_additional1 ?? null;
 	$sessionIds->sus_additional2 = $getAccessLevelOBJ->sus_additional2 ?? null;
 	$sessionIds->sus_accessibility_features = $getAccessLevelOBJ->sus_accessibility_features ?? null;
-	$sessionIds->user_permission_items = nuArrayToSeparated(nuGetUserPermissionItems($userId));
+	$sessionIds->user_permissions = nuArrayToSeparated(nuGetUserPermissions($userId));
 
 	$sessionIds->global_access = '0';
 	$sessionIds->ip_address = nuGetIPAddress();

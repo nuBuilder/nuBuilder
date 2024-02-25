@@ -48,11 +48,6 @@
 	if (empty($user)) nuDie(nuTranslate('Your session has timed out.'));
 
 	$formAndSessionData						= nuGatherFormAndSessionData($user['HOME_ID'], $globalAccess);
-	$sessionData							= $_SESSION['nubuilder_session_data'];
-	$formId									= $formAndSessionData->form_id;
-	$recordId								= $formAndSessionData->record_id;
-
-	$_POST['FORM_ID'] 						= $formId;
 
 	// 2FA: Check authentication status.
 	if ((($globalAccess && nuObjKey($sessionData,'2FA_ADMIN')) || (!$globalAccess && nuObjKey($sessionData,'2FA_USER'))) && nuObjKey($sessionData,'SESSION_2FA_STATUS') == 'PENDING') {
@@ -67,7 +62,12 @@
 			nuDisplayError(nuTranslate('Access denied. Password Change Pending.'));
 		}
 	}
-	
+
+	$sessionData							= $_SESSION['nubuilder_session_data'];
+	$formId									= $formAndSessionData->form_id;
+	$recordId								= $formAndSessionData->record_id;
+
+	$_POST['FORM_ID'] 						= $formId;
 	$_POST['nuHash']['PREVIOUS_RECORD_ID'] 	= $recordId;
 	$_POST['nuHash']['RECORD_ID'] 			= $recordId;
 	$_POST['nuHash']['FORM_ID'] 			= $formId;
@@ -140,7 +140,7 @@
 		$f->forms[0]->user_code					= $globalAccess ? '' : nuObjKey($user, 'USER_CODE', null);
 		$f->forms[0]->user_additional1			= $globalAccess ? '' : nuObjKey($user, 'USER_ADDITIONAL1', null);
 		$f->forms[0]->user_additional2			= $globalAccess ? '' : nuObjKey($user, 'USER_ADDITIONAL2', null);
-	//	$f->forms[0]->user_permission_items		= $globalAccess ? '' : $sessionData['user_permission_items'];
+		$f->forms[0]->user_permissions			= $globalAccess ? '' : nuObjKey($user, 'USER_PERMISSIONSS', null);
 		$f->forms[0]->user_a11y					= $globalAccess ? '' : nuObjKey($user, 'USER_A11Y', null);
 		$f->forms[0]->user_name					= $globalAccess ? '' : nuUser($user['USER_ID'])->sus_name;
 		$f->forms[0]->home_id					= $sessionData['HOME_ID'];
