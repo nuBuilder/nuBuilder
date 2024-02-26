@@ -202,6 +202,18 @@ function nuRunQueryString($sql, $sqlWithHK) {
 
 }
 
+function nuCreateTableFromSelect($tableName, $select, $params = [], $temporary = false) {
+
+	$query = sprintf(
+		'CREATE' . ($temporary ? ' TEMPORARY' : '') . ' TABLE `%s` AS (%s)',
+		$tableName,
+		$select
+	);
+
+	nuRunQuery($query, $params);
+
+}
+
 function nuSanitizeSqlQuery($query) {
 
 	// List of SQL commands to remove
