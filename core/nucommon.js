@@ -60,6 +60,13 @@ String.prototype.nuReplaceAll = function (str1, str2, ignore) {
 	return this.replace(new RegExp(str1.replace(/([\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g, function (c) { return "\\" + c; }), "g" + (ignore ? "i" : "")), str2);
 };
 
+String.prototype.nuStringToArray = function (separator = ',', trim = true) {
+
+    const result = this.split(separator);
+    return trim ? result.map(item => item.trim()) : result;
+
+}
+
 String.prototype.ltrim = function () {
 	return this.replace(/^\s+/, "");
 }
