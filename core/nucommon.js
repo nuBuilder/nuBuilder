@@ -1814,6 +1814,18 @@ function nuUserPermissions() {
 	return nuSERVERRESPONSE.user_permissions.nuStringToArray();
 }
 
+function nuUserHasPermission(item, userOnly = false) {
+
+	const hasPermission = nuUserPermissions().indexOf(item) !== -1;
+
+	if (userOnly === false && nuGlobalAccess()) {
+		return true;
+	}
+
+	return false;
+
+}
+
 function nuUserId() {
 	return nuSERVERRESPONSE.user_id;
 }
