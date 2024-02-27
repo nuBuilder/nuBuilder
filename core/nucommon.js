@@ -1810,6 +1810,10 @@ function nuUserAdditional2() {
 	return nuSERVERRESPONSE.user_additional2;
 }
 
+function nuUserPermissions() {
+	return nuSERVERRESPONSE.user_permissions.nuStringToArray();
+}
+
 function nuUserId() {
 	return nuSERVERRESPONSE.user_id;
 }
