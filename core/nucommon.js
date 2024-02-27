@@ -67,11 +67,11 @@ String.prototype.nuStringToArray = function (separator = ',', trim = true) {
 
 }
 
-String.prototype.ltrim = function () {
+String.prototype.nuLeftTrim = function () {
 	return this.replace(/^\s+/, "");
 }
 
-String.prototype.rtrim = function () {
+String.prototype.nuRightTrim = function () {
 	return this.replace(/\s+$/, "");
 }
 
