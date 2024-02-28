@@ -882,8 +882,8 @@ function nuBindCtrlEvents() {
 		}
 
 	}
-
-	$(document).keydown(function (e) {
+	
+	$(document).on('keydown', function (e) {
 
 		if((e.key === 'PageDown' || e.key === 'PageUp') && nuFormType() == 'browse'){
 			const $nuRecord = $("#nuRECORD");
