@@ -3401,7 +3401,7 @@ function nuAddBreadcrumb(i) {
 	}
 	*/
 
-	$id.css('font-size', 14)
+	$id.css('font-size', '14px')
 		.html(h + nuTranslate(title));
 
 	if (isLast) {
