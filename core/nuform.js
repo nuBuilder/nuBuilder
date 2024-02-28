@@ -541,7 +541,7 @@ function nuAddHomeLogout() {
 			$(div)
 				.addClass('nuBreadcrumb')
 				.css('cursor', "pointer")
-				.css('font-size', 16)
+				.css('font-size', '16px')
 				.attr('onclick', "nuGetBreadcrumb(0)")
 				.html('<i class="fa fa-home" style="font-size:17px;padding:0px 5px 0px 0px"></i>')
 				.attr('title', nuTranslate('Home'));
@@ -3344,7 +3344,7 @@ function nuBuildSubformDeleteTitle(l, id, subform_id) {
 		'width': 52,
 		'height': 50,
 		'text-align': 'center',
-		'font-size': 10,
+		'font-size': '10px',
 		'padding': 0,
 		'position': 'absolute'
 	})

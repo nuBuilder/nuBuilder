@@ -145,7 +145,7 @@ function nuPopupCalendar(pThis, d) {
 			'width': 20,
 			'height': 20,
 			'text-align': 'center',
-			'font-size': 14,
+			'font-size': '14px',
 			'font-style': 'bold',
 			'color': '#000000',
 			'cursor': 'pointer',
@@ -166,7 +166,7 @@ function nuPopupCalendar(pThis, d) {
 		'width': 90,
 		'height': 25,
 		'text-align': 'center',
-		'font-size': 14,
+		'font-size': '14px',
 		'color': '#000000',
 		'cursor': 'pointer',
 	})
@@ -185,7 +185,7 @@ function nuPopupCalendar(pThis, d) {
 			'height': 21,
 			'cursor': 'pointer',
 			'text-align': 'center',
-			'font-size': 14,
+			'font-size': '14px',
 			'color': '#000000',
 		})
 		.html('&#9668;')
@@ -205,7 +205,7 @@ function nuPopupCalendar(pThis, d) {
 			'height': 21,
 			'cursor': 'pointer',
 			'text-align': 'center',
-			'font-size': 14,
+			'font-size': '14px',
 			'color': '#000000',
 		})
 		.html('&#9658;')
@@ -236,7 +236,7 @@ function nuPopupCalendar(pThis, d) {
 		'width': 120,
 		'height': 25,
 		'text-align': 'center',
-		'font-size': 14,
+		'font-size': '14px',
 		'color': '#000000',
 	})
 		.addClass('nuCalendarColor');
@@ -254,7 +254,7 @@ function nuPopupCalendar(pThis, d) {
 			'height': 21,
 			'cursor': 'pointer',
 			'text-align': 'center',
-			'font-size': 14,
+			'font-size': '14px',
 			'color': '#000000',
 		})
 		.html('&#9668;')
@@ -273,7 +273,7 @@ function nuPopupCalendar(pThis, d) {
 			'height': 21,
 			'cursor': 'pointer',
 			'text-align': 'center',
-			'font-size': 14,
+			'font-size': '14px',
 			'color': '#000000',
 		})
 		.html('&#9658;')
@@ -347,7 +347,7 @@ function nuTitleBox(n, l) {
 			'border-width': 1,
 			'text-align': 'center',
 			'font-style': 'bold',
-			'font-size': 14,
+			'font-size': '14px',
 		})
 		.html(nuWeekDayFromString(n))
 		.addClass('nuCalendar nuCalendarColor');
@@ -370,7 +370,7 @@ function nuDayBox(n, l, t) {
 			'height': 20,
 			'cursor': 'pointer',
 			'text-align': 'center',
-			'font-size': 14,
+			'font-size': '14px',
 			'color': '#000000',
 		})
 		.addClass('nuCalendarSelected nuCalendar');

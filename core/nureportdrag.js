@@ -646,7 +646,7 @@ function nuSetTools() {
 		'width': 1200,
 		'height': 25,
 		'background-color': 'lightgrey',
-		'font-size': 16
+		'font-size': '16px'
 	});
 
 	$('#nuToolBar').html(h);
@@ -1355,14 +1355,14 @@ function nuMoveGroup() {
 	e.setAttribute('id', 'grpup');
 	$('#nuDragDialog').append(e);
 
-	$('#' + e.id).css({ 'font-size': 10, 'position': 'absolute', 'left': 15, 'top': 150, 'width': 90, 'height': 30 }).html(opener.nuTranslate('Move Up'));
+	$('#' + e.id).css({ 'font-size': 10 + 'px', 'position': 'absolute', 'left': 15, 'top': 150, 'width': 90, 'height': 30 }).html(opener.nuTranslate('Move Up'));
 	$('#' + e.id).click(function () { nuMoveReportGroup(nuDIALOG.groupNumber, -1); });
 
 	var e = document.createElement('button');
 	e.setAttribute('id', 'grpdn');
 	$('#nuDragDialog').append(e);
 
-	$('#' + e.id).css({ 'font-size': 10, 'position': 'absolute', 'left': 15, 'top': 200, 'width': 90, 'height': 30 }).html(opener.nuTranslate('Move Down'));
+	$('#' + e.id).css({ 'font-size': 10+ 'px', 'position': 'absolute', 'left': 15, 'top': 200, 'width': 90, 'height': 30 }).html(opener.nuTranslate('Move Down'));
 	$('#' + e.id).click(function () { nuMoveReportGroup(nuDIALOG.groupNumber, 1); });
 
 }
