@@ -442,7 +442,7 @@ function nuCloseAfterSave() {
 
 function nuBrowseStickyColumns($record) {
 
-	$record.bind("scroll", function () {
+	$record.on("scroll", function () {
 
 		const scrollLeft = $record.scrollLeft();
 		const scrollTop = $record.scrollTop();
