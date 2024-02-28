@@ -2010,7 +2010,8 @@ function nuIsIframe() {
 
 function nuPreventButtonDblClick() {
 
-	$('.nuActionButton, .nuButton, #nuLogout').not(".nuAllowDblClick").click(function () {
+	$('.nuActionButton, .nuButton, #nuLogout').not(".nuAllowDblClick").on("click", function () {
+
 		const button = $(this);
 		if (button.hasClass('nuReadonly') || button.hasClass('nuAllowDblClick')) {
 			return;
