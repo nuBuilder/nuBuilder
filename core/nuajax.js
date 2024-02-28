@@ -778,7 +778,7 @@ function nuSaveAfterDrag() {
 			alert(data.errors[0]);
 		} else {
 
-			$('div#nuDragDialog div#dialogTitle img#dialogClose').click();
+			$('div#nuDragDialog div#dialogTitle img#dialogClose').trigger( "click" );
 			nuGetBreadcrumb();
 
 		}

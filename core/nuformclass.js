@@ -157,7 +157,7 @@ class nuResponseForm {
 		$(".nuHtml").css('visibility', 'visible');
 		$("[data-nu-tab='x']").css('visibility', 'hidden');
 
-		$('.nuTabSelected').click();
+		$('.nuTabSelected').trigger( "click" );
 
 	}
 
@@ -221,7 +221,7 @@ class nuResponseForm {
 			}
 		}
 
-		$('.nuTabSelected').click();
+		$('.nuTabSelected').trigger( "click" );
 
 	}
 

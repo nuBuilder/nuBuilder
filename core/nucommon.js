@@ -287,7 +287,7 @@ function nuGlobalAccess() {
 
 function loginInputKeyup(event) {
 	if (event.key == 'Enter') {
-		$('input#submit').click();
+		$('input#submit').trigger( "click" );
 	}
 }
 
@@ -546,7 +546,7 @@ function nuLogin(loginTopRow, nuconfigNuWelcomeBodyInnerHTML, logonMode='normal'
 function nuSubmit(e) {
 
 	if (e.key == 'Enter') {
-		$('#submit').click();
+		$('#submit').trigger( "click" );
 	}
 
 }
@@ -1542,7 +1542,7 @@ function nuAddSlashes(s) {
 
 
 function nuOpenTab(i) {
-	$('#nuTab' + i).click();
+	$('#nuTab' + i).trigger( "click" );
 }
 
 function nuSelectedTabNumber(parent = null) {

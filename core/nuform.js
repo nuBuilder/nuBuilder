@@ -3112,7 +3112,7 @@ function nuAddSubformRow(t, e) {
 
 	let ts = $('.nuTabSelected');
 	ts.attr('nu-data-clicked-by-system', '');
-	ts.click();
+	ts.trigger( "click" );
 
 	$('#' + o.form + nuPad3(o.rows) + 'nuRECORD > .nuLookupButton')
 		.on("click", function () {
@@ -3532,7 +3532,7 @@ function nuGetStartingTab() {
 		ts.addClass('nuTabSelected');
 		ts.attr('nu-data-clicked-by-system', '');
 
-		ts.click();
+		ts.trigger( "click" );
 
 	}
 
@@ -3551,7 +3551,7 @@ function nuSetTab(pthis) {
 			ts.classList.add('nuTabSelected');
 			ts.setAttribute('nu-data-clicked-by-system', '');
 
-			ts.click();
+			ts.trigger( "click" );
 
 			break;
 		}
@@ -4585,7 +4585,7 @@ function nuBrowseAdditionalNavButtons() {
 function nuClickSearchColumn(e) {
 
 	var c = e.target.id.substr(12);
-	$('#nuSearchList' + c).click();
+	$('#nuSearchList' + c).trigger( "click" );
 	nuSetSearchColumn();
 
 }
@@ -4666,7 +4666,7 @@ function nuSearchPressed(e) {
 	e.preventDefault();
 
 	if (window.nuBROWSEROW === -1) {
-		$('#nuSearchButton').click();
+		$('#nuSearchButton').trigger( "click" );
 		return;
 	}
 
@@ -4855,7 +4855,7 @@ function nuPopulateLookup(fm, target, setFocus) {
 
 	eval(fm.lookup_javascript);
 
-	$('#dialogClose').click();
+	$('#dialogClose').trigger( "click" );
 
 	if (window.nuaction == 'save' && !nuLookingUp()) {
 		nuSaveAction();
