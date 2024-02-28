@@ -4111,7 +4111,7 @@ function nuBrowseTitle(b, i, l, m) {
 
 	div.setAttribute('id', id);
 
-	var sp = '<span id="nusort_' + i + '" class="nuSort" onclick="nuSortBrowse(' + i + ')" ontouchstart="nuSortBrowse(' + i + ')"> ' + nuTranslate(b[i].title) + ' </span>';
+	var sp = `<span id="nusort_${i}" class="nuSort" onclick="nuSortBrowse(${i})" ontouchstart="(function(event) { nuSortBrowse(${i}); event.preventDefault(); })({ passive: true })"> ${nuTranslate(b[i].title)} </span>`;
 
 	if (bc.sort == i) {
 
