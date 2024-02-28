@@ -146,15 +146,15 @@ String.prototype.nuFormat = function () {
 // "This is an example from {name}".format({name:"Blaine"});
 // "This is an example from {0}".format("Blaine");
 
-$.fn.enterKey = function (fnc) {
-	return this.each(function () {
-		$(this).keypress(function (e) {
-			if (e.key == 'Enter') {
+$.fn.enterKey = function(fnc) {
+	return this.each(function() {
+		$(this).on('keydown', function(e) { 
+			if (e.key === 'Enter' || e.keyCode === 13) {
 				fnc.call(this, e);
 			}
-		})
-	})
-}
+		});
+	});
+};
 
 $.fn.nuFocusWithoutScrolling = function () {
 
