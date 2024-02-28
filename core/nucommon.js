@@ -899,8 +899,7 @@ function nuBindCtrlEvents() {
 				$('#nuOptionsListBox').remove();
 			} else if (parent.$('#nuModal').length == 1) {
 				let ae = document.activeElement;
-				$(ae).blur();
-				$(ae).focus();
+				$(ae).trigger("blur").focus();
 				if (nuFormsUnsaved() == 0) {
 					nuClosePopup();
 				} else {
@@ -980,7 +979,7 @@ function nuBindCtrlEvents() {
 				} else if (e.code == 'KeyG' && g) {					//-- G		Object Grid
 					nuForm("nuobjectgrid", formId, "", "", 2);
 				} else if (e.code == 'KeyS') {						//-- s		Save
-					$(":focus").blur();
+					$(":focus").trigger("blur");
 					nuSaveAction();
 				} else if (e.code == 'KeyC') {						//-- c		Clone
 					nuCloneAction();
