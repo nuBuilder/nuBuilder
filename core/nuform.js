@@ -1560,7 +1560,7 @@ function nuLookupFocus(e) {
 	window.nuSubformRow = Number(p.substr(p.length - 3));
 
 	if (t != 'textarea') {
-		objT.select();
+		objT.trigger( "select" );
 	}
 
 }
