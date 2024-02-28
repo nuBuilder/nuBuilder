@@ -32,7 +32,7 @@ function nuMessageCutdown(o) {
 
         if (o.length == 0) { return; }
 
-        if (!$.isArray(o)) {
+        if (!Array.isArray(o)) {
                 let tmp = o;
                 o = [];
                 o.push(tmp);

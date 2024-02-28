@@ -1260,7 +1260,7 @@ function nuReadonly(i) {
 function nuShow(i, visible, openTab) {
 
 	var arr = [];
-	if (!$.isArray(i)) {
+	if (!Array.isArray(i)) {
 		arr.push(i);
 	} else {
 		arr = i;
@@ -1308,7 +1308,7 @@ function nuShow(i, visible, openTab) {
 function nuHide(i) {
 
 	var arr = [];
-	if (!$.isArray(i)) {
+	if (!Array.isArray(i)) {
 		arr.push(i);
 	} else {
 		arr = i;
@@ -2091,7 +2091,7 @@ function nuSetToolTip(i, message, labelHover) {
 
 function nuAddDatalist(i, arr, showAllOnArrowClick) {
 
-	if (!$.isArray(arr)) {
+	if (!Array.isArray(arr)) {
 		console.error('Argument #2 is not an array in nuAddDatalist() for object ' + i);
 		return;
 	}
@@ -2111,8 +2111,8 @@ function nuAddDatalist(i, arr, showAllOnArrowClick) {
 	arr.forEach(function (data) {
 
 		var option = document.createElement('option');
-		option.value = $.isArray(data) ? data[0] : data;
-		if (data.length == 2) option.text = $.isArray(data) ? data[1] : data;
+		option.value = Array.isArray(data) ? data[0] : data;
+		if (data.length == 2) option.text = Array.isArray(data) ? data[1] : data;
 		datalist.appendChild(option);
 	});
 

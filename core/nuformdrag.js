@@ -656,6 +656,7 @@ function nuCreateDragOptionsBox(form){
 	nuAddContentBoxFrames();
 	nuShowContentBoxFrames();
 	nuToggleHiddenObjects(); // hide hidden objects by dafault
+	// nuToggleDragLabels(); 
 
 	if ($('div.nuTab[id^="nuTab"]').length == 1) {
 		$('#move_tab_btn', window.parent.document.body).css('visibility', 'hidden');

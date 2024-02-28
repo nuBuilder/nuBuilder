@@ -1079,8 +1079,8 @@ function nuINPUTInput(inp, inputType, obj, objectType) {
 	
 	if (obj.datalist !== null && obj.datalist !== '' && typeof obj.datalist !== "undefined") {
 		let dl = obj.datalist;
-		if (!$.isArray(dl)) dl = JSON.parse(dl);
-		if (!$.isArray(dl)) dl = eval(dl);
+		if (!Array.isArray(dl)) dl = JSON.parse(dl);
+		if (!Array.isArray(dl)) dl = eval(dl);
 		nuAddDatalist(inp.id, dl);
 	}
 
@@ -5623,7 +5623,7 @@ function nuMessage(o, timeout, callback) {
 
 	if (o.length == 0) { return; }
 
-	if (!$.isArray(o)) {
+	if (!Array.isArray(o)) {
 		let tmp = o;
 		o = [];
 		o.push(tmp);
@@ -6620,7 +6620,7 @@ function nuPrompt(text, caption, defaultValue, format, fctn) {
 
 function nuAddBrowseTitleSelect(index, data, w) {
 
-	if (!$.isArray(data)) return;
+	if (!Array.isArray(data)) return;
 
 	var id = "nuBrowseTitle" + index + "_select";
 	var list = document.createElement('select');
