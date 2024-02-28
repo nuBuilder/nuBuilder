@@ -2077,16 +2077,22 @@ function nuSetPlaceholder(i, placeholder = null, translate = true) {
 function nuSetToolTip(i, message, labelHover) {
 
 	// Show tooltip on object hover
-	$("#" + i).hover(function () {
+	$("#" + i).on("mouseenter", function () {
 		$(this).attr("title", message);
+	}).on("mouseleave", function () {
+		$(this).removeAttr("title");
 	});
 
 	if (labelHover === true) {
 		// Show tooltip on label hover
-		$("#label_" + i).hover(function () {
+		$("#label_" + i).on("mouseenter", function () {
 			$(this).attr("title", message);
+		}).on("mouseleave", function () {
+			$(this).removeAttr("title");
 		});
+
 	}
+
 }
 
 function nuAddDatalist(i, arr, showAllOnArrowClick) {
