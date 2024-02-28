@@ -166,7 +166,7 @@ $.fn.nuFocusWithoutScrolling = function () {
 
 	let x = t.scrollX, y = t.scrollY;
 
-	this.focus();
+	this.trigger("focus");
 	t.scrollTo(x, y);
 	return this;
 
@@ -516,13 +516,13 @@ function nuLogin(loginTopRow, nuconfigNuWelcomeBodyInnerHTML, logonMode='normal'
 	}
 
 	if (window.nuLoginU == '' && window.nuLoginP == '') {
-		$('#nuusername').focus();
+		$('#nuusername').trigger("focus");
 	}
 
 	if (window.nuLoginU != '' && window.nuLoginP == '') {
 
 		$('#nuusername').val(window.nuLoginU);
-		$('#nupassword').focus();
+		$('#nupassword').trigger("focus");
 
 	}
 
@@ -899,7 +899,7 @@ function nuBindCtrlEvents() {
 				$('#nuOptionsListBox').remove();
 			} else if (parent.$('#nuModal').length == 1) {
 				let ae = document.activeElement;
-				$(ae).trigger("blur").focus();
+				$(ae).trigger("blur").trigger("focus");
 				if (nuFormsUnsaved() == 0) {
 					nuClosePopup();
 				} else {
@@ -1761,7 +1761,7 @@ function nuAddRow(id, setFocus = true) {
 	if (setFocus) {
 		const newIndex = nuPad3(o.rows.length) + o.fields[1];
 		const $newInput = $(`#${id}${newIndex}`);
-		$newInput.focus();
+		$newInput.trigger("focus");
 	}
 
 }
@@ -2267,7 +2267,7 @@ function nuSelectMultiWithoutCtrl(i, active) {
 	$(id + "[multiple] option").on('mousedown.selectmultinoctrl', function (event) {
 		if (event.shiftKey) return;
 		event.preventDefault();
-		this.focus();
+		this.trigger("focus");
 		var scroll = this.scrollTop;
 		event.target.selected = !event.target.selected;
 		this.scrollTop = scroll;
@@ -2758,7 +2758,7 @@ function nuInsertAtCaret(id, string) {
 	const value = txt.val();
 
 	txt.val(value.substring(0, caretPos) + string + value.substring(caretPos));
-	txt.focus();
+	txt.trigger("focus");
 
 	const endOfText = caretPos + string.length;
 	txt.prop('selectionStart', endOfText);

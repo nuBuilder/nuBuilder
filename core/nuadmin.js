@@ -650,7 +650,7 @@ function nuContextMenuBeforeRender(menu, event) {
 		}
 	});
 
-	$('#' + id).focus();
+	$('#' + id).trigger("focus");
 
 	return menu;
 }

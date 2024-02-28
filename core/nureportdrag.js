@@ -615,7 +615,7 @@ function nuSetDialog() { //-- reopen Dialog at set to last position
 		window[nuDIALOG.dialog]();
 		$('#nuDragDialog').css('left', nuDIALOG.dialogX);
 		$('#nuDragDialog').css('top', nuDIALOG.dialogY);
-		$('#' + nuREPORT.setFocus).focus();
+		$('#' + nuREPORT.setFocus).trigger("focus");
 
 	}
 

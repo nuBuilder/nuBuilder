@@ -279,7 +279,7 @@ function nuBuildForm(f) {
 
 	window.nuPORTRAITSCREEN = false;
 	if (!nuIsMobile()) {
-		$('#nuSearchField').focus();
+		$('#nuSearchField').trigger("focus");
 	} else {
 		nuMobileView(b.mobile_view);
 	}
@@ -2241,7 +2241,7 @@ function nuSubformFocusLastRow(id, f) {
 	const c = f === undefined ? sf.fields[1] : sf.fields.indexOf(f);
 	const r = sf.rows.length - 1;
 
-	$('#' + id + nuPad3(r) + c).focus();
+	$('#' + id + nuPad3(r) + c).trigger("focus");
 
 }
 
@@ -2373,7 +2373,7 @@ function nuSubformMoveFocus(activeElement, d) {
 
 	let row = activeElement.attr('data-nu-prefix').slice(-3);
 	let nextRow = $('#' + activeElement.attr('data-nu-form') + nuPad3(Number(row) + d) + activeElement.attr('id').substr(activeElement.attr('data-nu-form').length + 3));
-	if (nextRow.length == 1 && !nextRow.prop('disabled')) nextRow.focus();
+	if (nextRow.length == 1 && !nextRow.prop('disabled')) nextRow.trigger("focus");
 
 	return true;
 
@@ -4844,7 +4844,7 @@ function nuPopulateLookup(fm, target, setFocus) {
 		}
 
 		if (i == 1 && setFocus !== false) {
-			$id.focus();
+			$id.trigger("focus");
 		}
 
 	}
@@ -6562,11 +6562,11 @@ function nuPromptModal() {
 
 		let value1 = document.getElementById("prompt_value1");
 		value1.value = defaultValue === undefined ? '' : defaultValue;
-		value1.focus();
+		value1.trigger("focus");
 
 	}
 
-	$('#prompt_value1').focus();
+	$('#prompt_value1').trigger("focus");
 
 	this.inputkeyup = function (e, fctn) {
 		if (e.which == 13) {			//-- Enter
