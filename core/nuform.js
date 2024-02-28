@@ -3677,7 +3677,7 @@ function nuGetOptionsList(f, t, p, a, type) {
 		ArrangeObjects : ['Arrange Objects', 'nuPopup("' + f + '", "-2")', 'fas fa-arrows-alt', 'A'],
 		FormProperties : ['Form Properties', 'nuOptionsListAction("nuform", "' + f + '")', 'fa-cog', 'F'],
 		SearchableColumns : ['Searchable Columns', 'nuGetSearchList()', 'fa-columns', 'C'],
-		SubformObject : [nuTranslate('Subform Object'), '$("' + labelId + '").dblclick()', 'fa-cog', ''],
+		SubformObject : [nuTranslate('Subform Object'), '$("' + labelId + '").trigger("dblclick");', 'fa-cog', ''],
 		FormObjectList : ['Form Object List', 'nuOptionsListAction("nuobject", "", "' + f + '")', 'fa-th-list', 'O'],
 		Search : ['Search', 'nuSearchAction();', 'fas fa-search', 'S'],
 		Add : ['Add', 'nuAddAction();', 'fas fa-plus', 'A'],
