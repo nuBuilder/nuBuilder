@@ -3658,7 +3658,6 @@ function nuGetOptionsList(f, t, p, a, type) {
 	let list = [];
 
 	const buttons = nuSERVERRESPONSE.buttons;
-	const objects = nuSERVERRESPONSE.objects;
 	const canChange = nuAllowChanges(f);
 	const admin = a == 1;
 
