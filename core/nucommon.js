@@ -1821,7 +1821,7 @@ function nuUserHasPermission(item, userOnly = false) {
 		return true;
 	}
 
-	return false;
+	return hasPermission;
 
 }
 
