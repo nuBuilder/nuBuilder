@@ -2672,27 +2672,6 @@ function nuObjectClassList(i) {
 
 }
 
-function nuGetStorageItem(key, storage) {
-
-	var storage = storage === undefined || storage === 'session' ? window.sessionStorage : window.localStorage;
-
-	const itemStr = storage.getItem(key)
-
-	if (!itemStr) {
-		return null
-	}
-
-	const item = JSON.parse(itemStr)
-	const now = new Date()
-
-	if (now.getTime() > item.expiry && item.expiry !== null) {
-		storage.removeItem(key)
-		return null
-	}
-	return item.value;
-
-}
-
 function nuGetStorageItem(key, storageType = 'session') {
 
 	const storage = storageType === 'session' ? window.sessionStorage : window.localStorage;
