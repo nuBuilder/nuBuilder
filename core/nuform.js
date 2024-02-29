@@ -6564,7 +6564,7 @@ function nuPromptModal() {
 
 		let value1 = document.getElementById("prompt_value1");
 		value1.value = defaultValue === undefined ? '' : defaultValue;
-		value1.trigger("focus");
+		value1.focus();
 
 	}
 

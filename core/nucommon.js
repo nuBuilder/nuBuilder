@@ -2297,7 +2297,7 @@ function nuSelectMultiWithoutCtrl(i, active) {
 	$(id + "[multiple] option").on('mousedown.selectmultinoctrl', function (event) {
 		if (event.shiftKey) return;
 		event.preventDefault();
-		this.trigger("focus");
+		this.focus();
 		var scroll = this.scrollTop;
 		event.target.selected = !event.target.selected;
 		this.scrollTop = scroll;
