@@ -4475,7 +4475,8 @@ function nuBrowseTable() {
 				$div.html(value)
 					.attr('data-nu-primary-key', browseRows[rowIndex][0])
 					.on('click', (event) => nuSelectBrowse(event, $div[0]))
-					.hover(nuBrowseTableHoverIn, nuBrowseTableHoverOut);
+					.on('mouseenter', nuBrowseTableHoverIn)
+					.on('mouseleave', nuBrowseTableHoverOut); 
 
 			}
 
@@ -4891,39 +4892,39 @@ function nuChooseOneLookupRecord(e, fm) {
 
 function nuLookupObject(id, set, value) {
 
-    const el = $('#' + id);
+	const el = $('#' + id);
 
-    if (!el.length) {
-        nuReesetLookupProperties(this);
-        return;
-    }
+	if (!el.length) {
+		nuReesetLookupProperties(this);
+		return;
+	}
 
-    const i = nuValidLookupId(nuValidLookupId(id, 'code'), 'description');
-    nuUpdateLookupProperties(this, i);
+	const i = nuValidLookupId(nuValidLookupId(id, 'code'), 'description');
+	nuUpdateLookupProperties(this, i);
 
-    if (nuLookupShouldSetValue(value)) {
-        $('#' + this[set]).val(value);
-    }
+	if (nuLookupShouldSetValue(value)) {
+		$('#' + this[set]).val(value);
+	}
 
-    function nuReesetLookupProperties(obj) {
-        const props = ['id_id', 'code_id', 'description_id', 'id_value', 'code_value', 'description_value'];
-        props.forEach(prop => obj[prop] = '');
-    }
+	function nuReesetLookupProperties(obj) {
+		const props = ['id_id', 'code_id', 'description_id', 'id_value', 'code_value', 'description_value'];
+		props.forEach(prop => obj[prop] = '');
+	}
 
-    function nuUpdateLookupProperties(obj, i) {
-        Object.assign(obj, {
-            id_id: i,
-            code_id: i + 'code',
-            description_id: i + 'description',
-            id_value: $('#' + i).val(),
-            code_value: $('#' + i + 'code').val(),
-            description_value: $('#' + i + 'description').val()
-        });
-    }
+	function nuUpdateLookupProperties(obj, i) {
+		Object.assign(obj, {
+			id_id: i,
+			code_id: i + 'code',
+			description_id: i + 'description',
+			id_value: $('#' + i).val(),
+			code_value: $('#' + i + 'code').val(),
+			description_value: $('#' + i + 'description').val()
+		});
+	}
 
-    function nuLookupShouldSetValue(value) {
-        return value !== undefined && ['id', 'code', 'description'].includes(set);
-    }
+	function nuLookupShouldSetValue(value) {
+		return value !== undefined && ['id', 'code', 'description'].includes(set);
+	}
 
 }
 
@@ -6913,7 +6914,7 @@ function nuUppyGetLanguageCodeAndLocale(language) {
 		{ language: 'Armenian', code: 'hy_AM', locale: Uppy.locales.hy_AM },
 		{ language: 'Arabic', code: 'ar_SA', locale: Uppy.locales.ar_SA },
 		{ language: 'Afrikaans', code: 'af_ZA', locale: Uppy.locales.af_ZA }
-    ];
+	];
 
 	const languageData = languagesData.find(data => data.language === language);
 
