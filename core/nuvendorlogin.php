@@ -14,9 +14,8 @@ $result			= db_num_rows($obj);
 
 if($_SESSION['nubuilder_session_data']['IS_DEMO']){
 	echo('Not available in the Demo');
-	$page   = nuVendorBad($appId);
 	return;
-}
+} 
 
 $page = null;
 if ($result == 1) {
