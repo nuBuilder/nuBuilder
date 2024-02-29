@@ -4110,7 +4110,9 @@ function nuBrowseTitle(b, i, l, m) {
 
 	div.setAttribute('id', id);
 
-	var sp = `<span id="nusort_${i}" class="nuSort" onclick="nuSortBrowse(${i})" ontouchstart="(function(event) { nuSortBrowse(${i}); event.preventDefault(); })({ passive: true })"> ${nuTranslate(b[i].title)} </span>`;
+	// var sp = `<span id="nusort_${i}" class="nuSort" onclick="nuSortBrowse(${i})" ontouchstart="(function(event) { nuSortBrowse(${i}); event.preventDefault(); })({ passive: true })"> ${nuTranslate(b[i].title)} </span>`;
+	
+	var sp = `<span id="nusort_${i}" class="nuSort" onclick="nuSortBrowse(${i})" > ${nuTranslate(b[i].title)} </span>`;
 
 	if (bc.sort == i) {
 
@@ -4305,7 +4307,7 @@ function nuDownBrowseResize(e, source) {
 		return;
 	}
 
-	e.preventDefault();
+	// e.preventDefault();
 
 	id = e.target.id.replace('nusort_', 'nuBrowseTitle');
 	
@@ -4334,7 +4336,7 @@ function nuDragBrowseColumn(e, p) {
 		return; 	
 	}	
 
-	e.preventDefault();
+	// e.preventDefault();
 
 	if (window.nuBROWSERESIZE.mouse_down) {
 

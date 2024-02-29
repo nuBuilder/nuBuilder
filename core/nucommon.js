@@ -1965,22 +1965,45 @@ function nuDisableBrowseResize() {
 function nuDragTitleEvents() {
 
 	if (nuFormType() != 'browse') { 
-	return; 
+		return; 
 	}
     
 	let colWidths = nuFORM.getCurrent().column_widths || nuGetColumWidths();
 
 	nuSetBrowseColumns(colWidths);
 
-	$('#nubody').on('mousemove.nuresizecolumn', function (event) { nuDragBrowseColumn(event, 'pointer'); });
-	$browseTitle = $('.nuBrowseTitle');
- 
-	$('#nubody').on('mouseup.nuresizecolumn', function (event) { nuEndBrowseResize(); });
-	$browseTitle.on('mousedown.nuresizecolumn', function (event) { nuDownBrowseResize(event, 'pointer') });
-	$browseTitle.on('touchstart.nuresizecolumn', function (event) { nuDownBrowseResize(event, 'finger_touch'); });
-	$browseTitle.on('touchmove.nuresizecolumn', function (event) { nuDragBrowseColumn(event, 'finger_touch'); });
-	$browseTitle.on('touchend.nuresizecolumn', function (event) { nuEndBrowseResize(event); });
-	$browseTitle.on('touchcancel.nuresizecolumn', function (event) { nuEndBrowseResize(event); });
+	document.getElementById('nubody').addEventListener('mousemove', function(event) {
+	  nuDragBrowseColumn(event, 'pointer');
+	}, {passive: true});
+
+	var browseTitle = document.querySelectorAll('.nuBrowseTitle');
+
+	document.getElementById('nubody').addEventListener('mouseup', function(event) {
+	  nuEndBrowseResize();
+	}, {passive: true});
+
+	browseTitle.forEach(function(elem) {
+	  elem.addEventListener('mousedown', function(event) {
+		nuDownBrowseResize(event, 'pointer');
+	  }, {passive: true});
+
+	  elem.addEventListener('touchstart', function(event) {
+		nuDownBrowseResize(event, 'finger_touch');
+	  }, {passive: true});
+
+	  elem.addEventListener('touchmove', function(event) {
+		nuDragBrowseColumn(event, 'finger_touch');
+	  }, {passive: true});
+
+	  elem.addEventListener('touchend', function(event) {
+		nuEndBrowseResize(event);
+	  }, {passive: true});
+
+	  elem.addEventListener('touchcancel', function(event) {
+		nuEndBrowseResize(event);
+	  }, {passive: true});
+	});
+
 
 }
 
