@@ -1001,8 +1001,8 @@ function nuAddFormatting($v, $f){
 	if($f[0] == 'N'){												//-- number  '456.789','N|€ 1,000.00'
 		$CF				= nuGetNumberFormat(substr($f,2));			//-- CF[0]=sign, CF[1]=separator, CF[2]=decimal, CF[3]=places
 				
-//		$nf				= number_format ($v , $CF[3] , $CF[2] , $CF[1]);
-		$nf				= number_format ($v , gettype($CF[3])=='string'?0:$CF[3] , $CF[2] , $CF[1]);		 
+		$nf				= number_format ($v , $CF[3] , $CF[2] , $CF[1]);
+//		$nf				= number_format ($v , gettype($CF[3])=='string'? 0: $CF[3] , $CF[2] , $CF[1]);		 
 		$nm				= str_replace('-', '', $nf);
 
 		return $m . $CF[0] . ' ' . $nm;
