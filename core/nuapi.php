@@ -140,7 +140,7 @@
 		$f->forms[0]->user_code					= $globalAccess ? '' : nuObjKey($user, 'USER_CODE', null);
 		$f->forms[0]->user_additional1			= $globalAccess ? '' : nuObjKey($user, 'USER_ADDITIONAL1', null);
 		$f->forms[0]->user_additional2			= $globalAccess ? '' : nuObjKey($user, 'USER_ADDITIONAL2', null);
-		$f->forms[0]->user_permissions			= $globalAccess ? '' : nuObjKey($user, 'USER_PERMISSIONSS', null);
+		$f->forms[0]->user_permissions			= $globalAccess ? '' : nuObjKey($user, 'USER_PERMISSIONS', null);
 		$f->forms[0]->user_a11y					= $globalAccess ? '' : nuObjKey($user, 'USER_A11Y', null);
 		$f->forms[0]->user_name					= $globalAccess ? '' : nuUser($user['USER_ID'])->sus_name;
 		$f->forms[0]->home_id					= $sessionData['HOME_ID'];
