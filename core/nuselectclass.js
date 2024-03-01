@@ -161,11 +161,11 @@ class nuSelectObject {
 
 		parent.$('#sse_sql')
 			.val(s + f + c + "\n")
-			.change();
+			.trigger("change");
 
 		parent.$('#sse_json')
 			.val(this.buildJSON())
-			.change();
+			.trigger("change");
 
 
 		if (parent.$('#nuSaveToTextareaButton').length == 1) {
@@ -1044,7 +1044,7 @@ function nuChangeJoin(e) {
 
 	parent.$('#sse_json')
 		.val(JSON.stringify(j))
-		.change();
+		.trigger("change");
 
 	nuSQL.buildSQL();
 

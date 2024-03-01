@@ -1767,7 +1767,7 @@ function nuAddRow(id, setFocus = true) {
 
 	const o = nuSubformObject(id);
 	const index = nuPad3(o.rows.length - 1) + o.fields[1];
-	$(`#${id}${index}`).change();
+	$(`#${id}${index}`).trigger("change");
 
 	if (setFocus) {
 		const newIndex = nuPad3(o.rows.length) + o.fields[1];
@@ -2247,7 +2247,7 @@ function nuInsertTextAtCaret(i, text) {
 		'end'
 	);
 
-	o.change();
+	o.trigger("change");
 
 }
 
@@ -2312,7 +2312,7 @@ function nuSelectMultiWithoutCtrl(i, active) {
 		var scroll = this.scrollTop;
 		event.target.selected = !event.target.selected;
 		this.scrollTop = scroll;
-		$(this).parent().change();
+		$(this).parent().trigger("change");
 	});
 
 }
@@ -2356,9 +2356,10 @@ function nuSelectRemoveMultiple(i) {
 function nuSelectSelectAll(id, value) {
 
 	if (value === undefined) var value = true;
-
-	$("#" + id).find('option:not(:empty)').prop('selected', value);
-	$("#" + id).change();
+	
+	const $id = $("#" + id);
+	$id.find('option:not(:empty)').prop('selected', value);
+	$id.trigger("change");
 
 }
 
@@ -2524,12 +2525,12 @@ function nuSetValue(i, v, method, change) {
 	if (method === undefined && obj.is(':button')) {
 		obj.text(v);
 	} else if (obj.is(':checkbox')) {
-		if (change) obj.prop('checked', v).change();
+		if (change) obj.prop('checked', v).trigger("change");
 	} else if (obj.is('select') && method === 'text') {
 		$('#' + i + ' option').each(function () {
 			if ($(this).text().fixNbsp() === v) {
 				$(this).prop("selected", "selected");
-				if (change) obj.change();
+				if (change) obj.trigger("change");
 				return true;
 			}
 		});
@@ -2545,7 +2546,7 @@ function nuSetValue(i, v, method, change) {
 				break;
 			default:
 				obj.val(v);
-				if (change) obj.change();
+				if (change) obj.trigger("change");
 		}
 	}
 
@@ -2607,7 +2608,7 @@ function nuSetDateValue(i, d) {
 	var df = d.getFullYear() + '-' + nuPad2(d.getMonth() + 1) + '-' + nuPad2(d.getDate());
 
 	var format = obj.attr('data-nu-format');
-	obj.val(nuFORM.addFormatting(df, format)).change();
+	obj.val(nuFORM.addFormatting(df, format)).trigger("change");
 
 	return true;
 

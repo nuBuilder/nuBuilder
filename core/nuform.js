@@ -2805,7 +2805,7 @@ function nuSortSubform(sfName, c, e) {
 	newRecord.css('top', top).data('nu-top-position', top);
 
 	if (objSf.data('nu-filtered') === true) {
-		objSf.find('.nuSubformFilter').first().change();
+		objSf.find('.nuSubformFilter').first().trigger("change");
 	}
 
 }
@@ -2872,7 +2872,7 @@ function nuSubformUndoPaste(t) {
 	if (confirm(nuTranslate("Undo the last paste? (The values before the insertion will be restored)?"))) {
 		$("[data-prevalue]").each(function () {
 			var v = $(this).attr("data-prevalue");
-			$(this).val(v).change();
+			$(this).val(v).trigger("change");
 		});
 		nuHide($(this).attr('id'));
 	}
@@ -2897,9 +2897,9 @@ function nuSubformPaste(e, jsonObj) {
 	for (let c = dColStart; c < (dColStart + sNumCols); c++) {
 		var sr = 0;
 		for (let r = dRow; r < parseInt(dRow + sNumRows, 10); r++) {
-			var dest = $('#' + sfId + nuPad3(r) + obj.fields[c]);
+			let dest = $('#' + sfId + nuPad3(r) + obj.fields[c]);
 			dest.attr("data-prevalue", dest.val());
-			dest.val(jsonObj[sr][sc]).change();
+			dest.val(jsonObj[sr][sc]).trigger("change");
 			modifiedObjects.push(dest);
 			sr++;
 		}
@@ -5251,7 +5251,7 @@ function nuEmptyNoClone() {
 		} else {
 
 			if ($('#' + c[i].id).length == 1) {
-				$('#' + c[i].id).val('').change();
+				$('#' + c[i].id).val('').trigger("change");
 			}
 
 		}

@@ -531,7 +531,7 @@ function nuCalChoice(t) {
 
 	o
 		.val(fd)
-		.change()
+		.trigger("change")
 		.trigger("focus");
 
 	$('#nuCalendar').remove();
