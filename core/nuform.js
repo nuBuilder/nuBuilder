@@ -4053,12 +4053,6 @@ function nuRemoveTabById(id) {
 
 }
 
-function nuRemoveTabByTitle(title) {
-	const index = getTabIndexByTitle(title);
-	if (index > -1) {
-		$('#nuTab' + index).remove();
-	}
-}
 function nuHideTabById(id) {
 	nuShowTabById(id, false);
 }
