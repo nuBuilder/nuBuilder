@@ -4301,9 +4301,7 @@ function nuDownBrowseResize(e, source) {
 		return;
 	}
 
-	// e.preventDefault();
-
-	id = e.target.id.replace('nusort_', 'nuBrowseTitle');
+	const id = e.target.id.replace('nusort_', 'nuBrowseTitle');
 	
 	window.nuBROWSERESIZE.mouse_down = true;
 	window.nuBROWSERESIZE.pointer = source;
