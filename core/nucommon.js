@@ -291,6 +291,17 @@ function loginInputKeyup(event) {
 	}
 }
 
+function nuTriggerEvent(element, event = 'change') {
+
+	if (element instanceof jQuery) {
+		element.trigger(event);
+	} else {
+		let ev = new Event(event);
+		element.dispatchEvent(ev);
+	}
+
+}
+
 function nuOpener(t, f, r, filter, parameters) {
 
 	nuSetSuffix();
