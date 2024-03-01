@@ -894,18 +894,19 @@ function nuGetUserPermissions($userId = null){
 						`zzzzsys_user_permission`
 					LEFT JOIN zzzzsys_permission_item ON zzzzsys_permission_item_id = upe_ident
 					WHERE
-						upe_zzzzsys_user_id = ?
+						upe_zzzzsys_user_id = ? AND IFNULL(upe_active, '0') = '1'
 				";
 
 	$stmt		= nuRunQuery($query, [$userId]);
 
-	$permissions = array();
+	$permissions = [];
 
 	while ($row = db_fetch_row($stmt)) {
 		$permissions[] = $row[0];
 	}
 
 	return $permissions;
+
 }
 
 function nuUserHasPermission($item, $userId = null) {
