@@ -937,61 +937,61 @@ function nuAngle() {
 
 	$('.nuRelationships').remove();
 
-	var j = parent.$('#sse_json').val();
+	const jsonData = parent.$('#sse_json').val();
+	if (jsonData == '') { return; }
 
-	if (j == '') { return; }
+	const parsedData = JSON.parse(jsonData);
+	const joins = parsedData.joins;
+	const validJoins = [];
 
-	var J = JSON.parse(j);
-	var r = J.joins;
-	var ok = [];
+	//-- remove links to closed boxes
 
-	for (let key in r) {																//-- remove links to closed boxes
+	for (const key in joins) {
+		let fromId = key.split('--')[0];
+		let toId = key.split('--')[1];
 
-		var I = key.split('--')[0];
-		var i = key.split('--')[1];
-
-		if ($('#' + I).length == 1 && $('#' + i).length == 1) {
-			ok[I + '--' + i] = r[key];
+		if ($('#' + fromId).length === 1 && $('#' + toId).length === 1) {
+		  validJoins[key] = joins[key];
 		}
-
 	}
-
-	nuSQL.refreshJoins(ok);
+  
+	nuSQL.refreshJoins(validJoins);
 
 	for (let key in nuSQL.joins) {
 
-		var F = $('#' + nuSQL.joins[key].from);
-		var T = $('#' + nuSQL.joins[key].to);
-		var f = F.offset();
-		var t = T.offset();
-		var d = Math.atan2(t.top - f.top, t.left - f.left) * 180 / Math.PI;		//-- angle in degrees
-		var w = Math.sqrt(Math.pow(f.top - t.top, 2) + Math.pow(f.left - t.left, 2));
-		var i = 'joins' + nuID();
-		var jt = nuSQL.joins[key].join;
-		var lm = 7;
+		let fromElement = $('#' + nuSQL.joins[key].from);
+		let toElement = $('#' + nuSQL.joins[key].to);
+		let fromOffset = fromElement.offset();
+		let toOffset = toElement.offset();
+		let angle = Math.atan2(toOffset.top - fromOffset.top, toOffset.left - fromOffset.left) * 180 / Math.PI;		//-- angle in degrees
+		let distance = Math.sqrt(Math.pow(fromOffset.top - toOffset.top, 2) + Math.pow(fromOffset.left - toOffset.left, 2));
+		let joinId = 'joins' + nuID();
+		let joinType = nuSQL.joins[key].join;
+		let leftMargin = 7;
 
-		var L = document.createElement('div');										//-- relationship box (line)
+		//-- relationship box (line)
 
-		L.setAttribute('id', i);
+		let $lineElement = document.createElement('div');
+		$lineElement.setAttribute('id', joinId);
 
-		$('body').append(L);
+		$('body').append($lineElement);
 
-		$('#' + L.id).css({
-			'width': jt == 'LEFT' ? w - lm : w,
+		$('#' + $lineElement.id).css({
+			'width': joinType == 'LEFT' ? distance - leftMargin : distance,
 			'height': 6,
-			'left': f.left,
-			'top': f.top,
+			'left': fromOffset.left,
+			'top': fromOffset.top,
 			'position': 'absolute',
 			'text-align': 'center',
 			'border': 'rgba(255, 153, 0, .5) 0px solid',
-			'border-left-width': jt == 'LEFT' ? lm : 0,
+			'border-left-width': joinType == 'LEFT' ? leftMargin : 0,
 			'border-left-color': 'purple',
 			'background-color': 'rgba(255, 153, 0, .5)',
-			'transform': 'rotate(' + d + 'deg)',
+			'transform': 'rotate(' + angle + 'deg)',
 			'z-index': 10
 		})
 			.attr('data-nu-join', key)
-			.attr('title', jt + ' JOIN ON ' + nuSQL.joins[key].fromfield + ' = ' + nuSQL.joins[key].tofield + ' (Click to Change Join)')
+			.attr('title', joinType + ' JOIN ON ' + nuSQL.joins[key].fromfield + ' = ' + nuSQL.joins[key].tofield + ' (Click to Change Join)')
 			.addClass('nuRelationships')
 			.hover(function () {
 				$(this).css('border-top-width', 2);
@@ -1001,34 +1001,32 @@ function nuAngle() {
 				$(this).css('border-bottom-width', 0);
 			});
 
-		var L = $('#' + L.id);
-		var top = parseInt(f.top + f.top - L.top, 10);
-		var left = parseInt(f.left + f.left - L.left, 10);
+		$lineElement = $('#' + $lineElement.id);
+		let top = parseInt(fromOffset.top + fromOffset.top - $lineElement.top, 10);
+		let left = parseInt(fromOffset.left + fromOffset.left - $lineElement.left, 10);
 
-		$('#' + i)
+		$('#' + joinId)
 			.css('top', top)
 			.css('left', left);
 
+		let lTop = parseInt($lineElement.css('top'), 10);
+		let lLeft = parseInt($lineElement.css('left'), 10);
 
-		var Ltop = parseInt(L.css('top'), 10);
-		var Lleft = parseInt(L.css('left'), 10);
-
-		if (F.offset().top < T.offset().top) {
-			L.css('top', 7 + Ltop + F.offset().top - L.offset().top);
+		if (fromElement.offset().top < toElement.offset().top) {
+			$lineElement.css('top', 7 + lTop + fromElement.offset().top - $lineElement.offset().top);
 		} else {
-			L.css('top', 7 + Ltop + L.offset().top - F.offset().top);
+			$lineElement.css('top', 7 + lTop + $lineElement.offset().top - fromElement.offset().top);
 		}
 
-		if (F.offset().left < T.offset().left) {
-			L.css('left', -20 + Lleft - (L.offset().left - F.offset().left));
+		if (fromElement.offset().left < toElement.offset().left) {
+			$lineElement.css('left', -20 + lLeft - ($lineElement.offset().left - fromElement.offset().left));
 		} else {
-			L.css('left', -20 + Lleft - (L.offset().left - T.offset().left));
+			$lineElement.css('left', -20 + lLeft - ($lineElement.offset().left - toElement.offset().left));
 		}
 
 	}
 
 }
-
 
 function nuChangeJoin(e) {
 
