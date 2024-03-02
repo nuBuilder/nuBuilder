@@ -994,20 +994,25 @@ function nuAngle() {
 			.attr('title', joinType + ' JOIN ON ' + nuSQL.joins[key].fromfield + ' = ' + nuSQL.joins[key].tofield + ' (Click to Change Join)')
 			.addClass('nuRelationships')
 			.hover(function () {
-				$(this).css('border-top-width', 2);
-				$(this).css('border-bottom-width', 2);
+			  $(this).css({
+				'border-top-width': '2px',
+				'border-bottom-width': '2px'
+			  });
 			}, function () {
-				$(this).css('border-top-width', 0);
-				$(this).css('border-bottom-width', 0);
+			  $(this).css({
+				'border-top-width': '0',
+				'border-bottom-width': '0'
+			  });
 			});
 
 		$lineElement = $('#' + $lineElement.id);
 		let top = parseInt(fromOffset.top + fromOffset.top - $lineElement.top, 10);
 		let left = parseInt(fromOffset.left + fromOffset.left - $lineElement.left, 10);
 
-		$('#' + joinId)
-			.css('top', top)
-			.css('left', left);
+		$('#' + joinId).css({
+			'top': `${top}px`,
+			'left': `${left}px` 
+		}); 
 
 		let lTop = parseInt($lineElement.css('top'), 10);
 		let lLeft = parseInt($lineElement.css('left'), 10);
