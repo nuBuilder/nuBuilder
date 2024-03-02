@@ -1,17 +1,7 @@
 <?php
 
-function nuLoadBody($debug = false) {
-
-		if ( !$debug ) {
-				echo "<body id='nubody' onload='nuLoad()' onresize='nuResize()'>";
-		} else {
-				echo "<body>";
-				echo "<pre>";
-				print_r($_SESSION);
-				print_r($_SERVER);
-				print('<br>' . session_id());
-				echo "</pre>";
-		}
+function nuLoadBody() {
+	echo "<body id='nubody' onload='nuLoad()' onresize='nuResize()'>";
 }
 
 
