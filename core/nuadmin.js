@@ -1048,7 +1048,7 @@ var nuPrettyPrint = (function () {
 				delete attrs.style;
 			}
 			for (attr in attrs) {
-				if (attrs.hasOwnProperty(attr)) {
+				if (Object.prototype.hasOwnProperty.call(attrs, attr)) {
 					el[attr] = attrs[attr];
 				}
 			}
@@ -1060,7 +1060,7 @@ var nuPrettyPrint = (function () {
 		applyCSS: function (el, styles) {
 			/* Applies CSS to a single element */
 			for (var prop in styles) {
-				if (styles.hasOwnProperty(prop)) {
+				if (Object.prototype.hasOwnProperty.call(styles, prop)) {
 					el.style[prop] = styles[prop];
 				}
 			}
@@ -1193,7 +1193,7 @@ var nuPrettyPrint = (function () {
 
 			for (var property in source) {
 
-				if (source.hasOwnProperty(property)) {
+				if (Object.prototype.hasOwnProperty.call(source, property)) {
 
 					var sourceProperty = source[property];
 
@@ -1371,7 +1371,7 @@ var nuPrettyPrint = (function () {
 			if (typeof obj === 'object') {
 				str = '{';
 				for (var i in obj) {
-					if (obj.hasOwnProperty(i)) {
+					if (Object.prototype.hasOwnProperty.call(obj, i)) {
 						str += (first ? '' : ', ') + i + ':' + util.stringify(obj[i]);
 						first = false;
 					}
