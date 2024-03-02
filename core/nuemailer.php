@@ -62,7 +62,7 @@ function nuEmail($to_list=[],$from_address='',$from_name='',$content='',$subject
 
 	if ($priority != '') $mail->Priority = $priority; 										// Highest priority - Email priority (1 = High, 3 = Normal, 5 = low)
 
-	$mail->IsHTML($nuEmailSettings->html);
+	$mail->isHTML($nuEmailSettings->html);
 
 	_nuEmailHelperAdd($mail, $to_list, 'AddAddress');
 	_nuEmailHelperAdd($mail, $cc_list, 'AddCC');
