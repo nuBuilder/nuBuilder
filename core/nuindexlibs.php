@@ -56,7 +56,7 @@ function nuUseUP($nuBrowseFunction, $target, $welcome, $u, $p) {
 	return $h2;
 }
 
-function nuGetJS_action_screen($nuBrowseFunction, $target, $welcome, $opener, $search, $like) {
+function nuGetJSActionScreen($nuBrowseFunction, $target, $welcome, $opener, $search, $like) {
 
 	$h2 = "function nuLoad(){
 		if(nuIsOpener(window)){

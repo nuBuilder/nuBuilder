@@ -262,7 +262,7 @@ window.nuHASH				= [];
 			$onlySsoExcept = (isset($nuConfigSsoOnlyExcept) ? $nuConfigSsoOnlyExcept : array());
 			$h2 = nuGetJS_login($nuBrowseFunction, $target, $loginTopRow, $welcome, $nuForm, $nuRecord, $isSession, $nuConfigLogonMode, $onlySsoExcept, $lastUser);
 		} else {
-			$h2 = nuGetJS_action_screen($nuBrowseFunction, $target, $welcome, $opener, $search, $like);
+			$h2 = nuGetJSActionScreen($nuBrowseFunction, $target, $welcome, $opener, $search, $like);
 	   }
 
 	}
