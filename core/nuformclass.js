@@ -548,7 +548,7 @@ class nuFormObject {
 
 		for (var key in nuFORM.tableSchema) {
 
-			if (nuFORM.tableSchema.hasOwnProperty(key)) {
+			if (Object.prototype.hasOwnProperty.call(nuFORM.tableSchema, key)) {
 
 				if (nuSERVERRESPONSE.viewSchema.indexOf(key) == -1) {
 					tables.push(key);
