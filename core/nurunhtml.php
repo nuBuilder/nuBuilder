@@ -1,113 +1,137 @@
 <?php
-
-require_once('nuchoosesetup.php');
-require_once('nucommon.php');
-require_once('nudata.php');
-
+require_once ('nuchoosesetup.php');
+require_once ('nucommon.php');
+require_once ('nudata.php');
+	
 print "<meta charset='utf-8'>";
 
-$s					= "SELECT deb_message AS json FROM zzzzsys_debug WHERE zzzzsys_debug_id = ? ";		//-- created by nuRunHTML()
-$t					= nuRunQuery($s, [$_GET['i']]);
+$debugId = $_GET['i'] ?? null; 
+$jsonData = nuGetDebugMessageData($debugId);
 
-if (db_num_rows($t) == 0) {
+if ($jsonData) {
+	$columns = $jsonData->columns;
+	$sqlQuery = $jsonData->sql;
+
+	$_POST['nuHash'] = (array)$jsonData->hash;
+	$hash = nuHash();
+	$_POST['nuHash']['TABLE_ID'] = $hash['browse_table_id'];
+	nuEval($hash['form_id'] . '_BB');
+
+	$data = nuExecuteQueryAndFetchData($sqlQuery);
+	$tableHtml = nuRunHTMLGenerateHTMLTable($columns, $data, $hash);
+
+	print $tableHtml;
+	
+	nuRunHTMLCleanup($debugId, $hash);
+
+} else {
 	print nuTranslate("Use the Print button to refresh the table.");
-	return;
 }
 
-$r					= db_fetch_object($t);
-$j					= json_decode($r->json);
-$c					= $j->columns;
-$colCount			= count($c);
+function nuGetDebugMessageData($debugId) {
 
-$_POST['nuHash']	= (array) $j->hash;
-$hash				= nuHash();
-$_POST['nuHash']['TABLE_ID'] = $hash['browse_table_id'];
-nuEval($hash['form_id'] . '_BB');
+	$select = "SELECT deb_message AS json FROM zzzzsys_debug WHERE zzzzsys_debug_id = ? ";
+	$stmt = nuRunQuery($select, [$debugId]);
 
-$includeHiddenColumns = nuObjKey($hash, 'nuPrintincludeHiddenColumns', null) == '1' ? true : false;
-
-unset($hash);
-
-print "<style>\n";
-
-$class = [];
-
-
-
-for($col = 0 ; $col < $colCount ; $col++){
-
-	$wd		= ($c[$col]->width) . 'px';
-
-	$align = 'left';
-	if($c[$col]->align == 'r'){$align = 'right';}
-	if($c[$col]->align == 'c'){$align = 'center';}
-
-	$class[$col]	= "style='font-size:12px;width:$wd;text-align:$align'";
-
-}
-
-print "</style>\n";
-
-print "<TABLE border=1; style='border-collapse: collapse'>\n";
-print "\n<TR>";
-
-for($col = 0 ; $col < $colCount ; $col++){
-
-	if(!($c[$col]->width == 0 && $includeHiddenColumns != true)) {
-		$st	= $class[$col];
-		print "<TH $st>";
-		print nuTranslate($c[$col]->title);
-		print "</TH>\n";
-	}
-
-}
-
-$h	= "</TR>";
-
-$t				= nuRunQuery($j->sql);
-
-while($r = db_fetch_array($t)){
-
-	$h	.= "\n<TR>\n";
-
-	for($col = 0 ; $col < $colCount ; $col++){
-
-		if(!($c[$col]->width == 0 && $includeHiddenColumns != true)) {
-			
-			$display = $c[$col]->display;
-			$alias = nuGetColumnAlias($display);			
-			$display = $alias ? $alias : $display;	
-			
-			$rValue = $r[$display] ?? "";
-			
-			$v = $display == 'null' || $display == '""' ? '' : $rValue;
-			$st	= $class[$col];
-			$h	.= "<TD $st>" . $v . "</TD>\n";
-		}
-
-	}
-
-	$h	.= "</TR>";
-
-}
-
-
-$h	.= "</TABLE>";
-
-print $h;
-
-nuRunQuery("DELETE FROM zzzzsys_debug WHERE zzzzsys_debug_id = ? ", [$_GET['i']]);
-$hash = nuHash();
-nuRunQuery("DROP TABLE IF EXISTS " . $hash['browse_table_id']);
-unset($hash);
-
-
-function nuGetColumnAlias($column) {
-	if (preg_match('/\bAS\s+(\w+)\b/i', $column, $matches)) {
-		return $matches[1];
-	} else {
+	if (db_num_rows($stmt) == 0) {
 		return false;
 	}
+
+	$obj = db_fetch_object($stmt);
+	return json_decode($obj->json);
+
+}
+
+function nuRunHTMLGenerateTableHeader($columns, $includeHiddenColumns = false) {
+
+	$tableHtml = "<TR>";
+
+	$columnCount = count($columns);
+	for ($col = 0;$col < $columnCount;$col++) {
+		$column = $columns[$col];
+
+		if (!($column->width == 0 && $includeHiddenColumns != true)) {
+			$style = "style='font-size:12px;width:{$column->width}px;text-align:{$column->align}'";
+			$tableHtml .= "<TH $style>" . nuTranslate($column->title) . "</TH>\n";
+		}
+	}
+
+	$tableHtml .= "</TR>";
+	return $tableHtml;
+
+}
+
+function nuRunHTMLGenerateTableData($columns, $data, $includeHiddenColumns = false) {
+
+	$tableHtml = "";
+
+	foreach ($data as $row) {
+
+		$tableHtml .= "\n<TR>\n";
+
+		$columnCount = count($columns);
+		for ($col = 0;$col < $columnCount;$col++) {
+
+			$column = $columns[$col];
+			if (!($column->width === 0 && $includeHiddenColumns != true)) {
+				$display = $column->display;
+				$alias = nuGetColumnAlias($display);
+				$display = $alias ? $alias : $display;
+
+				$value = $row[$display] ?? "";
+				$value = $display == 'null' || $display == '""' ? '' : $value;
+				$style = "style='font-size:12px;width:{$column->width}px;text-align:{$column->align}'";
+
+				$tableHtml .= "<TD $style>" . $value . "</TD>\n";
+			}
+		}
+		$tableHtml .= "</TR>";
+	}
+
+	return $tableHtml;
+
+}
+
+function nuRunHTMLGenerateHTMLTable($columns, $data, $hash) {
+
+	$includeHiddenColumns = nuObjKey($hash, 'nuPrintincludeHiddenColumns', null) == '1' ? true : false;
+
+	$tableHtml = "<TABLE border=1; style='border-collapse: collapse'>\n";
+	$tableHtml .= nuRunHTMLGenerateTableHeader($columns, $includeHiddenColumns);
+	$tableHtml .= nuRunHTMLGenerateTableData($columns, $data, $includeHiddenColumns);
+	$tableHtml .= "</TABLE>";
+
+	return $tableHtml;
+
+}
+
+function nuExecuteQueryAndFetchData($sql, $params = []) {
+
+	$stmt = nuRunQuery($sql, $params);
+	if (db_num_rows($stmt) == 0) {
+		return [];
+	}
+	return db_fetch_all_array($stmt);
+
+}
+
+function nuRunHTMLCleanup($debugId, $hash) {
+
+	nuRunQuery("DELETE FROM zzzzsys_debug WHERE zzzzsys_debug_id = ? ", [$debugId]);
+	nuRunQuery("DROP TABLE IF EXISTS " . $hash['browse_table_id']);
+	unset($hash);
+
+}
+
+function nuGetColumnAlias($column) {
+
+	if (preg_match('/\bAS\s+(\w+)\b/i', $column, $matches)) {
+		return $matches[1];
+	}
+	else {
+		return false;
+	}
+
 }
 
 ?>
