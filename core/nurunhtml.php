@@ -134,4 +134,9 @@ function nuGetColumnAlias($column) {
 
 }
 
+function nuAddJavaScript($js, $bc = false, $first = false){
+	// dummy
+}
+
+
 ?>
