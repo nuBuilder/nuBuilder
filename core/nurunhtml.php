@@ -16,7 +16,11 @@ if ($jsonData) {
 	$hash = nuHash();
 	$_POST['nuHash']['TABLE_ID'] = $hash['browse_table_id'];
 	nuEval($hash['form_id'] . '_BB');
-
+	
+	if (nuHasErrors()) {
+		echo implode("<br>",$_POST['nuErrors']);
+	}
+	
 	$data = nuExecuteQueryAndFetchData($sqlQuery);
 	$tableHtml = nuRunHTMLGenerateHTMLTable($columns, $data, $hash);
 
