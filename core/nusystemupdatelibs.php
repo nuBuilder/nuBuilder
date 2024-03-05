@@ -360,11 +360,14 @@ function nuRemoveNuRecords(){
 
 	$s = "DELETE FROM sys_email_template WHERE zzzzsys_email_template_id LIKE 'nu%'";
 	nuRunQueryNoDebug($s);
+
+	$s = "DELETE FROM sys_email_log WHERE zzzzsys_email_template_id LIKE 'nu%'";
+	nuRunQueryNoDebug($s);
 	
-	$s = "DELETE FROM zzzzsys_permission_item WHERE zzzzsys_permission_item_id LIKE 'nu%'";
+	$s = "DELETE FROM sys_permission_item WHERE zzzzsys_permission_item_id LIKE 'nu%'";
 	nuRunQueryNoDebug($s);
 
-	$s = "DELETE FROM zzzzsys_user_permission WHERE zzzzsys_permission_id LIKE 'nu%'";
+	$s = "DELETE FROM sys_user_permission WHERE zzzzsys_permission_id LIKE 'nu%'";
 	nuRunQueryNoDebug($s);
 
 	//-- delete all timezones
@@ -439,6 +442,7 @@ function nuSystemList(){
 		$t[]	= 'zzzzsys_config';
 		$t[]	= 'zzzzsys_permission_item_id';
 		$t[]	= 'zzzzsys_permission_item';
+		$t[]	= 'zzzzsys_email_log';
 
 	return $t;
 }

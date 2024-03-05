@@ -1608,9 +1608,13 @@ function nuIsValidEmail($email){
 	return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
 }
 
-function nuSendEmail($args_to, $from_email = '', $from_name = '', $body = '', $subject = '', $attachments = [], $html = false, $cc = '', $bcc = '', $reply_to = [] , $priority = '', $smtp_options = []) {
+function nuSendEmail($args1, $args2 = "", $from_name = '', $body = '', $subject = '', $attachments = [], $html = false, $cc = '', $bcc = '', $reply_to = [] , $priority = '', $smtp_options = []) {
 
-	if (is_array($args_to) && strnatcmp(phpversion(),'7.1.0') >= 0) {				// Prior to PHP 7.1, this function only worked on numerical arrays.
+	if (is_array($args1) && is_array($args2)) {
+		return nuSendEmailEx($args1, $args2);
+	}
+
+	if (is_array($args1)) {
 
 		$defaults = [
 			'to' => '',
@@ -1627,12 +1631,13 @@ function nuSendEmail($args_to, $from_email = '', $from_name = '', $body = '', $s
 			'smtp_options' => []
 		];
 
-		$args = array_merge($defaults, array_intersect_key($args_to, $defaults));
+		$args = array_merge($defaults, array_intersect_key($args1, $defaults));
 		list($to, $from_email, $from_name, $cc, $bcc, $body, $subject, $reply_to, $attachments, $html, $priority, $smtp_options) = array_values($args);
 
 	}
 	else {
-		$to = $args_to;
+		$to = $args1;
+		$from_email = $args2;
 	}
 
 	$to_list = explode(',', $to);
@@ -1640,6 +1645,157 @@ function nuSendEmail($args_to, $from_email = '', $from_name = '', $body = '', $s
 	$bcc_list = explode(',', $bcc);
 
 	return nuEmail($to_list, $from_email, $from_name, $body, $subject, $attachments, $html, $cc_list, $bcc_list, $reply_to, "0", "SMTP", $priority, $smtp_options);
+
+}
+
+
+function nuStripEscapes($str) {
+	$str = str_replace('\"', '"', $str);
+	return str_replace("\'", "'", $str);
+}
+
+function nuSendEmailEx($args, $emailLogOptions) {
+
+	if (!is_array($emailLogOptions)) {
+		$tableName = null;
+		$tag = null;
+		$formId = null;
+		$userId = null;
+		$recordId = null;
+		$json = null;
+	}
+	else {
+		$defaultLogOptions = ['table_name' => null, 'tag' => null, 'form_id' => null, 'user_id' => null, 'record_id' => null, 'json' => null];
+
+		$emailLogOptions = array_merge($defaultLogOptions, array_intersect_key($emailLogOptions, $defaultLogOptions));
+		list($tableName, $tag, $formId, $userId, $recordId, $json) = array_values($emailLogOptions);
+	}
+
+	$args['subject'] = nuStripEscapes($args['subject']);
+	$args['body'] = nuStripEscapes($args['body']);
+	$sendResult = nuSendEmail($args);
+
+	$state = 'sent';
+	$sentAt = date('Y-m-d H:i:s');
+	$error = null;
+
+	if (!$sendResult[0]) {
+
+		if (count($sendResult) == 2) {
+			$error = $sendResult[1];
+		}
+		else {
+			$error = $sendResult[1] . '\n' . $sendResult[2];
+		}
+
+		$sentDate = null;
+		$state = 'error';
+	}
+
+	$insert = "
+		INSERT INTO `zzzzsys_email_log`(
+				`zzzzsys_email_log_id`,
+				`eml_from`,
+				`eml_to`,
+				`eml_cc`,
+				`eml_bcc`,
+				`eml_subject`,
+				`eml_body`,
+				`eml_file`,
+				`eml_from_name`,
+				`eml_html`,
+				`eml_reply_to`,
+				`eml_sent_at`,
+				`eml_state`,
+				`eml_importance`,
+				`eml_form_id`,
+				`eml_user_id`,
+				`eml_error`,
+				`eml_record_id`,
+				`eml_table_name`,
+				`eml_tag`,
+				`eml_json`
+				)
+		VALUES(
+				:ID,
+				:from,
+				:to,
+				:cc,
+				:bcc,
+				:subject,
+				:body,
+				:file,
+				:fromName,
+				:html,
+				:replyTo,
+				:sentAt,
+				:state,
+				:importance,
+				:formId,
+				:userId,
+				:error,
+				:recordId,
+				:tableName,
+				:tag,
+				:json
+		)
+	";
+
+	$hash = nuHash();
+	$id = nuID();
+
+	$defaults = [
+		'to' => '',
+		'fromEmail' => '',
+		'fromName' => '',
+		'cc' => '',
+		'bcc' => '',
+		'body' => '',
+		'subject' => 'test',
+		'replyTo' => [],
+		'attachments' => [],
+		'html' => true,
+		'priority' => ''
+	];
+
+	$args = array_merge($defaults, array_intersect_key($args, $defaults));
+	list($to, $fromEmail, $fromName, $cc, $bcc, $body, $subject, $replyTo, $attachments, $html, $priority) = array_values($args);
+
+	$recordId = $hash['RECORD_ID'] ?? null;
+	$formId = $hash['form_id'] ?? null;
+	$userId = $hash['user_id'] ?? null;
+
+	$params = [
+
+		"ID" => $id,
+		"from" => $fromEmail,
+		"to" => $to,
+		"cc" => $cc,
+		"bcc" => $bcc,
+		"subject" => $subject,
+		"body" => $body,
+		"file" => json_encode($attachments) ,
+		"fromName" => $fromName,
+		"html" => $html,
+		"replyTo" => json_encode($replyTo) ,
+		"sentAt" => $sentAt,
+		"state" => $state,
+		"importance" => $priority,
+		"formId" => $formId,
+		"userId" => $userId,
+		"error" => $error,
+		"recordId" => $recordId,
+		"tableName" => $tableName,
+		"tag" => $tag,
+		"json" => $json
+	];
+
+	$result = nuRunQuery($insert, $params, true);
+	if ($result == 0) {
+		// nuDebug('Insert sucessful!');
+	}
+
+	return $sendResult;
 
 }
 
