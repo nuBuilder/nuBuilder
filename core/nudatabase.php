@@ -41,6 +41,8 @@ $GLOBALS['sys_table_prefix'] = [
 	'code_snippet' => 'cot',
 	'config' => 'cfg',
 	'debug' => 'deb',
+	'email_template' => 'emt',
+	'email_log' => 'eml',
 	'event' => 'sev',
 	'file' => 'sfi',
 	'form' => 'sfo',
@@ -59,7 +61,9 @@ $GLOBALS['sys_table_prefix'] = [
 	'tab' => 'syt',
 	'timezone' => 'stz',
 	'translate' => 'trl',
-	'user' => 'sus'
+	'user' => 'sus',
+	'user_permission' => 'upe',
+	'permission_item' => 'pme'
 ];
 
 function nuRunQueryNoDebug($query, $params = [], $isInsert = false){
