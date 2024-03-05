@@ -289,16 +289,20 @@ function db_fetch_key_pair_array($obj){
 	return db_fetch($obj, 'keypairarray');
 }
 
+function db_fetch_all_key_pair_array($obj){
+	return db_fetch($obj, 'keypairarray', true);
+}
+
 function db_fetch_object($obj){
 	return db_fetch($obj, 'object');
 }
 
-function db_fetch_all_column($obj){
-	return db_fetch($obj, 'column', true);
-}
-
 function db_fetch_all_object($obj){
 	return db_fetch($obj, 'object', true);
+}
+
+function db_fetch_all_column($obj){
+	return db_fetch($obj, 'column', true);
 }
 
 function db_fetch_row($obj){
