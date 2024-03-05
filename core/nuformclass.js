@@ -641,27 +641,71 @@ class nuFormObject {
 
 	}
 
-	subform(sf, action = 'save') {
+	subformCollectRecordChildren(element, subformId, isMarkedForDeletion, deleteAll, values, edited, fieldNames, counter) {
 
-		var id = sf;
+		let $this = $('#' + element.id);
+
+		if (element.id.endsWith('nuDelete')) {
+			isMarkedForDeletion = ($this.prop("checked") || deleteAll) ? 1 : 0;
+		}
+
+		if (subformId == 'nuRECORD') { // Main form
+			fieldNames[counter] = element.id;
+		} else {
+			fieldNames[counter] = element.id.substr(subformId.length + 3);
+		}
+
+		const dataFormat = $this.attr('data-nu-format');
+		const inputType = $this.attr('type');
+							  
+		let value = $this.val();
+
+		if (inputType == 'checkbox') {
+			value = $this.prop("checked") ? 1 : 0;
+		}
+
+		if (typeof value === 'object') { // Multi SELECT Object
+			value = JSON.stringify(value);
+		}
+
+		values[counter] = nuFORM.removeFormatting(value, dataFormat);
+		edited[counter] = $this.hasClass('nuEdited') ? 1 : 0;
+
+		counter++;
+
+		return {
+			element,
+			isMarkedForDeletion,
+			values,
+			edited,
+			fieldNames,
+			counter
+		};
+
+	}	
+	
+	subform(formId, action = 'save') {
+
+		var id = formId;
 		var deleteAction = action == 'delete';
-		var sel;
+		var selector;
 		var oi;
 		var table;
 		var fk;
 		var pk;
-		var nd;
+		var nuDelete;
 		var na;
+		let cThis = this;
 
-		if (sf == '') {
+		if (formId == '') {
 
 			id = 'nuBuilder4EditForm';
 			oi = -1;
 			fk = '';
 			pk = $('#nuRECORD').attr('data-nu-primary-key-name');
 			table = $('#nuRECORD').attr('data-nu-table');
-			sel = '#nuRECORD';
-			var sf = 'nuRECORD';
+			selector = '#nuRECORD';
+			var formId = 'nuRECORD';
 
 			if (table === undefined) {
 				oi = parent.nuFORM === undefined ? undefined : parent.nuFORM.getCurrent().form_id;
@@ -671,149 +715,123 @@ class nuFormObject {
 
 		} else {
 
-			sel = "[id*='" + sf + "'][id*='nuRECORD']";
-			table = $(sel).attr('data-nu-table');
+			selector = "[id*='" + formId + "'][id*='nuRECORD']";
+			table = $(selector).attr('data-nu-table');
 
-			let $sf = $('#' + sf);
-			oi = $sf.attr('data-nu-object-id');
-			fk = $sf.attr('data-nu-foreign-key-name');
-			pk = $sf.attr('data-nu-primary-key-name');
-			nd = $sf.attr('data-nu-delete');
-			na = $sf.attr('data-nu-add');
+			let $subform = $('#' + formId);
+			oi = $subform.attr('data-nu-object-id');
+			fk = $subform.attr('data-nu-foreign-key-name');
+			pk = $subform.attr('data-nu-primary-key-name');
+			nuDelete = $subform.attr('data-nu-delete');
+			na = $subform.attr('data-nu-add');
 
 		}
 
-		var o = { 'id': id, 'foreign_key': fk, 'primary_key': pk, 'object_id': oi, 'table': table, 'action': action };	//-- foreign_key id id Form's record_id (which might change if cloned.)
-		var F = ['ID'];
-		o.rows = [];
-		o.columns = [];
-		o.chartData = [];
-		o.chartDataPivot = [];
-		o.edited = [];
-		o.deleted = [];
+		var obj = { 'id': id, 'foreign_key': fk, 'primary_key': pk, 'object_id': oi, 'table': table, 'action': action };	
+		//-- foreign_key id id Form's record_id (which might change if cloned.)
+		var fieldNames = ['ID'];
+		obj.rows = [];
+		obj.columns = [];
+		obj.chartData = [];
+		obj.chartDataPivot = [];
+		obj.edited = [];
+		obj.deleted = [];
 
-		$(sel).each(function (index) {
+		$(selector).each(function (index) {
 
-			var THIS = $(this);
+			var $this = $(this);
 			var dnpk = $(this).attr('data-nu-primary-key');
-			var V = [dnpk];
-			var E = [0];
-			var C = 1;
-			var chk = $('#' + this.id).prop("checked");
+			var values = [dnpk];
+			var edited = [0];
+			var counter = 1;
+			var isMarkedForDeletion = $('#' + this.id).prop("checked");
 
-			THIS.children('[data-nu-data]').each(function () {
+			const childrenInNuForm = $this.children('[data-nu-data]');
+			// var childrenInHTMLForm = $this.children('form').find('[data-nu-data]');
+			// var combinedChildren = childrenInNuForm.add(childrenInHTMLForm);
 
-				let $this = $('#' + this.id);
-				if (this.id.substr(-8) == 'nuDelete') {
-					chk = ($this.prop("checked") || deleteAction) ? 1 : 0;
-				}
-
-				if (sf == 'nuRECORD') {						//-- the main Form
-					F[C] = this.id;
-				} else {
-					F[C] = this.id.substr(sf.length + 3);
-				}
-
-				const dnf = $this.attr('data-nu-format');
-				const type = $this.attr('type');
-				let val = $this.val();
-
-				if (type == 'checkbox') {
-					val = $this.prop("checked") ? 1 : 0;
-				}
-
-				if (typeof ($this.val()) == 'object') {						//-- multi SELECT Object
-					val = JSON.stringify($this.val());
-				}
-
-				V[C] = nuFORM.removeFormatting(val, dnf);
-				E[C] = $this.hasClass('nuEdited') ? 1 : 0;
-
-				C++;
+			childrenInNuForm.each(function () {
+				
+				let children = cThis.subformCollectRecordChildren(this, formId, isMarkedForDeletion, deleteAction, values, edited, fieldNames, counter);
+				isMarkedForDeletion = children.isMarkedForDeletion;
+				values = children.values;
+				edited = children.edited;
+				counter = children.counter;
+				fieldNames = children.fieldNames;
 
 			});
 
 			if (!(na == 0 && dnpk == -1)) {
-				o.rows.push(V);
-				o.edited.push(E);
-				o.deleted.push(chk);
+				obj.rows.push(values);
+				obj.edited.push(edited);
+				obj.deleted.push(isMarkedForDeletion);
 			}
 
 		});
 
-		o.fields = F;
+		obj.fields = fieldNames;
 
 		var titles = [];
 
+		for (let fieldIndex = 0; fieldIndex < obj.fields.length - 1; fieldIndex++) {
+			const columnData = []; // Stores data for the current column
+			const fieldTitle = $('#title_' + formId + obj.fields[fieldIndex]).html();
+			titles.push(fieldTitle);
 
-		for (var f = 0; f < o.fields.length - 1; f++) {
-
-			var c = [];
-
-			titles.push($('#title_' + sf + o.fields[f]).html());
-
-			for (var r = 0; r < o.rows.length; r++) {
-
-				if (o.rows[r][o.fields.length - 1] == 0) {
-					c.push(o.rows[r][f]);
+			for (let rowIndex = 0; rowIndex < obj.rows.length; rowIndex++) {
+				const row = obj.rows[rowIndex];
+				if (row[obj.fields.length - 1] == 0) { // Assuming the last field is a status/flag
+					columnData.push(row[fieldIndex]);
 				}
-
 			}
 
-			o.columns.push(c);
-
+			obj.columns.push(columnData);
 		}
 
-		for (var i = 0; i < o.rows.length; i++) {
+		for (let rowIndex = 0; rowIndex < obj.rows.length; rowIndex++) {
+			const originalRow = obj.rows[rowIndex];
+			const modifiedRow = JSON.parse(JSON.stringify(originalRow)); // Deep copy of the row
 
-			var row = JSON.parse(JSON.stringify(o.rows[i]));
+			modifiedRow.shift(); // Remove the first element 
+			modifiedRow.pop();  // Remove the last element
 
-			row.shift();
-			row.pop();
-
-			if (o.deleted[i] == 0) {
-
-				for (var ro = 0; ro < row.length; ro++) {
-
-					if (ro != 0) {
-						row[ro] = Number(row[ro]);
-					}
-
+			if (obj.deleted[rowIndex] == 0) { // Check if the row is not marked for deletion
+				for (let columnIndex = 1; columnIndex < modifiedRow.length; columnIndex++) { // Skip the first element 
+					modifiedRow[columnIndex] = Number(modifiedRow[columnIndex]); // Convert to number
 				}
 
-				o.chartData.push(row);
+				obj.chartData.push(modifiedRow);
 			}
-
 		}
 
 		titles.shift();
-		o.chartData.splice(0, 0, titles);
+		obj.chartData.splice(0, 0, titles);
 
-		for (var i = 0; i < o.chartData[0].length; i++) {
+		for (let i = 0; i < obj.chartData[0].length; i++) {
 
-			row = [];
+			let row = [];
 
-			for (var p = 0; p < o.chartData.length; p++) {
-				row.push(o.chartData[p][i]);
+			for (var p = 0; p < obj.chartData.length; p++) {
+				row.push(obj.chartData[p][i]);
 			}
 
-			o.chartDataPivot.push(row);
+			obj.chartDataPivot.push(row);
 
 		}
 
-		if (nd == 0) {								//-- no deleting allowed
+		if (nuDelete == 0) {								//-- no deleting allowed
 
-			for (var i = 0; i < o.rows.length; i++) {
-				o.deleted[i] = 0;
+			for (let i = 0; i < obj.rows.length; i++) {
+				obj.deleted[i] = 0;
 			}
 
 			if (na == 1) {
-				o.deleted[o.deleted.length - 1] = 1;
+				obj.deleted[obj.deleted.length - 1] = 1;
 			}
 
 		}
 
-		return o;
+		return obj;
 
 	}
 
