@@ -277,24 +277,24 @@ function db_fetch($obj, $style = 'object', $fetchAll = false) {
 
 }
 
-function db_fetch_array($obj){
-	return db_fetch($obj, 'array');
+function db_fetch_array($obj, $fetchAll = false){
+	return db_fetch($obj, 'array', $fetchAll);
 }
 
 function db_fetch_all_array($obj){
 	return db_fetch($obj, 'array', true);
 }
 
-function db_fetch_key_pair_array($obj){
-	return db_fetch($obj, 'keypairarray');
+function db_fetch_key_pair_array($obj, $fetchAll = false){
+	return db_fetch($obj, 'keypairarray', $fetchAll);
 }
 
 function db_fetch_all_key_pair_array($obj){
 	return db_fetch($obj, 'keypairarray', true);
 }
 
-function db_fetch_object($obj){
-	return db_fetch($obj, 'object');
+function db_fetch_object($obj, $fetchAll = false){
+	return db_fetch($obj, 'object', $fetchAll);
 }
 
 function db_fetch_all_object($obj){
@@ -305,8 +305,8 @@ function db_fetch_all_column($obj){
 	return db_fetch($obj, 'column', true);
 }
 
-function db_fetch_row($obj){
-	return db_fetch($obj, 'row');
+function db_fetch_row($obj, $fetchAll = false){
+	return db_fetch($obj, 'row', $fetchAll);
 }
 
 function db_update_value($table, $pk, $recordId, $column, $newValue) {
