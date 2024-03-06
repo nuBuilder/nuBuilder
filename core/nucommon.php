@@ -660,9 +660,9 @@ function nuReplaceHashVariables($s){
 
 }
 
-function hex2rgb($hexOrColor) {
+function nuHex2rgb($hexOrColor) {
 
-	$hex = ColorToHex($hexOrColor);
+	$hex = nuColorToHex($hexOrColor);
 	$hex = str_replace("#", "", $hex);
 
 	if(strlen($hex) == 3) {
@@ -680,7 +680,7 @@ function hex2rgb($hexOrColor) {
 
 }
 
-function ColorToHex($pColor){
+function nuColorToHex($pColor){
 
 	$vColor	= strtoupper($pColor);
 	$colors = [

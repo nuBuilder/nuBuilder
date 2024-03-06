@@ -915,7 +915,7 @@ function nuSetPixelsToMM($pxREPORT){
 
 function nuPrintBackground($PDF, $sectionTop, $sectionHeight, $color){
 
-	$backcolor	= hex2rgb($color);
+	$backcolor	= nuHex2rgb($color);
 
 	$PDF->SetFillColor($backcolor[0], $backcolor[1], $backcolor[2]);
 	//$PDF->Rect(0, $sectionTop, 1000, $sectionHeight, 'F');
@@ -963,9 +963,9 @@ function nuPrintField($PDF, $S, $contents, $O, $LAY, $isHTML){
 	if(isset($contents->B)){$backgroundColor = $contents->B;}
 	if(isset($contents->F)){$fontColor = $contents->F;}
 
-	$drawcolor		 = hex2rgb($borderColor);
-	$backcolor		 = hex2rgb($backgroundColor);
-	$textcolor		 = hex2rgb($fontColor);
+	$drawcolor		 = nuHex2rgb($borderColor);
+	$backcolor		 = nuHex2rgb($backgroundColor);
+	$textcolor		 = nuHex2rgb($fontColor);
 
 	$PDF->SetDrawColor($drawcolor[0], $drawcolor[1], $drawcolor[2]);
 	$PDF->SetTextColor($textcolor[0], $textcolor[1], $textcolor[2]);
