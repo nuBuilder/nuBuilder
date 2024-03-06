@@ -2225,12 +2225,12 @@ function nuRecordId() {
 function nuUserId() {
 
     $userId = function_exists('nuHash') ? nuObjKey(nuHash(), 'USER_ID') ?? null : null;
-    return $userId ?? nuObjKey($_POST, 'USER_ID'); 
+	return $userId ?? nuObjKey($_POST, 'USER_ID'); 
 
 }
 
 function nuFormId() {
-    return nuReplaceHashVariables('#form_id#');
+	return nuReplaceHashVariables('#form_id#');
 }
 
 function hashCookieNotSetOrEmpty($h) {
@@ -2417,6 +2417,24 @@ function nuGetProperty($p, $a = null) {
 	}
 
 	return array_key_exists($p, $a) ? $a[$p] : null;
+
+}
+
+function nuHasProperty($property, &$value = null, $allowEmpty = true) {
+
+	$value = nuGetProperty($property);
+
+	if ($value) {
+
+		if (!$allowEmpty & nuTrim($value) === '') { 
+			return false;
+		}
+
+		return $value; 
+
+	}
+
+	return false;
 
 }
 
