@@ -2216,6 +2216,17 @@ function nuGetRecordURL($origin = null, $subFolder = null, $homepageId = null, $
 
 }
 
+function nuRecordId() {
+
+    $recordIdLower = nuReplaceHashVariables('#record_id#');
+    $recordIdUpper = nuReplaceHashVariables('#RECORD_ID#');
+
+	$recordId = $recordIdLower && $recordIdLower != '-1'  ? $recordIdLower : $recordIdUpper;
+
+	return $recordId; 
+
+}
+
 function hashCookieNotSetOrEmpty($h) {
 	return (preg_match('/\#(.*)\#/', $h) || nuTrim($h) == "");
 }
