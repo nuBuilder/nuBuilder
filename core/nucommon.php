@@ -2233,10 +2233,6 @@ function nuFormId() {
 	return nuReplaceHashVariables('#form_id#');
 }
 
-function hashCookieNotSetOrEmpty($h) {
-	return (preg_match('/\#(.*)\#/', $h) || nuTrim($h) == "");
-}
-
 function nuTranslateWriteSQL($f, $row, $counter, $total) {
 
 	$values = join(', ', array_map(function ($value) {

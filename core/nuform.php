@@ -703,10 +703,9 @@ function nuGetEditForm($F, $R){
 }
 
 function nuRowsPerPage($rows) {
-
-	$hk = nuReplaceHashVariables('#ROWS_PER_PAGE#');
-	if (!hashCookieNotSetOrEmpty($hk)) {
-		return intval($hk);
+	
+	if (nuHasProperty('ROWS_PER_PAGE', $value, false)) {
+		return intval($value);
 	} else {
 		return ($rows == 0 || $rows == null) ? 20 : $rows;
 	}
