@@ -6397,41 +6397,46 @@ function nuPortraitLabelWidth(o) {
 }
 
 function nuGetBrowsePaginationInfo() {
+	// Number of rows displayed per page
+	const rowsPerPage = $("div[id^='nucell_']" + "[id$='_1']").length; 
 
-	const r = $("div[id^='nucell_']" + "[id$='_1']").length; // Number of Rows per page
+	// Get current form data
+	const currentFormData = nuFORM.getCurrent();
 
-	const cf = nuFORM.getCurrent();
+	// Extract relevant pagination details
+	const currentPageNumber = currentFormData.page_number;
+	const totalFilteredRows = currentFormData.browse_filtered_rows;
+	const totalPages = currentFormData.pages;
 
-	const c = cf.page_number; 							// Current page number
-	const f = cf.browse_filtered_rows; 					// Number of records in the table after filtering
-	const p = cf.pages; 								// Total number of pages
+	// Variables to hold calculated values
+	let startRow;
+	let endRow;
 
-	var e; 												// Row number of the last record on the current page
-	var s; 												// Row number of the first record on the current page
+	// Logic to determine start and end rows based on pagination state
+	if (currentPageNumber == 0 && totalFilteredRows > 0 && totalPages == 1) {
+		// Special case: Single page with results
+		startRow = 1;
+		endRow = totalFilteredRows;
+	} else if (totalPages == currentPageNumber + 1 || totalFilteredRows == 0) {
+		// Last page or no results
+		startRow = totalFilteredRows == 0 ? 0 : currentPageNumber * rowsPerPage + 1;
+		endRow = totalFilteredRows;
+	} else if (currentPageNumber == 0 && totalPages > 1) {
+		// First page with multiple pages
+		startRow = 1;
+		endRow = rowsPerPage;
+	} else if (currentPageNumber > 0 && currentPageNumber < totalPages) {
+		// Any middle page 
+		endRow = (currentPageNumber + 1) * rowsPerPage;
+		startRow = endRow - rowsPerPage + 1;
+	}
 
-	if (c == 0 && f > 0 && p == 1) {
-		s = 1;
-		e = f;
-	} else
-		if (p == c + 1 || f == 0) {
-			s = f == 0 ? 0 : c * r + 1;
-			e = f;
-		} else
-			if (c == 0 && p > 1) {
-				s = 1;
-				e = r;
-			} else
-				if (c > 0 && c < p) {
-					e = (c + 1) * r;
-					s = e - r + 1;
-				}
-
+	// Return the calculated pagination details
 	return {
-		startRow: s,
-		endRow: e,
-		totalRows: f // filtered rows
+		startRow: startRow,
+		endRow: endRow,
+		totalRows: totalFilteredRows 
 	};
-
 }
 
 function nuShowBrowsePaginationInfo(f) {
