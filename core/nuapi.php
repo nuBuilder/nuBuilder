@@ -49,19 +49,8 @@
 
 	$formAndSessionData						= nuGatherFormAndSessionData($user['HOME_ID'], $globalAccess);
 
-	// 2FA: Check authentication status.
-	if ((($globalAccess && nuObjKey($sessionData,'2FA_ADMIN')) || (!$globalAccess && nuObjKey($sessionData,'2FA_USER'))) && nuObjKey($sessionData,'SESSION_2FA_STATUS') == 'PENDING') {
-		if ($formAndSessionData->form_id != $sessionData['2FA_FORM_ID'] && $callType != 'runhiddenphp') {
-			nuDisplayError(nuTranslate('Access denied. Authentication Pending.'));
-		}
-	}
-
-	// Change Password: Check authentication status.
-	if (!$globalAccess  && nuObjKey($sessionData,'SESSION_CHANGE_PW_STATUS') == 'PENDING') {
-		if ($formAndSessionData->form_id != $sessionData['CHANGE_PW_FORM_ID'] && $callType != 'runhiddenphp') {
-			nuDisplayError(nuTranslate('Access denied. Password Change Pending.'));
-		}
-	}
+	nuCheck2FAAuthenticationPending($sessionData, $formAndSessionData, $callType);
+	nuCheckPasswordChangePending($sessionData, $formAndSessionData, $callType);
 
 	$sessionData							= $_SESSION['nubuilder_session_data'];
 	$formId									= $formAndSessionData->form_id;

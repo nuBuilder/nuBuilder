@@ -206,4 +206,21 @@ function nu2FALocalTokenOK($uid) {
 
 }
 
+function nuCheckAccessPending($sessionData, $formAndSessionData, $callType, $statusKey, $errorMessage) {
+	if (nuObjKey($sessionData, $statusKey) === 'PENDING') {
+		if ($formAndSessionData->form_id !== $sessionData[$statusKey . '_FORM_ID'] && $callType !== 'runhiddenphp') {
+			nuDisplayError(nuTranslate($errorMessage));
+		}
+	}
+}
+
+function nuCheck2FAAuthenticationPending($sessionData, $formAndSessionData, $callType) {
+	nuCheckAccessPending($sessionData, $formAndSessionData, $callType, 'SESSION_2FA_STATUS', 'Access denied. Authentication Pending.');  
+}
+
+function nuCheckPasswordChangePending($sessionData, $formAndSessionData, $callType) {
+	nuCheckAccessPending($sessionData, $formAndSessionData, $callType, 'SESSION_CHANGE_PW_STATUS', 'Access denied. Password Change Pending.'); 
+}
+
+
 ?>
