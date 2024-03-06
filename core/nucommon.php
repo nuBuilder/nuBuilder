@@ -2208,11 +2208,7 @@ function nuGetRecordURL($origin = null, $subFolder = null, $homepageId = null, $
 		$formId = $hash['form_id'] == '' ? $hash['FORM_ID'] : $hash['form_id'];
 	}
 
-	$recordIdL = nuReplaceHashVariables('#record_id#');
-	$recordIdC = nuReplaceHashVariables('#RECORD_ID#');
-	$recordId = $recordIdL && $recordIdL != '-1'  ? $recordIdL : $recordIdC;
-
-	return $origin. $subFolder . '/index.php?f=' . $formId . '&r=' . $recordId . $homepageId;
+	return $origin. $subFolder . '/index.php?f=' . $formId . '&r=' . nuRecordId() . $homepageId;
 
 }
 
