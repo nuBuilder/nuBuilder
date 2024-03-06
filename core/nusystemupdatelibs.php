@@ -252,6 +252,7 @@ function nuAlterSystemTables(){
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_access_form` ADD `slf_form_type` varchar(2) DEFAULT NULL AFTER `slf_data_mode`;");
 
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_php` ADD `sph_global` VARCHAR(1) NOT NULL DEFAULT '0' AFTER `sph_system`;");
+	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_php` ADD `sph_template` VARCHAR(1) NOT NULL DEFAULT '0' AFTER `sph_global`;");
 
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_setup` ADD `set_smtp_use_ssl` VARCHAR(1) NOT NULL DEFAULT '1' AFTER `set_smtp_use_authentication`;");
 
@@ -266,6 +267,8 @@ function nuAlterSystemTables(){
 
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_cloner` ADD `clo_tables_include` MEDIUMTEXT NULL DEFAULT NULL AFTER `clo_iframe_forms`;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_cloner` ADD `clo_tables_exclude` MEDIUMTEXT NULL DEFAULT NULL AFTER `clo_tables_include`;");
+
+	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_email_template` ADD `emt_template` VARCHAR(1) NULL DEFAULT '0' AFTER `emt_group`;");
 
 	$setupColumns = db_field_names('zzzzsys_setup');
 	if(array_search('set_languages_included', $setupColumns) == false){
