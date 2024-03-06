@@ -1648,7 +1648,6 @@ function nuSendEmail($args1, $args2 = "", $from_name = '', $body = '', $subject 
 
 }
 
-
 function nuStripEscapes($str) {
 	$str = str_replace('\"', '"', $str);
 	return str_replace("\'", "'", $str);
@@ -1665,7 +1664,7 @@ function nuSendEmailEx($args, $emailLogOptions) {
 		$json = null;
 	}
 	else {
-		$defaultLogOptions = ['table_name' => null, 'tag' => null, 'form_id' => null, 'user_id' => null, 'record_id' => null, 'json' => null];
+		$defaultLogOptions = ['table_name' => null, 'tag' => null, 'form_id' => nuFormId(), 'user_id' => nuUserId(), 'record_id' => nuRecordId(), 'json' => null];
 
 		$emailLogOptions = array_merge($defaultLogOptions, array_intersect_key($emailLogOptions, $defaultLogOptions));
 		list($tableName, $tag, $formId, $userId, $recordId, $json) = array_values($emailLogOptions);
@@ -2221,6 +2220,17 @@ function nuRecordId() {
 
 	return $recordId; 
 
+}
+
+function nuUserId() {
+
+    $userId = function_exists('nuHash') ? nuObjKey(nuHash(), 'USER_ID') ?? null : null;
+    return $userId ?? nuObjKey($_POST, 'USER_ID'); 
+
+}
+
+function nuFormId() {
+    return nuReplaceHashVariables('#form_id#');
 }
 
 function hashCookieNotSetOrEmpty($h) {
