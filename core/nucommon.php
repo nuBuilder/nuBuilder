@@ -912,7 +912,7 @@ function nuGetUserPermissions($userId = null){
 function nuUserHasPermission($item, $userId = null) {
 
 	$permissions = nuGetUserPermissions($userId);
-	return nuArrayContains($item, $permissions);
+	return nuArrayContains($item, $permissions) || nuGlobalAccess();
 
 }
 
