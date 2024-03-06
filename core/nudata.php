@@ -862,7 +862,8 @@ function nuDisplayError($m) {
 }
 
 function nuHasErrors() {
-	return count($_POST['nuErrors']) > 0;
+	$nuErrors = nuObjKey($_POST,'nuErrors', []);
+	return count($nuErrors) > 0;
 }
 
 function nuCheckAccess($f, $r = '') {
