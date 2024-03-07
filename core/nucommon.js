@@ -51,6 +51,7 @@ String.prototype.nuEndsWith = function(substr, ignoreCase) {
 
 String.prototype.nuStartsWith = function(substr, ignoreCase) {
 
+
 	if (ignoreCase === undefined || ignoreCase === false) return this.startsWith(substr);
 	return this.toLowerCase().startsWith(substr.toLowerCase());
 
@@ -1982,49 +1983,47 @@ function nuAddEventListenerOnce(target, eventType, eventFunction, options, event
 
 function nuDragTitleEvents() {
 
-	if (nuFormType() != 'browse') { 
-		return; 
+	if (nuFormType() != 'browse') {
+		return;
 	}
-    
-	let colWidths = nuFORM.getCurrent().column_widths || nuGetColumWidths();
 
+	let colWidths = nuFORM.getCurrent().column_widths || nuGetColumWidths();
 	nuSetBrowseColumns(colWidths);
 
-	document.getElementById('nubody').addEventListener('mousemove', function(event) {
-	  nuDragBrowseColumn(event, 'pointer');
-	}, {passive: true});
+	const body = document.getElementById('nubody');
+	const browseTitle = document.querySelectorAll('.nuBrowseTitle');
 
-	var browseTitle = document.querySelectorAll('.nuBrowseTitle');
+	nuAddEventListenerOnce(body, 'mousemove', function(event) {
+		nuDragBrowseColumn(event, 'pointer');
+	}, {passive: true}, 'nu-mousemove-added');
 
-	document.getElementById('nubody').addEventListener('mouseup', function(event) {
-	  nuEndBrowseResize();
-	}, {passive: true});
+	nuAddEventListenerOnce(body, 'mouseup', function(event) {
+		nuEndBrowseResize();
+	}, {passive: true}, 'nu-mouseup-added');
 
-	browseTitle.forEach(function(elem) {
-	  elem.addEventListener('mousedown', function(event) {
-		nuDownBrowseResize(event, 'pointer');
-	  }, {passive: true});
+	browseTitle.forEach(elem => {
+		nuAddEventListenerOnce(elem, 'mousedown', function(event) {
+			nuDownBrowseResize(event, 'pointer');
+		}, {passive: true}, 'nu-mousedown-added');
 
-	  elem.addEventListener('touchstart', function(event) {
-		nuDownBrowseResize(event, 'finger_touch');
-	  }, {passive: true});
+		nuAddEventListenerOnce(elem, 'touchstart', function(event) {
+			nuDownBrowseResize(event, 'finger_touch');
+		}, {passive: true}, 'nu-touchstart-added');
 
-	  elem.addEventListener('touchmove', function(event) {
-		nuDragBrowseColumn(event, 'finger_touch');
-	  }, {passive: true});
+		nuAddEventListenerOnce(elem, 'touchmove', function(event) {
+			nuDragBrowseColumn(event, 'finger_touch');
+		}, {passive: true}, 'nu-touchmove-added');
 
-	  elem.addEventListener('touchend', function(event) {
-		nuEndBrowseResize(event);
-	  }, {passive: true});
+		nuAddEventListenerOnce(elem, 'touchend', function(event) {
+			nuEndBrowseResize(event);
+		}, {passive: true}, 'nu-touchend-added');
 
-	  elem.addEventListener('touchcancel', function(event) {
-		nuEndBrowseResize(event);
-	  }, {passive: true});
+		nuAddEventListenerOnce(elem, 'touchcancel', function(event) {
+			nuEndBrowseResize(event);
+		}, {passive: true}, 'nu-touchcancel-added');
 	});
 
-
 }
-
 
 function nuRemovePX(s) {
 	return Number(String(s).split('px')[0]);
