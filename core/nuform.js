@@ -6925,17 +6925,26 @@ function nuUppyGetLanguageCodeAndLocale(language) {
 
 }
 
-function nuUppyCreate(language) {
+function nuUppyCreate(language, languageFallback = null) {
 
 	let uppy = new Uppy.Uppy();
-	nuUppySetLanguage(uppy, language)
+	nuUppySetLanguage(uppy, language, languageFallback)
 	return uppy;
+
 }
 
-function nuUppySetLanguage(uppy, language) {
+function nuUppySetLanguage(uppy, language, languageFallback) {
 
-	const userLanguage = language || nuUserLanguage();
+	let userLanguage = language || nuUserLanguage();
+	if (!userLanguage) {
+		userLanguage = languageFallback;
+	}	
+
+	if (!userLanguage) return;
+
 	let langResult = nuUppyGetLanguageCodeAndLocale(userLanguage);
+	
+	if (!langResult) return;
 
 	const setUppyLanguage = (locale) => {
 		if (locale) {
@@ -6943,13 +6952,13 @@ function nuUppySetLanguage(uppy, language) {
 		}
 	};
 
-	if (langResult && !langResult.locale) {
-		$.getScript(`/core/libs/uppy/locales/${langResult.code}.min.js`, function (data, textStatus, jqxhr) {
+	if (!langResult.locale) {
+		$.getScript(`core/libs/uppy/locales/${langResult.code}.min.js`, function (data, textStatus, jqxhr) {
 			langResult = nuUppyGetLanguageCodeAndLocale(userLanguage);
 			setUppyLanguage(langResult.locale);
 		});
 	} else {
-		setUppyLanguage(langResult.locale);
+			setUppyLanguage(langResult.locale);
 	}
 
 	return langResult;
