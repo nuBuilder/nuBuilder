@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 06, 2024 at 02:15 PM
+-- Generation Time: Mar 07, 2024 at 04:15 PM
 -- Server version: 8.0.27
 -- PHP Version: 8.1.26
 
@@ -373,6 +373,7 @@ INSERT INTO `zzzzsys_config` (`zzzzsys_config_id`, `zzzzsys_setup_id`, `cfg_orde
 CREATE TABLE `zzzzsys_debug` (
   `zzzzsys_debug_id` varchar(25) NOT NULL,
   `deb_message` longtext,
+  `deb_flag` varchar(50) DEFAULT NULL,
   `deb_added` int DEFAULT NULL,
   `deb_user_id` varchar(25) DEFAULT NULL,
   `deb_json` mediumtext
@@ -813,8 +814,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`, `inf_json`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2024.03.06.02', NULL),
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2024.03.06.08', NULL);
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2024.03.07.00', NULL),
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2024.03.07.06', NULL);
 
 -- --------------------------------------------------------
 
