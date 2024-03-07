@@ -1973,6 +1973,13 @@ function nuDisableBrowseResize() {
 
 }
 
+function nuAddEventListenerOnce(target, eventType, eventFunction, options, eventClass) {
+	if (!target.classList.contains(eventClass)) {
+		target.addEventListener(eventType, eventFunction, options);
+		target.classList.add(eventClass);
+	}
+}
+
 function nuDragTitleEvents() {
 
 	if (nuFormType() != 'browse') { 
