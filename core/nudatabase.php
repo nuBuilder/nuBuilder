@@ -498,20 +498,21 @@ function nuDebugUserId() {
 
 }
 
-function nuDebugResult($nuDebugMsg){
+function nuDebugResult($nuDebugMsg, $flag){
 
 	if(is_object($nuDebugMsg)){
-		$nuDebugMsg = print_r($nuDebugMsg,1);
+		$nuDebugMsg = print_r($nuDebugMsg, 1);
 	}
 
 	$nuDebugId = nuID();
 
-	$insert = "INSERT INTO zzzzsys_debug (zzzzsys_debug_id, deb_message, deb_added, deb_user_id) VALUES (:id , :message, :added, :user_id)";
+	$insert = "INSERT INTO zzzzsys_debug (zzzzsys_debug_id, deb_message, deb_flag, deb_added, deb_user_id) VALUES (:id , :message, :flag, :added, :user_id)";
 
 	$params = [
 		"id"		=> $nuDebugId,
 		"message"	=> $nuDebugMsg,
 		"added"		=> time(),
+		"flag"		=> $flag,
 		"user_id"	=> nuDebugUserId()
 	];
 
@@ -526,7 +527,7 @@ function nuDebugResult($nuDebugMsg){
 
 }
 
-function nuDebug($a){
+function nuDebug($a, $flag = null){
 
 	$date				= date("Y-m-d H:i:s");
 	$b					= debug_backtrace();
@@ -565,7 +566,7 @@ function nuDebug($a){
 
 	}
 
-	nuDebugResult($m);
+	nuDebugResult($m, $flag);
 
 }
 

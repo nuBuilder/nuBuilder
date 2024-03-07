@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 07, 2024 at 04:15 PM
+-- Generation Time: Mar 07, 2024 at 04:28 PM
 -- Server version: 8.0.27
 -- PHP Version: 8.1.26
 
@@ -185,7 +185,7 @@ INSERT INTO `zzzzsys_browse` (`zzzzsys_browse_id`, `sbr_zzzzsys_form_id`, `sbr_t
 ('nu5bad6cb37889036', 'nulaunchable', 'Code', 'sfo_code', 'l', '', 20, 100, NULL),
 ('nu5bad6cb3789662e', 'nulaunchable', 'Description', 'sfo_description', 'l', '', 30, 400, NULL),
 ('nu5bad6cb378aa4cf', 'nulaunchable', 'Table', 'sfo_table', 'l', '', 40, 200, NULL),
-('nu5bad6cb378b79f4', 'nudebug', 'When', 'deb_added', 'l', '', 20, 130, NULL),
+('nu5bad6cb378b79f4', 'nudebug', 'When', 'deb_added', 'l', '', 30, 130, NULL),
 ('nu5bad6cb378c316b', 'nubuildtable', 'Code', 'code', 'l', '', 10, 100, NULL),
 ('nu5bad6cb378cf278', 'nubuildtable', 'Description', 'description', 'l', '', 20, 300, NULL),
 ('nu5f9aaac9719b88c', 'nucloner', 'Source Form', 'clo_form_source', 'l', '', 10, 190, NULL),
@@ -218,7 +218,7 @@ INSERT INTO `zzzzsys_browse` (`zzzzsys_browse_id`, `sbr_zzzzsys_form_id`, `sbr_t
 ('nu5fed7ae8d82586a', 'nuobjectgrid', 'Code', 'sfo_code', 'l', '', 10, 250, NULL),
 ('nu5ff0df492665285', 'nuaccess', 'Home', 'sfo_code', 'l', '', 40, 300, NULL),
 ('nu60fd004179b7f95', 'nuselect', 'Code', 'sse_code', 'l', '', 10, 545, NULL),
-('nu61bb9991f1c4d45', 'nudebug', 'User', 'IFNULL(sus_name, deb_user_id)', 'l', '', 30, 170, NULL),
+('nu61bb9991f1c4d45', 'nudebug', 'User', 'IFNULL(sus_name, deb_user_id)', 'l', '', 40, 170, NULL),
 ('nu61d7d0231fff5c5', 'nuaccess', 'Group', 'sal_group', 'l', NULL, 30, 280, NULL),
 ('nu635294e972c14ef', 'nuemailtemplate', 'Description', 'emt_description', 'l', '', 90, 270, NULL),
 ('nu635294e972c1e89', 'nuemailtemplate', 'Subject', 'emt_subject', 'l', '', 50, 210, NULL),
@@ -241,7 +241,8 @@ INSERT INTO `zzzzsys_browse` (`zzzzsys_browse_id`, `sbr_zzzzsys_form_id`, `sbr_t
 ('nu648030319e8fa15', 'nuform', 'Group', 'sfo_group', 'l', NULL, 40, 100, NULL),
 ('nu65d777ae073fdbf', 'nupermissionitem', 'Description', 'pme_description', 'l', '', 30, 860, NULL),
 ('nu65d777ae076e987', 'nupermissionitem', 'Ident', 'pme_ident', 'l', '', 10, 235, NULL),
-('nu65d7833b8766fd0', 'nupermissionitem', 'Group', 'pme_group', 'l', NULL, 20, 225, NULL);
+('nu65d7833b8766fd0', 'nupermissionitem', 'Group', 'pme_group', 'l', NULL, 20, 225, NULL),
+('nu65e9ea5e7414ca0', 'nudebug', 'Flag', 'deb_flag', 'l', NULL, 20, 180, NULL);
 
 -- --------------------------------------------------------
 
@@ -814,8 +815,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`, `inf_json`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2024.03.07.00', NULL),
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2024.03.07.06', NULL);
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2024.03.07.01', NULL),
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2024.03.07.07', NULL);
 
 -- --------------------------------------------------------
 
