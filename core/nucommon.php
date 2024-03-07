@@ -1610,7 +1610,7 @@ function nuIsValidEmail($email){
 
 function nuSendEmail($args1, $args2 = "", $from_name = '', $body = '', $subject = '', $attachments = [], $html = false, $cc = '', $bcc = '', $reply_to = [] , $priority = '', $smtp_options = []) {
 
-	if (is_array($args1) && is_array($args2)) {
+	if (is_array($args1) && (is_array($args2) || is_bool($args2))) {
 		return nuSendEmailEx($args1, $args2);
 	}
 
@@ -1648,19 +1648,19 @@ function nuSendEmail($args1, $args2 = "", $from_name = '', $body = '', $subject 
 
 }
 
-function nuStripEscapes($str) {
+function nuUnescapeQuotes($str) {
 	$str = str_replace('\"', '"', $str);
 	return str_replace("\'", "'", $str);
 }
 
 function nuSendEmailEx($args, $emailLogOptions) {
 
-	if (!is_array($emailLogOptions)) {
+	if (!is_array($emailLogOptions) || $emailLogOptions === true) {
 		$tableName = null;
 		$tag = null;
-		$formId = null;
-		$userId = null;
-		$recordId = null;
+		$formId = nuFormId();
+		$userId = nuUserId();
+		$recordId = nuRecordId();
 		$json = null;
 	}
 	else {
@@ -1670,8 +1670,8 @@ function nuSendEmailEx($args, $emailLogOptions) {
 		list($tableName, $tag, $formId, $userId, $recordId, $json) = array_values($emailLogOptions);
 	}
 
-	$args['subject'] = nuStripEscapes($args['subject']);
-	$args['body'] = nuStripEscapes($args['body']);
+	$args['subject'] = nuUnescapeQuotes($args['subject']);
+	$args['body'] = nuUnescapeQuotes($args['body']);
 	$sendResult = nuSendEmail($args);
 
 	$state = 'sent';
