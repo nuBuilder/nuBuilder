@@ -1656,7 +1656,7 @@ function nuUnescapeQuotes($str) {
 function nuSendEmailEx($args, $emailLogOptions) {
 
 	if (!is_array($emailLogOptions) || $emailLogOptions === true) {
-		$tableName = null;
+		$tableName = nuFormTable();
 		$tag = null;
 		$formId = nuFormId();
 		$userId = nuUserId();
@@ -1664,7 +1664,7 @@ function nuSendEmailEx($args, $emailLogOptions) {
 		$json = null;
 	}
 	else {
-		$defaultLogOptions = ['table_name' => null, 'tag' => null, 'form_id' => nuFormId(), 'user_id' => nuUserId(), 'record_id' => nuRecordId(), 'json' => null];
+		$defaultLogOptions = ['table_name' => nuFormTable(), 'tag' => null, 'form_id' => nuFormId(), 'user_id' => nuUserId(), 'record_id' => nuRecordId(), 'json' => null];
 
 		$emailLogOptions = array_merge($defaultLogOptions, array_intersect_key($emailLogOptions, $defaultLogOptions));
 		list($tableName, $tag, $formId, $userId, $recordId, $json) = array_values($emailLogOptions);
@@ -2231,6 +2231,13 @@ function nuUserId() {
 
 function nuFormId() {
 	return nuReplaceHashVariables('#form_id#');
+}
+
+function nuFormTable() {
+
+  $nuFormData = function_exists('nuHash') ? nuObjKey(nuHash(), 'nuFORMdata') ?? null : null;
+  return $nuFormData ? nuHash()['nuFORMdata'][0]->table ?? null : null;
+
 }
 
 function nuTranslateWriteSQL($f, $row, $counter, $total) {
