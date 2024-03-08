@@ -6,23 +6,23 @@ $_POST['RunQuery']		= 0;
 
 $sessionData = $_SESSION['nubuilder_session_data'] ?? null;
 
-$DBHost			= $sessionData['DB_HOST'] ?? $nuConfigDBHost;
-$DBName			= $sessionData['DB_NAME'] ?? $nuConfigDBName;
-$DBPort			= $sessionData['DB_PORT'] ?? ($nuConfigDBPort ?? '3306');
-$DBUser			= $sessionData['DB_USER'] ?? $nuConfigDBUser;
-$DBPassword		= $sessionData['DB_PASSWORD'] ?? $nuConfigDBPassword;
-$DBCharset		= $sessionData['DB_CHARSET'] ?? 'utf8';
-$DBOptions		= $sessionData['DB_OPTIONS'] ?? $nuConfigDBOptions ?? null;
-$charSet		= [PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $DBCharset"];
+$dbHost			= $sessionData['DB_HOST'] ?? $nuConfigDBHost;
+$dbName			= $sessionData['DB_NAME'] ?? $nuConfigDBName;
+$dbPort			= $sessionData['DB_PORT'] ?? ($nuConfigDBPort ?? '3306');
+$dbUser			= $sessionData['DB_USER'] ?? $nuConfigDBUser;
+$dbPassword		= $sessionData['DB_PASSWORD'] ?? $nuConfigDBPassword;
+$dbCharset		= $sessionData['DB_CHARSET'] ?? 'utf8';
+$dbOptions		= $sessionData['DB_OPTIONS'] ?? $nuConfigDBOptions ?? null;
+$charSet		= [PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $dbCharset"];
 
-if (is_array($DBOptions)) {
-	array_merge($charSet, $DBOptions);
+if (is_array($dbOptions)) {
+	array_merge($charSet, $dbOptions);
 } else {
-	$DBOptions = $charSet;
+	$dbOptions = $charSet;
 }
 
 try {
-	$nuDB = new PDO("mysql:host=$DBHost;dbname=$DBName;charset=$DBCharset;port=$DBPort", $DBUser, $DBPassword, $DBOptions);
+	$nuDB = new PDO("mysql:host=$dbHost;dbname=$dbName;charset=$dbCharset;port=$dbPort", $dbUser, $dbPassword, $dbOptions);
 	$nuDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
 	echo 'Connection to the nuBuilder database failed: ' . $e->getMessage();
