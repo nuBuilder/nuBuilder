@@ -444,7 +444,7 @@ function nuSystemList(){
 		$t[]	= 'zzzzsys_note_category';
 		$t[]	= 'zzzzsys_info';
 		$t[]	= 'zzzzsys_config';
-		$t[]	= 'zzzzsys_permission_item_id';
+		$t[]	= 'zzzzsys_user_permission';
 		$t[]	= 'zzzzsys_permission_item';
 		$t[]	= 'zzzzsys_email_log';
 
