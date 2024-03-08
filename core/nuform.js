@@ -127,10 +127,12 @@ function nuBuildForm(f) {
 		nuAddHolder('nuTabHolder');
 	}
 
-	nuAddHolder('nuRECORD')
+	const nuRecordDiv = nuAddHolder('nuRECORD')
 		.attr('data-nu-table', f.table)
 		.attr('data-nu-primary-key-name', f.primary_key);
 
+	// DEV: 
+	// nuWrapWithForm(nuRecordDiv[0], '#', ''); 
 	nuAddBreadcrumbs();
 
 	nuAddEditTabs('', f);
@@ -2080,7 +2082,7 @@ function nuGetSubformDimensions(SF) {
 
 		prefix = id + nuPad3(c);
 		const frmId = prefix + 'nuRECORD';
-		nuCreateElementWithId('div', frmId, scrId);
+		const recordDiv = nuCreateElementWithId('div', frmId, scrId);
 
 		nuSUBFORMnuRECORDAddCSS(frmId, rowTop, rowWidth, rowHeight, c%2 == 0 ? '1' : '0');
 		nuBuildEditObjects(subformRows.forms[c], prefix, SF, SF.forms[0]);
@@ -2108,6 +2110,29 @@ function nuGetSubformDimensions(SF) {
 	return Number(SF.width);
 
 }
+
+// DEV:
+function nuWrapWithForm(element,  formAction, formMethod) {
+  // 1. Create the form element
+  const form = document.createElement('form');
+  // form.onsubmit = function() { return false; }; // Add the onsubmit handler
+  form.setAttribute('onsubmit', 'return false'); // Add onsubmit attribute
+
+  form.id = 'myForm'; // Set the desired ID
+
+ // form.action = formAction;
+//  form.method = formMethod;
+
+  // 2. Get the element's parent (to insert the form before it)
+  const parent = element.parentNode;
+
+  // 3. Insert the form before the original element
+  parent.insertBefore(form, element);
+
+  // 4. Move the original element inside the form
+  form.appendChild(element);
+}
+
 
 function nuNewRowObject(p) {
 
@@ -4092,73 +4117,54 @@ function nuAddDataTab(i, t, p) {
 
 }
 
-function nuBrowseTitle(b, i, l, m) {
+function nuAlignmentStyle(alignment) {
 
-	var bc = window.nuFORM.getCurrent();
-	var un = bc.nosearch_columns.indexOf(i);
-	var id = 'nuBrowseTitle' + i;
-	var w = Number(b[i].width);
-	var a = b[i].align;
-	var div = document.createElement('div');
-	var ar = { l: 'left', c: 'center', r: 'right' };
-
-	div.setAttribute('id', id);
-
-	// var sp = `<span id="nusort_${i}" class="nuSort" onclick="nuSortBrowse(${i})" ontouchstart="(function(event) { nuSortBrowse(${i}); event.preventDefault(); })({ passive: true })"> ${nuTranslate(b[i].title)} </span>`;
-	
-	var sp = `<span id="nusort_${i}" class="nuSort" onclick="nuSortBrowse(${i})" > ${nuTranslate(b[i].title)} </span>`;
-
-	if (bc.sort == i) {
-
-		if (a == 'l') {
-
-			if (bc.sort_direction == 'asc') {
-				sp = '<span id="nusort_' + i + '" class="nuSort" onclick="nuSortBrowse(' + i + ')"> ' + nuTranslate(b[i].title) + ' <i id="nuSortIcon" class="fa fa-caret-up"></i></span>';
-			} else {
-				sp = '<span id="nusort_' + i + '" class="nuSort" onclick="nuSortBrowse(' + i + ')"> ' + nuTranslate(b[i].title) + ' <i id="nuSortIcon" class="fa fa-caret-down"></i></span>';
-			}
-
-		} else {
-
-			if (bc.sort_direction == 'asc') {
-				sp = '<span id="nusort_' + i + '" class="nuSort" onclick="nuSortBrowse(' + i + ')"><i id="nuSortIcon" class="fa fa-caret-up"></i> ' + nuTranslate(b[i].title) + ' </span>';
-			} else {
-				sp = '<span id="nusort_' + i + '" class="nuSort" onclick="nuSortBrowse(' + i + ')"><i id="nuSortIcon" class="fa fa-caret-down"></i> ' + nuTranslate(b[i].title) + ' </span>';
-			}
-
-		}
-
-	}
-
-	$('#nuRECORD').append(div);
-
-	var titleClass = m == '1' ? 'nuBrowseTitleMultiline nuBrowseTitle' : 'nuBrowseTitle';
-
-	var obj = $('#' + id);
-
-	obj
-		.html(sp)
-		.addClass(titleClass)
-		.css({
-			'text-align': ar[a],
-			'overflow': 'visible',
-			'width': w,
-			'left': l
-		});
-
-	obj.attr('data-nu-title-id', b[i].id);
-
-	if (w == 0) {
-		obj.hide();
-	}
-
-	// $('#nusort_' + i)[0].addEventListener('touchstart', function(event) { nuSortBrowse(i);}, { passive: true });
-
-	$('#nusearch_' + i).attr('checked', un == -1);
-
-	return l + nuTotalWidth(id);
+    const alignmentOptions = { l: 'left', c: 'center', r: 'right' };
+    return alignmentOptions[alignment];
 
 }
+
+function nuBrowseTitle(columns, index, left, multiline) {
+
+	function nuGenerateSortSpan(index, title, sortDirection) {
+		const sortIconClass = sortDirection === 'asc' ? 'fa-caret-up' : 'fa-caret-down';
+
+		return `<span id="nusort_${index}" class="nuSort" onclick="nuSortBrowse(${index})"> 
+				 ${nuTranslate(title)} 
+				 <i id="nuSortIcon" class="fa ${sortIconClass}"></i>
+			  </span>`;
+	}
+
+	const currentForm = window.nuFORM.getCurrent();
+	const columnIndex = currentForm.nosearch_columns.indexOf(index);
+	const elementId = 'nuBrowseTitle' + index;
+	const container = nuCreateElementWithId('div', elementId, 'nuRECORD');
+	const spanContent = `<span id="nusort_${index}" class="nuSort" onclick="nuSortBrowse(${index})" > ${nuTranslate(columns[index].title)} </span>`;
+	const sortedSpan = currentForm.sort === index ? nuGenerateSortSpan(index, columns[index].title, currentForm.sort_direction) : spanContent;
+	const titleClass = multiline === '1' ? 'nuBrowseTitleMultiline nuBrowseTitle' : 'nuBrowseTitle';
+	const columnWidth = Number(columns[index].width);
+	
+	const element = $(container);
+	element
+		.html(sortedSpan)
+		.addClass(titleClass)
+		.css({
+			'text-align': nuAlignmentStyle(columns[index].align),
+			'overflow': 'visible',
+			'width': columnWidth,
+			'left': left
+		})
+		.attr('data-nu-title-id', columns[index].id);
+
+	if (columnWidth === 0) {
+		element.hide();
+	}
+
+	$('#nusearch_' + index).attr('checked', columnIndex === -1);
+
+	return left + nuTotalWidth(elementId);
+}
+
 
 function nuTitleDrag(i) {
 
