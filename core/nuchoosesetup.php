@@ -1,7 +1,7 @@
 <?php
 
 	require_once(dirname(__FILE__). '/../nuconfig.php'); // nuconfig must be loaded before using nubuilder_session_dat
-	require_once('nubuilder_session_data.php');
+	require_once('nusessiondata.php');
 
 	if ( !session_id() ) {
 
