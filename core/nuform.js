@@ -127,12 +127,12 @@ function nuBuildForm(f) {
 		nuAddHolder('nuTabHolder');
 	}
 
-	const nuRecordDiv = nuAddHolder('nuRECORD')
+	// const nuRecordDiv = 
+	nuAddHolder('nuRECORD')
 		.attr('data-nu-table', f.table)
 		.attr('data-nu-primary-key-name', f.primary_key);
 
-	// DEV: 
-	// nuWrapWithForm(nuRecordDiv[0], '#', ''); 
+	// DEV: nuWrapWithForm(nuRecordDiv[0], '#', ''); 
 	nuAddBreadcrumbs();
 
 	nuAddEditTabs('', f);
@@ -2082,7 +2082,7 @@ function nuGetSubformDimensions(SF) {
 
 		prefix = id + nuPad3(c);
 		const frmId = prefix + 'nuRECORD';
-		const recordDiv = nuCreateElementWithId('div', frmId, scrId);
+		nuCreateElementWithId('div', frmId, scrId);
 
 		nuSUBFORMnuRECORDAddCSS(frmId, rowTop, rowWidth, rowHeight, c%2 == 0 ? '1' : '0');
 		nuBuildEditObjects(subformRows.forms[c], prefix, SF, SF.forms[0]);
