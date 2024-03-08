@@ -612,4 +612,17 @@ function nuID(){
 
 }
 
+function nuID_DEV(){
+
+    global $DBUser;
+
+    $uniqueId = uniqid();
+    $randomBytes = random_bytes(16);
+    $hash = hash('sha256', $randomBytes);
+
+    $prefix = $DBUser == 'nudev' ? 'nu' : '';
+    return $prefix . $uniqueId . substr($hash, 0, 2);
+
+}
+
 ?>
