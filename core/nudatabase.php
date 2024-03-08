@@ -498,7 +498,7 @@ function nuDebugUserId() {
 
 }
 
-function nuDebugResult($nuDebugMsg, $flag){
+function nuDebugResult($nuDebugMsg, $flag = null){
 
 	if(is_object($nuDebugMsg)){
 		$nuDebugMsg = print_r($nuDebugMsg, 1);
@@ -527,7 +527,7 @@ function nuDebugResult($nuDebugMsg, $flag){
 
 }
 
-function nuDebug($a, $flag = null){
+function nuDebug($a){
 
 	$date				= date("Y-m-d H:i:s");
 	$b					= debug_backtrace();
@@ -566,7 +566,7 @@ function nuDebug($a, $flag = null){
 
 	}
 
-	nuDebugResult($m, $flag);
+	nuDebugResult($m);
 
 }
 
