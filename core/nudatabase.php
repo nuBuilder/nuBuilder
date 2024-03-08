@@ -138,7 +138,6 @@ function nuRunQuery($sql, $params = [], $isInsert = false){
 		return $params;
 	}
 
-	// nuLog($s, count($params)> 0 ? $params[0] : '');
 	$stmt = $nuDB->prepare($sql);
 
 	try {
@@ -490,8 +489,10 @@ function nuDebugUserId() {
 	$nuDebugUserId = null;
 	if (function_exists('nuHash')) {
 		$hash = nuHash();
-		$nuDebugUserId = isset($hash) && isset($hash['USER_ID']) ? $hash['USER_ID'] : null;
-		$nuDebugUserId = $nuDebugUserId == null && isset($_POST['nuSTATE']['username']) ? $_POST['nuSTATE']['username'] : $nuDebugUserId;
+		$nuDebugUserId = $hash['USER_ID'] ?? null;
+		if (!$nuDebugUserId) {
+			$nuDebugUserId = $_POST['nuSTATE']['username'] ?? null;
+		}
 	}
 
 	return $nuDebugUserId;
