@@ -569,6 +569,22 @@ function nuDebug(...$args) {
 
 }
 
+class nuDebug {
+
+	 public static $tag = '';
+
+	 public static function setTag($tag) {
+		static::$tag = $tag;
+		return new static;
+	 }
+	 
+	 public static function output(...$args) {
+		$message = nuDebugCreateOutput(...$args);
+		nuDebugResult($message, static::$tag);
+	 }
+
+}
+
 function nuLog(...$args) {
 
 	$message = date("Y-m-d H:i:s") .  " : " . implode(" ; ", array_map(function($arg) {
