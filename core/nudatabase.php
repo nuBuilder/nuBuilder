@@ -120,15 +120,16 @@ function nuDebugMessageString($user, $message, $sql, $trace) {
 
 function nuRunQuery($sql, $params = [], $isInsert = false){
 
+	global $nuDB;
 	global $DBHost;
 	global $DBName;
 	global $DBUser;
 	global $DBPassword;
-	global $nuDB;
+			  
 	global $DBCharset;
 
 	if($sql == ''){
-		$params 		= [];
+		$params 	= [];
 		$params[0] 	= $DBHost;
 		$params[1] 	= $DBName;
 		$params[2] 	= $DBUser;
@@ -315,16 +316,16 @@ function db_fetch_row($obj, $fetchAll = false){
 function db_update_value($table, $pk, $recordId, $column, $newValue) {
 
 	$update = "UPDATE `$table` SET `$column` = ? WHERE `$pk` = ?";
-	nuRunQuery($update, [$newValue, $recordId]);
+	return nuRunQuery($update, [$newValue, $recordId]);
 
 }
 
 function db_fetch_value($table, $pk, $recordId, $column) {
 
 	$select = "SELECT `$column` FROM `$table` WHERE `$pk` = ?";
-	$result = nuRunQuery($select, [$recordId]);
-	if (db_num_rows($result) == 1) {
-		$arr = db_fetch_array($result);
+	$stmt = nuRunQuery($select, [$recordId]);
+	if (db_num_rows($stmt) == 1) {
+		$arr = db_fetch_array($stmt);
 		return $arr[$column];
 	} else {
 		return false;
@@ -334,14 +335,14 @@ function db_fetch_value($table, $pk, $recordId, $column) {
 
 function db_field_info($tableName) {
 
-    $fields = [];
-    $types = [];
-    $primaryKeys = [];
+	$fields = [];
+	$types = [];
+	$primaryKeys = [];
 
-    $query = "DESCRIBE `$tableName`";
-    $result = nuRunQueryNoDebug($query);
+	$query = "DESCRIBE `$tableName`";
+	$stmt = nuRunQueryNoDebug($query);
 
-	while ($row = db_fetch_row($result)) {
+	while ($row = db_fetch_row($stmt)) {
 		$fields[] = $row[0];
 		$types[] = $row[1];
 
@@ -354,32 +355,32 @@ function db_field_info($tableName) {
 
 }
 
-function db_field_names($n){
+function db_field_names($tableName) {
 
-	$a	= [];
-	$s	= "DESCRIBE `$n`";
-	$t	= nuRunQuery($s);
+	$fieldNames = [];
+	$describeQuery = "DESCRIBE `$tableName`";
+	$stmt = nuRunQuery($describeQuery);
 
-	while($r = db_fetch_row($t)){
-		$a[] = $r[0];
+	while ($row = db_fetch_row($stmt)) {
+		$fieldNames[] = $row[0]; 
 	}
 
-	return $a;
+	return $fieldNames;
 
 }
 
 
-function db_field_types($n){
+function db_field_types($tableName) {
 
-	$a		= [];
-	$s		= "DESCRIBE `$n`";
-	$t		= nuRunQuery($s);
+	$fieldTypes = [];
+	$describeQuery = "DESCRIBE `$tableName`";
+	$stmt = nuRunQuery($describeQuery); 
 
-	while($r = db_fetch_row($t)){
-		$a[] = $r[1];
+	while ($row = db_fetch_row($stmt)) { 
+		$fieldTypes[] = $row[1]; 
 	}
 
-	return $a;
+	return $fieldTypes;
 
 }
 
@@ -390,23 +391,24 @@ function db_field_exists($tableName, $fieldName) {
 
 }
 
-function db_primary_key($n){
+function db_primary_key($tableName) {
 
-	$a		= [];
-	$s		= "DESCRIBE `$n`";
-	$t		= nuRunQuery($s);
+	$primaryKeys = [];
+	$query = "DESCRIBE `$tableName`";
+	$stmt = nuRunQuery($query); 
 
-	while($r = db_fetch_row($t)){
+	while ($row = db_fetch_row($stmt)) {
 
-		if($r[3] == 'PRI'){
-			$a[] = $r[0];
+		if ($row[3] == 'PRI') {
+			$primaryKeys[] = $r[0];
 		}
 
 	}
 
-	return $a;
+	return $primaryKeys;
 
 }
+
 
 function nuDBQuote($s) {
 
@@ -415,21 +417,21 @@ function nuDBQuote($s) {
 
 }
 
-function db_num_rows($o) {
+function db_num_rows($obj) {
 
-	if (!is_object($o)) {
-		return 0;
-	}
-	return $o->rowCount();
+	return is_object($obj) ? $obj->rowCount() : 0;
+		   
+  
+					   
 
 }
 
-function db_num_columns($o) {
+function db_num_columns($obj) {
 
-	if (!is_object($o)) {
-		return 0;
-	}
-	return $o->columnCount();
+	return is_object($obj) ? $obj->columnCount() : 0;
+		   
+  
+						  
 
 }
 
@@ -501,7 +503,7 @@ function nuDebugUserId() {
 
 function nuDebugResult($nuDebugMsg, $flag = null){
 
-	if(is_object($nuDebugMsg)){
+	if (is_object($nuDebugMsg)){
 		$nuDebugMsg = print_r($nuDebugMsg, 1);
 	}
 
