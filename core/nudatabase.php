@@ -527,46 +527,45 @@ function nuDebugResult($nuDebugMsg, $flag = null){
 
 }
 
-function nuDebug($a){
+function nuDebugCreateOutput(...$args) {
 
-	$date				= date("Y-m-d H:i:s");
-	$b					= debug_backtrace();
-	$f					= $b[0]['file'];
-	$l					= $b[0]['line'];
-	$m					= "$date - $f line $l\n\n<br>\n";
+	$dateTime = new DateTime();
+	$backtrace = debug_backtrace();
+	$file = $backtrace[0]['file'];
+	$line = $backtrace[0]['line'];
+	$message = sprintf("%s - %s line %d\n\n<br>\n", $dateTime->format("Y-m-d H:i:s"), $file, $line);
 
-	$nuSystemEval				= '';
-	if ( isset($_POST['nuSystemEval']) ) {
-		$nuSystemEval			= $_POST['nuSystemEval'];
-	}
-	$nuProcedureEval			= '';
-	if ( isset($_POST['nuProcedureEval']) ) {
-		$nuProcedureEval		= $_POST['nuProcedureEval'];
-	}
+	$nuSystemEval = $_POST['nuSystemEval'] ?? '';
+	$nuProcedureEval = $_POST['nuProcedureEval'] ?? '';
 
-	if($_POST['RunQuery'] == 1){
-		$m				= "$date - SQL Error in <b>nuRunQuery</b>\n\n<br>\n" ;
-	}else{
-		$m				= "$date - $nuProcedureEval $nuSystemEval line $l\n\n<br>\n" ;
+	if (!empty($_POST['RunQuery']) && $_POST['RunQuery'] == 1) {
+		$message = sprintf("%s - SQL Error in <b>nuRunQuery</b>\n\n<br>\n", $dateTime->format("Y-m-d H:i:s"));
+	} else {
+		$message = sprintf("%s - %s %s line %d\n\n<br>\n", $dateTime->format("Y-m-d H:i:s"), $nuProcedureEval, $nuSystemEval, $line);
 	}
 
-	for($i = 0 ; $i < func_num_args() ; $i++){
+	foreach ($args as $i => $arg) {
+		$type = gettype($arg);
+		$message .= sprintf("\n[%d] : ", $i);
 
-		$p				= func_get_arg($i);
-
-		$m				.= "\n[$i] : ";
-
-		if(gettype($p) == 'object' or gettype($p) == 'array'){
-			$m			.= print_r($p,1);
-		}else{
-			$m			.= $p;
+		if ($type === 'object' || $type === 'array') {
+			$message .= print_r($arg, true);
+		} else {
+			$message .= $arg;
 		}
 
-		$m				.= "\n";
-
+		$message .= "\n";
 	}
 
-	nuDebugResult($m);
+	return $message;
+	
+}
+
+
+function nuDebug(...$args) {
+
+	$message = nuDebugCreateOutput(...$args);
+	nuDebugResult($message);
 
 }
 
