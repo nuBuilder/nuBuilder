@@ -4109,13 +4109,18 @@ function nuHideTabs() {
 
 }
 
-function nuAddDataTab(i, t, p) {
+function nuAddDataTab(id, tabNr, formIdPrefix) {
 
-	var P = String(p);
-	var f = P.substr(0, P.length - 3);
-	$('#' + i).attr('data-nu-tab', t).attr('data-nu-form', f);
+	let formId = '';
+	if (formIdPrefix) {
+		let formIdPrefixStr = String(formIdPrefix);
+		formId = formIdPrefixStr.substr(0, formIdPrefixStr.length - 3);
+	} 
+
+	$('#' + id).attr('data-nu-tab', tabNr).attr('data-nu-form', formId);
 
 }
+
 
 function nuAlignmentStyle(alignment) {
 
