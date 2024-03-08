@@ -134,7 +134,7 @@ function nuRunQuery($sql, $params = [], $isInsert = false){
 		$params[2] 	= $DBUser;
 		$params[3] 	= $DBPassword;
 		$params[4] 	= $nuDB;
-		$params[4] 	= $DBCharset;
+		$params[5] 	= $DBCharset;
 		return $params;
 	}
 
