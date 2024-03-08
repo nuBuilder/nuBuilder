@@ -4061,7 +4061,7 @@ function nuShowTabByTitle(title, visible) {
 
 function nuRemoveTabs(t) {
 
-	for (var i = 0; i < arguments.length; i++) {
+	for (let i = 0; i < arguments.length; i++) {
 		$('#nuTab' + arguments[i]).remove();
 	}
 
@@ -4120,7 +4120,6 @@ function nuAddDataTab(id, tabNr, formIdPrefix) {
 	$('#' + id).attr('data-nu-tab', tabNr).attr('data-nu-form', formId);
 
 }
-
 
 function nuAlignmentStyle(alignment) {
 
@@ -5012,6 +5011,7 @@ function nuChange(e) {
 	nuAddSubformRow(t, e);
 
 }
+
 function nuChooseEventList() {
 
 	if ($('#sob_all_type').val() == 'subform') {

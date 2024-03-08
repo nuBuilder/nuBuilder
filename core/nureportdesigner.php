@@ -1,5 +1,5 @@
 <?php
-	require_once('nuchoosesetup.php');
+	require_once('nusessiondata.php');
 ?>
 <!DOCTYPE html>
 <html>

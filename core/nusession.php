@@ -1,6 +1,6 @@
 <?php
 
-require_once('nuchoosesetup.php');
+require_once('nusessiondata.php');
 require_once('nucommon.php');
 require_once('nuprocesslogins.php');
 require_once('nuprocessssologins.php');

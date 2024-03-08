@@ -4,7 +4,7 @@ header("Cache-Control: no-cache, must-revalidate");
 header("Pragma: no-cache"); 
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 
-require_once ('nuchoosesetup.php');
+require_once ('nusessiondata.php');
 require_once ('nucommon.php');
 require_once ('nudata.php');
 require_once ('nusystemupdatelibs.php');

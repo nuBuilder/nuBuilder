@@ -12,7 +12,7 @@ require_once('core/nusetuplibs.php');
 $config = nuConfigScript();
 eval($config['code']);
 
-require_once('core/nuchoosesetup.php');
+require_once('core/nusessiondata.php');
 require_once('core/nuindexlibs.php');
 
 nuImportNewDB();

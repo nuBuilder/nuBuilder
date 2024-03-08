@@ -1,5 +1,5 @@
 <?php
-	require_once('nuchoosesetup.php');
+	require_once('nusessiondata.php');
 	$jquery = "libs/jquery/jquery-3.7.1.min.js";
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">

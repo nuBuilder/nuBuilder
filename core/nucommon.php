@@ -2,7 +2,7 @@
 
 error_reporting( error_reporting() & ~E_NOTICE );
 
-require_once('nuchoosesetup.php');
+require_once('nusessiondata.php');
 require_once('nubuilders.php');
 require_once('nuemailer.php');
 
