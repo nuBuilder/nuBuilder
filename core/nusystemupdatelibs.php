@@ -204,6 +204,9 @@ function nuCreateJSONColumns() {
 
 function nuAlterSystemTables(){
 
+	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_debug` ADD `deb_flag` VARCHAR(50) NULL DEFAULT NULL AFTER `deb_message`;");
+	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_debug` ADD `deb_user_id` VARCHAR(25) NULL DEFAULT NULL AFTER `deb_added`;");
+
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` CHANGE `sob_input_count` `sob_input_count` BIGINT(20) NULL DEFAULT '0';");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` CHANGE `sob_all_order` `sob_all_order` INT(11) NULL DEFAULT '0';");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_select_2` VARCHAR(1) NULL DEFAULT '0' AFTER `sob_select_multiple`;");
@@ -259,9 +262,6 @@ function nuAlterSystemTables(){
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_report` CHANGE `sre_zzzzsys_php_id` `sre_zzzzsys_php_id` VARCHAR(200) NULL DEFAULT NULL;");
 
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_select` ADD `sse_code` VARCHAR(50) NULL DEFAULT NULL AFTER `zzzzsys_select_id`;");
-
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_debug` ADD `deb_user_id` VARCHAR(25) NULL DEFAULT NULL AFTER `deb_added`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_debug` ADD `deb_flag` VARCHAR(50) NULL DEFAULT NULL AFTER `deb_message`;");
 
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_code_snippet` CHANGE `cot_updated_on` `cot_updated_on` TIMESTAMP on update CURRENT_TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP;");
 	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_code_snippet` ADD `cot_group` VARCHAR(80) NULL DEFAULT NULL AFTER `cot_description`;");
