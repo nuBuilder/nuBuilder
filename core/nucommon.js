@@ -2353,9 +2353,9 @@ function nuSelectRemoveOption(id, value) {
 }
 
 function nuSelectRemoveMultiple(i) {
-
-	var id = i === undefined || i === null ? 'select' : '#' + i;
-	$(id + "[multiple]").removeAttr('multiple').attr('size', '5');
+	
+    var id = i ? '#' + i : 'select';
+    $(id + "[multiple]").prop('multiple', false).attr('size', '5');
 
 }
 
