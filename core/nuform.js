@@ -5140,7 +5140,7 @@ function nuHasNotBeenEdited() {
 function nuDeleteAction() {
 
 	const formCode = nuCurrentProperties().form_code;
-	const isNuRecord = nuRecordId().startsWith('nu');
+	const isNuRecord = String(nuRecordId()).startsWith('nu');
 	const isNuForm =  formCode === 'nuform';
 
 	if (isNuForm && isNuRecord) {
