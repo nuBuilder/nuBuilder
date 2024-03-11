@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 08, 2024 at 02:50 AM
+-- Generation Time: Mar 11, 2024 at 04:10 PM
 -- Server version: 8.0.27
 -- PHP Version: 8.1.26
 
@@ -390,25 +390,25 @@ CREATE TABLE `zzzzsys_email_log` (
   `zzzzsys_email_log_id` varchar(25) NOT NULL,
   `eml_created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `eml_sent_at` datetime DEFAULT NULL,
-  `eml_state` varchar(25) DEFAULT NULL,
+  `eml_state` varchar(20) DEFAULT NULL,
   `eml_from` varchar(70) DEFAULT NULL,
   `eml_from_name` varchar(70) DEFAULT NULL,
   `eml_to` varchar(4000) DEFAULT NULL,
   `eml_cc` varchar(4000) DEFAULT NULL,
   `eml_bcc` varchar(4000) DEFAULT NULL,
-  `eml_subject` varchar(1000) DEFAULT NULL,
+  `eml_subject` varchar(100) DEFAULT NULL,
   `eml_body` text,
-  `eml_file` varchar(5000) DEFAULT NULL,
+  `eml_file` varchar(1000) DEFAULT NULL,
   `eml_html` tinyint(1) DEFAULT NULL,
-  `eml_reply_to` varchar(1000) DEFAULT NULL,
+  `eml_reply_to` varchar(100) DEFAULT NULL,
   `eml_form_id` varchar(25) DEFAULT NULL,
   `eml_user_id` varchar(25) DEFAULT NULL,
   `eml_record_id` varchar(25) DEFAULT NULL,
   `eml_importance` smallint DEFAULT NULL,
-  `eml_error` varchar(2000) DEFAULT NULL,
+  `eml_error` varchar(200) DEFAULT NULL,
   `eml_table_name` varchar(100) DEFAULT NULL,
   `eml_tag` varchar(70) DEFAULT NULL,
-  `eml_json` mediumtext
+  `eml_json` text
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
@@ -815,8 +815,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`, `inf_json`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2024.03.08.01', NULL),
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2024.03.08.02', NULL);
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2024.03.11.00', NULL),
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2024.03.08.16', NULL);
 
 -- --------------------------------------------------------
 
@@ -1643,7 +1643,7 @@ INSERT INTO `zzzzsys_php` (`zzzzsys_php_id`, `sph_code`, `sph_description`, `sph
 ('nuuser_BE', 'nuuser_BE', 'System PHP', 'nubuilder', '$nubuilderSessionData = $_SESSION[\'nubuilder_session_data\'];\n\n$add1Label = $nubuilderSessionData[\'USER_ADDITIONAL1_LABEL\'] ?? \'\';\n$add2Label = $nubuilderSessionData[\'USER_ADDITIONAL2_LABEL\'] ?? \'\';\n$addCode = $nubuilderSessionData[\'USER_CODE_LABEL\'] ?? \'\';\n\n$js = \"\n\n    	if (\'$add1Label\') { nuSetLabelText(\'sus_additional1\', \'$add1Label\', true) };\n    	if (\'$add2Label\') { nuSetLabelText(\'sus_additional2\', \'$add2Label\', true) };\n    	if (\'$addCode\') { nuSetLabelText(\'sus_code\', \'$addCode\', true) };\n\";\n\nnuAddJavaScript($js);\n', NULL, NULL, '1', '0', '0', NULL, NULL),
 ('nuuser_BS', 'nuuser_BS', 'System PHP', 'nubuilder', '$newPassword = \'#new_password#\';\n$checkPassword = \'#check_password#\';\n$passwordsMatch = $newPassword === $checkPassword;\n$newRecord = nuHasNoRecordID();\n$email = \'#sus_email#\';\n$sendWelcomeEmail = \'#user_send_welcome_email#\' == \'1\';\n\n$err = \"\";\nif ($newRecord && (empty($newPassword) || empty($checkPassword))) {\n    $err = nuTranslate(\"Both password fields must be filled in.\");\n}\n\nif (!$passwordsMatch) {\n    $err = nuTranslate(\"The passwords do not match.\");\n}\n\nif ($sendWelcomeEmail) {\n\n    if (!nuIsValidEmail($email)) {\n        $err .= \'<br>\' . nuTranslate(\"Invalid email address.\");\n    }\n\n    if (!$newRecord && (empty($newPassword) || empty($checkPassword))) {\n        $err .= \'<br>\' . nuTranslate(\"Password required to send welcome email.\");\n    }\n\n}\n\nif (!empty($err)) {\n    nuDisplayError($err);\n}', '', '', '1', '0', '0', '', NULL),
 ('nusetup_BS', 'nusetup_BS', 'System PHP', 'nubuilder', 'function nuConfigValueToTable($line, $setting, $oldValue) {\n\n    $parts = explode(\"=\", $line);\n\n    $newValue = $parts[1];\n    $newValue = str_replace(\'\"\', \"\", $newValue);\n    $newValue = str_replace(\"\'\", \"\", $newValue);\n\n    $partsValue = explode(\";\", $newValue);\n    $newValue = trim($partsValue[0]);\n\n    $update = $newValue != $oldValue;\n\n    if ($setting == \'nuCalendarStartOfWeek\' && strlen($newValue) > 1) {\n        $newValue = str_replace(\"Monday\", \"1\", $newValue);\n        $newValue = str_replace(\"Sunday\", \"0\", $newValue);\n    }\n\n    if ($update) nuRunQuery(\'UPDATE zzzzsys_config SET cfg_value = ? WHERE cfg_setting = ?\', [$newValue, $setting]);\n\n    return $update;\n\n}\n\nif (\"#configImport#\" == \'1\') {\n\n    // Import config settings form nuconfig.php\n    $s = \"SELECT cfg_setting, cfg_value AS old_value FROM zzzzsys_config \";\n    $t = nuRunQuery($s);\n    $config = file(__DIR__ .\"/../nuconfig.php\");\n\n    while ($r = db_fetch_object($t)) {\n\n        foreach ($config as $line) {\n            if (trim($line) !== \'\' && nuStringContains($r->cfg_setting, $line) == true) {\n                nuConfigValueToTable($line, $r->cfg_setting, $r->old_value);\n                break;\n            }\n\n        }\n\n    }\n\n}', NULL, NULL, '1', '0', '0', NULL, NULL),
-('nu62bdc77f2dc0351', 'GENERATEUIDLIST', 'Generate nuID List', 'nubuilder', '// Call: nuRunPHP(\'GENERATEUIDLIST\',\'\',0)\n\nfor ($x = 0; $x <= 500; $x++) {\n  echo nuID().\"<br>\";\n}\n\n', 'window', '', '1', '1', '0', '', NULL),
+('nu62bdc77f2dc0351', 'GENERATEUIDLIST', 'Generate nuID List', 'nubuilder', '// Call: nuRunPHP(\'GENERATEUIDLIST\',\'\',0)\n\nfor ($x = 0; $x <= 500; $x++) {\n  echo nuID().\"<br>\";\n}\n', 'window', '', '1', '1', '0', '', NULL),
 ('nu62c488df22285ea', 'NUDUMPFORMCODES', 'Dump form js and php codes  to files', 'nubuilder', '$s = \"SELECT sph_code, sph_php FROM `zzzzsys_php`\";\n$t = nuRunQuery($s);\n\nwhile ($r = db_fetch_object($t)) {\n\n    dumpFile(\'php_codes\', $r->sph_code, $r->sph_php, \'\', \"php\");\n}\n\n\n$s = \"SELECT sfo_code, sfo_javascript, sfo_browse_javascript, sfo_edit_javascript FROM `zzzzsys_form`\";\n$t = nuRunQuery($s);\n\nwhile ($r = db_fetch_object($t)) {\n\n    dumpFile(\'js_codes\', $r->sfo_code, $r->sfo_javascript, \'sfo_javascript\', \"js\");\n    dumpFile(\'js_codes\', $r->sfo_code, $r->sfo_edit_javascript, \'sfo_edit_javascript\', \"js\");\n    dumpFile(\'js_codes\', $r->sfo_code, $r->sfo_browse_javascript, \'sfo_browse_javascript\', \"js\");\n\n}\n\n\nfunction dumpFile($folder, $sfoCode, $code, $postfix, $extension) {\n\n    $postfix = $postfix == \'\' ? \'\' : \"_\" . $postfix;\n    $file = $sfoCode . $postfix . \".\" . $extension;\n    $code = $code == NULL ? \'\' : $code;\n\n    if (strlen($code) > 0) {\n        $dir = dirname(__DIR__, 1) . DIRECTORY_SEPARATOR. \"form_codes\". DIRECTORY_SEPARATOR .$folder . DIRECTORY_SEPARATOR . $file;\n        file_put_contents($dir, $code);\n    }\n}', 'hide', '', '1', '0', '0', '', NULL),
 ('nu62da72900a02b9a', 'NUUPLOADFILE_TEMPLATE', 'Upload Files Template', 'nubuilder', '// Allowed file types\n$allowedTypes = [\n    \'image/png\',\n    \'image/jpeg\',\n    \'application/pdf\',\n    \'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\',\n    \'application/vnd.openxmlformats-officedocument.wordprocessingml.document\',\n    \'application/vnd.openxmlformats-officedocument.presentationml.presentation\',\n    \'text/plain\',\n    \'text/csv\'\n];\n\n// Maximum file size\n$maxFileSize = 5 * 1024 * 1024; // (5 MB)\n\n// Target directory\n$targetDirectory = $_SERVER[\'DOCUMENT_ROOT\'] . \'/\';\n\ntry {\n\n	// Sanitize file name\n	$fileName = nuSanitizeFilename(basename($_FILES[\'file\'][\'name\']));\n\n	// Check file size\n	if ($_FILES[\'file\'][\'size\'] > $maxFileSize) {\n		throw new Exception(\'Exceeded file size limit\');\n	}\n\n	// Check file type\n	$finfo = new finfo(FILEINFO_MIME_TYPE);\n	if (!in_array($finfo->file($_FILES[\'file\'][\'tmp_name\']), $allowedTypes)) {\n		throw new Exception(\'Invalid file type\');\n	}\n\n	// Build target file path\n	$targetFile = $targetDirectory . $fileName;\n\n    if (move_uploaded_file($_FILES[\'file\'][\'tmp_name\'], $targetFile)) {\n        $data = [\'url\' => $targetFile, \'file\' => $fileName, \'message\' => \'The file \' . $fileName . \' has been uploaded.\'];\n        http_response_code(201);\n        $result = json_encode($data);\n    }\n    else {\n        throw new Exception(nuTranslate(\'Unable to move the uploaded file to its final location:\') . $targetFile);\n    }\n\n} catch(\\Throwable $th) {\n\n    $result = nuSetUploadError(\'Sorry, there was an error uploading your file.\');\n\n}', 'hide', '', '0', '1', '1', '', NULL),
 ('nu6401bbc46484fe0', 'NUDEBUGRESULTADDED_TEMPLATE', 'nuDebug Result Added Template', 'nubuilder', '// $nuDebugId . \"/\". $nuDebugMsg . \"/\". $nuDebugUserId . \"/\" . $flag', 'hide', '', '0', '1', '1', '', NULL),
