@@ -989,38 +989,26 @@ function nuDRAG(w, i, l, p, prop) {
 
 }
 
+function nuGetDBColumnLengh(tableName, id) {
 
-function getDBColumnLengh(w, id) {
+	const tableSchema = nuSERVERRESPONSE?.tableSchema;
+	if (!tableSchema || !tableName || !tableSchema[tableName]) return 0;
 
-	const tableSchema = nuSERVERRESPONSE.tableSchema;
-	if (tableSchema === undefined || w.table == '' || tableSchema[w.table] === undefined) return 0;
+	const columnIndex = tableSchema[tableName].names.indexOf(id);
+	if (columnIndex === -1) return 0;
 
-	var len = 0;
-	const index = tableSchema[w.table].names.indexOf(id);
-
-	if (index !== -1) {
-
-		const datatype = tableSchema[w.table]["types"][index].toUpperCase();
-
-		switch (datatype) {
-			case "TINYTEXT":
-				len = 255;
-				break;
-			case "TEXT":
-				len = 65535;
-				break;
-			case "MEDIUMTEXT":
-				len = 16777215;
-				break;
-			default:
-				if (datatype.includes('CHAR')) {
-					len = parseInt(datatype.replace(/\D/g, ""), 10);
-				}
-		}
+	const dataType = tableSchema[tableName].types[columnIndex].toUpperCase();
+	switch (dataType) {
+		case "TINYTEXT": return 255;
+		case "TEXT": return 65535;
+		case "MEDIUMTEXT": return 16777215;
+		default:
+			if (dataType.includes('CHAR')) {
+				return parseInt(dataType.match(/\d+/), 10) || 0;
+			}
+			return 0;
 	}
-
-	return len;
-
+	
 }
 
 function nuINPUTfileDatabase($fromId, obj, id, p) {
@@ -1333,7 +1321,8 @@ function nuINPUTSetMaxLength($id, inputType, objectType, w) {
 	if ((types && objectType == 'input') || objectType == 'textarea') {
 
 		const field = $id.attr('data-nu-field');
-		const len = getDBColumnLengh(w, field);
+		const len = nuGetDBColumnLengh(w.table, field);
+		
 		if (len !== 0) $id.attr('maxlength', len);
 
 	}
@@ -1622,18 +1611,18 @@ function nuSetObjectBounds(obj, top = null, left = null, width = null, height = 
 
 	obj = obj.jquery ? obj[0]: obj;
 
-    if (top !== null)
-        obj.style.top = top + 'px';
-    if (left !== null)
-        obj.style.left = left + 'px';
-    if (height !== null)
-        obj.style.height = height + 'px';
-    if (width !== null)
-        obj.style.width = width + 'px';
-    if (absolute || absolute === null)
-        obj.style.position = 'absolute';
+	if (top !== null)
+		obj.style.top = top + 'px';
+	if (left !== null)
+		obj.style.left = left + 'px';
+	if (height !== null)
+		obj.style.height = height + 'px';
+	if (width !== null)
+		obj.style.width = width + 'px';
+	if (absolute || absolute === null)
+		obj.style.position = 'absolute';
 
-    return $(obj);
+	return $(obj);
 
 }
 
@@ -4123,8 +4112,8 @@ function nuAddDataTab(id, tabNr, formIdPrefix) {
 
 function nuAlignmentStyle(alignment) {
 
-    const alignmentOptions = { l: 'left', c: 'center', r: 'right' };
-    return alignmentOptions[alignment];
+	const alignmentOptions = { l: 'left', c: 'center', r: 'right' };
+	return alignmentOptions[alignment];
 
 }
 
