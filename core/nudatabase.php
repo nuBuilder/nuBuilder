@@ -581,7 +581,7 @@ class nuDebug {
 		return new static;
 	 }
 	 
-	 public static function output(...$args) {
+	 public static function log(...$args) {
 		$message = nuDebugCreateOutput(...$args);
 		nuDebugResult($message, static::$tag);
 	 }
