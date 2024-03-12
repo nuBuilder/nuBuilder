@@ -235,8 +235,8 @@ function nuSQLTrim($s, $noCR = 0){
 
 }
 
-function nuObjKey($o, $k, $d = null) {
-	return isset($o[$k]) ? $o[$k] : $d;
+function nuObjKey($object, $key, $default = null) {
+    return $object[$key] ?? $default;
 }
 
 function nuStrPos($haystack, $needle, $offset = 0) {
