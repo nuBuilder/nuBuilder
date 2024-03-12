@@ -59,6 +59,10 @@ function nuLoad(){
 	if ( language == 'CSS' ) {editor.getSession().setMode({path:"ace/mode/css", inline:true});cl='css';}
 
 	document.getElementById('nu_language').innerHTML	= window.l + " (" + c  + ")";
+	
+	if (language.includes('SQL')) {
+		document.getElementById('nuACEBeautifyButton').style.display = 'none';
+	}
 
 	if($('#' + o, window.opener.document)[0].id == 'deb_message'){
 		$('#copy_to_nubuilder').remove();
@@ -233,7 +237,7 @@ window.onbeforeunload = nuWarning;
 	<button class="btn find nuActionButton" title='Find' style='top:8px;left:410px;width:30px;position:absolute' onclick='editor.execCommand("find");' ></button>
 	<button class="btn searchreplace nuActionButton" title='Search and Replace' style='top:8px;left:450px;width:30px;position:absolute' onclick='editor.execCommand("replace");' ></button>
 	<button class="btn commentout nuActionButton" title='Toggle Comment Lines' style='top:8px;left:500px;width:30px;position:absolute' onclick='editor.toggleCommentLines()' ></button>
-	<button class="btn beautify nuActionButton" title='Beautify' style='top:8px;left:540px;width:30px;position:absolute' onclick='nuAceBeautify()' ></button>
+	<button id = "nuACEBeautifyButton" class="btn beautify nuActionButton" title='Beautify' style='top:8px;left:540px;width:30px;position:absolute' onclick='nuAceBeautify()' ></button>
 	<button class="btn showinvisibles nuActionButton" title='Show invisible characters' style='top:8px;left:580px;width:30px;position:absolute' onclick='nuAceShowInvisibles();' ></button>
 
 	<span id='nu_language' 	 class="nuNotBreadcrumb" style='top:35px;left:18px;position:absolute;font-weight:500;color:black'></span>
