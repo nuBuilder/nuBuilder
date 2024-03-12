@@ -69,6 +69,18 @@ function nuErrorFound(){
 
 }
 
+function nuSQLRemoveComments($sql) {
+
+    // Remove single line // comments
+    $sql = preg_replace('/\/\/[^\r\n]*/', '', $sql);
+
+    // Remove block comments /* */
+    $sql = preg_replace('/\/\*[\s\S]*?\*\//', '', $sql);
+
+    return $sql;
+
+}
+
 class nuSqlString{
 
 	public  $from			= '';
@@ -88,7 +100,7 @@ class nuSqlString{
 
 	public function __construct($sql){
 
-		$sql				= preg_replace('%(/\*)(.*?)(\*/)%s',"",$sql); 	//-- remove  / * * / style comments
+		$sql				= nuSQLRemoveComments($sql);
 		$sql				= str_replace(chr(13), ' ', $sql);				//-- remove carrige returns
 		$sql				= str_replace(chr(10), ' ', $sql);				//-- remove line feeds
 		$sql				= rtrim($sql,';'); 								//-- strip trailing ;
