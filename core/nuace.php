@@ -40,11 +40,6 @@ function nuLoad(){
 		enableLiveAutocompletion: true
 	});
 
-	editor.on('change', function() {
-		$('#copy_to_nubuilder').css('background-color', 'red');
-		$('#copy_to_nubuilder_no_close').css('background-color', 'red');
-	});
-
 	window.startValue = opener.window.document.getElementById(window.o).value;
 	editor.setFontSize(14);
 	var cl			= '';
@@ -84,6 +79,10 @@ function nuLoad(){
 	editor.setValue(window.startValue);
 	editor.focus();
 	editor.navigateFileStart();
+
+	editor.on('change', function() {
+		nuSetEdited(true);
+	});
 	
 	// Disable Ace Ctrl+, shortcut
 	editor.commands.addCommand({
@@ -94,7 +93,7 @@ function nuLoad(){
 
 	document.addEventListener('keydown', handleCtrlComma);
 
-	nuRemoveButtonBgColor();
+	nuSetEdited(false);
 
 }
 
@@ -111,11 +110,8 @@ function handleCtrlComma(event) {
   }
 }
 
-function nuRemoveButtonBgColor() {
-
-	$('#copy_to_nubuilder').css('background-color', '');
-	$('#copy_to_nubuilder_no_close').css('background-color', '');
-
+function nuSetEdited(edited = true) {
+    $('.nuCopyBackButton').toggleClass('red', edited);
 }
 
 function nuResize(){
@@ -191,6 +187,11 @@ window.onbeforeunload = nuWarning;
 </head>
 
   <style>
+		
+		.nuCopyBackButton.red {
+			background-color: red !important;
+		}
+
 		button.btn.beautify::before {
 			content: "\f0d0";
 			font-family: "Font Awesome 5 Free";
@@ -237,8 +238,8 @@ window.onbeforeunload = nuWarning;
 
 <body onload='nuLoad()' onresize='nuResize()'>
 
-	<input type='button' id='copy_to_nubuilder' class='nuActionButton' style='top:8px;left:8px;position:absolute' onclick='nuAceSave(true)'>
-	<input type='button' id='copy_to_nubuilder_no_close' class='nuActionButton' style='top:8px;left:230px;position:absolute' onclick='nuAceSave(false)'>
+	<input type='button' id='copy_to_nubuilder' class='nuActionButton nuCopyBackButton' style='top:8px;left:8px;position:absolute' onclick='nuAceSave(true)'>
+	<input type='button' id='copy_to_nubuilder_no_close' class='nuActionButton nuCopyBackButton' style='top:8px;left:230px;position:absolute' onclick='nuAceSave(false)'>
 
 	<button class="btn undo nuActionButton" title='Undo' style='top:8px;left:370px;width:30px;position:absolute' onclick='editor.undo()' ></button>
 	<button class="btn find nuActionButton" title='Find' style='top:8px;left:410px;width:30px;position:absolute' onclick='editor.execCommand("find");' ></button>
