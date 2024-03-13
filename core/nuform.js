@@ -5607,7 +5607,62 @@ function nuTotal(f) {
 	return Number(nuFORM.calc(f));
 }
 
+
+function nuMessageEx(options, timeout, callback) {
+	
+    window.nuHideMessage = false;
+
+    const par = window.document;
+
+    $('#nuMessageDiv', par).remove();
+
+    if (!options.message || typeof options.message !== 'string' && !Array.isArray(options.message)) {
+        return;
+    }
+
+    let messages = Array.isArray(options.message) ? options.message : [options.message];
+    let title = options.title || 'Message';
+
+    // Create the message box
+    $('body', par).append(`<div id='nuMessageDiv' class='nuMessage'></div>`);
+
+    let msgDiv = $('#nuMessageDiv', par);
+
+    // Append title
+    msgDiv.append(`<div class='nuMessageTitle'>${title}</div>`);
+
+    // Append close button with Font Awesome icon
+    msgDiv.append(`<div class='nuMessageCloseButton' onclick='$("#nuMessageDiv").remove();'><i class="fa-solid fa-xmark"></i></div>`);
+
+    // Create and append message content wrapper with padding
+    let contentWrapper = $("<div style='padding-top: 20px;'></div>");
+    messages.forEach(msg => {
+        contentWrapper.append(msg).append('<br>');
+    });
+    msgDiv.append(contentWrapper);
+
+    if (timeout !== undefined) {
+        setTimeout(function () {
+            $('#nuMessageDiv', par).fadeOut("slow", function () {
+                $(this).remove();
+                if (callback !== undefined) {
+                    callback();
+                }
+            });
+        }, timeout);
+    }
+	
+	nuDragElement(msgDiv[0], 30);
+
+	return msgDiv;
+}
+
+
 function nuMessage(o, timeout, callback) {
+
+	if (o !== null && typeof o === 'object') {
+		return nuMessageEx(o, timeout, callback);
+	}
 
 	window.nuHideMessage = false;
 
