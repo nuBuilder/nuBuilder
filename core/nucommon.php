@@ -1442,6 +1442,12 @@ function nuGetPHP($phpid) {
 
 }
 
+
+
+function nuFailIfUnsetHashCookies($string) {
+	return preg_match('/#[^#]+#/', $string);
+}
+
 function nuEval($phpid){
 
 	$r						= nuGetPHP($phpid);
@@ -1449,7 +1455,8 @@ function nuEval($phpid){
 
 	$code					= $r->sph_code;
 	$php					= nuReplaceHashVariables($r->sph_php);
-	if($php == ''){return;}
+	
+	if(trim($php) == ''){return;}
 
 	$_POST['nuSystemEval']	= nuEvalMessage($phpid, $code);
 
@@ -1457,10 +1464,19 @@ function nuEval($phpid){
 	$nudata = $nuDataSet ? $_POST['nudata'] : '';
 
 	try{
+
 		$result = eval($php);
 		if ($result === false) {
+			$e = new Exception('Eval failed');
 			nuExceptionHandler($e, $code);
 		}
+
+		if (($nuFailIfUnsetHashCookies ?? false) === true && nuFailIfUnsetHashCookies($php)) {
+			$e = new Exception('nuEval failed, unset Hash Cookies.');
+			nuExceptionHandler($e, $code);
+			return;
+		}
+	
 	}catch(Throwable $e){
 		nuExceptionHandler($e, $code);
 	}catch(Exception $e){
