@@ -94,6 +94,7 @@ function nuLoad(){
 	document.addEventListener('keydown', handleCtrlComma);
 
 	nuSetEdited(false);
+	editor.getSession().getUndoManager().reset();
 
 }
 
@@ -111,15 +112,19 @@ function handleCtrlComma(event) {
 }
 
 function nuSetEdited(edited = true) {
-    $('.nuCopyBackButton').toggleClass('red', edited);
+    $('.nuCopyBackButton').toggleClass('red', edited);	
+	$('.undo').toggleClass('nuReadonly', ! edited);	
+	$(".undo").prop("disabled", !edited);
 }
 
-function nuResize(){
+function nuResize() {
+  const editorPad = document.getElementById('nu_editor_pad');
+  const editor = document.getElementById('nu_editor');
+  const windowWidth = `${window.innerWidth}px`;
+  const windowHeight = `${window.innerHeight - 75}px`;
 
-	document.getElementById('nu_editor_pad').style.width	= String(Number(window.innerWidth)) 		+ 'px';
-	document.getElementById('nu_editor').style.width		= String(Number(window.innerWidth)) 		+ 'px';
-	document.getElementById('nu_editor').style.height		= String(Number(window.innerHeight) - 75) 	+ 'px';
-
+  editorPad.style.width = editor.style.width = windowWidth;
+  editor.style.height = windowHeight;
 }
 
 function nuAceBeautify() {
@@ -241,7 +246,7 @@ window.onbeforeunload = nuWarning;
 	<input type='button' id='copy_to_nubuilder' class='nuActionButton nuCopyBackButton' style='top:8px;left:8px;position:absolute' onclick='nuAceSave(true)'>
 	<input type='button' id='copy_to_nubuilder_no_close' class='nuActionButton nuCopyBackButton' style='top:8px;left:230px;position:absolute' onclick='nuAceSave(false)'>
 
-	<button class="btn undo nuActionButton" title='Undo' style='top:8px;left:370px;width:30px;position:absolute' onclick='editor.undo()' ></button>
+	<button class="btn undo nuActionButton nuReadonly" title='Undo' style='top:8px;left:370px;width:30px;position:absolute' onclick='editor.undo()' disabled></button>
 	<button class="btn find nuActionButton" title='Find' style='top:8px;left:410px;width:30px;position:absolute' onclick='editor.execCommand("find");' ></button>
 	<button class="btn searchreplace nuActionButton" title='Search and Replace' style='top:8px;left:450px;width:30px;position:absolute' onclick='editor.execCommand("replace");' ></button>
 	<button class="btn commentout nuActionButton" title='Toggle Comment Lines' style='top:8px;left:500px;width:30px;position:absolute' onclick='editor.toggleCommentLines()' ></button>
