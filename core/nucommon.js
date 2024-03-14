@@ -2810,20 +2810,16 @@ function nuGetURLParameterValue(parameterName) {
 
 function nuSetURLPermaLink() {
 
-	const cProperties = nuCurrentProperties();
-	
+	const prop = nuCurrentProperties();
 	if (window.top === window.self) {
-
-		let home = nuGetURLParameterValue('h');
-		home = home === null ? '' : '&h=' + home;
-
-		const urlParams = '?f=' + cProperties.form_id + '&r=' + cProperties.record_id + home;
-
-		if (window.location.search.includes('?i=')) {
-			window.history.replaceState('', document.title, urlParams);
-		} else {
-			window.history.pushState('', document.title, urlParams);
-		}
+		let home = nuGetURLParameterValue('h') || '';
+		home = home ? '&h=' + home : '';
+		
+		const urlParams = `?f=${prop.form_id}&r=${prop.record_id}${home}`;
+		const urlContainsI = window.location.search.includes('?i=');
+		const historyMethod = urlContainsI ? 'replaceState' : 'pushState';
+		
+		window.history[historyMethod]('', document.title, urlParams);
 	}
 
 }
