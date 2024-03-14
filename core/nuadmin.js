@@ -656,7 +656,7 @@ function nuContextMenuBeforeRender(menu, event) {
 }
 
 function nuContextMenuItemText(label, iconClass) {
-	return '<i class="' + iconClass + ' fa-fw" aria-hidden="true"></i> <span style="padding-left:8px; white-space:nowrap; display: inline;">' + nuTranslate(label) + '</span>';
+	return '<i class="' + iconClass + ' fa-fw" aria-hidden="true"></i> <span style="padding-left:8px; white-space:nowrap; display: inline;">' + label + '</span>';
 }
 
 function nuContextMenuGetWordWidth(w) {
@@ -861,7 +861,12 @@ function nuContextMenuLabelPrompt() {
 	const id = contextMenuCurrentTargetId();
 	const obj = $('#' + contextMenuCurrentTarget.id);
 
-	let value = obj.is(":button") ? obj.val() : $('#' + label).html();
+	let value =  obj.attr('data-nu-org-label');
+	
+	if (typeof value === 'undefined') {
+		value = obj.is(":button") ? value : $('#' + label).html();
+	}
+	
 	value = obj.is(":button") && obj.attr('data-nu-label') ? obj.html() : value;
 
 	value = nuFormType() == 'edit' ? value : value.trim();
@@ -941,7 +946,7 @@ function nuContextMenuUpdateObject(value, column) {
 	if (nuFormType() == 'edit' && !isTab) {
 		id = contextMenuCurrentTargetUpdateId();
 	} else {
-		id = (Number(contextMenuCurrentTargetUpdateId().nuJustNumbers()) + 1) * 10;
+		id = (Number(contextMenuCurrentTargetUpdateId().justNumbers()) + 1) * 10;
 	}
 
 	let formId = isSfTitle ? nuContextMenuGetFormId('title_' + contextMenuCurrentTargetId()) : nuContextMenuGetFormId(id);

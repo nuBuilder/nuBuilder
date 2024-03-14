@@ -1251,6 +1251,7 @@ function nuINPUTSetValue($id, wi, inputType) {
 
 	if (inputType == 'button') {
 		$id.html(nuTranslate(wi.value));
+		$id.attr("data-nu-org-label", wi.value);
 	} else {
 
 		if (inputType == 'datetime-local') {													//-- replace ' ' between date and time with 'T'
@@ -1818,6 +1819,8 @@ function nuRUN(w, i, l, p, prop) {
 			.html(nuTranslate(obj.label))
 			.addClass('nuButton');
 
+		$('#' + id).attr("data-nu-org-label", obj.label);
+		
 		nuAddInputIcon(id, obj.input_icon);
 
 	} else {
@@ -3213,6 +3216,8 @@ function nuLabel(w, i, p, prop) {
 		label.innerHTML = '&#8199;';
 	}
 
+	$('#' + id).attr("data-nu-org-label", obj.label);
+
 	objLabel.classList.add(nuLabelGetValidationClass(obj.valid), 'nuLabel');
 
 	return objLabel;
@@ -3582,8 +3587,8 @@ function nuStartingTab(p) {
 
 function nuEditTab(p, t, i) {
 
-	var tabId = p + 'nuTab' + i;
-	var div = document.createElement('div');
+	const tabId = p + 'nuTab' + i;
+	let div = document.createElement('div');
 	div.setAttribute('id', tabId);
 
 	$('#' + p + 'nuTabHolder').append(div);
@@ -3594,7 +3599,8 @@ function nuEditTab(p, t, i) {
 		.attr('data-nu-tab-filter', i)
 		.attr('data-nu-form-filter', p)
 		.attr('data-nu-tab-id', t.id)
-		.attr('onclick', 'nuSelectTab(this, true)');
+		.attr('onclick', 'nuSelectTab(this, true)')
+		.attr("data-nu-org-label", t.title);
 
 	if (t.access !== undefined) {
 		if (t.access == '2') nuHide('nuTab' + i);
