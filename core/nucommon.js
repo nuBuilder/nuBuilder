@@ -2788,12 +2788,10 @@ function nuEscapeHTML(string, extraReplacements = {}) {
   };
 
   const replacements = { ...baseReplacements, ...extraReplacements };
-  const pattern = new RegExp(`[${Object.keys(replacements).join('')}]`, 'g');
+  const pattern = new RegExp(`[${Object.keys(replacements).map(c => '\\' + c).join('')}]`, 'g');
 
   return string.replace(pattern, character => replacements[character]);
- 
 }
-
 
 function nuDelay(ms) {
 	return new Promise(resolve => setTimeout(resolve, ms));
