@@ -717,7 +717,7 @@ function nuContextMenuItemPositionChanged(t, update) {
 			nuContextMenuUpdateLabel(id);
 
 		} else {
-			nuSetBrowseColumnSize(Number(contextMenuCurrentTargetUpdateId().justNumbers()), Number(t.value));
+			nuSetBrowseColumnSize(Number(contextMenuCurrentTargetUpdateId().nuJustNumbers()), Number(t.value));
 		}
 	}
 
@@ -941,7 +941,7 @@ function nuContextMenuUpdateObject(value, column) {
 	if (nuFormType() == 'edit' && !isTab) {
 		id = contextMenuCurrentTargetUpdateId();
 	} else {
-		id = (Number(contextMenuCurrentTargetUpdateId().justNumbers()) + 1) * 10;
+		id = (Number(contextMenuCurrentTargetUpdateId().nuJustNumbers()) + 1) * 10;
 	}
 
 	let formId = isSfTitle ? nuContextMenuGetFormId('title_' + contextMenuCurrentTargetId()) : nuContextMenuGetFormId(id);

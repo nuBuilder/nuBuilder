@@ -99,7 +99,7 @@ String.prototype.toTitleCase = function () {
 	return this.toLowerCase().replace(/^(\w)|\s(\w)/g, (grp) => grp.toUpperCase());
 }
 
-String.prototype.justNumbers = function () {
+String.prototype.nuJustNumbers = function () {
 	return this.replace(/[^0-9]/g, '');
 }
 
