@@ -1164,63 +1164,22 @@
 	text-decoration:underline;
 	cursor:pointer 
 }
-.nuMessage {
-	font-family: Tahoma, Geneva, Arial, sans-serif;
-	position: fixed; /* Changed from absolute to fixed to ensure it stays in viewport */
-	top: 10px;
-	left: 50%; /* Centering */
-	transform: translateX(-50%); /* Centering */
-	text-align: center;
-	padding-top: 40px; /* Adjusted to accommodate title */
-	padding-bottom: 20px;
-	padding-left: 20px;
-	padding-right: 20px;
-	background-color: #fdfaeb;
-	box-shadow: 2px 2px 2px 0 rgb(207, 205, 207);
-	opacity: 1;
+ .nuMessage {
+	font-family:Tahoma,Geneva,Arial,sans-serif;
+	position:absolute;
+	top:10px;
+	text-align:center;
+	padding:20px;
+	background-color:#fdfaeb;
+	box-shadow: 2px 2px 2px 0 rgb(207 205 207);
+	opacity:1;
 	word-break: break-word;
-	z-index: 5000;
-	border-radius: 4px;
-	border: #f3eed4 solid;
+	z-index:5000;
+	border-radius:4px;
+	border: #f3eed4 solid 30px;
 	border-left: none;
 	border-right: none;
-	border-bottom: none;
-	max-width: 90%; /* Ensure responsiveness */
-}
-.nuMessageTitle {
-	position: absolute;
-	top: 0;
-	left: 0; /* Ensure it starts from the very edge */
-	right: 0; /* Ensure it stretches to the very edge */
-	font-weight: bold;
-	padding: 10px 0; /* Keep vertical padding */
-	margin: 0; /* Remove any default margin */
-	background: #f3eed4;
-	border-top-left-radius: 4px;
-	border-top-right-radius: 4px;
-	box-sizing: border-box;
-	width: auto; /* Adjust width to auto to respect left/right positioning */
-}
-
-.nuMessageCloseButton {
-	position: absolute;
-	top: 0;
-	right: 0;
-	padding: 10px 15px;
-	cursor: pointer;
-	color: #000; /* Default color */
-}
-
-.nuMessageCloseButton:hover {
-	color: #ff0000; /* Color when hovered */
-}
-
-.nuMessageClose {
-	position: absolute;
-	top: 0;
-	right: 0;
-	padding: 10px 15px;
-	cursor: pointer;
+	border-bottom: none
 }
  #nuErrorCode {
 	position:relative;
