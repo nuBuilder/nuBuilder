@@ -87,8 +87,8 @@ String.prototype.containsAny = String.prototype.containsAny || function (arr) {
 
 };
 
-String.prototype.fixNbsp = function () {
-	return this.replace(/\xA0/g, " ")
+String.prototype.nuReplaceNonBreakingSpaces = function (replaceWith = ' ') {
+	return this.replace(/\xA0/g, replaceWith)
 }
 
 String.prototype.capitalise = function () {
@@ -2500,7 +2500,7 @@ function nuGetValue(i, method) {
 	if (i === undefined || nuDebugOut(obj, i)) return null;
 
 	if (obj.is(':checkbox')) return obj.is(":checked");
-	if (obj.is('select') && method === 'text') return $("#" + i + " option:selected").text().fixNbsp();
+	if (obj.is('select') && method === 'text') return $("#" + i + " option:selected").text().nuReplaceNonBreakingSpaces();
 	if (method === undefined && obj.is(':button')) return obj.text();
 
 	switch (method) {
@@ -2534,7 +2534,7 @@ function nuSetValue(i, v, method, change) {
 		if (change) obj.prop('checked', v).trigger("change");
 	} else if (obj.is('select') && method === 'text') {
 		$('#' + i + ' option').each(function () {
-			if ($(this).text().fixNbsp() === v) {
+			if ($(this).text().nuReplaceNonBreakingSpaces() === v) {
 				$(this).prop("selected", "selected");
 				if (change) obj.trigger("change");
 				return true;
