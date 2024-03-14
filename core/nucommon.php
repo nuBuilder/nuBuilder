@@ -71,13 +71,17 @@ function nuErrorFound(){
 
 function nuSQLRemoveComments($sql) {
 
-    // Remove single line // comments
-    $sql = preg_replace('/\/\/[^\r\n]*/', '', $sql);
+	if (empty($sql)) {
+		return '';
+	}
 
-    // Remove block comments /* */
-    $sql = preg_replace('/\/\*[\s\S]*?\*\//', '', $sql);
+	// Remove single line // comments
+	$sql = preg_replace('/\/\/[^\r\n]*/', '', $sql);
 
-    return $sql;
+	// Remove block comments /* */
+	$sql = preg_replace('/\/\*[\s\S]*?\*\//', '', $sql);
+
+	return $sql;
 
 }
 
@@ -248,7 +252,7 @@ function nuSQLTrim($s, $noCR = 0){
 }
 
 function nuObjKey($object, $key, $default = null) {
-    return $object[$key] ?? $default;
+	return $object[$key] ?? $default;
 }
 
 function nuStrPos($haystack, $needle, $offset = 0) {
@@ -2241,8 +2245,8 @@ function nuGetRecordURL($origin = null, $subFolder = null, $homepageId = null, $
 
 function nuRecordId() {
 
-    $recordIdLower = nuReplaceHashVariables('#record_id#');
-    $recordIdUpper = nuReplaceHashVariables('#RECORD_ID#');
+	$recordIdLower = nuReplaceHashVariables('#record_id#');
+	$recordIdUpper = nuReplaceHashVariables('#RECORD_ID#');
 
 	$recordId = $recordIdLower && $recordIdLower != '-1'  ? $recordIdLower : $recordIdUpper;
 
@@ -2252,7 +2256,7 @@ function nuRecordId() {
 
 function nuUserId() {
 
-    $userId = function_exists('nuHash') ? nuObjKey(nuHash(), 'USER_ID') ?? null : null;
+	$userId = function_exists('nuHash') ? nuObjKey(nuHash(), 'USER_ID') ?? null : null;
 	return $userId ?? nuObjKey($_POST, 'USER_ID'); 
 
 }
