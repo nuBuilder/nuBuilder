@@ -1050,9 +1050,15 @@ function nuUnbindDragEvents() {
 }
 
 function nuTranslate(obj) {
+	
+	const isEnglish = nuUserLanguage() === '';
 
 	if (Array.isArray(obj)) {
 
+		if (isEnglish) {
+			return obj;
+		}
+			
 		let arr = obj;
 		arr.forEach(function(item, index) {
 			const l = nuLANGUAGE.find(elem => elem.english === item);
@@ -1066,6 +1072,10 @@ function nuTranslate(obj) {
 
 		str = String(obj);
 		if (str.charAt(0) == '|') return str.substring(1);
+
+	    if (isEnglish) {
+			return str;
+		}
 
 		const l = nuLANGUAGE.find(elem => elem.english === str);
 		return !l ? str : l.translation;
