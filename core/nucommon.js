@@ -600,34 +600,34 @@ function nuCanArrangeObjects() {
 	return nuGlobalAccess() && nuSERVERRESPONSE.objects.length > 0 &&  !window.nuPORTRAITSCREEN && !(nuIsMobile() && nuCurrentProperties().mobile_view);
 }
 
-function nuPopup(f, r, filter) {
+function nuPopup(formId, recordId, filter) {
 
 	nuCursor('progress');
 
-	if (!nuGlobalAccess() && f == 'nuobject') { return; }
-	if (r == '-2' && !nuCanArrangeObjects()) { return; }
+	if (!nuGlobalAccess() && formId == 'nuobject') { return; }
+	if (recordId == '-2' && !nuCanArrangeObjects()) { return; }
 
 	$('#nuCalendar').remove();
 
-	window.nuOPENER.push(new nuOpener('F', f, r, filter));
+	window.nuOPENER.push(new nuOpener('F', formId, recordId, filter));
 
-	var id = window.nuOPENER[window.nuOPENER.length - 1].id;
+	var openerId = window.nuOPENER[window.nuOPENER.length - 1].id;
 
 	if (parent.window == window) {
-		let left = nuIsMobile() ? 0 : 50;
-		window.nuDialog.createDialog(left + window.pageXOffset, 25 + window.pageYOffset, 50, 50, '');
+		let dialogLeft = nuIsMobile() ? 0 : 50;
+		window.nuDialog.createDialog(dialogLeft + window.pageXOffset, 25 + window.pageYOffset, 50, 50, '');
 	} else {
 		window.nuDialog.createDialog(0, 30, 50, 50, '');
 	}
 
 	$('#nuDragDialog')
 		.css('visibility', 'hidden')
-		.append('<iframe style="border-style:none;right:5px;top:35px;width:400px;height:400px;position:absolute" id="nuWindow" src="index.php?opener=' + id + '&browsefunction=browse&iframe=1"></iframe>')
+		.append('<iframe style="border-style:none;right:5px;top:35px;width:400px;height:400px;position:absolute" id="nuWindow" src="index.php?opener=' + openerId + '&browsefunction=browse&iframe=1"></iframe>')
 		.prepend('<div id="nuDraggingBox" style="position:absolute; bottom:0px; right:0px; width:20px; height:20px; z-index:200"></div>');
 
 
 	if (window.nuOnPopupOpenedGlobal) {
-		nuOnPopupOpenedGlobal(f, r, filter);
+		nuOnPopupOpenedGlobal(formId, recordId, filter);
 	}
 
 }
