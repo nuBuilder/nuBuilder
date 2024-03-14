@@ -1073,7 +1073,7 @@ function nuTranslate(obj) {
 		str = String(obj);
 		if (str.charAt(0) == '|') return str.substring(1);
 
-	    if (isEnglish) {
+		if (isEnglish) {
 			return str;
 		}
 
@@ -2837,18 +2837,21 @@ function nuShuffleArray(arr) {
 	}
 }
 
-function nuCharacterArray(symbols = true, numbers = true, lowerAlpha = true, upperAlpha  = true) {
+function nuCharacterArray(symbols = true, numbers = true, lowerAlpha = true, upperAlpha = true) {
 
-	const LOWER_ALPHA = 'abcdefghijklmnopqrstuvwxyz';
-	const UPPER_ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	const NUMBERS = '0123456789';
-	const SYMBOLS = '!@#%&*()-_+={}[]|:;<>.?';
+	const characterSets = {
+		lowerAlpha: 'abcdefghijklmnopqrstuvwxyz',
+		upperAlpha: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+		numbers: '0123456789',
+		symbols: '!@#%&*()-_+={}[]|:;<>.?'
+	};
 
 	let characters = [];
-	if (upperAlpha) characters.push(...UPPER_ALPHA);
-	if (lowerAlpha) characters.push(...LOWER_ALPHA);
-	if (numbers) characters.push(...NUMBERS);
-	if (symbols) characters.push(...SYMBOLS);
+	if (symbols) characters.push(...characterSets.symbols);
+	if (numbers) characters.push(...characterSets.numbers);
+	if (lowerAlpha) characters.push(...characterSets.lowerAlpha);
+	if (upperAlpha) characters.push(...characterSets.upperAlpha);
+	
 	return characters;
 
 }
