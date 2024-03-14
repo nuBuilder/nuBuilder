@@ -63,8 +63,8 @@ String.prototype.nuReplaceAll = function (str1, str2, ignore) {
 
 String.prototype.nuStringToArray = function (separator = ',', trim = true) {
 
-    const result = this.split(separator);
-    return trim ? result.map(item => item.trim()) : result;
+	const result = this.split(separator);
+	return trim ? result.map(item => item.trim()) : result;
 
 }
 
@@ -2354,8 +2354,8 @@ function nuSelectRemoveOption(id, value) {
 
 function nuSelectRemoveMultiple(i) {
 	
-    var id = i ? '#' + i : 'select';
-    $(id + "[multiple]").prop('multiple', false).attr('size', '5');
+	var id = i ? '#' + i : 'select';
+	$(id + "[multiple]").prop('multiple', false).attr('size', '5');
 
 }
 
@@ -2865,3 +2865,22 @@ function nuMonthArray(options = {month: 'long'}, locale = 'en-US') {
 
 }
 
+function nuEventName(eventName = null) {
+
+	if (! eventName) {
+		eventName = nuRecordId().slice(-2);
+	}
+
+	const ev = [];
+
+	ev.BB = 'Before Browse';
+	ev.BE = 'Before Edit';
+	ev.BS = 'Before Save';
+	ev.AS = 'After Save';
+	ev.BD = 'Before Delete';
+	ev.AD = 'After Delete';
+	ev.AB = 'After Browse';
+
+	return ev[eventName];
+
+}
