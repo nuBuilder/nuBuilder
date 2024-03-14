@@ -2773,16 +2773,27 @@ function nuDateIsValid(date) {
 
 }
 
-function nuEscapeHTML(string) {
+function nuEscapeHTML(string, extraReplacements = {}) {
 
-	if (typeof string !== 'string') return '';
+  if (typeof string !== 'string') return '';
 
-	let replacements= {"<": "&lt;", ">": "&gt;","&": "&amp;", '"': "&quot;","'": "&#039;"};
-	return string.replace(/[<>&"]/g, function(character) {
-		return replacements[character];
-	});
+  const baseReplacements = {
+	'<': '&lt;',
+	'>': '&gt;',
+	'&': '&amp;',
+	'"': '&quot;',
+	"'": '&#039;',
+	'`': '&#x60;',
+	'\\': '&#92;'
+  };
 
+  const replacements = { ...baseReplacements, ...extraReplacements };
+  const pattern = new RegExp(`[${Object.keys(replacements).join('')}]`, 'g');
+
+  return string.replace(pattern, character => replacements[character]);
+ 
 }
+
 
 function nuDelay(ms) {
 	return new Promise(resolve => setTimeout(resolve, ms));
