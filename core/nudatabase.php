@@ -508,7 +508,8 @@ function nuDebugResult($nuDebugMsg, $flag = null){
 	}
 
 	$nuDebugId = nuID();
-
+	$nuDebugUserId = nuDebugUserId();
+	
 	$insert = "INSERT INTO zzzzsys_debug (zzzzsys_debug_id, deb_message, deb_flag, deb_added, deb_user_id) VALUES (:id , :message, :flag, :added, :user_id)";
 
 	$params = [
@@ -521,6 +522,7 @@ function nuDebugResult($nuDebugMsg, $flag = null){
 
 	nuRunQuery($insert, $params);
 
+	$nuDebugFlag = $flag || '';
 	$proc	= nuProcedure('NUDEBUGRESULTADDED');
 	if($proc != '') { 
 		eval($proc); 
@@ -574,16 +576,16 @@ function nuDebug(...$args) {
 
 class nuDebug {
 
-	 public static $tag = '';
+	 public static $flag = '';
 
-	 public static function setTag($tag) {
-		static::$tag = $tag;
+	 public static function setFlag($flag) {
+		static::$flag = $flag;
 		return new static;
 	 }
 	 
 	 public static function log(...$args) {
 		$message = nuDebugCreateOutput(...$args);
-		nuDebugResult($message, static::$tag);
+		nuDebugResult($message, static::$flag);
 	 }
 
 }
