@@ -522,7 +522,7 @@ function nuDebugResult($nuDebugMsg, $flag = null){
 
 	nuRunQuery($insert, $params);
 
-	$nuDebugFlag = $flag || '';
+	$nuDebugFlag = $flag ?? '';
 	$proc	= nuProcedure('NUDEBUGRESULTADDED');
 	if($proc != '') { 
 		eval($proc); 
