@@ -1615,28 +1615,23 @@ function nuSelectNextTab(i, byUser) {
 
 }
 
-function nuHideHolders(h) {
-
-	for (let i = 0; i < arguments.length; i++) {
-
-		if (arguments[i] == 0) { $('#nuActionHolder').hide(); }
-		if (arguments[i] == 1) { $('#nuBreadcrumbHolder').hide(); }
-		if (arguments[i] == 2) { $('#nuTabHolder').hide(); }
-
-	}
-
+function nuModifyHolders(action, ...args) {
+	const actions = {
+		0: '#nuActionHolder',
+		1: '#nuBreadcrumbHolder',
+		2: '#nuTabHolder',
+	};
+	args.forEach(arg => {
+		if (actions[arg]) $(actions[arg])[action]();
+	});
 }
 
-function nuRemoveHolders(h) {
+function nuHideHolders(...args) {
+	nuModifyHolders('hide', ...args);
+}
 
-	for (let i = 0; i < arguments.length; i++) {
-
-		if (arguments[i] == 0) { $('#nuActionHolder').remove(); }
-		if (arguments[i] == 1) { $('#nuBreadcrumbHolder').remove(); }
-		if (arguments[i] == 2) { $('#nuTabHolder').remove(); }
-
-	}
-
+function nuRemoveHolders(...args) {
+	nuModifyHolders('remove', ...args);
 }
 
 function nuAttachFontAwesome(i, c, s, after) {
