@@ -671,42 +671,30 @@ function nuCreateDragOptionsBox(form){
 
 
 function nuToggleHiddenObjects() {
-
-	$('.nuDragHidden',getNuDragDialogIframes(true)).each(function(){
-		let obj = $(this);
-		if (obj.css('visibility') ==='visible'){
-			obj.css('visibility', 'hidden')
-		} else {
-			obj.css('visibility', 'visible')
-		}
+	$('.nuDragHidden', getNuDragDialogIframes(true)).each(function() {
+		$(this).css('visibility', function(i, visibility) {
+			return visibility === 'visible' ? 'hidden' : 'visible';
+		});
 	});
-
-
 }
 
 function nuToggleDragLabels() {
-
-	$('.nuDragLabel',getNuDragDialogIframes(true)).each(function(){
-		let obj = $(this);
-		if (obj.css('visibility') ==='visible'){
-			obj.css('visibility', 'hidden')
-		} else {
-			obj.css('visibility', 'visible')
-		}
+	$('.nuDragLabel', getNuDragDialogIframes(true)).each(function() {
+		$(this).css('visibility', function(i, visibility) {
+			return visibility === 'visible' ? 'hidden' : 'visible';
+		});
 	});
 
-	$("[data-drag-button-label]",getNuDragDialogIframes(true)).each(function(){
-		let obj = $(this);
-		if (obj.is("[data-drag-value-visible]")) {
-			obj.text(this.id);
-			obj.removeAttr('data-drag-value-visible');
+	$("[data-drag-button-label]", getNuDragDialogIframes(true)).each(function() {
+		let $this = $(this);
+		if ($this.is("[data-drag-value-visible]")) {
+			$this.text(this.id).removeAttr('data-drag-value-visible');
 		} else {
-			obj.text(obj.attr('data-drag-button-label'));
-			obj.attr('data-drag-value-visible','');
+			$this.text($this.attr('data-drag-button-label')).attr('data-drag-value-visible', '');
 		}
 	});
-
 }
+
 
 function nuShowContentBoxFrames() {
 
