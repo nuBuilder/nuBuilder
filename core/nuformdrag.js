@@ -1220,26 +1220,21 @@ function nuUpdateDragSelections(fieldsSelectBox) {
 
 function nuCheckIfMovingTabOrderAllowed(fieldsSelectBox) {
 
-	var upDownBtn = $('#move_down_btn, #move_up_btn');
-	var upDownBtnParent = $('#move_down_btn, #move_up_btn', window.parent.document.body);
-
-	if ($('option:selected', fieldsSelectBox).length == 1) {
-
-		upDownBtn.removeAttr('disabled');
-		upDownBtn.removeClass('nuDragOptionsButtonDisabled');
-		upDownBtnParent.removeAttr('disabled');
-		upDownBtnParent.removeClass('nuDragOptionsButtonDisabled');
-
-	} else {
-
-		upDownBtn.prop('disabled', 'disabled');
-		upDownBtn.addClass('nuDragOptionsButtonDisabled');
-		upDownBtnParent.prop('disabled', 'disabled');
-		upDownBtnParent.addClass('nuDragOptionsButtonDisabled');
-
+	function nuToggleButtonState(buttons, enabled) {
+		buttons.prop('disabled', !enabled)
+			   .toggleClass('nuDragOptionsButtonDisabled', !enabled);
 	}
 
+	const upDownBtn = $('#move_down_btn, #move_up_btn'),
+		upDownBtnParent = $('#move_down_btn, #move_up_btn', window.parent.document.body);
+
+	const shouldEnable = $('option:selected', fieldsSelectBox).length == 1;
+
+	nuToggleButtonState(upDownBtn, shouldEnable);
+	nuToggleButtonState(upDownBtnParent, shouldEnable);
+
 }
+
 
 function nuCheckIfMovingFieldToOtherTabAllowed(fieldsSelectBox) {
 
