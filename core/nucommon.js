@@ -121,7 +121,7 @@ String.prototype.nuIsEmpty = function () {
 	return (this === null || this.length === 0);
 }
 
-Date.prototype.withoutTime = function () {
+Date.prototype.nuWithoutTime = function () {
 	var d = new Date(this);
 	d.setHours(0, 0, 0, 0);
 	return d;
