@@ -323,7 +323,7 @@ function nuOpenerAppend(t, k) {
 
 function nuGetOpenerById(pOPENER, pid) {
 
-	for (var i = 0; i < pOPENER.length; i++) {
+	for (let i = 0; i < pOPENER.length; i++) {
 		if (pOPENER[i].id == pid) {
 			return pOPENER[i];
 		}
@@ -334,7 +334,7 @@ function nuGetOpenerById(pOPENER, pid) {
 
 function nuRemoveOpenerById(o, pid) {
 
-	for (var i = 0; i < o.length; i++) {
+	for (let i = 0; i < o.length; i++) {
 
 		if (o[i].id == pid) {
 			o.splice(i, 1);
@@ -1394,8 +1394,8 @@ function nuIsDisabled(i) {
 	return o.is(':disabled') || o.hasClass('nuReadonly');
 }
 
-function nuAddThousandSpaces(s, c) {
-	return s.replace(/\B(?=(\d{3})+(?!\d))/g, c)
+function nuAddThousandSpaces(numberString, delimiter) {
+    return numberString.replace(/\B(?=(\d{3})+(?!\d))/g, delimiter);
 }
 
 function nuDuplicates(arr) {
