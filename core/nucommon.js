@@ -1569,8 +1569,10 @@ function nuOpenTab(i) {
 
 function nuSelectedTabNumber(parent = null) {
 
-	const t = parent === null ? window.nuFORM.getProperty('tab_start') : window.parent.nuFORM.getProperty('tab_start');
-	return t.length == 0 ? null : t[0].tabNumber;
+	const nuForm = parent === null ? window.nuFORM : window.parent.nuFORM;
+	const tabStart = nuForm.getProperty('tab_start');
+
+	return tabStart.length > 0 ? tabStart[0].tabNumber : null;
 
 }
 
