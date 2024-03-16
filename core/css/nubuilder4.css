@@ -765,6 +765,10 @@
 	border-width:0 0 1px;
 	margin:0 0 0 10px 
 }
+ .nuActionButton:active {
+	background-color: #266ca7;
+	border-color: #1f5482
+}
  .nuActionButton:not(.nuReadonly):hover {
 	color:#E2EAFF 
 }
