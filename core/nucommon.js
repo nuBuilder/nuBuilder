@@ -117,7 +117,7 @@ String.prototype.nuInsertString = function (index, string) {
 
 };
 
-String.prototype.isEmpty = function () {
+String.prototype.nuIsEmpty = function () {
 	return (this === null || this.length === 0);
 }
 
