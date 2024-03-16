@@ -789,7 +789,8 @@
 	color:var(--nu-label);
 	border-color:rgb(159,165,169);
 	text-shadow:none;
-	border-radius:3px 
+	border-radius:3px;
+	cursor: pointer;
 }
  .nuAdminButtonUsed {
 	background-color: #ebe9e9;
@@ -835,7 +836,7 @@
  .nuWindow {
 	border:none 
 }
- .nuReadonly {
+ .nuReadonly:not(.nuPreventDblClick) {
 	background-color:rgba(239,239,239,0.3);
 	border:1px solid #ebebeb;
 	color:rgb(84,84,84) 
