@@ -1,26 +1,28 @@
-function nuBindDragEvents(){
+function nuBindDragEvents() {
+	
+	$(document).on('mousemove.nuformdrag', function (e) {
 
-	$(document).on('mousemove.nuformdrag', function(e) {
+		var draggable = 0;
 
-		var draggable		= 0;
+		if (window.nuFORM.breadcrumbs.length != -1) {
 
-		if(window.nuFORM.breadcrumbs.length != -1) {
-
-			if(window.nuFORM.getProperty('record_id') == '-2') {
-				draggable	= 1;
+			if (window.nuFORM.getProperty('record_id') == '-2') {
+				draggable = 1;
 			}
 
 		}
 
-		if(draggable) {
+		if (draggable) {
 
-			if(e.stopPropagation) e.stopPropagation();
-			if(e.preventDefault) e.preventDefault();
+			if (e.stopPropagation)
+				e.stopPropagation();
+			if (e.preventDefault)
+				e.preventDefault();
 
-			e.cancelBubble	= true;
-			e.returnValue	= false;
+			e.cancelBubble = true;
+			e.returnValue = false;
 
-			if(e.buttons) {
+			if (e.buttons) {
 				nuDragBox(e);
 			}
 
@@ -28,34 +30,35 @@ function nuBindDragEvents(){
 
 	});
 
-	$(document).on('mousedown.nuformdrag', function(e) {
+	$(document).on('mousedown.nuformdrag', function (e) {
 
-		window.startX		= e.clientX + window.scrollX;
-		window.startY		= e.clientY + window.scrollY;
-		window.moveX		= 0;
-		window.moveY		= 0;
+		window.startX = e.clientX + window.scrollX;
+		window.startY = e.clientY + window.scrollY;
+		window.moveX = 0;
+		window.moveY = 0;
 
-		var draggable		= 0;
+		var draggable = 0;
 
-		if(window.nuFORM.last != -1) {
+		if (window.nuFORM.last != -1) {
 
-			if(window.nuFORM.getProperty('record_id') == '-2') {
-				draggable	= 1;
+			if (window.nuFORM.getProperty('record_id') == '-2') {
+				draggable = 1;
 			}
 
 		}
 
-		if(draggable) {
+		if (draggable) {
 
 			let id = e.target.id;
 
-			if (id === '') return;
+			if (id === '')
+				return;
 
-			const isCb = $('#'+ id).hasClass('nuContentBoxFrame');
+			const isCb = $('#' + id).hasClass('nuContentBoxFrame');
 
-			if(e.target === document.body || isCb || e.target === $('#nuRECORD')[0]) {
+			if (e.target === document.body || isCb || e.target === $('#nuRECORD')[0]) {
 
-				if(!(nuIsMacintosh() ? e.metaKey : e.ctrlKey)) {
+				if (!(nuIsMacintosh() ? e.metaKey : e.ctrlKey)) {
 					$('.nuDragSelected').removeClass('nuDragSelected');
 				}
 
@@ -63,12 +66,12 @@ function nuBindDragEvents(){
 
 			} else {
 
-				if(!(nuIsMacintosh() ? e.metaKey : e.ctrlKey) && !$('#'+ id).hasClass('nuDragSelected')) {
+				if (!(nuIsMacintosh() ? e.metaKey : e.ctrlKey) && !$('#' + id).hasClass('nuDragSelected')) {
 					$('.nuDragSelected').removeClass('nuDragSelected');
 				}
 
-				if($('#'+ id).attr('data-drag')) {
-					$('#'+ id).addClass('nuDragSelected');
+				if ($('#' + id).attr('data-drag')) {
+					$('#' + id).addClass('nuDragSelected');
 				}
 
 			}
@@ -79,21 +82,21 @@ function nuBindDragEvents(){
 
 	});
 
-	$(document).on('mouseup.nuformdrag', function(e) {
+	$(document).on('mouseup.nuformdrag', function (e) {
 
-		var draggable		= 0;
+		var draggable = 0;
 
-		if(window.nuFORM.last != -1) {
+		if (window.nuFORM.last != -1) {
 
-			if(window.nuFORM.getProperty('record_id') == '-2') {
-				draggable	= 1;
+			if (window.nuFORM.getProperty('record_id') == '-2') {
+				draggable = 1;
 			}
 
 		}
 
-		if(draggable) {
+		if (draggable) {
 
-			if($('#nuSelectBox').length > 0) {
+			if ($('#nuSelectBox').length > 0) {
 				nuRemoveBox((nuIsMacintosh() ? e.metaKey : e.ctrlKey));
 			}
 
@@ -103,7 +106,7 @@ function nuBindDragEvents(){
 
 	});
 
-	var nuDragKeydownListener = function(e){
+	var nuDragKeydownListener = function (e) {
 
 		if ((nuIsMacintosh() ? e.metaKey : e.ctrlKey) && e.key === "a") {
 			nuSelectAllDragObjects();
@@ -115,30 +118,30 @@ function nuBindDragEvents(){
 
 		var keyDirection = '';
 
-		if(e.key == 'ArrowLeft'){
-			keyDirection	= 'left';
-		} else if(e.key == 'ArrowRight'){
-			keyDirection	= 'right';
-		} else if(e.key == 'ArrowUp'){
-			keyDirection	= 'up';
-		} else if(e.key == 'ArrowDown'){
-			keyDirection	= 'down';
+		if (e.key == 'ArrowLeft') {
+			keyDirection = 'left';
+		} else if (e.key == 'ArrowRight') {
+			keyDirection = 'right';
+		} else if (e.key == 'ArrowUp') {
+			keyDirection = 'up';
+		} else if (e.key == 'ArrowDown') {
+			keyDirection = 'down';
 		}
 
-		if(keyDirection != ''){
+		if (keyDirection != '') {
 
-			$('.nuDragSelected').each(function(){
+			$('.nuDragSelected').each(function () {
 
-				var prop	= '';
-				var val	= '';
+				var prop = '';
+				var val = '';
 
 				var t = $(this);
 				var tLabel = $('#label_' + t.attr('id'));
 				var cb = $('#frame_' + t.attr('id'));
 
-				if(keyDirection == 'left'){
+				if (keyDirection == 'left') {
 
-					if(e.shiftKey){
+					if (e.shiftKey) {
 
 						prop = 'width';
 						val = t.width() - 1;
@@ -147,71 +150,75 @@ function nuBindDragEvents(){
 
 						prop = 'left';
 						val = t.position().left - 1;
-						if (tLabel.length !== 0) valLabel = tLabel.position().left - 1;
+						if (tLabel.length !== 0)
+							valLabel = tLabel.position().left - 1;
 
 					}
 
-				} else if(keyDirection == 'right'){
+				} else if (keyDirection == 'right') {
 
-					if(e.shiftKey){
+					if (e.shiftKey) {
 
 						prop = 'width';
-						val	= t.width() + 1;
+						val = t.width() + 1;
 
 					} else {
 
 						prop = 'left';
 						val = t.position().left + 1;
-						if (tLabel.length !== 0) valLabel = tLabel.position().left + 1;
+						if (tLabel.length !== 0)
+							valLabel = tLabel.position().left + 1;
 
 					}
 
-				} else if(keyDirection == 'up'){
+				} else if (keyDirection == 'up') {
 
-					if(e.shiftKey){
+					if (e.shiftKey) {
 
 						prop = 'height';
-						val = cb.length == 0 ? t.height() - 1 : cb.height() -1;
+						val = cb.length == 0 ? t.height() - 1 : cb.height() - 1;
 
 					} else {
 
 						prop = 'top';
 						val = t.position().top - 1;
-						if (tLabel.length !== 0) valLabel = tLabel.position().top - 1;
+						if (tLabel.length !== 0)
+							valLabel = tLabel.position().top - 1;
 
 					}
 
-				} else if(keyDirection == 'down'){
+				} else if (keyDirection == 'down') {
 
-					if(e.shiftKey){
+					if (e.shiftKey) {
 
 						prop = 'height';
-						val = cb.length == 0 ? t.height() +1 : cb.height() +1;
+						val = cb.length == 0 ? t.height() + 1 : cb.height() + 1;
 
 					} else {
 
 						prop = 'top';
 						val = t.position().top + 1;
-						if (tLabel.length !== 0) valLabel = tLabel.position().top + 1;
+						if (tLabel.length !== 0)
+							valLabel = tLabel.position().top + 1;
 
 					}
 
 				}
 
 				if (!(prop == 'height' && t.hasClass('nu_contentbox'))) {
-					t.css(prop,val+'px');
+					t.css(prop, val + 'px');
 				}
 
 				if ((prop == 'left' || prop == 'top') && (tLabel.length !== 0)) {
-					tLabel.css(prop,valLabel+'px');
+					tLabel.css(prop, valLabel + 'px');
 				}
-
 
 				// ContentBox
 				var cb = $('#frame_' + t.attr('id'));
 				if (cb.length == 1) {
-					if (prop == 'top') val += 18;
-					cb.css(prop,val+'px');
+					if (prop == 'top')
+						val += 18;
+					cb.css(prop, val + 'px');
 				}
 
 			});
@@ -223,57 +230,57 @@ function nuBindDragEvents(){
 
 }
 
-function nuUnbindDragEvents(){
+function nuUnbindDragEvents() {
 	$(document).off('.nuformdrag');
 }
 
-function nuUpdateDragFieldsListbox(){
+function nuUpdateDragFieldsListbox() {
 
-	$('#nuDragOptionsFields option:selected',window.parent.document.body).prop('selected',false);
+	$('#nuDragOptionsFields option:selected', window.parent.document.body).prop('selected', false);
 
-	$('.nuDragSelected').each(function(){
-		$('#nuDragOptionsFields option[id="drag_'+$(this).prop('id')+'"]',window.parent.document.body).prop('selected','selected');
+	$('.nuDragSelected').each(function () {
+		$('#nuDragOptionsFields option[id="drag_' + $(this).prop('id') + '"]', window.parent.document.body).prop('selected', 'selected');
 	});
 
-	nuCheckIfMovingTabOrderAllowed($('#nuDragOptionsFields',window.parent.document.body));
-	nuCheckIfMovingFieldToOtherTabAllowed($('#nuDragOptionsFields',window.parent.document.body));
+	nuCheckIfMovingTabOrderAllowed($('#nuDragOptionsFields', window.parent.document.body));
+	nuCheckIfMovingFieldToOtherTabAllowed($('#nuDragOptionsFields', window.parent.document.body));
 }
 
-function nuCreateBox(event){
+function nuCreateBox(event) {
 
-	var e			= document.createElement('div');
+	var e = document.createElement('div');
 
 	e.setAttribute('id', 'nuSelectBox');
 
 	$('body').append(e);
 
 	$('#' + e.id).css({
-		'width'				: 1,
-		'height'			: 1,
-		'top'				: event.clientY + window.scrollY,
-		'left'				: event.clientX,
-		'position'			: 'absolute',
-		'border-style'		: 'dashed',
-		'border-width'		: 1,
-		'border-color'		: 'red',
-		'z-index'			: '4000',
-		'background-color'	: 'transparent'
+		'width': 1,
+		'height': 1,
+		'top': event.clientY + window.scrollY,
+		'left': event.clientX,
+		'position': 'absolute',
+		'border-style': 'dashed',
+		'border-width': 1,
+		'border-color': 'red',
+		'z-index': '4000',
+		'background-color': 'transparent'
 	});
 
 }
 
 function nuDragBox(event) {
 
-	window.lastMoveX	= window.moveX;
-	window.lastMoveY	= window.moveY;
-	window.moveX		= event.clientX - window.startX;
-	window.moveY		= event.clientY - window.startY;
+	window.lastMoveX = window.moveX;
+	window.lastMoveY = window.moveY;
+	window.moveX = event.clientX - window.startX;
+	window.moveY = event.clientY - window.startY;
 
-	if($('#nuSelectBox').length > 0) {
+	if ($('#nuSelectBox').length > 0) {
 		nuResizeDrag(event);
 	} else {
 
-		if($('#nuSelectBox').length == 0 && nuCanMove()){
+		if ($('#nuSelectBox').length == 0 && nuCanMove()) {
 			nuMoveSelected();
 		}
 
@@ -287,32 +294,32 @@ function nuResizeDrag(event) {
 	var X = event.clientX - window.startX;
 	var Y = event.clientY + window.scrollY - window.startY;
 
-	if(X > 0) {
+	if (X > 0) {
 
 		selectBox.css({
-			'width' : X
+			'width': X
 		});
 
 	} else {
 
 		selectBox.css({
-			'width' : -1 * X,
-			'left' : window.startX + X,
+			'width': -1 * X,
+			'left': window.startX + X,
 		});
 
 	}
 
-	if(Y > 0) {
+	if (Y > 0) {
 
 		selectBox.css({
-			'height' : Y
+			'height': Y
 		});
 
 	} else {
 
 		selectBox.css({
-			'height' : -1 * Y,
-			'top' : window.startY + Y,
+			'height': -1 * Y,
+			'top': window.startY + Y,
 		});
 
 	}
@@ -326,64 +333,63 @@ function nuAddDragSelected(t) {
 function getNuDragDialogIframes(contents = false) {
 
 	const iframes = $('#nuDragDialog iframe');
-    return contents ? iframes.contents(): iframes;
-  
-}
+	return contents ? iframes.contents() : iframes;
 
+}
 
 function nuRemoveBox(ctrlKey) {
 
-	var selectBox	= $('#nuSelectBox');
+	var selectBox = $('#nuSelectBox');
 
-	var L			= parseInt(selectBox.css('left'), 10);
-	var T			= parseInt(selectBox.css('top'), 10) - nuGetTopArea();
-	var B			= T + parseInt(selectBox.css('height'), 10);
-	var R			= L + parseInt(selectBox.css('width'), 10);
+	var L = parseInt(selectBox.css('left'), 10);
+	var T = parseInt(selectBox.css('top'), 10) - nuGetTopArea();
+	var B = T + parseInt(selectBox.css('height'), 10);
+	var R = L + parseInt(selectBox.css('width'), 10);
 
 	selectBox.remove();
 
 	var o = $('[data-drag]');
 
-	if(!ctrlKey) {
+	if (!ctrlKey) {
 		$('.nuDragSelected').removeClass('nuDragSelected');
 	}
 
-	var selectedTab = $('.nuTabSelected').length > 0 ? $('.nuTabSelected')[0].id.substring(5): 0;
+	var selectedTab = $('.nuTabSelected').length > 0 ? $('.nuTabSelected')[0].id.substring(5) : 0;
 
-	o.each(function(index) {
+	o.each(function (index) {
 
-		if($(this).attr('data-nu-tab') == selectedTab) {
-			var l	=		parseInt($(this).css('left'), 10);
-			var t	=		parseInt($(this).css('top'), 10);
-			var b	= t +	parseInt($(this).css('height'), 10);
-			var r	= l +	parseInt($(this).css('width'), 10);
+		if ($(this).attr('data-nu-tab') == selectedTab) {
+			var l = parseInt($(this).css('left'), 10);
+			var t = parseInt($(this).css('top'), 10);
+			var b = t + parseInt($(this).css('height'), 10);
+			var r = l + parseInt($(this).css('width'), 10);
 
 			//drag around selected objects points
-			if(l >= L && l <= R && t >= T && t <= B) {
+			if (l >= L && l <= R && t >= T && t <= B) {
 				nuAddDragSelected($(this));
-			} else if(r >= L && r <= R && t >= T && t <= B) {
+			} else if (r >= L && r <= R && t >= T && t <= B) {
 				nuAddDragSelected($(this));
-			} else if(l >= L && l <= R && b >= T && b <= B) {
+			} else if (l >= L && l <= R && b >= T && b <= B) {
 				nuAddDragSelected($(this));
-			} else if(r >= L && r <= R && b >= T && b <= B) {
+			} else if (r >= L && r <= R && b >= T && b <= B) {
 				nuAddDragSelected($(this));
 			}
 
 			//drag within selected objects points
-			if(L >= l && L <= r && T >= t && T <= b) {
+			if (L >= l && L <= r && T >= t && T <= b) {
 				nuAddDragSelected($(this));
-			} else if(R >= l && R <= r && T >= t && T <= b) {
+			} else if (R >= l && R <= r && T >= t && T <= b) {
 				nuAddDragSelected($(this));
-			} else if(L >= l && L <= r && B >= t && B <= b) {
+			} else if (L >= l && L <= r && B >= t && B <= b) {
 				nuAddDragSelected($(this));
-			} else if(R >= l && R <= r && B >= t && B <= b) {
+			} else if (R >= l && R <= r && B >= t && B <= b) {
 				nuAddDragSelected($(this));
 			}
 
 			//drag through object but not through any points
-			if(L >= l && L <= r && T <= t && B >= b) {
+			if (L >= l && L <= r && T <= t && B >= b) {
 				nuAddDragSelected($(this));
-			} else if(L <= l && R >= r && T >= t && B <= b) {
+			} else if (L <= l && R >= r && T >= t && B <= b) {
 				nuAddDragSelected($(this));
 			}
 
@@ -393,26 +399,28 @@ function nuRemoveBox(ctrlKey) {
 
 }
 
-function nuInitialiseDragState(){
+function nuInitialiseDragState() {
 
-	window.nuDragOptionsState		= {'tabs': []};
+	window.nuDragOptionsState = {
+		'tabs': []
+	};
 
-	let tabOrderCounter				= 10;
+	let tabOrderCounter = 10;
 
-	$('div.nuTab[id^="nuTab"]').each(function(){
+	$('div.nuTab[id^="nuTab"]').each(function () {
 
 		var objects = {
 			'tab_id': $(this).attr('data-nu-tab-id'),
 			'objects': []
 		};
 
-		$('div#nuRECORD [data-nu-tab="'+$(this).prop('id').replace('nuTab','')+'"]').each(function(){
-			
+		$('div#nuRECORD [data-nu-tab="' + $(this).prop('id').replace('nuTab', '') + '"]').each(function () {
+
 			if (this.tagName != 'LABEL') {
 
-				const objectPosition		= $(this).position();
+				const objectPosition = $(this).position();
 
-				const objectProperties	= {
+				const objectProperties = {
 
 					'object_id': $(this).attr('data-nu-object-id'),
 					'id': $(this).prop('id'),
@@ -425,8 +433,8 @@ function nuInitialiseDragState(){
 				};
 
 				objects.objects.push(objectProperties);
-				tabOrderCounter		= tabOrderCounter + 10;
-			
+				tabOrderCounter = tabOrderCounter + 10;
+
 			}
 
 		});
@@ -437,15 +445,15 @@ function nuInitialiseDragState(){
 
 }
 
-function nuSetTabOrderDataAttrs(){
+function nuSetTabOrderDataAttrs() {
 
-	var currentTabNo	= $('div.nuTabSelected[id^="nuTab"]').attr('data-nu-tab-filter') || '0';
+	var currentTabNo = $('div.nuTabSelected[id^="nuTab"]').attr('data-nu-tab-filter') || '0';
 
-	for(var i=0; i<window.nuDragOptionsState.tabs[currentTabNo].objects.length; i++){
+	for (var i = 0; i < window.nuDragOptionsState.tabs[currentTabNo].objects.length; i++) {
 
-		var field		= window.nuDragOptionsState.tabs[currentTabNo].objects[i];
+		var field = window.nuDragOptionsState.tabs[currentTabNo].objects[i];
 
-		$('#nuDragOptionsFields option[id="drag_'+field.id+'"]',window.parent.document.body).attr('data-nu-tab-order',field.tab_order);
+		$('#nuDragOptionsFields option[id="drag_' + field.id + '"]', window.parent.document.body).attr('data-nu-tab-order', field.tab_order);
 
 	}
 
@@ -455,36 +463,36 @@ function nuDragCurrentTabNumber() {
 	return $('div.nuTabSelected[id^="nuTab"]', getNuDragDialogIframes(true)).attr('data-nu-tab-filter') || '0'
 }
 
-function nuMoveUpOrder(){
+function nuMoveUpOrder() {
 
-	var currentTabNo						= nuDragCurrentTabNumber();
-	var currentSelectedFieldOption			= $('select#nuDragOptionsFields option:selected');
+	var currentTabNo = nuDragCurrentTabNumber();
+	var currentSelectedFieldOption = $('select#nuDragOptionsFields option:selected');
 
-	for(var i=0; i<getNuDragDialogIframes()[0].contentWindow.nuDragOptionsState.tabs[currentTabNo].objects.length; i++){
+	for (var i = 0; i < getNuDragDialogIframes()[0].contentWindow.nuDragOptionsState.tabs[currentTabNo].objects.length; i++) {
 
-		var field							= getNuDragDialogIframes()[0].contentWindow.nuDragOptionsState.tabs[currentTabNo].objects[i];
+		var field = getNuDragDialogIframes()[0].contentWindow.nuDragOptionsState.tabs[currentTabNo].objects[i];
 
-		if(field.id == currentSelectedFieldOption.prop('id').replace('drag_','')){
+		if (field.id == currentSelectedFieldOption.prop('id').replace('drag_', '')) {
 
 			// if it's at the top, dont re-order anything
-			if(field.id == $('select#nuDragOptionsFields option')[0].id.replace('drag_',''))
+			if (field.id == $('select#nuDragOptionsFields option')[0].id.replace('drag_', ''))
 				return;
 
-			var previousFieldDOM			= $('select#nuDragOptionsFields option[data-nu-tab-order="'+(Number(currentSelectedFieldOption.attr('data-nu-tab-order'))-10)+'"]');
-			var previousFieldSTATE			= nuFindFieldInState(currentTabNo, previousFieldDOM.prop('id').replace('drag_',''));
+			var previousFieldDOM = $('select#nuDragOptionsFields option[data-nu-tab-order="' + (Number(currentSelectedFieldOption.attr('data-nu-tab-order')) - 10) + '"]');
+			var previousFieldSTATE = nuFindFieldInState(currentTabNo, previousFieldDOM.prop('id').replace('drag_', ''));
 
-			field.tab_order					= Number(previousFieldDOM.attr('data-nu-tab-order'));
-			previousFieldSTATE.tab_order	= field.tab_order + 10;
+			field.tab_order = Number(previousFieldDOM.attr('data-nu-tab-order'));
+			previousFieldSTATE.tab_order = field.tab_order + 10;
 
-			$('option#drag_'+field.id).attr('data-nu-tab-order',field.tab_order);
+			$('option#drag_' + field.id).attr('data-nu-tab-order', field.tab_order);
 
 			var previousFieldDOMID = previousFieldDOM.prop('id');
-			previousFieldDOM.attr('data-nu-tab-order',previousFieldSTATE.tab_order);
+			previousFieldDOM.attr('data-nu-tab-order', previousFieldSTATE.tab_order);
 
-			var previousFieldDOMHTML = $('option#'+previousFieldDOMID)[0].outerHTML;
+			var previousFieldDOMHTML = $('option#' + previousFieldDOMID)[0].outerHTML;
 
-			$('option#'+previousFieldDOMID).remove();
-			$('option#drag_'+field.id).after(previousFieldDOMHTML);
+			$('option#' + previousFieldDOMID).remove();
+			$('option#drag_' + field.id).after(previousFieldDOMHTML);
 
 		}
 
@@ -492,38 +500,38 @@ function nuMoveUpOrder(){
 
 }
 
-function nuMoveDownOrder(){
+function nuMoveDownOrder() {
 
-	var currentTabNo					= nuDragCurrentTabNumber();
-	var currentSelectedFieldOption		= $('select#nuDragOptionsFields option:selected');
+	var currentTabNo = nuDragCurrentTabNumber();
+	var currentSelectedFieldOption = $('select#nuDragOptionsFields option:selected');
 
-	for(var i=0; i<getNuDragDialogIframes()[0].contentWindow.nuDragOptionsState.tabs[currentTabNo].objects.length; i++){
+	for (var i = 0; i < getNuDragDialogIframes()[0].contentWindow.nuDragOptionsState.tabs[currentTabNo].objects.length; i++) {
 
-		var field						= getNuDragDialogIframes()[0].contentWindow.nuDragOptionsState.tabs[currentTabNo].objects[i];
+		var field = getNuDragDialogIframes()[0].contentWindow.nuDragOptionsState.tabs[currentTabNo].objects[i];
 
-		if(field.id == currentSelectedFieldOption.prop('id').replace('drag_','')){
+		if (field.id == currentSelectedFieldOption.prop('id').replace('drag_', '')) {
 
 			// if it's at the bottom, dont re-order anything
-			if(field.id == $('select#nuDragOptionsFields option')[($('select#nuDragOptionsFields option').length-1)].id.replace('drag_','')){
+			if (field.id == $('select#nuDragOptionsFields option')[($('select#nuDragOptionsFields option').length - 1)].id.replace('drag_', '')) {
 				return;
 			}
 
-			var nextFieldDOM = $('select#nuDragOptionsFields option[data-nu-tab-order="'+(Number(currentSelectedFieldOption.attr('data-nu-tab-order'))+10)+'"]');
-			var nextFieldSTATE = nuFindFieldInState(currentTabNo, nextFieldDOM.prop('id').replace('drag_',''));
+			var nextFieldDOM = $('select#nuDragOptionsFields option[data-nu-tab-order="' + (Number(currentSelectedFieldOption.attr('data-nu-tab-order')) + 10) + '"]');
+			var nextFieldSTATE = nuFindFieldInState(currentTabNo, nextFieldDOM.prop('id').replace('drag_', ''));
 
 			field.tab_order = Number(nextFieldDOM.attr('data-nu-tab-order'));
 			nextFieldSTATE.tab_order = field.tab_order - 10;
 
-			$('option#drag_'+field.id).attr('data-nu-tab-order',field.tab_order);
+			$('option#drag_' + field.id).attr('data-nu-tab-order', field.tab_order);
 
 			var nextFieldDOMID = nextFieldDOM.prop('id');
 
-			nextFieldDOM.attr('data-nu-tab-order',nextFieldSTATE.tab_order);
+			nextFieldDOM.attr('data-nu-tab-order', nextFieldSTATE.tab_order);
 
-			var nextFieldDOMHTML = $('option#'+nextFieldDOMID)[0].outerHTML;
+			var nextFieldDOMHTML = $('option#' + nextFieldDOMID)[0].outerHTML;
 
-			$('option#'+nextFieldDOMID).remove();
-			$('option#drag_'+field.id).before(nextFieldDOMHTML);
+			$('option#' + nextFieldDOMID).remove();
+			$('option#drag_' + field.id).before(nextFieldDOMHTML);
 
 		}
 
@@ -531,11 +539,11 @@ function nuMoveDownOrder(){
 
 }
 
-function nuFindFieldInState(tabNo, fieldID){
+function nuFindFieldInState(tabNo, fieldID) {
 
-	for(var i=0; i<getNuDragDialogIframes()[0].contentWindow.nuDragOptionsState.tabs[tabNo].objects.length; i++){
+	for (var i = 0; i < getNuDragDialogIframes()[0].contentWindow.nuDragOptionsState.tabs[tabNo].objects.length; i++) {
 
-		if(getNuDragDialogIframes()[0].contentWindow.nuDragOptionsState.tabs[tabNo].objects[i].id == fieldID){
+		if (getNuDragDialogIframes()[0].contentWindow.nuDragOptionsState.tabs[tabNo].objects[i].id == fieldID) {
 			return getNuDragDialogIframes()[0].contentWindow.nuDragOptionsState.tabs[tabNo].objects[i];
 		}
 
@@ -545,10 +553,10 @@ function nuFindFieldInState(tabNo, fieldID){
 
 }
 
-function nuCreateDragOptionsBox(form){
+function nuCreateDragOptionsBox(form) {
 
-	const dragOptionsBoxWidth		= 400;
-	const dragOptionsBoxMinHeight	= 520;	
+	const dragOptionsBoxWidth = 400;
+	const dragOptionsBoxMinHeight = 520;
 	const classNuDragOptionsButton = "nuDragOptionsButton nuButton";
 
 	const optionsBoxHTML = `
@@ -600,9 +608,9 @@ function nuCreateDragOptionsBox(form){
 				</table>
 		</div>
 	</div>`;
-	
-	$('#nuWindow',window.parent.document.body).css('right', 15);
-	$('#nuDragDialog',window.parent.document.body)
+
+	$('#nuWindow', window.parent.document.body).css('right', 15);
+	$('#nuDragDialog', window.parent.document.body)
 	.css('top', 35)
 	.prepend(optionsBoxHTML)
 	.css('height', Math.max(dragOptionsBoxMinHeight + 10, window.innerHeight + 40))
@@ -613,14 +621,14 @@ function nuCreateDragOptionsBox(form){
 	nuInitialiseDragState();
 
 	let tabSelected = $('.nuTabSelected');
-	let tab = tabSelected.length > 0 ? tabSelected.attr('id').replace('nuTab','') : 0;
+	let tab = tabSelected.length > 0 ? tabSelected.attr('id').replace('nuTab', '') : 0;
 	nuPopulateFieldsList(tab);
 	nuPopulateTabDropdown(tab);
 
-	$('.nuTab[id^="nuTab"]').prop('onclick','')
-		.on('click', function() {
+	$('.nuTab[id^="nuTab"]').prop('onclick', '')
+	.on('click', function () {
 
-		if($(this).hasClass('nuTabSelected')){
+		if ($(this).hasClass('nuTabSelected')) {
 			return;
 		}
 
@@ -632,8 +640,8 @@ function nuCreateDragOptionsBox(form){
 		const nuTabFilter = Number($(this).attr('data-nu-tab-filter'));
 		nuPopulateFieldsList(nuTabFilter);
 		nuPopulateTabDropdown(nuTabFilter);
-		
-		const $nuDragOptionsFields = $('#nuDragOptionsFields',window.parent.document.body);
+
+		const $nuDragOptionsFields = $('#nuDragOptionsFields', window.parent.document.body);
 		nuCheckIfMovingTabOrderAllowed($nuDragOptionsFields);
 		nuCheckIfMovingFieldToOtherTabAllowed($nuDragOptionsFields);
 
@@ -643,13 +651,13 @@ function nuCreateDragOptionsBox(form){
 	nuCheckIfMovingFieldToOtherTabAllowed($('#nuDragOptionsFields'));
 
 	let helpMessages = [
-	  "Use arrow keys to move selected Objects.",
-	  "Use arrow keys + SHIFT to resize selected Objects.",
-	  "Draw a square around Objects to highlight them.",
-	  "Hold CTRL to add Objects to the current selection."
+		"Use arrow keys to move selected Objects.",
+		"Use arrow keys + SHIFT to resize selected Objects.",
+		"Draw a square around Objects to highlight them.",
+		"Hold CTRL to add Objects to the current selection."
 	];
 
-	let help = `<input id='run_sam' type='button' class='input_button nuButton' value='?' 
+	let help = `<input id='run_sam' type='button' class='input_button nuButton' value='?'
 	  onclick='nuMessage(${JSON.stringify(helpMessages)})' 
 	  style='top: 2px; right: 15px; width: 21px; height: 21px; text-align: center; padding-left: 5px; position: absolute;'>`;
 
@@ -669,23 +677,22 @@ function nuCreateDragOptionsBox(form){
 
 }
 
-
 function nuToggleHiddenObjects() {
-	$('.nuDragHidden', getNuDragDialogIframes(true)).each(function() {
-		$(this).css('visibility', function(i, visibility) {
+	$('.nuDragHidden', getNuDragDialogIframes(true)).each(function () {
+		$(this).css('visibility', function (i, visibility) {
 			return visibility === 'visible' ? 'hidden' : 'visible';
 		});
 	});
 }
 
 function nuToggleDragLabels() {
-	$('.nuDragLabel', getNuDragDialogIframes(true)).each(function() {
-		$(this).css('visibility', function(i, visibility) {
+	$('.nuDragLabel', getNuDragDialogIframes(true)).each(function () {
+		$(this).css('visibility', function (i, visibility) {
 			return visibility === 'visible' ? 'hidden' : 'visible';
 		});
 	});
 
-	$("[data-drag-button-label]", getNuDragDialogIframes(true)).each(function() {
+	$("[data-drag-button-label]", getNuDragDialogIframes(true)).each(function () {
 		let $this = $(this);
 		if ($this.is("[data-drag-value-visible]")) {
 			$this.text(this.id).removeAttr('data-drag-value-visible');
@@ -695,15 +702,14 @@ function nuToggleDragLabels() {
 	});
 }
 
-
 function nuShowContentBoxFrames() {
 
-	$('.nu_contentbox').each(function() {
+	$('.nu_contentbox').each(function () {
 
 		var id = 'frame_' + $(this).attr('id');
-		var obj = $("#"+id);
+		var obj = $("#" + id);
 
-		if ($(this).is(":visible")){
+		if ($(this).is(":visible")) {
 			obj.css('visibility', 'visible')
 		} else {
 			obj.css('visibility', 'hidden')
@@ -714,7 +720,7 @@ function nuShowContentBoxFrames() {
 
 function nuAddContentBoxFrames() {
 
-	$('.nu_contentbox').each(function() {
+	$('.nu_contentbox').each(function () {
 		var w = $(this).cssNumber('width');
 		var t = $(this).cssNumber('top') + 18;
 		var l = $(this).cssNumber('left');
@@ -732,117 +738,119 @@ function nuAddContentBoxFrames() {
 }
 
 function nuDragSelected() {
-	return $('.nuDragSelected',getNuDragDialogIframes(true));
+	return $('.nuDragSelected', getNuDragDialogIframes(true));
 }
 
 function nuThisContentBox(t) {
-	return $('#frame_' + $(t).attr('id'),getNuDragDialogIframes(true));
+	return $('#frame_' + $(t).attr('id'), getNuDragDialogIframes(true));
 }
 
 function nuThisLabel(t) {
-	return $('#label_' + $(t).attr('id'),getNuDragDialogIframes(true));
+	return $('#label_' + $(t).attr('id'), getNuDragDialogIframes(true));
 }
 
 // Shortest
-function nuResizeToLowest(){
+function nuResizeToLowest() {
 
-	var lowest		= 1000000;
-	var selected	= nuDragSelected();
+	var lowest = 1000000;
+	var selected = nuDragSelected();
 
-	selected.each(function(){
+	selected.each(function () {
 
 		var cb = nuThisContentBox(this);
 		const h = cb.length == 0 ? $(this).height() : cb.height();
 
-		if(h < lowest){
-			lowest	= h;
+		if (h < lowest) {
+			lowest = h;
 		}
 
 	});
 
-	selected.each(function(){
+	selected.each(function () {
 
 		var cb = nuThisContentBox(this);
 		if (cb.length == 0) {
-			$(this).css('height',lowest+'px');
+			$(this).css('height', lowest + 'px');
 		} else {
-			cb.css('height',lowest+'px');
+			cb.css('height', lowest + 'px');
 		}
 	});
 
 }
 
-function nuResizeToThinnest(){
+function nuResizeToThinnest() {
 
-	var thinnest	= 1000000;
-	var selected	= nuDragSelected();
+	var thinnest = 1000000;
+	var selected = nuDragSelected();
 
-	selected.each(function(){
+	selected.each(function () {
 
-		if($(this).width() < thinnest){
-			thinnest	= $(this).width();
+		if ($(this).width() < thinnest) {
+			thinnest = $(this).width();
 		}
 
 	});
 
-	selected.each(function(){
-		$(this).css('width',thinnest+'px');
+	selected.each(function () {
+		$(this).css('width', thinnest + 'px');
 		var cb = nuThisContentBox(this);
-		if (cb.length == 1) cb.css('width', thinnest +'px');
+		if (cb.length == 1)
+			cb.css('width', thinnest + 'px');
 	});
 
 }
 
 // Tallest
-function nuResizeToHighest(){
+function nuResizeToHighest() {
 
-	var highest	= 0;
-	var selected	= nuDragSelected();
+	var highest = 0;
+	var selected = nuDragSelected();
 
-	selected.each(function(){
+	selected.each(function () {
 
 		var cb = nuThisContentBox(this);
 		const h = cb.length == 0 ? $(this).height() : cb.height();
 
-		if(h > highest){
-			highest	= h;
+		if (h > highest) {
+			highest = h;
 		}
 
 	});
 
-	selected.each(function(){
+	selected.each(function () {
 		var cb = nuThisContentBox(this);
 		if (cb.length == 0) {
-			$(this).css('height',highest+'px');
+			$(this).css('height', highest + 'px');
 		} else {
-			cb.css('height',highest+'px');
+			cb.css('height', highest + 'px');
 		}
 	});
 
 }
 
-function nuResizeToWidest(){
+function nuResizeToWidest() {
 
-	var widest		= 0;
-	var selected	= nuDragSelected();
+	var widest = 0;
+	var selected = nuDragSelected();
 
-	selected.each(function(){
+	selected.each(function () {
 
-		if($(this).width() > widest){
-			widest	= $(this).width();
+		if ($(this).width() > widest) {
+			widest = $(this).width();
 		}
 
 	});
 
-	selected.each(function(){
-		$(this).css('width',widest+'px');
+	selected.each(function () {
+		$(this).css('width', widest + 'px');
 		var cb = nuThisContentBox(this);
-		if (cb.length == 1) cb.css('width',widest +'px');
+		if (cb.length == 1)
+			cb.css('width', widest + 'px');
 	});
 
 }
 
-function nuSortObjAsc(a,b) {
+function nuSortObjAsc(a, b) {
 
 	return a.top - b.top;
 
@@ -850,7 +858,7 @@ function nuSortObjAsc(a,b) {
 
 function nuSpacingNotSupported() {
 
-	var supported = $('.nuDragSelected',getNuDragDialogIframes(true)).filter('.nu_contentbox').length == 0;
+	var supported = $('.nuDragSelected', getNuDragDialogIframes(true)).filter('.nu_contentbox').length == 0;
 	if (!supported) {
 		nuMessage('Vertical spacing of ContentBox is not supported yet.');
 	}
@@ -859,13 +867,14 @@ function nuSpacingNotSupported() {
 
 }
 
-function nuSpaceHorizontally(){
+function nuSpaceHorizontally() {
 
-	if (!nuSpacingNotSupported()) return;
+	if (!nuSpacingNotSupported())
+		return;
 
-	var selectedFields		= [];
+	var selectedFields = [];
 
-	$('.nuDragSelected',getNuDragDialogIframes(true)).each(function(){
+	$('.nuDragSelected', getNuDragDialogIframes(true)).each(function () {
 
 		selectedFields.push({
 			left: $(this).position().left,
@@ -877,29 +886,29 @@ function nuSpaceHorizontally(){
 
 	selectedFields.sort(nuSortObjAsc);
 
-	var gapTotal			= 0;
-	var leftTotal			= 0;
+	var gapTotal = 0;
+	var leftTotal = 0;
 
-	for(var i=1; i<selectedFields.length; i++){
+	for (var i = 1; i < selectedFields.length; i++) {
 
-		gapTotal			+= selectedFields[i].left-(selectedFields[i-1].left+selectedFields[i-1].width);
-		leftTotal			+= selectedFields[i].left-selectedFields[i-1].left;
+		gapTotal += selectedFields[i].left - (selectedFields[i - 1].left + selectedFields[i - 1].width);
+		leftTotal += selectedFields[i].left - selectedFields[i - 1].left;
 
 	}
 
-	var gapAvg				= Math.round(gapTotal/(selectedFields.length-1));
-	var leftAvg				= Math.round(leftTotal/(selectedFields.length-1));
+	var gapAvg = Math.round(gapTotal / (selectedFields.length - 1));
+	var leftAvg = Math.round(leftTotal / (selectedFields.length - 1));
 
-	if(gapAvg < 0){
+	if (gapAvg < 0) {
 
-		for(var i=1; i<selectedFields.length; i++){
-			$('#'+selectedFields[i].id,getNuDragDialogIframes(true)).css('left',($('#'+selectedFields[i-1].id,getNuDragDialogIframes(true)).position().left+leftAvg)+'px');
+		for (var i = 1; i < selectedFields.length; i++) {
+			$('#' + selectedFields[i].id, getNuDragDialogIframes(true)).css('left', ($('#' + selectedFields[i - 1].id, getNuDragDialogIframes(true)).position().left + leftAvg) + 'px');
 		}
 
 	} else {
 
-		for(var i=1; i<selectedFields.length; i++){
-			$('#'+selectedFields[i].id,getNuDragDialogIframes(true)).css('left',($('#'+selectedFields[i-1].id,getNuDragDialogIframes(true)).position().left+$('#'+selectedFields[i-1].id,getNuDragDialogIframes(true)).width()+gapAvg)+'px');
+		for (var i = 1; i < selectedFields.length; i++) {
+			$('#' + selectedFields[i].id, getNuDragDialogIframes(true)).css('left', ($('#' + selectedFields[i - 1].id, getNuDragDialogIframes(true)).position().left + $('#' + selectedFields[i - 1].id, getNuDragDialogIframes(true)).width() + gapAvg) + 'px');
 		}
 
 	}
@@ -908,17 +917,18 @@ function nuSpaceHorizontally(){
 
 function nuSpaceVertically() {
 
-	if (!nuSpacingNotSupported()) return;
+	if (!nuSpacingNotSupported())
+		return;
 
 	const $dialogIframes = getNuDragDialogIframes(true);
 	const selectedFields = [];
 
-	$('.nuDragSelected', $dialogIframes).each(function() {
+	$('.nuDragSelected', $dialogIframes).each(function () {
 		const $this = $(this);
 		selectedFields.push({
-			top: $this.position().top
-			, height: $this.height()
-			, id: $this.prop('id')
+			top: $this.position().top,
+			height: $this.height(),
+			id: $this.prop('id')
 		});
 	});
 
@@ -957,102 +967,106 @@ function nuSpaceVertically() {
 
 }
 
-function nuAlignRight(){
+function nuAlignRight() {
 
 	var rightestPoint = 0;
 	var selected = nuDragSelected();
 
-	selected.each(function(){
+	selected.each(function () {
 
-		if($(this).position().left+$(this).width() > rightestPoint){
+		if ($(this).position().left + $(this).width() > rightestPoint) {
 
-			rightestPoint	= $(this).position().left+$(this).width();
+			rightestPoint = $(this).position().left + $(this).width();
 
 		}
 
 	});
 
-	selected.each(function(){
-		$(this).css('left',(rightestPoint-$(this).width())+'px');
+	selected.each(function () {
+		$(this).css('left', (rightestPoint - $(this).width()) + 'px');
 
 		var tLabel = nuThisLabel(this);
-		if (tLabel.length == 1) tLabel.css('left',rightestPoint - $(this).width() - tLabel.cssNumber('width') - 5  +'px');
+		if (tLabel.length == 1)
+			tLabel.css('left', rightestPoint - $(this).width() - tLabel.cssNumber('width') - 5 + 'px');
 
 	});
 
 }
 
-function nuAlignLeft(){
+function nuAlignLeft() {
 
-	var leftestPoint		= 1000000;
+	var leftestPoint = 1000000;
 
-	var selected	= nuDragSelected();
+	var selected = nuDragSelected();
 
-	selected.each(function(){
+	selected.each(function () {
 
-		if($(this).position().left < leftestPoint){
+		if ($(this).position().left < leftestPoint) {
 
-			leftestPoint	= $(this).position().left;
+			leftestPoint = $(this).position().left;
 
 		}
 
 	});
 
-	selected.each(function(){
-		$(this).css('left',leftestPoint+'px');
+	selected.each(function () {
+		$(this).css('left', leftestPoint + 'px');
 		var cb = nuThisContentBox(this);
 
 		var tLabel = nuThisLabel(this);
-		if (tLabel.length == 1) tLabel.css('left',leftestPoint -  tLabel.cssNumber('width') - 5  +'px');
+		if (tLabel.length == 1)
+			tLabel.css('left', leftestPoint - tLabel.cssNumber('width') - 5 + 'px');
 
 		if (cb.length == 1) {
-			cb.css('left',leftestPoint +'px');
+			cb.css('left', leftestPoint + 'px');
 		}
 	});
 
 }
 
-function nuAlignTop(){
+function nuAlignTop() {
 
-	var highestPoint		= 1000000;
+	var highestPoint = 1000000;
 
-	var selected	= nuDragSelected();
+	var selected = nuDragSelected();
 
-	selected.each(function(){
+	selected.each(function () {
 
-		if($(this).position().top < highestPoint){
+		if ($(this).position().top < highestPoint) {
 
-			highestPoint	= $(this).position().top;
+			highestPoint = $(this).position().top;
 
 		}
 
 	});
 
-	selected.each(function(){
+	selected.each(function () {
 
-		$(this).css('top',highestPoint+'px');
+		$(this).css('top', highestPoint + 'px');
 		var cb = nuThisContentBox(this);
-		if (cb.length == 1) cb.css('top',highestPoint + 18 +'px');
+		if (cb.length == 1)
+			cb.css('top', highestPoint + 18 + 'px');
 
 		var tLabel = nuThisLabel(this);
-		if (tLabel.length == 1) tLabel.css('top',highestPoint +'px');
+		if (tLabel.length == 1)
+			tLabel.css('top', highestPoint + 'px');
 
 	});
 
 }
 
-function nuAlignBottom(){
+function nuAlignBottom() {
 
 	// its 0 here because technically top: 0px is the highest...
-	var lowestPoint			= 0;
+	var lowestPoint = 0;
 
-	var selected	= nuDragSelected();
+	var selected = nuDragSelected();
 
-	selected.each(function(){
+	selected.each(function () {
 
-		if($(this).position().top + $(this).height() > lowestPoint){
+		if ($(this).position().top + $(this).height() > lowestPoint) {
 
-			lowestPoint		= $(this).position().top + $(this).height();
+			lowestPoint = $(this).position().top + $(this).height();
 
 			var cb = nuThisContentBox(this);
 			lowestPoint = cb.length == 0 ? $(this).position().top + $(this).height() : cb.position().top + cb.height();
@@ -1061,18 +1075,19 @@ function nuAlignBottom(){
 
 	});
 
-	selected.each(function(){
+	selected.each(function () {
 
 		var cb = nuThisContentBox(this);
 		if (cb.length == 0) {
-			$(this).css('top',(lowestPoint-$(this).height())+'px');
+			$(this).css('top', (lowestPoint - $(this).height()) + 'px');
 		} else {
-			$(this).css('top',(lowestPoint-cb.height()-18)+'px');
-			cb.css('top', $(this).cssNumber('top')+ 18 + 'px');
+			$(this).css('top', (lowestPoint - cb.height() - 18) + 'px');
+			cb.css('top', $(this).cssNumber('top') + 18 + 'px');
 		}
 
 		var tLabel = nuThisLabel(this);
-		if (tLabel.length == 1) tLabel.css('top',lowestPoint - $(this).height() +'px');
+		if (tLabel.length == 1)
+			tLabel.css('top', lowestPoint - $(this).height() + 'px');
 
 	});
 }
@@ -1080,61 +1095,61 @@ function nuAlignBottom(){
 function nuMoveNuDrag() {
 
 	//find tab we are moving objects to
-	var moveToTab				= $('#nuDragOptionsTabsDropdown').val().substring(5);
+	var moveToTab = $('#nuDragOptionsTabsDropdown').val().substring(5);
 
-	$('#nuDragOptionsFields :selected').each(function(i, selected){
+	$('#nuDragOptionsFields :selected').each(function (i, selected) {
 
-		var fieldToMove		= $(selected).text();
-		var initialTab			= $('#nuWindow').contents().find('#'+fieldToMove).attr('data-nu-tab');
+		var fieldToMove = $(selected).text();
+		var initialTab = $('#nuWindow').contents().find('#' + fieldToMove).attr('data-nu-tab');
 
 		//hide objects on screen so they can be redrawn on correct tab.
-		$('#nuWindow').contents().find('#'+fieldToMove).attr('data-nu-tab',moveToTab).hide();
+		$('#nuWindow').contents().find('#' + fieldToMove).attr('data-nu-tab', moveToTab).hide();
 
 		//get tab objects array
-		var tabObjects			= $("#nuWindow")[0].contentWindow.nuDragOptionsState.tabs[initialTab];
-		var foundField			= false;
+		var tabObjects = $("#nuWindow")[0].contentWindow.nuDragOptionsState.tabs[initialTab];
+		var foundField = false;
 
-		for(var i = 0; i < tabObjects.objects.length; i++) {
+		for (var i = 0; i < tabObjects.objects.length; i++) {
 
-			if(tabObjects.objects[i].id == fieldToMove) {
+			if (tabObjects.objects[i].id == fieldToMove) {
 
 				var fieldObject = $("#nuWindow")[0].contentWindow.nuDragOptionsState.tabs[initialTab].objects[i];
 
 				foundField = true;
 
 				$("#nuWindow")[0].contentWindow.nuDragOptionsState.tabs[moveToTab].objects.push(fieldObject);
-				$("#nuWindow")[0].contentWindow.nuDragOptionsState.tabs[initialTab].objects.splice(i,1);
+				$("#nuWindow")[0].contentWindow.nuDragOptionsState.tabs[initialTab].objects.splice(i, 1);
 
 				i--;
 
-			} else if(foundField) {
+			} else if (foundField) {
 				$("#nuWindow")[0].contentWindow.nuDragOptionsState.tabs[initialTab].objects[i].tab_order -= 10;
 			}
 		}
 
 		//update orders
-		var tabObjectsU			= $("#nuWindow")[0].contentWindow.nuDragOptionsState.tabs[moveToTab];
+		var tabObjectsU = $("#nuWindow")[0].contentWindow.nuDragOptionsState.tabs[moveToTab];
 
-		for(var j = 0; j < tabObjectsU.objects.length; j++) {
+		for (var j = 0; j < tabObjectsU.objects.length; j++) {
 			tabObjectsU.objects[j].tab_order = Number(j * 10) + Number(moveToTab * 100);
 		}
 
 	});
 
 	//go to new tab
-	$('#nuWindow').contents().find('#nuTab'+moveToTab).trigger( "click" );
+	$('#nuWindow').contents().find('#nuTab' + moveToTab).trigger("click");
 
 }
 
-function nuSaveNuDrag(){
+function nuSaveNuDrag() {
 
 	$("body").append('<div id="overlay" style="background-color:grey;position:absolute;top:0;left:0;height:100%;width:100%;z-index:999;"></div>');
 
-	if(!nuPutFieldDimensionsIntoState()){
+	if (!nuPutFieldDimensionsIntoState()) {
 		return;
 	}
 
-	if(parent['nuFORM'] !== undefined){
+	if (parent['nuFORM'] !== undefined) {
 		parent.nuFORM.edited = false;
 	}
 
@@ -1142,42 +1157,42 @@ function nuSaveNuDrag(){
 
 }
 
-function nuAbortSaveDrag(){
+function nuAbortSaveDrag() {
 
-	 $("#overlay").remove();
+	$("#overlay").remove();
 
 }
 
-function nuPutFieldDimensionsIntoState(){
+function nuPutFieldDimensionsIntoState() {
 
-	for(var tabNo=0; tabNo<getNuDragDialogIframes()[0].contentWindow.nuDragOptionsState.tabs.length; tabNo++){
+	for (var tabNo = 0; tabNo < getNuDragDialogIframes()[0].contentWindow.nuDragOptionsState.tabs.length; tabNo++) {
 
-		for(var fieldNo=0; fieldNo<getNuDragDialogIframes()[0].contentWindow.nuDragOptionsState.tabs[tabNo].objects.length; fieldNo++){
+		for (var fieldNo = 0; fieldNo < getNuDragDialogIframes()[0].contentWindow.nuDragOptionsState.tabs[tabNo].objects.length; fieldNo++) {
 
 			var field = getNuDragDialogIframes()[0].contentWindow.nuDragOptionsState.tabs[tabNo].objects[fieldNo];
 
-			var contents = $('#' + field.id,getNuDragDialogIframes(true));
-			var cb = $('div#frame_'+field.id,getNuDragDialogIframes(true));
+			var contents = $('#' + field.id, getNuDragDialogIframes(true));
+			var cb = $('div#frame_' + field.id, getNuDragDialogIframes(true));
 
-			if(contents.length == 1){
+			if (contents.length == 1) {
 
 				contents.show();
 
-				field.left			= contents.position().left;
-				field.top			= contents.position().top;
-				field.width			= contents.width();
+				field.left = contents.position().left;
+				field.top = contents.position().top;
+				field.width = contents.width();
 
 				if (cb.length == 0) {
-					field.height	= contents.height();
+					field.height = contents.height();
 				} else {
-					field.height	= cb.height();
+					field.height = cb.height();
 				}
 
 				contents.hide();
 
 			} else {
 
-				alert('Error putting field dimensions into state with id: '+field.id);
+				alert('Error putting field dimensions into state with id: ' + field.id);
 
 				return false;
 
@@ -1191,24 +1206,24 @@ function nuPutFieldDimensionsIntoState(){
 
 }
 
-function nuUpdateDragSelections(fieldsSelectBox){
+function nuUpdateDragSelections(fieldsSelectBox) {
 
 	nuUnselectAllDragObjects();
 	nuCheckIfMovingTabOrderAllowed(fieldsSelectBox);
 	nuCheckIfMovingFieldToOtherTabAllowed(fieldsSelectBox);
 
-	$('option:selected', fieldsSelectBox).each(function(){
-		$('#'+$(this).prop('id').replace('drag_',''),getNuDragDialogIframes(true)).addClass('nuDragSelected');
+	$('option:selected', fieldsSelectBox).each(function () {
+		$('#' + $(this).prop('id').replace('drag_', ''), getNuDragDialogIframes(true)).addClass('nuDragSelected');
 	});
 
 }
 
-function nuCheckIfMovingTabOrderAllowed(fieldsSelectBox){
+function nuCheckIfMovingTabOrderAllowed(fieldsSelectBox) {
 
 	var upDownBtn = $('#move_down_btn, #move_up_btn');
 	var upDownBtnParent = $('#move_down_btn, #move_up_btn', window.parent.document.body);
 
-	if($('option:selected', fieldsSelectBox).length == 1){
+	if ($('option:selected', fieldsSelectBox).length == 1) {
 
 		upDownBtn.removeAttr('disabled');
 		upDownBtn.removeClass('nuDragOptionsButtonDisabled');
@@ -1217,85 +1232,84 @@ function nuCheckIfMovingTabOrderAllowed(fieldsSelectBox){
 
 	} else {
 
-		upDownBtn.prop('disabled','disabled');
+		upDownBtn.prop('disabled', 'disabled');
 		upDownBtn.addClass('nuDragOptionsButtonDisabled');
-		upDownBtnParent.prop('disabled','disabled');
+		upDownBtnParent.prop('disabled', 'disabled');
 		upDownBtnParent.addClass('nuDragOptionsButtonDisabled');
 
 	}
 
 }
 
-function nuCheckIfMovingFieldToOtherTabAllowed(fieldsSelectBox){
+function nuCheckIfMovingFieldToOtherTabAllowed(fieldsSelectBox) {
 
-	var tabDropdown		= $('#nuDragOptionsTabsDropdown',window.parent.document.body);
+	var tabDropdown = $('#nuDragOptionsTabsDropdown', window.parent.document.body);
 
-	if($('option:selected', fieldsSelectBox).length >= 1){
+	if ($('option:selected', fieldsSelectBox).length >= 1) {
 		tabDropdown.removeAttr('disabled');
 	} else {
-		tabDropdown.prop('disabled','disabled');
+		tabDropdown.prop('disabled', 'disabled');
 	}
 
 }
 
+function nuUnselectAllDragObjects() {
 
-function nuUnselectAllDragObjects(){
-
-	$('.nuDragSelected').each(function(){
+	$('.nuDragSelected').each(function () {
 		$(this).removeClass('nuDragSelected');
 	});
 
-	$('.nuDragSelected',getNuDragDialogIframes(true)).each(function(){
+	$('.nuDragSelected', getNuDragDialogIframes(true)).each(function () {
 		$(this).removeClass('nuDragSelected');
 	});
 
 }
 
-function nuSelectAllDragObjects(){
+function nuSelectAllDragObjects() {
 
-	$('[data-drag]').each(function(){
-		if ($(this).is(":visible")){
+	$('[data-drag]').each(function () {
+		if ($(this).is(":visible")) {
 			nuAddDragSelected($(this));
 		}
 	});
 
-	$('[data-drag]',getNuDragDialogIframes(true)).each(function(){
-		if ($(this).is(":visible")){
+	$('[data-drag]', getNuDragDialogIframes(true)).each(function () {
+		if ($(this).is(":visible")) {
 			nuAddDragSelected($(this));
 		}
 	});
 
 }
 
-function nuClearFieldsList(){
+function nuClearFieldsList() {
 
-	$('#nuDragOptionsFields',window.parent.document.body).html('');
-	$('#nuDragOptionsTabsDropdown',window.parent.document.body).html('');
+	$('#nuDragOptionsFields', window.parent.document.body).html('');
+	$('#nuDragOptionsTabsDropdown', window.parent.document.body).html('');
 
 }
 
-function nuPopulateFieldsList(currentlySelectedTabNo){
+function nuPopulateFieldsList(currentlySelectedTabNo) {
 
-	var tabOrderSearch	= nuGetMinTabOrderInTab(currentlySelectedTabNo);
-	var field			= null;
+	var tabOrderSearch = nuGetMinTabOrderInTab(currentlySelectedTabNo);
+	var field = null;
 
-	for(var i=0; i<window.nuDragOptionsState.tabs[currentlySelectedTabNo].objects.length; i++){
+	for (var i = 0; i < window.nuDragOptionsState.tabs[currentlySelectedTabNo].objects.length; i++) {
 
-		for(var j=0; j<window.nuDragOptionsState.tabs[currentlySelectedTabNo].objects.length; j++){
+		for (var j = 0; j < window.nuDragOptionsState.tabs[currentlySelectedTabNo].objects.length; j++) {
 
-			field		= window.nuDragOptionsState.tabs[currentlySelectedTabNo].objects[j];
+			field = window.nuDragOptionsState.tabs[currentlySelectedTabNo].objects[j];
 
-			if(field.tab_order == tabOrderSearch){
-				$('#nuDragOptionsFields',window.parent.document.body).append('<option id="drag_'+field.id+'">'+field.id+'</option>');
-				
-				if ($('#' + field.id).css('visibility') !=='visible') {
-					$('#nuDragOptionsFields option[id="drag_'+field.id	+'"]',window.parent.document.body).css('color','grey');
+			if (field.tab_order == tabOrderSearch) {
+				$('#nuDragOptionsFields', window.parent.document.body).append('<option id="drag_' + field.id + '">' + field.id + '</option>');
+
+				if ($('#' + field.id).css('visibility') !== 'visible') {
+					$('#nuDragOptionsFields option[id="drag_' + field.id + '"]', window.parent.document.body).css('color', 'grey');
 				}
 			}
 
 		}
 
-		tabOrderSearch	= tabOrderSearch + 10;
+		tabOrderSearch = tabOrderSearch + 10;
 
 	}
 
@@ -1303,19 +1317,18 @@ function nuPopulateFieldsList(currentlySelectedTabNo){
 
 }
 
+function nuGetMinTabOrderInTab(currentTabNo) {
 
-function nuGetMinTabOrderInTab(currentTabNo){
+	var minTabOrder = 1000000;
 
-	var minTabOrder			= 1000000;
+	for (var i = 0; i < window.nuDragOptionsState.tabs[currentTabNo].objects.length; i++) {
 
-	for(var i=0; i<window.nuDragOptionsState.tabs[currentTabNo].objects.length; i++){
-
-		if(window.nuDragOptionsState.tabs[currentTabNo].objects[i].tab_order < minTabOrder)
-			minTabOrder		= window.nuDragOptionsState.tabs[currentTabNo].objects[i].tab_order;
+		if (window.nuDragOptionsState.tabs[currentTabNo].objects[i].tab_order < minTabOrder)
+			minTabOrder = window.nuDragOptionsState.tabs[currentTabNo].objects[i].tab_order;
 
 	}
 
-	if(minTabOrder == 1000000){
+	if (minTabOrder == 1000000) {
 		return null;
 	}
 
@@ -1324,18 +1337,18 @@ function nuGetMinTabOrderInTab(currentTabNo){
 
 function nuMoveSelected() {
 
-	var s		= document.getElementsByClassName('nuDragSelected');
-	var l		= 0;
-	var t		= 0;
-	var o		= {};
+	var s = document.getElementsByClassName('nuDragSelected');
+	var l = 0;
+	var t = 0;
+	var o = {};
 
-	for(var i = 0 ; i < s.length ; i ++){
+	for (var i = 0; i < s.length; i++) {
 
-		o		= s[i].style;
-		l		= parseInt(o.left, 10)	+ (window.moveX - window.lastMoveX);
-		t		= parseInt(o.top, 10)	+ (window.moveY - window.lastMoveY);
-		o.left	= l + 'px';
-		o.top	= t + 'px';
+		o = s[i].style;
+		l = parseInt(o.left, 10) + (window.moveX - window.lastMoveX);
+		t = parseInt(o.top, 10) + (window.moveY - window.lastMoveY);
+		o.left = l + 'px';
+		o.top = t + 'px';
 
 		// Move ContentBox too
 		var cb = $('#frame_' + $(s[i]).attr('id'));
@@ -1346,7 +1359,7 @@ function nuMoveSelected() {
 
 		var tLabel = $('#label_' + $(s[i]).attr('id'));
 		if (tLabel.length !== 0) {
-			tLabel.css('left', l-tLabel.cssNumber('width')-5);
+			tLabel.css('left', l - tLabel.cssNumber('width') - 5);
 			tLabel.css('top', t);
 		}
 
@@ -1355,24 +1368,24 @@ function nuMoveSelected() {
 
 function nuCanMove() {
 
-	var s		= document.getElementsByClassName('nuDragSelected');
-	var l		= 0;
-	var t		= 0;
-	var o		= {};
+	var s = document.getElementsByClassName('nuDragSelected');
+	var l = 0;
+	var t = 0;
+	var o = {};
 
-	for(var i = 0 ; i < s.length ; i ++){
+	for (var i = 0; i < s.length; i++) {
 
-		o		= s[i].style;
-		l		= parseInt(o.left, 10) + (window.moveX - window.lastMoveX);
-		r		= l + parseInt(o.width, 10);
-		t		= parseInt(o.top, 10) + (window.moveY - window.lastMoveY);
-		b		= t + parseInt(o.height, 10);
+		o = s[i].style;
+		l = parseInt(o.left, 10) + (window.moveX - window.lastMoveX);
+		r = l + parseInt(o.width, 10);
+		t = parseInt(o.top, 10) + (window.moveY - window.lastMoveY);
+		b = t + parseInt(o.height, 10);
 
-		if(l < 0) {
+		if (l < 0) {
 			return false;
 		}
 
-		if(t < 0) {
+		if (t < 0) {
 			return false;
 		}
 
@@ -1384,31 +1397,31 @@ function nuCanMove() {
 
 function nuGetTopArea() {
 
-	var nuActionHolder		= parseInt($('#nuActionHolder').css('height'), 10);
-	var nuTabHolder			= parseInt($('#nuTabHolder').css('height'), 10);
-	var dialogTitle			= parseInt(parent.window.$('#dialogTitle').css('height'), 10);
+	var nuActionHolder = parseInt($('#nuActionHolder').css('height'), 10);
+	var nuTabHolder = parseInt($('#nuTabHolder').css('height'), 10);
+	var dialogTitle = parseInt(parent.window.$('#dialogTitle').css('height'), 10);
 
 	var nuBreadcrumbHolder;
-	if($('#nuBreadcrumbHolder').length == 1){
-		nuBreadcrumbHolder	= parseInt($('#nuBreadcrumbHolder').css('height'), 10);
-	}else{
-		nuBreadcrumbHolder	= 0;
+	if ($('#nuBreadcrumbHolder').length == 1) {
+		nuBreadcrumbHolder = parseInt($('#nuBreadcrumbHolder').css('height'), 10);
+	} else {
+		nuBreadcrumbHolder = 0;
 	}
 
 	return nuActionHolder + nuBreadcrumbHolder + nuTabHolder + dialogTitle;
 
 }
 
-function nuPopulateTabDropdown(currentlySelectedTabNo){
+function nuPopulateTabDropdown(currentlySelectedTabNo) {
 
 	// Create a dropdown with the values of the tabs
-	$('div.nuTab[id^="nuTab"]').each(function(){
+	$('div.nuTab[id^="nuTab"]').each(function () {
 
-		var tabNumber		= $(this).attr('data-nu-tab-filter');
-		var tabName			= $(this).text();
+		var tabNumber = $(this).attr('data-nu-tab-filter');
+		var tabName = $(this).text();
 
-		if(tabNumber != currentlySelectedTabNo) {
-			$('#nuDragOptionsTabsDropdown',window.parent.document.body).append('<option value="nuTab'+tabNumber+'">'+tabName+'</option>');
+		if (tabNumber != currentlySelectedTabNo) {
+			$('#nuDragOptionsTabsDropdown', window.parent.document.body).append('<option value="nuTab' + tabNumber + '">' + tabName + '</option>');
 		}
 
 	});
@@ -1420,7 +1433,10 @@ function nuPopulateTabDropdown(currentlySelectedTabNo){
 
 function nuDragElement(element, dragHeaderOffset) {
 
-	var startX = 0, startY = 0, endX = 0, endY = 0;
+	var startX = 0,
+	startY = 0,
+	endX = 0,
+	endY = 0;
 	element.onmousedown = dragStart;
 	element.ontouchstart = dragStart;
 
@@ -1431,7 +1447,7 @@ function nuDragElement(element, dragHeaderOffset) {
 			let touch = (e.touches && e.touches[0]) || (e.pointerType && e.pointerType === 'touch' && e);
 			let clientY = (touch || e).clientY;
 
-			if  (clientY - e.currentTarget.offsetTop > dragHeaderOffset) {
+			if (clientY - e.currentTarget.offsetTop > dragHeaderOffset) {
 				return;
 			}
 
@@ -1440,16 +1456,16 @@ function nuDragElement(element, dragHeaderOffset) {
 		e.preventDefault();
 		// mouse cursor position at start
 
-		if (e.clientX) {  // mousemove
+		if (e.clientX) { // mousemove
 			startX = e.clientX;
 			startY = e.clientY;
 		} else { // touchmove - assuming a single touchpoint
 			startX = e.touches[0].clientX
-			startY = e.touches[0].clientY
+				startY = e.touches[0].clientY
 		}
 		document.onmouseup = dragStop;
 		document.ontouchend = dragStop;
-		document.onmousemove = elementDrag;  // call whenever the cursor moves
+		document.onmousemove = elementDrag; // call whenever the cursor moves
 		document.ontouchmove = elementDrag;
 	}
 
