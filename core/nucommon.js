@@ -122,13 +122,13 @@ String.prototype.nuIsEmpty = function () {
 }
 
 Date.prototype.nuWithoutTime = function () {
-	var d = new Date(this);
+	let d = new Date(this);
 	d.setHours(0, 0, 0, 0);
 	return d;
 }
 
-Date.prototype.addDays = function (days) {
-	var date = new Date(this.valueOf());
+Date.prototype.nuAddDays = function (days) {
+	let date = new Date(this.valueOf());
 	date.setDate(date.getDate() + days);
 	return date;
 }
