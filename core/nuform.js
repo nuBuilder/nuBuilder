@@ -81,7 +81,7 @@ function nuBuildForm(f) {
 	nuSetSuffix(1000);
 	nuSetBody(f);
 	
-	nuRedefine_nuSelectBrowse();
+	nuRedefineNuSelectBrowse();
 
 	nuFORM.tableSchema = f.tableSchema;
 	nuFORM.formSchema = f.formSchema;
@@ -4473,7 +4473,7 @@ function nuBrowseTable() {
 
 				$div.html(value)
 					.attr('data-nu-primary-key', browseRows[rowIndex][0])
-					.on('click', (event) => nuSelectBrowse(event, $div[0]))
+					.on('click', (event) => nuInternalSelectBrowse(event, $div[0]))
 					.on('mouseenter', nuBrowseTableHoverIn)
 					.on('mouseleave', nuBrowseTableHoverOut); 
 
@@ -5910,7 +5910,30 @@ function nuFastReportFormat(width) {
 
 }
 
-function nuRedefine_nuSelectBrowse() {
+function nuIsDoubleClick(event, element) {
+
+	const now = event.timeStamp;
+	const lastClickTime = parseInt(element.getAttribute('nu-last-clicked-time')) || 0;
+	const doubleClickThreshold = 1000;
+
+	if (now - lastClickTime > doubleClickThreshold) {
+		element.setAttribute('nu-last-clicked-time',  now.toString());
+		return false; 
+	} else {
+		return true; 
+	}
+
+}
+
+function nuInternalSelectBrowse(event, element) {
+
+	if (! nuIsDoubleClick(event, element)) {
+		return nuSelectBrowse(event, element);
+	}
+
+}
+
+function nuRedefineNuSelectBrowse() {
 
 	nuSelectBrowse = function (e, t) {
 
@@ -5922,6 +5945,7 @@ function nuRedefine_nuSelectBrowse() {
 		const ro = window.nuFORM.getProperty('redirect_other_form_id');
 
 		if (formType == 'browse' && ro == '' && parent.$('#nuDragDialog').length == 0) {
+			
 			nuSelectBrowse = function (e, t) { }
 			return;
 		}
