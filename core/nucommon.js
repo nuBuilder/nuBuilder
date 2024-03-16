@@ -1577,8 +1577,11 @@ function nuSelectedTabNumber(parent = null) {
 function nuSelectedTabId(parent = null) {
 
 	const n = nuSelectedTabNumber(parent);
-	if (n === null) return null;
-	return parent === null ? $('#nuTab' + n).attr('data-nu-tab-id') : parent.$('#nuTab' + n).attr('data-nu-tab-id');
+	if (n === null) {
+		return null;
+	}
+	const selectorBase = parent === null ? $(`#nuTab${n}`) : parent.$(`#nuTab${n}`);
+	return selectorBase.attr('data-nu-tab-id');
 
 }
 
