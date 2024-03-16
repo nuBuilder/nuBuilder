@@ -103,7 +103,7 @@ String.prototype.nuJustNumbers = function () {
 	return this.replace(/[^0-9]/g, '');
 }
 
-String.prototype.withoutNumbers = function () {
+String.prototype.nuWithoutNumbers = function () {
 	return this.replace(/\d+/g, '');
 }
 
