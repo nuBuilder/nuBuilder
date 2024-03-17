@@ -429,21 +429,20 @@ function nuDisplayError(e) {
 
 function nuFormatAjaxErrorMessage(jqXHR, exception) {
 
-    const errorMessages = {
-        0: nuTranslate('Not connected. Please verify your network connection.'),
-        403: [`<h3>${nuTranslate('Access Forbidden.')}</h3>`, jqXHR.responseText],
-        404: nuTranslate('The requested page was not found.') + ' [404]',
-        500: nuTranslate('Internal Server Error.') + ' [500]',
-        parsererror: nuTranslate('Requested JSON parse failed.'),
-        timeout: nuTranslate('Time out error.'),
-        abort: nuTranslate('Ajax request aborted.'),
-    };
+	const errorMessages = {
+		0: nuTranslate('Not connected. Please verify your network connection.'),
+		403: [`<h3>${nuTranslate('Access Forbidden.')}</h3>`, jqXHR.responseText],
+		404: nuTranslate('The requested page was not found.') + ' [404]',
+		500: nuTranslate('Internal Server Error.') + ' [500]',
+		parsererror: nuTranslate('Requested JSON parse failed.'),
+		timeout: nuTranslate('Time out error.'),
+		abort: nuTranslate('Ajax request aborted.'),
+	};
 
-    const errorMessage = errorMessages[jqXHR.status] || errorMessages[exception] ||
-        [`<h3>${nuTranslate('Uncaught Error.')}</h3>`, jqXHR.responseText]
+	const errorMessage = errorMessages[jqXHR.status] || errorMessages[exception] ||
+		[`<h3>${nuTranslate('Uncaught Error.')}</h3>`, jqXHR.responseText]
 
-
-    return errorMessage;
+		return errorMessage;
 
 }
 
@@ -1636,27 +1635,25 @@ function nuRemoveHolders(...args) {
 	nuModifyHolders('remove', ...args);
 }
 
-function nuAttachFontAwesome(i, c, s, after) {
+function nuAttachFontAwesome(id, iconClass, size = 'medium', appendToEnd = false) {
 
-	const size = nuDefine(s, 'medium');
+	const sizeMap = {
+		small: '12px',
+		medium: '16px',
+		large: '24px'
+	};
 
-	let o = '#' + i;
-	if (i instanceof jQuery) {
-		o = i;
-	}
+	const actualSize = sizeMap[size] || size;
 
-	const html = '<i style="font-size:' + size + '" class="' + 'fa-fw ' + c + '"></i>';
-	let obj = $(o);
-	if (obj.length === 0) return;
+	let target = typeof id === 'string' ? `#${id}` : id;
+	const iconHtml = `<i style="font-size:${actualSize};" class="fa-fw ${iconClass}"></i>`;
+	let targetObj = $(target);
+	if (targetObj.length === 0) return;
 
-	let h = obj.html().trim();
-	let nbsp = h.length == 0 ? '' : '&nbsp';
+	const needsSpace = targetObj.html().trim().length > 0 ? '&nbsp;' : '';
+	const content = appendToEnd ? needsSpace + iconHtml : iconHtml + needsSpace;
 
-	if (after === true) {
-		obj.append(nbsp + html);
-	} else {
-		obj.prepend(html + nbsp);
-	}
+	appendToEnd ? targetObj.append(content) : targetObj.prepend(content);
 
 }
 
