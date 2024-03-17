@@ -859,7 +859,7 @@ function nuBuildEditObjects(formObj, p, o, prop) {
 
 	for (let objIndex = 0; objIndex < formObj.objects.length; objIndex++) {
 
-		if (!isDraggable) {
+		if (isDraggable) {
 
 			$("body").css("overflow", "hidden");
 			left = left + nuDRAG(formObj, objIndex, left, p, prop);
