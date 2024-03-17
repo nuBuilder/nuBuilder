@@ -42,8 +42,6 @@ function nuInitJSOptions() {
 
 nuInitJSOptions();
 
-var promot;
-
 function nuBuildForm(formObj) {
 
 	window.nuOnSetSelect2Options = null;		// can be overwritten by nuAddJavaScript()
@@ -6621,81 +6619,88 @@ function nuAddBrowseAdditionalNavButtons() {
 
 }
 
-function nuPromptModal() {
+class nuPromptModal {
 
-	this.render = function (text, caption, defaultValue, format, fctn) {
-
-		let winW = window.innerWidth;
-		let winH = window.innerHeight;
-		let modal = document.getElementById('nupromptmodal');
-		let nuprompt = document.getElementById('nuprompt');
-		modal.style.display = "block";
-		modal.style.height = winH + "px";
-		nuprompt.style.left = (winW / 2) - (560 * 0.5) + "px";
-		nuprompt.style.top = "5px";
-		nuprompt.style.display = "block";
-		document.getElementById('nuprompthead').innerHTML = caption;
-		let body = document.getElementById('nupromptbody');
-		body.innerHTML = text;
-		body.innerHTML += '<br><input id="prompt_value1" onkeyup="promot.inputkeyup(event, \'' + fctn + '\')" style="width: 450px; margin-top: 10px; border: 1px solid #CCC; padding: 10px; border-radius: 4px;"/>';
-		document.getElementById('nupromptfoot').innerHTML = '<button class="nuActionButton" onclick="promot.ok(\'' + fctn + '\', true)">OK</button> <button class="nuActionButton" onclick="promot.cancel(\'' + fctn + '\', false)">Cancel</button>';
-
-		let value1 = document.getElementById("prompt_value1");
-		value1.value = defaultValue === undefined ? '' : defaultValue;
-		value1.focus();
-
+	constructor() {
+		this.modalElement = document.getElementById('nupromptmodal');
+		this.promptElement = document.getElementById('nuprompt');
+		this.headElement = document.getElementById('nuprompthead');
+		this.bodyElement = document.getElementById('nupromptbody');
+		this.footElement = document.getElementById('nupromptfoot');
 	}
 
-	$('#prompt_value1').trigger("focus");
+	displayModal(visible = false) {
+		const displayStyle = visible ? "block" : "none";
+		this.modalElement.style.display = this.promptElement.style.display = displayStyle;
+	}
 
-	this.inputkeyup = function (e, fctn) {
-		if (e.which == 13) {			//-- Enter
+	setPosition() {
+		const winW = window.innerWidth;
+		const winH = window.innerHeight;
+		this.modalElement.style.height = `${winH}px`;
+		this.promptElement.style.left = `${(winW / 2) - (560 / 2)}px`;
+		this.promptElement.style.top = "5px";
+	}
+
+	render(text, caption, defaultValue = '', format, fctn) {
+		this.setPosition();
+		this.displayModal(true);
+
+		this.headElement.innerHTML = caption;
+		this.bodyElement.innerHTML =
+			`${text}<br><input id="prompt_value1" style="width: 450px; margin-top: 10px; border: 1px solid #CCC; padding: 10px; border-radius: 4px;" />`;
+		this.footElement.innerHTML =
+			`<button class="nuActionButton" onclick="nuPromptWindow.ok('${fctn}', true)">OK</button> <button class="nuActionButton" onclick="nuPromptWindow.cancel('${fctn}', false)">Cancel</button>`;
+
+		const inputElement = document.getElementById("prompt_value1");
+		inputElement.value = defaultValue;
+		inputElement.onkeyup = (e) => this.handleKeyup(e, fctn);
+		inputElement.focus();
+	}
+
+	handleKeyup(e, fctn) {
+		if (e.key === "Enter") {
 			this.ok(fctn);
-		} else if (e.which == 27) {		//-- ESC
+		} else if (e.key === "Escape") {
 			this.cancel(fctn);
 		}
 	}
 
-	this.cancel = function (fctn) {
+	cancel(fctn) {
 		window[fctn](null, false);
-		document.getElementById('nupromptmodal').style.display = "none";
-		document.getElementById('nuprompt').style.display = "none";
+		this.displayModal(false);
 	}
 
-	this.ok = function (fctn) {
-		var prompt_value1 = document.getElementById('prompt_value1').value;
-		window[fctn](prompt_value1, true);
-		document.getElementById('nupromptmodal').style.display = "none";
-		document.getElementById('nuprompt').style.display = "none";
+	ok(fctn) {
+		const value = document.getElementById('prompt_value1')
+			.value;
+		window[fctn](value, true);
+		this.displayModal(false);
 	}
 
-}
-
-function nuOnPromptClose(val, ok) {
 }
 
 function nuPrompt(text, caption, defaultValue, format, fctn) {
 
-	if ($('#nupromptmodal').length == 0) {
-
-		let nuPromptDiv =
-			`<div id="nupromptmodal"></div>
-
+	if (!document.getElementById('nupromptmodal')) {
+		const nuPromptDiv =
+			`
+		<div id="nupromptmodal"></div>
 		<div id="nuprompt">
-			<div id="nuprompthead"></div>
-			<div id="nupromptbody"></div>
-			<div id="nupromptfoot"></div>
+		  <div id="nuprompthead"></div>
+		  <div id="nupromptbody"></div>
+		  <div id="nupromptfoot"></div>
 		</div>`;
-
-		$('body').append(nuPromptDiv);
-		promot = new nuPromptModal();
-
+		document.body.insertAdjacentHTML('beforeend', nuPromptDiv);
+		nuPromptWindow = new nuPromptModal();
 	}
 
 	fctn = nuDefine(fctn, 'nuOnPromptClose');
+	nuPromptWindow.render(text, caption, defaultValue, format, fctn);
 
-	promot.render(text, caption, defaultValue, format, fctn);
+}
 
+function nuOnPromptClose(val, ok) {
 }
 
 function nuAddBrowseTitleSelect(index, data, w) {
