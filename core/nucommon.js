@@ -51,7 +51,6 @@ String.prototype.nuEndsWith = function(substr, ignoreCase) {
 
 String.prototype.nuStartsWith = function(substr, ignoreCase) {
 
-
 	if (ignoreCase === undefined || ignoreCase === false) return this.startsWith(substr);
 	return this.toLowerCase().startsWith(substr.toLowerCase());
 
@@ -147,11 +146,14 @@ String.prototype.nuFormat = function () {
 // "This is an example from {name}".format({name:"Blaine"});
 // "This is an example from {0}".format("Blaine");
 
-$.fn.enterKey = function(fnc) {
+$.fn.nuEnterKey = function(fn, preventDefault = false) {
 	return this.each(function() {
-		$(this).on('keydown', function(e) { 
-			if (e.key === 'Enter' || e.keyCode === 13) {
-				fnc.call(this, e);
+		$(this).on('keydown', e => {
+			if (e.key === 'Enter') {
+				if (preventDefault) {
+					e.preventDefault();
+				}
+				fn.call(this, e);
 			}
 		});
 	});
@@ -1395,7 +1397,7 @@ function nuIsDisabled(i) {
 }
 
 function nuAddThousandSpaces(numberString, delimiter) {
-    return numberString.replace(/\B(?=(\d{3})+(?!\d))/g, delimiter);
+	return numberString.replace(/\B(?=(\d{3})+(?!\d))/g, delimiter);
 }
 
 function nuDuplicates(arr) {

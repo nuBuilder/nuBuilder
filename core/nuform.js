@@ -1154,7 +1154,7 @@ function nuINPUTLookup(id, objId, wi, obj, $fromId, p, vis) {
 
 	if (Number(obj.width) == 0) nuHide(id);
 
-	$id.enterKey(function () {
+	$id.nuEnterKey(function () {
 		if ($(this).val().length == 0) {
 			let element = $('#' + target + 'button')[0];
 			nuBuildLookup(element, "");
