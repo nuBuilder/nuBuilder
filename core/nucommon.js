@@ -2148,34 +2148,31 @@ function nuSetToolTip(i, message, labelHover) {
 
 }
 
-function nuAddDatalist(i, arr, showAllOnArrowClick) {
+function nuAddDatalist(i, arr, showAllOnArrowClick = true) {
 
 	if (!Array.isArray(arr)) {
-		console.error('Argument #2 is not an array in nuAddDatalist() for object ' + i);
+		console.error(`Argument #2 is not an array in nuAddDatalist() for object ${i}`);
 		return;
 	}
 
-	var id = i + "_datalist";
-	var datalist = document.getElementById(id);
-
+	let datalist = document.getElementById(`${i}_datalist`);
 	if (!datalist) {
 		datalist = document.createElement('datalist');
-		datalist.id = id;
+		datalist.id = `${i}_datalist`;
 		document.body.appendChild(datalist);
-		if (showAllOnArrowClick !== false) nuDatalistShowAllOnArrowClick(i);
+		if (showAllOnArrowClick) nuDatalistShowAllOnArrowClick(i);
 	} else {
 		datalist.innerHTML = '';
 	}
 
-	arr.forEach(function (data) {
-
-		var option = document.createElement('option');
+	arr.forEach(data => {
+		let option = document.createElement('option');
 		option.value = Array.isArray(data) ? data[0] : data;
-		if (data.length == 2) option.text = Array.isArray(data) ? data[1] : data;
+		if (Array.isArray(data) && data.length == 2) option.text = data[1];
 		datalist.appendChild(option);
 	});
 
-	$('#' + i).attr('list', datalist.id).attr('autocomplete', 'off');
+	$(`#${i}`).attr('list', datalist.id).attr('autocomplete', 'off');
 
 }
 
