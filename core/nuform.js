@@ -81,35 +81,30 @@ function nuBuildForm(formObj) {
 
 	nuSetProperty('refreshed', nuGetProperty('refreshed') + 1);
 
-	var b = window.nuFORM.getCurrent();
-
 	nuAddedByLookup(formObj);
 
-	b.form_id = formObj.form_id;
-	b.record_id = formObj.record_id;
-	b.session_id = formObj.session_id;
-	b.user_id = formObj.user_id;
-	b.redirect_form_id = formObj.redirect_form_id;
-	b.redirect_other_form_id = formObj.redirect_other_form_id;
-	b.title = formObj.title;
-	b.row_height = formObj.row_height;
-	b.rows = formObj.rows;
-	b.browse_columns = formObj.browse_columns;
-	b.browse_sql = formObj.browse_sql;
-	b.browse_rows = formObj.browse_rows;
-	b.browse_table_id = formObj.browse_table_id;
-	b.browse_filtered_rows = formObj.browse_filtered_rows;
-	b.browse_title_multiline = formObj.browse_title_multiline;
-	b.browse_autoresize_columns = formObj.browse_autoresize_columns;
-	b.mobile_view = formObj.mobile_view;
-	b.pages = formObj.pages;
-	b.form_code = formObj.form_code;
-	b.form_description = formObj.form_description;
-	b.form_group = formObj.form_group;
-	b.form_type = formObj.form_type;
-	b.run_code = formObj.run_code;
-	b.run_description = formObj.run_description;
-	b.data_mode = formObj.data_mode;
+	const properties = ['form_id'
+		, 'record_id', 'session_id'
+		, 'user_id'
+		, 'redirect_form_id'
+		, 'redirect_other_form_id', 'title'
+		, 'row_height', 'rows'
+		, 'browse_columns', 'browse_sql'
+		, 'browse_rows', 'browse_table_id'
+		, 'browse_filtered_rows'
+		, 'browse_title_multiline'
+		, 'browse_autoresize_columns'
+		, 'mobile_view', 'pages'
+		, 'form_code', 'form_description'
+		, 'form_group', 'form_type'
+		, 'run_code', 'run_description'
+		, 'data_mode'
+	];
+
+	var currentForm = window.nuFORM.getCurrent();
+	properties.forEach(prop => {
+		currentForm[prop] = formObj[prop];
+	});
 
 	nuAddHolder('nuBreadcrumbHolder');
 	nuAddHomeLogout();
@@ -193,9 +188,9 @@ function nuBuildForm(formObj) {
 		window.nuRESPONSIVE.getStartPositions();
 	} else {
 
-		if (b.browse_autoresize_columns !== '0' || nuDocumentID !== parent.nuDocumentID) {
+		if (currentForm.browse_autoresize_columns !== '0' || nuDocumentID !== parent.nuDocumentID) {
 
-			if (nuUXOptions.nuAutosizeBrowseColumns || b.browse_autoresize_columns === '1' || nuDocumentID !== parent.nuDocumentID) {
+			if (nuUXOptions.nuAutosizeBrowseColumns || currentForm.browse_autoresize_columns === '1' || nuDocumentID !== parent.nuDocumentID) {
 				nuResizeBrowseColumns(true);
 			}
 
@@ -275,7 +270,7 @@ function nuBuildForm(formObj) {
 	if (!nuIsMobile()) {
 		$('#nuSearchField').trigger("focus");
 	} else {
-		nuMobileView(b.mobile_view);
+		nuMobileView(currentForm.mobile_view);
 	}
 
 	nuWindowPosition();
