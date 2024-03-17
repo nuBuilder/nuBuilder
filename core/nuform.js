@@ -845,42 +845,52 @@ function nuAddActionButtonSaveClose(caption) {
 
 }
 
-function nuBuildEditObjects(f, p, o, prop) {
+function nuIsDraggable() {
+	return nuRecordId() == '-2';
+}
 
-	if (typeof (f.objects) != 'object') { return; }
+function nuBuildEditObjects(formObj, p, o, prop) {
 
-	var l = 3;
+	if (typeof (formObj.objects) != 'object') { return; }
 
-	const draggable = nuRecordId() == '-2' ? 1 : 0;
+	var left = 3;
 
-	for (let i = 0; i < f.objects.length; i++) {
+	const isDraggable = nuIsDraggable();
 
-		if (!draggable) {
+	for (let objIndex = 0; objIndex < formObj.objects.length; objIndex++) {
 
-			var obj = prop.objects[i];
+		if (!isDraggable) {
+
+			$("body").css("overflow", "hidden");
+			left = left + nuDRAG(formObj, objIndex, left, p, prop);
+
+		} else {
+
+			var obj = prop.objects[objIndex];
 			var t = obj.type;
-			f.objects[i].parent_type = o == '' ? '' : o.subform_type;
+			formObj.objects[objIndex].parent_type = o == '' ? '' : o.subform_type;
 
-			if (t == 'input' || t == 'display' || t == 'lookup' || t == 'textarea' || t == 'calc') {
-				l = l + nuINPUT(f, i, l, p, prop);
-			} else if (t == 'run') {
-				l = l + nuRUN(f, i, l, p, prop);
-			} else if (t == 'html') {
-				l = l + nuHTML(f, i, l, p, prop);
-			} else if (t == 'contentbox') {
-				l = l + nuCONTENTBOX(f, i, l, p, prop);
-			} else if (t == 'editor') {
-				l = l + nuEDITOR(f, i, l, p, prop);
-			} else if (t == 'image') {
-				l = l + nuIMAGE(f, i, l, p, prop);
-			} else if (t == 'select') {
-				l = l + nuSELECT(f, i, l, p, prop);
-			} else if (t == 'subform' && p == '') {
-				l = l + nuSUBFORM(f, i, l, p, prop);
-			} else if (t == 'word') {
-				l = l + nuWORD(f, i, l, p, prop);
+			const typeFunctionMap = {
+				'input': nuINPUT,
+				'display': nuINPUT,
+				'lookup': nuINPUT,
+				'textarea': nuINPUT,
+				'calc': nuINPUT,
+				'run': nuRUN,
+				'html': nuHTML,
+				'contentbox': nuCONTENTBOX,
+				'editor': nuEDITOR,
+				'image': nuIMAGE,
+				'select': nuSELECT,
+				'subform': nuSUBFORM,
+				'word': nuWORD
+			};
+
+			// Execute the function based on the type
+			if (typeFunctionMap[t] && (t !== 'subform' || p === '')) {
+				left += typeFunctionMap[t](formObj, objIndex, left, p, prop);
 			}
-
+  
 			if (obj.labelOnTop) {
 				$('#' + obj.id).nuLabelOnTop();
 			}
@@ -888,16 +898,12 @@ function nuBuildEditObjects(f, p, o, prop) {
 			if (obj.visible === false) {
 				nuHide(obj.id);
 			}
+
 			nuAddAttributes(p + obj.id, obj.attributes);
 
-			l = l + 2;
+			left = left + 2;
 
-		} else {
-
-			$("body").css("overflow", "hidden");
-			l = l + nuDRAG(f, i, l, p, prop);
-
-		}
+		} 
 
 	}
 
