@@ -112,7 +112,7 @@ function nuBuildForm(formObj) {
 
 	if (formType == 'edit') {
 
-		nuOptions('', formObj.form_id, 'form', formObj.global_access);
+		nuOptions(formObj.form_id, '', 'form', formObj.global_access);
 		nuBuildEditObjects(formObj, '', '', formObj);
 		nuResizeFormDialogCoordinates();
 		nuCalculateForm(false);
@@ -2108,7 +2108,7 @@ function nuGetSubformDimensions(SF) {
 
 	}
 
-	nuOptions(id, SF.sf_form_id, 'subform', w.global_access);
+	nuOptions(SF.sf_form_id, id, 'subform', w.global_access);
 
 	var scrId = id + 'scrollDiv';
 	let scrDiv = nuCreateElementWithId('div', scrId, id);
@@ -3561,7 +3561,7 @@ function nuAddEditTabs(p, w) {
 
 	if (w.browse_columns.length > 0) {
 		nuBrowseTable();
-		nuOptions(`nuBrowseTitle${p}`, w.form_id, 'browse', w.global_access);
+		nuOptions(w.form_id, `nuBrowseTitle${p}`, 'browse', w.global_access);
 	}
 
 }
@@ -3667,25 +3667,23 @@ function nuEditTab(p, t, i) {
 
 }
 
-function nuOptions(p, f, t, access) {
+function nuOptions(formId, subformId, t, access) {
 
-	var R = nuRecordId();
+	if (nuRecordId() != '-2') {
 
-	if (R != '-2') {
-
-		var id = p + 'nuOptions';
+		var id = subformId + 'nuOptions';
 		var img = document.createElement('l');
 
 		img.setAttribute('id', id);
 
 		if (t == 'subform') {
-			if (nuAllowChanges(f) && nuGlobalAccess()) {
+			if (nuAllowChanges(formId) && nuGlobalAccess()) {
 
-				$('#' + p).prepend(img);
+				$('#' + subformId).prepend(img);
 
 				$('#' + id)
 					.attr('title', nuTranslate('Options'))
-					.attr('onclick', 'nuGetOptionsList("' + f + '", this, "' + p + '", "' + access + '", "' + t + '")')
+					.attr('onclick', 'nuGetOptionsList("' + formId + '", "' + subformId + '", "' + access + '", "' + t + '")')
 					.addClass('nuIcon nuOptionsSubform fa-fw');
 
 			}
@@ -3696,7 +3694,7 @@ function nuOptions(p, f, t, access) {
 
 			$('#' + id)
 				.attr('title', 'Options')
-				.attr('onclick', 'nuGetOptionsList("' + f + '", this, "' + p + '", "' + access + '", "' + t + '")')
+				.attr('onclick', 'nuGetOptionsList("' + formId + '", "' + subformId + '", "' + access + '", "' + t + '")')
 				.addClass('nuIcon nuOptions fa-fw');
 
 		}
@@ -3713,10 +3711,7 @@ function nuHideOptionsItemShortcutKeys() {
 	$('.nuOptionsItemShortcutKey').css('visibility','hidden');
 }
 
-function nuGetOptionsList(f, t, p, a, type) {
-
-	// f: form ID
-	// a: global_access
+function nuGetOptionsList(formId, subformId, globalAccess, type) {
 
 	const id = 'nuOptionsListBox';
 	if ($('#' + id).length !== 0) {
@@ -3727,26 +3722,26 @@ function nuGetOptionsList(f, t, p, a, type) {
 	let list = [];
 
 	const buttons = nuSERVERRESPONSE.buttons;
-	const canChange = nuAllowChanges(f);
-	const admin = a == 1;
+	const canChange = nuAllowChanges(formId);
+	const admin = globalAccess == 1;
 
-	const hasHelp = nuFORMHELP[p] != '' && nuFORMHELP[p] !== undefined && type != 'subform';
+	const hasHelp = nuFORMHELP[subformId] != '' && nuFORMHELP[subformId] !== undefined && type != 'subform';
 	const formType = nuFormType()[0];
 	const typeEdit = formType == 'e';
 	const typeBrowse = formType == 'b';
 	const typeSf = type == 'subform';
 
 	const typeLaunch = nuFORM.getCurrent().form_type != 'launch';
-	const labelId = '#label_' + $('#' + p + 'scrollDiv').parent().attr('id');
+	const labelId = '#label_' + $('#' + subformId + 'scrollDiv').parent().attr('id');
 
 	const items = {
 		Divider : ['', '', '', ''],
 		AddObject : ['Add Object', 'nuPopup("nuobject","-1","")', 'fa fa-plus', 'H'],
-		ArrangeObjects : ['Arrange Objects', 'nuPopup("' + f + '", "-2")', 'fas fa-arrows-alt', 'A'],
-		FormProperties : ['Form Properties', 'nuOptionsListAction("nuform", "' + f + '")', 'fa-cog', 'F'],
+		ArrangeObjects : ['Arrange Objects', 'nuPopup("' + formId + '", "-2")', 'fas fa-arrows-alt', 'A'],
+		FormProperties : ['Form Properties', 'nuOptionsListAction("nuform", "' + formId + '")', 'fa-cog', 'F'],
 		SearchableColumns : ['Searchable Columns', 'nuGetSearchList()', 'fa-columns', 'C'],
 		SubformObject : [nuTranslate('Subform Object'), '$("' + labelId + '").trigger("dblclick");', 'fa-cog', ''],
-		FormObjectList : ['Form Object List', 'nuOptionsListAction("nuobject", "", "' + f + '")', 'fa-th-list', 'O'],
+		FormObjectList : ['Form Object List', 'nuOptionsListAction("nuobject", "", "' + formId + '")', 'fa-th-list', 'O'],
 		Search : ['Search', 'nuSearchAction();', 'fas fa-search', 'S'],
 		Add : ['Add', 'nuAddAction();', 'fas fa-plus', 'A'],
 		Print : ['Print', 'nuPrintAction();', 'fas fa-print', 'P'],
@@ -3754,7 +3749,7 @@ function nuGetOptionsList(f, t, p, a, type) {
 		Delete : ['Delete', 'nuDeleteAction();', 'far fa-trash-alt', 'Y'],
 		Clone : ['Clone', 'nuCloneAction();', 'far fa-clone', 'C'],
 		Refresh : ['Refresh', 'if (nuGlobalAccess()) {nuRunPHPHidden("NUSETREFRESHCACHE", 0);} else {nuGetBreadcrumb();}', 'fas fa-sync-alt', 'R'],
-		Help : ['Help', nuFORMHELP[p], 'fa-question-circle', '?'],
+		Help : ['Help', nuFORMHELP[subformId], 'fa-question-circle', '?'],
 		ChangePassword : ['Change Password', 'nuPopup("nupassword", "", "")', 'fa-password', 'Q'],
 		DebugResults : ['nuDebug Results', 'nuOptionsListAction("nudebug", "")', 'fa-bug', 'D'],
 		Database : ['Database', 'nuVendorLogin("PMA")', 'fa-database', 'E'],
@@ -3849,7 +3844,7 @@ function nuGetOptionsList(f, t, p, a, type) {
 		.html('<span class="nuOptionsListTitle">&nbsp;&nbsp;' + nuTranslate('Options') + '<\span>')
 		.addClass('nuOptionsList');
 
-	nuBuildOptionsList(list, p, type);
+	nuBuildOptionsList(list, subformId, type);
 
 	if (nuIsMobile()) nuHideOptionsItemShortcutKeys();
 	$('[data-nu-option-title]').css('padding', 3);
