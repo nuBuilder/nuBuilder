@@ -1657,20 +1657,20 @@ function nuAttachFontAwesome(id, iconClass, size = 'medium', appendToEnd = false
 
 }
 
-function nuAttachHTML(i, text, after) {
+function nuAttachHTML(id, html, appendToEnd = false) {
 
-	let o = '#' + i;
-	if (i instanceof jQuery) {
-		o = i;
+	const target = id instanceof jQuery ? id : $(`#${id}`);
+
+	if (target.length === 0) {
+		console.warn('Target element not found.');
+		return;
 	}
 
-	if (after === true) {
-		$(o).append('&nbsp;' + text);
-	} else {
-		$(o).prepend(text + '&nbsp;');
-	}
+	const content = appendToEnd ? `&nbsp;${html}` : `${html}&nbsp;`;
+	appendToEnd ? target.append(content) : target.prepend(content);
 
 }
+
 
 function nuAttachFile(j, c) {
 
