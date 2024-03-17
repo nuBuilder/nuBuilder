@@ -222,6 +222,9 @@ jQuery.fn.extend({
 			return nuSetValue(this.id, v, 'text');
 		});
 	},
+	nuGetHTML: function () {
+		return nuGetValue(this.attr('id'), 'html');
+	},	
 	nuTranslate: function (method) {
 		return this.each(function () {
 			nuSetValue(this.id, nuTranslate(nuGetValue(this.id, method)), method);
@@ -2497,8 +2500,12 @@ function nuGetValue(i, method) {
 
 }
 
-function nuGetText(i, method) {
-	return nuGetValue(i, 'text');
+function nuGetText(id) {
+	return nuGetValue(id, 'text');
+}
+
+function nuGetHTML(id) {
+	return nuGetValue(id, 'html');
 }
 
 function nuSetValue(i, v, method, change) {
