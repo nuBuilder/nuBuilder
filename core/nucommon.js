@@ -2267,28 +2267,13 @@ function nuInsertTextAtCaret(i, text) {
 }
 
 function nuObjectIdFromId(i) {
-
-	if (i !== null) {
-
-		var f = window.nuSERVERRESPONSE;
-		var objId;
-		for (var o = 0; o < f.objects.length; o++) {
-			if (f.objects[o].id == i) {
-				objId = f.objects[o].object_id;
-				return objId;
-			}
-		}
+	if (i !== null && window.nuSERVERRESPONSE) {
+		const obj = window.nuSERVERRESPONSE.objects.find(o => o.id == i);
+		return obj ? obj.object_id : null;
 	}
-
 	return null;
 }
 
-/*
-* Set the column size of a Browse Screen
-*
-* @param	{int}	column	- Column number (first column = 0, second column = 1 etc.)
-* @param	{int}	size		- Size in pixels
-*/
 function nuSetBrowseColumnSize(column, size) {
 
 	var cw = this;
