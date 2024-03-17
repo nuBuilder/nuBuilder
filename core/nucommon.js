@@ -268,23 +268,20 @@ jQuery.fn.extend({
 
 });
 
-function nuPad4(i) {
-	return nuPad(i, 4);
+function nuPad4(id, pad = '0') {
+	return nuPad(id, 4, pad);
 }
 
-function nuPad3(i) {
-	return nuPad(i, 3);
+function nuPad3(id, pad = '0') {
+	return nuPad(id, 3, pad);
 }
 
-function nuPad2(i) {
-	return nuPad(i, 2);
+function nuPad2(id, pad = '0') {
+	return nuPad(id, 2, pad);
 }
 
-function nuPad(i, length, pad) {
-
-	if (typeof (pad) == "undefined") { var pad = 0; }
-	return i.toString().padStart(length, pad).toString();
-
+function nuPad(id, length, pad = '0') {
+	return id.toString().padStart(length, pad);
 }
 
 function nuGlobalAccess() {
