@@ -4413,9 +4413,7 @@ function nuDragBrowseColumn(e, p) {
 				nuFORM.breadcrumbs[nuFORM.breadcrumbs.length - 1].column_widths[c] = m;
 				nuSetBrowseColumns(nuFORM.breadcrumbs[nuFORM.breadcrumbs.length - 1].column_widths)
 
-			} else {
-				console.log('Offset size exceeds limit');
-			}
+			} 
 
 		}
 
@@ -6643,7 +6641,7 @@ class nuPromptModal {
 		this.promptElement.style.top = "5px";
 	}
 
-	render(text, caption, defaultValue = '', format, fctn) {
+	render(text, caption, defaultValue, format, fctn) {
 		this.setPosition();
 		this.displayModal(true);
 
@@ -6654,7 +6652,7 @@ class nuPromptModal {
 			`<button class="nuActionButton" onclick="nuPromptWindow.ok('${fctn}', true)">OK</button> <button class="nuActionButton" onclick="nuPromptWindow.cancel('${fctn}', false)">Cancel</button>`;
 
 		const inputElement = document.getElementById("prompt_value1");
-		inputElement.value = defaultValue;
+		inputElement.value = nuDefine(defaultValue,'')
 		inputElement.onkeyup = (e) => this.handleKeyup(e, fctn);
 		inputElement.focus();
 	}
