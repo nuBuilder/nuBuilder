@@ -1671,41 +1671,45 @@ function nuAttachHTML(id, html, appendToEnd = false) {
 
 }
 
+function nuCreateAppendHTML(htmlStr) {
 
-function nuAttachFile(j, c) {
-
-	if (window.nuGraphics.indexOf(c + '.png') != -1) {						//-- check filenames in graphics dir.
-
-		$(j)
-			.css('background-image', 'url("graphics/' + c + '.png')
-			.css('background-repeat', 'no-repeat')
-			.css('padding', '0px 0px 0px 0px')
-			.css('text-align', 'left')
-
-		return;
-
+	var df = document.createDocumentFragment()
+		, temp = document.createElement('div');
+	temp.innerHTML = htmlStr;
+	while (temp.firstChild) {
+		df.appendChild(temp.firstChild);
 	}
+	return df;
 
-	if (nuImages[c] !== undefined) {
+}
 
-		var p = JSON.parse(g);
-		var b = atob(p.file);
+function nuAttachFile(id, name) {
 
-		$(j)
-			.css('background-image', 'url("' + b + '")')
-			.css('background-repeat', 'no-repeat')
-			.css('padding', '0px 0px 0px 0px')
-			.css('text-align', 'left')
+	let cssProperties = {
+		'background-repeat': 'no-repeat',
+		'padding': '0px',
+		'text-align': 'left'
+	};
 
-		return;
-
+	if (window.nuGraphics.indexOf(name + '.png') !== -1) {
+		$('#' + id).css({
+			...cssProperties,
+			'background-image': `url("graphics/${name}.png")`
+		});
+	} else if (nuImages[name] !== undefined) {
+		let p = JSON.parse(g);
+		let b = atob(p.file);
+		$('#' + id).css({
+			...cssProperties,
+			'background-image': `url("${b}")`
+		});
 	}
 
 }
 
-function nuButtonIcon(j) {
+function nuButtonIcon(id) {
 
-	$(j).css({
+	$(id).css({
 		'text-align': 'left',
 		'padding': '0px 0px 0px 35px',
 		'background-size': '30px',
@@ -2283,17 +2287,6 @@ function nuSetBrowseColumnSize(column, size) {
 	cw.nuFORM.breadcrumbs[cw.nuFORM.breadcrumbs.length - 1].column_widths[column] = size;
 	cw.nuSetBrowseColumns(cw.nuFORM.breadcrumbs[cw.nuFORM.breadcrumbs.length - 1].column_widths)
 
-}
-
-function nuCreateAppendHTML(htmlStr) {
-
-	var df = document.createDocumentFragment()
-		, temp = document.createElement('div');
-	temp.innerHTML = htmlStr;
-	while (temp.firstChild) {
-		df.appendChild(temp.firstChild);
-	}
-	return df;
 }
 
 function nuSelectMultiWithoutCtrl(i, active) {
