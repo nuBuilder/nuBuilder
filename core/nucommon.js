@@ -2441,8 +2441,13 @@ jQuery.fn.nuHighlight = function (pat) {
 };
 
 function nuInputMaxLength(id, maxLength, labelId) {
-
 	const $input = $('#' + id);
+
+	// If maxLength is not provided, return the current maxlength of the input
+	if (maxLength === undefined) {
+		return parseInt($input.attr('maxlength'), 10) || null; // Return null if maxlength is not set
+	}
+
 	$input.attr('maxlength', maxLength);
 
 	if (labelId) {
@@ -2453,7 +2458,6 @@ function nuInputMaxLength(id, maxLength, labelId) {
 			$label.html(`${textLen}/${maxLength}`);
 		});
 	}
-
 }
 
 function nuDebugMode() {
