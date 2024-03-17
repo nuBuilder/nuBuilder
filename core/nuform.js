@@ -227,12 +227,7 @@ function nuBuildForm(formObj) {
 
 	}
 
-	if (window.nuTimesSaved > 0) {
-
-		if(window.nuAfterSaveGlobal) nuAfterSaveGlobal();
-		if(window.nuAfterSave) nuAfterSave();
-
-	}
+	nuProcessAfterSave();
 
 	nuAddFormStyle(formObj.style);
 
@@ -260,6 +255,18 @@ function nuBuildForm(formObj) {
 
 	if ((nuSERVERRESPONSE.user_a11y || globalAccess) && window.nuSetAccessibility) {
 		nuSetAccessibility(formType, globalAccess);
+	}
+
+}
+
+
+function nuProcessAfterSave() {
+
+	if (window.nuTimesSaved > 0) {
+
+		if (window.nuAfterSaveGlobal) nuAfterSaveGlobal();
+		if (window.nuAfterSave) nuAfterSave();
+
 	}
 
 }
