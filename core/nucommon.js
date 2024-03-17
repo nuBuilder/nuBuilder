@@ -2129,22 +2129,14 @@ function nuSetPlaceholder(i, placeholder = null, translate = true) {
 
 function nuSetToolTip(i, message, labelHover) {
 
-	// Show tooltip on object hover
-	$("#" + i).on("mouseenter", function () {
-		$(this).attr("title", message);
-	}).on("mouseleave", function () {
-		$(this).removeAttr("title");
-	});
+	const setToolTip = selector => $(selector)
+		.hover(
+			function () { $(this).attr("title", message); },
+			function () { $(this).removeAttr("title"); }
+		);
 
-	if (labelHover === true) {
-		// Show tooltip on label hover
-		$("#label_" + i).on("mouseenter", function () {
-			$(this).attr("title", message);
-		}).on("mouseleave", function () {
-			$(this).removeAttr("title");
-		});
-
-	}
+	setToolTip("#" + i);
+	if (labelHover) setToolTip("#label_" + i);
 
 }
 
