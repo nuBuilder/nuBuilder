@@ -598,7 +598,7 @@ function nuContextMenuPositionText(id, position) {
 		id = 'content_' + id;
 	}
 
-	return nuContextMenuItemPosition(position, $('#' + id).cssNumber(position));
+	return nuContextMenuItemPosition(position, $('#' + id).nuCSSNumber(position));
 
 }
 
@@ -696,16 +696,16 @@ function nuContextMenuItemPositionChanged(t, update) {
 					$('#' + id + 'code').css(prop, t.value + 'px');
 
 					if (prop == 'left') {
-						$('#' + id + 'button').css(prop, Number(t.value) + obj.cssNumber('width') + 6 + 'px');
-						$('#' + id + 'description').css(prop, Number(t.value) + obj.cssNumber('width') + 25 + 'px');
+						$('#' + id + 'button').css(prop, Number(t.value) + obj.nuCSSNumber('width') + 6 + 'px');
+						$('#' + id + 'description').css(prop, Number(t.value) + obj.nuCSSNumber('width') + 25 + 'px');
 					} else if (prop == 'top') {
 						$('#' + id + 'button').css(prop, t.value + 'px');
 						$('#' + id + 'description').css(prop, t.value + 'px');
 					} else if (prop == 'height') {
 						$('#' + id + 'description').css(prop, t.value + 'px');
 					} else if (prop == 'width') {
-						$('#' + id + 'button').css('left', Number(t.value) + obj.cssNumber('left') + 6 + 'px');
-						$('#' + id + 'description').css('left', Number(t.value) + obj.cssNumber('left') + 25 + 'px');
+						$('#' + id + 'button').css('left', Number(t.value) + obj.nuCSSNumber('left') + 6 + 'px');
+						$('#' + id + 'description').css('left', Number(t.value) + obj.nuCSSNumber('left') + 25 + 'px');
 					}
 
 				}

@@ -2238,7 +2238,7 @@ function nuSubformShow(sf, ob, show) {
 
 function nuSubformHideHeader(id) {
 	const scrollDiv = $('#' + id + 'scrollDiv');
-	scrollDiv.css({top: 0, height: $('#' + id).cssNumber('height')});
+	scrollDiv.css({top: 0, height: $('#' + id).nuCSSNumber('height')});
 }
 
 function nuSubformLastRow(t) {
@@ -2275,7 +2275,7 @@ function nuSubformSetHeight(i, height, minHeight, maxHeight) {
 		sf.data('nu-org-z-index', sf.css('z-index'));
 
 		if (height === undefined || height === null) {
-			h = window.innerHeight - sf.cssNumber('Top') - nuDialogHeadersHeight() - 50;
+			h = window.innerHeight - sf.nuCSSNumber('Top') - nuDialogHeadersHeight() - 50;
 		} else {
 			h = height;
 		}
@@ -2307,7 +2307,7 @@ function nuSubformRearrangeColumns(sf, fields, row, maintainWidth) {
 	}
 
 	let width = 3;
-	let totalwidth = $('#' + sf).cssNumber('width');
+	let totalwidth = $('#' + sf).nuCSSNumber('width');
 
 	if (row !== '') row = nuPad3(row);
 
@@ -2323,21 +2323,21 @@ function nuSubformRearrangeColumns(sf, fields, row, maintainWidth) {
 			if (!h0.is('[nu-subform-column-hidden]')) {
 				h0.attr('nu-subform-column-hidden', '');
 				let h = obj(p);
-				totalwidth -= h.cssNumber('width');
+				totalwidth -= h.nuCSSNumber('width');
 				h.nuHide();
 			}
 		} else {
 
 			if (obj(p0).attr('data-nu-type') == 'lookup') {
 				obj(p + 'code').css('left', width);
-				width = obj('code').cssNumber('width') + width + 6;
+				width = obj('code').nuCSSNumber('width') + width + 6;
 				obj(p + 'button').css('left', width);
 				width += 19;
 				obj(p + 'description').css('left', width);
-				width = obj('description').cssNumber('width') + width + 6;
+				width = obj('description').nuCSSNumber('width') + width + 6;
 			} else {
 				obj(p).css('left', width);
-				width = obj(p0).cssNumber('width') + width + 6;
+				width = obj(p0).nuCSSNumber('width') + width + 6;
 			}
 
 		}
@@ -2684,7 +2684,7 @@ function nuSubformAddFilter(filter) {
 			}
 
 			// Get positions
-			top = rec.cssNumber('top');
+			top = rec.nuCSSNumber('top');
 			let o = { 'obj': rec.attr('id'), 'top': top };
 			rec.data('nu-top-position', top); // save top position
 
@@ -2694,7 +2694,7 @@ function nuSubformAddFilter(filter) {
 
 		let rows = arr.sort(nuSubformSortTop);
 
-		let rowHeight = $('#' + sfName + '000nuRECORD').cssNumber('height');
+		let rowHeight = $('#' + sfName + '000nuRECORD').nuCSSNumber('height');
 		let rowTop = 0;
 		let hideCount = 0;
 
@@ -6863,8 +6863,8 @@ function nuSetSaveButtonPosition(t, l, h, w, fs) {
 	sb.appendTo('div#nuRECORD');
 
 	// not defined or 0
-	if (!w) w = sb.cssNumber("width");
-	if (!h) h = sb.cssNumber("height");
+	if (!w) w = sb.nuCSSNumber("width");
+	if (!h) h = sb.nuCSSNumber("height");
 
 	sb.css({
 		"top": t + "px",
@@ -6896,12 +6896,12 @@ function nuAttachSaveButtonTo(i, dx, dy, h, w, fs) {
 
 	if (!dx || dx == 0) dx = 0;
 	if (!dy || dy == 0) dy = 0;
-	if (!w || w == 0) w = sb.cssNumber("width");
-	if (!h || h == 0) h = sb.cssNumber("height");
+	if (!w || w == 0) w = sb.nuCSSNumber("width");
+	if (!h || h == 0) h = sb.nuCSSNumber("height");
 
 	sb.css({
-		"top": dest.cssNumber("top") + dest.cssNumber("height") + 15 + dy,
-		"left": dest.cssNumber("left") + dx,
+		"top": dest.nuCSSNumber("top") + dest.nuCSSNumber("height") + 15 + dy,
+		"left": dest.nuCSSNumber("left") + dx,
 		"width": w,
 		"position": "absolute",
 		"height": h,

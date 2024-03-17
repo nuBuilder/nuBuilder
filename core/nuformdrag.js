@@ -721,10 +721,10 @@ function nuShowContentBoxFrames() {
 function nuAddContentBoxFrames() {
 
 	$('.nu_contentbox').each(function () {
-		var w = $(this).cssNumber('width');
-		var t = $(this).cssNumber('top') + 18;
-		var l = $(this).cssNumber('left');
-		var h = $(this).cssNumber('height');
+		var w = $(this).nuCSSNumber('width');
+		var t = $(this).nuCSSNumber('top') + 18;
+		var l = $(this).nuCSSNumber('left');
+		var h = $(this).nuCSSNumber('height');
 		var id = 'frame_' + $(this).attr('id');
 		var bg = $(this).css('background-color');
 		var div = '<div class="nuContentBoxFrame" id="' + id + '" style="position: absolute; border:2px double ' + bg + ';width:' + w + 'px;height:' + h + 'px;top:' + t + 'px;left:' + l + 'px"></div>';
@@ -987,7 +987,7 @@ function nuAlignRight() {
 
 		var tLabel = nuThisLabel(this);
 		if (tLabel.length == 1)
-			tLabel.css('left', rightestPoint - $(this).width() - tLabel.cssNumber('width') - 5 + 'px');
+			tLabel.css('left', rightestPoint - $(this).width() - tLabel.nuCSSNumber('width') - 5 + 'px');
 
 	});
 
@@ -1015,7 +1015,7 @@ function nuAlignLeft() {
 
 		var tLabel = nuThisLabel(this);
 		if (tLabel.length == 1)
-			tLabel.css('left', leftestPoint - tLabel.cssNumber('width') - 5 + 'px');
+			tLabel.css('left', leftestPoint - tLabel.nuCSSNumber('width') - 5 + 'px');
 
 		if (cb.length == 1) {
 			cb.css('left', leftestPoint + 'px');
@@ -1082,7 +1082,7 @@ function nuAlignBottom() {
 			$(this).css('top', (lowestPoint - $(this).height()) + 'px');
 		} else {
 			$(this).css('top', (lowestPoint - cb.height() - 18) + 'px');
-			cb.css('top', $(this).cssNumber('top') + 18 + 'px');
+			cb.css('top', $(this).nuCSSNumber('top') + 18 + 'px');
 		}
 
 		var tLabel = nuThisLabel(this);
@@ -1354,7 +1354,7 @@ function nuMoveSelected() {
 
 		var tLabel = $('#label_' + $(s[i]).attr('id'));
 		if (tLabel.length !== 0) {
-			tLabel.css('left', l - tLabel.cssNumber('width') - 5);
+			tLabel.css('left', l - tLabel.nuCSSNumber('width') - 5);
 			tLabel.css('top', t);
 		}
 

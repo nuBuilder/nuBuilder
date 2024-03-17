@@ -2178,8 +2178,8 @@ function nuLabelOnTop(include, exclude, offsetTop = -18, offsetLeft = 0) {
 		if (jQuery.inArray(include[i], exclude) == -1) {
 			$element = $('#' + include[i]);
 			$('#' + 'label_' + include[i]).css({
-				'top': $element.cssNumber('top') + offsetTop
-				, 'left': $element.cssNumber('left') + offsetLeft
+				'top': $element.nuCSSNumber('top') + offsetTop
+				, 'left': $element.nuCSSNumber('left') + offsetLeft
 				, 'text-align': 'left'
 			});
 
@@ -2196,8 +2196,8 @@ jQuery.fn.nuLabelOnTop = function (offsetTop = -18, offsetLeft = 0) {
 
 		$element = $(this);
 		$('#' + 'label_' + this.id).css({
-			'top': $element.cssNumber("top") + offsetTop
-			, 'left': $element.cssNumber("left") + offsetLeft
+			'top': $element.nuCSSNumber("top") + offsetTop
+			, 'left': $element.nuCSSNumber("left") + offsetLeft
 			, 'text-align': 'left'
 		});
 
@@ -2207,7 +2207,7 @@ jQuery.fn.nuLabelOnTop = function (offsetTop = -18, offsetLeft = 0) {
 
 };
 
-jQuery.fn.cssNumber = function (prop) {
+jQuery.fn.nuCSSNumber = function (prop) {
 
 	var v = parseInt(this.css(prop), 10);
 	return isNaN(v) ? 0 : v;
@@ -2638,8 +2638,8 @@ function nuSetLabelText(i, str, translate) {
 	let lwidth = nuGetWordWidth(str);
 
 	let obj = $('#' + i);
-	let left = obj.cssNumber('left');
-	let top = obj.cssNumber('top');
+	let left = obj.nuCSSNumber('left');
+	let top = obj.nuCSSNumber('top');
 
 	label.css({
 		'top': Number(top),
