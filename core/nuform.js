@@ -295,23 +295,21 @@ function nuSetFormProperties(formObj) {
 
 function nuEditDoCloseAfterSave(formObj) {
 
-	let doClose = false;
-
-	if (nuHasBeenSaved() >= 1 && nuGetProperty('nuEditCloseAfterSave') != '0') {
-
-		const closeAfterSave = window.nuUXOptions.nuEditCloseAfterSave;
-
-		if (closeAfterSave || nuGetProperty('nuEditCloseAfterSave') == '1') {
-			if (closeAfterSave === 'AllForms') doClose = nuCloseAfterSave();
-			if (closeAfterSave === 'UserForms' && !formObj.form_id.startsWith('nu')) doClose = nuCloseAfterSave();
-			if (closeAfterSave === 'SystemForms' && !formObj.form_id.startsWith('nu')) doClose = nuCloseAfterSave();
-		}
-
-		if (doClose) return true;
-		
+	if (nuHasBeenSaved() < 1 || nuGetProperty('nuEditCloseAfterSave') == '0') {
+		return false;
 	}
 
-	if (doClose) return false;
+	const closeAfterSave = window.nuUXOptions.nuEditCloseAfterSave;
+	const isUserForm = !formObj.form_id.startsWith('nu');
+	const shouldCloseAllForms = closeAfterSave === 'AllForms';
+	const shouldCloseUserForms = closeAfterSave === 'UserForms' && isUserForm;
+	const shouldCloseSystemForms = closeAfterSave === 'SystemForms' && !isUserForm;
+
+	if (shouldCloseAllForms || shouldCloseUserForms || shouldCloseSystemForms) {
+		return nuCloseAfterSave();
+	}
+
+	return false;
 
 }
 
