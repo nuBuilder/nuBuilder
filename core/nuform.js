@@ -83,28 +83,7 @@ function nuBuildForm(formObj) {
 
 	nuAddedByLookup(formObj);
 
-	const properties = ['form_id'
-		, 'record_id', 'session_id'
-		, 'user_id'
-		, 'redirect_form_id'
-		, 'redirect_other_form_id', 'title'
-		, 'row_height', 'rows'
-		, 'browse_columns', 'browse_sql'
-		, 'browse_rows', 'browse_table_id'
-		, 'browse_filtered_rows'
-		, 'browse_title_multiline'
-		, 'browse_autoresize_columns'
-		, 'mobile_view', 'pages'
-		, 'form_code', 'form_description'
-		, 'form_group', 'form_type'
-		, 'run_code', 'run_description'
-		, 'data_mode'
-	];
-
-	var currentForm = window.nuFORM.getCurrent();
-	properties.forEach(prop => {
-		currentForm[prop] = formObj[prop];
-	});
+	var currentForm = nuSetFormProperties(formObj);
 
 	nuAddHolder('nuBreadcrumbHolder');
 	nuAddHomeLogout();
@@ -282,6 +261,35 @@ function nuBuildForm(formObj) {
 	if ((nuSERVERRESPONSE.user_a11y || globalAccess) && window.nuSetAccessibility) {
 		nuSetAccessibility(formType, globalAccess);
 	}
+
+}
+
+function nuSetFormProperties(formObj) {
+
+	const properties = ['form_id',
+		'record_id', 'session_id',
+		'user_id',
+		'redirect_form_id',
+		'redirect_other_form_id', 'title',
+		'row_height', 'rows',
+		'browse_columns', 'browse_sql',
+		'browse_rows', 'browse_table_id',
+		'browse_filtered_rows',
+		'browse_title_multiline',
+		'browse_autoresize_columns',
+		'mobile_view', 'pages',
+		'form_code', 'form_description',
+		'form_group', 'form_type',
+		'run_code', 'run_description',
+		'data_mode'
+	];
+
+	var currentForm = window.nuFORM.getCurrent();
+	properties.forEach(prop => {
+		currentForm[prop] = formObj[prop];
+	});
+
+	return currentForm;
 
 }
 
