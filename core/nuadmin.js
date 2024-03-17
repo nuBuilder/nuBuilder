@@ -68,7 +68,6 @@ function nuDevMode(m) {
 	const d = localStorage.getItem("nuDevMode");
 	if ((d === '1' || m) && nuGlobalAccess()) {
 		nuSetProperty('nuDevMode', '1', true);
-		nuConsoleErrorsToMessage();
 		return true;
 	}
 	if (!m) {
@@ -322,7 +321,14 @@ function nuShowObjectTooltip() {
 	}
 }
 
-function nuConsoleErrorsToMessage() {
+function nuConsoleErrorsToMessage(cancel = false) {
+
+	if (cancel) {
+		window.onerror = () => true;
+		return;
+	}
+
+	if (window.onerror) return;
 
 	window.onerror = function (msg, url, lineNo, columnNo, error) {
 

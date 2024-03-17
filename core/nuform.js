@@ -32,7 +32,8 @@ function nuInitJSOptions() {
 			'nuBrowserTabTitlePrefix': 'nuBuilder',		// Prefix in the Browser Tab
 			'nuCalendarStartOfWeek': 'Sunday',			// nuCalendar: Start of Week: Sunday (default) or Monday
 			'nuSelect2Theme': 'default',				// select2 theme (default, classic) Default: default
-			'nuEditCloseAfterSave': 'None'				// Close forms after saving. Values: None, All, User, System
+			'nuEditCloseAfterSave': 'None',				// Close forms after saving. Values: None, All, User, System
+			'nuConfigShowJSErrors' : 'None'					// Show JS errors in alert message
 		};
 
 	}
@@ -46,7 +47,7 @@ var promot;
 function nuBuildForm(f) {
 
 	window.nuOnSetSelect2Options = null;		// can be overwritten by nuAddJavaScript()
-	window.nuSERVERRESPONSE = f;						
+	window.nuSERVERRESPONSE = f;	
 
 	if (f.record_id != '-2') {
 		nuAddJavaScript(f.javascript_bc);
@@ -56,10 +57,11 @@ function nuBuildForm(f) {
 	$('html,body').scrollTop(0).scrollLeft(0);
 
 	if (nuNeedToLoginAgain(f)) return;
-
+	
 	const formType = nuFormType();
 	nuSetDefaultWindowProperties(f, formType);
-
+	
+	nuInitShowJSErrors();
 
 	nuFORM.edited = false;
 	
@@ -76,7 +78,7 @@ function nuBuildForm(f) {
 		if (doClose) return;
 
 	}
-
+	
 	nuFORM.scroll = [];
 	nuSetSuffix(1000);
 	nuSetBody(f);
@@ -294,6 +296,35 @@ function nuBuildForm(f) {
 
 	if ((nuSERVERRESPONSE.user_a11y || globalAccess) && window.nuSetAccessibility) {
 		nuSetAccessibility(formType, globalAccess);
+	}
+
+}
+
+function nuInitShowJSErrors() {
+
+	if (window.nuUXOptions.nuConfigShowJSErrors) {
+
+		const nuConfigShowJSErrors = window.nuUXOptions.nuConfigShowJSErrors;
+		let enableShowJSErrors;
+
+		switch (nuConfigShowJSErrors) {
+			case "None":
+				enableShowJSErrors = false;
+				break;
+			case "Globeadmin":
+				enableShowJSErrors = nuGlobalAccess()
+				break;
+			case "All":
+				enableShowJSErrors = true;
+				break;
+			default:
+				enableShowJSErrors = false;
+		}
+
+		if (enableShowJSErrors) {
+			nuConsoleErrorsToMessage();
+		}		
+		
 	}
 
 }
