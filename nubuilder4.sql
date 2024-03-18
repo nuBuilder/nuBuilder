@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 17, 2024 at 08:48 AM
+-- Generation Time: Mar 18, 2024 at 04:03 PM
 -- Server version: 8.0.27
 -- PHP Version: 8.1.26
 
@@ -334,29 +334,29 @@ CREATE TABLE `zzzzsys_config` (
 --
 
 INSERT INTO `zzzzsys_config` (`zzzzsys_config_id`, `zzzzsys_setup_id`, `cfg_order`, `cfg_category`, `cfg_setting`, `cfg_value`, `cfg_description`, `cfg_type`, `cfg_effective`, `cfg_json`) VALUES
-('nu62a0a02104dee61', '1', 130, 'Users', '$nuConfigDBGlobeadminUsers', '', 'User Ids with \'globeadmin\' permission, separated by comma', 1, '1', NULL),
+('nu62a0a02104dee61', '1', 120, 'Users', '$nuConfigDBGlobeadminUsers', '', 'User Ids with \'globeadmin\' permission, separated by comma', 1, '1', NULL),
 ('nu62a0a02104dfbee', '1', 10, 'Settings', '$nuConfigTitle', 'nuBuilder 4.5', 'nuBuilder Title', 1, '1', NULL),
 ('nu62a0a02104e08d7', '1', 20, 'Settings', '$nuConfigTimeOut', '1440', 'Session Timeout. Default: 1440 (24h)', 3, '1', NULL),
 ('nu62a0a02104e1480', '1', 30, 'Settings', '$nuConfigIsDemo', 'false', 'Demo Mode: Restricted rights. Saving not permitted.', 2, '3', NULL),
 ('nu62a0a02104e283a', '1', 40, 'Settings', '$nuConfigDemoDBGlobeadminUsername', '', 'Demo Mode: Specify a Demo Username and Password if $nuConfigIsDemo is set to true', 1, '1', NULL),
-('nu62a0a02104e340b', '1', 70, 'Settings', '$nuConfigDemoDBGlobeadminPassword', '', 'Demo Mode: Demo User Password', 1, '1', NULL),
-('nu62a0a02104e45bc', '1', 80, 'Settings', '$nuConfigDemoSavingAllowedIds', '', 'Demo Mode: Saving allowed in the specified form Ids. Separated by comma.', 1, '1', NULL),
-('nu62a0a02104e542c', '1', 90, 'Settings', '$nuConfigUserAdditional1Label', '', 'User Form: If not blank, rename the Label of \'Additional 1\' on the user form', 1, '1', NULL),
-('nu62a0a02104e64e6', '1', 100, 'Settings', '$nuConfigUserAdditional2Label', '', 'User Form: If not blank, rename the Label of \'Additional 2\' on the user form', 1, '1', NULL),
-('nu62a0a02104e72e8', '1', 110, 'Settings', '$nuConfigUserCodeLabel', '', 'User Form: If not blank, rename the Label of \'Code\' on the user form', 1, '1', NULL),
-('nu62a0a02104e8621', '1', 120, 'Settings', '$nuConfigBackupLocation', '', 'Backup location: Default: If left blank, backups are stored in /core/libs/mysqldump/dumps. Make sure to turn off directory listing!', 1, '1', NULL),
-('nu62a0a02104e96df', '1', 140, 'Options', '$nuConfigEnableDatabaseUpdate', 'true', 'Enable updating the database within nuBuilder', 2, '1', NULL),
-('nu62a0a02104ea45f', '1', 150, 'Options', '$nuConfigKeepSessionAlive', 'true', 'Use a timer to keep the session alive', 2, '2', NULL),
-('nu62a0a02104eb409', '1', 160, 'Options', '$nuConfigKeepSessionAliveInterval', '600', 'Keep-alive interval. Default 600 s (10 min)', 1, '2', NULL),
-('nu62a0a02104ec632', '1', 170, 'Options', '$nuUseMd5PasswordHash', 'false', 'If set to true, MD5 is used to hash passwords, otherwise password_hash(), which is recommended.', 2, '1', NULL),
-('nu62a0a02104ed59e', '1', 180, '2FA', '$nuConfig2FAAdmin', 'false', 'Use 2FA authentication for administrator', 2, '1', NULL),
-('nu62a0a02104ee392', '1', 190, '2FA', '$nuConfig2FAUser', 'false', 'Use 2FA authentication for users', 2, '1', NULL),
-('nu62a0a02104ef4e4', '1', 200, '2FA', '$nuConfig2FAFormID', 'nuauthentication', '2FA form ID. Default id: nuauthentication', 1, '1', NULL),
-('nu62a0a02104f06aa', '1', 210, '2FA', '$nuConfig2FATokenValidityTime', '168', '2FA Token Validity Time. Default: 7 days (7 * 24 hours)', 3, '1', NULL),
-('nu62a0a02104f17ad', '1', 220, '2FA', '$nuConfig2FAShowRememberMe', 'false', 'Show a checkbox \'Remember me for X days\' in the authentication form', 2, '1', NULL),
-('nu62a0a02104f230f', '1', 230, 'Includes', '$nuConfigIncludeTinyMCE', 'true', 'Include TinyMCE WYSIWYG', 2, '1', NULL),
-('nu62a0a02104f3db0', '1', 240, 'Includes', '$nuConfigIncludeGoogleCharts', 'true', 'Include external link to www.gstatic.com', 2, '2', NULL),
-('nu62a0a02104f4b8c', '1', 250, 'Includes', '$nuConfigIncludeApexCharts', 'false', 'Include apex charts (libs/apexcharts)', 2, '2', NULL),
+('nu62a0a02104e340b', '1', 60, 'Settings', '$nuConfigDemoDBGlobeadminPassword', '', 'Demo Mode: Demo User Password', 1, '1', NULL),
+('nu62a0a02104e45bc', '1', 70, 'Settings', '$nuConfigDemoSavingAllowedIds', '', 'Demo Mode: Saving allowed in the specified form Ids. Separated by comma.', 1, '1', NULL),
+('nu62a0a02104e542c', '1', 80, 'Settings', '$nuConfigUserAdditional1Label', '', 'User Form: If not blank, rename the Label of \'Additional 1\' on the user form', 1, '1', NULL),
+('nu62a0a02104e64e6', '1', 90, 'Settings', '$nuConfigUserAdditional2Label', '', 'User Form: If not blank, rename the Label of \'Additional 2\' on the user form', 1, '1', NULL),
+('nu62a0a02104e72e8', '1', 100, 'Settings', '$nuConfigUserCodeLabel', '', 'User Form: If not blank, rename the Label of \'Code\' on the user form', 1, '1', NULL),
+('nu62a0a02104e8621', '1', 110, 'Settings', '$nuConfigBackupLocation', '', 'Backup location: Default: If left blank, backups are stored in /core/libs/mysqldump/dumps. Make sure to turn off directory listing!', 1, '1', NULL),
+('nu62a0a02104e96df', '1', 130, 'Options', '$nuConfigEnableDatabaseUpdate', 'true', 'Enable updating the database within nuBuilder', 2, '1', NULL),
+('nu62a0a02104ea45f', '1', 140, 'Options', '$nuConfigKeepSessionAlive', 'true', 'Use a timer to keep the session alive', 2, '2', NULL),
+('nu62a0a02104eb409', '1', 150, 'Options', '$nuConfigKeepSessionAliveInterval', '600', 'Keep-alive interval. Default 600 s (10 min)', 1, '2', NULL),
+('nu62a0a02104ec632', '1', 160, 'Options', '$nuUseMd5PasswordHash', 'false', 'If set to true, MD5 is used to hash passwords, otherwise password_hash(), which is recommended.', 2, '1', NULL),
+('nu62a0a02104ed59e', '1', 170, '2FA', '$nuConfig2FAAdmin', 'false', 'Use 2FA authentication for administrator', 2, '1', NULL),
+('nu62a0a02104ee392', '1', 180, '2FA', '$nuConfig2FAUser', 'false', 'Use 2FA authentication for users', 2, '1', NULL),
+('nu62a0a02104ef4e4', '1', 190, '2FA', '$nuConfig2FAFormID', 'nuauthentication', '2FA form ID. Default id: nuauthentication', 1, '1', NULL),
+('nu62a0a02104f06aa', '1', 200, '2FA', '$nuConfig2FATokenValidityTime', '168', '2FA Token Validity Time. Default: 7 days (7 * 24 hours)', 3, '1', NULL),
+('nu62a0a02104f17ad', '1', 210, '2FA', '$nuConfig2FAShowRememberMe', 'false', 'Show a checkbox \'Remember me for X days\' in the authentication form', 2, '1', NULL),
+('nu62a0a02104f230f', '1', 220, 'Includes', '$nuConfigIncludeTinyMCE', 'true', 'Include TinyMCE WYSIWYG', 2, '1', NULL),
+('nu62a0a02104f3db0', '1', 230, 'Includes', '$nuConfigIncludeGoogleCharts', 'true', 'Include external link to www.gstatic.com', 2, '2', NULL),
+('nu62a0a02104f4b8c', '1', 240, 'Includes', '$nuConfigIncludeApexCharts', 'false', 'Include apex charts (libs/apexcharts)', 2, '2', NULL),
 ('nu62a0a02104f8bad', '1', 260, 'nuUXOptions', 'nuEnableBrowserBackButton', 'true', 'Enable the browser\'s Back button ', 2, '1', NULL),
 ('nu62a0a02104f9b3c', '1', 270, 'nuUXOptions', 'nuPreventButtonDblClick', 'true', 'Disable a button for 1 5 s to prevent a double click', 2, '1', NULL),
 ('nu62a0a02104fab5f', '1', 280, 'nuUXOptions', 'nuShowPropertiesOnMiddleClick', 'true', 'Show the Object Properties on middle mouse click', 2, '1', NULL),
@@ -380,7 +380,7 @@ INSERT INTO `zzzzsys_config` (`zzzzsys_config_id`, `zzzzsys_setup_id`, `cfg_orde
 ('nu62bdc792e1efb3a', '1', 50, 'Settings', '$nuConfigGlobeadminHome', 'nuhomecompact', 'Home form ID for administrator. Default: nuhome', 1, '3', NULL),
 ('nu634795d35e9b070', '1', 420, 'nuUXOptions', 'nuEditCloseAfterSave', 'None', 'Close forms after saving', 1, '1', NULL),
 ('nu62a0a021050465f', '1', 410, 'nuUXOptions', 'nuAceTheme', 'monokai', 'Ace theme. Default: Monokai', 9, '0', NULL),
-('nu62a0a02104e45ba', '1', 60, 'Settings', '$nuConfigShowJSErrors', '', 'Show JavaScript errors in a popup in addition to the developer console.', 1, '1', NULL);
+('nu62a0a02104e45ba', '1', 250, 'nuUXOptions', '$nuConfigShowJSErrors', '', 'Show JavaScript errors in a popup in addition to the developer console.', 1, '1', NULL);
 
 -- --------------------------------------------------------
 
@@ -837,8 +837,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`, `inf_json`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2024.03.17.00', NULL),
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2024.03.17.11', NULL);
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2024.03.18.00', NULL),
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2024.03.18.02', NULL);
 
 -- --------------------------------------------------------
 
@@ -2609,7 +2609,7 @@ CREATE TABLE `zzzzsys_user_permission` (
 --
 DROP TABLE IF EXISTS `zzzzsys_object_list`;
 
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `zzzzsys_object_list`  AS SELECT `information_schema`.`tables`.`TABLE_NAME` AS `zzzzsys_object_list_id` FROM `information_schema`.`TABLES` WHERE (`information_schema`.`tables`.`TABLE_SCHEMA` = database())  ;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `zzzzsys_object_list`  AS SELECT `information_schema`.`tables`.`TABLE_NAME` AS `zzzzsys_object_list_id` FROM `information_schema`.`tables` WHERE (`information_schema`.`tables`.`TABLE_SCHEMA` = database())  ;
 
 -- --------------------------------------------------------
 

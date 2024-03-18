@@ -304,11 +304,11 @@ function nuEditDoCloseAfterSave(formObj) {
 		return false;
 	}
 
-	const closeAfterSave = window.nuUXOptions.nuEditCloseAfterSave;
+	const closeAfterSave = window.nuUXOptions.nuEditCloseAfterSave.toLowerCase()
 	const isUserForm = !formObj.form_id.startsWith('nu');
-	const shouldCloseAllForms = closeAfterSave === 'AllForms';
-	const shouldCloseUserForms = closeAfterSave === 'UserForms' && isUserForm;
-	const shouldCloseSystemForms = closeAfterSave === 'SystemForms' && !isUserForm;
+	const shouldCloseAllForms = closeAfterSave === 'allforms';
+	const shouldCloseUserForms = closeAfterSave === 'userforms' && isUserForm;
+	const shouldCloseSystemForms = closeAfterSave === 'systemforms' && !isUserForm;
 
 	if (shouldCloseAllForms || shouldCloseUserForms || shouldCloseSystemForms) {
 		return nuCloseAfterSave();
@@ -325,14 +325,14 @@ function nuInitShowJSErrors() {
 		const nuConfigShowJSErrors = window.nuUXOptions.nuConfigShowJSErrors;
 		let enableShowJSErrors;
 
-		switch (nuConfigShowJSErrors) {
-			case "None":
+		switch (nuConfigShowJSErrors.toLowerCase()) {
+			case "none":
 				enableShowJSErrors = false;
 				break;
-			case "Globeadmin":
+			case "globeadmin":
 				enableShowJSErrors = nuGlobalAccess()
 				break;
-			case "All":
+			case "all":
 				enableShowJSErrors = true;
 				break;
 			default:
