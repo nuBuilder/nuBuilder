@@ -2925,19 +2925,9 @@ function nuSubformRefreshDisplayObject(prefix, displayId, formId) {
 
 function nuGetClipboardText(e) {
 
-	let cb;
-	let clipText = '';
-	if (window.clipboardData && window.clipboardData.getData) {
-		cb = window.clipboardData;
-		clipText = cb.getData('Text');
-	} else if (e.clipboardData && e.clipboardData.getData) {
-		cb = e.clipboardData;
-		clipText = cb.getData('text/plain');
-	} else {
-		cb = e.originalEvent.clipboardData;
-		clipText = cb.getData('text/plain');
-	}
-	return clipText;
+    const cb = (e.clipboardData || e.originalEvent.clipboardData || window.clipboardData);
+    const dataFormat = cb && cb.getData ? (window.clipboardData ? 'Text' : 'text/plain') : '';
+    return cb && dataFormat ? cb.getData(dataFormat) : '';
 
 }
 
