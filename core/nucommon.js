@@ -2887,3 +2887,37 @@ function nuEventName(eventName = null) {
 	return ev[eventName];
 
 }
+
+function nuConsoleErrorsToMessage(cancel = false) {
+
+	if (cancel) {
+		window.onerror = () => true;
+		return;
+	}
+
+	if (window.onerror) return;
+
+	window.onerror = function (msg, url, lineNo, columnNo, error) {
+
+		const msgDevConsole = nuTranslate('Please check the browser developer console for details.');
+		
+		if (msg == "ResizeObserver loop limit exceeded")
+			return; // ignore
+
+		if (msg.toLowerCase().indexOf('script error') > -1) {
+			nuMessage('<h1>JavaScript Error</h1>'. msgDevConsole);
+		} else { 
+			const message = [
+				'<h1>JavaScript Error</h1>',
+				msg,
+				'',
+				msgDevConsole
+			];
+
+			nuMessage(message);
+		}
+
+		return false;
+	};
+
+}

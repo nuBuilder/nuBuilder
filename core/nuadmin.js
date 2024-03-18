@@ -321,39 +321,6 @@ function nuShowObjectTooltip() {
 	}
 }
 
-function nuConsoleErrorsToMessage(cancel = false) {
-
-	if (cancel) {
-		window.onerror = () => true;
-		return;
-	}
-
-	if (window.onerror) return;
-
-	window.onerror = function (msg, url, lineNo, columnNo, error) {
-
-		if (msg == "ResizeObserver loop limit exceeded")
-			return; // ignore
-
-		if (msg.toLowerCase().indexOf('script error') > -1) {
-			alert('Script Error: See Browser Console for Details');
-		} else {
-			var message = [
-				'Message: ' + msg,
-				'URL: ' + url,
-				'Line: ' + lineNo,
-				'Column: ' + columnNo,
-				'Error object: ' + JSON.stringify(error)
-			].join(' - ');
-
-			alert(message);
-		}
-
-		return false;
-	};
-
-}
-
 var contextMenuCurrentTarget = null;
 
 var menuAlign = {
