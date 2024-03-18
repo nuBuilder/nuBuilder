@@ -1859,8 +1859,12 @@ function nuUserLogin() {
 }
 
 function nuUserLanguage() {
-	const l = nuSERVERRESPONSE.language;
-	return l === null ? '' : l;
+    if (typeof nuSERVERRESPONSE !== 'undefined') {
+        const l = nuSERVERRESPONSE.language;
+        return l === null ? '' : l;
+    } else {
+        return '';
+    }
 }
 
 function nuDatabase() {
