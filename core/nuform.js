@@ -1103,6 +1103,8 @@ function nuINPUTfileFileSystem($fromId, w, i, l, p, prop, id) {
 	html =  html.replaceAll('#uppy_div#', id + '_uppy_div');
 	html =  html.replaceAll('#this_object_id#', id);
 	html =  html.replaceAll('nuInitUppy()','nuInitUppy' + '_' + id + '()');
+	html =  html.replaceAll('.cssNumber(','nuCSSNumber(');
+	
 	html =  html.replaceAll('new Uppy.Core()','new Uppy.Uppy()');
 
 	nuSetObjectBounds($('#' + id), obj.top, obj.left, obj.width, obj.height)
@@ -4942,7 +4944,7 @@ function nuLookupObject(id, set, value) {
 	const el = $('#' + id);
 
 	if (!el.length) {
-		nuReesetLookupProperties(this);
+		nuResetLookupProperties(this);
 		return;
 	}
 
@@ -4953,7 +4955,7 @@ function nuLookupObject(id, set, value) {
 		$('#' + this[set]).val(value);
 	}
 
-	function nuReesetLookupProperties(obj) {
+	function nuResetLookupProperties(obj) {
 		const props = ['id_id', 'code_id', 'description_id', 'id_value', 'code_value', 'description_value'];
 		props.forEach(prop => obj[prop] = '');
 	}
