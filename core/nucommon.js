@@ -999,9 +999,9 @@ function nuBindCtrlEvents() {
 				} else if (e.code == 'KeyY') {						//-- y		Delete
 					nuDeleteAction();
 				} else if (e.code == 'ArrowRight') {				//-- ->		Select next tab
-					nuSelectNextTab(1, true);
+					nuSelectNextTab(1);
 				} else if (e.code == 'ArrowLeft') {					//-- <-		Select previous tab
-					nuSelectNextTab(-1, true);
+					nuSelectNextTab(-1);
 				}
 
 			}
@@ -1604,12 +1604,18 @@ function nuSelectedTabTitle(parent = null) {
 
 }
 
-function nuSelectNextTab(i, byUser) {
+function nuSelectNextTab(i, includeInvisible = false, byUser = true) {
 
 	const selectedTab = $('.nuTabSelected')[0];
 	const selectedTabId = selectedTab.id.substring(5);
-	const nextTabId = parseInt(selectedTabId, 10) + i;
-	const e = document.getElementById('nuTab' + nextTabId);
+	let nextTabId = parseInt(selectedTabId, 10) + i;
+	let e = document.getElementById('nuTab' + nextTabId);
+
+	while (!includeInvisible && e && !nuIsVisible(e.id)) {
+		nextTabId += i; // increment or decrement based on i's value
+		e = document.getElementById('nuTab' + nextTabId);
+	}
+
 	if (e) {
 		nuSelectTab(e, byUser);
 	}
@@ -1859,12 +1865,12 @@ function nuUserLogin() {
 }
 
 function nuUserLanguage() {
-    if (typeof nuSERVERRESPONSE !== 'undefined') {
-        const l = nuSERVERRESPONSE.language;
-        return l === null ? '' : l;
-    } else {
-        return '';
-    }
+	if (typeof nuSERVERRESPONSE !== 'undefined') {
+		const l = nuSERVERRESPONSE.language;
+		return l === null ? '' : l;
+	} else {
+		return '';
+	}
 }
 
 function nuDatabase() {
