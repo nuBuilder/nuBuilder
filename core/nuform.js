@@ -33,7 +33,7 @@ function nuInitJSOptions() {
 			'nuCalendarStartOfWeek': 'Sunday',			// nuCalendar: Start of Week: Sunday (default) or Monday
 			'nuSelect2Theme': 'default',				// select2 theme (default, classic) Default: default
 			'nuEditCloseAfterSave': 'None',				// Close forms after saving. Values: None, All, User, System
-			'nuConfigShowJSErrors' : 'None'					// Show JS errors in alert message
+			'nuShowJSErrors' : 'None'					// Show JS errors in alert message
 		};
 
 	}
@@ -320,12 +320,12 @@ function nuEditDoCloseAfterSave(formObj) {
 
 function nuInitShowJSErrors() {
 
-	if (window.nuUXOptions.nuConfigShowJSErrors) {
+	if (window.nuUXOptions.nuShowJSErrors) {
 
-		const nuConfigShowJSErrors = window.nuUXOptions.nuConfigShowJSErrors;
+		const nuShowJSErrors = window.nuUXOptions.nuShowJSErrors;
 		let enableShowJSErrors;
 
-		switch (nuConfigShowJSErrors.toLowerCase()) {
+		switch (nuShowJSErrors.toLowerCase()) {
 			case "none":
 				enableShowJSErrors = false;
 				break;
