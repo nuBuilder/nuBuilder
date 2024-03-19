@@ -323,20 +323,15 @@ function nuInitShowJSErrors() {
 	if (window.nuUXOptions.nuShowJSErrors) {
 
 		const nuShowJSErrors = window.nuUXOptions.nuShowJSErrors;
-		let enableShowJSErrors;
+		let enableShowJSErrors = false;
 
 		switch (nuShowJSErrors.toLowerCase()) {
-			case "none":
-				enableShowJSErrors = false;
-				break;
 			case "globeadmin":
 				enableShowJSErrors = nuGlobalAccess()
 				break;
-			case "all":
+			case "everyone":
 				enableShowJSErrors = true;
 				break;
-			default:
-				enableShowJSErrors = false;
 		}
 
 		if (enableShowJSErrors) {
