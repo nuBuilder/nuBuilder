@@ -1,10 +1,85 @@
 <?php
 
-function dropObject($name, $type) {
+// Alter nu-tables: Add new columns, change data types etc.
+function nuAlterSystemTables(){
 
-	foreach ($type as $value) {
-		nuRunQuery('DROP '.$value.' IF EXISTS `'.$name.'`');
+	$alterTableSQL = [
+		"ALTER TABLE `zzzzsys_debug` ADD `deb_flag` VARCHAR(50) NULL DEFAULT NULL AFTER `deb_message`;",
+		"ALTER TABLE `zzzzsys_debug` ADD `deb_user_id` VARCHAR(25) NULL DEFAULT NULL AFTER `deb_added`;",
+		"ALTER TABLE `zzzzsys_object` CHANGE `sob_input_count` `sob_input_count` BIGINT(20) NULL DEFAULT '0';",
+		"ALTER TABLE `zzzzsys_object` CHANGE `sob_all_order` `sob_all_order` INT(11) NULL DEFAULT '0';",
+		"ALTER TABLE `zzzzsys_object` ADD `sob_select_2` VARCHAR(1) NULL DEFAULT '0' AFTER `sob_select_multiple`;",
+		"ALTER TABLE `zzzzsys_object` ADD `sob_input_datalist` TEXT NULL DEFAULT NULL AFTER `sob_input_javascript`;",
+		"ALTER TABLE `zzzzsys_object` ADD `sob_input_attribute` VARCHAR(1000) NULL DEFAULT NULL AFTER `sob_input_datalist`;",
+		"ALTER TABLE `zzzzsys_object` ADD `sob_input_icon` VARCHAR(50) NULL DEFAULT NULL AFTER `sob_input_type`;",
+		"ALTER TABLE `zzzzsys_object` ADD `sob_input_file_target` VARCHAR(1) NOT NULL DEFAULT '0' AFTER `sob_input_attribute`;",
+		"ALTER TABLE `zzzzsys_object` ADD `sob_run_target` VARCHAR(1) NULL DEFAULT NULL AFTER `sob_run_method`;",
+		"ALTER TABLE `zzzzsys_object` ADD `sob_run_type` VARCHAR(1) NULL DEFAULT NULL AFTER `sob_run_target`;",
+		"ALTER TABLE `zzzzsys_object` ADD `sob_all_event` VARCHAR(1) NULL DEFAULT NULL AFTER `sob_all_access`;",
+		"ALTER TABLE `zzzzsys_object` ADD `sob_all_style_type` VARCHAR(15) NULL DEFAULT NULL AFTER `sob_all_event`;",
+		"ALTER TABLE `zzzzsys_object` ADD `sob_all_style` VARCHAR(1000) NULL DEFAULT NULL AFTER `sob_all_style_type`;",
+		"ALTER TABLE `zzzzsys_object` ADD `sob_all_json` MEDIUMTEXT NULL DEFAULT NULL AFTER `sob_image_zzzzsys_file_id`;",
+		"ALTER TABLE `zzzzsys_object` ADD `sob_all_access_condition` VARCHAR(1000) NULL DEFAULT NULL AFTER `sob_all_access`;",
+		"ALTER TABLE `zzzzsys_form` ADD `sfo_browse_title_multiline` VARCHAR(1) NULL DEFAULT '0' AFTER `sfo_browse_rows_per_page`;",
+		"ALTER TABLE `zzzzsys_form` ADD `sfo_browse_autoresize_columns` VARCHAR(1) NULL DEFAULT NULL AFTER `sfo_browse_title_multiline`;",
+		"ALTER TABLE `zzzzsys_form` ADD `sfo_breadcrumb_title` VARCHAR(100) NULL DEFAULT NULL AFTER `sfo_description`;",
+		"ALTER TABLE `zzzzsys_form` ADD `sfo_browse_javascript` MEDIUMTEXT NULL DEFAULT NULL AFTER `sfo_javascript`;",
+		"ALTER TABLE `zzzzsys_form` ADD `sfo_edit_javascript` MEDIUMTEXT NULL DEFAULT NULL AFTER `sfo_browse_javascript`;",
+		"ALTER TABLE `zzzzsys_form` ADD `sfo_style` MEDIUMTEXT NULL DEFAULT NULL AFTER `sfo_edit_javascript`;",
+		"ALTER TABLE `zzzzsys_form` ADD `sfo_mobile_view` VARCHAR(1) NULL DEFAULT NULL AFTER `sfo_style`;",
+		"ALTER TABLE `zzzzsys_form` ADD `sfo_group` VARCHAR(100) NULL DEFAULT NULL AFTER `sfo_description`;",
+		"ALTER TABLE `zzzzsys_session` ADD `sss_hashcookies` MEDIUMTEXT NULL DEFAULT NULL AFTER `sss_access`;",
+		"ALTER TABLE `zzzzsys_session` ADD COLUMN sss_login_time timestamp NULL DEFAULT current_timestamp() AFTER sss_time;",
+		"ALTER TABLE `zzzzsys_tab` ADD `syt_access` VARCHAR(1) NULL DEFAULT NULL AFTER `syt_help`;",
+		"ALTER TABLE `zzzzsys_user` ADD `sus_code` varchar(50) DEFAULT NULL AFTER `sus_name`;",
+		"ALTER TABLE `zzzzsys_user` ADD `sus_position` varchar(50) DEFAULT NULL AFTER `sus_code`;",
+		"ALTER TABLE `zzzzsys_user` ADD `sus_department` varchar(50) DEFAULT NULL AFTER `sus_position`;",
+		"ALTER TABLE `zzzzsys_user` ADD `sus_team` varchar(50) DEFAULT NULL AFTER `sus_department`;",
+		"ALTER TABLE `zzzzsys_user` ADD `sus_additional1` varchar(100) DEFAULT NULL AFTER `sus_email`;",
+		"ALTER TABLE `zzzzsys_user` ADD `sus_additional2` varchar(100) DEFAULT NULL AFTER `sus_additional1`;",
+		"ALTER TABLE `zzzzsys_user` ADD `sus_expires_on` datetime DEFAULT NULL AFTER `sus_login_password`;",
+		"ALTER TABLE `zzzzsys_user` ADD `sus_json` MEDIUMTEXT NULL DEFAULT NULL AFTER `sus_expires_on`;",
+		"ALTER TABLE `zzzzsys_user` ADD `sus_accessibility_features` VARCHAR(1) NULL DEFAULT NULL AFTER `sus_expires_on`;",
+		"ALTER TABLE `zzzzsys_user` ADD `sus_change_password` VARCHAR(1) NULL DEFAULT NULL AFTER `sus_expires_on`;",
+		"ALTER TABLE `zzzzsys_user` ADD `sus_permission` VARCHAR(1000) NULL DEFAULT NULL AFTER `sus_additional2`;",
+		"ALTER TABLE `zzzzsys_access` ADD `sal_use_2fa` VARCHAR(1) NULL DEFAULT NULL AFTER `sal_zzzzsys_form_id`;",
+		"ALTER TABLE `zzzzsys_access` ADD `sal_group` VARCHAR(100) NULL DEFAULT NULL AFTER `sal_description`;",
+		"ALTER TABLE `zzzzsys_access_form` ADD `slf_data_mode` varchar(2) DEFAULT NULL AFTER `slf_print_button`;",
+		"ALTER TABLE `zzzzsys_access_form` ADD `slf_form_type` varchar(2) DEFAULT NULL AFTER `slf_data_mode`;",
+		"ALTER TABLE `zzzzsys_php` ADD `sph_global` VARCHAR(1) NOT NULL DEFAULT '0' AFTER `sph_system`;",
+		"ALTER TABLE `zzzzsys_php` ADD `sph_template` VARCHAR(1) NOT NULL DEFAULT '0' AFTER `sph_global`;",
+		"ALTER TABLE `zzzzsys_setup` ADD `set_smtp_use_ssl` VARCHAR(1) NOT NULL DEFAULT '1' AFTER `set_smtp_use_authentication`;",
+		"ALTER TABLE `zzzzsys_report` CHANGE `sre_zzzzsys_php_id` `sre_zzzzsys_php_id` VARCHAR(200) NULL DEFAULT NULL;",
+		"ALTER TABLE `zzzzsys_select` ADD `sse_code` VARCHAR(50) NULL DEFAULT NULL AFTER `zzzzsys_select_id`;",
+		"ALTER TABLE `zzzzsys_code_snippet` CHANGE `cot_updated_on` `cot_updated_on` TIMESTAMP on update CURRENT_TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP;",
+		"ALTER TABLE `zzzzsys_code_snippet` ADD `cot_group` VARCHAR(80) NULL DEFAULT NULL AFTER `cot_description`;",
+		"ALTER TABLE `zzzzsys_cloner` ADD `clo_tables_include` MEDIUMTEXT NULL DEFAULT NULL AFTER `clo_iframe_forms`;",
+		"ALTER TABLE `zzzzsys_cloner` ADD `clo_tables_exclude` MEDIUMTEXT NULL DEFAULT NULL AFTER `clo_tables_include`;",
+		"ALTER TABLE `zzzzsys_email_template` ADD `emt_template` VARCHAR(1) NULL DEFAULT '0' AFTER `emt_group`;",		
+		"ALTER TABLE `pdf_temp` ADD `pdf_code` VARCHAR(100) NULL DEFAULT NULL AFTER `pdf_added_by`;",
+		"ALTER TABLE `pdf_temp` ADD `pdf_tag` VARCHAR(100) NULL DEFAULT NULL AFTER `pdf_code`;"
+	];
+
+	foreach ($alterTableSQL as $sqlStatement) {
+		nuRunQuery($sqlStatement);
 	}
+
+	$setupColumns = db_field_names('zzzzsys_setup');
+	if(array_search('set_languages_included', $setupColumns) == false){
+		nuRunQuery("ALTER TABLE `zzzzsys_setup` ADD `set_languages_included` VARCHAR(1000) NULL DEFAULT NULL AFTER `set_language`;");
+
+		$languagesJson = nuGetSupportedLanguagesAsJson();
+		nuRunQuery('UPDATE `zzzzsys_setup` SET set_languages_included = ?', [$languagesJson]);
+	}
+
+	if(array_search('set_style', $setupColumns) == false){
+		nuRunQuery("ALTER TABLE `zzzzsys_setup` ADD `set_style` LONGTEXT NULL DEFAULT NULL AFTER `set_header`;");
+		$style = "/* Define your own styles, override styles from nubuilder4.css */\r\n\r\n/*\r\n .nuActionButton {\r\n background-color: #579cb7\r\n}\r\n\r\n*/";
+		
+		nuRunQuery('UPDATE `zzzzsys_setup` SET set_style = ?', [$style]);
+	}
+	
+	nuCreateJSONColumns();
 
 }
 
@@ -14,9 +89,9 @@ function dropObject($name, $type) {
 
 function nuCopySystemTables() {
 
-	dropObject('zzzzsys_report_data', ['VIEW', 'TABLE']);
-	dropObject('zzzzsys_run_list', ['VIEW', 'TABLE']);
-	dropObject('zzzzsys_object_list', ['VIEW', 'TABLE']);
+	nuDropDatabaseObject ('zzzzsys_report_data', ['VIEW', 'TABLE']);
+	nuDropDatabaseObject ('zzzzsys_run_list', ['VIEW', 'TABLE']);
+	nuDropDatabaseObject ('zzzzsys_object_list', ['VIEW', 'TABLE']);
 
 	$t	= nuSystemList();
 
@@ -24,19 +99,20 @@ function nuCopySystemTables() {
 	for($i = 0 ; $i < $count ; $i++){
 
 		$table = $t[$i];
-		dropObject("sys_".$table, ['TABLE']);
+		nuDropDatabaseObject ("sys_".$table, ['TABLE']);
 
 		$sql = "CREATE TABLE sys_$table SELECT * FROM $table";
 		nuRunQueryNoDebug($sql);
 
 		if($table != 'zzzzsys_debug'){
-			dropObject($table, ['TABLE']);
+			nuDropDatabaseObject ($table, ['TABLE']);
 		}
 	}
+
 }
 
 // Import nubuilder4.sql
-function nuImportSystemFiles() {
+function nuSetupImportSQLFile() {
 
 	try{
 
@@ -45,7 +121,7 @@ function nuImportSystemFiles() {
 		$temp						= "";
 		if ( $handle ) {
 
-			dropObject('zzzzsys_debug', ['TABLE']);
+			nuDropDatabaseObject ('zzzzsys_debug', ['TABLE']);
 
 			while(($line = fgets($handle)) !== false){
 
@@ -60,7 +136,7 @@ function nuImportSystemFiles() {
 						$objList2 = 'TABLE_NAME AS zzzzsys_object_list_id from information_schema.tables WHERE TABLE_SCHEMA';
 						$temp	= str_replace($objList1, $objList2, $temp);
 
-						nuRunQuery($temp);
+						nuRunQueryNoDebug($temp);
 						$temp	= "";
 					}
 				}
@@ -74,6 +150,13 @@ function nuImportSystemFiles() {
 	}catch (Exception $e) {
 		nuInstallException($e);
 	}
+}
+
+function nuSQLImportFileExists($file){
+
+	$filePath = __DIR__ . "/../$file";
+	return file_exists($filePath) && is_readable($filePath) ? true : $filePath;
+
 }
 
 function nuInstallException($e){
@@ -202,94 +285,6 @@ function nuCreateJSONColumns() {
 
 }
 
-function nuAlterSystemTables(){
-
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_debug` ADD `deb_flag` VARCHAR(50) NULL DEFAULT NULL AFTER `deb_message`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_debug` ADD `deb_user_id` VARCHAR(25) NULL DEFAULT NULL AFTER `deb_added`;");
-
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` CHANGE `sob_input_count` `sob_input_count` BIGINT(20) NULL DEFAULT '0';");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` CHANGE `sob_all_order` `sob_all_order` INT(11) NULL DEFAULT '0';");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_select_2` VARCHAR(1) NULL DEFAULT '0' AFTER `sob_select_multiple`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_input_datalist` TEXT NULL DEFAULT NULL AFTER `sob_input_javascript`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_input_attribute` VARCHAR(1000) NULL DEFAULT NULL AFTER `sob_input_datalist`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_input_icon` VARCHAR(50) NULL DEFAULT NULL AFTER `sob_input_type`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_input_file_target` VARCHAR(1) NOT NULL DEFAULT '0' AFTER `sob_input_attribute`;");
-
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_run_target` VARCHAR(1) NULL DEFAULT NULL AFTER `sob_run_method`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_run_type` VARCHAR(1) NULL DEFAULT NULL AFTER `sob_run_target`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_all_event` VARCHAR(1) NULL DEFAULT NULL AFTER `sob_all_access`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_all_style_type` VARCHAR(15) NULL DEFAULT NULL AFTER `sob_all_event`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_all_style` VARCHAR(1000) NULL DEFAULT NULL AFTER `sob_all_style_type`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_all_json` MEDIUMTEXT NULL DEFAULT NULL AFTER `sob_image_zzzzsys_file_id`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_object` ADD `sob_all_access_condition` VARCHAR(1000) NULL DEFAULT NULL AFTER `sob_all_access`;");
-
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_form` ADD `sfo_browse_title_multiline` VARCHAR(1) NULL DEFAULT '0' AFTER `sfo_browse_rows_per_page`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_form` ADD `sfo_browse_autoresize_columns` VARCHAR(1) NULL DEFAULT NULL AFTER `sfo_browse_title_multiline`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_form` ADD `sfo_breadcrumb_title` VARCHAR(100) NULL DEFAULT NULL AFTER `sfo_description`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_form` ADD `sfo_browse_javascript` MEDIUMTEXT NULL DEFAULT NULL AFTER `sfo_javascript`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_form` ADD `sfo_edit_javascript` MEDIUMTEXT NULL DEFAULT NULL AFTER `sfo_browse_javascript`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_form` ADD `sfo_style` MEDIUMTEXT NULL DEFAULT NULL AFTER `sfo_edit_javascript`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_form` ADD `sfo_mobile_view` VARCHAR(1) NULL DEFAULT NULL AFTER `sfo_style`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_form` ADD `sfo_group` VARCHAR(100) NULL DEFAULT NULL AFTER `sfo_description`;");
-
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_session` ADD `sss_hashcookies` MEDIUMTEXT NULL DEFAULT NULL AFTER `sss_access`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_session` ADD COLUMN sss_login_time timestamp NULL DEFAULT current_timestamp(); AFTER sss_time;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_tab` ADD `syt_access` VARCHAR(1) NULL DEFAULT NULL AFTER `syt_help`;");
-
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_code` varchar(50) DEFAULT NULL AFTER `sus_name`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_position` varchar(50) DEFAULT NULL AFTER `sus_code`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_department` varchar(50) DEFAULT NULL AFTER `sus_position`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_team` varchar(50) DEFAULT NULL AFTER `sus_department`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_additional1` varchar(100) DEFAULT NULL AFTER `sus_email`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_additional2` varchar(100) DEFAULT NULL AFTER `sus_additional1`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_expires_on` datetime DEFAULT NULL AFTER `sus_login_password`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_json` MEDIUMTEXT NULL DEFAULT NULL AFTER `sus_expires_on`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_accessibility_features` VARCHAR(1) NULL DEFAULT NULL AFTER `sus_expires_on`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_change_password` VARCHAR(1) NULL DEFAULT NULL AFTER `sus_expires_on`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_user` ADD `sus_permission` VARCHAR(1000) NULL DEFAULT NULL AFTER `sus_additional2`;");
-
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_access` ADD `sal_use_2fa` VARCHAR(1) NULL DEFAULT NULL AFTER `sal_zzzzsys_form_id`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_access` ADD `sal_group` VARCHAR(100) NULL DEFAULT NULL AFTER `sal_description`;");
-
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_access_form` ADD `slf_data_mode` varchar(2) DEFAULT NULL AFTER `slf_print_button`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_access_form` ADD `slf_form_type` varchar(2) DEFAULT NULL AFTER `slf_data_mode`;");
-
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_php` ADD `sph_global` VARCHAR(1) NOT NULL DEFAULT '0' AFTER `sph_system`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_php` ADD `sph_template` VARCHAR(1) NOT NULL DEFAULT '0' AFTER `sph_global`;");
-
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_setup` ADD `set_smtp_use_ssl` VARCHAR(1) NOT NULL DEFAULT '1' AFTER `set_smtp_use_authentication`;");
-
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_report` CHANGE `sre_zzzzsys_php_id` `sre_zzzzsys_php_id` VARCHAR(200) NULL DEFAULT NULL;");
-
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_select` ADD `sse_code` VARCHAR(50) NULL DEFAULT NULL AFTER `zzzzsys_select_id`;");
-
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_code_snippet` CHANGE `cot_updated_on` `cot_updated_on` TIMESTAMP on update CURRENT_TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_code_snippet` ADD `cot_group` VARCHAR(80) NULL DEFAULT NULL AFTER `cot_description`;");
-
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_cloner` ADD `clo_tables_include` MEDIUMTEXT NULL DEFAULT NULL AFTER `clo_iframe_forms`;");
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_cloner` ADD `clo_tables_exclude` MEDIUMTEXT NULL DEFAULT NULL AFTER `clo_tables_include`;");
-
-	nuRunQueryNoDebug("ALTER TABLE `zzzzsys_email_template` ADD `emt_template` VARCHAR(1) NULL DEFAULT '0' AFTER `emt_group`;");
-
-	$setupColumns = db_field_names('zzzzsys_setup');
-	if(array_search('set_languages_included', $setupColumns) == false){
-		nuRunQueryNoDebug("ALTER TABLE `zzzzsys_setup` ADD `set_languages_included` VARCHAR(1000) NULL DEFAULT NULL AFTER `set_language`;");
-		nuRunQuery('UPDATE `zzzzsys_setup` SET set_languages_included = ?', ['["Afrikaans","Arabic","Armenian","Catalan","Chinese","Czech","Danish","Dutch", "French","German","Greek","Hindi","Italian","Japanese","Malay","Polish","Portuguese","Romanian","Russian","Slovak","Spanish","Tamil","Vietnamese"]']);
-	}
-
-	if(array_search('set_style', $setupColumns) == false){
-		nuRunQueryNoDebug("ALTER TABLE `zzzzsys_setup` ADD `set_style` LONGTEXT NULL DEFAULT NULL AFTER `set_header`;");
-		$style = "/* Define your own styles, override styles from nubuilder4.css */\r\n\r\n/*\r\n .nuActionButton {\r\n background-color: #579cb7\r\n}\r\n\r\n*/";
-		nuRunQuery('UPDATE `zzzzsys_setup` SET set_style = ?', [$style]);
-	}
-
-	nuRunQueryNoDebug("ALTER TABLE `pdf_temp` ADD `pdf_code` VARCHAR(100) NULL DEFAULT NULL AFTER `pdf_added_by`;");
-	nuRunQueryNoDebug("ALTER TABLE `pdf_temp` ADD `pdf_tag` VARCHAR(100) NULL DEFAULT NULL AFTER `pdf_code`;");
-	
-	nuCreateJSONColumns();
-
-}
-
 function nuJustNuRecords(){
 
 	$s = "DELETE FROM zzzzsys_event WHERE zzzzsys_event_id NOT LIKE 'nu%'";
@@ -367,12 +362,12 @@ function nuAppendToSystemTables(){
 			}
 			nuRunQuery("REPLACE INTO $table SELECT * FROM sys_$table");
 
-			dropObject("sys_".$table, ['TABLE']);
+			nuDropDatabaseObject ("sys_".$table, ['TABLE']);
 		}
 
-		dropObject('sys_zzzzsys_report_data', ['VIEW']);
-		dropObject('sys_zzzzsys_run_list', ['VIEW']);
-		dropObject('sys_zzzzsys_object_list', ['VIEW']);
+		nuDropDatabaseObject ('sys_zzzzsys_report_data', ['VIEW']);
+		nuDropDatabaseObject ('sys_zzzzsys_run_list', ['VIEW']);
+		nuDropDatabaseObject ('sys_zzzzsys_object_list', ['VIEW']);
 
 		// $s		= "UPDATE zzzzsys_setup SET set_denied = '1'";
 		// nuRunQuery($s);
@@ -455,6 +450,20 @@ function nuSetCollation(){
 
 }
 
+function nuGetSupportedLanguagesAsJson() {
+
+    $languages = [
+        "Afrikaans", "Arabic", "Armenian", "Catalan", "Chinese", 
+        "Czech", "Danish", "Dutch", "French", "German", "Greek", 
+        "Hindi", "Italian", "Japanese", "Malay", "Polish", 
+        "Portuguese", "Romanian", "Russian", "Slovak", "Spanish", 
+        "Tamil", "Vietnamese"
+    ];
+
+    return json_encode($languages);
+
+}
+
 function nuGetIncludedLanguages(){
 
 	$s		= "SELECT `set_languages_included` FROM `zzzzsys_setup`";
@@ -497,6 +506,13 @@ function nuImportLanguageFiles() {
 
 }
 
+function nuDropDatabaseObject($name, $types) {
+
+	foreach ($types as $type) {		
+		nuRunQuery("DROP $type IF EXISTS `$name`");
+	}
+
+}
 
 function nuCreateViewsOrTables() {
 	

@@ -51,25 +51,34 @@ function nuUpdateAllowed($jsonId, $u = null, $p = null) {
 
 
 function nuRunUpdate($jsonId, $u = null, $p = null) {
-
+	
+	$nuSQLFile = 'nubuilder4.sql';
+	
 	if (! nuUpdateAllowed($jsonId, $u, $p)) {
 		return;
 	}
 
-	$i = 1;
-
 	nuPrintUpdateMessage('nuBuilder Update');
 
+	// Check if import sql file exists
+	$importFileExists = nuSQLImportFileExists($nuSQLFile);
+	if ($importFileExists !== true) {
+		echo "File does not exist. Updated aborted: $importFileExists";		
+		return;
+	} 
+
+	$i = 1;
+
 	// Save configuration settings values
-	$config = nuRunQueryNoDebug("SELECT zzzzsys_config_id, cfg_value FROM zzzzsys_config WHERE zzzzsys_config_id like 'nu%'");
-	if (db_num_rows($config) > 0) {
+	$sysConfig = nuRunQueryNoDebug("SELECT zzzzsys_config_id, cfg_value FROM zzzzsys_config WHERE zzzzsys_config_id like 'nu%'");
+	if (db_num_rows($sysConfig) > 0) {
 		nuPrintUpdateMessage('Saved CONFIGURATION SETTINGS', $i);
 		$i++;
 	} else {
-		unset($config);
+		unset($sysConfig);
 	}
 
-	// Alter system tables (add new columns, change data types)
+	// Alter nu-tables: Add new columns, change data types etc.
 	nuAlterSystemTables();
 	nuPrintUpdateMessage('Altered System Tables', $i);
 	$i++;
@@ -80,8 +89,8 @@ function nuRunUpdate($jsonId, $u = null, $p = null) {
 	$i++;
 
 	// Import nubuilder4.sql
-	nuImportSystemFiles();
-	nuPrintUpdateMessage('Imported nubuilder4.sql into the DATABASE', $i);
+	nuSetupImportSQLFile();
+	nuPrintUpdateMessage("Imported $nuSQLFile into the DATABASE", $i);
 	$i++;
 
 	nuAddNewSystemTables();
@@ -111,13 +120,11 @@ function nuRunUpdate($jsonId, $u = null, $p = null) {
 
 
 	// Restore config values
-	if (isset($config)) {
+	if (isset($sysConfig)) {
 
-		while($r = db_fetch_object($config)){
-
+		while($r = db_fetch_object($sysConfig)){
 			$update = "UPDATE zzzzsys_config SET cfg_value = ? WHERE zzzzsys_config_id = ?";
 			nuRunQuery($update, [$r->cfg_value, $r->zzzzsys_config_id]);
-
 		}
 
 		nuPrintUpdateMessage('Restored CONFIGURATION SETTINGS', $i);
