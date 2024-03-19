@@ -2138,13 +2138,17 @@ function nuSetPlaceholder(i, placeholder = null, translate = true) {
 }
 
 function nuSetToolTip(i, message, labelHover) {
-
-	const setToolTip = selector => $(selector)
-		.hover(
-			function () { $(this).attr("title", message); },
-			function () { $(this).removeAttr("title"); }
-		);
-
+	
+	const setToolTip = selector => {
+		$(selector)
+			.on("mouseenter", function() {
+				$(this).attr("title", message);
+			})
+			.on("mouseleave", function() {
+				$(this).removeAttr("title");
+			});
+	};
+	
 	setToolTip("#" + i);
 	if (labelHover) setToolTip("#label_" + i);
 
