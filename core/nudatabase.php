@@ -400,7 +400,7 @@ function db_primary_key($tableName) {
 	while ($row = db_fetch_row($stmt)) {
 
 		if ($row[3] == 'PRI') {
-			$primaryKeys[] = $r[0];
+			$primaryKeys[] = $row[0];
 		}
 
 	}
