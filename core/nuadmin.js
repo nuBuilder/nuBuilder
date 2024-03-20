@@ -1007,7 +1007,7 @@ Benjamin Drucker
 var nuPrettyPrint = (function () {
 
 	/* These "util" functions are not part of the core
-	functionality but are  all necessary - mostly DOM helpers */
+	functionality but are all necessary - mostly DOM helpers */
 
 	var util = {
 
@@ -1021,7 +1021,7 @@ var nuPrettyPrint = (function () {
 			attrs = util.merge({}, attrs);
 
 			/* Add attributes to el */
-			if (attrs && attrs.style) {
+			if (attrs?.style) {
 				util.applyCSS(el, attrs.style);
 				delete attrs.style;
 			}
@@ -1494,7 +1494,7 @@ var nuPrettyPrint = (function () {
 					return util.common.depthReached(obj, settings);
 				}
 
-				var table = util.table([(obj.constructor && obj.constructor.name) || 'Object', null], 'object'),
+				var table = util.table([(obj.constructor?.name) || 'Object', null], 'object'),
 				isEmpty = true;
 
 				var keys = [];
@@ -1520,7 +1520,7 @@ var nuPrettyPrint = (function () {
 						table.addRow([i, typeDealer[type](item, depth + 1, i)], type);
 					} catch (e) {
 						/* Security errors are thrown on certain Window/DOM properties */
-						if (window.console && window.console.log) {
+						if (window.console?.log) {
 							console.log(e.message);
 
 						}
@@ -1567,7 +1567,7 @@ var nuPrettyPrint = (function () {
 
 				/* Accepts a table and modifies it */
 				var me = jquery ? 'jQuery' : 'Array',
-				table = util.table([((arr.constructor && arr.constructor.name) || me) + '(' + arr.length + ')', null], jquery ? 'jquery' : me.toLowerCase()),
+				table = util.table([((arr.constructor?.name) || me) + '(' + arr.length + ')', null], jquery ? 'jquery' : me.toLowerCase()),
 				isEmpty = true;
 
 				if (jquery) {
