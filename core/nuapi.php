@@ -52,8 +52,19 @@
 	$formId									= $formAndSessionData->form_id;
 	$recordId								= $formAndSessionData->record_id;
 
-	nuCheck2FAAuthenticationPending($sessionData, $formAndSessionData, $callType);
-	nuCheckPasswordChangePending($sessionData, $formAndSessionData, $callType);
+	// 2FA: Check authentication status.
+	if ((($globalAccess && nuObjKey($sessionData,'2FA_ADMIN')) || (!$globalAccess && nuObjKey($sessionData,'2FA_USER'))) && nuObjKey($sessionData,'SESSION_2FA_STATUS') == 'PENDING') {
+		if ($formAndSessionData->form_id != $sessionData['2FA_FORM_ID'] && $callType != 'runhiddenphp') {
+			nuDisplayError(nuTranslate('Access denied. Authentication Pending.'));
+		}
+	}
+
+	// Change Password: Check authentication status.
+	if (!$globalAccess  && nuObjKey($sessionData,'SESSION_CHANGE_PW_STATUS') == 'PENDING') {
+		if ($formAndSessionData->form_id != $sessionData['CHANGE_PW_FORM_ID'] && $callType != 'runhiddenphp') {
+			nuDisplayError(nuTranslate('Access denied. Password Change Pending.'));
+		}
+	}
 
 	$_POST['FORM_ID'] 						= $formId;
 	$_POST['nuHash']['PREVIOUS_RECORD_ID'] 	= $recordId;
