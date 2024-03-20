@@ -61,22 +61,22 @@ function nuAlterSystemTables(){
 	];
 
 	foreach ($alterTableSQL as $sqlStatement) {
-		nuRunQuery($sqlStatement);
+		nuRunQueryNoDebug($sqlStatement);
 	}
 
 	$setupColumns = db_field_names('zzzzsys_setup');
 	if(array_search('set_languages_included', $setupColumns) == false){
-		nuRunQuery("ALTER TABLE `zzzzsys_setup` ADD `set_languages_included` VARCHAR(1000) NULL DEFAULT NULL AFTER `set_language`;");
+		nuRunQueryNoDebug("ALTER TABLE `zzzzsys_setup` ADD `set_languages_included` VARCHAR(1000) NULL DEFAULT NULL AFTER `set_language`;");
 
 		$languagesJson = nuGetSupportedLanguagesAsJson();
-		nuRunQuery('UPDATE `zzzzsys_setup` SET set_languages_included = ?', [$languagesJson]);
+		nuRunQueryNoDebug('UPDATE `zzzzsys_setup` SET set_languages_included = ?', [$languagesJson]);
 	}
 
 	if(array_search('set_style', $setupColumns) == false){
-		nuRunQuery("ALTER TABLE `zzzzsys_setup` ADD `set_style` LONGTEXT NULL DEFAULT NULL AFTER `set_header`;");
+		nuRunQueryNoDebug("ALTER TABLE `zzzzsys_setup` ADD `set_style` LONGTEXT NULL DEFAULT NULL AFTER `set_header`;");
 		$style = "/* Define your own styles, override styles from nubuilder4.css */\r\n\r\n/*\r\n .nuActionButton {\r\n background-color: #579cb7\r\n}\r\n\r\n*/";
 		
-		nuRunQuery('UPDATE `zzzzsys_setup` SET set_style = ?', [$style]);
+		nuRunQueryNoDebug('UPDATE `zzzzsys_setup` SET set_style = ?', [$style]);
 	}
 	
 	nuCreateJSONColumns();
