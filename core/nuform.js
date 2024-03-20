@@ -2920,9 +2920,9 @@ function nuSubformRefreshDisplayObject(prefix, displayId, formId) {
 
 function nuGetClipboardText(e) {
 
-    const cb = (e.clipboardData || e.originalEvent.clipboardData || window.clipboardData);
-    const dataFormat = cb && cb.getData ? (window.clipboardData ? 'Text' : 'text/plain') : '';
-    return cb && dataFormat ? cb.getData(dataFormat) : '';
+	const cb = (e.clipboardData || e.originalEvent.clipboardData || window.clipboardData);
+	const dataFormat = cb?.getData ? (window.clipboardData ? 'Text' : 'text/plain') : '';
+	return cb && dataFormat ? cb.getData(dataFormat) : '';
 
 }
 
