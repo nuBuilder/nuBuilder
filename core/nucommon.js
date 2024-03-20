@@ -1456,7 +1456,7 @@ function nuGetFunctionList() {
 	for (var k in window) {
 
 		if (Object.prototype.hasOwnProperty.call(window, k)) {
-			if (String(k).substr(0, 2) === 'nu') {
+			if (String(k).startsWith('nu')) {
 				f += k + "\n";
 			}
 
