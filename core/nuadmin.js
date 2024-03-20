@@ -31,7 +31,7 @@ function nuFormInfoCurrentProperties() {
 }
 
 function nuShowVersionInfo() {
-	nuRunPHPHidden('NUVERSIONINFO', 0);
+	nuRunPHPHidden('NUVERSIONINFO');
 }
 
 function nuShowFormInfo() {
@@ -930,7 +930,7 @@ function nuContextMenuUpdateObject(value, column) {
 	nuSetProperty(p + '_form_id', formId);
 	nuSetProperty(p + '_type', isTab ? 'tab' : nuFormType());
 	nuSetProperty(p + '_column', column);
-	nuRunPHPHidden(p, 0);
+	nuRunPHPHidden(p);
 
 }
 

@@ -1145,7 +1145,7 @@ function nuSetProperty(name, value, persist) {
 	if (persist === true) { // global scope
 		nuSetProperty('NUSETHASHCOOKIE_NAME', name);
 		nuSetProperty('NUSETHASHCOOKIE_VALUE', value);
-		nuRunPHPHidden('NUSETHASHCOOKIE', 0);
+		nuRunPHPHidden('NUSETHASHCOOKIE');
 	}
 
 }

@@ -2682,7 +2682,7 @@ function nuRunBackup() {
 	const c = confirm(nuTranslate("Perform the Backup now?"));
 	if (c === true) {
 		nuMessage(nuTranslate("Backup is running") + "...");
-		nuRunPHPHidden("NUBACKUP", 0);
+		nuRunPHPHidden("NUBACKUP");
 	}
 
 }

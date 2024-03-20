@@ -321,6 +321,11 @@ function nuUpdateDatabaseHasDataModePermission($formId, $recordID, $deleteAction
 
 }
 
+class UpdateData {
+	public $columns = [];
+	public $values = [];
+	public $inserts = [];
+}
 function nuUpdateDatabase() {
 
 	$nuConfigDBTypesSetNullWhenEmpty = nuGetDBTypesSetNullWhenEmpty();
@@ -334,12 +339,6 @@ function nuUpdateDatabase() {
 			nuDisplayError(nuTranslate('Not available in the Demo') . "..");
 			return;
 		}
-	}
-
-	class UpdateData {
-		public $columns = [];
-		public $values = [];
-		public $inserts = [];
 	}
 
 	$nudata = $nuHash['nuFORMdata'];

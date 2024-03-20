@@ -2895,7 +2895,7 @@ function nuSubformRefreshSelectObject(prefix, selectId, formId, removeBlank) {
 	nuSetProperty(p + '_formid', formId);
 	nuSetProperty(p + '_removeblank', removeBlank === true ? '1' : '0');
 
-	nuRunPHPHidden(p, 0);
+	nuRunPHPHidden(p);
 
 }
 
@@ -2914,7 +2914,7 @@ function nuSubformRefreshDisplayObject(prefix, displayId, formId) {
 	nuSetProperty(p + '_displayid', displayId);
 	nuSetProperty(p + '_formid', formId);
 
-	nuRunPHPHidden(p, 0);
+	nuRunPHPHidden(p);
 
 }
 
@@ -3741,7 +3741,7 @@ function nuGetOptionsList(formId, subformId, globalAccess, type) {
 		Save : ['Save', 'nuSaveAction();', 'far fa-save', 'S'],
 		Delete : ['Delete', 'nuDeleteAction();', 'far fa-trash-alt', 'Y'],
 		Clone : ['Clone', 'nuCloneAction();', 'far fa-clone', 'C'],
-		Refresh : ['Refresh', 'if (nuGlobalAccess()) {nuRunPHPHidden("NUSETREFRESHCACHE", 0);} else {nuGetBreadcrumb();}', 'fas fa-sync-alt', 'R'],
+		Refresh : ['Refresh', 'if (nuGlobalAccess()) {nuRunPHPHidden("NUSETREFRESHCACHE");} else {nuGetBreadcrumb();}', 'fas fa-sync-alt', 'R'],
 		Help : ['Help', nuFORMHELP[subformId], 'fa-question-circle', '?'],
 		ChangePassword : ['Change Password', 'nuPopup("nupassword", "", "")', 'fa-password', 'Q'],
 		DebugResults : ['nuDebug Results', 'nuOptionsListAction("nudebug", "")', 'fa-bug', 'D'],

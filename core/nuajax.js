@@ -299,7 +299,7 @@ function nuGetPHP(formId, recordId) {
 }
 
 function nuRunPHP(code, iFrame, runBeforeSave) {
-
+	
 	if (runBeforeSave == undefined) {
 		if (window.nuBeforeSave) {
 			if (nuBeforeSave() === false) { return; }
@@ -343,14 +343,26 @@ function nuRunPHP(code, iFrame, runBeforeSave) {
 }
 
 
-function nuRunPHPHidden(code, rbs, params) {
-
-	if (arguments.length == 1) {
-
+function nuRunPHPHidden(code, options = null) {
+	
+	// DEV: params passed
+	const params = null;
+	if (typeof options === 'object' && options !== null) {
+		/*
+		const params = {
+			name: 'abc',
+			items: {
+				param1: '12345',
+				param2: '123',
+				param3: '234',
+			},
+		};
+		*/		
+	} else
+	if (options == true) {
 		if (window.nuBeforeSave) {
 			if (nuBeforeSave() === false) { return; }
 		}
-
 	}
 
 	var current = nuFORM.getCurrent();
@@ -380,9 +392,9 @@ function nuRunPHPHidden(code, rbs, params) {
 
 }
 
-function nuRunPHPHiddenWithParams(code, paramName, paramValue, rbs) {
+function nuRunPHPHiddenWithParams(code, paramName, paramValue) {
 	nuSetProperty(paramName, btoa(JSON.stringify(paramValue)));
-	nuRunPHPHidden(code, rbs);
+	nuRunPHPHidden(code);
 }
 
 function nuSystemUpdate() {
