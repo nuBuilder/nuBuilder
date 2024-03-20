@@ -457,28 +457,18 @@ function nuViewExists($view) {
 
 function nuCanCreateView() {
 
-	$dbName = $_SESSION['nubuilder_session_data']['DB_NAME'];
+	$testViewName = "nu_test_view_" . mt_rand();
 
-	$stmt = nuRunQueryTest("SHOW GRANTS FOR CURRENT_USER()");
-	if ($stmt !== true) {
+	$createViewSql = "CREATE VIEW `$testViewName` AS SELECT `zzzzsys_debug_id` FROM `zzzzsys_debug` LIMIT 1";
+	$result = nuRunQueryTest($createViewSql);
+
+	if ($result === true) {
+		// If the view creation succeeds, attempt to drop the view to clean up.
+		$dropViewSql = "DROP VIEW IF EXISTS `$testViewName`";
+		nuRunQueryNoDebug($dropViewSql);
 		return true;
 	}
-
-	while ($row = db_fetch_row($stmt)) {
-
-		$grants = $row[0];
-
-		$createView	= nuStringContains("CREATE VIEW", $grants, true);
-		$grant1		= nuStringContains("ALL PRIVILEGES ON `$dbName`.*", $grants, true);
-		$grant2		= nuStringContains("ALL PRIVILEGES ON *.*", $grants, true);
-		$grant3		= nuStringContains("ALL PRIVILEGES ON %", $grants, true);
-
-		if ($createView || $grant1 || $grant2 || $grant3) {
-			return true;
-		}
-
-	}
-
+	
 	return false;
 
 }
@@ -613,14 +603,14 @@ function nuID(){
 
 function nuID_DEV(){
 
-    global $DBUser;
+	global $DBUser;
 
-    $uniqueId = uniqid();
-    $randomBytes = random_bytes(16);
-    $hash = hash('sha256', $randomBytes);
+	$uniqueId = uniqid();
+	$randomBytes = random_bytes(16);
+	$hash = hash('sha256', $randomBytes);
 
-    $prefix = $DBUser == 'nudev' ? 'nu' : '';
-    return $prefix . $uniqueId . substr($hash, 0, 2);
+	$prefix = $DBUser == 'nudev' ? 'nu' : '';
+	return $prefix . $uniqueId . substr($hash, 0, 2);
 
 }
 
