@@ -574,7 +574,7 @@ function nuDebug(...$args) {
 
 }
 
-class nuDebug {
+final class nuDebug {
 
 	 public static $flag = '';
 
