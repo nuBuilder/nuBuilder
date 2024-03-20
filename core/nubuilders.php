@@ -187,12 +187,12 @@ function nuFFCreateTable($sF, $formType, $table, $Pk, $isNew, $drop) {
 	$sql		= nuFFNewTableSQL($table, $Pk, $columns, $isNew);
 
 	if ($drop) {
-		$test	= nuRunQueryTest($sql);
-		if (is_bool($test)) {
+		$stmt	= nuRunQueryTest($sql);
+		if (is_bool($stmt)) {
 			nuRunQuery("DROP TABLE IF EXISTS `$table`;");
 			return '';
 		} else {
-			return nuFFError($test, $sql);
+			return nuFFError($stmt->getMessage(), $sql);
 		}
 	} else {
 		nuRunQuery($sql);	

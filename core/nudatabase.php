@@ -90,7 +90,7 @@ function nuRunQueryTest($query, $params = []){
 	try {
 		$stmt->execute($params);
 	}catch(PDOException $ex){
-		return $ex->getMessage();
+		return $ex;
 	}
 
 	return true;
