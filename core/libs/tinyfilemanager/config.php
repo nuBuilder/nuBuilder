@@ -2,6 +2,8 @@
 
 require_once(dirname(__FILE__). '/../../../nuconfig.php');
 
+global $nuConfigFileMangerUsers;
+
 if (! isset($nuTfmNotAuth)) {
 
 	$sessionId = isset($_COOKIE['nu_TFM']) ? $_COOKIE["nu_TFM"] : '';
@@ -24,11 +26,16 @@ if (! isset($nuTfmNotAuth)) {
 	$stmt = $pdo->prepare("SELECT sss_access FROM `zzzzsys_session` WHERE zzzzsys_session_id = ?");
 	$stmt->execute([$sessionId]); 
 	$result = $stmt->fetch(PDO::FETCH_OBJ);
-
+	
 	if ($result) {
-		$json = json_decode($result->sss_access, true);
 
-		if ($json['session']['global_access'] != 1) {
+		$access = json_decode($result->sss_access, true);
+
+		$globalAccess = $access->session->global_access == '1';
+		$userId = $access->session->zzzzsys_user_id;
+		$userHasAccess = strpos($nuConfigFileMangerUsers,  $userId, 0) !== false;
+
+		if (!$globalAccess && !$userHasAccess) {
 			nuAuthFailed();
 		}
 
