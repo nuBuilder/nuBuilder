@@ -48,13 +48,12 @@
 	if (empty($user)) nuDie(nuTranslate('Your session has timed out.'));
 
 	$formAndSessionData						= nuGatherFormAndSessionData($user['HOME_ID'], $globalAccess);
-
-	nuCheck2FAAuthenticationPending($sessionData, $formAndSessionData, $callType);
-	nuCheckPasswordChangePending($sessionData, $formAndSessionData, $callType);
-
 	$sessionData							= $_SESSION['nubuilder_session_data'];
 	$formId									= $formAndSessionData->form_id;
 	$recordId								= $formAndSessionData->record_id;
+
+	nuCheck2FAAuthenticationPending($sessionData, $formAndSessionData, $callType);
+	nuCheckPasswordChangePending($sessionData, $formAndSessionData, $callType);
 
 	$_POST['FORM_ID'] 						= $formId;
 	$_POST['nuHash']['PREVIOUS_RECORD_ID'] 	= $recordId;
