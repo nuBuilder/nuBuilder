@@ -21,10 +21,8 @@ function nuAjax(w, successCallback, errorCallback) {
 
 			nuAjaxShowError(jqXHR, errorThrown);
 
-		},
-		complete: (jqXHR, textStatus) => {
-			// Do something when the request completes
-		},
+		}
+
 	});
 }
 
