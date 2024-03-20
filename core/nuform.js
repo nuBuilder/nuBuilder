@@ -1061,10 +1061,10 @@ function nuGetDBColumnLengh(tableName, id) {
 	
 }
 
-function nuINPUTfileDatabase($fromId, obj, id, p) {
+function nuINPUTfileDatabase($formId, obj, id, p) {
 
 	const newElement = nuCreateElementWithId('textarea', id);
-	$fromId.append(newElement);
+	$formId.append(newElement);
 
 	const $id = $(newElement);
 
@@ -1083,7 +1083,7 @@ function nuINPUTfileDatabase($fromId, obj, id, p) {
 
 }
 
-function nuINPUTfileFileSystem($fromId, w, i, l, p, prop, id) {
+function nuINPUTfileFileSystem($formId, w, i, l, p, prop, id) {
 
 	var obj = prop.objects[i];
 	id = id !== undefined ? id : p + obj.id;
@@ -1170,7 +1170,7 @@ function nuINPUTDisplay($id) {
 
 }
 
-function nuINPUTLookup(id, objId, wi, obj, $fromId, p, vis) {
+function nuINPUTLookup(id, objId, wi, obj, $formId, p, vis) {
 
 	let $id = $('#' + id);
 	$id.hide();
@@ -1185,7 +1185,7 @@ function nuINPUTLookup(id, objId, wi, obj, $fromId, p, vis) {
 	id = target + 'code';
 
 	const inp =  nuCreateElementWithId('input', id);
-	$fromId.append(inp);
+	$formId.append(inp);
 
 	nuAddDataTab(id, obj.tab, p);
 
@@ -1220,7 +1220,7 @@ function nuINPUTLookup(id, objId, wi, obj, $fromId, p, vis) {
 	id = target + 'button';
 
 	const div =  nuCreateElementWithId('div', id);
-	$fromId.append(div);
+	$formId.append(div);
 
 	nuAddDataTab(id, obj.tab, p);
 
@@ -1245,9 +1245,9 @@ function nuINPUTLookup(id, objId, wi, obj, $fromId, p, vis) {
 
 	id = p + obj.id + 'description';
 	const desc =  nuCreateElementWithId('input', id);
-	$fromId.append(desc);
+	$formId.append(desc);
 
-	$fromId.append(desc);
+	$formId.append(desc);
 	nuAddDataTab(id, obj.tab, p);
 	$('#' + id).css({
 		'top': obj.mobile ? Number(obj.top) + Number(obj.height) + 5 : Number(obj.top),
@@ -1389,7 +1389,7 @@ function nuINPUT(w, i, l, p, prop) {
 
 	const objId = p + obj.id;
 	var id = p + obj.id;
-	const $fromId = $('#' + p + 'nuRECORD');									//-- Edit Form Id
+	const $formId = $('#' + p + 'nuRECORD');									//-- Edit Form Id
 	var type = 'textarea';
 	var vis = obj.display == 0 ? 'hidden' : 'visible';
 	var inputType = obj.input;
@@ -1408,7 +1408,7 @@ function nuINPUT(w, i, l, p, prop) {
 	obj = nuLabelOrPosition(obj, w, i, l, p, prop);
 
 	if (type == 'input' && inputType == 'file' && inputSubType != 'uppy') {
-		id = nuINPUTfileDatabase($fromId, obj, id, p);
+		id = nuINPUTfileDatabase($formId, obj, id, p);
 	}
 
 	const inp = document.createElement(inputType == 'button' && objectType == 'input' ? 'button': type);
@@ -1416,7 +1416,7 @@ function nuINPUT(w, i, l, p, prop) {
 
 	let $id = $(inp);
 
-	$fromId.append(inp);
+	$formId.append(inp);
 
 	nuAddDataTab(id, obj.tab, p);
 	nuINPUTSetProperties($id, obj, inputType, objectType, wi, p);
@@ -1426,7 +1426,7 @@ function nuINPUT(w, i, l, p, prop) {
 	}
 
 	if (inputSubType == 'uppy') {
-		nuINPUTfileFileSystem($fromId, w, i, l, p, prop, id);
+		nuINPUTfileFileSystem($formId, w, i, l, p, prop, id);
 	}
 
 	if (inputType == 'nuScroll') {
@@ -1458,7 +1458,7 @@ function nuINPUT(w, i, l, p, prop) {
 
 	if (objectType == 'lookup') {
 
-		return nuINPUTLookup(id, objId, wi, obj, $fromId, p, vis);
+		return nuINPUTLookup(id, objId, wi, obj, $formId, p, vis);
 
 	} else {
 
