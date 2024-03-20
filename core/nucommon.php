@@ -428,7 +428,7 @@ function nuRunPHP($nuCode, $hidden = false) {
 		$exists = db_num_rows($stmt) == 1;
 
 		if (!$exists) {
-			if (substr($nuCode, 0, 2) !== 'nu') {
+			if (! nuStringStartsWith('nu', $nuCode)) {
 				nuDisplayError(nuTranslate("The Procedure does not exist...") . " ($nuCode)");
 			}
 		}
