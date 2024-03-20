@@ -1,21 +1,27 @@
 <?php
 require_once('nusessiondata.php');
+require_once('nucommon.php');
 require_once('nuprocesslogins.php');
 
 $sessionId		= $_REQUEST['sessid'];
+$sessionData	= $_SESSION['nubuilder_session_data'];
 
 $appId = isset($_GET['appId']) ? $_GET['appId'] : "";
 $table = isset($_GET['table']) ? $_GET['table'] : "";
 
-$values			= [$sessionId];
-$sql			= "SELECT * FROM zzzzsys_session WHERE zzzzsys_session_id = ?";
-$obj			= nuRunQuery($sql, $values);
-$result			= db_num_rows($obj);
-
-if($_SESSION['nubuilder_session_data']['IS_DEMO']){
+if($sessionData['IS_DEMO']){
 	echo('Not available in the Demo');
 	return;
 } 
+
+if (nuObjKey($sessionData,'SESSION_2FA_STATUS') == 'PENDING') {
+	echo('Access denied.');
+	return;
+}
+
+$sql			= "SELECT * FROM zzzzsys_session WHERE zzzzsys_session_id = ?";
+$obj			= nuRunQuery($sql, [$sessionId]);
+$result			= db_num_rows($obj);
 
 $page = null;
 if ($result == 1) {
