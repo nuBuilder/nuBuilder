@@ -517,6 +517,7 @@ function nuDropDatabaseObject($name, $types) {
 function nuCreateViewsOrTables() {
 	
 	$canCreateView = nuCanCreateView();
+	$canCreateView = $canCreateView === true || $canCreateView  === null;
 
 	$sqlCreateObjectListTable = "
 		CREATE TABLE IF NOT EXISTS `zzzzsys_object_list` (

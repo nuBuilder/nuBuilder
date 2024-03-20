@@ -420,18 +420,11 @@ function nuDBQuote($s) {
 function db_num_rows($obj) {
 
 	return is_object($obj) ? $obj->rowCount() : 0;
-		   
-  
-					   
-
 }
 
 function db_num_columns($obj) {
 
 	return is_object($obj) ? $obj->columnCount() : 0;
-		   
-  
-						  
 
 }
 
@@ -466,8 +459,12 @@ function nuCanCreateView() {
 
 	$dbName = $_SESSION['nubuilder_session_data']['DB_NAME'];
 
-	$qry = nuRunQuery("SHOW GRANTS FOR CURRENT_USER()");
-	while ($row = db_fetch_row($qry)) {
+	$stmt = nuRunQueryTest("SHOW GRANTS FOR CURRENT_USER()");
+	if ($stmt !== true) {
+		return true;
+	}
+
+	while ($row = db_fetch_row($stmt)) {
 
 		$grants = $row[0];
 
