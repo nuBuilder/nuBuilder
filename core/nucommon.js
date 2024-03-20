@@ -933,7 +933,7 @@ function nuBindCtrlEvents() {
 			e.preventDefault();
 
 			var g = nuGlobalAccess();
-			var formId = window.nuFORM.getCurrent().form_id;
+			var formId = nuFormId();
 
 			if (nuFormType() == 'browse' || nuFormType() == 'edit') {
 
