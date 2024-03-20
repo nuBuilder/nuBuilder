@@ -214,4 +214,16 @@ function nu2FAStatusPending($globalAccess, $sessionData, $callType, $recordId, $
 		return false;
 	}
 }
+
+function nuPasswordChangeStatusPending($globalAccess, $sessionData, $callType, $formId) {
+
+	if (!$globalAccess  && nuObjKey($sessionData,'SESSION_CHANGE_PW_STATUS') == 'PENDING') {
+		if ($formId != $sessionData['CHANGE_PW_FORM_ID'] && $callType != 'runhiddenphp') {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 ?>

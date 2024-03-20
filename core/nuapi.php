@@ -56,11 +56,8 @@
 		nuDisplayError(nuTranslate('Access denied. Authentication Pending.'));
 	}
 
-	// Change Password: Check authentication status.
-	if (!$globalAccess  && nuObjKey($sessionData,'SESSION_CHANGE_PW_STATUS') == 'PENDING') {
-		if ($formAndSessionData->form_id != $sessionData['CHANGE_PW_FORM_ID'] && $callType != 'runhiddenphp') {
-			nuDisplayError(nuTranslate('Access denied. Password Change Pending.'));
-		}
+	if (nuPasswordChangeStatusPending($globalAccess, $sessionData, $callType, $formId)) {
+		nuDisplayError(nuTranslate('Access denied. Password Change Pending.'));
 	}
 
 	$_POST['FORM_ID'] 						= $formId;
