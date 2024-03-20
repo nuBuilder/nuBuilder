@@ -116,7 +116,8 @@ function nuCreateDrag() {
 		const key = event.key;
 		var m = (event.buttons == 1 && this.classList.indexOf('nuDragSelected') != -1);
 
-		if (m || (key && key.startsWith('Arrow'))) {
+		if (m || (key?.startsWith('Arrow'))) {
+	
 
 			if ($('#nuDragDialog').is(":visible") == false) {
 
