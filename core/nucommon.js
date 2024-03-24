@@ -1186,16 +1186,28 @@ function nuGetLookupFields(id) {
 
 }
 
-function nuObjectComponents(i) {
+function nuObjectComponents(id) {
 
-	let o = [i, 'label_' + i];
-	const obj = $('#' + i);
-	if (obj.attr('data-nu-type') == 'lookup') o.push(i + 'code', i + 'button', i + 'description')
-	if (obj.hasClass('select2-hidden-accessible')) o.push(i + '_select2');
+	let componentIds = [id, `${id}_label`];
+	let type = '';
+	const element = $(`#${id}`);
 
-	return o;
+	if (element.attr('data-nu-type') === 'lookup') {
+		componentIds.push(`${id}code`, `${id}button`, `${id}description`);
+		type = 'lookup';
+	} else 
+	if (element.hasClass('select2-hidden-accessible')) {
+		componentIds.push(`${id}_select2`);
+		type = 'select2'; 
+	}
+
+	return {
+		componentIds,
+		type
+	};
 
 }
+
 
 function nuEnable(i, enable) {
 
@@ -1209,23 +1221,23 @@ function nuEnable(i, enable) {
 	$.each(ids, function(index) {
 
 		const id = ids[index];
-		const components = nuObjectComponents(id);
-
-		for (let c = 0; c < components.length; c++) {
+		let {componentIds, type} = nuObjectComponents(id);
+		
+		for (let c = 0; c < componentIds.length; c++) {
 
 			if (c === 1) {
 				continue;
 			} // skip label
 
-			let $current = $('#' + components[c]);
+			let $current = $('#' + componentIds[c]);
 
 			$current
 				.removeClass('nuReadonly')
 				.prop('readonly', false)
 				.prop('disabled', false);
 
-			if (c === 2) { //-- button
-				$current.on("click", () => nuBuildLookup(components[c], ""));
+			if (type === 'Lookup' && c === 2) { //-- button
+				$current.on("click", () => nuBuildLookup(componentIds[c], ""));
 			}
 
 		}
@@ -1240,14 +1252,14 @@ function nuDisable(id) { //-- Disable Edit Form Object
 
 	$.each(ids, function(index) {
 		const id = ids[index];
-		const components = nuObjectComponents(id);
+		const {componentIds, type} = nuObjectComponents(id);
 
-		for (let c = 0; c < components.length; c++) {
+		for (let c = 0; c < componentIds.length; c++) {
 			if (c === 1) {
 				continue;
 			} // skip label
 
-			let $component = $('#' + components[c]);
+			let $component = $('#' + componentIds[c]);
 			$component.addClass('nuReadonly')
 
 			let result = true;
