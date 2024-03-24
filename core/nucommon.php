@@ -443,13 +443,16 @@ function nuRunPHP($nuCode, $hidden = false) {
 			}
 
 			if ($hasAccess || $_SESSION['nubuilder_session_data']['isGlobeadmin']) {
-				if ($hidden) nuEval($row->zzzzsys_php_id);
+				if ($hidden) { 
+					nuEval($row->zzzzsys_php_id);
+					$_POST['nuRunPHPHidden'] = $nuCode;
+				}	
 			}
 			else {
 				nuDisplayError(nuTranslate("Access To Procedure Denied...") . " ($nuCode)");
 			}
 		}
-	
+
 	}
 
 	if ($hidden) {

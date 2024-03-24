@@ -69,6 +69,7 @@
 	$_POST['nuHash']['SESSION_ID'] 			= $sessionData['SESSION_ID'];
 	$_POST['nuValidate']					= [];
 	$_POST['nuCallback']					= '';
+	$_POST['nuRunPHPHidden']				= '';
 	$_POST['nuAfterEvent']					= false;
 
 	$f										= new stdClass;
@@ -156,6 +157,7 @@
 		$f->forms[0]->session_id				= $sessionData['SESSION_ID'];
 
 		$f->forms[0]->callback					= nuSetGlobalPropertiesJS()."\n".nuObjKey($_POST,'nuCallback');
+		$f->forms[0]->run_php					= nuObjKey($_POST,'nuRunPHPHidden');
 		$f->forms[0]->errors					= nuObjKey($_POST,'nuErrors');
 		$f->forms[0]->log_again					= nuObjKey($_POST,'nuLogAgain');
 		$f->forms[0]->global_access				= $globalAccess ? '1' : '0';
