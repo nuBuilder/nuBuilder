@@ -5003,12 +5003,29 @@ function nuHighlightSearch() {
 	});
 }
 
+function nuOnSubformDeleteClick(event) {
+
+	const id = event.target.id;
+	const sf = $('#' + id).attr('data-nu-checkbox');
+	const row = id.substring(sf.length, sf.length + 3);
+	const checked = $('#' + id).is(":checked");
+
+	$('[id^=' + sf + nuPad3(row) + ']')
+	.not(':button, :checkbox')
+	.toggleClass('nuSubformDeleteTicked', checked)
+	.toggleClass('nuReadonly', checked)
+	.nuEnable(!checked);
+
+}
+
 function nuChange(e) {
 
 	if (e.target.id.substr(-8) == 'nuDelete') {
 
 		var sfid = $(e.target).parent().parent().parent()[0].id;
 		var click = $('#' + sfid).attr('data-nu-clickdelete');
+
+		nuOnSubformDeleteClick(event);
 
 		eval(click);
 
