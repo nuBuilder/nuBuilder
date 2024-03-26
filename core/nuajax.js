@@ -392,9 +392,11 @@ function nuRunPHPHidden(code, options = null) {
 
 }
 
-function nuRunPHPHiddenWithParams(code, paramName, paramValue) {
-	nuSetProperty(paramName, btoa(JSON.stringify(paramValue)));
-	nuRunPHPHidden(code);
+function nuRunPHPHiddenWithParams(code, paramName, paramValue, runBeforeSave) {
+
+	nuSetProperty(paramName, nuEncode(JSON.stringify(paramValue)));
+	nuRunPHPHidden(code, runBeforeSave);
+
 }
 
 function nuSystemUpdate() {
