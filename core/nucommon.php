@@ -2661,4 +2661,16 @@ function nuPad($i, $length, $pad = 0) {
 	return str_pad((string)$i, $length, (string)$pad, STR_PAD_LEFT);
 }
 
+function nuDecode($str) {
+
+	$base64Decoded = base64_decode($str);
+	$decoded = json_decode($base64Decoded, true);
+	if (json_last_error() === JSON_ERROR_NONE) {
+		return $decoded;
+	} else {
+		return $base64Decoded;
+	}
+
+}
+
 ?>
