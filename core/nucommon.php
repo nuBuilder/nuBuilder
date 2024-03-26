@@ -1435,21 +1435,17 @@ function nuEventName($eventName) {
 
 }
 
-function nuGetPHP($phpid) {
+function nuGetPHP($idOrCode) {
 
-	$s						= "SELECT sph_php, sph_code FROM zzzzsys_php WHERE zzzzsys_php_id = ? ";
-	$t						= nuRunQuery($s, [$phpid]);
+    $sql = "SELECT sph_code, sph_description, zzzzsys_php_id, sph_php, sph_global
+            FROM zzzzsys_php
+            WHERE sph_code = ? OR zzzzsys_php_id = ?";
 
-	$php = '';
-	if (db_num_rows($t) == 1) {
-		$php = db_fetch_object($t);	
-	}
-
-	return $php;
+    $stmt = nuRunQuery($sql, [$idOrCode, $idOrCode]);
+	$exists = db_num_rows($stmt) === 1;
+	return $exists ? db_fetch_object($stmt) : null;
 
 }
-
-
 
 function nuFailIfUnsetHashCookies($string) {
 	return preg_match('/#[^#]+#/', $string);
