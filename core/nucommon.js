@@ -1284,9 +1284,9 @@ function nuDisable(id) { //-- Disable Edit Form Object
 
 function nuReadonly(id, readonly = true) {
 
-	const objComponents = nuObjectComponents(id);
+	let {componentIds, type} = nuObjectComponents(id);
 
-	objComponents.forEach((component, index) => {
+	componentIds.forEach((component, index) => {
 		// Skip label by index
 		if (index === 1) return;
 		$(`#${component}`)
@@ -1312,22 +1312,22 @@ function nuShow(i, visible, openTab) {
 			nuHide(arr[s]);
 		} else {
 
-			var o = nuObjectComponents(arr[s]);
+			let {componentIds, type} = nuObjectComponents(arr[s]);
 
-			for (var c = 0; c < o.length; c++) {
+			for (var c = 0; c < componentIds.length; c++) {
 
-				var t = String($('#' + o[c]).attr('data-nu-tab'));
+				var t = String($('#' + componentIds[c]).attr('data-nu-tab'));
 
-				if (nuIsHidden(o[c])) {
+				if (nuIsHidden(componentIds[c])) {
 					if (t[0] == 'x') {
 
-						$('#' + o[c])
+						$('#' + componentIds[c])
 							.attr('data-nu-tab', t.substr(1))
 							.show();
 
 					} else {
 
-						$('#' + o[c]).show();
+						$('#' + componentIds[c]).show();
 
 					}
 					counter++;
@@ -1353,21 +1353,22 @@ function nuHide(i) {
 		arr = i;
 	}
 
-	for (var s = 0; s < arr.length; s++) {
-		var o = nuObjectComponents(arr[s]);
+	for (let s = 0; s < arr.length; s++) {
 
-		for (var c = 0; c < o.length; c++) {
+		let {componentIds, type} = nuObjectComponents(arr[s]);
 
-			var t = String($('#' + o[c]).attr('data-nu-tab'));
+		for (let c = 0; c < componentIds.length; c++) {
+
+			const t = String($('#' + componentIds[c]).attr('data-nu-tab'));
 
 			if (t[0] == 'x') {
 
-				$('#' + o[c])
+				$('#' + componentIds[c])
 					.hide();
 
 			} else {
 
-				$('#' + o[c])
+				$('#' + componentIds[c])
 					.attr('data-nu-tab', 'x' + t)
 					.hide();
 
@@ -1385,9 +1386,9 @@ function nuRemove(i) {
 
 	for (const s of arr) {
 
-		const o = nuObjectComponents(s);
+		let {componentIds, type} = nuObjectComponents(s);
 
-		for (const c of o) {
+		for (const c of componentIds) {
 			$('#' + c).remove();
 		}
 	}

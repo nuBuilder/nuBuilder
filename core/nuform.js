@@ -6357,10 +6357,10 @@ function nuPortraitScreen(columns) {
 
 		if (jId.is("[nu-mobileview-hidden]") || !tabVisible) {
 
-			const objComponents = nuObjectComponents(id);
+			let {componentIds, type} = nuObjectComponents(id);
 
-			for (let c = 0; c < objComponents.length; c++) {
-				let comp = $('#' + objComponents[c]);
+			for (let c = 0; c < componentIds.length; c++) {
+				let comp = $('#' + componentIds[c]);
 				comp.attr('nu-mobileview-hidden', '');
 				comp.hide();
 			}
