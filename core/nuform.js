@@ -542,7 +542,7 @@ function nuBrowseRowsPerPageFilter(rowsPerPageOptions) {
 		$(`<option value="${optionValue}">${optionValue}</option>`).appendTo(selectElement);
 	}
 
-	$('#nuActionHolder').prepend(selectElement);
+	selectElement.insertBefore('#nuSearchField');
 
 	selectElement.on("change", function() {
 		nuSetProperty('page_number', 0);
