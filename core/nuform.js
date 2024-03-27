@@ -527,6 +527,8 @@ function nuBrowseStickyColumns($record) {
 
 function nuBrowseRowsPerPageFilter(rowsPerPageOptions) {
 
+	if (nuFormType() !== 'browse') return;
+
 	const selectId = 'nuBrowseRowsPerPage';
 	const hashCookie = 'ROWS_PER_PAGE';
 	const selectStyle = 'margin-left: 20px; width: 50px; height: 22px; text-align: left';
@@ -1495,7 +1497,7 @@ function nuApplyInputTypeSpecificBehaviors($id, inputType, objType, thisObj, obj
 	}
 
 	if (inputType == 'button' && objType == 'input') {
-		nuAddInputIcon($id.attr('id'), thisObj.input_icon); console.log('button input');
+		nuAddInputIcon($id.attr('id'), thisObj.input_icon);
 	}
 
 }
