@@ -1188,7 +1188,7 @@ function nuGetLookupFields(id) {
 
 function nuObjectComponents(id) {
 
-	let componentIds = [id, `${id}_label`];
+	let componentIds = [id, `label_${id}`];
 	let type = '';
 	const element = $(`#${id}`);
 
