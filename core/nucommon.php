@@ -423,7 +423,7 @@ function nuGetPHP($idOrCode) {
 
     $stmt = nuRunQuery($sql, [$idOrCode, $idOrCode]);
 	$exists = db_num_rows($stmt) === 1;
-	return $exists ? db_fetch_object($stmt) : '';
+	return $exists ? db_fetch_object($stmt) : false;
 
 }
 
@@ -444,7 +444,7 @@ function nuRunPHP($nuCode, $hidden = false) {
 	if ($nuCode !== 'nukeepalive') {
 
 		$phpObj = nuGetPHP($nuCode);
-		$exists = $phpObj !== '';
+		$exists = $phpObj !== false;
 		
 		if ($exists) {
 
@@ -1454,7 +1454,7 @@ function nuFailIfUnsetHashCookies($string) {
 function nuEval($phpid){
 
 	$r						= nuGetPHP($phpid);
-	if($r == ''){return;}
+	if($r === false){return;}
 
 	$code					= $r->sph_code;
 	$php					= nuReplaceHashVariables($r->sph_php);
