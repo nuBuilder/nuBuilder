@@ -554,6 +554,10 @@ function nuBrowseRowsPerPageFilter(rowsPerPageOptions) {
 
 }
 
+function nuPrintIncludeColumns($arr) {
+	nuSetProperty('nuPrintincludedColumns', nuEncode($arr));
+}
+
 function nuRestoreScrollPositions() {
 
 	$(function () {
