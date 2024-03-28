@@ -5,8 +5,14 @@ require_once ('nudata.php');
 
 print "<meta charset='utf-8'>";
 
-$debugId = $_GET['i'] ?? null; 
-$jsonData = nuGetDebugMessageData($debugId);
+$debugId = $_GET['i'] ?? ''; 
+
+$sessionVariable = "nuPrint_".$debugId;
+$jsonData = isset($_SESSION[$sessionVariable]) ? json_decode($_SESSION[$sessionVariable]) : null;
+if ($jsonData === null) {
+	$jsonData = nuGetDebugMessageData($debugId);
+	$_SESSION[$sessionVariable] = json_encode($jsonData );
+} 
 
 if ($jsonData) {
 	$columns = $jsonData->columns;
