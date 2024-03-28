@@ -86,7 +86,7 @@ String.prototype.nuCapitalise = function () {
 	return this.charAt(0).toUpperCase() + this.slice(1);
 }
 
-String.prototype.toTitleCase = function () {
+String.prototype.nuToTitleCase = function () {
 	return this.toLowerCase().replace(/^(\w)|\s(\w)/g, (grp) => grp.toUpperCase());
 }
 
