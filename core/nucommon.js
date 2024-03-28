@@ -43,17 +43,13 @@ window.nuBROWSERESIZE = {
 };
 
 String.prototype.nuEndsWith = function(substr, ignoreCase) {
-
 	if (ignoreCase === undefined || ignoreCase === false) return this.endsWith(substr);
 	return this.toLowerCase().endsWith(substr.toLowerCase());
-
 }
 
 String.prototype.nuStartsWith = function(substr, ignoreCase) {
-
 	if (ignoreCase === undefined || ignoreCase === false) return this.startsWith(substr);
 	return this.toLowerCase().startsWith(substr.toLowerCase());
-
 }
 
 String.prototype.nuReplaceAll = function (str1, str2, ignore) {
@@ -61,10 +57,8 @@ String.prototype.nuReplaceAll = function (str1, str2, ignore) {
 };
 
 String.prototype.nuStringToArray = function (separator = ',', trim = true) {
-
 	const result = this.split(separator);
 	return trim ? result.map(item => item.trim()) : result;
-
 }
 
 String.prototype.nuLeftTrim = function () {
@@ -76,21 +70,19 @@ String.prototype.nuRightTrim = function () {
 }
 
 String.prototype.containsAny = String.prototype.containsAny || function (arr) {
-
 	for (var i = 0; i < arr.length; i++) {
 		if (this.indexOf(arr[i]) > -1) {
 			return true;
 		}
 	}
 	return false;
-
 };
 
 String.prototype.nuReplaceNonBreakingSpaces = function (replaceWith = ' ') {
 	return this.replace(/\xA0/g, replaceWith)
 }
 
-String.prototype.capitalise = function () {
+String.prototype.nuCapitalise = function () {
 	return this.charAt(0).toUpperCase() + this.slice(1);
 }
 
