@@ -69,8 +69,11 @@ function nuGetVendorURL($appId, $table) {
 		$page = "libs/tinyfilemanager/tinyfilemanager.php";
 	}
 
-	setcookie("nu_".$appId,	 $_SESSION['nubuilder_session_data']['SESSION_ID']);
-
+	setcookie("nu_".$appId, $_SESSION['nubuilder_session_data']['SESSION_ID'], [
+		'secure' => true,
+		'httponly' => true
+	]);
+	
 	return $page;
 	
 }
