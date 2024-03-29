@@ -1244,7 +1244,7 @@ function nuDisable(id) { //-- Disable Edit Form Object
 
 	$.each(ids, function(index) {
 		const id = ids[index];
-		const {componentIds, type} = nuObjectComponents(id);
+		const {componentIds} = nuObjectComponents(id);
 
 		for (let c = 0; c < componentIds.length; c++) {
 			if (c === 1) {
@@ -1276,7 +1276,7 @@ function nuDisable(id) { //-- Disable Edit Form Object
 
 function nuReadonly(id, readonly = true) {
 
-	let {componentIds, type} = nuObjectComponents(id);
+	let {componentIds} = nuObjectComponents(id);
 
 	componentIds.forEach((component, index) => {
 		// Skip label by index
@@ -1304,7 +1304,7 @@ function nuShow(i, visible, openTab) {
 			nuHide(arr[s]);
 		} else {
 
-			let {componentIds, type} = nuObjectComponents(arr[s]);
+			let {componentIds} = nuObjectComponents(arr[s]);
 
 			for (var c = 0; c < componentIds.length; c++) {
 
@@ -1347,7 +1347,7 @@ function nuHide(i) {
 
 	for (let s = 0; s < arr.length; s++) {
 
-		let {componentIds, type} = nuObjectComponents(arr[s]);
+		let {componentIds} = nuObjectComponents(arr[s]);
 
 		for (let c = 0; c < componentIds.length; c++) {
 
@@ -1378,7 +1378,7 @@ function nuRemove(i) {
 
 	for (const s of arr) {
 
-		let {componentIds, type} = nuObjectComponents(s);
+		let {componentIds} = nuObjectComponents(s);
 
 		for (const c of componentIds) {
 			$('#' + c).remove();
