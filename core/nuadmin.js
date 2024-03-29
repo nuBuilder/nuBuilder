@@ -141,6 +141,7 @@ function nuAddAdminButtons() {
 	const {form_type, form_code} = nuCurrentProperties();
 	const formCode = form_code;
 
+
 	if (!form_type)
 		return;
 
@@ -149,11 +150,11 @@ function nuAddAdminButtons() {
 	const isEdit = form_type.includes("edit");
 	const isLaunch = form_type.includes("launch");
 
-	if ((nuAdminButtons["nuDebug"] || devMode) && nuMainForm()) {
+	if ((nuAdminButtons.nuDebug || devMode) && nuMainForm()) {
 		nuAddIconToBreadcrumbHolder('nuDebugButton', 'nuDebug Results', 'nuOpenNuDebug(2)', 'fa fa-bug', '3px');
 	}
 
-	if (nuAdminButtons["nuRefresh"]) {
+	if (nuAdminButtons.nuRefresh) {
 		nuAddIconToBreadcrumbHolder('nuRefreshButton', 'Refresh', 'nuGetBreadcrumb()', 'fas fa-sync-alt', '3px');
 	}
 
@@ -161,28 +162,29 @@ function nuAddAdminButtons() {
 
 	if (!formCode.startsWith('nu') || devMode) {
 
-		if (nuAdminButtons["nuProperties"]) {
-			buttonCount += nuAddAdminButton('Properties', adminButtons['nuProperties']);
+		if (nuAdminButtons.nuProperties) {
+			buttonCount += nuAddAdminButton('Properties', adminButtons.nuProperties);
 		}
 
-		if (nuAdminButtons["nuObjects"]) {
-			buttonCount += nuAddAdminButton('Objects', adminButtons['nuObjects']);
+		if (nuAdminButtons.nuObjects) {
+			buttonCount += nuAddAdminButton('Objects', adminButtons.nuObjects);
 		}
 
-		if (nuAdminButtons["nuPHP"]) {
+		if (nuAdminButtons.nuPHP) {
 			if (isEdit || isLaunch) {
-				buttonCount += nuAddAdminButton('AdminBE', adminButtons['AdminBE']);
+				buttonCount += nuAddAdminButton('AdminBE', adminButtons.AdminBE);
 			}
 
 			if (isBrowse) {
-				buttonCount += nuAddAdminButton('AdminBB', adminButtons['AdminBB']);
+				buttonCount += nuAddAdminButton('AdminBB', adminButtons.AdminBB);
 			}
 
 			if (isEdit) {
-				buttonCount += nuAddAdminButton('AdminBS', adminButtons['AdminBS']);
-				buttonCount += nuAddAdminButton('AdminAS', adminButtons['AdminAS']);
+				buttonCount += nuAddAdminButton('AdminBS', adminButtons.AdminBS);	
+				buttonCount += nuAddAdminButton('AdminAS', adminButtons.AdminAS);
 			}
 		}
+
 	}
 
 	const heightToAdd = 50;
@@ -1305,7 +1307,7 @@ var nuPrettyPrint = (function () {
 
 		getStyles: function (el, type) {
 			type = prettyPrintThis.settings.styles[type] || {};
-			return util.merge({}, prettyPrintThis.settings.styles['default'][el], type[el]);
+			return util.merge({}, prettyPrintThis.settings.styles['default'].el, type.el);
 		},
 
 		expander: function (text, title, clickFn) {
@@ -1479,7 +1481,7 @@ var nuPrettyPrint = (function () {
 				});
 			},
 			jquery: function (obj, depth, key) {
-				return typeDealer['array'](obj, depth, key, true);
+				return typeDealer.array(obj, depth, key, true);
 			},
 			object: function (obj, depth, key) {
 

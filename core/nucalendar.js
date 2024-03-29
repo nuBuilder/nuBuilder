@@ -18,7 +18,7 @@ function nuAppendChild(p, t, i) {
 
 function nuCalendarWeekStartNumber() {
 
-	let ws = nuUXOptions['nuCalendarStartOfWeek'];
+	let ws = nuUXOptions.nuCalendarStartOfWeek;
 	if (ws !== undefined) {
 		ws = String(ws);
 		ws = ws.length == 1 ? ws : ws.replace('Sunday', 0).replace('Monday', 1);
@@ -53,7 +53,7 @@ function nuPopupCalendarVanillaJs(pThis, d) {
 	let objCalendarOptionsDefault = { options: calendarOptionsDefault };
 	let calendarUserOptions = [];
 
-	if (typeof window['nuOnSetCalendarOptions'] === 'function') {
+	if (typeof window.nuOnSetCalendarOptions === 'function') {
 		calendarUserOptions = window.nuOnSetCalendarOptions(id, objCalendarOptionsDefault);
 	}
 
@@ -93,7 +93,7 @@ function nuPopupCalendar(pThis, d) {
 	$('#nuCalendar').remove();
 	$('#nuLookupList').remove();
 
-	if (nuUXOptions['nuCalendarVanillaJS'] || nuUXOptions['nuCalendarType'] === 'VanillaJS') {
+	if (nuUXOptions.nuCalendarVanillaJS || nuUXOptions.nuCalendarType === 'VanillaJS') {
 		nuPopupCalendarVanillaJs(pThis, d);
 		return;
 	}
@@ -492,25 +492,23 @@ function nuFullMonth(n) {
 
 function nu2Month(n) {
 
-	let mth = Array();
-
-	mth['Jan'] = '01';
-	mth['Feb'] = '02';
-	mth['Mar'] = '03';
-	mth['Apr'] = '04';
-	mth['May'] = '05';
-	mth['Jun'] = '06';
-	mth['Jul'] = '07';
-	mth['Aug'] = '08';
-	mth['Sep'] = '09';
-	mth['Oct'] = '10';
-	mth['Nov'] = '11';
-	mth['Dec'] = '12';
+	const mth = {};
+	mth.Jan = '01';
+	mth.Feb = '02';
+	mth.Mar = '03';
+	mth.Apr = '04';
+	mth.May = '05';
+	mth.Jun = '06';
+	mth.Jul = '07';
+	mth.Aug = '08';
+	mth.Sep = '09';
+	mth.Oct = '10';
+	mth.Nov = '11';
+	mth.Dec = '12';
 
 	return String(mth[n]);
 
 }
-
 
 function nuCalChoice(t) {
 
@@ -521,7 +519,7 @@ function nuCalChoice(t) {
 	var f = o.attr('data-nu-format');
 
 	var D = Number(t.innerHTML);
-	var M = Number(FMT[nuPad2(window.nuCalMonth + 1)]['jsmonth']);
+	var M = Number(FMT[nuPad2(window.nuCalMonth + 1)].jsmonth);
 
 	var Y = Number($('#nuCalYear').html());
 

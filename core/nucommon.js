@@ -2484,7 +2484,7 @@ function nuInputMaxLength(id, maxLength, labelId) {
 }
 
 function nuDebugMode() {
-	return nuUXOptions["nuDebugMode"];
+	return nuUXOptions.nuDebugMode;
 }
 
 function nuDebugOut(obj, i) {

@@ -1159,12 +1159,12 @@ function nuObjectDialog() {
 
 	var t = opener.nuTranslate('Field Name');
 
-	if (D['objectType'] == 'image') { t = 'Source'; }
-	if (D['objectType'] == 'label') { t = 'Title'; }
+	if (D.objectType == 'image') { t = 'Source'; }
+	if (D.objectType == 'label') { t = 'Title'; }
 
 	$('#caption_fieldName330').html(t);
 	/*
-		if(D['objectType'] == 'image'){
+		if(D.objectType== 'image'){
 			nuSetnuScroll(window.nuImages);
 		}else{
 			nuSetnuScroll(window.nuTT);
@@ -1173,15 +1173,15 @@ function nuObjectDialog() {
 	*/
 
 
-	if (D['objectType'] == 'image') {
+	if (D.objectType == 'image') {
 		nuSetnuScroll(window.nuImages);
 	}
 
-	if (D['objectType'] == 'field') {
+	if (D.objectType == 'field') {
 		nuSetnuScroll(window.nuTT);
 	}
 
-	if (D['objectType'] == 'label') {
+	if (D.objectType == 'label') {
 		nuSetnuScroll([["KEEP EXACT HEIGHT"]]);
 	}
 

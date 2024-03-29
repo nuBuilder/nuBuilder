@@ -970,11 +970,11 @@ class nuFormObject {
 
 			s = s.replaceAll('yyyy', yea);
 			s = s.replaceAll('yy', String(yea).substr(2));
-			s = s.replaceAll('mmmm', nuTranslate(FMT[mth]['mmmm']));
-			s = s.replaceAll('mmm', nuTranslate(FMT[mth]['mmm']));
-			s = s.replaceAll('mm', FMT[mth]['mm']);
-			s = s.replaceAll('dddd', FMT[wee]['dddd']);
-			s = s.replaceAll('ddd', FMT[wee]['ddd']);
+			s = s.replaceAll('mmmm', nuTranslate(FMT[mth].mmmm));
+			s = s.replaceAll('mmm', nuTranslate(FMT[mth].mmm));
+			s = s.replaceAll('mm', FMT[mth].mm);
+			s = s.replaceAll('dddd', FMT[wee].dddd);
+			s = s.replaceAll('ddd', FMT[wee].ddd);
 			s = s.replaceAll('dd', day);
 			s = s.replaceAll('hh', hou);
 			s = s.replaceAll('nn', min);
@@ -1048,7 +1048,7 @@ class nuFormObject {
 				var l = fmt[0];
 
 				if (l == 'm' && FMT[nuTranslateToEnglish(v[i])] !== undefined) {
-					d.m = FMT[nuTranslateToEnglish(v[i])]['mm'];					//-- javascript month
+					d.m = FMT[nuTranslateToEnglish(v[i])].mm;					//-- javascript month
 				}
 
 				if (fmt == 'dd') {

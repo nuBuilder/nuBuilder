@@ -92,7 +92,7 @@ function nuForm(f, r, filter, search, n, like) {
 	last.filter = filter == '' ? window.nuFILTER : filter;
 	last.search = search;
 
-	if (parent['nuHashFromEditForm'] === undefined) {
+	if (parent.nuHashFromEditForm === undefined) {
 		last.hash = [];
 	} else {
 		last.hash = parent.nuHashFromEditForm();
@@ -278,7 +278,7 @@ function nuGetPHP(formId, recordId) {
 	last.form_id = formId;
 	last.record_id = recordId;
 
-	if (parent['nuHashFromEditForm'] === undefined) {
+	if (parent.nuHashFromEditForm === undefined) {
 		last.hash = [];
 	} else {
 		last.hash = parent.nuHashFromEditForm();
@@ -316,7 +316,7 @@ function nuRunPHP(code, iFrame, runBeforeSave) {
 
 	if (nuFORM.getCurrent() === undefined) {
 		last.record_id = parent.nuFORM.getCurrent().record_id;
-		last.hash = parent['nuHashFromEditForm'] === undefined ? [] : parent.nuHashFromEditForm();
+		last.hash = parent.nuHashFromEditForm === undefined ? [] : parent.nuHashFromEditForm();
 	} else {
 		last.record_id = nuFORM.getCurrent().record_id;
 		last.hash = nuHashFromEditForm();

@@ -1149,7 +1149,7 @@ function nuSaveNuDrag() {
 		return;
 	}
 
-	if (parent['nuFORM'] !== undefined) {
+	if (parent.nuFORM !== undefined) {
 		parent.nuFORM.edited = false;
 	}
 
