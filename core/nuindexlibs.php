@@ -99,5 +99,3 @@ function nuGetJSActionScreen($nuBrowseFunction, $target, $welcome, $opener, $sea
 
 	return $h2;
 }
-
-?>

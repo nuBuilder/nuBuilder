@@ -165,5 +165,3 @@ function nuAddJavaScript($js, $bc = false, $first = false){
 	// dummy
 }
 
-
-?>

@@ -613,5 +613,3 @@ function nuID_DEV(){
 	return $prefix . $uniqueId . substr($hash, 0, 2);
 
 }
-
-?>

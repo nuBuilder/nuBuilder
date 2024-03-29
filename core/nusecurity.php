@@ -225,5 +225,3 @@ function nuPasswordChangeStatusPending($globalAccess, $sessionData, $callType, $
 
 	return false;
 }
-
-?>

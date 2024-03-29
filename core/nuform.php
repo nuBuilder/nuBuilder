@@ -1900,5 +1900,3 @@ function nuPreloadImages($a){
 	nuAddJavaScript($js);
 
 }
-
-?>

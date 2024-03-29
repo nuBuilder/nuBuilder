@@ -35,4 +35,3 @@ function nuDragSave($data){
 
 }
 
-?>

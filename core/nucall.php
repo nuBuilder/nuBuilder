@@ -58,7 +58,3 @@ if(!array_key_exists('TEMPORARY_SESSION', $_SESSION)){
 
 require_once('nucommon.php');
 nuEval($PHPID);
-
-
-
-

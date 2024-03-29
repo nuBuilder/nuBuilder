@@ -182,4 +182,3 @@
 	$j											= json_encode($f->forms[0]);
 
 	print $j;
-?>

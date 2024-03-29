@@ -173,5 +173,3 @@ function nuSsoCheckSysUserEntryIsInOrder($sus_login_name) {
 	($expired == 0) or nuDie("Error during SSO login.  Internal information: Entry for user was found but is expired.");
 
 }
-
-?>

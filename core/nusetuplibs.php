@@ -95,4 +95,3 @@ function nuCleanConfigValue($v) {
 
 }
 
-?>

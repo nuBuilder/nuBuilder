@@ -518,5 +518,3 @@ function nuGetTranslation($l) {
 
 	return $a;
 }
-
-?>

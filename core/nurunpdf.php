@@ -1238,4 +1238,3 @@ function nuSavePDF($PDF, $code = '', $tag = '') {
 
 }
 
-?>
