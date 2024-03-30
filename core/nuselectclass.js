@@ -1026,18 +1026,19 @@ function nuAngle() {
 
 function nuChangeJoin(e) {
 
-	var v = parent.$('#sse_json').val();
-	var j = JSON.parse(v);
-	var i = $(e.target).attr('data-nu-join');
+	const jsonInputElement = parent.$('#sse_json');
+	let jsonString = jsonInputElement.val();
+	const parsedJson = JSON.parse(jsonString);
+	const joinIndex = $(event.target).attr('data-nu-join');
 
-	if (j.joins[i] == '') {
-		j.joins[i] = 'LEFT';
+	if (parsedJson.joins[joinIndex] === '') {
+		parsedJson.joins[joinIndex] = 'LEFT';
 	} else {
-		j.joins[i] = '';
+		parsedJson.joins[joinIndex] = '';
 	}
 
-	parent.$('#sse_json')
-		.val(JSON.stringify(j))
+	jsonInputElement
+		.val(JSON.stringify(parsedJson))
 		.trigger("change");
 
 	nuSQL.buildSQL();
