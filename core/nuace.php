@@ -48,7 +48,7 @@ function nuLoad(){
 
 	const languageModes = {
 	  'HTML': {mode: 'html', cl: 'html'},
-	  'JAVASCRIPT': {mode: 'javascript', cl: 'js'},
+	  'JS': {mode: 'javascript', cl: 'js'},
 	  'MYSQL': {mode: 'mysql', cl: 'sql'},
 	  'PHP': {mode: 'php', cl: 'php'},
 	  'SQL': {mode: 'sql', cl: 'sql'},

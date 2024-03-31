@@ -6370,7 +6370,7 @@ function nuPortraitScreen(columns) {
 
 		if (jId.is("[nu-mobileview-hidden]") || !tabVisible) {
 
-			let {componentIds, type} = nuObjectComponents(id);
+			let {componentIds} = nuObjectComponents(id);
 
 			for (let c = 0; c < componentIds.length; c++) {
 				let comp = $('#' + componentIds[c]);
@@ -7062,5 +7062,14 @@ function nuUppySetLanguage(uppy, language, languageFallback) {
 	}
 
 	return langResult;
+
+}
+
+function nuACEInitDblClickHandlers() {
+
+	$('.js, .sql, .html, .php, .css').on('dblclick', function() {
+		const language = $(this).attr('class').split(' ')[0].toUpperCase();
+		nuOpenAce(language, this.id);
+	});
 
 }
