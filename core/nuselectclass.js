@@ -509,37 +509,29 @@ class nuSelectObject {
 
 		for (var k in r) {
 
-			var I = String(k).split('--')[0];
-			var i = String(k).split('--')[1];
+			var fromField = String(k).split('--')[0];
+			var toField = String(k).split('--')[1];
 
-			var B = String(I).split('_')[2];
-			var b = String(i).split('_')[2];
+			var fromTable = String(fromField).split('_')[2];
+			var toTable = String(toField).split('_')[2];
 
-			var T = $('#tablename' + B).html();
-			var A = $('#alias' + B).val();
-			var F = $('#' + I).html();
+			var obj = {
 
-			var t = $('#tablename' + b).html();
-			var a = $('#alias' + b).val();
-			var f = $('#' + i).html();
+				'from': fromField,
+				'fromtable': $('#tablename' + fromTable).html(),
+				'fromalias': $('#alias' + fromTable).val(),
+				'fromfield': $('#' + fromField).html(),
 
-			var o = {
-
-				'from': I,
-				'fromtable': T,
-				'fromalias': A,
-				'fromfield': F,
-
-				'to': i,
-				'totable': t,
-				'toalias': a,
-				'tofield': f,
+				'to': toField,
+				'totable': $('#tablename' + toTable).html(),
+				'toalias': $('#alias' + toTable).val(),
+				'tofield': $('#' + toField).html(),
 
 				'join': r[k],
 
 			};
 
-			this.joins[I + '--' + i] = o;
+			this.joins[fromField + '--' + toField] = obj;
 
 		}
 
