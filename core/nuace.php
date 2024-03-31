@@ -17,11 +17,11 @@
 
 <script>
 
-window.c = opener.window.nuAce[0];
-window.o = opener.window.nuAce[1];
-window.theme = opener.window.nuAce[2];
-window.l = $('#' + o, window.opener.document).attr('data-nu-label');
-document.title = l + " - Ace Editor";
+window.nuACELanguage = opener.window.nuAce[0];
+window.nuACEObjectId = opener.window.nuAce[1];
+window.nuACETheme = opener.window.nuAce[2];
+window.nuACEObjectLabel = $('#' + window.nuACEObjectId, window.opener.document).attr('data-nu-label');
+document.title = window.nuACEObjectId + " - Ace Editor";
 
 function nuLoad(){
 
@@ -31,7 +31,7 @@ function nuLoad(){
 	window.editor = ace.edit("nu_editor");
 
 	editor.setShowPrintMargin(false);
-	const theme = "ace/theme/" + (window.theme ? window.theme : 'monokai');
+	const theme = "ace/theme/" + (window.nuACETheme ? window.nuACETheme : 'monokai');
 
 	editor.setTheme(theme);
 	editor.setOptions({
@@ -40,11 +40,11 @@ function nuLoad(){
 		enableLiveAutocompletion: true
 	});
 
-	window.startValue = opener.window.document.getElementById(window.o).value;
+	window.startValue = opener.window.document.getElementById(nuACEObjectId).value;
 	editor.setFontSize(14);
-	var cl			= '';
 
-	var language = window.c.toUpperCase();
+	var cl			= '';
+	var language = window.nuACELanguage.toUpperCase();
 
 	const languageModes = {
 	  'HTML': {mode: 'html', cl: 'html'},
@@ -60,13 +60,13 @@ function nuLoad(){
 	  editor.getSession().setMode({path:`ace/mode/${mode}`, inline:true});
 	}
 
-	document.getElementById('nu_language').innerHTML	= window.l + " (" + c  + ")";
+	document.getElementById('nu_language').innerHTML	= window.nuACEObjectLabel + " (" + window.nuACELanguage + ")";
 	
 	if (language.includes('SQL')) {
 		document.getElementById('nuACEBeautifyButton').style.display = 'none';
 	}
 
-	if($('#' + o, window.opener.document)[0].id == 'deb_message'){
+	if($('#' + window.nuACEObjectId, window.opener.document)[0].id == 'deb_message'){
 		$('#copy_to_nubuilder').remove();
 		$('#copy_to_nubuilder_no_close').remove();
 	}else{
@@ -147,14 +147,14 @@ function nuAceSave(close){
 
 	window.nuWarn	= 0;
 
-	if(!opener.window.document.getElementById(window.o)){
+	if(!opener.window.document.getElementById(window.nuACEObjectId)){
 
 		alert('The opening Form is no longer available.');
 		return;
 
 	}
 
-	opener.window.document.getElementById(o).value = editor.getValue();
+	opener.window.document.getElementById(window.nuACEObjectId).value = editor.getValue();
 
 	if ("createEvent" in document) {
 
@@ -162,14 +162,14 @@ function nuAceSave(close){
 
 		evt.initEvent("change", false, true);
 
-		opener.window.document.getElementById(window.o).dispatchEvent(evt);
+		opener.window.document.getElementById(window.nuACEObjectId).dispatchEvent(evt);
 
 	}else{
-		opener.window.document.getElementById(window.o).fireEvent("onchange");
+		opener.window.document.getElementById(window.nuACEObjectId).fireEvent("onchange");
 	}
 
 	if (close) {
-		window.close();
+		window.nuACELanguagelose();
 	} else {
 		nuRemoveButtonBgColor();
 	}
