@@ -59,22 +59,8 @@ function nuShowFormInfo() {
 
 }
 
-function nuDevMode(m) {
-
-	if (m !== undefined) {
-		localStorage.setItem('nuDevMode', m ? '1' : '0');
-	}
-
-	const d = localStorage.getItem("nuDevMode");
-	if ((d === '1' || m) && nuGlobalAccess()) {
-		nuSetProperty('nuDevMode', '1', true);
-		return true;
-	}
-	if (!m) {
-		nuSetProperty('nuDevMode', '0', true);
-	}
-
-	return false;
+function nuDevMode() {
+	return nuSERVERRESPONSE.dev_mode === '1';
 }
 
 function nuAddAdminButton(id, obj) {

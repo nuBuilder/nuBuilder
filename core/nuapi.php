@@ -164,6 +164,7 @@
 		$f->forms[0]->data_mode					= $globalAccess ? null : nuGetFormPermission($formId,'slf_data_mode');
 		$f->forms[0]->form_type_access			= $globalAccess ? null : nuGetFormPermission($formId,'slf_form_type');
 		$f->forms[0]->is_demo					= nuDemo(false);
+		$f->forms[0]->dev_mode 					= $globalAccess && isset($nuConfigDevMode) ? (string)((int)$nuConfigDevMode) : '0';	
 		$f->forms[0]->remember_me_2fa			= $sessionData['2FA_REMEMBER_ME'];
 		$f->forms[0]->token_validity_time_2fa	= $sessionData['2FA_TOKEN_VALIDITY_TIME'];
 		$f->forms[0]->form_access				= $GLOBALS['nuSetup']->set_denied;
