@@ -829,7 +829,7 @@ class nuSelectObject {
 
 		Joins.joins[key] = v;
 
-		const sseJson u = JSON.stringify(Joins);
+		const sseJson = JSON.stringify(Joins);
 		parent.$('#sse_json').val(sseJson);
 
 	}
