@@ -5731,12 +5731,8 @@ function nuWindowPosition() {
 
 	const p = window.parent.document;
 
-	var d = $('#nuDragDialog', p);
-
-	const l = parseInt(d.css('left'), 10);
-	const t = parseInt(d.css('top'), 10);
-	var w = parseInt(d.css('width'), 10);
-	var h = parseInt(d.css('height'), 10);
+	let d = $('#nuDragDialog', p);
+	let {l, t, w, h} = nuObjectPosition($(d).attr('id'));
 
 	window.nuDialogSize = { left: l, top: t, width: w, height: h };
 
@@ -5748,6 +5744,7 @@ function nuWindowPosition() {
 	window.nuWindowSize = { width: w, height: h };
 
 }
+
 
 function nuNoDuplicates() {
 
