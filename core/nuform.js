@@ -4015,17 +4015,15 @@ function nuSelectAllTabs(pthis) {
 
 }
 
-function nuSelectTab(tab, byUser) {
+function nuSelectTab(tab, byUser = false) {
 
 	if (window.nuOnSelectTab) {
 		if (nuOnSelectTab(tab) == false) return;
 	}
 
-	if (byUser === undefined) byUser = false;
-
 	let $tabId = $('#' + tab.id);
 
-	byUser = byUser === true && ! $tabId.is('[nu-data-clicked-by-system]') ? true : false;
+	byUser = byUser && !$tabId.is('[nu-data-clicked-by-system]');
 
 	if (byUser) nuSaveScrollPositions();
 
@@ -4039,30 +4037,20 @@ function nuSelectTab(tab, byUser) {
 
 	window.nuFORMHELP[form] = window.nuTABHELP[tabId];
 
-	let t = nuFORM.getProperty('tab_start');
-
-	for (let i = 0; i < t.length; i++) {
-
-		if (t[i].prefix == form) {
-			t[i].tabNumber = filt;
-		}
-
-	}
-
-	// Treating nuIframes and nuHtml differently as anything that needs to calculate size can't be display: none when the page loads
-	$("[data-nu-form='" + form + "']:not('.nuIframe, .nuHtml')").hide();
-	$(".nuIframe[data-nu-form='" + form + "']").css('visibility', 'hidden');
-	$(".nuHtml[data-nu-form='" + form + "']").css('visibility', 'hidden');
+	let selector = "[data-nu-form='" + form + "']";
+	$(selector + ":not('.nuIframe, .nuHtml')").hide();
+	$(".nuIframe" + selector + ", .nuHtml" + selector).css('visibility', 'hidden');	
 	$("[data-nu-form-filter='" + form + "']").removeClass('nuTabSelected');
 
-	$("[data-nu-form='" + form + "'][data-nu-tab='" + filt + "']:not([data-nu-lookup-id]):not('.nuIframe, .nuHtml')").show();
-	$(".nuIframe[data-nu-form='" + form + "'][data-nu-tab='" + filt + "']").css('visibility', 'visible');
-	$(".nuHtml[data-nu-form='" + form + "'][data-nu-tab='" + filt + "']").css('visibility', 'visible');
+	selector = "[data-nu-form='" + form + "'][data-nu-tab='" + filt + "']";
+	$(selector + ":not([data-nu-lookup-id]):not('.nuIframe, .nuHtml')").show();
+	$(".nuIframe" + selector + ", .nuHtml" + selector).css('visibility', 'visible');
+	
 	$('#' + tab.id).addClass('nuTabSelected');
 
-	if (byUser) nuRestoreScrollPositions();
+	if (byUser) {
 
-	if (byUser === true) {
+		nuRestoreScrollPositions();
 
 		let s = $('.nuTabSelected');
 		let obj = null;
