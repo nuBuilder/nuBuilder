@@ -6924,14 +6924,7 @@ function nuSetBrowseNoSearchResultsMessage(str) {
 	$('.nuBrowseNoResults').html(nuTranslate(str));
 }
 
-function nuSetSaveButtonPosition(t, l, h, w, fs) {
-
-	var sb = $('#nuSaveButton');
-	sb.appendTo('div#nuRECORD');
-
-	// not defined or 0
-	if (!w) w = sb.nuCSSNumber("width");
-	if (!h) h = sb.nuCSSNumber("height");
+function nuSetSaveButtonProperties(sb, t, l, h, w, fs) {
 
 	sb.css({
 		"top": t + "px",
@@ -6952,6 +6945,18 @@ function nuSetSaveButtonPosition(t, l, h, w, fs) {
 
 }
 
+function nuSetSaveButtonPosition(t, l, h, w, fs) {
+
+	var sb = $('#nuSaveButton');
+	sb.appendTo('div#nuRECORD');
+
+	if (!w) w = sb.nuCSSNumber("width");
+	if (!h) h = sb.nuCSSNumber("height");
+
+	return nuSetSaveButtonProperties(sb, t, l, h, w, fs);
+
+}
+
 function nuAttachSaveButtonTo(i, dx, dy, h, w, fs) {
 
 	var sb = $('#nuSaveButton');
@@ -6966,22 +6971,7 @@ function nuAttachSaveButtonTo(i, dx, dy, h, w, fs) {
 	if (!w || w == 0) w = sb.nuCSSNumber("width");
 	if (!h || h == 0) h = sb.nuCSSNumber("height");
 
-	sb.css({
-		"top": dest.nuCSSNumber("top") + dest.nuCSSNumber("height") + 15 + dy,
-		"left": dest.nuCSSNumber("left") + dx,
-		"width": w,
-		"position": "absolute",
-		"height": h,
-		"margin": "unset"
-	});
-
-	sb.attr('data-nu-tab', '0');
-	sb.attr('data-nu-form', '');
-
-	if (fs) sb[0].style.fontSize = fs + "px";
-	if (nuSelectedTabNumber() !== '0') sb.css('display', 'none');
-
-	return sb;
+	return nuSetSaveButtonProperties(sb, dest.nuCSSNumber("top") + dest.nuCSSNumber("height") + 15 + dy, dest.nuCSSNumber("left") + dx, h, w, fs);
 
 }
 
