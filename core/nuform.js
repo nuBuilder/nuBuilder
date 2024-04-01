@@ -5053,42 +5053,46 @@ function nuOnSubformDeleteClick(event) {
 
 }
 
+function nuChangeDeleteClicked(e) {
+
+	const sfid = $(e.target).attr('data-nu-checkbox');
+	const click = $('#' + sfid).attr('data-nu-clickdelete');
+
+	nuOnSubformDeleteClick(e);
+
+	if (click) eval(click);
+
+	nuHasBeenEdited();
+	nuCalculateForm();
+
+}
+
 function nuChange(e) {
 
-	if (e.target.id.substr(-8) == 'nuDelete') {
-
-		var sfid = $(e.target).parent().parent().parent()[0].id;
-		var click = $('#' + sfid).attr('data-nu-clickdelete');
-
-		nuOnSubformDeleteClick(event);
-
-		eval(click);
-
-		nuHasBeenEdited();
-		nuCalculateForm();
-
+	if (e.target.id.endsWith('nuDelete')) {
+		nuChangeDeleteClicked(e);
 		return;
-
 	}
 
 	nuSetSaved(false);
 
-	var t = $('#' + e.target.id)[0];
-	var p = $('#' + t.id).attr('data-nu-prefix');
+	const t = $('#' + e.target.id)[0];
+	const $id = $(t);
+	const prefix = $id.attr('data-nu-prefix');
 
 	nuReformat(t);
 
-	$('#' + p + 'nuDelete').prop('checked', false);
-	$('#' + t.id).addClass('nuEdited');
+	$('#' + prefix + 'nuDelete').prop('checked', false);
+	$id.addClass('nuEdited');
 	nuHasBeenEdited();
 
 	$('#nuCalendar').remove();
-	$('#' + t.id).removeClass('nuValidate');
+	$id.removeClass('nuValidate');
 	nuCalculateForm();
 
-	if (p == '') { return; }
-
-	nuAddSubformRow(t, e);
+	if (prefix !== '') { 
+		nuAddSubformRow(t, e);
+	}
 
 }
 
