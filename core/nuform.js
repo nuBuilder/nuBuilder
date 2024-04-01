@@ -3154,8 +3154,9 @@ function nuRecordHolderObject(t) {
 	var i = String(p.attr('id'));
 	var c = 0;
 
-	this.form = i.substr(0, i.length - 3 - h.length);
-	this.strNo = i.substr(this.form.length, 3);
+	this.form = i.substring(0, i.length - 3 - h.length);
+	this.strNo = i.substring(this.form.length, this.form.length + 3);
+
 	this.intNo = Number(this.strNo);
 
 	while ($('#' + this.form + nuPad3(this.intNo + c) + h).length != 0) { c++; }
