@@ -1158,21 +1158,6 @@ function nuPopSQL(e, nuE) {			//-- used in database
 
 }
 
-function nuPopJS() {				//-- used in database
-
-	var i = $('#sob_all_zzzzsys_form_id').val();
-
-	if (i == '') {
-
-		alert(nuTranslate('Cannot Create Event Until This Form Has Been Saved..'));
-		return;
-
-	}
-
-	nuPopup('nuform', i, 'justjs');
-
-}
-
 function nuGetLookupFields(id) {
 
 	const prefix = id.slice(0, -4);
