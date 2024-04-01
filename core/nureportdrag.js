@@ -1385,13 +1385,14 @@ function nuDialogInput(cap, id, top, left, val, fun, sel) {
 		$('#' + e.id).html(opener.nuTranslate(cap));
 	}
 
-	if (arguments.length == 7) {
-		var e = document.createElement('select');
-		var ew = 4;
-	} else {
-		var e = document.createElement('input');
-		var ew = 0;
+	let ew = 4;
+	let tagName = 'select';
+	if (arguments.length !== 7) {
+		tagName = 'input';
+		ew = 0;
 	}
+
+	var e = document.createElement(tagName);
 	e.setAttribute('id', id);
 
 	$('#nuDragDialog').append(e);
