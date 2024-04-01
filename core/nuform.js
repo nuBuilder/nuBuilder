@@ -3730,7 +3730,7 @@ function nuOptions(formId, subformId, t, access) {
 }
 
 function nuAllowChanges(f) {
-	return nuSERVERRESPONSE.form_access == 0 || String(f).substr(0, 2) != 'nu' || f == 'nuuserhome';
+	return nuSERVERRESPONSE.form_access == 0 || !String(f).startsWith('nu') || f == 'nuuserhome';
 }
 
 function nuHideOptionsItemShortcutKeys() {
