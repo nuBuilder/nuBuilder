@@ -1934,7 +1934,7 @@ function nuSELECT(w, i, l, p, prop) {
 
 	const sel =  nuCreateElementWithId('select', id, p + 'nuRECORD');
 
-	$sel = $(sel);
+	let $sel = $(sel);
 
 	if (w.objects[i].value != '' && nuRecordId() == '-1') {
 		$sel.addClass('nuEdited');
@@ -1979,7 +1979,8 @@ function nuSELECT(w, i, l, p, prop) {
 		a = [s];
 	}
 
-	if (s.substr(0, 1) + s.substr(-1) == '[]') {
+	// Check if the string starts and ends with '[]'
+	if (/^\[.*\]$/.test(s)) {
 		eval('a = ' + s);
 	}
 
