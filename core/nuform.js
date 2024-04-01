@@ -5290,34 +5290,34 @@ function nuCloneAction() {
 
 function nuEmptyNoClone() {
 
-    const noclone = nuSERVERRESPONSE.noclone;
+	const noclone = nuSERVERRESPONSE.noclone;
 
-    if (!noclone || !Array.isArray(noclone)) return;
+	if (!noclone || !Array.isArray(noclone)) return;
 
-    noclone.forEach(function(item) {
+	noclone.forEach(function(item) {
 
-        if (item.subform) {
-            $('#' + item.id + 'scrollDiv .nuSubform1, #' + item.id + 'scrollDiv .nuSubform0').each(function() {
-                if (this.id !== item.id + '000nuRECORD') {
-                    $(this).remove();
-                }
-            });
+		if (item.subform) {
+			$('#' + item.id + 'scrollDiv .nuSubform1, #' + item.id + 'scrollDiv .nuSubform0').each(function() {
+				if (this.id !== item.id + '000nuRECORD') {
+					$(this).remove();
+				}
+			});
 
-            $('#' + item.id + '000nuRECORD').children().each(function() {
-                if ($(this).hasClass('nuEdited')) {
-                    $(this).val('');
-                    if ($('#' + this.id + 'button').length) {
-                        $('#' + this.id + 'code, #' + this.id + 'description').val('');
-                    }
-                }
-            });
+			$('#' + item.id + '000nuRECORD').children().each(function() {
+				if ($(this).hasClass('nuEdited')) {
+					$(this).val('');
+					if ($('#' + this.id + 'button').length) {
+						$('#' + this.id + 'code, #' + this.id + 'description').val('');
+					}
+				}
+			});
 
-            $('#' + item.id + '000nuDelete').prop('checked', true);
-            $('#' + item.id + '001nuRECORD').remove();
-        } else {
-            $('#' + item.id).val('').trigger("change");
-        }
-    });
+			$('#' + item.id + '000nuDelete').prop('checked', true);
+			$('#' + item.id + '001nuRECORD').remove();
+		} else {
+			$('#' + item.id).val('').trigger("change");
+		}
+	});
 
 }
 
@@ -5732,7 +5732,7 @@ function nuWindowPosition() {
 	const p = window.parent.document;
 
 	let d = $('#nuDragDialog', p);
-	let {l, t, w, h} = nuObjectPosition($(d).attr('id'));
+	let {l, t, w, h} = nuObjectPosition(d);
 
 	window.nuDialogSize = { left: l, top: t, width: w, height: h };
 
@@ -5744,7 +5744,6 @@ function nuWindowPosition() {
 	window.nuWindowSize = { width: w, height: h };
 
 }
-
 
 function nuNoDuplicates() {
 
@@ -6122,7 +6121,8 @@ function nuBrowseBorders() {
 
 function nuObjectPosition(id) {
 
-	const $id = $('#' + id);
+	const $id = nujQueryObj(id);
+
 	const t = parseInt($id.css('top'), 10);
 	const l = parseInt($id.css('left'), 10);
 	const h = parseInt($id.css('height'), 10);
