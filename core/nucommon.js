@@ -1127,35 +1127,24 @@ function nuPreview(a) {
 
 }
 
-function nuPopPHP(e, nuE) {			//-- used in database
+function nuPopEvent(e, formId, nuEvent) {
 
-	var i = nuRecordId();
+	const recordId = nuRecordId();
 
-	if (i == '') {
-
-		alert(nuTranslate('Cannot create Event Until This Form Has Been Saved..'));
-		return;
-
+	if (formId === 'nuphp') {
+		nuPopup('nuphp', recordId + '_' + nuEvent, 'justphp');
+	} else if (formId === 'nuselect') {
+		nuPopup('nuselect', recordId + '_' + nuEvent, 'justsql');
 	}
-
-	nuPopup('nuphp', i + '_' + nuE, 'justphp');
 
 }
 
+function nuPopPHP(e, nuEvent) {
+	nuPopEvent(e, 'nuphp', nuEvent);
+}
 
-function nuPopSQL(e, nuE) {			//-- used in database
-
-	var i = nuRecordId();
-
-	if (i == '') {
-
-		alert(nuTranslate('Cannot create SQL Until This Form Has Been Saved..'));
-		return;
-
-	}
-
-	nuPopup('nuselect', i + '_' + nuE, 'justsql');
-
+function nuPopSQL(e, nuEvent) {
+	nuPopEvent(e, 'nuselect', nuEvent);
 }
 
 function nuGetLookupFields(id) {
