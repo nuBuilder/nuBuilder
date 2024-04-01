@@ -2329,7 +2329,7 @@ function nuSubformLastRow(t) {
 
 	const i = String($('#' + t.id).parent().attr('id'));
 	const p = i.substr(0, i.length - 17);
-	const s = parseInt(i.substr(11, 3), 10) + 1;
+	const s2 = parseInt(i.substring(11, 14), 10) + 1;
 	const n = $('#' + p + nuPad3(s) + 'nuRECORD').length;
 
 	return n == 0;
