@@ -265,6 +265,20 @@ jQuery.fn.extend({
 
 });
 
+function nujQueryObj(id) {
+
+	if (typeof id === 'string') {
+		return $('#' + id);
+	} else if (id instanceof HTMLElement) {
+		return $(id);		
+	} else if (id instanceof jQuery) {
+		return id;
+	} else {
+		return jQuery([]);
+	}
+
+}
+
 function nuPad4(id, pad = '0') {
 	return nuPad(id, 4, pad);
 }
