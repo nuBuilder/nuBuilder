@@ -2285,14 +2285,18 @@ function nuObjectIdFromId(id) {
 
 function nuSetBrowseColumnSize(column, size) {
 
-	var cw = this;
-	if (nuIsIframe()) {
-		cw = parent.$("#" + window.frameElement.id)[0].contentWindow;
+	let contextWindow = nuIsIframe() ? parent.document.getElementById(window.frameElement.id).contentWindow : this;
+	const currentBreadcrumb = contextWindow.nuFORM.breadcrumbs[contextWindow.nuFORM.breadcrumbs.length - 1];
+	
+	if (size === undefined) {
+		return currentBreadcrumb.column_widths[column];
 	}
-	cw.nuFORM.breadcrumbs[cw.nuFORM.breadcrumbs.length - 1].column_widths[column] = size;
-	cw.nuSetBrowseColumns(cw.nuFORM.breadcrumbs[cw.nuFORM.breadcrumbs.length - 1].column_widths)
+	
+	currentBreadcrumb.column_widths[column] = size;
+	contextWindow.nuSetBrowseColumns(currentBreadcrumb.column_widths);
 
 }
+
 
 function nuSelectMultiWithoutCtrl(i, active) {
 
