@@ -2356,10 +2356,9 @@ function nuSelectRemoveMultiple(i) {
 
 }
 
-function nuSelectSelectAll(id, value) {
 
-	if (value === undefined) var value = true;
-	
+function nuSelectSelectAll(id, value = true) {
+
 	const $id = $("#" + id);
 	$id.find('option:not(:empty)').prop('selected', value);
 	$id.trigger("change");
