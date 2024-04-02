@@ -299,12 +299,6 @@ function nuGlobalAccess() {
 	return window.global_access;
 }
 
-function loginInputKeyup(event) {
-	if (event.key == 'Enter') {
-		$('input#submit').trigger( "click" );
-	}
-}
-
 function nuTriggerEvent(element, event = 'change') {
 
 	if (element instanceof jQuery) {
