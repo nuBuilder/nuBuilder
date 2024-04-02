@@ -134,9 +134,6 @@ String.prototype.nuFormat = function () {
 		return (typeof args[key] !== "undefined" ? args[key] : match);
 	});
 };
-// Examples:
-// "This is an example from {name}".format({name:"Blaine"});
-// "This is an example from {0}".format("Blaine");
 
 $.fn.nuEnterKey = function(fn, preventDefault = false) {
 	return this.each(function() {
