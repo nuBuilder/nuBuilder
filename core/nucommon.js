@@ -2365,30 +2365,32 @@ function nuSelectSelectAll(id, value = true) {
 
 }
 
-function nuSelectSelectedValueArray(id) {
+function nuSelectSelectedInfo(id) {
 
-	var a = [];
-	$('#' + id + ' option:selected').each(function (index) {
-		if ($(this).val() !== '') {
-			a.push($(this).val())
+	let option = {
+		values: [],
+		texts: []
+	};
+
+	$('#' + id + ' option:selected').each(function() {
+		let $this = $(this);
+		if ($this.val() !== '') {
+			option.values.push($this.val());
+			option.texts.push($this.text());
 		}
 	});
 
-	return a;
+	return option;
 
 }
 
+
+function nuSelectSelectedValueArray(id) {
+	return nuSelectSelectedInfo(id).values;
+}
+
 function nuSelectSelectedTextArray(id) {
-
-	var a = [];
-	$('#' + id + ' option:selected').each(function (index) {
-		if ($(this).val() !== '') {
-			a.push($(this).text())
-		}
-	});
-
-	return a;
-
+	return nuSelectSelectedInfo(id).texts;
 }
 
 function nuPasteText(id, callback) {
