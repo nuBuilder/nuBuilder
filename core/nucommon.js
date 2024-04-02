@@ -2445,7 +2445,6 @@ jQuery.fn.nuHighlight = function (pat) {
 				const middleclone = middlebit.cloneNode(true);
 				spannode.appendChild(middleclone);
 				middlebit.parentNode.replaceChild(spannode, middlebit);
-			//	spannode.setAttribute("onclick", "nuSelectBrowse(event, this.parentElement)");
 				skip = 1;
 			}
 		} else if (node.nodeType == 1 && node.childNodes && !/(script|style)/i.test(node.tagName)) {
@@ -2461,6 +2460,7 @@ jQuery.fn.nuHighlight = function (pat) {
 };
 
 function nuInputMaxLength(id, maxLength, labelId) {
+
 	const $input = $('#' + id);
 
 	// If maxLength is not provided, return the current maxlength of the input
@@ -2478,6 +2478,7 @@ function nuInputMaxLength(id, maxLength, labelId) {
 			$label.html(`${textLen}/${maxLength}`);
 		});
 	}
+
 }
 
 function nuDebugMode() {
@@ -2584,12 +2585,12 @@ function nuCurrentDate(format) {
 
 	return df;
 
-};
+}
 
 function nuCurrentDateTime(format) {
 
-	let d = new Date();
-	let
+	const d = new Date();
+	const
 		yyyy = d.getFullYear(),
 		mm = nuPad2(d.getMonth() + 1),
 		dd = nuPad2(d.getDate()),
@@ -2597,14 +2598,15 @@ function nuCurrentDateTime(format) {
 		nn = nuPad2(d.getMinutes()),
 		ss = nuPad2(d.getSeconds());
 
-	let df = yyyy + '-' + mm + '-' + dd + ' ' + hh + ':' + nn + ':' + ss;
+	let dateTimeFormat = `${yyyy}-${mm}-${dd} ${hh}:${nn}:${ss}`;
+
 	if (format !== undefined) {
-		df = nuFORM.addFormatting(df, 'D|' + format);
+		dateTimeFormat = nuFORM.addFormatting(dateTimeFormat, 'D|' + format);
 	}
 
-	return df;
+	return dateTimeFormat;
 
-};
+}
 
 function nuSetDateValue(i, d) {
 
