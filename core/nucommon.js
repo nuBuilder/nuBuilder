@@ -2634,28 +2634,6 @@ function nuArrayColumn(arr, n) {
 	return arr.map(x => x[n]);
 }
 
-function nuBase64decode(str) {
-
-	const text = atob(str);
-	const length = text.length;
-	const bytes = new Uint8Array(length);
-
-	for (let i = 0; i < length; i++) {
-		bytes[i] = text.charCodeAt(i);
-	}
-
-	const decoder = new TextDecoder(); // default is utf-8
-	return decoder.decode(bytes);
-
-}
-
-function nuBase64encode(str) {
-
-	let encode = encodeURIComponent(str).replace(/%([a-f0-9]{2})/gi, (m, $1) => String.fromCharCode(parseInt($1, 10)))
-	return btoa(encode);
-
-}
-
 function nuOpenWiki(page) {
 	window.open('https://wiki.nubuilder.cloud/index.php' + page);
 }
