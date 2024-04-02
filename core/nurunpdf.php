@@ -512,7 +512,7 @@ class nuSECTION{
 					$fit				= floor($availableHeight / $this->O[$i]->height);			//-- rows that will fit this page
 				}
 
-				$o						= pdfObject($this->O[$i]->id, $this->O[$i]->top);			//-- create Object
+				$o						= nuPdfObject($this->O[$i]->id, $this->O[$i]->top);			//-- create Object
 
 				if(isset($this->O[$i]->B)){$o->B = $this->O[$i]->B;$this->O[$i]->B = null;}
 				if(isset($this->O[$i]->F)){$o->F = $this->O[$i]->F;$this->O[$i]->F = null;}
@@ -542,7 +542,7 @@ class nuSECTION{
 
 			$expandedSectionHeight			= $expandedSectionHeight - $sectionHeight;
 
-			$s								= pdfSection($this->group, $this->section, $sectionTop, $sectionHeight);
+			$s								= nuPdfSection($this->group, $this->section, $sectionTop, $sectionHeight);
 			$sectionTop						= $sectionTop + $sectionHeight;
 			$os								= [];
 
@@ -564,7 +564,7 @@ class nuSECTION{
 
 			if($expandedSectionHeight > 0){
 
-				$s							= pdfSection($this->group, $this->section, $sectionTop, $expandedSectionHeight);
+				$s							= nuPdfSection($this->group, $this->section, $sectionTop, $expandedSectionHeight);
 				$sectionTop					= $sectionTop + $expandedSectionHeight;
 				$os							= [];
 				$s->objects					= $os;																		//-- add objects to section
@@ -604,13 +604,13 @@ class nuSECTION{
 		$count			= count($O);
 		for($i = 0 ; $i < $count ; $i ++){
 
-			$newO			= pdfObject($O[$i]->id, $O[$i]->top);				//-- create Object
+			$newO			= nuPdfObject($O[$i]->id, $O[$i]->top);				//-- create Object
 			$newO->lines	= $O[$i]->LINES;
 			$newOs[]		= $newO;
 
 		}
 
-		$newsec				= pdfSection(2, $section, $section == 0 ? 0 : $this->pageHeight - $S->height, $S->height);
+		$newsec				= nuPdfSection(2, $section, $section == 0 ? 0 : $this->pageHeight - $S->height, $S->height);
 		$newsec->objects	= $newOs;										//-- add objects to section
 		$this->SECTIONS[]	= $newsec;
 
@@ -860,7 +860,7 @@ class nuSECTION{
 
 //================================================
 
-function pdfSection($g, $s, $t, $h){		//-- section
+function nuPdfSection($g, $s, $t, $h){		//-- section
 
 	$c					= new stdClass;
 	$c->objects			= [];
@@ -873,7 +873,7 @@ function pdfSection($g, $s, $t, $h){		//-- section
 
 }
 
-function pdfObject($id, $t){
+function nuPdfObject($id, $t){
 
 	$c					= new stdClass;
 	$c->lines			= [];
