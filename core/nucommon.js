@@ -1723,53 +1723,52 @@ function nuButtonIcon(id) {
 
 }
 
-function nuChart(i, t, a, h, x, y, st, is) {
+function nuChart(chartId, chartType, dataArray, chartTitle, xAxisTitle, yAxisTitle, seriesType, isStacked) {
+ 
+	const chartElement = document.getElementById(chartId);
+	if (!chartElement) return;
 
-	let obj = document.getElementById(i);
-	if (obj === null) return;
-
-	a = eval(a);
-
-	if (a === undefined || a === '' || a.length === 0) { return; }
+	const data = eval(dataArray);
+	if (!data || data.length === 0) return;
 
 	try {
-		google.charts.load('current', { 'packages': ['corechart'] });
+		google.charts.load('current', {
+			packages: ['corechart']
+		});
 	} catch (error) {
 		return;
 	}
 
-	google.charts.setOnLoadCallback(drawVisualization);
+	google.charts.setOnLoadCallback(drawChart);
 
-	function drawVisualization() {
-
-		let data = google.visualization.arrayToDataTable(a);
-		let wrapper = new google.visualization.ChartWrapper({
-
-			chartType: t,
-			dataTable: data,
-			containerId: i,
-
+	function drawChart() {
+		const dataTable = google.visualization.arrayToDataTable(data);
+		const chartWrapper = new google.visualization.ChartWrapper({
+			chartType,
+			dataTable,
+			containerId: chartId,
 			options: {
-				title: h,
-				vAxis: { title: y },
-				hAxis: { title: x },
-				seriesType: st,
-				isStacked: is,
-			}
-
+				title: chartTitle,
+				vAxis: {
+					title: yAxisTitle
+				},
+				hAxis: {
+					title: xAxisTitle
+				},
+				seriesType,
+				isStacked,
+			},
 		});
 
-		var readyListener = google.visualization.events.addListener(wrapper, 'ready', function () {
+		const readyListener = google.visualization.events.addListener(chartWrapper, 'ready', () => {
 			if (window.nuChartOnReady) {
 				google.visualization.events.removeListener(readyListener);
-				nuChartOnReady(i, wrapper);
+				window.nuChartOnReady(chartId, chartWrapper);
 			}
 		});
 
-		wrapper.draw();
-
-		window[i + '_wrapper'] = wrapper;
-
+		chartWrapper.draw();
+		window[`${chartId}_wrapper`] = chartWrapper;
 	}
 
 }
