@@ -345,7 +345,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 
 					$o->run_type	= 'F';
 
-				}else if($runType == 'P' || isProcedure($fromId)){
+				}else if($runType == 'P' || nuIsProcedure($fromId)){
 
 					$actt			= nuRunQuery('SELECT sph_zzzzsys_form_id, sph_code FROM zzzzsys_php WHERE zzzzsys_php_id = ?', [$fromId]);
 					$act			= db_fetch_object($actt);
@@ -355,7 +355,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 					$runtab			= nuRunQuery("SELECT sph_run FROM zzzzsys_php WHERE zzzzsys_php_id = ?", [$r->sob_run_zzzzsys_form_id]);
 					$o->run_hidden	= db_fetch_object($runtab)->sph_run == 'hide';
 
-				}else if($runType == 'R' || isReport($fromId)){
+				}else if($runType == 'R' || nuIsReport($fromId)){
 
 					$actt			= nuRunQuery('SELECT sre_zzzzsys_form_id, sre_code  FROM zzzzsys_report WHERE zzzzsys_report_id = ?', [$fromId]);
 					$act			= db_fetch_object($actt);
@@ -1807,7 +1807,7 @@ function nuGetBrowseWidth($f){
 
 }
 
-function isForm($i){
+function nuIsForm($i){
 
 	$s	= "SELECT zzzzsys_form_id_id FROM zzzzsys_form WHERE zzzzsys_form_id = ?";
 	$t	= nuRunQuery($s, [$i]);
@@ -1817,7 +1817,7 @@ function isForm($i){
 
 }
 
-function isProcedure($i){
+function nuIsProcedure($i){
 
 	$s	= "SELECT zzzzsys_php_id FROM zzzzsys_php WHERE zzzzsys_php_id = ?";
 	$t	= nuRunQuery($s, [$i]);
@@ -1827,7 +1827,7 @@ function isProcedure($i){
 
 }
 
-function isReport($i){
+function nuIsReport($i){
 
 	$s	= "SELECT zzzzsys_report_id FROM zzzzsys_report WHERE zzzzsys_report_id = ?";
 	$t	= nuRunQuery($s, [$i]);
