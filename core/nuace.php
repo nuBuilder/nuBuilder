@@ -103,8 +103,8 @@ function handleCtrlComma(event) {
   // Check if the Ctrl + , combination is pressed (Ace menu opens)
   if ((event.metaKey || event.ctrlKey) && event.keyCode == 188) {
 	  editor.execCommand("showSettingsMenu");
-      document.title = Date.now();
-      setTimeout(function () {
+	  document.title = Date.now();
+	  setTimeout(function () {
 		$('#ace_settingsmenu').parent().css('background-color','');
 	}, 50);
 
@@ -112,7 +112,7 @@ function handleCtrlComma(event) {
 }
 
 function nuSetEdited(edited = true) {
-    $('.nuCopyBackButton').toggleClass('red', edited);	
+	$('.nuCopyBackButton').toggleClass('red', edited);	
 	$('.undo').toggleClass('nuReadonly', ! edited);	
 	$(".undo").prop("disabled", !edited);
 }
@@ -154,6 +154,8 @@ function nuAceSave(close){
 
 	}
 
+	nuSetEdited(false);
+
 	opener.window.document.getElementById(window.nuACEObjectId).value = editor.getValue();
 
 	if ("createEvent" in document) {
@@ -169,7 +171,7 @@ function nuAceSave(close){
 	}
 
 	if (close) {
-		window.nuACELanguagelose();
+		window.close();
 	} else {
 		nuRemoveButtonBgColor();
 	}
