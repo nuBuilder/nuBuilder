@@ -2272,12 +2272,15 @@ function nuInsertTextAtCaret(i, text) {
 
 }
 
-function nuObjectIdFromId(i) {
-	if (i !== null && window.nuSERVERRESPONSE) {
-		const obj = window.nuSERVERRESPONSE.objects.find(o => o.id == i);
+function nuObjectIdFromId(id) {
+
+	if (id !== null && window.nuSERVERRESPONSE) {
+		const obj = window.nuSERVERRESPONSE.objects.find(object => object.id === id);
 		return obj ? obj.object_id : null;
 	}
+
 	return null;
+
 }
 
 function nuSetBrowseColumnSize(column, size) {
