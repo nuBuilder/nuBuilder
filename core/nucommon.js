@@ -2384,7 +2384,6 @@ function nuSelectSelectedInfo(id) {
 
 }
 
-
 function nuSelectSelectedValueArray(id) {
 	return nuSelectSelectedInfo(id).values;
 }
@@ -2403,10 +2402,6 @@ function nuPasteText(id, callback) {
 			}
 		});
 
-}
-
-function nuCopyText(i) {
-	return nuCopyToClipboard($('#' + i).val());
 }
 
 function nuCopyToClipboard(s) {
