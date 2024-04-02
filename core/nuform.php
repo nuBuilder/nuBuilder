@@ -1383,9 +1383,9 @@ function nuBrowseWhereClause($searchFields, $searchString, $returnArray = false)
 		for ($SF = 0; $SF < $countSearchFields; $SF++) {												//-- loop through searchable fields
 
 			if ($task[$i] == 'include') {
-				$include[] = 'CONVERT(' . nuBrowseRemoveFieldAlias($searchFields[$SF]) . ' USING utf8) LIKE ' . $SEARCHES[$i];
+				$include[] = 'CONVERT(' . nuBrowseRemoveFieldAlias($searchFields[$SF]) . ' USING UTF8MB4) LIKE ' . $SEARCHES[$i];
 			} else {
-				$exclude[] = 'CONVERT(' . nuBrowseRemoveFieldAlias($searchFields[$SF]) . ' USING utf8) NOT LIKE ' . $SEARCHES[$i];
+				$exclude[] = 'CONVERT(' . nuBrowseRemoveFieldAlias($searchFields[$SF]) . ' USING UTF8MB4) NOT LIKE ' . $SEARCHES[$i];
 			}
 
 		}
