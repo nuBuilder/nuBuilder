@@ -2404,9 +2404,13 @@ function nuPasteText(id, callback) {
 
 }
 
-function nuCopyToClipboard(s) {
+function nuCopyToClipboard(obj) {
 
-	navigator.clipboard.writeText(s).then(function () {
+	if (typeof obj !== 'string') {
+		obj = nujQueryObj(obj).val();
+	}
+
+	navigator.clipboard.writeText(obj).then(function () {
 		return true;
 	}, function () {
 		return false;
