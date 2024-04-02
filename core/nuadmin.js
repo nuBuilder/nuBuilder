@@ -573,7 +573,7 @@ function nuContextMenuBeforeRender(menu, event) {
 	const id = contextMenuCurrentTargetId();
 	const $currentTarget = $('#' + contextMenuCurrentTarget.id);
 	const isButton = $currentTarget.is(":button");
-	const isSelect = $('#' + contextMenuCurrentTargetUpdateId()).is("select");
+	const isSelect = $('#' + nuContextMenuCurrentTargetUpdateId()).is("select");
 
 	menu.forEach((item) => {
 		if (Object.prototype.hasOwnProperty.call(item, "tag")) {
@@ -582,7 +582,7 @@ function nuContextMenuBeforeRender(menu, event) {
 				item.html = nuContextMenuPositionText(id, item.tag);
 				break;
 			case 'Object':
-				item.text = `Object: ${(nuFormType() === 'edit' ? contextMenuCurrentTargetUpdateId() : nuContextMenuCurrentTargetBrowseId())}`;
+				item.text = `Object: ${(nuFormType() === 'edit' ? nuContextMenuCurrentTargetUpdateId() : nuContextMenuCurrentTargetBrowseId())}`;
 				break;
 			case 'Access':
 				item.subMenu.forEach((sub) => {
@@ -678,7 +678,7 @@ function nuContextMenuItemPositionChanged(t, update) {
 			nuContextMenuUpdateLabel(id);
 
 		} else {
-			nuSetBrowseColumnSize(Number(contextMenuCurrentTargetUpdateId().nuJustNumbers()), Number(t.value));
+			nuSetBrowseColumnSize(Number(nuContextMenuCurrentTargetUpdateId().nuJustNumbers()), Number(t.value));
 		}
 	}
 
@@ -723,7 +723,7 @@ function nuContextMenuUpdateAccess(v) {
 function nuContextMenuUpdateAlign(v) {
 
 	const ftEdit = nuFormType() == 'edit';
-	const id = ftEdit ? contextMenuCurrentTargetUpdateId() : nuContextMenuCurrentTargetBrowseId();
+	const id = ftEdit ? nuContextMenuCurrentTargetUpdateId() : nuContextMenuCurrentTargetBrowseId();
 
 	$('#' + id).css('text-align', v);
 
@@ -836,7 +836,7 @@ function nuContextMenuLabelPrompt() {
 
 }
 
-function contextMenuCurrentTargetUpdateId() {
+function nuContextMenuCurrentTargetUpdateId() {
 
 	let t = $('#' + contextMenuCurrentTarget.id);
 	let hasClass = nuObjectClassList(contextMenuCurrentTarget.id).containsAny(['nuWord', 'nuImage', 'nuSort', 'nuTab']) && !t.hasClass('nuTabHolder');
@@ -879,7 +879,7 @@ function nuContextMenuCurrentTargetBrowseId() {
 function nuContextMenuCopyIdToClipboard() {
 
 	let t = $('#' + contextMenuCurrentTarget.id);
-	let id = t.hasClass('nuSubformTitle') ? contextMenuCurrentTargetUpdateId() : contextMenuCurrentTargetId();
+	let id = t.hasClass('nuSubformTitle') ? nuContextMenuCurrentTargetUpdateId() : contextMenuCurrentTargetId();
 	nuCopyToClipboard(id);
 
 }
@@ -888,7 +888,7 @@ function nuContextMenuClone() {}
 
 function nuContextMenuObjectPopup(e) {
 
-	let objId = nuObjectIdFromId(contextMenuCurrentTargetUpdateId());
+	let objId = nuObjectIdFromId(nuContextMenuCurrentTargetUpdateId());
 
 	if ((nuIsMacintosh() ? e.metaKey : e.ctrlKey) === true) {
 		nuForm('nuobject', objId, '', '', '2');
@@ -905,9 +905,9 @@ function nuContextMenuUpdateObject(value, column) {
 
 	var id;
 	if (nuFormType() == 'edit' && !isTab) {
-		id = contextMenuCurrentTargetUpdateId();
+		id = nuContextMenuCurrentTargetUpdateId();
 	} else {
-		id = (Number(contextMenuCurrentTargetUpdateId().nuJustNumbers()) + 1) * 10;
+		id = (Number(nuContextMenuCurrentTargetUpdateId().nuJustNumbers()) + 1) * 10;
 	}
 
 	let formId = isSfTitle ? nuContextMenuGetFormId('title_' + contextMenuCurrentTargetId()) : nuContextMenuGetFormId(id);
