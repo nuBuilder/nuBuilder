@@ -91,7 +91,7 @@ function nuLoad(){
 		exec: editor.commands.byName['showSettingsMenu'].exec
 	});
 
-	document.addEventListener('keydown', handleCtrlComma);
+	document.addEventListener('keydown', nuACEhandleCtrlComma);
 
 	nuSetEdited(false);
 	editor.getSession().getUndoManager().reset();
@@ -99,7 +99,7 @@ function nuLoad(){
 }
 
 
-function handleCtrlComma(event) {
+function nuACEhandleCtrlComma(event) {
   // Check if the Ctrl + , combination is pressed (Ace menu opens)
   if ((event.metaKey || event.ctrlKey) && event.keyCode == 188) {
 	  editor.execCommand("showSettingsMenu");
