@@ -7,11 +7,11 @@ $p = isset($_GET['p']) ? $_GET['p'] : $argv[1]; 		// PHP Procedure code
 $acc = isset($_GET['acc']) ? $_GET['acc'] : $argv[2];	// Access Level code (May not be assigned to a user for security reasons)
 
 if (!isset($p)) {
-	setError('No procedure code is provided.');
+	nuSetError('No procedure code is provided.');
 }
 
 if (!isset($acc)) {
-	setError('No access level code is provided.');
+	nuSetError('No access level code is provided.');
 }
 
 $qry = "
@@ -30,14 +30,14 @@ $qry = "
 $rs = nuRunQuery($qry, [$p, $acc]);
 
 if (db_num_rows($rs) != 1) {
-	setError('Procedure not found for the access level and procedure code given.');
+	nuSetError('Procedure not found for the access level and procedure code given.');
 }
 
 $obj = db_fetch_object($rs);
 
 eval($obj->sph_php);
 
-function setError($h) {
+function nuSetError($h) {
 	header("Content-Type: text/html");
 	header("HTTP/1.0 400 Bad Request");
 	die($h);
