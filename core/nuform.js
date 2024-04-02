@@ -4086,27 +4086,27 @@ function nuSelectTab(tab, byUser = false) {
 
 }
 
-function getTabIndexByTitle(title) {
+function nuGetTabIndexByTitle(title) {
 	const tabs = nuSERVERRESPONSE.tabs;
 	return tabs.findIndex(data => data.title.replace(/\|/g, "") === title);
 }
 
 function nuSelectTabByTitle(title) {
-	const index = getTabIndexByTitle(title);
+	const index = nuGetTabIndexByTitle(title);
 	if (index > -1) {
 		nuSelectTab($('#nuTab' + index)[0]);
 	}
 }
 
 function nuRemoveTabByTitle(title) {
-	const index = getTabIndexByTitle(title);
+	const index = nuGetTabIndexByTitle(title);
 	if (index > -1) {
 		$('#nuTab' + index).remove();
 	}
 }
 
 function nuShowTabByTitle(title, visible) {
-	const index = getTabIndexByTitle(title);
+	const index = nuGetTabIndexByTitle(title);
 	if (index > -1) {
 		nuShow('nuTab' + index, visible);
 	}
