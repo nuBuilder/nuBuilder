@@ -2572,18 +2572,18 @@ function nuSetText(i, v) {
 
 function nuCurrentDate(format) {
 
-	let d = new Date();
-	let
+	const d = new Date();
+	const
 		yyyy = d.getFullYear(),
 		mm = nuPad2(d.getMonth() + 1),
 		dd = nuPad2(d.getDate());
 
-	let df = yyyy + '-' + mm + '-' + dd;
+	let dateFormat = `${yyyy}-${mm}-${dd}`;
 	if (format !== undefined) {
-		df = nuFORM.addFormatting(df, 'D|' + format);
+		dateFormat = nuFORM.addFormatting(dateFormat, 'D|' + format);
 	}
 
-	return df;
+	return dateFormat;
 
 }
 
@@ -2772,22 +2772,24 @@ function nuDateIsValid(date) {
 
 function nuEscapeHTML(string, extraReplacements = {}) {
 
-  if (typeof string !== 'string') return '';
+	if (typeof string !== 'string') return '';
 
-  const baseReplacements = {
-	'<': '&lt;',
-	'>': '&gt;',
-	'&': '&amp;',
-	'"': '&quot;',
-	"'": '&#039;',
-	'`': '&#x60;',
-	'\\': '&#92;'
-  };
+	const baseReplacements = {
+		'<': '&lt;',
+		'>': '&gt;',
+		'&': '&amp;',
+		'"': '&quot;',
+		"'": '&#039;',
+		'`': '&#x60;',
+		'\\': '&#92;'
+	};
 
-  const replacements = { ...baseReplacements, ...extraReplacements };
-  const pattern = new RegExp(`[${Object.keys(replacements).map(c => '\\' + c).join('')}]`, 'g');
+	const replacements = {...baseReplacements,
+		...extraReplacements
+	};
+	const pattern = new RegExp(`[${Object.keys(replacements).map(c => '\\' + c).join('')}]`, 'g');
 
-  return string.replace(pattern, character => replacements[character]);
+	return string.replace(pattern, character => replacements[character]);
 }
 
 function nuDelay(ms) {
