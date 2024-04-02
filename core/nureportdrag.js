@@ -651,12 +651,12 @@ function nuSetTools() {
 
 	$('#nuToolBar').html(h);
 	$('#nuToolBar').addClass('nuSection nuDragToolbar nuDragDialog');
-	moveToolbar();
+	nuMoveToolbar();
 
 
 }
 
-function moveToolbar() {
+function nuMoveToolbar() {
 
 	$('#nuToolBar').css('top', window.scrollY + 10);
 
@@ -1191,7 +1191,7 @@ function nuObjectDialog() {
 
 }
 
-function deleteSelectedObjects() {
+function nuDeleteSelectedObjects() {
 
 	var sel = document.getElementsByClassName('nuDragSelected');
 
@@ -1206,7 +1206,7 @@ function deleteSelectedObjects() {
 
 }
 
-function findWithAttr(array, attr, value) {
+function nuFindWithAttr(array, attr, value) {
 	for (var i = 0; i < array.length; i += 1) {
 		if (array[i][attr] === value) {
 			return i;
