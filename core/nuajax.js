@@ -776,7 +776,7 @@ function nuUpdateData(action, instruction, close) {
 
 function nuSaveAfterDrag() {
 
-	const contentWin = getNuDragDialogIframes()[0].contentWindow;
+	const contentWin = nuGetNuDragDialogIframes()[0].contentWindow;
 	let last = contentWin.nuFORM.getCurrent();
 
 	last.call_type = 'nudragsave';
