@@ -1317,7 +1317,9 @@ function nuShow(i, visible, openTab) {
 
 		}
 
-		if (openTab !== false && counter > 0) nuOpenTab($('.nuTabSelected')[0].id.substr(5));
+		if (openTab !== false && counter > 0 && $('.nuTabSelected').length > 0) {
+			nuOpenTab($('.nuTabSelected')[0].id.substr(5));
+		}	
 
 	}
 
