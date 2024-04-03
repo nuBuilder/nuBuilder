@@ -2670,4 +2670,20 @@ function nuDecode($str) {
 
 }
 
-?>
+function nuIsHTTPS() {
+
+	$isHttps =
+		$_SERVER['HTTPS']
+		?? $_SERVER['REQUEST_SCHEME']
+		?? $_SERVER['HTTP_X_FORWARDED_PROTO']
+		?? null
+	;
+
+	return
+		$isHttps && (
+			strcasecmp('on', $isHttps) == 0
+			|| strcasecmp('https', $isHttps) == 0
+		)
+	;
+
+}

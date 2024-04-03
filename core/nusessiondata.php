@@ -3,6 +3,7 @@
 require_once(dirname(__FILE__). '/../nuconfig.php'); // nuconfig must be loaded before using nubuilder_session_dat
 require_once('nusetuplibs.php');
 require_once('nudatabase.php');
+require_once('nucommon.php');
 
 $config = nuConfigScript();
 eval($config['code']);
@@ -17,23 +18,6 @@ if ( !session_id() ) {
 if ( !isset($_SESSION['nubuilder_session_data']) ) {
 
 	nuLoadNewSession();
-}
-function nuIsHTTPS() {
-
-	$isHttps =
-		$_SERVER['HTTPS']
-		?? $_SERVER['REQUEST_SCHEME']
-		?? $_SERVER['HTTP_X_FORWARDED_PROTO']
-		?? null
-	;
-
-	return
-		$isHttps && (
-			strcasecmp('on', $isHttps) == 0
-			|| strcasecmp('https', $isHttps) == 0
-		)
-	;
-
 }
 
 function nuLoadNewSession() {
