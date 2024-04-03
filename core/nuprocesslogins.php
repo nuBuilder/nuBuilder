@@ -170,7 +170,7 @@ function nuGetIPAddress() {
 
 function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 
-	global $nuConfig2FAAdmin;
+	global $nuConfig2FAAdmin, $nuConfigDevMode;
 
 	$_SESSION['nubuilder_session_data']['SESSION_ID'] = nuIDTEMP();
 	$_SESSION['nubuilder_session_data']['SESSION_TIMESTAMP'] = time();
@@ -198,7 +198,8 @@ function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 	$sessionIds->sus_additional2 =  '';
 	$sessionIds->sus_accessibility_features =  '';
 	$sessionIds->user_permissions =  '';
-	
+	$sessionIds->dev_mode =  isset($nuConfigDevMode) ? (string)((int)$nuConfigDevMode) : '0';
+
 	if ($nuConfig2FAAdmin) {
 		if (nu2FALocalTokenOK($sessionIds->sus_login_name)) {
 			$sessionIds->zzzzsys_form_id = $_SESSION['nubuilder_session_data']['HOME_ID'];
@@ -348,8 +349,8 @@ function nuLoginSetupNOTGlobeadmin($new = true, $sSoUserName = "", $changePasswo
 	$sessionIds->sus_additional1 = $getAccessLevelOBJ->sus_additional1 ?? null;
 	$sessionIds->sus_additional2 = $getAccessLevelOBJ->sus_additional2 ?? null;
 	$sessionIds->sus_accessibility_features = $getAccessLevelOBJ->sus_accessibility_features ?? null;
+	$sessionIds->dev_mode = '0';
 	$sessionIds->user_permissions = nuArrayToSeparated(nuGetUserPermissions($userId));
-
 	$sessionIds->global_access = '0';
 	$sessionIds->ip_address = nuGetIPAddress();
 	$sessionIds->zzzzsys_form_id = $getAccessLevelOBJ->sal_zzzzsys_form_id;
