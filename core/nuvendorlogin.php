@@ -76,10 +76,7 @@ function nuGetVendorURL($appId, $table) {
 		$cookieOptions['secure'] = true;
 	}
 
-	setcookie("nu_".$appId, $_SESSION['nubuilder_session_data']['SESSION_ID'], [
-		'secure' => true,
-		'httponly' => true
-	]);
+	setcookie("nu_".$appId, $_SESSION['nubuilder_session_data']['SESSION_ID'], $cookieOptions);
 	
 	return $page;
 	
