@@ -81,5 +81,3 @@ function nuGetVendorURL($appId, $table) {
 	return $page;
 	
 }
-
-?>

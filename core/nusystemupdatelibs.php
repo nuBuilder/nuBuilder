@@ -609,6 +609,3 @@ function nuCreateViewsOrTables() {
 	}
 
 }
-
-
-?>
