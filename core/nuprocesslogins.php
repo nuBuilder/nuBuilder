@@ -304,7 +304,6 @@ function nuLoginSetupNOTGlobeadmin($new = true, $sSoUserName = "", $changePasswo
 			}
 
 		}
-		nuDebug(1, $check ? 'check ok' : 'check nok', $checkToken ? 'checkToken ok ' : 'checkToken nok');
 			
 		if ($check === false && $checkToken === false) nuDie();
 
