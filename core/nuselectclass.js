@@ -735,24 +735,6 @@ class nuSelectObject {
 
 	}
 
-
-	getJoins() {
-
-		var a = [];
-		var j = [];
-		var r = this.joins;
-
-		for (var k in r) {
-
-			a[r[k].from + '--' + r[k].to] = r[k];
-			j.push(a[r[k].from + '--' + r[k].to]);
-
-		}
-
-		return this.joins;
-
-	}
-
 	rebuildGraphic() {
 
 		var j = $('#sse_json', parent.document).val();
