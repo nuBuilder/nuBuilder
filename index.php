@@ -40,21 +40,29 @@ if ( !isset($_SESSION['nubuilder_session_data']['NB_PATH']) || dirname($_SESSION
 
 <?php
 
-function nuInclude($pfile, $type, $refreshCache = true){
+function nuInclude($pfile, $type, $refreshCache = true) {
 
-	if ($pfile == '') return;
-
-	$a = array();
-	if (!is_array ($pfile)) {
-		array_push($a, $pfile);
-	} else {
-		$a = $pfile;
+	if (empty($pfile)) {
+		return;
 	}
 
-	foreach ($a as $value) {
-		$timestamp =  $refreshCache ? date("YmdHis") : 1; //-- Add timestamp so JavaScript changes are effective immediately if $refreshCache is true
-		if ($type == 'script') print "<script src='$value?ts=$timestamp' type='text/javascript'></script>\n";
-		if ($type == 'stylesheet') print "<link rel='stylesheet' href='$value?ts=$timestamp' />\n";
+	$files = is_array($pfile) ? $pfile : [$pfile];
+
+	foreach ($files as $file) {
+
+		$timestamp = $refreshCache ? ( $_SESSION['nuinclude'][$file] ?? date("YmdHis") ) : 1;
+		if ($refreshCache && !isset($_SESSION['nuinclude'][$file])) {
+			$_SESSION['nuinclude'][$file] = $timestamp;
+		}
+
+		switch ($type) {
+			case 'script':
+				echo "<script src='{$file}?ts={$timestamp}' type='text/javascript'></script>\n";
+				break;
+			case 'stylesheet':
+				echo "<link rel='stylesheet' href='{$file}?ts={$timestamp}' />\n";
+				break;
+		}
 	}
 
 }
@@ -275,7 +283,7 @@ window.nuHASH				= [];
 		if (nuMainForm()) {
 
 			function nuRunKeepAlive() {
-				nuRunPHPHidden('nukeepalive', 0);
+				nuRunPHPHidden('nukeepalive');
 			}
 
 			if (sessionStorage.getItem('nukeepalive') === null) {
