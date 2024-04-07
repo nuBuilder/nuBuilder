@@ -178,6 +178,8 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 
 	if($R != ''){
 
+		$dbFields = db_field_names($f->table);
+
 		$t							= nuRunQuery($s, [$F]);
 
 		while($r = db_fetch_object($t)){
@@ -188,10 +190,12 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 				$cloneable[]		= ['subform' => $r->sob_all_type == 'subform', 'id' => $r->sob_all_id];
 			}
 
+			$o->table_column = in_array($r->sob_all_id, $dbFields) ? '1' : '0';
+
 			if($R == '-1'){
 				$o->value			= '';//nuGetSQLValue($r->sob_all_default_value_sql);
 			}else{
-				$o->value			= nuObjKey($A,$r->sob_all_id,'');
+				$o->value = nuObjKey($A,$r->sob_all_id, '');
 			}
 
 			if($r->sob_all_type == 'calc'){

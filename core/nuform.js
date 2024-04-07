@@ -923,6 +923,9 @@ function nuBuildEditObjects(formObj, p, o, prop) {
 				$('#' + obj.id).nuLabelOnTop();
 			}
 
+			const tableColumn = formObj.objects[objIndex].table_column;
+			$('#' + obj.id).attr('data-nu-table-column', tableColumn);
+
 			if (obj.visible === false) {
 				nuHide(obj.id);
 			}
@@ -5062,8 +5065,6 @@ function nuChange(e) {
 		return;
 	}
 
-	nuSetSaved(false);
-
 	const t = $('#' + e.target.id)[0];
 	const $id = $(t);
 	const prefix = $id.attr('data-nu-prefix');
@@ -5072,7 +5073,6 @@ function nuChange(e) {
 
 	$('#' + prefix + 'nuDelete').prop('checked', false);
 	$id.addClass('nuEdited');
-	nuHasBeenEdited();
 
 	$('#nuCalendar').remove();
 	$id.removeClass('nuValidate');
@@ -5080,6 +5080,11 @@ function nuChange(e) {
 
 	if (prefix !== '') { 
 		nuAddSubformRow(t, e);
+	}
+
+	if ($id.attr('data-nu-table-column') != '0') {
+		nuSetSaved(false);
+		nuHasBeenEdited();
 	}
 
 }
@@ -5744,34 +5749,25 @@ function nuNoDuplicates() {
 	window.nuDuplicate = true;
 
 	$('.nuTabHolder.nuDuplicate').each(function () {
+		const $this = $(this);
+		const tabHolderHtml = $this.html();
+		const fieldName = $this.attr('data-nu-field');
+		const sfId = $this.attr('data-nu-subform');
+		const sfObj = nuSubformObject(sfId);
+		const uniqueValues = [];
+		const fieldIndex = sfObj.fields.indexOf(fieldName);
 
-		var t = $(this).html();
-		var f = $(this).attr('data-nu-field');
-		var s = $(this).attr('data-nu-subform');
-		var sf = nuSubformObject(s);
-		var a = [];
-		var c = sf.fields.indexOf(f);
-
-		for (var i = 0; i < sf.rows.length; i++) {
-
-			if (sf.deleted[i] == 0) {
-
-				var rv = sf.rows[i][c];
-
-				if (a.indexOf(rv) != -1) {
-
-					nuMessage(['Duplicate <b>' + t + '</b> on row <b>' + i + '</b>']);
+		for (let rowIndex = 0; rowIndex < sfObj.rows.length; rowIndex++) {
+			if (sfObj.deleted[rowIndex] == 0) {
+				const rowValue = sfObj.rows[rowIndex][fieldIndex];
+				if (uniqueValues.includes(rowValue)) {
+					nuMessage([`Duplicate <b>${tabHolderHtml}</b> on row <b>${rowIndex}</b>`]);
 					window.nuDuplicate = false;
 					return;
-
 				}
-
-				a.push(sf.rows[i][c]);
-
+				uniqueValues.push(rowValue);
 			}
-
 		}
-
 	});
 
 	return window.nuDuplicate;
