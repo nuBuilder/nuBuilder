@@ -703,25 +703,26 @@ function nuCreateDialog(t) {
 
 	}
 
-	this.moveDialog = function (e) {
+	this.moveDialog = function (event) {
 
-		if (window.nuCurrentID == 'nuModal') { return; }
-
-		var s = document.getElementById('nuDragDialog');
-		if (s === null) return;
-
-		var o = s.style;
-		var l = parseInt(o.left, 10) + this.moveX;
-		var t = parseInt(o.top, 10) + this.moveY;
-
-		if (e.target.classList == '' && e.target.id != 'nuSelectBox') {
-
-			o.left = l + 'px';
-			o.top = t + 'px';
-
+		if (window.nuCurrentID === 'nuModal') { 
+			return; 
 		}
-
+	
+		const dialog = document.getElementById('nuDragDialog');
+		if (dialog === null) return;
+	
+		let style = dialog.style;
+		let newLeft = parseInt(style.left, 10) + this.moveX;
+		let newTop = parseInt(style.top, 10) + this.moveY;
+	
+		if (event.target.classList.length === 0 && event.target.id !== 'nuSelectBox') {
+			style.left = newLeft + 'px';
+			style.top = newTop + 'px';
+		}
+	
 	}
+	
 
 	this.createDialog = function (l, t, w, h, title) {
 
