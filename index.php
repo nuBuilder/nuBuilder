@@ -9,8 +9,7 @@ require_once('nuconfig.php');
 require_once('core/nudatabase.php');
 require_once('core/nusetuplibs.php');
 
-$config = nuConfigScript();
-eval($config['code']);
+eval(nuConfigScript()['code']);
 
 require_once('core/nusessiondata.php');
 require_once('core/nuindexlibs.php');
@@ -40,65 +39,6 @@ if ( !isset($_SESSION['nubuilder_session_data']['NB_PATH']) || dirname($_SESSION
 
 <?php
 
-function nuInclude($pfile, $type, $refreshCache = true) {
-
-	if (empty($pfile)) {
-		return;
-	}
-
-	$files = is_array($pfile) ? $pfile : [$pfile];
-
-	foreach ($files as $file) {
-
-		$timestamp = $refreshCache ? ( $_SESSION['nuinclude'][$file] ?? date("YmdHis") ) : 1;
-		if ($refreshCache && !isset($_SESSION['nuinclude'][$file])) {
-			$_SESSION['nuinclude'][$file] = $timestamp;
-		}
-
-		switch ($type) {
-			case 'script':
-				echo "<script src='{$file}?ts={$timestamp}' type='text/javascript'></script>\n";
-				break;
-			case 'stylesheet':
-				echo "<link rel='stylesheet' href='{$file}?ts={$timestamp}' />\n";
-				break;
-		}
-	}
-
-}
-
-function nuJSIndexInclude($pfile, $refreshCache = true){
-	nuInclude($pfile, 'script', $refreshCache);
-}
-
-function nuCSSIndexInclude($pfile, $refreshCache = true){
-	nuInclude($pfile, 'stylesheet', $refreshCache);
-}
-
-function nuJSChartsInclude(){
-
-	global $nuConfigIncludeGoogleCharts;
-	global $nuConfigIncludeApexCharts;
-
-	if ($nuConfigIncludeGoogleCharts != false) {
-		$pfile = "https://www.gstatic.com/charts/loader.js";
-		nuInclude($pfile, 'script');
-	}
-
-	if ($nuConfigIncludeApexCharts != false) {
-		$pfile = "core/libs/apexcharts/apexcharts.min.js";
-		nuInclude($pfile, 'script');
-	}
-}
-
-function nuEndsWithStyleTag($style) {
-
-	$tag = '</style>';
-	$style = trim($style);
-	return strpos($style, $tag) === strlen($style) - strlen($tag);
-
-}
-
 function nuHeader() {
 
 	$sql = "SELECT set_style, set_header FROM zzzzsys_setup WHERE zzzzsys_setup_id = ?";
@@ -111,44 +51,19 @@ function nuHeader() {
 	return "\n\n" . $obj->set_header . $style . "\n\n";
 }
 
+function nuEndsWithStyleTag($style) {
+
+	$tag = '</style>';
+	$style = trim($style);
+	return strpos($style, $tag) === strlen($style) - strlen($tag);
+
+}
+
 function nuLastLoggedInUser() {
 	return $_SESSION['nuLastUser']['user_id'] ?? "";
 }
 
-nuJSIndexInclude('core/libs/jquery/jquery-3.7.1.min.js', false);
-nuJSIndexInclude('core/nuwysiwyg.js');
-nuJSIndexInclude('core/nuformclass.js');
-nuJSIndexInclude('core/nuform.js');
-nuJSIndexInclude('core/nuformdrag.js');
-nuJSIndexInclude('core/nucalendar.js');
-nuJSIndexInclude('core/nucommon.js');
-nuJSIndexInclude('core/nuadmin.js');
-nuJSIndexInclude('core/nureportjson.js');
-nuJSIndexInclude('core/nuajax.js');
-nuJSChartsInclude();
-nuJSIndexInclude('core/libs/ctxmenu/ctxmenu.min.js');
-nuJSIndexInclude('core/libs/vanillajs-datepicker/datepicker-full.min.js');
-nuJSIndexInclude('core/libs/jquery/jquery-confirm.min.js');
-nuCSSIndexInclude('core/libs/uppy/uppy.min.css');
-nuJSIndexInclude('core/libs/uppy/uppy.min.js');
-
-nuJSIndexInclude('core/libs/select2/select2.min.js');
-
-if (isset($nuConfigIncludeTinyMCE) && $nuConfigIncludeTinyMCE != false) {
-	nuJSIndexInclude('core/libs/tinymce/tinymce.min.js');
-}
-
-nuCSSIndexInclude('core/css/nubuilder4.css');
-
-
-$nuConfigIncludeJS = isset($nuConfigIncludeJS) ? $nuConfigIncludeJS : '';
-nuJSIndexInclude($nuConfigIncludeJS);
-$nuConfigIncludeCSS = isset($nuConfigIncludeCSS) ? $nuConfigIncludeCSS : '';
-nuCSSIndexInclude($nuConfigIncludeCSS);
-
-nuCSSIndexInclude('core/libs/select2/select2.min.css');
-nuCSSIndexInclude('core/libs/vanillajs-datepicker/datepicker.min.css');
-nuCSSIndexInclude('core/libs/jquery/jquery-confirm.min.css');
+nuIncludeFiles();
 
 ?>
 
