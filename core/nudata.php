@@ -5,6 +5,7 @@ function nuValidateFormsFetchObject($objectId) {
 		$query = '
 				SELECT
 					sob_subform_zzzzsys_form_id as form_id,
+					sob_subform_foreign_key as subform_fk,
 					sob_all_label as label,
 					sob_all_access as access,
 					zzzzsys_form.sfo_description as form_description
@@ -18,6 +19,7 @@ function nuValidateFormsFetchObject($objectId) {
 		if (db_num_rows($stmt) === 0) {
 			$obj = [
 				'formId' => $objectId,
+				'subform_fk' => '',
 				'label' => '',
 				'access' => '',
 				'form_description' => ''
@@ -27,6 +29,7 @@ function nuValidateFormsFetchObject($objectId) {
 			$row = db_fetch_object($stmt);
 			$obj = [
 				'formId' => $row->form_id,
+				'subform_fk' => $row->subform_fk,
 				'label' => $row->label,
 				'access' => $row->access,
 				'form_description' => $row->form_description
@@ -90,7 +93,7 @@ function nuValidateForms() {
         $form = $formData[$formIndex];
         $formObject = nuValidateFormsFetchObject($form->object_id);
         $formId = $formObject['formId'];
-        $objectLabel = $formObject['label'];
+		$subformFK = $formObject['subform_fk'];	
         $accessLevel = $formObject['access'];
         $formDescription = $formObject['form_description'];
 
@@ -101,7 +104,6 @@ function nuValidateForms() {
         $formObjects = nuValidateFormsFetchFormObjects($formId);
         $validationRules = $formObjects['validate'];
         $fieldLabels = $formObjects['label'];
-        
         $formDescription = $formIndex > 0 ? "($formDescription)" : '';
 
         $rowCount = count($form->rows);
@@ -115,7 +117,7 @@ function nuValidateForms() {
                 $rowDeleted = $form->deleted[$rowIndex] == 0;
                 $rowValue = $form->rows[$rowIndex][$fieldIndex];
                 
-                $errorCount += nuValidateFormsRequiredFields($form, $formIndex, $rowIndex, $validationType, $rowValue, $fieldLabel, $formDescription, $rowDeleted, $fieldIndex);
+                $errorCount += nuValidateFormsRequiredFields($form, $formIndex, $subformFK, $rowIndex, $validationType, $rowValue, $fieldLabel, $formDescription, $rowDeleted, $fieldIndex);
             }
         }
     }
@@ -138,7 +140,7 @@ function nuDisplayErrorRequiredFields($formIndex, $row, $label, $formDescription
 
 }
 
-function nuValidateFormsRequiredFields($form, $formIndex, $row, $validationType, $rowValue, $label, $formDescription, $rowDeleted, $fieldLabel) {	
+function nuValidateFormsRequiredFields($form, $formIndex, $subformFK, $row, $validationType, $rowValue, $label, $formDescription, $rowDeleted, $fieldLabel) {	
 
 	switch ($validationType) {
 	case 1:		// No blanks	
@@ -149,14 +151,14 @@ function nuValidateFormsRequiredFields($form, $formIndex, $row, $validationType,
 		break;
 
 	case 2:		// No duplicates
-		if (nuDuplicate($form, $row, $fieldLabel) && $rowDeleted) {
+		if (nuDuplicate($form, $subformFK, $row, $fieldLabel) && $rowDeleted) {
 			nuDisplayErrorRequiredFields($formIndex, $row, $label, $formDescription, '%s has a duplicate', 'has a duplicate');
 			return 1;
 		}
 		break;
 
 	case 3:		// No duplicates or blanks
-		$isDuplicate = nuDuplicate($form, $row, $fieldLabel);
+		$isDuplicate = nuDuplicate($form, $subformFK, $row, $fieldLabel);
 		$isBlank = ($rowValue === '' || $rowValue === '[]');
 
 		if (($isDuplicate || $isBlank) && $rowDeleted) {
@@ -208,14 +210,20 @@ function nuCheckAccessLevel($data) {
 
 }
 
-function nuDuplicate($form, $row, $fieldLabel) {
+function nuDuplicate($form, $subformFK, $row, $fieldLabel) {
 
 	$field = $form->fields[$fieldLabel];
 	$pk = $form->rows[$row][0];
 	$value = $form->rows[$row][$fieldLabel];
 
 	$query = "SELECT `$form->primary_key` FROM `$form->table` WHERE `$field` = ? AND `$form->primary_key` != ?";
+
+	if (isset($subformFK) && trim($subformFK) !== '') {
+		$query .= " AND `$subformFK` = '". nuRecordId() ."'";
+	}
+
 	$stmt = nuRunQuery($query, [$value, $pk]);
+	
 	return db_num_rows($stmt) > 0;
 
 }
