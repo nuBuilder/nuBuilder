@@ -924,7 +924,7 @@ function nuBuildEditObjects(formObj, p, o, prop) {
 			}
 
 			const tableColumn = formObj.objects[objIndex].table_column;
-			$('#' + obj.id).attr('data-nu-table-column', tableColumn);
+			$('#' + p + obj.id).attr('data-nu-table-column', tableColumn);
 
 			if (obj.visible === false) {
 				nuHide(obj.id);
