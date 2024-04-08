@@ -4040,6 +4040,15 @@ function nuSelectTab(tab, byUser = false) {
 
 	window.nuFORMHELP[form] = window.nuTABHELP[tabId];
 
+	let tabStart = nuFORM.getProperty('tab_start');
+	for (let i = 0; i < tabStart.length; i++) {
+
+		if (tabStart[i].prefix == form) {
+			tabStart[i].tabNumber = filt;
+		}
+
+	}
+
 	let selector = "[data-nu-form='" + form + "']";
 	$(selector + ":not('.nuIframe, .nuHtml')").hide();
 	$(".nuIframe" + selector + ", .nuHtml" + selector).css('visibility', 'hidden');	
