@@ -666,13 +666,9 @@ function nuCreateDialog(t) {
 			this.moveDialog(event);
 		}
 
-		var dir = event.target.parentElement.baseURI.includes('nureportdesigner') ? '' : 'core/';
+		const dir = event.target.parentElement.baseURI.includes('nureportdesigner') ? '' : 'core/';
+		$('#dialogClose').attr("src", dir + "graphics/close" + (event.target.id === 'dialogClose' ? "_red" : "") + ".png");
 
-		if (event.target.id == 'dialogClose') {
-			$('#dialogClose').attr("src", dir + "graphics/close_red.png");
-		} else {
-			$('#dialogClose').attr("src", dir + "graphics/close.png");
-		}
 
 	}
 
