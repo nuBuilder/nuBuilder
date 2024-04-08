@@ -2903,3 +2903,14 @@ function nuConsoleErrorsToMessage(cancel = false) {
 	};
 
 }
+
+function nuSetAttributes(element, attributes) {
+
+	for (const key in attributes) {
+		if (attributes.hasOwnProperty(key)) {
+			element.setAttribute(key, attributes[key]);
+		}
+	}
+
+}
+
