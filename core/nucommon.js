@@ -618,7 +618,7 @@ function nuPopup(formId, recordId, filter) {
 
 	if (parent.window == window) {
 		let dialogLeft = nuIsMobile() ? 0 : 50;
-		window.nuDialog.createDialog(dialogLeft + window.pageXOffset, 25 + window.pageYOffset, 50, 50, '');
+		window.nuDialog.createDialog(dialogLeft + window.scrollX, 25 + window.scrollY, 50, 50, '');
 	} else {
 		window.nuDialog.createDialog(0, 30, 50, 50, '');
 	}
