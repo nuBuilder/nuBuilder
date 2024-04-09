@@ -355,39 +355,27 @@ function nuGetBreadcrumb(bc) {
 	}
 
 	nuSaveScrollPositions();
-
-	nuCursor('progress');
-
-	var a = arguments.length;
-	var e = nuFORM.edited;
-
-	if (a == 0) {
-		var b = nuFORM.breadcrumbs.length - 1;
-	} else {
-		var b = bc;
-	}
+	
+	const breadCrumbIndex = arguments.length === 0 ? nuFORM.breadcrumbs.length - 1 : bc;
 
 	window.nuTimesSaved = -1;
 
-	if (e && nuFORM.getCurrent().form_type != 'launch') {
+	if (nuFORM.edited && nuFORM.getCurrent().form_type != 'launch') {
 
 		if (!confirm(nuTranslate('Leave this form without saving?'))) {
-			nuCursor('default');
 			return;
 		}
 
 	}
 
-	window.nuFORM.removeAfter(b);
+	window.nuFORM.removeAfter(breadCrumbIndex);
 
-	var c = window.nuFORM.getCurrent();
-
-	if (c === undefined) {
+	const current = window.nuFORM.getCurrent();
+	if (current === undefined) {
 		nuGetNuDragDialogIframes().remove();
 	} else {
-		nuForm(c.form_id, c.record_id, c.filter, c.search, 1);
+		nuForm(current.form_id, current.record_id, current.filter, current.search, 1);
 	}
-
 
 }
 
