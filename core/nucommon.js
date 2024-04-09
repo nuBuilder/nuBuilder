@@ -413,19 +413,16 @@ function nuOpenPreviousBreadcrumb(b) {
 
 }
 
-function nuDisplayError(e) {
+function nuDisplayError(errorObj) {
 
-	if (e.errors === undefined || e.errors.length == 0) {			//-- no error messages
+	if (!errorObj.errors || errorObj.errors.length === 0) {
 		return false;
 	}
 
-	let msgDiv = nuMessage(e.errors);
+	const messageDiv = nuMessage(errorObj.errors);
+	window.nuOnMessage?.(messageDiv, errorObj.errors);
 
-	if (window.nuOnMessage) {
-		nuOnMessage(msgDiv, e.errors);
-	}
-
-	return e.after_event == false;								//-- errors are really just messages if from after save or after delete.
+	return !errorObj.after_event;
 
 }
 
