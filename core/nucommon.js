@@ -391,21 +391,19 @@ function nuGetBreadcrumb(bc) {
 
 }
 
-function nuOpenPreviousBreadcrumb(b) {
+function nuOpenPreviousBreadcrumb(offset = 1) {
 
-	const breadcrumbs = window.nuFORM.breadcrumbs;
 	const modal = parent.$('#nuModal');
-
 	if (modal.length) {
 		nuClosePopup();
 		return true;
 	}
 
-	b = b ? b + 1 : 2;
+	const bcIndex = Math.max(2, offset + 1);
+	const bcLength = window.nuFORM.breadcrumbs.length;
 
-	const l = breadcrumbs.length;
-	if (l > 1) {
-		nuGetBreadcrumb(l - b);
+	if (bcLength > 1) {
+		nuGetBreadcrumb(bcLength - bcIndex);
 		return true;
 	}
 	
