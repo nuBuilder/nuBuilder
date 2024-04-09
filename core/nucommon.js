@@ -821,16 +821,13 @@ function nuReformat(t) {
 
 }
 
-
 function nuOpenAce(lang, obj) {
 
-	var ts = new Date().getTime();
-	
-	const theme = nuUXOptions.nuAceTheme ? nuUXOptions.nuAceTheme : 'default';
+	const ts = Date.now();
+	const theme = nuUXOptions.nuAceTheme || 'default';
 	
 	window.nuAce = [lang, obj, theme];
-
-	window.open('core/nuace.php?' + ts);
+	window.open(`core/nuace.php?${ts}`);
 
 }
 
@@ -1130,7 +1127,6 @@ function nuObjectComponents(id) {
 
 }
 
-
 function nuEnable(i, enable) {
 
 	if (enable === false) {
@@ -1168,7 +1164,7 @@ function nuEnable(i, enable) {
 
 }
 
-function nuDisable(id) { //-- Disable Edit Form Object
+function nuDisable(id) {
 
 	const ids = Array.isArray(id) ? id : [id];
 
