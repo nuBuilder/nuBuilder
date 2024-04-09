@@ -1341,23 +1341,6 @@ function nuAddThousandSpaces(numberString, delimiter) {
 	return numberString.replace(/\B(?=(\d{3})+(?!\d))/g, delimiter);
 }
 
-function nuDuplicates(arr) {
-
-	var s = arr.slice().sort();
-	var d = [];
-
-	for (var i = 0; i < arr.length - 1; i++) {
-
-		if (s[i + 1] == s[i]) {
-			d.push(s[i]);
-		}
-
-	}
-
-	return d;
-
-}
-
 function nuResizeWindow(e) {
 
 	if (e.target.id !== 'dialogTitleWords') return;
@@ -1432,7 +1415,6 @@ function nuSetSuffix(a) {
 		window.nuSuffix++;
 	}
 
-
 }
 
 function nuWhen(timestamp) {
@@ -1464,39 +1446,6 @@ function nuAddEditFieldsToHash(w) {
 
 function nuOnFocus(e) {
 	$('.nuTabSelected').attr('nu-data-active-element', document.activeElement.id);
-}
-
-function nuClick2(e) {
-
-	const t = $(e.target);
-
-	if (t.parent().parent().attr('class') !== 'ctxmenu') {
-		nuContextMenuClose();
-	}
-
-	if (!t.hasClass('nuOptionsItem') && ! t.hasClass('nuSearchCheckbox') && ! t.hasClass('nuOptionsList')
-	&& ! $(e.target.parentElement).hasClass('nuOptionsList')) {
-		$('#nuSearchList').remove();
-	}
-
-	if (!t.hasClass('nuIcon') && ! t.hasClass('nuOptionsList') && ! t.hasClass('nuOptionsListTitle')) {
-		$('#nuOptionsListBox').remove();
-	}
-
-	if (e.target.id != 'nuMessageDiv' && t.attr('data-nu-option-title') != 'Help') {
-
-		if (window.nuHideMessage) {
-			$('#nuMessageDiv').remove();
-		}
-
-		window.nuHideMessage = true;
-
-	}
-
-	if (t.attr('type') != 'nuDate' && !t.hasClass('nuCalendar')) {
-		$('#nuCalendar').remove();
-	}
-
 }
 
 function nuClick(e) {
@@ -1534,7 +1483,6 @@ function nuClick(e) {
 function nuAddSlashes(s) {
 	return String(s).replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
 }
-
 
 function nuOpenTab(i) {
 	$('#nuTab' + i).trigger( "click" );
