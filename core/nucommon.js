@@ -834,52 +834,6 @@ function nuOpenAce(lang, obj) {
 
 }
 
-
-function nuRunIt(t, email, type) {
-
-	var r = $('#' + t.id).attr('data-nu-row');
-	var c = '000';
-	var p = $('#' + r + c).html();
-
-	if (arguments.length < 3) {										//-- set type
-
-		var type = $('#' + r + '001').html();					//-- report - PDF,or procedure - PHP
-
-	}
-
-	if (arguments.length == 1) {										//-- set email
-
-		var email = 0;
-
-	}
-
-	var f = $('#' + t.id).attr('data-nu-primary-key');
-	var i = nuRecordId();
-
-	if (email == 1) {
-
-		if (type == 'php') {
-			nuEmailPHP(i);
-		}
-
-		if (type == 'pdf') {
-			nuEmailPDF(i);
-		}
-
-	} else {
-
-		if (type == 'php') {
-			nuGetPHP(f, p);
-		}
-
-		if (type == 'pdf') {
-			nuGetReport(f, p);
-		}
-
-	}
-
-}
-
 function nuBindCtrlEvents() {
 
 	var nuCtrlKeydownListener = function (e) {
