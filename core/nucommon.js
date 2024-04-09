@@ -1451,14 +1451,14 @@ function nuSpaces(s) {
 
 function nuAddEditFieldsToHash(w) {
 
-    const {fields, rows} = nuFORM.data()[0];
-    const rowData = rows[0];
+	const {fields, rows} = nuFORM.data()[0];
+	const rowData = rows[0];
 
-    fields.slice(2).forEach((field, index) => {
-        w[field] = rowData[index + 2];
-    });
+	fields.slice(2).forEach((field, index) => {
+		w[field] = rowData[index + 2];
+	});
 
-    return w;
+	return w;
 
 }
 
@@ -1466,7 +1466,7 @@ function nuOnFocus(e) {
 	$('.nuTabSelected').attr('nu-data-active-element', document.activeElement.id);
 }
 
-function nuClick(e) {
+function nuClick2(e) {
 
 	const t = $(e.target);
 
@@ -1494,6 +1494,38 @@ function nuClick(e) {
 	}
 
 	if (t.attr('type') != 'nuDate' && !t.hasClass('nuCalendar')) {
+		$('#nuCalendar').remove();
+	}
+
+}
+
+function nuClick(e) {
+
+	const target = $(e.target);
+	const parentClasses = target.parents().map(function() {
+		return this.className;
+	}).get();
+
+	if (!parentClasses.includes('ctxmenu')) {
+		nuContextMenuClose();
+	}
+
+	if (!target.closest('.nuOptionsItem, .nuSearchCheckbox, .nuOptionsList').length) {
+		$('#nuSearchList').remove();
+	}
+
+	if (!target.is('.nuIcon, .nuOptionsList, .nuOptionsListTitle')) {
+		$('#nuOptionsListBox').remove();
+	}
+
+	if (target.attr('id') !== 'nuMessageDiv' && target.attr('data-nu-option-title') !== 'Help') {
+		if (window.nuHideMessage) {
+			$('#nuMessageDiv').remove();
+		}
+		window.nuHideMessage = true;
+	}
+
+	if (!target.is('[type="nuDate"], .nuCalendar')) {
 		$('#nuCalendar').remove();
 	}
 
