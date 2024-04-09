@@ -1327,14 +1327,14 @@ function nuIsHidden(id) {
 	return !nuIsVisible(id);
 }
 
-function nuIsEnabled(i) {
-	let o = $('#' + i);
-	return !o.is(':disabled') && !o.hasClass('nuReadonly');
+function nuIsEnabled(id) {
+	const $id = $('#' + id);
+	return !$id.is(':disabled') && !$id.hasClass('nuReadonly');
 }
 
-function nuIsDisabled(i) {
-	let o = $('#' + i);
-	return o.is(':disabled') || o.hasClass('nuReadonly');
+function nuIsDisabled(id) {
+	let $id = $('#' + id);
+	return $id.is(':disabled') || $id.hasClass('nuReadonly');
 }
 
 function nuAddThousandSpaces(numberString, delimiter) {
