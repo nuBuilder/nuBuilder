@@ -1451,15 +1451,14 @@ function nuSpaces(s) {
 
 function nuAddEditFieldsToHash(w) {
 
-	var d = nuFORM.data()[0];
-	var f = d.fields;
-	var r = d.rows[0];
+    const {fields, rows} = nuFORM.data()[0];
+    const rowData = rows[0];
 
-	for (let i = 2; i < f.length; i++) {
-		w[f[i]] = r[i];
-	}
+    fields.slice(2).forEach((field, index) => {
+        w[field] = rowData[index + 2];
+    });
 
-	return w;
+    return w;
 
 }
 
