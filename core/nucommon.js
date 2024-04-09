@@ -776,47 +776,34 @@ function nuCreateDialog(t) {
 
 }
 
-function nuReformat(t) {
+function nuReformat(element) {
 
-	function nuReapplyFormat(v, f) {
+	const $element = $('#' + element.id);
+	const formatType = $element.attr('data-nu-format');
+	const currentValue = $element.val();
 
-		let r = nuFORM.removeFormatting(v, f);
-		return nuFORM.addFormatting(r, f);
-
+	if (!formatType || !currentValue) {
+		return currentValue;
 	}
+	const reapplyFormat = function(value, format) {
+		let rawValue = nuFORM.removeFormatting(value, format);
+		return nuFORM.addFormatting(rawValue, format);
+	};
 
-	let o = $('#' + t.id);
-	let f = o.attr('data-nu-format');
-	let v = o.val();
+	const formattedValue = reapplyFormat(currentValue, formatType);
 
-	if (f == '' || v == '') {
-		return v;
-	}
+	if (formatType.startsWith('D') && currentValue !== formattedValue) {
+		$element.val('');
 
-	if (f[0] == 'D') {
-
-		let a = nuReapplyFormat(v, f);
-		if (v != a) {
-
-			o.val('');
-
-			if (window.nuFormatValueClearedGlobal) {
-				nuFormatValueClearedGlobal(o, v);
-			}
-
-			if (window.nuFormatValueCleared) {
-				nuFormatValueCleared(o, v);
-			}
-
+		if (window.nuFormatValueClearedGlobal) {
+			nuFormatValueClearedGlobal($element, currentValue);
 		}
 
-	}
-
-	if (f[0] == 'N') {
-
-		let a = nuReapplyFormat(v, f);
-		o.val(a);
-
+		if (window.nuFormatValueCleared) {
+			nuFormatValueCleared($element, currentValue);
+		}
+	} else if (formatType.startsWith('N')) {
+		$element.val(formattedValue);
 	}
 
 }
