@@ -583,7 +583,14 @@ function nuBuildLookup(t, s, like) {
 }
 
 function nuCanArrangeObjects() {
-	return nuGlobalAccess() && nuSERVERRESPONSE.objects.length > 0 &&  !window.nuPORTRAITSCREEN && !(nuIsMobile() && nuCurrentProperties().mobile_view);
+
+	const hasObjects = nuSERVERRESPONSE.objects && nuSERVERRESPONSE.objects.length > 0;
+	const isNotPortraitScreen = !window.nuPORTRAITSCREEN;
+	const isNotMobileView = !(nuIsMobile() && nuCurrentProperties().mobile_view);
+	const isNotArrangeObjects = nuRecordId() != '-2';
+
+	return nuGlobalAccess() && hasObjects && isNotPortraitScreen && isNotMobileView && isNotArrangeObjects;
+
 }
 
 function nuPopup(formId, recordId, filter) {
