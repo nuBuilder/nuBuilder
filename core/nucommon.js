@@ -803,7 +803,7 @@ function nuOpenAce(lang, obj) {
 
 function nuBindCtrlEvents() {
 
-	var nuCtrlKeydownListener = function (e) {
+	const nuCtrlKeydownListener = function (e) {
 
 		if (e.key === 'F3' || ((nuIsMacintosh() ? e.metaKey : e.ctrlKey) && e.key === 'f')) { // exclude Ctrl + f
 			window.nuNEW = 0;
@@ -852,78 +852,57 @@ function nuBindCtrlEvents() {
 
 			e.preventDefault();
 
-			var g = nuGlobalAccess();
-			var formId = nuFormId();
+			const globalAccess = nuGlobalAccess();
+			const formId = nuFormId();
+			const formType = nuFormType();
+			const isBrowseOrEdit = formType === 'browse' || formType === 'edit';
+			const isEditOnly = formType === 'edit';
+			const isBrowseOnly = formType === 'browse';
 
-			if (nuFormType() == 'browse' || nuFormType() == 'edit') {
+			// Define actions in a more structured way to avoid redundancy
+			const actions = {
+				// Common actions for both 'browse' and 'edit'
+				'KeyR': { action: () => nuGetBreadcrumb(), condition: true },
+				// Actions available on 'browse' or 'edit' form types
+				...(isBrowseOrEdit && {
+					'KeyF': { action: () => nuPopup("nuform", formId), condition: globalAccess },
+					'KeyO': { action: () => nuPopup("nuobject", "", formId), condition: globalAccess },
+					'KeyM': { action: () => nuShowFormInfo(), condition: globalAccess },
+					'KeyV': { action: () => nuShowVersionInfo(), condition: globalAccess },
+					'KeyE': { action: () => nuVendorLogin('PMA'), condition: globalAccess },
+					'KeyI': { action: () => nuForm("nusession", "", "", "", 2), condition: globalAccess },
+					'KeyQ': { action: () => nuVendorLogin("TFM"), condition: globalAccess && isBrowseOrEdit },
+					'KeyB': { action: () => nuRunBackup(), condition: globalAccess },
+					'KeyU': { action: () => nuForm('nusetup', '1', '', '', 2), condition: globalAccess },
+					'KeyD': { action: () => nuPopup("nudebug", ""), condition: globalAccess },
+					'KeyY': { action: () => nuPrettyPrintMessage(e, nuCurrentProperties()), condition: globalAccess },
+					'KeyL': { action: () => nuAskLogout(), condition: true },
+				}),
+				// Actions specific to 'browse' form type
+				...(isBrowseOnly && {
+					'KeyC': { action: () => nuGetSearchList(), condition: globalAccess },
+					'KeyS': { action: () => nuSearchAction(), condition: true },
+					'KeyA': { action: () => nuAddAction(), condition: globalAccess },
+					'KeyP': { action: () => nuPrintAction(), condition: globalAccess },
+				}),
+				// Actions specific to 'edit' form type
+				...(isEditOnly && {
+					'KeyA': { action: () => nuPopup(formId, "-2"), condition: nuCanArrangeObjects() },
+					'KeyQ': { action: () => nuPopup("nupassword", "", ""), condition: !globalAccess },
+					'KeyH': { action: () => nuPopup('nuobject', '-1', ''), condition: globalAccess },
+					'KeyG': { action: () => nuForm("nuobjectgrid", formId, "", "", 2), condition: globalAccess },
+					'KeyS': { action: () => { $(":focus").trigger("blur"); nuSaveAction(); }, condition: true },
+					'KeyC': { action: () => nuCloneAction(), condition: true },
+					'KeyY': { action: () => nuDeleteAction(), condition: true },
+					'ArrowRight': { action: () => nuSelectNextTab(1), condition: true },
+					'ArrowLeft': { action: () => nuSelectNextTab(-1), condition: true },
+				})
+			};
 
-				if (e.code == 'KeyF' && g) {						//-- f		Form Properties
-					nuPopup("nuform", formId);
-				} else if (e.code == 'KeyO' && g) {					//-- O		Object List
-					nuPopup("nuobject", "", formId);
-				} else if (e.code == 'KeyM' && g) {					//-- m		Form Info
-					nuShowFormInfo();
-				} else if (e.code == 'KeyV' && g) {					//-- v		Version Info
-					nuShowVersionInfo();					
-				} else if (e.code == 'KeyE' && g) {					//-- e		Database
-					nuVendorLogin('PMA');
-				} else if (e.code == 'KeyI' && g) {					//-- i		Sessions
-					nuForm("nusession","","", "", 2);
-				} else if (e.code == 'KeyQ' && g) {					//-- e		File Manager
-					nuVendorLogin("TFM");
-				} else if (e.code == 'KeyB' && g) {					//-- b		Backup
-					nuRunBackup();
-				} else if (e.code == 'KeyR') {						//-- r		Refresh
-					nuGetBreadcrumb();
-				} else if (e.code == 'KeyU' && g) {					//-- u		Setup
-					nuForm('nusetup', '1', '', '', 2);
-				} else if (e.code == 'KeyD' && g) {					//-- d		nuDebug Results
-					nuPopup("nudebug", "");
-				} else if (e.code == 'KeyY' && g) {					//-- y		Current Properties
-					nuPrettyPrintMessage(e, nuCurrentProperties());
-				} else if (e.code == 'KeyL') {						//-- l		Log out
-					nuAskLogout();
-				}
-
-			}
-
-			if (nuFormType() == 'browse') {
-
-				if (e.code == 'KeyC' && g) {						//-- c		Searchable Columns
-					nuGetSearchList();
-				} else if (e.code == 'KeyS') {						//-- s		Search
-					nuSearchAction();
-				} else if (e.code == 'KeyA' && g) {					//-- a		Add
-					nuAddAction();
-				} else if (e.code == 'KeyP' && g) {					//-- p		Print
-					nuPrintAction();
-				}
-
-			}
-
-			if (nuFormType() == 'edit') {
-
-				if (e.code == 'KeyA' && nuCanArrangeObjects()) {	//-- a		Arrange Objects
-					nuPopup(formId, "-2");
-				} else if (e.code == 'KeyQ' && !g) {				//-- q		Change Password
-					nuPopup("nupassword", "5b6bb7108a75efc", "");
-				} else if (e.code == 'KeyH' && g) {					//-- t		Add Object
-					nuPopup('nuobject', '-1', '');
-				} else if (e.code == 'KeyG' && g) {					//-- G		Object Grid
-					nuForm("nuobjectgrid", formId, "", "", 2);
-				} else if (e.code == 'KeyS') {						//-- s		Save
-					$(":focus").trigger("blur");
-					nuSaveAction();
-				} else if (e.code == 'KeyC') {						//-- c		Clone
-					nuCloneAction();
-				} else if (e.code == 'KeyY') {						//-- y		Delete
-					nuDeleteAction();
-				} else if (e.code == 'ArrowRight') {				//-- ->		Select next tab
-					nuSelectNextTab(1);
-				} else if (e.code == 'ArrowLeft') {					//-- <-		Select previous tab
-					nuSelectNextTab(-1);
-				}
-
+			// Execute action based on key press if condition is met
+			const action = actions[e.code];
+			if (action && action.condition) {
+				action.action();
 			}
 
 			var nosearch = window.nuFORM.getProperty('nosearch_columns');
@@ -938,15 +917,11 @@ function nuBindCtrlEvents() {
 			if (searchIndex != -1) {
 
 				if ($.inArray(searchIndex, nosearch) != '-1') {
-
 					nosearch.pop(searchIndex);
 					$('#nusort_' + searchIndex).removeClass('nuNoSearch');
-
 				} else {
-
 					nosearch.push(searchIndex);
 					$('#nusort_' + searchIndex).addClass('nuNoSearch');
-
 				}
 
 			}
@@ -955,13 +930,11 @@ function nuBindCtrlEvents() {
 		}
 	});
 
-	var nuCtrlKeyupListener = function (e) {
-
+	const nuCtrlKeyupListener = function (e) {
 		window.nuNEW = 0;
 	}
 
 	$(document).on('keydown.nubindctrl', nuCtrlKeydownListener);
-
 	$(document).on('keyup.nubindctrl', nuCtrlKeyupListener);
 
 }
