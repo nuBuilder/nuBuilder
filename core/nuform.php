@@ -36,7 +36,7 @@ function nuBeforeEdit($FID, $RID){
 	if($ct == 'getform' and $r == ''){return;}
 
 	$formType = $_POST['nuSTATE']['form_type'] ?? '';
-    $recordID = $_POST['nuSTATE']['record_id'] ?? '';
+	$recordID = $_POST['nuSTATE']['record_id'] ?? '';
 
 	if($ct == 'getform'){
 
@@ -178,7 +178,7 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 
 	if($R != ''){
 
-		$dbFields = db_field_names($f->table);
+		$dbFields = ($A !== []) ? db_field_names($f->table) : [];
 
 		$t							= nuRunQuery($s, [$F]);
 
