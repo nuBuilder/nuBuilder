@@ -652,7 +652,6 @@ function nuCreateDialog(t) {
 		const dir = event.target.parentElement.baseURI.includes('nureportdesigner') ? '' : 'core/';
 		$('#dialogClose').attr("src", dir + "graphics/close" + (event.target.id === 'dialogClose' ? "_red" : "") + ".png");
 
-
 	}
 
 	this.click = function (event) {
@@ -870,7 +869,7 @@ function nuBindCtrlEvents() {
 					'KeyM': { action: () => nuShowFormInfo(), condition: globalAccess },
 					'KeyV': { action: () => nuShowVersionInfo(), condition: globalAccess },
 					'KeyE': { action: () => nuVendorLogin('PMA'), condition: globalAccess },
-					'KeyI': { action: () => nuForm("nusession", "", "", "", 2), condition: globalAccess },
+					'KeyJ': { action: () => nuForm("nusession", "", "", "", 2), condition: globalAccess },
 					'KeyQ': { action: () => nuVendorLogin("TFM"), condition: globalAccess && isBrowseOrEdit },
 					'KeyB': { action: () => nuRunBackup(), condition: globalAccess },
 					'KeyU': { action: () => nuForm('nusetup', '1', '', '', 2), condition: globalAccess },
@@ -905,8 +904,8 @@ function nuBindCtrlEvents() {
 				action.action();
 			}
 
-			var nosearch = window.nuFORM.getProperty('nosearch_columns');
-			var searchIndex = -1;
+			let nosearch = window.nuFORM.getProperty('nosearch_columns');
+			let searchIndex = -1;
 
 			//Numbers
 			const numberCode = e.code.replace('Digit','');
