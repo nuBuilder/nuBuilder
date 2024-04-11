@@ -28,14 +28,14 @@ function nuAjaxShowError(jqXHR, errorThrown) {
 
 	const errMsg = nuFormatAjaxErrorMessage(jqXHR, errorThrown);
 
-	let msgDiv;  
-	if (nuHasHiddenModalDragDialog()) {    
-		msgDiv = parent.nuMessage(errMsg);    
-		nuClosePopup();   
-	} else {    
-		msgDiv = nuMessage(errMsg);  
-	}  
-	if (window.nuOnMessage) {    
+	let msgDiv;
+	if (nuHasHiddenModalDragDialog()) {
+		msgDiv = parent.nuMessage(errMsg);
+		nuClosePopup();
+	} else {
+		msgDiv = nuMessage(errMsg);
+	}
+	if (window.nuOnMessage) {
 		nuOnMessage(msgDiv, errMsg);
 	}
 
