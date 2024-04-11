@@ -98,14 +98,11 @@ String.prototype.nuWithoutNumbers = function () {
 	return this.replace(/\d+/g, '');
 }
 
-String.prototype.nuInsertString = function (index, string) {
-
+String.prototype.nuInsertString = function(index, string) {
 	if (index > 0) {
-		return this.substring(0, index) + string + this.substr(index);
+		return this.substring(0, index) + string + this.substring(index);
 	}
-
 	return string + this;
-
 };
 
 String.prototype.nuIsEmpty = function () {
