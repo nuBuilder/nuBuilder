@@ -1186,7 +1186,7 @@ function nuShow(i, visible, openTab) {
 					if (t[0] == 'x') {
 
 						$('#' + componentIds[c])
-							.attr('data-nu-tab', t.substr(1))
+							.attr('data-nu-tab', t.substring(1))
 							.show();
 
 					} else {
