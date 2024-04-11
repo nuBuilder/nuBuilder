@@ -904,9 +904,7 @@ function nuBindCtrlEvents() {
 
 			// Execute action based on key press if condition is met
 			const action = actions[e.code];
-			if (action && action.condition) {
-				action.action();
-			}
+			action?.condition && action.action();
 
 			let nosearch = window.nuFORM.getProperty('nosearch_columns');
 			let searchIndex = -1;
