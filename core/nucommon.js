@@ -2779,10 +2779,11 @@ function nuConsoleErrorsToMessage(cancel = false) {
 function nuSetAttributes(element, attributes) {
 
 	for (const key in attributes) {
-		if (attributes.hasOwnProperty(key)) {
+		if (Object.prototype.hasOwnProperty.call(attributes, key)) {
 			element.setAttribute(key, attributes[key]);
-		}
+	  	}
 	}
 
 }
+  
 
