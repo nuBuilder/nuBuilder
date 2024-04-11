@@ -3782,7 +3782,7 @@ function nuGetOptionsList(formId, subformId, globalAccess, type) {
 		ChangePassword : ['Change Password', 'nuPopup("nupassword", "", "")', 'fa-password', 'Q'],
 		DebugResults : ['nuDebug Results', 'nuOptionsListAction("nudebug", "")', 'fa-bug', 'D'],
 		Database : ['Database', 'nuVendorLogin("PMA")', 'fa-database', 'E'],
-		Sessions : ['Sessions', 'nuForm("nusession","","", "", 2)', 'fas fa-key', 'I'],
+		Sessions : ['Sessions', 'nuForm("nusession","","", "", 2)', 'fas fa-key', 'J'],
 		FileManager : ['File Manager', 'nuVendorLogin("TFM");', 'far fa-file-code', 'Q'],
 		Backup : ['Backup', 'nuRunBackup();', 'far fa-hdd', 'B'],
 		Setup : ['Setup', 'nuForm("nusetup","1","", "", 2)', 'fa-cogs', 'U'],
