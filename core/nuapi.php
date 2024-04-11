@@ -73,6 +73,7 @@
 	$_POST['nuAfterEvent']					= false;
 
 	$f										= new stdClass;
+	$f->forms = [];
 	$f->forms[0]							= new stdClass;
 
 	if(count($formAndSessionData->errors) == 0){
@@ -155,7 +156,6 @@
 		if ($refreshCache) nuSetJSONData('REFRESH_CACHE','0');
 
 		$f->forms[0]->session_id				= $sessionData['SESSION_ID'];
-
 		$f->forms[0]->callback					= nuSetGlobalPropertiesJS()."\n".nuObjKey($_POST,'nuCallback');
 		$f->forms[0]->run_php					= nuObjKey($_POST,'nuRunPHPHidden');
 		$f->forms[0]->errors					= nuObjKey($_POST,'nuErrors');
