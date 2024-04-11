@@ -1293,7 +1293,7 @@ var nuPrettyPrint = (function () {
 
 		getStyles: function (el, type) {
 			type = prettyPrintThis.settings.styles[type] || {};
-			return util.merge({}, prettyPrintThis.settings.styles['default'].el, type.el);
+			return util.merge({}, prettyPrintThis.settings.styles.default.el, type.el);
 		},
 
 		expander: function (text, title, clickFn) {
