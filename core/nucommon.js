@@ -853,8 +853,6 @@ function nuBindCtrlEvents() {
 
 			window.nuNEW = 0;
 
-			e.preventDefault();
-
 			const globalAccess = nuGlobalAccess();
 			const formId = nuFormId();
 			const formType = nuFormType();
@@ -904,7 +902,10 @@ function nuBindCtrlEvents() {
 
 			// Execute action based on key press if condition is met
 			const action = actions[e.code];
-			action?.condition && action.action();
+			if (action?.condition) {
+				e.preventDefault();
+				action.action();
+			} 
 
 			let nosearch = window.nuFORM.getProperty('nosearch_columns');
 			let searchIndex = -1;
