@@ -1134,7 +1134,7 @@ function nuINPUTfileFileSystem($formId, w, i, l, p, prop, id) {
 	html =  html.replaceAll('#uppy_div#', id + '_uppy_div');
 	html =  html.replaceAll('#this_object_id#', id);
 	html =  html.replaceAll('nuInitUppy()','nuInitUppy' + '_' + id + '()');
-	html =  html.replaceAll('.cssNumber(','nuCSSNumber(');
+	html =  html.replaceAll('.cssNumber(','.nuCSSNumber(');
 	
 	html =  html.replaceAll('new Uppy.Core()','new Uppy.Uppy()');
 
