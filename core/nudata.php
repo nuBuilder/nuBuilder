@@ -972,4 +972,8 @@ function nuLogout() {
 
 	// Unset session data
 	unset($_SESSION['nubuilder_session_data']['SESSION_ID']);
+	
+	// Unset cached include files
+	unset($_SESSION['nuinclude']);
+
 }
