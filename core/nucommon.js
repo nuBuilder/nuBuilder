@@ -2217,7 +2217,6 @@ function nuSelectRemoveMultiple(i) {
 
 }
 
-
 function nuSelectSelectAll(id, value = true) {
 
 	const $id = $("#" + id);
@@ -2251,6 +2250,10 @@ function nuSelectSelectedValueArray(id) {
 
 function nuSelectSelectedTextArray(id) {
 	return nuSelectSelectedInfo(id).texts;
+}
+
+function nuSelectSetIndex(id, index) {
+	$("#" + id).prop("selectedIndex", index).change();
 }
 
 function nuPasteText(id, callback) {
