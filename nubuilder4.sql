@@ -2613,7 +2613,7 @@ CREATE TABLE `zzzzsys_user_permission` (
 --
 DROP TABLE IF EXISTS `zzzzsys_object_list`;
 
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `zzzzsys_object_list`  AS SELECT `information_schema`.`tables`.`TABLE_NAME` AS `zzzzsys_object_list_id` FROM `information_schema`.`TABLES` WHERE (`information_schema`.`tables`.`TABLE_SCHEMA` = database())  ;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `zzzzsys_object_list`  AS SELECT `information_schema`.`tables`.`TABLE_NAME` AS `zzzzsys_object_list_id` FROM `information_schema`.`tables` WHERE (`information_schema`.`tables`.`TABLE_SCHEMA` = database())  ;
 
 -- --------------------------------------------------------
 
