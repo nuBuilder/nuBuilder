@@ -5427,10 +5427,10 @@ function nuFormsUnsaved() {
 
 function nuAddJavaScript(js) {
 
-	var s = document.createElement('script');
-	s.innerHTML = "\n\n" + js + "\n\n";
+	const scriptElement = document.createElement('script');
+	scriptElement.textContent = `\n\n${js}\n\n`;
 
-	$('body').append(s);
+	document.body.appendChild(scriptElement);
 
 }
 
