@@ -4813,24 +4813,23 @@ function nuAddAction() {
 
 }
 
-function nuSortBrowse(c) {
+function nuSortBrowse(column) {
 
-	var l = window.nuFORM.getCurrent();
-	l.filter = $('#nuFilter').val();
-	l.page_number = 0;
+	const formState = window.nuFORM.getCurrent();
+	formState.filter = $('#nuFilter').val();
+	formState.page_number = 0;
 
-	if (c == l.sort) {
-		l.sort_direction = l.sort_direction == 'asc' ? 'desc' : 'asc';
+	if (column === formState.sort) {
+		formState.sort_direction = (formState.sort_direction === 'asc') ? 'desc' : 'asc';
 	} else {
-
-		l.sort = c;
-		l.sort_direction = 'asc';
-
+		formState.sort = column;
+		formState.sort_direction = 'asc';
 	}
 
 	nuSearchAction();
 
 }
+
 
 function nuGetPage(p) {
 
