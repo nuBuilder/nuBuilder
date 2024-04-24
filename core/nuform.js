@@ -4830,25 +4830,10 @@ function nuSortBrowse(column) {
 
 }
 
+function nuGetPage(page) {
 
-function nuGetPage(p) {
-
-	let P = parseInt('00' + p, 10);
-
-	if (p > nuCurrentProperties().pages || p === 0) return;
-
-	let current = window.nuFORM.getCurrent();
-
-	if (P == 0) {
-		P = 1;
-	}
-
-	if (P > current.pages) {
-		P = current.pages;
-	}
-
-	current.page_number = P - 1;
-
+	page = Math.max(1, Math.min(parseInt(page, 10), window.nuFORM.getCurrent().pages));
+	window.nuFORM.getCurrent().page_number = page - 1;
 	nuSearchAction();
 
 }
