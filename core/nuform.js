@@ -4813,18 +4813,6 @@ function nuAddAction() {
 
 }
 
-function nuRunPHPAction(code) {
-	nuRunPHP(code);
-}
-
-function nuRunReportAction(code) {
-	nuRunReport(code);
-}
-
-function nuEmailReportAction(code) {
-	nuEmailReport(code);
-}
-
 function nuSortBrowse(c) {
 
 	var l = window.nuFORM.getCurrent();
