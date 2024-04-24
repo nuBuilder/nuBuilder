@@ -5443,26 +5443,26 @@ function nuAddFormStyle(style) {
 	}
 
 }
-
 function nuHashFromEditForm() {
 
-	var A = {};
-	var S = nuSubformObject('');
-	var B = nuFORM.getCurrent();
+	const resultHash = {};
+	const subform = nuSubformObject('');
+	const currentForm = nuFORM.getCurrent();
 
-	if (S.rows.length == 0) { return A; }
+	if (subform.rows.length === 0) { return resultHash; }
 
-	for (var key in B) {
-		A[key] = B[key];
+	for (const key in currentForm) {
+		resultHash[key] = currentForm[key];
 	}
 
-	for (var i = 0; i < S.fields.length; i++) {
-		A[S.fields[i]] = S.rows[0][i];
+	for (let i = 0; i < subform.fields.length; i++) {
+		resultHash[subform.fields[i]] = subform.rows[0][i];
 	}
 
-	return A;
+	return resultHash;
 
 }
+
 
 function nuDetach() {
 
