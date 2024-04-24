@@ -5463,7 +5463,6 @@ function nuHashFromEditForm() {
 
 }
 
-
 function nuDetach() {
 
 	$('.nuDragLineV').each(function () {
@@ -5532,18 +5531,16 @@ function nuSearchableList() {
 
 }
 
-function nuWidestTitle(c) {
+function nuWidestTitle(columns) {
 
-	var w = 120;
+	let widest = 120;
 
-	for (let i = 0; i < c.length; i++) {
-
-		const t = String(c[i].title).replaceAll('<br>', ' ').replaceAll('<p>', ' ');
-		w = Math.max(nuGetWordWidth(t), w);
-
+	for (let i = 0; i < columns.length; i++) {
+		const title = String(columns[i].title).replaceAll('<br>', ' ').replaceAll('<p>', ' ');
+		widest = Math.max(nuGetWordWidth(title), widest);
 	}
 
-	return w + 70;
+	return widest + 70;
 
 }
 
