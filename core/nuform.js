@@ -4840,32 +4840,27 @@ function nuGetPage(page) {
 
 function nuPopulateLookup(fm, target, setFocus) {
 
-	var p = String($('#' + target).attr('data-nu-prefix'));
-	var f = fm.lookup_values;
+	const p = String($('#' + target).attr('data-nu-prefix'));
+	const f = fm.lookup_values;
 
 	window.nuSubformRow = Number(p.slice(-3));
 
-	for (var i = 0; i < f.length; i++) {
+	for (let i = 0; i < f.length; i++) {
+		const id = String(f[i][0]);
+		let $id = $('#' + id);
 
-		var id = String(f[i][0]);
-		var $id = $('#' + id);
-
-		if (id.substring(0, p.length) != p) {
+		if (id.substring(0, p.length) !== p) {
 			$id = $('#' + p + id);
 		}
 
 		$id.addClass('nuEdited');
 
-		if ($id.attr('type') == 'checkbox') {
-
-			$id.prop('checked', f[i][1] == '1');
-
+		if ($id.attr('type') === 'checkbox') {
+			$id.prop('checked', f[i][1] === '1');
 		} else {
-
 			$id.val(f[i][1]);
 
 			if ($id.attr('data-nu-format') !== undefined) {
-
 				nuReformat($id[0]);
 				$id.addClass('nuEdited');
 				$('#' + p + 'nuDelete').prop('checked', false);
@@ -4877,15 +4872,12 @@ function nuPopulateLookup(fm, target, setFocus) {
 				if (window.nuOnLookupPopulated) {
 					nuOnLookupPopulated(id, p);
 				}
-
 			}
-
 		}
 
-		if (i == 1 && setFocus !== false) {
+		if (i === 1 && setFocus !== false) {
 			$id.trigger("focus");
 		}
-
 	}
 
 	window.nuLOOKUPSTATE[$('#' + target).attr('data-nu-object-id')] = 'found';
@@ -4894,9 +4886,9 @@ function nuPopulateLookup(fm, target, setFocus) {
 
 	eval(fm.lookup_javascript);
 
-	$('#dialogClose').trigger( "click" );
+	$('#dialogClose').trigger("click");
 
-	if (window.nuaction == 'save' && !nuLookingUp()) {
+	if (window.nuaction === 'save' && !nuLookingUp()) {
 		nuSaveAction();
 	}
 
