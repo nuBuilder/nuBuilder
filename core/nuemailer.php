@@ -36,7 +36,7 @@ function nuEmail($to_list=[],$from_address='',$from_name='',$content='',$subject
 
 	$nuEmailSettings = nuMarshallEmailSettings($from_address, $from_name, $html, $reply_to_list);
 
-	$mail = new \PHPMailer\PHPMailer\PHPMailer();
+	$mail = new PHPMailer();
 	$mail->SMTPDebug = $debug;
 
 	if ( $method == 'SMTP' ) {
