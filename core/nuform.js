@@ -4981,6 +4981,7 @@ function nuValidLookupId(id, fld) {
 }
 
 function nuHighlightSearch() {
+
 	const bc = window.nuFORM.getCurrent().search;
 
 	if (!bc || !bc.length) {
@@ -5001,6 +5002,7 @@ function nuHighlightSearch() {
 			search.forEach(term => $(this).nuHighlight(term));
 		}
 	});
+
 }
 
 function nuOnSubformDeleteClick(event) {
@@ -5073,57 +5075,65 @@ function nuChooseEventList() {
 
 }
 
-function nuChangeFile(e) {
+function nuChangeFile(event) {
 
-	if (e.target.id.substr(-8) == 'nuDelete') {
+	const targetId = event.target.id;
+	const deleteSuffix = 'nuDelete';
 
+	if (targetId.endsWith(deleteSuffix)) {
 		nuHasBeenEdited();
 		return;
-
 	}
 
-	var theFile = e.target.id;
-	var theTextarea = theFile.substr(0, theFile.length - 5);
+	const fileElementId = targetId;
+	const textAreaId = fileElementId.slice(0, -5);
 
-	if ($('#' + theFile).val() == '') { return; }
+	if ($('#' + fileElementId).val() === '') {
+		return;
+	}
 
-	var a = $('#' + theFile)[0].files[0];
-	var r = new FileReader();
+	const file = $('#' + fileElementId)[0].files[0];
+	const fileReader = new FileReader();
 
-	r.onload = function () {
-
-		var f = btoa(r.result);
-		var o = { 'file': f, 'name': a.name, 'size': a.size, 'type': a.type };
-		var j = JSON.stringify(o);
+	fileReader.onload = function () {
+		const base64EncodedFile = btoa(fileReader.result);
+		const fileInfo = {
+			'file': base64EncodedFile,
+			'name': file.name,
+			'size': file.size,
+			'type': file.type
+		};
+		const fileInfoJSON = JSON.stringify(fileInfo);
 
 		if (window.nuOnFileLoad) {
-			if (nuOnFileLoad(theFile, o) === false) { return; }
+			if (nuOnFileLoad(fileElementId, fileInfo) === false) {
+				return;
+			}
 		} else {
-			if (j.length > 600000) {
-
+			if (fileInfoJSON.length > 600000) {
 				nuMessage([nuTranslate('File is too large, cannot be saved. Must be under 300Kb')]);
 				return;
-
 			}
 		}
 
-		$('#' + theTextarea).val(j).addClass('nuEdited');
-
+		$('#' + textAreaId).val(fileInfoJSON).addClass('nuEdited');
 	};
 
-	r.readAsDataURL(a);
+	fileReader.readAsDataURL(file);
 
-	var t = $('#' + theFile)[0];
-	var p = $('#' + theTextarea).attr('data-nu-prefix');
+	const fileInputElement = $('#' + fileElementId)[0];
+	const prefix = $('#' + textAreaId).attr('data-nu-prefix');
 
-	$('#' + p + 'nuDelete').prop('checked', false);
-	$('#' + theTextarea).addClass('nuEdited');
+	$('#' + prefix + deleteSuffix).prop('checked', false);
+	$('#' + textAreaId).addClass('nuEdited');
 
 	nuHasBeenEdited();
 
-	if (p == '') { return; }
+	if (prefix === '') {
+		return;
+	}
 
-	nuAddSubformRow(t, e);
+	nuAddSubformRow(fileInputElement, event);
 
 }
 
