@@ -5546,111 +5546,97 @@ function nuWidestTitle(columns) {
 
 function nuGetSearchList() {
 
-	var c = nuFORM.getProperty('browse_columns');
-	var d = document.createElement('div');
+    const browseColumns = nuFORM.getProperty('browse_columns');
+    const searchListDiv = document.createElement('div');
 
-	$('#nuOptionsListBox').remove();
+    $('#nuOptionsListBox').remove();
 
-	var widest = nuWidestTitle(c) + 20;
+    const widest = nuWidestTitle(browseColumns) + 40;
 
-	d.setAttribute('id', 'nuSearchList');
+    searchListDiv.setAttribute('id', 'nuSearchList');
+    $('body').append(searchListDiv);
 
-	$('body').append(d);
+    $(searchListDiv).css({
+        width: widest,
+        height: 10 + (browseColumns.length * 30),
+        top: 138,
+        left: (window.innerWidth - widest) < 0 ? 0 : 50,
+        position: 'absolute',
+        textAlign: 'left'
+    })
+    .html(`<span style="font-weight:bold">&nbsp;&nbsp;${nuTranslate('Include When Searching')}<span>`)
+    .addClass('nuOptionsList');
 
-	$('#' + d.id).css({
-		'width': widest + 20,
-		'height': 10 + (c.length * 30),
-		'top': 138,
-		'left': (window.innerWidth - widest) < 0 ? 0 : 50,
-		'position': 'absolute',
-		'text-align': 'left'
-	})
-		.html('<span style="font-weight:bold">&nbsp;&nbsp;' + nuTranslate('Include When Searching') + '<\span>')
-		.addClass('nuOptionsList');
+    browseColumns.forEach((column, index) => {
+        const noSearch = nuFORM.getCurrent().nosearch_columns.includes(index);
+        const checkbox = document.createElement('input');
+        checkbox.setAttribute('id', 'nuSearchList' + index);
+        checkbox.setAttribute('type', 'checkbox');
 
-	for (var i = 0; i < c.length; i++) {
+        $(searchListDiv).append(checkbox);
 
-		var isChecked = true;
+        $(checkbox).css({
+            width: 20,
+            height: 25,
+            top: 30 + (index * 25),
+            left: 5,
+            position: 'absolute',
+            textAlign: 'left'
+        })
+        .prop('checked', !noSearch)
+        .attr('onclick', 'nuSetSearchColumn();')
+        .addClass('nuSearchCheckbox');
 
-		if ($.inArray(i, nuFORM.getCurrent().nosearch_columns) != '-1') {
-			isChecked = false;
-		}
+        const titleDiv = document.createElement('div');
+        const title = column.title.replaceAll('<br>', ' ').replaceAll('<p>', ' ');
 
-		var p = document.createElement('input');
+        titleDiv.setAttribute('id', 'nuSearchText' + index);
 
-		p.setAttribute('id', 'nuSearchList' + i);
-		p.setAttribute('type', 'checkbox');
+        $(searchListDiv).append(titleDiv);
 
-		$('#' + d.id).append(p);
+        $(titleDiv).css({
+            height: 25,
+            top: 33 + (index * 25),
+            left: 40,
+            position: 'absolute',
+            textAlign: 'left'
+        })
+        .attr('onclick', 'nuClickSearchColumn(event);')
+        .addClass('nuOptionsItem')
+        .html(title)
+        .click(() => {
+            const checkBox = $('#nuSearchList' + index);
+            checkBox.prop('checked', !checkBox.prop('checked'));
+            nuSetSearchColumn();
+        });
 
-		$('#' + p.id).css({
-			'width': 20,
-			'height': 25,
-			'top': 30 + (i * 25),
-			'left': 5,
-			'position': 'absolute',
-			'text-align': 'left'
-		})
-			.prop('checked', isChecked)
-			.attr('onclick', 'nuSetSearchColumn();')
-			.addClass('nuSearchCheckbox');
+        if (index < 9) {
+            const shortcutKeyDiv = document.createElement('div');
+            shortcutKeyDiv.setAttribute('id', 'nuSearchTextShortcutKey' + index);
+            $(searchListDiv).append(shortcutKeyDiv);
 
-		var t = document.createElement('div');
-		var nobr = String(c[i].title).nuReplaceAll('<br>', ' ').nuReplaceAll('<p>', ' ');;
+            $(shortcutKeyDiv).css({
+                position: 'absolute',
+                textAlign: 'left',
+                height: 15,
+                width: 50,
+                top: 37 + (index * 25),
+                right: 10
+            })
+            .html(nuCtrlCmdShiftName(index + 1))
+            .addClass('nuOptionsItemShortcutKey');
+        }
+    });
 
-		t.setAttribute('id', 'nuSearchText' + i);
+    $('.nuOptionsItem').css({ width: widest - 90, padding: '3px 0px 0px 3px' });
+    $('#nuSearchList').css({ height: 50 + (browseColumns.length * 25) });
 
-		$('#' + d.id).append(t);
+    nuDragElement($('#nuSearchList')[0], 30);
 
-		$('#' + t.id).css({
-			'height': 25,
-			'top': 33 + (i * 25),
-			'left': 40,
-			'position': 'absolute',
-			'text-align': 'left'
-		})
-			.attr('onclick', 'nuClickSearchColumn(event);')
-			.addClass('nuOptionsItem')
-			.html(nobr)
-			.click(function () {
-
-				var cb = $('#nuSearchList' + i).attr('checked');
-
-				$('#' + 'nuSearchList' + i).attr('checked', !cb);
-
-				nuSetSearchColumn();
-
-			});
-
-		if (i < 9) {
-
-			var shortcut_key = document.createElement('div');
-			var shortcut_key_id = 'nuSearchTextShortcutKey' + i.toString();
-
-			shortcut_key.setAttribute('id', shortcut_key_id);
-
-			$('#nuSearchList').append(shortcut_key);
-
-			var prop = { 'position': 'absolute', 'text-align': 'left', 'height': 15, 'width': 50 };
-
-			$('#' + shortcut_key.id)
-				.css(prop)
-				.css({ 'top': 37 + (i * 25), 'right': 10 })
-				.html(nuCtrlCmdShiftName(i+1))
-				.addClass('nuOptionsItemShortcutKey');
-
-		}
-
-	}
-
-	$('.nuOptionsItem').css({ 'width': widest - 90, 'padding': '3px 0px 0px 3px' });
-	$('#nuSearchList').css({ 'height': 50 + (c.length * 25) });
-
-	nuDragElement($('#nuSearchList')[0], 30);
-
-	if (nuIsMobile()) nuHideOptionsItemShortcutKeys();
+    if (nuIsMobile()) nuHideOptionsItemShortcutKeys();
 
 }
+
 
 function nuTotal(f) {
 	return Number(nuFORM.calc(f));
