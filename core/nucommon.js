@@ -132,7 +132,7 @@ String.prototype.nuFormat = function () {
 	});
 };
 
-$.fn.nuEnterKey = function(fn, preventDefault = false) {
+$.fn.nuOnEnterKey = function(fn, preventDefault = false) {
 	return this.each(function() {
 		$(this).on('keydown', e => {
 			if (e.key === 'Enter') {
