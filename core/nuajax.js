@@ -357,7 +357,7 @@ function nuRunPHPHidden(code, options = null) {
 		};
 		*/		
 	} else
-	if (options == true) {
+	if (options === true) {
 		if (window.nuBeforeSave) {
 			if (nuBeforeSave() === false) { return; }
 		}
