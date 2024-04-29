@@ -1027,8 +1027,11 @@ function nuSelectOptions($sql) {
 
 		$count = count($parts);
 		for ($i = 0; $i < $count; $i++) {
+			
+			$selectValue = $parts[$i];
+			$selectDescription = isset($parts[$i + 1]) ? $parts[$i + 1] : 'Undefined';
 
-			$options[]	= nuSelectAddOption($parts[$i], $parts[$i + 1]);
+			$options[]	= nuSelectAddOption($selectValue, $selectDescription);
 			$i++;
 
 		}
