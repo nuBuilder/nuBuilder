@@ -1384,11 +1384,11 @@ function nuINPUTSetProperties($id, obj, inputType, objectType, thisObj, p) {
 	.attr('data-nu-prefix', p)
 	.attr('data-nu-type', objectType)
 	.attr('data-nu-subform-sort', 1)
-	.attr('data-nu-label', thisObj.label)
 	.attr('onfocus', 'nuLookupFocus(event)');
 
 	if (inputType != 'button') {
-		$id.attr('data-nu-data', '');
+		$id.attr('data-nu-data', '')
+		.attr('data-nu-label', thisObj.label)
 	} else {
 		$id.addClass('nuButton');
 	}
