@@ -805,6 +805,7 @@ function nuContextMenuLabelPromptCallback(value, ok) {
 			nuSetLabelText(contextMenuCurrentTarget.id.substring(6), value, true);
 		} else {
 			objLabel.html(nuTranslate(value));
+			objLabel.attr('data-nu-org-label', value);
 			const icon = objLabel.attr('nu-data-icon');
 			if (icon) {
 				nuAddInputIcon(contextMenuCurrentTarget.id, icon);
