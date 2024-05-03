@@ -1545,12 +1545,14 @@ function nuAddAttributes(id, attr) {
 
 function nuAddInputIcon(id, icon) {
 
-	function addIcon(idIcon, string, after) {
+	function addIcon(id, string, after) {
 		if (string.startsWith('fa')) {
-			nuAttachFontAwesome(idIcon, string, 'normal', after);
+			nuAttachFontAwesome(id, string, 'normal', after);
 		} else {
-			nuAttachHTML(idIcon, string, after);
+			nuAttachHTML(id, string, after);
 		}
+		$('#' + id)[0].setAttribute('nu-data-icon', string);
+		//	$('#' + id)[0].setAttribute('nu-data-icon-after', after);
 	}
 
 	if (icon !== undefined && icon !== null && icon !== '' && !nuUserA11Y()) {

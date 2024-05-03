@@ -804,7 +804,11 @@ function nuContextMenuLabelPromptCallback(value, ok) {
 		if (contextMenuCurrentTarget.id.startsWith('label_')) {
 			nuSetLabelText(contextMenuCurrentTarget.id.substring(6), value, true);
 		} else {
-			objLabel.html(value);
+			objLabel.html(nuTranslate(value));
+			const icon = objLabel.attr('nu-data-icon');
+			if (icon) {
+				nuAddInputIcon(contextMenuCurrentTarget.id, icon);
+			}
 		}
 
 		let column = nuFormType() == 'edit' ? 'sob_all_label' : 'sbr_title';
