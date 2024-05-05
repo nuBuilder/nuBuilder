@@ -743,7 +743,7 @@ function nuBreadcrumbDescription($r, $R){
 		$b = nuBreadcrumbDescriptionPart($bt);
 	}
 
-	return nuReplaceHashVariables($b);
+	return stripslashes(nuReplaceHashVariables($b));
 
 }
 
