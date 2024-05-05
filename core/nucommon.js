@@ -2787,5 +2787,3 @@ function nuSetAttributes(element, attributes) {
 	}
 
 }
-  
-

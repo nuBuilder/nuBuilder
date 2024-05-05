@@ -4457,21 +4457,21 @@ function nuAlign(a) {
 
 function nuBrowseTableHoverIn() {
 
-    if (window.nuBROWSERESIZE.moving_element == '') {
+	if (window.nuBROWSERESIZE.moving_element == '') {
 
-        console.log(this.offsetWidth + '/' + this.scrollWidth);
-        if ((this.offsetWidth < this.scrollWidth ||
-            this.offsetHeight < this.scrollHeight) &&
-            !$(this).is('[title]')) {
-            $(this).attr('title', $(this).html().replace(/(<([^>]+)>)/ig, '')); // Remove HTML tags
-        }
+		console.log(this.offsetWidth + '/' + this.scrollWidth);
+		if ((this.offsetWidth < this.scrollWidth ||
+			this.offsetHeight < this.scrollHeight) &&
+			!$(this).is('[title]')) {
+			$(this).attr('title', $(this).html().replace(/(<([^>]+)>)/ig, '')); // Remove HTML tags
+		}
 
-        $("[data-nu-row]").addClass('nuBrowseTable').removeClass('nuSelectBrowse');
-        window.nuBROWSEROW = -1;
+		$("[data-nu-row]").addClass('nuBrowseTable').removeClass('nuSelectBrowse');
+		window.nuBROWSEROW = -1;
 
-        const dataRow = $(this).attr('data-nu-row');
-        $("[data-nu-row='" + dataRow + "']").not('.nuCellColored').addClass('nuSelectBrowse').removeClass('nuBrowseTable');
-    }
+		const dataRow = $(this).attr('data-nu-row');
+		$("[data-nu-row='" + dataRow + "']").not('.nuCellColored').addClass('nuSelectBrowse').removeClass('nuBrowseTable');
+	}
 
 }
 
@@ -5689,56 +5689,60 @@ function nuTotal(f) {
 	return Number(nuFORM.calc(f));
 }
 
-function nuMessage(o, timeout, callback) {
+function nuMessage(messages, timeout, callback) {
 
+	const rootElement = window.top.document;
 	window.nuHideMessage = false;
 
-	const par = window.document;
+	$('#nuMessageDiv', rootElement).remove();
 
-	$('#nuMessageDiv', par).remove();
+	if (messages.length === 0) {
+		return;
+	}
 
-	if (o.length == 0) { return; }
-
-	if (!Array.isArray(o)) {
-		let tmp = o;
-		o = [];
-		o.push(tmp);
+	if (!Array.isArray(messages)) {
+		messages = [messages];
 	}
 
 	let widest = 5;
-	for (let i = 0; i < o.length; i++) {
-		widest = Math.max(widest, nuGetWordWidth(o[i]));
+	for (let i = 0; i < messages.length; i++) {
+		widest = Math.max(widest, nuGetWordWidth(messages[i]));
 	}
 
 	widest = Math.min(widest + 200, 1000);
-	let w = window.visualViewport.width - 42; 								//-- subtract padding, border
-	let l = Math.max(0, $(this).scrollLeft() + (w - widest) / 2);
-	w = Math.min(w, widest);
+	let viewportWidth = window.visualViewport.width - 42;
+	const leftPosition = Math.max(0, $(this).scrollLeft() + (viewportWidth - widest) / 2);
+	viewportWidth = Math.min(viewportWidth, widest);
 
-	$('body', par).append("<div id='nuMessageDiv' class='nuMessage' style='overflow:hidden;width:" + w + "px;left:" + l + "px' ></div>");
+	const topPosition = window.scrollY + 10;
+	const messageContainer = $('<div>', {
+		id: 'nuMessageDiv',
+		class: 'nuMessage',
+		style: `overflow:hidden;top:${topPosition}px;width:${viewportWidth}px;left:${leftPosition}px`
+	});
 
-	let msgDiv = $('#nuMessageDiv', par);
-
-	for (let i = 0; i < o.length; i++) {
-		msgDiv.append(o[i]).append('<br>');
+	for (let i = 0; i < messages.length; i++) {
+		messageContainer.append(messages[i]).append('<br>');
 	}
+
+	$('body', rootElement).append(messageContainer);
 
 	if (timeout !== undefined) {
 		setTimeout(function () {
-			$('#nuMessageDiv', par).fadeOut("slow");
+			messageContainer.fadeOut("slow");
 
 			if (callback !== undefined) {
 				callback();
 			}
-
 		}, timeout);
 	}
 
-	nuDragElement(msgDiv[0], 30);
+	nuDragElement(messageContainer[0], 30);
 
-	return msgDiv;
+	return messageContainer;
 
 }
+
 
 function nuWindowPosition() {
 
