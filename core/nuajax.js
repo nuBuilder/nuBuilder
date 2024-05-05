@@ -450,8 +450,8 @@ function nuAttachImage(i, code, fit) {
 		return;
 
 	}
-
-	var PARENT = parent.parent.parent.parent.parent.parent.parent.parent.parent;
+	
+	var PARENT = window.top.window;
 
 	if (PARENT.nuImages[code] !== undefined) {
 
@@ -505,7 +505,7 @@ function nuAttachButtonImage(i, c, cssClass = 'nuButtonImage') {
 
 	}
 
-	var PARENT = parent.parent.parent.parent.parent.parent.parent.parent.parent;
+	var PARENT = window.top.window;
 
 	var pi = PARENT.nuImages !== undefined ? PARENT.nuImages[c] : '';
 
