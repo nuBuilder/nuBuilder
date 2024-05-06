@@ -442,7 +442,9 @@ function nuHasProcedureAccess($phpObj) {
 function nuRunPHP($nuCode, $hidden = false) {
 
 	if ($nuCode !== 'nukeepalive') {
-
+		
+		$result = "";
+		$_POST['nuRunPHPHiddenResult'] = "";
 		$phpObj = nuGetPHP($nuCode);
 		$exists = $phpObj !== false;
 		
@@ -451,15 +453,18 @@ function nuRunPHP($nuCode, $hidden = false) {
 			if (nuHasProcedureAccess($phpObj)) {
 				if ($hidden) {
 					nuEval($phpObj->zzzzsys_php_id);
+					$_POST['nuRunPHPHiddenResult'] = $result;
 					$_POST['nuRunPHPHidden'] = $nuCode;
 				}
 			} else {
+				$_POST['nuRunPHPHiddenResult'] = "Access denied";
 				nuDisplayError(nuTranslate("Access To Procedure Denied...") . " ($nuCode)");
 			}
 
 		} else {
 
 			if (!$exists && !nuStringStartsWith('nu', $nuCode)) {
+				$_POST['nuRunPHPHiddenResult'] = "Procedure does not exist";
 				nuDisplayError(nuTranslate("The Procedure does not exist...") . " ($nuCode)");
 			}
 
