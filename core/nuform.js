@@ -4459,7 +4459,6 @@ function nuBrowseTableHoverIn() {
 
 	if (window.nuBROWSERESIZE.moving_element == '') {
 
-		console.log(this.offsetWidth + '/' + this.scrollWidth);
 		if ((this.offsetWidth < this.scrollWidth ||
 			this.offsetHeight < this.scrollHeight) &&
 			!$(this).is('[title]')) {
