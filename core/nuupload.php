@@ -2,6 +2,7 @@
 	
 require_once ('nucommon.php');
 require_once ('nudatabase.php');
+require_once ('nuform.php');
 
 function nuUploadFile() {
 
@@ -44,11 +45,11 @@ function nuUploadFile() {
 		if (db_num_rows($t) == 0) {
 			throw new Exception('Invalid Session Id');
 		}
-
+		
 		$code = nuProcedure($proc);
 		if ($code != '') {
-			eval($code);
-			return $result;
+			nuRunPHPHidden($proc);
+			return $_POST['nuRunPHPHiddenResult'];
 		}
 		else {
 			throw new Exception('Unknown Procedure Name');
