@@ -2104,6 +2104,20 @@ function nuEnableDisableAllObjects(v, excludeTypes, excludeIds) {
 
 }
 
+function nuEnableDisableAllObjects(enable, excludeTypes = [], excludeIds = []) {
+
+	const responseObjects = {
+		objects: [...nuSERVERRESPONSE.objects]
+	};
+
+	for (const obj of responseObjects.objects) {
+		if (!excludeTypes.includes(obj.type) && !excludeIds.includes(obj.id) && obj.type !== 'contentbox' && obj.type !== 'html') {
+			nuEnable(obj.id, enable);
+		}
+	}
+
+}
+
 function nuEnableAllObjects(excludeTypes, excludeIds) {
 
 	nuEnableDisableAllObjects(true, excludeTypes, excludeIds);
