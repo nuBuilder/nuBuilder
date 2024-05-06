@@ -49,7 +49,7 @@
   font-style: normal;
   font-weight: 400;
   src: url('../fonts/noto-sans-v27-latin-regular.woff2') format('woff2'),
-       url('../fonts/noto-sans-v27-latin-regular.woff') format('woff');
+	    url('../fonts/noto-sans-v27-latin-regular.woff') format('woff');
 }
 /* noto-sans-italic - latin */
 @font-face {
@@ -58,7 +58,7 @@
   font-style: italic;
   font-weight: 400;
   src: url('../fonts/noto-sans-v27-latin-italic.woff2') format('woff2'),	
-       url('../fonts/noto-sans-v27-latin-italic.woff') format('woff');
+	    url('../fonts/noto-sans-v27-latin-italic.woff') format('woff');
 }
 /* noto-sans-700 - latin */
 @font-face {
@@ -67,7 +67,7 @@
   font-style: normal;
   font-weight: 700;
   src: url('../fonts/noto-sans-v27-latin-700.woff2') format('woff2'),
-       url('../fonts/noto-sans-v27-latin-700.woff') format('woff');
+	    url('../fonts/noto-sans-v27-latin-700.woff') format('woff');
 }
 /* noto-sans-700italic - latin */
 @font-face {
@@ -76,7 +76,7 @@
   font-style: italic;
   font-weight: 700;
   src: url('../fonts/noto-sans-v27-latin-700italic.woff2') format('woff2'),
-       url('../fonts/noto-sans-v27-latin-700italic.woff') format('woff');
+	    url('../fonts/noto-sans-v27-latin-700italic.woff') format('woff');
 }
 
 .input_file {
@@ -167,6 +167,9 @@
  input:not(.nuDragSelected):focus,select:not(.nuDragSelected):focus,textarea:not(.nuDragSelected):focus {
 	outline: none;
 	box-shadow: 0 0 0 1px rgb(220 237 244)
+}
+ input[type=checkbox], input[type=radio] {
+	 margin: 0 0 0 4px;
 }
  .nuCellOdd {
 	 background-color:#fcfcfc;
@@ -1386,9 +1389,9 @@
 	 font: 15px Verdana, sans-serif
 }
 @media only screen and (max-device-width:480px){
-    .ctxmenu {
-        font-size: 11px;
-    }
+	 .ctxmenu {
+	 	 font-size: 11px;
+	 }
 }
  .ctxmenu li {
 	 margin: 1px 0;
