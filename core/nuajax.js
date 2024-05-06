@@ -247,16 +247,23 @@ function nuLogout() {
 	last.session_id = window.nuSESSION;
 	last.call_type = 'logout';
 
-	const successCallback = function (data, textStatus, jqXHR) {
-
-		if (!nuDisplayError(data)) {
-			sessionStorage.removeItem('nukeepalive');
-			winTop.window.open('index.php', '_self');
-		}
-
+	const finalizeLogout = function() {
+		sessionStorage.removeItem('nukeepalive');
+		winTop.window.open('index.php', '_self');
 	};
 
-	nuAjax(last, successCallback);
+	const successCallback = function(data, textStatus, jqXHR) {
+		if (!nuDisplayError(data)) {
+			finalizeLogout();
+		}
+	};
+
+	const errorCallback = function(data, textStatus, jqXHR) {
+		finalizeLogout();
+		return false;
+	};
+
+	nuAjax(last, successCallback, errorCallback);
 
 }
 
