@@ -12,10 +12,13 @@ function nuAjax(w, successCallback, errorCallback) {
 		})
 		.done(successCallback)
 		.fail((jqXHR, textStatus, errorThrown) => {
+			let showError = true;
 			if (typeof errorCallback === "function") {
-				errorCallback(jqXHR, textStatus, errorThrown);
+				showError = errorCallback(jqXHR, textStatus, errorThrown);
 			}
-			nuAjaxShowError(jqXHR, errorThrown);
+			if (showError) {
+				nuAjaxShowError(jqXHR, errorThrown);
+			}
 		});
 
 	} catch (error) {
