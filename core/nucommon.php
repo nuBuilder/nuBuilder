@@ -2246,7 +2246,7 @@ function nuGetRecordURL($origin = null, $subFolder = null, $homepageId = null, $
 
 	return $origin. $subFolder . '/index.php?f=' . $formId . '&r=' . nuRecordId() . $homepageId;
 
-}}
+}
 function nuRecordId() {
 
 	$recordIdLower = nuReplaceHashVariables('#record_id#');
