@@ -2246,19 +2246,18 @@ function nuGetRecordURL($origin = null, $subFolder = null, $homepageId = null, $
 
 	return $origin. $subFolder . '/index.php?f=' . $formId . '&r=' . nuRecordId() . $homepageId;
 
-}
-
+}}
 function nuRecordId() {
 
 	$recordIdLower = nuReplaceHashVariables('#record_id#');
 	$recordIdUpper = nuReplaceHashVariables('#RECORD_ID#');
 
-	$recordId = $recordIdLower && $recordIdLower != '-1'  ? $recordIdLower : $recordIdUpper;
+	$formId = function_exists('nuHash') ? nuObjKey(nuHash(), 'FORM_ID') ?? null : null;
+	$recordId = $formId === 'doesntmatter' ? $recordIdLower : $recordIdUpper;
 
 	return $recordId;
 
 }
-
 function nuUserId() {
 
 	$userId = function_exists('nuHash') ? nuObjKey(nuHash(), 'USER_ID') ?? null : null;
