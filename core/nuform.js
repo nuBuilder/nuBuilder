@@ -1481,14 +1481,10 @@ function nuApplyInputTypeSpecificBehaviors($id, inputType, objType, thisObj, obj
 		case 'checkbox':
 			nuINPUTCheckbox($id, thisObj, obj);
 			break;
-		case 'text':
-			if (objType === 'display') {
-				nuINPUTDisplay($id);
-			} 
-			break;			
-		default:
-			// ...
-			break;
+	}
+
+	if (objType === 'display') {
+		nuINPUTDisplay($id);
 	}
 
 	if (objType === 'calc') {
@@ -1508,7 +1504,6 @@ function nuApplyInputTypeSpecificBehaviors($id, inputType, objType, thisObj, obj
 	}
 
 }
-
 
 function nuAddAttributes(id, attr) {
 
