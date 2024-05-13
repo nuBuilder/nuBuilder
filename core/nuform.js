@@ -1640,6 +1640,11 @@ function nuLookupFocus(e) {
 
 }
 
+function nuSelectOnFocus(e) {
+	const $field = $(e.target);
+	$field.attr('data-nu-org-value', $field.val());
+}
+
 function nuCurrentRow() {
 	return window.nuSubformRow;
 }
@@ -1959,15 +1964,15 @@ function nuSELECT(w, i, l, p, prop) {
 		'width': Number(obj.width),
 		'position': 'absolute'
 	})
-		.attr('onfocus', 'nuLookupFocus(event)')
-		.attr('onchange', 'nuChange(event)')
-		.attr('data-nu-field', obj.id)
-		.attr('data-nu-object-id', w.objects[i].object_id)
-		.attr('data-nu-format', '')
-		.attr('data-nu-subform-sort', 1)
-		.attr('data-nu-data', '')
-		.attr('data-nu-label', w.objects[i].label)
-		.attr('data-nu-prefix', p);
+	.attr('onfocus', 'nuSelectOnFocus(event)')
+	.attr('onchange', 'nuChange(event)')
+	.attr('data-nu-field', obj.id)
+	.attr('data-nu-object-id', w.objects[i].object_id)
+	.attr('data-nu-format', '')
+	.attr('data-nu-subform-sort', 1)
+	.attr('data-nu-data', '')
+	.attr('data-nu-label', w.objects[i].label)
+	.attr('data-nu-prefix', p);
 
 
 	$sel.css('height', Number(obj.height));
@@ -5076,6 +5081,16 @@ function nuChange(e) {
 	const t = $('#' + e.target.id)[0];
 	const $id = $(t);
 	const prefix = $id.attr('data-nu-prefix');
+		
+	if ($id.is('select') && nuIsDisabled(e.target.id)) {
+
+		const oldValue = $id.attr('data-nu-org-value');
+		const newValue = $id.val();
+		if(oldValue !== newValue) {
+			$id.val(oldValue);
+			return;
+		}
+	}
 
 	nuReformat(t);
 
