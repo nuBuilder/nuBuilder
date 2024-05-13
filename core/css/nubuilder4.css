@@ -253,28 +253,11 @@
 	position:absolute;
 	color:white;
  }
- .nuCalendar {
-	 position:absolute;
-	 width:210px;
-	 height:223px;
-	 color:#000000;
-	 border-style:none;
-	 user-select: none
-}
- #nuCalendar {
-	 box-shadow:5px 5px 5px 0 rgba(150,147,150,1) 
-}
  #nulink {
 	 position:absolute;
 	 right:55px;
 	 padding:5px;
 	 color:#dfdfdf 
-}
- .nuCalendarColor {
-	 background-color:#BADEEB 
-}
- .nuCalendarSelected:hover {
-	 background-color:#00ADEF 
 }
  .nuDragIn {
 	 border-width:4px;

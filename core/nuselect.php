@@ -9,13 +9,14 @@ nuJSInclude('nuform.js');
 nuJSInclude('nuformdrag.js');
 nuJSInclude('nudrag.js');
 nuJSInclude('nureportdrag.js');
-nuJSInclude('nucalendar.js');
+nuJSIndexInclude('libs/vanillajs-datepicker/datepicker-full.min.js');
 nuJSInclude('nucommon.js');
 nuJSInclude('nuajax.js');				//-- calls to server
 nuJSInclude('nureportjson.js');
 
 nuCSSInclude('css/nubuilder4.css');
 nuCSSInclude('css/nudrag.css');
+nuCSSIndexInclude('libs/vanillajs-datepicker/datepicker.min.css');
 
 ?>
 

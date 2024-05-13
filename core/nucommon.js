@@ -597,8 +597,6 @@ function nuPopup(formId, recordId, filter) {
 	if (!nuGlobalAccess() && formId == 'nuobject') { return; }
 	if (recordId == '-2' && !nuCanArrangeObjects()) { return; }
 
-	$('#nuCalendar').remove();
-
 	window.nuOPENER.push(new nuOpener('F', formId, recordId, filter));
 
 	var openerId = window.nuOPENER[window.nuOPENER.length - 1].id;
@@ -1413,10 +1411,6 @@ function nuClick(e) {
 			$('#nuMessageDiv').remove();
 		}
 		window.nuHideMessage = true;
-	}
-
-	if (!target.is('[type="nuDate"], .nuCalendar')) {
-		$('#nuCalendar').remove();
 	}
 
 }

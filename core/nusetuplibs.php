@@ -157,7 +157,6 @@ function nuIncludeFiles() {
 	nuJSIndexInclude('core/nuformclass.js');
 	nuJSIndexInclude('core/nuform.js');
 	nuJSIndexInclude('core/nuformdrag.js');
-	nuJSIndexInclude('core/nucalendar.js');
 	nuJSIndexInclude('core/nucommon.js');
 	nuJSIndexInclude('core/nuadmin.js');
 	nuJSIndexInclude('core/nureportjson.js');

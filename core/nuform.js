@@ -5097,7 +5097,6 @@ function nuChange(e) {
 	$('#' + prefix + 'nuDelete').prop('checked', false);
 	$id.addClass('nuEdited');
 
-	$('#nuCalendar').remove();
 	$id.removeClass('nuValidate');
 	nuCalculateForm();
 
@@ -7075,5 +7074,77 @@ function nuACEInitDblClickHandlers() {
 		const language = $(this).attr('class').split(' ')[0].toUpperCase();
 		nuOpenAce(language, this.id);
 	});
+
+}
+
+function nuCalendarWeekStartNumber() {
+
+	let ws = nuUXOptions.nuCalendarStartOfWeek;
+	if (ws !== undefined) {
+		ws = String(ws);
+		ws = ws.length == 1 ? ws : ws.replace('Sunday', 0).replace('Monday', 1);
+	}
+
+	return ws;
+
+}
+
+function nuPopupCalendar(pThis, d) {
+
+	if (pThis === null) { return; }
+
+	let id = pThis.id;
+	let datepicker = window[id + '_datepicker'];
+
+	if (datepicker) {
+		datepicker.destroy();
+	}
+
+	let optionWeekStart = {};
+	let weekStartNumber = nuCalendarWeekStartNumber();
+
+	let calendarOptionsDefault = {
+		autohide: true,
+		calendarWeeks: false,
+		defaultViewDate: d,
+		format: $(pThis).attr('data-nu-format').replace('D|', ''),
+		todayHighlight: true,
+		clearBtn: true,
+		weekStart : (weekStartNumber !== undefined ? weekStartNumber : 0)
+	}
+
+	let objCalendarOptionsDefault = { options: calendarOptionsDefault };
+	let calendarUserOptions = [];
+
+	if (typeof window.nuOnSetCalendarOptions === 'function') {
+		calendarUserOptions = window.nuOnSetCalendarOptions(id, objCalendarOptionsDefault);
+	}
+
+	let calendarOptions = Object.assign(calendarUserOptions, objCalendarOptionsDefault.options);
+
+	Datepicker.locales.en = {
+		days: nuTranslate(["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]),
+		daysShort: nuTranslate(["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]),
+		daysMin: nuTranslate(["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]),
+		months: nuTranslate(["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]),
+		monthsShort: nuTranslate(["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]),
+		today: nuTranslate("Today"),
+		clear: nuTranslate("Clear"),
+		titleFormat: "MM y"
+	}
+
+	datepicker = new Datepicker(pThis, calendarOptions);
+
+	const nuChangeDate = function (e) {
+		$(e.target).addClass('nuEdited');
+	}
+
+	$(pThis).off('changeDate.vanillajspicker').on('changeDate.vanillajspicker', nuChangeDate);
+
+	window[id + '_datepicker'] = datepicker;
+
+	datepicker.setOptions({ defaultViewDate: d });
+
+	datepicker.show();
 
 }
