@@ -59,7 +59,8 @@ function nuAlterSystemTables(){
 		"ALTER TABLE `pdf_temp` ADD `pdf_code` VARCHAR(100) NULL DEFAULT NULL AFTER `pdf_added_by`;",
 		"ALTER TABLE `pdf_temp` ADD `pdf_tag` VARCHAR(100) NULL DEFAULT NULL AFTER `pdf_code`;",
 		"ALTER TABLE `zzzzsys_email_log` CHANGE `eml_created_at` `eml_created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP;",
-		"ALTER TABLE `zzzzsys_email_log` CHANGE `eml_sent_at` `eml_sent_at` TIMESTAMP NULL DEFAULT NULL;"
+		"ALTER TABLE `zzzzsys_email_log` CHANGE `eml_sent_at` `eml_sent_at` TIMESTAMP NULL DEFAULT NULL;",
+		"ALTER TABLE `zzzzsys_config` ADD `cfg_title` VARCHAR(50) NULL DEFAULT NULL AFTER `cfg_category`;"
 	];
 
 	foreach ($alterTableSQL as $sqlStatement) {
