@@ -2795,3 +2795,34 @@ function nuSetAttributes(element, attributes) {
 	}
 
 }
+
+
+function nuGetWindowProperty(key, property) {
+
+	if (!window[key]) {
+		return undefined;
+	}
+
+	if (property === undefined) {
+		return window[key];
+	}
+
+	if (window[key][property] !== undefined) {
+		return window[key][property];
+	}
+
+	return undefined;
+
+}
+
+function nuSetWindowProperty(key, property, value) {
+
+	if (!window[key]) {
+		window[key] = {};
+	}
+
+	if (value !== undefined) {
+		window[key][property] = value;
+	}
+
+}
