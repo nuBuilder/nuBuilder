@@ -31,6 +31,7 @@ function nuInitJSOptions() {
 			'nuDebugMode': true,						// Debug Mode
 			'nuBrowserTabTitlePrefix': 'nuBuilder',		// Prefix in the Browser Tab
 			'nuCalendarStartOfWeek': 'Sunday',			// nuCalendar: Start of Week: Sunday (default) or Monday
+			'nuCalendarWeekNumbers' : 'None', 			// nuCalendar: 0 = None, 1 = ISO 8601, 2 = Western traditional, 3 = Middle Eastern
 			'nuSelect2Theme': 'default',				// select2 theme (default, classic) Default: default
 			'nuEditCloseAfterSave': 'None',				// Close forms after saving. Values: None, All, User, System
 			'nuShowJSErrors' : 'None'					// Show JS errors in alert message
@@ -7089,6 +7090,10 @@ function nuCalendarWeekStartNumber() {
 
 }
 
+function nuCalendarWeekNumbers() {
+    return nuUXOptions.nuCalendarWeekNumbers || 0;
+}
+
 function nuConvertToVanillaJSCalendarFormat(str) {
 
 	const formatMapping = {
@@ -7119,7 +7124,7 @@ function nuPopupCalendar(pThis, d) {
 
 	let calendarOptionsDefault = {
 		autohide: true,
-		calendarWeeks: false,
+		calendarWeeks: nuCalendarWeekNumbers(),
 		defaultViewDate: d,
 		format: nuConvertToVanillaJSCalendarFormat($(pThis).attr('data-nu-format')),
 		todayHighlight: true,
