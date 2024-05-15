@@ -7151,6 +7151,7 @@ function nuPopupCalendar(pThis, d) {
 
 	const nuChangeDate = function (e) {
 		$(e.target).addClass('nuEdited');
+		datepicker.destroy();
 	}
 
 	$(pThis).off('changeDate.vanillajspicker').on('changeDate.vanillajspicker', nuChangeDate);
