@@ -7089,12 +7089,26 @@ function nuCalendarWeekStartNumber() {
 
 }
 
+function nuConvertToVanillaJSCalendarFormat(str) {
+
+	const formatMapping = {
+		'D|': '',
+		'ddd': 'DD',
+		'mmm': 'MM'
+	};
+
+	let newStr = str.replace(/D\||ddd|mmm/g, match => formatMapping[match]);
+
+	return newStr;
+
+}
+
 function nuPopupCalendar(pThis, d) {
 
 	if (pThis === null) { return; }
 
 	let id = pThis.id;
-	let datepicker = window[id + '_datepicker'];
+	let datepicker = nuGetWindowProperty('nudatepickers', id);
 
 	if (datepicker) {
 		datepicker.destroy();
@@ -7107,7 +7121,7 @@ function nuPopupCalendar(pThis, d) {
 		autohide: true,
 		calendarWeeks: false,
 		defaultViewDate: d,
-		format: $(pThis).attr('data-nu-format').replace('D|', ''),
+		format: nuConvertToVanillaJSCalendarFormat($(pThis).attr('data-nu-format')),
 		todayHighlight: true,
 		clearBtn: true,
 		weekStart : (weekStartNumber !== undefined ? weekStartNumber : 0)
@@ -7141,10 +7155,11 @@ function nuPopupCalendar(pThis, d) {
 
 	$(pThis).off('changeDate.vanillajspicker').on('changeDate.vanillajspicker', nuChangeDate);
 
-	window[id + '_datepicker'] = datepicker;
+	nuGetWindowProperty('nudatepickers', id, datepicker);
 
 	datepicker.setOptions({ defaultViewDate: d });
 
 	datepicker.show();
 
 }
+
