@@ -1611,36 +1611,6 @@ function nuRunSystemUpdate(){
 
 }
 
-function nuGetFonts(){
-
-//	$dir	= "fonts/";
-	$dir	= "tfpdf/font/unifont/";
-	$a		= [];
-
-	if (is_dir($dir)){	// Open a directory, and read its contents
-
-		if ($dh = opendir($dir)){
-
-			while (($file = readdir($dh)) !== false){
-
-				$b = explode('.', $file);
-				if($b[1] == 'ttf'){
-					$f		= explode('.', $file);
-					$a[]	= $f[0];
-				}
-
-			}
-
-			closedir($dh);
-
-		}
-
-	}
-
-	return $a;
-
-}
-
 function nuIsValidEmail($email){
 	return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
 }
