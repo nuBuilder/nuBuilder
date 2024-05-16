@@ -2082,22 +2082,6 @@ jQuery.fn.nuCSSNumber = function (prop) {
 
 };
 
-function nuEnableDisableAllObjects(v, excludeTypes, excludeIds) {
-
-	excludeTypes = nuDefine(excludeTypes, []);
-	excludeIds = nuDefine(excludeIds, []);
-
-	const r = JSON.parse(JSON.stringify(nuSERVERRESPONSE));
-	for (let i = 0; i < r.objects.length; i++) {
-		const obj = r.objects[i];
-
-		if ($.inArray(obj.type, excludeTypes) == -1 && $.inArray(obj.id, excludeIds) == -1 && obj.type !== 'contentbox') {
-			nuEnable(obj.id, v);
-		}
-	}
-
-}
-
 function nuEnableDisableAllObjects(enable, excludeTypes = [], excludeIds = []) {
 
 	const responseObjects = {
