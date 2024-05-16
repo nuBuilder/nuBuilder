@@ -2692,14 +2692,20 @@ function nuIsHTTPS() {
 
 }
 
-function nuEnsureFileExtension($filename, $desiredExtension) {
+function nuEnsureFileExtension($filename, $desiredExtension, $forceExtension = false) {
 
 	$currentExtension = pathinfo($filename, PATHINFO_EXTENSION);
-	if (empty($currentExtension)) {
-		$filename .= '.' . ltrim($desiredExtension, '.');
+
+	if (empty($currentExtension) || $forceExtension) {
+		$filename = preg_replace('/\.[^.]*$/', '', $filename);
+		
+		if ($forceExtension) {
+			$filename .= '.' . ltrim($desiredExtension, '.');
+		} else {
+			$filename .= '.' . ltrim($currentExtension, '.');
+		}
 	}
 
 	return $filename;
-
 }
 
