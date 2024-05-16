@@ -62,7 +62,7 @@ function nuConfigScript() {
 				} else {
 
 					if ($js == "") $code .= "\$nuJSOptions = \"\n";
-					$js .= $r['cfg_category']. "['". $r['cfg_setting'] . "']"	. " = " . nuCleanConfigValue($r['cfg_value']) ."; \n";
+					$js .= nuConfigScriptJSType($setting) . "['". $r['cfg_setting'] . "']"	. " = " . nuCleanConfigValue($r['cfg_value']) ."; \n";
 
 				}
 
@@ -78,6 +78,13 @@ function nuConfigScript() {
         'code' => $code,
         'js' => $js
     ];
+
+}
+
+function nuConfigScriptJSType($setting) {
+
+	$nuAdminButtons = ['nuRefresh', 'nuProperties', 'nuPHP', 'nuObjects', 'nuDebug'];
+    return in_array($setting, $nuAdminButtons) ? 'nuAdminButtons' : 'nuUXOptions';
 
 }
 
