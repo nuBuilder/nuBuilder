@@ -1872,7 +1872,6 @@ function db_setup(){
 
 }
 
-
 function nuUserLanguage($e = ''){
 
 	$user_id	= nuObjKey(nuHash(),'USER_ID','');
@@ -1953,7 +1952,6 @@ function nuFormatVarArgs($format, $values) {
 
 }
 
-
 function nuToCSV($table, $file, $d){
 
 	$T = nuRunQuery("SELECT * FROM `$table`");
@@ -1966,7 +1964,7 @@ function nuToCSV($table, $file, $d){
 
 	header('Content-Type: application/excel');
 	header('Content-Encoding: UTF-8');
-	header('Content-Disposition: attachment; filename="' . $file . '"');
+	header('Content-Disposition: attachment; filename="' . nuEnsureFileExtension($file, 'csv', true) . '"');
 
 	$fp = fopen('php://output', 'w');
 
