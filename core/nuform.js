@@ -7091,7 +7091,21 @@ function nuCalendarWeekStartNumber() {
 }
 
 function nuCalendarWeekNumbers() {
-    return nuUXOptions.nuCalendarWeekNumbers || 0;
+	
+    const weekNum =  nuUXOptions.nuCalendarWeekNumbers || 0;
+
+		const mapping = {
+			"None": 0,
+			"ISO 8601": 1,
+			"Western traditional": 2,
+			"Middle Eastern": 3
+		};
+	
+		if (weekNum in mapping) {
+			return mapping[weekNum];
+		} else {
+			return 0;
+		}
 }
 
 function nuConvertToVanillaJSCalendarFormat(str) {
