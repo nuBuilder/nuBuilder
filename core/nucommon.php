@@ -2691,3 +2691,15 @@ function nuIsHTTPS() {
 	;
 
 }
+
+function nuEnsureFileExtension($filename, $desiredExtension) {
+
+	$currentExtension = pathinfo($filename, PATHINFO_EXTENSION);
+	if (empty($currentExtension)) {
+		$filename .= '.' . ltrim($desiredExtension, '.');
+	}
+
+	return $filename;
+
+}
+
