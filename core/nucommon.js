@@ -1786,27 +1786,30 @@ function nuDecendingSortNumberColumn(b, a) {
 
 }
 
-function nuEmbedObject(f, d, w, h) {
+function nuEmbedObject(json, containerId, width, height) {
 
-	if (f == '') { return; }
+	if (json === '') { return; }
 
-	w = nuDefine(w, 300);
-	h = nuDefine(h, 300);
+	width = nuDefine(width, 300);
+	height = nuDefine(height, 300);
 
-	const obj = JSON.parse(f);
-	const type = obj.type;
-	const url = atob(obj.file);
+	const fileData = JSON.parse(json);
+	const fileType = fileData.type;
+	let dataUrl = atob(fileData.file);
 
-	var el = document.createElement("EMBED");
-	el.setAttribute("type", type);
-	el.setAttribute("src", url);
+	if (!dataUrl.startsWith('data:')) {
+		dataUrl = `data:${fileType};base64,${fileData.file}`;
+	}
 
-	if (w !== -1) el.setAttribute("width", w + "px");
-	if (h !== -1) el.setAttribute("height", h + "px");
+	const embedElement = document.createElement("EMBED");
+	embedElement.setAttribute("type", fileType);
+	embedElement.setAttribute("src", dataUrl);
 
-	$('#' + d).html('');
-	document.getElementById(d).appendChild(el);
+	if (width !== -1) embedElement.setAttribute("width", width + "px");
+	if (height !== -1) embedElement.setAttribute("height", height + "px");
 
+	$('#' + containerId).html('');
+	document.getElementById(containerId).appendChild(embedElement);
 }
 
 function nuVendorLogin(appId) {
