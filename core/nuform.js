@@ -1116,7 +1116,7 @@ function nuINPUTfileDatabase($formId, obj, id, p) {
 		$id.val(obj.value);
 	}
 
-	return id + '_file';
+	return id + '_input';
 
 }
 
@@ -5131,38 +5131,37 @@ function nuChangeFile(e) {
 
 	}
 
-	var theFile = e.target.id;
-	var theTextarea = theFile.substr(0, theFile.length - 5);
+	var id = e.target.id;
+	var theTextarea = id.substr(0, id.length - 6);
 
-	if ($('#' + theFile).val() == '') { return; }
+	if ($('#' + id).val() == '') { return; }
 
-	var a = $('#' + theFile)[0].files[0];
+	var a = $('#' + id)[0].files[0];
 	var r = new FileReader();
 
 	r.onload = function () {
 
 		var f = btoa(r.result);
-		var o = { 'file': f, 'name': a.name, 'size': a.size, 'type': a.type };
-		var j = JSON.stringify(o);
+		var obj = { 'file': f, 'name': a.name, 'size': a.size, 'type': a.type };
+		var json = JSON.stringify(obj);
 
 		if (window.nuOnFileLoad) {
-			if (nuOnFileLoad(theFile, o) === false) { return; }
+			if (nuOnFileLoad(id, obj) === false) { return; }
 		} else {
-			if (j.length > 600000) {
-
+			if (a.size > 300000) {
 				nuMessage([nuTranslate('File is too large, cannot be saved. Must be under 300Kb')]);
 				return;
-
 			}
 		}
 
-		$('#' + theTextarea).val(j).addClass('nuEdited');
+		$('#' + theTextarea).val(json).addClass('nuEdited');
+
 
 	};
 
 	r.readAsDataURL(a);
 
-	var t = $('#' + theFile)[0];
+	var t = $('#' + id)[0];
 	var p = $('#' + theTextarea).attr('data-nu-prefix');
 
 	$('#' + p + 'nuDelete').prop('checked', false);
@@ -6432,7 +6431,7 @@ function nuPortraitScreen(columns) {
 
 					} else if (obj[i].input == 'file') {
 						top += 5;
-						$('#' + id + '_file').css({ 'top': top, 'left': lw + 10 });
+						$('#' + id + '_input').css({ 'top': top, 'left': lw + 10 });
 						top += 5;
 					}
 
