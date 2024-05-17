@@ -718,12 +718,14 @@ function nuRowsPerPage($rows) {
 
 function nuBreadcrumbDescriptionPart($bt){
 
+	$bt = nuReplaceHashVariables($bt);
 	if(strtolower(substr(nuTrim($bt), 0, 6)) == 'select'){
 		$t	= nuRunQuery($bt);
-		return db_fetch_row($t)[0];
+		return db_num_rows($t)> 0 ? db_fetch_row($t)[0] : '';
 	}
 
 	return $bt;
+
 }
 
 function nuBreadcrumbDescription($r, $R){
