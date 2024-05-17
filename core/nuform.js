@@ -5703,9 +5703,8 @@ function nuTotal(f) {
 function nuMessage(messages, timeout, callback) {
 
 	const rootElement = window.top.document;
-	window.nuHideMessage = false;
-
-	$('#nuMessageDiv', rootElement).remove();
+	nuMessageRemove();
+	rootElement.nuHideMessage = false;
 
 	if (messages.length === 0) {
 		return;
@@ -5754,7 +5753,16 @@ function nuMessage(messages, timeout, callback) {
 
 }
 
+function nuMessageRemove() {
 
+	const rootElement = window.top.document;
+	if (window.top.document.nuHideMessage) {
+		rootElement.nuHideMessage = false;
+		$('#nuMessageDiv', rootElement).remove();
+	}
+
+}
+		
 function nuWindowPosition() {
 
 	const p = window.parent.document;

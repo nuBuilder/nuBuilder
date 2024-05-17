@@ -9,7 +9,7 @@ window.nuOnLookupPopulatedGlobal = null;
 window.nuOnTabSelectedGlobal = null;
 window.nuOnPopupOpenedGlobal = null;
 window.nuOnDisableGlobal = null;
-window.nuHideMessage = true;
+window.top.document.nuHideMessage = true;
 window.nuDragID = 1000;
 window.nuLastForm = '';
 window.nuNEW = '';
@@ -828,7 +828,7 @@ function nuBindCtrlEvents() {
 		if (e.key == 'Escape') {
 
 			if (nuIsVisible('nuMessageDiv')) {
-				$('#nuMessageDiv').remove();
+				nuMessageRemove();
 			} else if (nuIsVisible('nuOptionsListBox')) {
 				$('#nuOptionsListBox').remove();
 			} else if (parent.$('#nuModal').length == 1) {
@@ -1407,10 +1407,8 @@ function nuClick(e) {
 	}
 
 	if (target.attr('id') !== 'nuMessageDiv' && target.attr('data-nu-option-title') !== 'Help') {
-		if (window.nuHideMessage) {
-			$('#nuMessageDiv').remove();
-		}
-		window.nuHideMessage = true;
+		nuMessageRemove();
+		window.top.document.nuHideMessage = true;
 	}
 
 }
