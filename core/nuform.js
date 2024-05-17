@@ -5156,6 +5156,10 @@ function nuChangeFile(e) {
 
 		$('#' + theTextarea).val(json).addClass('nuEdited');
 
+		if (window.nuOnFileLoaded) {
+			nuOnFileLoaded(e, id, json);
+		} 
+
 	};
 
 	r.readAsDataURL(a);
