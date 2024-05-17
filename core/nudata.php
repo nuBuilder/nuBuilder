@@ -783,7 +783,7 @@ function nuUpdateCounter($id) {
 
         $result = nuRunQuery($sql, [$id]);
         $row = db_fetch_object($result);
-        $currentCount = $row->sob_input_count;
+        $currentCount = $row->sob_input_count ?? 0;
         $js = $row->sob_input_javascript;
 
         if ($js == $uniqueId) {

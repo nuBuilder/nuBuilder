@@ -6,7 +6,7 @@ function nuAlterSystemTables(){
 	$alterTableSQL = [
 		"ALTER TABLE `zzzzsys_debug` ADD `deb_flag` VARCHAR(50) NULL DEFAULT NULL AFTER `deb_message`;",
 		"ALTER TABLE `zzzzsys_debug` ADD `deb_user_id` VARCHAR(25) NULL DEFAULT NULL AFTER `deb_added`;",
-		"ALTER TABLE `zzzzsys_object` CHANGE `sob_input_count` `sob_input_count` VARCHAR(20) NULL DEFAULT '1';",
+		"ALTER TABLE `zzzzsys_object` CHANGE `sob_input_count` `sob_input_count` VARCHAR(15) NULL DEFAULT NULL",
 		"ALTER TABLE `zzzzsys_object` CHANGE `sob_all_order` `sob_all_order` INT(11) NULL DEFAULT '0';",
 		"ALTER TABLE `zzzzsys_object` ADD `sob_select_2` VARCHAR(1) NULL DEFAULT '0' AFTER `sob_select_multiple`;",
 		"ALTER TABLE `zzzzsys_object` ADD `sob_input_datalist` TEXT NULL DEFAULT NULL AFTER `sob_input_javascript`;",
