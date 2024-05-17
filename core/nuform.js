@@ -5146,7 +5146,7 @@ function nuChangeFile(e) {
 		var json = JSON.stringify(obj);
 
 		if (window.nuOnFileLoad) {
-			if (nuOnFileLoad(id, obj) === false) { return; }
+			if (nuOnFileLoad(e, id, json) === false) { return; }
 		} else {
 			if (a.size > 300000) {
 				nuMessage([nuTranslate('File is too large, cannot be saved. Must be under 300Kb')]);
@@ -5155,7 +5155,6 @@ function nuChangeFile(e) {
 		}
 
 		$('#' + theTextarea).val(json).addClass('nuEdited');
-
 
 	};
 
