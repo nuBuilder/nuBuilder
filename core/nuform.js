@@ -5755,10 +5755,10 @@ function nuMessage(messages, timeout, callback) {
 
 function nuMessageRemove() {
 
-	const rootElement = window.top.document;
-	if (window.top.document.nuHideMessage) {
-		rootElement.nuHideMessage = false;
-		$('#nuMessageDiv', rootElement).remove();
+	const windowTopDoc = window.top.document;
+	if (windowTopDoc.nuHideMessage) {
+		windowTopDoc.nuHideMessage = false;
+		$('#nuMessageDiv', windowTopDoc).remove();
 	}
 
 }
