@@ -252,8 +252,6 @@ function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 	];
 
 	nuRunQuery($sql, $values);
-	
-	nuCreateViewsOrTables();
 
 	return true;
 }
