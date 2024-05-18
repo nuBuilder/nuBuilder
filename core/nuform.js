@@ -6012,14 +6012,14 @@ function nuFastReportFormat(width) {
 function nuIsDoubleClick(event, element) {
 
 	const now = event.timeStamp;
-	const lastClickTime = parseInt(element.getAttribute('nu-last-clicked-time')) || 0;
+	const lastClickTime = parseInt(element.getAttribute('nu-last-clicked-time'), 10) || 0;
 	const doubleClickThreshold = 1000;
 
-	if (now - lastClickTime > doubleClickThreshold) {
-		element.setAttribute('nu-last-clicked-time',  now.toString());
-		return false; 
+	if (lastClickTime && (now - lastClickTime < doubleClickThreshold)) {
+		return true;
 	} else {
-		return true; 
+		element.setAttribute('nu-last-clicked-time', now.toString());
+		return false;
 	}
 
 }
