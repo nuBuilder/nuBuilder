@@ -1509,36 +1509,49 @@ function nuApplyInputTypeSpecificBehaviors($id, inputType, objType, thisObj, obj
 function nuAddAttributes(id, attr) {
 
 	if (attr !== undefined && attr !== null && attr !== '') {
-
-		attr.trim().replace(/\"/g, "").split(",").forEach(attr => {
-
+		let attrs = [];
+		let inQuotes = false;
+		let currentAttr = '';
+		
+		for (let i = 0; i < attr.length; i++) {
+			let char = attr[i];
+			if (char === '"') {
+				inQuotes = !inQuotes;
+			}
+			if (char === ',' && !inQuotes) {
+				attrs.push(currentAttr);
+				currentAttr = '';
+			} else {
+				currentAttr += char;
+			}
+		}
+		attrs.push(currentAttr);
+		
+		attrs.forEach(attr => {
 			const arr = attr.split('=');
 			let key;
 			let value;
 
 			if (arr.length == 2) {
-				[key, value] = arr;
+				key = arr[0].trim();
+				value = arr[1].trim().replace(/^"(.*)"$/, '$1');  // Remove surrounding quotes
 			} else if (arr.length == 1) {
-				key = attr;
+				key = attr.trim();
 				value = '';
 			}
 
-			if (arr.length == 1 || arr.length == 2) {
-				
+			if (arr.length == 1 || arr.length == 2) {				
 				if (key.trim() === 'nu-label-position' && value === 'top') {
 					$('#' + id).nuLabelOnTop();
 				} else {
-					$('#' + id)[0].setAttribute(key.trim(), value);
+					document.getElementById(id).setAttribute(key.trim(), value);
 				}
 				
 			}
-
 		});
-
 	}
 
 }
-
 function nuAddInputIcon(id, icon) {
 
 	function addIcon(id, string, after) {
@@ -7102,7 +7115,7 @@ function nuCalendarWeekStartNumber() {
 
 function nuCalendarWeekNumbers() {
 	
-    const weekNum =  nuUXOptions.nuCalendarWeekNumbers || 0;
+	const weekNum =  nuUXOptions.nuCalendarWeekNumbers || 0;
 
 		const mapping = {
 			"None": 0,
