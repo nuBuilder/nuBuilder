@@ -43,8 +43,6 @@ function nuCheckUserLoginRequest() {
 
 	global $nuConfigLoginAsUser;
 
-	$nuConfigLoginAsUser = false; // DEV
-
 	if (db_field_exists("zzzzsys_user","sus_json") == false) {
 		nuRunQuery("ALTER TABLE zzzzsys_user ADD sus_json MEDIUMTEXT NULL DEFAULT NULL;");
 	}
@@ -129,21 +127,7 @@ function nuCheckUserLoginRequest() {
 }
 
 function nuCheckIsLoginRequest($callType = 'login') {
-
-	if (array_key_exists('nuSTATE', $_POST)) {
-
-		if (array_key_exists('call_type', $_POST['nuSTATE'])) {
-
-			if ($_POST['nuSTATE']['call_type'] == $callType) {
-
-				return true;
-
-			}
-		}
-	}
-
-	return false;
-
+	return ($_POST['nuSTATE']['call_type'] ?? null) === $callType;
 }
 
 function nuGetIPAddress() {
