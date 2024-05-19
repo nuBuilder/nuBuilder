@@ -1810,8 +1810,9 @@ function nuEmbedObject(json, containerId, width, height) {
 	document.getElementById(containerId).appendChild(embedElement);
 }
 
-function nuVendorLogin(appId) {
-	window.open("core/nuvendorlogin.php?sessid=" + window.nuSESSION + "&appId=" + appId + "&table=" + nuSERVERRESPONSE.table);
+function nuVendorLogin(appId, table) {
+    const tableName = table || nuSERVERRESPONSE.table;
+    window.open("core/nuvendorlogin.php?sessid=" + window.nuSESSION + "&appId=" + appId + "&table=" + tableName);
 }
 
 function nuIsMobile() {
