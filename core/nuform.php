@@ -749,176 +749,168 @@ function nuBreadcrumbDescription($r, $R){
 
 }
 
-function nuGetOtherLookupValues($o){
+function nuGetOtherLookupValues($lookupObject) {
 
-	$p								= $o->object_id;
-	$l								= $_POST['nuHash']['LOOKUP_RECORD_ID'];
-	$s								= "SELECT sob_lookup_zzzzsys_form_id as form_id FROM zzzzsys_object WHERE zzzzsys_object_id = ? ";
-	$t								= nuRunQuery($s, [$p]);
-	$r								= db_fetch_object($t);
-	$i								= $r->form_id;
-	$f								= nuFormProperties($i,'sfo_table, sfo_primary_key');
-	$s								= "SELECT * FROM $f->sfo_table WHERE $f->sfo_primary_key = ? ";
-	$t								= nuRunQuery($s, [$l]);
-	$_POST['lookup_row']			= db_fetch_object($t);
+	$objectId = $lookupObject->object_id;
+	$lookupRecordId = $_POST['nuHash']['LOOKUP_RECORD_ID'];
+	$query = "SELECT sob_lookup_zzzzsys_form_id as form_id FROM zzzzsys_object WHERE zzzzsys_object_id = ? ";
+	$stmt = nuRunQuery($query, [$objectId]);
+	$result = db_fetch_object($stmt);
+	$formId = $result->form_id;
+	$formProperties = nuFormProperties($formId, 'sfo_table, sfo_primary_key');
+	$selectQuery = "SELECT * FROM $formProperties->sfo_table WHERE $formProperties->sfo_primary_key = ? ";
+	$selectStmt = nuRunQuery($selectQuery, [$lookupRecordId]);
+	$_POST['lookup_row'] = db_fetch_object($selectStmt);
 
-	if(db_num_rows($t) == 1){
-		$_POST['lookup_row']->ID	= $l;
+	if (db_num_rows($selectStmt) == 1) {
+		$_POST['lookup_row']->ID = $lookupRecordId;
 	}
 
-	if(db_num_rows($t) == 0){
-
-		$_POST['lookup_row']		= new stdClass;
-		$_POST['lookup_row']->ID	= '';
-
+	if (db_num_rows($selectStmt) == 0) {
+		$_POST['lookup_row'] = new stdClass;
+		$_POST['lookup_row']->ID = '';
 	}
 
-	$_POST['lookup_values']			= [];
+	$_POST['lookup_values'] = [];
 
-	$GLOBALS['EXTRAJS']		= '';
-	nuEval($p . '_AB');
+	$GLOBALS['EXTRAJS'] = '';
+	nuEval($objectId . '_AB');
 
 	return $_POST['lookup_values'];
-
 }
 
-function nuGetAllLookupValues(){
+function nuGetAllLookupValues() {
 
-	$objectId 						= $_POST['nuSTATE']['object_id'];
-	$primaryKey 					= $_POST['nuSTATE']['primary_key'];
-	$query 							= "SELECT * FROM `zzzzsys_object` WHERE `zzzzsys_object_id` = ?";
-	$stmt 							= nuRunQuery($query, [$objectId]);
-	$row 							= db_fetch_object($stmt);
-	$object 						= nuDefaultObject($row, []);
-	$object->description_width		= $row->sob_lookup_description_width;
-	$object->form_id 				= $row->sob_lookup_zzzzsys_form_id;
-	$object->value 					= $primaryKey;
+	$objectId = $_POST['nuSTATE']['object_id'];
+	$primaryKey = $_POST['nuSTATE']['primary_key'];
+	$query = "SELECT * FROM `zzzzsys_object` WHERE `zzzzsys_object_id` = ?";
+	$stmt = nuRunQuery($query, [$objectId]);
+	$row = db_fetch_object($stmt);
+	$object = nuDefaultObject($row, []);
+	$object->description_width = $row->sob_lookup_description_width;
+	$object->form_id = $row->sob_lookup_zzzzsys_form_id;
+	$object->value = $primaryKey;
 
 	$lookupValues = nuGetLookupValues($row, $object);
 
 	$_POST['nuHash']['LOOKUP_RECORD_ID'] = $lookupValues[0][1];
 
-	$otherLookupValues 				= nuGetOtherLookupValues($object);
+	$otherLookupValues = nuGetOtherLookupValues($object);
 
-	$result 						= new stdClass;
-	$result->lookup_values 			= array_merge($lookupValues, $otherLookupValues);
-	$result->lookup_javascript		= nuObjKey($GLOBALS, 'EXTRAJS', '') . ";$row->sob_lookup_javascript";
+	$result = new stdClass;
+	$result->lookup_values = array_merge($lookupValues, $otherLookupValues);
+	$result->lookup_javascript = nuObjKey($GLOBALS, 'EXTRAJS', '') . ";$row->sob_lookup_javascript";
 
 	return $result;
-
 }
 
-function nuGetLookupValues($R, $O){
+function nuGetLookupValues($objectRow, $lookupObject) {
 
-
-	$was		= $_POST['nuHash']['TABLE_ID'];
+	$previousTableId = $_POST['nuHash']['TABLE_ID'];
 
 	$_POST['nuHash']['TABLE_ID'] = nuTT();
 
-	nuBeforeBrowse($O->form_id);
+	nuBeforeBrowse($lookupObject->form_id);
 
-	$s			= "SELECT sfo_primary_key, sfo_browse_sql FROM zzzzsys_form WHERE zzzzsys_form_id = ?";
-	$t			= nuRunQuery($s, [$O->form_id]);
-	$r			= db_fetch_object($t);
-	$S			= new nuSqlString(nuReplaceHashVariables($r->sfo_browse_sql));
+	$query = "SELECT sfo_primary_key, sfo_browse_sql FROM zzzzsys_form WHERE zzzzsys_form_id = ?";
+	$stmt = nuRunQuery($query, [$lookupObject->form_id]);
+	$result = db_fetch_object($stmt);
+	$sqlString = new nuSqlString(nuReplaceHashVariables($result->sfo_browse_sql));
 
-	$s			= "
+	$selectQuery = "
 		SELECT
-			$r->sfo_primary_key,
-			$R->sob_lookup_code,
-			$R->sob_lookup_description
-			$S->from
+			$result->sfo_primary_key,
+			$objectRow->sob_lookup_code,
+			$objectRow->sob_lookup_description
+			$sqlString->from
 		WHERE
-			`$r->sfo_primary_key` = ?
+			`$result->sfo_primary_key` = ?
 	";
 
-	$s			= nuReplaceHashVariables($s);
-	$t			= nuRunQuery($s, [$O->value]);
-	$l			= db_fetch_row($t);
+	$selectQuery = nuReplaceHashVariables($selectQuery);
+	$selectStmt = nuRunQuery($selectQuery, [$lookupObject->value]);
+	$lookupRow = db_fetch_row($selectStmt);
 
-	$f			= nuObjKey($_POST['nuSTATE'],'prefix','') . $O->id;
+	$fieldPrefix = nuObjKey($_POST['nuSTATE'], 'prefix', '') . $lookupObject->id;
 
 	nuRunQuery(nuReplaceHashVariables('DROP TABLE if EXISTS #TABLE_ID#'));
 
-	$_POST['nuHash']['TABLE_ID'] = $was;
+	$_POST['nuHash']['TABLE_ID'] = $previousTableId;
 
-	$v			= [];
-	$v[]		= [$f,					$l[0] ?? ''];
-	$v[]		= [$f . 'code',			$l[1] ?? ''];
-	$v[]		= [$f . 'description',	$l[2] ?? ''];
+	$lookupValues = [];
+	$lookupValues[] = [$fieldPrefix, $lookupRow[0] ?? ''];
+	$lookupValues[] = [$fieldPrefix . 'code', $lookupRow[1] ?? ''];
+	$lookupValues[] = [$fieldPrefix . 'description', $lookupRow[2] ?? ''];
 
-	return $v;
-
+	return $lookupValues;
 }
 
+function nuGetAllLookupList() {
 
-function nuGetAllLookupList(){
-
-	$O				= $_POST['nuSTATE']['object_id'];
-	$C				= $_POST['nuSTATE']['code'];
-	$was			= nuObjKey($_POST['nuHash'],'TABLE_ID');
+	$objectId = $_POST['nuSTATE']['object_id'];
+	$lookupCode = $_POST['nuSTATE']['code'];
+	$previousTableId = nuObjKey($_POST['nuHash'], 'TABLE_ID');
 
 	$_POST['nuHash']['TABLE_ID'] = nuTT();
 
-	$s				= "SELECT sob_lookup_code, sob_lookup_description, sob_lookup_zzzzsys_form_id, sob_lookup_javascript FROM zzzzsys_object WHERE zzzzsys_object_id = ?";
-	$t				= nuRunQuery($s, [$O]);
-	$r				= db_fetch_object($t);
-	$code			= $r->sob_lookup_code;
-	$description	= $r->sob_lookup_description;
-	$form_id		= $r->sob_lookup_zzzzsys_form_id;
-	$js				= $r->sob_lookup_javascript;
+	$query = "SELECT sob_lookup_code, sob_lookup_description, sob_lookup_zzzzsys_form_id, sob_lookup_javascript FROM zzzzsys_object WHERE zzzzsys_object_id = ?";
+	$stmt = nuRunQuery($query, [$objectId]);
+	$result = db_fetch_object($stmt);
+	$codeField = $result->sob_lookup_code;
+	$descriptionField = $result->sob_lookup_description;
+	$formId = $result->sob_lookup_zzzzsys_form_id;
+	$javaScript = $result->sob_lookup_javascript;
 
-	nuBeforeBrowse($form_id);
+	nuBeforeBrowse($formId);
 
-	$s				= "SELECT sfo_primary_key, sfo_browse_sql FROM zzzzsys_form WHERE zzzzsys_form_id = ?";
-	$t				= nuRunQuery($s, [$form_id]);
-	$r				= db_fetch_object($t);
-	$id				= $r->sfo_primary_key;
-	$SQL			= new nuSqlString(nuReplaceHashVariables($r->sfo_browse_sql));
-	$s				= "
-					SELECT $id, $code, $description
-					$SQL->from
-					$SQL->where
-					AND $code = ?
-					ORDER BY $code
-					";
+	$formQuery = "SELECT sfo_primary_key, sfo_browse_sql FROM zzzzsys_form WHERE zzzzsys_form_id = ?";
+	$formStmt = nuRunQuery($formQuery, [$formId]);
+	$formResult = db_fetch_object($formStmt);
+	$primaryKeyField = $formResult->sfo_primary_key;
+	$sqlString = new nuSqlString(nuReplaceHashVariables($formResult->sfo_browse_sql));
 
-	$s				= nuReplaceHashVariables($s);
-	$t				= nuRunQuery($s, [$C]);
-	$like			= '';
-	$a				= [];
+	$lookupQuery = "
+		SELECT $primaryKeyField, $codeField, $descriptionField
+		$sqlString->from
+		$sqlString->where
+		AND $codeField = ?
+		ORDER BY $codeField
+	";
 
-	if(db_num_rows($t) == 0){
+	$lookupQuery = nuReplaceHashVariables($lookupQuery);
+	$lookupStmt = nuRunQuery($lookupQuery, [$lookupCode]);
+	$lookupList = [];
 
-		$s			= "
-					SELECT $id, $code, $description
-					$SQL->from
-					$SQL->where
-					AND ($code LIKE ? OR $description LIKE ?)
-					AND '$C' != ''
-					ORDER BY $code
-					";
+	if (db_num_rows($lookupStmt) == 0) {
 
-		$t			= nuRunQuery($s, ['%' . $C . '%', '%' . $C . '%']);
+		$likeQuery = "
+			SELECT $primaryKeyField, $codeField, $descriptionField
+			$sqlString->from
+			$sqlString->where
+			AND ($codeField LIKE ? OR $descriptionField LIKE ?)
+			AND '$lookupCode' != ''
+			ORDER BY $codeField
+		";
 
+		$lookupStmt = nuRunQuery($likeQuery, ['%' . $lookupCode . '%', '%' . $lookupCode . '%']);
 	}
 
 	nuRunQuery(nuReplaceHashVariables('DROP TABLE if EXISTS #TABLE_ID#'));
 
-	$_POST['nuHash']['TABLE_ID'] = $was;
+	$_POST['nuHash']['TABLE_ID'] = $previousTableId;
 
-	while($r = db_fetch_row($t)){
-		$a[]		= $r;
+	while ($row = db_fetch_row($lookupStmt)) {
+		$lookupList[] = $row;
 	}
 
-	$f						= new stdClass;
-	$f->lookup_like			= $like;
-	$f->lookup_values		= $a;
-	$f->lookup_javascript	= $js;
+	$lookupResult = new stdClass;
+	$lookupResult->lookup_like = '';
+	$lookupResult->lookup_values = $lookupList;
+	$lookupResult->lookup_javascript = $javaScript;
 
-	return $f;
-
+	return $lookupResult;
 }
+
 
 function nuLookupRecord(){
 
