@@ -11,6 +11,7 @@ eval($config['code']);
 if ( !session_id() ) {
 
 	nuCheckGarbageCollector();
+	session_name($nuConfigDBName);
 	session_start(['cookie_lifetime' => 0,'cookie_secure' => nuIsHTTPS2(),'cookie_httponly' => true]);
 
 }
