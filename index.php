@@ -1,5 +1,5 @@
 <?php
-$nb_path = __DIR__;
+$nuPath = __DIR__;
 
 $nuconfig = "nuconfig.php";
 if(! is_file($nuconfig)){
@@ -18,7 +18,7 @@ nuImportNewDB();
 
 require_once('core/nusystemupdatelibs.php');
 
-if ( !isset($_SESSION['nubuilder_session_data']['NB_PATH']) || dirname($_SESSION['nubuilder_session_data']['NB_PATH']) != $nb_path ) {
+if ( !isset($_SESSION['nubuilder_session_data']['NB_PATH']) || dirname($_SESSION['nubuilder_session_data']['NB_PATH']) != $nuPath ) {
 
 	$_SESSION['nubuilder_session_data']['NB_PATH'] = null;
 	nuLoadNewSession();
