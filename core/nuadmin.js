@@ -121,9 +121,6 @@ function nuAddAdminButtons() {
 		},
 	};
 
-	if (!nuGlobalAccess())
-		return;
-
 	const {form_type, form_code} = nuCurrentProperties();
 	const formCode = form_code;
 
@@ -136,11 +133,11 @@ function nuAddAdminButtons() {
 	const isEdit = form_type.includes("edit");
 	const isLaunch = form_type.includes("launch");
 
-	if ((nuAdminButtons.nuDebug || devMode) && nuMainForm()) {
+	if ((window.nuUXOptions.nuDebugIcon || devMode) && nuMainForm()) {
 		nuAddIconToBreadcrumbHolder('nuDebugButton', 'nuDebug Results', 'nuOpenNuDebug(2)', 'fa fa-bug', '3px');
 	}
 
-	if (nuAdminButtons.nuRefresh) {
+	if (window.nuUXOptions.nuRefreshIcon) {
 		nuAddIconToBreadcrumbHolder('nuRefreshButton', 'Refresh', 'nuGetBreadcrumb()', 'fas fa-sync-alt', '3px');
 	}
 
@@ -148,15 +145,15 @@ function nuAddAdminButtons() {
 
 	if (!formCode.startsWith('nu') || devMode) {
 
-		if (nuAdminButtons.nuProperties) {
+		if (window.nuUXOptions.nuPropertiesIcon) {
 			buttonCount += nuAddAdminButton('Properties', adminButtons.nuProperties);
 		}
 
-		if (nuAdminButtons.nuObjects) {
+		if (window.nuUXOptions.nuObjectsIcon) {
 			buttonCount += nuAddAdminButton('Objects', adminButtons.nuObjects);
 		}
 
-		if (nuAdminButtons.nuPHP) {
+		if (window.nuUXOptions.nuPHPIcon) {
 			if (isEdit || isLaunch) {
 				buttonCount += nuAddAdminButton('AdminBE', adminButtons.AdminBE);
 			}
