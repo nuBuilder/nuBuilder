@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 19, 2024 at 09:02 AM
+-- Generation Time: May 22, 2024 at 05:28 AM
 -- Server version: 8.2.0
 -- PHP Version: 8.3.4
 
@@ -335,13 +335,13 @@ CREATE TABLE `zzzzsys_config` (
 --
 
 INSERT INTO `zzzzsys_config` (`zzzzsys_config_id`, `zzzzsys_setup_id`, `cfg_order`, `cfg_category`, `cfg_title`, `cfg_setting`, `cfg_value`, `cfg_description`, `cfg_type`, `cfg_effective`, `cfg_json`) VALUES
-('nu62a0a02105071cb', '1', 40, 'Admin', 'Objects Icon', 'nuObjects', 'true', 'Show Objects (Obj) icon', 2, '1', NULL),
-('nu62a0a02105062e5', '1', 50, 'Admin', 'PHP Icons', 'nuPHP', 'true', 'Show PHP (BE, BS, AS, BB) icons', 2, '1', NULL),
-('nu62a0a02105079da', '1', 60, 'Admin', 'Properties Icon', 'nuProperties', 'true', 'Show Properties (Prop) icon', 2, '1', NULL),
-('nu62a0a0210506a8f', '1', 70, 'Admin', 'Refresh Icons', 'nuRefresh', 'true', 'Show Refresh icon', 2, '1', NULL),
+('nu62a0a02105071cb', '1', 30, 'Admin', 'Objects Icon', 'nuObjects', 'true', 'Show Objects (Obj) icon', 2, '1', NULL),
+('nu62a0a02105062e5', '1', 40, 'Admin', 'PHP Icons', 'nuPHP', 'true', 'Show PHP (BE, BS, AS, BB) icons', 2, '1', NULL),
+('nu62a0a02105079da', '1', 50, 'Admin', 'Properties Icon', 'nuProperties', 'true', 'Show Properties (Prop) icon', 2, '1', NULL),
+('nu62a0a0210506a8f', '1', 60, 'Admin', 'Refresh Icons', 'nuRefresh', 'true', 'Show Refresh icon', 2, '1', NULL),
 ('nu62a0a0210505b68', '1', 10, 'Admin', 'Debug Icon', 'nuDebug', 'true', 'Show Debug icon', 2, '1', NULL),
 ('nu62a0a02105011e4', '1', 20, 'Admin', 'Debug Mode', 'nuDebugMode', 'true', 'If the element does not exist when using functions such as nuGetValue() or nuSetValue(), a warning will be output to the Developer Console', 2, '1', NULL),
-('nu62a0a02104dee61', '1', 30, 'Admin', 'Globeadmin User IDs', '$nuConfigDBGlobeadminUsers', '', 'User Ids with \'globeadmin\' permissions, separated by commas', 1, '1', NULL),
+('nu62a0a02104dee61', '1', 70, 'Admin', 'Globeadmin User IDs', '$nuConfigDBGlobeadminUsers', '', 'User Ids with \'globeadmin\' permissions, separated by commas', 1, '1', NULL),
 ('nu62bdc792e1efb3a', '1', 80, 'Admin', 'Admin Home Form ID', '$nuConfigGlobeadminHome', 'nuhomecompact', 'Home form ID for administrator. Default: nuhomecompact', 1, '3', NULL),
 ('nu62a0a02104e96df', '1', 90, 'Admin', 'Enable DB Update', '$nuConfigEnableDatabaseUpdate', 'true', 'Enable updating the database within nuBuilder', 2, '1', NULL),
 ('nu62a0a02104e542c', '1', 100, 'Form', 'Additional 1 Label', '$nuConfigUserAdditional1Label', '', 'User Form: If not blank, rename the Label \'Additional 1\'', 1, '1', NULL),
@@ -839,8 +839,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`, `inf_json`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2024.05.19.01', NULL),
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2024.05.19.00', NULL);
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2024.05.22.00', NULL),
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2024.05.21.03', NULL);
 
 -- --------------------------------------------------------
 
@@ -1447,10 +1447,10 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu6273e620cb09f2e', 'nucsvtransfer', NULL, 'input', 'csv_delete_after_import', 'Delete File after Import', 'nu5f711b9343afdbd', 60, 240, 482, 16, 22, '1', 'left', '0', '0', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'checkbox', NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('nu6291b842c635f61', 'nucloner', 'zzzzsys_cloner', 'input', 'clo_sql_replace_into', 'REPLACE INTO', 'nu5f9aaac95bc52e7', 150, 457, 595, 18, 22, '1', 'right', '0', '0', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'checkbox', NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('nu629b168a66288f0', 'nuprocedure', 'zzzzsys_php', 'display', 'sph_form_code', 'form code', 'nu5bad6cb36b27343', 110, 0, 0, 200, 20, '1', 'left', '0', '2', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'SELECT sfo_code  FROM `zzzzsys_php` \nLEFT JOIN zzzzsys_form ON LEFT(zzzzsys_php_id,char_length(zzzzsys_php_id)-3)  = zzzzsys_form_id\nWHERE `zzzzsys_php_id` LIKE \'#RECORD_ID#\'', '0', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-('nu62aee449c3ac7e9', 'nu62aee4493239e3a', 'zzzzsys_config', 'input', 'cfg_category', 'Category', 'nu62aee449a876a58', 10, 10, 150, 140, 22, '1', 'left', '0', '1', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'text', NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-('nu62aee449c50bbf6', 'nu62aee4493239e3a', 'zzzzsys_config', 'input', 'cfg_setting', 'Setting', 'nu62aee449a876a58', 50, 42, 150, 0, 22, '1', 'left', '0', '2', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'text', NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-('nu62aee449c676cfb', 'nu62aee4493239e3a', 'zzzzsys_config', 'input', 'cfg_value', 'Value', 'nu62aee449a876a58', 30, 74, 150, 175, 22, '1', 'left', '0', '0', NULL, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'text', NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-('nu62aee449c7d0758', 'nu62aee4493239e3a', 'zzzzsys_config', 'input', 'cfg_description', 'Description', 'nu62aee449a876a58', 40, 106, 150, 614, 22, '1', 'left', '0', '1', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'text', NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('nu62aee449c3ac7e9', 'nu62aee4493239e3a', 'zzzzsys_config', 'input', 'cfg_category', 'Category', 'nu62aee449a876a58', 10, 10, 150, 100, 22, '1', 'left', '0', '1', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'text', NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('nu62aee449c50bbf6', 'nu62aee4493239e3a', 'zzzzsys_config', 'input', 'cfg_setting', 'Setting', 'nu62aee449a876a58', 30, 42, 150, 270, 22, '1', 'left', '0', '1', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'text', NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('nu62aee449c676cfb', 'nu62aee4493239e3a', 'zzzzsys_config', 'input', 'cfg_value', 'Value', 'nu62aee449a876a58', 40, 74, 150, 135, 22, '1', 'left', '0', '0', NULL, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'text', NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('nu62aee449c7d0758', 'nu62aee4493239e3a', 'zzzzsys_config', 'input', 'cfg_description', 'Description', 'nu62aee449a876a58', 50, 106, 150, 508, 22, '1', 'left', '0', '1', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'text', NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('nu62aee449c92710c', 'nu62aee4493239e3a', 'zzzzsys_config', 'input', 'cfg_type', 'Type', 'nu62aee449a876a58', 70, 138, 150, 0, 22, '1', 'left', '0', '2', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'text', NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('nu62afe0e1a56a398', 'nusetup', 'zzzzsys_setup', 'subform', 'nuconfigsettings', ' ', 'nu62b34b8c669ce6b', 160, 52, 40, 1288, 462, '1', 'right', '0', '0', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'nu62aee4493239e3a', 'zzzzsys_setup_id', '0', '0', 'g', 'zzzzsys_config', '89', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('nu62cca90dbcba8da', 'nuhomecompact', NULL, 'run', 'object_button', 'Objects', 'nu62cca90dba09759', 90, 281, 67, 236, 30, '1', 'left', '0', '0', NULL, '0', 'Class', 'input_button_left', NULL, NULL, 'nuobject', NULL, 'b', '0', 'F', NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'fas fa-cubes', NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
@@ -1574,7 +1574,7 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu65f28ff563094d9', 'nuemaillog', 'zzzzsys_email_log', 'textarea', 'eml_body', 'Body', 'nu65f28ff562a8cc4', 140, 402, 147, 700, 200, '1', 'left', '0', '0', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('nu65f8d60b0cacd08', 'nurunjavascript', NULL, 'textarea', 'jsc_Input', 'Input', '65f8d60b05b6ec6', 10, 18, 68, 500, 250, '1', 'left', '0', '0', NULL, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '[\'North\',\'South\',\'East\',\'West\']', NULL, 'spellcheck=false,placeholder=\"Press Ctrl+Enter to execute.\"', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('nu65f8d60b0cdf0d3', 'nurunjavascript', NULL, 'textarea', 'jsc_output', 'Output', '65f8d60b05b6ec6', 20, 283, 68, 500, 250, '1', 'left', '0', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '[\'North\',\'South\',\'East\',\'West\']', NULL, 'spellcheck=false', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-('6644b7f133e91b7', 'nu62aee4493239e3a', 'zzzzsys_config', 'input', 'cfg_title', 'Title', 'nu62aee449a876a58', 20, 42, 150, 300, 22, '1', 'left', '0', '1', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'text', NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+('6644b7f133e91b7', 'nu62aee4493239e3a', 'zzzzsys_config', 'input', 'cfg_title', 'Title', 'nu62aee449a876a58', 20, 42, 150, 210, 22, '1', 'left', '0', '1', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'text', NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
