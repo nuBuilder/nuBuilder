@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 22, 2024 at 07:41 AM
+-- Generation Time: May 22, 2024 at 09:44 PM
 -- Server version: 8.2.0
 -- PHP Version: 8.3.4
 
@@ -335,11 +335,11 @@ CREATE TABLE `zzzzsys_config` (
 --
 
 INSERT INTO `zzzzsys_config` (`zzzzsys_config_id`, `zzzzsys_setup_id`, `cfg_order`, `cfg_category`, `cfg_title`, `cfg_setting`, `cfg_value`, `cfg_description`, `cfg_type`, `cfg_effective`, `cfg_json`) VALUES
-('nu62a0a02105071cb', '1', 30, 'Admin', 'Objects Icon', 'nuObjects', 'true', 'Show Objects (Obj) icon', 2, '1', NULL),
-('nu62a0a02105062e5', '1', 40, 'Admin', 'PHP Icons', 'nuPHP', 'true', 'Show PHP (BE, BS, AS, BB) icons', 2, '1', NULL),
-('nu62a0a02105079da', '1', 50, 'Admin', 'Properties Icon', 'nuProperties', 'true', 'Show Properties (Prop) icon', 2, '1', NULL),
-('nu62a0a0210506a8f', '1', 60, 'Admin', 'Refresh Icons', 'nuRefresh', 'true', 'Show Refresh icon', 2, '1', NULL),
-('nu62a0a0210505b68', '1', 10, 'Admin', 'Debug Icon', 'nuDebug', 'true', 'Show Debug icon', 2, '1', NULL),
+('nu62a0a02105071cb', '1', 30, 'Admin', 'Objects Icon', 'nuObjectsIcon', 'true', 'Show Objects (Obj) icon', 2, '1', NULL),
+('nu62a0a02105062e5', '1', 40, 'Admin', 'PHP Icons', 'nuPHPIcon', 'true', 'Show PHP (BE, BS, AS, BB) icons', 2, '1', NULL),
+('nu62a0a02105079da', '1', 50, 'Admin', 'Properties Icon', 'nuPropertiesIcon', 'true', 'Show Properties (Prop) icon', 2, '1', NULL),
+('nu62a0a0210506a8f', '1', 60, 'Admin', 'Refresh Icons', 'nuRefreshIcon', 'true', 'Show Refresh icon', 2, '1', NULL),
+('nu62a0a0210505b68', '1', 10, 'Admin', 'Debug Icon', 'nuDebugIcon', 'true', 'Show Debug icon', 2, '1', NULL),
 ('nu62a0a02105011e4', '1', 20, 'Admin', 'Debug Mode', 'nuDebugMode', 'true', 'If the element does not exist when using functions such as nuGetValue() or nuSetValue(), a warning will be output to the Developer Console', 2, '1', NULL),
 ('nu62a0a02104dee61', '1', 70, 'Admin', 'Globeadmin User IDs', '$nuConfigDBGlobeadminUsers', '', 'User Ids with \'globeadmin\' permissions, separated by commas', 1, '1', NULL),
 ('nu62bdc792e1efb3a', '1', 80, 'Admin', 'Admin Home Form ID', '$nuConfigGlobeadminHome', 'nuhomecompact', 'Home form ID for administrator. Default: nuhomecompact', 1, '3', NULL),
