@@ -79,7 +79,7 @@ class nuBuilderSessionData {
 	'GLOBEADMIN_PASS'			=> '',
 	'GLOBEADMIN_DEMO_NAME'		=> '',
 	'GLOBEADMIN_DEMO_PASS'		=> '',
-	'GLOBEADMIN_HOME'			=> 'nuhomecompact',
+	'GLOBEADMIN_HOME'			=> 'nuhome',
 	'DEMO_SAVING_ALLOWED_IDS'	=> '',
 	'USER_LOGIN'				=> '',
 	'USER_NAME'					=> '',
@@ -138,7 +138,7 @@ class nuBuilderSessionData {
 		$this->nubuilder['GLOBEADMIN_NAME']			= $nuConfigDBGlobeadminUsername;
 		$this->nubuilder['GLOBEADMIN_PASS']			= $nuConfigDBGlobeadminPassword;
 		$this->nubuilder['GLOBEADMIN_USERS']		= $nuConfigDBGlobeadminUsers;
-		$this->nubuilder['GLOBEADMIN_HOME']			= $nuConfigGlobeadminHome;
+		$this->nubuilder['GLOBEADMIN_HOME']			= ($nuConfigGlobeadminHome === 'nuhomecompact') ? 'nuhome' : $nuConfigGlobeadminHome;
 
 		$this->nubuilder['GLOBEADMIN_DEMO_NAME']	= $nuConfigDemoDBGlobeadminUsername;
 		$this->nubuilder['GLOBEADMIN_DEMO_PASS']	= $nuConfigDemoDBGlobeadminPassword;
