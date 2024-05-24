@@ -2530,20 +2530,18 @@ function nuRunBackup() {
 
 }
 
-function nuAddCSSStyle(styleString, id) {
+function nuAddCSSStyle(styleString, id = 'nucssstyle') {
 
-	let i = id === undefined ? 'nucssstyle' : id;
-	$('#' + i).remove();
+	let existingStyle = document.getElementById(id);
+	if (existingStyle) existingStyle.remove();
 
-	let regex = /( |<([^>]+)>)/ig;
-	styleString = styleString.replace(regex, "");
+	styleString = styleString.replace(/( |<([^>]+)>)/ig, "").trim();
+	if (styleString === '') return;
 
-	if (styleString.trim() === '') return;
-
-	let css = document.createElement('style');
-	css.id = i;
+	const css = document.createElement('style');
+	css.id = id;
 	css.appendChild(document.createTextNode(styleString));
-	document.getElementsByTagName("head")[0].appendChild(css);
+	document.head.appendChild(css);
 
 }
 
