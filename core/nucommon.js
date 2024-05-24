@@ -1811,8 +1811,8 @@ function nuEmbedObject(json, containerId, width, height) {
 }
 
 function nuVendorLogin(appId, table) {
-    const tableName = table || nuSERVERRESPONSE.table;
-    window.open("core/nuvendorlogin.php?sessid=" + window.nuSESSION + "&appId=" + appId + "&table=" + tableName);
+	const tableName = table || nuSERVERRESPONSE.table;
+	window.open("core/nuvendorlogin.php?sessid=" + window.nuSESSION + "&appId=" + appId + "&table=" + tableName);
 }
 
 function nuIsMobile() {
@@ -2466,19 +2466,16 @@ function nuCurrentDateTime(format) {
 
 }
 
-function nuSetDateValue(i, d) {
+function nuSetDateValue(id, date) {
 
-	var obj = $('#' + i);
+	const obj = $('#' + id);
 
-	if (i === undefined || nuDebugOut(obj, i)) return false;
+	if (!id || nuDebugOut(obj, id)) return false;
 
-	if (d === undefined) {
-		var d = new Date();
-	}
+	date = date !== undefined ? date : new Date();
+	const df = date.getFullYear() + '-' + nuPad2(date.getMonth() + 1) + '-' + nuPad2(date.getDate());
 
-	var df = d.getFullYear() + '-' + nuPad2(d.getMonth() + 1) + '-' + nuPad2(d.getDate());
-
-	var format = obj.attr('data-nu-format');
+	const format = obj.attr('data-nu-format');
 	obj.val(nuFORM.addFormatting(df, format)).trigger("change");
 
 	return true;
