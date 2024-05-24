@@ -2494,24 +2494,26 @@ function nuOpenWiki(page) {
 	window.open('https://wiki.nubuilder.cloud/index.php' + page);
 }
 
-function nuSetLabelText(i, str, translate) {
+function nuSetLabelText(id, text, translate) {
 
-	if (translate === true) { str = nuTranslate(str); }
+	if (translate) {
+		text = nuTranslate(text);
+	}
 
-	let label = $('#label_' + i);
-	let lwidth = nuGetWordWidth(str);
+	const label = $('#label_' + id);
+	const lwidth = nuGetWordWidth(text);
 
-	let obj = $('#' + i);
-	let left = obj.nuCSSNumber('left');
-	let top = obj.nuCSSNumber('top');
+	const obj = $('#' + id);
+	const left = obj.nuCSSNumber('left');
+	const top = obj.nuCSSNumber('top');
 
 	label.css({
-		'top': Number(top),
-		'left': Number(left) - lwidth - 17,
-		'width': Number(lwidth + 12)
-	}).html(str);
+		'top': top,
+		'left': left - lwidth - 17,
+		'width': lwidth + 12
+	}).html(text);
 
-	if (obj.attr('data-nu-label-position') == 'top') {
+	if (obj.attr('data-nu-label-position') === 'top') {
 		obj.nuLabelOnTop();
 	}
 
