@@ -2545,10 +2545,11 @@ function nuAddCSSStyle(styleString, id = 'nucssstyle') {
 
 }
 
-function nuObjectClassList(i) {
+function nuObjectClassList(id) {
 
-	let c = $('#' + i).attr('class');
-	return c === undefined ? '' : c.split(/\s+/).join(' ');
+	const element = $('#' + id);
+	const classList = element.attr('class');
+	return classList ? classList.trim().split(/\s+/).join(' ') : '';
 
 }
 
