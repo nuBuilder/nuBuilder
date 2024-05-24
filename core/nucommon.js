@@ -2354,14 +2354,14 @@ function nuDebugOut(obj, i) {
 
 }
 
-function nuGetValue(i, method) {
+function nuGetValue(id, method) {
 
-	var obj = $('#' + i);
-	if (i === undefined || nuDebugOut(obj, i)) return null;
+	const obj = $('#' + id);
+	if (!id || nuDebugOut(obj, id)) return null;
 
 	if (obj.is(':checkbox')) return obj.is(":checked");
-	if (obj.is('select') && method === 'text') return $("#" + i + " option:selected").text().nuReplaceNonBreakingSpaces();
-	if (method === undefined && obj.is(':button')) return obj.text();
+	if (obj.is('select') && method === 'text') return $("#" + id + " option:selected").text().nuReplaceNonBreakingSpaces();
+	if (!method && obj.is(':button')) return obj.text();
 
 	switch (method) {
 		case 'html':
