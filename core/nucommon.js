@@ -816,8 +816,12 @@ function nuBindCtrlEvents() {
 		}
 
 	}
-	
+
 	$(document).on('keydown', function (e) {
+
+		if (e.isComposing || e.keyCode === 229) {
+			return;
+		}
 
 		if((e.key === 'PageDown' || e.key === 'PageUp') && nuFormType() == 'browse'){
 			const $nuRecord = $("#nuRECORD");
@@ -828,10 +832,10 @@ function nuBindCtrlEvents() {
 		if (e.key == 'Escape') {
 
 			if (nuIsVisible('nuMessageDiv')) {
-				nuMessageRemove();
+				nuMessageRemove(true);
 			} else if (nuIsVisible('nuOptionsListBox')) {
 				$('#nuOptionsListBox').remove();
-			} else if (parent.$('#nuModal').length == 1) {
+			} else if (parent.$('#nuModal').length === 1) {
 				let ae = document.activeElement;
 				$(ae).trigger("blur").trigger("focus");
 				if (nuFormsUnsaved() == 0) {
@@ -857,53 +861,55 @@ function nuBindCtrlEvents() {
 			const isBrowseOrEdit = formType === 'browse' || formType === 'edit';
 			const isEditOnly = formType === 'edit';
 			const isBrowseOnly = formType === 'browse';
+			const isLaunch = nuCurrentProperties().form_type === 'launch';
 
 			// Define actions in a more structured way to avoid redundancy
 			const actions = {
 				// Common actions for both 'browse' and 'edit'
-				'KeyR': { action: () => nuGetBreadcrumb(), condition: true },
-				// Actions available on 'browse' or 'edit' form types
-				...(isBrowseOrEdit && {
-					'KeyF': { action: () => nuPopup("nuform", formId), condition: globalAccess },
-					'KeyO': { action: () => nuPopup("nuobject", "", formId), condition: globalAccess },
-					'KeyM': { action: () => nuShowFormInfo(), condition: globalAccess },
-					'KeyV': { action: () => nuShowVersionInfo(), condition: globalAccess },
-					'KeyE': { action: () => nuVendorLogin('PMA'), condition: globalAccess },
-					'KeyJ': { action: () => nuForm("nusession", "", "", "", 2), condition: globalAccess },
-					'KeyQ': { action: () => nuVendorLogin("TFM"), condition: globalAccess && isBrowseOrEdit },
-					'KeyB': { action: () => nuRunBackup(), condition: globalAccess },
-					'KeyU': { action: () => nuForm('nusetup', '1', '', '', 2), condition: globalAccess },
-					'KeyD': { action: () => nuPopup("nudebug", ""), condition: globalAccess },
-					'KeyY': { action: () => nuPrettyPrintMessage(e, nuCurrentProperties()), condition: globalAccess },
-					'KeyL': { action: () => nuAskLogout(), condition: true },
-				}),
+				'r': { action: () => nuGetBreadcrumb(), condition: true },
 				// Actions specific to 'browse' form type
 				...(isBrowseOnly && {
-					'KeyC': { action: () => nuGetSearchList(), condition: globalAccess },
-					'KeyS': { action: () => nuSearchAction(), condition: true },
-					'KeyA': { action: () => nuAddAction(), condition: globalAccess },
-					'KeyP': { action: () => nuPrintAction(), condition: globalAccess },
+					'c': { action: () => nuGetSearchList(), condition: true },
+					's': { action: () => nuSearchAction(), condition: true },
+					'a': { action: () => nuAddAction(), condition: true },
+					'p': { action: () => nuPrintAction(), condition: globalAccess },
 				}),
 				// Actions specific to 'edit' form type
 				...(isEditOnly && {
-					'KeyA': { action: () => nuPopup(formId, "-2"), condition: nuCanArrangeObjects() },
-					'KeyQ': { action: () => nuPopup("nupassword", "", ""), condition: !globalAccess },
-					'KeyH': { action: () => nuPopup('nuobject', '-1', ''), condition: globalAccess },
-					'KeyG': { action: () => nuForm("nuobjectgrid", formId, "", "", 2), condition: globalAccess },
-					'KeyS': { action: () => { $(":focus").trigger("blur"); nuSaveAction(); }, condition: true },
-					'KeyC': { action: () => nuCloneAction(), condition: true },
-					'KeyY': { action: () => nuDeleteAction(), condition: true },
-					'ArrowRight': { action: () => nuSelectNextTab(1), condition: true },
-					'ArrowLeft': { action: () => nuSelectNextTab(-1), condition: true },
-				})
+					'a': { action: () => nuPopup(formId, "-2"), condition: nuCanArrangeObjects() },
+					'q': { action: () => nuPopup("nupassword", "", ""), condition: !globalAccess },
+					'h': { action: () => nuPopup('nuobject', '-1', ''), condition: globalAccess },
+					'g': { action: () => nuForm("nuobjectgrid", formId, "", "", 2), condition: globalAccess },
+					's': { action: () => { $(":focus").trigger("blur"); nuSaveAction(); }, condition: true },
+					'c': { action: () => { if (!isLaunch) {nuCloneAction() }}, condition: true },
+					'y': { action: () => { if (!isLaunch) {nuDeleteAction() }}, condition: true },
+					'arrowright': { action: () => nuSelectNextTab(1), condition: true },
+					'arrowleft': { action: () => nuSelectNextTab(-1), condition: true },
+				}),				
+				// Actions available on 'browse' or 'edit' form types
+				...(isBrowseOrEdit && {
+					'f': { action: () => nuPopup("nuform", formId), condition: globalAccess },
+					'o': { action: () => nuPopup("nuobject", "", formId), condition: globalAccess },
+					'm': { action: () => nuShowFormInfo(), condition: globalAccess },
+					'v': { action: () => nuShowVersionInfo(), condition: globalAccess },
+					'e': { action: () => nuVendorLogin('PMA'), condition: globalAccess },
+					'j': { action: () => nuForm("nusession", "", "", "", 2), condition: globalAccess },
+					'q': { action: () => nuVendorLogin("TFM"), condition: globalAccess && isBrowseOrEdit },
+					'b': { action: () => nuRunBackup(), condition: globalAccess },
+					'u': { action: () => nuForm('nusetup', '1', '', '', 2), condition: globalAccess },
+					'd': { action: () => nuPopup("nudebug", ""), condition: globalAccess },
+					'x': { action: () => nuPrettyPrintMessage(e, nuCurrentProperties()), condition: globalAccess },
+					'l': { action: () => nuAskLogout(), condition: true },
+				}),
 			};
 
 			// Execute action based on key press if condition is met
-			const action = actions[e.code];
+			const key = e.key.toLowerCase();
+			const action = actions[key];
 			if (action?.condition) {
 				e.preventDefault();
 				action.action();
-			} 
+			}
 
 			let nosearch = window.nuFORM.getProperty('nosearch_columns');
 			let searchIndex = -1;
