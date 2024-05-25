@@ -5758,16 +5758,16 @@ function nuMessage(messages, timeout, callback) {
 
 }
 
-function nuMessageRemove() {
+function nuMessageRemove(force = false) {
 
 	const windowTopDoc = window.top.document;
-	if (windowTopDoc.nuHideMessage) {
+	if (force || windowTopDoc.nuHideMessage) {
 		windowTopDoc.nuHideMessage = false;
 		$('#nuMessageDiv', windowTopDoc).remove();
 	}
 
 }
-		
+
 function nuWindowPosition() {
 
 	const p = window.parent.document;
