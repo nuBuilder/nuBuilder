@@ -5708,7 +5708,7 @@ function nuTotal(f) {
 function nuMessage(messages, timeout, callback) {
 
 	const rootElement = window.top.document;
-	nuMessageRemove();
+	nuMessageRemove(true);
 	rootElement.nuHideMessage = false;
 
 	if (messages.length === 0) {
