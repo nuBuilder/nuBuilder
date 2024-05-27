@@ -2336,17 +2336,6 @@ function nuSubformHideHeader(id) {
 	scrollDiv.css({top: 0, height: $('#' + id).nuCSSNumber('height')});
 }
 
-function nuSubformLastRow(t) {
-
-	const i = String($('#' + t.id).parent().attr('id'));
-	const p = i.substr(0, i.length - 17);
-	const s2 = parseInt(i.substring(11, 14), 10) + 1;
-	const n = $('#' + p + nuPad3(s) + 'nuRECORD').length;
-
-	return n == 0;
-
-}
-
 function nuSubformFocusLastRow(id, f) {
 
 	const sf = nuSubformObject(id);
