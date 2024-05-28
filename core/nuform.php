@@ -23,7 +23,7 @@ function nuBeforeBrowse($f){
 }
 
 function nuBeforeEdit($FID, $RID){
-	
+
 	$r						= nuFormProperties($FID);
 
 	$GLOBALS['EXTRAJS']		= '';
@@ -31,9 +31,10 @@ function nuBeforeEdit($FID, $RID){
 	$GLOBALS['STYLE']		= '';
 
 	$ct						= $_POST['nuSTATE']['call_type'];
-
+	
 	if($ct == 'getreport' and $r == ''){return;}
 	if($ct == 'getform' and $r == ''){return;}
+	if($r === false) return;
 
 	$formType = $_POST['nuSTATE']['form_type'] ?? '';
 	$recordID = $_POST['nuSTATE']['record_id'] ?? '';
@@ -138,8 +139,11 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 	$f = nuGetEditForm($F, $R);
 
 	if ($f === null) {
-		return;
+		$O = new stdClass();
+		$O->forms[] = $f;
+		return $O->forms[0];
 	}
+
 	$f->form_id		= $F;
 
 	if ($R == '' && $f->form_type == 'launch') $R = '-1';
