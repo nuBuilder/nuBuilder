@@ -885,6 +885,7 @@ function nuBindCtrlEvents() {
 					'y': { action: () => { if (!isLaunch) {nuDeleteAction() }}, condition: true },
 					'arrowright': { action: () => nuSelectNextTab(1), condition: true },
 					'arrowleft': { action: () => nuSelectNextTab(-1), condition: true },
+					'?': { action: () => nuOpenFormHelp(), condition: true }
 				}),				
 				// Actions available on 'browse' or 'edit' form types
 				...(isBrowseOrEdit && {
@@ -2499,6 +2500,14 @@ function nuArrayColumn(arr, n) {
 function nuOpenWiki(page) {
 	window.open('https://wiki.nubuilder.cloud/index.php' + page);
 }
+
+function nuOpenFormHelp(page) {
+
+	const help = nuFORMHELP[""];
+	if (help) eval(help);
+
+}
+
 
 function nuSetLabelText(id, text, translate) {
 
