@@ -121,65 +121,62 @@
 
 	if($callType != 'logout')	{
 
-		if (!isset($f->forms[0])) { // Form deleted etc.
-			json_encode($f);
-			return;
+		if (isset($f->forms[0])) {
+
+			$f->forms[0]->after_event				= nuObjKey($_POST, 'nuAfterEvent');
+			$f->forms[0]->user_id					= nuObjKey($user, 'USER_ID', null);
+			$f->forms[0]->login_name				= nuObjKey($user, 'LOGIN_NAME', null);
+			$f->forms[0]->user_team					= $globalAccess ? '' : nuObjKey($user, 'USER_TEAM', null);
+			$f->forms[0]->user_department			= $globalAccess ? '' : nuObjKey($user, 'USER_DEPARTMENT', null);
+			$f->forms[0]->user_position				= $globalAccess ? '' : nuObjKey($user, 'USER_POSITION', null);
+			$f->forms[0]->user_code					= $globalAccess ? '' : nuObjKey($user, 'USER_CODE', null);
+			$f->forms[0]->user_additional1			= $globalAccess ? '' : nuObjKey($user, 'USER_ADDITIONAL1', null);
+			$f->forms[0]->user_additional2			= $globalAccess ? '' : nuObjKey($user, 'USER_ADDITIONAL2', null);
+			$f->forms[0]->user_permissions			= $globalAccess ? '' : nuObjKey($user, 'USER_PERMISSIONS', null);
+			$f->forms[0]->user_a11y					= $globalAccess ? '' : nuObjKey($user, 'USER_A11Y', null);
+			$f->forms[0]->user_name					= $globalAccess ? '' : nuUser($user['USER_ID'])->sus_name;
+			$f->forms[0]->home_id					= $sessionData['HOME_ID'];
+			$f->forms[0]->language					= $sessionData['language'];
+
+			$f->forms[0]->access_level_id			= $user['USER_GROUP_ID'];
+			$f->forms[0]->access_level_code			= $user['ACCESS_LEVEL_CODE'];
+			$f->forms[0]->access_level_group		= $user['ACCESS_LEVEL_GROUP'];
+
+			$f->forms[0]->database					= $sessionData['DB_NAME'];
+			$f->forms[0]->dimensions				= $formAndSessionData->dimensions ?? null;
+			$f->forms[0]->translation				= $formAndSessionData->translation;
+
+			$f->forms[0]->tableSchema				= nuUpdateTableSchema($callType, $refreshCache && $globalAccess);
+			$f->forms[0]->viewSchema				= nuBuildViewSchema();
+			$f->forms[0]->formSchema				= nuUpdateFormSchema($refreshCache  && $globalAccess);
+
+			if ($refreshCache) nuSetJSONData('REFRESH_CACHE','0');
+
+			$f->forms[0]->session_id				= $sessionData['SESSION_ID'];
+			$f->forms[0]->callback					= nuSetGlobalPropertiesJS()."\n".nuObjKey($_POST,'nuCallback');
+			$f->forms[0]->run_php					= nuObjKey($_POST,'nuRunPHPHidden');
+			$f->forms[0]->errors					= nuObjKey($_POST,'nuErrors');
+			$f->forms[0]->log_again					= nuObjKey($_POST,'nuLogAgain');
+			$f->forms[0]->global_access				= $globalAccess ? '1' : '0';
+			$f->forms[0]->data_mode					= $globalAccess ? null : nuGetFormPermission($formId,'slf_data_mode');
+			$f->forms[0]->form_type_access			= $globalAccess ? null : nuGetFormPermission($formId,'slf_form_type');
+			$f->forms[0]->is_demo					= nuDemo(false);
+			$f->forms[0]->dev_mode 					= $globalAccess && isset($nuConfigDevMode) ? (string)((int)$nuConfigDevMode) : '0';	
+			$f->forms[0]->remember_me_2fa			= $sessionData['2FA_REMEMBER_ME'];
+			$f->forms[0]->token_validity_time_2fa	= $sessionData['2FA_TOKEN_VALIDITY_TIME'];
+			$f->forms[0]->form_access				= $GLOBALS['nuSetup']->set_denied;
+			$f->forms[0]->javascript				= nuObjKey($GLOBALS,'EXTRAJS');
+			$f->forms[0]->style						= nuObjKey($GLOBALS,'STYLE');
+			$f->forms[0]->javascript_bc				= nuObjKey($GLOBALS,'EXTRAJS_BC');
+			$f->forms[0]->target					= nuObjKey($state,'target');
+
+			$buttons								= nuButtons($formId, $state);
+			$f->forms[0]->buttons					= $buttons[0];
+			$f->forms[0]->run_code					= $buttons[1];
+			$f->forms[0]->run_description			= $buttons[2];
+
 		}
-
-		$f->forms[0]->after_event				= nuObjKey($_POST, 'nuAfterEvent');
-		$f->forms[0]->user_id					= nuObjKey($user, 'USER_ID', null);
-		$f->forms[0]->login_name				= nuObjKey($user, 'LOGIN_NAME', null);
-		$f->forms[0]->user_team					= $globalAccess ? '' : nuObjKey($user, 'USER_TEAM', null);
-		$f->forms[0]->user_department			= $globalAccess ? '' : nuObjKey($user, 'USER_DEPARTMENT', null);
-		$f->forms[0]->user_position				= $globalAccess ? '' : nuObjKey($user, 'USER_POSITION', null);
-		$f->forms[0]->user_code					= $globalAccess ? '' : nuObjKey($user, 'USER_CODE', null);
-		$f->forms[0]->user_additional1			= $globalAccess ? '' : nuObjKey($user, 'USER_ADDITIONAL1', null);
-		$f->forms[0]->user_additional2			= $globalAccess ? '' : nuObjKey($user, 'USER_ADDITIONAL2', null);
-		$f->forms[0]->user_permissions			= $globalAccess ? '' : nuObjKey($user, 'USER_PERMISSIONS', null);
-		$f->forms[0]->user_a11y					= $globalAccess ? '' : nuObjKey($user, 'USER_A11Y', null);
-		$f->forms[0]->user_name					= $globalAccess ? '' : nuUser($user['USER_ID'])->sus_name;
-		$f->forms[0]->home_id					= $sessionData['HOME_ID'];
-		$f->forms[0]->language					= $sessionData['language'];
-
-		$f->forms[0]->access_level_id			= $user['USER_GROUP_ID'];
-		$f->forms[0]->access_level_code			= $user['ACCESS_LEVEL_CODE'];
-		$f->forms[0]->access_level_group		= $user['ACCESS_LEVEL_GROUP'];
-
-		$f->forms[0]->database					= $sessionData['DB_NAME'];
-		$f->forms[0]->dimensions				= $formAndSessionData->dimensions ?? null;
-		$f->forms[0]->translation				= $formAndSessionData->translation;
-
-		$f->forms[0]->tableSchema				= nuUpdateTableSchema($callType, $refreshCache && $globalAccess);
-		$f->forms[0]->viewSchema				= nuBuildViewSchema();
-		$f->forms[0]->formSchema				= nuUpdateFormSchema($refreshCache  && $globalAccess);
-
-		if ($refreshCache) nuSetJSONData('REFRESH_CACHE','0');
-
-		$f->forms[0]->session_id				= $sessionData['SESSION_ID'];
-		$f->forms[0]->callback					= nuSetGlobalPropertiesJS()."\n".nuObjKey($_POST,'nuCallback');
-		$f->forms[0]->run_php					= nuObjKey($_POST,'nuRunPHPHidden');
-		$f->forms[0]->errors					= nuObjKey($_POST,'nuErrors');
-		$f->forms[0]->log_again					= nuObjKey($_POST,'nuLogAgain');
-		$f->forms[0]->global_access				= $globalAccess ? '1' : '0';
-		$f->forms[0]->data_mode					= $globalAccess ? null : nuGetFormPermission($formId,'slf_data_mode');
-		$f->forms[0]->form_type_access			= $globalAccess ? null : nuGetFormPermission($formId,'slf_form_type');
-		$f->forms[0]->is_demo					= nuDemo(false);
-		$f->forms[0]->dev_mode 					= $globalAccess && isset($nuConfigDevMode) ? (string)((int)$nuConfigDevMode) : '0';	
-		$f->forms[0]->remember_me_2fa			= $sessionData['2FA_REMEMBER_ME'];
-		$f->forms[0]->token_validity_time_2fa	= $sessionData['2FA_TOKEN_VALIDITY_TIME'];
-		$f->forms[0]->form_access				= $GLOBALS['nuSetup']->set_denied;
-		$f->forms[0]->javascript				= nuObjKey($GLOBALS,'EXTRAJS');
-		$f->forms[0]->style						= nuObjKey($GLOBALS,'STYLE');
-		$f->forms[0]->javascript_bc				= nuObjKey($GLOBALS,'EXTRAJS_BC');
-		$f->forms[0]->target					= nuObjKey($state,'target');
-
-		$buttons								= nuButtons($formId, $state);
-		$f->forms[0]->buttons					= $buttons[0];
-		$f->forms[0]->run_code					= $buttons[1];
-		$f->forms[0]->run_description			= $buttons[2];
-
 	}
 
 	$j											= json_encode($f->forms[0]);
-
 	print $j;
