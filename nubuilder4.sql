@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 28, 2024 at 12:18 PM
+-- Generation Time: May 29, 2024 at 03:01 PM
 -- Server version: 8.2.0
 -- PHP Version: 8.3.4
 
@@ -835,8 +835,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`, `inf_json`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2024.05.28.00', NULL),
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2024.05.28.01', NULL);
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2024.05.29.00', NULL),
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2024.05.29.02', NULL);
 
 -- --------------------------------------------------------
 
@@ -1669,7 +1669,7 @@ INSERT INTO `zzzzsys_php` (`zzzzsys_php_id`, `sph_code`, `sph_description`, `sph
 ('nu65f27499be765b1_AB', 'nu5fe94c6815842ec_AB', 'System PHP', 'nubuilder', 'nuSetFormValue(\'sph_code_snippet_paste\', nuLookupRecord()->cot_source_code);', NULL, NULL, '1', '0', '0', NULL, NULL),
 ('nuemaillog_BB', 'nuemaillog_BB', 'System PHP', 'nubuilder', '$getDistinctUserColumnQuery = function($column) {\n    return \"SELECT DISTINCT `$column` FROM `zzzzsys_email_log` WHERE IFNULL(`$column`,\'\') <> \'\' ORDER BY `$column`\";\n};\n\n$sqlState = function() use ($getDistinctUserColumnQuery) {\n    return $getDistinctUserColumnQuery(\'eml_state\');\n};\n\n\n$state = nuEncodeQueryRowResults($sqlState(), [], [\'\']);\n\n$filterJS = \"\n    function getData(data) {\n        return JSON.parse(atob(data));\n    }\n\n    function getState() {\n        return getData(\'$state\');\n    }\n\";\n\n\n\nnuAddJavaScript($filterJS);', NULL, NULL, '1', '0', '0', NULL, NULL),
 ('nudebug_BB', 'nudebug_BB', 'System PHP', 'nubuilder', '$getDistinctUserColumnQuery = function($column) {\n    return \"SELECT DISTINCT `$column` FROM `zzzzsys_debug` WHERE IFNULL(`$column`,\'\') <> \'\' ORDER BY `$column`\";\n};\n\n$sqlSFlag = function() use ($getDistinctUserColumnQuery) {\n    return $getDistinctUserColumnQuery(\'deb_flag\');\n};\n\n\n$flag = nuEncodeQueryRowResults($sqlSFlag(), [], [\'\']);\n\n$filterJS = \"\n    function getData(data) {\n        return JSON.parse(atob(data));\n    }\n\n    function getFlag() {\n        return getData(\'$flag\');\n    }\n\";\n\n\n\nnuAddJavaScript($filterJS);', NULL, NULL, '1', '0', '0', NULL, NULL),
-('nurunlist_BB', 'nurunlist_BB', 'System PHP', 'nubuilder', '$select =\n\n\"\n    SELECT\n        `zzzzsys_form`.`zzzzsys_form_id` AS `zzzzsys_debug_id`,\n        \'Form\' AS `run`,\n        `zzzzsys_form`.`sfo_code` AS `code`,\n        `zzzzsys_form`.`sfo_description` AS `description`\n    FROM\n        `zzzzsys_form`\n    UNION\n    SELECT\n        `zzzzsys_report`.`zzzzsys_report_id` AS `zzzzsys_debug_id`,\n        \'Report\' AS `run`,\n        `zzzzsys_report`.`sre_code` AS `code`,\n        `zzzzsys_report`.`sre_description` AS `description`\n    FROM\n        `zzzzsys_report`\n    UNION\n    SELECT\n        `zzzzsys_php`.`zzzzsys_php_id` AS `zzzzsys_debug_id`,\n        \'Procedure\' AS `run`,\n        `zzzzsys_php`.`sph_code` AS `code`,\n        `zzzzsys_php`.`sph_description` AS `description`\n    FROM\n        `zzzzsys_php`\n    WHERE\n        (`zzzzsys_php`.`sph_system` <> 1)\n    ORDER BY\n        `code`\n\";\n\nnuCreateTableFromSelect(\'#TABLE_ID#\', $select);', NULL, NULL, '1', '0', '0', NULL, NULL),
+('nurunlist_BB', 'nurunlist_BB', 'System PHP', 'nubuilder', '$select =\n\n\"\n    SELECT * FROM (\n    	 	 SELECT\n    	 	 	 	 `zzzzsys_form`.`zzzzsys_form_id` AS `zzzzsys_debug_id`,\n    	 	 	 	 \'Form\' AS `run`,\n    	 	 	 	 `zzzzsys_form`.`sfo_code` AS `code`,\n    	 	 	 	 `zzzzsys_form`.`sfo_description` AS `description`\n    	 	 FROM\n    	 	 	 	 `zzzzsys_form`\n    	 	 UNION\n    	 	 SELECT\n    	 	 	 	 `zzzzsys_report`.`zzzzsys_report_id` AS `zzzzsys_debug_id`,\n    	 	 	 	 \'Report\' AS `run`,\n    	 	 	 	 `zzzzsys_report`.`sre_code` AS `code`,\n    	 	 	 	 `zzzzsys_report`.`sre_description` AS `description`\n    	 	 FROM\n    	 	 	 	 `zzzzsys_report`\n    	 	 UNION\n    	 	 SELECT\n    	 	 	 	 `zzzzsys_php`.`zzzzsys_php_id` AS `zzzzsys_debug_id`,\n    	 	 	 	 \'Procedure\' AS `run`,\n    	 	 	 	 `zzzzsys_php`.`sph_code` AS `code`,\n    	 	 	 	 `zzzzsys_php`.`sph_description` AS `description`\n    	 	 FROM\n    	 	 	 	 `zzzzsys_php`\n    	 	 WHERE\n    	 	 	 	 (`zzzzsys_php`.`sph_system` <> 1)\n    ) AS combined\n    ORDER BY\n	 	 `code`\n\";\n\nnuCreateTableFromSelect(\'#TABLE_ID#\', $select);', NULL, NULL, '1', '0', '0', NULL, NULL),
 ('nu5bad6cb35f2188f_AB', 'nu5bad6cb35f2188f_AB', 'System PHP', 'nubuilder', '$r = nuLookupRecord();\n\nif (isset($r->zzzzsys_report_data_id)) {\n    $tt	= nuTTList($r->zzzzsys_report_data_id, \'nublank\');				    //-- Field list from Temp table\n    \n    nuSetFormValue(\'fieldlist\', json_encode($tt));\n}\n', NULL, NULL, '1', '0', '0', NULL, NULL);
 
 -- --------------------------------------------------------
