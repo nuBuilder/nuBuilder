@@ -106,12 +106,15 @@ function nuForm(f, r, filter, search, n, like) {
 
 		var fm = data;
 
-		if (nuDisplayError(fm)) {
+		if (!fm || nuDisplayError(fm)) {
 
 			nuCursor('default');
 
 			parent.$('#nuModal').remove();
 
+			if (!fm) {
+				nuMessage(`<h3>${nuTranslate('Error loading the form')}</h3>`);
+			} else
 			if (parent.$('#nuDragDialog').css('visibility') == 'hidden') {
 				parent.nuDisplayError(fm);
 				parent.$('#nuDragDialog').remove();
@@ -119,7 +122,7 @@ function nuForm(f, r, filter, search, n, like) {
 
 			nuFORM.breadcrumbs.pop();
 
-			if (fm.log_again == 1) { location.reload(); }
+			if (fm && fm.log_again == 1) { location.reload(); }
 
 		} else {
 

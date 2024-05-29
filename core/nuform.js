@@ -5694,50 +5694,74 @@ function nuTotal(f) {
 	return Number(nuFORM.calc(f));
 }
 
-function nuMessage(messages, timeout, callback) {
+function nuMessage(options, options2, options3, options4) {
 
 	const rootElement = window.top.document;
 	nuMessageRemove(true);
+
+	let title = '';
+	let messages = [];
+	let timeout = null;
+	let callback = null;
+
+	if (arguments.length === 1) {
+		messages = Array.isArray(options) ? options : [options];
+	} else if (arguments.length >= 2) {
+		if (Number.isInteger(options2)) {
+			timeout = options2;
+			messages = Array.isArray(options) ? options : [options];
+			callback = typeof options3 === 'function' ? options3 : null;
+		} else {
+			title = options;
+			messages = Array.isArray(options2) ? options2 : [options2];
+			timeout = Number.isInteger(options3) ? options3 : null;
+			callback = typeof options4 === 'function' ? options4 : null;
+		}
+	}
+
 	rootElement.nuHideMessage = false;
+	messages = Array.isArray(messages) ? messages : [messages];
 
-	if (messages.length === 0) {
-		return;
-	}
-
-	if (!Array.isArray(messages)) {
-		messages = [messages];
-	}
-
-	let widest = 5;
-	for (let i = 0; i < messages.length; i++) {
-		widest = Math.max(widest, nuGetWordWidth(messages[i]));
-	}
-
+	let widest = messages.reduce((maxWidth, msg) => Math.max(maxWidth, nuGetWordWidth(msg)), 5);
 	widest = Math.min(widest + 200, 1000);
-	let viewportWidth = window.visualViewport.width - 42;
-	const leftPosition = Math.max(0, $(this).scrollLeft() + (viewportWidth - widest) / 2);
-	viewportWidth = Math.min(viewportWidth, widest);
 
+	const viewportWidth = Math.min(document.documentElement.clientWidth - 42, widest);
+	const leftPosition = Math.max(0, (document.documentElement.clientWidth - viewportWidth) / 2);
 	const topPosition = window.scrollY + 10;
+
 	const messageContainer = $('<div>', {
 		id: 'nuMessageDiv',
 		class: 'nuMessage',
 		style: `overflow:hidden;top:${topPosition}px;width:${viewportWidth}px;left:${leftPosition}px`
 	});
 
-	for (let i = 0; i < messages.length; i++) {
-		messageContainer.append(messages[i]).append('<br>');
-	}
+	const header = $('<div>', { class: 'nuMessageHeader' });
+	const titleElement = $('<div>', { class: 'nuMessageTitle', text: title });
+	const closeButton = $('<i>', { class: 'fas fa-times nuMessageClose' });
 
+	closeButton.on('click', () => {
+		messageContainer.fadeOut("slow", () => messageContainer.remove());
+	});
+
+	header.append(titleElement).append(closeButton);
+	messageContainer.append(header);
+
+	const messageBody = $('<div>', { class: 'nuMessageBody' });
+	messages.forEach(msg => {
+		messageBody.append($('<div>').text(msg)).append('<br>');
+	});
+
+	messageContainer.append(messageBody);
 	$('body', rootElement).append(messageContainer);
 
-	if (timeout !== undefined) {
-		setTimeout(function () {
-			messageContainer.fadeOut("slow");
+	if (!title) {
+		header.css('padding', 15);
+	}
 
-			if (callback !== undefined) {
-				callback();
-			}
+	if (timeout) {
+		setTimeout(() => {
+			messageContainer.fadeOut("slow", () => messageContainer.remove());
+			if (callback) callback();
 		}, timeout);
 	}
 

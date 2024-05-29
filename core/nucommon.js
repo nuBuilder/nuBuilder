@@ -1413,10 +1413,11 @@ function nuClick(e) {
 		$('#nuOptionsListBox').remove();
 	}
 
-	if (target.attr('id') !== 'nuMessageDiv' && target.attr('data-nu-option-title') !== 'Help') {
+	if (target.attr('id') !== 'nuMessageDiv' && !parentClasses.includes('nuMessage') && target.attr('data-nu-option-title') !== 'Help') {
 		nuMessageRemove();
 		window.top.document.nuHideMessage = true;
 	}
+	
 
 }
 
