@@ -7197,7 +7197,7 @@ function nuPopupCalendar(pThis, d) {
 	datepicker = new Datepicker(pThis, calendarOptions);
 
 	const nuChangeDate = function (e) {
-		$(e.target).addClass('nuEdited');
+		$(e.target).trigger('change');
 		datepicker.destroy();
 	}
 
