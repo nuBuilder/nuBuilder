@@ -5736,7 +5736,7 @@ function nuMessage(options, options2, options3, options4) {
 	});
 
 	const header = $('<div>', { class: 'nuMessageHeader' });
-	const titleElement = $('<div>', { class: 'nuMessageTitle', text: title });
+	const titleElement = $('<div>', { class: 'nuMessageTitle', html: title });
 	const closeButton = $('<i>', { class: 'fas fa-times nuMessageClose' });
 
 	closeButton.on('click', () => {
@@ -5748,7 +5748,7 @@ function nuMessage(options, options2, options3, options4) {
 
 	const messageBody = $('<div>', { class: 'nuMessageBody' });
 	messages.forEach(msg => {
-		messageBody.append($('<div>').text(msg)).append('<br>');
+		messageBody.append($('<div>').html(msg)).append('<br>');
 	});
 
 	messageContainer.append(messageBody);
