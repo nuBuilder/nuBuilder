@@ -817,7 +817,9 @@ function nuBindCtrlEvents() {
 
 	}
 
-	$(document).on('keydown', function (e) {
+	const nuHtml = document.getElementById('nuhtml');
+
+	nuAddEventListenerOnce(nuHtml, 'keydown', function(e) {
 
 		if (e.isComposing || e.keyCode === 229) {
 			return;
@@ -935,7 +937,9 @@ function nuBindCtrlEvents() {
 
 			window.nuFORM.setProperty('nosearch_columns', nosearch);
 		}
-	});
+
+	}, {passive: false}, 'nu-keydown-added');
+
 
 	const nuCtrlKeyupListener = function (e) {
 		window.nuNEW = 0;
