@@ -4599,6 +4599,8 @@ function nuBrowseCreateFooter(currentForm, topOffset, leftOffset, rowHeight) {
 			padding: '5px 0px'
 		});
 
+		nuBrowseAdditionalNavButtons();	
+
 }
 
 function nuBrowseCreateFooterHtml(currentForm) {
@@ -4610,6 +4612,34 @@ function nuBrowseCreateFooterHtml(currentForm) {
 	const totalPagesLabel = ' / ' + (currentForm.pages === 0 ? 1 : currentForm.pages) + ' ';
 
 	return last + pageLabel + currentPageInput + totalPagesLabel + next;
+
+}
+
+function nuBrowseAdditionalNavButtons() {
+
+	if ($('#nuFirst').length > 0) return;
+
+	const currentPage = Number($('#browsePage').val());
+	const lastPage = nuCurrentProperties().pages;
+
+	const disabledStyle = {
+		opacity: '0.3',
+		'pointer-events': 'none'
+	};
+
+	const firstBtn = '<span id="nuFirst" class="nuBrowsePage"><i class="fa fa-step-backward" style="font-size: 16px" onclick="nuGetPage(1)">&nbsp;&nbsp;&nbsp;&nbsp;</i></span>';
+	$(firstBtn).insertBefore('#nuLast');
+
+	const endBtn = `<span id="nuEnd" class="nuBrowsePage">&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-step-forward nuBrowsePage" style="font-size: 16px" onclick="nuGetPage(${lastPage})"></i></span>`;
+	$(endBtn).insertAfter('#nuNext');
+
+	if (currentPage === 1) {
+		$('#nuFirst, #nuLast').css(disabledStyle);
+	}
+
+	if (currentPage >= lastPage) {
+		$('#nuNext, #nuEnd').css(disabledStyle);
+	}
 
 }
 
@@ -4644,7 +4674,7 @@ function nuBrowseTitleMultiLine() {
 
 function nuSetBrowseColumnWidth(column, width) {
 
-	var cw = this;
+	let cw = this;
 	if (nuIsIframe()) {
 		cw = parent.$("#" + window.frameElement.id)[0].contentWindow;
 	}
@@ -4655,7 +4685,7 @@ function nuSetBrowseColumnWidth(column, width) {
 
 function nuClickSearchColumn(e) {
 
-	var c = e.target.id.substr(12);
+	const c = e.target.id.substr(12);
 	$('#nuSearchList' + c).trigger( "click" );
 	nuSetSearchColumn();
 
