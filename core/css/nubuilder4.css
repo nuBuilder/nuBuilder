@@ -1168,7 +1168,6 @@
 	border-right: none;
 	border-bottom: none;
 }
-
 .nuMessageHeader {
 	display: flex;
 	justify-content: center;
@@ -1178,11 +1177,6 @@
 	border-bottom: 1px solid #ccc;
 	position: relative;
 }
-
-.nuMessageTitle {
-	font-weight: bold;
-}
-
 .nuMessageClose {
 	position: absolute;
 	right: 10px;
@@ -1190,15 +1184,12 @@
 	cursor: pointer;
 	font-size: 1.2em;
 }
-
 .nuMessageClose:hover {
 	color: red;
 }
-
 .nuMessageBody {
 	padding: 20px;
 }
-
  #nuErrorCode {
 	position:relative;
 	height:50px;
@@ -1440,6 +1431,9 @@
 }
  .ctxmenu li.interactive:hover {
 	background: rgba(0, 0, 0, 0.1)
+}
+ .ctxmenu li.interactive:focus {
+	background: rgba(171, 195, 244, 0.2);
 }
  .ctxmenu li.submenu::after {
 	color: #655e5e;;
