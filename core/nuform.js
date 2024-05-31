@@ -4512,7 +4512,7 @@ function nuBrowseTable() {
 	nuHighlightSearch();
 	nuBrowseBorders();
 
-	nuBrowseUpdateParentDocumentStyles(topOffset + rowHeight + 10);
+	nuBrowseUpdateParentDocumentStyles(topOffset + rowHeight + 140);
 
 }
 
