@@ -4400,8 +4400,6 @@ function nuDragBrowseColumn(e, p) {
 		return; 	
 	}	
 
-	// e.preventDefault();
-
 	if (window.nuBROWSERESIZE.mouse_down) {
 
 		window.nuBROWSERESIZE.pointer = p; // added
@@ -4485,107 +4483,143 @@ function nuBrowseTableHoverOut() {
 function nuBrowseTable() {
 
 	const currentForm = window.nuFORM.getCurrent();
-	const browseColumns = currentForm.browse_columns;
-	const browseRows = currentForm.browse_rows;
-	const browseRowCount = browseRows.length;		
+	const columns = currentForm.browse_columns;
+	const rows = currentForm.browse_rows;
+	const rowCount = rows.length;
 	const rowHeight = currentForm.row_height;
 	const $record = $('#nuRECORD');
 
 	let incrementalWidth = 0;
-	let topOffset = parseInt($('#nuBrowseTitle0').css('height'), 10) - rowHeight - 2;
+	let topOffset = nuBrowseCalculateInitialTopOffset(rowHeight);
 	let leftOffset = 7;
 
 	for (let rowIndex = 0; rowIndex < currentForm.rows; rowIndex++) {
-
 		leftOffset = 7;
 		topOffset += rowHeight + 7;
 
-		if (browseRowCount === 0 && rowIndex > 0) {
-
-			const searchLengthZero = nuCurrentProperties().search.length === 0;
-			const noDataMessage = searchLengthZero ? 'No data to display' : 'No search results found';
-			const firstCellClass = searchLengthZero ? 'nuBrowseNoData' : 'nuBrowseNoResults';
-			$('#nucell_0_0').html(nuTranslate(noDataMessage)).addClass(firstCellClass);
-			window[`nuBrowseNo${firstCellClass === 'nuBrowseNoData' ? 'Data' : 'SearchResults'}`] = true;
+		if (rowCount === 0 && rowIndex > 0) {
+			nuBrowseHandleNoDataScenario();
 			break;
-
 		}
 
-		for (let colIndex = 0; colIndex < browseColumns.length; colIndex++) {
-
-			const columnWidth = Number(browseColumns[colIndex].width);
-			const id = `nucell_${rowIndex}_${colIndex}`;
-
-			const div = nuCreateElementWithId('div', id, 'nuRECORD');
-
-			const $div = nuSetObjectBounds(div, topOffset, leftOffset, columnWidth, rowHeight, true);
-			div.setAttribute('data-nu-row', rowIndex);
-			div.setAttribute('data-nu-column', colIndex);
-			div.style.textAlign = nuAlign(browseColumns[colIndex].align);
-			div.style.overflow = 'hidden';
-			div.style.padding = (columnWidth < 0 ? 0 : undefined) + 'px';
-			div.style.borderWidth = (columnWidth < 0 ? 0 : undefined) + 'px';
-			div.classList.add(`nuCell${(rowIndex / 2 === parseInt(rowIndex / 2, 10)) ? 'Even' : 'Odd'}`);
-
-			if (columnWidth === 0) {
-				$div.hide();
-			} else {
-				div.classList.add('nuBrowseTable', 'nuCell');
-			}
-
-			if (rowIndex < browseRows.length) {
-
-				const currentColumn = browseColumns[colIndex];
-				const value = currentColumn.format === '' ? browseRows[rowIndex][colIndex + 1] : nuFORM.addFormatting(browseRows[rowIndex][colIndex + 1], currentColumn.format);
-
-				$div.html(value)
-					.attr('data-nu-primary-key', browseRows[rowIndex][0])
-					.on('click', (event) => nuInternalSelectBrowse(event, $div[0]))
-					.on('mouseenter', nuBrowseTableHoverIn)
-					.on('mouseleave', nuBrowseTableHoverOut); 
-
-			}
-
-			if (rowIndex === 0 && colIndex === 0) {
-				incrementalWidth = nuTotalWidth(id) - columnWidth;
-			}
-
-			leftOffset += (columnWidth === 0 ? 0 : columnWidth + incrementalWidth);
+		for (let colIndex = 0; colIndex < columns.length; colIndex++) {
+			leftOffset = nuBrowseHandleCellCreation(rowIndex, colIndex, columns, rows, topOffset, leftOffset, rowHeight, incrementalWidth);
 		}
-
 	}
 
-
-	const last = `<span id="nuLast" onclick="nuGetPage(${currentForm.page_number})" class="nuBrowsePage">&#9668;</span>`;
-	const next = `<span id="nuNext" onclick="nuGetPage(${currentForm.page_number + 2})" class="nuBrowsePage">►</span>`;
-	const pageLabel = '&nbsp;Page&nbsp;';
-	const currentPageInput = `<input id="browsePage" style="text-align:center;margin:3px 0px 0px 0px;width:40px" onchange="nuGetPage(this.value)" value="${currentForm.page_number + 1}" class="browsePage"/>`;	
-	const totalPagesLabel = ' / ' + (currentForm.pages === 0 ? 1 : currentForm.pages) + ' ';
-	const footerTopOffset = topOffset + rowHeight + 10;
-	const divFooter = nuCreateElementWithId('div', 'nuBrowseFooter', 'nuRECORD');
-
-	$(divFooter)
-		.addClass('nuBrowseFooter')
-		.html(last + pageLabel + currentPageInput + totalPagesLabel + next)
-		.css({
-			'text-align': 'center'
-			, width: leftOffset - 7
-			, top: footerTopOffset
-			, left: 7
-			, height: 25
-			, position: 'absolute'
-			, padding: '5px 0px'
-		});
+	nuBrowseCreateFooter(currentForm, topOffset, leftOffset, rowHeight);
 
 	nuHighlightSearch();
 	nuBrowseBorders();
 
-	const totalHeight = footerTopOffset + 130;
+	nuBrowseUpdateParentDocumentStyles(topOffset + rowHeight + 10);
+
+}
+
+function nuBrowseCalculateInitialTopOffset(rowHeight) {
+	return parseInt($('#nuBrowseTitle0').css('height'), 10) - rowHeight - 2;
+}
+
+function nuBrowseHandleNoDataScenario() {
+
+	const searchLengthZero = nuCurrentProperties().search.length === 0;
+	const noDataMessage = searchLengthZero ? 'No data to display' : 'No search results found';
+	const firstCellClass = searchLengthZero ? 'nuBrowseNoData' : 'nuBrowseNoResults';
+	$('#nucell_0_0').html(nuTranslate(noDataMessage)).addClass(firstCellClass);
+	window[`nuBrowseNo${firstCellClass === 'nuBrowseNoData' ? 'Data' : 'SearchResults'}`] = true;
+
+}
+
+function nuBrowseHandleCellCreation(rowIndex, colIndex, browseColumns, browseRows, topOffset, leftOffset, rowHeight, incrementalWidth) {
+
+	const columnWidth = Number(browseColumns[colIndex].width);
+	const id = `nucell_${rowIndex}_${colIndex}`;
+
+	const div = nuCreateElementWithId('div', id, 'nuRECORD');
+	const $div = nuSetObjectBounds(div, topOffset, leftOffset, columnWidth, rowHeight, true);
+	nuBrowseSetCellAttributes(div, rowIndex, colIndex, browseColumns[colIndex]);
+
+	if (columnWidth === 0) {
+		$div.hide();
+	} else {
+		div.classList.add('nuBrowseTable', 'nuCell');
+	}
+
+	if (rowIndex < browseRows.length) {
+		nuBrowseSetCellContentAndEvents($div, browseRows, rowIndex, colIndex, browseColumns[colIndex]);
+	}
+
+	if (rowIndex === 0 && colIndex === 0) {
+		incrementalWidth = nuTotalWidth(id) - columnWidth;
+	}
+
+	return leftOffset + (columnWidth === 0 ? 0 : columnWidth + incrementalWidth);
+
+}
+
+function nuBrowseSetCellAttributes(div, rowIndex, colIndex, column) {
+
+	div.setAttribute('data-nu-row', rowIndex);
+	div.setAttribute('data-nu-column', colIndex);
+	div.style.textAlign = nuAlign(column.align);
+	div.style.overflow = 'hidden';
+	div.style.padding = (column.width < 0 ? 0 : undefined) + 'px';
+	div.style.borderWidth = (column.width < 0 ? 0 : undefined) + 'px';
+	div.classList.add(`nuCell${(rowIndex / 2 === parseInt(rowIndex / 2, 10)) ? 'Even' : 'Odd'}`);
+
+}
+
+function nuBrowseSetCellContentAndEvents($div, browseRows, rowIndex, colIndex, currentColumn) {
+
+	const value = currentColumn.format === '' ? browseRows[rowIndex][colIndex + 1] : nuFORM.addFormatting(browseRows[rowIndex][colIndex + 1], currentColumn.format);
+	$div.html(value)
+		.attr('data-nu-primary-key', browseRows[rowIndex][0])
+		.on('click', (event) => nuInternalSelectBrowse(event, $div[0]))
+		.on('mouseenter', nuBrowseTableHoverIn)
+		.on('mouseleave', nuBrowseTableHoverOut);
+	
+}
+
+function nuBrowseCreateFooter(currentForm, topOffset, leftOffset, rowHeight) {
+
+	const footerTopOffset = topOffset + rowHeight + 10;
+	const divFooter = nuCreateElementWithId('div', 'nuBrowseFooter', 'nuRECORD');
+	const footerHtml = nuBrowseCreateFooterHtml(currentForm);
+
+	$(divFooter)
+		.addClass('nuBrowseFooter')
+		.html(footerHtml)
+		.css({
+			'text-align': 'center',
+			width: leftOffset - 7,
+			top: footerTopOffset,
+			left: 7,
+			height: 25,
+			position: 'absolute',
+			padding: '5px 0px'
+		});
+
+}
+
+function nuBrowseCreateFooterHtml(currentForm) {
+
+	const last = `<span id="nuLast" onclick="nuGetPage(${currentForm.page_number})" class="nuBrowsePage">&#9668;</span>`;
+	const next = `<span id="nuNext" onclick="nuGetPage(${currentForm.page_number + 2})" class="nuBrowsePage">►</span>`;
+	const pageLabel = '&nbsp;Page&nbsp;';
+	const currentPageInput = `<input id="browsePage" style="text-align:center;margin:3px 0px 0px 0px;width:40px" onchange="nuGetPage(this.value)" value="${currentForm.page_number + 1}" class="browsePage"/>`;
+	const totalPagesLabel = ' / ' + (currentForm.pages === 0 ? 1 : currentForm.pages) + ' ';
+
+	return last + pageLabel + currentPageInput + totalPagesLabel + next;
+
+}
+
+function nuBrowseUpdateParentDocumentStyles(totalHeight) {
+
 	const parentDocument = window.parent.document;
 	$('#nuDragDialog', parentDocument).css({
-		height: totalHeight + 30
-		, visibility: 'visible'
-		, overflow: 'hidden'
+		height: totalHeight + 30,
+		visibility: 'visible',
+		overflow: 'hidden'
 	});
 
 	$('#nuWindow', parentDocument).css({
@@ -4593,9 +4627,9 @@ function nuBrowseTable() {
 	});
 
 	$('body').css('height', totalHeight - 30);
-	$record.css({
-		height: 0
-		, width: 0
+	$('#nuRECORD').css({
+		height: 0,
+		width: 0
 	});
 
 }
@@ -4604,6 +4638,7 @@ function nuBrowseTitleMultiLine() {
 
 	$('#nuActionHolder').css({ 'height': '40px' });
 	$('.nuBrowseTitle').css('top', "-20px");
+
 }
 
 
@@ -4615,36 +4650,6 @@ function nuSetBrowseColumnWidth(column, width) {
 	}
 	cw.nuFORM.breadcrumbs[cw.nuFORM.breadcrumbs.length - 1].column_widths[column] = width;
 	cw.nuSetBrowseColumns(cw.nuFORM.breadcrumbs[cw.nuFORM.breadcrumbs.length - 1].column_widths);
-
-}
-
-function nuBrowseAdditionalNavButtons() {
-
-	if (nuFormType() !== 'browse') {
-		return;
-	}
-
-	const currentPage = Number($('#browsePage').val());
-	const lastPage = nuCurrentProperties().pages;
-
-	const disabledStyle = {
-		opacity: '0.3',
-		'pointer-events': 'none'
-	};
-
-	const firstBtn = '<span id="nuFirst" class="nuBrowsePage"><i class="fa fa-step-backward" style="font-size: 16px" onclick="nuGetPage(1)">&nbsp;&nbsp;&nbsp;&nbsp;</i></span>';
-	$(firstBtn).insertBefore('#nuLast');
-
-	const endBtn = `<span id="nuEnd" class="nuBrowsePage">&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-step-forward nuBrowsePage" style="font-size: 16px" onclick="nuGetPage(${lastPage})"></i></span>`;
-	$(endBtn).insertAfter('#nuNext');
-
-	if (currentPage === 1) {
-		$('#nuFirst, #nuLast').css(disabledStyle);
-	}
-
-	if (currentPage === lastPage) {
-		$('#nuNext, #nuEnd').css(disabledStyle);
-	}
 
 }
 
