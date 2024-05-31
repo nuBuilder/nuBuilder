@@ -5746,10 +5746,36 @@ function nuMessage(options, options2, options3, options4) {
 	header.append(titleElement).append(closeButton);
 	messageContainer.append(header);
 
+	const formatTitle = (titleElement, str) => {
+		const headerTag =  str.hasHTMLTag(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
+		if (headerTag) { 
+			titleElement.html(str); 
+			titleElement.find(headerTag).css('margin', '0px');
+		}	
+		return headerTag;
+	};
+
+	if (title) {
+		if(! formatTitle(titleElement, title)) {
+			formatTitle(titleElement, '<h3>' + title + '</h3>');
+		}
+	}
+
 	const messageBody = $('<div>', { class: 'nuMessageBody' });
-	messages.forEach(msg => {
-		messageBody.append($('<div>').html(msg)).append('<br>');
-	});
+	for (let i = 0; i < messages.length; i++) {
+
+		let hasTag = false;
+		if (i === 0 && !title) { 
+			hasTag = formatTitle(titleElement, messages[i]);
+			if (hasTag) {
+				title = messages[i];
+			}
+		} 
+		
+		if (!hasTag) {
+			messageBody.append($('<div>').html(messages[i])).append('<br>');
+		}
+	}
 
 	messageContainer.append(messageBody);
 	$('body', rootElement).append(messageContainer);

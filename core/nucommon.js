@@ -109,6 +109,23 @@ String.prototype.nuIsEmpty = function () {
 	return (this === null || this.length === 0);
 }
 
+String.prototype.hasHTMLTag = function(tag) {
+    const escapeTagName = (name) => name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+    let regex;
+    if (Array.isArray(tag)) {
+        const escapedTags = tag.map(escapeTagName);
+        const regexString = `(${escapedTags.join('|')})\\b[^>]*>`;
+        regex = new RegExp(regexString, 'i');
+    } else {
+        const escapedTagName = escapeTagName(tag);
+        regex = new RegExp(`(${escapedTagName})\\b[^>]*>`, 'i');
+    }
+    
+    const match = this.match(regex);
+    return match ? match[1] : false;
+};
+
 Date.prototype.nuWithoutTime = function () {
 	let d = new Date(this);
 	d.setHours(0, 0, 0, 0);
@@ -818,7 +835,6 @@ function nuBindCtrlEvents() {
 	}
 
 	const nuHtml = document.getElementById('nuhtml');
-
 	nuAddEventListenerOnce(nuHtml, 'keydown', function(e) {
 
 		if (e.isComposing || e.keyCode === 229) {
@@ -2772,16 +2788,15 @@ function nuConsoleErrorsToMessage(cancel = false) {
 			return; // ignore
 
 		if (msg.toLowerCase().indexOf('script error') > -1) {
-			nuMessage('<h1>JavaScript Error</h1>',  msgDevConsole);
+			nuMessage(nuTranslate('JavaScript Error'),  msgDevConsole);
 		} else { 
 			const message = [
-				'<h1>JavaScript Error</h1>',
 				msg,
 				'',
 				msgDevConsole
 			];
 
-			nuMessage(message);
+			nuMessage(nuTranslate('JavaScript Error'), message);
 		}
 
 		return false;

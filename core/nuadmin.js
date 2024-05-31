@@ -47,7 +47,7 @@ function nuShowFormInfo() {
 	const browseSQL = nuFormType() === "browse" && (showSQL) ? `<br><b>Browse SQL:</b><br><pre class="nuFormInfoBrowseSQL"><code id="nuFormInfoBrowseSQL">${currProps.browse_sql}</pre></code><br>${browseCopyButton}` : "<br>";
 	const table = nuSERVERRESPONSE.table !== "" && (showSQL) ? `<b>Table:</b> ${nuSERVERRESPONSE.table}` : "";
 	const formInfo = [
-		`<h2><u>${currProps.form_description}</u></h2>`, 
+		`<h3>${currProps.form_description}</h3>`, 
 		`<b>Form ID:</b> ${currProps.form_id}`, `<b>Form Code:</b> ${formCode}`,
 		table,
 		recordId,

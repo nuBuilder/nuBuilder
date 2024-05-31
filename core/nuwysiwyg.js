@@ -12,7 +12,7 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 	}
 
 	if (!tinymce) {
-		nuMessage(["<h2>TinyMCE is not included</h2>", "Set $nuConfigIncludeTinyMCE = true in nuconfig.php"]);
+		nuMessage("TinyMCE is not included", "Set $nuConfigIncludeTinyMCE = true in nuconfig.php");
 		return;
 	}
 
