@@ -3027,83 +3027,6 @@ function nuGetClipboardJson(clipRows) {
 
 }
 
-function nuSubformEnableMultiPaste(subformId, selector, undoButton, callback) {
-
-	$(selector).not(".nuReadonly").on('paste', function (e) {
-		var clipText = nuGetClipboardText(e);
-
-		if (clipText.indexOf('\t') >= 0 || clipText.indexOf('\n') >= 0) {
-
-			var clipRows = nuGetClipboardRows(clipText);
-			var jsonObj = nuGetClipboardJson(clipRows);
-
-			e.stopPropagation();
-			e.preventDefault();
-
-			if (confirm(nuTranslate("Paste Data? Existing data might get overwritten"))) {
-				$('[data-nu-form="' + subformId + '"]').removeAttr("data-prevalue");
-				const modifiedObjects = nuSubformPaste(e, jsonObj);
-
-				if (undoButton) {
-					nuShow(undoButton);
-				}
-
-				if (callback !== undefined) {
-					callback(modifiedObjects);
-				}
-
-				window.nuNEW = 0;
-
-			}
-		}
-
-	});
-
-}
-
-function nuSubformHeaderToSeparatedString(fields, delimiter, includeId) {
-
-	var start = includeId == true ? 0 : 1;
-	var h = '';
-
-	for (var i = start; i < fields.length - 1; i++) {
-		h += fields[i] + delimiter;
-	}
-	return h + '\n';
-}
-
-function nuSubformRowToSeparatedString(rows, delimiter, includeId) {
-
-	var processRow = function (row, includeId) {
-
-		var finalVal = '';
-
-		var start = includeId == true ? 0 : 1;
-		for (var j = start; j < row.length - 1; j++) {
-			var innerValue = row[j] === null ? '' : row[j].toString();
-			if (row[j] instanceof Date) {
-				innerValue = row[j].toLocaleString();
-			}
-			var result = innerValue.replace(/"/g, '""');
-			if (result.search(/("|,|\n)/g) >= 0)
-				result = '"' + result + '"';
-			if (j > start)
-				finalVal += delimiter;
-			finalVal += result;
-		}
-		return finalVal + '\n';
-	};
-
-	var output = "";
-
-	for (var i = 0; i < rows.length - 1; i++) {
-		output += processRow(rows[i], includeId);
-	}
-
-	return output;
-}
-
-
 function nuCopyToClipboard(s) {
 
 	navigator.clipboard.writeText(s).then(function () {
@@ -3114,38 +3037,65 @@ function nuCopyToClipboard(s) {
 
 }
 
-/**
- * Copy the data of a Subform to the Clipboard
- *
- * @param {string}	i				- Subform Object ID
- * @param {string}	delimiter			- Delimiter for the data. Default: \t (tabulator)
- * @param {bool}	[includeHeader]		- true to include the header (titles)
- * @param {bool}	[includeId]			- true to include the Id (Primary Key)
- *
- */
+function nuSubformHeaderToSeparatedString(fields, delimiter, includeId) {
 
-function nuSubformToClipboard(i, delimiter, includeHeader, includeId) {
+	const start = includeId ? 0 : 1;
+	let headerString = '';
+	for (let i = start; i < fields.length; i++) {
+		headerString += fields[i] + delimiter;
+	}
+	return headerString.slice(0, -1) + '\n'; // Remove the last delimiter and add a newline
 
-	var obj = nuSubformObject(i);
+}
 
-	var s = "";
+function nuSubformRowToSeparatedString(rows, delimiter, includeId) {
 
-	if (!delimiter) {
-		delimiter = '\t';
+	const processRow = function (row, includeId) {
+		let finalVal = '';
+		const start = includeId ? 0 : 1;
+		for (let j = start; j < row.length; j++) {
+			let innerValue = row[j] === null ? '' : row[j].toString();
+			if (row[j] instanceof Date) {
+				innerValue = row[j].toLocaleString();
+			}
+			let result = innerValue.replace(/"/g, '""');
+			if (result.search(/("|,|\n)/g) >= 0)
+				result = '"' + result + '"';
+			if (j > start)
+				finalVal += delimiter;
+			finalVal += result;
+		}
+		return finalVal + '\n';
+	};
+
+	let output = "";
+	for (let i = 0; i < rows.length; i++) { // Include the last row
+		output += processRow(rows[i], includeId);
 	}
 
-	if (!includeId) {
-		includeId = false;
-	}
+	return output;
 
-	if (includeHeader === true) {
+}
+
+function nuSubformToClipboard(id, delimiter, includeHeader, includeId) {
+
+	const obj = nuSubformObject(id);
+
+	let s = "";
+
+	delimiter = delimiter || '\t';
+	includeId = !!includeId; // Ensure boolean
+
+	if (includeHeader) {
 		s = nuSubformHeaderToSeparatedString(obj.fields, delimiter, includeId);
 	}
 
 	s += nuSubformRowToSeparatedString(obj.rows, delimiter, includeId);
 
 	nuCopyToClipboard(s);
+
 }
+
 
 function nuRecordHolderObject(t) {
 
