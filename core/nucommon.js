@@ -892,7 +892,9 @@ function nuBindCtrlEvents() {
 					'a': { action: () => nuAddAction(), condition: true },
 					'p': { action: () => nuPrintAction(), condition: globalAccess },
 					'arrowright': { action: () => $('#nuNext').trigger('click'), condition: true },
-					'arrowleft': { action: () => $('#nuLast').trigger('click'), condition: true }					
+					'arrowleft': { action: () => $('#nuLast').trigger('click'), condition: true },
+					'end': { action: () => $('#nuEnd i').trigger('click'), condition: true },
+					'home': { action: () => $('#nuFirst i').trigger('click'), condition: true }
 				}),
 				// Actions specific to 'edit' form type
 				...(isEditOnly && {
@@ -927,6 +929,7 @@ function nuBindCtrlEvents() {
 			// Execute action based on key press if condition is met
 			const key = e.key.toLowerCase();
 			const action = actions[key];
+
 			if (action?.condition) {
 				e.preventDefault();
 				action.action();
