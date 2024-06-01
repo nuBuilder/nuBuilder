@@ -5684,7 +5684,7 @@ function nuMessage(options, options2, options3, options4) {
 	const rootElement = window.top.document;
 	nuMessageRemove(true);
 
-	let argCount = arguments.length;
+	let argCount = nuCountDefinedArguments(...arguments);
 	let title = '';
 	let messages = [];
 	let timeout = null;

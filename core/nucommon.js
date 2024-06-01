@@ -2849,3 +2849,8 @@ function nuSetWindowProperty(key, property, value) {
 	}
 
 }
+
+function nuCountDefinedArguments(...args) {
+	return args.filter(arg => arg !== undefined).length;
+}
+  
