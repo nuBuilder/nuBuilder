@@ -39,25 +39,37 @@ function nuShowFormInfo() {
 	const currProps = nuCurrentProperties();
 	const formCode = currProps.form_code;
 	const isDevMode = nuDevMode();
+	const formType = nuFormType();
+	const isEditMode = formType === "edit";
+	const isBrowseMode = formType === "browse";
+	const showSQL = !formCode.startsWith("nu") || isDevMode;
+
 	const permalinkButton = '<br><button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCopyPermalink()">Copy Permalink</button>';
 	const currPropsButton = '<button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCurrentProperties()">Current Properties</button>';
-	const recordId = nuFormType() === "edit" && currProps.form_type !== "launch" ? `<b>Record ID:</b> ${currProps.record_id}<br>` : "";
+	const recordId = isEditMode && currProps.form_type !== "launch" ? `<b>Record ID:</b> ${currProps.record_id}<br>` : "";
 	const browseCopyButton = '<button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCopyBrowseSQL()">Copy SQL</button><br>';
-	const showSQL = !formCode.startsWith("nu") || isDevMode;
-	const browseSQL = nuFormType() === "browse" && (showSQL) ? `<br><b>Browse SQL:</b><br><pre class="nuFormInfoBrowseSQL"><code id="nuFormInfoBrowseSQL">${currProps.browse_sql}</pre></code><br>${browseCopyButton}` : "<br>";
-	const table = nuSERVERRESPONSE.table !== "" && (showSQL) ? `<b>Table:</b> ${nuSERVERRESPONSE.table}` : "";
+	const browseSQL = isBrowseMode && showSQL ? `<br><b>Browse SQL:</b><br><pre class="nuFormInfoBrowseSQL"><code id="nuFormInfoBrowseSQL">${currProps.browse_sql}</pre></code><br>${browseCopyButton}` : "<br>";
+	const table = nuSERVERRESPONSE.table !== "" && showSQL ? `<b>Table:</b> ${nuSERVERRESPONSE.table}` : "";
+
 	const formInfo = [
-		`<h3>${currProps.form_description}</h3>`, 
-		`<b>Form ID:</b> ${currProps.form_id}`, `<b>Form Code:</b> ${formCode}`,
+		`<h3>${currProps.form_description}</h3>`,
+		`<b>Form ID:</b> ${currProps.form_id}`,
+		`<b>Form Code:</b> ${formCode}`,
 		table,
 		recordId,
 		currPropsButton,
 		permalinkButton,
 		browseSQL,
 	];
-	nuMessage(formInfo);
+
+	const msg = nuMessage(formInfo);
+
+	if (!isBrowseMode) {
+		msg.css('width', '350px');
+	}
 
 }
+
 
 function nuDevMode() {
 	return nuSERVERRESPONSE.dev_mode === '1';
