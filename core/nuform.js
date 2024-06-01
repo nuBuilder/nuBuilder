@@ -3037,6 +3037,40 @@ function nuCopyToClipboard(s) {
 
 }
 
+function nuSubformEnableMultiPaste(subformId, selector, undoButton, callback) {
+
+	$(selector).not(".nuReadonly").on('paste', function (e) {
+		var clipText = nuGetClipboardText(e);
+
+		if (clipText.indexOf('\t') >= 0 || clipText.indexOf('\n') >= 0) {
+
+			var clipRows = nuGetClipboardRows(clipText);
+			var jsonObj = nuGetClipboardJson(clipRows);
+
+			e.stopPropagation();
+			e.preventDefault();
+
+			if (confirm(nuTranslate("Paste Data? Existing data might get overwritten"))) {
+				$('[data-nu-form="' + subformId + '"]').removeAttr("data-prevalue");
+				const modifiedObjects = nuSubformPaste(e, jsonObj);
+
+				if (undoButton) {
+					nuShow(undoButton);
+				}
+
+				if (callback !== undefined) {
+					callback(modifiedObjects);
+				}
+
+				window.nuNEW = 0;
+
+			}
+		}
+
+	});
+
+}
+
 function nuSubformHeaderToSeparatedString(fields, delimiter, includeId) {
 
 	const start = includeId ? 0 : 1;

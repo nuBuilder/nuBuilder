@@ -1810,19 +1810,19 @@ function nuPrettyPrintMessage(e, obj) {
 			maxDepth: 1,
 		})
 
-		let btnClose = '<button class="nuClose" onclick=" nuClosePropertiesMsgDiv() " style="height:25px;float:right;">&#10006;</button><br>';
-
+	const title = nuTranslate('Current Properties') + ' : ' + nuGetProperty('form_code');
 	if (e !== undefined && (nuIsMacintosh() ? e.metaKey : e.ctrlKey)) {
 		let w = window.open();
-		w.document.title = nuTranslate('Current Properties') + ' : ' + nuGetProperty('form_code')
+		w.document.title = title;
 			$(w.document.body).html(ppTable);
 	} else {
-		let msg = nuMessage([btnClose, ppTable]);
+		let msg = nuMessage(title, ppTable);
 		msg.css({
 			'width': 700,
 			'text-align': 'left',
 			'background-color': 'white'
 		}).attr("id", "nuPropertiesMsgDiv");
+
 		nuDragElement(document.getElementById('nuPropertiesMsgDiv'), 40);
 	}
 
