@@ -891,6 +891,8 @@ function nuBindCtrlEvents() {
 					's': { action: () => nuSearchAction(), condition: true },
 					'a': { action: () => nuAddAction(), condition: true },
 					'p': { action: () => nuPrintAction(), condition: globalAccess },
+					'arrowright': { action: () => $('#nuNext').trigger('click'), condition: true },
+					'arrowleft': { action: () => $('#nuLast').trigger('click'), condition: true }					
 				}),
 				// Actions specific to 'edit' form type
 				...(isEditOnly && {
@@ -918,7 +920,7 @@ function nuBindCtrlEvents() {
 					'u': { action: () => nuForm('nusetup', '1', '', '', 2), condition: globalAccess },
 					'd': { action: () => nuPopup("nudebug", ""), condition: globalAccess },
 					'x': { action: () => nuPrettyPrintMessage(e, nuCurrentProperties()), condition: globalAccess },
-					'l': { action: () => nuAskLogout(), condition: true },
+					'l': { action: () => nuAskLogout(), condition: true }
 				}),
 			};
 
