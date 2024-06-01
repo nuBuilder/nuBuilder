@@ -156,6 +156,8 @@
 			$f->forms[0]->callback					= nuSetGlobalPropertiesJS()."\n".nuObjKey($_POST,'nuCallback');
 			$f->forms[0]->run_php					= nuObjKey($_POST,'nuRunPHPHidden');
 			$f->forms[0]->errors					= nuObjKey($_POST,'nuErrors');
+			$f->forms[0]->errors_validation_title	= nuObjKey($_POST,'nuErrorValidationTitle');
+
 			$f->forms[0]->log_again					= nuObjKey($_POST,'nuLogAgain');
 			$f->forms[0]->global_access				= $globalAccess ? '1' : '0';
 			$f->forms[0]->data_mode					= $globalAccess ? null : nuGetFormPermission($formId,'slf_data_mode');

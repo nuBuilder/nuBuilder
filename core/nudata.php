@@ -342,6 +342,7 @@ function nuUpdateDatabase() {
 	$nuHash = $_POST['nuHash'];
 	$formId = $nuHash['form_id'];
 	$deleteAction = $nuHash['delete_action'];
+	$_POST['nuErrorValidation'] = '';
 
 	if (nuDemo(false)) {
 		if ($deleteAction || (!$deleteAction && strpos($_SESSION['nubuilder_session_data']['DEMO_SAVING_ALLOWED_IDS'], $formId) === false)) {
@@ -360,7 +361,10 @@ function nuUpdateDatabase() {
 		return;
 	}
 
-	if (!nuValidateForms()) return;
+	if (!nuValidateForms()) {
+		nuSetValidationErrorTitle('Validation Error');
+		return;
+	}
 
 	$nuMainTable = $nudata[0]->table;
 	$nuDataFormId = $nudata[0]->object_id;
@@ -478,6 +482,10 @@ function nuUpdateDatabase() {
 
 	return $_POST['nuHash']['RECORD_ID'];
 
+}
+
+function nuSetValidationErrorTitle($title) {
+	$_POST['nuErrorValidationTitle'] = nuTranslate($title);
 }
 
 function nuUpdateDatabaseAddNuLog(&$updateData, $userId, $table) {

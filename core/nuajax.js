@@ -726,6 +726,19 @@ function nuUpdateData(action, instruction, close) {
 
 	const successCallback = function (data, textStatus, jqXHR) {
 
+		const addErrorTitle = (errors, errorValidation) => {
+			if (Array.isArray(errors) && errors.length > 0) {
+				errors.unshift('<h3>' + errorValidation + '</h3');
+			}
+			return errors;
+		};
+
+		if (data.errors_validation_title) {
+			data.errors = addErrorTitle(data.errors, data.errors_validation_title);
+		} else if (data.errors) {
+			data.errors = addErrorTitle(data.errors, nuTranslate('Error'));
+		}
+
 		if (nuDisplayError(data)) {
 
 			$('.nuActionButton').show();
