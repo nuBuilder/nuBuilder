@@ -5734,14 +5734,40 @@ function nuMessage(options, options2, options3, options4) {
 	const rootElement = window.top.document;
 	nuMessageRemove(true);
 
+	let argCount = arguments.length;
 	let title = '';
 	let messages = [];
 	let timeout = null;
 	let callback = null;
 
-	if (arguments.length === 1) {
+	const extractMessageParts = (msg) => {
+		const headerPattern = /<h[1-5]>(.*?)<\/h[1-5]>/i;
+		const match = msg.match(headerPattern);
+	
+		if (match) {
+			const title = match[1];
+			const message = msg.replace(headerPattern, '');
+			return {
+				title: title,
+				message: message
+			};
+		} 
+		
+		return false;
+	}
+
+	if (argCount === 1 && ! Array.isArray(options)) {
+		const messageParts = extractMessageParts(options);
+		if (messageParts) {
+			options = messageParts.title; 
+			options2 = messageParts.message; 
+			argCount = 2;
+		}
+	}
+
+	if (argCount === 1) {
 		messages = Array.isArray(options) ? options : [options];
-	} else if (arguments.length >= 2) {
+	} else if (argCount >= 2) {
 		if (Number.isInteger(options2)) {
 			timeout = options2;
 			messages = Array.isArray(options) ? options : [options];
