@@ -779,7 +779,7 @@
 	background-color:#fafafa;
 	background-image:none;
 	color:var(--nu-label);
-	border-color:rgb(159,165,169);
+	border-color:#d3d3d3;
 	text-shadow:none;
 	border-radius:3px 
 }
