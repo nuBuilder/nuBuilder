@@ -5758,7 +5758,7 @@ function nuMessage(options, options2, options3, options4) {
 	messageContainer.append(header);
 
 	const formatTitle = (titleElement, str) => {
-		const headerTag =  str.hasHTMLTag(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
+		const headerTag =  str.nuHasHTMLTag(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
 		if (headerTag) { 
 			titleElement.html(str); 
 			titleElement.find(headerTag).css('margin', '0px');

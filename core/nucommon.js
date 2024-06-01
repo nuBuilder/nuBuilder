@@ -109,7 +109,7 @@ String.prototype.nuIsEmpty = function () {
 	return (this === null || this.length === 0);
 }
 
-String.prototype.hasHTMLTag = function(tag) {
+String.prototype.nuHasHTMLTag = function(tag) {
     const escapeTagName = (name) => name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
     let regex;
