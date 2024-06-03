@@ -884,8 +884,8 @@ function nuReturnNewRecord($i = - 1) {
 	$_POST['nuHash']['RECORD_ID'] = $i;
 }
 
-function nuDisplayError($m) {
-	$_POST['nuErrors'][] = $m;
+function nuDisplayError($message) {
+	$_POST['nuErrors'][] = $message;
 }
 
 function nuDisplayMessage($m) {
