@@ -5789,7 +5789,9 @@ function nuMessage(options, options2, options3, options4) {
 		return false;
 	}
 
-	if (argCount === 1 && ! Array.isArray(options)) {
+	const isArrayWithLengthOne = Array.isArray(options) && options.length == 1;
+	if (argCount === 1 && (typeof options == "string" || isArrayWithLengthOne)) {
+		if (isArrayWithLengthOne) options = options[0];
 		const messageParts = extractMessageParts(options);
 		if (messageParts) {
 			options = messageParts.title; 
