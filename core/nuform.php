@@ -1114,21 +1114,25 @@ function nuBuildTabList($formId){
 
 }
 
-function nuRefineTabList($t){
+function nuRefineTabList($tabs){
 
-	$a			= [];
+	$refinedTabList = [];
 
-	$count = count($t);
-	for($i = 0 ; $i < $count ; $i++){
+	$tabCount = count($tabs);
+	for($index = 0; $index < $tabCount; $index++){
 
-		$a[]	= ['title' => $t[$i]->syt_title, 'id' => $t[$i]->zzzzsys_tab_id, 'help' => $t[$i]->syt_help, 'access' => $t[$i]->syt_access ?? null];
+		$refinedTabList[] = [
+			'title' => $tabs[$index]->syt_title,
+			'id' => $tabs[$index]->zzzzsys_tab_id,
+			'help' => $tabs[$index]->syt_help,
+			'access' => $tabs[$index]->syt_access ?? null
+		];
 
 	}
 
-	return $a;
+	return $refinedTabList;
 
 }
-
 
 function nuGetSQLValue($s){
 
