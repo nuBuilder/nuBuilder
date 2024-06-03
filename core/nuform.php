@@ -1134,18 +1134,18 @@ function nuRefineTabList($tabs){
 
 }
 
-function nuGetSQLValue($s){
+function nuGetSQLValue($sql){
 
-	$s		= nuReplaceHashVariables(nuTrim($s));
+	$trimmedSql = nuReplaceHashVariables(nuTrim($sql));
 
-	if(nuTrim($s) == ''){
+	if(nuTrim($trimmedSql) == ''){
 		return '';
-	}else{
+	} else {
 
-		$t	= nuRunQuery($s);
-		$r	= db_fetch_row($t);
+		$queryResult = nuRunQuery($trimmedSql);
+		$row = db_fetch_row($queryResult);
 
-		return $r[0];
+		return $row[0];
 
 	}
 
