@@ -113,7 +113,7 @@ function nuForm(f, r, filter, search, n, like) {
 			parent.$('#nuModal').remove();
 
 			if (!fm) {
-				nuMessage(`<h3>${nuTranslate('Error loading the form')}</h3>`);
+			nuMessage(`${nuTranslate('Error')}`, `${nuTranslate('Error loading the form')}`);
 			} else
 			if (parent.$('#nuDragDialog').css('visibility') == 'hidden') {
 				parent.nuDisplayError(fm);

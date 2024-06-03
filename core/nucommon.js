@@ -2533,7 +2533,7 @@ function nuRunBackup() {
 	if (!nuGlobalAccess()) return;
 
 	if (confirm(nuTranslate("Perform the Backup now?"))) {
-		nuMessage(nuTranslate("Backup is running") + "...");
+		nuMessage(`${nuTranslate('Information')}`, `${nuTranslate('Backup is running')}` + "...");
 		nuRunPHPHidden("NUBACKUP");
 	}
 

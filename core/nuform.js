@@ -5311,7 +5311,7 @@ function nuDeleteAction() {
 	const isNuForm =  formCode === 'nuform';
 
 	if (isNuForm && isNuRecord) {
-		nuMessage(nuTranslate("nuBuilder's core forms cannot be deleted."));
+		nuMessage(`${nuTranslate('Error')}`, `${nuTranslate("nuBuilder's core forms cannot be deleted.")}`);
 		return ;
 	}	
 
@@ -5950,7 +5950,7 @@ function nuNoDuplicates() {
 			if (sfObj.deleted[rowIndex] == 0) {
 				const rowValue = sfObj.rows[rowIndex][fieldIndex];
 				if (uniqueValues.includes(rowValue)) {
-					nuMessage([`Duplicate <b>${tabHolderHtml}</b> on row <b>${rowIndex}</b>`]);
+					nuMessage(`${nuTranslate('Validation Error')}`, `Duplicate <b>${tabHolderHtml}</b> on row <b>${rowIndex}</b>`);
 					window.nuDuplicate = false;
 					return;
 				}

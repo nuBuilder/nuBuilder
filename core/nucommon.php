@@ -458,14 +458,14 @@ function nuRunPHP($nuCode, $hidden = false) {
 				}
 			} else {
 				$_POST['nuRunPHPHiddenResult'] = "Access denied";
-				nuDisplayError(nuTranslate("Access To Procedure Denied...") . " ($nuCode)");
+				nuDisplayError('<h2>'.nuTranslate("Error").'</h2>'. nuTranslate("Access To Procedure Denied...") . " ($nuCode)");
 			}
 
 		} else {
 
 			if (!$exists && !nuStringStartsWith('nu', $nuCode)) {
 				$_POST['nuRunPHPHiddenResult'] = "Procedure does not exist";
-				nuDisplayError(nuTranslate("The Procedure does not exist...") . " ($nuCode)");
+				nuDisplayError('<h2>'.nuTranslate("Error").'</h2>'. nuTranslate("The Procedure does not exist...") . " ($nuCode)");
 			}
 
 		}
