@@ -8,6 +8,7 @@ window.nuLoadEditGlobal = null;
 window.nuOnLookupPopulatedGlobal = null;
 window.nuOnTabSelectedGlobal = null;
 window.nuOnPopupOpenedGlobal = null;
+window.nuOnOptionsListLoadedGlobal = null;
 window.nuOnDisableGlobal = null;
 window.top.document.nuHideMessage = true;
 window.nuDragID = 1000;

@@ -3859,6 +3859,10 @@ function nuGetOptionsList(formId, subformId, globalAccess, type) {
 	$('[data-nu-option-title]').css('padding', 3);
 	nuDragElement($('#nuOptionsListBox')[0], 30);
 
+	if (window.nuOnOptionsListLoadedGlobal) {
+		nuOnOptionsListLoadedGlobal();
+	}
+
 }
 
 function nuBuildOptionsList(l, p, type) {												//-- loop through adding options to menu
