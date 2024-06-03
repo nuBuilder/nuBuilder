@@ -1056,7 +1056,9 @@ function nuGetSubformRecords($R, $A){
 
 	$f = nuGetEditForm($R->sob_subform_zzzzsys_form_id, '');
 	$w = $f->where == '' ? '' : ' AND (' . substr($f->where, 6) . ')';
-	$s = "SELECT `$f->primary_key` $f->from WHERE (`$R->sob_subform_foreign_key` = '$R->subform_fk') $w $f->order";
+	$s = "SELECT `$f->primary_key` $f->from WHERE (IFNULL(`$R->sob_subform_foreign_key`,'-1') = '$R->subform_fk') $w $f->order";
+
+	nuDebug($s);
 	$I = $_POST['nuHash']['RECORD_ID'];
 
 
