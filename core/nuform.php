@@ -1052,42 +1052,41 @@ function nuRemoveNonCharacters($s){
 
 }
 
-function nuGetSubformRecords($R, $A){
+function nuGetSubformRecords($record) {
 
-	$f = nuGetEditForm($R->sob_subform_zzzzsys_form_id, '');
-	$w = $f->where == '' ? '' : ' AND (' . substr($f->where, 6) . ')';
-	$s = "SELECT `$f->primary_key` $f->from WHERE (IFNULL(`$R->sob_subform_foreign_key`,'-1') = '$R->subform_fk') $w $f->order";
+	$formId = nuGetEditForm($record->sob_subform_zzzzsys_form_id, '');
+	$whereClause = $formId->where == '' ? '' : ' AND (' . substr($formId->where, 6) . ')';
+	$selectQuery = "SELECT `$formId->primary_key` $formId->from WHERE (IFNULL(`$record->sob_subform_foreign_key`,'-1') = '$record->subform_fk') $whereClause $formId->order";
 
-	nuDebug($s);
-	$I = $_POST['nuHash']['RECORD_ID'];
+	$originalRecordId = $_POST['nuHash']['RECORD_ID'];
 
+	$queryResult = nuRunQuery($selectQuery);
+	$subformRecords = [];
 
-	$t = nuRunQuery($s);
-	$a = [];
+	$tabs = nuBuildTabList($record->sob_subform_zzzzsys_form_id);
 
-	$tabs			= nuBuildTabList($R->sob_subform_zzzzsys_form_id);
+	while($row = db_fetch_row($queryResult)) {
 
-	while($r = db_fetch_row($t)){
-
-		$_POST['nuHash']['RECORD_ID']			= $r[0];
-		$o										= nuGetFormObject($R->sob_subform_zzzzsys_form_id, $r[0], count($a), $tabs);
-		$o->foreign_key							= $R->subform_fk;
-		$o->foreign_key_name					= $R->sob_subform_foreign_key;
-		$a[]									= $o;
+		$_POST['nuHash']['RECORD_ID'] = $row[0];
+		$formObject = nuGetFormObject($record->sob_subform_zzzzsys_form_id, $row[0], count($subformRecords), $tabs);
+		$formObject->foreign_key = $record->subform_fk;
+		$formObject->foreign_key_name = $record->sob_subform_foreign_key;
+		$subformRecords[] = $formObject;
 
 	}
 
-	$_POST['nuHash']['RECORD_ID']				= -1;
-	$o											= nuGetFormObject($R->sob_subform_zzzzsys_form_id, -1, count($a), $tabs);
-	$o->foreign_key								= $R->subform_fk;
-	$o->foreign_key_name						= $R->sob_subform_foreign_key;
-	$a[]										= $o;
+	$_POST['nuHash']['RECORD_ID'] = -1;
+	$newFormObject = nuGetFormObject($record->sob_subform_zzzzsys_form_id, -1, count($subformRecords), $tabs);
+	$newFormObject->foreign_key = $record->subform_fk;
+	$newFormObject->foreign_key_name = $record->sob_subform_foreign_key;
+	$subformRecords[] = $newFormObject;
 
-	$_POST['nuHash']['RECORD_ID']				= $I;
+	$_POST['nuHash']['RECORD_ID'] = $originalRecordId;
 
-	return $a;
+	return $subformRecords;
 
 }
+
 
 function nuBuildTabList($i){
 
