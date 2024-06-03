@@ -746,6 +746,10 @@ function nuUpdateData(action, instruction, close) {
 
 		} else {
 
+			if (data.messages) {
+				window.messages = data.messages;
+			}
+
 			if (data.after_event) {
 				nuMESSAGES = data.errors;
 			}

@@ -131,6 +131,8 @@ function nuBuildForm(formObj) {
 	nuAddHome();
 
 	nuShowLastUpdatedMessage();
+	
+	nuShowMessages();
 
 	if (window.nuOnEditorLoad) {
 		nuOnEditorLoad();
@@ -5456,6 +5458,15 @@ function nuShowLastUpdatedMessage() {
 	if (window.last_action) {
 		nuUpdateMessage(window.last_action);
 		window.last_action = "";
+	}
+
+}
+
+function nuShowMessages() {
+
+	if (window.messages?.length) {
+		nuMessage(window.messages);
+		window.messages = "";
 	}
 
 }

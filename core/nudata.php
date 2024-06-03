@@ -888,6 +888,10 @@ function nuDisplayError($m) {
 	$_POST['nuErrors'][] = $m;
 }
 
+function nuDisplayMessage($m) {
+	$_POST['nuMessages'][] = $m;
+}
+
 function nuHasErrors() {
 	$nuErrors = nuObjKey($_POST,'nuErrors', []);
 	return count($nuErrors) > 0;
