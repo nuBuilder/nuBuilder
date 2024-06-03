@@ -563,39 +563,6 @@ function nuSubmit(e) {
 
 }
 
-function nuBuildLookup(t, s, like) {
-
-	if ($(t).prop('disabled')) { return; }
-
-	nuCursor('progress');
-
-	let obj = $('#' + t.id);
-	var f = obj.attr('data-nu-form-id');
-	var tar = obj.attr('data-nu-target');
-	var p = obj.attr('data-nu-prefix');
-	window.nuSubformRow = Number(p.substr(p.length - 3));
-
-	if (arguments.length < 3) {
-		like = '';
-	}
-
-	window.nuOPENER.push(new nuOpener('F', f, ''));
-
-	var open = window.nuOPENER[window.nuOPENER.length - 1];
-
-	if (parent.window == window) {
-		let left = nuIsMobile() ? 0 : 50;
-		window.nuDialog.createDialog(left, 25, 50, 50, '');
-	} else {
-		window.nuDialog.createDialog(0, 30, 50, 50, '');
-	}
-
-	$('#nuDragDialog')
-		.css('visibility', 'hidden')
-		.append('<iframe style="border-style:none;right:5px;top:35px;width:400px;height:400px;position:absolute" id="nuWindow" src="index.php?&opener=' + open.id + '&target=' + tar + '&search=' + s + '&like=' + like + '&browsefunction=lookup&iframe=1"></iframe>');
-
-}
-
 function nuCanArrangeObjects() {
 
 	const hasObjects = nuSERVERRESPONSE.objects && nuSERVERRESPONSE.objects.length > 0;
@@ -616,7 +583,7 @@ function nuPopup(formId, recordId, filter) {
 
 	window.nuOPENER.push(new nuOpener('F', formId, recordId, filter));
 
-	var openerId = window.nuOPENER[window.nuOPENER.length - 1].id;
+	const openerId = window.nuOPENER[window.nuOPENER.length - 1].id;
 
 	if (parent.window == window) {
 		let dialogLeft = nuIsMobile() ? 0 : 50;

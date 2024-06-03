@@ -3283,7 +3283,6 @@ function nuLabel(w, i, p, prop) {
 
 }
 
-
 function nuPopulateLookup3(v, p) {
 
 	for (var i = 0; i < v.length; i++) {
@@ -4884,6 +4883,52 @@ function nuGetPage(p) {
 
 }
 
+function nuBuildLookup(id, search, like) {
+
+	if ($(id).prop('disabled')) { return; }
+
+	nuCursor('progress');
+
+	const obj = $('#' + id.id);
+	const f = obj.attr('data-nu-form-id');
+	const target = obj.attr('data-nu-target');
+	const prefix = obj.attr('data-nu-prefix');
+	window.nuSubformRow = Number(prefix.substr(prefix.length - 3));
+
+	if (arguments.length < 3) {
+		like = '';
+	}
+
+	window.nuOPENER.push(new nuOpener('F', f, ''));
+
+	if (parent.window === window) {
+		let left = nuIsMobile() ? 0 : 50;
+		window.nuDialog.createDialog(left, 25, 50, 50, '');
+	} else {
+		window.nuDialog.createDialog(0, 30, 50, 50, '');
+	}
+
+	const opener = window.nuOPENER[window.nuOPENER.length - 1];
+	const dialog = $('#nuDragDialog');
+	dialog.css('visibility', 'hidden');
+
+	const iframe = $('<iframe>', {
+		id: 'nuWindow',
+		src: `index.php?opener=${opener.id}&target=${target}&search=${search}&like=${like}&browsefunction=lookup&iframe=1`,
+		css: {
+			borderStyle: 'none',
+			right: '5px',
+			top: '30px',
+			width: '400px',
+			height: '400px',
+			position: 'absolute'
+		}
+	});
+
+	dialog.append(iframe);
+
+}
+
 function nuPopulateLookup(fm, target, setFocus) {
 
 	var p = String($('#' + target).attr('data-nu-prefix'));
@@ -6387,6 +6432,7 @@ function nuGetIframeValue(f, o, method) {
 
 	const obj = $('#' + f).contents().find('#' + o)
 	return (!method || method == 'val') ? obj.val() : obj.html();
+
 }
 
 function nuSetIframeValue(f, o, v, method) {
