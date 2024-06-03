@@ -1151,42 +1151,31 @@ function nuGetSQLValue($sql){
 
 }
 
-function nuBrowseColumns($f){
+function nuBrowseColumns($form) {
 
-	if($f->record_id != ''){return [];}
-
-	nuBeforeBrowse($f->id);
-
-	$s				= "SELECT * FROM zzzzsys_browse WHERE sbr_zzzzsys_form_id = ? ORDER BY sbr_order";
-	$t				= nuRunQuery($s, [$f->id]);
-	$a				= [];
-
-	while($r = db_fetch_object($t)){
-
-		$r->title	= $r->sbr_title;
-		$r->display	= $r->sbr_display;
-		$r->align	= $r->sbr_align;
-		$r->width	= $r->sbr_width;
-		$r->order	= $r->sbr_order;
-		$r->format	= $r->sbr_format;
-		$r->id		= $r->zzzzsys_browse_id;
-
-		unset($r->zzzzsys_browse_id);
-		unset($r->sbr_zzzzsys_form_id);
-		unset($r->sbr_title);
-		unset($r->sbr_display);
-		unset($r->sbr_align);
-		unset($r->sbr_format);
-		unset($r->sbr_sort);
-		unset($r->sbr_order);
-		unset($r->sbr_width);
-
-		$a[]		= $r;
-
+	if ($form->record_id != '') {
+		return [];
 	}
 
-	return $a;
+	nuBeforeBrowse($form->id);
 
+	$query = "SELECT * FROM zzzzsys_browse WHERE sbr_zzzzsys_form_id = ? ORDER BY sbr_order";
+	$queryResult = nuRunQuery($query, [$form->id]);
+	$columns = [];
+
+	while ($row = db_fetch_object($queryResult)) {
+		$columns[] = (object)[
+			'title' => $row->sbr_title,
+			'display' => $row->sbr_display,
+			'align' => $row->sbr_align,
+			'width' => $row->sbr_width,
+			'order' => $row->sbr_order,
+			'format' => $row->sbr_format,
+			'id' => $row->zzzzsys_browse_id
+		];
+	}
+
+	return $columns;
 }
 
 function nuBrowseRows($f){
