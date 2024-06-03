@@ -5213,7 +5213,8 @@ function nuChangeFile(e) {
 			if (nuOnFileLoad(e, id, json) === false) { return; }
 		} else {
 			if (a.size > 300000) {
-				nuMessage([nuTranslate('File is too large, cannot be saved. Must be under 300Kb')]);
+				nuMessage(nuTranslate('Error'), [nuTranslate('File is too large, cannot be saved. Must be under 300Kb')]);
+				$('#' + id).val('');
 				return;
 			}
 		}
