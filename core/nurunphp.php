@@ -12,3 +12,7 @@ $GLOBALS['TABLE_ID']	= $TABLE_ID;
 $_POST['nuHash']		= $hashData;
 
 nuEval($JSON->parentID);
+
+if (nuHasErrors()) {
+	echo implode("<br>",$_POST['nuErrors']);
+}
