@@ -1242,7 +1242,6 @@ function nuHide(i) {
 
 }
 
-
 function nuRemove(i) {
 
 	const arr = Array.isArray(i) ? i : [i];
@@ -1259,7 +1258,13 @@ function nuRemove(i) {
 }
 
 function nuIsVisible(id) {
-	return $('#' + id).is(':visible');
+
+	const $id = typeof id === 'string' ? $('#' + id) : id;
+	const display = $id.css('display');
+	const visibility = $id.css('visibility');
+	const isHidden = $id.is(':hidden');
+	return display !== 'none' && visibility !== 'hidden' && !isHidden;
+
 }
 
 function nuIsHidden(id) {
