@@ -327,7 +327,12 @@ function nuResizeDrag(event) {
 }
 
 function nuAddDragSelected(t) {
-	t.addClass('nuDragSelected');
+
+	if (nuIsVisible(t)) {
+		t.addClass('nuDragSelected');
+	}  else {
+	}
+
 }
 
 function nuGetNuDragDialogIframes(contents = false) {
