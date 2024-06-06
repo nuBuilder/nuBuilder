@@ -7272,17 +7272,22 @@ function nuCalendarWeekNumbers() {
 }
 
 function nuConvertToVanillaJSCalendarFormat(str) {
-
+	
 	const formatMapping = {
 		'D|': '',
-		'ddd': 'DD',
-		'mmm': 'MM'
+		'mmmm': 'MM',
+		'dddd': 'DD',
+		'ddd': 'D',
+		'mmm': 'M'
 	};
 
-	let newStr = str.replace(/D\||ddd|mmm/g, match => formatMapping[match]);
+	let newStr = str;
+	for (const [key, value] of Object.entries(formatMapping)) {
+		newStr = newStr.split(key).join(value);
+	}
 
 	return newStr;
-
+	
 }
 
 function nuPopupCalendar(pThis, d) {
