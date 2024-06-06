@@ -1260,6 +1260,8 @@ function nuRemove(i) {
 function nuIsVisible(id) {
 
 	const $id = typeof id === 'string' ? $('#' + id) : id;
+	if ($id.length === 0) return null;
+
 	const display = $id.css('display');
 	const visibility = $id.css('visibility');
 	const isHidden = $id.is(':hidden');
