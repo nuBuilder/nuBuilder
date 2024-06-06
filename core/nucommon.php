@@ -5,6 +5,7 @@ error_reporting( error_reporting() & ~E_NOTICE );
 require_once('nusessiondata.php');
 require_once('nubuilders.php');
 require_once('nuemailer.php');
+require_once('nudata.php');
 
 nuSetTimeLimit(0);
 
@@ -417,11 +418,11 @@ function nuRunPHPHidden($nuCode){
 
 function nuGetPHP($idOrCode) {
 
-    $sql = "SELECT sph_code, sph_description, zzzzsys_php_id, sph_php, sph_global
-            FROM zzzzsys_php
-            WHERE sph_code = ? OR zzzzsys_php_id = ?";
+	$sql = "SELECT sph_code, sph_description, zzzzsys_php_id, sph_php, sph_global
+			FROM zzzzsys_php
+			WHERE sph_code = ? OR zzzzsys_php_id = ?";
 
-    $stmt = nuRunQuery($sql, [$idOrCode, $idOrCode]);
+	$stmt = nuRunQuery($sql, [$idOrCode, $idOrCode]);
 	$exists = db_num_rows($stmt) === 1;
 	return $exists ? db_fetch_object($stmt) : false;
 
@@ -1457,45 +1458,76 @@ function nuFailIfUnsetHashCookies($string) {
 	return preg_match('/#[^#]+#/', $string);
 }
 
-function nuEval($phpid){
+function nuEvalSafe($code, $returnOutput = false) {
+
+	$output = '';
+
+	try {
+		if ($returnOutput) ob_start();
+
+		set_error_handler(function($errno, $errstr, $errfile, $errline) {
+			throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+		});
+
+		$result = eval($code);
+		if ($returnOutput) {
+			$output = ob_get_clean();
+			restore_error_handler();
+		}
+
+		if ($returnOutput) {
+			return ['result' => $result, 'output' => $output, 'error' => null];
+		} else {
+			return ['result' => $result, 'error' => null];
+		}
+	} catch (ParseError $e) {
+		if ($returnOutput) ob_end_clean();
+		return ['result' => null, 'output' => $output, 'error' => $e];
+	} catch (ErrorException $e) {
+		if ($returnOutput) ob_end_clean();
+		return ['result' => null, 'output' => $output, 'error' => $e];
+	} catch (Throwable $e) {
+		if ($returnOutput) ob_end_clean();
+		return ['result' => null, 'output' => $output, 'error' => $e];
+	}
+
+}
+
+
+function nuEval($phpid, $returnOutput = false){
 
 	$r						= nuGetPHP($phpid);
-	if($r === false){return;}
+	if($r === false){return '';}
 
 	$code					= $r->sph_code;
 	$php					= nuReplaceHashVariables($r->sph_php);
 
-	if(trim($php) == ''){return;}
+	if(trim($php) == ''){return '';}
 
 	$_POST['nuSystemEval']	= nuEvalMessage($phpid, $code);
 
 	$nuDataSet = isset($_POST['nudata']);
 	$nudata = $nuDataSet ? $_POST['nudata'] : '';
 
-	try{
+	$result = nuEvalSafe($php, $returnOutput);
 
-		$result = eval($php);
-		if ($result === false) {
-			$e = new Exception('Eval failed');
-			nuExceptionHandler($e, $code);
-		}
+	if ($result['error']) {
+		nuExceptionHandler($result['error'], $code);
+	}
 
-		if (($nuFailIfUnsetHashCookies ?? false) === true && nuFailIfUnsetHashCookies($php)) {
-			$e = new Exception('nuEval failed, unset Hash Cookies.');
-			nuExceptionHandler($e, $code);
-			return;
-		}
+	if (($nuFailIfUnsetHashCookies ?? false) === true && nuFailIfUnsetHashCookies($php)) {
+		$e = new Exception('nuEval failed, unset Hash Cookies.');
+		nuExceptionHandler($e, $code);
+		return '';
+	}
 
-	}catch(Throwable $e){
-		nuExceptionHandler($e, $code);
-	}catch(Exception $e){
-		nuExceptionHandler($e, $code);
-	} catch (ParseError $e) {
-		nuExceptionHandler($e, $code);
+	if ($returnOutput) {
+		return $result['output'];
 	}
 
 	$_POST['nuProcedureEval']			= '';
 	$_POST['nuSystemEval']				= '';
+	
 	if ($nuDataSet) $_POST['nudata']	= $nudata;
 
 }
