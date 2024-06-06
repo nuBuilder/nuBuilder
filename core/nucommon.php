@@ -1548,15 +1548,15 @@ function nuRunProcedure($procedure) {
 
 function nuProcedure($c){
 
-	$s						= "SELECT sph_php, sph_code FROM zzzzsys_php WHERE sph_code = ? ";
-	$t						= nuRunQuery($s, [$c]);
+	$s = "SELECT sph_php, sph_code FROM zzzzsys_php WHERE sph_code = ? OR zzzzsys_php_id = ?";
+	$stmt = nuRunQuery($s, [$c, $c]);
 
-	if (db_num_rows($t) > 0) {	// procedure exists
+	if (db_num_rows($stmt) > 0) {
 
-		$r					= db_fetch_object($t);
+		$r = db_fetch_object($stmt);
 
-		$php				= nuReplaceHashVariables($r->sph_php);
-		$php				= "$php \n\n//--Added by nuProcedure()\n\n$"."_POST['nuProcedureEval'] = '';";
+		$php = nuReplaceHashVariables($r->sph_php);
+		$php = "$php \n\n//--Added by nuProcedure()\n\n$"."_POST['nuProcedureEval'] = '';";
 		$_POST['nuProcedureEval'] = "Procedure <b>$r->sph_code</b> - run inside ";
 		return $php;
 	} else {
