@@ -5,7 +5,11 @@
 	$nuState = $_POST['nuSTATE'] ?? null;
 	if ($nuState == null && !empty($_FILES["file"])) {
 		require_once('nuupload.php');
-		echo nuUploadFile();
+		$upload = nuUploadFile();
+		if (nuHasErrors()) {
+			nuDebug(' <html>' . implode("", $_POST['nuErrors']). '</html>');
+		}		
+		echo $upload;
 		return;
 	}
 

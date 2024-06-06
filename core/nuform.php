@@ -978,7 +978,11 @@ function nuSelectOptions($sql) {
 	$sqlFirstCharsNoSpacesNoLineBreaks = preg_replace('/\s+/', '', $sqlFirstChars);
 
 	//-- sql statement
-	if (nuStringStartsWith('SELECT', $sqlFirstChars, true) || nuStringStartsWith('(SELECT', $sqlFirstCharsNoSpacesNoLineBreaks, true) || nuStringStartsWith('WITH', $sqlFirstChars, true)) {
+	if (
+		nuStringStartsWith('SELECT', $sqlFirstChars, true) ||
+		nuStringStartsWith('(SELECT', $sqlFirstCharsNoSpacesNoLineBreaks, true) ||
+		nuStringStartsWith('WITH', $sqlFirstChars, true)
+	) {
 		
 		$stmt = nuRunQueryString($sql, $sqlWithHk);
 
