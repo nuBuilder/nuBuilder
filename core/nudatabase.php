@@ -540,13 +540,19 @@ function nuDebugCreateOutput(...$args) {
 	}
 
 	foreach ($args as $i => $arg) {
-		$type = gettype($arg);
-		$message .= sprintf("\n[%d] : ", $i);
 
-		if ($type === 'object' || $type === 'array') {
-			$message .= print_r($arg, true);
-		} else {
+		if (nuStringStartsWith(' <html>', $arg)) {
 			$message .= $arg;
+		} else {
+
+			$type = gettype($arg);
+			$message .= sprintf("\n[%d] : ", $i);
+
+			if ($type === 'object' || $type === 'array') {
+				$message .= print_r($arg, true);
+			} else {
+				$message .= $arg;
+			}
 		}
 
 		$message .= "\n";
