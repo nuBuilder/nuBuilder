@@ -880,7 +880,7 @@ class nuFormObject {
 
 		f.Sun = { 'ddd': 'Sun', 'dddd': 'Sunday', 'dd': '01', 'd': '1' };
 		f.Mon = { 'ddd': 'Mon', 'dddd': 'Monday', 'dd': '02', 'd': '2' };
-		f.Tue = { 'ddd': 'Tue', 'dddd': 'Tueday', 'dd': '03', 'd': '3' };
+		f.Tue = { 'ddd': 'Tue', 'dddd': 'Tuesday', 'dd': '03', 'd': '3' };
 		f.Wed = { 'ddd': 'Wed', 'dddd': 'Wednesday', 'dd': '04', 'd': '4' };
 		f.Thu = { 'ddd': 'Thu', 'dddd': 'Thursday', 'dd': '05', 'd': '5' };
 		f.Fri = { 'ddd': 'Fri', 'dddd': 'Friday', 'dd': '06', 'd': '6' };
@@ -888,7 +888,7 @@ class nuFormObject {
 
 		f.Sunday = { 'ddd': 'Sun', 'dddd': 'Sunday', 'dd': '01', 'd': '1' };
 		f.Monday = { 'ddd': 'Mon', 'dddd': 'Monday', 'dd': '02', 'd': '2' };
-		f.Tuesday = { 'ddd': 'Tue', 'dddd': 'Tueday', 'dd': '03', 'd': '3' };
+		f.Tuesday = { 'ddd': 'Tue', 'dddd': 'Tuesday', 'dd': '03', 'd': '3' };
 		f.Wednesday = { 'ddd': 'Wed', 'dddd': 'Wednesday', 'dd': '04', 'd': '4' };
 		f.Thursday = { 'ddd': 'Thu', 'dddd': 'Thursday', 'dd': '05', 'd': '5' };
 		f.Friday = { 'ddd': 'Fri', 'dddd': 'Friday', 'dd': '06', 'd': '6' };
