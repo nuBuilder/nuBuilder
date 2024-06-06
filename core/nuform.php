@@ -130,10 +130,6 @@ function nuEvents($r) {
 	return $r->sob_all_event ?? '';
 }
 
-function nuDisplayExtractRunProcedureParameter($code) {
-	return preg_match("/nuRunProcedure\('([^']+)'\);/", $code, $matches) ? $matches[1] : null;
-}
-
 function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 
 	if($tabs == null) {
@@ -251,21 +247,19 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 
 				if($r->sob_all_type == 'display'){
 
-					$o->value	= null;
-					$disS		= trim(nuReplaceHashVariables($r->sob_display_sql));
+					$o->value			= null;
+					$displayProcedure	= $r->sob_display_procedure ?? '';
 
-					if (nuStringStartsWith('nuRunProcedure(', $disS)) {
-						
-						$proc = nuDisplayExtractRunProcedureParameter($disS);
-						if ($proc) { 
-							$code = nuProcedure($proc);
-							if ($code !== '') {
-								$o->value = nuEval($proc, true);
-							}
+					if ($displayProcedure) {
+
+						$code = nuProcedure($displayProcedure);
+						if ($code !== '') {
+							$o->value = nuEval($displayProcedure, true);
 						}
-		
+
 					} else {
 
+						$disS		= trim(nuReplaceHashVariables($r->sob_display_sql));
 						$disT			= nuRunQuery($disS);
 
 						if (db_num_rows($disT) >= 1) {

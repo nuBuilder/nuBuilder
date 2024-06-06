@@ -15,6 +15,7 @@ function nuAlterSystemTables(){
 		"ALTER TABLE `zzzzsys_object` ADD `sob_input_file_target` VARCHAR(1) NOT NULL DEFAULT '0' AFTER `sob_input_attribute`;",
 		"ALTER TABLE `zzzzsys_object` ADD `sob_run_target` VARCHAR(1) NULL DEFAULT NULL AFTER `sob_run_method`;",
 		"ALTER TABLE `zzzzsys_object` ADD `sob_run_type` VARCHAR(1) NULL DEFAULT NULL AFTER `sob_run_target`;",
+		"ALTER TABLE `zzzzsys_object` ADD `sob_display_procedure` VARCHAR(25) NULL DEFAULT NULL AFTER `sob_display_sql`;",
 		"ALTER TABLE `zzzzsys_object` ADD `sob_all_event` VARCHAR(1) NULL DEFAULT NULL AFTER `sob_all_access`;",
 		"ALTER TABLE `zzzzsys_object` ADD `sob_all_style_type` VARCHAR(15) NULL DEFAULT NULL AFTER `sob_all_event`;",
 		"ALTER TABLE `zzzzsys_object` ADD `sob_all_style` VARCHAR(1000) NULL DEFAULT NULL AFTER `sob_all_style_type`;",
