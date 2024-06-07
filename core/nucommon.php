@@ -1464,15 +1464,15 @@ function nuEvalSafe($code, $returnOutput = false) {
 
 	try {
 		if ($returnOutput) ob_start();
-
+		/*
 		set_error_handler(function($errno, $errstr, $errfile, $errline) {
 			throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
 		});
-
+		*/
 		$result = eval($code);
 		if ($returnOutput) {
 			$output = ob_get_clean();
-			restore_error_handler();
+		//	restore_error_handler();
 		}
 
 		if ($returnOutput) {
