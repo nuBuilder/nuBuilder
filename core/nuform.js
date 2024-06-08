@@ -4485,7 +4485,6 @@ function nuBrowseTable() {
 	const rows = currentForm.browse_rows;
 	const rowCount = rows.length;
 	const rowHeight = currentForm.row_height;
-	const $record = $('#nuRECORD');
 
 	let incrementalWidth = 0;
 	let topOffset = nuBrowseCalculateInitialTopOffset(rowHeight);
