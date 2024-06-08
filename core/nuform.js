@@ -4837,7 +4837,7 @@ function nuAddAction() {
 }
 
 function nuRunPHPAction(code) {
-	nuRunPHP(code);
+	nuRunPHP(code, '', true);
 }
 
 function nuRunReportAction(code) {

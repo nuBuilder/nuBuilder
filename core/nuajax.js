@@ -308,14 +308,14 @@ function nuGetPHP(formId, recordId) {
 
 }
 
-function nuRunPHP(code, iFrame, runBeforeSave) {
+function nuRunPHP(code, iFrame = '', runBeforeSave = false) {
 	
-	if (runBeforeSave == undefined) {
+	if (runBeforeSave === true) {
 		if (window.nuBeforeSave) {
 			if (nuBeforeSave() === false) { return; }
 		}
 	}
-
+	
 	const current = nuFORM.getCurrent();
 	let last = $.extend(true, {}, current);
 
