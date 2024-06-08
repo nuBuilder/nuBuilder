@@ -402,10 +402,17 @@ function nuRunPHPHidden(code, options = null) {
 
 }
 
-function nuRunPHPHiddenWithParams(code, paramName, paramValue, runBeforeSave) {
+function nuRunPHPHiddenWithParams(code, paramName, paramValue, runBeforeSave = false) {
 
 	nuSetProperty(paramName, nuEncode(JSON.stringify(paramValue)));
 	nuRunPHPHidden(code, runBeforeSave);
+
+}
+
+function nuRunPHPWithParams(code, paramName, paramValue, iFrame = '', runBeforeSave = false) {
+
+	nuSetProperty(paramName, nuEncode(JSON.stringify(paramValue)));
+	nuRunPHP(code, iFrame, runBeforeSave);
 
 }
 
