@@ -7276,7 +7276,7 @@ function nuCalendarWeekNumbers() {
 		}
 }
 
-function nuConvertToVanillaJSCalendarFormat(str) {
+function nuConvertToVanillaJSCalendarFormat(format) {
 	
 	const formatMapping = {
 		'D|': '',
@@ -7286,12 +7286,12 @@ function nuConvertToVanillaJSCalendarFormat(str) {
 		'mmm': 'M'
 	};
 
-	let newStr = str;
+	let vanillaJSFormat = format;
 	for (const [key, value] of Object.entries(formatMapping)) {
-		newStr = newStr.split(key).join(value);
+		vanillaJSFormat = vanillaJSFormat.split(key).join(value);
 	}
 
-	return newStr;
+	return vanillaJSFormat;
 	
 }
 
@@ -7300,11 +7300,7 @@ function nuPopupCalendar(pThis, d) {
 	if (pThis === null) { return; }
 
 	let id = pThis.id;
-	let datepicker = nuGetWindowProperty('nudatepickers', id);
-
-	if (datepicker) {
-		datepicker.destroy();
-	}
+	nuDestroyWindowProperty('nudatepickers', id)
 
 	let optionWeekStart = {};
 	let weekStartNumber = nuCalendarWeekStartNumber();
@@ -7316,6 +7312,7 @@ function nuPopupCalendar(pThis, d) {
 		format: nuConvertToVanillaJSCalendarFormat($(pThis).attr('data-nu-format')),
 		todayHighlight: true,
 		clearBtn: true,
+		// updateOnBlur: false,
 		weekStart : (weekStartNumber !== undefined ? weekStartNumber : 0)
 	}
 
@@ -7348,10 +7345,9 @@ function nuPopupCalendar(pThis, d) {
 
 	$(pThis).off('changeDate.vanillajspicker').on('changeDate.vanillajspicker', nuChangeDate);
 
-	nuGetWindowProperty('nudatepickers', id, datepicker);
+	nuSetWindowProperty('nudatepickers', id, datepicker);
 
 	datepicker.setOptions({ defaultViewDate: d });
-
 	datepicker.show();
 
 }
