@@ -2813,6 +2813,32 @@ function nuGetWindowProperty(key, property) {
 
 }
 
+function nuDestroyWindowProperty(key, property) {
+
+	if (!window[key]) {
+		return;
+	}
+
+	if (property !== undefined) {
+		if (window[key].hasOwnProperty(property)) {
+			if (typeof window[key][property].destroy === 'function') {
+				window[key][property].destroy();
+			}
+			delete window[key][property];
+		}
+	} else {
+		for (let prop in window[key]) {
+			if (window[key].hasOwnProperty(prop)) {
+				if (typeof window[key][prop].destroy === 'function') {
+					window[key][prop].destroy();
+				}
+				delete window[key][prop];
+			}
+		}
+	}
+
+}
+
 function nuSetWindowProperty(key, property, value) {
 
 	if (!window[key]) {
