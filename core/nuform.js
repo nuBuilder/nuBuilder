@@ -22,6 +22,7 @@ function nuInitJSOptions() {
 			'nuSelect2Theme': 'default',				// select2 theme (default, classic) Default: default
 			'nuEditCloseAfterSave': 'None',				// Close forms after saving. Values: None, All, User, System
 			'nuShowJSErrors' : 'None',					// Show JS errors in alert message
+			'nuShowURLPermaLink': false,				// Show URL permalink
 			'nuDebugIcon': true,
 			'nuPHPIcon': true,
 			'nuRefreshIcon': true,
@@ -189,6 +190,10 @@ function nuBuildForm(formObj) {
 
 	if (nuUXOptions.nuShowBackButton) {
 		nuAddBackButton();
+	}
+
+	if (nuUXOptions.nuShowURLPermaLink) {
+		nuSetURLPermaLink();
 	}
 
 	if (nuUXOptions.nuShowPropertiesOnMiddleClick) {

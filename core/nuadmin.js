@@ -51,7 +51,7 @@ function nuShowFormInfo() {
 	const formIdCopyButton = copyButtonHTML("nuFormInfoCopyFormId", formId, 'Copy');
 	const formCodeCopyButton = copyButtonHTML("nuFormInfoCopyFormCode", formCode, 'Copy');
 	const browseCopyButton = copyButtonHTML("nuFormInfoCopyBrowseSQL", formattedBrowseSQL, 'Copy SQL');
-	const permalinkButton = copyButtonHTML("nuFormInfoCopyPermalink", window.location.href, 'Copy Permalink');
+	const permalinkButton = nuUXOptions.nuShowURLPermaLink ? copyButtonHTML("nuFormInfoCopyPermalink", window.location.href, 'Copy Permalink') : '';
 	const currPropsButton = `<button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCurrentProperties()">${nuTranslate('Current Properties')}</button>`;
 
 	const tableInfo = nuSERVERRESPONSE.table !== "" && showSQL ? `<b>${nuTranslate('Table')}:</b> ${nuSERVERRESPONSE.table} ${copyButtonHTML("nuFormInfoCopyTable", nuSERVERRESPONSE.table, 'Copy')}` : "";
