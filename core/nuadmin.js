@@ -35,6 +35,7 @@ function nuShowVersionInfo() {
 }
 
 function nuShowFormInfo() {
+
 	const currProps = nuCurrentProperties();
 	const { form_code: formCode, form_id: formId, form_description: formDescription, form_type: formType, browse_sql: browseSQLRaw, record_id: recordId } = currProps;
 	const isDevMode = nuDevMode();
@@ -44,34 +45,35 @@ function nuShowFormInfo() {
 	const showSQL = !formCode.startsWith("nu") || isDevMode;
 	const formattedBrowseSQL = String(browseSQLRaw).replace(/\s{2,}/g, '\n');
 
-	// Function to create buttons with translated labels
-	const copyButtonHTML = (id, value, label) => `<button type="button" class="nuActionButton nuAdminButton" onclick="navigator.clipboard.writeText(nuTranslate('${value}'))">${nuTranslate(label)}</button>`;
+	const escapeForHTMLAttribute = str => str.replace(/\n/g, '\\n').replace(/'/g, "\\'");
+	const copyButtonHTML = (value, label) => `<button type="button" class="nuActionButton nuAdminButton" onclick="navigator.clipboard.writeText(nuTranslate('${escapeForHTMLAttribute(value)}'))">${nuTranslate(label)}</button>`;
 
-	// Copy Buttons for each element
-	const formIdCopyButton = copyButtonHTML("nuFormInfoCopyFormId", formId, 'Copy');
-	const formCodeCopyButton = copyButtonHTML("nuFormInfoCopyFormCode", formCode, 'Copy');
-	const browseCopyButton = copyButtonHTML("nuFormInfoCopyBrowseSQL", formattedBrowseSQL, 'Copy SQL');
-	const permalinkButton = nuUXOptions.nuShowURLPermaLink ? copyButtonHTML("nuFormInfoCopyPermalink", window.location.href, 'Copy Permalink') : '';
+	const formIdCopyButton = copyButtonHTML(formId, 'Copy');
+	const formCodeCopyButton = copyButtonHTML(formCode, 'Copy');
+	const browseCopyButton = copyButtonHTML(formattedBrowseSQL, 'Copy SQL');
+	const permalinkButton = nuUXOptions.nuShowURLPermaLink ? copyButtonHTML(window.location.href, 'Copy Permalink') : '';
 	const currPropsButton = `<button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCurrentProperties()">${nuTranslate('Current Properties')}</button>`;
+	
+	const recordIdCopyButton = isEditMode && recordId ? copyButtonHTML(recordId, 'Copy') : '';  // Adding Record ID copy button
 
-	const tableInfo = nuSERVERRESPONSE.table !== "" && showSQL ? `<b>${nuTranslate('Table')}:</b> ${nuSERVERRESPONSE.table} ${copyButtonHTML("nuFormInfoCopyTable", nuSERVERRESPONSE.table, 'Copy')}` : "";
-	const recordIdInfo = isEditMode && formType !== "launch" ? `<b>${nuTranslate('Record ID')}:</b> ${recordId}<br>` : "";
+	const tableInfo = nuSERVERRESPONSE.table !== "" && showSQL ? `<b>${nuTranslate('Table')}:</b> ${nuSERVERRESPONSE.table} ${copyButtonHTML(nuSERVERRESPONSE.table, 'Copy')}` : "";
+	const recordIdInfo = isEditMode && formType !== "launch" ? `<b>${nuTranslate('Record ID')}:</b> ${recordId} ${recordIdCopyButton}<br>` : "";
 	const browseSQLInfo = isBrowseMode && showSQL ? `<br><b>${nuTranslate('Browse SQL')}:</b><br><br>${browseCopyButton}<pre class="nuFormInfoBrowseSQL"><code id="nuFormInfoBrowseSQL">${formattedBrowseSQL}</pre></code><br>` : "<br>";
 
 	const formInfo = [
-		`<h3>${nuTranslate(formDescription)}</h3>`,
-		`<b>${nuTranslate('Form ID')}:</b> ${formId} ${formIdCopyButton}`,
-		`<b>${nuTranslate('Form Code')}:</b> ${formCode} ${formCodeCopyButton}`,
-		tableInfo,
-		recordIdInfo,
-		currPropsButton,
-		permalinkButton,
+		`<b>${nuTranslate('Form ID')}:</b> ${formId} ${formIdCopyButton}`+ '<br>' +
+		`<b>${nuTranslate('Form Code')}:</b> ${formCode} ${formCodeCopyButton}` + '<br>' +
+		tableInfo + '<br>' +
+		recordIdInfo + '<br>' +
+		currPropsButton + '<br>' +
+		permalinkButton + '<br>' +
 		browseSQLInfo
 	];
 
-	const msg = nuMessage(formInfo);
+	const msg = nuMessage(`<h3>${nuTranslate(formDescription)}</h3>`, formInfo);
+
 	if (!isBrowseMode) {
-		msg.css('width', '350px');
+		msg.css('width', '400px');
 	}
 }
 
