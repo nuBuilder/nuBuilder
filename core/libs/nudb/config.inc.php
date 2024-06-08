@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 require_once(dirname(__FILE__). '/../../../nuconfig.php');
 
-if (! isset($nuConfigPMANotAuth)) {
+if (! isset($nuConfigPMANoAuth)) {
 
 	$sessionId = isset($_COOKIE['nu_PMA']) ? $_COOKIE["nu_PMA"] : '';
 	
