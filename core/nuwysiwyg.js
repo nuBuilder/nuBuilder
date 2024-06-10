@@ -17,8 +17,6 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 	}
 
 	let idContainer = id + '_container';
-
-	let useDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
 	let obj = document.getElementById(idContainer);
 
 	var _plugins;
@@ -108,8 +106,8 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 		toolbar_mode: 'sliding',
 		content_style: "p { margin: 0; }",
 		contextmenu: _contextmenu,
-		skin: useDarkMode ? 'oxide-dark' : 'oxide',
-		content_css: useDarkMode ? 'dark' : 'default',
+		skin:  'oxide',
+		content_css: 'default',
 		cache_suffix: '?v=7.0.0',
 		license_key: 'gpl',
 		setup: function (editor) {
