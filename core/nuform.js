@@ -802,7 +802,7 @@ function nuAddActionButtons(form) {
 			nuAddActionButton('Add', addCaption, 'nuAddAction()');
 		}
 
-		if (button.Print == 1 && nuFORM.getCurrent().browse_rows.length > 0) {
+		if (button.Print == 1 && nuFORM.getCurrent().browse_rows.length > 0 && !isMobile)  {
 			nuAddActionButton('Print', printCaption, 'nuPrintAction()');
 		}
 
