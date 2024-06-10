@@ -916,7 +916,8 @@ function nuBuildEditObjects(formObj, p, o, prop) {
 
 			// Execute the function based on the type
 			if (typeFunctionMap[t] && (t !== 'subform' || p === '')) {
-				left += typeFunctionMap[t](formObj, objIndex, left, p, prop);
+				let newLeft = typeFunctionMap[t](formObj, objIndex, left, p, prop);
+				left += newLeft;
 			}
   
 			if (obj.labelOnTop) {
@@ -932,7 +933,9 @@ function nuBuildEditObjects(formObj, p, o, prop) {
 
 			nuAddAttributes(p + obj.id, obj.attributes);
 
-			left = left + 2;
+			if (!(t == 'contentbox' && nuIsMobile())) { 
+					left = left + 2;
+			}
 
 		} 
 
@@ -1784,7 +1787,9 @@ function nuCONTENTBOX(w, i, l, p, prop) {
 	const div =  nuCreateElementWithId('div', id, p + 'nuRECORD');
 
 	nuAddDataTab(id, obj.tab, p);
-
+	if (nuIsMobile()) {
+		obj.width = 0;
+	}
 	nuSetObjectBounds(div, obj.top, obj.left, obj.width, obj.height).css('z-index', '-1')
 		.attr('data-nu-object-id', w.objects[i].object_id)
 		.attr('data-nu-prefix', p)
@@ -6485,7 +6490,7 @@ function nuLookingUp() {
 
 }
 
-function nuPortraitScreen(columns) {
+function nuPortraitScreen(columns = 1) {
 
 	function nuPortraitScreenObjDimensions(id, jId) {
 
@@ -6496,158 +6501,200 @@ function nuPortraitScreen(columns) {
 		}
 
 		if (!jId.is("[nu-mobileview-hidden]")) {
-			width = Math.max(width, jId.outerWidth());
-		}
+			maxWidth = Math.max(maxWidth, jId.outerWidth());
+		} 
 
 		let heightLabel = $('#label_' + id).length == 0 ? 0 : $('#label_' + id).outerHeight()
 
-		return { height, width, heightLabel }
+		return { height, maxWidth, heightLabel }
 
 	}
 
-	$('#nubody').css('transform', 'scale(1)');
+    const nuPortraitSetTransformScale = (objectWidth, screenWidth) => {
+        const maxScale = 2.5; 
+        const scale = Math.min(screenWidth / objectWidth, maxScale);
+        $('#nubody').css({ 'width': objectWidth, 'transform': `scale(${scale})` });
+        return scale;
+    };
 
-	if (nuFormType() == 'browse') { return; }
-
-	window.nuPORTRAITSCREEN = true;
-
-	$('.nuBuilderLink').remove();
-	if (arguments.length == 0) { columns = 1; }
-
-	$('.nuPortraitTab').remove();
-
-	const obj = nuSERVERRESPONSE.objects;
-	var lw = columns == 1 ? 0 : nuPortraitLabelWidth(obj);
-	var top = 0;
-	var b = -1;
-	var width = 0;
-	let oWidth = 0;
-	let oTop = 0;
-
-	for (let i = 0; i < obj.length; i++) {
-
-		let oType = obj[i].type;
-
-		let id = obj[i].id;
-		let jId = $('#' + id);
-
-
-		let { height, width, heightLabel } = nuPortraitScreenObjDimensions(id, jId)
-
-		const jtab = $('#nuTab' + obj[i].tab);
-		let tabVisible = jtab.nuIsVisible()
-
-		if (obj[i].tab != b && tabVisible && ! window.nuPortraitScreenShowTabTitles == false ) {
-
-			if ($('.nuTab').length > 1) {
-				b = obj[i].tab;
-				const l = jtab.html();
-				const d = '<div class="nuPortraitTab" id="nuPort' + b + '" style="top:' + top + 'px" >' + l + '</div>';
-				$('#nuRECORD').append(d);
-				const OH = $('#nuPort' + b).outerHeight()
-
-				top = top + OH + 5;
-			}
-
-		}
-
-		tabVisible = jtab.nuIsVisible() || $('.nuTab').length == 1;
-
-		if (jId.is("[nu-mobileview-hidden]") || !tabVisible) {
-
-			let {componentIds} = nuObjectComponents(id);
-
-			for (let c = 0; c < componentIds.length; c++) {
-				let comp = $('#' + componentIds[c]);
-				comp.attr('nu-mobileview-hidden', '');
-				comp.hide();
-			}
-
+    const nuPortraitAppendTab = (tabId, top) => {
+        const tabElement = $(`#nuTab${tabId}`);
+        const tabContent = tabElement.html();
+        const tabDiv = `<div class="nuPortraitTab" id="nuPort${tabId}" style="top:${top}px">${tabContent}</div>`;
+		
+		if ($('#' + `nuPort${tabId}`).length === 0) {
+			$('#nuRECORD').append(tabDiv);
+			return $(`#nuPort${tabId}`).outerHeight();
 		} else {
-
-			if (obj[i].read != 2) {
-
-				if (oType == 'contentbox') {
-					jId.attr('nu-mobileview-hidden', '');
-					jId.hide();
-				} else {
-
-					$('#label_' + id).css({ 'top': top + 2, 'left': 7, 'text-align': 'left', 'font-weight': 700 });
-
-					const sameRow = jId.is('[data-nu-same-row]');
-					if (columns == 1 && !sameRow) {
-						top = top + heightLabel + 5;
-					}
-
-					if (jId.is('[data-select2-id]')) {
-						jId = $('#' + id + '_select2');
-					}
-
-					if (sameRow) {
-						const spacing = jId.attr('data-nu-same-row') || 0
-						jId.css({ 'top': oTop, 'left': Number(oWidth) + Number(spacing) });
-					} else {
-						jId.css({ 'top': top, 'left': lw + 10 });
-					}
-
-					if (oType == 'lookup') {
-
-						const w = $('#' + id + 'code').outerWidth()
-						const d = $('#' + id + 'description').outerWidth()
-						width = Math.max(width, w + d + 30);
-
-						$('#' + id + 'code').css({ 'top': top, 'left': lw + 10 });
-						$('#' + id + 'button').css({ 'top': top, 'left': lw + w + 15 });
-						top += 35;
-						$('#' + id + 'description').css({ 'top': top, 'left': lw + 10, 'width': w - 5 });
-
-					} else if (obj[i].input == 'file') {
-						top += 5;
-						$('#' + id + '_input').css({ 'top': top, 'left': lw + 10 });
-						top += 5;
-					}
-
-					oWidth = lw + 10 + Number(obj[i].width);
-					oTop = top;
-
-					if (!sameRow) {
-						top = top + height + 5;
-					}
-
-				}
-
-			}
-
+			return 0;
 		}
-	}
+    };
 
-	$("[data-nu-tab!='x'][data-nu-form='']:not([data-nu-lookup-id]):not([nu-mobileview-hidden])").show();
-	$('#nuTabHolder').hide();
+    const nuSetPortraitElementPosition = (element, top, left, sameRow, previousWidth, previousTop, labelWidth) => {
+        const spacing = Number(element.attr('data-nu-same-row') || 0);
+        if (sameRow) {
+            element.css({ 'top': previousTop, 'left': previousWidth + spacing });
+        } else {
+            element.css({ 'top': top, 'left': labelWidth + 10 });
+        }
+    };
 
-	top = top + 50;
+    const nuPortraitHandleLookup = (id, top, labelWidth) => {
+        const codeElement = $(`#${id}code`);
+        const descElement = $(`#${id}description`);
+        const buttonElement = $(`#${id}button`);
 
-	$('#nuRECORD').append('<div id="nuPortEnd" style="left:0px;position:absolute;top:' + top + 'px" >&nbsp;</div>');
+        const codeWidth = codeElement.outerWidth();
+        const descWidth = descElement.outerWidth();
 
-	if (columns == 1) {
-		$('label').css('text-align', 'right').css({ 'width': width, 'text-align': 'left', 'left': 12 });
-	} else {
-		$('label').css('text-align', 'left').css('width', lw);
-	}
+        codeElement.css({ 'top': top, 'left': labelWidth + 10 });
+        buttonElement.css({ 'top': top, 'left': labelWidth + codeWidth + 15 });
 
-	var objectWidth = width + lw + 50;
-	var screenWidth = window.innerWidth;
-	var scale = screenWidth / (objectWidth);
+        top += 35;
+        descElement.css({ 'top': top, 'left': labelWidth + 10, 'width': codeWidth - 5 });
 
-	$('#nubody').css('width', objectWidth).css('transform', 'scale(' + scale + ')')
-	$('html,body').scrollTop(0).scrollLeft(0);
-	window.scrollTo(0, 0);
+        return { top, width: codeWidth + descWidth + 30 };
+    };
 
-	$('#nuBreadcrumbHolder').css('width', window.visualViewport.width);
+    const nuPortraitHandleFileInput = (id, top, labelWidth) => {
+        const inputElement = $(`#${id}_input`);
+        top += 5;
+        inputElement.css({ 'top': top, 'left': labelWidth + 10 });
+        return top + 5;
+    };
 
-	return scale;
+    const nuPortraitAdjustLabelStyles = (columns, maxWidth, labelWidth) => {
+        if (columns === 1) {
+            $('label').css({ 'text-align': 'left', 'width': maxWidth, 'left': 12 });
+        } else {
+            $('label').css({ 'text-align': 'left', 'width': labelWidth });
+        }
+    };
 
+    $('#nubody').css('transform', 'scale(1)');
+
+    if (nuFormType() === 'browse') { return; }
+
+    window.nuPORTRAITSCREEN = true;
+    $('.nuBuilderLink').remove();
+    $('.nuPortraitTab').remove();
+
+    const objects = nuSERVERRESPONSE.objects;
+    const labelWidth = columns === 1 ? 0 : nuPortraitLabelWidth(objects);
+    let top = 0;
+    let currentTab = -1;
+    var maxWidth = 0;
+    let objWidth = 0;
+    let objTop = 0;
+
+    objects.forEach(obj => {
+        const { id, type: objType, tab: objTab, read, input } = obj;
+        let element = $(`#${id}`);
+
+        var { height, maxWidth, heightLabel } = nuPortraitScreenObjDimensions(id, element);
+
+        const tabElement = $(`#nuTab${objTab}`);
+        let tabVisible = tabElement.nuIsVisible();
+
+        if (objTab !== currentTab && tabVisible && window.nuPortraitScreenShowTabTitles !== false && objType !== 'contentbox') {
+            if ($('.nuTab').length > 1) {
+                currentTab = objTab;
+                const tabHeight = nuPortraitAppendTab(currentTab, top);
+                top += tabHeight + 5;
+            }
+        }
+
+        tabVisible = tabElement.nuIsVisible() || $('.nuTab').length === 1;
+
+        if (element.is("[nu-mobileview-hidden]") || !tabVisible) {
+            const { componentIds } = nuObjectComponents(id);
+            componentIds.forEach(compId => {
+                const comp = $(`#${compId}`);
+                comp.attr('nu-mobileview-hidden', '');
+                comp.hide();
+            });
+        } else {
+            if (read !== 2) {
+                if (objType === 'contentbox') {
+                    element.attr('nu-mobileview-hidden', '');
+                    element.hide();
+                } else {
+                    $('#label_' + id).css({ 'top': top + 2, 'left': 7, 'text-align': 'left', 'font-weight': 700 });
+
+                    const sameRow = element.is('[data-nu-same-row]');
+                    if (columns === 1 && !sameRow) {
+                        top += heightLabel + 5;
+                    }
+
+                    if (element.is('[data-select2-id]')) {
+                        element = $(`#${id}_select2`);
+                    }
+
+                    nuSetPortraitElementPosition(element, top, labelWidth + 10, sameRow, objWidth, objTop, labelWidth);
+
+                    if (objType === 'lookup') {
+                        const lookupResult = nuPortraitHandleLookup(id, top, labelWidth);
+                        top = lookupResult.top;
+                        maxWidth = Math.max(maxWidth, lookupResult.width);
+                    } else if (input === 'file') {
+                        top = nuPortraitHandleFileInput(id, top, labelWidth);
+                    }
+
+                    objWidth = labelWidth + 10 + Number(obj.width);
+                    objTop = top;
+
+                    if (!sameRow) {
+                        top += height + 5;
+                    }
+                }
+            }
+        }
+    });
+
+    $("[data-nu-tab!='x'][data-nu-form='']:not([data-nu-lookup-id]):not([nu-mobileview-hidden])").show();
+    $('#nuTabHolder').hide();
+
+    top += 50;
+    $('#nuRECORD').append(`<div id="nuPortEnd" style="left:0px;position:absolute;top:${top}px">&nbsp;</div>`);
+
+    nuPortraitAdjustLabelStyles(columns, maxWidth, labelWidth);
+
+	let windowInnerWidth = nuGetWindowProperty('nuWindowInnerWidth', nuFormId());
+	
+	if (!windowInnerWidth) {
+		windowInnerWidth = window.innerWidth;
+		nuSetWindowProperty('nuWindowInnerWidth', nuFormId(), windowInnerWidth);
+	};
+	
+    const objectWidth = maxWidth + labelWidth + 50;
+    const scale = nuPortraitSetTransformScale(objectWidth, windowInnerWidth);
+
+    $('html, body').scrollTop(0).scrollLeft(0);
+    window.scrollTo(0, 0);
+
+    $('#nuBreadcrumbHolder').css('width', window.visualViewport.width);
+
+    return scale;
 }
 
+function getPortraitScreenObjDimensions(id, element) {
+    let height = element.outerHeight();
+    let width = 0;
+
+    if (element.is('[data-select2-id]')) {
+        height = element.data('nu-org-height') + 50;
+    }
+
+    if (!element.is("[nu-mobileview-hidden]")) {
+        width = Math.max(width, element.outerWidth());
+    }
+
+    const heightLabel = $(`#label_${id}`).length === 0 ? 0 : $(`#label_${id}`).outerHeight();
+    return { height, width, heightLabel };
+}
+
+
+	
 function nuMobileView(mobileView) {
 
 	if (nuUXOptions.nuMobileView && mobileView == '1') {
