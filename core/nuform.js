@@ -771,7 +771,7 @@ function nuSearchFieldSetSearchType(isMobile) {
 		});
 
 	if (isMobile) {
-		$searchField.css('height', '35px');
+		$searchField.css('height', '32px');
 	}	
 
 }
@@ -1652,7 +1652,7 @@ function nuAddStyle(id, obj) {
 
 function nuAddDblClickOpenObjectProperties(obj, objId) {  
 	if (nuGlobalAccess()) { 
-		obj.on('dblclick', function() { debugger;
+		obj.on('dblclick', function() {
 			nuDestroyWindowProperty('nudatepickers');
 			nuOptionsListAction("nuobject", objId);
 		});
@@ -4065,7 +4065,8 @@ function nuSelectTab(tab, byUser = false) {
 	selector = "[data-nu-form='" + form + "'][data-nu-tab='" + filt + "']";
 	$(selector + ":not([data-nu-lookup-id]):not('.nuIframe, .nuHtml')").show();
 	$(".nuIframe" + selector + ", .nuHtml" + selector).css('visibility', 'visible');
-	
+	$("[nu-mobileview-hidden]").hide();
+
 	$('#' + tab.id).addClass('nuTabSelected');
 
 	if (byUser) {
