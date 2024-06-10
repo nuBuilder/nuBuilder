@@ -761,12 +761,18 @@ function nuDefine(v, defaultValue = '') {
 
 function nuSearchFieldSetSearchType(isMobile) {
 
-	$("#nuSearchField")
+	const $searchField = $("#nuSearchField");
+
+	$searchField
 		.prop("type", "search")
 		.attr('autocomplete', 'off')
 		.on('search', function () {
 			nuSearchAction();
 		});
+
+	if (isMobile) {
+		$searchField.css('height', '35px');
+	}	
 
 }
 
@@ -780,23 +786,21 @@ function nuAddActionButtons(form) {
 	}
 
 	var button = form.buttons;
+	const isMobile = nuIsMobile();
 
 	if (nuFormType() == 'browse') {
 
 		var s = nuDefine(nuFORM.getProperty('search'));
 		var f = nuDefine(nuFORM.getProperty('filter'));
 
-		const isMobile = nuIsMobile();
-
 		$('#nuActionHolder').append("<input id='nuSearchField' type='text' class='nuSearch' onfocus='this.value = this.value;' onkeypress='nuSearchPressed(event)' onkeydown='nuArrowPressed(event)' value='" + s + "'>")
 			.append("<input id='nuFilter' style='visibility:hidden;width:0px' value='" + f + "'>");
 
+		const searchCaption = isMobile ? "<i class='fa-fw fa fa-search fa-lg'></i>" : "<i class='fa-fw fa fa-search'></i>" + "&nbsp;" + nuTranslate('Search');
+		const printCaption = nuTranslate('Print');
+		const addCaption = isMobile ? "<i class='fa-fw fa fa-add fa-lg'></i>" : nuTranslate('Add');
 
-		const searchCaption = isMobile ? "" : "&nbsp;" + nuTranslate('Search');
-		const printCaption = isMobile ? "<i class='fa fa-print'></i>" : nuTranslate('Print');
-		const addCaption = isMobile ? "<i class='fa fa-add'></i>" : nuTranslate('Add');
-
-		nuAddActionButton("Search", "<i class='fa fa-search'></i>" + searchCaption, 'nuSearchAction()');
+		nuAddActionButton("Search", searchCaption, 'nuSearchAction()');
 
 		if (button.Add == 1) {
 			nuAddActionButton('Add', addCaption, 'nuAddAction()');
@@ -830,6 +834,10 @@ function nuAddActionButtons(form) {
 
 		}
 
+	}
+
+	if (isMobile) {
+		$('.nuActionButton').css('height', '32px');
 	}
 
 }
