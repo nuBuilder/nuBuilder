@@ -6540,7 +6540,7 @@ function nuPortraitScreen(columns = 1) {
     };
 
     const nuSetPortraitElementPosition = (element, top, left, sameRow, previousWidth, previousTop, labelWidth) => {
-        const spacing = Number(element.attr('data-nu-same-row') || 0);
+        const spacing = Number(element.attr('data-nu-mobile-same-row') || 0);
         if (sameRow) {
             element.css({ 'top': previousTop, 'left': previousWidth + spacing });
         } else {
@@ -6630,7 +6630,7 @@ function nuPortraitScreen(columns = 1) {
                 } else {
                     $('#label_' + id).css({ 'top': top + 2, 'left': 7, 'text-align': 'left', 'font-weight': 700 });
 
-                    const sameRow = element.is('[data-nu-same-row]');
+                    const sameRow = element.is('[data-nu-mobile-same-row]');
                     if (columns === 1 && !sameRow) {
                         top += heightLabel + 5;
                     }
