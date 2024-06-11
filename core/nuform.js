@@ -1676,6 +1676,7 @@ function nuLookupFocus(e) {
 function nuSelectOnFocus(e) {
 	const $field = $(e.target);
 	$field.attr('data-nu-org-value', $field.val());
+	nuLookupFocus(e);
 }
 
 function nuCurrentRow() {
