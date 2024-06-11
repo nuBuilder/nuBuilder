@@ -264,9 +264,13 @@
 	border-style:dotted;
 	cursor:pointer 
 }
- .nuScroll,.input_nuScroll:hover::-webkit-inner-spin-button {
-	background:url(../graphics/nu_scroll.png) no-repeat 50% 50%;
-	background-position:right 5px top 2px 
+ .nuScroll, .input_nuScroll:hover::-webkit-inner-spin-button {
+	background: url(../graphics/nu_scroll.png) no-repeat right 5px center;
+}
+ @media (pointer: coarse) {
+	.nuScroll, .input_nuScroll:hover::-webkit-inner-spin-button {
+		background: none;
+	}
 }
  .nuAutoNumber,.input_nuAutoNumber {
 	background-color:lightgrey;
