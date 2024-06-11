@@ -4077,7 +4077,10 @@ function nuSelectTab(tab, byUser = false) {
 	selector = "[data-nu-form='" + form + "'][data-nu-tab='" + filt + "']";
 	$(selector + ":not([data-nu-lookup-id]):not('.nuIframe, .nuHtml')").show();
 	$(".nuIframe" + selector + ", .nuHtml" + selector).css('visibility', 'visible');
-	$("[nu-mobileview-hidden]").hide();
+
+	if (nuIsMobile()) {
+		$("[nu-mobileview-hidden]").hide();
+	}
 
 	$('#' + tab.id).addClass('nuTabSelected');
 
