@@ -418,16 +418,18 @@ function nuRunPHPWithParams(code, paramName, paramValue, iFrame = '', runBeforeS
 
 function nuSystemUpdate() {
 
-	var msg = nuTranslate("Update system? Be sure to backup first.");
-	if (confirm(msg) == false) { return; }
-
-	if (nuCurrentProperties().form_code == 'nuupdate') {
-		var myWindow = window.open("", "_self");
-		myWindow.document.write(nuTranslate('This tab can be closed after the update.') + ' <br> ' + nuTranslate('You will need to log in again for the changes to take effect.'));
+	const msg = `${nuTranslate("Do you want to update the system?")}\n${nuTranslate("Ensure you have a working backup and do not interrupt the update process.")}`;
+	if (confirm(msg) === false) {
+		return;
 	}
 
-	var current = nuFORM.getCurrent();
-	var last = $.extend(true, {}, current);
+	if (nuCurrentProperties().form_code === 'nuupdate') {
+		const myWindow = window.open("", "_self");
+		myWindow.document.write(`${nuTranslate('This tab can be closed after the update.')} <br> ${nuTranslate('You will need to log in again for the changes to take effect.')}`);
+	}
+
+	const current = nuFORM.getCurrent();
+	const last = $.extend(true, {}, current);
 
 	last.session_id = nuSESSION;
 	last.call_type = 'systemupdate';
@@ -435,17 +437,13 @@ function nuSystemUpdate() {
 	last.nuFORMdata = nuFORM.data();
 	last.hash = nuHashFromEditForm();
 
-	var successCallback = function (data, textStatus, jqXHR) {
-
-		var fm = data;
+	const successCallback = function (data, textStatus, jqXHR) {
+		const fm = data;
 
 		if (!nuDisplayError(fm)) {
-
-			var updateUrl = 'core/nusystemupdate.php?i=' + fm.id;
+			const updateUrl = 'core/nusystemupdate.php?i=' + fm.id;
 			window.open(updateUrl);
-
 		}
-
 	};
 
 	nuAjax(last, successCallback);
