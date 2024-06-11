@@ -6501,19 +6501,24 @@ function nuLookingUp() {
 
 function nuPortraitScreen(columns = 1) {
 
-	function nuPortraitScreenObjDimensions(id, jId) {
+	function nuPortraitScreenObjDimensions(id, element) {
 
-		let height = jId.outerHeight()
+		let height = element.outerHeight()
 
-		if (jId.is('[data-select2-id]')) {
-			height = jId.data('nu-org-height') + 50;
+		if (element.is('[data-select2-id]')) {
+			height = element.data('nu-org-height') + 50;
 		}
 
-		if (!jId.is("[nu-mobileview-hidden]")) {
-			maxWidth = Math.max(maxWidth, jId.outerWidth());
+		if (!element.is("[nu-mobileview-hidden]")) {
+			maxWidth = Math.max(maxWidth, element.outerWidth());
 		} 
 
 		let heightLabel = $('#label_' + id).length == 0 ? 0 : $('#label_' + id).outerHeight()
+
+		if (element.is('input') || element.is('select')) {
+			height = height * 1.5;
+			element.height(height);
+		}
 
 		return { height, maxWidth, heightLabel }
 
@@ -6546,6 +6551,12 @@ function nuPortraitScreen(columns = 1) {
         } else {
             element.css({ 'top': top, 'left': labelWidth + 10 });
         }
+
+		const maxWidth = element.attr('data-nu-mobile-max-width');
+		if (maxWidth) {
+			element.css('wdith', Math.max(element.nuCSSNumber('width'), maxWidth));
+		}
+
     };
 
     const nuPortraitHandleLookup = (id, top, labelWidth) => {
@@ -6559,7 +6570,12 @@ function nuPortraitScreen(columns = 1) {
         codeElement.css({ 'top': top, 'left': labelWidth + 10 });
         buttonElement.css({ 'top': top, 'left': labelWidth + codeWidth + 15 });
 
-        top += 35;
+		let height = codeElement.outerHeight() * 1.5;
+		codeElement.height(height); 
+		descElement.height(height); 
+		top += height;
+
+        top += 15;
         descElement.css({ 'top': top, 'left': labelWidth + 10, 'width': codeWidth - 5 });
 
         return { top, width: codeWidth + descWidth + 30 };
