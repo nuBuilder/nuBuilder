@@ -1272,7 +1272,12 @@ function nuINPUTLookup(id, objId, thisObj, obj, $formId, p, vis) {
 
 	nuAddDataTab(id, obj.tab, p);
 
-	var luClass = obj.label === 'Insert-Snippet' ? 'fa fa-code' : 'fa fa-search';
+	let luClass = obj.label === 'Insert-Snippet' ? 'fa fa-code' : 'fa fa-search';
+	let luStyle = "padding:4px";
+	if (nuIsMobile()) {
+		luClass += ' fa-lg';
+		luStyle += ';padding-top: 15px';
+	}
 
 	nuSetObjectBounds(div, obj.top, Number(obj.left) + Number(obj.width) + 6, 15, Number(obj.height - 2))
 		.attr('type', 'button')
@@ -1284,7 +1289,7 @@ function nuINPUTLookup(id, objId, thisObj, obj, $formId, p, vis) {
 		.attr('onfocus', 'nuLookupFocus(event)')
 		.attr('onclick', 'nuBuildLookup(this,"")')
 		.addClass('nuLookupButton')
-		.html('<i style="padding:4px" class="' + luClass + '"></i>')
+		.html('<i style="'+ luStyle +'" class="' + luClass + '"></i>')
 		.css('visibility', vis);
 
 	if (obj.label === 'Insert-Snippet') $('#' + id).css('font-size', '18px');
@@ -1678,9 +1683,11 @@ function nuLookupFocus(e) {
 }
 
 function nuSelectOnFocus(e) {
+
 	const $field = $(e.target);
 	$field.attr('data-nu-org-value', $field.val());
 	nuLookupFocus(e);
+
 }
 
 function nuCurrentRow() {
