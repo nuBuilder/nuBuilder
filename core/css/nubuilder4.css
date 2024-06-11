@@ -764,6 +764,10 @@
  .nuActionButton:not(.nuReadonly):hover {
 	color:#E2EAFF 
 }
+ .nuActionButtonIcon {
+	height: 28px;
+	width: 28px
+}
  .nuQuickButton {
 	background-color:#f7f7f7;
 	color:var(--nu-black);
