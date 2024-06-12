@@ -6640,6 +6640,9 @@ function nuPortraitScreen(columns = 1) {
 		if (objTab !== currentTab && tabVisible && window.nuPortraitScreenShowTabTitles !== false && objType !== 'contentbox') {
 			if ($('.nuTab').length > 1) {
 				currentTab = objTab;
+				if (currentTab > 0) {
+					top += 20;
+				}
 				const tabHeight = nuPortraitAppendTab(currentTab, top);
 				top += tabHeight + 5;
 			}
