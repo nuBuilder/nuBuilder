@@ -6536,6 +6536,11 @@ function nuPortraitScreen(columns = 1) {
 			element.height(height);
 		}
 
+		const maxHeight = element.attr('data-nu-mobile-max-height');
+		if (maxHeight) { 
+			element.css('height', Math.min(element.nuCSSNumber('height'), parseFloat(maxHeight)));
+		}
+		
 		return { height, maxWidth, heightLabel }
 
 	}
