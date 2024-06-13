@@ -188,10 +188,9 @@ function nuAddAdminButtons() {
 
 	}
 
-	const heightToAdd = 50;
+	let heightToAdd = 50;
 	if (buttonCount > 0) {
-		
-		$('#nuActionHolder').css('height', `+=${heightToAdd}px`);
+
 		const frame = parent.$('#nuDragDialog iframe');
 		const dragDialog = parent.$('#nuDragDialog');
 		if (frame.length !== 0) {
@@ -200,8 +199,13 @@ function nuAddAdminButtons() {
 		if (dragDialog.length !== 0) {
 			dragDialog.outerHeight((i, h) => h + heightToAdd);
 		}
+	
+		if (isLaunch) heightToAdd = 20;
+		$('#nuActionHolder').css('height', `+=${heightToAdd}px`);
+
 		const lastAdminButton = $('.nuAdminButton').last();
 		$('<br style="user-select:none">').insertAfter(lastAdminButton);
+
 	}
 
 }
