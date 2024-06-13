@@ -1265,6 +1265,8 @@ function nuRemove(i) {
 
 function nuIsVisible(id) {
 
+	if (id) return;
+
 	const $id = typeof id === 'string' ? $('#' + id) : id;
 	if ($id.length === 0) return null;
 
