@@ -6729,6 +6729,7 @@ function nuPortraitScreen(columns = 1) {
 
 function nuMobileView(mobileView) {
 
+	mobileView = nuDefine(mobileView, nuCurrentProperties().mobile_view);
 	if (nuUXOptions.nuMobileView && mobileView == '1') {
 		if (nuFormType() == 'edit') {
 			nuPortraitScreen();
