@@ -850,7 +850,7 @@ function nuAddActionButton(id, value, func, text, e) {
 	}
 
 	if (typeof(value) == 'object') {
-		value = nuIsMobileView() ? value.valueMobile : nuTranslate(nuDefine('value'));
+		value = nuShouldUseMobileView() ? value.valueMobile : nuTranslate(nuDefine('value'));
 	} else {
 		value = nuTranslate(nuDefine(value));
 	}
@@ -6727,13 +6727,13 @@ function nuPortraitScreen(columns = 1) {
 	return scale;
 }
 
-function nuIsMobileView() {
+function nuShouldUseMobileView() {
 	return nuIsMobile() && nuUXOptions.nuMobileView && nuCurrentProperties().mobile_view == "1";
 }
 
 function nuSetMobileView() {
 
-	if (nuIsMobileView()) {
+	if (nuShouldUseMobileView()) {
 		if (nuFormType() == 'edit') {
 			nuPortraitScreen();
 			$('button').css('text-align', 'left');
