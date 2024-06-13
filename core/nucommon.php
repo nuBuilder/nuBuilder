@@ -1460,7 +1460,7 @@ function nuFailIfUnsetHashCookies($string) {
 	return preg_match('/#[^#]+#/', $string);
 }
 
-function nuEvalSafe($code, $returnOutput = false) {
+function nuEvalSafe($code, $nudata, $returnOutput = false) {
 
 	$output = '';
 	$nuFailIfUnsetHashCookies = false;
@@ -1506,7 +1506,7 @@ function nuEval($phpid, $returnOutput = false) {
 	$nuDataSet = isset($_POST['nudata']);
 	$nudata = $nuDataSet ? $_POST['nudata'] : '';
 
-	$result = nuEvalSafe($php, $returnOutput);
+	$result = nuEvalSafe($php, $nudata, $returnOutput);
 
 	$nuFailIfUnsetHashCookies = $result['nuFailIfUnsetHashCookies'] ?? false;
 
