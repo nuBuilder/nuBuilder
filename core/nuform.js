@@ -6728,7 +6728,7 @@ function nuPortraitScreen(columns = 1) {
 }
 
 function nuIsMobileView() {
-	return nuUXOptions.nuMobileView && nuCurrentProperties().mobile_view == "1";
+	return nuIsMobile() && nuUXOptions.nuMobileView && nuCurrentProperties().mobile_view == "1";
 }
 
 function nuSetMobileView() {
