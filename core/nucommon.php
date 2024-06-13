@@ -1459,38 +1459,27 @@ function nuFailIfUnsetHashCookies($string) {
 function nuEvalSafe($code, $returnOutput = false) {
 
 	$output = '';
+	$nuFailIfUnsetHashCookies = false;
 
 	try {
 		if ($returnOutput) ob_start();
-		/*
-		set_error_handler(function($errno, $errstr, $errfile, $errline) {
-			throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
-		});
-		*/
 		$result = eval($code);
 		if ($returnOutput) {
 			$output = ob_get_clean();
-		//	restore_error_handler();
 		}
 
-		if ($returnOutput) {
-			return ['result' => $result, 'output' => $output, 'error' => null];
-		} else {
-			return ['result' => $result, 'error' => null];
-		}
-	} catch (ParseError $e) {
+		$error = null;
+	} catch (ParseError | ErrorException | Throwable $e) {
+		$error = $e;
 		if ($returnOutput) ob_end_clean();
-		return ['result' => null, 'output' => $output, 'error' => $e];
-	} catch (ErrorException $e) {
-		if ($returnOutput) ob_end_clean();
-		return ['result' => null, 'output' => $output, 'error' => $e];
-	} catch (Throwable $e) {
-		if ($returnOutput) ob_end_clean();
-		return ['result' => null, 'output' => $output, 'error' => $e];
 	}
 
+	if ($returnOutput) {
+		return ['result' => $result, 'output' => $output, 'error' => $error, 'nuFailIfUnsetHashCookies' => $nuFailIfUnsetHashCookies];
+	} else {
+		return ['result' => $result, 'error' => $error, 'nuFailIfUnsetHashCookies' => $nuFailIfUnsetHashCookies];
+	}
 }
-
 
 function nuEval($phpid, $returnOutput = false){
 
@@ -1509,11 +1498,13 @@ function nuEval($phpid, $returnOutput = false){
 
 	$result = nuEvalSafe($php, $returnOutput);
 
+	$nuFailIfUnsetHashCookies = $result['nuFailIfUnsetHashCookies'] ?? false;
+
 	if ($result['error']) {
 		nuExceptionHandler($result['error'], $code);
 	}
 
-	if (($nuFailIfUnsetHashCookies ?? false) === true && nuFailIfUnsetHashCookies($php)) {
+	if ($nuFailIfUnsetHashCookies && nuFailIfUnsetHashCookies($php)) {
 		$e = new Exception('nuEval failed, unset Hash Cookies.');
 		nuExceptionHandler($e, $code);
 		return '';
