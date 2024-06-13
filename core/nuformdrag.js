@@ -2,32 +2,19 @@ function nuBindDragEvents() {
 	
 	$(document).on('mousemove.nuformdrag', function (e) {
 
-		var draggable = 0;
+		let arrangingObjects = window.nuFORM.breadcrumbs.length != -1 && nuArrangingObjects();
 
-		if (window.nuFORM.breadcrumbs.length != -1) {
-
-			if (window.nuFORM.getProperty('record_id') == '-2') {
-				draggable = 1;
-			}
-
-		}
-
-		if (draggable) {
-
-			if (e.stopPropagation)
-				e.stopPropagation();
-			if (e.preventDefault)
-				e.preventDefault();
-
+		if (arrangingObjects) {
+			e.stopPropagation?.();
+			e.preventDefault?.();
 			e.cancelBubble = true;
 			e.returnValue = false;
-
+		
 			if (e.buttons) {
 				nuDragBox(e);
 			}
-
 		}
-
+		
 	});
 
 	$(document).on('mousedown.nuformdrag', function (e) {
@@ -37,17 +24,9 @@ function nuBindDragEvents() {
 		window.moveX = 0;
 		window.moveY = 0;
 
-		var draggable = 0;
+		const arrangingObjects = window.nuFORM.last != -1 && nuArrangingObjects();
 
-		if (window.nuFORM.last != -1) {
-
-			if (window.nuFORM.getProperty('record_id') == '-2') {
-				draggable = 1;
-			}
-
-		}
-
-		if (draggable) {
+		if (arrangingObjects) {
 
 			let id = e.target.id;
 
@@ -84,17 +63,8 @@ function nuBindDragEvents() {
 
 	$(document).on('mouseup.nuformdrag', function (e) {
 
-		var draggable = 0;
-
-		if (window.nuFORM.last != -1) {
-
-			if (window.nuFORM.getProperty('record_id') == '-2') {
-				draggable = 1;
-			}
-
-		}
-
-		if (draggable) {
+		const arrangingObjects = window.nuFORM.last != -1 && nuArrangingObjects();
+		if (arrangingObjects) {
 
 			if ($('#nuSelectBox').length > 0) {
 				nuRemoveBox((nuIsMacintosh() ? e.metaKey : e.ctrlKey));
