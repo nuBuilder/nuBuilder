@@ -165,16 +165,19 @@ $.fn.nuOnEnterKey = function(fn, preventDefault = false) {
 
 $.fn.nuFocusWithoutScrolling = function () {
 
-	let t = $(this)[0];
+	let element = $(this)[0];
 
-	if (t === undefined) {
+	if (element === undefined) {
 		return;
 	}
 
-	let x = t.scrollX, y = t.scrollY;
+	let x = element.scrollX, y = element.scrollY;
 
+	this.attr('inputmode', 'none');
 	this.trigger("focus");
-	t.scrollTo(x, y);
+	this.removeAttr('inputmode');
+
+	element.scrollTo(x, y);
 	return this;
 
 };
@@ -1265,7 +1268,7 @@ function nuRemove(i) {
 
 function nuIsVisible(id) {
 
-	if (id) return;
+	if (!id) return;
 
 	const $id = typeof id === 'string' ? $('#' + id) : id;
 	if ($id.length === 0) return null;
