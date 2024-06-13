@@ -864,4 +864,6 @@ function nuAbortSave() {
 	$("#nuProgressUpdate").hide();
 	$('.nuActionButton').show();
 
+	return true;
+
 }
