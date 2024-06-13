@@ -117,7 +117,7 @@ function nuCreateDrag() {
 		var m = (event.buttons == 1 && this.classList.indexOf('nuDragSelected') != -1);
 
 		if (m || (key?.startsWith('Arrow'))) {
-	
+
 
 			if ($('#nuDragDialog').is(":visible") == false) {
 
@@ -447,7 +447,7 @@ function nuCreateDrag() {
 		$('body').append(e);
 
 		$('#nuDragArea').css({ 'left': l, 'top': t, 'width': w, 'height': h })
-						.addClass('nuDragArea nuDragNoSelect');
+			.addClass('nuDragArea nuDragNoSelect');
 
 	}
 
@@ -461,10 +461,10 @@ function nuCreateDrag() {
 		$('#nuDragArea').append(e);
 
 		$('#' + id).addClass('nuDragObject')
-		.css(prop)
-		.css('z-index', 100 + $('.nuDragObject').length)
-		.attr('data-section', '')
-		.attr('data-x', 0);
+			.css(prop)
+			.css('z-index', 100 + $('.nuDragObject').length)
+			.attr('data-section', '')
+			.attr('data-x', 0);
 
 	}
 

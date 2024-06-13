@@ -10,11 +10,11 @@ function nuSsoLoginCheckParams() {
 	$check = true;
 	$nuState = $_POST['nuSTATE'];
 
-	(array_key_exists('ssousersname',	$nuState)) || $check = false;
-	(array_key_exists('ssousersemail',	$nuState)) || $check = false;
-	(array_key_exists('code',			$nuState)) || $check = false;
+	(array_key_exists('ssousersname', $nuState)) || $check = false;
+	(array_key_exists('ssousersemail', $nuState)) || $check = false;
+	(array_key_exists('code', $nuState)) || $check = false;
 
-	if($check) {
+	if ($check) {
 		if (($nuState['ssousersname'] == "") || ($nuState['ssousersemail'] == "") ||
 			($nuState['code'] == "")) {
 			$check = false;
@@ -27,20 +27,26 @@ function nuSsoLoginCheckParams() {
 function nuSsoGetloginRequestData() {
 
 	$return = [];
-	if (array_key_exists('ssousersname',	$_POST['nuSTATE']))	$nameFromPost  = $_POST['nuSTATE']['ssousersname'];
-	if (array_key_exists('ssousersemail',	$_POST['nuSTATE']))	$emailFromPost = $_POST['nuSTATE']['ssousersemail'];
-	if (array_key_exists('code',			$_POST['nuSTATE']))	$codeFromPost	= $_POST['nuSTATE']['code'];
+	if (array_key_exists('ssousersname', $_POST['nuSTATE']))
+		$nameFromPost = $_POST['nuSTATE']['ssousersname'];
+	if (array_key_exists('ssousersemail', $_POST['nuSTATE']))
+		$emailFromPost = $_POST['nuSTATE']['ssousersemail'];
+	if (array_key_exists('code', $_POST['nuSTATE']))
+		$codeFromPost = $_POST['nuSTATE']['code'];
 
-	$nameFromPost  and $return["name"]  = $nameFromPost;
+	$nameFromPost and $return["name"] = $nameFromPost;
 	$emailFromPost and $return["email"] = $emailFromPost;
-	$codeFromPost  and $return["code"]  = $codeFromPost;
+	$codeFromPost and $return["code"] = $codeFromPost;
 
 	return $return;
 }
 
 function nuSsoCheckloginDataAgainstDb($sso_d) {
 
-	$check = true;  $nameFromDB="";  $emailFromDB="";  $timeFromDB=0;
+	$check = true;
+	$nameFromDB = "";
+	$emailFromDB = "";
+	$timeFromDB = 0;
 
 	$sql = "
 		SELECT sso_email, sso_name, sso_login_time_s
@@ -53,19 +59,21 @@ function nuSsoCheckloginDataAgainstDb($sso_d) {
 
 	$r = db_fetch_object($rs);
 	$emailFromDB = $r->sso_email;
-	$nameFromDB  = $r->sso_name;
-	$timeFromDB  = $r->sso_login_time_s;
-	$elapsed = time()-$timeFromDB;
+	$nameFromDB = $r->sso_name;
+	$timeFromDB = $r->sso_login_time_s;
+	$elapsed = time() - $timeFromDB;
 
-	if($elapsed > 200) $check = false;  // TODO: Change to short timeout, e.g. five seconds or less
+	if ($elapsed > 200)
+		$check = false;  // TODO: Change to short timeout, e.g. five seconds or less
 	$check or nuDie("Error during SSO login.  A timeout occurred.  $elapsed ; $timeFromDB");
 
-	if($sso_d["name"] != $nameFromDB or $sso_d["email"] != $emailFromDB) $check = false;
+	if ($sso_d["name"] != $nameFromDB or $sso_d["email"] != $emailFromDB)
+		$check = false;
 	$check or nuDie("Error during SSO login.  Data did not match ssologin request.");
 
 	$return = [];
 	$return["email"] = $emailFromDB;
-	$return["name"]  = $nameFromDB;
+	$return["name"] = $nameFromDB;
 	return $return;
 }
 
@@ -98,7 +106,7 @@ function nuSsoVeryFirstLogin($sus_login_name) {
 
 function nuSsoDetermineAccessLevelForFirstLogin($ssodb_d) {
 
-	$error	= '';
+	$error = '';
 	$accessLevel = 'Unset';
 	$email = $ssodb_d["email"];
 	// Optionally add php code in nuBuilder: Builders->Procedure with
@@ -115,12 +123,14 @@ function nuSsoDetermineAccessLevelForFirstLogin($ssodb_d) {
 	// 'Denied'
 	// Or should already match the "Description" of an existing entry in nuBuilder Setup->Access Levels.
 	// (If it does not exist, an error will be generated).
-	$p		= nuProcedure("DETERMINE_ACCESS_LEVEL_FOR_FIRST_SSO_LOGIN");
-	if($p != ''){
-		eval($p);
-		if ($error != '') nuDie($error);
+	$p = nuProcedure("DETERMINE_ACCESS_LEVEL_FOR_FIRST_SSO_LOGIN");
+	if ($p != '') {
+		eval ($p);
+		if ($error != '')
+			nuDie($error);
 	}
-	if($accessLevel == 'Unset') $accessLevel = 'Default';
+	if ($accessLevel == 'Unset')
+		$accessLevel = 'Default';
 	return $accessLevel;
 }
 
@@ -136,10 +146,11 @@ function nuSsoAddSysUserEntryForFirstLogin($emailLocalPart, $ssodb_d) {  // $sso
 	$rs = nuRunQuery($sql, [$accessLevel]);
 	$rowCount = db_num_rows($rs);
 	$check = ($rowCount == 1);
-	$check or nuDie('Error during SSO login.  Internal information: There must be exactly one entry in "Access Levels" with "Description" of '.$accessLevel.' but found '."$rowCount");
+	$check or nuDie('Error during SSO login.  Internal information: There must be exactly one entry in "Access Levels" with "Description" of ' . $accessLevel . ' but found ' . "$rowCount");
 
 	$r = db_fetch_object($rs);
-	if (!isset($r->zzzzsys_access_id)) $check = false;
+	if (!isset($r->zzzzsys_access_id))
+		$check = false;
 	$check or nuDie('Error during SSO login.  Internal information: Access ID not set');
 	$fk_ro_access_id = $r->zzzzsys_access_id;
 
@@ -148,7 +159,7 @@ function nuSsoAddSysUserEntryForFirstLogin($emailLocalPart, $ssodb_d) {  // $sso
 	$array = [$ssodb_d["email"], $fk_ro_access_id, $ssodb_d["name"], $emailLocalPart, $ssodb_d["email"]];
 	$rs = nuRunQuery($sql, $array, true);
 
-//	 $rowCount = db_num_rows($rs);
+	//	 $rowCount = db_num_rows($rs);
 //	 $check = ($numRows == 1);
 //	 $check or nuDie('Error during SSO login.  Internal information: New entry with default access level failed');
 }

@@ -35,7 +35,7 @@ if (db_num_rows($rs) != 1) {
 
 $obj = db_fetch_object($rs);
 
-eval($obj->sph_php);
+eval ($obj->sph_php);
 
 function nuSetError($h) {
 	header("Content-Type: text/html");

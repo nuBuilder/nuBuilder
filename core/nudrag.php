@@ -1,16 +1,17 @@
 <?php
 
-function nuDragSave($data){
+function nuDragSave($data) {
 
-	if (nuDemo()) return;
+	if (nuDemo())
+		return;
 
-	foreach($data['nuDragState']['tabs'] as $tab){
+	foreach ($data['nuDragState']['tabs'] as $tab) {
 
-		if($tab['objects'] !== null){
+		if ($tab['objects'] !== null) {
 
 			$tabID = $tab['tab_id'];
 
-			for($i = 0; $i < sizeof($tab['objects']); $i++) {
+			for ($i = 0; $i < sizeof($tab['objects']); $i++) {
 
 				$field = $tab['objects'][$i];
 

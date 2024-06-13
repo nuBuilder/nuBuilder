@@ -157,7 +157,7 @@ class nuResponseForm {
 		$(".nuHtml").css('visibility', 'visible');
 		$("[data-nu-tab='x']").css('visibility', 'hidden');
 
-		$('.nuTabSelected').trigger( "click" );
+		$('.nuTabSelected').trigger("click");
 
 	}
 
@@ -221,7 +221,7 @@ class nuResponseForm {
 			}
 		}
 
-		$('.nuTabSelected').trigger( "click" );
+		$('.nuTabSelected').trigger("click");
 
 	}
 
@@ -657,7 +657,7 @@ class nuFormObject {
 
 		const dataFormat = $this.attr('data-nu-format');
 		const inputType = $this.attr('type');
-							  
+
 		let value = $this.val();
 
 		if (inputType == 'checkbox') {
@@ -682,8 +682,8 @@ class nuFormObject {
 			counter
 		};
 
-	}	
-	
+	}
+
 	subform(formId, action = 'save') {
 
 		var id = formId;
@@ -727,7 +727,7 @@ class nuFormObject {
 
 		}
 
-		var obj = { 'id': id, 'foreign_key': fk, 'primary_key': pk, 'object_id': oi, 'table': table, 'action': action };	
+		var obj = { 'id': id, 'foreign_key': fk, 'primary_key': pk, 'object_id': oi, 'table': table, 'action': action };
 		//-- foreign_key id id Form's record_id (which might change if cloned.)
 		var fieldNames = ['ID'];
 		obj.rows = [];
@@ -751,7 +751,7 @@ class nuFormObject {
 			// var combinedChildren = childrenInNuForm.add(childrenInHTMLForm);
 
 			childrenInNuForm.each(function () {
-				
+
 				let children = cThis.subformCollectRecordChildren(this, formId, isMarkedForDeletion, deleteAction, values, edited, fieldNames, counter);
 				isMarkedForDeletion = children.isMarkedForDeletion;
 				values = children.values;
@@ -792,11 +792,11 @@ class nuFormObject {
 			const originalRow = obj.rows[rowIndex];
 			const modifiedRow = JSON.parse(JSON.stringify(originalRow)); // Deep copy of the row
 
-			modifiedRow.shift(); // Remove the first element 
+			modifiedRow.shift(); // Remove the first element
 			modifiedRow.pop();  // Remove the last element
 
 			if (obj.deleted[rowIndex] == 0) { // Check if the row is not marked for deletion
-				for (let columnIndex = 1; columnIndex < modifiedRow.length; columnIndex++) { // Skip the first element 
+				for (let columnIndex = 1; columnIndex < modifiedRow.length; columnIndex++) { // Skip the first element
 					modifiedRow[columnIndex] = Number(modifiedRow[columnIndex]); // Convert to number
 				}
 

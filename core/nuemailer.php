@@ -35,14 +35,14 @@ function nuEmailPHP($sendTo, $fromAddress, $fromName, $content, $subject, $optio
 }
 
 // Send email using PHPMailer
-function nuEmail($to_list=[],$from_address='',$from_name='',$content='',$subject='',$file_list=[],$html=false,$cc_list=[],$bcc_list=[],$reply_to_list=[],$debug=0,$method='SMTP',$priority='', $smtp_options = []){
-	
+function nuEmail($to_list = [], $from_address = '', $from_name = '', $content = '', $subject = '', $file_list = [], $html = false, $cc_list = [], $bcc_list = [], $reply_to_list = [], $debug = 0, $method = 'SMTP', $priority = '', $smtp_options = []) {
+
 	/* DEV: null to empty string
-	$args = get_defined_vars();
-	foreach ($args as $key => $val) {
-		$$key = $val === null && !is_array($key) ? "" : $val;
-	}
-	*/
+				$args = get_defined_vars();
+				foreach ($args as $key => $val) {
+					$$key = $val === null && !is_array($key) ? "" : $val;
+				}
+				*/
 
 	ob_start();
 
@@ -51,28 +51,29 @@ function nuEmail($to_list=[],$from_address='',$from_name='',$content='',$subject
 	$mail = new PHPMailer();
 	$mail->SMTPDebug = $debug;
 
-	if ( $method == 'SMTP' ) {
+	if ($method == 'SMTP') {
 		$mail->isSMTP();
 	}
-	if ( $method == 'sendmail' ) {
+	if ($method == 'sendmail') {
 		$mail->isSendmail();
 	}
 
-	$mail->Subject	 		 		 	= $subject;
-	$mail->Body	 		 		 		= $content;
-	$mail->Username	 		 			= $nuEmailSettings->username;	 		 		 	// defaults to ''
-	$mail->Password	 		 			= $nuEmailSettings->password;	 		 		 	// defaults to ''
-	$mail->Host	 		 		 		= $nuEmailSettings->host;	 		 		 		// defaults to 127.0.0.1
-	$mail->From	 		 		 		= $nuEmailSettings->from_address;	 		 		// defaults to ''
-	$mail->FromName	 		 			= $nuEmailSettings->from_name;	 		 		 	// defaults to ''
-	$mail->Port	 		 		 		= $nuEmailSettings->smtp_port;	 		 		 	// defaults to 25
-	$mail->SMTPSecure	 		 		= $nuEmailSettings->smtp_secure;	 		 		// defaults to '' otherwsie it will be tls or ssl
-	$mail->SMTPAuth	 		 			= $nuEmailSettings->smtp_use_authentication;	 	// defaults to false
-	$mail->WordWrap	 		 			= $nuEmailSettings->word_wrap;	 		 		 	// defaults to 120
-	$mail->CharSet	 		 		 	= $nuEmailSettings->charset;	 		 		 	// defaults to UTF-8
-	$mail->SMTPOptions	 		 		= $smtp_options;	 		 		 				// defaults to empty array
+	$mail->Subject = $subject;
+	$mail->Body = $content;
+	$mail->Username = $nuEmailSettings->username;	 		 		 	// defaults to ''
+	$mail->Password = $nuEmailSettings->password;	 		 		 	// defaults to ''
+	$mail->Host = $nuEmailSettings->host;	 		 		 		// defaults to 127.0.0.1
+	$mail->From = $nuEmailSettings->from_address;	 		 		// defaults to ''
+	$mail->FromName = $nuEmailSettings->from_name;	 		 		 	// defaults to ''
+	$mail->Port = $nuEmailSettings->smtp_port;	 		 		 	// defaults to 25
+	$mail->SMTPSecure = $nuEmailSettings->smtp_secure;	 		 		// defaults to '' otherwsie it will be tls or ssl
+	$mail->SMTPAuth = $nuEmailSettings->smtp_use_authentication;	 	// defaults to false
+	$mail->WordWrap = $nuEmailSettings->word_wrap;	 		 		 	// defaults to 120
+	$mail->CharSet = $nuEmailSettings->charset;	 		 		 	// defaults to UTF-8
+	$mail->SMTPOptions = $smtp_options;	 		 		 				// defaults to empty array
 
-	if ($priority != '') $mail->Priority = $priority; 										// Highest priority - Email priority (1 = High, 3 = Normal, 5 = low)
+	if ($priority != '')
+		$mail->Priority = $priority; 										// Highest priority - Email priority (1 = High, 3 = Normal, 5 = low)
 
 	$mail->isHTML($nuEmailSettings->html);
 
@@ -96,7 +97,7 @@ function nuEmail($to_list=[],$from_address='',$from_name='',$content='',$subject
 			$result[2] = $mail->ErrorInfo;
 		}
 
-	} catch(Exception $e) {
+	} catch (Exception $e) {
 		$result[0] = false;
 		$result[1] = $e->errorMessage();
 		$result[2] = $mail->ErrorInfo;
@@ -110,49 +111,49 @@ function nuEmail($to_list=[],$from_address='',$from_name='',$content='',$subject
 
 function _nuMarshallEmailSettingsHelper($obj, $key, $default = '') {
 
-	if ( !is_object($obj) ) {
+	if (!is_object($obj)) {
 		return $default;
 	}
-	if ( !isset($obj->$key) ) {
+	if (!isset($obj->$key)) {
 		return $default;
 	}
 	$a = trim($obj->$key);
-	if ( empty($a) ) {
+	if (empty($a)) {
 		return $default;
 	}
 	return $a;
 }
 
-function nuMarshallEmailSettings( $from_address = '', $from_name = '', $html = false, $reply_to_list = [] ) {
+function nuMarshallEmailSettings($from_address = '', $from_name = '', $html = false, $reply_to_list = []) {
 
 	$setup = db_setup();
 	$nuEmailSettings = new stdClass();
-	$nuEmailSettings->error_text				= '';
-	$nuEmailSettings->username					= _nuMarshallEmailSettingsHelper($setup, 'set_smtp_username');
-	$nuEmailSettings->password					= _nuMarshallEmailSettingsHelper($setup, 'set_smtp_password');
-	$nuEmailSettings->host						= _nuMarshallEmailSettingsHelper($setup, 'set_smtp_host', '127.0.0.1');
-	$nuEmailSettings->smtp_port					= _nuMarshallEmailSettingsHelper($setup, 'set_smtp_port', '25');
-	$nuEmailSettings->smtp_use_secure			= _nuMarshallEmailSettingsHelper($setup, 'set_smtp_use_ssl', false);
-	$nuEmailSettings->smtp_use_authentication	= _nuMarshallEmailSettingsHelper($setup, 'set_smtp_use_authentication', false);
-	$nuEmailSettings->from_address				= $from_address != '' ? $from_address : _nuMarshallEmailSettingsHelper($setup, 'set_smtp_from_address');
-	$nuEmailSettings->from_name					= $from_name != '' ? $from_name :  _nuMarshallEmailSettingsHelper($setup, 'set_smtp_from_name');
-	$nuEmailSettings->word_wrap					= 120;
-	$nuEmailSettings->charset					= 'UTF-8';
-	$nuEmailSettings->html						= $html;
+	$nuEmailSettings->error_text = '';
+	$nuEmailSettings->username = _nuMarshallEmailSettingsHelper($setup, 'set_smtp_username');
+	$nuEmailSettings->password = _nuMarshallEmailSettingsHelper($setup, 'set_smtp_password');
+	$nuEmailSettings->host = _nuMarshallEmailSettingsHelper($setup, 'set_smtp_host', '127.0.0.1');
+	$nuEmailSettings->smtp_port = _nuMarshallEmailSettingsHelper($setup, 'set_smtp_port', '25');
+	$nuEmailSettings->smtp_use_secure = _nuMarshallEmailSettingsHelper($setup, 'set_smtp_use_ssl', false);
+	$nuEmailSettings->smtp_use_authentication = _nuMarshallEmailSettingsHelper($setup, 'set_smtp_use_authentication', false);
+	$nuEmailSettings->from_address = $from_address != '' ? $from_address : _nuMarshallEmailSettingsHelper($setup, 'set_smtp_from_address');
+	$nuEmailSettings->from_name = $from_name != '' ? $from_name : _nuMarshallEmailSettingsHelper($setup, 'set_smtp_from_name');
+	$nuEmailSettings->word_wrap = 120;
+	$nuEmailSettings->charset = 'UTF-8';
+	$nuEmailSettings->html = $html;
 
-	$nuEmailSettings->reply_to_list		= [];
-	$nuEmailSettings->smtp_secure		= '';
-	if ( $nuEmailSettings->smtp_port	== '587' ) {
-		$nuEmailSettings->smtp_secure	= 'tls';
-		$nuEmailSettings->verbose_host	= 'tls://'.$nuEmailSettings->host.':587';
+	$nuEmailSettings->reply_to_list = [];
+	$nuEmailSettings->smtp_secure = '';
+	if ($nuEmailSettings->smtp_port == '587') {
+		$nuEmailSettings->smtp_secure = 'tls';
+		$nuEmailSettings->verbose_host = 'tls://' . $nuEmailSettings->host . ':587';
 	}
-	if ( $nuEmailSettings->smtp_port	== '465' ) {
-		$nuEmailSettings->smtp_secure	= 'ssl';
-		$nuEmailSettings->verbose_host	= 'ssl://'.$nuEmailSettings->host.':465';
+	if ($nuEmailSettings->smtp_port == '465') {
+		$nuEmailSettings->smtp_secure = 'ssl';
+		$nuEmailSettings->verbose_host = 'ssl://' . $nuEmailSettings->host . ':465';
 	}
-	if ( empty($reply_to_list) ) {
-		if ( $from_address != '' ) {
-					$nuEmailSettings->reply_to_list = [$from_address => $from_name];
+	if (empty($reply_to_list)) {
+		if ($from_address != '') {
+			$nuEmailSettings->reply_to_list = [$from_address => $from_name];
 		}
 	} else {
 		$nuEmailSettings->reply_to_list = $reply_to_list;
@@ -170,30 +171,30 @@ function _nuEmailHelperAdd(&$mail, $names_addresses, $method) {
 }
 
 function _nuEmailHelperAddOrdinal(&$mail, $names_addresses, $method) {
-	if ( !is_array($names_addresses) ) {
+	if (!is_array($names_addresses)) {
 		return;
 	}
 	$count = count($names_addresses);
-	for ( $x=0; $x<$count; $x++ ) {
+	for ($x = 0; $x < $count; $x++) {
 		$mail->$method($names_addresses[$x], '');
 	}
 }
 
 function _nuEmailHelperAddAssociative(&$mail, $names_addresses, $method) {
-	foreach ( $names_addresses as $key => $value ) {
+	foreach ($names_addresses as $key => $value) {
 		$mail->$method($key, $value);
 	}
 }
 
-function _nuEmailHelperAttach(&$mail, $file_list = [] ) {
-	if ( !is_array($file_list) ) {
+function _nuEmailHelperAttach(&$mail, $file_list = []) {
+	if (!is_array($file_list)) {
 		return;
 	}
-	if ( !nuIsArrayAssociative($file_list) ) {
+	if (!nuIsArrayAssociative($file_list)) {
 		return;
 	}
 
-	foreach($file_list as $filename=>$filesource) {
-		$mail->AddAttachment($filesource,$filename);
+	foreach ($file_list as $filename => $filesource) {
+		$mail->AddAttachment($filesource, $filename);
 	}
 }

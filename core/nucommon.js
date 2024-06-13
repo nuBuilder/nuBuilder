@@ -43,12 +43,12 @@ window.nuBROWSERESIZE = {
 	last_moved_element: ''
 };
 
-String.prototype.nuEndsWith = function(substr, ignoreCase) {
+String.prototype.nuEndsWith = function (substr, ignoreCase) {
 	if (ignoreCase === undefined || ignoreCase === false) return this.endsWith(substr);
 	return this.toLowerCase().endsWith(substr.toLowerCase());
 }
 
-String.prototype.nuStartsWith = function(substr, ignoreCase) {
+String.prototype.nuStartsWith = function (substr, ignoreCase) {
 	if (ignoreCase === undefined || ignoreCase === false) return this.startsWith(substr);
 	return this.toLowerCase().startsWith(substr.toLowerCase());
 }
@@ -99,7 +99,7 @@ String.prototype.nuWithoutNumbers = function () {
 	return this.replace(/\d+/g, '');
 }
 
-String.prototype.nuInsertString = function(index, string) {
+String.prototype.nuInsertString = function (index, string) {
 	if (index > 0) {
 		return this.substring(0, index) + string + this.substring(index);
 	}
@@ -110,7 +110,7 @@ String.prototype.nuIsEmpty = function () {
 	return (this === null || this.length === 0);
 }
 
-String.prototype.nuHasHTMLTag = function(tag) {
+String.prototype.nuHasHTMLTag = function (tag) {
 	const escapeTagName = (name) => name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 	let regex;
@@ -122,7 +122,7 @@ String.prototype.nuHasHTMLTag = function(tag) {
 		const escapedTagName = escapeTagName(tag);
 		regex = new RegExp(`(${escapedTagName})\\b[^>]*>`, 'i');
 	}
-	
+
 	const match = this.match(regex);
 	return match ? match[1] : false;
 };
@@ -150,8 +150,8 @@ String.prototype.nuFormat = function () {
 	});
 };
 
-$.fn.nuOnEnterKey = function(fn, preventDefault = false) {
-	return this.each(function() {
+$.fn.nuOnEnterKey = function (fn, preventDefault = false) {
+	return this.each(function () {
 		$(this).on('keydown', e => {
 			if (e.key === 'Enter') {
 				if (preventDefault) {
@@ -192,7 +192,7 @@ jQuery.fn.extend({
 		return this.each(function () {
 			nuReadonly(this.id, readonly);
 		});
-	},	
+	},
 	nuDisable: function () {
 		return this.each(function () {
 			nuDisable(this.id);
@@ -236,7 +236,7 @@ jQuery.fn.extend({
 	},
 	nuGetHTML: function () {
 		return nuGetValue(this.attr('id'), 'html');
-	},	
+	},
 	nuTranslate: function (method) {
 		return this.each(function () {
 			nuSetValue(this.id, nuTranslate(nuGetValue(this.id, method)), method);
@@ -257,18 +257,18 @@ jQuery.fn.extend({
 	nuIsEnabled: function () {
 		return nuIsEnabled(this.attr('id'));
 	},
-	nuSetPlaceholder: function(placeholder, translate) {
+	nuSetPlaceholder: function (placeholder, translate) {
 		return this.each(function () {
 			return nuSetPlaceholder(this.id, placeholder, translate);
-		});			
+		});
 	},
-	nuSetLabelText: function(str, translate) {
+	nuSetLabelText: function (str, translate) {
 		return this.each(function () {
 			nuSetLabelText(this.id, str, translate);
 		});
 	},
-	nuTogglePassword: function(show) {
-		return this.each(function() {
+	nuTogglePassword: function (show) {
+		return this.each(function () {
 			let $input = $(this);
 			let type = $input.attr('type') === 'password' ? 'text' : 'password';
 			if (show !== undefined) {
@@ -276,7 +276,7 @@ jQuery.fn.extend({
 			}
 			$input.attr('type', type);
 		});
-  }
+	}
 
 });
 
@@ -285,7 +285,7 @@ function nujQueryObj(id) {
 	if (typeof id === 'string') {
 		return $('#' + id);
 	} else if (id instanceof HTMLElement) {
-		return $(id);		
+		return $(id);
 	} else if (id instanceof jQuery) {
 		return id;
 	} else {
@@ -373,7 +373,7 @@ function nuGetBreadcrumb(bc) {
 	}
 
 	nuSaveScrollPositions();
-	
+
 	const breadCrumbIndex = arguments.length === 0 ? nuFORM.breadcrumbs.length - 1 : bc;
 
 	window.nuTimesSaved = -1;
@@ -412,7 +412,7 @@ function nuOpenPreviousBreadcrumb(offset = 1) {
 		nuGetBreadcrumb(bcLength - bcIndex);
 		return true;
 	}
-	
+
 	return false;
 
 }
@@ -445,11 +445,11 @@ function nuFormatAjaxErrorMessage(jqXHR, exception) {
 	const errorMessage = errorMessages[jqXHR.status] || errorMessages[exception] ||
 		[`<h3>${nuTranslate('Uncaught Error.')}</h3>`, jqXHR.responseText]
 
-		return errorMessage;
+	return errorMessage;
 
 }
 
-function nuLogin(loginTopRow, nuconfigNuWelcomeBodyInnerHTML, logonMode='normal', onlySsoExcept={}, lastUser="") {
+function nuLogin(loginTopRow, nuconfigNuWelcomeBodyInnerHTML, logonMode = 'normal', onlySsoExcept = {}, lastUser = "") {
 
 	var HTML = String(nuconfigNuWelcomeBodyInnerHTML).trim();
 	loginTopRow = String(loginTopRow).trim();
@@ -473,7 +473,7 @@ function nuLogin(loginTopRow, nuconfigNuWelcomeBodyInnerHTML, logonMode='normal'
 			<form id='nuLoginForm' action='#' method='post' onsubmit='return false'>
 				<div id='login' class='nuLogin'>
 					<table align="center">`
-						+ topRow + `
+		+ topRow + `
 			`;
 	var h2sso = `
 						<tr>
@@ -502,7 +502,7 @@ function nuLogin(loginTopRow, nuconfigNuWelcomeBodyInnerHTML, logonMode='normal'
 	`;
 
 
-	if(logonMode == 'normal') {
+	if (logonMode == 'normal') {
 		var h = h1 + h3normal + h4;
 	} else if (logonMode == 'sso') {
 		var h = h1 + h2sso + h4;
@@ -562,13 +562,13 @@ function nuLogin(loginTopRow, nuconfigNuWelcomeBodyInnerHTML, logonMode='normal'
 function nuSubmit(e) {
 
 	if (e.key == 'Enter') {
-		$('#submit').trigger( "click" );
+		$('#submit').trigger("click");
 	}
 
 }
 
 function nuArrangingObjects(recordId) {
-	
+
 	recordId = nuDefine(recordId, nuRecordId());
 	return recordId == '-2';
 
@@ -683,24 +683,24 @@ function nuCreateDialog(t) {
 
 	this.moveDialog = function (event) {
 
-		if (window.nuCurrentID === 'nuModal') { 
-			return; 
+		if (window.nuCurrentID === 'nuModal') {
+			return;
 		}
-	
+
 		const dialog = document.getElementById('nuDragDialog');
 		if (dialog === null) return;
-	
+
 		let style = dialog.style;
 		let newLeft = parseInt(style.left, 10) + this.moveX;
 		let newTop = parseInt(style.top, 10) + this.moveY;
-	
+
 		if (event.target.classList.length === 0 && event.target.id !== 'nuSelectBox') {
 			style.left = newLeft + 'px';
 			style.top = newTop + 'px';
 		}
-	
+
 	}
-	
+
 
 	this.createDialog = function (l, t, w, h, title) {
 
@@ -763,7 +763,7 @@ function nuReformat(element) {
 	if (!formatType || !currentValue) {
 		return currentValue;
 	}
-	const reapplyFormat = function(value, format) {
+	const reapplyFormat = function (value, format) {
 		let rawValue = nuFORM.removeFormatting(value, format);
 		return nuFORM.addFormatting(rawValue, format);
 	};
@@ -790,7 +790,7 @@ function nuOpenAce(lang, obj) {
 
 	const ts = Date.now();
 	const theme = nuUXOptions.nuAceTheme || 'default';
-	
+
 	window.nuAce = [lang, obj, theme];
 	window.open(`core/nuace.php?${ts}`);
 
@@ -812,13 +812,13 @@ function nuBindCtrlEvents() {
 	}
 
 	const nuHtml = document.getElementById('nuhtml');
-	nuAddEventListenerOnce(nuHtml, 'keydown', function(e) {
+	nuAddEventListenerOnce(nuHtml, 'keydown', function (e) {
 
 		if (e.isComposing || e.keyCode === 229) {
 			return;
 		}
 
-		if((e.key === 'PageDown' || e.key === 'PageUp') && nuFormType() == 'browse'){
+		if ((e.key === 'PageDown' || e.key === 'PageUp') && nuFormType() == 'browse') {
 			const $nuRecord = $("#nuRECORD");
 			const scrollBy = e.key === 'PageDown' ? 400 : -400;
 			$nuRecord.scrollTop($nuRecord.scrollTop() + scrollBy);
@@ -880,12 +880,12 @@ function nuBindCtrlEvents() {
 					'h': { action: () => nuPopup('nuobject', '-1', ''), condition: globalAccess },
 					'g': { action: () => nuForm("nuobjectgrid", formId, "", "", 2), condition: globalAccess },
 					's': { action: () => { $(":focus").trigger("blur"); nuSaveAction(); }, condition: true },
-					'c': { action: () => { if (!isLaunch) {nuCloneAction() }}, condition: true },
-					'y': { action: () => { if (!isLaunch) {nuDeleteAction() }}, condition: true },
+					'c': { action: () => { if (!isLaunch) { nuCloneAction() } }, condition: true },
+					'y': { action: () => { if (!isLaunch) { nuDeleteAction() } }, condition: true },
 					'arrowright': { action: () => nuSelectNextTab(1), condition: true },
 					'arrowleft': { action: () => nuSelectNextTab(-1), condition: true },
 					'?': { action: () => nuOpenFormHelp(), condition: true }
-				}),				
+				}),
 				// Actions available on 'browse' or 'edit' form types
 				...(isBrowseOrEdit && {
 					'f': { action: () => nuPopup("nuform", formId), condition: globalAccess },
@@ -916,7 +916,7 @@ function nuBindCtrlEvents() {
 			let searchIndex = -1;
 
 			//Numbers
-			const numberCode = e.code.replace('Digit','');
+			const numberCode = e.code.replace('Digit', '');
 			if (numberCode >= "1" && numberCode <= "9") {
 				searchIndex = Number(numberCode) - 1;
 			}
@@ -936,7 +936,7 @@ function nuBindCtrlEvents() {
 			window.nuFORM.setProperty('nosearch_columns', nosearch);
 		}
 
-	}, {passive: false}, 'nu-keydown-added');
+	}, { passive: false }, 'nu-keydown-added');
 
 
 	const nuCtrlKeyupListener = function (e) {
@@ -953,7 +953,7 @@ function nuUnbindDragEvents() {
 }
 
 function nuTranslate(obj) {
-	
+
 	const isEnglish = nuUserLanguage() === '';
 
 	if (Array.isArray(obj)) {
@@ -961,9 +961,9 @@ function nuTranslate(obj) {
 		if (isEnglish) {
 			return obj;
 		}
-			
+
 		let arr = obj;
-		arr.forEach(function(item, index) {
+		arr.forEach(function (item, index) {
 			const l = nuLANGUAGE.find(elem => elem.english === item);
 			arr[index] = !l ? item : l.translation;
 		})
@@ -993,7 +993,7 @@ function nuTranslateToEnglish(str) {
 	str = String(str);
 	if (str.charAt(0) === '|') return str.substring(1);
 
-	const l = nuLANGUAGE.find(({translation}) => translation === str);
+	const l = nuLANGUAGE.find(({ translation }) => translation === str);
 	return l ? l.english : str;
 
 }
@@ -1066,11 +1066,11 @@ function nuObjectComponents(id) {
 	if (element.attr('data-nu-type') === 'lookup') {
 		componentIds.push(`${id}code`, `${id}button`, `${id}description`);
 		type = 'lookup';
-	} else 
-	if (element.hasClass('select2-hidden-accessible')) {
-		componentIds.push(`${id}_select2`);
-		type = 'select2'; 
-	}
+	} else
+		if (element.hasClass('select2-hidden-accessible')) {
+			componentIds.push(`${id}_select2`);
+			type = 'select2';
+		}
 
 	return {
 		componentIds,
@@ -1088,11 +1088,11 @@ function nuEnable(i, enable) {
 
 	const ids = Array.isArray(i) ? i : [i];
 
-	$.each(ids, function(index) {
+	$.each(ids, function (index) {
 
 		const id = ids[index];
-		let {componentIds, type} = nuObjectComponents(id);
-		
+		let { componentIds, type } = nuObjectComponents(id);
+
 		for (let c = 0; c < componentIds.length; c++) {
 
 			if (c === 1) {
@@ -1120,9 +1120,9 @@ function nuDisable(id) {
 
 	const ids = Array.isArray(id) ? id : [id];
 
-	$.each(ids, function(index) {
+	$.each(ids, function (index) {
 		const id = ids[index];
-		const {componentIds} = nuObjectComponents(id);
+		const { componentIds } = nuObjectComponents(id);
 
 		for (let c = 0; c < componentIds.length; c++) {
 			if (c === 1) {
@@ -1154,7 +1154,7 @@ function nuDisable(id) {
 
 function nuReadonly(id, readonly = true) {
 
-	let {componentIds} = nuObjectComponents(id);
+	let { componentIds } = nuObjectComponents(id);
 
 	componentIds.forEach((component, index) => {
 		// Skip label by index
@@ -1182,7 +1182,7 @@ function nuShow(i, visible, openTab) {
 			nuHide(arr[s]);
 		} else {
 
-			let {componentIds} = nuObjectComponents(arr[s]);
+			let { componentIds } = nuObjectComponents(arr[s]);
 
 			for (var c = 0; c < componentIds.length; c++) {
 
@@ -1209,7 +1209,7 @@ function nuShow(i, visible, openTab) {
 
 		if (openTab !== false && counter > 0 && $('.nuTabSelected').length > 0) {
 			nuOpenTab($('.nuTabSelected')[0].id.substr(5));
-		}	
+		}
 
 	}
 
@@ -1227,7 +1227,7 @@ function nuHide(i) {
 
 	for (let s = 0; s < arr.length; s++) {
 
-		let {componentIds} = nuObjectComponents(arr[s]);
+		let { componentIds } = nuObjectComponents(arr[s]);
 
 		for (let c = 0; c < componentIds.length; c++) {
 
@@ -1257,7 +1257,7 @@ function nuRemove(i) {
 
 	for (const s of arr) {
 
-		let {componentIds} = nuObjectComponents(s);
+		let { componentIds } = nuObjectComponents(s);
 
 		for (const c of componentIds) {
 			$('#' + c).remove();
@@ -1390,7 +1390,7 @@ function nuSpaces(s) {
 
 function nuAddEditFieldsToHash(w) {
 
-	const {fields, rows} = nuFORM.data()[0];
+	const { fields, rows } = nuFORM.data()[0];
 	const rowData = rows[0];
 
 	fields.slice(2).forEach((field, index) => {
@@ -1408,7 +1408,7 @@ function nuOnFocus(e) {
 function nuClick(e) {
 
 	const target = $(e.target);
-	const parentClasses = target.parents().map(function() {
+	const parentClasses = target.parents().map(function () {
 		return this.className;
 	}).get();
 
@@ -1428,7 +1428,7 @@ function nuClick(e) {
 		nuMessageRemove();
 		window.top.document.nuHideMessage = true;
 	}
-	
+
 
 }
 
@@ -1437,7 +1437,7 @@ function nuAddSlashes(s) {
 }
 
 function nuOpenTab(i) {
-	$('#nuTab' + i).trigger( "click" );
+	$('#nuTab' + i).trigger("click");
 }
 
 function nuSelectedTabNumber(parent = null) {
@@ -1597,7 +1597,7 @@ function nuButtonIcon(id) {
 }
 
 function nuChart(chartId, chartType, dataArray, chartTitle, xAxisTitle, yAxisTitle, seriesType, isStacked) {
- 
+
 	const chartElement = document.getElementById(chartId);
 	if (!chartElement) return;
 
@@ -1891,34 +1891,34 @@ function nuDragTitleEvents() {
 	const body = document.getElementById('nubody');
 	const browseTitle = document.querySelectorAll('.nuBrowseTitle');
 
-	nuAddEventListenerOnce(body, 'mousemove', function(event) {
+	nuAddEventListenerOnce(body, 'mousemove', function (event) {
 		nuDragBrowseColumn(event, 'pointer');
-	}, {passive: true}, 'nu-mousemove-added');
+	}, { passive: true }, 'nu-mousemove-added');
 
-	nuAddEventListenerOnce(body, 'mouseup', function(event) {
+	nuAddEventListenerOnce(body, 'mouseup', function (event) {
 		nuEndBrowseResize();
-	}, {passive: true}, 'nu-mouseup-added');
+	}, { passive: true }, 'nu-mouseup-added');
 
 	browseTitle.forEach(elem => {
-		nuAddEventListenerOnce(elem, 'mousedown', function(event) {
+		nuAddEventListenerOnce(elem, 'mousedown', function (event) {
 			nuDownBrowseResize(event, 'pointer');
-		}, {passive: true}, 'nu-mousedown-added');
+		}, { passive: true }, 'nu-mousedown-added');
 
-		nuAddEventListenerOnce(elem, 'touchstart', function(event) {
+		nuAddEventListenerOnce(elem, 'touchstart', function (event) {
 			nuDownBrowseResize(event, 'finger_touch');
-		}, {passive: true}, 'nu-touchstart-added');
+		}, { passive: true }, 'nu-touchstart-added');
 
-		nuAddEventListenerOnce(elem, 'touchmove', function(event) {
+		nuAddEventListenerOnce(elem, 'touchmove', function (event) {
 			nuDragBrowseColumn(event, 'finger_touch');
-		}, {passive: true}, 'nu-touchmove-added');
+		}, { passive: true }, 'nu-touchmove-added');
 
-		nuAddEventListenerOnce(elem, 'touchend', function(event) {
+		nuAddEventListenerOnce(elem, 'touchend', function (event) {
 			nuEndBrowseResize(event);
-		}, {passive: true}, 'nu-touchend-added');
+		}, { passive: true }, 'nu-touchend-added');
 
-		nuAddEventListenerOnce(elem, 'touchcancel', function(event) {
+		nuAddEventListenerOnce(elem, 'touchcancel', function (event) {
 			nuEndBrowseResize(event);
-		}, {passive: true}, 'nu-touchcancel-added');
+		}, { passive: true }, 'nu-touchcancel-added');
 	});
 
 }
@@ -2013,17 +2013,17 @@ function nuSetPlaceholder(i, placeholder = null, translate = true) {
 }
 
 function nuSetToolTip(i, message, labelHover) {
-	
+
 	const setToolTip = selector => {
 		$(selector)
-			.on("mouseenter", function() {
+			.on("mouseenter", function () {
 				$(this).attr("title", message);
 			})
-			.on("mouseleave", function() {
+			.on("mouseleave", function () {
 				$(this).removeAttr("title");
 			});
 	};
-	
+
 	setToolTip("#" + i);
 	if (labelHover) setToolTip("#label_" + i);
 
@@ -2072,7 +2072,7 @@ function nuLabelOnTop(include, exclude, offsetTop = -18, offsetLeft = 0) {
 				, 'text-align': 'left'
 			});
 
-		$element.attr('data-nu-label-position', 'top');
+			$element.attr('data-nu-label-position', 'top');
 
 		}
 	}
@@ -2161,11 +2161,11 @@ function nuSetBrowseColumnSize(column, size) {
 
 	let contextWindow = nuIsIframe() ? parent.document.getElementById(window.frameElement.id).contentWindow : this;
 	const currentBreadcrumb = contextWindow.nuFORM.breadcrumbs[contextWindow.nuFORM.breadcrumbs.length - 1];
-	
+
 	if (size === undefined) {
 		return currentBreadcrumb.column_widths[column];
 	}
-	
+
 	currentBreadcrumb.column_widths[column] = size;
 	contextWindow.nuSetBrowseColumns(currentBreadcrumb.column_widths);
 
@@ -2197,7 +2197,7 @@ function nuSelectRemoveEmpty(elementId, setIndex) {
 
 	const selector = elementId === undefined ? 'select' : `#${elementId}`;
 
-	$(`${selector} option`).each(function() {
+	$(`${selector} option`).each(function () {
 		const option = $(this);
 		if (option.val().trim() === "" && option.text().trim() === "") {
 			option.remove();
@@ -2205,7 +2205,7 @@ function nuSelectRemoveEmpty(elementId, setIndex) {
 	});
 
 	if (setIndex !== undefined) {
-		$(`${selector}`).each(function() {
+		$(`${selector}`).each(function () {
 			$(this).prop('selectedIndex', setIndex);
 		});
 	}
@@ -2224,7 +2224,7 @@ function nuSelectRemoveOption(id, searchValue, findByText = false) {
 }
 
 function nuSelectRemoveMultiple(i) {
-	
+
 	var id = i ? '#' + i : 'select';
 	$(id + "[multiple]").prop('multiple', false).attr('size', '5');
 
@@ -2245,7 +2245,7 @@ function nuSelectSelectedInfo(id) {
 		texts: []
 	};
 
-	$('#' + id + ' option:selected').each(function() {
+	$('#' + id + ' option:selected').each(function () {
 		let $this = $(this);
 		if ($this.val() !== '') {
 			option.values.push($this.val());
@@ -2350,7 +2350,7 @@ function nuInputMaxLength(id, maxLength, labelId) {
 	if (labelId) {
 		const $label = $('#' + labelId);
 		$label.html(`${maxLength}/${maxLength}`);
-		$input.on('input', function() {
+		$input.on('input', function () {
 			const textLen = maxLength - this.value.length;
 			$label.html(`${textLen}/${maxLength}`);
 		});
@@ -2598,7 +2598,7 @@ function nuGetStorageItem(key, storageType = 'session') {
 	}
 
 	return item.value;
- 
+
 }
 
 function nuSetStorageItem(key, value, storageType = 'session', ttl = undefined) {
@@ -2608,7 +2608,8 @@ function nuSetStorageItem(key, value, storageType = 'session', ttl = undefined) 
 	const item = {
 		value: value
 		, expiry: ttl === undefined ? null : now.getTime() + ttl * 1000
-	, };
+		,
+	};
 
 	storage.setItem(key, JSON.stringify(item));
 
@@ -2644,7 +2645,8 @@ function nuEscapeHTML(string, extraReplacements = {}) {
 		'\\': '&#92;'
 	};
 
-	const replacements = {...baseReplacements,
+	const replacements = {
+		...baseReplacements,
 		...extraReplacements
 	};
 	const pattern = new RegExp(`[${Object.keys(replacements).map(c => '\\' + c).join('')}]`, 'g');
@@ -2682,11 +2684,11 @@ function nuSetURLPermaLink() {
 	if (window.top === window.self) {
 		let home = nuGetURLParameterValue('h') || '';
 		home = home ? '&h=' + home : '';
-		
+
 		const urlParams = `?f=${prop.form_id}&r=${prop.record_id}${home}`;
 		const urlContainsI = window.location.search.includes('?i=');
 		const historyMethod = urlContainsI ? 'replaceState' : 'pushState';
-		
+
 		window.history[historyMethod]('', document.title, urlParams);
 	}
 
@@ -2696,8 +2698,8 @@ function nuShuffleArray(arr) {
 	for (let i = arr.length - 1; i > 0; i--) {
 		const j = Math.floor(Math.random() * (i + 1));
 		[arr[i],
-			arr[j]] = [arr[j],
-			arr[i]];
+		arr[j]] = [arr[j],
+		arr[i]];
 	}
 }
 
@@ -2715,7 +2717,7 @@ function nuCharacterArray(symbols = true, numbers = true, lowerAlpha = true, upp
 	if (numbers) characters.push(...characterSets.numbers);
 	if (lowerAlpha) characters.push(...characterSets.lowerAlpha);
 	if (upperAlpha) characters.push(...characterSets.upperAlpha);
-	
+
 	return characters;
 
 }
@@ -2728,7 +2730,7 @@ function nuRandomPassword(characterArray, size) {
 
 }
 
-function nuMonthArray(options = {month: 'long'}, locale = 'en-US') {
+function nuMonthArray(options = { month: 'long' }, locale = 'en-US') {
 
 	const arr = [];
 
@@ -2744,7 +2746,7 @@ function nuMonthArray(options = {month: 'long'}, locale = 'en-US') {
 
 function nuEventName(eventName = null) {
 
-	if (! eventName) {
+	if (!eventName) {
 		eventName = nuRecordId().slice(-2);
 	}
 
@@ -2774,13 +2776,13 @@ function nuConsoleErrorsToMessage(cancel = false) {
 	window.onerror = function (msg, url, lineNo, columnNo, error) {
 
 		const msgDevConsole = nuTranslate('Please check the browser developer console for details.');
-		
+
 		if (msg == "ResizeObserver loop limit exceeded")
 			return; // ignore
 
 		if (msg.toLowerCase().indexOf('script error') > -1) {
-			nuMessage(nuTranslate('JavaScript Error'),  msgDevConsole);
-		} else { 
+			nuMessage(nuTranslate('JavaScript Error'), msgDevConsole);
+		} else {
 			const message = [
 				msg,
 				'',
@@ -2800,7 +2802,7 @@ function nuSetAttributes(element, attributes) {
 	for (const key in attributes) {
 		if (Object.prototype.hasOwnProperty.call(attributes, key)) {
 			element.setAttribute(key, attributes[key]);
-	  	}
+		}
 	}
 
 }
@@ -2865,4 +2867,4 @@ function nuSetWindowProperty(key, property, value) {
 function nuCountDefinedArguments(...args) {
 	return args.filter(arg => arg !== undefined).length;
 }
-  
+

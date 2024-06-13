@@ -1,8 +1,8 @@
 <?php
 
-require_once('nudatabase.php');
+require_once ('nudatabase.php');
 
-if(!array_key_exists('p',$_REQUEST)) {
+if (!array_key_exists('p', $_REQUEST)) {
 	header("Content-Type: text/html");
 	header("HTTP/1.0 400 Bad Request");
 	die('No procedure code is provided.');
@@ -12,21 +12,21 @@ $getPHPIDQRY = nuRunQuery("
 	SELECT zzzzsys_php_id FROM zzzzsys_php
 	WHERE sph_code = ?
 ", [$_REQUEST['p']]);
-if(db_num_rows($getPHPIDQRY) != 1){
+if (db_num_rows($getPHPIDQRY) != 1) {
 	header("Content-Type: text/html");
 	header("HTTP/1.0 400 Bad Request");
 	die('Could not find procedure with code given.');
 }
 $getPHPIDOBJ = db_fetch_object($getPHPIDQRY);
 $PHPID = $getPHPIDOBJ->zzzzsys_php_id;
-if($PHPID == ''){
+if ($PHPID == '') {
 	header("Content-Type: text/html");
 	header("HTTP/1.0 400 Bad Request");
 	die('Invalid procedure was found.');
 }
 
-require_once('nusession.php');
-if(!array_key_exists('TEMPORARY_SESSION', $_SESSION)){
+require_once ('nusession.php');
+if (!array_key_exists('TEMPORARY_SESSION', $_SESSION)) {
 	$getAccessQRY = nuRunQuery("
 		SELECT sss_access FROM zzzzsys_session WHERE zzzzsys_session_id = ?
 	", [$_SESSION['nubuilder_session_data']['SESSION_ID']]);
@@ -56,5 +56,5 @@ if(!array_key_exists('TEMPORARY_SESSION', $_SESSION)){
 
 //$procedure = new nuEvalPHPClass($PHPID);
 
-require_once('nucommon.php');
+require_once ('nucommon.php');
 nuEval($PHPID);

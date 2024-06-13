@@ -1,5 +1,5 @@
 function nuBindDragEvents() {
-	
+
 	$(document).on('mousemove.nuformdrag', function (e) {
 
 		let arrangingObjects = window.nuFORM.breadcrumbs.length != -1 && nuArrangingObjects();
@@ -9,12 +9,12 @@ function nuBindDragEvents() {
 			e.preventDefault?.();
 			e.cancelBubble = true;
 			e.returnValue = false;
-		
+
 			if (e.buttons) {
 				nuDragBox(e);
 			}
 		}
-		
+
 	});
 
 	$(document).on('mousedown.nuformdrag', function (e) {
@@ -300,7 +300,7 @@ function nuAddDragSelected(t) {
 
 	if (nuIsVisible(t)) {
 		t.addClass('nuDragSelected');
-	}  else {
+	} else {
 	}
 
 }
@@ -609,10 +609,10 @@ function nuCreateDragOptionsBox(form) {
 
 	$('#nuWindow', window.parent.document.body).css('right', 15);
 	$('#nuDragDialog', window.parent.document.body)
-	.css('top', 35)
-	.prepend(optionsBoxHTML)
-	.css('height', Math.max(dragOptionsBoxMinHeight + 10, window.innerHeight + 40))
-	.css('width', nuFormWH().width + dragOptionsBoxWidth - 15);
+		.css('top', 35)
+		.prepend(optionsBoxHTML)
+		.css('height', Math.max(dragOptionsBoxMinHeight + 10, window.innerHeight + 40))
+		.css('width', nuFormWH().width + dragOptionsBoxWidth - 15);
 
 	$('#nuBreadcrumbHolder').remove();
 
@@ -624,26 +624,26 @@ function nuCreateDragOptionsBox(form) {
 	nuPopulateTabDropdown(tab);
 
 	$('.nuTab[id^="nuTab"]').prop('onclick', '')
-	.on('click', function () {
+		.on('click', function () {
 
-		if ($(this).hasClass('nuTabSelected')) {
-			return;
-		}
+			if ($(this).hasClass('nuTabSelected')) {
+				return;
+			}
 
-		nuClearFieldsList();
-		nuUnselectAllDragObjects();
-		nuSelectTab(this);
-		nuShowContentBoxFrames();
+			nuClearFieldsList();
+			nuUnselectAllDragObjects();
+			nuSelectTab(this);
+			nuShowContentBoxFrames();
 
-		const nuTabFilter = Number($(this).attr('data-nu-tab-filter'));
-		nuPopulateFieldsList(nuTabFilter);
-		nuPopulateTabDropdown(nuTabFilter);
+			const nuTabFilter = Number($(this).attr('data-nu-tab-filter'));
+			nuPopulateFieldsList(nuTabFilter);
+			nuPopulateTabDropdown(nuTabFilter);
 
-		const $nuDragOptionsFields = $('#nuDragOptionsFields', window.parent.document.body);
-		nuCheckIfMovingTabOrderAllowed($nuDragOptionsFields);
-		nuCheckIfMovingFieldToOtherTabAllowed($nuDragOptionsFields);
+			const $nuDragOptionsFields = $('#nuDragOptionsFields', window.parent.document.body);
+			nuCheckIfMovingTabOrderAllowed($nuDragOptionsFields);
+			nuCheckIfMovingFieldToOtherTabAllowed($nuDragOptionsFields);
 
-	});
+		});
 
 	nuCheckIfMovingTabOrderAllowed($('#nuDragOptionsFields'));
 	nuCheckIfMovingFieldToOtherTabAllowed($('#nuDragOptionsFields'));
@@ -656,7 +656,7 @@ function nuCreateDragOptionsBox(form) {
 	];
 
 	let help = `<input id='run_sam' type='button' class='input_button nuButton' value='?'
-	  onclick='nuMessage(${JSON.stringify(helpMessages)})' 
+	  onclick='nuMessage(${JSON.stringify(helpMessages)})'
 	  style='top: 2px; right: 15px; width: 21px; height: 21px; text-align: center; padding-left: 5px; position: absolute;'>`;
 
 	$('body').append(help);
@@ -858,7 +858,7 @@ function nuSpacingNotSupported() {
 
 	const supported = $('.nuDragSelected', nuGetNuDragDialogIframes(true)).filter('.nu_contentbox').length == 0;
 	if (!supported) {
-		nuMessage(`${nuTranslate('Information')}`,'Vertical spacing of ContentBox is not supported yet.');
+		nuMessage(`${nuTranslate('Information')}`, 'Vertical spacing of ContentBox is not supported yet.');
 	}
 
 	return supported;
@@ -1220,7 +1220,7 @@ function nuCheckIfMovingTabOrderAllowed(fieldsSelectBox) {
 
 	function nuToggleButtonState(buttons, enabled) {
 		buttons.prop('disabled', !enabled)
-			   .toggleClass('nuDragOptionsButtonDisabled', !enabled);
+			.toggleClass('nuDragOptionsButtonDisabled', !enabled);
 	}
 
 	const upDownBtn = $('#move_down_btn, #move_up_btn'),
@@ -1427,9 +1427,9 @@ function nuPopulateTabDropdown(currentlySelectedTabNo) {
 function nuDragElement(element, dragHeaderOffset) {
 
 	var startX = 0,
-	startY = 0,
-	endX = 0,
-	endY = 0;
+		startY = 0,
+		endX = 0,
+		endY = 0;
 	element.onmousedown = dragStart;
 	element.ontouchstart = dragStart;
 
@@ -1454,7 +1454,7 @@ function nuDragElement(element, dragHeaderOffset) {
 			startY = e.clientY;
 		} else { // touchmove - assuming a single touchpoint
 			startX = e.touches[0].clientX
-				startY = e.touches[0].clientY
+			startY = e.touches[0].clientY
 		}
 		document.onmouseup = dragStop;
 		document.ontouchend = dragStop;

@@ -1,6 +1,6 @@
 <?php
 
-/*	
+/*
 	Subform Columns:
 	0: "ID"
 	1: "ff_label"
@@ -9,23 +9,24 @@
 	4: "ff_type"
 	5: "ff_datatype"
 	6: "ff_browse"
-	7: "nuDelete"	
+	7: "nuDelete"
 */
 
-function nuBuildFastForm($table, $formType, $Pk){
+function nuBuildFastForm($table, $formType, $Pk) {
 
-	if (nuDemo()) return;
+	if (nuDemo())
+		return;
 
-	$formId		= nuID();
-						
-	$isNew 		= nuFFIsNewTable($table, $Pk, $formType);
-	$TT			= nuTT();
-	$sF			= nuSubformObject('obj_sf');
-	$tabId		= nuID();
-	$FFNumber	= nuFFNumber();
+	$formId = nuID();
 
-	if($formType == 'launch'){
-		$table	= 'Launch Form ' . $FFNumber;
+	$isNew = nuFFIsNewTable($table, $Pk, $formType);
+	$TT = nuTT();
+	$sF = nuSubformObject('obj_sf');
+	$tabId = nuID();
+	$FFNumber = nuFFNumber();
+
+	if ($formType == 'launch') {
+		$table = 'Launch Form ' . $FFNumber;
 	}
 
 	//--------- Test table creation -----------------------
@@ -39,7 +40,7 @@ function nuBuildFastForm($table, $formType, $Pk){
 
 	$test = nuFFCreateTable($sF, $formType, $table, $Pk, $isNew, true);
 
-	if ($test != '') { 
+	if ($test != '') {
 		nuDisplayError($test);
 		return;
 	}
@@ -67,7 +68,8 @@ function nuBuildFastForm($table, $formType, $Pk){
 	nuFFTempUpdate($sF, $formType, $TT, $table, $formId, $tabId);
 
 	// -------- Create FF table ---------------------------
-	if ($isNew) nuFFCreateNewTable($sF, $formType, $table, $Pk, $isNew);
+	if ($isNew)
+		nuFFCreateNewTable($sF, $formType, $table, $Pk, $isNew);
 
 	// -------- Insert Browse -----------------------------
 
@@ -90,7 +92,7 @@ function nuBuildFastForm($table, $formType, $Pk){
 
 }
 
-function nuFFObjectMaxTop(){
+function nuFFObjectMaxTop() {
 
 	$s = 'SELECT MAX(sob_all_top) as max_top FROM zzzzsys_object WHERE sob_all_zzzzsys_tab_id = "nufastforms"';
 	$t = nuRunQuery($s);
@@ -100,16 +102,16 @@ function nuFFObjectMaxTop(){
 
 }
 
-function nuFFNumber(){
+function nuFFNumber() {
 
 	$s = "
 
-		SELECT 
+		SELECT
 			COALESCE(MAX(CAST(SUBSTRING(`sfo_code`, 3) as UNSIGNED)),0) + 1 as num
-		FROM (    
-		SELECT 
+		FROM (
+		SELECT
 			`sfo_code`
-		FROM `zzzzsys_form` 
+		FROM `zzzzsys_form`
 		WHERE `sfo_code` LIKE 'FF%'
 		AND SUBSTRING(`sfo_code`, 3) REGEXP '^-?[0-9]+$'
 		) T
@@ -122,27 +124,27 @@ function nuFFNumber(){
 
 }
 
-function nuFFNewTableSQL($table, $pk, $columns, $isNew){
+function nuFFNewTableSQL($table, $pk, $columns, $isNew) {
 
-					 
-	$start	= "CREATE TABLE $table";
-	$a		= [];
-	$a[]	= "`$pk` VARCHAR(25) NOT NULL";
-	$h		= nuHash();
-	$fk		= $h['fastform_fk'];
 
-	if($h['fastform_type'] == 'subform' && $isNew){
-		$a[]	= "`$fk` VARCHAR(25) DEFAULT NULL";
+	$start = "CREATE TABLE $table";
+	$a = [];
+	$a[] = "`$pk` VARCHAR(25) NOT NULL";
+	$h = nuHash();
+	$fk = $h['fastform_fk'];
+
+	if ($h['fastform_type'] == 'subform' && $isNew) {
+		$a[] = "`$fk` VARCHAR(25) DEFAULT NULL";
 	}
-	
+
 	$count = count($columns);
-	for($i = 0 ; $i < $count ; $i++){
+	for ($i = 0; $i < $count; $i++) {
 
 		$n = $columns[$i]['name'];
 		$t = $columns[$i]['type'];
 
 		if ($t !== '') {
-			$a[] = "$n ". $t ." DEFAULT NULL";
+			$a[] = "$n " . $t . " DEFAULT NULL";
 		} else {
 			$a[] = "$n $t DEFAULT NULL";
 		}
@@ -150,11 +152,11 @@ function nuFFNewTableSQL($table, $pk, $columns, $isNew){
 	}
 
 	if ($h['check_nulog'] == '1') {
-		$a[] = $table."_nulog VARCHAR(1000) DEFAULT NULL";
+		$a[] = $table . "_nulog VARCHAR(1000) DEFAULT NULL";
 	}
 
-	$a[]	= "PRIMARY KEY ($pk)";
-	$im		= implode(',', $a);
+	$a[] = "PRIMARY KEY ($pk)";
+	$im = implode(',', $a);
 
 	return "$start ($im)";
 
@@ -170,24 +172,25 @@ function nuFFError($err, $sql) {
 
 function nuFFCreateTable($sF, $formType, $table, $Pk, $isNew, $drop) {
 
-	if ($formType == 'launch' || ! $isNew) return '';
+	if ($formType == 'launch' || !$isNew)
+		return '';
 
 	$columns = [];
 	$count = count($sF->rows);
-	for($i = 0 ; $i < $count ; $i++){
+	for ($i = 0; $i < $count; $i++) {
 
-		if($sF->deleted[$i] == 0){
+		if ($sF->deleted[$i] == 0) {
 			$type = $sF->rows[$i][5];												//-- ff_datatype
 			if (trim($type) !== '') {
-				$columns[] = ['name'=>$sF->rows[$i][2], 'type'=>$type];				//-- ff_field
+				$columns[] = ['name' => $sF->rows[$i][2], 'type' => $type];				//-- ff_field
 			}
 		}
 	}
 
-	$sql		= nuFFNewTableSQL($table, $Pk, $columns, $isNew);
+	$sql = nuFFNewTableSQL($table, $Pk, $columns, $isNew);
 
 	if ($drop) {
-		$stmt	= nuRunQueryTest($sql);
+		$stmt = nuRunQueryTest($sql);
 		if (is_bool($stmt)) {
 			nuRunQuery("DROP TABLE IF EXISTS `$table`;");
 			return '';
@@ -195,7 +198,7 @@ function nuFFCreateTable($sF, $formType, $table, $Pk, $isNew, $drop) {
 			return nuFFError($stmt->getMessage(), $sql);
 		}
 	} else {
-		nuRunQuery($sql);	
+		nuRunQuery($sql);
 		return '';
 	}
 
@@ -238,9 +241,9 @@ function nuFFInsertForm($formId, $formType, $formCode, $formDesc, $table, $Pk) {
 			(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 	";
 
-	$table	= $formType == 'launch' ? '' : $table;
-	$Pk		= $formType == 'launch' ? '' : $Pk;
-	$sql	= $formType == 'launch' ? '' : "SELECT * FROM $table"; 
+	$table = $formType == 'launch' ? '' : $table;
+	$Pk = $formType == 'launch' ? '' : $Pk;
+	$sql = $formType == 'launch' ? '' : "SELECT * FROM $table";
 
 	$arg = [
 		$formId,								// -- zzzzsys_form_id
@@ -260,7 +263,7 @@ function nuFFInsertForm($formId, $formType, $formCode, $formDesc, $table, $Pk) {
 
 }
 
-function nuFFFormProperties($FFNumber){
+function nuFFFormProperties($FFNumber) {
 
 	return [
 		'form_code' => 'FF' . $FFNumber,
@@ -271,15 +274,16 @@ function nuFFFormProperties($FFNumber){
 
 function nuFFIsNewTable($table, &$Pk, $formType) {
 
-	if ($formType == 'launch') return false;
+	if ($formType == 'launch')
+		return false;
 
-	$t								= nuRunQuery("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = DATABASE()");
-	while($obj = db_fetch_row($t)){
+	$t = nuRunQuery("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = DATABASE()");
+	while ($obj = db_fetch_row($t)) {
 
-		if($obj[0] == $table){
+		if ($obj[0] == $table) {
 
-			$_POST['tableSchema']	= nuBuildTableSchema();
-			$Pk						= isset($_POST['tableSchema'][$table]['primary_key'][0]) ? $_POST['tableSchema'][$table]['primary_key'][0] : $Pk;
+			$_POST['tableSchema'] = nuBuildTableSchema();
+			$Pk = isset($_POST['tableSchema'][$table]['primary_key'][0]) ? $_POST['tableSchema'][$table]['primary_key'][0] : $Pk;
 
 			return false;
 
@@ -290,33 +294,34 @@ function nuFFIsNewTable($table, &$Pk, $formType) {
 	return true;
 
 }
-	
+
 function nuFFTempCreate($TT) {
 
 	$sql = "CREATE TABLE $TT SELECT * FROM zzzzsys_object WHERE 1=0";
 	nuRunQuery($sql);
 
 }
-	
+
 function nuFFTempInsertSampleObjects($sF, $formType, $TT) {
 
 	nuFFTempCreate($TT);
 
-	if ($formType == 'browse') return;
-	
+	if ($formType == 'browse')
+		return;
+
 	$count = count($sF->rows);
-	for($i = 0 ; $i < $count ; $i++){
+	for ($i = 0; $i < $count; $i++) {
 
-		if($sF->deleted[$i] == 0){																					//-- not ticked as deleted
+		if ($sF->deleted[$i] == 0) {																					//-- not ticked as deleted
 
-			$r					= $sF->rows[$i][3]; 																//-- ff_type
-			$newid				= nuID();
-			$sF->rows[$i][3]	= $newid;
+			$r = $sF->rows[$i][3]; 																//-- ff_type
+			$newid = nuID();
+			$sF->rows[$i][3] = $newid;
 
-			$sql				= "INSERT INTO $TT SELECT * FROM zzzzsys_object WHERE zzzzsys_object_id = ?";		//-- Insert sample object
+			$sql = "INSERT INTO $TT SELECT * FROM zzzzsys_object WHERE zzzzsys_object_id = ?";		//-- Insert sample object
 			nuRunQuery($sql, [$r]);
 
-			$sql				= "UPDATE $TT SET zzzzsys_object_id = ? WHERE zzzzsys_object_id = ?";
+			$sql = "UPDATE $TT SET zzzzsys_object_id = ? WHERE zzzzsys_object_id = ?";
 			nuRunQuery($sql, [$newid, $r]);
 
 		}
@@ -326,13 +331,14 @@ function nuFFTempInsertSampleObjects($sF, $formType, $TT) {
 }
 
 function nuFFTempUpdate($sF, $formType, $TT, $table, $formId, $tabId) {
-	
-	if ($formType == 'browse') return;
 
-	$sql			= "
+	if ($formType == 'browse')
+		return;
+
+	$sql = "
 
 		UPDATE $TT
-		SET 
+		SET
 			sob_all_id					= ?,
 			sob_all_label				= ?,
 			sob_all_order				= ?,
@@ -342,28 +348,28 @@ function nuFFTempUpdate($sF, $formType, $TT, $table, $formId, $tabId) {
 			sob_all_zzzzsys_form_id		= ?,
 			sob_all_zzzzsys_tab_id		= ?,
 			zzzzsys_object_id			= ?
-		WHERE 
+		WHERE
 			zzzzsys_object_id			= ?
 
 	";
 
-	$top		= 10;
-	
+	$top = 10;
+
 	$count = count($sF->rows);
-	for($i = 0 ; $i < $count ; $i++){
+	for ($i = 0; $i < $count; $i++) {
 
-		if($sF->deleted[$i] == 0){								//-- not ticked as deleted
+		if ($sF->deleted[$i] == 0) {								//-- not ticked as deleted
 
-			$newid	= nuID();
-			$label	= $sF->rows[$i][1];
-			$field	= $sF->rows[$i][2];
-			$oldid	= $sF->rows[$i][3];
+			$newid = nuID();
+			$label = $sF->rows[$i][1];
+			$field = $sF->rows[$i][2];
+			$oldid = $sF->rows[$i][3];
 
-			$array	= [$field, $label, $i * 5, $top, 150, $table, $formId, $tabId, $newid, $oldid];
+			$array = [$field, $label, $i * 5, $top, 150, $table, $formId, $tabId, $newid, $oldid];
 			nuRunQuery($sql, $array);
 
-			$OT		= nuRunQuery("SELECT * FROM $TT WHERE zzzzsys_object_id = ? ", [$newid]);
-			$top	= $top + db_fetch_object($OT)->sob_all_height + 10;
+			$OT = nuRunQuery("SELECT * FROM $TT WHERE zzzzsys_object_id = ? ", [$newid]);
+			$top = $top + db_fetch_object($OT)->sob_all_height + 10;
 
 		}
 
@@ -377,9 +383,12 @@ function nuFFCreateNewTable($sF, $formType, $table, $Pk, $isNew) {
 	global $nuConfigDBCollate;
 	global $nuConfigDBCharacterSet;
 
-	if (!isset($nuConfigDBEngine)) 			$nuConfigDBEngine = "MyISAM";
-	if (!isset($nuConfigDBCollate)) 		$nuConfigDBCollate = "utf8_general_ci";
-	if (!isset($nuConfigDBCharacterSet))	$nuConfigDBCharacterSet = "utf8";
+	if (!isset($nuConfigDBEngine))
+		$nuConfigDBEngine = "MyISAM";
+	if (!isset($nuConfigDBCollate))
+		$nuConfigDBCollate = "utf8_general_ci";
+	if (!isset($nuConfigDBCharacterSet))
+		$nuConfigDBCharacterSet = "utf8";
 
 	nuFFCreateTable($sF, $formType, $table, $Pk, $isNew, false);
 
@@ -390,17 +399,18 @@ function nuFFCreateNewTable($sF, $formType, $table, $Pk, $isNew) {
 
 function nuFFInsertBrowse($sF, $formId, $formType) {
 
-	if (!nuStringStartsWith('browse', $formType)) return;
+	if (!nuStringStartsWith('browse', $formType))
+		return;
 
 	$count = count($sF->rows);
-	for($i = 0 ; $i < $count ; $i++){
+	for ($i = 0; $i < $count; $i++) {
 
-		if($sF->rows[$i][6] == 1 && $sF->deleted[$i] == 0){	//-- ff_browse ticked and not set as deleted
+		if ($sF->rows[$i][6] == 1 && $sF->deleted[$i] == 0) {	//-- ff_browse ticked and not set as deleted
 
-			$label	= $sF->rows[$i][1];							//-- ff_label
-			$id		= $sF->rows[$i][2];							//-- ff_field	
+			$label = $sF->rows[$i][1];							//-- ff_label
+			$id = $sF->rows[$i][2];							//-- ff_field
 
-			$sql	= "
+			$sql = "
 
 				INSERT INTO zzzzsys_browse
 					(zzzzsys_browse_id,
@@ -413,10 +423,10 @@ function nuFFInsertBrowse($sF, $formId, $formType) {
 					sbr_width)
 				VALUES
 					(?, ?, ?, ?, ?, ?, ?, ?)
-			
+
 			";
 
-			$array = [nuID(), $formId, $label, $id, 'l', '', ($i+1) * 10, 250];
+			$array = [nuID(), $formId, $label, $id, 'l', '', ($i + 1) * 10, 250];
 
 			nuRunQuery($sql, $array);
 
@@ -428,18 +438,18 @@ function nuFFInsertBrowse($sF, $formId, $formType) {
 
 function nuFFInsertObjects($table, $TT, $formType, $formId) {
 
-	if ($formType !== 'subform'){
+	if ($formType !== 'subform') {
 		nuFFInsertRunButton($table, $TT, $formType, $formId);
 	}
 
 	//if ($formType !== 'browse'){
-		nuRunQuery("INSERT INTO zzzzsys_object SELECT * FROM $TT");
+	nuRunQuery("INSERT INTO zzzzsys_object SELECT * FROM $TT");
 	//}
 
-}	
+}
 
 function nuFFInsertRunButton($table, $TT, $formType, $formId) {
-	
+
 	//----------make sure button has a tab--------
 
 	$sql = "
@@ -491,8 +501,8 @@ function nuFFInsertRunButton($table, $TT, $formType, $formId) {
 
 	";
 
-	$recordId	= substr($formType, 0, 6) == 'browse' ? '' : '-1';
-	$array		= [nuID(), 'nuuserhome', 'nufastforms', "ff".$formId, ucfirst($table), '', 11, nuFFObjectMaxTop(), 30, 150, 30, $formId, $recordId, 'b', 0, 0, 0, 'center', 'run'];
+	$recordId = substr($formType, 0, 6) == 'browse' ? '' : '-1';
+	$array = [nuID(), 'nuuserhome', 'nufastforms', "ff" . $formId, ucfirst($table), '', 11, nuFFObjectMaxTop(), 30, 150, 30, $formId, $recordId, 'b', 0, 0, 0, 'center', 'run'];
 
 	nuRunQuery($sql, $array);
 
@@ -505,19 +515,18 @@ function nuFFGetLink($formId, $recordId, $text) {
 function nuFFCreatedMessage($table, $TT, $isNew, $formId, $formType, $formCode) {
 
 	$msg = ($isNew) ? 'Table and Form have' : 'Form has';
-															   
+
 
 	if ($formType == 'subform') {
 
 		$link = nuFFGetLink('nuform', $formId, $formCode);
 		$js = "
-			var m1		= '<h2>A $msg been created!</h2>';					   
+			var m1		= '<h2>A $msg been created!</h2>';
 			$link
 			var m2		= '<p>(There is now a Form with a Code of ' + link + ' found in <b>Forms</b>)';
 		";
 
-	}
-	else {
+	} else {
 
 		$link = nuFFGetLink('nuuserhome', '-1', 'Fast Forms');
 		$js = "
@@ -537,35 +546,36 @@ function nuFFCreatedMessage($table, $TT, $isNew, $formId, $formType, $formCode) 
 
 }
 
-	
-function nuBuildFastReport(){
 
-	if (nuDemo()) return;
+function nuBuildFastReport() {
 
-	$t	= nuRunQuery("SELECT COUNT(*) AS fastreports FROM zzzzsys_report WHERE sre_code like 'FR%'");
-	$fr	= db_fetch_object($t)->fastreports;
+	if (nuDemo())
+		return;
 
-	$i	= nuID();
-	$c	= "FR$fr";
-	$d	= "Fast Report $fr";
-	$g	= "Fast Report";
-	$j	= nuHash();
-	$j	= str_replace('\"', '"', $j['fieldlist']);
-	$t	= nuHash();
-	$t	= $t['table'];
-	$f	= 'nublank';
-	$s	= "
+	$t = nuRunQuery("SELECT COUNT(*) AS fastreports FROM zzzzsys_report WHERE sre_code like 'FR%'");
+	$fr = db_fetch_object($t)->fastreports;
+
+	$i = nuID();
+	$c = "FR$fr";
+	$d = "Fast Report $fr";
+	$g = "Fast Report";
+	$j = nuHash();
+	$j = str_replace('\"', '"', $j['fieldlist']);
+	$t = nuHash();
+	$t = $t['table'];
+	$f = 'nublank';
+	$s = "
 			INSERT INTO zzzzsys_report
 			(
-				zzzzsys_report_id, 
-				sre_code, 
-				sre_description, 
-				sre_group, 
-				sre_zzzzsys_php_id, 
-				sre_zzzzsys_form_id, 
+				zzzzsys_report_id,
+				sre_code,
+				sre_description,
+				sre_group,
+				sre_zzzzsys_php_id,
+				sre_zzzzsys_form_id,
 				sre_layout
-			) 
-			VALUES 
+			)
+			VALUES
 			(
 				?,
 				?,
@@ -581,7 +591,7 @@ function nuBuildFastReport(){
 	nuRunQuery($s, [$i, $c, $d, $g, $t, $f, $j]);
 
 
-	$js		= "
+	$js = "
 
 		var m1	= '<h1>A Fast Report has been created!</h1>';
 		var m2	= '<p>(There is now a Report with a Code of <b>$c</b> found in <b>Reports</b>)';

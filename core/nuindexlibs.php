@@ -22,11 +22,11 @@ function nuGetJS_login($nuBrowseFunction, $target, $loginTopRow, $welcome, $form
 		// Lines below take a PHP array and create a JS dictionary - example:
 		// Input:  PHP:	$onlySsoExcept = ["globeadmin", "fred"]
 		// Output:  JS: var onlySsoExcept = { "globeadmin": true, "fred": true };
-		$colonTrueAdded = array_map(function($item) {  // Append ": true' but also put double quotes around the keys
-			return '"'.$item.'": true';
+		$colonTrueAdded = array_map(function ($item) {  // Append ": true' but also put double quotes around the keys
+			return '"' . $item . '": true';
 		}, $onlySsoExcept);
 		$dictLiteral = join(", ", $colonTrueAdded);
-		$jsDict  = 'var onlySsoExcept = { '.$dictLiteral.' }';
+		$jsDict = 'var onlySsoExcept = { ' . $dictLiteral . ' }';
 		$h3 = "
 			var loginTopRow				= `$loginTopRow`;
 			var welcome					= `$welcome`;
@@ -37,7 +37,7 @@ function nuGetJS_login($nuBrowseFunction, $target, $loginTopRow, $welcome, $form
 
 	$h4 = "}";
 
-	return $h2.$h3.$h4;
+	return $h2 . $h3 . $h4;
 
 }
 

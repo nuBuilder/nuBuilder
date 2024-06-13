@@ -1,8 +1,8 @@
 <?php
 
-function nuValidateFormsFetchObject($objectId) { 
+function nuValidateFormsFetchObject($objectId) {
 
-		$query = '
+	$query = '
 				SELECT
 					sob_subform_zzzzsys_form_id as form_id,
 					sob_subform_foreign_key as subform_fk,
@@ -10,40 +10,40 @@ function nuValidateFormsFetchObject($objectId) {
 					sob_all_access as access,
 					zzzzsys_form.sfo_description as form_description
 				FROM zzzzsys_object
-				LEFT JOIN zzzzsys_form ON zzzzsys_form_id = sob_subform_zzzzsys_form_id 
+				LEFT JOIN zzzzsys_form ON zzzzsys_form_id = sob_subform_zzzzsys_form_id
 				WHERE zzzzsys_object_id = ?
 			';
 
-		$stmt	= nuRunQuery($query, [$objectId]);
+	$stmt = nuRunQuery($query, [$objectId]);
 
-		if (db_num_rows($stmt) === 0) {
-			$obj = [
-				'formId' => $objectId,
-				'subform_fk' => '',
-				'label' => '',
-				'access' => '',
-				'form_description' => ''
-			];
-		} else {
+	if (db_num_rows($stmt) === 0) {
+		$obj = [
+			'formId' => $objectId,
+			'subform_fk' => '',
+			'label' => '',
+			'access' => '',
+			'form_description' => ''
+		];
+	} else {
 
-			$row = db_fetch_object($stmt);
-			$obj = [
-				'formId' => $row->form_id,
-				'subform_fk' => $row->subform_fk,
-				'label' => $row->label,
-				'access' => $row->access,
-				'form_description' => $row->form_description
-			];
+		$row = db_fetch_object($stmt);
+		$obj = [
+			'formId' => $row->form_id,
+			'subform_fk' => $row->subform_fk,
+			'label' => $row->label,
+			'access' => $row->access,
+			'form_description' => $row->form_description
+		];
 
-		}
-		
-		return $obj;
+	}
+
+	return $obj;
 
 }
 
-function nuValidateFormsFetchFormObjects($formId) { 
+function nuValidateFormsFetchFormObjects($formId) {
 
-		$query = '
+	$query = '
 			SELECT
 				sob_all_id AS id,
 				sob_all_label AS label,
@@ -51,25 +51,25 @@ function nuValidateFormsFetchFormObjects($formId) {
 			FROM
 				zzzzsys_object
 			WHERE
-				sob_all_zzzzsys_form_id = ?		
-		'; 
+				sob_all_zzzzsys_form_id = ?
+		';
 
-		$stmt = nuRunQuery($query, [$formId]);
+	$stmt = nuRunQuery($query, [$formId]);
 
-		$validate = [];
-		$label = [];
-		
-		while ($row = db_fetch_object($stmt)) {
-			$validate[$row->id] = $row->validate;
-			$label[$row->id] = $row->label;
-		}
+	$validate = [];
+	$label = [];
 
-		$obj = [
-			'validate' => $validate,
-			'label' => $label
-		];
-	
-		return $obj;
+	while ($row = db_fetch_object($stmt)) {
+		$validate[$row->id] = $row->validate;
+		$label[$row->id] = $row->label;
+	}
+
+	$obj = [
+		'validate' => $validate,
+		'label' => $label
+	];
+
+	return $obj;
 
 }
 
@@ -79,94 +79,93 @@ function nuWrapWithTag($value, $tag) {
 
 function nuValidateForms() {
 
-    $formData = $_POST['nuHash']['nuFORMdata'];
-    
-    if (!nuCheckAccessLevel($formData[0])) {
-        return false;
-    }
+	$formData = $_POST['nuHash']['nuFORMdata'];
 
-    $errorCount = 0;
-    $formDataCount = count($formData);
-    
-    for ($formIndex = 0; $formIndex < $formDataCount; $formIndex++) {
+	if (!nuCheckAccessLevel($formData[0])) {
+		return false;
+	}
 
-        $form = $formData[$formIndex];
-        $formObject = nuValidateFormsFetchObject($form->object_id);
-        $formId = $formObject['formId'];
-		$subformFK = $formObject['subform_fk'];	
-        $accessLevel = $formObject['access'];
-        $formDescription = $formObject['form_description'];
+	$errorCount = 0;
+	$formDataCount = count($formData);
 
-        if ($accessLevel == 1) {
-            continue; // read-only
-        }
+	for ($formIndex = 0; $formIndex < $formDataCount; $formIndex++) {
 
-        $formObjects = nuValidateFormsFetchFormObjects($formId);
-        $validationRules = $formObjects['validate'];
-        $fieldLabels = $formObjects['label'];
-        $formDescription = $formIndex > 0 ? "($formDescription)" : '';
+		$form = $formData[$formIndex];
+		$formObject = nuValidateFormsFetchObject($form->object_id);
+		$formId = $formObject['formId'];
+		$subformFK = $formObject['subform_fk'];
+		$accessLevel = $formObject['access'];
+		$formDescription = $formObject['form_description'];
 
-        $rowCount = count($form->rows);
-        for ($rowIndex = 0; $rowIndex < $rowCount; $rowIndex++) {
-			
-            $fieldCount = count($form->fields);
-            for ($fieldIndex = 1; $fieldIndex < $fieldCount; $fieldIndex++) {
-                $field = $form->fields[$fieldIndex];
-                $validationType = nuObjKey($validationRules, $field);
-                $fieldLabel = nuWrapWithTag(nuObjKey($fieldLabels, $field), 'b');
-                $rowDeleted = $form->deleted[$rowIndex] == 0;
-                $rowValue = $form->rows[$rowIndex][$fieldIndex];
-                
-                $errorCount += nuValidateFormsRequiredFields($form, $formIndex, $subformFK, $rowIndex, $validationType, $rowValue, $fieldLabel, $formDescription, $rowDeleted, $fieldIndex);
-            }
-        }
-    }
-    
-    return $errorCount == 0;
+		if ($accessLevel == 1) {
+			continue; // read-only
+		}
+
+		$formObjects = nuValidateFormsFetchFormObjects($formId);
+		$validationRules = $formObjects['validate'];
+		$fieldLabels = $formObjects['label'];
+		$formDescription = $formIndex > 0 ? "($formDescription)" : '';
+
+		$rowCount = count($form->rows);
+		for ($rowIndex = 0; $rowIndex < $rowCount; $rowIndex++) {
+
+			$fieldCount = count($form->fields);
+			for ($fieldIndex = 1; $fieldIndex < $fieldCount; $fieldIndex++) {
+				$field = $form->fields[$fieldIndex];
+				$validationType = nuObjKey($validationRules, $field);
+				$fieldLabel = nuWrapWithTag(nuObjKey($fieldLabels, $field), 'b');
+				$rowDeleted = $form->deleted[$rowIndex] == 0;
+				$rowValue = $form->rows[$rowIndex][$fieldIndex];
+
+				$errorCount += nuValidateFormsRequiredFields($form, $formIndex, $subformFK, $rowIndex, $validationType, $rowValue, $fieldLabel, $formDescription, $rowDeleted, $fieldIndex);
+			}
+		}
+	}
+
+	return $errorCount == 0;
 
 }
 
 function nuDisplayErrorRequiredFields($formIndex, $row, $label, $formDescription, $errorMf, $errorSf) {
 
 	if ($formIndex === 0) {
-		
+
 		nuDisplayError("$label " . nuTranslate($errorSf));
 		// DEV:
-		// nuDisplayError(nuTranslate($errorMf, $label)); 
-	}
-	else {
-		nuDisplayError("$label " . nuTranslate('on row') . " " . ($row + 1) . " " . nuTranslate("$errorSf") . " " .$formDescription);
+		// nuDisplayError(nuTranslate($errorMf, $label));
+	} else {
+		nuDisplayError("$label " . nuTranslate('on row') . " " . ($row + 1) . " " . nuTranslate("$errorSf") . " " . $formDescription);
 	}
 
 }
 
-function nuValidateFormsRequiredFields($form, $formIndex, $subformFK, $row, $validationType, $rowValue, $label, $formDescription, $rowDeleted, $fieldLabel) {	
+function nuValidateFormsRequiredFields($form, $formIndex, $subformFK, $row, $validationType, $rowValue, $label, $formDescription, $rowDeleted, $fieldLabel) {
 
 	switch ($validationType) {
-	case 1:		// No blanks	
-		if (($rowValue === '' || $rowValue === '[]') && $rowDeleted) {
-			nuDisplayErrorRequiredFields($formIndex, $row, $label, $formDescription, '%s cannot be left blank', 'cannot be left blank');
-			return 1;
-		}
-		break;
+		case 1:		// No blanks
+			if (($rowValue === '' || $rowValue === '[]') && $rowDeleted) {
+				nuDisplayErrorRequiredFields($formIndex, $row, $label, $formDescription, '%s cannot be left blank', 'cannot be left blank');
+				return 1;
+			}
+			break;
 
-	case 2:		// No duplicates
-		if (nuDuplicate($form, $subformFK, $row, $fieldLabel) && $rowDeleted) {
-			nuDisplayErrorRequiredFields($formIndex, $row, $label, $formDescription, '%s has a duplicate', 'has a duplicate');
-			return 1;
-		}
-		break;
+		case 2:		// No duplicates
+			if (nuDuplicate($form, $subformFK, $row, $fieldLabel) && $rowDeleted) {
+				nuDisplayErrorRequiredFields($formIndex, $row, $label, $formDescription, '%s has a duplicate', 'has a duplicate');
+				return 1;
+			}
+			break;
 
-	case 3:		// No duplicates or blanks
-		$isDuplicate = nuDuplicate($form, $subformFK, $row, $fieldLabel);
-		$isBlank = ($rowValue === '' || $rowValue === '[]');
+		case 3:		// No duplicates or blanks
+			$isDuplicate = nuDuplicate($form, $subformFK, $row, $fieldLabel);
+			$isBlank = ($rowValue === '' || $rowValue === '[]');
 
-		if (($isDuplicate || $isBlank) && $rowDeleted) {
-			nuDisplayErrorRequiredFields($formIndex, $row, $label, $formDescription, '%s must be both unique and not blank', 'must be both unique and not blank');
-			return 1;
-		}
+			if (($isDuplicate || $isBlank) && $rowDeleted) {
+				nuDisplayErrorRequiredFields($formIndex, $row, $label, $formDescription, '%s must be both unique and not blank', 'must be both unique and not blank');
+				return 1;
+			}
 	}
-	
+
 	return 0;
 
 }
@@ -189,9 +188,9 @@ function nuCheckAccessLevel($data) {
 			throw new Exception("An error occurred while fetching access level data.");
 		}
 
-		$numRows = db_num_rows($stmt);		
+		$numRows = db_num_rows($stmt);
 		$accessLevel = $numRows === 0 ? null : db_fetch_object($stmt);
-	
+
 		if ($action === 'save' && ($accessLevel === NULL || $accessLevel->slf_save_button != 1)) {
 			throw new Exception("Save is disabled for this access level.");
 		}
@@ -200,12 +199,11 @@ function nuCheckAccessLevel($data) {
 			throw new Exception("Delete is disabled for this access level.");
 		}
 
-	}
-	catch(Exception $e) {
+	} catch (Exception $e) {
 		nuDisplayError(nuTranslate($e->getMessage()));
 		return false;
 	}
-	
+
 	return true;
 
 }
@@ -219,11 +217,11 @@ function nuDuplicate($form, $subformFK, $row, $fieldLabel) {
 	$query = "SELECT `$form->primary_key` FROM `$form->table` WHERE `$field` = ? AND `$form->primary_key` != ?";
 
 	if (isset($subformFK) && trim($subformFK) !== '') {
-		$query .= " AND `$subformFK` = '". nuRecordId() ."'";
+		$query .= " AND `$subformFK` = '" . nuRecordId() . "'";
 	}
 
 	$stmt = nuRunQuery($query, [$value, $pk]);
-	
+
 	return db_num_rows($stmt) > 0;
 
 }
@@ -240,8 +238,7 @@ function nuUpdateDatabaseSave($recordId, $row, $pk, $table, $deleted, $log, $use
 			$sql[] = "INSERT INTO `$table` $inserts $values;";
 		}
 
-	}
-	else {
+	} else {
 
 		$sql[] = "UPDATE `$table` SET $columns WHERE `$pk` = '$recordId';";
 
@@ -252,13 +249,12 @@ function nuUpdateDatabaseSave($recordId, $row, $pk, $table, $deleted, $log, $use
 			$logData = json_decode($logRow[0]);
 
 			if (gettype($logData) == 'object') {
-				$logData->edited = ['user' => $userId, 'time' => time() ];
-			}
-			else {
+				$logData->edited = ['user' => $userId, 'time' => time()];
+			} else {
 
 				$logData = new stdClass;
 				$logData->added = ['user' => 'unknown', 'time' => 0];
-				$logData->edited = ['user' => $userId, 'time' => time() ];
+				$logData->edited = ['user' => $userId, 'time' => time()];
 
 			}
 
@@ -274,11 +270,11 @@ function nuUpdateDatabaseSave($recordId, $row, $pk, $table, $deleted, $log, $use
 function nuUpdateDatabaseDelete($table, $pk, $deleted, $rows, $action, &$sqls) {
 
 	$deletedCount = count($deleted);
-	for ($i = 0;$i < $deletedCount;$i++) {
+	for ($i = 0; $i < $deletedCount; $i++) {
 		$id = $rows[$i][0];
 		if ($action == 'delete' || $deleted[$i] == '1') {
 			if ($id != '-1') {
-				$sql	= "DELETE FROM $table WHERE `$pk` = '$id';";
+				$sql = "DELETE FROM $table WHERE `$pk` = '$id';";
 				$sqls[] = $sql;
 			}
 		}
@@ -381,7 +377,7 @@ function nuUpdateDatabase() {
 	$sql = [];
 
 	$countNuData = count($nudata);
-	for ($formIndex = 0;$formIndex < $countNuData;$formIndex++) {
+	for ($formIndex = 0; $formIndex < $countNuData; $formIndex++) {
 
 		$sf = $nudata[$formIndex];
 
@@ -396,12 +392,12 @@ function nuUpdateDatabase() {
 		$formId = $sf->object_id;
 
 		$autoNumbers = nuAutoNumbers($formId);
-		$tableCts = nuObjKey($clientTableSchema, $table);	
+		$tableCts = nuObjKey($clientTableSchema, $table);
 		$tableColumns = nuObjKey($tableCts, 'names') ?? [];
 		$log = in_array($table . '_nulog', $tableColumns);
 
 		$countRows = count($rows);
-		for ($row = 0;$row < $countRows;$row++) {
+		for ($row = 0; $row < $countRows; $row++) {
 
 			$rowEdited = nuEditedRow($edited[$row], $fields, $tableColumns);
 			if ($formIndex == 0 && $recordID == '-1') { // Main form
@@ -419,19 +415,19 @@ function nuUpdateDatabase() {
 				$mainRecordId = nuUpdateDatabaseSetValues($formIndex, $table, $primaryKey, $foreignKey, $recordId, $mainRecordId, $updateData); // prev: $values, $insertColumns
 
 				$countR = count($currentRow);
-				for ($r = 1;$r < $countR;$r++) {
-					
+				for ($r = 1; $r < $countR; $r++) {
+
 					$field = $fields[$r];
 					$isAutoNumber = in_array($field, $autoNumbers);
 
 					if ($edit[$r] == 1 or $isAutoNumber) { //-- has been edited
 
-							if (!nuUpdateDatabaseIsValidTable($clientTableSchema, $table, $formType)) {
-								return;
-							}
+						if (!nuUpdateDatabaseIsValidTable($clientTableSchema, $table, $formType)) {
+							return;
+						}
 
-							$value = $currentRow[$r];
-							nuUpdateDatabaseGetUpdateValue($field, $value, $formId, $table, $tableColumns, $clientTableSchema, $log, $isAutoNumber, $nuConfigDBTypesSetNullWhenEmpty, $updateData);
+						$value = $currentRow[$r];
+						nuUpdateDatabaseGetUpdateValue($field, $value, $formId, $table, $tableColumns, $clientTableSchema, $log, $isAutoNumber, $nuConfigDBTypesSetNullWhenEmpty, $updateData);
 
 					}
 
@@ -460,7 +456,7 @@ function nuUpdateDatabase() {
 
 		nuEval($nuDataFormId . '_BD');
 		$sql = array_reverse($sql); //-- delete children first
-		
+
 	}
 
 	if (nuHasErrors()) {
@@ -491,38 +487,37 @@ function nuSetValidationErrorTitle($title) {
 function nuUpdateDatabaseAddNuLog(&$updateData, $userId, $table) {
 
 	$jd = new stdClass;
-	$jd->added = ['user' => $userId, 'time' => time() ];
+	$jd->added = ['user' => $userId, 'time' => time()];
 	$je = addslashes(json_encode($jd));
 	$updateData->values[] = "'$je'";
 	$updateData->inserts[] = "`$table" . "_nulog`";
 
 }
-					
+
 function nuUpdateDatabaseIsValidTable($clientTableSchema, $table, $formType) {
-	
+
 	if (nuObjKey($clientTableSchema, $table, '') == '') { //-- not valid table name
 
 		if ($formType == 'launch') {
 			nuDisplayError(nuTranslate("Launch Forms Cannot Be Saved"));
-		}
-		else {
+		} else {
 			nuDisplayError("<b>$table</b> " . nuTranslate("is not a valid table name for a form"));
 		}
 
 		return false;
-	
+
 	}
-	
+
 	return true;
-	
+
 }
 
-function nuUpdateDatabaseGetUpdateValue($field, $value, $formId, $table, $tableColumns, $clientTableSchema, $log, $isAutoNumber,  $nuConfigDBTypesSetNullWhenEmpty, &$updateData) {
+function nuUpdateDatabaseGetUpdateValue($field, $value, $formId, $table, $tableColumns, $clientTableSchema, $log, $isAutoNumber, $nuConfigDBTypesSetNullWhenEmpty, &$updateData) {
 
 	$idx = array_search($field, $tableColumns);
 	$isNulog = $log && nuStringEndsWith("_nulog", $field);
-	
-	if ($idx !== false && ! $isNulog) { //-- valid field name and not nulog column
+
+	if ($idx !== false && !$isNulog) { //-- valid field name and not nulog column
 		$v = $isAutoNumber ? nuAutoNumber($formId, $field, $value) : $value;
 
 		$type = $clientTableSchema[$table]['types'][$idx];
@@ -534,8 +529,7 @@ function nuUpdateDatabaseGetUpdateValue($field, $value, $formId, $table, $tableC
 		if (!empty($filteredNullableTypes) && $v == '') { //-- numeric and date types: null if empty
 			$updateData->values[] = "null";
 			$updateData->columns[] = "`$field` = null";
-		}
-		else {
+		} else {
 			$add = addslashes($v);
 			$updateData->values[] = "'$add'";
 			$updateData->columns[] = "`$field` = '$add'";
@@ -546,7 +540,7 @@ function nuUpdateDatabaseGetUpdateValue($field, $value, $formId, $table, $tableC
 	}
 
 }
-																														  
+
 function nuUpdateDatabaseSetValues($formIndex, $table, $primaryKey, $foreignKey, $recordId, $mainRecordId, &$updateData) {
 
 	$nv = '';
@@ -559,8 +553,7 @@ function nuUpdateDatabaseSetValues($formIndex, $table, $primaryKey, $foreignKey,
 			$mainRecordId = $nv;
 		}
 
-	}
-	else {
+	} else {
 
 		$primaryKeyValue = "'$recordId'";
 		if ($formIndex == 0) {
@@ -589,7 +582,7 @@ function nuUpdateDatabaseExecStatements($sql, $nuMainTable, $mainRecordId) {
 
 	if ($sql != null) {
 		$countSql = count($sql);
-		for ($i = 0;$i < $countSql;$i++) {
+		for ($i = 0; $i < $countSql; $i++) {
 			$sqlLine = $sql[$i];
 			$insert = "INSERT INTO $nuMainTable";
 
@@ -613,7 +606,7 @@ function nuUpdateDatabaseRunBeforeDeleteEvent(&$nudata) {
 
 	$p = nuProcedure('nuBeforeDelete');
 	if ($p != '') {
-		eval($p);
+		eval ($p);
 	}
 	if (nuHasErrors()) {
 		return false;
@@ -628,7 +621,7 @@ function nuUpdateDatabaseRunBeforeSaveEvents(&$nudata, $nuDataFormId) {
 	// Global Before Save event
 	$proc = nuProcedure('nuBeforeSave');
 	if ($proc != '') {
-		eval($proc);
+		eval ($proc);
 	}
 	if (nuHasErrors()) {
 		return false;
@@ -653,7 +646,7 @@ function nuUpdateDatabaseRunAfterEvents($deleteAction, $dataFormId) {
 	$proc = nuProcedure($procName);
 
 	if ($proc) {
-		eval($proc);
+		eval ($proc);
 	}
 
 	if (nuHasErrors()) {
@@ -667,10 +660,11 @@ function nuUpdateDatabaseRunAfterEvents($deleteAction, $dataFormId) {
 
 function nuGetNuDataValue($nudata, $formId, $field) {
 
-	if ($formId == '') $formId = 'nuBuilder4EditForm';
+	if ($formId == '')
+		$formId = 'nuBuilder4EditForm';
 
 	$count = count($nudata);
-	for ($formIndex = 0;$formIndex < $count;$formIndex++) {
+	for ($formIndex = 0; $formIndex < $count; $formIndex++) {
 		$sf = $nudata[$formIndex];
 		if ($formId == $sf->id) {
 			$key = array_search($field, $sf->fields);
@@ -684,7 +678,8 @@ function nuGetNuDataValue($nudata, $formId, $field) {
 
 function nuSetNuDataValue(&$nudata, $formId, $field, $value) {
 
-	if ($formId == '') $formId = 'nuBuilder4EditForm';
+	if ($formId == '')
+		$formId = 'nuBuilder4EditForm';
 
 	foreach ($nudata as $formIndex => $sf) {
 		if ($formId === $sf->id) {
@@ -729,7 +724,7 @@ function nuSubFormsEdited($nudata, $tableColumns) {
 		return false; // no subforms
 	}
 
-	for ($formIndex = 1;$formIndex < $countData;$formIndex++) {
+	for ($formIndex = 1; $formIndex < $countData; $formIndex++) {
 
 		$sf = $nudata[$formIndex];
 		$edited = $sf->edited;
@@ -737,7 +732,7 @@ function nuSubFormsEdited($nudata, $tableColumns) {
 		$fields = $sf->fields;
 
 		$countRows = count($rows);
-		for ($row = 0;$row < $countRows;$row++) {
+		for ($row = 0; $row < $countRows; $row++) {
 			if (nuEditedRow($edited[$row], $fields, $tableColumns)) {
 				return true;
 			}
@@ -774,55 +769,54 @@ function nuAutoNumber($formId, $fieldId, $value) {
 
 	if ($isInputType && $isAutoNumber && $isNewRecord) {
 		return nuUpdateCounter($row->zzzzsys_object_id);
-	}
-	else {
+	} else {
 		return $value;
 	}
 }
 
 function nuUpdateCounter($id) {
 
-    $uniqueId = nuID();
-    $sql = "SELECT sob_input_count, sob_input_javascript FROM zzzzsys_object WHERE zzzzsys_object_id = ?";
+	$uniqueId = nuID();
+	$sql = "SELECT sob_input_count, sob_input_javascript FROM zzzzsys_object WHERE zzzzsys_object_id = ?";
 
-    for ($i = 0; $i < 10; $i++) {
+	for ($i = 0; $i < 10; $i++) {
 
-        nuRunQuery("UPDATE zzzzsys_object SET sob_input_javascript = ? WHERE zzzzsys_object_id = ? AND IFNULL(sob_input_javascript,'') = ?", [$uniqueId, $id, '']);
+		nuRunQuery("UPDATE zzzzsys_object SET sob_input_javascript = ? WHERE zzzzsys_object_id = ? AND IFNULL(sob_input_javascript,'') = ?", [$uniqueId, $id, '']);
 
-        $result = nuRunQuery($sql, [$id]);
-        $row = db_fetch_object($result);
-        $currentCount = $row->sob_input_count ?? 0;
-        $js = $row->sob_input_javascript;
+		$result = nuRunQuery($sql, [$id]);
+		$row = db_fetch_object($result);
+		$currentCount = $row->sob_input_count ?? 0;
+		$js = $row->sob_input_javascript;
 
-        if ($js == $uniqueId) {
+		if ($js == $uniqueId) {
 
-            $prefix = preg_replace('/[0-9]+/', '', $currentCount);
-            $numericPart = preg_replace('/[^0-9]/', '', $currentCount);
+			$prefix = preg_replace('/[0-9]+/', '', $currentCount);
+			$numericPart = preg_replace('/[^0-9]/', '', $currentCount);
 			if ($numericPart === '') {
 				$numericPart = '0';
 			}
 
-            $newNumericPart = intval($numericPart) + 1;
-            $newId = $prefix . $newNumericPart;
+			$newNumericPart = intval($numericPart) + 1;
+			$newId = $prefix . $newNumericPart;
 
-            nuRunQuery("UPDATE zzzzsys_object SET sob_input_javascript = ?, sob_input_count = ? WHERE zzzzsys_object_id = ?", ['', $newId, $id]);
+			nuRunQuery("UPDATE zzzzsys_object SET sob_input_javascript = ?, sob_input_count = ? WHERE zzzzsys_object_id = ?", ['', $newId, $id]);
 
-            return $newId;
-        }
-		
+			return $newId;
+		}
+
 		return -1;
-		
-    }
 
-    nuDisplayError(nuTranslate('Could not get AutoNumber'));
-    return -1;
+	}
+
+	nuDisplayError(nuTranslate('Could not get AutoNumber'));
+	return -1;
 
 }
 
-function nuAutoNumbers($formId){
+function nuAutoNumbers($formId) {
 
-	$autoNumbers	= [];
-	$query		= "
+	$autoNumbers = [];
+	$query = "
 					SELECT sob_all_id
 					FROM zzzzsys_object
 					WHERE sob_all_zzzzsys_form_id	= ?
@@ -830,11 +824,11 @@ function nuAutoNumbers($formId){
 					AND sob_input_type				= ?
 				";
 
-	$stmt		= nuRunQuery($query, [$formId, 'input', 'nuAutoNumber']);
-				   
+	$stmt = nuRunQuery($query, [$formId, 'input', 'nuAutoNumber']);
 
-	while($row = db_fetch_object($stmt)){
-		$autoNumbers[]	= $row->sob_all_id;
+
+	while ($row = db_fetch_object($stmt)) {
+		$autoNumbers[] = $row->sob_all_id;
 	}
 
 	return $autoNumbers;
@@ -869,7 +863,7 @@ function nuFormatValue($rowData, $fieldIndex) {
 }
 
 function nuHasNoRecordID() {
-	return $_POST['nuHash']['RECORD_ID'] == - 1;
+	return $_POST['nuHash']['RECORD_ID'] == -1;
 }
 
 function nuHasNewRecordID() {
@@ -880,7 +874,7 @@ function nuChangeHashVariable($h, $v) {
 	$_POST['nuHash'][$h] = $v;
 }
 
-function nuReturnNewRecord($i = - 1) {
+function nuReturnNewRecord($i = -1) {
 	$_POST['nuHash']['RECORD_ID'] = $i;
 }
 
@@ -893,7 +887,7 @@ function nuDisplayMessage($m) {
 }
 
 function nuHasErrors() {
-	$nuErrors = nuObjKey($_POST,'nuErrors', []);
+	$nuErrors = nuObjKey($_POST, 'nuErrors', []);
 	return count($nuErrors) > 0;
 }
 
@@ -929,41 +923,41 @@ function nuSubformObject($id = '') {
 
 }
 
-function nuDeleteForm($formId){
+function nuDeleteForm($formId) {
 
-	$query		= "DELETE FROM zzzzsys_browse WHERE sbr_zzzzsys_form_id = ?";
-	$stmt		= nuRunQuery($query, [$formId]);
-	$query		= "DELETE FROM zzzzsys_tab WHERE syt_zzzzsys_form_id = ?";
-	$stmt		= nuRunQuery($query, [$formId]);
-	$query		= "DELETE FROM zzzzsys_php WHERE zzzzsys_php_id LIKE ?";
-	$stmt		= nuRunQuery($query, [$formId.'_'.'%']);
-	$query		= "DELETE FROM zzzzsys_select WHERE zzzzsys_select_id LIKE ?";
-	$stmt		= nuRunQuery($query, [$formId]);
-	$query		= "DELETE FROM zzzzsys_select_clause WHERE ssc_zzzzsys_select_id LIKE ?";
-	$stmt		= nuRunQuery($query, [$formId.'%']);
-	$query		= "DELETE FROM zzzzsys_object WHERE sob_all_type = ? AND sob_run_zzzzsys_form_id = ?";
-	$stmt		= nuRunQuery($query, ['run', $formId]);
+	$query = "DELETE FROM zzzzsys_browse WHERE sbr_zzzzsys_form_id = ?";
+	$stmt = nuRunQuery($query, [$formId]);
+	$query = "DELETE FROM zzzzsys_tab WHERE syt_zzzzsys_form_id = ?";
+	$stmt = nuRunQuery($query, [$formId]);
+	$query = "DELETE FROM zzzzsys_php WHERE zzzzsys_php_id LIKE ?";
+	$stmt = nuRunQuery($query, [$formId . '_' . '%']);
+	$query = "DELETE FROM zzzzsys_select WHERE zzzzsys_select_id LIKE ?";
+	$stmt = nuRunQuery($query, [$formId]);
+	$query = "DELETE FROM zzzzsys_select_clause WHERE ssc_zzzzsys_select_id LIKE ?";
+	$stmt = nuRunQuery($query, [$formId . '%']);
+	$query = "DELETE FROM zzzzsys_object WHERE sob_all_type = ? AND sob_run_zzzzsys_form_id = ?";
+	$stmt = nuRunQuery($query, ['run', $formId]);
 
-	$query		= "SELECT * FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = ?";
-	$stmt		= nuRunQuery($query, [$formId]);
+	$query = "SELECT * FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = ?";
+	$stmt = nuRunQuery($query, [$formId]);
 
-	while($row = db_fetch_object($stmt)){
+	while ($row = db_fetch_object($stmt)) {
 
-		$object	= $row->zzzzsys_object_id;
-	
-		$query	= "DELETE FROM zzzzsys_event WHERE sev_zzzzsys_object_id = ?";
-		$stmt	= nuRunQuery($query, [$object]);
-	
-		$query	= "DELETE FROM zzzzsys_php WHERE zzzzsys_php_id LIKE ?";
-		$stmt	= nuRunQuery($query, [$object.'_'.'%']);
+		$object = $row->zzzzsys_object_id;
+
+		$query = "DELETE FROM zzzzsys_event WHERE sev_zzzzsys_object_id = ?";
+		$stmt = nuRunQuery($query, [$object]);
+
+		$query = "DELETE FROM zzzzsys_php WHERE zzzzsys_php_id LIKE ?";
+		$stmt = nuRunQuery($query, [$object . '_' . '%']);
 
 	}
 
-	$query		= "DELETE FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = ?";
-	$stmt		= nuRunQuery($query, [$formId]);
+	$query = "DELETE FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = ?";
+	$stmt = nuRunQuery($query, [$formId]);
 
-	$query		= "DELETE FROM zzzzsys_form WHERE zzzzsys_form_id LIKE ?";
-	$stmt		= nuRunQuery($query, [$formId]);
+	$query = "DELETE FROM zzzzsys_form WHERE zzzzsys_form_id LIKE ?";
+	$stmt = nuRunQuery($query, [$formId]);
 
 }
 
@@ -996,7 +990,7 @@ function nuLogout() {
 
 	// Unset session data
 	unset($_SESSION['nubuilder_session_data']['SESSION_ID']);
-	
+
 	// Unset cached include files
 	unset($_SESSION['nuinclude']);
 
