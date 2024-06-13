@@ -173,9 +173,9 @@ $.fn.nuFocusWithoutScrolling = function () {
 
 	let x = element.scrollX, y = element.scrollY;
 
-//	this.attr('inputmode', 'none');
+	this.attr('inputmode', 'none');
 	this.trigger("focus");
-//	this.removeAttr('inputmode');
+	this.removeAttr('inputmode');
 
 	element.scrollTo(x, y);
 	return this;
