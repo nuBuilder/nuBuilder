@@ -563,12 +563,11 @@ function nuSubmit(e) {
 	}
 
 }
-
 function nuCanArrangeObjects() {
 
 	const hasObjects = nuSERVERRESPONSE.objects && nuSERVERRESPONSE.objects.length > 0;
 	const isNotPortraitScreen = !window.nuPORTRAITSCREEN;
-	const isNotMobileView = !(nuIsMobile() && nuCurrentProperties().mobile_view);
+	const isNotMobileView = !nuIsMobileView();
 	const isNotArrangeObjects = nuRecordId() != '-2';
 
 	return nuGlobalAccess() && hasObjects && isNotPortraitScreen && isNotMobileView && isNotArrangeObjects;
