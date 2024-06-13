@@ -129,38 +129,36 @@ function nuRunType($r) {
 function nuEvents($r) {
 	return $r->sob_all_event ?? '';
 }
+function nuGetFormObject($formId, $recordId, $numObjects, $defaultTabs = null) {
 
-function nuGetFormObject($F, $R, $OBJS, $tabs = null){
+	$defaultTabs = $defaultTabs ?? nuBuildTabList($formId);
 
-	if($tabs == null) {
-		$tabs = nuBuildTabList($F);
+	$formObject = nuGetEditForm($formId, $recordId);
+
+	// Handle case where form object is not found
+	if ($formObject === null) {
+		$response = new stdClass();
+		$response->forms[] = $formObject;
+		return $response->forms[0];
 	}
 
-	$f = nuGetEditForm($F, $R);
+	$formObject->form_id = $formId;
+	if ($recordId == '' && $formObject->form_type == 'launch') {
+		$recordId = '-1';
+	}
+	$formObject->record_id = $recordId;
 
-	if ($f === null) {
-		$O = new stdClass();
-		$O->forms[] = $f;
-		return $O->forms[0];
+	// Fetch data from database if necessary
+	if (!isset($formObject->table) || $formObject->table == '' || $recordId == '') {
+		$data = [];
+	} else {
+		$selectQuery = "SELECT * FROM `$formObject->table` WHERE `$formObject->primary_key` = ?";
+		$queryResult = nuRunQuery($selectQuery, [$recordId]);
+		$data = db_fetch_array($queryResult);
 	}
 
-	$f->form_id		= $F;
-
-	if ($R == '' && $f->form_type == 'launch') $R = '-1';
-	$f->record_id	= $R;
-
-	if(!isset($f->table) || $f->table == '' || $R == ''){
-		$A			= [];
-	}else{
-
-		$s	= "SELECT * FROM `$f->table` WHERE `$f->primary_key` = ?";
-		$t	= nuRunQuery($s, [$R]);
-		$A	= db_fetch_array($t);
-
-	}
-
-	$s = "
-
+	// SQL query to fetch form object
+	$sqlQuery = "
 		SELECT
 			*
 		FROM
@@ -174,328 +172,233 @@ function nuGetFormObject($F, $R, $OBJS, $tabs = null){
 			syt_order,
 			(sob_all_type = 'run'),
 			sob_all_zzzzsys_tab_id
-
 	";
 
-	$cloneable					= [];
-	$a							= [];
+	$cloneableObjects = [];
+	$formObjects = [];
 
-	if($R != ''){
+	// Process each row from the SQL query result
+	if ($recordId != '') {
+		// Fetch database field names if data exists
+		$dbFields = ($data !== []) ? db_field_names($formObject->table) : [];
 
-		$dbFields = ($A !== []) ? db_field_names($f->table) : [];
+		$queryResult = nuRunQuery($sqlQuery, [$formId]);
 
-		$t							= nuRunQuery($s, [$F]);
+		while ($row = db_fetch_object($queryResult)) {
 
-		while($r = db_fetch_object($t)){
+			$object = nuDefaultObject($row, $defaultTabs);
 
-			$o						= nuDefaultObject($r, $tabs);
-
-			if($r->sob_all_cloneable == '0'){
-				$cloneable[]		= ['subform' => $r->sob_all_type == 'subform', 'id' => $r->sob_all_id];
+			if ($row->sob_all_cloneable == '0') {
+				$cloneableObjects[] = ['subform' => $row->sob_all_type == 'subform', 'id' => $row->sob_all_id];
 			}
 
-			$o->table_column = in_array($r->sob_all_id, $dbFields) ? '1' : '0';
+			$object->table_column = in_array($row->sob_all_id, $dbFields) ? '1' : '0';
 
-			if($R == '-1'){
-				$o->value			= '';//nuGetSQLValue($r->sob_all_default_value_sql);
-			}else{
-				$o->value = nuObjKey($A,$r->sob_all_id, '');
+			$object->value = ($recordId == '-1') ? '' : nuObjKey($data, $row->sob_all_id, '');
+
+			if ($row->sob_all_type == 'calc') {
+				$object->formula = $row->sob_calc_formula;
+				$object->format = $row->sob_calc_format;
+				$object->align = $row->sob_all_align;
+				$object->calc_order = $row->sob_all_order;
 			}
 
-			if($r->sob_all_type == 'calc'){
-
-				$o->formula			= $r->sob_calc_formula;
-				$o->format			= $r->sob_calc_format;
-				$o->align			= $r->sob_all_align;
-				$o->calc_order		= $r->sob_all_order;
-
+			if ($row->sob_all_type == 'textarea' || $row->sob_all_type == 'run') {
+				$object->align = $row->sob_all_align;
 			}
 
-			if($r->sob_all_type == 'textarea' || $r->sob_all_type == 'run'){
-				$o->align			= $r->sob_all_align;
-			}
+			if ($row->sob_all_type == 'input' || $row->sob_all_type == 'display') {
+				$object->align = $row->sob_all_align;
+				$object->format = '';
+				$inputType = $row->sob_input_type;
 
-			if($r->sob_all_type == 'input' || $r->sob_all_type == 'display'){
-
-				$o->align			= $r->sob_all_align;
-				$o->format			= '';
-				$inputType			= $r->sob_input_type;
-
-				if($inputType== 'nuNumber' || $inputType == 'nuDate'){
-					$o->format		= $r->sob_input_format;
+				if ($inputType == 'nuNumber' || $inputType == 'nuDate') {
+					$object->format = $row->sob_input_format;
 				}
 
-				if($inputType == 'nuAutoNumber'){
-
-					$o->counter		= $o->value;
-
+				if ($inputType == 'nuAutoNumber') {
+					$object->counter = $object->value;
 				}
 
-				$o->input			= $inputType;
+				$object->input = $inputType;
 
-				if($inputType == 'button' && $r->sob_all_type == 'input'){
-					$o->value		= $r->sob_all_label;
+				if ($inputType == 'button' && $row->sob_all_type == 'input') {
+					$object->value = $row->sob_all_label;
 				}
 
-				if($inputType == 'nuScroll' && $r->sob_all_type == 'input'){
-					$o->scroll		= $r->sob_input_javascript;
+				if ($inputType == 'nuScroll' && $row->sob_all_type == 'input') {
+					$object->scroll = $row->sob_input_javascript;
 				}
 
-				if(($inputType == 'nuDate' || $inputType == 'nuNumber' || $inputType == 'number' || $inputType == 'text' || $inputType == 'email' || $inputType == 'search' || $inputType == 'month') && $r->sob_all_type == 'input' && $r->sob_input_datalist != ''){
-					$o->datalist	= json_encode (nuDataListOptions(nuReplaceHashVariables($r->sob_input_datalist)));
+				if (($inputType == 'nuDate' || $inputType == 'nuNumber' || $inputType == 'number' || $inputType == 'text' || $inputType == 'email' || $inputType == 'search' || $inputType == 'month') && $row->sob_all_type == 'input' && $row->sob_input_datalist != '') {
+					$object->datalist = json_encode(nuDataListOptions(nuReplaceHashVariables($row->sob_input_datalist)));
 				}
 
-				if($r->sob_all_type == 'display'){
-
-					$o->value			= null;
-					$displayProcedure	= $r->sob_display_procedure ?? '';
+				if ($row->sob_all_type == 'display') {
+					$object->value = null;
+					$displayProcedure = $row->sob_display_procedure ?? '';
 
 					if ($displayProcedure) {
-
 						$code = nuProcedure($displayProcedure);
 						if ($code !== '') {
-							$o->value = nuEval($displayProcedure, true);
+							$object->value = nuEval($displayProcedure, true);
 						}
-
 					} else {
-
-						$disS		= trim(nuReplaceHashVariables($r->sob_display_sql));
-						$disT			= nuRunQuery($disS);
-
-						if (db_num_rows($disT) >= 1) {
-							$disR		= db_fetch_row($disT);
-							$o->value	= $disR[0];
-						} 
-
+						$displaySql = trim(nuReplaceHashVariables($row->sob_display_sql));
+						$displayResult = nuRunQuery($displaySql);
+						if (db_num_rows($displayResult) >= 1) {
+							$displayRow = db_fetch_row($displayResult);
+							$object->value = $displayRow[0];
+						}
 					}
-
 				}
-
 			}
 
-			if($r->sob_all_type == 'contentbox'){
+			if ($row->sob_all_type == 'contentbox') {
+				$contentWidth = $object->width . "px";
+				$contentHeight = $object->height . "px";
+				$contentLabel = nuTranslate($row->sob_all_label);
+				$contentId = $row->sob_all_id;
+				$contentTitleId = 'label_' . $contentId;
+				$contentContentId = 'content_' . $contentId;
+				$contentBoxId = 'box_' . $contentId;
+				$contentAlign = $row->sob_all_align;
 
-				$cWidth		= $o->width."px";
-				$cHeight	= $o->height."px";
-				$cLabel		= nuTranslate($r->sob_all_label);
-				$cId		= $r->sob_all_id;
-				$cTitleId	= 'label_'.$cId;
-				$cContentId	= 'content_'.$cId;
-				$cBoxId		= 'box_'.$cId;
-				$cAlign		= $r->sob_all_align;
-
-				$o->html = nuReplaceHashVariables($r->sob_html_code)."
-					<div class='nuContentBox' id='$cBoxId' style='left: 0px; top: 0px; height: $cHeight; width: $cWidth;'>
-					<div class='nuContentBoxTitle' style='text-align: $cAlign' id='$cTitleId'>$cLabel</div>
-					<div class='nuContentBoxContent' id='$cContentId'></div>
+				$object->html = nuReplaceHashVariables($row->sob_html_code) . "
+					<div class='nuContentBox' id='$contentBoxId' style='left: 0px; top: 0px; height: $contentHeight; width: $contentWidth;'>
+						<div class='nuContentBoxTitle' style='text-align: $contentAlign' id='$contentTitleId'>$contentLabel</div>
+						<div class='nuContentBoxContent' id='$contentContentId'></div>
 					</div>
 				";
-
-			}
-			
-			$fileTarget = isset($r->sob_input_file_target) ? $r->sob_input_file_target : 0;
-			
-			$o->file_target = $fileTarget;
-			if($r->sob_all_type == 'editor'  || $r->sob_all_type == 'input' && $fileTarget == 1){
-					$o->html		= nuReplaceHashVariables($r->sob_html_code);
-					
 			}
 
-			if($r->sob_all_type == 'html'){
-
-				if($r->sob_html_chart_type == ''){
-					$o->html		= nuReplaceHashVariables($r->sob_html_code);
-				}else{
-
-					$o->html		= '';
-					$htmljs			= addslashes($r->sob_html_javascript);
-
-					$v = $r->sob_html_vertictal_label ?? '';
-					$h = $r->sob_html_horizontal_label ?? '';
-					$title = $r->sob_html_title ?? '';
-					$htmlj = "";
-
-					$chart_options = [
-						'p' => ['type' => 'PieChart', 'stacked' => false],
-						'l' => ['type' => 'ComboChart', 'stacked' => false, 'chart_type' => 'lines'],
-						'b' => ['type' => 'ComboChart', 'stacked' => false, 'chart_type' => 'bars'],
-						'bs' => ['type' => 'ComboChart', 'stacked' => true, 'chart_type' => 'bars'],
-						'bh' => ['type' => 'BarChart', 'stacked' => false, 'chart_type' => 'bars'],
-						'bhs' => ['type' => 'BarChart', 'stacked' => true, 'chart_type' => 'bars'],
-					];
-
-					$chart_type = $r->sob_html_chart_type ?? '';
-
-					if (array_key_exists($chart_type, $chart_options)) {
-						$type = $chart_options[$chart_type]['type'];
-						$stacked = $chart_options[$chart_type]['stacked'];
-						$chart_type = $chart_options[$chart_type]['chart_type'];
-
-						$htmlj = "\nnuChart('$r->sob_all_id', '$type', '$htmljs', '$title', '$h', '$v', '$chart_type', $stacked);";
-					}
-
-					nuAddJavaScript($htmlj);
-
-				}
-
+			if ($row->sob_all_type == 'image') {
+				$object->src = nuGetSrc($row->sob_image_zzzzsys_file_id);
 			}
 
-			if($r->sob_all_type == 'image'){
-				$o->src				= nuGetSrc($r->sob_image_zzzzsys_file_id);
+			if ($row->sob_all_type == 'select') {
+				$object->multiple = $row->sob_select_multiple;
+				$object->select2 = $row->sob_select_2 ?? null;
+				$object->options = nuSelectOptions($row->sob_select_sql);
 			}
 
-			if($r->sob_all_type == 'select'){
+			if ($row->sob_all_type == 'run') {
+				$formId = $row->sob_run_zzzzsys_form_id;
+				$object->form_id = $formId;
+				$object->record_id = nuReplaceHashVariables($row->sob_run_id);
+				$object->parameters = $row->sob_all_id;
 
-				$o->multiple		= $r->sob_select_multiple;
-				$o->select2			= $r->sob_select_2 ?? null;
-				$o->options			= nuSelectOptions($r->sob_select_sql);
-
-			}
-
-			if($r->sob_all_type == 'run'){
-
-				$fromId				= $r->sob_run_zzzzsys_form_id;
-				$o->form_id			= $fromId;
-				$o->record_id		= nuReplaceHashVariables($r->sob_run_id);
-				$o->parameters		= $r->sob_all_id;
-
-				$runType			= nuRunType($r);
+				$runType = nuRunType($row);
 
 				if ($runType == 'F') {
+					$object->run_type = 'F';
+				} elseif ($runType == 'P' || nuIsProcedure($formId)) {
+					$procedureQuery = nuRunQuery('SELECT sph_zzzzsys_form_id, sph_code FROM zzzzsys_php WHERE zzzzsys_php_id = ?', [$formId]);
+					$procedureObject = db_fetch_object($procedureQuery);
+					$object->form_id = $procedureObject->sph_zzzzsys_form_id;
+					$object->record_id = $procedureObject->sph_code;
+					$object->run_type = 'P';
+					$runTabQuery = nuRunQuery("SELECT sph_run FROM zzzzsys_php WHERE zzzzsys_php_id = ?", [$row->sob_run_zzzzsys_form_id]);
+					$object->run_hidden = db_fetch_object($runTabQuery)->sph_run == 'hide';
 
-					$o->run_type	= 'F';
-
-				}else if($runType == 'P' || nuIsProcedure($fromId)){
-
-					$actt			= nuRunQuery('SELECT sph_zzzzsys_form_id, sph_code FROM zzzzsys_php WHERE zzzzsys_php_id = ?', [$fromId]);
-					$act			= db_fetch_object($actt);
-					$o->form_id		= $act->sph_zzzzsys_form_id;
-					$o->record_id	= $act->sph_code;
-					$o->run_type	= 'P';
-					$runtab			= nuRunQuery("SELECT sph_run FROM zzzzsys_php WHERE zzzzsys_php_id = ?", [$r->sob_run_zzzzsys_form_id]);
-					$o->run_hidden	= db_fetch_object($runtab)->sph_run == 'hide';
-
-				}else if($runType == 'R' || nuIsReport($fromId)){
-
-					$actt			= nuRunQuery('SELECT sre_zzzzsys_form_id, sre_code  FROM zzzzsys_report WHERE zzzzsys_report_id = ?', [$fromId]);
-					$act			= db_fetch_object($actt);
-					$o->form_id		= $act->sre_zzzzsys_form_id;;
-					$o->record_id	= $act->sre_code;
-					$o->run_type	= 'R';
-
-				}else{
-					$o->run_type	= 'F';
+				} elseif ($runType == 'R' || nuIsReport($formId)) {
+					$reportQuery = nuRunQuery('SELECT sre_zzzzsys_form_id, sre_code FROM zzzzsys_report WHERE zzzzsys_report_id = ?', [$formId]);
+					$reportObject = db_fetch_object($reportQuery);
+					$object->form_id = $reportObject->sre_zzzzsys_form_id;
+					$object->record_id = $reportObject->sre_code;
+					$object->run_type = 'R';
+				} else {
+					$object->run_type = 'F';
 				}
 
-				$o->filter			= nuReplaceHashVariables($r->sob_run_filter);
-				$o->run_method		= $r->sob_run_method;
-				$o->run_target		= $r->sob_run_target ?? '0';
-
+				$object->filter = nuReplaceHashVariables($row->sob_run_filter);
+				$object->run_method = $row->sob_run_method;
+				$object->run_target = $row->sob_run_target ?? '0';
 			}
 
-			if($r->sob_all_type == 'lookup'){
-
-				$o->description_width	= $r->sob_lookup_description_width;
-				$o->form_id				= $r->sob_lookup_zzzzsys_form_id;
-				$o->values				= nuGetLookupValues($r, $o);
-
+			if ($row->sob_all_type == 'lookup') {
+				$object->description_width = $row->sob_lookup_description_width;
+				$object->form_id = $row->sob_lookup_zzzzsys_form_id;
+				$object->values = nuGetLookupValues($row, $object);
 			}
 
-			if($r->sob_all_type == 'subform'){
-
-				// need to set both subform_fk in $r and $o for later use
-				$r->subform_fk			= $R;
-				$o->subform_fk			= $R;
-				$o->subform_type		= $r->sob_subform_type;
-				$o->delete				= $r->sob_subform_delete;
-				$f->foreign_key_name	= $r->sob_subform_foreign_key;
-				$o->foreign_key_name	= $r->sob_subform_foreign_key;
-				$o->primary_key_name	= nuFormProperties($r->sob_subform_zzzzsys_form_id,'sfo_primary_key')->sfo_primary_key;
-				$f->primary_key_name	= $o->primary_key_name;
-				$o->add					= $r->sob_subform_add;
-				$o->dimensions			= nuFormDimensions($r->sob_subform_zzzzsys_form_id);
-				$o->forms				= nuGetSubformRecords($r);
-				$o->sf_form_id			= $r->sob_subform_zzzzsys_form_id;
-				$o->browse_columns		= [];
-
+			if ($row->sob_all_type == 'subform') {
+				$row->subform_fk = $recordId;
+				$object->subform_fk = $recordId;
+				$object->subform_type = $row->sob_subform_type;
+				$object->delete = $row->sob_subform_delete;
+				$formObject->foreign_key_name = $row->sob_subform_foreign_key;
+				$object->foreign_key_name = $row->sob_subform_foreign_key;
+				$object->primary_key_name = nuFormProperties($row->sob_subform_zzzzsys_form_id, 'sfo_primary_key')->sfo_primary_key;
+				$formObject->primary_key_name = $object->primary_key_name;
+				$object->add = $row->sob_subform_add;
+				$object->dimensions = nuFormDimensions($row->sob_subform_zzzzsys_form_id);
+				$object->forms = nuGetSubformRecords($row);
+				$object->sf_form_id = $row->sob_subform_zzzzsys_form_id;
+				$object->browse_columns = [];
 			}
 
-			if($r->sob_all_type == 'word'){
-				$o->word				= $r->sob_all_label;
-				$o->align				= $r->sob_all_align;
+			if ($row->sob_all_type == 'word') {
+				$object->word = $row->sob_all_label;
+				$object->align = $row->sob_all_align;
 			}
 
-			if (nuEvents($r) == '0') {
-				$o->js 					= [];
+			if (nuEvents($row) == '0') {
+				$object->js = [];
 			} else {
-				$o->js					= nuObjectEvents($r->zzzzsys_object_id);
+				$object->js = nuObjectEvents($row->zzzzsys_object_id);
 			}
 
-			$o->tab_order				= $r->sob_all_order;
-			$o->style_type 				= $r->sob_all_style_type ?? '';
-			$o->style 					= $r->sob_all_style ?? '';
+			$object->tab_order = $row->sob_all_order;
+			$object->style_type = $row->sob_all_style_type ?? '';
+			$object->style = $row->sob_all_style ?? '';
 
-			if (isset($r->sob_input_attribute) && $r->sob_input_attribute != ''){
-				$o->attributes	= $r->sob_input_attribute;
-			} else {
-				$o->attributes	= '';
+			$object->attributes = isset($row->sob_input_attribute) && $row->sob_input_attribute != '' ? $row->sob_input_attribute : '';
+			$object->input_icon = isset($row->sob_input_icon) && $row->sob_input_icon != '' ? $row->sob_input_icon : '';
+
+			if ($numObjects > 0) {
+				unset($object->type);
+				unset($object->id);
+				unset($object->label);
+				unset($object->top);
+				unset($object->left);
+				unset($object->width);
+				unset($object->height);
+				unset($object->align);
 			}
 
-			if (isset($r->sob_input_icon) && $r->sob_input_icon != ''){
-				$o->input_icon	= $r->sob_input_icon;
-			} else {
-				$o->input_icon	= '';
-			}
-
-			if($OBJS > 0){
-
-				unset($o->type);
-				unset($o->id);
-				unset($o->label);
-				unset($o->top);
-				unset($o->left);
-				unset($o->width);
-				unset($o->height);
-				unset($o->align);
-
-			}
-
-			$a[]	= $o;
-
+			$formObjects[] = $object;
 		}
-
 	}
 
-	$f->tabs					= nuRefineTabList($tabs);
-	$f->noclone					= $cloneable;
-	$f->browse_columns			= nuBrowseColumns($f);
-	$B							= nuBrowseRows($f);
+	$formObject->tabs = nuRefineTabList($defaultTabs);
+	$formObject->noclone = $cloneableObjects;
+	$formObject->browse_columns = nuBrowseColumns($formObject);
 
-	$f->browse_rows				= nuObjKey($B,0,0);
-	$f->browse_filtered_rows	= nuObjKey($B,1,0);
-	$f->browse_sql				= nuObjKey($B,2,0);
+	$browseRows = nuBrowseRows($formObject);
+	$formObject->browse_rows = nuObjKey($browseRows, 0, 0);
+	$formObject->browse_filtered_rows = nuObjKey($browseRows, 1, 0);
+	$formObject->browse_sql = nuObjKey($browseRows, 2, 0);
 
-	if ($f->browse_filtered_rows > 0) {
-		nuOnProcess($F, $f, 'BB', 'nuOnProcessBrowseRows');
+	if ($formObject->browse_filtered_rows > 0) {
+		nuOnProcess($formId, $formObject, 'BB', 'nuOnProcessBrowseRows');
 	}
 
-	$__x					= nuHash();
-	$f->browse_table_id		= $__x['TABLE_ID'];
+	$__x = nuHash();
+	$formObject->browse_table_id = $__x['TABLE_ID'];
 	unset($__x);
+	$rowsPerPage = $formObject->rows ?? 1;
+	$formObject->pages = ceil($formObject->browse_filtered_rows / $rowsPerPage);
+	$formObject->objects = $formObjects;
+	$formObject->number_formats = nuBuildCurrencyFormats();
 
-	$rows					= $f->rows ?? 1;
-	$f->pages				= ceil($f->browse_filtered_rows/$rows);
-	$f->objects				= $a;
-	$f->number_formats		= nuBuildCurrencyFormats();
-	$O						= new stdClass();
-
-	if ($f->browse_filtered_rows == 0) {
-		nuOnProcess($F, $f, 'BE', 'nuOnProcessObjects');
+	$response = new stdClass();
+	if ($formObject->browse_filtered_rows == 0) {
+		nuOnProcess($formId, $formObject, 'BE', 'nuOnProcessObjects');
 	}
 
-	$O->forms[]				= $f;
-
-	return $O->forms[0];
+	$response->forms[] = $formObject;
+	return $response->forms[0];
 
 }
 
