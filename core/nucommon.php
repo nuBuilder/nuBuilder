@@ -653,47 +653,45 @@ function nuRunHTML(){
 
 }
 
-function nuReplaceHashVariables($s){
+function nuReplaceHashVariables($str){
 
-	$s	= isset($s) ? nuTrim($s) : '';
+	$str = isset($str) ? nuTrim($str) : '';
 
-	if($s == ''){
+	if ($str === ''){
 		return '';
 	}
 
-	$a	= nuObjKey($_POST,'nuHash', null);
+	$hashValues = nuObjKey($_POST, 'nuHash', null);
 
-	if ($a != null) {
+	if ($hashValues != null) {
 
-		$q	= "SELECT sss_hashcookies FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
-		$t	= nuRunQuery($q, [$_SESSION['nubuilder_session_data']['SESSION_ID']]);
-		$r	= db_fetch_object($t);
+		$query = "SELECT sss_hashcookies FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
+		$stmt = nuRunQuery($query, [$_SESSION['nubuilder_session_data']['SESSION_ID']]);
+		$obj = db_fetch_object($stmt);
 
-		if (isset($r->sss_hashcookies)) {
+		if (isset($obj->sss_hashcookies)) {
 
-			$j	= nuJsonDecode($r->sss_hashcookies, true);
+			$decodedCookies = nuJsonDecode($obj->sss_hashcookies, true);
 
-			if (is_array($j)) {
-				$a = array_merge($j, $a);
+			if (is_array($decodedCookies)) {
+				$hashValues = array_merge($decodedCookies, $hashValues);
 			}
 		}
-
 	}
 
-	if (!is_array($a)) {
-		return $s;
+	if (!is_array($hashValues)) {
+		return $str;
 	}
 
-	foreach ($a as $k => $v) {
+	foreach ($hashValues as $key => $value) {
 
-		 if(!is_object ($a[$k]) && !is_array ($a[$k]) ) {
-			$v = $v == null ? '' : $v;
-			$s	= str_replace ('#' . $k . '#', $v, $s);
+		if (!is_object($hashValues[$key]) && !is_array($hashValues[$key])) {
+			$value = $value == null ? '' : $value;
+			$str = str_replace('#' . $key . '#', $value, $str);
 		}
-
 	}
 
-	return $s;
+	return $str;
 
 }
 
