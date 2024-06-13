@@ -1544,15 +1544,14 @@ function nuProcedure($c){
 
 }
 
-function nuSQL($c) {
+function nuSQL($code) {
 
-	$s						= "SELECT sse_sql FROM zzzzsys_select WHERE sse_code = ?";
-	$t						= nuRunQuery($s, [$c]);
+	$select = "SELECT sse_sql FROM zzzzsys_select WHERE sse_code = ?";
+	$stmt = nuRunQuery($select, [$code]);
 
-	if (db_num_rows($t) > 0) {	// SQL description exists
-
-		$r					= db_fetch_object($t);
-		return	nuReplaceHashVariables($r->sse_sql);
+	if (db_num_rows($stmt) > 0) { // SQL description exists
+		$obj = db_fetch_object($stmt);
+		return nuReplaceHashVariables($obj->sse_sql);
 
 	}
 

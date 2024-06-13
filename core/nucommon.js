@@ -111,20 +111,20 @@ String.prototype.nuIsEmpty = function () {
 }
 
 String.prototype.nuHasHTMLTag = function(tag) {
-    const escapeTagName = (name) => name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+	const escapeTagName = (name) => name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-    let regex;
-    if (Array.isArray(tag)) {
-        const escapedTags = tag.map(escapeTagName);
-        const regexString = `(${escapedTags.join('|')})\\b[^>]*>`;
-        regex = new RegExp(regexString, 'i');
-    } else {
-        const escapedTagName = escapeTagName(tag);
-        regex = new RegExp(`(${escapedTagName})\\b[^>]*>`, 'i');
-    }
-    
-    const match = this.match(regex);
-    return match ? match[1] : false;
+	let regex;
+	if (Array.isArray(tag)) {
+		const escapedTags = tag.map(escapeTagName);
+		const regexString = `(${escapedTags.join('|')})\\b[^>]*>`;
+		regex = new RegExp(regexString, 'i');
+	} else {
+		const escapedTagName = escapeTagName(tag);
+		regex = new RegExp(`(${escapedTagName})\\b[^>]*>`, 'i');
+	}
+	
+	const match = this.match(regex);
+	return match ? match[1] : false;
 };
 
 Date.prototype.nuWithoutTime = function () {
