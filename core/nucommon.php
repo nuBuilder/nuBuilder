@@ -872,49 +872,39 @@ function nuColorToHex($pColor){
 
 }
 
-function nuAddToHashList($J, $run){
+function nuAddToHashList($J, $run) {
 
-	$hash				= [];
-	$ignore				= [];
-	$ignore[]			= 'sre_layout';
-	$ignore[]			= 'slp_php';
-	$ignore[]			= 'sre_php';
+	$hash = [];
 
-	foreach($J as $key => $v){										//-- add current hash variables
+	$ignore = ['sre_layout', 'slp_php', 'sre_php'];
 
-		if(!in_array($key, $ignore)){
-			$hash['' . $key . ''] = $v;
+	foreach ($J as $key => $v) {
+		if (!in_array($key, $ignore)) {
+			$hash[$key] = $v;
 		}
-
 	}
 
-	$d							= new DateTime();
+	$d = new DateTime();
+	$hash['nu_date_time'] = $d->format('Y-m-d H:i:s');
+	$hash['nu_date'] = $d->format('Y-m-d');
+	$hash['nu_time'] = $d->format('H:i:s');
+	$hash['nu_year'] = $d->format('Y');
+	$hash['nu_month'] = $d->format('m');
+	$hash['nu_day'] = $d->format('d');
+	$hash['nu_hour'] = $d->format('H');
+	$hash['nu_minute'] = $d->format('i');
 
-	$hash['nu_date_time']		= $d->format('Y-m-d H:i:s');
-	$hash['nu_date']			= $d->format('Y-m-d');
-	$hash['nu_time']			= $d->format('H:i:s');
-	$hash['nu_year']			= $d->format('Y');
-	$hash['nu_month']			= $d->format('m');
-	$hash['nu_day']				= $d->format('d');
-	$hash['nu_hour']			= $d->format('H');
-	$hash['nu_minute']			= $d->format('i');
-
-	if($run == 'report'){
-
-		$hash['sre_layout']		= $J->sre_layout;
-		$hash['slp_php']		= isset($J->slp_php) ? $J->slp_php : '';
-
-	}
-
-	if($run == 'php'){
-
-		$hash['sph_php']		= $J->sph_php;
-
+	if ($run == 'report') {
+		$hash['sre_layout'] = $J->sre_layout ?? null;
+		$hash['slp_php'] = $J->slp_php ?? '';
+	} elseif ($run == 'php') {
+		$hash['sph_php'] = $J->sph_php ?? '';
 	}
 
 	return $hash;
 
 }
+
 
 function nuGetUserPermissions($userId = null){
 
