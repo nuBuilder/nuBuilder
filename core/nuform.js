@@ -102,7 +102,7 @@ function nuBuildForm(formObj) {
 	nuAddActionButtons(formObj);
 	nuRecordProperties(formObj, '');
 
-	let obj0 = null;
+	let firstObject = null;
 
 	if (formType == 'edit') {
 
@@ -111,14 +111,14 @@ function nuBuildForm(formObj) {
 		nuResizeFormDialogCoordinates();
 		nuCalculateForm(false);
 
-		obj0 = nuGetFirstObject(formObj.objects, -1);
+		firstObject = nuGetFirstObject(formObj.objects, -1);
 
 	}
 
 	nuGetStartingTab();
 
-	if (formType == 'edit' && nuIsNewRecord() && (obj0 !== null)) {
-		obj0.nuFocusWithoutScrolling();
+	if (formType == 'edit' && nuIsNewRecord() && (firstObject !== null)) {
+		firstObject.nuFocusWithoutScrolling();
 	}
 
 	if (nuArrangingObjects(formObj.record_id)) {
