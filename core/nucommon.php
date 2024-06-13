@@ -1815,20 +1815,21 @@ function nuSendEmailEx($args, $emailLogOptions) {
 
 }
 
-function nuUser($id = null){
+function nuUser($userId = null) {
 
-	$s	= "
-		SELECT *
-		FROM zzzzsys_user
-		WHERE zzzzsys_user_id = ?
-	";
+    $query = "
+        SELECT *
+        FROM zzzzsys_user
+        WHERE zzzzsys_user_id = ?
+    ";
 
-	$t	= nuHash();
-	$t	= nuRunQuery($s, [$id == null ? $t['USER_ID'] : $id]);
+    $idToFetch = ($userId === null) ? nuHash()['USER_ID'] : $userId;
 
-	return db_fetch_object($t);
+    $stmt = nuRunQuery($query, [$idToFetch]);
+    return db_num_rows($stmt) === 1 ? db_fetch_object($stmt) : false; 
 
 }
+
 
 function db_setup(){
 
