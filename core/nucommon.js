@@ -563,14 +563,21 @@ function nuSubmit(e) {
 	}
 
 }
+
+function nuArrangingObjects(recordId) {
+	
+	recordId = nuDefine(recordId, nuRecordId());
+	return recordId == '-2';
+
+}
+
 function nuCanArrangeObjects() {
 
 	const hasObjects = nuSERVERRESPONSE.objects && nuSERVERRESPONSE.objects.length > 0;
 	const isNotPortraitScreen = !window.nuPORTRAITSCREEN;
 	const isNotMobileView = !nuShouldUseMobileView();
-	const isNotArrangeObjects = nuRecordId() != '-2';
 
-	return nuGlobalAccess() && hasObjects && isNotPortraitScreen && isNotMobileView && isNotArrangeObjects;
+	return nuGlobalAccess() && hasObjects && isNotPortraitScreen && isNotMobileView && !nuArrangingObjects();
 
 }
 
@@ -579,7 +586,7 @@ function nuPopup(formId, recordId, filter) {
 	nuCursor('progress');
 
 	if (!nuGlobalAccess() && formId == 'nuobject') { return; }
-	if (recordId == '-2' && !nuCanArrangeObjects()) { return; }
+	if (nuArrangingObjects(recordId) && !nuCanArrangeObjects()) { return; }
 
 	window.nuOPENER.push(new nuOpener('F', formId, recordId, filter));
 

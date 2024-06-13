@@ -41,7 +41,7 @@ function nuBuildForm(formObj) {
 	window.nuOnSetSelect2Options = null;		// can be overwritten by nuAddJavaScript()
 	window.nuSERVERRESPONSE = formObj;	
 
-	if (formObj.record_id != '-2') {
+	if (nuArrangingObjects(formObj.record_id)) {
 		nuAddJavaScript(formObj.javascript_bc);
 	}
 
@@ -121,7 +121,7 @@ function nuBuildForm(formObj) {
 		obj0.nuFocusWithoutScrolling();
 	}
 
-	if (formObj.record_id == '-2') {			// Arrange Objects
+	if (nuArrangingObjects(formObj.record_id)) {
 		nuCreateDragOptionsBox(formObj);
 	} else {
 		nuAddJavaScript(formObj.javascript);
@@ -778,12 +778,8 @@ function nuSearchFieldSetSearchType(isMobile) {
 
 function nuAddActionButtons(form) {
 
-	let draggable = 0;
-	const r = nuRecordId();
-
-	if (r == '-2') {
-		draggable = 1;
-	}
+	const recordId = nuRecordId();
+	const arrangingObjects = nuArrangingObjects(recordId);
 
 	var button = form.buttons;
 	const isMobile = nuIsMobile();
@@ -814,7 +810,7 @@ function nuAddActionButtons(form) {
 
 	} else {
 
-		if (!draggable) {
+		if (!arrangingObjects) {
 
 			if (button.Save == 1 && form.form_type != 'launch') {
 				if ((nuIsNewRecord() && form.data_mode == 0) || form.data_mode != 0) {
@@ -822,7 +818,7 @@ function nuAddActionButtons(form) {
 				}
 			}
 
-			if (r != -1) {
+			if (recordId != -1) {
 
 				if (button.Delete == 1) { nuAddActionButton('Delete'); }
 				if (button.Clone == 1) { nuAddActionButton('Clone'); }
@@ -885,21 +881,17 @@ function nuAddActionButtonSaveClose(caption) {
 
 }
 
-function nuIsDraggable() {
-	return nuRecordId() == '-2';
-}
-
 function nuBuildEditObjects(formObj, p, o, prop) {
 
 	if (typeof (formObj.objects) != 'object') { return; }
 
 	var left = 3;
 
-	const isDraggable = nuIsDraggable();
+	const arrangingObjects = nuArrangingObjects();
 
 	for (let objIndex = 0; objIndex < formObj.objects.length; objIndex++) {
 
-		if (isDraggable) {
+		if (arrangingObjects) {
 
 			$("body").css("overflow", "hidden");
 			left = left + nuDRAG(formObj, objIndex, left, p, prop);
@@ -3714,7 +3706,7 @@ function nuEditTab(p, t, i) {
 
 function nuOptions(formId, subformId, t, access) {
 
-	if (nuRecordId() != '-2') {
+	if (!nuArrangingObjects()) {
 
 		var id = subformId + 'nuOptions';
 		var img = document.createElement('l');
@@ -4696,7 +4688,6 @@ function nuBrowseTitleMultiLine() {
 	$('.nuBrowseTitle').css('top', "-20px");
 
 }
-
 
 function nuSetBrowseColumnWidth(column, width) {
 
