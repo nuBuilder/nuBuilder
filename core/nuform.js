@@ -3470,18 +3470,32 @@ function nuAddBreadcrumbs() {
 
 }
 
-
 function nuGetTitleNew(bc, title = 'New') {
 
 	if (nuFormType() == 'edit' && bc.form_type != 'launch' && nuIsNewRecord()) {
-
-		const fId = bc.form_id;
 		const breadcrumbLength = nuFORM.breadcrumbs.length;
-		const pId = breadcrumbLength < 2 ? '' : nuFORM.breadcrumbs[breadcrumbLength - 2].form_id;
-		return fId !== pId ? `${nuTranslate(bc.form_description)} (${title})` : title;
+		const browseFormId = breadcrumbLength < 2 ? '' : nuFORM.breadcrumbs[breadcrumbLength - 2].form_id;
+		const thisFormId = bc.form_id;
+		return thisFormId !== browseFormId ? `${nuTranslate(bc.form_description)} (${title})` : title;
 	}
 
 	return false;
+
+}
+
+function nuBreadcrumbTitleWithoutBrowse() {
+
+	const breadcrumbs = window.nuFORM.breadcrumbs;
+	const lastBreadcrumb = breadcrumbs[breadcrumbs.length - 2];
+
+	if (!(lastBreadcrumb?.form_id === nuFormId() && lastBreadcrumb?.browse_columns.length)) {
+		const title = breadcrumbs[breadcrumbs.length - 1].title;
+		const formDescription = nuTranslate(nuCurrentProperties().form_description);
+		const breadcrumbLength = $('.nuBreadcrumb').length;
+		if (formDescription !== title) {
+			$('#nuBreadcrumb' + breadcrumbLength).html(formDescription + ' | ' + title);
+		}
+	}
 
 }
 
@@ -3508,6 +3522,10 @@ function nuAddBreadcrumb(i) {
 
 	$id.css('font-size', '14px')
 		.html(h + nuTranslate(title));
+
+	if (nuFormId().startsWith('nu') && nuFormType() == 'edit') {
+		nuBreadcrumbTitleWithoutBrowse();
+	}
 
 	if (isLast) {
 		$id.addClass('nuNotBreadcrumb');
