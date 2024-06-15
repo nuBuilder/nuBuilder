@@ -1,6 +1,6 @@
 function nuInitMobileView() {
 
-	if (nuShouldUseMobileView()) {
+	if (nuUseMobileView()) {
 		if (nuFormType() == 'edit') {
 			nuSetMobileView();
 			$('button').css('text-align', 'left');
@@ -319,7 +319,7 @@ function nuSetMobileView(columns = 1) {
 	return scale;
 }
 
-function nuShouldUseMobileView() {
+function nuUseMobileView() {
 	return nuIsMobile() && nuUXOptions.nuMobileView && nuCurrentProperties().mobile_view == "1";
 }
 

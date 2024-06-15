@@ -578,7 +578,7 @@ function nuCanArrangeObjects() {
 
 	const hasObjects = nuSERVERRESPONSE.objects && nuSERVERRESPONSE.objects.length > 0;
 	const isNotPortraitScreen = !window.nuPORTRAITSCREEN;
-	const isNotMobileView = !nuShouldUseMobileView();
+	const isNotMobileView = !nuUseMobileView();
 
 	return nuGlobalAccess() && hasObjects && isNotPortraitScreen && isNotMobileView && !nuArrangingObjects();
 
