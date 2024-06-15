@@ -242,7 +242,11 @@ function nuBuildForm(formObj) {
 	if (!nuIsMobile()) {
 		$('#nuSearchField').trigger("focus");
 	} else {
-		nuSetMobileView();
+		if (nuUXOptions.nuDevMobileView2) {
+			nuInitMobileView();
+		} else {
+			nuSetMobileView1();
+		}
 	}
 
 	nuWindowPosition();
@@ -256,7 +260,6 @@ function nuBuildForm(formObj) {
 	}
 
 }
-
 
 function nuProcessAfterSave() {
 
@@ -6511,10 +6514,7 @@ function nuLookingUp() {
 	for (let lu in window.nuLOOKUPSTATE) {
 
 		if (window.nuLOOKUPSTATE[lu] == 'looking') {
-
-			// nuMessage([nuTranslate('A Lookup is still being populated...')]);
 			return true;
-
 		}
 
 	}
@@ -6740,7 +6740,7 @@ function nuShouldUseMobileView() {
 	return nuIsMobile() && nuUXOptions.nuMobileView && nuCurrentProperties().mobile_view == "1";
 }
 
-function nuSetMobileView() {
+function nuSetMobileView1() {
 
 	if (nuShouldUseMobileView()) {
 		if (nuFormType() == 'edit') {
@@ -7116,8 +7116,6 @@ function nuSetSelect2(id, obj) {
 		top: Number(obj.top),
 		left: Number(obj.left)
 	}).attr('id', select2Id);
-
-
 
 	return select2Id;
 

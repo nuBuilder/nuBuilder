@@ -10,6 +10,7 @@ nuJSInclude('nuformdrag.js');
 nuJSInclude('nudrag.js');
 nuJSInclude('nureportdrag.js');
 nuJSIndexInclude('libs/vanillajs-datepicker/datepicker-full.min.js');
+nuJSInclude('numobile.js');
 nuJSInclude('nucommon.js');
 nuJSInclude('nuajax.js');				//-- calls to server
 nuJSInclude('nureportjson.js');
