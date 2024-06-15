@@ -19,6 +19,7 @@ function nuSetMobileView(columns = 1) {
 
 	const heightMultiplier = 1.5;
 	const maxScale = 0.9;
+	const visibleTabs = nuVisibleTabs();
 
 	function nuMobileViewSetObjectDimensions(id, element) {
 
@@ -87,10 +88,10 @@ function nuSetMobileView(columns = 1) {
 
 	const nuMobileViewAppendTabSelect = () => {
 
-		if ($('.n').length <= 1) return 0;
+		if (visibleTabs.length <= 1) return 0;
 
 		let options = '';
-		$('.nuTab:visible').each(function (index, element) {
+		visibleTabs.each(function (index, element) {
 
 			$element = $(element);
 			const html = $element.html();
@@ -256,12 +257,22 @@ function nuSetMobileView(columns = 1) {
 					element.attr('nu-mobile-hidden', '');
 					element.hide();
 				} else {
-					$('#label_' + id).css({ 'top': top + 2, 'left': 7, 'text-align': 'left', 'font-weight': 700 });
+
+					let labelTop = top + 2;
+					let labelLeft = 7;
 
 					const sameRow = element.is('[data-nu-mobile-same-row]');
 					if (columns === 1 && !sameRow) {
-						top += heightLabel + 5;
+						if (!element.is(':checkbox')) {
+							top += heightLabel + 5;
+						} else {
+							labelTop += 3;
+							labelLeft = 40;
+						}
+
 					}
+
+					$('#label_' + id).css({ 'top': labelTop, 'left': labelLeft, 'text-align': 'left', 'font-weight': 700 });
 
 					if (element.is('[data-select2-id]')) {
 						element = $(`#${id}_select2`);
@@ -297,7 +308,7 @@ function nuSetMobileView(columns = 1) {
 	top += 50;
 	$('#nuRECORD').append(`<div id="nuPortEnd" style="left:0px;position:absolute;top:${top}px">&nbsp;</div>`);
 
-	nuMobileViewAdjustLabelStyles(columns, maxWidth, labelWidth);
+	// nuMobileViewAdjustLabelStyles(columns, maxWidth, labelWidth);
 
 	let windowInnerWidth = nuGetWindowProperty('nuWindowInnerWidth', nuFormId());
 
@@ -309,7 +320,10 @@ function nuSetMobileView(columns = 1) {
 	const objectWidth = maxWidth + labelWidth + 50;
 	const scale = nuMobileViewSetTransformScale(objectWidth, windowInnerWidth);
 
-	nuAddTabNavigator();
+	if (visibleTabs.length > 1) {
+		nuAddTabNavigator();
+	}
+
 	nuScrollToTopLeft();
 
 	$('#nuBreadcrumbHolder').css('width', window.visualViewport.width);
@@ -338,15 +352,17 @@ function nuTabNavCreateIcon(id, top, left, iconClass, direction) {
 
 }
 
+function nuVisibleTabs() {
+	return $('.nuTab:visible');
+}
+
 function nuAddTabNavigator() {
 
-	if ($('.nuTab:visible').length > 1) {
-		const top = 20;
-		const left = 280;
-		nuTabNavCreateIcon('nuTabNavLeftArrow', top, left, 'fa-solid fa-angle-left', -1);
-		nuTabNavCreateIcon('nuTabNavRightArrow', top, left + 50, 'fa-solid fa-angle-right', 1);
-		nuMobileViewTabNavUpdateStates();
-	}
+	const top = 20;
+	const left = 280;
+	nuTabNavCreateIcon('nuTabNavLeftArrow', top, left, 'fa-solid fa-angle-left', -1);
+	nuTabNavCreateIcon('nuTabNavRightArrow', top, left + 50, 'fa-solid fa-angle-right', 1);
+	nuMobileViewTabNavUpdateStates();
 
 }
 
