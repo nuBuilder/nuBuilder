@@ -11,6 +11,10 @@ function nuInitMobileView() {
 
 }
 
+function nuUseMobileView() {
+	return nuIsMobile() && nuUXOptions.nuMobileView && nuCurrentProperties().mobile_view == "1";
+}
+
 function nuSetMobileView(columns = 1) {
 
 	const heightMultiplier = 1.5;
@@ -83,7 +87,7 @@ function nuSetMobileView(columns = 1) {
 
 	const nuMobileViewAppendTabSelect = () => {
 
-		if ($('.nuTab:visible').length <= 1) return 0;
+		if ($('.n').length <= 1) return 0;
 
 		let options = '';
 		$('.nuTab:visible').each(function (index, element) {
@@ -110,7 +114,7 @@ function nuSetMobileView(columns = 1) {
 		const $tabSelect = $('#nuMobileViewTabSelectId')
 
 		$tabSelect.on('change', function () {
-			const selectedTabId = nuGetValue(this.id); debugger;
+			const selectedTabId = nuGetValue(this.id);
 			nuSelectTabById(selectedTabId);
 			nuMobileViewTabNavUpdateStates();
 		});
@@ -182,7 +186,6 @@ function nuSetMobileView(columns = 1) {
 		if (oneColumn) $('label').css('left', 12);
 
 	};
-
 
 	const nuMobileViewLabelWidth = (objects) => {
 
@@ -306,21 +309,17 @@ function nuSetMobileView(columns = 1) {
 	const objectWidth = maxWidth + labelWidth + 50;
 	const scale = nuMobileViewSetTransformScale(objectWidth, windowInnerWidth);
 
-	if ($('.nuTab').length > 1) {
-		nuAddTabNavigator();
-		nuMobileViewTabNavUpdateStates();
-	}
-
-	window.scrollTo(0, 0);
-	$('html, body').scrollTop(0).scrollLeft(0);
+	nuAddTabNavigator();
+	nuScrollToTopLeft();
 
 	$('#nuBreadcrumbHolder').css('width', window.visualViewport.width);
 
 	return scale;
 }
 
-function nuUseMobileView() {
-	return nuIsMobile() && nuUXOptions.nuMobileView && nuCurrentProperties().mobile_view == "1";
+function nuScrollToTopLeft() {
+	window.scrollTo(0, 0);
+	$('html, body').scrollTop(0).scrollLeft(0);
 }
 
 function nuTabNavCreateIcon(id, top, left, iconClass, direction) {
@@ -341,10 +340,13 @@ function nuTabNavCreateIcon(id, top, left, iconClass, direction) {
 
 function nuAddTabNavigator() {
 
-	const top = 20;
-	const left = 280;
-	nuTabNavCreateIcon('nuTabNavLeftArrow', top, left, 'fa-solid fa-angle-left', -1);
-	nuTabNavCreateIcon('nuTabNavRightArrow', top, left + 50, 'fa-solid fa-angle-right', 1);
+	if ($('.nuTab:visible').length > 1) {
+		const top = 20;
+		const left = 280;
+		nuTabNavCreateIcon('nuTabNavLeftArrow', top, left, 'fa-solid fa-angle-left', -1);
+		nuTabNavCreateIcon('nuTabNavRightArrow', top, left + 50, 'fa-solid fa-angle-right', 1);
+		nuMobileViewTabNavUpdateStates();
+	}
 
 }
 
