@@ -1269,7 +1269,7 @@ function nuINPUTLookup(id, objId, thisObj, obj, $formId, p, vis) {
 
 	let luClass = obj.label === 'Insert-Snippet' ? 'fa fa-code' : 'fa fa-search';
 	let luStyle = "padding:4px";
-	if (nuIsMobile()) {
+	if (thisObj.parent_type !== 'g' && nuIsMobile()) {
 		luClass += ' fa-lg';
 		luStyle += ';padding-top: 15px';
 	}

@@ -329,6 +329,7 @@ function nuSetMobileView(columns = 1) {
 	$('#nuBreadcrumbHolder').css('width', window.visualViewport.width);
 
 	return scale;
+
 }
 
 function nuScrollToTopLeft() {
