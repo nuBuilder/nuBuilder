@@ -88,11 +88,13 @@ function nuSetMobileView(columns = 1) {
 		let options = '';
 		$('.nuTab:visible').each(function (index, element) {
 
-			const value = $(element).html();
+			$element = $(element);
+			const html = $element.html();
+			const tabId = $element.attr('data-nu-tab-id');
 			if (index === 0) {
-				options += `<option value="${index + 1}" selected>${value}</option>`;
+				options += `<option value="${tabId}" selected>${html}</option>`;
 			} else {
-				options += `<option value="${index + 1}">${value}</option>`;
+				options += `<option value="${tabId}">${html}</option>`;
 			}
 
 		});
@@ -108,8 +110,8 @@ function nuSetMobileView(columns = 1) {
 		const $tabSelect = $('#nuMobileViewTabSelectId')
 
 		$tabSelect.on('change', function () {
-			const selectedText = $(this).find('option:selected').text();
-			nuSelectTabByTitle(selectedText);
+			const selectedTabId = nuGetValue(this.id); debugger;
+			nuSelectTabById(selectedTabId);
 			nuMobileViewTabNavUpdateStates();
 		});
 
