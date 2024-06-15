@@ -1215,40 +1215,32 @@ function nuShow(i, visible, openTab) {
 
 }
 
+function nuHide(ids) {
 
-function nuHide(i) {
+	let elementIds = [];
 
-	var arr = [];
-	if (!Array.isArray(i)) {
-		arr.push(i);
+	if (!Array.isArray(ids)) {
+		elementIds.push(ids);
 	} else {
-		arr = i;
+		elementIds = ids;
 	}
 
-	for (let s = 0; s < arr.length; s++) {
+	for (let i = 0; i < elementIds.length; i++) {
+		const { componentIds } = nuObjectComponents(elementIds[i]);
 
-		let { componentIds } = nuObjectComponents(arr[s]);
+		for (let j = 0; j < componentIds.length; j++) {
+			const elementId = componentIds[j];
+			const nuTab = String($('#' + elementId).attr('data-nu-tab'));
 
-		for (let c = 0; c < componentIds.length; c++) {
-
-			const t = String($('#' + componentIds[c]).attr('data-nu-tab'));
-
-			if (t[0] == 'x') {
-
-				$('#' + componentIds[c])
-					.hide();
-
+			if (nuTab[0] === 'x') {
+				$('#' + elementId).hide();
 			} else {
-
-				$('#' + componentIds[c])
-					.attr('data-nu-tab', 'x' + t)
+				$('#' + elementId)
+					.attr('data-nu-tab', 'x' + nuTab)
 					.hide();
-
 			}
-
 		}
 	}
-
 }
 
 function nuRemove(i) {
