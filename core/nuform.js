@@ -4147,6 +4147,13 @@ function nuSelectTabByTitle(title) {
 	}
 }
 
+function nuSelectTabById(id) {
+	const element = $('div[data-nu-tab-id=' + id + ']');
+	if (element) {
+		nuSelectTab(element[0]);
+	}
+}
+
 function nuRemoveTabByTitle(title) {
 	const index = nuGetTabIndexByTitle(title);
 	if (index > -1) {
