@@ -83,7 +83,7 @@ function nuSetMobileView(columns = 1) {
 
 	const nuMobileViewAppendTabSelect = () => {
 
-		if ($('.nuTab:visible').length === 1) return 0;
+		if ($('.nuTab:visible').length <= 1) return 0;
 
 		let options = '';
 		$('.nuTab:visible').each(function (index, element) {
