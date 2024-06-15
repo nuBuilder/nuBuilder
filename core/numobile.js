@@ -83,10 +83,11 @@ function nuSetMobileView(columns = 1) {
 
 	const nuMobileViewAppendTabSelect = () => {
 
-		if ($('.nuTab').length === 1) return 0;
+		if ($('.nuTab:visible').length === 1) return 0;
 
 		let options = '';
-		$('.nuTab').each(function (index, element) {
+		$('.nuTab:visible').each(function (index, element) {
+
 			const value = $(element).html();
 			if (index === 0) {
 				options += `<option value="${index + 1}" selected>${value}</option>`;
