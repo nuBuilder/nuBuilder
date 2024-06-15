@@ -1228,16 +1228,15 @@ function nuHide(ids) {
 	}
 }
 
-function nuRemove(i) {
+function nuRemove(id) {
 
-	const arr = Array.isArray(i) ? i : [i];
+	const elementIds = Array.isArray(id) ? id : [id];
 
-	for (const s of arr) {
+	for (const elementId of elementIds) {
+		const { componentIds } = nuObjectComponents(elementId);
 
-		let { componentIds } = nuObjectComponents(s);
-
-		for (const c of componentIds) {
-			$('#' + c).remove();
+		for (const componentId of componentIds) {
+			$('#' + componentId).remove();
 		}
 	}
 
