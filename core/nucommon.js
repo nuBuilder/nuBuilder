@@ -1166,51 +1166,36 @@ function nuReadonly(id, readonly = true) {
 
 }
 
-function nuShow(i, visible, openTab) {
+function nuShow(ids, visible, openTab) {
 
-	var arr = [];
-	if (!Array.isArray(i)) {
-		arr.push(i);
-	} else {
-		arr = i;
-	}
+	const elementIds = Array.isArray(ids) ? ids : [ids];
+	let shownCounter = 0;
 
-	let counter = 0;
-	for (var s = 0; s < arr.length; s++) {
-
+	for (const elementId of elementIds) {
 		if (visible === false) {
-			nuHide(arr[s]);
+			nuHide(elementId);
 		} else {
+			const { componentIds } = nuObjectComponents(elementId);
 
-			let { componentIds } = nuObjectComponents(arr[s]);
+			for (const componentId of componentIds) {
+				const nuTab = String($('#' + componentId).attr('data-nu-tab'));
 
-			for (var c = 0; c < componentIds.length; c++) {
-
-				var t = String($('#' + componentIds[c]).attr('data-nu-tab'));
-
-				if (nuIsHidden(componentIds[c])) {
-					if (t[0] == 'x') {
-
-						$('#' + componentIds[c])
-							.attr('data-nu-tab', t.substring(1))
+				if (nuIsHidden(componentId)) {
+					if (nuTab[0] === 'x') {
+						$('#' + componentId)
+							.attr('data-nu-tab', nuTab.substring(1))
 							.show();
-
 					} else {
-
-						$('#' + componentIds[c]).show();
-
+						$('#' + componentId).show();
 					}
-					counter++;
+					shownCounter++;
 				}
-
 			}
-
 		}
 
-		if (openTab !== false && counter > 0 && $('.nuTabSelected').length > 0) {
+		if (openTab !== false && shownCounter > 0 && $('.nuTabSelected').length > 0) {
 			nuOpenTab($('.nuTabSelected')[0].id.substr(5));
 		}
-
 	}
 
 }
