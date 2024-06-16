@@ -4924,23 +4924,25 @@ function nuSortBrowse(c) {
 
 }
 
-function nuGetPage(p) {
+function nuGetPage(pageNumber) {
 
-	let P = parseInt('00' + p, 10);
+	const paddedPageNumber = parseInt('00' + pageNumber, 10);
 
-	if (p > nuCurrentProperties().pages || p === 0) return;
-
-	let current = window.nuFORM.getCurrent();
-
-	if (P == 0) {
-		P = 1;
+	if (pageNumber > nuCurrentProperties().pages || pageNumber === 0) {
+		return;
 	}
 
-	if (P > current.pages) {
-		P = current.pages;
+	let currentForm = window.nuFORM.getCurrent();
+
+	if (paddedPageNumber === 0) {
+		paddedPageNumber = 1;
 	}
 
-	current.page_number = P - 1;
+	if (paddedPageNumber > currentForm.pages) {
+		paddedPageNumber = currentForm.pages;
+	}
+
+	currentForm.page_number = paddedPageNumber - 1;
 
 	nuSearchAction();
 
