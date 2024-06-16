@@ -5143,26 +5143,27 @@ function nuLookupObject(id, set, value) {
 }
 
 function nuHighlightSearch() {
-	const bc = window.nuFORM.getCurrent().search;
 
-	if (!bc || !bc.length) {
+	const currentSearch = window.nuFORM.getCurrent().search;
+
+	if (!currentSearch || !currentSearch.length) {
 		return;
 	}
 
 	const exclude = new Set(window.nuFORM.getCurrent().nosearch_columns || []);
 
-	const search = bc
+	const search = currentSearch
 		.split(' ')
 		.filter(a => a && a[0] !== '-')
 		.sort((a, b) => a.length - b.length);
 
 	$('.nuBrowseTable').each(function () {
-		const col = Number($(this).attr('data-nu-column'));
-
-		if (!exclude.has(col)) {
+		const column = Number($(this).attr('data-nu-column'));
+		if (!exclude.has(column)) {
 			search.forEach(term => $(this).nuHighlight(term));
 		}
 	});
+
 }
 
 function nuOnSubformDeleteClick(event) {
