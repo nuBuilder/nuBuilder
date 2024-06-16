@@ -5059,32 +5059,36 @@ function nuPopulateLookup(fm, target, setFocus) {
 
 }
 
-function nuChooseOneLookupRecord(e, fm) {
+function nuChooseOneLookupRecord(event, fm) {
 
-	var o = new nuLookupObject(e.target.id);
-	var i = o.id_id;
-	var t = document.getElementById(e.target.id);
-	var like = nuEncode(fm.lookup_like);
+	const targetId = event.target.id;
+	const lookupObject = new nuLookupObject(targetId);
+	const lookupId = lookupObject.id_id;
+	const targetElement = document.getElementById(targetId);
+	const likeEncoded = nuEncode(fm.lookup_like);
+	const lookupValues = fm.lookup_values;
+	const inputValue = event.target.value.toUpperCase();
 
-	if (fm.lookup_values.length == 0) {
-		nuGetLookupId('', i);
+	if (lookupValues.length === 0) {
+		nuGetLookupId('', lookupId);
+		return;
 	}
 
-	if (fm.lookup_values.length == 1) {
+	if (lookupValues.length === 1) {
+		const lookupValue = String(lookupValues[0][1]).toUpperCase();
 
-		if (e.target.value.toUpperCase() == String(fm.lookup_values[0][1]).toUpperCase()) {
-			nuGetLookupId(fm.lookup_values[0][0], i);
+		if (inputValue === lookupValue) {
+			nuGetLookupId(lookupValues[0][0], lookupId);
 		} else {
-			nuBuildLookup(t, e.target.value);
+			nuBuildLookup(targetElement, event.target.value);
 		}
-
+		return;
 	}
 
-	if (fm.lookup_values.length > 1) {
-		nuBuildLookup(t, e.target.value, like);
-	}
+	nuBuildLookup(targetElement, event.target.value, likeEncoded);
 
 }
+
 
 function nuLookupObject(id, set, value) {
 
