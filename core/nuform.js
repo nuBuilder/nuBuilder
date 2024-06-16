@@ -4995,65 +4995,58 @@ function nuBuildLookup(id, search, like) {
 
 }
 
-function nuPopulateLookup(fm, target, setFocus) {
+function nuPopulateLookup(form, targetId, setFocus) {
 
-	var p = String($('#' + target).attr('data-nu-prefix'));
-	var f = fm.lookup_values;
+	const targetElement = $('#' + targetId);
+	const prefix = String(targetElement.attr('data-nu-prefix'));
+	const lookupValues = form.lookup_values;
 
-	window.nuSubformRow = Number(p.slice(-3));
+	window.nuSubformRow = Number(prefix.slice(-3));
 
-	for (var i = 0; i < f.length; i++) {
+	for (let i = 0; i < lookupValues.length; i++) {
+		const id = String(lookupValues[i][0]);
+		let $element = $('#' + id);
 
-		var id = String(f[i][0]);
-		var $id = $('#' + id);
-
-		if (id.substring(0, p.length) != p) {
-			$id = $('#' + p + id);
+		if (id.substring(0, prefix.length) !== prefix) {
+			$element = $('#' + prefix + id);
 		}
 
-		$id.addClass('nuEdited');
+		$element.addClass('nuEdited');
 
-		if ($id.attr('type') == 'checkbox') {
-
-			$id.prop('checked', f[i][1] == '1');
-
+		if ($element.attr('type') === 'checkbox') {
+			$element.prop('checked', lookupValues[i][1] === '1');
 		} else {
+			$element.val(lookupValues[i][1]);
 
-			$id.val(f[i][1]);
-
-			if ($id.attr('data-nu-format') !== undefined) {
-
-				nuReformat($id[0]);
-				$id.addClass('nuEdited');
-				$('#' + p + 'nuDelete').prop('checked', false);
+			if ($element.attr('data-nu-format')) {
+				nuReformat($element[0]);
+				$element.addClass('nuEdited');
+				$('#' + prefix + 'nuDelete').prop('checked', false);
 
 				if (window.nuOnLookupPopulatedGlobal) {
-					nuOnLookupPopulatedGlobal(id, p);
+					nuOnLookupPopulatedGlobal(id, prefix);
 				}
 
 				if (window.nuOnLookupPopulated) {
-					nuOnLookupPopulated(id, p);
+					nuOnLookupPopulated(id, prefix);
 				}
-
 			}
-
 		}
 
-		if (i == 1 && setFocus !== false) {
-			$id.trigger("focus");
+		if (i === 1 && setFocus !== false) {
+			$element.trigger("focus");
 		}
-
 	}
 
-	window.nuLOOKUPSTATE[$('#' + target).attr('data-nu-object-id')] = 'found';
+	window.nuLOOKUPSTATE[targetElement.attr('data-nu-object-id')] = 'found';
 
 	nuCalculateForm();
 
-	eval(fm.lookup_javascript);
+	eval(form.lookup_javascript);
 
 	$('#dialogClose').trigger("click");
 
-	if (window.nuaction == 'save' && !nuLookingUp()) {
+	if (window.nuaction === 'save' && !nuLookingUp()) {
 		nuSaveAction();
 	}
 
