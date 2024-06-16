@@ -3,7 +3,6 @@ function nuInitMobileView() {
 	if (nuUseMobileView()) {
 		if (nuFormType() == 'edit') {
 			nuSetMobileView();
-			$('button').css('text-align', 'left');
 		} else {
 			$('#nuBreadcrumbHolder').css('width', window.visualViewport.width);
 		}
@@ -73,22 +72,20 @@ function nuSetMobileView(columns = 1) {
 		if (visibleTabs.length <= 1) return 0;
 
 		let options = '';
-		visibleTabs.each(function (index, element) {
 
-			$element = $(element);
+		const selectedTabId = $('.nuTabSelected').attr('data-nu-tab-id');
+
+		visibleTabs.each(function (_, element) {
+			const $element = $(element);
 			const html = $element.html();
 			const tabId = $element.attr('data-nu-tab-id');
-			if (index === 0) {
-				options += `<option value="${tabId}" selected>${html}</option>`;
-			} else {
-				options += `<option value="${tabId}">${html}</option>`;
-			}
+			const isSelected = tabId === selectedTabId ? 'selected' : '';
 
+			options += `<option value="${tabId}" ${isSelected}>${html}</option>`;
 		});
 
 		const tabSelect = `
-			<select class="nuMobileViewTabSelect"
-					id="nuMobileViewTabSelectId">
+			<select class="nuMobileViewTabSelect" id="nuMobileViewTabSelectId">
 			${options}
 			</select>`;
 
@@ -157,7 +154,6 @@ function nuSetMobileView(columns = 1) {
 
 	};
 
-
 	const nuMobileViewLabelWidth = (objects) => {
 
 		var labelWidth = 0
@@ -191,6 +187,7 @@ function nuSetMobileView(columns = 1) {
 	let objCount = 0;
 
 	objects.forEach(obj => {
+
 		const { id, type: objType, tab: objTab, read, input } = obj;
 		let element = $(`#${id}`);
 
@@ -201,7 +198,7 @@ function nuSetMobileView(columns = 1) {
 
 		if (currentTab === -1 && objCount === 0) {
 			const tabHeight = nuMobileViewAppendTabSelect(top);
-			top += (tabHeight > 0 ? tabHeight + 30 : 0);
+			top += (tabHeight > 0 ? tabHeight + 60 : 0);
 		}
 
 		if (objTab !== currentTab && tabVisible && window.nuSetMobileViewShowTabTitles !== false && objType !== 'contentbox') {
@@ -275,12 +272,7 @@ function nuSetMobileView(columns = 1) {
 
 	});
 
-	$('#nuTabHolder').hide();
-
 	top += 50;
-	$('#nuRECORD').append(`<div id="nuPortEnd" style="left:0px;position:absolute;top:${top}px">&nbsp;</div>`);
-
-	// nuMobileViewAdjustLabelStyles(columns, maxWidth, labelWidth);
 
 	let windowInnerWidth = nuGetWindowProperty('nuWindowInnerWidth', nuFormId());
 
@@ -298,8 +290,11 @@ function nuSetMobileView(columns = 1) {
 
 	nuScrollToTopLeft();
 
-	$('#nuBreadcrumbHolder').css('width', nuMobileViewgetScaledDocumentWidth(scale));
+	$('#nuBreadcrumbHolder, #nuActionHolder').css('width', nuMobileViewgetScaledDocumentWidth(scale));
 	$('#nubody').css('width', window.visualViewport.width);
+
+	$('button').css('text-align', 'left');
+	$('#nuTabHolder').hide();
 
 	if (window.nuOnMobileViewComplete) {
 		nuOnMobileViewComplete();
