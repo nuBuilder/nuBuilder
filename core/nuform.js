@@ -5902,7 +5902,10 @@ function nuMessage(options, options2, options3, options4) {
 
 	const header = $('<div>', { class: 'nuMessageHeader' });
 	const titleElement = $('<div>', { class: 'nuMessageTitle', html: title });
-	const closeButton = $('<i>', { class: 'fas fa-times nuMessageClose' });
+	
+	let closeButtonClass = 'fas fa-times nuMessageClose';
+	if (nuIsMobile()) closeButtonClass += ' fa-2x';
+	const closeButton = $('<i>', { class: closeButtonClass});
 
 	closeButton.on('click', () => {
 		messageContainer.fadeOut("slow", () => messageContainer.remove());
