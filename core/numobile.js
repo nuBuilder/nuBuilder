@@ -316,9 +316,8 @@ function nuSetMobileView(columns = 1) {
 
 	nuScrollToTopLeft();
 
-	$('#nuBreadcrumbHolder').css('width', window.visualViewport.width);
-
-
+	$('#nuBreadcrumbHolder').css('width', nuMobileViewgetScaledDocumentWidth(scale));
+	$('#nubody').css('width', window.visualViewport.width);
 
 	if (window.nuOnMobileViewComplete) {
 		nuOnMobileViewComplete();
@@ -328,9 +327,19 @@ function nuSetMobileView(columns = 1) {
 
 }
 
+function nuMobileViewgetScaledDocumentWidth(scale) {
+
+	const viewportWidth = document.documentElement.clientWidth;
+	const scaledWidth = viewportWidth / scale;
+	return scaledWidth;
+
+}
+
 function nuScrollToTopLeft() {
+
 	window.scrollTo(0, 0);
 	$('html, body').scrollTop(0).scrollLeft(0);
+
 }
 
 function nuTabNavCreateIcon(id, top, left, iconClass, direction) {
