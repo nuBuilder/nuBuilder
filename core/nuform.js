@@ -4905,19 +4905,17 @@ function nuEmailReportAction(code) {
 	nuEmailReport(code);
 }
 
-function nuSortBrowse(c) {
+function nuSortBrowse(column) {
 
-	var l = window.nuFORM.getCurrent();
-	l.filter = $('#nuFilter').val();
-	l.page_number = 0;
+	const currentForm = window.nuFORM.getCurrent();
+	currentForm.filter = $('#nuFilter').val();
+	currentForm.page_number = 0;
 
-	if (c == l.sort) {
-		l.sort_direction = l.sort_direction == 'asc' ? 'desc' : 'asc';
+	if (column === currentForm.sort) {
+		currentForm.sort_direction = (currentForm.sort_direction === 'asc') ? 'desc' : 'asc';
 	} else {
-
-		l.sort = c;
-		l.sort_direction = 'asc';
-
+		currentForm.sort = column;
+		currentForm.sort_direction = 'asc';
 	}
 
 	nuSearchAction();
