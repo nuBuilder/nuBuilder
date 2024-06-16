@@ -73,7 +73,7 @@ function nuShowFormInfo() {
 	const msg = nuMessage(`<h3>${nuTranslate(formDescription)}</h3>`, formInfo);
 
 	if (!isBrowseMode) {
-		msg.css('width', '400px');
+		msg.css('max-width', '400px');
 	}
 }
 
@@ -1809,29 +1809,29 @@ function nuClosePropertiesMsgDiv() {
 	$("#nuPropertiesMsgDiv").remove();
 }
 
-function nuPrettyPrintMessage(e, obj) {
+function nuPrettyPrintMessage(event, properties) {
 
-	obj = Object.fromEntries(Object.entries(obj).sort())
+	const sortedProperties = Object.fromEntries(Object.entries(properties).sort());
 
-	let ppTable = nuPrettyPrint(obj, {
-		// Config
+	const prettyPrintedTable = nuPrettyPrint(sortedProperties, {
 		maxArray: 20,
 		expanded: false,
 		maxDepth: 1,
-	})
+	});
 
 	const title = nuTranslate('Current Properties') + ' : ' + nuGetProperty('form_code');
-	if (e !== undefined && (nuIsMacintosh() ? e.metaKey : e.ctrlKey)) {
-		let w = window.open();
-		w.document.title = title;
-		$(w.document.body).html(ppTable);
+
+	if (event !== undefined && (nuIsMacintosh() ? event.metaKey : event.ctrlKey)) {
+		const newWindow = window.open();
+		newWindow.document.title = title;
+		$(newWindow.document.body).html(prettyPrintedTable);
 	} else {
-		let msg = nuMessage(title, ppTable);
-		msg.css({
-			'width': 700,
+		const message = nuMessage(title, prettyPrintedTable);
+		message.css({
+			'max-width': '700px',
 			'text-align': 'left',
 			'background-color': 'white'
-		}).attr("id", "nuPropertiesMsgDiv");
+		}).attr('id', 'nuPropertiesMsgDiv');
 
 		nuDragElement(document.getElementById('nuPropertiesMsgDiv'), 40);
 	}

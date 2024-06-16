@@ -50,27 +50,9 @@ function nuSetMobileView(columns = 1) {
 
 	}
 
-	const nuMobileViewGetTransformScale = (element) => {
-
-		const transform = $(element).css('transform');
-		if (transform === 'none') {
-			return 1;
-		}
-
-		const matrix = transform.match(/^matrix\((.+)\)$/);
-		if (matrix) {
-			const values = matrix[1].split(', ');
-			return parseFloat(values[0]);
-		}
-
-		return 1;
-
-	};
-
 	const nuMobileViewSetTransformScale = (objectWidth, screenWidth) => {
 
-		const nuBody = $('#nubody');
-		const currentScale = nuMobileViewGetTransformScale(nuBody);
+		const currentScale = nuMobileViewGetTransformScale();
 
 		nuBody.attr('nu-org-scale-attribute', currentScale);
 		nuBody.attr('nu-org-width', nuBody.width());
@@ -418,4 +400,24 @@ function nuMobileViewTabNavUpdateArrowStates(arrowSelector, condition) {
 	});
 
 }
+
+function nuMobileViewGetTransformScale(element) {
+
+	if (!element) element = nuBody = $('#nubody');
+
+	const transform = $(element).css('transform');
+	if (transform === 'none') {
+		return 1;
+	}
+
+	const matrix = transform.match(/^matrix\((.+)\)$/);
+	if (matrix) {
+		const values = matrix[1].split(', ');
+		return parseFloat(values[0]);
+	}
+
+	return 1;
+
+};
+
 
