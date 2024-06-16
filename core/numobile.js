@@ -175,18 +175,6 @@ function nuSetMobileView(columns = 1) {
 
 	};
 
-	const nuMobileViewAdjustLabelStyles = (columns, maxWidth, labelWidth) => {
-
-		const oneColumn = columns === 1;
-		const width = oneColumn ? maxWidth : labelWidth;
-		$('label').css({
-			'text-align': 'left',
-			'width': width
-		});
-
-		if (oneColumn) $('label').css('left', 12);
-
-	};
 
 	const nuMobileViewLabelWidth = (objects) => {
 
@@ -260,7 +248,7 @@ function nuSetMobileView(columns = 1) {
 				} else {
 
 					let labelTop = top + 2;
-					let labelLeft = 7;
+					let labelLeft = 10;
 
 					const sameRow = element.is('[data-nu-mobile-same-row]');
 					if (columns === 1 && !sameRow) {
@@ -273,7 +261,8 @@ function nuSetMobileView(columns = 1) {
 
 					}
 
-					$('#label_' + id).css({ 'top': labelTop, 'left': labelLeft, 'text-align': 'left', 'font-weight': 700 });
+					$('#label_' + id).css({ 'top': labelTop - 4, 'left': labelLeft })
+						.addClass('nuMobileViewLabel').css('width', '');
 
 					if (element.is('[data-select2-id]')) {
 						element = $(`#${id}_select2`);

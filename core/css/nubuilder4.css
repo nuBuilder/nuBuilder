@@ -1561,6 +1561,15 @@ span.nuActionButton {
 	width: max-content
 }
 
+.nuMobileViewLabel {
+	display: inline-block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-align: left;
+	font-size: 15px
+}
+
 .nuMobileViewTabSelect {
 	background-color: #dde8f2;
 	position: absolute;
@@ -1580,7 +1589,9 @@ span.nuActionButton {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	cursor: pointer
+	cursor: pointer;
+	text-align: left;
+	font-weight: 700
 }
 
 .ql-editor {
