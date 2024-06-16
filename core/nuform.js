@@ -5902,13 +5902,15 @@ function nuMessage(options, options2, options3, options4) {
 
 	const header = $('<div>', { class: 'nuMessageHeader' });
 	const titleElement = $('<div>', { class: 'nuMessageTitle', html: title });
-	
+
 	let closeButtonClass = 'fas fa-times nuMessageClose';
 	if (nuIsMobile()) closeButtonClass += ' fa-2x';
-	const closeButton = $('<i>', { class: closeButtonClass});
+	const closeButton = $('<i>', { class: closeButtonClass });
 
-	closeButton.on('click', () => {
-		messageContainer.fadeOut("slow", () => messageContainer.remove());
+	closeButton.on('click touchstart', function () {
+		messageContainer.fadeOut("slow", function () {
+			nuMessageRemove();
+		});
 	});
 
 	header.append(titleElement).append(closeButton);
