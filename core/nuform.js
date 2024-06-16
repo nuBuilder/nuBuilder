@@ -4972,14 +4972,17 @@ function nuBuildLookup(id, search, like) {
 	}
 
 	const opener = window.nuOPENER[window.nuOPENER.length - 1];
+
 	const dialog = $('#nuDragDialog');
-	dialog.css('visibility', 'hidden');
+	dialog.css({
+		visibility: 'hidden',
+		top: `${window.scrollY + 30}px`
+	});
 
 	const iframe = $('<iframe>', {
 		id: 'nuWindow',
 		src: `index.php?opener=${opener.id}&target=${target}&search=${search}&like=${like}&browsefunction=lookup&iframe=1`,
 		css: {
-			borderStyle: 'none',
 			right: '5px',
 			top: '30px',
 			width: '400px',
