@@ -4842,37 +4842,41 @@ function nuArrowPressed(e) {
 
 }
 
-function nuSearchAction(S, F) {
+function nuSearchAction(searchValue, filterValue) {
 
 	if (arguments.length > 0) {
-		$('#nuSearchField').val(S);
+		$('#nuSearchField').val(searchValue);
 	}
-	if (arguments.length == 2) {
-		$('#nuFilter').val(F);
+	if (arguments.length === 2) {
+		$('#nuFilter').val(filterValue);
 	}
 
-	var s = String($('#nuSearchField').val()).nuReplaceAll("'", "&#39;", true);
-	var f = String($('#nuFilter').val()).nuReplaceAll("'", "&#39;", true);
+	const searchString = String($('#nuSearchField').val()).nuReplaceAll("'", "&#39;", true);
+	const filterString = String($('#nuFilter').val()).nuReplaceAll("'", "&#39;", true);
 
 	if (window.nuOnSearchActionGlobal) {
-		let o = { search: s, filter: f };
-		if (nuOnSearchActionGlobal(o) === false) { return; }
-		s = o.search;
-		f = o.filter;
+		let globalObject = { search: searchString, filter: filterString };
+		if (nuOnSearchActionGlobal(globalObject) === false) {
+			return;
+		}
+		searchString = globalObject.search;
+		filterString = globalObject.filter;
 	}
 
 	if (window.nuOnSearchAction) {
-		let o = { search: s, filter: f };
-		if (nuOnSearchAction(o) === false) { return; }
-		s = o.search;
-		f = o.filter;
+		let localObject = { search: searchString, filter: filterString };
+		if (nuOnSearchAction(localObject) === false) {
+			return;
+		}
+		searchString = localObject.search;
+		filterString = localObject.filter;
 	}
 
-	window.nuFORM.setProperty('search', s);
-	window.nuFORM.setProperty('filter', f);
+	window.nuFORM.setProperty('search', searchString);
+	window.nuFORM.setProperty('filter', filterString);
 
-	const caller = nuSearchAction.caller === null ? '' : nuSearchAction.caller.name;
-	if ((arguments.length === 0 && caller != 'nuGetPage') || arguments.length >= 1) {
+	const callerName = nuSearchAction.caller === null ? '' : nuSearchAction.caller.name;
+	if ((arguments.length === 0 && callerName !== 'nuGetPage') || arguments.length >= 1) {
 		window.nuFORM.setProperty('page_number', 0);
 	}
 
