@@ -432,6 +432,7 @@ function nuSetDefaultWindowProperties(f, formType) {
 	window.nuUniqueID = 'c' + String(Date.now());
 	window.global_access = f.global_access == '1';
 	window.nuVerticalTabs = false;
+	window.nuOnMobileVievLoaded = false;
 
 }
 
@@ -4092,7 +4093,7 @@ function nuSelectTab(tab, byUser = false) {
 	$(".nuIframe" + selector + ", .nuHtml" + selector).css('visibility', 'visible');
 
 	if (nuIsMobile()) {
-		$("[nu-mobile-hidden]").hide();
+		$("[data-nu-mobile-hidden]").hide();
 	}
 
 	$('#' + tab.id).addClass('nuTabSelected');
@@ -6541,7 +6542,7 @@ function nuPortraitScreen(columns = 1) {
 			height = element.data('nu-org-height') + incHeight;
 		}
 
-		if (!element.is("[nu-mobile-hidden]")) {
+		if (!element.is("[data-nu-mobile-hidden]")) {
 			maxWidth = Math.max(maxWidth, element.outerWidth());
 		}
 
@@ -6671,17 +6672,17 @@ function nuPortraitScreen(columns = 1) {
 
 		tabVisible = tabElement.nuIsVisible() || $('.nuTab').length === 1;
 
-		if (element.is("[nu-mobile-hidden]") || !tabVisible) {
+		if (element.is("[data-nu-mobile-hidden]") || !tabVisible) {
 			const { componentIds } = nuObjectComponents(id);
 			componentIds.forEach(compId => {
 				const comp = $(`#${compId}`);
-				comp.attr('nu-mobile-hidden', '');
+				comp.attr('data-nu-mobile-hidden', '');
 				comp.hide();
 			});
 		} else {
 			if (read !== 2) {
 				if (objType === 'contentbox') {
-					element.attr('nu-mobile-hidden', '');
+					element.attr('data-nu-mobile-hidden', '');
 					element.hide();
 				} else {
 					$('#label_' + id).css({ 'top': top + 2, 'left': 7, 'text-align': 'left', 'font-weight': 700 });
@@ -6717,7 +6718,7 @@ function nuPortraitScreen(columns = 1) {
 		}
 	});
 
-	$("[data-nu-tab!='x'][data-nu-form='']:not([data-nu-lookup-id]):not([nu-mobile-hidden])").show();
+	$("[data-nu-tab!='x'][data-nu-form='']:not([data-nu-lookup-id]):not([data-nu-mobile-hidden])").show();
 	$('#nuTabHolder').hide();
 
 	top += 50;

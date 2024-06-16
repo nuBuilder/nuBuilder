@@ -1239,7 +1239,7 @@ function nuCheckIfMovingFieldToOtherTabAllowed(fieldsSelectBox) {
 	var tabDropdown = $('#nuDragOptionsTabsDropdown', window.parent.document.body);
 
 	if ($('option:selected', fieldsSelectBox).length >= 1) {
-		tabDropdown.removeAttr('disabled');
+		tabDropdown.prop('disabled', false);
 	} else {
 		tabDropdown.prop('disabled', 'disabled');
 	}
