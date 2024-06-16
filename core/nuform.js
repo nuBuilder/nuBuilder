@@ -4802,8 +4802,6 @@ function nuSearchColumnsReset() {
 
 function nuSearchPressed(e) {
 
-	e = e || window.event;
-
 	if (e.key !== 'Enter') {
 		window.nuBROWSEROW = -1;
 		$('[data-nu-row]').addClass('nuBrowseTable').removeClass('nuSelectBrowse');
