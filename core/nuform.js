@@ -4822,10 +4822,6 @@ function nuSearchPressed(e) {
 
 function nuArrowPressed(e) {
 
-	if (!e) {
-		e = window.event;
-	}
-
 	if (e.key == 'ArrowUp' || e.key == 'ArrowDown') {
 
 		const rows = $("[data-nu-column='0'][data-nu-primary-key]").length - 1;
