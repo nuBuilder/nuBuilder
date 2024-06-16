@@ -5089,62 +5089,56 @@ function nuChooseOneLookupRecord(event, fm) {
 
 }
 
-
 function nuLookupObject(id, set, value) {
 
-	const el = $('#' + id);
+	const $id = $('#' + id);
 
-	if (!el.length) {
+	if (!$id.length) {
 		nuResetLookupProperties(this);
 		return;
 	}
 
-	const i = nuValidLookupId(nuValidLookupId(id, 'code'), 'description');
-	nuUpdateLookupProperties(this, i);
-
-	if (nuLookupShouldSetValue(value)) {
-		$('#' + this[set]).val(value);
-	}
-
-	function nuResetLookupProperties(obj) {
+	const nuResetLookupProperties = (obj) => {
 		const props = ['id_id', 'code_id', 'description_id', 'id_value', 'code_value', 'description_value'];
 		props.forEach(prop => obj[prop] = '');
 	}
 
-	function nuUpdateLookupProperties(obj, i) {
+	const nuUpdateLookupProperties = (obj, id) => {
 		Object.assign(obj, {
-			id_id: i,
-			code_id: i + 'code',
-			description_id: i + 'description',
-			id_value: $('#' + i).val(),
-			code_value: $('#' + i + 'code').val(),
-			description_value: $('#' + i + 'description').val()
+			id_id: id,
+			code_id: id + 'code',
+			description_id: id + 'description',
+			id_value: $('#' + id).val(),
+			code_value: $('#' + id + 'code').val(),
+			description_value: $('#' + id + 'description').val()
 		});
 	}
 
-	function nuLookupShouldSetValue(value) {
-		return value !== undefined && ['id', 'code', 'description'].includes(set);
-	}
+	const nuValidLookupId = (originalId, suffix) => {
+		const idString = String(originalId);
+		const suffixString = String(suffix);
 
-}
+		if (idString.endsWith(suffixString)) {
+			const idWithoutSuffix = idString.slice(0, -suffixString.length);
+			const elementWithSuffix = $(`#${idString}${suffixString}`);
+			const elementWithDoubleSuffix = $(`#${idString}${suffixString}${suffixString}`);
 
-function nuValidLookupId(id, fld) {
-
-	const i = String(id);
-	const f = String(fld);
-	const fl = f.length;
-
-	if (i.endsWith(f)) {
-		const iWithoutF = i.slice(0, -fl);
-		const elWithF = $('#' + i + f);
-		const elWithFF = $('#' + i + f + f);
-
-		if (elWithF.length === 1 && elWithFF.length === 1) {
-			return iWithoutF + f;
+			if (elementWithSuffix.length === 1 && elementWithDoubleSuffix.length === 1) {
+				return `${idWithoutSuffix}${suffixString}`;
+			}
 		}
+
+		return idString;
 	}
 
-	return i;
+	const nuLookupShouldSetValue = (value) => value !== undefined && ['id', 'code', 'description'].includes(set);
+
+	const lookupId = nuValidLookupId(nuValidLookupId(id, 'code'), 'description');
+	nuUpdateLookupProperties(this, lookupId);
+
+	if (nuLookupShouldSetValue(value)) {
+		$('#' + this[set]).val(value);
+	}
 
 }
 
