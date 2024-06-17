@@ -205,7 +205,7 @@ function nuSetMobileView(columns = 1) {
 			if ($('.nuTab').length > 1) {
 				currentTab = objTab;
 				if (currentTab > 0) {
-					top = 60;
+					top = 80;
 				}
 			}
 		}
