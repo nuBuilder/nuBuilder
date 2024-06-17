@@ -4845,8 +4845,8 @@ function nuSearchAction(searchValue, filterValue) {
 		$('#nuFilter').val(filterValue);
 	}
 
-	const searchString = String($('#nuSearchField').val()).nuReplaceAll("'", "&#39;", true);
-	const filterString = String($('#nuFilter').val()).nuReplaceAll("'", "&#39;", true);
+	let searchString = String($('#nuSearchField').val()).nuReplaceAll("'", "&#39;", true);
+	let filterString = String($('#nuFilter').val()).nuReplaceAll("'", "&#39;", true);
 
 	if (window.nuOnSearchActionGlobal) {
 		let globalObject = { search: searchString, filter: filterString };
