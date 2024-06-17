@@ -106,21 +106,21 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 		toolbar_mode: 'sliding',
 		content_style: "p { margin: 0; }",
 		contextmenu: _contextmenu,
-		skin:  'oxide',
+		skin: 'oxide',
 		content_css: 'default',
 		cache_suffix: '?v=7.0.0',
 		license_key: 'gpl',
 		setup: function (editor) {
 
 			editor.addShortcut('ctrl+shift+S', 'Save', function () {
-			  nuSaveAction();
+				nuSaveAction();
 			});
 
 			editor.on('init', function (e) {
 
 				e.target.setContent(nuGetValue(id));
 				if (window.nuTinyMCEOnInit) {
-					nuTinyMCEOnInit(e, editor);
+					nuTinyMCEOnInit(e, editor, id);
 				}
 			});
 
