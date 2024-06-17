@@ -158,3 +158,29 @@ function nuSaveEditor() {
 	});
 
 }
+
+function nuTinyMCESetBounds(id, left, top, width, height) {
+
+	const idParentContainer = `${id}_parent_container`;
+	const element = document.getElementById(idParentContainer);
+
+	if (element) {
+		if (left) element.style.left = `${left}px`;
+		if (top) element.style.top = `${top}px`;
+		if (width) element.style.width = `${width}px`;
+		if (height) element.style.height = `${height}px`;
+	} else {
+		return;
+	}
+
+	id += '_container';
+	const editor = tinymce.get(id);
+	if (editor) {
+		const container = editor.getContainer();
+		if (width) container.style.width = `${width}px`;
+		if (height) container.style.height = `${height}px`;
+		if (left) container.style.left = `${left}px`;
+		if (top) container.style.top = `${top}px`;
+	}
+
+}
