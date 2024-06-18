@@ -4141,6 +4141,10 @@ function nuGetTabIndexByTitle(title) {
 	return tabs.findIndex(data => data.title.replace(/\|/g, "") === title);
 }
 
+function nuGetSelectedTabId() {
+	return $('.nuTabSelected').attr('data-nu-tab-id')
+}
+
 function nuSelectTabByTitle(title) {
 	const index = nuGetTabIndexByTitle(title);
 	if (index > -1) {
