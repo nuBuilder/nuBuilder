@@ -16,8 +16,9 @@ function nuUseMobileView() {
 
 function nuSetMobileView() {
 
-	const heightMultiplier = 1.5;
-	const maxScale = 0.9;
+	const HEIGHT_MULTIPLIER = 1.5;
+	const MAX_SCALE = 0.9;
+	const SPACING = 10;
 	const visibleTabs = nuVisibleTabs();
 	const nuBody = $('#nubody');
 
@@ -26,7 +27,7 @@ function nuSetMobileView() {
 		let height = element.outerHeight()
 
 		if (element.is('[data-select2-id]')) {
-			const incHeight = element.attr('multiple') ? 10 : 5;
+			const incHeight = element.attr('multiple') ? SPACING : 5;
 			height = element.data('nu-org-height') + incHeight;
 		}
 
@@ -34,10 +35,10 @@ function nuSetMobileView() {
 			maxWidth = Math.max(maxWidth, element.outerWidth());
 		}
 
-		let heightLabel = $('#label_' + id).length === 0 ? 0 : $('#label_' + id).outerHeight()
+		let labelHeight = $('#label_' + id).length === 0 ? 0 : $('#label_' + id).outerHeight()
 
 		if (element.is('input') || element.is('select')) {
-			height *= heightMultiplier;
+			height *= HEIGHT_MULTIPLIER;
 			element.height(height);
 		}
 
@@ -46,7 +47,7 @@ function nuSetMobileView() {
 			element.css('height', Math.min(element.nuCSSNumber('height'), parseFloat(maxHeight)));
 		}
 
-		return { height, maxWidth, heightLabel }
+		return { height, maxWidth, labelHeight }
 
 	}
 
@@ -57,7 +58,7 @@ function nuSetMobileView() {
 		nuBody.attr('nu-org-scale-attribute', currentScale);
 		nuBody.attr('nu-org-width', nuBody.width());
 
-		const scale = Math.max(screenWidth / objectWidth, maxScale);
+		const scale = Math.max(screenWidth / objectWidth, MAX_SCALE);
 
 		nuBody.css({
 			'width': objectWidth,
@@ -107,7 +108,7 @@ function nuSetMobileView() {
 		if (sameRow) {
 			element.css({ 'top': previousTop, 'left': previousWidth + spacing });
 		} else {
-			element.css({ 'top': top, 'left': 10 });
+			element.css({ 'top': top, 'left': SPACING });
 		}
 
 		const maxWidth = element.attr('data-nu-mobile-max-width');
@@ -117,7 +118,7 @@ function nuSetMobileView() {
 
 	};
 
-	const nuMobileViewHandleLookup = (id, top) => {
+	const nuMobileViewLookup = (id, top) => {
 
 		const elements = {
 			code: $(`#${id}code`),
@@ -128,45 +129,55 @@ function nuSetMobileView() {
 		const codeWidth = elements.code.outerWidth();
 		const descWidth = elements.description.outerWidth();
 
-		elements.code.css({ top: top, left: 10 });
+		elements.code.css({ top: top, left: SPACING });
 		elements.button.css({ top: top, left: codeWidth + 15 });
 
-		const height = elements.code.outerHeight() * heightMultiplier;
+		const height = elements.code.outerHeight() * HEIGHT_MULTIPLIER;
 		elements.code.height(height);
 		elements.description.height(height);
 
 		top += height + 15;
 
-		elements.description.css({ top: top, left: 10, width: codeWidth - 5 });
+		elements.description.css({ top: top, left: SPACING, width: codeWidth - 5 });
 
 		return { top: top, width: codeWidth + descWidth + 30 };
 
 	};
 
-	const nuMobileViewHandleFileInput = (id, top) => {
+	const nuMobileViewFileInput = (id, top) => {
 
 		const inputElement = $(`#${id}_input`);
 		top += 5;
-		inputElement.css({ 'top': top, 'left': 10 });
+		inputElement.css({ 'top': top, 'left': SPACING });
 		return top + 5;
 
 	};
 
-	function nuMobileViewLabel(id, labelTop, isCheckbox, labelLeft) {
+	function nuMobileViewLabel(id, top, isCheckbox, labelLeft, labelHeight, sameRow) {
+
+		labelTop = top + 2;
+
+		if (!sameRow) {
+			if (!isCheckbox) {
+				top += labelHeight + 5;
+			} else {
+				labelTop += 3;
+				labelLeft = 40;
+			}
+		}
 
 		const nuLabel = $('#label_' + id);
 		const hasLabel = nuLabel.length === 1 && nuLabel.html().trim() !== '';
 		labelTop += isCheckbox ? 4 : -13;
 		nuLabel.css({ 'top': labelTop, 'left': labelLeft });
 		nuLabel.addClass('nuMobileViewLabel').css('width', '');
-		return { hasLabel, labelTop };
+		return { top, hasLabel, labelTop };
 
 	}
 
 	function nuMobileViewSetDimensionsAndScale() {
 
 		let windowInnerWidth = nuGetWindowProperty('nuWindowInnerWidth', nuFormId());
-
 		if (!windowInnerWidth) {
 			windowInnerWidth = window.innerWidth;
 			nuSetWindowProperty('nuWindowInnerWidth', nuFormId(), windowInnerWidth);
@@ -185,11 +196,12 @@ function nuSetMobileView() {
 
 	}
 
+	function nuMobileViewSetEndElement() {
+		$('#nuRECORD').append(`<div id="nuMobileViewEnd" style="left:0px;height:100px;position:absolute;top:${maxHeight}px">&nbsp;</div>`);
+	}
+
 	nuBody.css('transform', 'scale(1)');
-
 	if (nuFormType() === 'browse') return;
-
-	const objects = nuSERVERRESPONSE.objects;
 
 	let top = 0;
 	let currentTab = -1;
@@ -199,12 +211,12 @@ function nuSetMobileView() {
 	let objCount = 0;
 	let maxHeight = 100;
 
-	objects.forEach(obj => {
+	nuSERVERRESPONSE.objects.forEach(obj => {
 
 		const { id, type: objType, tab: objTab, read, input } = obj;
 		let element = $(`#${id}`);
 
-		let { height, maxWidth, heightLabel } = nuMobileViewSetObjectDimensions(id, element);
+		let { height, maxWidth, labelHeight } = nuMobileViewSetObjectDimensions(id, element);
 
 		const tabElement = $(`#nuTab${objTab}`);
 		let tabVisible = tabElement.nuIsVisible();
@@ -225,7 +237,7 @@ function nuSetMobileView() {
 
 		tabVisible = tabElement.nuIsVisible() || $('.nuTab').length === 1;
 
-		if (element.is("[data-nu-mobile-hidden]") || !tabVisible) {
+		if (element.is("[data-nu-mobile-hidden]") || !tabVisible || objType === 'contentbox') {
 			const { componentIds } = nuObjectComponents(id);
 			componentIds.forEach(compId => {
 				const comp = $(`#${compId}`);
@@ -234,61 +246,43 @@ function nuSetMobileView() {
 			});
 		} else {
 			if (read !== 2) {
-				if (objType === 'contentbox') {
-					element.attr('data-nu-mobile-hidden', '');
-					element.hide();
-				} else {
 
-					if (element.is('[data-select2-id]')) {
-						element = $(`#${id}_select2`);
-					}
-
-					const isCheckbox = element.is(':checkbox');
-					let labelTop = top + 2;
-					let labelLeft = 10;
-
-					const sameRow = element.is('[data-nu-mobile-same-row]');
-					if (!sameRow) {
-						if (!isCheckbox) {
-							top += heightLabel + 5;
-						} else {
-							labelTop += 3;
-							labelLeft = 40;
-						}
-
-					}
-
-					({ hasLabel, labelTop } = nuMobileViewLabel(id, labelTop, isCheckbox, labelLeft));
-
-					nuMobileViewElementPosition(element, top, sameRow, objWidth, objTop);
-
-					if (objType === 'lookup') {
-						const lookupResult = nuMobileViewHandleLookup(id, top);
-						top = lookupResult.top;
-						maxWidth = Math.max(maxWidth, lookupResult.width);
-					} else if (input === 'file') {
-						top = nuMobileViewHandleFileInput(id, top);
-					}
-
-					objWidth = 10 + Number(obj.width);
-					objTop = top;
-
-					if (!sameRow) {
-						top += height + (hasLabel && !isCheckbox ? 30 : 5);
-						if (isCheckbox) top += 10;
-					}
-
+				if (element.is('[data-select2-id]')) {
+					element = $(`#${id}_select2`);
 				}
+
+				const isCheckbox = element.is(':checkbox');
+				const sameRow = element.is('[data-nu-mobile-same-row]');
+				({ top, hasLabel, labelTop } = nuMobileViewLabel(id, top, isCheckbox, SPACING, labelHeight, sameRow));
+
+				nuMobileViewElementPosition(element, top, sameRow, objWidth, objTop);
+
+				if (objType === 'lookup') {
+					const lookupResult = nuMobileViewLookup(id, top);
+					top = lookupResult.top;
+					maxWidth = Math.max(maxWidth, lookupResult.width);
+				} else if (input === 'file') {
+					top = nuMobileViewFileInput(id, top);
+				}
+
+				objWidth = SPACING + Number(obj.width);
+				objTop = top;
+
+				if (!sameRow) {
+					top += height + (hasLabel && !isCheckbox ? 30 : 5);
+					if (isCheckbox) top += SPACING;
+				}
+
 			}
+
 		}
 
 		maxHeight = Math.max(maxHeight, top);
 		objCount++;
 
-
 	});
 
-	$('#nuRECORD').append(`<div id="nuPortEnd" style="left:0px;height:100px;position:absolute;top:${maxHeight}px">&nbsp;</div>`);
+	nuMobileViewSetEndElement();
 
 	if (visibleTabs.length > 1) {
 		nuAddTabNavigator();
