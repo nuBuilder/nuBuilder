@@ -218,7 +218,7 @@ textarea {
 	border-radius: 0.25rem;
 	font-family: var(--nu-font-sans-serif);
 	font-size: 13.3333px;
-	padding: 0.25rem 0.3rem
+	padding: 0.25rem 0.3rem;
 }
 
 body {
@@ -234,7 +234,7 @@ input {
 	border: 1px solid var(--nu-border);
 	border-radius: 0.25rem;
 	font-family: var(--nu-font-sans-serif);
-	padding: 0 2px
+	padding: 0 2px;
 }
 
 button {
@@ -1442,6 +1442,7 @@ input[type=radio] {
 
 .nuMessageClose {
 	position: absolute;
+	touch-action: manipulation;
 	left: 10px;
 	cursor: pointer;
 	font-size: 1.2em
