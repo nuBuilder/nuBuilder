@@ -208,10 +208,9 @@ function nuSetMobileView() {
 	var maxWidth = 0;
 	let objWidth = 0;
 	let objTop = 0;
-	let objCount = 0;
 	let maxHeight = 100;
 
-	nuSERVERRESPONSE.objects.forEach(obj => {
+	nuSERVERRESPONSE.objects.forEach((obj, index) => {
 
 		const { id, type: objType, tab: objTab, read, input } = obj;
 		let element = $(`#${id}`);
@@ -221,8 +220,8 @@ function nuSetMobileView() {
 		const tabElement = $(`#nuTab${objTab}`);
 		let tabVisible = tabElement.nuIsVisible();
 
-		if (currentTab === -1 && objCount === 0) {
-			const tabHeight = nuMobileViewAppendTabSelect(top);
+		if (currentTab === -1 && index === 0) {
+			const tabHeight = nuMobileViewAppendTabSelect();
 			top += tabHeight > 0 ? tabHeight + 60 : 0;
 		}
 
@@ -278,7 +277,6 @@ function nuSetMobileView() {
 		}
 
 		maxHeight = Math.max(maxHeight, top);
-		objCount++;
 
 	});
 
