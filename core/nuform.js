@@ -6592,7 +6592,7 @@ function nuPortraitScreen(columns = 1) {
 		}
 	};
 
-	const nuSetPortraitElementPosition = (element, top, left, sameRow, previousWidth, previousTop, labelWidth) => {
+	const nuSetPortraitElementPosition = (element, top, sameRow, previousWidth, previousTop, labelWidth) => {
 		const spacing = Number(element.attr('data-nu-mobile-same-row') || 0);
 		if (sameRow) {
 			element.css({ 'top': previousTop, 'left': previousWidth + spacing });
@@ -6706,7 +6706,7 @@ function nuPortraitScreen(columns = 1) {
 						element = $(`#${id}_select2`);
 					}
 
-					nuSetPortraitElementPosition(element, top, labelWidth + 10, sameRow, objWidth, objTop, labelWidth);
+					nuSetPortraitElementPosition(element, top, sameRow, objWidth, objTop, labelWidth);
 
 					if (objType === 'lookup') {
 						const lookupResult = nuPortraitHandleLookup(id, top, labelWidth);
