@@ -143,7 +143,7 @@ function nuBuildForm(formObj) {
 		});
 	}
 
-	nuEvaluateOnLoadEvents();
+	nuEvaluateOnLoadEvents(formType);
 
 	if (window.nuLoadEditGlobal && formType == 'edit') {
 		nuLoadEditGlobal(formObj.form_id, formObj.form_code);
@@ -585,6 +585,8 @@ function nuSaveScrollPositions() {
 
 function nuEvaluateOnLoadEvents() {
 
+	if (formType == 'browse') return;
+
 	const serverResponse = JSON.parse(JSON.stringify(nuSERVERRESPONSE));
 
 	for (const obj of serverResponse.objects) {
@@ -672,7 +674,7 @@ function nuSetBody(f) {
 	$body.html('');
 	$body.removeClass('nuBrowseBody nuEditBody');
 
-	if (nuFormType() == 'browse') {
+	if (nuFormType() === 'browse') {
 		$body.addClass('nuBrowseBody');
 	} else {
 
