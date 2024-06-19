@@ -583,9 +583,9 @@ function nuSaveScrollPositions() {
 
 }
 
-function nuEvaluateOnLoadEvents() {
+function nuEvaluateOnLoadEvents(formType) {
 
-	if (formType == 'browse') return;
+	if (formType === 'browse') return;
 
 	const serverResponse = JSON.parse(JSON.stringify(nuSERVERRESPONSE));
 
