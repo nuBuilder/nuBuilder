@@ -13,7 +13,7 @@ class nuSelectObject {
 	}
 
 	addBox(tableName, id) {
-	
+
 		this.table = tableName;
 		const tableSchema = parent.nuFORM.tableSchema;
 		const fieldNames = tableSchema[tableName].names;
@@ -23,9 +23,9 @@ class nuSelectObject {
 		this.scrollID = 'scroll' + boxIdSuffix;
 		const boxWidth = this.boxWidth(tableSchema, tableName);
 		const boxElement = document.createElement('div');
-	
+
 		this.boxes.push(this.boxID);
-	
+
 		boxElement.setAttribute('id', this.boxID);
 		$('body').append(boxElement);
 		$('#' + this.boxID).css({
@@ -41,7 +41,7 @@ class nuSelectObject {
 			'z-index': 5,
 		})
 			.addClass('nuBox nuDragNoSelect nuBoxHeader nuBoxShadow');
-	
+
 		const scrollElement = document.createElement('div');
 		scrollElement.setAttribute('id', this.scrollID);
 		$('#' + this.boxID).append(scrollElement);
@@ -55,7 +55,7 @@ class nuSelectObject {
 			'line-height': 1,
 		})
 			.addClass('nuDragNoSelect nuBoxHeader');
-	
+
 		const tableNameElement = document.createElement('div');
 		tableNameElement.setAttribute('id', 'tablename' + this.boxID);
 		$('#' + this.boxID).append(tableNameElement);
@@ -74,7 +74,7 @@ class nuSelectObject {
 			})
 			.html(tableName)
 			.addClass('nuDragNoSelect nuTableName nuBoxTitle');
-	
+
 		const checkAllBox = document.createElement('input');
 		checkAllBox.setAttribute('id', 'checkall' + this.boxID);
 		$('#' + this.boxID).append(checkAllBox);
@@ -88,7 +88,7 @@ class nuSelectObject {
 			.attr('type', 'checkbox')
 			.attr('onchange', 'window.nuSQL.buildSQL("table","' + this.boxID + '")')
 			.prop('checked', true);
-	
+
 		const aliasInput = document.createElement('input');
 		aliasInput.setAttribute('id', 'alias' + this.boxID);
 		$('#' + this.boxID).append(aliasInput);
@@ -103,11 +103,11 @@ class nuSelectObject {
 			.change(function () {
 				nuSQL.buildSQL();
 			});
-	
+
 		fieldNames.forEach((fieldName, index) => {
 			this.boxRow(index, fieldName, fieldTypes[index], boxWidth);
 		});
-	
+
 		const closeBoxElement = document.createElement('div');
 		closeBoxElement.setAttribute('id', 'nuBoxClose' + this.boxID);
 		$('#' + this.boxID).append(closeBoxElement);
@@ -128,48 +128,48 @@ class nuSelectObject {
 	buildSQL(context, boxId) {
 
 		if (parent.$('#sse_edit').val() == 1) { return; }
-	
+
 		nuAngle();
-	
+
 		const selectClause = this.buildSelect(context, boxId);
 		const fromClause = this.buildFrom();
 		const clauses = this.buildClauses();
-	
+
 		parent.$('#sse_sql')
 			.val(`${selectClause}${fromClause}${clauses}\n`)
 			.trigger("change");
-	
+
 		parent.$('#sse_json')
 			.val(this.buildJSON())
 			.trigger("change");
-	
+
 		if (parent.$('#nuSaveToTextareaButton').length == 1) {
 			parent.$('#nuSaveToTextareaButton').hide();
 			parent.$('#nuSaveButton').show();
 		}
 
 	}
-	
+
 	buildSelect(checkType, boxID) {
 
 		if (checkType === 'field') {
 			$('#checkall' + boxID).prop('checked', false);
 		}
-	
+
 		if (checkType === 'table') {
 			$('.checkfield.' + boxID).prop('checked', false);
 		}
-	
+
 		let selectClauses = [];
-	
+
 		for (let i = 0; i < this.boxes.length; i++) {
 			let currentBoxID = this.boxes[i];
-	
+
 			if ($('#' + currentBoxID).length === 1) {
 				let tableName = $('#tablename' + currentBoxID).html();
 				let aliasName = $('#alias' + currentBoxID).val();
 				let fullTableName = this.justAlias(tableName, aliasName);
-	
+
 				if ($('#checkall' + currentBoxID).is(':checked')) {
 					selectClauses.push(fullTableName + '.*');
 				} else {
@@ -179,7 +179,7 @@ class nuSelectObject {
 							let fieldBoxID = String(this.id).split('_')[2];
 							let fieldAlias = $('#alias' + fieldBoxID).val();
 							let fieldName = $('#' + fieldID).html();
-	
+
 							if (!fieldAlias) {
 								selectClauses.push(fullTableName + '.' + fieldName);
 							} else {
@@ -190,7 +190,7 @@ class nuSelectObject {
 				}
 			}
 		}
-	
+
 		let sqlSelect = "SELECT\n " + selectClauses.join(',\n    ') + "\n";
 		return sqlSelect;
 
@@ -200,29 +200,27 @@ class nuSelectObject {
 
 		this.tempTables = this.usedTables();
 		this.tempJoins = this.getJoinObjects(); // current visible joins
-	
+
 		const tableOrder = (table1, table2) => table2.joins.length - table1.joins.length;
-	
+
 		for (let tableIndex = 0; tableIndex < this.tempTables.length; tableIndex++) {
 			if (this.tempTables[tableIndex].used !== -1) {
 				const sortedTables = this.tempTables.sort(tableOrder);
 				let hasMoreJoins = true;
-	
+
 				let initialAlias = this.tempTables[tableIndex].alias;
 				let lastAliasUsed = this.fromAlias(sortedTables[0].table, sortedTables[0].alias);
 				let definedAliases = [lastAliasUsed, initialAlias];
 				let joinDetails;
-	
-				const joinsArray = [];
-	
+
 				while (hasMoreJoins) {
 					[hasMoreJoins, joinDetails] = this.getJoinObject(definedAliases);
-	
+
 					if (hasMoreJoins) {
 						const joinType = joinDetails.type === 'LEFT' ? "\n        LEFT JOIN " : "\n        JOIN ";
-	
+
 						let currentAlias = this.justAlias(joinDetails.tables[0], joinDetails.aliases[0]);
-	
+
 						let tableAlias;
 						if (definedAliases.indexOf(lastAliasUsed) === -1 || definedAliases.indexOf(currentAlias) === -1) {
 							tableAlias = this.buildAlias(joinDetails.tables[0], joinDetails.aliases[0]);
@@ -231,37 +229,37 @@ class nuSelectObject {
 							tableAlias = this.buildAlias(joinDetails.tables[1], joinDetails.aliases[1]);
 							lastAliasUsed = this.justAlias(joinDetails.tables[1], joinDetails.aliases[1]);
 						}
-	
+
 						definedAliases.push(lastAliasUsed);
 						definedAliases.push(currentAlias);
-	
+
 						this.markTableAsUsed(joinDetails.tables[0], joinDetails.aliases[0]);
 						this.markTableAsUsed(joinDetails.tables[1], joinDetails.aliases[1]);
-	
+
 						const joinConditions = joinDetails.joins.join(' AND ');
-	
+
 						this.tempTables[tableIndex].joins.push(joinType + tableAlias + ' ON ' + joinConditions);
 					}
 				}
 			}
 		}
-	
+
 		const finalSortedTables = this.tempTables.sort(tableOrder);
 		const finalJoins = [];
-	
+
 		for (let i = 0; i < finalSortedTables.length; i++) {
 			if (finalSortedTables[i].joins.length > 0 || finalSortedTables[i].used !== -1) {
 				const aliasDefinition = this.fromAlias(finalSortedTables[i].table, finalSortedTables[i].alias);
 				const joins = finalSortedTables[i].joins.join("");
-	
+
 				finalJoins.push("\n    " + aliasDefinition + joins);
 			}
 		}
-	
+
 		return "\nFROM" + finalJoins.join('');
 
 	}
-	
+
 	markTableAsUsed(table, alias) {
 
 		for (let i = 0; i < this.tempTables.length; i++) {
@@ -272,76 +270,76 @@ class nuSelectObject {
 		}
 
 	}
-	
+
 	usedTables() {
 
 		const tablesWithUsage = [];
 		const context = this;
 		this.tempJoins = this.getJoinObjects(); // current visible joins
-	
+
 		$('.nuBox').each(function () {
 			const boxId = $(this)[0].id;
 			const tableName = $('#tablename' + boxId).html();
 			const aliasName = $('#alias' + boxId).val();
 			let usageCount = 0;
-	
+
 			for (const joinKey in context.joins) {
 				const join = context.joins[joinKey];
 				if (join.fromalias === aliasName || join.fromtable === tableName || join.toalias === aliasName || join.totable === tableName) {
 					usageCount++;
 				}
 			}
-	
+
 			tablesWithUsage.push({ 'table': tableName, 'alias': context.justAlias(tableName, aliasName), 'used': usageCount, 'joins': [] });
 		});
-	
+
 		const compareUsage = (firstTable, secondTable) => firstTable.used < secondTable.used;
-	
+
 		tablesWithUsage.sort(compareUsage);
-	
+
 		return tablesWithUsage;
 
 	}
-	
+
 
 	getJoinObject(aliasList) {
 
 		const tempJoins = this.tempJoins;
 		const aliases = [];
-	
+
 		for (let i = 0; i < aliasList.length; i++) {
 			const splitAlias = aliasList[i].split(' ');
 			aliases.push(splitAlias[0], splitAlias[splitAlias.length - 1]);
 		}
-	
+
 		for (let i = 0; i < tempJoins.length; i++) {
 			const joinObject = tempJoins[i];
 			const firstAlias = this.justAlias(joinObject.tables[0], joinObject.aliases[0]);
 			const secondAlias = this.justAlias(joinObject.tables[1], joinObject.aliases[1]);
-	
+
 			if (aliases.indexOf(firstAlias) !== -1 || aliases.indexOf(secondAlias) !== -1) {
 				this.tempJoins.splice(i, 1);
 				return [true, joinObject];
 			}
 		}
-	
+
 		return [false, {}];
 
 	}
-	
+
 	getJoinObjects() {
 
 		const joinData = this.joins;
 		const joinMap = {};
 		const joinList = [];
-	
+
 		for (const key in joinData) {
 			const join = joinData[key];
 			const fromTableAlias = this.justAlias(join.fromtable, join.fromalias);
 			const toTableAlias = this.justAlias(join.totable, join.toalias);
 			const joinCondition = `${fromTableAlias}.${join.fromfield} = ${toTableAlias}.${join.tofield}`;
 			const joinId = [fromTableAlias, toTableAlias].sort().join('--');
-	
+
 			if (joinMap[joinId] === undefined) {
 				joinMap[joinId] = {
 					'tables': [join.fromtable, join.totable],
@@ -357,14 +355,14 @@ class nuSelectObject {
 				}
 			}
 		}
-	
+
 		for (const key in joinMap) {
 			joinList.push(joinMap[key]);
 		}
-	
+
 		return joinList;
 	}
-	
+
 	fromAlias(t, a) {
 		return a === t ? t : `${t} AS ${a}`;
 	}
@@ -399,7 +397,7 @@ class nuSelectObject {
 		}
 
 	}
-	
+
 	buildClauses() {
 
 		const orderFunction = (b, a) => (b[1] + 10000 + Number(b[4])) - (a[1] + 10000 + Number(a[4]));
@@ -410,12 +408,12 @@ class nuSelectObject {
 		let orderByClauses = [];
 		let groupByClauses = [];
 		let havingClauses = [];
-	
+
 		for (let i = 0; i < selectClauses.length; i++) {
 			let [_, type, field, condition, sortOrder, , display] = selectClauses[i];
 			let isClauseValid = field != '' && condition != '';
 			let isGroupOrOrderValid = field != '' && sortOrder != '';
-	
+
 			if (display == 0) {
 				if (type == 1 && isClauseValid) { whereClauses.push('(' + field + ' ' + condition + ')'); }
 				if (type == 4 && isClauseValid) { havingClauses.push('(' + field + condition + ')'); }
@@ -423,16 +421,16 @@ class nuSelectObject {
 				if (type == 3 && isGroupOrOrderValid) { orderByClauses.push(field + ' ' + sortOrder); }
 			}
 		}
-	
+
 		if (whereClauses.length > 0) { clauses += "\n\nWHERE\n    (" + whereClauses.join(" AND \n    ") + ")\n"; }
 		if (groupByClauses.length > 0) { clauses += "\nGROUP BY\n    " + groupByClauses.join(",\n    ") + "\n"; }
 		if (havingClauses.length > 0) { clauses += "\nHAVING\n    " + havingClauses.join(" AND \n    ") + "\n"; }
 		if (orderByClauses.length > 0) { clauses += "\nORDER BY\n    " + orderByClauses.join(",\n    ") + "\n"; }
-	
+
 		return clauses;
 
 	}
-	
+
 
 	boxWidth(tableSchema, t) {
 
@@ -522,7 +520,7 @@ class nuSelectObject {
 		const jsonResult = {};
 		const tables = [];
 		const self = this;
-	
+
 		$('.nuBox').each(function () {
 			const id = this.id;
 			const tableObject = {
@@ -535,18 +533,18 @@ class nuSelectObject {
 			};
 			tables.push(tableObject);
 		});
-	
+
 		jsonResult.tables = tables;
 		const joins = {};
 		const relations = this.joins;
-	
+
 		for (const key in relations) {
-			const {from, to, join} = relations[key];
+			const { from, to, join } = relations[key];
 			joins[`${from}--${to}`] = join;
 		}
-	
+
 		jsonResult.joins = joins;
-	
+
 		return JSON.stringify(jsonResult);
 
 	}
@@ -566,46 +564,46 @@ class nuSelectObject {
 	rebuildGraphic() {
 
 		const jsonString = $('#sse_json', parent.document).val();
-	
+
 		if (!jsonString) { return true; }
-	
+
 		const jsonData = JSON.parse(jsonString);
-	
+
 		for (const table of jsonData.tables) {
 			if (!parent.nuFORM.tableSchema[table.tablename]) {
 				nuMessage([`No table named <b>${table.tablename}</b>.`]);
 				return false;
 			}
 		}
-	
+
 		for (const table of jsonData.tables) {
 			this.addBox(table.tablename, table.id);
-	
+
 			$(`#${table.id}`)
 				.css('top', table.position.top)
 				.css('left', table.position.left);
-	
+
 			$(`#tablename${table.id}`).html(table.tablename);
 			$(`#alias${table.id}`).val(table.alias);
 			$(`#checkall${table.id}`).prop('checked', table.checkall);
-	
+
 			table.checkboxes.forEach((checkbox, index) => {
 				$(`#select_${index}_${table.id}`).prop('checked', checkbox);
 			});
 		}
-	
+
 		const joins = jsonData.joins;
 		for (const key in joins) {
 			const [startIndex, endIndex] = key.split('--');
 			this.joins[`${startIndex}--${endIndex}`] = joins[key];
 		}
-	
+
 		nuAngle();
-	
+
 		return true;
 
 	}
-	
+
 	addJoin(key, v) {
 
 		const jsonString = parent.$('#sse_json').val();
@@ -716,10 +714,10 @@ function nuAngle() {
 		let toId = key.split('--')[1];
 
 		if ($('#' + fromId).length === 1 && $('#' + toId).length === 1) {
-		  validJoins[key] = joins[key];
+			validJoins[key] = joins[key];
 		}
 	}
-  
+
 	nuSQL.refreshJoins(validJoins);
 
 	for (let key in nuSQL.joins) {
@@ -759,15 +757,15 @@ function nuAngle() {
 			.attr('title', joinType + ' JOIN ON ' + nuSQL.joins[key].fromfield + ' = ' + nuSQL.joins[key].tofield + ' (Click to Change Join)')
 			.addClass('nuRelationships')
 			.hover(function () {
-			  $(this).css({
-				'border-top-width': '2px',
-				'border-bottom-width': '2px'
-			  });
+				$(this).css({
+					'border-top-width': '2px',
+					'border-bottom-width': '2px'
+				});
 			}, function () {
-			  $(this).css({
-				'border-top-width': '0',
-				'border-bottom-width': '0'
-			  });
+				$(this).css({
+					'border-top-width': '0',
+					'border-bottom-width': '0'
+				});
 			});
 
 		$lineElement = $('#' + $lineElement.id);
@@ -776,8 +774,8 @@ function nuAngle() {
 
 		$('#' + joinId).css({
 			'top': `${top}px`,
-			'left': `${left}px` 
-		}); 
+			'left': `${left}px`
+		});
 
 		let lTop = parseInt($lineElement.css('top'), 10);
 		let lLeft = parseInt($lineElement.css('left'), 10);
