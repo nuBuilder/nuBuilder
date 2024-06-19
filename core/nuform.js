@@ -4926,7 +4926,7 @@ function nuSortBrowse(column) {
 
 function nuGetPage(pageNumber) {
 
-	const paddedPageNumber = parseInt('00' + pageNumber, 10);
+	let paddedPageNumber = parseInt('00' + pageNumber, 10);
 
 	if (pageNumber > nuCurrentProperties().pages || pageNumber === 0) {
 		return;
