@@ -5961,7 +5961,7 @@ function nuMessage(options, options2, options3, options4) {
 	if (nuUseMobileView()) {
 		const scale = nuMobileViewGetTransformScale();
 		$('#nuMessageDiv').css({
-			'width': nuMobileViewgetScaledDocumentWidth(scale) - 40,
+			'width': nuMobileViewGetScaledDocumentWidth(scale) - 40,
 			'left': '5px'
 		});
 	}
