@@ -300,7 +300,6 @@ function nuAddDragSelected(t) {
 
 	if (nuIsVisible(t)) {
 		t.addClass('nuDragSelected');
-	} else {
 	}
 
 }
