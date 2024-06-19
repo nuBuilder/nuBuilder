@@ -163,6 +163,28 @@ function nuSetMobileView() {
 
 	}
 
+	function nuMobileViewSetDimensionsAndScale() {
+
+		let windowInnerWidth = nuGetWindowProperty('nuWindowInnerWidth', nuFormId());
+
+		if (!windowInnerWidth) {
+			windowInnerWidth = window.innerWidth;
+			nuSetWindowProperty('nuWindowInnerWidth', nuFormId(), windowInnerWidth);
+		}
+
+		const objectWidth = maxWidth + 50;
+		const scale = nuMobileViewSetTransformScale(objectWidth, windowInnerWidth);
+
+		$('.nuBuilderLink, .nuPortraitTab, .nuAdminButton').remove();
+		$('#nuTabHolder').hide();
+		$('button').css('text-align', 'left');
+		$('#nuBreadcrumbHolder, #nuActionHolder').css('width', nuMobileViewGetScaledDocumentWidth(scale));
+
+		nuBody.css('width', window.visualViewport.width);
+		return scale;
+
+	}
+
 	nuBody.css('transform', 'scale(1)');
 
 	if (nuFormType() === 'browse') return;
@@ -268,27 +290,11 @@ function nuSetMobileView() {
 
 	$('#nuRECORD').append(`<div id="nuPortEnd" style="left:0px;height:100px;position:absolute;top:${maxHeight}px">&nbsp;</div>`);
 
-	let windowInnerWidth = nuGetWindowProperty('nuWindowInnerWidth', nuFormId());
-
-	if (!windowInnerWidth) {
-		windowInnerWidth = window.innerWidth;
-		nuSetWindowProperty('nuWindowInnerWidth', nuFormId(), windowInnerWidth);
-	}
-
-	const objectWidth = maxWidth + 50;
-	const scale = nuMobileViewSetTransformScale(objectWidth, windowInnerWidth);
-
 	if (visibleTabs.length > 1) {
 		nuAddTabNavigator();
 	}
 
-	$('.nuBuilderLink, .nuPortraitTab, .nuAdminButton').remove();
-	$('#nuBreadcrumbHolder, #nuActionHolder').css('width', nuMobileViewGetScaledDocumentWidth(scale));
-	$('#nuTabHolder').hide();
-	$('button').css('text-align', 'left');
-
-	nuBody.css('width', window.visualViewport.width);
-
+	const scale = nuMobileViewSetDimensionsAndScale();
 	nuScrollToTopLeft();
 
 	if (window.nuOnMobileViewComplete) {
