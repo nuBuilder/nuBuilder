@@ -5088,14 +5088,14 @@ function nuLookupObject(id, set, value) {
 
 	const $id = $('#' + id);
 
-	if (!$id.length) {
-		nuResetLookupProperties(this);
-		return;
-	}
-
 	const nuResetLookupProperties = (obj) => {
 		const props = ['id_id', 'code_id', 'description_id', 'id_value', 'code_value', 'description_value'];
 		props.forEach(prop => obj[prop] = '');
+	}
+
+	if (!$id.length) {
+		nuResetLookupProperties(this);
+		return;
 	}
 
 	const nuUpdateLookupProperties = (obj, id) => {
