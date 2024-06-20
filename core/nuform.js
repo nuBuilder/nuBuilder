@@ -5026,15 +5026,8 @@ function nuPopulateLookup(form, targetId, setFocus) {
 				nuReformat($element[0]);
 				$element.addClass('nuEdited');
 				$('#' + prefix + 'nuDelete').prop('checked', false);
-
-				if (window.nuOnLookupPopulatedGlobal) {
-					nuOnLookupPopulatedGlobal(id, prefix);
-				}
-
-				if (window.nuOnLookupPopulated) {
-					nuOnLookupPopulated(id, prefix);
-				}
 			}
+
 		}
 
 		if (i === 1 && setFocus !== false) {
