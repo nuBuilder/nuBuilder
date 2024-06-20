@@ -1457,15 +1457,14 @@ function nuSelectNextTab(i, includeInvisible = false, byUser = true) {
 	const selectedTab = $('.nuTabSelected')[0];
 	const selectedTabId = selectedTab.id.substring(5);
 	let nextTabId = parseInt(selectedTabId, 10) + i;
-	let e = document.getElementById('nuTab' + nextTabId);
 
-	while (!includeInvisible && e && !nuIsVisible(e.id)) {
-		nextTabId += i; // increment or decrement based on i's value
-		e = document.getElementById('nuTab' + nextTabId);
+	let element;
+	while (!includeInvisible && (element = document.getElementById('nuTab' + nextTabId)) && !nuIsVisible(element.id)) {
+		nextTabId += i;
 	}
 
-	if (e) {
-		nuSelectTab(e, byUser);
+	if (element) {
+		nuSelectTab(element, byUser);
 	}
 
 }
