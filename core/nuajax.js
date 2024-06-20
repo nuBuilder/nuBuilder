@@ -597,17 +597,23 @@ function nuGetLookupId(pk, id, setFocus, setEdited) {
 		if (!nuDisplayError(data)) {
 
 			nuPopulateLookup(data, id, setFocus);
-			$('#' + id).addClass('nuEdited');
 
+			$('#' + id).addClass('nuEdited');
 			if (setEdited != false) {
 				nuHasBeenEdited();
 			}
 
 			var o = $('#' + id);
-
 			if (o.attr('data-nu-prefix') == '') { return; }
-
 			nuAddSubformRow(o[0], false);
+
+			if (window.nuOnLookupPopulatedGlobal) {
+				nuOnLookupPopulatedGlobal(id, prefix, lookupValues);
+			}
+
+			if (window.nuOnLookupPopulated) {
+				nuOnLookupPopulated(id, prefix, lookupValues);
+			}
 
 		}
 
