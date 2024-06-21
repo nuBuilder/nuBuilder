@@ -1581,6 +1581,16 @@ span.nuActionButton {
 	font-weight: bolder
 }
 
+.nuMobileViewTabNavDisabled {
+	pointer-events: none;
+	opacity: 0.5;
+}
+
+.nuMobileViewTabNavEnabled {
+	pointer-events: auto;
+	opacity: 1;
+}
+
 .nuMobileViewTabNavIcon {
 	position: absolute;
 	width: 40px;
