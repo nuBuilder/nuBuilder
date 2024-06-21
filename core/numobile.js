@@ -129,7 +129,9 @@ function nuSetMobileView() {
 		let previousWidth = newWidth;
 
 		const isCheckbox = element.is(':checkbox');
-
+		
+		if (id == 'ter_altersgruppen_kinder') debugger;
+		
 		if (!isSameRow) {
 			newTopPosition += height + (hasLabel && !isCheckbox ? 30 : 5);
 			if (isCheckbox) {
@@ -250,7 +252,7 @@ function nuSetMobileView() {
 		$('#nuRECORD').append(`<div id="nuMobileViewEnd" style="left:0px;height:100px;position:absolute;top:${maxHeight}px">&nbsp;</div>`);
 	}
 
-	function nuMobileViewSetTopPosition(currentTab, index, objType, objTab, top, tabVisible) {
+	function nuMobileViewSetTop(currentTab, index, objType, objTab, top, tabVisible) {
 
 		if (currentTab === -1 && index === 0) {
 			const tabHeight = nuMobileViewAppendTabSelect();
@@ -267,7 +269,7 @@ function nuSetMobileView() {
 			}
 		}
 
-		return top;
+		return { top, currentTab};
 
 	}
 
@@ -294,8 +296,10 @@ function nuSetMobileView() {
 		const tabElement = $(`#nuTab${objTab}`);
 		let tabVisible = tabElement.nuIsVisible();
 
-		top = nuMobileViewSetTopPosition(currentTab, index, objType, objTab, top, tabVisible);
-
+		const topInfo = nuMobileViewSetTop(currentTab, index, objType, objTab, top, tabVisible);
+		top = topInfo.top;
+		currentTab = topInfo.currentTab;
+ 
 		tabVisible = tabElement.nuIsVisible() || $('.nuTab').length === 1;
 
 		if (element.is("[data-nu-mobile-hidden]") || !tabVisible || objType === 'contentbox') {
@@ -453,6 +457,4 @@ function nuMobileViewGetTransformScale(element) {
 
 	return 1;
 
-};
-
-
+}
