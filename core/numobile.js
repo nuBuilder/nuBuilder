@@ -57,7 +57,7 @@ function nuSetMobileView() {
 
 		const maxObjWidth = element.attr('data-nu-mobile-max-width');
 		if (maxObjWidth) {
-			width = Math.min(element.nuCSSNumber('width'), parseFloat(maxWidth));
+			width = Math.min(parseFloat(maxObjWidth), parseFloat(maxWidth));
 			element.css('width', width);
 		}
 
@@ -358,7 +358,7 @@ function nuMobileViewGetScaledDocumentWidth(scale) {
 function nuScrollToTopLeft() {
 
 	window.scrollTo(0, 0);
-	$('html, body').scrollTop(0).scrollLeft(0);
+	document.getElementById("nuBreadcrumbHolder").scrollIntoView();
 
 }
 
