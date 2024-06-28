@@ -1407,7 +1407,11 @@ function nuGatherFormAndSessionData($home, $globalAccess) {
 		$formId = $globalAccess ? $sessionData['GLOBEADMIN_HOME'] : $sessionData['HOME_ID'];
 	}
 
-	if ($formId !== '') {
+	if (nuStringStartsWith('code:', $formId, true)) {
+		$formId = db_fetch_value('zzzzsys_form', 'sfo_code', substr($formId, 5), 'zzzzsys_form_id');
+	}
+
+	if ($formId) {
 		$formAndSessionData->form_id = $formId;
 	} else {
 		$formAndSessionData->form_id = $home == '' ? $sessionData['GLOBEADMIN_HOME'] : $home;
