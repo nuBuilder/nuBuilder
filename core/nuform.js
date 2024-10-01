@@ -7455,6 +7455,19 @@ function nuPopupCalendar(pThis, d) {
 
 	datepicker.setOptions({ defaultViewDate: d });
 	datepicker.show();
+	setCalendarTop();
 
 }
 
+function setCalendarTop(){
+
+	var $innerDiv = $('.datepicker');
+	var offset = $innerDiv.offset();
+
+	// Move the div to the body
+	$innerDiv.appendTo('body');
+
+	// Apply the position
+	$innerDiv.css({position: 'absolute', top: offset.top, left: offset.left});
+	
+}
