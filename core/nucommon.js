@@ -2284,32 +2284,38 @@ function nuCursor(c) {
 	*** Johann Burkard <http://johannburkard.de> / <mailto:jb@eaio.com>
 */
 
-jQuery.fn.nuHighlight = function (pat) {
-	function innerHighlight(node, pat) {
-		var skip = 0;
-		if (node.nodeType == 3) {
-			var pos = node.data.toUpperCase().indexOf(pat);
-			pos -= (node.data.substr(0, pos).toUpperCase().length - node.data.substr(0, pos).length);
-			if (pos >= 0) {
-				let spannode = document.createElement('span');
-				spannode.className = 'nuBrowseSearch';
-				let middlebit = node.splitText(pos);
-				const middleclone = middlebit.cloneNode(true);
-				spannode.appendChild(middleclone);
-				middlebit.parentNode.replaceChild(spannode, middlebit);
-				skip = 1;
+jQuery.fn.nuHighlight = function (pattern) {
+
+	function applyHighlight(node, pattern) {
+
+		let skipNode = 0;
+		if (node.nodeType === 3) {
+			const regex = new RegExp(pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+			const match = node.data.match(regex);
+			if (match) {
+				const matchStart = match.index;
+				const spanElement = document.createElement('span');
+				spanElement.className = 'nuBrowseSearch';
+				const matchedText = node.splitText(matchStart);
+				const cloneMatchedText = matchedText.cloneNode(true);
+				spanElement.appendChild(cloneMatchedText);
+				matchedText.parentNode.replaceChild(spanElement, matchedText);
+				skipNode = 1;
 			}
-		} else if (node.nodeType == 1 && node.childNodes && !/(script|style)/i.test(node.tagName)) {
-			for (var i = 0; i < node.childNodes.length; ++i) {
-				i += innerHighlight(node.childNodes[i], pat);
+		} else if (node.nodeType === 1 && node.childNodes && !/(script|style)/i.test(node.tagName)) {
+			for (let i = 0; i < node.childNodes.length; ++i) {
+				i += applyHighlight(node.childNodes[i], pattern);
 			}
 		}
-		return skip;
+		return skipNode;
 	}
-	return this.length && pat && pat.length ? this.each(function () {
-		innerHighlight(this, pat.toUpperCase());
+
+	return this.length && pattern && pattern.length ? this.each(function () {
+		applyHighlight(this, pattern);
 	}) : this;
+
 };
+
 
 function nuInputMaxLength(id, maxLength, labelId) {
 
