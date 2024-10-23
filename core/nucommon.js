@@ -2286,7 +2286,7 @@ function nuCursor(c) {
 
 jQuery.fn.nuHighlight = function (pattern) {
 
-	function applyHighlight(node, pattern) {
+	function nuApplyHighlight(node, pattern) {
 
 		let skipNode = 0;
 		if (node.nodeType === 3) {
@@ -2304,18 +2304,17 @@ jQuery.fn.nuHighlight = function (pattern) {
 			}
 		} else if (node.nodeType === 1 && node.childNodes && !/(script|style)/i.test(node.tagName)) {
 			for (let i = 0; i < node.childNodes.length; ++i) {
-				i += applyHighlight(node.childNodes[i], pattern);
+				i += nuApplyHighlight(node.childNodes[i], pattern);
 			}
 		}
 		return skipNode;
 	}
 
 	return this.length && pattern && pattern.length ? this.each(function () {
-		applyHighlight(this, pattern);
+		nuApplyHighlight(this, pattern);
 	}) : this;
 
 };
-
 
 function nuInputMaxLength(id, maxLength, labelId) {
 
