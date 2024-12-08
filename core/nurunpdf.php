@@ -1194,7 +1194,7 @@ function nuSavePDF($PDF, $code = '', $tag = '') {
 	if (nuDemo()) return;
 
 	// save PDF file on the server in the ./temp directory
-	$filename1 = 'nupdf_' . nuID() . '.pdf';
+	$filename1 = 'nupdf_' . $tag . '.pdf';
 	$dir = dirname(getcwd()) . DIRECTORY_SEPARATOR. 'temp' . DIRECTORY_SEPARATOR;
 	$filename = $dir . $filename1;
 	$path = realpath($dir);
