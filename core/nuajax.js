@@ -192,7 +192,7 @@ function nuRunReport(formId, iFrame) {
 
 }
 
-function nuRunReportSave(formId, tag = null, callback = null) {
+function nuRunReportSave(formId, tag = null, callback = null, ftype = null) {
 
 	const current = nuFORM.getCurrent();
 	const last = $.extend(true, {}, current);
@@ -211,13 +211,14 @@ function nuRunReportSave(formId, tag = null, callback = null) {
 			let formData = new FormData();
 			formData.append('ID', fm.id);
 			formData.append('tag', tag);
+			formData.append('ftype', ftype);
 			let xhr = new XMLHttpRequest();
 
 			if (callback !== null) {
 				xhr.onreadystatechange = function () {
 					if (this.readyState == 4 && this.status == 200) {
 						const data = JSON.parse(xhr.responseText);
-						callback(data.filename, data.id, this);
+						//callback(data.filename, data.id, this);
 					}
 				}
 			}
