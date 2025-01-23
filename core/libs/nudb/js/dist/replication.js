@@ -6,14 +6,13 @@
  * @requires    jQueryUI
  * @requires    js/functions.js
  */
+
 var randomServerId = Math.floor(Math.random() * 10000000);
 var confPrefix = 'server-id=' + randomServerId + '\nlog_bin=mysql-bin\nlog_error=mysql-bin.err\n';
-
 function updateConfig() {
   var confIgnore = 'binlog_ignore_db=';
   var confDo = 'binlog_do_db=';
   var databaseList = '';
-
   if ($('#db_select option:selected').length === 0) {
     $('#rep').text(confPrefix);
   } else if ($('#db_type option:selected').val() === 'all') {
@@ -28,11 +27,10 @@ function updateConfig() {
     $('#rep').text(confPrefix + databaseList);
   }
 }
+
 /**
  * Unbind all event handlers before tearing down a page
  */
-
-
 AJAX.registerTeardown('replication.js', function () {
   $('#db_type').off('change');
   $('#db_select').off('change');

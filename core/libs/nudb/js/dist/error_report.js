@@ -1,5 +1,4 @@
-/* global TraceKit */
-// js/vendor/tracekit.js
+/* global TraceKit */ // js/vendor/tracekit.js
 
 /**
  * general function, usually for data manipulation pages
@@ -10,17 +9,14 @@ var ErrorReport = {
    * @var {object}, stores the last exception info
    */
   lastException: null,
-
   /**
    * @var object stores the Error Report Data to prevent unnecessary data fetching
    */
   errorReportData: null,
-
   /**
    * @var object maintains unique keys already used
    */
   keyDict: {},
-
   /**
    * handles thrown error exceptions based on user preferences
    *
@@ -33,7 +29,6 @@ var ErrorReport = {
       Functions.ajaxShowMessage(data.error, false);
       return;
     }
-
     if (data.report_setting === 'ask') {
       ErrorReport.showErrorNotification();
     } else if (data.report_setting === 'always') {
@@ -57,13 +52,10 @@ var ErrorReport = {
     if (JSON.stringify(ErrorReport.lastException) === JSON.stringify(exception)) {
       return;
     }
-
     if (exception.name === null || typeof exception.name === 'undefined') {
       exception.name = ErrorReport.extractExceptionName(exception);
     }
-
     ErrorReport.lastException = exception;
-
     if (ErrorReport.errorReportData === null) {
       $.post('index.php?route=/error-report', {
         'ajax_request': true,
@@ -78,7 +70,6 @@ var ErrorReport = {
       ErrorReport.errorDataHandler(ErrorReport.errorReportData, exception);
     }
   },
-
   /**
    * Shows the modal dialog previewing the report
    *
@@ -88,7 +79,6 @@ var ErrorReport = {
    */
   showReportDialog: function (exception) {
     const reportData = ErrorReport.getReportData(exception);
-
     const sendErrorReport = function () {
       const postData = $.extend(reportData, {
         'send_error_report': true,
@@ -104,13 +94,11 @@ var ErrorReport = {
       });
       $('#errorReportModal').modal('hide');
     };
-
     $.post('index.php?route=/error-report', reportData).done(function (data) {
       // Delete the modal to refresh it in case the user changed SendErrorReports value
       if (document.getElementById('errorReportModal') !== null) {
         $('#errorReportModal').remove();
       }
-
       $('body').append($(data.report_modal));
       const $errorReportModal = $('#errorReportModal');
       $errorReportModal.on('show.bs.modal', function () {
@@ -122,7 +110,6 @@ var ErrorReport = {
       $errorReportModal.modal('show');
     });
   },
-
   /**
    * Shows the small notification that asks for user permission
    *
@@ -130,11 +117,9 @@ var ErrorReport = {
    */
   showErrorNotification: function () {
     var key = Math.random().toString(36).substring(2, 12);
-
     while (key in ErrorReport.keyDict) {
       key = Math.random().toString(36).substring(2, 12);
     }
-
     ErrorReport.keyDict[key] = 1;
     var $div = $('<div class="alert alert-danger" role="alert" id="error_notification_' + key + '"></div>').append(Functions.getImage('s_error') + Messages.strErrorOccurred);
     var $buttons = $('<div class="float-end"></div>');
@@ -149,13 +134,12 @@ var ErrorReport = {
     buttonHtml += Functions.getImage('b_close', Messages.strIgnore);
     buttonHtml += '</a>';
     $buttons.html(buttonHtml);
-    $div.append($buttons); // eslint-disable-next-line compat/compat
-
+    $div.append($buttons);
+    // eslint-disable-next-line compat/compat
     $div.appendTo(document.body);
     $(document).on('click', '#show_error_report_' + key, ErrorReport.createReportDialog);
     $(document).on('click', '#ignore_error_' + key, ErrorReport.removeErrorNotification);
   },
-
   /**
    * Removes the notification if it was displayed before
    *
@@ -167,12 +151,10 @@ var ErrorReport = {
       // don't remove the hash fragment by navigating to #
       e.preventDefault();
     }
-
     $('#error_notification_' + $(this).data('notification-id')).fadeOut(function () {
       $(this).remove();
     });
   },
-
   /**
    * Extracts Exception name from message if it exists
    *
@@ -183,17 +165,13 @@ var ErrorReport = {
     if (exception.message === null || typeof exception.message === 'undefined') {
       return '';
     }
-
     var reg = /([a-zA-Z]+):/;
     var regexResult = reg.exec(exception.message);
-
     if (regexResult && regexResult.length === 2) {
       return regexResult[1];
     }
-
     return '';
   },
-
   /**
    * Shows the modal dialog previewing the report
    *
@@ -203,7 +181,6 @@ var ErrorReport = {
     ErrorReport.removeErrorNotification();
     ErrorReport.showReportDialog(ErrorReport.lastException);
   },
-
   /**
    * Returns the report data to send to the server
    *
@@ -215,7 +192,6 @@ var ErrorReport = {
     if (exception && exception.stack && exception.stack.length) {
       for (var i = 0; i < exception.stack.length; i++) {
         var stack = exception.stack[i];
-
         if (stack.context && stack.context.length) {
           for (var j = 0; j < stack.context.length; j++) {
             if (stack.context[j].length > 80) {
@@ -225,7 +201,6 @@ var ErrorReport = {
         }
       }
     }
-
     var reportData = {
       'server': CommonParams.get('server'),
       'ajax_request': true,
@@ -233,16 +208,13 @@ var ErrorReport = {
       'url': window.location.href,
       'exception_type': 'js'
     };
-
     if (AJAX.scriptHandler.scripts.length > 0) {
       reportData.scripts = AJAX.scriptHandler.scripts.map(function (script) {
         return script;
       });
     }
-
     return reportData;
   },
-
   /**
    * Wraps given function in error reporting code and returns wrapped function
    *
@@ -259,17 +231,15 @@ var ErrorReport = {
           TraceKit.report(x);
         }
       };
-
-      newFunc.wrapped = true; // Set guid of wrapped function same as original function, so it can be removed
+      newFunc.wrapped = true;
+      // Set guid of wrapped function same as original function, so it can be removed
       // See bug#4146 (problem with jquery draggable and sortable)
-
       newFunc.guid = func.guid = func.guid || newFunc.guid || jQuery.guid++;
       return newFunc;
     } else {
       return func;
     }
   },
-
   /**
    * Automatically wraps the callback in AJAX.registerOnload
    *
@@ -277,13 +247,11 @@ var ErrorReport = {
    */
   wrapAjaxOnloadCallback: function () {
     var oldOnload = AJAX.registerOnload;
-
     AJAX.registerOnload = function (file, func) {
       var wrappedFunction = ErrorReport.wrapFunction(func);
       oldOnload.call(this, file, wrappedFunction);
     };
   },
-
   /**
    * Automatically wraps the callback in $.fn.on
    *
@@ -291,7 +259,6 @@ var ErrorReport = {
    */
   wrapJqueryOnCallback: function () {
     var oldOn = $.fn.on;
-
     $.fn.on = function () {
       for (var i = 1; i <= 3; i++) {
         if (typeof arguments[i] === 'function') {
@@ -299,11 +266,9 @@ var ErrorReport = {
           break;
         }
       }
-
       return oldOn.apply(this, arguments);
     };
   },
-
   /**
    * Wraps the callback in AJAX.registerOnload automatically
    *

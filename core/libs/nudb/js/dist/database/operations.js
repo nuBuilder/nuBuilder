@@ -33,20 +33,16 @@ AJAX.registerOnload('database/operations.js', function () {
    */
   $(document).on('submit', '#rename_db_form.ajax', function (event) {
     event.preventDefault();
-
     if (Functions.emptyCheckTheField(this, 'newname')) {
       Functions.ajaxShowMessage(Messages.strFormEmpty, false, 'error');
       return false;
     }
-
     var oldDbName = CommonParams.get('db');
     var newDbName = $('#new_db_name').val();
-
     if (newDbName === oldDbName) {
       Functions.ajaxShowMessage(Messages.strDatabaseRenameToSameName, false, 'error');
       return false;
     }
-
     var $form = $(this);
     var question = Functions.escapeHtml('CREATE DATABASE ' + newDbName + ' / DROP DATABASE ' + oldDbName);
     Functions.prepareForAjaxRequest($form);
@@ -59,7 +55,6 @@ AJAX.registerOnload('database/operations.js', function () {
           Navigation.reload(function () {
             $('#pma_navigation_tree').find('a:not(\'.expander\')').each(function () {
               var $thisAnchor = $(this);
-
               if ($thisAnchor.text() === data.newname) {
                 // simulate a click on the new db name
                 // in navigation
@@ -77,22 +72,18 @@ AJAX.registerOnload('database/operations.js', function () {
   /**
    * Ajax Event Handler for 'Copy Database'
    */
-
   $(document).on('submit', '#copy_db_form.ajax', function (event) {
     event.preventDefault();
-
     if (Functions.emptyCheckTheField(this, 'newname')) {
       Functions.ajaxShowMessage(Messages.strFormEmpty, false, 'error');
       return false;
     }
-
     Functions.ajaxShowMessage(Messages.strCopyingDatabase, false);
     var $form = $(this);
     Functions.prepareForAjaxRequest($form);
     $.post($form.attr('action'), $form.serialize(), function (data) {
       // use messages that stay on screen
       $('.alert-success, .alert-danger').fadeOut();
-
       if (typeof data !== 'undefined' && data.success === true) {
         if ($('#checkbox_switch').is(':checked')) {
           CommonParams.set('db', data.newname);
@@ -103,7 +94,6 @@ AJAX.registerOnload('database/operations.js', function () {
           CommonParams.set('db', data.db);
           Functions.ajaxShowMessage(data.message);
         }
-
         Navigation.reload();
       } else {
         Functions.ajaxShowMessage(data.error, false);
@@ -114,15 +104,14 @@ AJAX.registerOnload('database/operations.js', function () {
   /**
    * Change tables columns visible only if change tables is checked
    */
-
   $('#span_change_all_tables_columns_collations').hide();
   $('#checkbox_change_all_tables_collations').on('click', function () {
     $('#span_change_all_tables_columns_collations').toggle();
   });
+
   /**
    * Ajax Event handler for 'Change Charset' of the database
    */
-
   $(document).on('submit', '#change_db_charset_form.ajax', function (event) {
     event.preventDefault();
     var $form = $(this);
@@ -140,14 +129,12 @@ AJAX.registerOnload('database/operations.js', function () {
   /**
    * Ajax event handlers for Drop Database
    */
-
   $(document).on('click', '#drop_db_anchor.ajax', function (event) {
     event.preventDefault();
     var $link = $(this);
     /**
      * @var {String} question String containing the question to be asked for confirmation
      */
-
     var question = Messages.strDropDatabaseStrongWarning + ' ';
     question += Functions.sprintf(Messages.strDoYouReally, 'DROP DATABASE `' + Functions.escapeHtml(CommonParams.get('db') + '`'));
     var params = Functions.getJsConfirmCommonParam(this, $link.getPostData());

@@ -6,9 +6,6 @@ namespace Williamdes\MariaDBMySQLKBS;
 
 use Exception;
 
-/**
- * KBException class
- */
 class KBException extends Exception
 {
 }

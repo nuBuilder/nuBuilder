@@ -1,7 +1,4 @@
 <?php
-/**
- * `JOIN` keyword parser.
- */
 
 declare(strict_types=1);
 
@@ -25,7 +22,7 @@ class JoinKeyword extends Component
     /**
      * Types of join.
      *
-     * @var array
+     * @var array<string, string>
      */
     public static $JOINS = [
         'CROSS JOIN' => 'CROSS',
@@ -92,9 +89,9 @@ class JoinKeyword extends Component
     }
 
     /**
-     * @param Parser     $parser  the parser that serves as context
-     * @param TokensList $list    the list of tokens that are being parsed
-     * @param array      $options parameters for parsing
+     * @param Parser               $parser  the parser that serves as context
+     * @param TokensList           $list    the list of tokens that are being parsed
+     * @param array<string, mixed> $options parameters for parsing
      *
      * @return JoinKeyword[]
      */
@@ -134,8 +131,6 @@ class JoinKeyword extends Component
         for (; $list->idx < $list->count; ++$list->idx) {
             /**
              * Token parsed at this moment.
-             *
-             * @var Token
              */
             $token = $list->tokens[$list->idx];
 
@@ -205,8 +200,8 @@ class JoinKeyword extends Component
     }
 
     /**
-     * @param JoinKeyword[] $component the component to be built
-     * @param array         $options   parameters for building
+     * @param JoinKeyword[]        $component the component to be built
+     * @param array<string, mixed> $options   parameters for building
      *
      * @return string
      */

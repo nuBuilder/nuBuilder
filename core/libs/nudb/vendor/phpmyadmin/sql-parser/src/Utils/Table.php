@@ -1,7 +1,4 @@
 <?php
-/**
- * Table utilities.
- */
 
 declare(strict_types=1);
 
@@ -22,7 +19,7 @@ class Table
      *
      * @param CreateStatement $statement the statement to be processed
      *
-     * @return array
+     * @return array<int, array<string, mixed[]|string|null>>
      */
     public static function getForeignKeys($statement)
     {
@@ -80,7 +77,7 @@ class Table
      *
      * @param CreateStatement $statement the statement to be processed
      *
-     * @return array
+     * @return array<int|string, array<string, bool|string|mixed>>
      */
     public static function getFields($statement)
     {

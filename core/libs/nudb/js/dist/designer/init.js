@@ -2,20 +2,11 @@
  * Initializes the data required to run Designer, then fires it up.
  */
 
-/* global DesignerOfflineDB */
-// js/designer/database.js
-
-/* global DesignerHistory */
-// js/designer/history.js
-
-/* global DesignerMove */
-// js/designer/move.js
-
-/* global DesignerPage */
-// js/designer/page.js
-
-/* global designerConfig */
-// templates/database/designer/main.twig
+/* global DesignerOfflineDB */ // js/designer/database.js
+/* global DesignerHistory */ // js/designer/history.js
+/* global DesignerMove */ // js/designer/move.js
+/* global DesignerPage */ // js/designer/page.js
+/* global designerConfig */ // templates/database/designer/main.twig
 
 /* eslint-disable no-unused-vars */
 var jTabs;
@@ -47,7 +38,6 @@ AJAX.registerOnload('designer/init.js', function () {
   db = designerConfig.db;
   designerTablesEnabled = designerConfig.tablesEnabled;
   DesignerMove.main();
-
   if (!designerTablesEnabled) {
     DesignerOfflineDB.open(function (success) {
       if (success) {
@@ -55,7 +45,6 @@ AJAX.registerOnload('designer/init.js', function () {
       }
     });
   }
-
   $('#query_Aggregate_Button').on('click', function () {
     $('#query_Aggregate').css('display', 'none');
   });

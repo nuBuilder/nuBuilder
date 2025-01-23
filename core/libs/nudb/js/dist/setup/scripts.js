@@ -2,15 +2,16 @@
  * Functions used in Setup configuration forms
  */
 
-/* global displayErrors, getAllValues, getIdPrefix, validators */
-// js/config.js
+/* global displayErrors, getAllValues, getIdPrefix, validators */ // js/config.js
+
 // show this window in top frame
 if (top !== self) {
   window.top.location.href = location;
-} // ------------------------------------------------------------------
+}
+
+// ------------------------------------------------------------------
 // Messages
 //
-
 
 $(function () {
   if (window.location.protocol === 'https:') {
@@ -22,9 +23,7 @@ $(function () {
       return false;
     });
   }
-
   var hiddenMessages = $('.hiddenmessage');
-
   if (hiddenMessages.length > 0) {
     hiddenMessages.hide();
     var link = $('#show_hidden_messages');
@@ -36,8 +35,9 @@ $(function () {
     link.html(link.html().replace('#MSG_COUNT', hiddenMessages.length));
     link.show();
   }
-}); // set document width
+});
 
+// set document width
 $(function () {
   var width = 0;
   $('ul.tabs li').each(function () {
@@ -47,9 +47,12 @@ $(function () {
   width += 250;
   $('body').css('min-width', width);
   $('.tabs_contents').css('min-width', contentWidth);
-}); //
+});
+
+//
 // END: Messages
 // ------------------------------------------------------------------
+
 // ------------------------------------------------------------------
 // Form validation and field operations
 //
@@ -63,22 +66,18 @@ $(function () {
  *
  * @return {bool|void}
  */
-
 function ajaxValidate(parent, id, values) {
-  var $parent = $(parent); // ensure that parent is a fieldset
-
+  var $parent = $(parent);
+  // ensure that parent is a fieldset
   if ($parent.attr('tagName') !== 'FIELDSET') {
     $parent = $parent.closest('fieldset');
-
     if ($parent.length === 0) {
       return false;
     }
   }
-
   if ($parent.data('ajax') !== null) {
     $parent.data('ajax').abort();
   }
-
   $parent.data('ajax', $.ajax({
     url: 'validate.php',
     cache: false,
@@ -92,9 +91,7 @@ function ajaxValidate(parent, id, values) {
       if (response === null) {
         return;
       }
-
       var error = {};
-
       if (typeof response !== 'object') {
         error[$parent.id] = [response];
       } else if (typeof response.error !== 'undefined') {
@@ -105,7 +102,6 @@ function ajaxValidate(parent, id, values) {
           error[key] = Array.isArray(value) ? value : [value];
         }
       }
-
       displayErrors(error);
     },
     complete: function () {
@@ -114,11 +110,10 @@ function ajaxValidate(parent, id, values) {
   }));
   return true;
 }
+
 /**
  * Automatic form submission on change.
  */
-
-
 $(document).on('change', '.autosubmit', function (e) {
   e.target.form.submit();
 });
@@ -139,10 +134,8 @@ $.extend(true, validators, {
         data[this.id] = this.value;
         ajaxValidate(this, 'Servers/1/hide_db', data);
       }
-
       return true;
     },
-
     /**
      * TrustedProxies field
      *
@@ -156,7 +149,6 @@ $.extend(true, validators, {
         data[this.id] = this.value;
         ajaxValidate(this, 'TrustedProxies', data);
       }
-
       return true;
     }
   },
@@ -173,10 +165,8 @@ $.extend(true, validators, {
       if (!isKeyUp) {
         ajaxValidate(this, 'Server', getAllValues());
       }
-
       return true;
     },
-
     /**
      * Validates Server_login_options fieldset
      *
@@ -188,7 +178,6 @@ $.extend(true, validators, {
       // eslint-disable-line camelcase
       return validators.fieldset.Server.apply(this, [isKeyUp]);
     },
-
     /**
      * Validates Server_pmadb fieldset
      *
@@ -201,19 +190,19 @@ $.extend(true, validators, {
       if (isKeyUp) {
         return true;
       }
-
       var prefix = getIdPrefix($(this).find('input'));
-
       if ($('#' + prefix + 'pmadb').val() !== '') {
         ajaxValidate(this, 'Server_pmadb', getAllValues());
       }
-
       return true;
     }
   }
-}); //
+});
+
+//
 // END: Form validation and field operations
 // ------------------------------------------------------------------
+
 // ------------------------------------------------------------------
 // User preferences allow/disallow UI
 //
@@ -223,16 +212,15 @@ $(function () {
     if (this !== e.target) {
       return;
     }
-
     var el = $(this).find('input');
-
     if (el.prop('disabled')) {
       return;
     }
-
     el.prop('checked', !el.prop('checked'));
   });
-}); //
+});
+
+//
 // END: User preferences allow/disallow UI
 // ------------------------------------------------------------------
 

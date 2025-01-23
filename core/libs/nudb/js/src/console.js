@@ -183,7 +183,8 @@ var Console = {
             });
 
             $(document).on('ajaxComplete', function (event, xhr, ajaxOptions) {
-                if (ajaxOptions.dataType && ajaxOptions.dataType.indexOf('json') !== -1) {
+                // Not a json body, then skip
+                if (ajaxOptions.dataType && ajaxOptions.dataType.indexOf('json') === -1) {
                     return;
                 }
                 if (xhr.status !== 200) {
@@ -486,7 +487,7 @@ var ConsoleResizer = {
      * @return {void}
      */
     mouseUp: function () {
-        Console.setConfig('Height', ConsoleResizer.resultHeight);
+        Console.setConfig('Height', Math.round(ConsoleResizer.resultHeight));
         Console.show();
         $(document).off('mousemove');
         $(document).off('mouseup');
@@ -544,6 +545,7 @@ var ConsoleInput = {
         if (ConsoleInput.codeMirror) {
             // eslint-disable-next-line new-cap
             ConsoleInput.inputs.console = CodeMirror($('#pma_console').find('.console_query_input')[0], {
+                // style: cm-s-pma
                 theme: 'pma',
                 mode: 'text/x-sql',
                 lineWrapping: true,
@@ -562,6 +564,7 @@ var ConsoleInput = {
             if ($('#pma_bookmarks').length !== 0) {
                 // eslint-disable-next-line new-cap
                 ConsoleInput.inputs.bookmark = CodeMirror($('#pma_console').find('.bookmark_add_input')[0], {
+                    // style: cm-s-pma
                     theme: 'pma',
                     mode: 'text/x-sql',
                     lineWrapping: true,
@@ -1463,8 +1466,9 @@ var ConsoleDebug = {
             )
         );
         if (url) {
+            var decodedUrl = new URLSearchParams(url.split('?')[1]);
             $('#debug_console').find('.debug>.welcome').append(
-                $('<span class="script_name">').text(url.split('?')[0])
+                $('<span class="script_name">').text(decodedUrl.has('route') ? decodedUrl.get('route') : url)
             );
         }
 

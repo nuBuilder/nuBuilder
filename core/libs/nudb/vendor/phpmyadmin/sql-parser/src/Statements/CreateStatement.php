@@ -1,7 +1,4 @@
 <?php
-/**
- * `CREATE` statement.
- */
 
 declare(strict_types=1);
 
@@ -30,7 +27,8 @@ class CreateStatement extends Statement
     /**
      * Options for `CREATE` statements.
      *
-     * @var array
+     * @var array<string, int|array<int, int|string>>
+     * @psalm-var array<string, (positive-int|array{positive-int, ('var'|'var='|'expr'|'expr=')})>
      */
     public static $OPTIONS = [
         // CREATE TABLE
@@ -76,7 +74,8 @@ class CreateStatement extends Statement
     /**
      * All database options.
      *
-     * @var array
+     * @var array<string, int|array<int, int|string>>
+     * @psalm-var array<string, (positive-int|array{positive-int, ('var'|'var='|'expr'|'expr=')})>
      */
     public static $DB_OPTIONS = [
         'CHARACTER SET' => [
@@ -108,7 +107,8 @@ class CreateStatement extends Statement
     /**
      * All table options.
      *
-     * @var array
+     * @var array<string, int|array<int, int|string>>
+     * @psalm-var array<string, (positive-int|array{positive-int, ('var'|'var='|'expr'|'expr=')})>
      */
     public static $TABLE_OPTIONS = [
         'ENGINE' => [
@@ -211,12 +211,21 @@ class CreateStatement extends Statement
             21,
             'var',
         ],
+        'PAGE_COMPRESSED' => [
+            22,
+            'var',
+        ],
+        'PAGE_COMPRESSION_LEVEL' => [
+            23,
+            'var',
+        ],
     ];
 
     /**
      * All function options.
      *
-     * @var array
+     * @var array<string, int|array<int, int|string>>
+     * @psalm-var array<string, (positive-int|array{positive-int, ('var'|'var='|'expr'|'expr=')})>
      */
     public static $FUNC_OPTIONS = [
         'NOT' => [
@@ -231,22 +240,10 @@ class CreateStatement extends Statement
             3,
             'var=',
         ],
-        'CONTAINS' => [
-            4,
-            'expr',
-        ],
-        'NO' => [
-            4,
-            'var',
-        ],
-        'READS' => [
-            4,
-            'var',
-        ],
-        'MODIFIES' => [
-            4,
-            'expr',
-        ],
+        'CONTAINS SQL' => 4,
+        'NO SQL' => 4,
+        'READS SQL DATA' => 4,
+        'MODIFIES SQL DATA' => 4,
         'SQL SECURITY' => [
             6,
             'var',
@@ -262,13 +259,13 @@ class CreateStatement extends Statement
 
         'CREATE' => 1,
         'DETERMINISTIC' => 2,
-        'DATA' => 5,
     ];
 
     /**
      * All trigger options.
      *
-     * @var array
+     * @var array<string, int|array<int, int|string>>
+     * @psalm-var array<string, (positive-int|array{positive-int, ('var'|'var='|'expr'|'expr=')})>
      */
     public static $TRIGGER_OPTIONS = [
         'BEFORE' => 1,
@@ -283,7 +280,7 @@ class CreateStatement extends Statement
      *
      * Used by all `CREATE` statements.
      *
-     * @var Expression
+     * @var Expression|null
      */
     public $name;
 
@@ -296,7 +293,7 @@ class CreateStatement extends Statement
      * @see static::$FUNC_OPTIONS
      * @see static::$TRIGGER_OPTIONS
      *
-     * @var OptionsArray
+     * @var OptionsArray|null
      */
     public $entityOptions;
 
@@ -306,9 +303,20 @@ class CreateStatement extends Statement
      *
      * Used by `CREATE TABLE` and `CREATE VIEW`.
      *
-     * @var CreateDefinition[]|ArrayObj
+     * @var CreateDefinition[]|ArrayObj|null
      */
     public $fields;
+
+    /**
+     * If `CREATE TABLE WITH`.
+     * If `CREATE TABLE AS WITH`.
+     * If `CREATE VIEW AS WITH`.
+     *
+     * Used by `CREATE TABLE`, `CREATE VIEW`
+     *
+     * @var WithStatement|null
+     */
+    public $with;
 
     /**
      * If `CREATE TABLE ... SELECT`.
@@ -325,42 +333,42 @@ class CreateStatement extends Statement
      *
      * Used by `CREATE TABLE`
      *
-     * @var Expression
+     * @var Expression|null
      */
     public $like;
 
     /**
      * Expression used for partitioning.
      *
-     * @var string
+     * @var string|null
      */
     public $partitionBy;
 
     /**
      * The number of partitions.
      *
-     * @var int
+     * @var int|null
      */
     public $partitionsNum;
 
     /**
      * Expression used for subpartitioning.
      *
-     * @var string
+     * @var string|null
      */
     public $subpartitionBy;
 
     /**
      * The number of subpartitions.
      *
-     * @var int
+     * @var int|null
      */
     public $subpartitionsNum;
 
     /**
      * The partition of the new table.
      *
-     * @var PartitionDefinition[]
+     * @var PartitionDefinition[]|null
      */
     public $partitions;
 
@@ -369,7 +377,7 @@ class CreateStatement extends Statement
      *
      * Used by `CREATE TRIGGER`.
      *
-     * @var Expression
+     * @var Expression|null
      */
     public $table;
 
@@ -378,7 +386,7 @@ class CreateStatement extends Statement
      *
      * Used by `CREATE FUNCTION`.
      *
-     * @var DataType
+     * @var DataType|null
      */
     public $return;
 
@@ -387,7 +395,7 @@ class CreateStatement extends Statement
      *
      * Used by `CREATE FUNCTION` and `CREATE PROCEDURE`.
      *
-     * @var ParameterDefinition[]
+     * @var ParameterDefinition[]|null
      */
     public $parameters;
 
@@ -436,6 +444,13 @@ class CreateStatement extends Statement
                     . Expression::build($this->like);
             }
 
+            if ($this->with !== null) {
+                return 'CREATE '
+                . OptionsArray::build($this->options) . ' '
+                . Expression::build($this->name) . ' '
+                . $this->with->build();
+            }
+
             $partition = '';
 
             if (! empty($this->partitionBy)) {
@@ -465,10 +480,17 @@ class CreateStatement extends Statement
                 . OptionsArray::build($this->entityOptions)
                 . $partition;
         } elseif ($this->options->has('VIEW')) {
+            $builtStatement = '';
+            if ($this->select !== null) {
+                $builtStatement = $this->select->build();
+            } elseif ($this->with !== null) {
+                $builtStatement = $this->with->build();
+            }
+
             return 'CREATE '
                 . OptionsArray::build($this->options) . ' '
                 . Expression::build($this->name) . ' '
-                . $fields . ' AS ' . ($this->select ? $this->select->build() : '')
+                . $fields . ' AS ' . $builtStatement
                 . (! empty($this->body) ? TokensList::build($this->body) : '') . ' '
                 . OptionsArray::build($this->entityOptions);
         } elseif ($this->options->has('TRIGGER')) {
@@ -531,8 +553,6 @@ class CreateStatement extends Statement
 
         /**
          * Token parsed at this moment.
-         *
-         * @var Token
          */
         $token = $list->tokens[$list->idx];
         $nextidx = $list->idx + 1;
@@ -546,14 +566,22 @@ class CreateStatement extends Statement
             if (($token->type === Token::TYPE_KEYWORD) && ($token->keyword === 'SELECT')) {
                 /* CREATE TABLE ... SELECT */
                 $this->select = new SelectStatement($parser, $list);
+            } elseif ($token->type === Token::TYPE_KEYWORD && ($token->keyword === 'WITH')) {
+                /* CREATE TABLE WITH */
+                $this->with = new WithStatement($parser, $list);
             } elseif (
                 ($token->type === Token::TYPE_KEYWORD) && ($token->keyword === 'AS')
                 && ($list->tokens[$nextidx]->type === Token::TYPE_KEYWORD)
-                && ($list->tokens[$nextidx]->value === 'SELECT')
             ) {
-                /* CREATE TABLE ... AS SELECT */
-                $list->idx = $nextidx;
-                $this->select = new SelectStatement($parser, $list);
+                if ($list->tokens[$nextidx]->value === 'SELECT') {
+                    /* CREATE TABLE ... AS SELECT */
+                    $list->idx = $nextidx;
+                    $this->select = new SelectStatement($parser, $list);
+                } elseif ($list->tokens[$nextidx]->value === 'WITH') {
+                    /* CREATE TABLE WITH */
+                    $list->idx = $nextidx;
+                    $this->with = new WithStatement($parser, $list);
+                }
             } elseif ($token->type === Token::TYPE_KEYWORD && $token->keyword === 'LIKE') {
                 /* CREATE TABLE `new_tbl` LIKE 'orig_tbl' */
                 $list->idx = $nextidx;
@@ -602,8 +630,6 @@ class CreateStatement extends Statement
                 for (; $list->idx < $list->count; ++$list->idx) {
                     /**
                      * Token parsed at this moment.
-                     *
-                     * @var Token
                      */
                     $token = $list->tokens[$list->idx];
 
@@ -692,6 +718,10 @@ class CreateStatement extends Statement
 
             for (; $list->idx < $list->count; ++$list->idx) {
                 $token = $list->tokens[$list->idx];
+                if ($token->type === Token::TYPE_DELIMITER) {
+                    break;
+                }
+
                 $this->body[] = $token;
             }
         } elseif ($this->options->has('VIEW')) {
@@ -711,10 +741,15 @@ class CreateStatement extends Statement
                 $token->type === Token::TYPE_KEYWORD
                 && $token->keyword === 'AS'
                 && $list->tokens[$nextidx]->type === Token::TYPE_KEYWORD
-                && $list->tokens[$nextidx]->value === 'SELECT'
             ) {
-                $list->idx = $nextidx;
-                $this->select = new SelectStatement($parser, $list);
+                if ($list->tokens[$nextidx]->value === 'SELECT') {
+                    $list->idx = $nextidx;
+                    $this->select = new SelectStatement($parser, $list);
+                    ++$list->idx; // Skipping last token from the select.
+                } elseif ($list->tokens[$nextidx]->value === 'WITH') {
+                    ++$list->idx;
+                    $this->with = new WithStatement($parser, $list);
+                }
             }
 
             // Parsing all other tokens
@@ -750,6 +785,10 @@ class CreateStatement extends Statement
 
             for (; $list->idx < $list->count; ++$list->idx) {
                 $token = $list->tokens[$list->idx];
+                if ($token->type === Token::TYPE_DELIMITER) {
+                    break;
+                }
+
                 $this->body[] = $token;
             }
         } else {

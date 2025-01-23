@@ -1,7 +1,4 @@
 <?php
-/**
- * Parses a list of options.
- */
 
 declare(strict_types=1);
 
@@ -32,12 +29,12 @@ class OptionsArray extends Component
     /**
      * ArrayObj of selected options.
      *
-     * @var array
+     * @var array<int, mixed>
      */
     public $options = [];
 
     /**
-     * @param array $options The array of options. Options that have a value
+     * @param array<int, mixed> $options The array of options. Options that have a value
      *                       must be an array with at least two keys `name` and
      *                       `expr` or `value`.
      */
@@ -47,9 +44,9 @@ class OptionsArray extends Component
     }
 
     /**
-     * @param Parser     $parser  the parser that serves as context
-     * @param TokensList $list    the list of tokens that are being parsed
-     * @param array      $options parameters for parsing
+     * @param Parser               $parser  the parser that serves as context
+     * @param TokensList           $list    the list of tokens that are being parsed
+     * @param array<string, mixed> $options parameters for parsing
      *
      * @return OptionsArray
      */
@@ -66,8 +63,6 @@ class OptionsArray extends Component
 
         /**
          * The option that was processed last time.
-         *
-         * @var array
          */
         $lastOption = null;
 
@@ -103,8 +98,6 @@ class OptionsArray extends Component
         for (; $list->idx < $list->count; ++$list->idx) {
             /**
              * Token parsed at this moment.
-             *
-             * @var Token
              */
             $token = $list->tokens[$list->idx];
 
@@ -284,8 +277,8 @@ class OptionsArray extends Component
     }
 
     /**
-     * @param OptionsArray $component the component to be built
-     * @param array        $options   parameters for building
+     * @param OptionsArray         $component the component to be built
+     * @param array<string, mixed> $options   parameters for building
      *
      * @return string
      */
@@ -363,7 +356,9 @@ class OptionsArray extends Component
      * Merges the specified options with these ones. Values with same ID will be
      * replaced.
      *
-     * @param array|OptionsArray $options the options to be merged
+     * @param array<int, mixed>|OptionsArray $options the options to be merged
+     *
+     * @return void
      */
     public function merge($options)
     {

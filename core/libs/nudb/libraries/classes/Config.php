@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhpMyAdmin;
 
 use PhpMyAdmin\Config\Settings;
+use Throwable;
 
 use function __;
 use function array_filter;
@@ -370,8 +371,13 @@ class Config
 
         ob_start();
         $isConfigLoading = true;
-        /** @psalm-suppress UnresolvableInclude */
-        $eval_result = include $this->getSource();
+        try {
+            /** @psalm-suppress UnresolvableInclude */
+            $eval_result = include $this->getSource();
+        } catch (Throwable $exception) {
+            $eval_result = false;
+        }
+
         $isConfigLoading = false;
         ob_end_clean();
 
@@ -1017,7 +1023,7 @@ class Config
      */
     public function getCookieName(string $cookieName): string
     {
-        return $cookieName . ( $this->isHttps() ? '_https' : '' );
+        return ($this->isHttps() ? '__Secure-' : '') . $cookieName . ($this->isHttps() ? '_https' : '');
     }
 
     /**

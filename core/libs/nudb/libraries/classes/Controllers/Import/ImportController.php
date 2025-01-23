@@ -150,10 +150,9 @@ final class ImportController extends AbstractController
             // apply values for parameters
             if (! empty($_POST['parameterized']) && ! empty($_POST['parameters']) && is_array($_POST['parameters'])) {
                 $parameters = $_POST['parameters'];
-                foreach ($parameters as $parameter => $replacement) {
-                    $replacementValue = $this->dbi->escapeString($replacement);
+                foreach ($parameters as $parameter => $replacementValue) {
                     if (! is_numeric($replacementValue)) {
-                        $replacementValue = '\'' . $replacementValue . '\'';
+                        $replacementValue = '\'' . $this->dbi->escapeString($replacementValue) . '\'';
                     }
 
                     $quoted = preg_quote($parameter, '/');
@@ -302,10 +301,10 @@ final class ImportController extends AbstractController
         }
 
         $timestamp = time();
-        if (isset($_POST['allow_interrupt'])) {
-            $maximum_time = ini_get('max_execution_time');
-        } else {
-            $maximum_time = 0;
+        $maximum_time = 0;
+        $maxExecutionTime = (int) ini_get('max_execution_time');
+        if (isset($_POST['allow_interrupt']) && $maxExecutionTime >= 1) {
+            $maximum_time = $maxExecutionTime - 1; // Give 1 second for phpMyAdmin to exit nicely
         }
 
         // set default values
@@ -531,7 +530,7 @@ final class ImportController extends AbstractController
 
         // Convert the file's charset if necessary
         if (Encoding::isSupported() && isset($charset_of_file)) {
-            if ($charset_of_file !== 'utf-8') {
+            if ($charset_of_file !== 'utf-8' && in_array($charset_of_file, Encoding::listEncodings(), true)) {
                 $charset_conversion = true;
             }
         } elseif (isset($charset_of_file) && $charset_of_file !== 'utf-8') {

@@ -8,11 +8,9 @@ const GitInfo = {
     if (typeof str !== 'string') {
       return false;
     }
-
-    let add = 0; // Parse possible alpha/beta/rc/
-
+    let add = 0;
+    // Parse possible alpha/beta/rc/
     const state = str.split('-');
-
     if (state.length >= 2) {
       if (state[1].substr(0, 2) === 'rc') {
         add = -20 - parseInt(state[1].substr(2), 10);
@@ -24,18 +22,16 @@ const GitInfo = {
         /* We don't handle dev, it's git snapshot */
         add = 0;
       }
-    } // Parse version
-
-
-    const x = str.split('.'); // Use 0 for non existing parts
-
+    }
+    // Parse version
+    const x = str.split('.');
+    // Use 0 for non existing parts
     const maj = parseInt(x[0], 10) || 0;
     const min = parseInt(x[1], 10) || 0;
     const pat = parseInt(x[2], 10) || 0;
     const hotfix = parseInt(x[3], 10) || 0;
     return maj * 100000000 + min * 1000000 + pat * 10000 + hotfix * 100 + add;
   },
-
   /**
    * Indicates current available version on main page.
    * @param {object} data
@@ -57,16 +53,13 @@ const GitInfo = {
       const prefixMessage = document.createTextNode(Messages.strLatestAvailable + ' ');
       versionInformationMessage.appendChild(prefixMessage);
       versionInformationMessage.appendChild(versionInformationMessageLink);
-
       if (latest > current) {
         const message = Functions.sprintf(Messages.strNewerVersion, Functions.escapeHtml(data.version), Functions.escapeHtml(data.date));
         let htmlClass = 'alert alert-primary';
-
         if (Math.floor(latest / 10000) === Math.floor(current / 10000)) {
           /* Security update */
           htmlClass = 'alert alert-danger';
         }
-
         $('#newer_version_notice').remove();
         const mainContainerDiv = document.createElement('div');
         mainContainerDiv.id = 'newer_version_notice';
@@ -81,25 +74,19 @@ const GitInfo = {
         mainContainerDiv.appendChild(mainContainerDivLink);
         $('#maincontainer').append($(mainContainerDiv));
       }
-
       if (latest === current) {
         versionInformationMessage = document.createTextNode(' (' + Messages.strUpToDate + ')');
       }
       /* Remove extra whitespace */
-
-
       const versionInfo = $('#li_pma_version').contents().get(2);
-
       if (typeof versionInfo !== 'undefined') {
         versionInfo.textContent = versionInfo.textContent.trim();
       }
-
       const $liPmaVersion = $('#li_pma_version');
       $liPmaVersion.find('span.latest').remove();
       $liPmaVersion.append($(versionInformationMessage));
     }
   },
-
   /**
    * Loads Git revision data from ajax for index.php
    */
@@ -110,10 +97,13 @@ const GitInfo = {
       'server': CommonParams.get('server'),
       'ajax_request': true,
       'no_debug': true
-    }, function (data) {
+    }).done(function (data) {
       if (typeof data !== 'undefined' && data.success === true) {
         $(data.message).insertAfter('#li_pma_version');
       }
+    }).fail(function () {
+      const gitHashInfoLi = '<li id="li_pma_version_git" class="list-group-item">' + window.Messages.errorLoadingGitInformation + '</li>';
+      $(gitHashInfoLi).insertAfter('#li_pma_version');
     });
   }
 };
@@ -122,14 +112,16 @@ AJAX.registerTeardown('home.js', function () {
 });
 AJAX.registerOnload('home.js', function () {
   $('#themesModal').on('show.bs.modal', function () {
-    $.get('index.php?route=/themes', function (data) {
+    $.get('index.php?route=/themes', {
+      'server': CommonParams.get('server')
+    }, function (data) {
       $('#themesModal .modal-body').html(data.themes);
     });
   });
+
   /**
    * Load version information asynchronously.
    */
-
   if ($('li.jsversioncheck').length > 0) {
     $.ajax({
       dataType: 'json',
@@ -141,7 +133,6 @@ AJAX.registerOnload('home.js', function () {
       success: GitInfo.currentVersion
     });
   }
-
   if ($('#is_git_revision').length > 0) {
     setTimeout(GitInfo.displayGitRevision, 10);
   }

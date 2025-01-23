@@ -7,7 +7,6 @@ AJAX.registerOnload('transformations/xml.js', function () {
     var $json = $(this);
     var $pre = $json.find('pre');
     /* We only care about visible elements to avoid double processing */
-
     if ($pre.is(':visible')) {
       var $highlight = $('<div class="xml-highlight cm-s-default"></div>');
       $json.append($highlight);

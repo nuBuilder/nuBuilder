@@ -6,10 +6,10 @@ AJAX.registerTeardown('database/tracking.js', function () {
   $('body').off('click', '#untrackedForm.ajax button[name="submit_mult"], #untrackedForm.ajax input[name="submit_mult"]');
   $('body').off('click', 'a.delete_tracking_anchor.ajax');
 });
+
 /**
  * Bind event handlers
  */
-
 AJAX.registerOnload('database/tracking.js', function () {
   var $versions = $('#versions');
   $versions.find('tr').first().find('th').append($('<div class="sorticon"></div>'));
@@ -47,17 +47,16 @@ AJAX.registerOnload('database/tracking.js', function () {
     }
   });
   var $body = $('body');
+
   /**
    * Handles multi submit for tracked tables
    */
-
   $body.on('click', '#trackedForm.ajax button[name="submit_mult"], #trackedForm.ajax input[name="submit_mult"]', function (e) {
     e.preventDefault();
     var $button = $(this);
     var $form = $button.parent('form');
     var argsep = CommonParams.get('arg_separator');
     var submitData = $form.serialize() + argsep + 'ajax_request=true' + argsep + 'ajax_page_request=true' + argsep + 'submit_mult=' + $button.val();
-
     if ($button.val() === 'delete_tracking') {
       var question = Messages.strDeleteTrackingDataMultiple;
       $button.confirm(question, $form.attr('action'), function (url) {
@@ -71,10 +70,10 @@ AJAX.registerOnload('database/tracking.js', function () {
       $.post($form.attr('action'), submitData, AJAX.responseHandler);
     }
   });
+
   /**
    * Handles multi submit for untracked tables
    */
-
   $body.on('click', '#untrackedForm.ajax button[name="submit_mult"], #untrackedForm.ajax input[name="submit_mult"]', function (e) {
     e.preventDefault();
     var $button = $(this);
@@ -85,10 +84,10 @@ AJAX.registerOnload('database/tracking.js', function () {
     AJAX.source = $form;
     $.post($form.attr('action'), submitData, AJAX.responseHandler);
   });
+
   /**
    * Ajax Event handler for 'Delete tracking'
    */
-
   $body.on('click', 'a.delete_tracking_anchor.ajax', function (e) {
     e.preventDefault();
     var $anchor = $(this);

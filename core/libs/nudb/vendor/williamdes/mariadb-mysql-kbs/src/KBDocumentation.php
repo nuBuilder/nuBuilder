@@ -19,7 +19,7 @@ class KBDocumentation extends stdClass implements JsonSerializable
     /**
      * The anchor
      *
-     * @var string
+     * @var string|null
      */
     private $anchor = null;
 

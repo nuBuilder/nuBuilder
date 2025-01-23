@@ -7,11 +7,9 @@
 [![License](https://poser.pugx.org/williamdes/mariadb-mysql-kbs/license)](https://packagist.org/packages/williamdes/mariadb-mysql-kbs)
 [![Latest Stable Version](https://poser.pugx.org/williamdes/mariadb-mysql-kbs/v/stable)](https://packagist.org/packages/williamdes/mariadb-mysql-kbs)
 [![npm version](https://badge.fury.io/js/mariadb-mysql-kbs.svg)](https://badge.fury.io/js/mariadb-mysql-kbs)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/williamdes/mariadb-mysql-kbs.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/williamdes/mariadb-mysql-kbs/alerts/)
-[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/williamdes/mariadb-mysql-kbs.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/williamdes/mariadb-mysql-kbs/context:javascript)
 [![Known Vulnerabilities](https://snyk.io/test/github/williamdes/mariadb-mysql-kbs/badge.svg)](https://snyk.io/test/github/williamdes/mariadb-mysql-kbs)
-[![Dependabot](https://badgen.net/badge/Dependabot/enabled/green?icon=dependabot)](https://dependabot.com/)
-[![dependencies Status](https://david-dm.org/williamdes/mariadb-mysql-kbs/status.svg)](https://david-dm.org/williamdes/mariadb-mysql-kbs)
+[![Rust Report Card](https://rust-reportcard.xuri.me/badge/github.com/williamdes/mariadb-mysql-kbs)](https://rust-reportcard.xuri.me/report/github.com/williamdes/mariadb-mysql-kbs)
+![maintenance-status](https://img.shields.io/badge/maintenance-passively--maintained-yellowgreen.svg)
 
 [API doc](https://williamdes.github.io/mariadb-mysql-kbs/Williamdes/MariaDBMySQLKBS.html)
 
@@ -28,7 +26,7 @@ Merged data : `/dist/`
 ### Update the data
 
 ```bash
-yarn run build
+cargo run --release extract
 ```
 
 ```bash

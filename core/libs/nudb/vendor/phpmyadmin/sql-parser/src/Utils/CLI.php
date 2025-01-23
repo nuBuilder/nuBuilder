@@ -1,7 +1,4 @@
 <?php
-/**
- * CLI interface.
- */
 
 declare(strict_types=1);
 
@@ -27,6 +24,30 @@ use const STDIN;
  */
 class CLI
 {
+    public function run(): int
+    {
+        $params = $this->getopt('', ['lint', 'highlight', 'tokenize']);
+        if ($params !== false) {
+            if (isset($params['lint'])) {
+                return $this->runLint(false);
+            }
+
+            if (isset($params['highlight'])) {
+                return $this->runHighlight(false);
+            }
+
+            if (isset($params['tokenize'])) {
+                return $this->runTokenize(false);
+            }
+        }
+
+        $this->usageLint(false);
+        $this->usageHighlight(false);
+        $this->usageTokenize(false);
+
+        return 1;
+    }
+
     /**
      * @param string[]|false[] $params
      * @param string[]         $longopts
@@ -48,15 +69,17 @@ class CLI
     /**
      * @return void
      */
-    public function usageHighlight()
+    public function usageHighlight(bool $isStandalone = true)
     {
-        echo "Usage: highlight-query --query SQL [--format html|cli|text] [--ansi]\n";
-        echo "       cat file.sql | highlight-query\n";
+        $command = $isStandalone ? 'highlight-query' : 'sql-parser --highlight';
+
+        echo 'Usage: ' . $command . ' --query SQL [--format html|cli|text] [--ansi]' . "\n";
+        echo '       cat file.sql | ' . $command . "\n";
     }
 
     /**
-     * @param string $opt
-     * @param array  $long
+     * @param string   $opt
+     * @param string[] $long
      *
      * @return string[]|false[]|false
      */
@@ -98,7 +121,7 @@ class CLI
     /**
      * @return int
      */
-    public function runHighlight()
+    public function runHighlight(bool $isStandalone = true)
     {
         $params = $this->parseHighlight();
         if ($params === false) {
@@ -106,7 +129,7 @@ class CLI
         }
 
         if (isset($params['h'])) {
-            $this->usageHighlight();
+            $this->usageHighlight($isStandalone);
 
             return 0;
         }
@@ -120,7 +143,7 @@ class CLI
         }
 
         if (isset($params['a'])) {
-            Context::setMode('ANSI_QUOTES');
+            Context::setMode(Context::SQL_MODE_ANSI_QUOTES);
         }
 
         if (isset($params['q'])) {
@@ -134,7 +157,7 @@ class CLI
         }
 
         echo "ERROR: Missing parameters!\n";
-        $this->usageHighlight();
+        $this->usageHighlight($isStandalone);
 
         return 1;
     }
@@ -142,10 +165,12 @@ class CLI
     /**
      * @return void
      */
-    public function usageLint()
+    public function usageLint(bool $isStandalone = true)
     {
-        echo "Usage: lint-query --query SQL [--ansi]\n";
-        echo "       cat file.sql | lint-query\n";
+        $command = $isStandalone ? 'lint-query' : 'sql-parser --lint';
+
+        echo 'Usage: ' . $command . ' --query SQL [--ansi]' . "\n";
+        echo '       cat file.sql | ' . $command . "\n";
     }
 
     /**
@@ -168,7 +193,7 @@ class CLI
     /**
      * @return int
      */
-    public function runLint()
+    public function runLint(bool $isStandalone = true)
     {
         $params = $this->parseLint();
         if ($params === false) {
@@ -176,7 +201,7 @@ class CLI
         }
 
         if (isset($params['h'])) {
-            $this->usageLint();
+            $this->usageLint($isStandalone);
 
             return 0;
         }
@@ -194,7 +219,7 @@ class CLI
         }
 
         if (isset($params['a'])) {
-            Context::setMode('ANSI_QUOTES');
+            Context::setMode(Context::SQL_MODE_ANSI_QUOTES);
         }
 
         if (isset($params['q'])) {
@@ -213,7 +238,7 @@ class CLI
         }
 
         echo "ERROR: Missing parameters!\n";
-        $this->usageLint();
+        $this->usageLint($isStandalone);
 
         return 1;
     }
@@ -221,10 +246,12 @@ class CLI
     /**
      * @return void
      */
-    public function usageTokenize()
+    public function usageTokenize(bool $isStandalone = true)
     {
-        echo "Usage: tokenize-query --query SQL [--ansi]\n";
-        echo "       cat file.sql | tokenize-query\n";
+        $command = $isStandalone ? 'tokenize-query' : 'sql-parser --tokenize';
+
+        echo 'Usage: ' . $command . ' --query SQL [--ansi]' . "\n";
+        echo '       cat file.sql | ' . $command . "\n";
     }
 
     /**
@@ -246,7 +273,7 @@ class CLI
     /**
      * @return int
      */
-    public function runTokenize()
+    public function runTokenize(bool $isStandalone = true)
     {
         $params = $this->parseTokenize();
         if ($params === false) {
@@ -254,7 +281,7 @@ class CLI
         }
 
         if (isset($params['h'])) {
-            $this->usageTokenize();
+            $this->usageTokenize($isStandalone);
 
             return 0;
         }
@@ -268,7 +295,7 @@ class CLI
         }
 
         if (isset($params['a'])) {
-            Context::setMode('ANSI_QUOTES');
+            Context::setMode(Context::SQL_MODE_ANSI_QUOTES);
         }
 
         if (isset($params['q'])) {
@@ -290,7 +317,7 @@ class CLI
         }
 
         echo "ERROR: Missing parameters!\n";
-        $this->usageTokenize();
+        $this->usageTokenize($isStandalone);
 
         return 1;
     }

@@ -1,7 +1,4 @@
 <?php
-/**
- * Transaction statement.
- */
 
 declare(strict_types=1);
 
@@ -30,28 +27,29 @@ class TransactionStatement extends Statement
     /**
      * The type of this query.
      *
-     * @var int
+     * @var int|null
      */
     public $type;
 
     /**
      * The list of statements in this transaction.
      *
-     * @var Statement[]
+     * @var Statement[]|null
      */
     public $statements;
 
     /**
      * The ending transaction statement which may be a `COMMIT` or a `ROLLBACK`.
      *
-     * @var TransactionStatement
+     * @var TransactionStatement|null
      */
     public $end;
 
     /**
      * Options for this query.
      *
-     * @var array
+     * @var array<string, int|array<int, int|string>>
+     * @psalm-var array<string, (positive-int|array{positive-int, ('var'|'var='|'expr'|'expr=')})>
      */
     public static $OPTIONS = [
         'START TRANSACTION' => 1,
@@ -69,6 +67,8 @@ class TransactionStatement extends Statement
     /**
      * @param Parser     $parser the instance that requests parsing
      * @param TokensList $list   the list of tokens to be parsed
+     *
+     * @return void
      */
     public function parse(Parser $parser, TokensList $list)
     {
@@ -96,7 +96,10 @@ class TransactionStatement extends Statement
                 $ret .= ';' . $statement->build();
             }
 
-            $ret .= ';' . $this->end->build();
+            $ret .= ';';
+            if ($this->end !== null) {
+                $ret .= $this->end->build();
+            }
         }
 
         return $ret;

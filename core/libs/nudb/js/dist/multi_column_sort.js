@@ -5,12 +5,12 @@
  *
  * @requires    jQuery
  */
+
 AJAX.registerOnload('keyhandler.js', function () {
   $('th.draggable.column_heading.pointer.marker a').on('click', function (event) {
     var orderUrlRemove = $(this).parent().find('input[name="url-remove-order"]').val();
     var orderUrlAdd = $(this).parent().find('input[name="url-add-order"]').val();
     var argsep = CommonParams.get('arg_separator');
-
     if (event.ctrlKey || event.altKey) {
       event.preventDefault();
       AJAX.source = $(this);

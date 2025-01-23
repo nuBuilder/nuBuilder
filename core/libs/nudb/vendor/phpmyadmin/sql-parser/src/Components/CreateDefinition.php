@@ -1,9 +1,4 @@
 <?php
-/**
- * Parses the create definition of a column or a key.
- *
- * Used for parsing `CREATE TABLE` statement.
- */
 
 declare(strict_types=1);
 
@@ -31,7 +26,12 @@ class CreateDefinition extends Component
     /**
      * All field options.
      *
-     * @var array
+     * @var array<string, bool|int|array<int, int|string|array<string, bool>>>
+     * @psalm-var array<string, (bool|positive-int|array{
+     *   0: positive-int,
+     *   1: ('var'|'var='|'expr'|'expr='),
+     *   2?: array<string, bool>
+     * })>
      */
     public static $FIELD_OPTIONS = [
         // Tells the `OptionsArray` to not sort the options.
@@ -56,6 +56,7 @@ class CreateDefinition extends Component
             'var',
         ],
         'AUTO_INCREMENT' => 3,
+        'KEY' => 4,
         'PRIMARY' => 4,
         'PRIMARY KEY' => 4,
         'UNIQUE' => 4,
@@ -91,6 +92,11 @@ class CreateDefinition extends Component
         'INVISIBLE' => 13,
         'ENFORCED' => 14,
         'NOT' => 15,
+        'COMPRESSED' => 16,
+        'SRID' => [
+            17,
+            'var',
+        ],
         // Common entries.
         //
         // NOTE: Some of the common options are not in the same order which
@@ -110,51 +116,51 @@ class CreateDefinition extends Component
     /**
      * The name of the new column.
      *
-     * @var string
+     * @var string|null
      */
     public $name;
 
     /**
      * Whether this field is a constraint or not.
      *
-     * @var bool
+     * @var bool|null
      */
     public $isConstraint;
 
     /**
      * The data type of thew new column.
      *
-     * @var DataType
+     * @var DataType|null
      */
     public $type;
 
     /**
      * The key.
      *
-     * @var Key
+     * @var Key|null
      */
     public $key;
 
     /**
      * The table that is referenced.
      *
-     * @var Reference
+     * @var Reference|null
      */
     public $references;
 
     /**
      * The options of this field.
      *
-     * @var OptionsArray
+     * @var OptionsArray|null
      */
     public $options;
 
     /**
-     * @param string       $name         the name of the field
-     * @param OptionsArray $options      the options of this field
-     * @param DataType|Key $type         the data type of this field or the key
-     * @param bool         $isConstraint whether this field is a constraint or not
-     * @param Reference    $references   references
+     * @param string|null       $name         the name of the field
+     * @param OptionsArray|null $options      the options of this field
+     * @param DataType|Key|null $type         the data type of this field or the key
+     * @param bool              $isConstraint whether this field is a constraint or not
+     * @param Reference|null    $references   references
      */
     public function __construct(
         $name = null,
@@ -175,9 +181,9 @@ class CreateDefinition extends Component
     }
 
     /**
-     * @param Parser     $parser  the parser that serves as context
-     * @param TokensList $list    the list of tokens that are being parsed
-     * @param array      $options parameters for parsing
+     * @param Parser               $parser  the parser that serves as context
+     * @param TokensList           $list    the list of tokens that are being parsed
+     * @param array<string, mixed> $options parameters for parsing
      *
      * @return CreateDefinition[]
      */
@@ -214,8 +220,6 @@ class CreateDefinition extends Component
         for (; $list->idx < $list->count; ++$list->idx) {
             /**
              * Token parsed at this moment.
-             *
-             * @var Token
              */
             $token = $list->tokens[$list->idx];
 
@@ -321,7 +325,7 @@ class CreateDefinition extends Component
 
     /**
      * @param CreateDefinition|CreateDefinition[] $component the component to be built
-     * @param array                               $options   parameters for building
+     * @param array<string, mixed>                $options   parameters for building
      *
      * @return string
      */

@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - yyyy-mm-dd
 
+## [1.2.2] - 2024-07-24
+
+- Update and fix doc blocks
+- Support PHPUnit 10
+- Improve tests for PHPUnit 10 & 11
+- Exclude tests from the vendor tarball
+
+## [1.2.1] - 2022-12-03
+
+- Don't replace `samyoul/u2f-php-server` anymore in `composer.json`
+- Exclude tests and phpunit config from vendor archives
+- Apply `wdes/coding-standard` and make constants officially public
+
 ## [1.2.0] - 2021-12-12
 
 - Added `ReturnTypeWillChange` for PHP 8.1 on SignRequest and RegistrationRequest

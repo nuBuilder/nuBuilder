@@ -76,7 +76,7 @@ class Header
      *
      * @var bool
      */
-    private $isAjax;
+    private $isAjax = false;
     /**
      * Whether to display anything
      *
@@ -107,12 +107,15 @@ class Header
         $this->template = new Template();
 
         $this->isEnabled = true;
-        $this->isAjax = false;
         $this->bodyId = '';
         $this->title = '';
         $this->console = new Console();
-        $this->menu = new Menu($dbi, $db ?? '', $table ?? '');
-        $this->menuEnabled = true;
+        $this->menuEnabled = false;
+        if ($dbi !== null) {
+            $this->menuEnabled = true;
+            $this->menu = new Menu($dbi, $db ?? '', $table ?? '');
+        }
+
         $this->warningsEnabled = true;
         $this->scripts = new Scripts();
         $this->addDefaultScripts();
@@ -136,7 +139,7 @@ class Header
         $this->scripts->addFile('name-conflict-fixes.js');
         $this->scripts->addFile('vendor/bootstrap/bootstrap.bundle.min.js');
         $this->scripts->addFile('vendor/js.cookie.js');
-        $this->scripts->addFile('vendor/jquery/jquery.validate.js');
+        $this->scripts->addFile('vendor/jquery/jquery.validate.min.js');
         $this->scripts->addFile('vendor/jquery/jquery-ui-timepicker-addon.js');
         $this->scripts->addFile('vendor/jquery/jquery.debounce-1.0.6.js');
         $this->scripts->addFile('menu_resizer.js');
@@ -191,8 +194,8 @@ class Header
             'LoginCookieValidity' => $GLOBALS['cfg']['LoginCookieValidity'],
             'session_gc_maxlifetime' => (int) ini_get('session.gc_maxlifetime'),
             'logged_in' => isset($dbi) ? $dbi->isConnected() : false,
-            'is_https' => $GLOBALS['config']->isHttps(),
-            'rootPath' => $GLOBALS['config']->getRootPath(),
+            'is_https' => $GLOBALS['config'] !== null && $GLOBALS['config']->isHttps(),
+            'rootPath' => $GLOBALS['config'] !== null && $GLOBALS['config']->getRootPath(),
             'arg_separator' => Url::getArgSeparator(),
             'version' => Version::VERSION,
         ];
@@ -398,6 +401,7 @@ class Header
 
         $console = $this->console->getDisplay();
         $messages = $this->getMessage();
+        $isLoggedIn = isset($GLOBALS['dbi']) && $GLOBALS['dbi']->isConnected();
 
         return $this->template->render('header', [
             'lang' => $GLOBALS['lang'],
@@ -416,6 +420,7 @@ class Header
             'show_hint' => $GLOBALS['cfg']['ShowHint'],
             'is_warnings_enabled' => $this->warningsEnabled,
             'is_menu_enabled' => $this->menuEnabled,
+            'is_logged_in' => $isLoggedIn,
             'menu' => $menu ?? '',
             'console' => $console,
             'messages' => $messages,
@@ -489,14 +494,14 @@ class Header
             $headers['X-Frame-Options'] = 'DENY';
         }
 
-        $headers['Referrer-Policy'] = 'no-referrer';
+        $headers['Referrer-Policy'] = 'same-origin';
 
         $headers = array_merge($headers, $this->getCspHeaders());
 
         /**
          * Re-enable possible disabled XSS filters.
          *
-         * @see https://www.owasp.org/index.php/List_of_useful_HTTP_headers
+         * @see https://developer.mozilla.org/docs/Web/HTTP/Headers/X-XSS-Protection
          */
         $headers['X-XSS-Protection'] = '1; mode=block';
 
@@ -504,21 +509,21 @@ class Header
          * "nosniff", prevents Internet Explorer and Google Chrome from MIME-sniffing
          * a response away from the declared content-type.
          *
-         * @see https://www.owasp.org/index.php/List_of_useful_HTTP_headers
+         * @see https://developer.mozilla.org/docs/Web/HTTP/Headers/X-Content-Type-Options
          */
         $headers['X-Content-Type-Options'] = 'nosniff';
 
         /**
          * Adobe cross-domain-policies.
          *
-         * @see https://www.adobe.com/devnet/articles/crossdomain_policy_file_spec.html
+         * @see https://www.sentrium.co.uk/labs/application-security-101-http-headers
          */
         $headers['X-Permitted-Cross-Domain-Policies'] = 'none';
 
         /**
          * Robots meta tag.
          *
-         * @see https://developers.google.com/webmasters/control-crawl-index/docs/robots_meta_tag
+         * @see https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag
          */
         $headers['X-Robots-Tag'] = 'noindex, nofollow';
 

@@ -19,14 +19,14 @@ class KBEntry extends stdClass implements JsonSerializable
     /**
      * Type of variable
      *
-     * @var string
+     * @var string|null
      */
     private $type = null;
 
     /**
      * Is dynamic ?
      *
-     * @var bool
+     * @var bool|null
      */
     private $dynamic = null;
 

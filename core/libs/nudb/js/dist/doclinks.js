@@ -1,6 +1,7 @@
 /**
  * Definition of links to MySQL documentation.
  */
+
 // eslint-disable-next-line no-unused-vars
 var mysqlDocKeyword = {
   /* Multi word */
@@ -83,7 +84,6 @@ var mysqlDocKeyword = {
   'DROP VIEW': ['drop-view'],
   'RENAME TABLE': ['rename-table'],
   'TRUNCATE TABLE': ['truncate-table'],
-
   /* Statements */
   'SELECT': ['select'],
   'SET': ['set'],
@@ -98,7 +98,6 @@ var mysqlDocKeyword = {
   'DO': ['do'],
   'HANDLER': ['handler'],
   'COLLATE': ['charset-collations'],
-
   /* Functions */
   'ABS': ['mathematical-functions', 'function_abs'],
   'ACOS': ['mathematical-functions', 'function_acos'],
@@ -328,8 +327,9 @@ var mysqlDocKeyword = {
   'NOT_REGEXP': ['regexp', 'operator_not-regexp'],
   'COUNT_DISTINCT': ['aggregate-functions', 'function_count-distinct'],
   'NOT_IN': ['comparison-operators', 'function_not-in']
-}; // eslint-disable-next-line no-unused-vars
+};
 
+// eslint-disable-next-line no-unused-vars
 var mysqlDocBuiltin = {
   'TINYINT': ['numeric-types'],
   'SMALLINT': ['numeric-types'],

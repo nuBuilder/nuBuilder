@@ -1,7 +1,4 @@
 <?php
-/**
- * `SET` statement.
- */
 
 declare(strict_types=1);
 
@@ -23,7 +20,8 @@ class SetStatement extends Statement
      *
      * @see Statement::$CLAUSES
      *
-     * @var array
+     * @var array<string, array<int, int|string>>
+     * @psalm-var array<string, array{non-empty-string, (1|2|3)}>
      */
     public static $CLAUSES = [
         'SET' => [
@@ -39,7 +37,8 @@ class SetStatement extends Statement
     /**
      * Possible exceptions in SET statement.
      *
-     * @var array
+     * @var array<string, int|array<int, int|string>>
+     * @psalm-var array<string, (positive-int|array{positive-int, ('var'|'var='|'expr'|'expr=')})>
      */
     public static $OPTIONS = [
         'CHARSET' => [
@@ -68,7 +67,10 @@ class SetStatement extends Statement
         '@@PERSIST_ONLY' => 3,
     ];
 
-    /** @var array */
+    /**
+     * @var array<string, int|array<int, int|string>>
+     * @psalm-var array<string, (positive-int|array{positive-int, ('var'|'var='|'expr'|'expr=')})>
+     */
     public static $END_OPTIONS = [
         'COLLATE' => [
             1,
@@ -80,7 +82,7 @@ class SetStatement extends Statement
     /**
      * Options used in current statement.
      *
-     * @var OptionsArray[]
+     * @var OptionsArray|null
      */
     public $options;
 
@@ -89,14 +91,14 @@ class SetStatement extends Statement
      *
      * @see static::$END_OPTIONS
      *
-     * @var OptionsArray
+     * @var OptionsArray|null
      */
     public $end_options;
 
     /**
      * The updated values.
      *
-     * @var SetOperation[]
+     * @var SetOperation[]|null
      */
     public $set;
 

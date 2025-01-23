@@ -1,7 +1,4 @@
 <?php
-/**
- * `LIMIT` keyword parser.
- */
 
 declare(strict_types=1);
 
@@ -22,20 +19,20 @@ class Limit extends Component
     /**
      * The number of rows skipped.
      *
-     * @var int
+     * @var int|string
      */
     public $offset;
 
     /**
      * The number of rows to be returned.
      *
-     * @var int
+     * @var int|string
      */
     public $rowCount;
 
     /**
-     * @param int $rowCount the row count
-     * @param int $offset   the offset
+     * @param int|string $rowCount the row count
+     * @param int|string $offset   the offset
      */
     public function __construct($rowCount = 0, $offset = 0)
     {
@@ -44,9 +41,9 @@ class Limit extends Component
     }
 
     /**
-     * @param Parser     $parser  the parser that serves as context
-     * @param TokensList $list    the list of tokens that are being parsed
-     * @param array      $options parameters for parsing
+     * @param Parser               $parser  the parser that serves as context
+     * @param TokensList           $list    the list of tokens that are being parsed
+     * @param array<string, mixed> $options parameters for parsing
      *
      * @return Limit
      */
@@ -59,8 +56,6 @@ class Limit extends Component
         for (; $list->idx < $list->count; ++$list->idx) {
             /**
              * Token parsed at this moment.
-             *
-             * @var Token
              */
             $token = $list->tokens[$list->idx];
 
@@ -93,8 +88,11 @@ class Limit extends Component
                 continue;
             }
 
-            // Skip if not a number
-            if (($token->type !== Token::TYPE_NUMBER)) {
+            // Skip if not a number or a bind parameter (?)
+            if (
+                ! ($token->type === Token::TYPE_NUMBER
+                    || ($token->type === Token::TYPE_SYMBOL && ($token->flags & Token::FLAG_SYMBOL_PARAMETER)))
+            ) {
                 break;
             }
 
@@ -116,8 +114,8 @@ class Limit extends Component
     }
 
     /**
-     * @param Limit $component the component to be built
-     * @param array $options   parameters for building
+     * @param Limit                $component the component to be built
+     * @param array<string, mixed> $options   parameters for building
      *
      * @return string
      */

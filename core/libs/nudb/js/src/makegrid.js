@@ -595,6 +595,12 @@ var makeGrid = function (t, enableResize, enableReorder, enableVisib, enableGrid
          * @param cell <td> element to be edited
          */
         showEditCell: function (cell) {
+            // destroy the date picker instance left if any, see: #17703
+            var $datePickerInstance = $(g.cEdit).find('.hasDatepicker');
+            if ($datePickerInstance.length > 0) {
+                $datePickerInstance.datepicker('destroy');
+            }
+
             if ($(cell).is('.grid_edit') &&
                 !g.colRsz && !g.colReorder) {
                 if (!g.isCellEditActive) {
@@ -625,11 +631,7 @@ var makeGrid = function (t, enableResize, enableReorder, enableVisib, enableGrid
                     // fill the cell edit with text from <td>
                     var value = Functions.getCellValue(cell);
                     if ($cell.attr('data-type') === 'json' && $cell.is('.truncated') === false) {
-                        try {
-                            value = JSON.stringify(JSON.parse(value), null, 4);
-                        } catch (e) {
-                            // Show as is
-                        }
+                        value = Functions.stringifyJSON(value, null, 4);
                     }
                     $(g.cEdit).find('.edit_box').val(value);
 
@@ -757,7 +759,8 @@ var makeGrid = function (t, enableResize, enableReorder, enableVisib, enableGrid
             if ($dp.length > 0) {
                 // eslint-disable-next-line no-underscore-dangle
                 $(document).on('mousedown', $.datepicker._checkExternalClick);
-                $dp.datepicker('destroy');
+                $dp.datepicker('refresh');
+
                 // change the cursor in edit box back to normal
                 // (the cursor become a hand pointer when we add datepicker)
                 $(g.cEdit).find('.edit_box').css('cursor', 'inherit');
@@ -842,7 +845,9 @@ var makeGrid = function (t, enableResize, enableReorder, enableVisib, enableGrid
                         });
                     } else {
                         $(g.cEdit).on('keypress change paste', '.edit_box', function () {
-                            $checkbox.prop('checked', false);
+                            if ($(this).val() !== '') {
+                                $checkbox.prop('checked', false);
+                            }
                         });
                         // Capture ctrl+v (on IE and Chrome)
                         $(g.cEdit).on('keydown', '.edit_box', function (e) {
@@ -876,6 +881,8 @@ var makeGrid = function (t, enableResize, enableReorder, enableVisib, enableGrid
                             if ($editArea.find('select').length > 0) {
                                 $editArea.find('select').val('');
                             }
+                        } else if ($td.is('.datefield')) {
+                            $('.ui-datepicker-trigger').trigger('click');
                         } else {
                             $editArea.find('textarea').val('');
                         }
@@ -1046,11 +1053,7 @@ var makeGrid = function (t, enableResize, enableReorder, enableVisib, enableGrid
                             $editArea.removeClass('edit_area_loading');
                             if (typeof data !== 'undefined' && data.success === true) {
                                 if ($td.attr('data-type') === 'json') {
-                                    try {
-                                        data.value = JSON.stringify(JSON.parse(data.value), null, 4);
-                                    } catch (e) {
-                                        // Show as is
-                                    }
+                                    data.value = Functions.stringifyJSON(data.value, null, 4);
                                 }
                                 $td.data('original_data', data.value);
                                 $(g.cEdit).find('.edit_box').val(data.value);
@@ -1216,7 +1219,11 @@ var makeGrid = function (t, enableResize, enableReorder, enableVisib, enableGrid
                     whereClause = '';
                 }
                 fullWhereClause.push(whereClause);
-                var conditionArray = JSON.parse($tr.find('.condition_array').val());
+                var conditionArrayContent = $tr.find('.condition_array').val();
+                if (typeof conditionArrayContent === 'undefined') {
+                    conditionArrayContent = '{}';
+                }
+                var conditionArray = JSON.parse(conditionArrayContent);
 
                 /**
                  * multi edit variables, for current row
@@ -1267,7 +1274,13 @@ var makeGrid = function (t, enableResize, enableReorder, enableVisib, enableGrid
                             fieldsType.push('hex');
                         }
                         fieldsNull.push('');
-                        fields.push($thisField.data('value'));
+
+                        if ($thisField.attr('data-type') !== 'json') {
+                            fields.push($thisField.data('value'));
+                        } else {
+                            const JSONString = Functions.stringifyJSON($thisField.data('value'));
+                            fields.push(JSONString);
+                        }
 
                         var cellIndex = $thisField.index('.to_be_saved');
                         if ($thisField.is(':not(.relation, .enum, .set, .bit)')) {
@@ -1503,7 +1516,16 @@ var makeGrid = function (t, enableResize, enableReorder, enableVisib, enableGrid
                 } else {
                     thisFieldParams[fieldName] = $(g.cEdit).find('.edit_box').val();
                 }
-                if (g.wasEditedCellNull || thisFieldParams[fieldName] !== Functions.getCellValue(g.currentEditCell)) {
+
+                let isValueUpdated;
+                if ($thisField.attr('data-type') !== 'json') {
+                    isValueUpdated = thisFieldParams[fieldName] !== Functions.getCellValue(g.currentEditCell);
+                } else {
+                    const JSONString = Functions.stringifyJSON(thisFieldParams[fieldName]);
+                    isValueUpdated = JSONString !== Functions.stringifyJSON(Functions.getCellValue(g.currentEditCell));
+                }
+
+                if (g.wasEditedCellNull || isValueUpdated) {
                     needToPost = true;
                 }
             }
@@ -2040,8 +2062,8 @@ var makeGrid = function (t, enableResize, enableReorder, enableVisib, enableGrid
                     }
                 });
 
-            $(g.t).find('td.data.click2')
-                .on('click', function (e) {
+            $(g.t)
+                .on('click', 'td.data.click2', function (e) {
                     var $cell = $(this);
                     // In the case of relational link, We want single click on the link
                     // to goto the link and double click to start grid-editing.
@@ -2075,7 +2097,7 @@ var makeGrid = function (t, enableResize, enableReorder, enableVisib, enableGrid
                         }
                     }
                 })
-                .on('dblclick', function (e) {
+                .on('dblclick', 'td.data.click2', function (e) {
                     if ($(e.target).is('.grid_edit a')) {
                         e.preventDefault();
                     } else {
@@ -2166,14 +2188,17 @@ var makeGrid = function (t, enableResize, enableReorder, enableVisib, enableGrid
 
     // wrap all truncated data cells with span indicating the original length
     // todo update the original length after a grid edit
-    $(t).find('td.data.truncated:not(:has(span))')
+    $(t).find('td.data.truncated:not(:has(>span))')
+        .filter(function () {
+            return $(this).data('originallength') !== undefined;
+        })
         .wrapInner(function () {
             return '<span title="' + Messages.strOriginalLength + ' ' +
                 $(this).data('originallength') + '"></span>';
         });
 
     // wrap remaining cells, except actions cell, with span
-    $(t).find('th, td:not(:has(span))')
+    $(t).find('th, td:not(:has(>span))')
         .wrapInner('<span></span>');
 
     // create grid elements

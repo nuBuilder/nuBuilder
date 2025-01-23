@@ -1,7 +1,4 @@
 <?php
-/**
- * Defines the localization helper infrastructure of the library.
- */
 
 declare(strict_types=1);
 
@@ -11,6 +8,9 @@ use PhpMyAdmin\MoTranslator\Loader;
 
 use function class_exists;
 
+/**
+ * Defines the localization helper infrastructure of the library.
+ */
 class Translator
 {
     /**
@@ -29,6 +29,8 @@ class Translator
 
     /**
      * Loads translator.
+     *
+     * @return void
      */
     public static function load()
     {

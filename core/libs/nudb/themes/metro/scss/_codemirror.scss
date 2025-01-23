@@ -10,6 +10,15 @@ $textarea-rows: 15 !default;
   direction: ltr;
 }
 
+// Code mirror default style (do not affect the console style)
+.CodeMirror.cm-s-default {
+  // @see: issue #17705
+  div.CodeMirror-scroll {
+    margin-right: 0;
+    padding-bottom: 0;
+  }
+}
+
 #pma_console .CodeMirror {
   border: none;
 }
@@ -93,4 +102,14 @@ span {
 
 .CodeMirror-hints {
   z-index: 1999;
+}
+
+.CodeMirror-lint-tooltip {
+  z-index: 2000;
+  font-family: inherit;
+
+  code {
+    font-family: monospace;
+    font-weight: bold;
+  }
 }

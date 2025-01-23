@@ -1,7 +1,4 @@
 <?php
-/**
- * `RENAME TABLE` keyword parser.
- */
 
 declare(strict_types=1);
 
@@ -47,9 +44,9 @@ class RenameOperation extends Component
     }
 
     /**
-     * @param Parser     $parser  the parser that serves as context
-     * @param TokensList $list    the list of tokens that are being parsed
-     * @param array      $options parameters for parsing
+     * @param Parser               $parser  the parser that serves as context
+     * @param TokensList           $list    the list of tokens that are being parsed
+     * @param array<string, mixed> $options parameters for parsing
      *
      * @return RenameOperation[]
      */
@@ -80,8 +77,6 @@ class RenameOperation extends Component
         for (; $list->idx < $list->count; ++$list->idx) {
             /**
              * Token parsed at this moment.
-             *
-             * @var Token
              */
             $token = $list->tokens[$list->idx];
 
@@ -156,8 +151,8 @@ class RenameOperation extends Component
     }
 
     /**
-     * @param RenameOperation $component the component to be built
-     * @param array           $options   parameters for building
+     * @param RenameOperation      $component the component to be built
+     * @param array<string, mixed> $options   parameters for building
      *
      * @return string
      */

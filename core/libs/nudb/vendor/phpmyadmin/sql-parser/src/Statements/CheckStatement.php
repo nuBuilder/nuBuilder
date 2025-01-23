@@ -1,7 +1,4 @@
 <?php
-/**
- * `CHECK` statement.
- */
 
 declare(strict_types=1);
 
@@ -17,7 +14,8 @@ class CheckStatement extends MaintenanceStatement
     /**
      * Options of this statement.
      *
-     * @var array
+     * @var array<string, int|array<int, int|string>>
+     * @psalm-var array<string, (positive-int|array{positive-int, ('var'|'var='|'expr'|'expr=')})>
      */
     public static $OPTIONS = [
         'TABLE' => 1,

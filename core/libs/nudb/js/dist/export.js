@@ -2,35 +2,34 @@
  * Functions used in the export tab
  *
  */
+
 var Export = {};
+
 /**
  * Disables the "Dump some row(s)" sub-options
  */
-
 Export.disableDumpSomeRowsSubOptions = function () {
   $('label[for=\'limit_to\']').fadeTo('fast', 0.4);
   $('label[for=\'limit_from\']').fadeTo('fast', 0.4);
   $('input[type=\'text\'][name=\'limit_to\']').prop('disabled', 'disabled');
   $('input[type=\'text\'][name=\'limit_from\']').prop('disabled', 'disabled');
 };
+
 /**
  * Enables the "Dump some row(s)" sub-options
  */
-
-
 Export.enableDumpSomeRowsSubOptions = function () {
   $('label[for=\'limit_to\']').fadeTo('fast', 1);
   $('label[for=\'limit_from\']').fadeTo('fast', 1);
   $('input[type=\'text\'][name=\'limit_to\']').prop('disabled', '');
   $('input[type=\'text\'][name=\'limit_from\']').prop('disabled', '');
 };
+
 /**
  * Return template data as a json object
  *
  * @return {object} template data
  */
-
-
 Export.getTemplateData = function () {
   var $form = $('form[name="dump"]');
   var excludeList = ['token', 'server', 'db', 'table', 'single_table', 'export_type', 'export_method', 'sql_query', 'template_id'];
@@ -42,21 +41,20 @@ Export.getTemplateData = function () {
         if (!obj[this.name].push) {
           obj[this.name] = [obj[this.name]];
         }
-
         obj[this.name].push(this.value || '');
       } else {
         obj[this.name] = this.value || '';
       }
     }
-  }); // include unchecked checkboxes (which are ignored by serializeArray()) with null
+  });
+  // include unchecked checkboxes (which are ignored by serializeArray()) with null
   // to uncheck them when loading the template
-
   $form.find('input[type="checkbox"]:not(:checked)').each(function () {
     if (obj[this.name] === undefined) {
       obj[this.name] = null;
     }
-  }); // include empty multiselects
-
+  });
+  // include empty multiselects
   $form.find('select').each(function () {
     if ($(this).find('option:selected').length === 0) {
       obj[this.name] = [];
@@ -64,13 +62,12 @@ Export.getTemplateData = function () {
   });
   return obj;
 };
+
 /**
  * Create a template with selected options
  *
  * @param name name of the template
  */
-
-
 Export.createTemplate = function (name) {
   var templateData = Export.getTemplateData();
   var params = {
@@ -98,13 +95,12 @@ Export.createTemplate = function (name) {
     }
   });
 };
+
 /**
  * Loads a template
  *
  * @param id ID of the template to load
  */
-
-
 Export.loadTemplate = function (id) {
   var params = {
     'ajax_request': true,
@@ -122,7 +118,6 @@ Export.loadTemplate = function (id) {
       $.each(options, function (key, value) {
         var localValue = value;
         var $element = $form.find('[name="' + key + '"]');
-
         if ($element.length) {
           if ($element.is('input') && $element.attr('type') === 'checkbox' && localValue === null) {
             $element.prop('checked', false);
@@ -132,10 +127,8 @@ Export.loadTemplate = function (id) {
                 localValue = [localValue];
               }
             }
-
             $element.val(localValue);
           }
-
           $element.trigger('change');
         }
       });
@@ -146,13 +139,12 @@ Export.loadTemplate = function (id) {
     }
   });
 };
+
 /**
  * Updates an existing template with current options
  *
  * @param id ID of the template to update
  */
-
-
 Export.updateTemplate = function (id) {
   var templateData = Export.getTemplateData();
   var params = {
@@ -173,13 +165,12 @@ Export.updateTemplate = function (id) {
     }
   });
 };
+
 /**
  * Delete a template
  *
  * @param id ID of the template to delete
  */
-
-
 Export.deleteTemplate = function (id) {
   var params = {
     'ajax_request': true,
@@ -199,11 +190,10 @@ Export.deleteTemplate = function (id) {
     }
   });
 };
+
 /**
  * Unbind all event handlers before tearing down a page
  */
-
-
 AJAX.registerTeardown('export.js', function () {
   $('#plugins').off('change');
   $('input[type=\'radio\'][name=\'sql_structure_or_data\']').off('change');
@@ -237,70 +227,67 @@ AJAX.registerOnload('export.js', function () {
       Functions.highlightSql(modal);
     });
   });
+
   /**
    * Export template handling code
    */
   // create a new template
-
   $('input[name="createTemplate"]').on('click', function (e) {
     e.preventDefault();
     var name = $('input[name="templateName"]').val();
-
     if (name.length) {
       Export.createTemplate(name);
     }
-  }); // load an existing template
+  });
 
+  // load an existing template
   $('select[name="template"]').on('change', function (e) {
     e.preventDefault();
     var id = $(this).val();
-
     if (id.length) {
       Export.loadTemplate(id);
     }
-  }); // update an existing template with new criteria
+  });
 
+  // update an existing template with new criteria
   $('input[name="updateTemplate"]').on('click', function (e) {
     e.preventDefault();
     var id = $('select[name="template"]').val();
-
     if (id.length) {
       Export.updateTemplate(id);
     }
-  }); // delete an existing template
+  });
 
+  // delete an existing template
   $('input[name="deleteTemplate"]').on('click', function (e) {
     e.preventDefault();
     var id = $('select[name="template"]').val();
-
     if (id.length) {
       Export.deleteTemplate(id);
     }
   });
+
   /**
    * Toggles the hiding and showing of each plugin's options
    * according to the currently selected plugin from the dropdown list
    */
-
   $('#plugins').on('change', function () {
     $('#format_specific_opts').find('div.format_specific_options').addClass('d-none');
     var selectedPluginName = $('#plugins').find('option:selected').val();
     $('#' + selectedPluginName + '_options').removeClass('d-none');
   });
+
   /**
    * Toggles the enabling and disabling of the SQL plugin's comment options that apply only when exporting structure
    */
-
   $('input[type=\'radio\'][name=\'sql_structure_or_data\']').on('change', function () {
     var commentsArePresent = $('#checkbox_sql_include_comments').prop('checked');
     var show = $('input[type=\'radio\'][name=\'sql_structure_or_data\']:checked').val();
-
     if (show === 'data') {
       // disable the SQL comment options
       if (commentsArePresent) {
         $('#checkbox_sql_dates').prop('disabled', true).parent().fadeTo('fast', 0.4);
       }
-
       $('#checkbox_sql_relation').prop('disabled', true).parent().fadeTo('fast', 0.4);
       $('#checkbox_sql_mime').prop('disabled', true).parent().fadeTo('fast', 0.4);
     } else {
@@ -308,28 +295,27 @@ AJAX.registerOnload('export.js', function () {
       if (commentsArePresent) {
         $('#checkbox_sql_dates').prop('disabled', false).parent().fadeTo('fast', 1);
       }
-
       $('#checkbox_sql_relation').prop('disabled', false).parent().fadeTo('fast', 1);
       $('#checkbox_sql_mime').prop('disabled', false).parent().fadeTo('fast', 1);
     }
-
     if (show === 'structure') {
       $('#checkbox_sql_auto_increment').prop('disabled', true).parent().fadeTo('fast', 0.4);
     } else {
       $('#checkbox_sql_auto_increment').prop('disabled', false).parent().fadeTo('fast', 1);
     }
-  }); // When MS Excel is selected as the Format automatically Switch to Character Set as windows-1252
+  });
 
+  // When MS Excel is selected as the Format automatically Switch to Character Set as windows-1252
   $('#plugins').on('change', function () {
     var selectedPluginName = $('#plugins').find('option:selected').val();
-
     if (selectedPluginName === 'excel') {
       $('#select_charset').val('windows-1252');
     } else {
       $('#select_charset').val('utf-8');
     }
-  }); // For separate-file exports only ZIP compression is allowed
+  });
 
+  // For separate-file exports only ZIP compression is allowed
   $('input[type="checkbox"][name="as_separate_files"]').on('change', function () {
     if ($(this).is(':checked')) {
       $('#compression').val('zip');
@@ -341,16 +327,13 @@ AJAX.registerOnload('export.js', function () {
     }
   });
 });
-
 Export.setupTableStructureOrData = function () {
   if ($('input[name=\'export_type\']').val() !== 'database') {
     return;
   }
-
   var pluginName = $('#plugins').find('option:selected').val();
   var formElemName = pluginName + '_structure_or_data';
   var forceStructureOrData = !$('input[name=\'' + formElemName + '_default\']').length;
-
   if (forceStructureOrData === true) {
     $('input[name="structure_or_data_forced"]').val(1);
     $('.export_structure input[type="checkbox"], .export_data input[type="checkbox"]').prop('disabled', true);
@@ -360,51 +343,44 @@ Export.setupTableStructureOrData = function () {
     $('.export_structure input[type="checkbox"], .export_data input[type="checkbox"]').prop('disabled', false);
     $('.export_structure, .export_data').fadeTo('fast', 1);
     var structureOrData = $('input[name="' + formElemName + '_default"]').val();
-
     if (structureOrData === 'structure') {
       $('.export_data input[type="checkbox"]').prop('checked', false);
     } else if (structureOrData === 'data') {
       $('.export_structure input[type="checkbox"]').prop('checked', false);
     }
-
     if (structureOrData === 'structure' || structureOrData === 'structure_and_data') {
       if (!$('.export_structure input[type="checkbox"]:checked').length) {
         $('input[name="table_select[]"]:checked').closest('tr').find('.export_structure input[type="checkbox"]').prop('checked', true);
       }
     }
-
     if (structureOrData === 'data' || structureOrData === 'structure_and_data') {
       if (!$('.export_data input[type="checkbox"]:checked').length) {
         $('input[name="table_select[]"]:checked').closest('tr').find('.export_data input[type="checkbox"]').prop('checked', true);
       }
     }
-
     Export.checkSelectedTables();
     Export.checkTableSelectAll();
     Export.checkTableSelectStructureOrData();
   }
 };
+
 /**
  * Toggles the hiding and showing of plugin structure-specific and data-specific
  * options
  */
-
-
 Export.toggleStructureDataOpts = function () {
   var pluginName = $('select#plugins').val();
   var radioFormName = pluginName + '_structure_or_data';
   var dataDiv = '#' + pluginName + '_data';
   var structureDiv = '#' + pluginName + '_structure';
-  var show = $('input[type=\'radio\'][name=\'' + radioFormName + '\']:checked').val(); // Show the #rows if 'show' is not structure
-
+  var show = $('input[type=\'radio\'][name=\'' + radioFormName + '\']:checked').val();
+  // Show the #rows if 'show' is not structure
   $('#rows').toggle(show !== 'structure');
-
   if (show === 'data') {
     $(dataDiv).slideDown('slow');
     $(structureDiv).slideUp('slow');
   } else {
     $(structureDiv).slideDown('slow');
-
     if (show === 'structure') {
       $(dataDiv).slideUp('slow');
     } else {
@@ -412,14 +388,12 @@ Export.toggleStructureDataOpts = function () {
     }
   }
 };
+
 /**
  * Toggles the disabling of the "save to file" options
  */
-
-
 Export.toggleSaveToFile = function () {
   var $ulSaveAsfile = $('#ul_save_asfile');
-
   if (!$('#radio_dump_asfile').prop('checked')) {
     $ulSaveAsfile.find('> li').fadeTo('fast', 0.4);
     $ulSaveAsfile.find('> li > input').prop('disabled', true);
@@ -430,19 +404,17 @@ Export.toggleSaveToFile = function () {
     $ulSaveAsfile.find('> li > select').prop('disabled', false);
   }
 };
-
 AJAX.registerOnload('export.js', function () {
   Export.toggleSaveToFile();
   $('input[type=\'radio\'][name=\'output_format\']').on('change', Export.toggleSaveToFile);
 });
+
 /**
  * For SQL plugin, toggles the disabling of the "display comments" options
  */
-
 Export.toggleSqlIncludeComments = function () {
   $('#checkbox_sql_include_comments').on('change', function () {
     var $ulIncludeComments = $('#ul_include_comments');
-
     if (!$('#checkbox_sql_include_comments').prop('checked')) {
       $ulIncludeComments.find('> li').fadeTo('fast', 0.4);
       $ulIncludeComments.find('> li > input').prop('disabled', true);
@@ -457,14 +429,12 @@ Export.toggleSqlIncludeComments = function () {
     }
   });
 };
-
 Export.checkTableSelectAll = function () {
   var total = $('input[name="table_select[]"]').length;
   var strChecked = $('input[name="table_structure[]"]:checked').length;
   var dataChecked = $('input[name="table_data[]"]:checked').length;
   var strAll = $('#table_structure_all');
   var dataAll = $('#table_data_all');
-
   if (strChecked === total) {
     strAll.prop('indeterminate', false).prop('checked', true);
   } else if (strChecked === 0) {
@@ -472,7 +442,6 @@ Export.checkTableSelectAll = function () {
   } else {
     strAll.prop('indeterminate', true).prop('checked', false);
   }
-
   if (dataChecked === total) {
     dataAll.prop('indeterminate', false).prop('checked', true);
   } else if (dataChecked === 0) {
@@ -481,13 +450,11 @@ Export.checkTableSelectAll = function () {
     dataAll.prop('indeterminate', true).prop('checked', false);
   }
 };
-
 Export.checkTableSelectStructureOrData = function () {
   var dataChecked = $('input[name="table_data[]"]:checked').length;
   var autoIncrement = $('#checkbox_sql_auto_increment');
   var pluginName = $('select#plugins').val();
   var dataDiv = '#' + pluginName + '_data';
-
   if (dataChecked === 0) {
     $(dataDiv).slideUp('slow');
     autoIncrement.prop('disabled', true).parent().fadeTo('fast', 0.4);
@@ -496,33 +463,27 @@ Export.checkTableSelectStructureOrData = function () {
     autoIncrement.prop('disabled', false).parent().fadeTo('fast', 1);
   }
 };
-
 Export.toggleTableSelectAllStr = function () {
   var strAll = $('#table_structure_all').is(':checked');
-
   if (strAll) {
     $('input[name="table_structure[]"]').prop('checked', true);
   } else {
     $('input[name="table_structure[]"]').prop('checked', false);
   }
 };
-
 Export.toggleTableSelectAllData = function () {
   var dataAll = $('#table_data_all').is(':checked');
-
   if (dataAll) {
     $('input[name="table_data[]"]').prop('checked', true);
   } else {
     $('input[name="table_data[]"]').prop('checked', false);
   }
 };
-
 Export.checkSelectedTables = function () {
   $('.export_table_select tbody tr').each(function () {
     Export.checkTableSelected(this);
   });
 };
-
 Export.checkTableSelected = function (row) {
   var $row = $(row);
   var tableSelect = $row.find('input[name="table_select[]"]');
@@ -530,7 +491,6 @@ Export.checkTableSelected = function (row) {
   var dataCheck = $row.find('input[name="table_data[]"]');
   var data = dataCheck.is(':checked:not(:disabled)');
   var structure = strCheck.is(':checked:not(:disabled)');
-
   if (data && structure) {
     tableSelect.prop({
       checked: true,
@@ -551,11 +511,9 @@ Export.checkTableSelected = function (row) {
     $row.removeClass('marked');
   }
 };
-
 Export.toggleTableSelect = function (row) {
   var $row = $(row);
   var tableSelected = $row.find('input[name="table_select[]"]').is(':checked');
-
   if (tableSelected) {
     $row.find('input[type="checkbox"]:not(:disabled)').prop('checked', true);
     $row.addClass('marked');
@@ -564,7 +522,6 @@ Export.toggleTableSelect = function (row) {
     $row.removeClass('marked');
   }
 };
-
 Export.handleAddProcCheckbox = function () {
   if ($('#table_structure_all').is(':checked') === true && $('#table_data_all').is(':checked') === true) {
     $('#checkbox_sql_procedure_function').prop('checked', true);
@@ -572,7 +529,6 @@ Export.handleAddProcCheckbox = function () {
     $('#checkbox_sql_procedure_function').prop('checked', false);
   }
 };
-
 AJAX.registerOnload('export.js', function () {
   /**
    * For SQL plugin, if "CREATE TABLE options" is checked/unchecked, check/uncheck each of its sub-options
@@ -587,20 +543,18 @@ AJAX.registerOnload('export.js', function () {
       $create.prop('checked', true);
     }
   });
+
   /**
    * Disables the view output as text option if the output must be saved as a file
    */
-
   $('#plugins').on('change', function () {
     var activePlugin = $('#plugins').find('option:selected').val();
     var forceFile = $('#force_file_' + activePlugin).val();
-
     if (forceFile === 'true') {
       if ($('#radio_dump_asfile').prop('checked') !== true) {
         $('#radio_dump_asfile').prop('checked', true);
         Export.toggleSaveToFile();
       }
-
       $('#radio_view_as_text').prop('disabled', true).parent().fadeTo('fast', 0.4);
     } else {
       $('#radio_view_as_text').prop('disabled', false).parent().fadeTo('fast', 1);
@@ -639,7 +593,6 @@ AJAX.registerOnload('export.js', function () {
     Export.handleAddProcCheckbox();
     Export.checkTableSelectStructureOrData();
   });
-
   if ($('input[name=\'export_type\']').val() === 'database') {
     // Hide structure or data radio buttons
     $('input[type=\'radio\'][name$=\'_structure_or_data\']').each(function () {
@@ -647,7 +600,6 @@ AJAX.registerOnload('export.js', function () {
       var name = $this.prop('name');
       var val = $('input[name="' + name + '"]:checked').val();
       var nameDefault = name + '_default';
-
       if (!$('input[name="' + nameDefault + '"]').length) {
         $this.after($('<input type="hidden" name="' + nameDefault + '" value="' + val + '" disabled>')).after($('<input type="hidden" name="' + name + '" value="structure_and_data">'));
         $this.parent().find('label').remove();
@@ -655,25 +607,25 @@ AJAX.registerOnload('export.js', function () {
         $this.parent().remove();
       }
     });
-    $('input[type=\'radio\'][name$=\'_structure_or_data\']').remove(); // Disable CREATE table checkbox for sql
+    $('input[type=\'radio\'][name$=\'_structure_or_data\']').remove();
 
+    // Disable CREATE table checkbox for sql
     var createTableCheckbox = $('#checkbox_sql_create_table');
     createTableCheckbox.prop('checked', true);
     var dummyCreateTable = $('#checkbox_sql_create_table').clone().removeAttr('id').attr('type', 'hidden');
     createTableCheckbox.prop('disabled', true).after(dummyCreateTable).parent().fadeTo('fast', 0.4);
     Export.setupTableStructureOrData();
   }
+
   /**
    * Handle force structure_or_data
    */
-
-
   $('#plugins').on('change', Export.setupTableStructureOrData);
 });
+
 /**
  * Toggles display of options when quick and custom export are selected
  */
-
 Export.toggleQuickOrCustom = function () {
   if ($('input[name=\'quick_or_custom\']').length === 0 // custom_no_form option
   || $('#radio_custom_export').prop('checked') // custom
@@ -694,22 +646,19 @@ Export.toggleQuickOrCustom = function () {
     $('#output_quick_export').removeClass('d-none');
   }
 };
-
 var timeOut;
-
 Export.checkTimeOut = function (timeLimit) {
   var limit = timeLimit;
-
   if (typeof limit === 'undefined' || limit === 0) {
     return true;
-  } // margin of one second to avoid race condition to set/access session variable
-
-
+  }
+  // margin of one second to avoid race condition to set/access session variable
   limit = limit + 1;
   clearTimeout(timeOut);
   timeOut = setTimeout(function () {
     $.get('index.php?route=/export/check-time-out', {
-      'ajax_request': true
+      'ajax_request': true,
+      'server': CommonParams.get('server')
     }, function (data) {
       if (data.message === 'timeout') {
         Functions.ajaxShowMessage('<div class="alert alert-danger" role="alert">' + Messages.strTimeOutError + '</div>', false);
@@ -717,6 +666,7 @@ Export.checkTimeOut = function (timeLimit) {
     });
   }, limit * 1000);
 };
+
 /**
  * Handler for Alias dialog box
  *
@@ -724,8 +674,6 @@ Export.checkTimeOut = function (timeLimit) {
  *
  * @return {void}
  */
-
-
 Export.createAliasModal = function (event) {
   event.preventDefault();
   var modal = $('#renameExportModal');
@@ -733,7 +681,6 @@ Export.createAliasModal = function (event) {
   modal.on('shown.bs.modal', function () {
     modal.closest('.ui-dialog').find('.ui-button').addClass('btn btn-secondary');
     var db = CommonParams.get('db');
-
     if (db) {
       var option = $('<option></option>');
       option.text(db);
@@ -767,36 +714,30 @@ Export.createAliasModal = function (event) {
       } else {
         $(this).parents('tr').remove();
       }
-    }); // Toggle checkbox based on aliases
-
+    });
+    // Toggle checkbox based on aliases
     $('input#btn_alias_config').prop('checked', !isEmpty);
   });
   $('#saveAndCloseBtn').on('click', function () {
     $('#alias_modal').parent().appendTo($('form[name="dump"]'));
   });
 };
-
 Export.aliasToggleRow = function (elm) {
   var inputs = elm.parents('tr').find('input,button');
-
   if (elm.val()) {
     inputs.attr('disabled', false);
   } else {
     inputs.attr('disabled', true);
   }
 };
-
 Export.aliasRow = null;
-
 Export.addAlias = function (type, name, field, value) {
   if (value === '') {
     return;
   }
-
   if (Export.aliasRow === null) {
     Export.aliasRow = $('#alias_data tfoot tr');
   }
-
   var row = Export.aliasRow.clone();
   row.find('th').text(type);
   row.find('td').first().text(name);
@@ -806,14 +747,11 @@ Export.addAlias = function (type, name, field, value) {
     $(this).parents('tr').remove();
   });
   var matching = $('#alias_data [name="' + $.escapeSelector(field) + '"]');
-
   if (matching.length > 0) {
     matching.parents('tr').remove();
   }
-
   $('#alias_data tbody').append(row);
 };
-
 AJAX.registerOnload('export.js', function () {
   $('input[type=\'radio\'][name=\'quick_or_custom\']').on('change', Export.toggleQuickOrCustom);
   $('#format_specific_opts').find('div.format_specific_options').addClass('d-none').find('h3').remove();
@@ -822,23 +760,24 @@ AJAX.registerOnload('export.js', function () {
   Export.toggleSqlIncludeComments();
   Export.checkTableSelectAll();
   Export.handleAddProcCheckbox();
+
   /**
    * Initially disables the "Dump some row(s)" sub-options
    */
-
   Export.disableDumpSomeRowsSubOptions();
+
   /**
    * Disables the "Dump some row(s)" sub-options when it is not selected
    */
-
   $('input[type=\'radio\'][name=\'allrows\']').on('change', function () {
     if ($('#radio_allrows_0').prop('checked')) {
       Export.enableDumpSomeRowsSubOptions();
     } else {
       Export.disableDumpSomeRowsSubOptions();
     }
-  }); // Open Alias Modal Dialog on click
+  });
 
+  // Open Alias Modal Dialog on click
   $('#btn_alias_config').on('click', Export.createAliasModal);
   $('.alias_remove').on('click', function () {
     $(this).parents('tr').remove();
@@ -846,7 +785,6 @@ AJAX.registerOnload('export.js', function () {
   $('#db_alias_select').on('change', function () {
     Export.aliasToggleRow($(this));
     var table = CommonParams.get('table');
-
     if (table) {
       var option = $('<option></option>');
       option.text(table);
@@ -922,11 +860,9 @@ AJAX.registerOnload('export.js', function () {
     Export.addAlias(Messages.strAliasColumn, db + '.' + table + '.' + column, 'aliases[' + db + '][tables][' + table + '][colums][' + column + ']', $('#column_alias_name').val());
     $('#column_alias_name').val('');
   });
-
   var setSelectOptions = function (doCheck) {
     Functions.setSelectOptions('dump', 'db_select[]', doCheck);
   };
-
   $('#db_select_all').on('click', function (e) {
     e.preventDefault();
     setSelectOptions(true);
@@ -936,9 +872,10 @@ AJAX.registerOnload('export.js', function () {
     setSelectOptions(false);
   });
   $('#buttonGo').on('click', function () {
-    var timeLimit = parseInt($(this).attr('data-exec-time-limit')); // If the time limit set is zero,
-    // then time out won't occur so no need to check for time out.
+    var timeLimit = parseInt($(this).attr('data-exec-time-limit'));
 
+    // If the time limit set is zero,
+    // then time out won't occur so no need to check for time out.
     if (timeLimit > 0) {
       Export.checkTimeOut(timeLimit);
     }

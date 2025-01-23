@@ -1,7 +1,4 @@
 <?php
-/**
- * Parses an array.
- */
 
 declare(strict_types=1);
 
@@ -27,20 +24,20 @@ class ArrayObj extends Component
     /**
      * The array that contains the unprocessed value of each token.
      *
-     * @var array
+     * @var string[]
      */
     public $raw = [];
 
     /**
      * The array that contains the processed value of each token.
      *
-     * @var array
+     * @var string[]
      */
     public $values = [];
 
     /**
-     * @param array $raw    the unprocessed values
-     * @param array $values the processed values
+     * @param string[] $raw    the unprocessed values
+     * @param string[] $values the processed values
      */
     public function __construct(array $raw = [], array $values = [])
     {
@@ -49,9 +46,9 @@ class ArrayObj extends Component
     }
 
     /**
-     * @param Parser     $parser  the parser that serves as context
-     * @param TokensList $list    the list of tokens that are being parsed
-     * @param array      $options parameters for parsing
+     * @param Parser               $parser  the parser that serves as context
+     * @param TokensList           $list    the list of tokens that are being parsed
+     * @param array<string, mixed> $options parameters for parsing
      *
      * @return ArrayObj|Component[]
      */
@@ -90,13 +87,15 @@ class ArrayObj extends Component
         for (; $list->idx < $list->count; ++$list->idx) {
             /**
              * Token parsed at this moment.
-             *
-             * @var Token
              */
             $token = $list->tokens[$list->idx];
 
             // End of statement.
             if ($token->type === Token::TYPE_DELIMITER) {
+                if ($brackets > 0) {
+                    $parser->error('A closing bracket was expected.', $token);
+                }
+
                 break;
             }
 
@@ -129,9 +128,9 @@ class ArrayObj extends Component
                             $ret->values[] = trim($lastValue);
                             $lastRaw = $lastValue = '';
                         }
-                    }
 
-                    continue;
+                        continue;
+                    }
                 }
             }
 
@@ -166,8 +165,8 @@ class ArrayObj extends Component
     }
 
     /**
-     * @param ArrayObj|ArrayObj[] $component the component to be built
-     * @param array               $options   parameters for building
+     * @param ArrayObj|ArrayObj[]  $component the component to be built
+     * @param array<string, mixed> $options   parameters for building
      *
      * @return string
      */

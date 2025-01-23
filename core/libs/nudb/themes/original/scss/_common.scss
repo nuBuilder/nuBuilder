@@ -48,6 +48,10 @@ form {
   display: inline;
 }
 
+input[type=checkbox]#fk_checks {
+  margin: 6px;
+}
+
 textarea {
   overflow: visible;
 }
@@ -423,7 +427,6 @@ div#modalOverlay {
 }
 
 #login_form label {
-  width: 10em;
   font-weight: bolder;
 }
 
@@ -831,7 +834,6 @@ code {
     margin-bottom: 0;
     max-height: 10em;
     overflow: auto;
-    direction: ltr;
   }
 
   &.sql {
@@ -841,7 +843,6 @@ code {
     margin-bottom: 0;
     max-height: 10em;
     overflow: auto;
-    direction: ltr;
   }
 }
 
@@ -852,7 +853,6 @@ div.sqlvalidate {
   margin-bottom: 0;
   max-height: 10em;
   overflow: auto;
-  direction: ltr;
 }
 
 .result_query div.sqlOuter,
@@ -1000,6 +1000,7 @@ select.invalid_value,
   top: 0;
   left: 0;
   background: #000;
+  opacity: 0.7;
   z-index: 1000;
   overflow: hidden;
 }
@@ -1775,9 +1776,32 @@ input#auto_increment_opt {
   }
 }
 
-input.btn {
+input.btn,
+button.btn {
+  border-color: $btn-border-color;
   color: #333;
   background-color: #d0dce0;
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: #8b9aa0;
+    border-color: $btn-border-color;
+  }
+}
+
+button.jsPrintButton {
+  background-color: unset;
+  border-color: unset;
+  border: unset;
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: unset;
+    border-color: unset;
+    border: unset;
+  }
 }
 
 body .ui-widget {

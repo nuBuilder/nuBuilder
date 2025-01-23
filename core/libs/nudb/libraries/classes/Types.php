@@ -96,8 +96,8 @@ class Types
     public function getTextOperators()
     {
         return [
-            'LIKE',
             'LIKE %...%',
+            'LIKE',
             'NOT LIKE',
             'NOT LIKE %...%',
             '=',
@@ -529,7 +529,6 @@ class Types
     {
         $isMariaDB = $this->dbi->isMariaDB();
         $serverVersion = $this->dbi->getVersion();
-        $isUUIDSupported = Compatibility::isUUIDSupported($this->dbi);
 
         switch ($class) {
             case 'CHAR':
@@ -572,10 +571,6 @@ class Types
 
                 if (($isMariaDB && $serverVersion < 100012) || $serverVersion < 50603) {
                     $ret = array_diff($ret, ['INET6_NTOA']);
-                }
-
-                if (! $isUUIDSupported) {
-                    $ret = array_diff($ret, ['UUID']);
                 }
 
                 return array_values($ret);
@@ -657,10 +652,6 @@ class Types
 
                 if (($isMariaDB && $serverVersion < 100012) || $serverVersion < 50603) {
                     $ret = array_diff($ret, ['INET6_ATON']);
-                }
-
-                if (! $isUUIDSupported) {
-                    $ret = array_diff($ret, ['UUID_SHORT']);
                 }
 
                 return array_values($ret);
@@ -871,6 +862,28 @@ class Types
         }
 
         return $ret;
+    }
+
+    public function mapAliasToMysqlType(string $alias): string
+    {
+        return [
+            'BOOL' => 'TINYINT',
+            'BOOLEAN' => 'TINYINT',
+            'CHARACTER VARYING' => 'VARCHAR',
+            'FIXED' => 'DECIMAL',
+            'FLOAT4' => 'FLOAT',
+            'FLOAT8' => 'DOUBLE',
+            'INT1' => 'TINYINT',
+            'INT2' => 'SMALLINT',
+            'INT3' => 'MEDIUMINT',
+            'INT4' => 'INT',
+            'INT8' => 'BIGINT',
+            'LONG VARBINARY' => 'MEDIUMBLOB',
+            'LONG VARCHAR' => 'MEDIUMTEXT',
+            'LONG' => 'MEDIUMTEXT',
+            'MIDDLEINT' => 'MEDIUMINT',
+            'NUMERIC' => 'DECIMAL',
+        ][$alias] ?? $alias;
     }
 
     /**

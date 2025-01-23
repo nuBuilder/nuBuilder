@@ -750,6 +750,13 @@ class Export
 
         $views = [];
 
+        if ($tables !== []) {
+            // Prefetch table information to improve performance.
+            // Table status will get saved in Query Cache,
+            // and all instantiations of Table below should be much faster.
+            $this->dbi->getTablesFull($db, $tables);
+        }
+
         foreach ($tables as $table) {
             $tableObject = new Table($table, $db);
             // if this is a view, collect it for later;
@@ -960,6 +967,7 @@ class Export
      * @param ExportPlugin $exportPlugin    the selected export plugin
      * @param string       $crlf            end of line character(s)
      * @param string       $errorUrl        the URL in case of error
+     * @param string|null  $db              the database where the query is executed
      * @param string       $sqlQuery        the query to be executed
      * @param string       $exportType      the export type
      */
@@ -968,6 +976,7 @@ class Export
         ExportPlugin $exportPlugin,
         string $crlf,
         string $errorUrl,
+        ?string $db,
         string $sqlQuery,
         string $exportType
     ): void {
@@ -976,7 +985,7 @@ class Export
             return;
         }
 
-        if (! $exportPlugin->exportRawQuery($errorUrl, $sqlQuery, $crlf)) {
+        if (! $exportPlugin->exportRawQuery($errorUrl, $db, $sqlQuery, $crlf)) {
             $GLOBALS['message'] = Message::error(
                 // phpcs:disable Generic.Files.LineLength.TooLong
                 /* l10n: A query written by the user is a "raw query" that could be using no tables or databases in particular */

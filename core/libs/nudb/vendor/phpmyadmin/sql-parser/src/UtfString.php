@@ -1,14 +1,4 @@
 <?php
-/**
- * Implementation for UTF-8 strings.
- *
- * The subscript operator in PHP, when used with string will return a byte
- * and not a character. Because in UTF-8 strings a character may occupy more
- * than one byte, the subscript operator may return an invalid character.
- *
- * Because the lexer relies on the subscript operator this class had to be
- * implemented.
- */
 
 declare(strict_types=1);
 
@@ -16,17 +6,27 @@ namespace PhpMyAdmin\SqlParser;
 
 use ArrayAccess;
 use Exception;
+use Stringable;
 
 use function mb_check_encoding;
 use function mb_strlen;
 use function ord;
 
 /**
+ * Implementation for UTF-8 strings.
+ *
+ * The subscript operator in PHP, when used with string will return a byte and not a character. Because in UTF-8
+ * strings a character may occupy more than one byte, the subscript operator may return an invalid character.
+ *
+ * Because the lexer relies on the subscript operator this class had to be implemented.
+ *
  * Implements array-like access for UTF-8 strings.
  *
  * In this library, this class should be used to parse UTF-8 queries.
+ *
+ * @implements ArrayAccess<int, string>
  */
-class UtfString implements ArrayAccess
+class UtfString implements ArrayAccess, Stringable
 {
     /**
      * The raw, multi-byte string.
@@ -259,6 +259,8 @@ class UtfString implements ArrayAccess
      * @param int    $offset the offset to be set
      * @param string $value  the value to be set
      *
+     * @return void
+     *
      * @throws Exception not implemented.
      */
     #[\ReturnTypeWillChange]
@@ -271,6 +273,8 @@ class UtfString implements ArrayAccess
      * Unsets an index.
      *
      * @param int $offset the value to be unset
+     *
+     * @return void
      *
      * @throws Exception not implemented.
      */

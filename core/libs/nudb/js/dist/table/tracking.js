@@ -6,10 +6,10 @@ AJAX.registerTeardown('table/tracking.js', function () {
   $('body').off('click', 'a.delete_version_anchor.ajax');
   $('body').off('click', 'a.delete_entry_anchor.ajax');
 });
+
 /**
  * Bind event handlers
  */
-
 AJAX.registerOnload('table/tracking.js', function () {
   $('#versions tr').first().find('th').append($('<div class="sorticon"></div>'));
   $('#versions').tablesorter({
@@ -29,7 +29,6 @@ AJAX.registerOnload('table/tracking.js', function () {
       }
     }
   });
-
   if ($('#ddl_versions tbody tr').length > 0) {
     $('#ddl_versions tr').first().find('th').append($('<div class="sorticon"></div>'));
     $('#ddl_versions').tablesorter({
@@ -47,7 +46,6 @@ AJAX.registerOnload('table/tracking.js', function () {
       }
     });
   }
-
   if ($('#dml_versions tbody tr').length > 0) {
     $('#dml_versions tr').first().find('th').append($('<div class="sorticon"></div>'));
     $('#dml_versions').tablesorter({
@@ -65,18 +63,16 @@ AJAX.registerOnload('table/tracking.js', function () {
       }
     });
   }
+
   /**
    * Handles multi submit for tracking versions
    */
-
-
   $('body').on('click', '#versionsForm.ajax button[name="submit_mult"], #versionsForm.ajax input[name="submit_mult"]', function (e) {
     e.preventDefault();
     var $button = $(this);
     var $form = $button.parent('form');
     var argsep = CommonParams.get('arg_separator');
     var submitData = $form.serialize() + argsep + 'ajax_request=true' + argsep + 'ajax_page_request=true' + argsep + 'submit_mult=' + $button.val();
-
     if ($button.val() === 'delete_version') {
       var question = Messages.strDeleteTrackingVersionMultiple;
       $button.confirm(question, $form.attr('action'), function (url) {
@@ -90,10 +86,10 @@ AJAX.registerOnload('table/tracking.js', function () {
       $.post($form.attr('action'), submitData, AJAX.responseHandler);
     }
   });
+
   /**
    * Ajax Event handler for 'Delete version'
    */
-
   $('body').on('click', 'a.delete_version_anchor.ajax', function (e) {
     e.preventDefault();
     var $anchor = $(this);
@@ -107,10 +103,10 @@ AJAX.registerOnload('table/tracking.js', function () {
       $.post(url, params, AJAX.responseHandler);
     });
   });
+
   /**
    * Ajax Event handler for 'Delete tracking report entry'
    */
-
   $('body').on('click', 'a.delete_entry_anchor.ajax', function (e) {
     e.preventDefault();
     var $anchor = $(this);

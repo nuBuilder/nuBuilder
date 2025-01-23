@@ -1,7 +1,4 @@
 <?php
-/**
- * `CALL` statement.
- */
 
 declare(strict_types=1);
 
@@ -26,7 +23,7 @@ class CallStatement extends Statement
     /**
      * The name of the function and its parameters.
      *
-     * @var FunctionCall
+     * @var FunctionCall|null
      */
     public $call;
 

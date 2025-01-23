@@ -1,7 +1,4 @@
 <?php
-/**
- * `DELETE` statement.
- */
 
 declare(strict_types=1);
 
@@ -52,7 +49,8 @@ class DeleteStatement extends Statement
     /**
      * Options for `DELETE` statements.
      *
-     * @var array
+     * @var array<string, int|array<int, int|string>>
+     * @psalm-var array<string, (positive-int|array{positive-int, ('var'|'var='|'expr'|'expr=')})>
      */
     public static $OPTIONS = [
         'LOW_PRIORITY' => 1,
@@ -65,7 +63,8 @@ class DeleteStatement extends Statement
      *
      * @see Statement::$CLAUSES
      *
-     * @var array
+     * @var array<string, array<int, int|string>>
+     * @psalm-var array<string, array{non-empty-string, (1|2|3)}>
      */
     public static $CLAUSES = [
         'DELETE' => [
@@ -106,56 +105,56 @@ class DeleteStatement extends Statement
     /**
      * Table(s) used as sources for this statement.
      *
-     * @var Expression[]
+     * @var Expression[]|null
      */
     public $from;
 
     /**
      * Joins.
      *
-     * @var JoinKeyword[]
+     * @var JoinKeyword[]|null
      */
     public $join;
 
     /**
      * Tables used as sources for this statement.
      *
-     * @var Expression[]
+     * @var Expression[]|null
      */
     public $using;
 
     /**
      * Columns used in this statement.
      *
-     * @var Expression[]
+     * @var Expression[]|null
      */
     public $columns;
 
     /**
      * Partitions used as source for this statement.
      *
-     * @var ArrayObj
+     * @var ArrayObj|null
      */
     public $partition;
 
     /**
      * Conditions used for filtering each row of the result set.
      *
-     * @var Condition[]
+     * @var Condition[]|null
      */
     public $where;
 
     /**
      * Specifies the order of the rows in the result set.
      *
-     * @var OrderKeyword[]
+     * @var OrderKeyword[]|null
      */
     public $order;
 
     /**
      * Conditions used for limiting the size of the result set.
      *
-     * @var Limit
+     * @var Limit|null
      */
     public $limit;
 
@@ -236,8 +235,6 @@ class DeleteStatement extends Statement
         for (; $list->idx < $list->count; ++$list->idx) {
             /**
              * Token parsed at this moment.
-             *
-             * @var Token
              */
             $token = $list->tokens[$list->idx];
 

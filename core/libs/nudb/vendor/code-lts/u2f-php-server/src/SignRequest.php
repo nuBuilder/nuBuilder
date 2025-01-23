@@ -2,19 +2,15 @@
 
 namespace CodeLts\U2F\U2FServer;
 
-
 class SignRequest implements \JsonSerializable
 {
-    /** Protocol version */
+    /** @var string Protocol version */
     protected $version = U2FServer::VERSION;
-
-    /** Authentication challenge */
+    /** @var string Authentication challenge */
     protected $challenge;
-
-    /** Key handle of a registered authenticator */
+    /** @var string Key handle of a registered authenticator */
     protected $keyHandle;
-
-    /** Application id */
+    /** @var string Application id */
     protected $appId;
 
     public function __construct(array $parameters)

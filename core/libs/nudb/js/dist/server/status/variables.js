@@ -21,7 +21,6 @@ AJAX.registerOnload('server/status/variables.js', function () {
   var text = ''; // Holds filter text
 
   /* 3 Filtering functions */
-
   $('#filterAlert').on('change', function () {
     alertFilter = this.checked;
     filterVariables();
@@ -40,8 +39,7 @@ AJAX.registerOnload('server/status/variables.js', function () {
   }).trigger('change');
   $('#filterText').on('keyup', function () {
     var word = $(this).val().replace(/_/g, ' ');
-
-    if (word.length === 0) {
+    if (word.length === 0 || word.length >= 32768) {
       textFilter = null;
     } else {
       try {
@@ -54,20 +52,17 @@ AJAX.registerOnload('server/status/variables.js', function () {
         }
       }
     }
-
     text = word;
     filterVariables();
   }).trigger('keyup');
-  /* Filters the status variables by name/category/alert in the variables tab */
 
+  /* Filters the status variables by name/category/alert in the variables tab */
   function filterVariables() {
     var usefulLinks = 0;
     var section = text;
-
     if (categoryFilter.length > 0) {
       section = categoryFilter;
     }
-
     if (section.length > 1) {
       $('#linkSuggestions').find('span').each(function () {
         if ($(this).attr('class').indexOf('status_' + section) !== -1) {
@@ -78,13 +73,11 @@ AJAX.registerOnload('server/status/variables.js', function () {
         }
       });
     }
-
     if (usefulLinks > 0) {
       $('#linkSuggestions').css('display', '');
     } else {
       $('#linkSuggestions').css('display', 'none');
     }
-
     $('#serverStatusVariables').find('th.name').each(function () {
       if ((textFilter === null || textFilter.exec($(this).text())) && (!alertFilter || $(this).next().find('span.text-danger').length > 0) && (categoryFilter.length === 0 || $(this).parent().hasClass('s_' + categoryFilter))) {
         $(this).parent().css('display', '');

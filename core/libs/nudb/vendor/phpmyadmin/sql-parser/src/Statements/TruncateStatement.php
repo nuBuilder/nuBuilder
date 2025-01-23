@@ -1,7 +1,4 @@
 <?php
-/**
- * `TRUNCATE` statement.
- */
 
 declare(strict_types=1);
 
@@ -18,14 +15,15 @@ class TruncateStatement extends Statement
     /**
      * Options for `TRUNCATE` statements.
      *
-     * @var array
+     * @var array<string, int|array<int, int|string>>
+     * @psalm-var array<string, (positive-int|array{positive-int, ('var'|'var='|'expr'|'expr=')})>
      */
     public static $OPTIONS = ['TABLE' => 1];
 
     /**
      * The name of the truncated table.
      *
-     * @var Expression
+     * @var Expression|null
      */
     public $table;
 
