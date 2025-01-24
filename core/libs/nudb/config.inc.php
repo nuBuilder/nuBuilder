@@ -1,8 +1,13 @@
 <?php
 declare(strict_types=1);
 
+error_reporting(E_ALL & ~E_DEPRECATED);
+
 require_once(dirname(__FILE__). '/../../../nuconfig.php');
 
+$DBCharset	= 'utf8';
+$nuConfigDBPort = isset($nuConfigDBPort) ? $nuConfigDBPort : '3306';
+	
 if (! isset($nuConfigPMANoAuth)) {
 
 	$sessionId = isset($_COOKIE['nu_PMA']) ? $_COOKIE["nu_PMA"] : '';
@@ -10,9 +15,6 @@ if (! isset($nuConfigPMANoAuth)) {
 	if ($sessionId == '') {
 		nuAuthFailed();
 	}
-
-	$DBCharset	= 'utf8';
-	$nuConfigDBPort = $nuConfigDBPort ?? '3306';
 
 	try {
 		$pdo = new PDO("mysql:host=$nuConfigDBHost;dbname=$nuConfigDBName;charset=$DBCharset;port=$nuConfigDBPort", $nuConfigDBUser, $nuConfigDBPassword);
@@ -70,8 +72,7 @@ $cfg['Servers'][$i]['user']								= $nuConfigDBUser;
 $cfg['Servers'][$i]['password']							= $nuConfigDBPassword;
 
 
-
-if ( $_COOKIE["nuConfigDBPasswordBlank"] == 'BLANK' ) {
+if (isset($_COOKIE["nuConfigDBPasswordBlank"]) && $_COOKIE["nuConfigDBPasswordBlank"] === 'BLANK') {
 	$cfg['Servers'][$i]['password'] = '';
 }
 
