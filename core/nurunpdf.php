@@ -14,16 +14,18 @@ $get						= isset($_GET['i']);
 	if($get){
 	$jsonID					= $_GET['i'];
 	$tag					= '';
+	$ftype                                  = '';
 }else{
-	$jsonID					= isset($_POST['ID']) ? $_POST['ID'] : null	;
+	$jsonID					= isset($_POST['ID']) ? $_POST['ID'] : null;
 	$tag					= isset($_POST['tag']) ? $_POST['tag'] : null;
+	$ftype                                  = isset($_POST['ftype']) ? $_POST['ftype'] : null;
 }
 
 if ($jsonID !== null) {
-	nuRunReportId($jsonID, $tag, $get);
+	nuRunReportId($jsonID, $tag, $get, $ftype);
 }
 
-function nuRunReportId($jsonID, $tag, $get) {
+function nuRunReportId($jsonID, $tag, $get, $ftype) {
 
 	$J							= nuGetJSONData($jsonID);
 
@@ -88,8 +90,14 @@ function nuRunReportId($jsonID, $tag, $get) {
 		return false;
 	}else{
 
-		$result = nuSavePDF($PDF, $JSON->code, $tag);
-		nuRemoveFiles();
+        if ( $ftype == 'null' ) {
+                $result = nuSavePDF($PDF, $JSON->code, $tag);
+                nuRemoveFiles();
+                }
+        else    {
+                $result = nuSavePDF2($PDF, $JSON->code, $tag);
+                nuRemoveFiles();
+                }
 
 		return [
 			'id' =>  $result['id'],
@@ -1238,3 +1246,26 @@ function nuSavePDF($PDF, $code = '', $tag = '') {
 
 }
 
+function nuSavePDF2($PDF, $code = '', $tag = '') {
+        if (nuDemo()) return;
+        // save PDF file on the server in the ./temp directory
+        // filename equals to tag
+        $filename = $tag;
+        if ($filename == '') {nuDebug('Filename not defined in the nuSavePDF2 function.'); return;}
+        $filename1 = $filename . '.pdf';
+        $dir = dirname(getcwd()) . DIRECTORY_SEPARATOR. 'temp' . DIRECTORY_SEPARATOR;
+        $file = $dir . $filename1;
+        $path = realpath($dir);
+                if (is_writable($path)) {
+                        $PDF->Output($file, 'F');
+                }
+                else {
+                      nuDebug('There was an error saving the report','The directory to save PDF files: '. $dir .' does not exist or you do not have permission to write to this folder!');
+                }
+
+        $rid = null;
+        return [
+                'id' => $rid,
+                'filename' => $filename
+        ];
+}
