@@ -587,7 +587,7 @@ function nuContextMenuValidationText(id, sub, validation) {
 }
 
 function nuContextMenuBeforeRender(menu, event) {
-
+debugger;
 	contextMenuCurrentTarget = event.currentTarget;
 	const id = nuContextMenuCurrentTargetId();
 	const $currentTarget = $('#' + contextMenuCurrentTarget.id);
@@ -948,23 +948,30 @@ function nuContextMenuUpdateObject(value, column) {
 
 function nuContextMenuUpdate() {
 
-	let typeEdit = nuFormType() == 'edit';
-	let selector = typeEdit ? 'label, button, .nu_run, .nuWord, .nuImage, .nuContentBoxTitle, .nuTab, .nuSubformTitle' : '.nuSort';
-	//not('.nuDragLabel')
-	$(selector).each((index, element) => {
+	const typeEdit = nuFormType() === 'edit';
+	const selector = typeEdit
+		? 'label, button, .nu_run, .nuWord, .nuImage, .nuContentBoxTitle, .nuTab, .nuSubformTitle'
+		: '.nuSort';
 
-		let el = "#" + element.id;
+	$(selector).each((index, element) => {
+		const el = `#${element.id}`;
 		if (el !== '#' && $(el).length > 0) {
+			let menuDefinition;
 
 			if ($(el).hasClass('nuTab')) {
-				ctxmenu.update(el, nuContextMenuDefinitionTab, nuContextMenuBeforeRender);
+				menuDefinition = nuContextMenuDefinitionTab;
 			} else if ($(el).hasClass('nuSubformTitle')) {
-				ctxmenu.update(el, nuContextMenuDefinitionSubform, nuContextMenuBeforeRender);
+				menuDefinition = nuContextMenuDefinitionSubform;
 			} else {
-				ctxmenu.update(el, typeEdit ? nuContextMenuDefinitionEdit : nuContextMenuDefinitionBrowse, nuContextMenuBeforeRender);
+				menuDefinition = typeEdit
+					? nuContextMenuDefinitionEdit
+					: nuContextMenuDefinitionBrowse;
 			}
-		}
 
+			ctxmenu.update(el, menuDefinition, {
+				onBeforeShow: (menu, event) => nuContextMenuBeforeRender(menu, event),
+			});
+		}
 	});
 
 }
