@@ -966,7 +966,7 @@ function nuContextMenuUpdate() {
 	const typeEdit = nuFormType() === 'edit';
 	const selector = typeEdit
 		? 'label, button, .nu_run, .nuWord, .nuImage, .nuContentBoxTitle, .nuTab, .nuSubformTitle, .nuAdminButton'
-		: '.nuSort';
+		: '.nuSort, .nuAdminButton';
 
 	$(selector).each((index, element) => {
 		const el = `#${element.id}`;
