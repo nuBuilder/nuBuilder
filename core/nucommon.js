@@ -1914,9 +1914,11 @@ function nuImportUsersFromCSV(file, delimiter) {
 }
 
 function nuIsIframe() {
-
 	return parent.window.nuDocumentID != window.nuDocumentID && parent.window.nuDocumentID !== undefined;
+}
 
+function nuIsPopup() {
+	return window.frameElement && $(window.frameElement).closest('.nuDragDialog').length > 0;
 }
 
 function nuPreventButtonDblClick() {
