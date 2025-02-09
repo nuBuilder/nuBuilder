@@ -527,6 +527,21 @@ var nuContextMenuDefinitionTab = [
 
 ];
 
+var nuContextMenuDefinitionAdminButton = [
+
+	{
+		text: "Hide Buttons",
+		tag: "Hide",
+		action: function (e) {
+			const id = nuContextMenuCurrentTargetId();
+			const $id = $('#' + id);
+			$id.siblings('.nuAdminButton').remove();
+			$id.remove();
+		}
+	}
+
+];
+
 var nuContextMenuDefinitionSubform = [
 
 	menuObject, {
@@ -587,7 +602,7 @@ function nuContextMenuValidationText(id, sub, validation) {
 }
 
 function nuContextMenuBeforeRender(menu, event) {
-debugger;
+
 	contextMenuCurrentTarget = event.currentTarget;
 	const id = nuContextMenuCurrentTargetId();
 	const $currentTarget = $('#' + contextMenuCurrentTarget.id);
@@ -950,17 +965,21 @@ function nuContextMenuUpdate() {
 
 	const typeEdit = nuFormType() === 'edit';
 	const selector = typeEdit
-		? 'label, button, .nu_run, .nuWord, .nuImage, .nuContentBoxTitle, .nuTab, .nuSubformTitle'
+		? 'label, button, .nu_run, .nuWord, .nuImage, .nuContentBoxTitle, .nuTab, .nuSubformTitle, .nuAdminButton'
 		: '.nuSort';
 
 	$(selector).each((index, element) => {
 		const el = `#${element.id}`;
-		if (el !== '#' && $(el).length > 0) {
+		const $el = $(el);
+		
+		if (el !== '#' && $el.length > 0) {
 			let menuDefinition;
 
-			if ($(el).hasClass('nuTab')) {
+			if ($el.hasClass('nuAdminButton')) {
+				menuDefinition = nuContextMenuDefinitionAdminButton;
+			} else if ($el.hasClass('nuTab')) {
 				menuDefinition = nuContextMenuDefinitionTab;
-			} else if ($(el).hasClass('nuSubformTitle')) {
+			} else if ($el.hasClass('nuSubformTitle')) {
 				menuDefinition = nuContextMenuDefinitionSubform;
 			} else {
 				menuDefinition = typeEdit
