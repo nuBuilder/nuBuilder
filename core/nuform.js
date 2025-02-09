@@ -476,7 +476,7 @@ function nuCloseAfterSave() {
 
 	nuDelay(100).then(() => {
 		nuHasNotBeenEdited();
-		if (nuIsIframe()) {
+		if (nuIsPopup()) {
 			nuClosePopup();
 		} else {
 			if (!nuOpenPreviousBreadcrumb()) {
