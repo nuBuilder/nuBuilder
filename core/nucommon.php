@@ -1463,6 +1463,7 @@ function nuEvalSafe($code, $nudata, $returnOutput = false) {
 
 	$output = '';
 	$nuFailIfUnsetHashCookies = false;
+	$result = null;
 
 	try {
 		if ($returnOutput)
