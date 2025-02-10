@@ -3153,7 +3153,7 @@ function nuSubformToClipboard(id, delimiter, includeHeader, includeId) {
 	let s = "";
 
 	delimiter = delimiter || '\t';
-	includeId = !!includeId; // Ensure boolean
+	includeId = Boolean(includeId);
 
 	if (includeHeader) {
 		s = nuSubformHeaderToSeparatedString(obj.fields, delimiter, includeId);
