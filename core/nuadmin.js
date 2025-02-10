@@ -969,6 +969,9 @@ function nuContextMenuUpdate() {
 		: '.nuSort, .nuAdminButton';
 
 	$(selector).each((index, element) => {
+
+		if (!element.id) return;
+
 		const el = `#${element.id}`;
 		const $el = $(el);
 		
