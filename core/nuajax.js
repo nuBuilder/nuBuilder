@@ -192,7 +192,7 @@ function nuRunReport(formId, iFrame) {
 
 }
 
-function nuRunReportSave(formId, tag = null, callback = null) {
+function nuRunReportSave(formId, tag = null, callback = null, fileName = '') {
 
 	const current = nuFORM.getCurrent();
 	const last = $.extend(true, {}, current);
@@ -211,6 +211,7 @@ function nuRunReportSave(formId, tag = null, callback = null) {
 			let formData = new FormData();
 			formData.append('ID', fm.id);
 			formData.append('tag', tag);
+			formData.append('file_name', fileName);
 			let xhr = new XMLHttpRequest();
 
 			if (callback !== null) {

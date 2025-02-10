@@ -6,6 +6,8 @@ require_once('nudata.php');
 require_once('libs/tcpdf/tcpdf.php');
 define('FPDF_FONTPATH','libs/tcpdf/font/');
 
+error_reporting(E_ALL & ~E_DEPRECATED);
+
 $GLOBALS['nu_report']		= [];
 $GLOBALS['nu_columns']		= [];
 $GLOBALS['nu_files']		= [];
@@ -14,16 +16,18 @@ $get						= isset($_GET['i']);
 	if($get){
 	$jsonID					= $_GET['i'];
 	$tag					= '';
+	$fileName				= '';
 }else{
 	$jsonID					= isset($_POST['ID']) ? $_POST['ID'] : null	;
 	$tag					= isset($_POST['tag']) ? $_POST['tag'] : null;
+	$fileName				= isset($_POST['file_name']) ? $_POST['file_name'] : '';
 }
 
 if ($jsonID !== null) {
-	nuRunReportId($jsonID, $tag, $get);
+	nuRunReportId($jsonID, $tag, $get, $fileName);
 }
 
-function nuRunReportId($jsonID, $tag, $get) {
+function nuRunReportId($jsonID, $tag, $get, $fileName) {
 
 	$J							= nuGetJSONData($jsonID);
 
@@ -88,7 +92,7 @@ function nuRunReportId($jsonID, $tag, $get) {
 		return false;
 	}else{
 
-		$result = nuSavePDF($PDF, $JSON->code, $tag);
+		$result = nuSavePDF($PDF, $JSON->code, $tag, $fileName);
 		nuRemoveFiles();
 
 		return [
@@ -1189,20 +1193,24 @@ function nuRemovePageBreak($S){
 	}
 }
 
-function nuSavePDF($PDF, $code = '', $tag = '') {
+function nuSavePDF($PDF, $code = '', $tag = '', $fileName = '') {
 
 	if (nuDemo()) return;
 
-	// save PDF file on the server in the ./temp directory
-	$filename1 = 'nupdf_' . nuID() . '.pdf';
+	if (empty($fileName)) {
+		$fileName = 'nupdf_' . nuID() . '.pdf';
+	} else {
+		$fileName = nuEnsureFileExtension($fileName, 'pdf', true);
+	}
+
 	$dir = dirname(getcwd()) . DIRECTORY_SEPARATOR. 'temp' . DIRECTORY_SEPARATOR;
-	$filename = $dir . $filename1;
+	$fileName = $dir . $fileName;
 	$path = realpath($dir);
 
 	$rid = null;
 
 	if (is_writable($path)) {
-		$PDF->Output($filename, 'F');
+		$PDF->Output($fileName, 'F');
 		$s = nuHash();
 		$usr = isset($s["USER_ID"]) ? $s["USER_ID"] : null;
 		$rid = nuID();
@@ -1218,11 +1226,24 @@ function nuSavePDF($PDF, $code = '', $tag = '') {
 			); ";
 		nuRunQuery($q1);
 
-		$q1 = "INSERT INTO pdf_temp (pdf_temp_id,pdf_added_by,pdf_code,pdf_tag,pdf_file_name)
-					VALUES ('$rid','$usr','$code','$tag','$filename');";
-		nuRunQuery($q1);
+		$insertSql = "
+			INSERT INTO pdf_temp 
+			  (pdf_temp_id, pdf_added_by, pdf_code, pdf_tag, pdf_file_name)
+			VALUES
+			  (:pdf_temp_id, :pdf_added_by, :pdf_code, :pdf_tag, :pdf_file_name)
+		";
 
-		echo json_encode(['filename' => $filename, 'id' => $rid]);
+		$data = array(
+			"pdf_temp_id"	=> $rid,
+			"pdf_added_by"	=> $usr,
+			"pdf_code"		=> $code,
+			"pdf_tag"		=> $tag,
+			"pdf_file_name"	=> $fileName
+		);
+
+		$r = nuRunQuery($insertSql, $data, true);
+
+		echo json_encode(['filename' => $fileName, 'id' => $rid]);
 
 
 	}
@@ -1233,8 +1254,7 @@ function nuSavePDF($PDF, $code = '', $tag = '') {
 
 	return [
 		'id' => $rid,
-		'filename' => $filename
+		'filename' => $fileName
 	];
 
 }
-
