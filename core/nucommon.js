@@ -43,15 +43,15 @@ window.nuBROWSERESIZE = {
 	last_moved_element: ''
 };
 
-String.prototype.nuEndsWith = function (substr, ignoreCase) {
-	if (ignoreCase === undefined || ignoreCase === false) return this.endsWith(substr);
+String.prototype.nuEndsWith = function (substr, ignoreCase = false) {
+	if (!ignoreCase) return this.endsWith(substr);
 	return this.toLowerCase().endsWith(substr.toLowerCase());
-}
+};
 
-String.prototype.nuStartsWith = function (substr, ignoreCase) {
-	if (ignoreCase === undefined || ignoreCase === false) return this.startsWith(substr);
+String.prototype.nuStartsWith = function (substr, ignoreCase = false) {
+	if (!ignoreCase) return this.startsWith(substr);
 	return this.toLowerCase().startsWith(substr.toLowerCase());
-}
+};
 
 String.prototype.nuReplaceAll = function (str1, str2, ignore) {
 	return this.replace(new RegExp(str1.replace(/([\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g, function (c) { return "\\" + c; }), "g" + (ignore ? "i" : "")), str2);
