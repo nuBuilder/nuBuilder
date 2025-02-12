@@ -533,13 +533,15 @@ function nuSetJSONData($name, $newJson) {
 	$sessionId = $_SESSION['nubuilder_session_data']['SESSION_ID'];
 	$stmt = nuRunQuery("SELECT sss_access FROM zzzzsys_session WHERE zzzzsys_session_id = ? ", [$sessionId]);
 
-	$row = db_fetch_object($stmt);
-	$access = nuJsonDecode($row->sss_access, true);
+	if (db_num_rows($stmt) > 0) {
+		$row = db_fetch_object($stmt);
+		$access = nuJsonDecode($row->sss_access, true);
 
-	$access[$name] = $newJson;
-	$update = json_encode($access);
+		$access[$name] = $newJson;
+		$update = json_encode($access);
 
-	nuRunQuery("UPDATE zzzzsys_session SET sss_access = ? WHERE zzzzsys_session_id = ? ", [$update, $sessionId]);
+		nuRunQuery("UPDATE zzzzsys_session SET sss_access = ? WHERE zzzzsys_session_id = ? ", [$update, $sessionId]);
+	}
 
 }
 

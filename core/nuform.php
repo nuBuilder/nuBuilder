@@ -1584,6 +1584,11 @@ function nuReportAccessList($j) {
 function nuButtons($formid, $POST) {
 
 	$t = nuRunQuery("SELECT sss_access FROM zzzzsys_session WHERE zzzzsys_session_id = ? ", [$_SESSION['nubuilder_session_data']['SESSION_ID']]);
+
+	if (db_num_rows($t) == 0) {
+		return [array('Add' => 0, 'Print' => 0, 'Save' => 0, 'Clone' => 0, 'Delete' => 0, 'Run' => 'nuRunPHP("' . '' . '")', 'RunHidden' => ''), '', ''];
+	}
+
 	$r = db_fetch_object($t);
 	$nuJ = nuJsonDecode($r->sss_access);
 	$_POST['forms'] = $nuJ->forms;
