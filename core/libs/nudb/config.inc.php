@@ -79,7 +79,6 @@ if (isset($_COOKIE["nuConfigDBPasswordBlank"]) && $_COOKIE["nuConfigDBPasswordBl
 $cfg['Servers'][$i]['compress']							= false;
 $cfg['Servers'][$i]['AllowNoPassword']					= true;
 $cfg['Servers'][$i]['CheckConfigurationPermissions']	= false;
-$cfg['ThemeDefault'] = 'pmahomme';
 
 /* Security parameters */
 $cfg['CheckConfigurationPermissions'] = false;
