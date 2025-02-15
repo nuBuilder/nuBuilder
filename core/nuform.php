@@ -169,6 +169,7 @@ function nuGetFormObject($formId, $recordId, $numObjects, $defaultTabs = null) {
 function nuGetFormSetBasicProperties($formObject, $formId, $recordId) {
 
 	$formObject->form_id = $formId;
+
 	if ($recordId == '' && $formObject->form_type == 'launch') {
 		$recordId = '-1';
 	}
@@ -191,6 +192,13 @@ function nuGetFormData($formObject, $recordId) {
 
 function nuGetFormProcessObjects($formObject, $formId, $recordId, $data, $defaultTabs, $numObjects) {
 
+	$formObjects = [];
+	$cloneableObjects = [];
+
+	if ($recordId === '' && $formObject->form_type !== 'launch') { // Browse
+		return [$formObjects, $cloneableObjects];
+	}
+
 	$sqlQuery = "
 		SELECT
 			*
@@ -206,9 +214,7 @@ function nuGetFormProcessObjects($formObject, $formId, $recordId, $data, $defaul
 			(sob_all_type = 'run'),
 			sob_all_zzzzsys_tab_id
 	";
-
-	$formObjects = [];
-	$cloneableObjects = [];
+	
 	$dbFields = ($data !== []) ? db_field_names($formObject->table) : [];
 
 	$stmt = nuRunQuery($sqlQuery, [$formId]);
