@@ -1988,7 +1988,9 @@ function nuFromCSV($file, $table, $d, $delete) {
 		return;
 	}
 
-	ini_set('auto_detect_line_endings', true);
+	if (PHP_VERSION_ID < 80100) {
+		ini_set('auto_detect_line_endings', true);
+	}
 
 	$a = [];
 	$w = [];
@@ -2722,4 +2724,3 @@ function nuEnsureFileExtension($filename, $desiredExtension, $forceExtension = f
 
 	return $filename;
 }
-
