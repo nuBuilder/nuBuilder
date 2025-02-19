@@ -599,27 +599,27 @@ function nuLog(...$args) {
 
 function nuID() {
 
-	global $DBUser;
+	global $nuConfigDBUser;
 	$i = uniqid();
 	$s = md5($i);
 
 	while ($i == uniqid()) {
 	}
 
-	$prefix = $DBUser == 'nudev' ? 'nu' : '';
+	$prefix = $nuConfigDBUser == 'nudev' ? 'nu' : '';
 	return $prefix . uniqid() . $s[0] . $s[1];
 
 }
 
 function nuID_DEV() {
 
-	global $DBUser;
+	global $nuConfigDBUser;
 
 	$uniqueId = uniqid();
 	$randomBytes = random_bytes(16);
 	$hash = hash('sha256', $randomBytes);
 
-	$prefix = $DBUser == 'nudev' ? 'nu' : '';
+	$prefix = $nuConfigDBUser == 'nudev' ? 'nu' : '';
 	return $prefix . $uniqueId . substr($hash, 0, 2);
 
 }
