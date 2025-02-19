@@ -422,6 +422,11 @@ input[type=radio] {
 	position: relative
 }
 
+.nuSubformCheckbox {
+	margin: 0 !important;
+	margin-top: 3px !important;
+}
+
 .nuOptionsSubform {
 	border-style: none;
 	color: transparent !important;
