@@ -992,9 +992,8 @@ input[type=radio] {
 }
 
 .nuAdminButtonUsed {
-	background-color: #437430;
-	border-color: #000000ad;
-	color: #ffffff;
+	background-color: #98a29cab;
+	color: #000000;
 }
 
 #nuBackBtnButton.nuActionButton {
