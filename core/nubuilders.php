@@ -429,6 +429,7 @@ function nuFFInsertBrowse($sF, $formId, $formType, $defaultFormats) {
 			";
 			
 			$inputType = $sF->rows[$i][4];
+			$defaultFormat = '';
 			if ($inputType === 'nu59e446589b0af4c') { 			// Date
 				$defaultFormat = $defaultFormats['Date'];
 			} else if ($inputType === 'nu59e446589b20a14') {  	// Number
