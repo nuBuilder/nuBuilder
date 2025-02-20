@@ -51,6 +51,8 @@ function nuBuildFastForm($table, $formType, $Pk) {
 	$formCode = $fp['form_code'];
 	$formDesc = $fp['form_desc'];
 
+	$defaultFormats = nuGetDefaultFormats();
+
 	//--------- Insert new tab ----------------------------
 
 	nuFFInsertTab($tabId, $formId);
@@ -73,11 +75,11 @@ function nuBuildFastForm($table, $formType, $Pk) {
 
 	// -------- Insert Browse -----------------------------
 
-	nuFFInsertBrowse($sF, $formId, $formType);
+	nuFFInsertBrowse($sF, $formId, $formType, $defaultFormats);
 
 	// -------- Insert Objects ----------------------------
 
-	nuFFInsertObjects($table, $TT, $formType, $formId);
+	nuFFInsertObjects($table, $TT, $formType, $formId, $defaultFormats);
 
 	// -------- Display created message -------------------
 
@@ -397,18 +399,18 @@ function nuFFCreateNewTable($sF, $formType, $table, $Pk, $isNew) {
 
 }
 
-function nuFFInsertBrowse($sF, $formId, $formType) {
+function nuFFInsertBrowse($sF, $formId, $formType, $defaultFormats) {
 
 	if (!nuStringStartsWith('browse', $formType))
 		return;
 
 	$count = count($sF->rows);
 	for ($i = 0; $i < $count; $i++) {
-
+		
 		if ($sF->rows[$i][6] == 1 && $sF->deleted[$i] == 0) {	//-- ff_browse ticked and not set as deleted
 
 			$label = $sF->rows[$i][1];							//-- ff_label
-			$id = $sF->rows[$i][2];							//-- ff_field
+			$id = $sF->rows[$i][2];								//-- ff_field
 
 			$sql = "
 
@@ -425,8 +427,15 @@ function nuFFInsertBrowse($sF, $formId, $formType) {
 					(?, ?, ?, ?, ?, ?, ?, ?)
 
 			";
-
-			$array = [nuID(), $formId, $label, $id, 'l', '', ($i + 1) * 10, 250];
+			
+			$inputType = $sF->rows[$i][4];
+			if ($inputType === 'nu59e446589b0af4c') { 			// Date
+				$defaultFormat = $defaultFormats['Date'];
+			} else if ($inputType === 'nu59e446589b20a14') {  	// Number
+				$defaultFormat = $defaultFormats['Number'];
+			}	
+				
+			$array = [nuID(), $formId, $label, $id, 'l', $defaultFormat, ($i + 1) * 10, 250];
 
 			nuRunQuery($sql, $array);
 
@@ -436,15 +445,17 @@ function nuFFInsertBrowse($sF, $formId, $formType) {
 
 }
 
-function nuFFInsertObjects($table, $TT, $formType, $formId) {
+function nuFFInsertObjects($table, $TT, $formType, $formId, $defaultFormats) {
 
 	if ($formType !== 'subform') {
 		nuFFInsertRunButton($table, $TT, $formType, $formId);
 	}
 
-	//if ($formType !== 'browse'){
 	nuRunQuery("INSERT INTO zzzzsys_object SELECT * FROM $TT");
-	//}
+	
+	$sqlUpdateFormat = "UPDATE zzzzsys_object SET sob_input_format = ? WHERE sob_input_type = ?";
+	nuRunQuery($sqlUpdateFormat, [$defaultFormats['Date'], 'nuDate']);
+	nuRunQuery($sqlUpdateFormat, [$defaultFormats['Number'], 'nuNumber']);
 
 }
 

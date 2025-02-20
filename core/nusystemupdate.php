@@ -1,24 +1,25 @@
 <?php
 header("Content-type: text/html; charset=utf-8");
 header("Cache-Control: no-cache, must-revalidate");
-header("Pragma: no-cache"); 
+header("Pragma: no-cache");
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 
-require_once ('nusessiondata.php');
-require_once ('nucommon.php');
-require_once ('nudata.php');
-require_once ('nusystemupdatelibs.php');
+require_once('nusessiondata.php');
+require_once('nucommon.php');
+require_once('nudata.php');
+require_once('nusystemupdatelibs.php');
 require_once('nusetuplibs.php');
 require_once('nuform.php');
 require_once('../nuconfig.php');
 
 $config = nuConfigScript();
-eval($config['code']);
+eval ($config['code']);
 
 $jsonId = isset($_GET['i']) ? $_GET['i'] : null;
 
 if ($jsonId != null) {
-	while (@ob_end_flush());
+	while (@ob_end_flush())
+		;
 	ob_implicit_flush(true);
 	nuRunUpdate($jsonId);
 }
@@ -49,12 +50,51 @@ function nuUpdateAllowed($jsonId, $u = null, $p = null) {
 
 }
 
+function nuSetupGetConfig() {
+
+	$sysConfig = nuRunQueryNoDebug("SELECT zzzzsys_config_id, cfg_value FROM zzzzsys_config WHERE zzzzsys_config_id like 'nu%'");
+	return $sysConfig;
+
+}
+
+function nuSetupGetDefaultFormats() {
+
+	$sysConfig = nuRunQueryNoDebug("SELECT zzzzsys_format_id, srm_default FROM zzzzsys_format  WHERE srm_default IS NOT NULL");
+	return $sysConfig;
+
+}
+
+
+function nuSetupRestoreConfig($sysConfig) {
+
+	while ($row = db_fetch_object($sysConfig)) {
+		$update = "UPDATE zzzzsys_config SET cfg_value = ? WHERE zzzzsys_config_id = ?";
+		nuRunQuery($update, [$row->cfg_value, $row->zzzzsys_config_id]);
+	}
+
+}
+
+function nuSetupRestoreDefaultFormats($defaultFormats) {
+
+	if (db_num_rows($defaultFormats) !== 0) {
+
+		$update = "UPDATE zzzzsys_format SET srm_default = ?";
+		nuRunQuery($update, ['0']);
+
+		while ($row = db_fetch_object($defaultFormats)) {
+			$update = "UPDATE zzzzsys_format SET srm_default = ? WHERE zzzzsys_format_id = ?";
+			nuRunQuery($update, [$row->srm_default, $row->zzzzsys_format_id]);
+		}
+
+	}
+
+}
 
 function nuRunUpdate($jsonId, $u = null, $p = null) {
-	
+
 	$nuSQLFile = 'nubuilder4.sql';
-	
-	if (! nuUpdateAllowed($jsonId, $u, $p)) {
+
+	if (!nuUpdateAllowed($jsonId, $u, $p)) {
 		return;
 	}
 
@@ -63,19 +103,29 @@ function nuRunUpdate($jsonId, $u = null, $p = null) {
 	// Check if import sql file exists
 	$importFileExists = nuSQLImportFileExists($nuSQLFile);
 	if ($importFileExists !== true) {
-		echo "File does not exist. Updated aborted: $importFileExists";		
+		echo "File does not exist. Updated aborted: $importFileExists";
 		return;
-	} 
+	}
 
 	$i = 1;
 
 	// Save configuration settings values
-	$sysConfig = nuRunQueryNoDebug("SELECT zzzzsys_config_id, cfg_value FROM zzzzsys_config WHERE zzzzsys_config_id like 'nu%'");
+	$sysConfig = nuSetupGetConfig();
 	if (db_num_rows($sysConfig) > 0) {
 		nuPrintUpdateMessage('Saved CONFIGURATION SETTINGS', $i);
 		$i++;
 	} else {
-		unset($sysConfig);
+		$sysConfig = null;
+	}
+
+
+	// Save default formats
+	$defaultFormats = nuSetupGetDefaultFormats();
+	if (db_num_rows($defaultFormats) > 0) {
+		nuPrintUpdateMessage('Saved DEFAULT FORMATS', $i);
+		$i++;
+	} else {
+		$defaultFormats = null;
 	}
 
 	// Alter nu-tables: Add new columns, change data types etc.
@@ -118,18 +168,18 @@ function nuRunUpdate($jsonId, $u = null, $p = null) {
 	nuPrintUpdateMessage('Imported the LANGUAGE FILES into the DATABASE', $i);
 	$i++;
 
-
 	// Restore config values
 	if (isset($sysConfig)) {
-
-		while($r = db_fetch_object($sysConfig)){
-			$update = "UPDATE zzzzsys_config SET cfg_value = ? WHERE zzzzsys_config_id = ?";
-			nuRunQuery($update, [$r->cfg_value, $r->zzzzsys_config_id]);
-		}
-
+		nuSetupRestoreConfig($sysConfig);
 		nuPrintUpdateMessage('Restored CONFIGURATION SETTINGS', $i);
 		$i++;
+	}
 
+	// Restore default formats
+	if (isset($defaultFormats)) {
+		nuSetupRestoreDefaultFormats($defaultFormats);
+		nuPrintUpdateMessage('Restored DEFAULT FORMATS', $i);
+		$i++;
 	}
 
 	// Set DB Collation

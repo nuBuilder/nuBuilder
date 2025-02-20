@@ -50,6 +50,7 @@ function nuAlterSystemTables(){
 		"ALTER TABLE `zzzzsys_php` ADD `sph_global` VARCHAR(1) NOT NULL DEFAULT '0' AFTER `sph_system`;",
 		"ALTER TABLE `zzzzsys_php` ADD `sph_template` VARCHAR(1) NOT NULL DEFAULT '0' AFTER `sph_global`;",
 		"ALTER TABLE `zzzzsys_setup` ADD `set_smtp_use_ssl` VARCHAR(1) NOT NULL DEFAULT '1' AFTER `set_smtp_use_authentication`;",
+		"ALTER TABLE `zzzzsys_format` ADD `srm_default` VARCHAR(1) NULL DEFAULT NULL AFTER `srm_type`;",
 		"ALTER TABLE `zzzzsys_report` CHANGE `sre_zzzzsys_php_id` `sre_zzzzsys_php_id` VARCHAR(200) NULL DEFAULT NULL;",
 		"ALTER TABLE `zzzzsys_select` ADD `sse_code` VARCHAR(50) NULL DEFAULT NULL AFTER `zzzzsys_select_id`;",
 		"ALTER TABLE `zzzzsys_code_snippet` CHANGE `cot_updated_on` `cot_updated_on` TIMESTAMP on update CURRENT_TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP;",

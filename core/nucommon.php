@@ -2,10 +2,10 @@
 
 error_reporting(error_reporting() & ~E_NOTICE);
 
-require_once ('nusessiondata.php');
-require_once ('nubuilders.php');
-require_once ('nuemailer.php');
-require_once ('nudata.php');
+require_once('nusessiondata.php');
+require_once('nubuilders.php');
+require_once('nuemailer.php');
+require_once('nudata.php');
 
 nuSetTimeLimit(0);
 
@@ -1142,6 +1142,28 @@ function nuPunctuation($text) {
 	}
 
 	return $result;
+
+}
+
+function nuGetDefaultFormats() {
+
+	$query = "SELECT srm_format, srm_type FROM zzzzsys_format WHERE IFNULL(srm_default, '') = '1'";
+	$formats = ['Date' => '', 'Number' => ''];
+
+	$stmt = nuRunQuery($query);
+	while ($row = db_fetch_array($stmt)) {
+		if ($row['srm_type'] === 'Date' && empty($formats['Date'])) {
+			$formats['Date'] = $row['srm_format'];
+		} elseif ($row['srm_type'] === 'Number' && empty($formats['Number'])) {
+			$formats['Number'] = $row['srm_format'];
+		}
+
+		if (!empty($formats['Date']) && !empty($formats['Number'])) {
+			break;
+		}
+	}
+
+	return $formats;
 
 }
 
@@ -2661,10 +2683,10 @@ function nuIncludeConfigPHPFiles() {
 
 	if (isset($nuConfigIncludePHP) && $nuConfigIncludePHP != '') {
 		if (!is_array($nuConfigIncludePHP)) {
-			require_once ($nuConfigIncludePHP);
+			require_once($nuConfigIncludePHP);
 		} else {
 			foreach ($nuConfigIncludePHP as $file) {
-				require_once ($file);
+				require_once($file);
 			}
 		}
 	}
