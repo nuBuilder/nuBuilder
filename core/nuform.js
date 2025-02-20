@@ -5155,7 +5155,6 @@ function nuHighlightSearch() {
 	});
 
 }
-
 function nuOnSubformDeleteClick(event) {
 
 	const id = event.target.id;
@@ -5166,6 +5165,9 @@ function nuOnSubformDeleteClick(event) {
 	$('[id^=' + sf + nuPad3(row) + ']')
 		.not(':button, :checkbox')
 		.toggleClass('nuSubformDeleteTicked', checked)
+		.filter(function () {
+			return $(this).attr('data-nu-access') !== "1";
+		})
 		.toggleClass('nuReadonly', checked)
 		.nuEnable(!checked);
 
