@@ -41,7 +41,7 @@ if ( !isset($_SESSION['nubuilder_session_data']['NB_PATH']) || dirname($_SESSION
 
 function nuHeader() {
 
-	$sql = "SELECT set_style, set_header FROM zzzzsys_setup WHERE zzzzsys_setup_id = ?";
+	$sql = "SELECT * FROM zzzzsys_setup WHERE zzzzsys_setup_id = ?";
 	$stmt = nuRunQuery($sql, [1]);
 
 	$obj = db_fetch_object($stmt);
