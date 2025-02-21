@@ -56,7 +56,10 @@ function nuConfigScript() {
 					$code .= $r['cfg_setting'] . " = " . nuCleanConfigValue($r['cfg_value']) .";\n";
 				} else {
 
-					if ($js == "") $code .= "\$nuJSOptions = \"\n";
+					if ($js == "") { 
+						$code .= "\$nuJSOptions = \"\n";
+						$js = "window.nuUXOptions = {}; \n";
+					}
 					$js .= 'nuUXOptions' . "['". $r['cfg_setting'] . "']"	. " = " . nuCleanConfigValue($r['cfg_value']) ."; \n";
 
 				}
