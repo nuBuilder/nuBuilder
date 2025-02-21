@@ -542,8 +542,8 @@ function nuDebugCreateOutput(...$args) {
 
 	foreach ($args as $i => $arg) {
 
-		$type = gettype($arg);
-		if ($type === 'string' && nuStringStartsWith(' <html>', $arg)) {
+		$type = gettype($arg); 
+		if ($type === 'string' && strpos($arg, ' <html>') === 0) {
 			$message .= $arg;
 		} else {
 
