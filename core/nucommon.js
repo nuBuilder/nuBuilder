@@ -2613,6 +2613,17 @@ function nuDateIsValid(date) {
 
 }
 
+function nuObjectIdIsValid(id) {
+
+	if (typeof id !== 'string' || id.length === 0) {
+		return false;
+	}
+
+	const validIdPattern = /^[^\d\s][^\s]*$/u;
+	return validIdPattern.test(id);
+
+}
+
 function nuEscapeHTML(string, extraReplacements = {}) {
 
 	if (typeof string !== 'string') return '';
