@@ -306,7 +306,8 @@ input[type=radio] {
 	padding: 10px 0;
 	background-color: white;
 	height: 22px;
-	text-align: left
+	text-align: left;
+	user-select: none
 }
 
 .nuBreadcrumbHolder {
@@ -331,13 +332,15 @@ input[type=radio] {
 	color: white;
 	display: inline-block;
 	text-decoration: underline;
-	font-size: 12px
+	font-size: 12px;
+	user-select: none
 }
 
 .nuBreadcrumbArrow {
 	color: white;
 	display: inline-block;
-	font-size: 12px
+	font-size: 12px;
+	user-select: none
 }
 
 .nuBreadcrumb:hover {
@@ -389,7 +392,8 @@ input[type=radio] {
 .nuNotBreadcrumb {
 	color: white;
 	display: inline-block;
-	font-size: 12px
+	font-size: 12px;
+	user-select: none;
 }
 
 .nuOptions {
@@ -629,7 +633,8 @@ input[type=radio] {
 
 .nuBuilderLink {
 	text-decoration-line: none;
-	color: #eeeded
+	color: #eeeded;
+	user-select: none
 }
 
 .nuIcon {
