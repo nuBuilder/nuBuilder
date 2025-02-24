@@ -214,7 +214,7 @@ function nuGetFormProcessObjects($formObject, $formId, $recordId, $data, $defaul
 			(sob_all_type = 'run'),
 			sob_all_zzzzsys_tab_id
 	";
-	
+
 	$dbFields = ($data !== []) ? db_field_names($formObject->table) : [];
 
 	$stmt = nuRunQuery($sqlQuery, [$formId]);
@@ -525,46 +525,46 @@ function nuDefaultObject($r, $t) {
 	$labelOnTop = null;
 
 	/*
-							if (nuIsMobile() && isset($r->sob_all_json)) {
+											  if (nuIsMobile() && isset($r->sob_all_json)) {
 
-								$json = $r->sob_all_json;
-								if ($json != '') {
+												  $json = $r->sob_all_json;
+												  if ($json != '') {
 
-									$obj	= nuJsonDecode($json, true);
+													  $obj	= nuJsonDecode($json, true);
 
-									$type		= nuObjKey($obj,'type', null);
+													  $type		= nuObjKey($obj,'type', null);
 
-									if ($type != null) {
+													  if ($type != null) {
 
-										$mobile		= nuObjKey($type,'mobile', null);
+														  $mobile		= nuObjKey($type,'mobile', null);
 
-										if ($mobile == true) {
+														  if ($mobile == true) {
 
-											$visible	= nuObjKey($mobile,'visible', null);
-											$name		= nuObjKey($mobile,'name', null);
-											$labelOnTop	= nuObjKey($mobile,'labelontop', null);
-											$labelOnTop	= $labelOnTop == null || $labelOnTop == true;
+															  $visible	= nuObjKey($mobile,'visible', null);
+															  $name		= nuObjKey($mobile,'name', null);
+															  $labelOnTop	= nuObjKey($mobile,'labelontop', null);
+															  $labelOnTop	= $labelOnTop == null || $labelOnTop == true;
 
-											$size		= nuObjKey($mobile,'size');
-											if ($size != null) {
-												$width		= nuObjKey($size, 'width', null);
-												$height		= nuObjKey($size, 'height', null);
-											}
+															  $size		= nuObjKey($mobile,'size');
+															  if ($size != null) {
+																  $width		= nuObjKey($size, 'width', null);
+																  $height		= nuObjKey($size, 'height', null);
+															  }
 
-											$location		= nuObjKey($mobile,'location');
-											if ($location != null) {
-												$top		= nuObjKey($location, 'top', null);
-												$left		= nuObjKey($location, 'left', null);
-											}
+															  $location		= nuObjKey($mobile,'location');
+															  if ($location != null) {
+																  $top		= nuObjKey($location, 'top', null);
+																  $left		= nuObjKey($location, 'left', null);
+															  }
 
-										}
+														  }
 
-									}
+													  }
 
-								}
+												  }
 
-							}
-							*/
+											  }
+											  */
 
 	$o->mobile = $mobile;
 	$o->labelOnTop = $labelOnTop;
@@ -935,77 +935,76 @@ function nuSelectAddOption($text, $value) {
 
 }
 
+function nuGetSelectType($processedSql) {
+	$sqlFirstChars = nuTrim(substr($processedSql, 0, 20));
+	$sqlFirstCharsNoSpaces = preg_replace('/\s+/', '', $sqlFirstChars);
+
+	if (
+		nuStringStartsWith('SELECT ', $sqlFirstChars, true) ||
+		nuStringStartsWith('(SELECT ', $sqlFirstCharsNoSpaces, true) ||
+		nuStringStartsWith('WITH ', $sqlFirstChars, true) ||
+		nuStringStartsWith('#', $sqlFirstCharsNoSpaces, true)
+	) {
+		return 'query';
+	} elseif (nuStringStartsWith('[', $sqlFirstChars) && is_array(nuJsonDecode($processedSql))) {
+		return 'array';
+	} elseif (nuStringStartsWith('%LANGUAGES%', $sqlFirstChars, true)) {
+		return 'languages';
+	} elseif (nuStringStartsWith('SHOW TABLES', $sqlFirstChars) || nuStringStartsWith('SHOW FULL TABLES', $sqlFirstChars)) {
+		return 'showTables';
+	} else {
+		return 'delimited';
+	}
+}
+
 function nuSelectOptions($sql) {
 
 	$options = [];
-
 	$sqlWithHk = $sql;
-	$sql = nuReplaceHashVariables($sql);
+	$processedSql = nuReplaceHashVariables($sql);
 
-	$sqlFirstChars = nuTrim(substr($sql, 0, 20));
-	$sqlFirstCharsNoSpacesNoLineBreaks = preg_replace('/\s+/', '', $sqlFirstChars);
+	$selectType = nuGetSelectType($processedSql);
 
-	//-- sql statement
-	if (
-		nuStringStartsWith('SELECT', $sqlFirstChars, true) ||
-		nuStringStartsWith('(SELECT', $sqlFirstCharsNoSpacesNoLineBreaks, true) ||
-		nuStringStartsWith('WITH', $sqlFirstChars, true)
-	) {
-
-		$stmt = nuRunQueryString($sql, $sqlWithHk);
-
-		if (nuErrorFound()) {
-			return;
-		}
-
-		while ($row = db_fetch_row($stmt)) {
-			$options[] = $row;
-		}
-
-		//-- Array style
-	} elseif (nuStringStartsWith('[', $sqlFirstChars) && is_array(nuJsonDecode($sql))) {
-
-		$arr = nuJsonDecode($sql);
-		foreach ($arr as $item) {
-			$options[] = nuSelectAddOption($item, $item);
-		}
-
-		//-- language Files
-	} elseif (nuStringStartsWith('%LANGUAGES%', $sqlFirstChars, true)) {
-
-		foreach (glob("languages/*.sql") as $file) {
-
-			$baseName = basename($file, '.sql');
-			$options[] = nuSelectAddOption($baseName, $baseName);
-
-		}
-
-		//-- SHOW (FULL) TABLES
-	} elseif (nuStringStartsWith('SHOW TABLES', $sqlFirstChars) || nuStringStartsWith('SHOW FULL TABLES', $sqlFirstChars)) {
-
-		$stmt = nuRunQuery($sql);
-		while ($row = db_fetch_row($stmt)) {
-			if (!nuStringStartsWith('__', $row[0])) {
-				$options[] = nuSelectAddOption($row[0], $row[0]);
+	switch ($selectType) {
+		case 'query':
+			$stmt = nuRunQueryString($processedSql, $sqlWithHk);
+			if (nuErrorFound()) {
+				return;
 			}
-		}
-
-		//-- comma delimited string
-	} else {
-
-		$parts = explode('|', nuRemoveNonCharacters($sql));
-
-		$count = count($parts);
-		for ($i = 0; $i < $count; $i++) {
-
-			$selectValue = $parts[$i];
-			$selectDescription = isset($parts[$i + 1]) ? $parts[$i + 1] : 'Undefined';
-
-			$options[] = nuSelectAddOption($selectValue, $selectDescription);
-			$i++;
-
-		}
-
+			while ($row = db_fetch_row($stmt)) {
+				$options[] = $row;
+			}
+			break;
+		case 'array':
+			$arr = nuJsonDecode($processedSql);
+			foreach ($arr as $item) {
+				$options[] = nuSelectAddOption($item, $item);
+			}
+			break;
+		case 'languages':
+			foreach (glob("languages/*.sql") as $file) {
+				$baseName = basename($file, '.sql');
+				$options[] = nuSelectAddOption($baseName, $baseName);
+			}
+			break;
+		case 'showTables':
+			$stmt = nuRunQuery($sql);
+			while ($row = db_fetch_row($stmt)) {
+				if (!nuStringStartsWith('__', $row[0])) {
+					$options[] = nuSelectAddOption($row[0], $row[0]);
+				}
+			}
+			break;
+		case 'delimited':
+		default:
+			$parts = explode('|', nuRemoveNonCharacters($processedSql));
+			for ($i = 0, $count = count($parts); $i < $count; $i++) {
+				$selectValue = $parts[$i];
+				$selectDescription = isset($parts[$i + 1]) ? $parts[$i + 1] : 'Undefined';
+				$options[] = nuSelectAddOption($selectValue, $selectDescription);
+				$i++; // Skip the next element (used as description)
+			}
+			break;
 	}
 
 	return $options;
