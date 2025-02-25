@@ -945,7 +945,7 @@ function nuGetSelectType($processedSql) {
 		nuStringStartsWith('SELECT', $sqlFirstChars, true) ||
 		nuStringStartsWith('(SELECT', $sqlFirstCharsNoSpaces, true) ||
 		nuStringStartsWith('WITH ', $sqlFirstChars, true) ||
-		nuStringStartsWith('#', $sqlFirstCharsNoSpaces, true)
+		nuStringStartsWith('# ', $sqlFirstCharsNoSpaces, true)
 	) {
 		return 'query';
 	} elseif (nuStringStartsWith('[', $sqlFirstChars) && is_array(nuJsonDecode($processedSql))) {
