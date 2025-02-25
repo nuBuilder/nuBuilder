@@ -1019,6 +1019,10 @@ input[type=radio] {
 	border-color: #dc3545
 }
 
+.nuDebugButtonHighlight {
+	color: #ff5454;
+}
+
 .nuSaveButton {}
 
 .nuDeleteButton {}

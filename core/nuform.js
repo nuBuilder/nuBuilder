@@ -238,6 +238,7 @@ function nuBuildForm(formObj) {
 	const globalAccess = nuGlobalAccess();
 	if (globalAccess) {
 		nuContextMenuUpdate();
+		nuUpdateDebugButton();
 	}
 
 	nuSetSaved(true);
@@ -324,6 +325,18 @@ function nuEditDoCloseAfterSave(formObj) {
 	}
 
 	return false;
+
+}
+
+function nuUpdateDebugButton() {
+
+	const debugMessages = nuSERVERRESPONSE && nuSERVERRESPONSE.nu_debug;
+
+	if (Array.isArray(debugMessages) && debugMessages.length > 0) {
+		$("#nuDebugButton")
+			.addClass("nuDebugButtonHighlight")
+			.attr("title", debugMessages.join(" "));
+	}
 
 }
 

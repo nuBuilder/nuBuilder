@@ -159,6 +159,7 @@ if ($callType != 'logout') {
 		$f->forms[0]->errors = nuObjKey($_POST, 'nuErrors');
 		$f->forms[0]->messages = nuObjKey($_POST, 'nuMessages');
 		$f->forms[0]->errors_validation_title = nuObjKey($_POST, 'nuErrorValidationTitle');
+		$f->forms[0]->nu_debug = $GLOBALS['ERRORS'] ?? null;
 
 		$f->forms[0]->log_again = nuObjKey($_POST, 'nuLogAgain');
 		$f->forms[0]->global_access = $globalAccess ? '1' : '0';
