@@ -526,46 +526,46 @@ function nuDefaultObject($r, $t) {
 	$labelOnTop = null;
 
 	/*
-														  if (nuIsMobile() && isset($r->sob_all_json)) {
+																   if (nuIsMobile() && isset($r->sob_all_json)) {
 
-															  $json = $r->sob_all_json;
-															  if ($json != '') {
+																	   $json = $r->sob_all_json;
+																	   if ($json != '') {
 
-																  $obj	= nuJsonDecode($json, true);
+																		   $obj	= nuJsonDecode($json, true);
 
-																  $type		= nuObjKey($obj,'type', null);
+																		   $type		= nuObjKey($obj,'type', null);
 
-																  if ($type != null) {
+																		   if ($type != null) {
 
-																	  $mobile		= nuObjKey($type,'mobile', null);
+																			   $mobile		= nuObjKey($type,'mobile', null);
 
-																	  if ($mobile == true) {
+																			   if ($mobile == true) {
 
-																		  $visible	= nuObjKey($mobile,'visible', null);
-																		  $name		= nuObjKey($mobile,'name', null);
-																		  $labelOnTop	= nuObjKey($mobile,'labelontop', null);
-																		  $labelOnTop	= $labelOnTop == null || $labelOnTop == true;
+																				   $visible	= nuObjKey($mobile,'visible', null);
+																				   $name		= nuObjKey($mobile,'name', null);
+																				   $labelOnTop	= nuObjKey($mobile,'labelontop', null);
+																				   $labelOnTop	= $labelOnTop == null || $labelOnTop == true;
 
-																		  $size		= nuObjKey($mobile,'size');
-																		  if ($size != null) {
-																			  $width		= nuObjKey($size, 'width', null);
-																			  $height		= nuObjKey($size, 'height', null);
-																		  }
+																				   $size		= nuObjKey($mobile,'size');
+																				   if ($size != null) {
+																					   $width		= nuObjKey($size, 'width', null);
+																					   $height		= nuObjKey($size, 'height', null);
+																				   }
 
-																		  $location		= nuObjKey($mobile,'location');
-																		  if ($location != null) {
-																			  $top		= nuObjKey($location, 'top', null);
-																			  $left		= nuObjKey($location, 'left', null);
-																		  }
+																				   $location		= nuObjKey($mobile,'location');
+																				   if ($location != null) {
+																					   $top		= nuObjKey($location, 'top', null);
+																					   $left		= nuObjKey($location, 'left', null);
+																				   }
 
-																	  }
+																			   }
 
-																  }
+																		   }
 
-															  }
+																	   }
 
-														  }
-														  */
+																   }
+																   */
 
 	$o->mobile = $mobile;
 	$o->labelOnTop = $labelOnTop;
@@ -937,12 +937,13 @@ function nuSelectAddOption($text, $value) {
 }
 
 function nuGetSelectType($processedSql) {
+
 	$sqlFirstChars = nuTrim(substr($processedSql, 0, 20));
 	$sqlFirstCharsNoSpaces = preg_replace('/\s+/', '', $sqlFirstChars);
 
 	if (
-		nuStringStartsWith('SELECT ', $sqlFirstChars, true) ||
-		nuStringStartsWith('(SELECT ', $sqlFirstCharsNoSpaces, true) ||
+		nuStringStartsWith('SELECT', $sqlFirstChars, true) ||
+		nuStringStartsWith('(SELECT', $sqlFirstCharsNoSpaces, true) ||
 		nuStringStartsWith('WITH ', $sqlFirstChars, true) ||
 		nuStringStartsWith('#', $sqlFirstCharsNoSpaces, true)
 	) {
@@ -951,11 +952,12 @@ function nuGetSelectType($processedSql) {
 		return 'array';
 	} elseif (nuStringStartsWith('%LANGUAGES%', $sqlFirstChars, true)) {
 		return 'languages';
-	} elseif (nuStringStartsWith('SHOW TABLES', $sqlFirstChars) || nuStringStartsWith('SHOW FULL TABLES', $sqlFirstChars)) {
+	} elseif (nuStringStartsWith('SHOW TABLES', $sqlFirstChars, true) || nuStringStartsWith('SHOW FULL TABLES', $sqlFirstChars)) {
 		return 'showTables';
 	} else {
 		return 'delimited';
 	}
+
 }
 
 function nuSelectOptions($sql) {
