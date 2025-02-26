@@ -462,9 +462,9 @@ function nuRunPHP($nuCode, $hidden = false) {
 		if ($exists) {
 
 			if (nuHasProcedureAccess($phpObj)) {
+
 				if ($hidden) {
 					nuEval($phpObj->zzzzsys_php_id);
-					$_POST['nuRunPHPHiddenResult'] = $result;
 					$_POST['nuRunPHPHidden'] = $nuCode;
 				}
 			} else {
@@ -1492,7 +1492,7 @@ function nuEvalSafe($code, $nudata, $returnOutput = false) {
 	try {
 		if ($returnOutput)
 			ob_start();
-		$result = eval ($code);
+		eval ($code);
 		if ($returnOutput) {
 			$output = ob_get_clean();
 		}
@@ -1543,6 +1543,9 @@ function nuEval($phpid, $returnOutput = false) {
 		nuExceptionHandler($e, $code);
 		return '';
 	}
+
+
+	$_POST['nuRunPHPHiddenResult'] = $result['result'];
 
 	if ($returnOutput) {
 		return $result['output'];
