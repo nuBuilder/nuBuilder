@@ -86,6 +86,13 @@ $readonly_users = array(
     'user'
 );
 
+// Global readonly, including when auth is not being used
+$global_readonly = false;
+
+// user specific directories
+// array('Username' => 'Directory path', 'Username2' => 'Directory path', ...)
+$directories_users = array();
+
 // Enable highlight.js (https://highlightjs.org/) on view's page
 $use_highlightjs = true;
 
@@ -102,6 +109,7 @@ $default_timezone = 'Etc/UTC'; // UTC
 
 // Root path for file manager
 // use absolute path of directory i.e: '/var/www/folder' or $_SERVER['DOCUMENT_ROOT'].'/folder'
+//make sure update $root_url in next section
 $root_path = $_SERVER['DOCUMENT_ROOT'];
 
 // Root url for links in file manager.Relative to $http_host. Variants: '', 'path/to/subfolder'
@@ -109,18 +117,21 @@ $root_path = $_SERVER['DOCUMENT_ROOT'];
 $root_url = '';
 
 // Server hostname. Can set manually if wrong
+// $_SERVER['HTTP_HOST'].'/folder'
 $http_host = $_SERVER['HTTP_HOST'];
-
-// user specific directories
-// array('Username' => 'Directory path', 'Username2' => 'Directory path', ...)
-$directories_users = array();
 
 // input encoding for iconv
 $iconv_input_encoding = 'UTF-8';
 
 // date() format for file modification date
-// Doc - https://www.php.net/manual/en/datetime.format.php
+// Doc - https://www.php.net/manual/en/function.date.php
 $datetime_format = 'Y-m-d H:i:s';
+
+// Path display mode when viewing file information
+// 'full' => show full path
+// 'relative' => show path relative to root_path
+// 'host' => show path on the host
+$path_display_mode = 'full';
 
 // Allowed file extensions for create and rename files
 // e.g. 'txt,html,css,js'
@@ -136,13 +147,13 @@ $allowed_upload_extensions = '';
 $favicon_path = '';
 
 // Files and folders to excluded from listing
-// e.g. array('myfile.html', 'personal-folder', '*.php', ...)
-$exclude_items = array('');
+// e.g. array('myfile.html', 'personal-folder', '*.php', '/path/to/folder', ...)
+$exclude_items = array();
 
 // Online office Docs Viewer
-// Availabe rules are 'google', 'microsoft' or false
-// google => View documents using Google Docs Viewer
-// microsoft => View documents using Microsoft Web Apps Viewer
+// Available rules are 'google', 'microsoft' or false
+// Google => View documents using Google Docs Viewer
+// Microsoft => View documents using Microsoft Web Apps Viewer
 // false => disable online doc viewer
 $online_viewer = 'google';
 
@@ -151,9 +162,14 @@ $online_viewer = 'google';
 // false => disable sticky header
 $sticky_navbar = true;
 
+// Maximum file upload size
+// Increase the following values in php.ini to work properly
+// memory_limit, upload_max_filesize, post_max_size
+$max_upload_size_bytes = 5000000000; // size 5,000,000,000 bytes (~5GB)
 
-// max upload file size
-$max_upload_size_bytes = 5000;
+// chunk size used for upload
+// eg. decrease to 1MB if nginx reports problem 413 entity too large
+$upload_chunk_size_bytes = 2000000; // chunk size 2,000,000 bytes (~2MB)
 
 // Possible rules are 'OFF', 'AND' or 'OR'
 // OFF => Don't check connection IP, defaults to OFF
@@ -175,5 +191,6 @@ $ip_blacklist = array(
     '0.0.0.0',      // non-routable meta ipv4
     '::'            // non-routable meta ipv6
 );
+
 
 ?>
