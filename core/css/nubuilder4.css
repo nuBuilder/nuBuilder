@@ -993,7 +993,12 @@ input[type=radio] {
 	color: var(--nu-label);
 	border-color: #d3d3d3;
 	text-shadow: none;
-	border-radius: 3px
+	border-radius: 3px;
+}
+
+.nuAdminButton:not(.nuReadonly):active {
+	background-color: #096341 ! important;
+	transform: scale(0.90);
 }
 
 .nuAdminButtonUsed {
