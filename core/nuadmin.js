@@ -974,7 +974,7 @@ function nuContextMenuUpdate() {
 
 		const el = `#${element.id}`;
 		const $el = $(el);
-		
+
 		if (el !== '#' && $el.length > 0) {
 			let menuDefinition;
 
@@ -1122,22 +1122,23 @@ var nuPrettyPrint = (function () {
 					}
 				};
 
-			util.forEach(cells, function (cell) {
+			util.forEach(cells, function (cell, index) {
 
-				if (cell === null) {
+			if (cell === null) {
 					return;
 				}
-				/* Default cell type is <td> */
-				td = util.el(cellType, attrs);
-
+				// Create a copy of the attributes for this cell.
+				var cellAttrs = util.merge({}, attrs);
+				if (index === 0) {
+					// Merge the first cell's style.
+					cellAttrs.style = util.merge({}, cellAttrs.style, prettyPrintThis.settings.styles['default'].td_first);
+				}
+				td = util.el(cellType, cellAttrs);
 				if (cell.nodeType) {
-					/* IsDomElement */
 					td.appendChild(cell);
 				} else {
-					/* IsString */
 					td.innerHTML = util.shorten(cell.toString());
 				}
-
 				tr.appendChild(td);
 			});
 
@@ -1799,6 +1800,7 @@ var nuPrettyPrint = (function () {
 					borderCollapse: 'collapse',
 					width: '100%'
 				},
+
 				td: {
 					padding: '5px',
 					fontSize: '12px',
@@ -1808,6 +1810,9 @@ var nuPrettyPrint = (function () {
 					verticalAlign: 'top',
 					fontFamily: '"Consolas","Lucida Console",Courier,mono',
 					whiteSpace: 'nowrap'
+				},
+				td_first: {
+					minWidth: '150px'
 				},
 				td_hover: {
 					/* Styles defined here will apply to all tr:hover > td,
@@ -1857,9 +1862,13 @@ function nuPrettyPrintMessage(event, properties) {
 	} else {
 		const message = nuMessage(title, prettyPrintedTable);
 		message.css({
-			'max-width': '700px',
+			'max-width': '90vw',
+			'max-height': '80vw',
 			'text-align': 'left',
-			'background-color': 'white'
+			'background-color': 'white',
+			'width' : '70vw',
+			'left' : '50px',
+			'overflow' : 'auto',
 		}).attr('id', 'nuPropertiesMsgDiv');
 
 		nuDragElement(document.getElementById('nuPropertiesMsgDiv'), 40);
