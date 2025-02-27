@@ -2472,8 +2472,12 @@ function nuSetDateValue(id, date) {
 	const obj = $('#' + id);
 
 	if (!id || nuDebugOut(obj, id)) return false;
+	date = date instanceof Date && !isNaN(date) ? date : new Date(date);
 
-	date = date !== undefined ? date : new Date();
+	if (!(date instanceof Date) || isNaN(date)) {
+		date = new Date();
+	}
+
 	const df = date.getFullYear() + '-' + nuPad2(date.getMonth() + 1) + '-' + nuPad2(date.getDate());
 
 	const format = obj.attr('data-nu-format');
