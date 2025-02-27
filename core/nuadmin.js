@@ -718,20 +718,32 @@ function nuContextMenuItemPositionChanged(t, update) {
 
 }
 
-function nuContextMenuItemPosition(label, v) {
+function nuContextMenuItemPosition(label, value) {
 
-	const lwidth = nuContextMenuGetWordWidth(label);
-	let left = 70 - lwidth + 17;
-	if (label == 'Top')
-		left += 2;
-	if (label == 'Left')
-		left += 1;
-	if (label == 'Height')
-		left -= 1;
+	const labelHTML = `<span style="
+		width: 100px;
+		padding-left: 20px;
+		font-family: Verdana, sans-serif;
+		white-space: nowrap;
+		display: inline-block;">
+	  ${label}
+	</span>`;
 
-	return '<span style="width: 100px; padding-left:20px; font-family: font-family: Verdana, sans-serif;white-space:nowrap; display: inline;">' + label + '</span>' +
-		' <input data-property="' + label + '" onChange="nuContextMenuItemPositionChanged(this, false)" onBlur="nuContextMenuItemPositionChanged(this, true)" style="text-align: right; margin: 3px 10px 3px ' + left + 'px; width: 50px; height: 22px" type="number" min="0" class="input_number" value="' + v + '"> </input>';
+	const inputHTML = `<input
+		data-property="${label}"
+		onChange="nuContextMenuItemPositionChanged(this, false)"
+		onBlur="nuContextMenuItemPositionChanged(this, true)"
+		style="
+		  text-align: right;
+		  margin: 3px 10px 3px 0;
+		  width: 50px;
+		  height: 22px"
+		type="number"
+		min="0"
+		class="input_number"
+		value="${value}">`;
 
+	return labelHTML + inputHTML;
 }
 
 function nuContextMenuUpdateAccess(v) {
@@ -1124,7 +1136,7 @@ var nuPrettyPrint = (function () {
 
 			util.forEach(cells, function (cell, index) {
 
-			if (cell === null) {
+				if (cell === null) {
 					return;
 				}
 				// Create a copy of the attributes for this cell.
@@ -1866,9 +1878,9 @@ function nuPrettyPrintMessage(event, properties) {
 			'max-height': '80vw',
 			'text-align': 'left',
 			'background-color': 'white',
-			'width' : '70vw',
-			'left' : '50px',
-			'overflow' : 'auto',
+			'width': '70vw',
+			'left': '50px',
+			'overflow': 'auto',
 		}).attr('id', 'nuPropertiesMsgDiv');
 
 		nuDragElement(document.getElementById('nuPropertiesMsgDiv'), 40);
