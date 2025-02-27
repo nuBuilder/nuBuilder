@@ -954,12 +954,17 @@ class nuFormObject {
 			s = s.replaceAll('mmmm', nuTranslate(FMT[mth].mmmm));
 			s = s.replaceAll('mmm', nuTranslate(FMT[mth].mmm));
 			s = s.replaceAll('mm', FMT[mth].mm);
-			s = s.replaceAll('dddd', nuTranslate(FMT[wee].dddd));
-			s = s.replaceAll('ddd', nuTranslate(FMT[wee].ddd));
-			s = s.replaceAll('dd', day);
-			s = s.replaceAll('hh', hou);
-			s = s.replaceAll('nn', min);
-			s = s.replaceAll('ss', sec);
+
+			const tokens = {
+				dddd: nuTranslate(FMT[wee].dddd),
+				ddd: nuTranslate(FMT[wee].ddd),
+				dd: day,
+				hh: hou,
+				nn: min,
+				ss: sec,
+			};
+
+			s = s.replace(/(dddd|ddd|dd|hh|nn|ss)/g, token => tokens[token]);
 
 			// Remove the initial "D|" (or equivalent) prefix
 			return s.slice(2);
