@@ -111,8 +111,7 @@
 	font-family: 'Noto Sans';
 	font-style: normal;
 	font-weight: 400;
-	src: url('../fonts/noto-sans-v27-latin-regular.woff2') format('woff2'),
-		url('../fonts/noto-sans-v27-latin-regular.woff') format('woff');
+	src: url('../fonts/noto-sans-v38-latin-regular.woff2') format('woff2')
 }
 
 /* noto-sans-italic - latin */
@@ -121,8 +120,7 @@
 	font-family: 'Noto Sans';
 	font-style: italic;
 	font-weight: 400;
-	src: url('../fonts/noto-sans-v27-latin-italic.woff2') format('woff2'),
-		url('../fonts/noto-sans-v27-latin-italic.woff') format('woff');
+	src: url('../fonts/noto-sans-v38-latin-italic.woff2') format('woff2')
 }
 
 /* noto-sans-700 - latin */
@@ -131,8 +129,7 @@
 	font-family: 'Noto Sans';
 	font-style: normal;
 	font-weight: 700;
-	src: url('../fonts/noto-sans-v27-latin-700.woff2') format('woff2'),
-		url('../fonts/noto-sans-v27-latin-700.woff') format('woff');
+	src: url('../fonts/noto-sans-v38-latin-700.woff2') format('woff2')
 }
 
 /* noto-sans-700italic - latin */
@@ -141,8 +138,7 @@
 	font-family: 'Noto Sans';
 	font-style: italic;
 	font-weight: 700;
-	src: url('../fonts/noto-sans-v27-latin-700italic.woff2') format('woff2'),
-		url('../fonts/noto-sans-v27-latin-700italic.woff') format('woff');
+	src: url('../fonts/noto-sans-v38-latin-700italic.woff2') format('woff2')
 }
 
 .input_file {
