@@ -837,62 +837,54 @@ class nuFormObject {
 
 	setFormats() {
 
-		var f = {};
+		const f = {};
 
-		f['01'] = { 'mmm': 'Jan', 'mmmm': 'January', 'mm': '01', 'm': '1', 'jsmonth': 0 };
-		f['02'] = { 'mmm': 'Feb', 'mmmm': 'February', 'mm': '02', 'm': '2', 'jsmonth': 1 };
-		f['03'] = { 'mmm': 'Mar', 'mmmm': 'March', 'mm': '03', 'm': '3', 'jsmonth': 2 };
-		f['04'] = { 'mmm': 'Apr', 'mmmm': 'April', 'mm': '04', 'm': '4', 'jsmonth': 3 };
-		f['05'] = { 'mmm': 'May', 'mmmm': 'May', 'mm': '05', 'm': '5', 'jsmonth': 4 };
-		f['06'] = { 'mmm': 'Jun', 'mmmm': 'June', 'mm': '06', 'm': '6', 'jsmonth': 5 };
-		f['07'] = { 'mmm': 'Jul', 'mmmm': 'July', 'mm': '07', 'm': '7', 'jsmonth': 6 };
-		f['08'] = { 'mmm': 'Aug', 'mmmm': 'August', 'mm': '08', 'm': '8', 'jsmonth': 7 };
-		f['09'] = { 'mmm': 'Sep', 'mmmm': 'September', 'mm': '09', 'm': '9', 'jsmonth': 8 };
-		f['10'] = { 'mmm': 'Oct', 'mmmm': 'October', 'mm': '10', 'm': '10', 'jsmonth': 9 };
-		f['11'] = { 'mmm': 'Nov', 'mmmm': 'November', 'mm': '11', 'm': '11', 'jsmonth': 10 };
-		f['12'] = { 'mmm': 'Dec', 'mmmm': 'December', 'mm': '12', 'm': '12', 'jsmonth': 11 };
+		// Define month details
+		const months = [
+			{ num: '01', mmm: 'Jan', mmmm: 'January' },
+			{ num: '02', mmm: 'Feb', mmmm: 'February' },
+			{ num: '03', mmm: 'Mar', mmmm: 'March' },
+			{ num: '04', mmm: 'Apr', mmmm: 'April' },
+			{ num: '05', mmm: 'May', mmmm: 'May' },
+			{ num: '06', mmm: 'Jun', mmmm: 'June' },
+			{ num: '07', mmm: 'Jul', mmmm: 'July' },
+			{ num: '08', mmm: 'Aug', mmmm: 'August' },
+			{ num: '09', mmm: 'Sep', mmmm: 'September' },
+			{ num: '10', mmm: 'Oct', mmmm: 'October' },
+			{ num: '11', mmm: 'Nov', mmmm: 'November' },
+			{ num: '12', mmm: 'Dec', mmmm: 'December' }
+		];
 
-		f.Jan = { 'mmm': 'Jan', 'mmmm': 'January', 'mm': '01', 'm': '1', 'jsmonth': 0 };
-		f.Feb = { 'mmm': 'Feb', 'mmmm': 'February', 'mm': '02', 'm': '2', 'jsmonth': 1 };
-		f.Mar = { 'mmm': 'Mar', 'mmmm': 'March', 'mm': '03', 'm': '3', 'jsmonth': 2 };
-		f.Apr = { 'mmm': 'Apr', 'mmmm': 'April', 'mm': '04', 'm': '4', 'jsmonth': 3 };
-		f.May = { 'mmm': 'May', 'mmmm': 'May', 'mm': '05', 'm': '5', 'jsmonth': 4 };
-		f.Jun = { 'mmm': 'Jun', 'mmmm': 'June', 'mm': '06', 'm': '6', 'jsmonth': 5 };
-		f.Jul = { 'mmm': 'Jul', 'mmmm': 'July', 'mm': '07', 'm': '7', 'jsmonth': 6 };
-		f.Aug = { 'mmm': 'Aug', 'mmmm': 'August', 'mm': '08', 'm': '8', 'jsmonth': 7 };
-		f.Sep = { 'mmm': 'Sep', 'mmmm': 'September', 'mm': '09', 'm': '9', 'jsmonth': 8 };
-		f.Oct = { 'mmm': 'Oct', 'mmmm': 'October', 'mm': '10', 'm': '10', 'jsmonth': 9 };
-		f.Nov = { 'mmm': 'Nov', 'mmmm': 'November', 'mm': '11', 'm': '11', 'jsmonth': 10 };
-		f.Dec = { 'mmm': 'Dec', 'mmmm': 'December', 'mm': '12', 'm': '12', 'jsmonth': 11 };
+		// Populate the object for months using numeric, abbreviated, and full names as keys
+		months.forEach((month, index) => {
+			const data = {
+				mmm: month.mmm,
+				mmmm: month.mmmm,
+				mm: month.num,
+				m: String(index + 1),
+				jsmonth: index
+			};
+			f[month.num] = data;
+			f[month.mmm] = data;
+			f[month.mmmm] = data;
+		});
 
-		f.January = { 'mmm': 'Jan', 'mmmm': 'January', 'mm': '01', 'm': '1', 'jsmonth': 0 };
-		f.February = { 'mmm': 'Feb', 'mmmm': 'February', 'mm': '02', 'm': '2', 'jsmonth': 1 };
-		f.March = { 'mmm': 'Mar', 'mmmm': 'March', 'mm': '03', 'm': '3', 'jsmonth': 2 };
-		f.April = { 'mmm': 'Apr', 'mmmm': 'April', 'mm': '04', 'm': '4', 'jsmonth': 3 };
-		f.May = { 'mmm': 'May', 'mmmm': 'May', 'mm': '05', 'm': '5', 'jsmonth': 4 };
-		f.June = { 'mmm': 'Jun', 'mmmm': 'June', 'mm': '06', 'm': '6', 'jsmonth': 5 };
-		f.July = { 'mmm': 'Jul', 'mmmm': 'July', 'mm': '07', 'm': '7', 'jsmonth': 6 };
-		f.August = { 'mmm': 'Aug', 'mmmm': 'August', 'mm': '08', 'm': '8', 'jsmonth': 7 };
-		f.September = { 'mmm': 'Sep', 'mmmm': 'September', 'mm': '09', 'm': '9', 'jsmonth': 8 };
-		f.October = { 'mmm': 'Oct', 'mmmm': 'October', 'mm': '10', 'm': '10', 'jsmonth': 9 };
-		f.November = { 'mmm': 'Nov', 'mmmm': 'November', 'mm': '11', 'm': '11', 'jsmonth': 10 };
-		f.December = { 'mmm': 'Dec', 'mmmm': 'December', 'mm': '12', 'm': '12', 'jsmonth': 11 };
+		// Define day details
+		const days = [
+			{ ddd: 'Sun', dddd: 'Sunday', dd: '01', d: '1' },
+			{ ddd: 'Mon', dddd: 'Monday', dd: '02', d: '2' },
+			{ ddd: 'Tue', dddd: 'Tuesday', dd: '03', d: '3' },
+			{ ddd: 'Wed', dddd: 'Wednesday', dd: '04', d: '4' },
+			{ ddd: 'Thu', dddd: 'Thursday', dd: '05', d: '5' },
+			{ ddd: 'Fri', dddd: 'Friday', dd: '06', d: '6' },
+			{ ddd: 'Sat', dddd: 'Saturday', dd: '07', d: '7' }
+		];
 
-		f.Sun = { 'ddd': 'Sun', 'dddd': 'Sunday', 'dd': '01', 'd': '1' };
-		f.Mon = { 'ddd': 'Mon', 'dddd': 'Monday', 'dd': '02', 'd': '2' };
-		f.Tue = { 'ddd': 'Tue', 'dddd': 'Tuesday', 'dd': '03', 'd': '3' };
-		f.Wed = { 'ddd': 'Wed', 'dddd': 'Wednesday', 'dd': '04', 'd': '4' };
-		f.Thu = { 'ddd': 'Thu', 'dddd': 'Thursday', 'dd': '05', 'd': '5' };
-		f.Fri = { 'ddd': 'Fri', 'dddd': 'Friday', 'dd': '06', 'd': '6' };
-		f.Sat = { 'ddd': 'Sat', 'dddd': 'Saturday', 'dd': '07', 'd': '7' };
-
-		f.Sunday = { 'ddd': 'Sun', 'dddd': 'Sunday', 'dd': '01', 'd': '1' };
-		f.Monday = { 'ddd': 'Mon', 'dddd': 'Monday', 'dd': '02', 'd': '2' };
-		f.Tuesday = { 'ddd': 'Tue', 'dddd': 'Tuesday', 'dd': '03', 'd': '3' };
-		f.Wednesday = { 'ddd': 'Wed', 'dddd': 'Wednesday', 'dd': '04', 'd': '4' };
-		f.Thursday = { 'ddd': 'Thu', 'dddd': 'Thursday', 'dd': '05', 'd': '5' };
-		f.Friday = { 'ddd': 'Fri', 'dddd': 'Friday', 'dd': '06', 'd': '6' };
-		f.Saturday = { 'ddd': 'Sat', 'dddd': 'Saturday', 'dd': '07', 'd': '7' };
+		// Populate the object for days using both abbreviated and full names
+		days.forEach(day => {
+			f[day.ddd] = day;
+			f[day.dddd] = day;
+		});
 
 		return f;
 
@@ -900,31 +892,24 @@ class nuFormObject {
 
 	addFormatting(v, f) {
 
-
-		if (v == undefined) { return ''; }
-		if (f == undefined) { return v; }
-		if (f == '') { return v; }
-		if (v === '') { return v; }
+		if (v === undefined || v === '') { return ''; }
+		if (f === undefined || f === '') { return v; }
 
 		v = String(v);
 		f = String(f);
 
-		if (f[0] == 'N') {													//-- number '456.789','N|€ 1,000.00'
-
-			var CF = nuGetNumberFormat(f);								//-- CF[0]=sign, CF[1]=separator, CF[2]=decimal, CF[3]=places
+		if (f[0] === 'N') {  // number formatting: e.g. '456.789','N|€ 1,000.00'
+			var CF = nuGetNumberFormat(f);  // CF[0]=sign, CF[1]=separator, CF[2]=decimal, CF[3]=places
 			v = Number(v.replace(CF.decimal, '.')).toFixed(CF[3]);
-
 			if (isNaN(Number(v))) { return ''; }
 			var splitNumber = v.split('.');
-			var decimals = splitNumber.length == 1 ? '' : splitNumber[1];
+			var decimals = splitNumber.length === 1 ? '' : splitNumber[1];
 			return String(CF[0] + ' ' + nuAddThousandSpaces(splitNumber[0], CF[1]) + CF[2] + decimals).trim();
-
 		}
 
-		if (f[0] == 'D') {	//-- date
-
-			if (String(v.split(' ')[0]) == '0000-00-00') { return ''; }
-			if (v == '') { return ''; }
+		if (f[0] === 'D') {  // date formatting
+			if (String(v.split(' ')[0]) === '0000-00-00') { return ''; }
+			if (v === '') { return ''; }
 
 			var FMT = this.setFormats();
 
@@ -936,36 +921,32 @@ class nuFormObject {
 				var t = String(v.split(' ')[0]).split(':');
 			}
 
-			if (t[0] == 'undefined') {
-				var t = [0, 0, 0];
+			if (t[0] === 'undefined') {
+				t = [0, 0, 0];
 			}
 
-			var o = new Date(d[0], d[1] - 1, d[2], t[0], t[1], t[2], 0);			//-- (year, month, day, hours, minutes, seconds, milliseconds)
-
+			var o = new Date(d[0], d[1] - 1, d[2], t[0], t[1], t[2], 0);
 			if (!nuDateIsValid(o)) { return ''; }
 
 			const splitDate = o.toString().split(' ');
-			var wee = splitDate[0];													//-- Tue Jul 07 2022 11:11:12 GMT+0930 (Cen. Australia Standard Time)
+			var wee = splitDate[0]; // e.g. "Tue" from "Tue Jul 07 2022 11:11:12 ..."
 			var mth = splitDate[1];
 			var day = splitDate[2];
 			var yea = splitDate[3];
 
-			var hou = String(splitDate[4]).split(':')[0];
-			var min = String(splitDate[4]).split(':')[1];
-			var sec = String(splitDate[4]).split(':')[2];
+			var timeParts = splitDate[4].split(':');
+			var hou = timeParts[0];
+			var min = timeParts[1];
+			var sec = timeParts[2];
 
 			var s = String(f);
 
 			if (Number(hou) > 11) {
-
 				s = s.replaceAll('pp', 'pm');
 				s = s.replaceAll('PP', 'PM');
-
 			} else {
-
 				s = s.replaceAll('pp', 'am');
 				s = s.replaceAll('PP', 'AM');
-
 			}
 
 			s = s.replaceAll('yyyy', yea);
@@ -973,15 +954,15 @@ class nuFormObject {
 			s = s.replaceAll('mmmm', nuTranslate(FMT[mth].mmmm));
 			s = s.replaceAll('mmm', nuTranslate(FMT[mth].mmm));
 			s = s.replaceAll('mm', FMT[mth].mm);
-			s = s.replaceAll('dddd', FMT[wee].dddd);
-			s = s.replaceAll('ddd', FMT[wee].ddd);
+			s = s.replaceAll('dddd', nuTranslate(FMT[wee].dddd));
+			s = s.replaceAll('ddd', nuTranslate(FMT[wee].ddd));
 			s = s.replaceAll('dd', day);
 			s = s.replaceAll('hh', hou);
 			s = s.replaceAll('nn', min);
 			s = s.replaceAll('ss', sec);
 
+			// Remove the initial "D|" (or equivalent) prefix
 			return s.slice(2);
-
 		}
 
 		return v;
@@ -991,35 +972,33 @@ class nuFormObject {
 
 	removeFormatting(v, f) {
 
-		if (v == undefined) { return ''; }
-		if (f == undefined) { return v; }
-		if (f == '') { return v; }
-		if (v == '') { return v; }
+		if (v === undefined || v === '') { return ''; }
+		if (f === undefined || f === '') { return v; }
 
 		v = String(v);
 		f = String(f);
 
-		if (f[0] == 'N') {										//-- number
+		if (f[0] === 'N') {  // number formatting
+			var CF = nuGetNumberFormat(f); // CF[0]=sign, CF[1]=separator, CF[2]=decimal, CF[3]=places
 
-			//var F		= nuNumberFormat(f);
-			var CF = nuGetNumberFormat(f);								//-- CF[0]=sign, CF[1]=separator, CF[2]=decimal, CF[3]=places
-
-			if (CF[2] == '') {
-				return v.replace(CF[0], '').replace(' ', '').nuReplaceAll(CF[1], '');
+			if (CF[2] === '') {
+				return v.replace(CF[0], '')
+					.replace(' ', '')
+					.nuReplaceAll(CF[1], '');
 			}
-
-			return v.replace(CF[0], '').replace(' ', '').nuReplaceAll(CF[1], '').replace(CF[2], '.');
-
+			return v.replace(CF[0], '')
+				.replace(' ', '')
+				.nuReplaceAll(CF[1], '')
+				.replace(CF[2], '.');
 		}
 
-		if (f[0] == 'D') {										//-- date
-
-			if (f.substr(0, 10) == '0000-00-00') {
+		if (f[0] === 'D') {  // date formatting
+			if (f.substr(0, 10) === '0000-00-00') {
 				return '';
 			}
 
 			var FMT = this.setFormats();
-			var hasTime = f.indexOf('hh') != -1 || f.indexOf('nn') != -1 || f.indexOf('ss') != -1;		//-- looking for the time
+			var hasTime = f.indexOf('hh') !== -1 || f.indexOf('nn') !== -1 || f.indexOf('ss') !== -1;  // look for time tokens
 
 			v = String(v)
 				.nuReplaceAll(':', ' ')
@@ -1038,47 +1017,50 @@ class nuFormObject {
 				.nuReplaceAll(',', ' ')
 				.split(' ');
 
-			var o = Date().toString().split(' ', 6);								//-- Tue Sep 07 2004 11:11:12 GMT+0930 (Cen. Australia Standard Time)
+			// Use today's date/time as defaults
+			var o = Date().toString().split(' ', 6);  // e.g. "Tue Sep 07 2004 11:11:12 ..."
 			var time = String(o[4]).split(':');
+			var d = { 'y': o[3], 'm': FMT[o[1]].jsmonth, 'd': o[2], 'h': time[0], 'n': time[1], 's': time[2] };
 
-			var d = { 'y': o[3], 'm': FMT[o[1]].jsmonth, 'd': o[2], 'h': time[0], 'n': time[1], 's': time[2] };	//-- today's date time[2]};	//-- today's date
 			for (var i = 0; i < f.length; i++) {
-
 				var fmt = String(f[i]);
-				var l = fmt[0];
 
-				if (l == 'm' && FMT[nuTranslateToEnglish(v[i])] !== undefined) {
-					d.m = FMT[nuTranslateToEnglish(v[i])].mm;					//-- javascript month
+				// Check for month token: it must be translated before lookup.
+				if (fmt[0] === 'm' && FMT[nuTranslateToEnglish(v[i])] !== undefined) {
+					d.m = FMT[nuTranslateToEnglish(v[i])].mm;  // set month from format data
 				}
 
-				if (fmt == 'dd') {
+				// If token is exactly "dd", use the value directly
+				if (fmt === 'dd') {
 					d.d = v[i];
 				}
-				if (l == 'y') {
-					d.y = v[i] || '';
-					if (d.y.length == 2) d.y = '20' + d.y;
+
+				if (fmt === 'dddd' && FMT[nuTranslateToEnglish(v[i])] !== undefined) {
+					d.d = FMT[nuTranslateToEnglish(v[i])].dd;
 				}
 
-				if (l == 'h') { d.h = v[i]; }
-				if (l == 'n') { d.n = v[i]; }
-				if (l == 's') { d.s = v[i]; }
-
+				if (fmt[0] === 'y') {
+					d.y = v[i] || '';
+					if (d.y.length === 2) { d.y = '20' + d.y; }
+				}
+				if (fmt[0] === 'h') { d.h = v[i]; }
+				if (fmt[0] === 'n') { d.n = v[i]; }
+				if (fmt[0] === 's') { d.s = v[i]; }
 			}
 
-			var o = new Date(d.y, Number(d.m) - 1, d.d, Number(d.h), Number(d.n), Number(d.s), 0);
-			var y = String(o.getFullYear()) + '-';
-			var m = nuPad2(o.getMonth() + 1) + '-';
-			var a = nuPad2(o.getDate()) + ' ';
-			var h = nuPad2(o.getHours()) + ':';
-			var n = nuPad2(o.getMinutes()) + ':';
-			var s = nuPad2(o.getSeconds());
+			// Create the new Date object using the parsed parts.
+			var oDate = new Date(d.y, Number(d.m) - 1, d.d, Number(d.h), Number(d.n), Number(d.s), 0);
+			var y = String(oDate.getFullYear()) + '-';
+			var m = nuPad2(oDate.getMonth() + 1) + '-';
+			var a = nuPad2(oDate.getDate()) + ' ';
+			var h = nuPad2(oDate.getHours()) + ':';
+			var n = nuPad2(oDate.getMinutes()) + ':';
+			var s = nuPad2(oDate.getSeconds());
 
 			if (hasTime) {
-				return String(y + m + a + h + n + s);
+				return y + m + a + h + n + s;
 			}
-
 			return String(y + m + a).trim();
-
 		}
 
 	}
