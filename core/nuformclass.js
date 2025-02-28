@@ -243,7 +243,7 @@ class nuFormObject {
 
 		this.tableSchema = [];
 		this.formSchema = [];
-		this.formats = this.setFormats();
+		this.formats = this.getFormats();
 		this.breadcrumbs = [];
 		this.scroll = [];
 		this.edited = false;
@@ -890,6 +890,20 @@ class nuFormObject {
 
 	}
 
+	getFormats() {
+
+		let formats = window.nuFormats;
+		if (formats) {
+			return formats;
+		}
+
+		formats = this.setFormats();
+
+		window.nuFormats = formats;
+		return formats;
+
+	}
+
 	addFormatting(v, f) {
 
 		if (v === undefined || v === '') { return ''; }
@@ -911,7 +925,7 @@ class nuFormObject {
 			if (String(v.split(' ')[0]) === '0000-00-00') { return ''; }
 			if (v === '') { return ''; }
 
-			var FMT = this.setFormats();
+			var FMT = this.getFormats();
 
 			if (v.includes('-')) {
 				var d = String(v.split(' ')[0]).split('-');
@@ -1002,7 +1016,7 @@ class nuFormObject {
 				return '';
 			}
 
-			var FMT = this.setFormats();
+			var FMT = this.getFormats();
 			var hasTime = f.indexOf('hh') !== -1 || f.indexOf('nn') !== -1 || f.indexOf('ss') !== -1;  // look for time tokens
 
 			v = String(v)
