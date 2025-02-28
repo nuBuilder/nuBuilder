@@ -256,7 +256,7 @@ function nuInitSetBrowseWidthHelper() {
 				});
 
 				w.prop('onclick', null).off('click');
-				w.click(function (e) {
+				w.on('click', function (e) {
 					nuSetBrowseColumnWidths();
 				});
 			}
