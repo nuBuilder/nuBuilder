@@ -893,7 +893,7 @@ class nuFormObject {
 	addFormatting(v, f) {
 
 		if (v === undefined || v === '') { return ''; }
-		if (f === undefined || f === '') { return v; }
+		if (!f) { return v; }
 
 		v = String(v);
 		f = String(f);
