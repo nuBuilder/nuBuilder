@@ -428,7 +428,7 @@ function nuRunPHPHidden($nuCode) {
 
 function nuGetPHP($idOrCode) {
 
-	$sql = "SELECT sph_code, sph_description, zzzzsys_php_id, sph_php, sph_global
+	$sql = "SELECT *
 			FROM zzzzsys_php
 			WHERE sph_code = ? OR zzzzsys_php_id = ?";
 
@@ -440,7 +440,11 @@ function nuGetPHP($idOrCode) {
 
 function nuHasProcedureAccess($phpObj) {
 
-	$hasAccess = $phpObj->sph_global == '1';
+	$hasAccess = ($phpObj->sph_global ?? 0) == '1';
+	$demoAccess = ($phpObj->sph_demo ?? 0) == '1';
+	
+	if (!$demoAccess && nuDemo()) return false;
+	
 	if (!$hasAccess) {
 		$procList = nuProcedureAccessList(nuAllowedActivities());
 		$hasAccess = in_array($phpObj->zzzzsys_php_id, $procList);
