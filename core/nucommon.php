@@ -2749,3 +2749,28 @@ function nuEnsureFileExtension($filename, $desiredExtension, $forceExtension = f
 
 	return $filename;
 }
+
+
+function nuGetSelectType($processedSql) {
+
+	$sqlFirstChars = nuTrim(substr($processedSql, 0, 20));
+	$sqlFirstCharsNoSpaces = preg_replace('/\s+/', '', $sqlFirstChars);
+
+	if (
+		nuStringStartsWith('SELECT', $sqlFirstChars, true) ||
+		nuStringStartsWith('(SELECT', $sqlFirstCharsNoSpaces, true) ||
+		nuStringStartsWith('WITH ', $sqlFirstChars, true) ||
+		nuStringStartsWith('# ', $sqlFirstCharsNoSpaces, true)
+	) {
+		return 'query';
+	} elseif (nuStringStartsWith('[', $sqlFirstChars) && is_array(nuJsonDecode($processedSql))) {
+		return 'array';
+	} elseif (nuStringStartsWith('%LANGUAGES%', $sqlFirstChars, true)) {
+		return 'languages';
+	} elseif (nuStringStartsWith('SHOW TABLES', $sqlFirstChars, true) || nuStringStartsWith('SHOW FULL TABLES', $sqlFirstChars)) {
+		return 'showTables';
+	} else {
+		return 'delimited';
+	}
+
+}
