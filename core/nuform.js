@@ -7425,6 +7425,7 @@ function nuConvertToVanillaJSCalendarFormat(format) {
 function nuPopupCalendar(pThis, d) {
 
 	if (pThis === null) { return; }
+	if ($(pThis).is("[nu-disable-calendar]")) return;
 
 	let id = pThis.id;
 	nuDestroyWindowProperty('nudatepickers', id)
