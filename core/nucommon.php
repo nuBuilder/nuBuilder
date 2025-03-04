@@ -1067,9 +1067,8 @@ function nuAddFormatting($v, $f) {
 		}
 
 		$o = new DateTime();
-
-		$o->setDate($d[0], $d[1], $d[2]);
-		$o->setTime($t[0], $t[1], $t[2]);
+		$o->setDate((int)$d[0], (int)$d[1], (int)$d[2]);
+		$o->setTime((int)$t[0], (int)$t[1], (int)$t[2]);
 
 		$s = '';
 
