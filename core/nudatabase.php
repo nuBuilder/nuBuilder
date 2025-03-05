@@ -501,6 +501,18 @@ function nuGetSysTables() {
 
 }
 
+function nuGetUserTables() {
+
+    $tables = [];
+    $stmt = nuRunQuery("SELECT table_name as TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = DATABASE() AND TABLE_NAME NOT LIKE 'zzzzsys_%'");
+    while ($row = db_fetch_row($stmt)) {
+        $tables[] = $row[0];
+    }
+
+    return $tables;
+
+}
+
 function nuCanCreateView() {
 
 	$testViewName = "nu_test_view_" . mt_rand();
