@@ -454,9 +454,9 @@ function nuFFInsertObjects($table, $TT, $formType, $formId, $defaultFormats) {
 
 	nuRunQuery("INSERT INTO zzzzsys_object SELECT * FROM $TT");
 	
-	$sqlUpdateFormat = "UPDATE zzzzsys_object SET sob_input_format = ? WHERE sob_input_type = ?";
-	nuRunQuery($sqlUpdateFormat, [$defaultFormats['Date'], 'nuDate']);
-	nuRunQuery($sqlUpdateFormat, [$defaultFormats['Number'], 'nuNumber']);
+	$sqlUpdateFormat = "UPDATE zzzzsys_object SET sob_input_format = ? WHERE sob_input_type = ? AND sob_all_zzzzsys_form_id  = ?";
+	nuRunQuery($sqlUpdateFormat, [$defaultFormats['Date'], 'nuDate', $formId]);
+	nuRunQuery($sqlUpdateFormat, [$defaultFormats['Number'], 'nuNumber', $formId]);
 
 }
 
