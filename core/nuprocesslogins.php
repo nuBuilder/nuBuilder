@@ -174,6 +174,8 @@ function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 	$sessionIds->sus_login_name = $loginName;
 	$sessionIds->language = $lang;
 	$sessionIds->sus_name = $userId == '' ? '' : $userName;
+	$sessionIds->sus_first_name = '';
+	$sessionIds->sus_last_name = '';
 	$sessionIds->sus_position = '';
 	$sessionIds->sus_department = '';
 	$sessionIds->sus_team = '';
@@ -317,6 +319,8 @@ function nuLoginSetupNOTGlobeadmin($new = true, $sSoUserName = "", $changePasswo
 	$sessionIds->zzzzsys_user_id = $userId;
 	$sessionIds->sus_login_name = $getAccessLevelOBJ->sus_login_name;
 	$sessionIds->sus_name = $getAccessLevelOBJ->sus_name;
+	$sessionIds->sus_first_name = $getAccessLevelOBJ->sus_first_name ?? null;
+	$sessionIds->sus_last_name = $getAccessLevelOBJ->sus_last_name ?? null;
 	$sessionIds->language = $language;
 	$sessionIds->sus_position = $getAccessLevelOBJ->sus_position ?? null;
 	$sessionIds->sus_department = $getAccessLevelOBJ->sus_department ?? null;

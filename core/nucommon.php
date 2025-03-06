@@ -442,9 +442,10 @@ function nuHasProcedureAccess($phpObj) {
 
 	$hasAccess = ($phpObj->sph_global ?? 0) == '1';
 	$demoAccess = ($phpObj->sph_demo ?? 0) == '1';
-	
-	if (!$demoAccess && nuDemo()) return false;
-	
+
+	if (!$demoAccess && nuDemo())
+		return false;
+
 	if (!$hasAccess) {
 		$procList = nuProcedureAccessList(nuAllowedActivities());
 		$hasAccess = in_array($phpObj->zzzzsys_php_id, $procList);
@@ -979,6 +980,8 @@ function nuGetUserAccess() {
 	$A['ACCESS_LEVEL_GROUP'] = $j->access_level_group;
 	$A['LOGIN_NAME'] = $j->session->sus_login_name;
 	$A['USER_NAME'] = $j->session->sus_name;
+	$A['USER_FIRST_NAME'] = $j->session->sus_first_name;
+	$A['USER_LAST_NAME'] = $j->session->sus_last_name;
 	$A['USER_DEPARTMENT'] = $j->session->sus_department;
 	$A['USER_TEAM'] = $j->session->sus_team;
 	$A['USER_CODE'] = $j->session->sus_code;
@@ -1067,8 +1070,8 @@ function nuAddFormatting($v, $f) {
 		}
 
 		$o = new DateTime();
-		$o->setDate((int)$d[0], (int)$d[1], (int)$d[2]);
-		$o->setTime((int)$t[0], (int)$t[1], (int)$t[2]);
+		$o->setDate((int) $d[0], (int) $d[1], (int) $d[2]);
+		$o->setTime((int) $t[0], (int) $t[1], (int) $t[2]);
 
 		$s = '';
 

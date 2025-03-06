@@ -1,7 +1,7 @@
 <?php
 
 // Alter nu-tables: Add new columns, change data types etc.
-function nuAlterSystemTables(){
+function nuAlterSystemTables() {
 
 	$alterTableSQL = [
 		"ALTER TABLE `zzzzsys_debug` ADD `deb_flag` VARCHAR(50) NULL DEFAULT NULL AFTER `deb_message`;",
@@ -43,6 +43,8 @@ function nuAlterSystemTables(){
 		"ALTER TABLE `zzzzsys_user` ADD `sus_accessibility_features` VARCHAR(1) NULL DEFAULT NULL AFTER `sus_expires_on`;",
 		"ALTER TABLE `zzzzsys_user` ADD `sus_change_password` VARCHAR(1) NULL DEFAULT NULL AFTER `sus_expires_on`;",
 		"ALTER TABLE `zzzzsys_user` ADD `sus_permission` VARCHAR(1000) NULL DEFAULT NULL AFTER `sus_additional2`;",
+		"ALTER TABLE `zzzzsys_user` ADD `sus_last_name` VARCHAR(30) NULL DEFAULT NULL AFTER `sus_name`;",
+		"ALTER TABLE `zzzzsys_user` ADD `sus_first_name` VARCHAR(30) NULL DEFAULT NULL AFTER `sus_name`;",
 		"ALTER TABLE `zzzzsys_access` ADD `sal_use_2fa` VARCHAR(1) NULL DEFAULT NULL AFTER `sal_zzzzsys_form_id`;",
 		"ALTER TABLE `zzzzsys_access` ADD `sal_group` VARCHAR(100) NULL DEFAULT NULL AFTER `sal_description`;",
 		"ALTER TABLE `zzzzsys_access_form` ADD `slf_data_mode` varchar(2) DEFAULT NULL AFTER `slf_print_button`;",
@@ -58,7 +60,7 @@ function nuAlterSystemTables(){
 		"ALTER TABLE `zzzzsys_code_snippet` ADD `cot_group` VARCHAR(80) NULL DEFAULT NULL AFTER `cot_description`;",
 		"ALTER TABLE `zzzzsys_cloner` ADD `clo_tables_include` MEDIUMTEXT NULL DEFAULT NULL AFTER `clo_iframe_forms`;",
 		"ALTER TABLE `zzzzsys_cloner` ADD `clo_tables_exclude` MEDIUMTEXT NULL DEFAULT NULL AFTER `clo_tables_include`;",
-		"ALTER TABLE `zzzzsys_email_template` ADD `emt_template` VARCHAR(1) NULL DEFAULT '0' AFTER `emt_group`;",		
+		"ALTER TABLE `zzzzsys_email_template` ADD `emt_template` VARCHAR(1) NULL DEFAULT '0' AFTER `emt_group`;",
 		"ALTER TABLE `pdf_temp` ADD `pdf_code` VARCHAR(100) NULL DEFAULT NULL AFTER `pdf_added_by`;",
 		"ALTER TABLE `pdf_temp` ADD `pdf_tag` VARCHAR(100) NULL DEFAULT NULL AFTER `pdf_code`;",
 		"ALTER TABLE `zzzzsys_email_log` CHANGE `eml_created_at` `eml_created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP;",
@@ -71,20 +73,20 @@ function nuAlterSystemTables(){
 	}
 
 	$setupColumns = db_field_names('zzzzsys_setup');
-	if(array_search('set_languages_included', $setupColumns) == false){
+	if (array_search('set_languages_included', $setupColumns) == false) {
 		nuRunQueryNoDebug("ALTER TABLE `zzzzsys_setup` ADD `set_languages_included` VARCHAR(1000) NULL DEFAULT NULL AFTER `set_language`;");
 
 		$languagesJson = nuGetSupportedLanguagesAsJson();
 		nuRunQueryNoDebug('UPDATE `zzzzsys_setup` SET set_languages_included = ?', [$languagesJson]);
 	}
 
-	if(array_search('set_style', $setupColumns) == false){
+	if (array_search('set_style', $setupColumns) == false) {
 		nuRunQueryNoDebug("ALTER TABLE `zzzzsys_setup` ADD `set_style` LONGTEXT NULL DEFAULT NULL AFTER `set_header`;");
 		$style = "/* Define your own styles, override styles from nubuilder4.css */\r\n\r\n/*\r\n .nuActionButton {\r\n background-color: #579cb7\r\n}\r\n\r\n*/";
-		
+
 		nuRunQueryNoDebug('UPDATE `zzzzsys_setup` SET set_style = ?', [$style]);
 	}
-	
+
 	nuCreateJSONColumns();
 
 }
@@ -95,23 +97,23 @@ function nuAlterSystemTables(){
 
 function nuCopySystemTables() {
 
-	nuDropDatabaseObject ('zzzzsys_report_data', ['VIEW', 'TABLE']);
-	nuDropDatabaseObject ('zzzzsys_run_list', ['VIEW', 'TABLE']);
-	nuDropDatabaseObject ('zzzzsys_object_list', ['VIEW', 'TABLE']);
+	nuDropDatabaseObject('zzzzsys_report_data', ['VIEW', 'TABLE']);
+	nuDropDatabaseObject('zzzzsys_run_list', ['VIEW', 'TABLE']);
+	nuDropDatabaseObject('zzzzsys_object_list', ['VIEW', 'TABLE']);
 
-	$t	= nuSystemList();
+	$t = nuSystemList();
 
 	$count = count($t);
-	for($i = 0 ; $i < $count ; $i++){
+	for ($i = 0; $i < $count; $i++) {
 
 		$table = $t[$i];
-		nuDropDatabaseObject ("sys_".$table, ['TABLE']);
+		nuDropDatabaseObject("sys_" . $table, ['TABLE']);
 
 		$sql = "CREATE TABLE sys_$table SELECT * FROM $table";
 		nuRunQueryNoDebug($sql);
 
-		if($table != 'zzzzsys_debug'){
-			nuDropDatabaseObject ($table, ['TABLE']);
+		if ($table != 'zzzzsys_debug') {
+			nuDropDatabaseObject($table, ['TABLE']);
 		}
 	}
 
@@ -120,148 +122,148 @@ function nuCopySystemTables() {
 // Import nubuilder4.sql
 function nuSetupImportSQLFile() {
 
-	try{
+	try {
 
-		$file = 					 dirname(__FILE__). '/../nubuilder4.sql';
-		@$handle					= fopen($file, "r");
-		$temp						= "";
-		if ( $handle ) {
+		$file = dirname(__FILE__) . '/../nubuilder4.sql';
+		@$handle = fopen($file, "r");
+		$temp = "";
+		if ($handle) {
 
-			nuDropDatabaseObject ('zzzzsys_debug', ['TABLE']);
+			nuDropDatabaseObject('zzzzsys_debug', ['TABLE']);
 
-			while(($line = fgets($handle)) !== false){
+			while (($line = fgets($handle)) !== false) {
 
-				if($line[0] != "-" AND $line[0] != "/" AND $line[0] != "\n"){
-					$line 			= trim($line);
-					$temp 			.= $line;
-					if(substr($line, -1) == ";"){
-						$temp	= rtrim($temp,';');
-						$temp	= str_replace('ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER','', $temp);
+				if ($line[0] != "-" and $line[0] != "/" and $line[0] != "\n") {
+					$line = trim($line);
+					$temp .= $line;
+					if (substr($line, -1) == ";") {
+						$temp = rtrim($temp, ';');
+						$temp = str_replace('ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER', '', $temp);
 						nuRunQueryNoDebug($temp);
-						$temp	= "";
+						$temp = "";
 					}
 				}
 			}
-		}else{
+		} else {
 			nuInstallException("Error opening the file: $file");
 		}
 
-	}catch (Throwable $e) {
+	} catch (Throwable $e) {
 		nuInstallException($e);
-	}catch (Exception $e) {
+	} catch (Exception $e) {
 		nuInstallException($e);
 	}
 }
 
-function nuSQLImportFileExists($file){
+function nuSQLImportFileExists($file) {
 
 	$filePath = __DIR__ . "/../$file";
 	return file_exists($filePath) && is_readable($filePath) ? true : $filePath;
 
 }
 
-function nuInstallException($e){
+function nuInstallException($e) {
 
-	$ce		= $_POST['nuProcedureEval'];
-	$se		= $_POST['nuSystemEval'];
-	print "$ce $se<br>" . $e->getFile() .'<i>' . $e->getMessage() . '</i>' . '<br><b><i>Traced from...</i></b><br>';
-	$a		= $e->getTrace();
-	$t		= array_reverse($a);
+	$ce = $_POST['nuProcedureEval'];
+	$se = $_POST['nuSystemEval'];
+	print "$ce $se<br>" . $e->getFile() . '<i>' . $e->getMessage() . '</i>' . '<br><b><i>Traced from...</i></b><br>';
+	$a = $e->getTrace();
+	$t = array_reverse($a);
 
 	$count = count($t);
-	for($i = 0 ; $i < $count ; $i++){
-		$m	= '(line:<i>' . $t[$i]['line'] . '</i>) ' . $t[$i]['file'] . ' <b> - ' . $t[$i]['function'] . '<b>';
+	for ($i = 0; $i < $count; $i++) {
+		$m = '(line:<i>' . $t[$i]['line'] . '</i>) ' . $t[$i]['file'] . ' <b> - ' . $t[$i]['function'] . '<b>';
 		print $m . '<br>';
 	}
 
 }
 
 //-- after zzzzsys files have been imported
-function nuUpdateSystemRecords(){
+function nuUpdateSystemRecords() {
 
-	$ts			= nuBuildTableSchema();
-	$t			= nuListSystemTables();
-	$new		= [];
+	$ts = nuBuildTableSchema();
+	$t = nuListSystemTables();
+	$new = [];
 
 	$countTables = count($t);
-	for($i = 0 ; $i < $countTables ; $i++){
+	for ($i = 0; $i < $countTables; $i++) {
 
-		$table		= $t[$i];
-		$new		= $ts["$table"]['names'];
+		$table = $t[$i];
+		$new = $ts["$table"]['names'];
 
 		$old = nuObjKey($ts, "sys_$table", false) ? $ts["sys_$table"]['names'] : null;
 
 		if (is_array($old)) {
-		//-- remove unused fields from old
-		$countOld = count($old);
-		for($c = 0 ; $c < $countOld ; $c++){
-			$field	= $old[$c];
-			if(!in_array($field, $new)){
-				$sql= "ALTER TABLE sys_$table DROP COLUMN $field";
-				nuRunQuery($sql);
+			//-- remove unused fields from old
+			$countOld = count($old);
+			for ($c = 0; $c < $countOld; $c++) {
+				$field = $old[$c];
+				if (!in_array($field, $new)) {
+					$sql = "ALTER TABLE sys_$table DROP COLUMN $field";
+					nuRunQuery($sql);
+				}
 			}
-		}
 		} else {
 			// print "Names does not exist in sys_$table" . '<br>';
 		}
 	}
 
-	$ts 			= nuBuildTableSchema();
-	for($i = 0 ; $i < $countTables ; $i++){
+	$ts = nuBuildTableSchema();
+	for ($i = 0; $i < $countTables; $i++) {
 
-		$table		= $t[$i];
-		$lfield		= 'FIRST';
+		$table = $t[$i];
+		$lfield = 'FIRST';
 
 		//-- insert extra new fields into old
 		$countNew = count($new);
-		for($c = 0 ; $c < $countNew ; $c++){
+		for ($c = 0; $c < $countNew; $c++) {
 
-			$new	= $ts["$table"]['names'];
-			$newt	= $ts["$table"]['types'];
+			$new = $ts["$table"]['names'];
+			$newt = $ts["$table"]['types'];
 			$old = nuObjKey($ts, "sys_$table", false) ? $ts["sys_$table"]['names'] : null;
 			$oldt = nuObjKey($ts, "sys_$table", false) ? $ts["sys_$table"]['types'] : null;
 
-			if($old != null && (nuObjKey($old,$c, false) && nuObjKey($new,$c, false))){
+			if ($old != null && (nuObjKey($old, $c, false) && nuObjKey($new, $c, false))) {
 
-				$ofield	= $old[$c];
-				$nfield	= $new[$c];
-				$otype	= $oldt[$c];
-				$ntype	= $newt[$c];
+				$ofield = $old[$c];
+				$nfield = $new[$c];
+				$otype = $oldt[$c];
+				$ntype = $newt[$c];
 
-				if($ofield != $nfield){
+				if ($ofield != $nfield) {
 
-					$sql= "ALTER TABLE sys_$table ADD COLUMN $nfield $ntype $lfield";
+					$sql = "ALTER TABLE sys_$table ADD COLUMN $nfield $ntype $lfield";
 					nuRunQuery($sql);
-					$ts	= nuBuildTableSchema();
+					$ts = nuBuildTableSchema();
 					//-- start from the beginning again
-					$c	= -1;
+					$c = -1;
 
-				}else if($otype != $ntype){
+				} else if ($otype != $ntype) {
 
-					$sql= "ALTER TABLE sys_$table MODIFY COLUMN $nfield $ntype";
+					$sql = "ALTER TABLE sys_$table MODIFY COLUMN $nfield $ntype";
 					nuRunQuery($sql);
 				}
 
-				if($ofield == ''){
-					$lfield	= '';
-				}else{
-					$lfield	= "AFTER $ofield";
+				if ($ofield == '') {
+					$lfield = '';
+				} else {
+					$lfield = "AFTER $ofield";
 				}
 			}
 		}
 	}
 }
 
-function nuAddNewSystemTables(){
+function nuAddNewSystemTables() {
 
-	$ts			= nuBuildTableSchema();
+	$ts = nuBuildTableSchema();
 	foreach ($ts as $k => $v) {
-		if(substr($k,0,8) == 'zzzzsys_'){
+		if (substr($k, 0, 8) == 'zzzzsys_') {
 
-			if(nuObjKey($ts,"sys_$k", false)){
-				$v	= $ts["sys_$k"]['valid'];
-				if($v == ''){
-					$sql	= "CREATE TABLE sys_$k SELECT * FROM $k";
+			if (nuObjKey($ts, "sys_$k", false)) {
+				$v = $ts["sys_$k"]['valid'];
+				if ($v == '') {
+					$sql = "CREATE TABLE sys_$k SELECT * FROM $k";
 					nuRunQuery($sql);
 				}
 			}
@@ -274,9 +276,9 @@ function nuCreateJSONColumns() {
 
 	$ts = nuBuildTableSchema();
 	foreach ($GLOBALS['sys_table_prefix'] as $tbl => $prefix) {
-		
+
 		if (nuObjKey($ts, "zzzzsys_$tbl", false)) {
-			$exists = db_field_exists("zzzzsys_".$tbl, $prefix."_json");
+			$exists = db_field_exists("zzzzsys_" . $tbl, $prefix . "_json");
 
 			if (!$exists) {
 				nuRunQueryNoDebug("ALTER TABLE zzzzsys_$tbl ADD {$prefix}_json MEDIUMTEXT NULL DEFAULT NULL;");
@@ -286,7 +288,7 @@ function nuCreateJSONColumns() {
 
 }
 
-function nuJustNuRecords(){
+function nuJustNuRecords() {
 
 	$s = "DELETE FROM zzzzsys_event WHERE zzzzsys_event_id NOT LIKE 'nu%'";
 	nuRunQuery($s);
@@ -337,7 +339,7 @@ function nuRemoveNuRecords() {
 	foreach ($queries as $query) {
 
 		$table = $query["table"];
-		$pk = substr($table, 4)."_id"; // remove sys_ prefix
+		$pk = substr($table, 4) . "_id"; // remove sys_ prefix
 		$where = isset($query["where"]) ? $query["where"] : $pk . " LIKE 'nu%'";
 
 		// e.g. DELETE FROM `sys_zzzzsys_event` WHERE zzzzsys_event_id LIKE 'nu%'
@@ -347,96 +349,99 @@ function nuRemoveNuRecords() {
 
 }
 
-function nuAppendToSystemTables(){
+function nuAppendToSystemTables() {
 
-	try{
-		$t		= nuSystemList();
-		$count	= count($t);
+	try {
+		$t = nuSystemList();
+		$count = count($t);
 
-		for($i = 0 ; $i < $count ; $i++){
+		for ($i = 0; $i < $count; $i++) {
 			$table = $t[$i];
 
 			//-- if duplicate records, use latest record from zzzzsys_object
-			if($table == 'zzzzsys_object'){
+			if ($table == 'zzzzsys_object') {
 				nuRunQuery("REPLACE INTO sys_zzzzsys_object SELECT * FROM zzzzsys_object");
 				nuRunQuery("DELETE FROM zzzzsys_object");
 			}
 			nuRunQuery("REPLACE INTO $table SELECT * FROM sys_$table");
 
-			nuDropDatabaseObject ("sys_".$table, ['TABLE']);
+			nuDropDatabaseObject("sys_" . $table, ['TABLE']);
 		}
 
 
 		// $s		= "UPDATE zzzzsys_setup SET set_denied = '1'";
 		// nuRunQuery($s);
 
-	}catch (Throwable $e) {
+	} catch (Throwable $e) {
 		nuInstallException($e);
-	}catch (Exception $e) {
+	} catch (Exception $e) {
 		nuInstallException($e);
 	}
 }
 
-function nuSystemList(){
+function nuSystemList() {
 
-	$t	= [];
-		$t[]	= 'zzzzsys_access';
-		$t[]	= 'zzzzsys_access_form';
-		$t[]	= 'zzzzsys_access_php';
-		$t[]	= 'zzzzsys_access_report';
-		$t[]	= 'zzzzsys_browse';
-		$t[]	= 'zzzzsys_debug';
-		$t[]	= 'zzzzsys_event';
-		$t[]	= 'zzzzsys_file';
-		$t[]	= 'zzzzsys_form';
-		$t[]	= 'zzzzsys_format';
-		$t[]	= 'zzzzsys_object';
-		$t[]	= 'zzzzsys_php';
-		$t[]	= 'zzzzsys_report';
-		$t[]	= 'zzzzsys_select';
-		$t[]	= 'zzzzsys_select_clause';
-		$t[]	= 'zzzzsys_session';
-		$t[]	= 'zzzzsys_setup';
-		$t[]	= 'zzzzsys_tab';
-		$t[]	= 'zzzzsys_timezone';
-		$t[]	= 'zzzzsys_translate';
-		$t[]	= 'zzzzsys_user';
-		$t[]	= 'zzzzsys_cloner';
-		$t[]	= 'zzzzsys_code_snippet';
-		$t[]	= 'zzzzsys_note';
-		$t[]	= 'zzzzsys_email_template';
-		$t[]	= 'zzzzsys_note_category';
-		$t[]	= 'zzzzsys_info';
-		$t[]	= 'zzzzsys_config';
-		$t[]	= 'zzzzsys_user_permission';
-		$t[]	= 'zzzzsys_permission_item';
-		$t[]	= 'zzzzsys_email_log';
+	$t = [];
+	$t[] = 'zzzzsys_access';
+	$t[] = 'zzzzsys_access_form';
+	$t[] = 'zzzzsys_access_php';
+	$t[] = 'zzzzsys_access_report';
+	$t[] = 'zzzzsys_browse';
+	$t[] = 'zzzzsys_debug';
+	$t[] = 'zzzzsys_event';
+	$t[] = 'zzzzsys_file';
+	$t[] = 'zzzzsys_form';
+	$t[] = 'zzzzsys_format';
+	$t[] = 'zzzzsys_object';
+	$t[] = 'zzzzsys_php';
+	$t[] = 'zzzzsys_report';
+	$t[] = 'zzzzsys_select';
+	$t[] = 'zzzzsys_select_clause';
+	$t[] = 'zzzzsys_session';
+	$t[] = 'zzzzsys_setup';
+	$t[] = 'zzzzsys_tab';
+	$t[] = 'zzzzsys_timezone';
+	$t[] = 'zzzzsys_translate';
+	$t[] = 'zzzzsys_user';
+	$t[] = 'zzzzsys_cloner';
+	$t[] = 'zzzzsys_code_snippet';
+	$t[] = 'zzzzsys_note';
+	$t[] = 'zzzzsys_email_template';
+	$t[] = 'zzzzsys_note_category';
+	$t[] = 'zzzzsys_info';
+	$t[] = 'zzzzsys_config';
+	$t[] = 'zzzzsys_user_permission';
+	$t[] = 'zzzzsys_permission_item';
+	$t[] = 'zzzzsys_email_log';
 
 	return $t;
 }
 
-function nuSetCollation(){
+function nuSetCollation() {
 
 	global $nuConfigDBEngine;
 	global $nuConfigDBCollate;
 	global $nuConfigDBCharacterSet;
 
-	if (!isset($nuConfigDBEngine))			$nuConfigDBEngine = "MyISAM";
-	if (!isset($nuConfigDBCollate))			$nuConfigDBCollate = "utf8_general_ci";
-	if (!isset($nuConfigDBCharacterSet))	$nuConfigDBCharacterSet = "utf8";
+	if (!isset($nuConfigDBEngine))
+		$nuConfigDBEngine = "MyISAM";
+	if (!isset($nuConfigDBCollate))
+		$nuConfigDBCollate = "utf8_general_ci";
+	if (!isset($nuConfigDBCharacterSet))
+		$nuConfigDBCharacterSet = "utf8";
 
-	$db		= nuRunQuery("SELECT DATABASE()");
-	$dbname	= db_fetch_row($db);
-	$dbname	= $dbname[0];
+	$db = nuRunQuery("SELECT DATABASE()");
+	$dbname = db_fetch_row($db);
+	$dbname = $dbname[0];
 	nuRunQuery("ALTER DATABASE $dbname CHARACTER SET $nuConfigDBCharacterSet COLLATE $nuConfigDBCollate");
 
-	$tbls	= nuRunQuery("SHOW FULL Tables WHERE Table_type = 'BASE TABLE'");
+	$tbls = nuRunQuery("SHOW FULL Tables WHERE Table_type = 'BASE TABLE'");
 
-	while($row = db_fetch_row($tbls)){
+	while ($row = db_fetch_row($tbls)) {
 
-		$tab 	= $row[0];
+		$tab = $row[0];
 
-		if(substr($tab, 0, 8) == 'zzzzsys_'){
+		if (substr($tab, 0, 8) == 'zzzzsys_') {
 
 			nuRunQuery("ALTER TABLE $tab ENGINE = $nuConfigDBEngine");
 			nuRunQuery("ALTER TABLE $tab DEFAULT CHARACTER SET $nuConfigDBCharacterSet COLLATE $nuConfigDBCollate");
@@ -450,26 +455,26 @@ function nuSetCollation(){
 
 function nuGetSupportedLanguagesAsJson() {
 
-    $languages = [
-        "Afrikaans", "Arabic", "Armenian", "Catalan", "Chinese", 
-        "Czech", "Danish", "Dutch", "French", "German", "Greek", 
-        "Hindi", "Italian", "Japanese", "Malay", "Polish", 
-        "Portuguese", "Romanian", "Russian", "Slovak", "Spanish", 
-        "Tamil", "Vietnamese"
-    ];
+	$languages = [
+		"Afrikaans", "Arabic", "Armenian", "Catalan", "Chinese",
+		"Czech", "Danish", "Dutch", "French", "German", "Greek",
+		"Hindi", "Italian", "Japanese", "Malay", "Polish",
+		"Portuguese", "Romanian", "Russian", "Slovak", "Spanish",
+		"Tamil", "Vietnamese"
+	];
 
-    return json_encode($languages);
+	return json_encode($languages);
 
 }
 
-function nuGetIncludedLanguages(){
+function nuGetIncludedLanguages() {
 
-	$s		= "SELECT `set_languages_included` FROM `zzzzsys_setup`";
-	$t		= nuRunQuery($s);
-	$r		= db_fetch_row($t);
+	$s = "SELECT `set_languages_included` FROM `zzzzsys_setup`";
+	$t = nuRunQuery($s);
+	$r = db_fetch_row($t);
 
 	$v = str_replace('"', '', $r[0]);
-	$v = str_replace(['[',']'] , '' , $v );
+	$v = str_replace(['[', ']'], '', $v);
 
 	return $v == '' ? [] : explode(",", $v);
 
@@ -480,13 +485,13 @@ function nuImportLanguageFiles() {
 	nuRunQuery("DELETE FROM `zzzzsys_translate` WHERE `zzzzsys_translate_id` LIKE 'nu%'");
 
 	$l = nuGetIncludedLanguages();
-	try{
+	try {
 
 		$countLanguages = count($l);
-		for($i = 0 ; $i < $countLanguages ; $i++){
+		for ($i = 0; $i < $countLanguages; $i++) {
 
 			if (trim($l[$i]) != '') {
-				$file = __DIR__ . DIRECTORY_SEPARATOR . 'languages'. DIRECTORY_SEPARATOR . $l[$i]. '.sql';
+				$file = __DIR__ . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR . $l[$i] . '.sql';
 				$sql = file_get_contents($file);
 				if ($sql) {
 					nuRunQuery($sql);
@@ -498,7 +503,7 @@ function nuImportLanguageFiles() {
 		}
 	} catch (Throwable $e) {
 		nuInstallException($e);
-	}catch (Exception $e) {
+	} catch (Exception $e) {
 		nuInstallException($e);
 	}
 
@@ -506,7 +511,7 @@ function nuImportLanguageFiles() {
 
 function nuDropDatabaseObject($name, $types) {
 
-	foreach ($types as $type) {		
+	foreach ($types as $type) {
 		nuRunQuery("DROP $type IF EXISTS `$name`");
 	}
 

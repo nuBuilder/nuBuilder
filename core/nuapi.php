@@ -4,7 +4,7 @@ header("Cache-Control: no-cache, must-revalidate");
 
 $nuState = $_POST['nuSTATE'] ?? null;
 if ($nuState == null && !empty($_FILES["file"])) {
-	require_once ('nuupload.php');
+	require_once 'nuupload.php';
 	$upload = nuUploadFile();
 	if (nuHasErrors()) {
 		nuDebug(' <html>' . implode("", $_POST['nuErrors']) . '</html>');
@@ -20,14 +20,14 @@ if ($nuState == null) {
 
 $_POST['nuSTATE'] = json_decode($nuState, true);
 
-require_once ('../nuconfig.php');
-require_once ('nusecurity.php');
-require_once ('nusession.php');
-require_once ('nucommon.php');
-require_once ('nuform.php');
-require_once ('nudata.php');
-require_once ('nudrag.php');
-require_once ('nudatabase.php');
+require_once '../nuconfig.php';
+require_once 'nusecurity.php';
+require_once 'nusession.php';
+require_once 'nucommon.php';
+require_once 'nuform.php';
+require_once 'nudata.php';
+require_once 'nudrag.php';
+require_once 'nudatabase.php';
 
 nuIncludeConfigPHPFiles();
 
@@ -49,7 +49,6 @@ if ($refreshCache && !$globalAccess) {
 	nuUpdateTableSchema($callType, true);
 	nuUpdateFormSchema(true);
 }
-;
 
 if (empty($user))
 	nuDie(nuTranslate('Your session has timed out.'));
@@ -135,6 +134,8 @@ if ($callType != 'logout') {
 		$f->forms[0]->user_permissions = $globalAccess ? '' : nuObjKey($user, 'USER_PERMISSIONS', null);
 		$f->forms[0]->user_a11y = $globalAccess ? '' : nuObjKey($user, 'USER_A11Y', null);
 		$f->forms[0]->user_name = $globalAccess ? '' : nuUser($user['USER_ID'])->sus_name;
+		$f->forms[0]->user_first_name = $globalAccess ? '' : nuObjKey($user, 'USER_FIRST_NAME', null);
+		$f->forms[0]->user_last_name = $globalAccess ? '' : nuObjKey($user, 'USER_LAST_NAME', null);
 		$f->forms[0]->home_id = $sessionData['HOME_ID'];
 		$f->forms[0]->language = $sessionData['language'];
 

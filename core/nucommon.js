@@ -1659,6 +1659,14 @@ function nuUserName() {
 	return nuSERVERRESPONSE.user_name;
 }
 
+function nuUserFirstName() {
+	return nuSERVERRESPONSE.user_first_name;
+}
+
+function nuUserLastName() {
+	return nuSERVERRESPONSE.user_last_name;
+}
+
 function nuUserPosition() {
 	return nuSERVERRESPONSE.user_position;
 }
