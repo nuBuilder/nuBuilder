@@ -59,6 +59,11 @@ function nuSetupGetConfig() {
 
 function nuSetupGetDefaultFormats() {
 
+	$formatColumns = db_field_names('zzzzsys_format');
+	if(array_search('srm_default', $formatColumns) === false){
+		return null;
+	}	
+
 	$sysConfig = nuRunQueryNoDebug("SELECT zzzzsys_format_id, srm_default FROM zzzzsys_format  WHERE srm_default IS NOT NULL");
 	return $sysConfig;
 
@@ -118,10 +123,9 @@ function nuRunUpdate($jsonId, $u = null, $p = null) {
 		$sysConfig = null;
 	}
 
-
 	// Save default formats
 	$defaultFormats = nuSetupGetDefaultFormats();
-	if (db_num_rows($defaultFormats) > 0) {
+	if ($defaultFormats !== null && db_num_rows($defaultFormats) > 0) {
 		nuPrintUpdateMessage('Saved DEFAULT FORMATS', $i);
 		$i++;
 	} else {
