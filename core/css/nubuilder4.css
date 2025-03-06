@@ -316,6 +316,7 @@ input[type=radio] {
 	padding: 5px 0;
 	position: sticky;
 	top: 0;
+	min-height: 22.5px;
 	z-index: 999;
 	width: 100vw;
 	display: flex;
