@@ -122,7 +122,7 @@ function nuLoginRequest(u, p) {
   
 }
 
-window.nuVersion 		= 'nuBuilder4.5';
+window.nuVersion 		= 'nuBuilder4.6';
 window.nuDocumentID		= Date.now();
 
 window.nuHASH				= [];

@@ -1,4 +1,4 @@
-# nuBuilder Forte 4.5
+# nuBuilder Forte 4.6
 
 ------------
 
@@ -30,7 +30,7 @@ It gives its users the ability to do database operations like:
 - customised date and number formats with the Format Builder
 - calculated fields with the Formula Builder
 
-Further customisation that can be done with JavaScript, PHP, HTML, CSS 
+Further customisation that can be done with JavaScript, PHP, HTML, CSS
 
 ------------
 
@@ -66,7 +66,7 @@ Further customisation that can be done with JavaScript, PHP, HTML, CSS
 - Download and unzip the nuBuilder files
 - Upload to your webserver
 - Create a database (e.g. nubuilder4 )
-- Make a copy of the nuconfig-sample.php file and save the new file as nuconfig.php 
+- Make a copy of the nuconfig-sample.php file and save the new file as nuconfig.php
 - Edit nuconfig.php to set your database and globeadmin credentials
 - Open the URL that will look something like: http://yoursitename.com/nubuilder4/index.php
 - Done - you can now login as 'globeadmin'

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Mar 08, 2025 at 06:41 AM
+-- Generation Time: Mar 08, 2025 at 07:25 AM
 -- Server version: 8.2.0
 -- PHP Version: 8.3.4
 
@@ -835,8 +835,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`, `inf_json`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.5-2025.03.08.00', NULL),
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.5-2025.03.06.03', NULL);
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.6-2025.03.08.01', NULL),
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.6-2025.03.08.00', NULL);
 
 -- --------------------------------------------------------
 

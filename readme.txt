@@ -1,5 +1,5 @@
 === nuBuilder Forte ===
-Name: nuBuilder 4.5
+Name: nuBuilder 4.6
 
 Contributors: Steven Copley, kev1n, Janusz, Neil, Nilesh, Ap.Muthu
 License: [GPLv3](https://www.gnu.org/licenses/old-licenses/gpl-3.0.html)
@@ -63,7 +63,7 @@ nuBuilder is a enterprise level application builder but with no limitations on d
 4. Edit nuconfig.php to set your database credentials and globeadmin credentials
 
 Detailed installation instructions can be found here: 
-https://github.com/nuBuilder/nuBuilder-4.5/wiki/nuBuilder-Installation-Guide
+https://github.com/nuBuilder/nuBuilder/wiki/nuBuilder-Installation-Guide
 
 == Documentation ==
 
