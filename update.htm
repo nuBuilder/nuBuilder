@@ -7,9 +7,8 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>nuBuilder Update</title>
-    <link rel="stylesheet" href="core/libs/bootstrap/bootstrap.min.css">
-	<link rel="stylesheet" href='core/libs/fontawesome/css/all.min.css' >
-
+    <link rel="stylesheet" href="core/libs/bootstrap/bootstrap.min.css?v=5.3.3">
+    <link rel="stylesheet" href="core/libs/fontawesome/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -21,14 +20,13 @@
         p {
             color: grey;
         }
-		ul {
-			padding-left: 20px; /* Adjust as necessary to align with the content area */
-			list-style-type: disc; /* Ensure list item bullets are visible */
-		}
-
-		li {
-			margin-left: 0; /* Reset or adjust the margin to keep the text inside the container */
-		}		
+        ul {
+            padding-left: 20px;
+            list-style-type: disc;
+        }
+        li {
+            margin-left: 0;
+        }       
         #heading_outside_nu {
             color: red;
         }
@@ -39,7 +37,7 @@
         #msform {
             text-align: center;
             position: relative;
-			margin: 22px;
+            margin: 22px;
         }
         #msform fieldset {
             background: white;
@@ -48,14 +46,14 @@
             width: 100%;
             padding-bottom: 20px;
             position: relative;
-            display: none; /* Ensuring that fieldsets are not displayed initially */
+            display: none; 
         }
         #msform fieldset:first-of-type {
             display: block; /* Only the first fieldset is displayed */
         }
-		.card {
-			padding: 15px; /* Add padding to ensure contents, including lists, are indented appropriately */
-		}		
+        .card {
+            padding: 15px;
+        }       
         .form-card {
             text-align: left;
         }
@@ -87,117 +85,98 @@
         #msform .action-button:hover {
             background-color: #311B92;
         }
-		#progressbar {
-			margin-bottom: 30px;
-			overflow: hidden;
-			color: lightgrey
-		}
-
-		#progressbar .active {
-			color: #673AB7
-		}
-
-		#progressbar li {
-			list-style-type: none;
-			font-size: 15px;
-			width: 25%;
-			float: left;
-			position: relative;
-			font-weight: 400
-		}
-
-		#progressbar #backup:before {
-			font-family: 'Font Awesome 6 Free';
-			content: '\f0a0';
-		}
-
-		#progressbar #download:before {
-			font-family: 'Font Awesome 6 Free';
-			content: "\f358"
-		}
-
-		#progressbar #prepare:before {
-			font-family: "Font Awesome 6 Free";
-			content: "\f1c6"
-		}
-
-		#progressbar #update:before {
-			font-family: "Font Awesome 6 Free";
-			font-weight: 900;
-			content: "\f058";
-		}
-
-		#progressbar li:before {
-			width: 50px;
-			height: 50px;
-			line-height: 45px;
-			display: block;
-			font-size: 20px;
-			color: #ffffff;
-			background: lightgray;
-			border-radius: 50%;
-			margin: 0 auto 10px auto;
-			padding: 2px
-		}
-
-		#progressbar li:after {
-			content: '';
-			width: 100%;
-			height: 2px;
-			background: lightgray;
-			position: absolute;
-			left: 0;
-			top: 25px;
-			z-index: -1
-		}
-
-		#progressbar li.active:before,
-		#progressbar li.active:after {
-			background: #673AB7
-		}
-
-		.progress {
-			height: 20px
-		}
-
-		.progress-bar {
-			background-color: #673AB7
-		}
-
-		#msform .action-button-previous {
-			width: 30%; /* Adjust the width to match the 'Next' button */
-			background: #616161; /* Typically, 'Previous' buttons have a different color to distinguish them */
-			color: white;
-			border-radius: 0;
-			padding: 10px 15px;
-			margin: 10px 5px;
-			font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-		}
-
-		#msform .action-button-previous:hover {
-			background-color: #000000; /* Darken the hover state for visual feedback */
-		}
-
-		.justify-content-container {
-			justify-content: center!important;
-			padding-left: 10px;
-		}
-
-		@media (max-width: 576px) {
-	
-			.container-fluid {
-				padding-left: 0 !important;
-				padding-right: 0 !important; 
-			}
-		
-		   .justify-content-container {
-				justify-content: left!important;
-			}		
-			
-		    ul {
-				padding-left: 15px; 
-			}
-			
+        #progressbar {
+            margin-bottom: 30px;
+            overflow: hidden;
+            color: lightgrey;
+        }
+        #progressbar .active {
+            color: #673AB7;
+        }
+        #progressbar li {
+            list-style-type: none;
+            font-size: 15px;
+            width: 25%;
+            float: left;
+            position: relative;
+            font-weight: 400;
+        }
+        #progressbar #backup:before {
+            font-family: 'Font Awesome 6 Free';
+            content: '\f0a0';
+        }
+        #progressbar #download:before {
+            font-family: 'Font Awesome 6 Free';
+            content: "\f358";
+        }
+        #progressbar #prepare:before {
+            font-family: 'Font Awesome 6 Free';
+            content: "\f1c6";
+        }
+        #progressbar #update:before {
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            content: "\f058";
+        }
+        #progressbar li:before {
+            width: 50px;
+            height: 50px;
+            line-height: 45px;
+            display: block;
+            font-size: 20px;
+            color: #ffffff;
+            background: lightgray;
+            border-radius: 50%;
+            margin: 0 auto 10px auto;
+            padding: 2px;
+        }
+        #progressbar li:after {
+            content: '';
+            width: 100%;
+            height: 2px;
+            background: lightgray;
+            position: absolute;
+            left: 0;
+            top: 25px;
+            z-index: -1;
+        }
+        #progressbar li.active:before,
+        #progressbar li.active:after {
+            background: #673AB7;
+        }
+        .progress {
+            height: 20px;
+        }
+        .progress-bar {
+            background-color: #673AB7;
+        }
+        #msform .action-button-previous {
+            width: 30%;
+            background: #616161; 
+            color: white;
+            border-radius: 0;
+            padding: 10px 15px;
+            margin: 10px 5px;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+        #msform .action-button-previous:hover {
+            background-color: #000000;
+        }
+        .justify-content-container {
+            justify-content: center!important;
+            padding-left: 10px;
+        }
+        @media (max-width: 576px) {
+            .container-fluid {
+                padding-left: 0 !important;
+                padding-right: 0 !important; 
+            }
+            .justify-content-container {
+                justify-content: left!important;
+            }       
+            ul {
+                padding-left: 15px; 
+            }
             #msform input,
             #msform textarea {
                 font-size: 14px;
@@ -214,36 +193,34 @@
         }
     </style>
     <script src="core/libs/jquery/jquery-3.7.1.min.js"></script>
-    <script src="core/libs/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="core/libs/bootstrap/bootstrap.bundle.min.js?v=5.3.3"></script>
     <script>
         $(document).ready(function() {
-		
-			var p = window.frameElement;
-			if (p === null) { 
-				$('#nulogo').show(); 
-				$('#heading_steps').show();
-				$('input[name ="next"]').prop('disabled', true);
-				$('#startupdateskip').prop('disabled', true);		
-			} else {
-				$('#nulogo').remove(); 
-				$('#heading_outside_nu').remove();
-			}
-	
-            var current_fs, next_fs, previous_fs; //fieldsets
+        
+            var p = window.frameElement;
+            if (p === null) { 
+                $('#nulogo').show(); 
+                $('#heading_steps').show();
+                $('input[name ="next"]').prop('disabled', true);
+                $('#startupdateskip').prop('disabled', true);		
+            } else {
+                $('#nulogo').remove(); 
+                $('#heading_outside_nu').remove();
+            }
+    
+            var current_fs, next_fs, previous_fs; // fieldsets
             var opacity;
             var current = 1;
             var steps = $("fieldset").length;
-		
+        
             setProgressBar(current);
-
+    
             $(".next").click(function() {
-			
-				if ($(this).attr('id') == 'startupdate' || $(this).attr('id') == 'startupdateskip') {
-
-					parent.nuSystemUpdate();
-					return;
-				}
-			
+                if ($(this).attr('id') == 'startupdate' || $(this).attr('id') == 'startupdateskip') {
+                    parent.nuSystemUpdate();
+                    return;
+                }
+            
                 current_fs = $(this).parent();
                 next_fs = $(this).parent().next();
                 $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
@@ -251,7 +228,7 @@
                 current_fs.hide();
                 setProgressBar(++current);
             });
-
+    
             $(".previous").click(function() {
                 current_fs = $(this).parent();
                 previous_fs = $(this).parent().prev();
@@ -260,7 +237,7 @@
                 current_fs.hide();
                 setProgressBar(--current);
             });
-
+    
             function setProgressBar(curStep) {
                 var percent = parseFloat(100 / steps) * curStep;
                 $(".progress-bar").css("width", percent + "%");
@@ -274,21 +251,24 @@
             <div class="col-11 col-sm-9 col-md-7 col-lg-8 col-xl-5 text-center p-0 mb-2">
                 <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
                     <h2 id="heading">nuBuilder Update</h2>
-                    <center><img id="nulogo" style="display: none;" src="core/graphics/logo.png" alt="nuBuilder Forte"></center><br>
+                    <div class="text-center">
+                        <img id="nulogo" style="display: none;" src="core/graphics/logo.png" alt="nuBuilder Forte">
+                    </div>
+                    <br>
                     <p id="heading_steps">To update nuBuilder follow these steps:</p>
                     <p id="heading_outside_nu">Log in to nuBuilder, click the Update Button on the Database Tab of the Home Form to start the Update process.</p>
                     <form id="msform">
-
-						<!-- progressbar -->
-						<ul id="progressbar">
-							<li class="active" id="backup"><strong>Backup</strong></li>
-							<li id="download"><strong>Download</strong></li>
-							<li id="prepare"><strong>Prepare</strong></li>
-							<li id="update"><strong>Update</strong></li>
-						</ul>
-						<div class="progress">
-							<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-						</div> <br> 
+                        <!-- progressbar -->
+                        <ul id="progressbar">
+                            <li class="active" id="backup"><strong>Backup</strong></li>
+                            <li id="download"><strong>Download</strong></li>
+                            <li id="prepare"><strong>Prepare</strong></li>
+                            <li id="update"><strong>Update</strong></li>
+                        </ul>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <br> 
                         <!-- fieldsets -->
                         <fieldset>
                             <div class="form-card">
@@ -300,14 +280,18 @@
                                         <h2 class="steps">Step 1 - 4</h2>
                                     </div>
                                 </div>
-							<ul>
-							<li>Ensure you back up your database before proceeding with this update.<br>
-							You can export your nuBuilder database to a file using phpMyAdmin or the mysqldump utility.<br>
-							The backup will consist of a single file containing all nuBuilder tables and data (e.g., nubuilder4.sql).</li>
-							<li>Back up your nuBuilder files as well. For example, you can add them to an archive named 20240611_backup_nubuilder4.zip.</li>
-		
-							</ul>	
-                            </div> <input type="button" name="next" class="next action-button" value="Next">
+                                <ul>
+                                    <li>
+                                        Ensure you back up your database before proceeding with this update.<br>
+                                        You can export your nuBuilder database to a file using phpMyAdmin or the mysqldump utility.<br>
+                                        The backup will consist of a single file containing all nuBuilder tables and data (e.g., nubuilder4.sql).
+                                    </li>
+                                    <li>
+                                        Back up your nuBuilder files as well. For example, you can add them to an archive named 20240611_backup_nubuilder4.zip.
+                                    </li>
+                                </ul>
+                            </div>
+                            <input type="button" name="next" class="next action-button" value="Next">
                             <input type="button" id="startupdateskip" style="width:240px" class="next action-button" value="Skip Wizard / Update now">
                         </fieldset>
                         <fieldset>
@@ -324,7 +308,9 @@
                                     <li>Pull the latest nuBuilder files from either Sourceforge or Github.</li>
                                     <li>Alternatively, use a subversion client to obtain the latest files.</li>
                                 </ul>
-                            </div> <input type="button" name="next" class="next action-button" value="Next"> <input type="button" name="previous" class="previous action-button-previous" value="Previous">
+                            </div>
+                            <input type="button" name="next" class="next action-button" value="Next">
+                            <input type="button" name="previous" class="previous action-button-previous" value="Previous">
                         </fieldset>
                         <fieldset>
                             <div class="form-card">
@@ -332,16 +318,22 @@
                                     <div class="col-7">
                                         <h2 class="fs-title">Delete & Unpack:</h2>
                                     </div>
-                                    <div the "col-5">
+                                    <div class="col-5">
                                         <h2 class="steps">Step 3 - 4</h2>
                                     </div>
-                                    <ul>
-									<li>Delete all files and folders in your nuBuilder directory except for nuconfig.php.<br>
-									Do not delete any files that do not belong to the nuBuilder core files.</li>
-									<li>Extract the downloaded .zip file to your nuBuilder root directory.</li>
-                                    </ul>
                                 </div>
-                            </div> <input type="button" name="next" class="next action-button" value="Next"> <input type="button" name="previous" class="previous action-button-previous" value="Previous">
+                                <ul>
+                                    <li>
+                                        Delete all files and folders in your nuBuilder directory except for nuconfig.php.<br>
+                                        Do not delete any files that do not belong to the nuBuilder core files.
+                                    </li>
+                                    <li>
+                                        Extract the downloaded .zip file to your nuBuilder root directory.
+                                    </li>
+                                </ul>
+                            </div>
+                            <input type="button" name="next" class="next action-button" value="Next">
+                            <input type="button" name="previous" class="previous action-button-previous" value="Previous">
                         </fieldset>
                         <fieldset>
                             <div class="form-card">
@@ -352,15 +344,15 @@
                                     <div class="col-5">
                                         <h2 class="steps">Step 4 - 4</h2>
                                     </div>
-                                    <ul>
-									<li>You are now ready to proceed with the update.</li>
-									<li>After completing the update, thoroughly test your site to ensure there are no issues.</li>
-									<li> It is recommended to use a test environment to verify changes before applying them to the production environment.</li>
-                                    </ul>
-                                    <br>
-                                   
                                 </div>
-                            </div>  <input type="button" id="startupdate" name="next" class="next action-button" value="Update">
+                                <ul>
+                                    <li>You are now ready to proceed with the update.</li>
+                                    <li>After completing the update, thoroughly test your site to ensure there are no issues.</li>
+                                    <li>It is recommended to use a test environment to verify changes before applying them to the production environment.</li>
+                                </ul>
+                                <br>
+                            </div>
+                            <input type="button" id="startupdate" name="next" class="next action-button" value="Update">
                         </fieldset>
                     </form>
                 </div>
