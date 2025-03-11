@@ -1352,32 +1352,43 @@ function nuBuildFormSchema() {
 
 function nuBuildTableSchema() {
 
-	$a = [];
-	$t = nuRunQuery("SELECT table_name as TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = DATABASE()");
-
-	while ($r = db_fetch_object($t)) {
-
-		$tn = $r->TABLE_NAME;
-
-		$info = db_field_info($tn);
-		$a[$tn] = ['names' => $info[0], 'types' => $info[1], 'primary_key' => $info[2], 'valid' => 1];
-
+	$tableSchemas = [];
+	$stmt = nuRunQuery(nuGetTableNamesSQL());
+	while ($row = db_fetch_object($stmt)) {
+		$tableName = $row->TABLE_NAME;
+		$tableInfo = db_field_info($tableName);
+		$tableSchemas[$tableName] = [
+			'names' => $tableInfo[0],
+			'types' => $tableInfo[1],
+			'primary_key' => $tableInfo[2],
+			'valid' => 1
+		];
 	}
 
-	return $a;
+	return $tableSchemas;
 
 }
 
 function nuBuildViewSchema() {
 
-	$a = [];
-	$t = nuRunQuery("SELECT table_name as TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'VIEW' AND table_schema = DATABASE()");
-
-	while ($r = db_fetch_object($t)) {
-		$a[] = $r->TABLE_NAME;
+	$viewNames = [];
+	$stmt = nuRunQuery(nuGetTableNamesSQL('VIEW'));
+	while ($row = db_fetch_object($stmt)) {
+		$viewNames[] = $row->TABLE_NAME;
 	}
 
-	return nuGlobalAccess() ? $a : [];
+	return nuGlobalAccess() ? $viewNames : [];
+
+}
+
+function nuGetTableNamesSQL($tableType = null) {
+
+	$sql = "SELECT table_name as TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = DATABASE()";
+	if ($tableType) {
+		$sql .= " AND TABLE_TYPE = '$tableType'";
+	}
+
+	return $sql;
 
 }
 
