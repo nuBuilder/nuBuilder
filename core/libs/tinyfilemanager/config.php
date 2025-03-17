@@ -1,4 +1,7 @@
 <?php
+// ***
+// TFM Config will be stored here, do not remove
+// ***
 
 require_once(dirname(__FILE__). '/../../../nuconfig.php');
 
