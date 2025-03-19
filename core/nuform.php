@@ -13,7 +13,6 @@ function nuFormProperties($formId, $columns = '') {
 function nuBeforeBrowse($formId) {
 
 	$_POST['nuMessages'] = [];
-
 	$procedure = nuProcedure('nuBeforeBrowse');
 
 	if ($procedure != '') {
@@ -281,7 +280,8 @@ function nuGetFormModifyObject($object, $formObject, $row, $recordId, $data, $nu
 				$displayResult = nuRunQuery($displaySql);
 				if (db_num_rows($displayResult) >= 1) {
 					$displayRow = db_fetch_row($displayResult);
-					$object->value = $displayRow[0];
+					$object->value = rtrim(implode("\n", $displayRow), "\n");
+					nuDebug($object->value);
 				}
 			}
 		}
@@ -526,46 +526,46 @@ function nuDefaultObject($r, $t) {
 	$labelOnTop = null;
 
 	/*
-																   if (nuIsMobile() && isset($r->sob_all_json)) {
+																	  if (nuIsMobile() && isset($r->sob_all_json)) {
 
-																	   $json = $r->sob_all_json;
-																	   if ($json != '') {
+																		  $json = $r->sob_all_json;
+																		  if ($json != '') {
 
-																		   $obj	= nuJsonDecode($json, true);
+																			  $obj	= nuJsonDecode($json, true);
 
-																		   $type		= nuObjKey($obj,'type', null);
+																			  $type		= nuObjKey($obj,'type', null);
 
-																		   if ($type != null) {
+																			  if ($type != null) {
 
-																			   $mobile		= nuObjKey($type,'mobile', null);
+																				  $mobile		= nuObjKey($type,'mobile', null);
 
-																			   if ($mobile == true) {
+																				  if ($mobile == true) {
 
-																				   $visible	= nuObjKey($mobile,'visible', null);
-																				   $name		= nuObjKey($mobile,'name', null);
-																				   $labelOnTop	= nuObjKey($mobile,'labelontop', null);
-																				   $labelOnTop	= $labelOnTop == null || $labelOnTop == true;
+																					  $visible	= nuObjKey($mobile,'visible', null);
+																					  $name		= nuObjKey($mobile,'name', null);
+																					  $labelOnTop	= nuObjKey($mobile,'labelontop', null);
+																					  $labelOnTop	= $labelOnTop == null || $labelOnTop == true;
 
-																				   $size		= nuObjKey($mobile,'size');
-																				   if ($size != null) {
-																					   $width		= nuObjKey($size, 'width', null);
-																					   $height		= nuObjKey($size, 'height', null);
-																				   }
+																					  $size		= nuObjKey($mobile,'size');
+																					  if ($size != null) {
+																						  $width		= nuObjKey($size, 'width', null);
+																						  $height		= nuObjKey($size, 'height', null);
+																					  }
 
-																				   $location		= nuObjKey($mobile,'location');
-																				   if ($location != null) {
-																					   $top		= nuObjKey($location, 'top', null);
-																					   $left		= nuObjKey($location, 'left', null);
-																				   }
+																					  $location		= nuObjKey($mobile,'location');
+																					  if ($location != null) {
+																						  $top		= nuObjKey($location, 'top', null);
+																						  $left		= nuObjKey($location, 'left', null);
+																					  }
 
-																			   }
+																				  }
 
-																		   }
+																			  }
 
-																	   }
+																		  }
 
-																   }
-																   */
+																	  }
+																	  */
 
 	$o->mobile = $mobile;
 	$o->labelOnTop = $labelOnTop;

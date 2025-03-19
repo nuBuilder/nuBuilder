@@ -2280,7 +2280,7 @@ function nuGetHttpOrigin() {
 
 function nuGetRecordURL($origin = null, $subFolder = null, $homepageId = null, $formId = null) {
 
-	$homepageId = $homepageId ? '&h=' . $homepageId : '';
+	$homepageId = $homepageId ? "&h=$homepageId" : '';
 	$origin = $origin ? $origin : nuGetHttpOrigin();
 
 	if (!$formId) {

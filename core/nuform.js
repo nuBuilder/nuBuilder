@@ -1456,7 +1456,7 @@ function nuINPUT(formObj, index, layer, prefix, properties) {
 	const thisObj = formObj.objects[index];
 	const objectId = prefix + obj.id;
 	const formId = $('#' + prefix + 'nuRECORD');
-	let inputElementType = obj.type !== 'textarea' ? 'input' : 'textarea';
+	let inputElementType = obj.type === 'textarea' || (obj.type === 'display' && obj.value.includes("\n")) ? 'textarea' : 'input';
 	const visibility = obj.display === 0 ? 'hidden' : 'visible';
 	const inputType = obj.input;
 	let objType = obj.type;
