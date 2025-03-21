@@ -281,7 +281,6 @@ function nuGetFormModifyObject($object, $formObject, $row, $recordId, $data, $nu
 				if (db_num_rows($displayResult) >= 1) {
 					$displayRow = db_fetch_row($displayResult);
 					$object->value = rtrim(implode("\n", $displayRow), "\n");
-					nuDebug($object->value);
 				}
 			}
 		}
