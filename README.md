@@ -1,112 +1,108 @@
 # nuBuilder Forte 4.6
 
-------------
+**A powerful, open-source, low-code platform for rapidly building custom web-based database applications.**
 
-* ***Home Page:*** https://www.nubuilder.com
-* ***Demo:*** https://demo.nubuilder.cloud/
-* ***Wiki:*** https://wiki.nubuilder.cloud/
-* ***Forum:*** https://forums.nubuilder.cloud/
-* ***Requires PHP:*** 7.0.33 (older versions untested). phpMyAdmin that is shipped with nuBuilder will require PHP 7.2.5+
-* ***Requires MySQL/MariaDB:*** MySQL 5.7 or greater OR MariaDB 10.3 or greater
-* ***Requires a web server:*** (e.g. Apache or Nginx)
-* ***License:*** [GPLv3](https://www.gnu.org/licenses/old-licenses/gpl-3.0.html)
+---
 
-------------
+### Quick Links:
 
-## Description
+- 🌐 [Home Page](https://www.nubuilder.com)  
+- 🚀 [Live Demo](https://demo.nubuilder.cloud/)  
+- 📑 [Wiki Documentation](https://wiki.nubuilder.cloud)  
+- 💬 [Community Forum](https://forums.nubuilder.cloud/)
 
-nuBuilder enables you to make any web-based database application that you want or need with the least amount of effort and learning.
+---
 
-It gives its users the ability to do database operations like:
+## Overview
 
-* Search, Create, Insert, Read, Update, Delete
+**nuBuilder Forte** is a versatile, web-based development environment designed to simplify the creation and management of robust database-driven applications. Its intuitive, low-code interface allows you to easily build database applications without extensive coding knowledge.
 
+nuBuilder Forte streamlines essential database operations:
 
-✪ With low-code tools that create ...
+- **Search, Create, Insert, Read, Update, Delete**
 
-- Fast Forms with the Form Builder
-- Fast Reports
-- Database queries with the SQL Builder
-- customised date and number formats with the Format Builder
-- calculated fields with the Formula Builder
+---
 
-Further customisation that can be done with JavaScript, PHP, HTML, CSS
+## Why nuBuilder Forte?
 
-------------
+- **🚀 Rapid Development**: Quickly build complex forms, reports, and database queries.
+- **🎨 Easy Customization**: Extensive customization options using built-in builders or custom code.
+- **🙌 User-Friendly**: Intuitive UI ensures minimal training for end-users.
+- **🌎 Open-Source & Web-Based**: Free, accessible from anywhere, no installation required for users.
 
-**✪ Features:**
+---
 
-- low-code
-- SQL Builder
-- Form Builder
-- Report Builder
-- User Management
-- Access Levels
-- 2FA
-- WYSIWYG Editor
-- Send Emails
-- Translations
-- Import CSV Files
-- Create Graphs
-- Code Snippets
-- File Manager
-- File Upload
-- Email Templates
-- SSO (Single sign-on)
-- Calculated Fields
-- Subforms
-- Embedded Forms
-- Visually Arrange Objects
-- Mobile View
+## Core Features
 
-------------
+- ✅ **Low-Code Interface** – Build apps rapidly, with minimal coding.
+- ✅ **Form & Report Builder** – Easily create custom forms and reports visually.
+- ✅ **SQL Builder** – Effortlessly design database queries.
+- ✅ **Advanced User Management** – Manage users, roles, and permissions.
+- ✅ **Security & Authentication** – Built-in support for 2FA and SSO.
+- ✅ **Customization & Extensions** – Customize extensively with JavaScript, PHP, HTML, and CSS.
 
-**✪ Easy installation:**
+---
 
-- Download and unzip the nuBuilder files
-- Upload to your webserver
-- Create a database (e.g. nubuilder4 )
-- Make a copy of the nuconfig-sample.php file and save the new file as nuconfig.php
-- Edit nuconfig.php to set your database and globeadmin credentials
-- Open the URL that will look something like: http://yoursitename.com/nubuilder4/index.php
-- Done - you can now login as 'globeadmin'
+## Advanced Capabilities
 
-[Detailed installation instructions](https://wiki.nubuilder.cloud/index.php?title=Documentation)
+| Feature                              | Description                                           |
+| ------------------------------------ | ----------------------------------------------------- |
+| 📋 **Form & Report Builder**         | Visually create forms and reports                     |
+| 📊 **Graph & Charting Tools**        | Generate insightful visualizations                    |
+| 🔐 **Secure Authentication (2FA, SSO)** | Enhance security with built-in authentication         |
+| 🌍 **Localization & Translations**   | Support multiple languages seamlessly                 |
+| 📧 **Email Integration & Templates** | Easily send emails directly from your apps            |
+| 📦 **CSV & File Management**         | Import/export CSV data, manage files                  |
+| ⚙️ **Calculated & Custom Fields**    | Dynamically calculate data within forms               |
+| 📱 **Responsive Design**             | Optimized for mobile, tablet, and desktop devices     |
 
+---
 
-## Documentation
+## Installation
 
-### PDF instructions / Documentation to get started as a nuBuilder developer
+### Prerequisites
 
-* [nuBuilder-Forte-User-Guide 1](https://sourceforge.net/projects/nubuilder/files/nuBuilderForte_UserGuide_OLD.pdf/download)
-* [nuBuilder-Forte-User-Guide 2](https://sourceforge.net/projects/nubuilder/files/nuBuilderForte_UserGuide.pdf/download)
-* [nuBuilder-Forte-Wiki-Documentation](https://wiki.nubuilder.cloud)
+- **PHP**: Version 7.0.33 or greater  
+  *(PHP 7.2.5+ required if using integrated phpMyAdmin)*
+- **Database**: MySQL 5.7+ or MariaDB 10.3+
+- **Web Server**: Apache or Nginx
 
-------------
+### Quick Start Guide
 
-### Alternative to MS-Access
-nuBuilder provides an ideal replacement/upgrade from **MS-Access**. It won't get slower and slower as you add more records, unlike **MS-Access**.
+1. **Download and unzip** nuBuilder files.
+2. **Upload** to your web server directory.
+3. **Create** a new MySQL or MariaDB database (e.g., `nubuilder4`).
+4. **Rename** the `nuconfig-sample.php` file to `nuconfig.php` and update it with your database credentials.
+5. **Navigate** to your installation URL:  
+   `http://yoursite.com/nubuilder4/index.php`
+6. **Log in** using the default credentials:  
+   Username: `globeadmin`
 
-### Easy To Learn For End Users
-nuBuilder uses an Uncluttered Interface which makes it very easy for new users to find there way around.
+> ℹ️ **[Detailed installation instructions](https://wiki.nubuilder.cloud/index.php?title=Documentation)**
 
-### Easy To Learn For Developers
-nuBuilder is designed to be as easy as possible to get started with building **Forms** and **Search** Screens. With online videos and documentation, you have all the information you need to become a nuBuilder developer.
+---
 
-### Build Business Applications Fast
-nuBuilder makes it affordable to build custom business solutions.
+## Documentation & Resources
 
-### Web Based
-nuBuilder is fully web based which means you can use it anywhere and ***end users do not need to install anything***.
+- 📖 [nuBuilder Forte User Guide](https://sourceforge.net/projects/nubuilder/files/nuBuilderForte_UserGuide.pdf/download)
+- 📚 [nuBuilder Wiki Documentation](https://wiki.nubuilder.cloud)
 
-### Open Source
-nuBuilder is free to download and install on your own web server with zero licence fees.
+---
 
-### Use your existing PHP and MySQL skills
-nuBuilder is built upon industry standard technology stack and does not require you to learn any non-standard languages or templating systems.
+## Why Choose nuBuilder Forte Over Alternatives?
 
-### Single File Backup
-nuBuilder stores all forms, reports, company data and PHP/JavaScript code in MySQL. You can backup your entire application within a single database file.
+- 🔥 **Scalable Alternative to MS-Access** – No performance degradation with growing data.
+- 💼 **Cost-effective Alternative to Oracle APEX** – No database or resource limitations.
+- 📚 **Easy Learning Curve** – Built using familiar PHP and MySQL technology.
+- 🌐 **Fully Web-Based** – Accessible everywhere without client-side installation.
+- 💾 **Single-File Backup** – Easily backup or migrate your entire application and data.
 
-### Alternative to Oracle Application Express
-nuBuilder is a enterprise level application builder but with no limitations on database size or CPU usage.
+---
+
+## License
+
+nuBuilder Forte is licensed under the [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html) open-source license.
+
+---
+
+🌟 **Join our community and start building powerful database applications with nuBuilder Forte today!**
