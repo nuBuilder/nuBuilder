@@ -1859,10 +1859,13 @@ function nuIMAGE(w, i, l, p, prop) {
 	let $img = $(img);
 	nuSetObjectBounds(img, obj.top, obj.left, obj.width).addClass('nuImage');
 	if (obj.height !== "-1" && obj.width !== "-1") {
-		nuSetObjectBounds($img, null, null, obj.width, obj.height)
+		nuSetObjectBounds($img, null, null, obj.width, obj.height);
 	}
 
 	$img.attr('src', atob(w.objects[i].src));
+	$img.on('error', function () {
+		$(this).off('error').attr('src', 'core/graphics/default-image.png');
+	});
 
 	nuSetAccess(id, obj.read);
 	nuAddJSObjectEvents(id, obj.js);
