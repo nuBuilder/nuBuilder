@@ -987,8 +987,14 @@ function nuAddJSObjectEvents(id, events) {
 			continue;
 		}
 
-		code += ';' + eventObj.js;
-		element.setAttribute(ev, code);
+		if (ev === 'onenter') {
+			$(element).nuOnEnterKey(function (e) {
+				eval(eventObj.js);
+			});
+		} else {
+			code += ';' + eventObj.js;
+			element.setAttribute(ev, code);
+		}
 	}
 
 	if (element.tagName === "BUTTON") {
@@ -999,7 +1005,6 @@ function nuAddJSObjectEvents(id, events) {
 			ele.attr('onclick', newOnclick);
 		}
 	}
-
 }
 
 function nuRecordProperties(w, p, l) {
@@ -5259,7 +5264,7 @@ function nuChooseEventList() {
 		return ['beforeinsertrow', 'afterinsertrow', 'clickdelete'];
 	}
 
-	return ['onchange', 'oninput', 'onclick', 'onblur', 'onnuload', 'onfocus', 'onkeydown'];
+	return ['onchange', 'oninput', 'onclick', 'onblur', 'onnuload', 'onfocus', 'onkeydown', 'onenter'];
 
 }
 
