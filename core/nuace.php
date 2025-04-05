@@ -146,7 +146,8 @@ $jquery = "libs/jquery/jquery-3.7.1.min.js";
 		window.nuACELanguage = opener.window.nuAce[0];
 		window.nuACEObjectId = opener.window.nuAce[1];
 		window.nuACETheme = opener.window.nuAce[2];
-		window.nuACEObjectLabel = $('#' + window.nuACEObjectId, window.opener.document).attr('data-nu-label');
+		const $el = $('#' + window.nuACEObjectId, window.opener.document);
+		window.nuACEObjectLabel = $el.attr('data-nu-label') || $el.attr('title') || $el.attr('id');
 		document.title = window.nuACEObjectId + " - Ace Editor";
 
 		function nuLoad() {
@@ -182,7 +183,9 @@ $jquery = "libs/jquery/jquery-3.7.1.min.js";
 			}
 
 			document.getElementById('nu_language').innerHTML =
-				window.nuACEObjectLabel + " (" + window.nuACELanguage + ")";
+				window.nuACELanguage === window.nuACEObjectLabel
+					? window.nuACEObjectLabel
+					: window.nuACEObjectLabel + " (" + window.nuACELanguage + ")";
 
 			if (language.includes('SQL')) {
 				document.getElementById('nuACEBeautifyButton').style.display = 'none';
