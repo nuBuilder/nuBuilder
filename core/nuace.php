@@ -47,6 +47,29 @@ $jquery = "libs/jquery/jquery-3.7.1.min.js";
 			margin-left: auto;
 		}
 
+		#saveIndicator {
+			display: none;
+			height: 20px;
+			font-size: 16px;
+			font-weight: 400;
+			line-height: 18px;
+			text-align: center;
+			vertical-align: middle;
+			text-shadow: 0 1px 1px #E1E8EA;
+			border-style: solid;
+			border-width: 1px;
+			border-color: #01A6F5;
+			background-color: #EDEDED;
+			color: #01A6F5;
+			border-radius: 4px;
+			box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+			opacity: 0.7;
+			padding: 0 5px;
+			display: inline-block;
+			margin-left: 10px;
+			margin-right: 5px;
+		}
+
 		#editor-container {
 			position: absolute;
 			top: 50px;
@@ -269,12 +292,22 @@ $jquery = "libs/jquery/jquery-3.7.1.min.js";
 			// Call nuSaveAction only if Auto Save is checked
 			if (document.getElementById('btn_save_on_apply_checkbox').checked) {
 				window.opener.nuSaveAction();
+				if (!close) showSavedIndicator();
 			}
 			if (close) {
 				window.close();
 			} else {
 				nuRemoveButtonBgColor();
 			}
+		}
+
+		function nuRemoveButtonBgColor() {
+			$('#btn_save_close').css('background-color', '');
+			$('#btn_save').css('background-color', '');
+		}
+
+		function showSavedIndicator() {
+			$('#saveIndicator').fadeIn(200).delay(1000).fadeOut(200);
 		}
 
 		function nuWarning() {
@@ -292,6 +325,10 @@ $jquery = "libs/jquery/jquery-3.7.1.min.js";
 	<div class="toolbar">
 		<input type="button" id="btn_save_close" class="nuActionButton nuCopyBackButton" onclick="nuAceSave(true)">
 		<input type="button" id="btn_save" class="nuActionButton nuCopyBackButton" onclick="nuAceSave(false)">
+		<span id="saveIndicator"
+			style="display:none; margin-left: 10px; margin-right: 5px; font-weight:bold; color:green;">
+			Saved!
+		</span>
 		<input type="checkbox" id="btn_save_on_apply_checkbox">
 		<label for="btn_save_on_apply_checkbox" style="margin-left: 5px;">Save on Apply</label>
 		<button class="btn undo nuActionButton nuReadonly" title="Undo" onclick="editor.undo()" disabled></button>
