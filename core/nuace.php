@@ -76,6 +76,7 @@ $jquery = "libs/jquery/jquery-3.7.1.min.js";
 			left: 0;
 			right: 0;
 			bottom: 0;
+			margin-top: 3px;
 		}
 
 		#nu_editor_pad,
@@ -195,17 +196,18 @@ $jquery = "libs/jquery/jquery-3.7.1.min.js";
 				$('#btn_save_close').remove();
 				$('#btn_save').remove();
 			} else {
-				// Rename buttons and add title attributes
-				var btnSaveClose = document.getElementById('btn_save_close');
+				let btnSaveClose = document.getElementById('btn_save_close');
 				btnSaveClose.value = 'Apply & Close';
-				btnSaveClose.title = 'Copy changes back and Close';
-				var btnSave = document.getElementById('btn_save');
+				btnSaveClose.title = 'Copy changes back and Close (Ctrl+Shift+C)';
+
+				let btnSave = document.getElementById('btn_save');
 				btnSave.value = 'Apply';
-				btnSave.title = 'Copy changes back';
+				btnSave.title = 'Copy changes back (Ctrl+Shift+S)';
 			}
 
 			nuResize();
 
+			editor.renderer.setScrollMargin(10, 0, 0, 10);
 			editor.setValue(window.startValue);
 			editor.focus();
 			editor.navigateFileStart();
@@ -238,6 +240,20 @@ $jquery = "libs/jquery/jquery-3.7.1.min.js";
 			document.getElementById('btn_save_on_apply_checkbox').addEventListener('change', function () {
 				localStorage.setItem('auto_save', this.checked);
 			});
+
+			document.addEventListener('keydown', function (e) {
+				if (e.ctrlKey && e.shiftKey) {
+					const key = e.key.toLowerCase();
+					if (key === 's') {
+						e.preventDefault();
+						document.getElementById('btn_save').click(); // Apply
+					} else if (key === 'c') {
+						e.preventDefault();
+						document.getElementById('btn_save_close').click(); // Apply & Close
+					}
+				}
+			});
+
 		}
 
 		function nuACEhandleCtrlComma(event) {
