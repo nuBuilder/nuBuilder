@@ -109,6 +109,14 @@ $jquery = "libs/jquery/jquery-3.7.1.min.js";
 			font-weight: 900;
 			margin-left: 1px;
 		}
+
+		.toolbar #nu_language {
+			color: black;
+			flex-basis: 100%;
+			text-align: left;
+			margin-top: 5px;
+			margin-left: 10px;
+		}
 	</style>
 
 	<script>
@@ -297,7 +305,6 @@ $jquery = "libs/jquery/jquery-3.7.1.min.js";
 		<button class="btn showinvisibles nuActionButton" title="Show invisible characters"
 			onclick="nuAceShowInvisibles();"></button>
 		<span id="nu_language" class="nuNotBreadcrumb"></span>
-		<img id="nulogo" src="graphics/logo.png" width="120">
 	</div>
 	<div id="editor-container">
 		<div id="nu_editor_pad"></div>
