@@ -223,6 +223,17 @@ $jquery = "libs/jquery/jquery-3.7.1.min.js";
 				exec: editor.commands.byName['showSettingsMenu'].exec
 			});
 
+			editor.commands.addCommand({
+				name: "showKeyboardShortcuts",
+				bindKey: { win: "Ctrl-Shift-k", mac: "Command-Shift-k" },
+				exec: function (editor) {
+					ace.config.loadModule("ace/ext/keybinding_menu", function (module) {
+						module.init(editor);
+						editor.showKeyboardShortcuts()
+					})
+				}
+			})
+
 			document.addEventListener('keydown', nuACEhandleCtrlComma);
 			nuSetEdited(false);
 			editor.getSession().getUndoManager().reset();
