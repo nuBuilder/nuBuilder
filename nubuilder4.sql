@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 06, 2025 at 10:58 AM
+-- Generation Time: Apr 06, 2025 at 11:52 PM
 -- Server version: 8.2.0
 -- PHP Version: 8.3.4
 
@@ -840,8 +840,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`, `inf_json`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.6-2025.04.06.00', NULL),
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.6-2025.04.05.05', NULL);
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.6-2025.04.07.00', NULL),
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.6-2025.04.05.06', NULL);
 
 -- --------------------------------------------------------
 
@@ -1558,7 +1558,7 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu67c940bf969f659', 'nuuser', 'zzzzsys_user', 'input', 'sus_first_name', 'First Name', 'nu5bad6cb36b63cae', 40, 71, 219, 329, 22, '0', 'left', '0', '0', NULL, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'text', NULL, NULL, NULL, 'autocomplete=\"off\"', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '{\"type\":{\"version\":\"1.0\",\"mobile\":{\"version\":\"1.0\",\"name\":\"test1\",\"visible\":true,\"location\":{\"top\":\"65\",\"left\":\"52\"},\"size\":{\"width\":\"250\",\"height\":\"25\"},\"class\":[\"nuMobileInput\"]}}}', NULL),
 ('nu67c940d83501a9a', 'nuuser', 'zzzzsys_user', 'input', 'sus_last_name', 'Last Name', 'nu5bad6cb36b63cae', 50, 100, 219, 329, 22, '0', 'left', '0', '0', NULL, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'text', NULL, NULL, NULL, 'autocomplete=\"off\"', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '{\"type\":{\"version\":\"1.0\",\"mobile\":{\"version\":\"1.0\",\"name\":\"test1\",\"visible\":true,\"location\":{\"top\":\"65\",\"left\":\"52\"},\"size\":{\"width\":\"250\",\"height\":\"25\"},\"class\":[\"nuMobileInput\"]}}}', NULL),
 ('nu67f1436f5c9633b', 'nuform', 'zzzzsys_form', 'select', 'savedItemsDropdown', 'Versions', 'nu5bad6cb37026348', 300, 29, 912, 166, 22, '1', 'right', '0', '2', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', '|', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-('nu67f22e3baab43be', 'nufile', 'zzzzsys_file', 'run', 'run_nufile_associated_objects', '', 'nu67f22d53d2c87ad', 90, 28, 22, 844, 441, '0', 'center', '0', '0', NULL, '0', NULL, NULL, NULL, NULL, 'nu67f22e3ba027e23', NULL, 'i', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+('nu67f22e3baab43be', 'nufile', 'zzzzsys_file', 'run', 'run_nufile_associated_objects', '', 'nu67f22d53d2c87ad', 90, 28, 22, 844, 441, '0', 'center', '0', '0', NULL, '0', NULL, NULL, NULL, NULL, 'nu67f22e3ba027e23', '#RECORD_ID#', 'i', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
