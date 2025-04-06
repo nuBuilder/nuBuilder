@@ -19,6 +19,7 @@ $jquery = "libs/jquery/jquery-3.7.1.min.js";
 		.toolbar {
 			display: flex;
 			align-items: center;
+			gap: 10px;
 			padding: 8px;
 			background: #f0f0f0;
 			border-bottom: 1px solid #ccc;
