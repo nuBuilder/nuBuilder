@@ -1466,7 +1466,7 @@ function nuINPUT(formObj, index, layer, prefix, properties) {
 
 	let objType = obj.type;
 	let inputElementType = obj.type === 'textarea' ||
-		(obj.type === 'display' && obj?.value?.includes("\n"))
+		(obj.type === 'display' && String(obj?.value).includes("\n"))
 		? 'textarea'
 		: 'input';
 
