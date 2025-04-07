@@ -636,7 +636,7 @@ function nuDisplayLoggedInUser() {
 
 function nuAddHomeLogout() {
 
-	if (nuMainForm()) {
+	if (nuMainForm(true)) {
 
 		if (window.nuFORM.breadcrumbs.length > 1) {
 
@@ -3577,9 +3577,9 @@ function nuAddBreadcrumb(i) {
 
 }
 
-function nuMainForm() {
+function nuMainForm(ignoreOpener = false) {
 
-	if (opener) {
+	if (opener && !ignoreOpener) {
 
 		try {
 			return nuDocumentID == opener.nuDocumentID;
