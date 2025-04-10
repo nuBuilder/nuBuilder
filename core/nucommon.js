@@ -2031,15 +2031,26 @@ function nuAddDatalist(i, arr, showAllOnArrowClick = true) {
 		datalist.innerHTML = '';
 	}
 
-	arr.forEach(data => {
+	arr.forEach(item => {
 		let option = document.createElement('option');
-		option.value = Array.isArray(data) ? data[0] : data;
-		if (Array.isArray(data) && data.length == 2) option.text = data[1];
+		if (Array.isArray(item)) {
+			// Use the first element as the option value.
+			option.value = item[0];
+			// If more than one element exists, join the rest as the option text.
+			if (item.length > 1) {
+				option.text = item.slice(1).join(' ');
+			}
+		} else {
+			// If the item is not an array, use it directly.
+			option.value = item;
+		}
 		datalist.appendChild(option);
 	});
 
-	$(`#${i}`).attr('list', datalist.id).attr('autocomplete', 'off');
-
+	// Update attributes of the input element.
+	const inputElement = document.getElementById(i);
+	inputElement.setAttribute('list', datalist.id);
+	inputElement.setAttribute('autocomplete', 'off');
 }
 
 function nuLabelOnTop(include, exclude, offsetTop = -18, offsetLeft = 0) {

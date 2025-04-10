@@ -1189,7 +1189,7 @@ function nuINPUTInput(inp, inputType, obj, objectType) {
 
 	inp.setAttribute('type', inputType);
 
-	const className = objectType == 'lookup' ? 'nuHiddenLookup' : 'input_' + inputType;
+	const className = objectType === 'lookup' ? 'nuHiddenLookup' : 'input_' + inputType;
 	inp.classList.add(className);
 
 	if (obj.datalist !== null && obj.datalist !== '' && typeof obj.datalist !== "undefined") {

@@ -264,8 +264,12 @@ function nuGetFormModifyObject($object, $formObject, $row, $recordId, $data, $nu
 		if ($inputType == 'nuScroll' && $row->sob_all_type == 'input') {
 			$object->scroll = $row->sob_input_javascript;
 		}
-		if (($inputType == 'nuDate' || $inputType == 'nuNumber' || $inputType == 'number' || $inputType == 'text' || $inputType == 'email' || $inputType == 'search' || $inputType == 'month') && $row->sob_all_type == 'input' && $row->sob_input_datalist != '') {
-			$object->datalist = json_encode(nuDataListOptions(nuReplaceHashVariables($row->sob_input_datalist)));
+		$supportedDatalistInputTypes = ['nuDate', 'nuNumber', 'number', 'text', 'email', 'search', 'month'];
+		if (in_array($inputType, $supportedDatalistInputTypes) &&
+			$row->sob_all_type === 'input' &&
+			!empty($row->sob_input_datalist)) {
+			$datalistOptions = nuDataListOptions(nuReplaceHashVariables($row->sob_input_datalist));
+			$object->datalist = json_encode($datalistOptions);
 		}
 		if ($row->sob_all_type == 'display') {
 			$object->value = null;
@@ -525,46 +529,46 @@ function nuDefaultObject($r, $t) {
 	$labelOnTop = null;
 
 	/*
-																	  if (nuIsMobile() && isset($r->sob_all_json)) {
+																							  if (nuIsMobile() && isset($r->sob_all_json)) {
 
-																		  $json = $r->sob_all_json;
-																		  if ($json != '') {
+																								  $json = $r->sob_all_json;
+																								  if ($json != '') {
 
-																			  $obj	= nuJsonDecode($json, true);
+																									  $obj	= nuJsonDecode($json, true);
 
-																			  $type		= nuObjKey($obj,'type', null);
+																									  $type		= nuObjKey($obj,'type', null);
 
-																			  if ($type != null) {
+																									  if ($type != null) {
 
-																				  $mobile		= nuObjKey($type,'mobile', null);
+																										  $mobile		= nuObjKey($type,'mobile', null);
 
-																				  if ($mobile == true) {
+																										  if ($mobile == true) {
 
-																					  $visible	= nuObjKey($mobile,'visible', null);
-																					  $name		= nuObjKey($mobile,'name', null);
-																					  $labelOnTop	= nuObjKey($mobile,'labelontop', null);
-																					  $labelOnTop	= $labelOnTop == null || $labelOnTop == true;
+																											  $visible	= nuObjKey($mobile,'visible', null);
+																											  $name		= nuObjKey($mobile,'name', null);
+																											  $labelOnTop	= nuObjKey($mobile,'labelontop', null);
+																											  $labelOnTop	= $labelOnTop == null || $labelOnTop == true;
 
-																					  $size		= nuObjKey($mobile,'size');
-																					  if ($size != null) {
-																						  $width		= nuObjKey($size, 'width', null);
-																						  $height		= nuObjKey($size, 'height', null);
-																					  }
+																											  $size		= nuObjKey($mobile,'size');
+																											  if ($size != null) {
+																												  $width		= nuObjKey($size, 'width', null);
+																												  $height		= nuObjKey($size, 'height', null);
+																											  }
 
-																					  $location		= nuObjKey($mobile,'location');
-																					  if ($location != null) {
-																						  $top		= nuObjKey($location, 'top', null);
-																						  $left		= nuObjKey($location, 'left', null);
-																					  }
+																											  $location		= nuObjKey($mobile,'location');
+																											  if ($location != null) {
+																												  $top		= nuObjKey($location, 'top', null);
+																												  $left		= nuObjKey($location, 'left', null);
+																											  }
 
-																				  }
+																										  }
 
-																			  }
+																									  }
 
-																		  }
+																								  }
 
-																	  }
-																	  */
+																							  }
+																							  */
 
 	$o->mobile = $mobile;
 	$o->labelOnTop = $labelOnTop;
@@ -898,30 +902,33 @@ function nuSetFormValue($f, $v) {
 
 }
 
-function nuDataListOptions($sql) {
+function nuDataListOptions($input) {
 
-	$result = [];
+	$options = [];
 
-	$s = strtoupper(nuTrim($sql));
+	$trimmedInput = nuTrim($input);
+	$upperInput = strtoupper($trimmedInput);
 
-	if (substr($s, 0, 6) == 'SELECT' || substr($s, 0, 4) == 'SHOW') {	//-- sql statement
-
-		$stmt = nuRunQuery($sql);
+	if (substr($upperInput, 0, 6) === 'SELECT' || substr($upperInput, 0, 4) === 'SHOW') {
+		// SQL query case
+		$queryResult = nuRunQuery($input);
 
 		if (nuErrorFound()) {
 			return;
 		}
 
-		while ($row = db_fetch_row($stmt)) {
-			$result[] = $row;
+		while ($row = db_fetch_row($queryResult)) {
+			$options[] = $row;
 		}
-	} else if (substr(nuTrim($s), 0, 1) == '[') {
-		$result = nuJsonDecode($sql);
+	} else if (substr($trimmedInput, 0, 1) === '[') {
+		// JSON array case
+		$options = nuJsonDecode($input);
 	} else {
-		return $sql;
+		// Plain string
+		return $input;
 	}
 
-	return $result;
+	return $options;
 
 }
 
