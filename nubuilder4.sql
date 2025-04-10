@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 10, 2025 at 10:51 PM
+-- Generation Time: Apr 10, 2025 at 10:53 PM
 -- Server version: 8.2.0
 -- PHP Version: 8.3.4
 
@@ -667,7 +667,8 @@ INSERT INTO `zzzzsys_event` (`zzzzsys_event_id`, `sev_zzzzsys_object_id`, `sev_e
 ('nu67b570cb83a84fc', 'nu64ec098aabab518', 'onclick', 'nuCopyToClipboard($(\'#pwg_input\'));', NULL),
 ('nu67c945696912cde', 'nu67c940bf969f659', 'onchange', 'nuUserSetNameParts(this);', NULL),
 ('nu67c943c0ae2172f', 'nu5bad6cb33ad88b7', 'onchange', 'nuUserSetNameParts(this);', NULL),
-('nu67c9bd2c42d0474', 'nu67c940d83501a9a', 'onchange', 'nuUserSetNameParts(this);', NULL);
+('nu67c9bd2c42d0474', 'nu67c940d83501a9a', 'onchange', 'nuUserSetNameParts(this);', NULL),
+('nu67f84bdfdb15c65', 'nu5bad6cb33ed5ffe', 'oninput', 'nuDisable(\'nuProcRunProcedureButton\');', NULL);
 
 -- --------------------------------------------------------
 
@@ -841,7 +842,7 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`, `inf_json`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.6-2025.04.11.00', NULL),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.6-2025.04.11.01', NULL),
 ('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.6-2025.04.10.00', NULL);
 
 -- --------------------------------------------------------
@@ -1054,7 +1055,7 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu5bad6cb33d99a4b', 'nuuser', 'zzzzsys_user', 'lookup', 'sus_zzzzsys_access_id', 'Access Level', 'nu5bad6cb36b63cae', 70, 158, 219, 329, 22, '1', 'left', '1', '0', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, 'sal_code', 'sal_description', '300', NULL, 'nuaccess', 'nuShow(\'sus_zzzzsys_access_id_open_button\',sus_zzzzsys_access_id.value !== \'\');', NULL, 'zzzzsys_access', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '{\"type\":{\"version\":\"1.0\",\"mobile\":{\"version\":\"1.0\",\"name\":\"test1\",\"visible\":true,\"location\":{\"top\":\"115\",\"left\":\"52\"},\"size\":{\"width\":\"250\",\"height\":\"25\"},\"class\":[\"nuMobileInput\"]}}}', NULL),
 ('nu5bad6cb33e17c28', 'nuprocedure', 'zzzzsys_php', 'input', 'sph_code', 'Code', 'nu5bad6cb36b27343', 20, 37, 142, 350, 22, '1', 'left', '3', '0', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', 'browse|Browse|edit|Edit|browseedit|Browse and Edit|criteria|Criteria or Home|procedure|Procedure|report|Report', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'search', NULL, NULL, '[\"nuBeforeSave\",\"nuAfterSave\",\"nuBeforeEdit\",\"nuBeforeBrowse\",\"nuBeforeDelete\",\"nuAfterDelete\",\"nuStartup\",\"nuCheckPasswordPolicy\",\"nuInvalidLogin\",\"nuAfterUpdate\",\"nuSendWelcomeEmail\"]', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('nu5bad6cb33e77084', 'nusetup', 'zzzzsys_setup', 'contentbox', 'contentbox_auth', 'Auth SMTP Information', 'nu5bad6cb36e31edf', 190, 39, 40, 539, 398, '1', 'center', '0', '0', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'data-nu-mobile-hidden', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-('nu5bad6cb33ed5ffe', 'nuprocedure', 'zzzzsys_php', 'textarea', 'sph_php', 'PHP', 'nu5bad6cb36b27343', 70, 172, 142, 764, 358, '1', 'left', '1', '0', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'spellcheck=false, data-nu-mobile-max-width=350px', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('nu5bad6cb33ed5ffe', 'nuprocedure', 'zzzzsys_php', 'textarea', 'sph_php', 'PHP', 'nu5bad6cb36b27343', 70, 172, 142, 764, 358, '1', 'left', '1', '0', NULL, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'spellcheck=false, data-nu-mobile-max-width=350px', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('nu5bad6cb33fe854c', 'nuprocedure', 'zzzzsys_php', 'input', 'sph_description', 'Description', 'nu5bad6cb36b27343', 30, 64, 142, 608, 22, '1', 'left', '1', '0', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', 'browse|Browse|edit|Edit|browseedit|Browse and Edit|criteria|Criteria or Home|procedure|Procedure|report|Report', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'text', NULL, NULL, NULL, 'data-nu-mobile-max-width=350px', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('nu5bad6cb3400c80a', 'nubuildreport', 'zzzzsys_report', 'lookup', 'sre_zzzzsys_form_id', 'Launch From', 'nu5bad6cb36804778', 70, 166, 236, 186, 22, '1', 'left', '0', '0', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', 'SELECT zzzzsys_form_id, CONCAT(sfo_code, \' - \', sfo_description)\nFROM zzzzsys_form\nORDER BY sfo_code', 'sfo_code', 'sfo_description', '200', NULL, 'nulaunchable', NULL, NULL, 'zzzzsys_form', 'nuform', NULL, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('nu5bad6cb340c5469', 'nubuildreport', 'zzzzsys_report', 'input', 'sre_code', 'Code', 'nu5bad6cb36804778', 20, 54, 236, 186, 22, '1', 'left', '1', '0', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', 'browse|Browse|edit|Edit|browseedit|Browse and Edit|criteria|Criteria or Home|procedure|Procedure|report|Report', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'text', NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
