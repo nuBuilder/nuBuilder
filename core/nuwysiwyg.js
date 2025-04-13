@@ -159,6 +159,16 @@ function nuSaveEditor() {
 
 }
 
+function nuTinyMCESetContent(elementId, html) {
+
+	const tinyMCEId = $(`#${elementId}_parent_container`).find('.nuTinyMCE').attr('id');
+	const editor = tinymce.get(tinyMCEId);
+	if (editor) {
+		editor.setContent(html);
+	}
+
+}
+
 function nuTinyMCESetBounds(id, left, top, width, height) {
 
 	const idParentContainer = `${id}_parent_container`;

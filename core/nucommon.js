@@ -2404,38 +2404,38 @@ function nuGetHTML(id) {
 	return nuGetValue(id, 'html');
 }
 
-function nuSetValue(i, v, method, change) {
+function nuSetValue(id, value, method, change) {
 
-	var obj = $('#' + i);
+	var obj = $('#' + id);
 
-	if (i === undefined || nuDebugOut(obj, i)) return false;
+	if (id === undefined || nuDebugOut(obj, id)) return false;
 
 	change = (change || change === undefined);
 
 	if (method === undefined && obj.is(':button')) {
-		obj.text(v);
+		obj.text(value);
 	} else if (obj.is(':checkbox')) {
-		if (change) obj.prop('checked', v).trigger("change");
+		if (change) obj.prop('checked', value).trigger("change");
 	} else if (obj.is('select') && method === 'text') {
-		$('#' + i + ' option').each(function () {
-			if ($(this).text().nuReplaceNonBreakingSpaces() === v) {
+		$('#' + id + ' option').each(function () {
+			if ($(this).text().nuReplaceNonBreakingSpaces() === value) {
 				$(this).prop("selected", "selected");
 				if (change) obj.trigger("change");
 				return true;
 			}
 		});
-
+	} else if (obj.hasClass('nuEditor')) {
+		nuTinyMCESetContent(id, value)
 	} else {
-
 		switch (method) {
 			case 'html':
-				obj.html(v);
+				obj.html(value);
 				break;
 			case 'text':
-				obj.text(v);
+				obj.text(value);
 				break;
 			default:
-				obj.val(v);
+				obj.val(value);
 				if (change) obj.trigger("change");
 		}
 	}
