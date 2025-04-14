@@ -112,8 +112,13 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 		license_key: 'gpl',
 		setup: function (editor) {
 
-			editor.addShortcut('ctrl+shift+S', 'Save', function () {
+			editor.addShortcut('ctrl+shift+S', 'Save', function (e) {
+				window.isShortcutSave = true;
+
 				nuSaveAction();
+				setTimeout(() => { window.isShortcutSave = false; }, 1000);
+
+				return false;
 			});
 
 			editor.on('init', function (e) {
@@ -125,6 +130,9 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 			});
 
 			editor.on("change", function () {
+				if (window.isShortcutSave) {
+					return;
+				}
 				nuTinyMCEOnChangeHandler(editor);
 			});
 
