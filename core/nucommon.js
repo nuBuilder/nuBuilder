@@ -2375,13 +2375,26 @@ function nuDebugOut(obj, i) {
 }
 
 function nuGetValue(id, method) {
+	if (!id) return null;
 
 	const obj = $('#' + id);
-	if (!id || nuDebugOut(obj, id)) return null;
+	if (nuDebugOut(obj, id)) return null;
 
-	if (obj.is(':checkbox')) return obj.is(":checked");
-	if (obj.is('select') && method === 'text') return $("#" + id + " option:selected").text().nuReplaceNonBreakingSpaces();
-	if (!method && obj.is(':button')) return obj.text();
+	if (obj.is(':checkbox')) {
+		return obj.is(":checked");
+	}
+
+	if (obj.hasClass('nuEditor')) {
+		return nuTinyMCEGetContent(id);
+	}
+
+	if (obj.is('select') && method === 'text') {
+		return obj.find("option:selected").text().nuReplaceNonBreakingSpaces();
+	}
+
+	if (!method && obj.is(':button')) {
+		return obj.text();
+	}
 
 	switch (method) {
 		case 'html':
@@ -2393,7 +2406,6 @@ function nuGetValue(id, method) {
 		default:
 			return obj.val();
 	}
-
 }
 
 function nuGetText(id) {
