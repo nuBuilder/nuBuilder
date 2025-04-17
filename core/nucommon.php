@@ -1797,24 +1797,24 @@ function nuSendEmailEx($args, $emailLogOptions) {
 				)
 		VALUES(
 				:ID,
-				:from,
+				:from_email,
 				:to,
 				:cc,
 				:bcc,
 				:subject,
 				:body,
 				:file,
-				:fromName,
+				:from_name,
 				:html,
-				:replyTo,
-				:sentAt,
+				:reply_to,
+				:sent_at,
 				:state,
 				:importance,
-				:formId,
-				:userId,
+				:form_id,
+				:user_id,
 				:error,
-				:recordId,
-				:tableName,
+				:record_id,
+				:table_name,
 				:tag,
 				:json
 		)
@@ -1825,13 +1825,13 @@ function nuSendEmailEx($args, $emailLogOptions) {
 
 	$defaults = [
 		'to' => '',
-		'fromEmail' => '',
-		'fromName' => '',
+		'from_email' => '',
+		'from_name' => '',
 		'cc' => '',
 		'bcc' => '',
 		'body' => '',
 		'subject' => 'test',
-		'replyTo' => [],
+		'reply_to' => [],
 		'attachments' => [],
 		'html' => true,
 		'priority' => ''
@@ -1840,39 +1840,33 @@ function nuSendEmailEx($args, $emailLogOptions) {
 	$args = array_merge($defaults, array_intersect_key($args, $defaults));
 	list($to, $fromEmail, $fromName, $cc, $bcc, $body, $subject, $replyTo, $attachments, $html, $priority) = array_values($args);
 
-	$recordId = $hash['RECORD_ID'] ?? null;
-	$formId = $hash['form_id'] ?? null;
-	$userId = $hash['user_id'] ?? null;
-
 	$params = [
-
 		"ID" => $id,
-		"from" => $fromEmail,
+		"from_email" => $fromEmail,
+		"from_name" => $fromName,
 		"to" => $to,
 		"cc" => $cc,
 		"bcc" => $bcc,
 		"subject" => $subject,
 		"body" => $body,
 		"file" => json_encode($attachments),
-		"fromName" => $fromName,
 		"html" => $html,
-		"replyTo" => json_encode($replyTo),
-		"sentAt" => $sentAt,
+		"reply_to" => json_encode($replyTo),
+		"sent_at" => $sentAt,
 		"state" => $state,
 		"importance" => $priority,
-		"formId" => $formId,
-		"userId" => $userId,
+		"form_id" => $formId,
+		"user_id" => $userId,
 		"error" => $error,
-		"recordId" => $recordId,
-		"tableName" => $tableName,
+		"record_id" => $recordId,
+		"table_name" => $tableName,
 		"tag" => $tag,
 		"json" => $json
 	];
 
-	$result = nuRunQuery($insert, $params, true);
-	if ($result == 0) {
-		// nuDebug('Insert sucessful!');
-	}
+nuDebug($params);
+
+	nuRunQuery($insert, $params, true);
 
 	return $sendResult;
 
