@@ -809,8 +809,6 @@ function nuUpdateCounter($id) {
 			return $newId;
 		}
 
-		return -1;
-
 	}
 
 	nuDisplayError(nuTranslate('Could not get AutoNumber'));
