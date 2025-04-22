@@ -389,7 +389,13 @@ function nuUpdateDatabase() {
 		$table = $sf->table;
 		$primaryKey = $sf->primary_key;
 		$foreignKey = $sf->foreign_key;
-		$formId = $sf->object_id;
+		if ($formIndex > 0) {
+			$query = "SELECT `sob_subform_zzzzsys_form_id` FROM `zzzzsys_object` WHERE `zzzzsys_object_id` = ? LIMIT 1";
+			$stmt = nuRunQuery($query, [$sf->object_id]);
+			$formId = db_fetch_row($stmt)[0];
+		} else {
+			$formId = $sf->object_id;
+		}
 
 		$autoNumbers = nuAutoNumbers($formId);
 		$tableCts = nuObjKey($clientTableSchema, $table);
@@ -419,15 +425,14 @@ function nuUpdateDatabase() {
 
 					$field = $fields[$r];
 					$isAutoNumber = in_array($field, $autoNumbers);
-
-					if ($edit[$r] == 1 or $isAutoNumber) { //-- has been edited
+					if ($edit[$r] == 1 || $isAutoNumber) { //-- has been edited
 
 						if (!nuUpdateDatabaseIsValidTable($clientTableSchema, $table, $formType)) {
 							return;
 						}
 
 						$value = $currentRow[$r];
-						nuUpdateDatabaseGetUpdateValue($field, $value, $formId, $table, $tableColumns, $clientTableSchema, $log, $isAutoNumber, $nuConfigDBTypesSetNullWhenEmpty, $updateData);
+						nuUpdateDatabaseGetUpdateValue($field, $value, $formId, $recordId, $table, $tableColumns, $clientTableSchema, $log, $isAutoNumber, $nuConfigDBTypesSetNullWhenEmpty, $updateData);
 
 					}
 
@@ -512,14 +517,14 @@ function nuUpdateDatabaseIsValidTable($clientTableSchema, $table, $formType) {
 
 }
 
-function nuUpdateDatabaseGetUpdateValue($field, $value, $formId, $table, $tableColumns, $clientTableSchema, $log, $isAutoNumber, $nuConfigDBTypesSetNullWhenEmpty, &$updateData) {
+function nuUpdateDatabaseGetUpdateValue($field, $value, $formId, $recordId, $table, $tableColumns, $clientTableSchema, $log, $isAutoNumber, $nuConfigDBTypesSetNullWhenEmpty, &$updateData) {
 
 	$idx = array_search($field, $tableColumns);
 	$isNulog = $log && nuStringEndsWith("_nulog", $field);
 
 	if ($idx !== false && !$isNulog) { //-- valid field name and not nulog column
-		$v = $isAutoNumber ? nuAutoNumber($formId, $field, $value) : $value;
 
+		$v = $isAutoNumber ? nuAutoNumber($formId, $recordId, $field, $value) : $value;
 		$type = $clientTableSchema[$table]['types'][$idx];
 
 		$filteredNullableTypes = array_filter($nuConfigDBTypesSetNullWhenEmpty, function ($value) use ($type) {
@@ -757,7 +762,7 @@ function nuEditObjects($formId) {
 	return $objectIds;
 }
 
-function nuAutoNumber($formId, $fieldId, $value) {
+function nuAutoNumber($formId, $recordId, $fieldId, $value) {
 
 	$query = "SELECT sob_all_type, sob_input_type, zzzzsys_object_id FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = ? AND sob_all_id = ?";
 	$stmt = nuRunQuery($query, [$formId, $fieldId]);
@@ -765,9 +770,9 @@ function nuAutoNumber($formId, $fieldId, $value) {
 
 	$isInputType = $row->sob_all_type == 'input';
 	$isAutoNumber = $row->sob_input_type == 'nuAutoNumber';
-	$isNewRecord = nuHasNewRecordID() || nuHasNoRecordID();
-
+	$isNewRecord = nuHasNewRecordID() || nuHasNoRecordID() || $recordId == '-1';
 	if ($isInputType && $isAutoNumber && $isNewRecord) {
+
 		return nuUpdateCounter($row->zzzzsys_object_id);
 	} else {
 		return $value;
@@ -825,8 +830,6 @@ function nuAutoNumbers($formId) {
 				";
 
 	$stmt = nuRunQuery($query, [$formId, 'input', 'nuAutoNumber']);
-
-
 	while ($row = db_fetch_object($stmt)) {
 		$autoNumbers[] = $row->sob_all_id;
 	}
@@ -995,3 +998,4 @@ function nuLogout() {
 	unset($_SESSION['nuinclude']);
 
 }
+
