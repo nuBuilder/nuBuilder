@@ -322,7 +322,7 @@ function nuGetFormModifyObject($object, $formObject, $row, $recordId, $data, $nu
 			$horizontalLabel = $row->sob_html_horizontal_label ?? '';
 			$title = $row->sob_html_title ?? '';
 			$chart_options = [
-				'p' => ['type' => 'PieChart', 'stacked' => false],
+				'p' => ['type' => 'PieChart', 'stacked' => false, 'chart_type' => 'pie'],
 				'l' => ['type' => 'ComboChart', 'stacked' => false, 'chart_type' => 'lines'],
 				'b' => ['type' => 'ComboChart', 'stacked' => false, 'chart_type' => 'bars'],
 				'bs' => ['type' => 'ComboChart', 'stacked' => true, 'chart_type' => 'bars'],
