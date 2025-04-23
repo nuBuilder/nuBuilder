@@ -661,6 +661,8 @@ function nuCreateDialog(t) {
 				}
 
 			}
+			
+			nuMessageRemove(true);
 			$('#nuDragDialog').remove();
 			$('#nuModal').remove();
 			$('body').off('.popup');
