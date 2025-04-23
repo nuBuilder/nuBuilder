@@ -3311,6 +3311,11 @@ function nuLabelGetValidationClass(validationId) {
 function nuLabel(w, i, p, prop) {
 
 	let obj = prop.objects[i];
+
+	if (!obj.label && obj.type === 'subform') {
+		obj.label = ' ';
+	}
+
 	if (obj.label == '' || obj.display == 0 || obj.label == "Insert-Snippet") {
 		return;
 	}
@@ -3805,271 +3810,213 @@ function nuHideOptionsItemShortcutKeys() {
 
 function nuGetOptionsList(formId, subformId, globalAccess, type) {
 
-	const id = 'nuOptionsListBox';
-	if ($('#' + id).length !== 0) {
-		$('#nuOptionsListBox').remove();
+	const MENU_ID = 'nuOptionsListBox';
+	const $existing = $('#' + MENU_ID);
+
+	if ($existing.length) {
+		$existing.remove();
 		return;
 	}
 
-	let list = [];
-
 	const buttons = nuSERVERRESPONSE.buttons;
 	const canChange = nuAllowChanges(formId);
-	const admin = globalAccess == 1;
+	const isAdmin = (globalAccess == 1);
+	const formHelp = nuFORMHELP[subformId];
+	const hasHelp = Boolean(formHelp) && type !== 'subform';
+	const [modeFlag] = nuFormType();
+	const isEditMode = (modeFlag === 'e');
+	const isBrowseMode = (modeFlag === 'b');
+	const isSubform = (type === 'subform');
+	const isLaunch = (nuFORM.getCurrent().form_type !== 'launch');
 
-	const hasHelp = nuFORMHELP[subformId] != '' && nuFORMHELP[subformId] !== undefined && type != 'subform';
-	const formType = nuFormType()[0];
-	const typeEdit = formType == 'e';
-	const typeBrowse = formType == 'b';
-	const typeSf = type == 'subform';
-
-	const typeLaunch = nuFORM.getCurrent().form_type != 'launch';
-	const labelId = '#label_' + $('#' + subformId + 'scrollDiv').parent().attr('id');
-
-	const items = {
-		Divider: ['', '', '', ''],
-		AddObject: ['Add Object', 'nuPopup("nuobject","-1","")', 'fa fa-plus', 'H'],
-		ArrangeObjects: ['Arrange Objects', 'nuPopup("' + formId + '", "-2")', 'fas fa-arrows-alt', 'A'],
-		FormProperties: ['Form Properties', 'nuOptionsListAction("nuform", "' + formId + '")', 'fa-cog', 'F'],
-		SearchableColumns: ['Searchable Columns', 'nuGetSearchList()', 'fa-columns', 'C'],
-		SubformObject: [nuTranslate('Subform Object'), '$("' + labelId + '").trigger("dblclick");', 'fa-cog', ''],
-		FormObjectList: ['Form Object List', 'nuOptionsListAction("nuobject", "", "' + formId + '")', 'fa-th-list', 'O'],
-		Search: ['Search', 'nuSearchAction();', 'fas fa-search', 'S'],
-		Add: ['Add', 'nuAddAction();', 'fas fa-plus', 'A'],
-		Print: ['Print', 'nuPrintAction();', 'fas fa-print', 'P'],
-		Save: ['Save', 'nuSaveAction();', 'far fa-save', 'S'],
-		Delete: ['Delete', 'nuDeleteAction();', 'far fa-trash-alt', 'Y'],
-		Clone: ['Clone', 'nuCloneAction();', 'far fa-clone', 'C'],
-		Refresh: ['Refresh', 'if (nuGlobalAccess()) {nuRunPHPHidden("NUSETREFRESHCACHE");} else {nuGetBreadcrumb();}', 'fas fa-sync-alt', 'R'],
-		Help: ['Help', nuFORMHELP[subformId], 'fa-question-circle', '?'],
-		ChangePassword: ['Change Password', 'nuPopup("nupassword", "", "")', 'fa-password', 'Q'],
-		DebugResults: ['nuDebug Results', 'nuOptionsListAction("nudebug", "")', 'fa-bug', 'D'],
-		Database: ['Database', 'nuVendorLogin("PMA")', 'fa-database', 'E'],
-		Sessions: ['Sessions', 'nuForm("nusession","","", "", 2)', 'fas fa-key', 'J'],
-		FileManager: ['File Manager', 'nuVendorLogin("TFM");', 'far fa-file-code', 'Q'],
-		Backup: ['Backup', 'nuRunBackup();', 'far fa-hdd', 'B'],
-		Setup: ['Setup', 'nuForm("nusetup","1","", "", 2)', 'fa-cogs', 'U'],
-		FormInfo: ['Form Info', 'nuShowFormInfo();', 'fa-info', 'M'],
-		VersionInfo: ['Version Info', 'nuShowVersionInfo();', 'fa-info', 'V'],
-		Logout: ['Log out', 'nuAskLogout();', 'fas fa-sign-out-alt', 'L']
+	const getLabelSelector = () => {
+		const parentId = $('#' + subformId + 'scrollDiv').parent().attr('id');
+		return '#label_' + parentId;
 	};
 
-	if (typeEdit && admin && canChange) {
-		if (nuCanArrangeObjects()) {
-			list.push(items.ArrangeObjects);
+	const subformAction = `$("` + getLabelSelector() + `").trigger("dblclick");`;
+	const ITEMS = {
+		Divider: ['', '', '', ''],
+		AddObject: ['Add Object', 'nuPopup("nuobject","-1","")', 'fa fa-plus', 'H'],
+		ArrangeObjects: ['Arrange Objects', `nuPopup("${formId}", "-2")`, 'fas fa-arrows-alt', 'A'],
+		FormProperties: ['Form Properties', `nuOptionsListAction("nuform", "${formId}")`, 'fa-cog', 'F'],
+		SearchableColumns: ['Searchable Columns', 'nuGetSearchList()', 'fa-columns', 'C'],
+		SubformObject: [nuTranslate('Subform Object'), subformAction, 'fa-cog', ''],
+		FormObjectList: ['Form Object List', `nuOptionsListAction("nuobject", "", "${formId}")`, 'fa-th-list', 'O'],
+		Search: ['Search', 'nuSearchAction()', 'fas fa-search', 'S'],
+		Add: ['Add', 'nuAddAction()', 'fas fa-plus', 'A'],
+		Print: ['Print', 'nuPrintAction()', 'fas fa-print', 'P'],
+		Save: ['Save', 'nuSaveAction()', 'far fa-save', 'S'],
+		Delete: ['Delete', 'nuDeleteAction()', 'far fa-trash-alt', 'Y'],
+		Clone: ['Clone', 'nuCloneAction()', 'far fa-clone', 'C'],
+		Refresh: ['Refresh', `if (nuGlobalAccess()) { nuRunPHPHidden("NUSETREFRESHCACHE"); } else { nuGetBreadcrumb(); }`, 'fas fa-sync-alt', 'R'],
+		Help: ['Help', nuFORMHELP[subformId], 'fa-question-circle', '?'],
+		ChangePassword: ['Change Password', 'nuPopup("nupassword","","")', 'fa-password', 'Q'],
+		DebugResults: ['nuDebug Results', 'nuOptionsListAction("nudebug","")', 'fa-bug', 'D'],
+		Database: ['Database', 'nuVendorLogin("PMA")', 'fa-database', 'E'],
+		Sessions: ['Sessions', 'nuForm("nusession","","", "", 2)', 'fas fa-key', 'J'],
+		FileManager: ['File Manager', 'nuVendorLogin("TFM")', 'far fa-file-code', 'Q'],
+		Backup: ['Backup', 'nuRunBackup()', 'far fa-hdd', 'B'],
+		Setup: ['Setup', 'nuForm("nusetup","1","", "", 2)', 'fa-cogs', 'U'],
+		FormInfo: ['Form Info', 'nuShowFormInfo()', 'fa-info', 'M'],
+		VersionInfo: ['Version Info', 'nuShowVersionInfo()', 'fa-info', 'V'],
+		Logout: ['Log out', 'nuAskLogout()', 'fas fa-sign-out-alt', 'L']
+	};
+
+	const menuList = [];
+	if (isEditMode && isAdmin && canChange) {
+		if (nuCanArrangeObjects()) menuList.push(ITEMS.ArrangeObjects);
+		if (!isSubform) {
+			menuList.push(ITEMS.AddObject, ITEMS.Divider);
 		}
-		if (!typeSf) {
-			list.push(items.AddObject);
-			list.push(items.Divider);
-		}
 	}
 
-	if (typeBrowse) list.push(items.SearchableColumns);
-	if (admin && canChange) list.push(items.FormProperties);
+	if (isBrowseMode) menuList.push(ITEMS.SearchableColumns);
+	if (isAdmin && canChange) menuList.push(ITEMS.FormProperties);
+	if (isSubform && canChange) menuList.push(ITEMS.SubformObject);
+	if (isAdmin && canChange) menuList.push(ITEMS.FormObjectList);
+	if (!isSubform && isAdmin) menuList.push(ITEMS.Divider);
 
-	if (typeSf && canChange) {
-		list.push(items.SubformObject);
+	if (isBrowseMode) {
+		menuList.push(ITEMS.Search);
+		if (buttons.Add === '1') menuList.push(ITEMS.Add);
+		if (buttons.Print === '1' && nuFORM.getCurrent().browse_rows.length > 0)
+			menuList.push(ITEMS.Print);
 	}
 
-	if (admin && canChange) list.push(items.FormObjectList);
-
-	if (!typeSf && admin) list.push(items.Divider);
-
-	if (typeBrowse) {
-		list.push(items.Search);
-		if (buttons.Add == '1') { list.push(items.Add); }
-		if (buttons.Print == '1' && nuFORM.getCurrent().browse_rows.length > 0) { list.push(items.Print); }
+	if (isLaunch && isEditMode && !isSubform) {
+		const { data_mode } = nuFORM.getCurrent();
+		if (buttons.Save === '1' && data_mode !== 0) menuList.push(ITEMS.Save);
+		if (buttons.Delete === '1' && !nuIsNewRecord()) menuList.push(ITEMS.Delete);
+		if (buttons.Clone === '1' && !nuIsNewRecord()) menuList.push(ITEMS.Clone);
 	}
 
-	if (typeLaunch && typeEdit && type != 'subform') {
+	if (hasHelp) menuList.push(ITEMS.Help);
 
-		const data_mode = nuFORM.getCurrent().data_mode;
-		if (buttons.Save == '1' && data_mode !== 0) { list.push(items.Save); }
-		if (buttons.Delete == '1' && !nuIsNewRecord()) { list.push(items.Delete); }
-		if (buttons.Clone == '1' && !nuIsNewRecord()) { list.push(items.Clone); }
-
+	if (!isSubform) {
+		menuList.push(ITEMS.Refresh);
+		if (isAdmin) menuList.push(ITEMS.Divider);
 	}
 
-	if (hasHelp) {
-		list.push(items.Help);
+	if (!isAdmin) menuList.push(ITEMS.Divider, ITEMS.ChangePassword);
+
+	if (isAdmin && !isSubform) {
+		menuList.push(
+			ITEMS.DebugResults, ITEMS.Divider,
+			ITEMS.Database, ITEMS.Sessions,
+			ITEMS.FileManager, ITEMS.Backup,
+			ITEMS.Setup, ITEMS.FormInfo,
+			ITEMS.VersionInfo
+		);
 	}
 
-	if (!typeSf) {
-		list.push(items.Refresh);
-		if (admin) list.push(items.Divider);
+	if (!isSubform && nuIsMobile()) {
+		menuList.push(ITEMS.Divider, ITEMS.Logout);
 	}
 
-	if (!admin) {
-		list.push(items.Divider);
-		list.push(items.ChangePassword);
-	}
+	if (!menuList.length) return;
 
-	if (admin && !typeSf) {
-		list.push(items.DebugResults);
-		list.push(items.Divider);
-		list.push(items.Database);
-		list.push(items.Sessions);
-		list.push(items.FileManager);
-		list.push(items.Backup);
-		list.push(items.Setup);
-		list.push(items.FormInfo);
-		list.push(items.VersionInfo);
-	}
+	$('<div>', { id: MENU_ID })
+		.addClass('nuOptionsList')
+		.css({ top: 0, width: 30 })
+		.html(`<span class="nuOptionsListTitle">&nbsp;&nbsp;${nuTranslate('Options')}</span>`)
+		.appendTo('body');
 
-	if (!typeSf && nuIsMobile()) {
-		list.push(items.Divider);
-		list.push(items.Logout);
-	}
-
-	if (list.length == 0) { return; }
-
-	let div = document.createElement('div');
-	div.setAttribute('id', id);
-	$('body').append(div);
-
-	$('#' + id)
-		.css({
-			'top': 0,
-			'height': 20 + (list.length * 20),
-			'width': 30
-		})
-		.html('<span class="nuOptionsListTitle">&nbsp;&nbsp;' + nuTranslate('Options') + '<\span>')
-		.addClass('nuOptionsList');
-
-	nuBuildOptionsList(list, subformId, type);
+	nuBuildOptionsList(menuList, subformId, type);
 
 	if (nuIsMobile()) nuHideOptionsItemShortcutKeys();
+
 	$('[data-nu-option-title]').css('padding', 3);
-	nuDragElement($('#nuOptionsListBox')[0], 30);
 
-	if (window.nuOnOptionsListLoadedGlobal) {
-		nuOnOptionsListLoadedGlobal();
-	}
+	nuDragElement($('#' + MENU_ID)[0], 30);
 
+	if (window.nuOnOptionsListLoadedGlobal) nuOnOptionsListLoadedGlobal();
 }
 
-function nuBuildOptionsList(l, p, type) {												//-- loop through adding options to menu
+function nuBuildOptionsList(items, parentId, contextType) {
 
-	var iprop = { 'position': 'absolute', 'text-align': 'left', 'width': 15, 'height': 15 };
-	var width = 0;
+	const BOX_SEL = '#nuOptionsListBox';
+	const ITEM_HEIGHT = 20;
+	const TITLE_HEIGHT = 30;
 
-	for (let i = 0; i < l.length; i++) {
-		if (l[i][0] != '') l[i][0] = nuTranslate(l[i][0]); 		// Text
-		l[i][3] = nuCtrlCmdShiftName(l[i][3]); 					// Shortcut
-	}
-
-	for (let i = 0; i < l.length; i++) {
-		width = Math.max((nuGetWordWidth(l[i][0]) + nuGetWordWidth(l[i][3])), width);
-	}
-
-	for (let i = 0; i < l.length; i++) {
-
-		var t = l[i][0];	// Text
-		var f = l[i][1]; 	// onclick
-		var c = l[i][2]; 	// Icon
-		var k = l[i][3]; 	// Shortcut
-		var itemtop = 30 + (i * 20);
-
-		// Add Icon
-
-		var icon = document.createElement('i');
-		var icon_id = 'nuOptionList' + i.toString();
-
-		icon.setAttribute('id', icon_id);
-
-		$('#nuOptionsListBox').append(icon);
-
-		$('#' + icon.id)
-			.css(iprop)
-			.css({ 'top': itemtop, 'left': 9 })
-			.addClass('fa')
-			.addClass(c)
-			.addClass('nuOptionList');
-
-		// Add Option Text
-
-		const isDivider = t == '' ? true : false;
-
-		var desc = document.createElement(isDivider ? 'hr' : 'div');
-		var desc_id = 'nuOptionText' + i.toString();
-
-		desc.setAttribute('id', desc_id);
-
-		$('#nuOptionsListBox').append(desc);
-		var style = { 'position': 'absolute', 'text-align': 'left', 'height': (isDivider ? 0 : 15) };
-
-		if (isDivider) {
-
-			$('#' + desc.id)
-				.css(style)
-				.css({ 'top': itemtop - 4, 'left': 30 })
-				.html(t)
-				.attr('onclick', f)
-				.addClass('nuOptionsItem-divider');
-
-		} else {
-
-			$('#' + desc.id)
-				.css(style)
-				.css({ 'top': itemtop - 4, 'left': 30 })
-				.html(t)
-				.attr('onclick', f)
-				.attr('data-nu-option-title', t)
-				.addClass('nuOptionsItem');
-		}
-
-		// Add ahortcut
-		if (k !== '') {
-			var shortcut_key = document.createElement('div');
-			var shortcut_key_id = 'nuOptionTextShortcutKey' + i.toString();
-
-			shortcut_key.setAttribute('id', shortcut_key_id);
-
-			if (type !== 'subform') {
-				$('#nuOptionsListBox').append(shortcut_key);
-			}
-
-			style = { 'position': 'absolute', 'text-align': 'left', 'height': 15, 'width': 50 };
-
-			$('#' + shortcut_key.id)
-				.css(style)
-				.css({ 'top': itemtop - 2, 'right': 10 })
-				.html(k)
-				.attr('onclick', f)
-				.addClass('nuOptionsItemShortcutKey');
-		}
-
-	}
-
-	var off = $('#' + p + 'nuOptions').offset();
-	var top = off.top;
-	var left = off.left;
-	var reduce = 0;
-
-	if (type == 'browse') {
-		left = 12;
-	}
-
-	if (type == 'form') {
-		top = off.top - 6;
-		left = 10;
-	}
-
-	if (type == 'subform') {
-		top = off.top - 70;
-		left = off.left;
-		reduce = 55;
-	}
-
-	$('#nuOptionsListBox').css({
-		'height': 40 + (l.length * 20),
-		'width': 50 + width - reduce,
-		'left': left,
-		'top': top + 70
+	items.forEach(it => {
+		it[0] = it[0] ? nuTranslate(it[0]) : '';
+		it[3] = nuCtrlCmdShiftName(it[3]);
 	});
 
-	$('.nuOptionsItem').css({ 'width': width - 57, 'padding': '0px 0px 0px 3px' });
-	$('.nuOptionsItem-divider').css({ 'width': 35 + width - reduce - 7, 'left': 0 });
+	const maxWidth = items.reduce((max, [text, , , key]) => {
+		return Math.max(max, nuGetWordWidth(text) + nuGetWordWidth(key));
+	}, 0);
+
+	items.forEach(([text, action, iconCls, shortcut], idx) => {
+		const topPos = TITLE_HEIGHT + idx * ITEM_HEIGHT;
+		const isDivider = (text === '');
+		const handler = (typeof action === 'function')
+			? action
+			: new Function(action);
+
+		$('<i>')
+			.addClass(`fa ${iconCls} nuOptionList`)
+			.css({ position: 'absolute', top: topPos, left: 9, width: 15, height: 15 })
+			.appendTo(BOX_SEL);
+
+		const $entry = isDivider
+			? $('<hr>').addClass('nuOptionsItem-divider').css({
+				position: 'absolute',
+				top: topPos - 4,
+				left: 30,
+				width: 35 + maxWidth - (contextType === 'subform' ? 55 : 0),
+				height: 0
+			})
+			: $('<div>')
+				.attr('data-nu-option-title', text)
+				.addClass('nuOptionsItem')
+				.css({
+					position: 'absolute',
+					top: topPos - 4,
+					left: 30,
+					width: maxWidth - 57,
+					height: 15,
+					padding: '0px 0px 0px 3px',
+					'text-align': 'left'
+				})
+				.html(text);
+
+		$entry.on('click', handler).appendTo(BOX_SEL);
+		if (shortcut && contextType !== 'subform') {
+			$('<div>')
+				.addClass('nuOptionsItemShortcutKey')
+				.css({
+					position: 'absolute',
+					top: topPos - 2,
+					right: 10,
+					width: 50,
+					height: 15,
+					'text-align': 'left'
+				})
+				.on('click', handler)
+				.html(shortcut)
+				.appendTo(BOX_SEL);
+		}
+	});
+
+	const $trigger = $('#' + parentId + 'nuOptions');
+	const offset = $trigger.offset();
+	const finalTop = offset.top + 70;
+
+	const finalLeft = (contextType === 'browse')
+		? 12
+		: (contextType === 'form')
+			? 10
+			: offset.left;
+
+	const widthReduce = (contextType === 'subform') ? 55 : 0;
+	$(BOX_SEL).css({
+		top: finalTop,
+		left: finalLeft,
+		width: 50 + maxWidth - widthReduce,
+		height: TITLE_HEIGHT + items.length * ITEM_HEIGHT + 10
+	});
 
 }
 
@@ -5933,6 +5880,7 @@ function nuMessage(options, options2, options3, options4) {
 	const closeButton = $('<i>', { class: closeButtonClass });
 
 	closeButton.on('click touchstart', function () {
+		debugger;
 		messageContainer.fadeOut("slow", function () {
 			nuMessageRemove();
 		});
