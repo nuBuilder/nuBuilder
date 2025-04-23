@@ -1875,7 +1875,7 @@ function nuPrettyPrintMessage(event, properties) {
 		const message = nuMessage(title, prettyPrintedTable);
 		message.css({
 			'max-width': '90vw',
-			'max-height': '80vw',
+			'max-height': '90vh',
 			'text-align': 'left',
 			'background-color': 'white',
 			'width': '70vw',
