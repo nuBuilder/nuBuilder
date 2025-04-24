@@ -5880,7 +5880,6 @@ function nuMessage(options, options2, options3, options4) {
 	const closeButton = $('<i>', { class: closeButtonClass });
 
 	closeButton.on('click touchstart', function () {
-		debugger;
 		messageContainer.fadeOut("slow", function () {
 			nuMessageRemove();
 		});
