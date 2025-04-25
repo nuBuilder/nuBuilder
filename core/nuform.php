@@ -131,8 +131,16 @@ function nuFormCode($f) {
 	return nuFormProperties($f, 'sfo_code')->sfo_code;
 }
 
-function nuRunType($r) {
-	return $r->sob_run_type ?? '';
+function nuRunType($runType, $formId) {
+
+	if ($runType === 'P' || nuIsProcedure($formId)) {
+		return 'P';
+	} elseif ($runType === 'R' || nuIsReport($formId)) {
+		return 'R';
+	} else {
+		return 'F';
+	}
+
 }
 
 function nuEvents($r) {
@@ -356,11 +364,11 @@ function nuGetFormModifyObject($object, $formObject, $row, $recordId, $data, $nu
 		$object->record_id = nuReplaceHashVariables($row->sob_run_id);
 		$object->parameters = $row->sob_all_id;
 
-		$runType = nuRunType($row);
+		$runType = nuRunType($row->sob_run_type ?? '', $formId);
 
-		if ($runType == 'F') {
+		if ($runType === 'F') {
 			$object->run_type = 'F';
-		} elseif ($runType == 'P' || nuIsProcedure($formId)) {
+		} elseif ($runType === 'P') {
 			$procedureQuery = nuRunQuery('SELECT sph_zzzzsys_form_id, sph_code FROM zzzzsys_php WHERE zzzzsys_php_id = ?', [$formId]);
 			$procedureObject = db_fetch_object($procedureQuery);
 			$object->form_id = $procedureObject->sph_zzzzsys_form_id;
@@ -369,7 +377,7 @@ function nuGetFormModifyObject($object, $formObject, $row, $recordId, $data, $nu
 			$runTabQuery = nuRunQuery("SELECT sph_run FROM zzzzsys_php WHERE zzzzsys_php_id = ?", [$row->sob_run_zzzzsys_form_id]);
 			$object->run_hidden = db_fetch_object($runTabQuery)->sph_run == 'hide';
 
-		} elseif ($runType == 'R' || nuIsReport($formId)) {
+		} elseif ($runType === 'R') {
 			$reportQuery = nuRunQuery('SELECT sre_zzzzsys_form_id, sre_code FROM zzzzsys_report WHERE zzzzsys_report_id = ?', [$formId]);
 			$reportObject = db_fetch_object($reportQuery);
 			$object->form_id = $reportObject->sre_zzzzsys_form_id;
@@ -529,46 +537,46 @@ function nuDefaultObject($r, $t) {
 	$labelOnTop = null;
 
 	/*
-																							  if (nuIsMobile() && isset($r->sob_all_json)) {
+																										  if (nuIsMobile() && isset($r->sob_all_json)) {
 
-																								  $json = $r->sob_all_json;
-																								  if ($json != '') {
+																											  $json = $r->sob_all_json;
+																											  if ($json != '') {
 
-																									  $obj	= nuJsonDecode($json, true);
+																												  $obj	= nuJsonDecode($json, true);
 
-																									  $type		= nuObjKey($obj,'type', null);
+																												  $type		= nuObjKey($obj,'type', null);
 
-																									  if ($type != null) {
+																												  if ($type != null) {
 
-																										  $mobile		= nuObjKey($type,'mobile', null);
+																													  $mobile		= nuObjKey($type,'mobile', null);
 
-																										  if ($mobile == true) {
+																													  if ($mobile == true) {
 
-																											  $visible	= nuObjKey($mobile,'visible', null);
-																											  $name		= nuObjKey($mobile,'name', null);
-																											  $labelOnTop	= nuObjKey($mobile,'labelontop', null);
-																											  $labelOnTop	= $labelOnTop == null || $labelOnTop == true;
+																														  $visible	= nuObjKey($mobile,'visible', null);
+																														  $name		= nuObjKey($mobile,'name', null);
+																														  $labelOnTop	= nuObjKey($mobile,'labelontop', null);
+																														  $labelOnTop	= $labelOnTop == null || $labelOnTop == true;
 
-																											  $size		= nuObjKey($mobile,'size');
-																											  if ($size != null) {
-																												  $width		= nuObjKey($size, 'width', null);
-																												  $height		= nuObjKey($size, 'height', null);
-																											  }
+																														  $size		= nuObjKey($mobile,'size');
+																														  if ($size != null) {
+																															  $width		= nuObjKey($size, 'width', null);
+																															  $height		= nuObjKey($size, 'height', null);
+																														  }
 
-																											  $location		= nuObjKey($mobile,'location');
-																											  if ($location != null) {
-																												  $top		= nuObjKey($location, 'top', null);
-																												  $left		= nuObjKey($location, 'left', null);
+																														  $location		= nuObjKey($mobile,'location');
+																														  if ($location != null) {
+																															  $top		= nuObjKey($location, 'top', null);
+																															  $left		= nuObjKey($location, 'left', null);
+																														  }
+
+																													  }
+
+																												  }
+
 																											  }
 
 																										  }
-
-																									  }
-
-																								  }
-
-																							  }
-																							  */
+																										  */
 
 	$o->mobile = $mobile;
 	$o->labelOnTop = $labelOnTop;
