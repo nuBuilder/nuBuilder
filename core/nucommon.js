@@ -661,7 +661,7 @@ function nuCreateDialog(t) {
 				}
 
 			}
-			
+
 			nuMessageRemove(true);
 			$('#nuDragDialog').remove();
 			$('#nuModal').remove();
@@ -1963,12 +1963,17 @@ function nuAddBackButton() {
 
 function nuEnableBrowserBackButton() {
 
-	window.history.pushState({ page: 1 }, "", "");
+	if (window.history.length > 1) {
+		window.history.pushState({ page: 1 }, "", "");
+	} else {
+		window.history.replaceState({ page: 1 }, "", "");
+	}
+
 	window.onpopstate = function (event) {
 		if (event) {
 			nuOpenPreviousBreadcrumb();
 		}
-	}
+	};
 
 }
 
