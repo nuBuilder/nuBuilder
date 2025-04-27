@@ -2184,8 +2184,6 @@ function nuSUBFORM(w, i, l, p, prop) {
 
 	let id = p + SF.id;
 	nuCreateElementWithId('div', id, p + 'nuRECORD');  		//-- Edit Form Id
-
-	nuLabelOrPosition(SF, w, i, l, p, prop)
 	nuAddDataTab(id, SF.tab, p);
 	nuSUBFORMAddCSS(id, SF);
 	nuAddJSObjectEvents(id, SF.js);
@@ -2257,6 +2255,7 @@ function nuSUBFORM(w, i, l, p, prop) {
 
 	}
 
+	nuLabelOrPosition(SF, w, i, l, p, prop);
 	nuSetAccess(id, SF.read);
 	nuAddStyle(id, SF);
 
@@ -3332,7 +3331,14 @@ function nuLabel(w, i, p, prop) {
 	const lwidth = nuGetWordWidth(label, 'label');
 	const forId = obj.type == 'lookup' ? p + obj.id + 'code' : p + obj.id;
 
-	if (!['subform', 'html'].includes(obj.type)) {
+	if (obj.type === 'subform') {
+		const subform = nuSubformObject(forId);
+		const fieldId = subform.fields?.[1];
+		if (fieldId) {
+			const firstSfElement = `${forId}000${fieldId}`;
+			objLabel.setAttribute('for', firstSfElement);
+		}
+	} else {
 		objLabel.setAttribute('for', forId);
 	}
 
