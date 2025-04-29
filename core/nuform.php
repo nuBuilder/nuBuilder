@@ -539,46 +539,46 @@ function nuDefaultObject($r, $t) {
 	$labelOnTop = null;
 
 	/*
-																																  if (nuIsMobile() && isset($r->sob_all_json)) {
+																																	 if (nuIsMobile() && isset($r->sob_all_json)) {
 
-																																	  $json = $r->sob_all_json;
-																																	  if ($json != '') {
+																																		 $json = $r->sob_all_json;
+																																		 if ($json != '') {
 
-																																		  $obj	= nuJsonDecode($json, true);
+																																			 $obj	= nuJsonDecode($json, true);
 
-																																		  $type		= nuObjKey($obj,'type', null);
+																																			 $type		= nuObjKey($obj,'type', null);
 
-																																		  if ($type != null) {
+																																			 if ($type != null) {
 
-																																			  $mobile		= nuObjKey($type,'mobile', null);
+																																				 $mobile		= nuObjKey($type,'mobile', null);
 
-																																			  if ($mobile == true) {
+																																				 if ($mobile == true) {
 
-																																				  $visible	= nuObjKey($mobile,'visible', null);
-																																				  $name		= nuObjKey($mobile,'name', null);
-																																				  $labelOnTop	= nuObjKey($mobile,'labelontop', null);
-																																				  $labelOnTop	= $labelOnTop == null || $labelOnTop == true;
+																																					 $visible	= nuObjKey($mobile,'visible', null);
+																																					 $name		= nuObjKey($mobile,'name', null);
+																																					 $labelOnTop	= nuObjKey($mobile,'labelontop', null);
+																																					 $labelOnTop	= $labelOnTop == null || $labelOnTop == true;
 
-																																				  $size		= nuObjKey($mobile,'size');
-																																				  if ($size != null) {
-																																					  $width		= nuObjKey($size, 'width', null);
-																																					  $height		= nuObjKey($size, 'height', null);
-																																				  }
+																																					 $size		= nuObjKey($mobile,'size');
+																																					 if ($size != null) {
+																																						 $width		= nuObjKey($size, 'width', null);
+																																						 $height		= nuObjKey($size, 'height', null);
+																																					 }
 
-																																				  $location		= nuObjKey($mobile,'location');
-																																				  if ($location != null) {
-																																					  $top		= nuObjKey($location, 'top', null);
-																																					  $left		= nuObjKey($location, 'left', null);
-																																				  }
+																																					 $location		= nuObjKey($mobile,'location');
+																																					 if ($location != null) {
+																																						 $top		= nuObjKey($location, 'top', null);
+																																						 $left		= nuObjKey($location, 'left', null);
+																																					 }
 
-																																			  }
+																																				 }
 
-																																		  }
+																																			 }
 
-																																	  }
+																																		 }
 
-																																  }
-																																  */
+																																	 }
+																																	 */
 
 	$o->mobile = $mobile;
 	$o->labelOnTop = $labelOnTop;
@@ -1522,35 +1522,35 @@ function nuGetFormPermission($formId, $permissionField) {
 
 }
 
-function nuFormAccessList($j) {
+function nuFormAccessList($accessData) {
 
-	$a = [];
-	$t = nuRunQuery("SELECT zzzzsys_form_id FROM zzzzsys_form WHERE sfo_type = 'subform'");
+	$accessList = [];
+	$queryResult = nuRunQuery("SELECT zzzzsys_form_id FROM zzzzsys_form WHERE sfo_type = 'subform'");
 
-	while ($r = db_fetch_row($t)) {
-		$a[] = $r[0];
+	while ($row = db_fetch_row($queryResult)) {
+		$accessList[] = $row[0];
 	}
 
-	$count = count($j->forms);
-	for ($i = 0; $i < $count; $i++) {
-		$a[] = $j->forms[$i][0];
+	$formCount = count($accessData->forms);
+	for ($formIndex = 0; $formIndex < $formCount; $formIndex++) {
+		$accessList[] = $accessData->forms[$formIndex][0];
 	}
 
-	$count = count($j->reports);
-	for ($i = 0; $i < $count; $i++) {
-		$a[] = $j->reports[$i][1];
+	$reportCount = count($accessData->reports);
+	for ($reportIndex = 0; $reportIndex < $reportCount; $reportIndex++) {
+		$accessList[] = $accessData->reports[$reportIndex][1];
 	}
 
-	$count = count($j->procedures);
-	for ($i = 0; $i < $count; $i++) {
-		$a[] = $j->procedures[$i][1];
+	$procedureCount = count($accessData->procedures);
+	for ($procedureIndex = 0; $procedureIndex < $procedureCount; $procedureIndex++) {
+		$accessList[] = $accessData->procedures[$procedureIndex][1];
 	}
 
-	$__x = nuGetUserAccess();
-	$a[] = $__x['HOME_ID'];
-	unset($__x);
+	$userAccess = nuGetUserAccess();
+	$accessList[] = $userAccess['HOME_ID'];
+	unset($userAccess);
 
-	return $a;
+	return $accessList;
 
 }
 
