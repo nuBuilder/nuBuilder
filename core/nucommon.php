@@ -1500,31 +1500,51 @@ function nuFailIfUnsetHashCookies($string) {
 	return preg_match('/#[^#]+#/', $string);
 }
 
+function nuEvalSafeErrorHandler($errno, $errstr, $errfile, $errline) {
+	throw new Exception("Error [$errno]: $errstr in $errfile on line $errline");
+}
+
 function nuEvalSafe($code, $nudata, $returnOutput = false) {
+
+	set_error_handler("nuEvalSafeErrorHandler");
 
 	$output = '';
 	$nuFailIfUnsetHashCookies = false;
 	$result = null;
+	$error = null;
 
 	try {
-		if ($returnOutput)
+		if ($returnOutput) {
 			ob_start();
+		}
+
 		eval ($code);
+
 		if ($returnOutput) {
 			$output = ob_get_clean();
 		}
-
-		$error = null;
-	} catch (ParseError | ErrorException | Throwable $e) {
+	} catch (Throwable $e) {
 		$error = $e;
-		if ($returnOutput)
+		if ($returnOutput) {
 			ob_end_clean();
+		}
+	} finally {
+		restore_error_handler();
 	}
 
 	if ($returnOutput) {
-		return ['result' => $result, 'output' => $output, 'error' => $error, 'nuFailIfUnsetHashCookies' => $nuFailIfUnsetHashCookies];
+		return [
+			'result' => $result,
+			'output' => $output,
+			'error' => $error,
+			'nuFailIfUnsetHashCookies' => $nuFailIfUnsetHashCookies
+		];
 	} else {
-		return ['result' => $result, 'error' => $error, 'nuFailIfUnsetHashCookies' => $nuFailIfUnsetHashCookies];
+		return [
+			'result' => $result,
+			'error' => $error,
+			'nuFailIfUnsetHashCookies' => $nuFailIfUnsetHashCookies
+		];
 	}
 }
 
@@ -1864,7 +1884,7 @@ function nuSendEmailEx($args, $emailLogOptions) {
 		"json" => $json
 	];
 
-nuDebug($params);
+	nuDebug($params);
 
 	nuRunQuery($insert, $params, true);
 
