@@ -114,7 +114,7 @@ function nuValidateForms() {
 				$field = $form->fields[$fieldIndex];
 				$validationType = nuObjKey($validationRules, $field);
 				$fieldLabel = nuWrapWithTag(nuObjKey($fieldLabels, $field), 'b');
-				$rowDeleted = $form->deleted[$rowIndex] == 0;
+				$rowDeleted = $form->deleted[$rowIndex] == 1;
 				$rowValue = $form->rows[$rowIndex][$fieldIndex];
 
 				$errorCount += nuValidateFormsRequiredFields($form, $formIndex, $subformFK, $rowIndex, $validationType, $rowValue, $fieldLabel, $formDescription, $rowDeleted, $fieldIndex);
@@ -141,32 +141,55 @@ function nuDisplayErrorRequiredFields($formIndex, $row, $label, $formDescription
 
 function nuValidateFormsRequiredFields($form, $formIndex, $subformFK, $row, $validationType, $rowValue, $label, $formDescription, $rowDeleted, $fieldLabel) {
 
+	if ($rowDeleted) {
+		return 0;
+	}
+
+	$isBlank = $rowValue === '' || $rowValue === '[]';
+
 	switch ($validationType) {
-		case 1:		// No blanks
-			if (($rowValue === '' || $rowValue === '[]') && $rowDeleted) {
+		case 1: // No blanks
+			if ($isBlank) {
 				nuDisplayErrorRequiredFields($formIndex, $row, $label, $formDescription, '%s cannot be left blank', 'cannot be left blank');
 				return 1;
 			}
 			break;
 
-		case 2:		// No duplicates
-			if (nuDuplicate($form, $subformFK, $row, $fieldLabel) && $rowDeleted) {
+		case 2: // No duplicates (but only if value is not empty)
+			$value = $form->rows[$row][$fieldLabel];
+			if ($value !== '' && $value !== '[]' && nuDuplicate($form, $subformFK, $row, $fieldLabel)) {
 				nuDisplayErrorRequiredFields($formIndex, $row, $label, $formDescription, '%s has a duplicate', 'has a duplicate');
 				return 1;
 			}
 			break;
 
-		case 3:		// No duplicates or blanks
+		case 3: // No duplicates or blanks
 			$isDuplicate = nuDuplicate($form, $subformFK, $row, $fieldLabel);
-			$isBlank = ($rowValue === '' || $rowValue === '[]');
-
-			if (($isDuplicate || $isBlank) && $rowDeleted) {
+			if ($isBlank || $isDuplicate) {
 				nuDisplayErrorRequiredFields($formIndex, $row, $label, $formDescription, '%s must be both unique and not blank', 'must be both unique and not blank');
 				return 1;
 			}
+			break;
 	}
 
 	return 0;
+}
+
+function nuDuplicate($form, $subformFK, $row, $fieldLabel) {
+
+	$field = $form->fields[$fieldLabel];
+	$pk = $form->rows[$row][0];
+	$value = $form->rows[$row][$fieldLabel];
+
+	$query = "SELECT `$form->primary_key` FROM `$form->table` WHERE `$field` = ? AND `$form->primary_key` != ?";
+
+	if (isset($subformFK) && trim($subformFK) !== '') {
+		$query .= " AND `$subformFK` = '" . nuRecordId() . "'";
+	}
+
+	$stmt = nuRunQuery($query, [$value, $pk]);
+
+	return db_num_rows($stmt) > 0;
 
 }
 
@@ -205,24 +228,6 @@ function nuCheckAccessLevel($data) {
 	}
 
 	return true;
-
-}
-
-function nuDuplicate($form, $subformFK, $row, $fieldLabel) {
-
-	$field = $form->fields[$fieldLabel];
-	$pk = $form->rows[$row][0];
-	$value = $form->rows[$row][$fieldLabel];
-
-	$query = "SELECT `$form->primary_key` FROM `$form->table` WHERE `$field` = ? AND `$form->primary_key` != ?";
-
-	if (isset($subformFK) && trim($subformFK) !== '') {
-		$query .= " AND `$subformFK` = '" . nuRecordId() . "'";
-	}
-
-	$stmt = nuRunQuery($query, [$value, $pk]);
-
-	return db_num_rows($stmt) > 0;
 
 }
 
