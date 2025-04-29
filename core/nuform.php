@@ -539,46 +539,46 @@ function nuDefaultObject($r, $t) {
 	$labelOnTop = null;
 
 	/*
-																															if (nuIsMobile() && isset($r->sob_all_json)) {
+																																  if (nuIsMobile() && isset($r->sob_all_json)) {
 
-																																$json = $r->sob_all_json;
-																																if ($json != '') {
+																																	  $json = $r->sob_all_json;
+																																	  if ($json != '') {
 
-																																	$obj	= nuJsonDecode($json, true);
+																																		  $obj	= nuJsonDecode($json, true);
 
-																																	$type		= nuObjKey($obj,'type', null);
+																																		  $type		= nuObjKey($obj,'type', null);
 
-																																	if ($type != null) {
+																																		  if ($type != null) {
 
-																																		$mobile		= nuObjKey($type,'mobile', null);
+																																			  $mobile		= nuObjKey($type,'mobile', null);
 
-																																		if ($mobile == true) {
+																																			  if ($mobile == true) {
 
-																																			$visible	= nuObjKey($mobile,'visible', null);
-																																			$name		= nuObjKey($mobile,'name', null);
-																																			$labelOnTop	= nuObjKey($mobile,'labelontop', null);
-																																			$labelOnTop	= $labelOnTop == null || $labelOnTop == true;
+																																				  $visible	= nuObjKey($mobile,'visible', null);
+																																				  $name		= nuObjKey($mobile,'name', null);
+																																				  $labelOnTop	= nuObjKey($mobile,'labelontop', null);
+																																				  $labelOnTop	= $labelOnTop == null || $labelOnTop == true;
 
-																																			$size		= nuObjKey($mobile,'size');
-																																			if ($size != null) {
-																																				$width		= nuObjKey($size, 'width', null);
-																																				$height		= nuObjKey($size, 'height', null);
-																																			}
+																																				  $size		= nuObjKey($mobile,'size');
+																																				  if ($size != null) {
+																																					  $width		= nuObjKey($size, 'width', null);
+																																					  $height		= nuObjKey($size, 'height', null);
+																																				  }
 
-																																			$location		= nuObjKey($mobile,'location');
-																																			if ($location != null) {
-																																				$top		= nuObjKey($location, 'top', null);
-																																				$left		= nuObjKey($location, 'left', null);
-																																			}
+																																				  $location		= nuObjKey($mobile,'location');
+																																				  if ($location != null) {
+																																					  $top		= nuObjKey($location, 'top', null);
+																																					  $left		= nuObjKey($location, 'left', null);
+																																				  }
 
-																																		}
+																																			  }
 
-																																	}
+																																		  }
 
-																																}
+																																	  }
 
-																															}
-																															*/
+																																  }
+																																  */
 
 	$o->mobile = $mobile;
 	$o->labelOnTop = $labelOnTop;
@@ -1506,19 +1506,19 @@ function nuDisplayErrorAccessDenied($callType, $stmt) {
 
 }
 
-function nuGetFormPermission($f, $field) {
+function nuGetFormPermission($formId, $permissionField) {
 
-	$s = "SELECT $field FROM zzzzsys_access_form WHERE slf_zzzzsys_access_id = ? AND slf_zzzzsys_form_id = ?";
-	$t = nuRunQuery($s, [$_POST['nuHash']['USER_GROUP_ID'], $f]);
+	$sql = "SELECT $permissionField FROM zzzzsys_access_form WHERE slf_zzzzsys_access_id = ? AND slf_zzzzsys_form_id = ?";
+	$stmt = nuRunQuery($sql, [$_POST['nuHash']['USER_GROUP_ID'], $formId]);
 
-	if (db_num_rows($t) == 1) {
-		$r = db_fetch_row($t);
-		$r = $r[0] == null || $r[0] == '' ? null : (int) $r[0];
+	if (db_num_rows($stmt) === 1) {
+		$value = db_fetch_row($stmt);
+		$value = $value[0] == null || $value[0] == '' ? null : (int) $value[0];
 	} else {
-		$r = null;
+		$value = null;
 	}
 
-	return $r;
+	return $value;
 
 }
 
