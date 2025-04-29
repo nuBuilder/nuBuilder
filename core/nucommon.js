@@ -2382,12 +2382,13 @@ function nuDebugOut(obj, i) {
 }
 
 function nuGetValue(id, method) {
+
 	if (!id) return null;
 
 	const obj = $('#' + id);
 	if (nuDebugOut(obj, id)) return null;
 
-	if (obj.is(':checkbox')) {
+	if (obj.is(':checkbox') || obj.is(':radio')) {
 		return obj.is(":checked");
 	}
 
@@ -2413,6 +2414,7 @@ function nuGetValue(id, method) {
 		default:
 			return obj.val();
 	}
+
 }
 
 function nuGetText(id) {
@@ -2433,7 +2435,7 @@ function nuSetValue(id, value, method, change) {
 
 	if (method === undefined && obj.is(':button')) {
 		obj.text(value);
-	} else if (obj.is(':checkbox')) {
+	} else if (obj.is(':checkbox') || obj.is(':radio')) {
 		if (change) obj.prop('checked', value).trigger("change");
 	} else if (obj.is('select') && method === 'text') {
 		$('#' + id + ' option').each(function () {
