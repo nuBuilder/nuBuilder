@@ -236,7 +236,7 @@ function nuGetFormProcessObjects($formObject, $formId, $recordId, $data, $defaul
 	return [$formObjects, $cloneableObjects];
 }
 
-function nuGetFormModifyObject($object, $formObject, $row, $recordId, $data, $numObjects, $cloneableObjects, $dbFields) {
+function nuGetFormModifyObject($object, $formObject, $row, $recordId, $data, $numObjects, &$cloneableObjects, $dbFields) {
 
 	if ($row->sob_all_cloneable == '0') {
 		$cloneableObjects[] = ['subform' => $row->sob_all_type == 'subform', 'id' => $row->sob_all_id];
@@ -539,46 +539,46 @@ function nuDefaultObject($r, $t) {
 	$labelOnTop = null;
 
 	/*
-																																	 if (nuIsMobile() && isset($r->sob_all_json)) {
+																																		   if (nuIsMobile() && isset($r->sob_all_json)) {
 
-																																		 $json = $r->sob_all_json;
-																																		 if ($json != '') {
+																																			   $json = $r->sob_all_json;
+																																			   if ($json != '') {
 
-																																			 $obj	= nuJsonDecode($json, true);
+																																				   $obj	= nuJsonDecode($json, true);
 
-																																			 $type		= nuObjKey($obj,'type', null);
+																																				   $type		= nuObjKey($obj,'type', null);
 
-																																			 if ($type != null) {
+																																				   if ($type != null) {
 
-																																				 $mobile		= nuObjKey($type,'mobile', null);
+																																					   $mobile		= nuObjKey($type,'mobile', null);
 
-																																				 if ($mobile == true) {
+																																					   if ($mobile == true) {
 
-																																					 $visible	= nuObjKey($mobile,'visible', null);
-																																					 $name		= nuObjKey($mobile,'name', null);
-																																					 $labelOnTop	= nuObjKey($mobile,'labelontop', null);
-																																					 $labelOnTop	= $labelOnTop == null || $labelOnTop == true;
+																																						   $visible	= nuObjKey($mobile,'visible', null);
+																																						   $name		= nuObjKey($mobile,'name', null);
+																																						   $labelOnTop	= nuObjKey($mobile,'labelontop', null);
+																																						   $labelOnTop	= $labelOnTop == null || $labelOnTop == true;
 
-																																					 $size		= nuObjKey($mobile,'size');
-																																					 if ($size != null) {
-																																						 $width		= nuObjKey($size, 'width', null);
-																																						 $height		= nuObjKey($size, 'height', null);
-																																					 }
+																																						   $size		= nuObjKey($mobile,'size');
+																																						   if ($size != null) {
+																																							   $width		= nuObjKey($size, 'width', null);
+																																							   $height		= nuObjKey($size, 'height', null);
+																																						   }
 
-																																					 $location		= nuObjKey($mobile,'location');
-																																					 if ($location != null) {
-																																						 $top		= nuObjKey($location, 'top', null);
-																																						 $left		= nuObjKey($location, 'left', null);
-																																					 }
+																																						   $location		= nuObjKey($mobile,'location');
+																																						   if ($location != null) {
+																																							   $top		= nuObjKey($location, 'top', null);
+																																							   $left		= nuObjKey($location, 'left', null);
+																																						   }
 
-																																				 }
+																																					   }
 
-																																			 }
+																																				   }
 
-																																		 }
+																																			   }
 
-																																	 }
-																																	 */
+																																		   }
+																																		   */
 
 	$o->mobile = $mobile;
 	$o->labelOnTop = $labelOnTop;
