@@ -2305,44 +2305,90 @@ function nuCursor(c) {
 
 }
 
-/*	*** Based on highlight v5: Highlights arbitrary terms.
-	*** Renamed to nuHighlight using the className nuBrowseSearch
-	*** <http://johannburkard.de/blog/programming/javascript/highlight-javascript-text-higlighting-jquery-plugin.html>
-	*** MIT license.
-	*** Johann Burkard <http://johannburkard.de> / <mailto:jb@eaio.com>
-*/
+jQuery.fn.nuHighlight = function (pattern, accentInsensitive = true) {
+	if (!pattern || !pattern.length) return this;
 
-jQuery.fn.nuHighlight = function (pattern) {
+	// Flags + precomputed patterns
+	const useFold = accentInsensitive === true;
+	const upPat = pattern.toUpperCase();
+	const foldPat = useFold
+		? pattern
+			.normalize('NFD')
+			.replace(/[\u0300-\u036f]/g, '')
+			.toUpperCase()
+		: null;
 
-	function nuApplyHighlight(node, pattern) {
+	function applyHighlight(node) {
+		let skip = 0;
 
-		let skipNode = 0;
+		// --- TEXT NODE: find a match ---
 		if (node.nodeType === 3) {
-			const regex = new RegExp(pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
-			const match = node.data.match(regex);
-			if (match) {
-				const matchStart = match.index;
-				const spanElement = document.createElement('span');
-				spanElement.className = 'nuBrowseSearch';
-				const matchedText = node.splitText(matchStart);
-				const cloneMatchedText = matchedText.cloneNode(true);
-				spanElement.appendChild(cloneMatchedText);
-				matchedText.parentNode.replaceChild(spanElement, matchedText);
-				skipNode = 1;
+			const text = node.data;
+
+			if (useFold) {
+				// Build folded string + index map
+				let folded = '', map = [];
+				for (let i = 0; i < text.length; i++) {
+					const decomp = text[i].normalize('NFD');
+					folded += decomp[0];
+					map.push(i);
+				}
+				folded = folded.toUpperCase();
+				const idx = folded.indexOf(foldPat);
+				if (idx >= 0) {
+					const startOrig = map[idx];
+					const endMap = idx + foldPat.length;
+					const endOrig = endMap < map.length ? map[endMap] : text.length;
+
+					// Split into [before][match][after]
+					const afterMatch = node.splitText(startOrig);
+					const rest = afterMatch.splitText(endOrig - startOrig);
+
+					// Wrap only the matched text
+					const span = document.createElement('span');
+					span.className = 'nuBrowseSearch';
+					span.appendChild(afterMatch.cloneNode(true));
+					afterMatch.parentNode.replaceChild(span, afterMatch);
+
+					skip = 1;
+				}
+			} else {
+				// Plain case-insensitive
+				const upText = text.toUpperCase();
+				const idx = upText.indexOf(upPat);
+				if (idx >= 0) {
+					const afterMatch = node.splitText(idx);
+					const rest = afterMatch.splitText(pattern.length);
+
+					const span = document.createElement('span');
+					span.className = 'nuBrowseSearch';
+					span.appendChild(afterMatch.cloneNode(true));
+					afterMatch.parentNode.replaceChild(span, afterMatch);
+
+					skip = 1;
+				}
 			}
-		} else if (node.nodeType === 1 && node.childNodes && !/(script|style)/i.test(node.tagName)) {
-			for (let i = 0; i < node.childNodes.length; ++i) {
-				i += nuApplyHighlight(node.childNodes[i], pattern);
+
+			// --- ELEMENT NODE: recurse, skipping script/style ---
+		} else if (
+			node.nodeType === 1 &&
+			node.childNodes &&
+			!/(script|style)/i.test(node.tagName)
+		) {
+			for (let i = 0; i < node.childNodes.length; i++) {
+				i += applyHighlight(node.childNodes[i]) || 0;
 			}
 		}
-		return skipNode;
+
+		return skip;
 	}
 
-	return this.length && pattern && pattern.length ? this.each(function () {
-		nuApplyHighlight(this, pattern);
-	}) : this;
-
+	// Apply to each element in the jQuery collection
+	return this.each(function () {
+		applyHighlight(this);
+	});
 };
+
 
 function nuInputMaxLength(id, maxLength, labelId) {
 
