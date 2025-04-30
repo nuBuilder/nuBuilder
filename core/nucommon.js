@@ -2600,11 +2600,12 @@ function nuSetLabelText(id, text, translate) {
 	}
 
 	const label = $('#label_' + id);
-	const lwidth = nuGetWordWidth(text);
-
 	const obj = $('#' + id);
 	const left = obj.nuCSSNumber('left');
 	const top = obj.nuCSSNumber('top');
+
+	// Use the same font styling as the label or fallback to obj
+	const lwidth = nuGetWordWidth(text, label.length ? label : obj);
 
 	label.css({
 		'top': top,

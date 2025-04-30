@@ -3383,21 +3383,40 @@ function nuAddHolder(t) {
 
 }
 
-function nuGetWordWidth(w, objClass) {
 
-	if (!objClass) {
-		objClass = 'nuSection';
-	}
+function nuGetWordWidth(text, refElem) {
 
 	const W = 'nuTestWidth';
-	const h = "<" + 'div' + " id='" + W + "' style='position:absolute;visible:hidden;width:auto'>" + nuEscapeHTML(w) + "</" + 'div' + ">";
-	$('body').append(h);
-	let obj = $('#' + W);
-	obj.addClass(objClass);
-	let l = parseInt(obj.css('width'), 10);
-	obj.remove();
 
-	return l + 5;
+	// Create temporary measuring element
+	const $temp = $("<div>", {
+		id: W,
+		text: text,
+		css: {
+			position: 'absolute',
+			visibility: 'hidden',
+			whiteSpace: 'nowrap',
+			width: 'auto'
+		}
+	}).appendTo('body');
+
+	// Copy font-related styles from the reference element
+	if (refElem && refElem.length && refElem[0] instanceof Element) {
+		const computed = window.getComputedStyle(refElem[0]);
+		$temp.css({
+			fontSize: computed.fontSize,
+			fontFamily: computed.fontFamily,
+			fontWeight: computed.fontWeight,
+			fontStyle: computed.fontStyle,
+			letterSpacing: computed.letterSpacing,
+			textTransform: computed.textTransform
+		});
+	}
+
+	const width = $temp.outerWidth();
+	$temp.remove();
+
+	return width + 5; // Optional buffer
 
 }
 
