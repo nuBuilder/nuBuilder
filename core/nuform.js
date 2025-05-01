@@ -1570,6 +1570,7 @@ function nuAddAttributes(id, attr) {
 				currentAttr += char;
 			}
 		}
+
 		attrs.push(currentAttr);
 
 		attrs.forEach(attr => {
@@ -1586,7 +1587,9 @@ function nuAddAttributes(id, attr) {
 			}
 
 			if (arr.length == 1 || arr.length == 2) {
-				if (key.trim() === 'nu-label-position' && value === 'top') {
+				if (key.trim() === 'value' && value !== '') {
+					$('#' + id).nuSetValue(value)
+				} else if (key.trim() === 'nu-label-position' && value === 'top') {
 					$('#' + id).nuLabelOnTop();
 				} else {
 					document.getElementById(id).setAttribute(key.trim(), value);
@@ -1597,6 +1600,7 @@ function nuAddAttributes(id, attr) {
 	}
 
 }
+
 function nuAddInputIcon(id, icon) {
 
 	function addIcon(id, string, after) {
