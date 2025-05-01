@@ -1551,55 +1551,51 @@ function nuApplyInputTypeSpecificBehaviors($id, inputType, objType, thisObj, obj
 
 }
 
-function nuAddAttributes(id, attr) {
+function nuParseAttributes(attr = '') {
 
-	if (attr !== undefined && attr !== null && attr !== '') {
-		let attrs = [];
-		let inQuotes = false;
-		let currentAttr = '';
-
-		for (let i = 0; i < attr.length; i++) {
-			let char = attr[i];
-			if (char === '"') {
-				inQuotes = !inQuotes;
-			}
-			if (char === ',' && !inQuotes) {
-				attrs.push(currentAttr);
-				currentAttr = '';
-			} else {
-				currentAttr += char;
-			}
-		}
-
-		attrs.push(currentAttr);
-
-		attrs.forEach(attr => {
-			const arr = attr.split('=');
-			let key;
-			let value;
-
-			if (arr.length == 2) {
-				key = arr[0].trim();
-				value = arr[1].trim().replace(/^"(.*)"$/, '$1');  // Remove surrounding quotes
-			} else if (arr.length == 1) {
-				key = attr.trim();
-				value = '';
-			}
-
-			if (arr.length == 1 || arr.length == 2) {
-				if (key.trim() === 'value' && value !== '') {
-					$('#' + id).nuSetValue(value)
-				} else if (key.trim() === 'nu-label-position' && value === 'top') {
-					$('#' + id).nuLabelOnTop();
-				} else {
-					document.getElementById(id).setAttribute(key.trim(), value);
-				}
-
-			}
-		});
-	}
+	if (!attr) return [];
+	const parts = attr.match(/(?:[^,"']+|"[^"]*")+/g) || [];
+	return parts.map(part => {
+		let [rawKey, ...rest] = part.split('=');
+		const key = rawKey.trim();
+		const value = rest.join('=').trim().replace(/^"(.*)"$/, '$1');
+		return { key, value };
+	});
 
 }
+
+function nuApplyAttributes(id, attrs) {
+
+	const el = document.getElementById(id);
+	if (!el) return;
+	attrs.forEach(({ key, value }) => {
+		switch (key) {
+			case 'value':
+				if (value) {
+					$('#' + id).nuSetValue(value);
+				}
+				break;
+			case 'nu-label-position':
+				if (value === 'top') {
+					$('#' + id).nuLabelOnTop();
+				} else {
+					el.setAttribute(key, value);
+				}
+				break;
+			default:
+				el.setAttribute(key, value);
+		}
+	});
+
+}
+
+function nuAddAttributes(id, attr = '') {
+
+	const attrs = nuParseAttributes(attr);
+	nuApplyAttributes(id, attrs);
+
+}
+
 
 function nuAddInputIcon(id, icon) {
 
