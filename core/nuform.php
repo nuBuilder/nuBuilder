@@ -187,14 +187,11 @@ function nuGetFormSetBasicProperties($formObject, $formId, $recordId) {
 
 function nuGetFormData($formObject, $recordId) {
 
-	if (!isset($formObject->table) || empty($formObject->table) || empty($recordId)) {
+	if (!isset($formObject->table) || $formObject->table == '' || $recordId == '') {
 		return [];
 	} else {
-		$sql = "SELECT * FROM `{$formObject->table}` WHERE `{$formObject->primary_key}` = ?";
-		$stmt = nuRunQuery($sql, [$recordId]);
-		if (db_num_rows($stmt) == 0) {
-			return [];
-		}
+		$query = "SELECT * FROM `$formObject->table` WHERE `$formObject->primary_key` = ?";
+		$stmt = nuRunQuery($query, [$recordId]);
 		return db_fetch_array($stmt);
 	}
 
