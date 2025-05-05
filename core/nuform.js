@@ -1571,7 +1571,7 @@ function nuApplyAttributes(id, attrs) {
 	attrs.forEach(({ key, value }) => {
 		switch (key) {
 			case 'value':
-				if (value) {
+				if (value && nuIsNewRecord()) {
 					const type = $('#' + id).attr('data-nu-type');
 					if (type === 'lookup') {
 						nuGetLookupId(value, id, false, false);
