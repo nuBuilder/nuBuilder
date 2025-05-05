@@ -1572,7 +1572,13 @@ function nuApplyAttributes(id, attrs) {
 		switch (key) {
 			case 'value':
 				if (value) {
-					$('#' + id).nuSetValue(value);
+					const type = $('#' + id).attr('data-nu-type');
+					if (type === 'lookup') {
+						nuGetLookupId(value, id, false, false);
+					} else {
+						$('#' + id).nuSetValue(value);
+					}
+					nuHasNotBeenEdited();
 				}
 				break;
 			case 'nu-label-position':
