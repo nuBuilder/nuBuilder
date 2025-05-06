@@ -192,9 +192,7 @@ function nuGetFormData($formObject, $recordId) {
 	} else {
 		$query = "SELECT * FROM `$formObject->table` WHERE `$formObject->primary_key` = ?";
 		$stmt = nuRunQuery($query, [$recordId]);
-		if (db_num_rows($stmt) == 0) {
-			return [];
-		}
+
 		return db_fetch_array($stmt);
 	}
 
