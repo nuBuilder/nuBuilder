@@ -6519,17 +6519,32 @@ function nuRecordRun(id, filter) {
 
 }
 
-function nuGetIframeValue(f, o, method) {
+function nuGetIframeValue(iframeId, elementId, method = 'val') {
 
-	const obj = $('#' + f).contents().find('#' + o)
-	return (!method || method == 'val') ? obj.val() : obj.html();
+	const $iframe = $('#' + iframeId);
+	if (!$iframe.length) return null;
+
+	const $element = $iframe.contents().find('#' + elementId);
+	if (!$element.length) return null;
+
+	return method === 'html' ? $element.html() : $element.val();
 
 }
 
-function nuSetIframeValue(f, o, v, method) {
+function nuSetIframeValue(iframeId, elementId, value, method = 'val') {
 
-	const obj = $('#' + f).contents().find('#' + o)
-	return (!method || method == 'val') ? obj.val(v) : obj.html(v);
+	const $iframe = $('#' + iframeId);
+	if (!$iframe.length) return false;
+
+	const $element = $iframe.contents().find('#' + elementId);
+	if (!$element.length) return false;
+
+	if (method === 'html') {
+		$element.html(value);
+	} else {
+		$element.val(value);
+	}
+	return true;
 
 }
 
