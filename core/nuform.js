@@ -6580,6 +6580,23 @@ function nuSetIframeProperty(frameId, property, value, refresh = true) {
 
 }
 
+function nuRefreshIframe(frameId) {
+
+	const iframeEl = document.getElementById(frameId);
+
+	if (!iframeEl || !iframeEl.contentWindow) {
+		return false;
+	}
+
+	if (typeof iframeEl.contentWindow.nuGetBreadcrumb !== 'function') {
+		return false;
+	}
+
+	iframeEl.contentWindow.nuGetBreadcrumb();
+	return true;
+
+}
+
 function nuLookingUp() {
 
 	for (let lu in window.nuLOOKUPSTATE) {
