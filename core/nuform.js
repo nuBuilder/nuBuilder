@@ -6548,6 +6548,38 @@ function nuSetIframeValue(iframeId, elementId, value, method = 'val') {
 
 }
 
+function nuGetIframeProperty(frameId, property) {
+
+	const el = document.getElementById(frameId);
+	if (!el) return null;
+	const win = el.contentWindow;
+	if (win && typeof win.nuGetProperty === 'function') {
+		return win.nuGetProperty(property);
+	}
+
+	return null;
+
+}
+
+function nuSetIframeProperty(frameId, property, value, refresh = true) {
+
+	const el = document.getElementById(frameId);
+
+	if (!el) return false;
+
+	const win = el.contentWindow;
+	if (win && typeof win.nuSetProperty === 'function') {
+		win.nuSetProperty(property, value);
+		if (refresh && typeof win.nuGetBreadcrumb === 'function') {
+			win.nuGetBreadcrumb();
+		}
+		return true;
+	}
+
+	return false;
+
+}
+
 function nuLookingUp() {
 
 	for (let lu in window.nuLOOKUPSTATE) {
