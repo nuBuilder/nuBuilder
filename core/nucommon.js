@@ -941,7 +941,7 @@ function nuBindCtrlEvents() {
 	}, { passive: false }, 'nu-keydown-added');
 
 
-	const nuCtrlKeyupListener = function (e) {
+	const nuCtrlKeyupListener = function () {
 		window.nuNEW = 0;
 	}
 
