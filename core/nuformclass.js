@@ -459,7 +459,7 @@ class nuFormObject {
 		var fld = [];
 
 		const sqlFrameContents = $('#sqlframe').contents();
-		sqlFrameContents.find('.nuBox').each(function (index) {
+		sqlFrameContents.find('.nuBox').each(function () {
 
 			var b = $(this)[0].id;
 			var a = sqlFrameContents.find('#alias' + b).val();
