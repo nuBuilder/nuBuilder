@@ -537,46 +537,46 @@ function nuDefaultObject($r, $t) {
 	$labelOnTop = null;
 
 	/*
-																																		   if (nuIsMobile() && isset($r->sob_all_json)) {
+																																					   if (nuIsMobile() && isset($r->sob_all_json)) {
 
-																																			   $json = $r->sob_all_json;
-																																			   if ($json != '') {
+																																						   $json = $r->sob_all_json;
+																																						   if ($json != '') {
 
-																																				   $obj	= nuJsonDecode($json, true);
+																																							   $obj	= nuJsonDecode($json, true);
 
-																																				   $type		= nuObjKey($obj,'type', null);
+																																							   $type		= nuObjKey($obj,'type', null);
 
-																																				   if ($type != null) {
+																																							   if ($type != null) {
 
-																																					   $mobile		= nuObjKey($type,'mobile', null);
+																																								   $mobile		= nuObjKey($type,'mobile', null);
 
-																																					   if ($mobile == true) {
+																																								   if ($mobile == true) {
 
-																																						   $visible	= nuObjKey($mobile,'visible', null);
-																																						   $name		= nuObjKey($mobile,'name', null);
-																																						   $labelOnTop	= nuObjKey($mobile,'labelontop', null);
-																																						   $labelOnTop	= $labelOnTop == null || $labelOnTop == true;
+																																									   $visible	= nuObjKey($mobile,'visible', null);
+																																									   $name		= nuObjKey($mobile,'name', null);
+																																									   $labelOnTop	= nuObjKey($mobile,'labelontop', null);
+																																									   $labelOnTop	= $labelOnTop == null || $labelOnTop == true;
 
-																																						   $size		= nuObjKey($mobile,'size');
-																																						   if ($size != null) {
-																																							   $width		= nuObjKey($size, 'width', null);
-																																							   $height		= nuObjKey($size, 'height', null);
-																																						   }
+																																									   $size		= nuObjKey($mobile,'size');
+																																									   if ($size != null) {
+																																										   $width		= nuObjKey($size, 'width', null);
+																																										   $height		= nuObjKey($size, 'height', null);
+																																									   }
 
-																																						   $location		= nuObjKey($mobile,'location');
-																																						   if ($location != null) {
-																																							   $top		= nuObjKey($location, 'top', null);
-																																							   $left		= nuObjKey($location, 'left', null);
+																																									   $location		= nuObjKey($mobile,'location');
+																																									   if ($location != null) {
+																																										   $top		= nuObjKey($location, 'top', null);
+																																										   $left		= nuObjKey($location, 'left', null);
+																																									   }
+
+																																								   }
+
+																																							   }
+
 																																						   }
 
 																																					   }
-
-																																				   }
-
-																																			   }
-
-																																		   }
-																																		   */
+																																					   */
 
 	$o->mobile = $mobile;
 	$o->labelOnTop = $labelOnTop;
@@ -1707,72 +1707,101 @@ function nuFormAccess($s, $a) {
 	return ['0', '0', '0', '0', '0'];
 
 }
+function nuFormDimensions($formId) {
 
-function nuFormDimensions($f) {
+	$dimensionList = [];
 
-	$d = [];
-	$t = nuRunQuery("SELECT sfo_browse_row_height, sfo_browse_rows_per_page FROM zzzzsys_form WHERE zzzzsys_form_id = ?", [$f]);
-	$r = db_fetch_object($t);
+	// Fetch form settings
+	$formQuery = nuRunQuery(
+		"SELECT sfo_browse_row_height, sfo_browse_rows_per_page
+         FROM zzzzsys_form
+         WHERE zzzzsys_form_id = ?",
+		[$formId]
+	);
+	$formConfig = db_fetch_object($formQuery);
 
-	$brh = $r->sfo_browse_row_height ?? 0;
-	$brp = $r->sfo_browse_rows_per_page ?? 0;
+	$settingRowHeight = $formConfig->sfo_browse_row_height ?? 0;
+	$settingRowsPerPage = $formConfig->sfo_browse_rows_per_page ?? 0;
 
-	$bt = 57;	//-- browse title
-	$rh = intval($brh) == 0 ? 25 : $brh;
-	$rs = intval($brp) == 0 ? 25 : $brp;
-	$bb = 25;	//-- browse footer
-	$t = nuRunQuery("SELECT * FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = ?", [$f]);
-	$h = 0;
-	$w = 0;
-	$gh = 0;
-	$gw = 0;
+	// Static heights
+	$titleAreaHeight = 57;  // browse title
+	$footerAreaHeight = 25;  // browse footer
 
-	while ($r = db_fetch_object($t)) {
+	// Resolve defaults if settings are zero
+	$rowHeight = intval($settingRowHeight) === 0 ? 25 : $settingRowHeight;
+	$rowsPerPage = intval($settingRowsPerPage) === 0 ? 25 : $settingRowsPerPage;
 
-		if ($r->sob_all_type == 'lookup') {
+	// Prepare variables for computing form/edit and grid dimensions
+	$objQuery = nuRunQuery("SELECT * FROM zzzzsys_object WHERE sob_all_zzzzsys_form_id = ?", [$formId]);
 
-			$w = max($w, $r->sob_all_left + $r->sob_all_width + $r->sob_lookup_description_width + 40);
-			$gw = $gw + $r->sob_all_width + $r->sob_lookup_description_width + 40;
+	$maxEditHeight = 0;
+	$maxEditWidth = 0;
+	$maxGridRowHeight = 0;
+	$totalGridWidth = 0;
 
+	// Iterate over each object on the form
+	while ($obj = db_fetch_object($objQuery)) {
+		// Compute width for edit form
+		if ($obj->sob_all_type === 'lookup') {
+			$calculatedWidth = $obj->sob_all_left
+				+ $obj->sob_all_width
+				+ $obj->sob_lookup_description_width
+				+ 40;
+			$totalGridWidth += $obj->sob_all_width
+				+ $obj->sob_lookup_description_width
+				+ 40;
 		} else {
+			$calculatedWidth = $obj->sob_all_left
+				+ $obj->sob_all_width
+				+ 40;
+			$totalGridWidth += $obj->sob_all_width + 4;
+		}
+		$maxEditWidth = max($maxEditWidth, $calculatedWidth);
 
-			$w = max($w, $r->sob_all_left + $r->sob_all_width + 40);
-			$gw = $gw + $r->sob_all_width + 4;
-
+		// Compute height for each object
+		if ($obj->sob_all_type === 'textarea') {
+			$objectHeight = $obj->sob_all_height + 16;
+		} elseif (!empty($obj->sob_select_2) && $obj->sob_select_2 === '1') {
+			$objectHeight = $obj->sob_all_height + 13;
+		} else {
+			$objectHeight = $obj->sob_all_height;
 		}
 
-		if ($r->sob_all_type == 'textarea') {
-			$oh = $r->sob_all_height + 16;
-		} else if (isset($r->sob_select_2) && $r->sob_select_2 == '1') {
-			$oh = $r->sob_all_height + 13;
-		} else {
-			$oh = $r->sob_all_height;
-		}
-
-		$h = max($h, $r->sob_all_top + $oh);
-		$gh = max($oh, 27, $gh);
-
+		$maxEditHeight = max($maxEditHeight, $obj->sob_all_top + $objectHeight);
+		$maxGridRowHeight = max($maxGridRowHeight, $objectHeight, 27);
 	}
 
-	$bh = $bt + ($rs * $rh) + $bb;
-	$bw = nuGetBrowseWidth($f);
+	// Calculate browse dimensions
+	$browseHeight = $titleAreaHeight
+		+ ($rowsPerPage * $rowHeight)
+		+ $footerAreaHeight;
+	$browseWidth = nuGetBrowseWidth($formId);
 
-	$grid = ['height' => $gh, 'width' => $gw];
-	$browse = ['height' => $bh, 'width' => $bw];
-	$edit = ['height' => $h, 'width' => $w];
+	// Assemble dimension arrays
+	$gridDimensions = ['height' => $maxGridRowHeight, 'width' => $totalGridWidth];
+	$browseDimensions = ['height' => $browseHeight, 'width' => $browseWidth];
+	$editDimensions = ['height' => $maxEditHeight, 'width' => $maxEditWidth];
 
-	$d[] = $bt + ($rs * $rh) + $bb;	//-- lookup browse height
-	$d[] = $bw;
-	$d[] = $h + 0;					 //-- lookup form height
-	$d[] = $w + 0;					 //-- lookup form width
-	$d[] = $h + 0;					 //-- form height
-	$d[] = $w + 50;					 //-- form width
-	$d[] = $gh + 0;					 //-- grid height
-	$d[] = $gw + 55;					 //-- grid width
+	// (Legacy list of dimensions — preserved for backward compatibility)
+	$dimensionList[] = $browseHeight;
+	$dimensionList[] = $browseWidth;
+	$dimensionList[] = $maxEditHeight;
+	$dimensionList[] = $maxEditWidth;
+	$dimensionList[] = $maxEditHeight;
+	$dimensionList[] = $maxEditWidth + 50;
+	$dimensionList[] = $maxGridRowHeight;
+	$dimensionList[] = $totalGridWidth + 55;
+	$dimensionList[] = [
+		'browse' => $browseDimensions,
+		'edit' => $editDimensions,
+		'grid' => $gridDimensions,
+	];
 
-	$d[] = ['browse' => $browse, 'edit' => $edit, 'grid' => $grid];
-
-	return ['browse' => $browse, 'edit' => $edit, 'grid' => $grid];
+	return [
+		'browse' => $browseDimensions,
+		'edit' => $editDimensions,
+		'grid' => $gridDimensions,
+	];
 
 }
 
