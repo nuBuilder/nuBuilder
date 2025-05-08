@@ -746,7 +746,7 @@ function nuSelectDialog() {
 
 	var a = [];
 
-	var dragObj  = document.getElementsByClassName('nuDragObject');
+	var dragObj = document.getElementsByClassName('nuDragObject');
 
 	for (let o = 0; o < dragObj.length; o++) {
 
@@ -1296,21 +1296,21 @@ function nuGroupDialog() {
 	left = left + 210;
 
 	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[3], fun, [['a', 'Ascending'], ['d', 'Descending']]);
-	$('#sortBy').attr({'id': 'sortBy3', 'data-group': 3}).css('width', 105);
+	$('#sortBy').attr({ 'id': 'sortBy3', 'data-group': 3 }).css('width', 105);
 	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[4], fun, [['a', 'Ascending'], ['d', 'Descending']]);
-	$('#sortBy').attr({'id': 'sortBy4', 'data-group': 4}).css('width', 105);
+	$('#sortBy').attr({ 'id': 'sortBy4', 'data-group': 4 }).css('width', 105);
 	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[5], fun, [['a', 'Ascending'], ['d', 'Descending']]);
-	$('#sortBy').attr({'id': 'sortBy5', 'data-group': 5}).css('width', 105);
+	$('#sortBy').attr({ 'id': 'sortBy5', 'data-group': 5 }).css('width', 105);
 	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[6], fun, [['a', 'Ascending'], ['d', 'Descending']]);
-	$('#sortBy').attr({'id': 'sortBy6', 'data-group': 6}).css('width', 105);
+	$('#sortBy').attr({ 'id': 'sortBy6', 'data-group': 6 }).css('width', 105);
 	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[7], fun, [['a', 'Ascending'], ['d', 'Descending']]);
-	$('#sortBy').attr({'id': 'sortBy7', 'data-group': 7}).css('width', 105);
+	$('#sortBy').attr({ 'id': 'sortBy7', 'data-group': 7 }).css('width', 105);
 	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[8], fun, [['a', 'Ascending'], ['d', 'Descending']]);
-	$('#sortBy').attr({'id': 'sortBy8', 'data-group': 8}).css('width', 105);
+	$('#sortBy').attr({ 'id': 'sortBy8', 'data-group': 8 }).css('width', 105);
 	top = nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[9], fun, [['a', 'Ascending'], ['d', 'Descending']]);
-	$('#sortBy').attr({'id': 'sortBy9', 'data-group': 9}).css('width', 105);
+	$('#sortBy').attr({ 'id': 'sortBy9', 'data-group': 9 }).css('width', 105);
 	nuDialogInput('', 'sortBy', top, left, nuREPORT.groups[10], fun, [['a', 'Ascending'], ['d', 'Descending']]);
-	$('#sortBy').attr({'id': 'sortBy10', 'data-group': 10}).css('width', 105);
+	$('#sortBy').attr({ 'id': 'sortBy10', 'data-group': 10 }).css('width', 105);
 
 	top = 430;
 	left = left - 100;
@@ -1362,7 +1362,7 @@ function nuMoveGroup() {
 	e.setAttribute('id', 'grpdn');
 	$('#nuDragDialog').append(e);
 
-	$('#' + e.id).css({ 'font-size': 10+ 'px', 'position': 'absolute', 'left': 15, 'top': 200, 'width': 90, 'height': 30 }).html(opener.nuTranslate('Move Down'));
+	$('#' + e.id).css({ 'font-size': 10 + 'px', 'position': 'absolute', 'left': 15, 'top': 200, 'width': 90, 'height': 30 }).html(opener.nuTranslate('Move Down'));
 	$('#' + e.id).click(function () { nuMoveReportGroup(nuDIALOG.groupNumber, 1); });
 
 }
@@ -1484,11 +1484,8 @@ function nuUpdateProperties(id) {
 
 }
 
-function nuDoNothing(t) {
-
+function nuDoNothing() {
 }
-
-
 
 function nuUpdateReport(t) {
 
@@ -1578,11 +1575,11 @@ function nuMoveReportGroup(ele, dir) {
 
 	function nuMoveGroupUpDown(i) {
 
-			const tempObj = nuREPORT.groups[groupNumber];
-			nuREPORT.groups[groupNumber] = nuREPORT.groups[groupNumber + i];
-			nuREPORT.groups[groupNumber + i] = tempObj;
-			nuREPORT.setFocus = $('#sortField' + (groupNumber + i)).attr('id');
-			nuDIALOG.groupNumber = groupNumber + i;
+		const tempObj = nuREPORT.groups[groupNumber];
+		nuREPORT.groups[groupNumber] = nuREPORT.groups[groupNumber + i];
+		nuREPORT.groups[groupNumber + i] = tempObj;
+		nuREPORT.setFocus = $('#sortField' + (groupNumber + i)).attr('id');
+		nuDIALOG.groupNumber = groupNumber + i;
 
 	}
 
