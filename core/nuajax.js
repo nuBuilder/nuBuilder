@@ -103,7 +103,7 @@ function nuForm(f, r, filter, search, n, like) {
 	last.AAA = 'hw';
 	last.like = like;
 
-	var successCallback = function (data, textStatus, jqXHR) {
+	var successCallback = function (data, _textStatus, _jqXHR) {
 
 		var fm = data;
 
@@ -172,7 +172,7 @@ function nuRunReport(formId, iFrame) {
 	last.form_id = formId;
 	last.hash = parent.nuHashFromEditForm ? parent.nuHashFromEditForm() : [];
 
-	const successCallback = function (data, textStatus, jqXHR) {
+	const successCallback = function (data, _textStatus, _jqXHR) {
 
 		if (!nuDisplayError(data)) {
 
@@ -202,7 +202,7 @@ function nuRunReportSave(formId, tag = null, callback = null, fileName = '') {
 	last.form_id = formId;
 	last.hash = nuHashFromEditForm();
 
-	const successCallback = function (data, textStatus, jqXHR) {
+	const successCallback = function (data, _textStatus, _jqXHR) {
 
 		const fm = data;
 
@@ -258,13 +258,13 @@ function nuLogout() {
 		winTop.window.open('index.php', '_self');
 	};
 
-	const successCallback = function (data, textStatus, jqXHR) {
+	const successCallback = function (data, _textStatus, _jqXHR) {
 		if (!nuDisplayError(data)) {
 			finalizeLogout();
 		}
 	};
 
-	const errorCallback = function (data, textStatus, jqXHR) {
+	const errorCallback = function (_data, _textStatus, _jqXHR) {
 		finalizeLogout();
 		return false;
 	};
@@ -333,7 +333,7 @@ function nuRunPHP(code, iFrame = '', runBeforeSave = false) {
 		last.hash = nuHashFromEditForm();
 	}
 
-	const successCallback = function (data, textStatus, jqXHR) {
+	const successCallback = function (data, _textStatus, _jqXHR) {
 
 		if (!nuDisplayError(data)) {
 
@@ -387,7 +387,7 @@ function nuRunPHPHidden(code, options = null) {
 	last.nuFORMdata = nuFORM.data();
 	last.hash = nuHashFromEditForm();
 
-	var successCallback = function (data, textStatus, jqXHR) {
+	var successCallback = function (data, _textStatus, _jqXHR) {
 
 		var fm = data;
 
@@ -437,7 +437,7 @@ function nuSystemUpdate() {
 	last.nuFORMdata = nuFORM.data();
 	last.hash = nuHashFromEditForm();
 
-	const successCallback = function (data, textStatus, jqXHR) {
+	const successCallback = function (data, _textStatus, _jqXHR) {
 		const fm = data;
 
 		if (!nuDisplayError(fm)) {
@@ -488,7 +488,7 @@ function nuAttachImage(i, code, fit) {
 	last.call_type = 'getfile';
 	last.fileCode = code;
 
-	var successCallback = function (data, textStatus, jqXHR) {
+	var successCallback = function (data, _textStatus, _jqXHR) {
 
 		if (nuDisplayError(data)) { return; };
 
@@ -549,7 +549,7 @@ function nuAttachButtonImage(i, c, cssClass = 'nuButtonImage') {
 	last.call_type = 'getfile';
 	last.fileCode = c;
 
-	var successCallback = function (data, textStatus, jqXHR) {
+	var successCallback = function (data, _textStatus, _jqXHR) {
 
 		if (nuDisplayError(data)) { return; };
 
@@ -589,7 +589,7 @@ function nuGetLookupId(pk, id, setFocus, setEdited) {
 	last.prefix = l.attr('data-nu-prefix');
 	last.primary_key = pk;
 
-	var successCallback = function (data, textStatus, jqXHR) {
+	var successCallback = function (data, _textStatus, _jqXHR) {
 
 		nuSERVERRESPONSELU = data;
 
@@ -672,7 +672,7 @@ function nuPrintAction() {
 	last.browse_sql = nuSERVERRESPONSE.browse_sql;
 	last.session_id = window.nuSESSION;
 
-	const successCallback = function (data, textStatus, jqXHR) {
+	const successCallback = function (data, _textStatus, _jqXHR) {
 
 		if (!nuDisplayError(data)) {
 			var p = 'core/nurunhtml.php?i=' + data.id;
@@ -685,7 +685,7 @@ function nuPrintAction() {
 
 }
 
-function nuUpdateData(action, instruction, close) {
+function nuUpdateData(action, instruction, _close) {
 
 	if (action == 'save') {
 
@@ -735,7 +735,7 @@ function nuUpdateData(action, instruction, close) {
 
 	$('.nuActionButton').hide();
 
-	const successCallback = function (data, textStatus, jqXHR) {
+	const successCallback = function (data, _textStatus, _jqXHR) {
 
 		const addErrorTitle = (errors, errorValidation) => {
 			if (Array.isArray(errors) && errors.length > 0) {
@@ -825,7 +825,7 @@ function nuSaveAfterDrag() {
 	last.call_type = 'nudragsave';
 	last.nuDragState = contentWin.nuDragOptionsState;
 
-	const successCallback = function (data, textStatus, jqXHR) {
+	const successCallback = function (data, _textStatus, _jqXHR) {
 
 		if (nuDisplayError(data.errors)) {
 			alert(data.errors[0]);
