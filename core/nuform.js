@@ -34,7 +34,6 @@ function nuInitJSOptions() {
 		for (var key in defaults) {
 			if (defaults.hasOwnProperty(key) && typeof window.nuUXOptions[key] === "undefined") {
 				window.nuUXOptions[key] = defaults[key];
-				console.log('added: ' + key + ' - ' + defaults[key]);
 			}
 		}
 	}
