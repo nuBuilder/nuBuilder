@@ -112,7 +112,7 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 		license_key: 'gpl',
 		setup: function (editor) {
 
-			editor.addShortcut('ctrl+shift+S', 'Save', function (e) {
+			editor.addShortcut('ctrl+shift+S', 'Save', function () {
 				window.isShortcutSave = true;
 
 				nuSaveAction();
