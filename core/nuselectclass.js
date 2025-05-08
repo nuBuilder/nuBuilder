@@ -553,7 +553,7 @@ class nuSelectObject {
 
 		let checkBoxes = [];
 
-		$(':checkbox.' + b).each(function (index) {
+		$(':checkbox.' + b).each(function () {
 			checkBoxes.push($(this).is(':checked'));
 		});
 
