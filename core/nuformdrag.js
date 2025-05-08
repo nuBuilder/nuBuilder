@@ -330,7 +330,7 @@ function nuRemoveBox(ctrlKey) {
 
 	var selectedTab = $('.nuTabSelected').length > 0 ? $('.nuTabSelected')[0].id.substring(5) : 0;
 
-	o.each(function (index) {
+	o.each(function () {
 
 		if ($(this).attr('data-nu-tab') == selectedTab) {
 			var l = parseInt($(this).css('left'), 10);
