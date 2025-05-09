@@ -1,4 +1,4 @@
-# nuBuilder Forte 4.6
+# nuBuilder Forte 4.7
 
 **A powerful, open-source, low-code platform for rapidly building custom web-based database applications.**
 
@@ -6,9 +6,9 @@
 
 ### Quick Links:
 
-- 🌐 [Home Page](https://www.nubuilder.com)  
-- 🚀 [Live Demo](https://demo.nubuilder.cloud/)  
-- 📑 [Wiki Documentation](https://wiki.nubuilder.cloud)  
+- 🌐 [Home Page](https://www.nubuilder.com)
+- 🚀 [Live Demo](https://demo.nubuilder.cloud/)
+- 📑 [Wiki Documentation](https://wiki.nubuilder.cloud)
 - 💬 [Community Forum](https://forums.nubuilder.cloud/)
 
 ---
@@ -62,8 +62,7 @@ nuBuilder Forte streamlines essential database operations:
 
 ### Prerequisites
 
-- **PHP**: Version 7.0.33 or greater  
-  *(PHP 7.2.5+ required if using integrated phpMyAdmin)*
+- **PHP**: Version 7.4.33 or greater
 - **Database**: MySQL 5.7+ or MariaDB 10.3+
 - **Web Server**: Apache or Nginx
 
@@ -73,9 +72,9 @@ nuBuilder Forte streamlines essential database operations:
 2. **Upload** to your web server directory.
 3. **Create** a new MySQL or MariaDB database (e.g., `nubuilder4`).
 4. **Rename** the `nuconfig-sample.php` file to `nuconfig.php` and update it with your database credentials.
-5. **Navigate** to your installation URL:  
+5. **Navigate** to your installation URL:
    `http://yoursite.com/nubuilder4/index.php`
-6. **Log in** using the default credentials:  
+6. **Log in** using the default credentials:
    Username: `globeadmin`
 
 > ℹ️ **[Detailed installation instructions](https://wiki.nubuilder.cloud/index.php?title=Documentation)**

@@ -170,7 +170,7 @@ if (!isset($_SESSION['nubuilder_session_data']['NB_PATH']) || dirname($_SESSION[
 
 		}
 
-		window.nuVersion = 'nuBuilder4.6';
+		window.nuVersion = 'nuBuilder4.7';
 		window.nuDocumentID = Date.now();
 
 		window.nuHASH = [];
