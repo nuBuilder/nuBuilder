@@ -2434,6 +2434,19 @@ function nuGetValue(id, method) {
 	const obj = $('#' + id);
 	if (nuDebugOut(obj, id)) return null;
 
+	if (obj.hasClass('nuHiddenLookup')) {
+		if (method === 'code') {
+			const codeId = id + 'code';
+			const codeObj = $('#' + codeId);
+			return codeObj.length ? codeObj.val() : null;
+		}
+		if (method === 'description') {
+			const descId = id + 'description';
+			const descObj = $('#' + descId);
+			return descObj.length ? descObj.val() : null;
+		}
+	}
+
 	if (obj.is(':checkbox') || obj.is(':radio')) {
 		return obj.is(":checked");
 	}
