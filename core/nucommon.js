@@ -2492,6 +2492,11 @@ function nuSetValue(id, value, method, change) {
 
 	change = (change || change === undefined);
 
+	if (obj.hasClass('nuHiddenLookup')) {
+		nuGetLookupId(value, id, method, change);
+		return true;
+	}
+
 	if (method === undefined && obj.is(':button')) {
 		obj.text(value);
 	} else if (obj.is(':checkbox') || obj.is(':radio')) {
