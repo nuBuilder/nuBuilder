@@ -7405,7 +7405,7 @@ function nuUppySetLanguage(uppy, language, languageFallback) {
 	};
 
 	if (!langResult.locale) {
-		$.getScript(`../third_party/uppy/locales/${langResult.code}.min.js`, function (data, textStatus, jqxhr) {
+		$.getScript(`third_party/uppy/locales/${langResult.code}.min.js`, function (data, textStatus, jqxhr) {
 			langResult = nuUppyGetLanguageCodeAndLocale(userLanguage);
 			setUppyLanguage(langResult.locale);
 		});
