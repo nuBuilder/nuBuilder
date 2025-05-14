@@ -1045,7 +1045,7 @@ function nuAddFormatting($v, $f) {
 	}
 	$m = $v < 0 ? '-' : '';
 
-	if ($f[0] == 'N') {												//-- number  '456.789','N|€ 1,000.00'
+	if ($f[0] == 'N') {												//-- number  '456.789','N|??? 1,000.00'
 		$CF = nuGetNumberFormat(substr($f, 2));						//-- CF[0]=sign, CF[1]=separator, CF[2]=decimal, CF[3]=places
 
 		$nf = number_format($v, intval($CF[3]), $CF[2], $CF[1]);
@@ -1444,7 +1444,7 @@ function nuFontList() {
 	$result = [];
 	$fonts = [['Helvetica', 'Helvetica'], ['Courier', 'Courier'], ['Times', 'Times'], ['Symbol', 'Symbol']];
 	$exclude = ['..', '.', DIRECTORY_SEPARATOR];
-	$folder = __DIR__ . DIRECTORY_SEPARATOR . 'libs/tcpdf' . DIRECTORY_SEPARATOR . 'fonts';
+	$folder = __DIR__ . DIRECTORY_SEPARATOR . '../third_party/tcpdf' . DIRECTORY_SEPARATOR . 'fonts';
 
 	$list = scandir($folder);
 

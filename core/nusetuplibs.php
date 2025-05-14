@@ -139,7 +139,7 @@ function nuJSChartsInclude(){
 	}
 
 	if ($nuConfigIncludeApexCharts != false) {
-		$pfile = "core/libs/apexcharts/apexcharts.min.js";
+		$pfile = "third_party/apexcharts/apexcharts.min.js";
 		nuInclude($pfile, 'script');
 	}
 }
@@ -150,7 +150,7 @@ function nuIncludeFiles() {
 	global $nuConfigIncludeJS;
 	global $nuConfigIncludeCSS;
 
-	nuJSIndexInclude('core/libs/jquery/jquery-3.7.1.min.js', false);
+	nuJSIndexInclude('third_party/jquery/jquery-3.7.1.min.js', false);
 	nuJSIndexInclude('core/nuwysiwyg.js');
 	nuJSIndexInclude('core/nuformclass.js');
 	nuJSIndexInclude('core/nuform.js');
@@ -161,17 +161,17 @@ function nuIncludeFiles() {
 	nuJSIndexInclude('core/nureportjson.js');
 	nuJSIndexInclude('core/nuajax.js');
 	nuJSChartsInclude();
-	nuJSIndexInclude('core/libs/ctxmenu/ctxmenu.min.js');
-	nuJSIndexInclude('core/libs/vanillajs-datepicker/datepicker-full.min.js');
-	nuJSIndexInclude('core/libs/jquery/jquery-confirm.min.js');
-	nuCSSIndexInclude('core/libs/uppy/uppy.min.css');
-	nuJSIndexInclude('core/libs/uppy/uppy.min.js');
+	nuJSIndexInclude('third_party/ctxmenu/ctxmenu.min.js');
+	nuJSIndexInclude('third_party/vanillajs-datepicker/datepicker-full.min.js');
+	nuJSIndexInclude('third_party/jquery/jquery-confirm.min.js');
+	nuCSSIndexInclude('third_party/uppy/uppy.min.css');
+	nuJSIndexInclude('third_party/uppy/uppy.min.js');
 
-	nuJSIndexInclude('core/libs/select2/select2.min.js');
+	nuJSIndexInclude('third_party/select2/select2.min.js');
 
 	if (isset($nuConfigIncludeTinyMCE) && $nuConfigIncludeTinyMCE != false) {
 
-		nuJSIndexInclude('core/libs/tinymce/tinymce.min.js');
+		nuJSIndexInclude('third_party/tinymce/tinymce.min.js');
 	}
 
 	nuCSSIndexInclude('core/css/nubuilder4.css');
@@ -181,8 +181,8 @@ function nuIncludeFiles() {
 	$nuConfigIncludeCSS = isset($nuConfigIncludeCSS) ? $nuConfigIncludeCSS : '';
 	nuCSSIndexInclude($nuConfigIncludeCSS);
 
-	nuCSSIndexInclude('core/libs/select2/select2.min.css');
-	nuCSSIndexInclude('core/libs/vanillajs-datepicker/datepicker.min.css');
-	nuCSSIndexInclude('core/libs/jquery/jquery-confirm.min.css');
+	nuCSSIndexInclude('third_party/select2/select2.min.css');
+	nuCSSIndexInclude('third_party/vanillajs-datepicker/datepicker.min.css');
+	nuCSSIndexInclude('third_party/jquery/jquery-confirm.min.css');
 
 }

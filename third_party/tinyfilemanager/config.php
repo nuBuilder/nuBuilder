@@ -3,7 +3,7 @@
 // TFM Config will be stored here, do not remove
 // ***
 
-require_once(dirname(__FILE__). '/../../../nuconfig.php');
+require_once(dirname(__FILE__). '/../../nuconfig.php');
 
 global $nuConfigFileMangerUsers;
 
@@ -12,7 +12,7 @@ if (! isset($nuTfmNotAuth)) {
 	$sessionId = isset($_COOKIE['nu_TFM']) ? $_COOKIE["nu_TFM"] : '';
 	
 	if ($sessionId == '') {
-		nuAuthFailed();
+		nuAuthFailed('Invalid Session');
 	}
 
 	$DBCharset	= 'utf8';
@@ -32,26 +32,26 @@ if (! isset($nuTfmNotAuth)) {
 	
 	if ($result) {
 
-		$access = json_decode($result->sss_access, true);
+		$access = json_decode($result->sss_access);
 
 		$globalAccess = $access->session->global_access == '1';
 		$userId = $access->session->zzzzsys_user_id;
 		$userHasAccess = strpos($nuConfigFileMangerUsers,  $userId, 0) !== false;
 
 		if (!$globalAccess && !$userHasAccess) {
-			nuAuthFailed();
+			nuAuthFailed('Access Denied'.$sessionId);
 		}
 
 	} else {
-		nuAuthFailed();
+		nuAuthFailed('Session Expired');
 	}
 
 }
 
-function nuAuthFailed() {
+function nuAuthFailed($id) {
     header("Content-Type: text/html");
     header("HTTP/1.0 400 Bad Request");
-    die("Sorry. Invalid session id");
+    die("Tiny File Manager: ". $id);
 }
 
 

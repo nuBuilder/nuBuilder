@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 error_reporting(E_ALL & ~E_DEPRECATED);
 
-require_once(dirname(__FILE__). '/../../../nuconfig.php');
+require_once(dirname(__FILE__). '/../../nuconfig.php');
 
 $DBCharset	= 'utf8';
 $nuConfigDBPort = isset($nuConfigDBPort) ? $nuConfigDBPort : '3306';

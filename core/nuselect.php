@@ -2,14 +2,14 @@
 
 require_once('nucommon.php');
 
-nuJSInclude('libs/jquery/jquery-3.7.1.min.js');
+nuJSInclude('../third_party/jquery/jquery-3.7.1.min.js');
 nuJSInclude('nuselectclass.js');
 nuJSInclude('nuformclass.js');
 nuJSInclude('nuform.js');
 nuJSInclude('nuformdrag.js');
 nuJSInclude('nudrag.js');
 nuJSInclude('nureportdrag.js');
-nuJSIndexInclude('libs/vanillajs-datepicker/datepicker-full.min.js');
+nuJSIndexInclude('../third_party/vanillajs-datepicker/datepicker-full.min.js');
 nuJSInclude('numobile.js');
 nuJSInclude('nucommon.js');
 nuJSInclude('nuajax.js');				//-- calls to server
@@ -17,7 +17,7 @@ nuJSInclude('nureportjson.js');
 
 nuCSSInclude('css/nubuilder4.css');
 nuCSSInclude('css/nudrag.css');
-nuCSSIndexInclude('libs/vanillajs-datepicker/datepicker.min.css');
+nuCSSIndexInclude('../third_party/vanillajs-datepicker/datepicker.min.css');
 
 ?>
 

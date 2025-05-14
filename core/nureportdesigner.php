@@ -9,7 +9,7 @@ require_once('nusessiondata.php');
 
 	require_once('nucommon.php');
 
-	$jquery = "libs/jquery/jquery-3.7.1.min.js";
+	$jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 
 	nuJSInclude($jquery);
 	nuJSInclude('nuformclass.js');
@@ -17,14 +17,14 @@ require_once('nusessiondata.php');
 	nuJSInclude('nuformdrag.js');
 	nuJSInclude('nudrag.js');
 	nuJSInclude('nureportdrag.js');
-	nuJSIndexInclude('libs/vanillajs-datepicker/datepicker-full.min.js');
+	nuJSIndexInclude('../third_party/vanillajs-datepicker/datepicker-full.min.js');
 	nuJSInclude('nucommon.js');
 	nuJSInclude('nuajax.js');			//-- calls to server
 	nuJSInclude('nureportjson.js');
 
 	nuCSSInclude('css/nubuilder4.css');
 	nuCSSInclude('css/nudrag.css');
-	nuCSSIndexInclude('libs/vanillajs-datepicker/datepicker.min.css');
+	nuCSSIndexInclude('../third_party/vanillajs-datepicker/datepicker.min.css');
 
 
 	$f = nuFormatList();

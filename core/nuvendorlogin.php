@@ -59,17 +59,18 @@ function nuGetVendorURL($appId, $table) {
 		$table = $table == "" ? "" : "&table=$table";
 
 		if ($table) {
-			$page = "libs/nudb/index.php?route=/sql&pos=0&db=$dbName&table=$table&$time=$time";
+			$page = "../third_party/nudb/index.php?route=/sql&pos=0&db=$dbName&table=$table&$time=$time";
 		} else {
-			$page = "libs/nudb/index.php?route=/database/structure&server=1&db=$dbName&$time=$time";
+			$page = "../third_party/nudb/index.php?route=/database/structure&server=1&db=$dbName&$time=$time";
 		}
 
 	} elseif ($appId == 'TFM') {
-		$page = "libs/tinyfilemanager/tinyfilemanager.php";
+		$page = "../third_party/tinyfilemanager/tinyfilemanager.php";
 	}
 
 	$cookieOptions = [
-		'httponly' => true
+		'httponly' => true,
+		'path' => '/'
 	];
 
 	if (nuIsHTTPS()) {

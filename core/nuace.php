@@ -1,6 +1,6 @@
 <?php
 require_once('nusessiondata.php');
-$jquery = "libs/jquery/jquery-3.7.1.min.js";
+$jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 ?>
 <!DOCTYPE html>
 <html>
@@ -9,11 +9,11 @@ $jquery = "libs/jquery/jquery-3.7.1.min.js";
 	<title>Ace Editor</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<script src="<?php echo $jquery; ?>"></script>
-	<script src="libs/ace/src-min-noconflict/ace.js" charset="utf-8"></script>
-	<script src="libs/ace/src-min-noconflict/ext-language_tools.js" charset="utf-8"></script>
-	<script src="libs/ace/src-min-noconflict/ext-beautify.js" charset="utf-8"></script>
+	<script src="../third_party/ace/src-min-noconflict/ace.js" charset="utf-8"></script>
+	<script src="../third_party/ace/src-min-noconflict/ext-language_tools.js" charset="utf-8"></script>
+	<script src="../third_party/ace/src-min-noconflict/ext-beautify.js" charset="utf-8"></script>
 	<link rel="stylesheet" href="css/nubuilder4.css">
-	<link rel="stylesheet" href="libs/fontawesome/css/all.min.css">
+	<link rel="stylesheet" href="../third_party/fontawesome/css/all.min.css">
 
 	<style>
 		.toolbar {
@@ -152,13 +152,14 @@ $jquery = "libs/jquery/jquery-3.7.1.min.js";
 		window.nuACEObjectLabel = $el.attr('data-nu-label') || $el.attr('title') || $el.attr('id');
 		document.title = window.nuACEObjectId + " - Ace Editor";
 
-		function nuLoad() {
+		function nuLoad() { 
 			ace.require("ace/ext/language_tools");
 			window.beautify = ace.require("ace/ext/beautify");
 			window.editor = ace.edit("nu_editor");
 
 			editor.setShowPrintMargin(false);
 			const theme = "ace/theme/" + (window.nuACETheme ? window.nuACETheme : 'monokai');
+		debugger;
 			editor.setTheme(theme);
 			editor.setOptions({
 				enableBasicAutocompletion: true,

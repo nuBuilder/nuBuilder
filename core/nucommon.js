@@ -791,7 +791,7 @@ function nuReformat(element) {
 function nuOpenAce(lang, obj) {
 
 	const ts = Date.now();
-	const theme = nuUXOptions.nuAceTheme || 'default';
+	const theme = nuUXOptions.nuAceTheme || 'dawn';
 
 	window.nuAce = [lang, obj, theme];
 	window.open(`core/nuace.php?${ts}`);

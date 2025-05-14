@@ -3,8 +3,8 @@
 require_once('nusession.php');
 require_once('nucommon.php');
 require_once('nudata.php');
-require_once('libs/tcpdf/tcpdf.php');
-define('FPDF_FONTPATH','libs/tcpdf/font/');
+require_once('../third_party/tcpdf/tcpdf.php');
+define('FPDF_FONTPATH','../third_party/tcpdf/font/');
 
 error_reporting(E_ALL & ~E_DEPRECATED);
 
