@@ -26,7 +26,7 @@ nuBuilder Forte streamlines essential database operations:
 ## Why nuBuilder Forte?
 
 - **🚀 Rapid Development**: Quickly build complex forms, reports, and database queries.
-- **🎨 Easy Customization**: Extensive customization options using built-in builders or custom code.
+- **🎨 Easy Customisation**: Extensive customisation options using built-in builders or custom code.
 - **🙌 User-Friendly**: Intuitive UI ensures minimal training for end-users.
 - **🌎 Open-Source & Web-Based**: Free, accessible from anywhere, no installation required for users.
 
@@ -39,7 +39,7 @@ nuBuilder Forte streamlines essential database operations:
 - ✅ **SQL Builder** – Effortlessly design database queries.
 - ✅ **Advanced User Management** – Manage users, roles, and permissions.
 - ✅ **Security & Authentication** – Built-in support for 2FA and SSO.
-- ✅ **Customization & Extensions** – Customize extensively with JavaScript, PHP, HTML, and CSS.
+- ✅ **Customisation & Extensions** – Customise extensively with JavaScript, PHP, HTML, and CSS.
 
 ---
 
@@ -48,13 +48,12 @@ nuBuilder Forte streamlines essential database operations:
 | Feature                              | Description                                           |
 | ------------------------------------ | ----------------------------------------------------- |
 | 📋 **Form & Report Builder**         | Visually create forms and reports                     |
-| 📊 **Graph & Charting Tools**        | Generate insightful visualizations                    |
+| 📊 **Graph & Charting Tools**        | Generate insightful visualisations                    |
 | 🔐 **Secure Authentication (2FA, SSO)** | Enhance security with built-in authentication         |
-| 🌍 **Localization & Translations**   | Support multiple languages seamlessly                 |
+| 🌍 **Localisation & Translations**   | Support multiple languages seamlessly                 |
 | 📧 **Email Integration & Templates** | Easily send emails directly from your apps            |
 | 📦 **CSV & File Management**         | Import/export CSV data, manage files                  |
 | ⚙️ **Calculated & Custom Fields**    | Dynamically calculate data within forms               |
-| 📱 **Responsive Design**             | Optimized for mobile, tablet, and desktop devices     |
 
 ---
 
@@ -70,10 +69,10 @@ nuBuilder Forte streamlines essential database operations:
 
 1. **Download and unzip** nuBuilder files.
 2. **Upload** to your web server directory.
-3. **Create** a new MySQL or MariaDB database (e.g., `nubuilder4`).
+3. **Create** a new MySQL or MariaDB database (e.g., `nubuilder`).
 4. **Rename** the `nuconfig-sample.php` file to `nuconfig.php` and update it with your database credentials.
 5. **Navigate** to your installation URL:
-   `http://yoursite.com/nubuilder4/index.php`
+   `http://yoursite.com/nubuilder/index.php`
 6. **Log in** using the default credentials:
    Username: `globeadmin`
 
@@ -100,7 +99,11 @@ nuBuilder Forte streamlines essential database operations:
 
 ## License
 
-nuBuilder Forte is licensed under the [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html) open-source license.
+nuBuilder Forte is licensed under the [GPL v3](https://www.gnu.org/licenses/gpl-3.0.html) open-source license.
+
+| **Permissions**                                            | **Conditions**                                                            | **Limitations**    |
+|------------------------------------------------------------|---------------------------------------------------------------------------|--------------------|
+| - Commercial use<br>- Distribution<br>- Modification<br>- Patent use<br>- Private use | - Disclose source<br>- License and copyright notice<br>- Same license<br>- State changes | - Liability<br>- Warranty |
 
 ---
 
