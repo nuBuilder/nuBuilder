@@ -4622,6 +4622,7 @@ function nuBrowseSetCellAttributes(div, rowIndex, colIndex, column) {
 
 	div.setAttribute('data-nu-row', rowIndex);
 	div.setAttribute('data-nu-column', colIndex);
+	div.setAttribute('data-nu-column-id', column.id);
 	div.style.textAlign = nuAlign(column.align);
 	div.style.overflow = 'hidden';
 	div.style.padding = (column.width < 0 ? 0 : undefined) + 'px';
