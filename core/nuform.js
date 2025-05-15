@@ -4744,6 +4744,53 @@ function nuSetBrowseColumnWidth(column, width) {
 
 }
 
+function nuBrowseRow(elOrEvent, columnNumberOrId) {
+
+	// Normalize to a jQuery-wrapped element
+	const $invoked = (elOrEvent && elOrEvent.target)
+	 ? $(elOrEvent.currentTarget || elOrEvent.target)
+	 : $(elOrEvent);
+
+	// Read the row index from the invoking element
+	const rowAttr = $invoked.attr('data-nu-row');
+	const row = rowAttr != null ? parseInt(rowAttr, 10) : null;
+
+	// If a columnNumberOrId was provided, select that cell in the same row,
+	// otherwise stick with the invoking element itself
+	let $cell = $invoked;
+
+	if (columnNumberOrId != null && row != null) {
+		// 1) try to find a cell in this row by data-nu-column-id override
+		const $byPk = $(`.nuCell[data-nu-row="${row}"][data-nu-column-id="${columnNumberOrId}"]`);
+		if ($byPk.length) {
+			$cell = $byPk;
+		}
+		// 2) otherwise fall back to the row/column-id lookup
+		else {
+			$cell = $(`#nucell_${row}_${columnNumberOrId}`);
+		}
+	}
+
+	const pk = $cell.attr('data-nu-primary-key');
+	const colAttr = $cell.attr('data-nu-column');
+	const column = parseInt(colAttr, 10);
+	const colId = $cell.attr('data-nu-column-id');
+	const html = $cell.html();
+	const value = $cell.text();
+
+	return {
+		pk,
+		row,
+		column,
+		colId,
+		html,
+		value,
+		$cell
+	};
+
+}
+
+
 function nuClickSearchColumn(e) {
 
 	const c = e.target.id.substr(12);
