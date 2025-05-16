@@ -17,8 +17,9 @@ function nuInitJSOptions() {
 		'nuCalendarStartOfWeek': 'Sunday',		// nuCalendar: Start of Week: Sunday (default) or Monday
 		'nuCalendarWeekNumbers': 'None',		// nuCalendar: 0 = None, 1 = ISO 8601, 2 = Western traditional, 3 = Middle Eastern
 		'nuSelect2Theme': 'default',			// select2 theme (default, classic) Default: default
-		'nuEditCloseAfterSave': 'None',			// Close forms after saving. Values: None, All, User, System
+		'nuEditCloseAfterSave': 'None',			// Close forms after saving. Values: none, All, User, System
 		'nuShowJSErrors': 'None',				// Show JS errors in alert message
+		'nuHideTabTitleIfOnlyOne': 'None',		// Hide tab title if only one tab. Values: None, globeadmin, user, everyone
 		'nuShowURLPermaLink': false,			// Show URL permalink
 		'nuDebugIcon': true,
 		'nuPHPIcon': true,
@@ -99,6 +100,7 @@ function nuBuildForm(formObj) {
 	nuAddBreadcrumbs();
 
 	nuAddEditTabs('', formObj);
+	nuSetHideTabIfOnlyOne();
 
 	if (typeof window.nuBeforeAddActionButtons === 'function') {
 		nuBeforeAddActionButtons();
@@ -362,6 +364,33 @@ function nuInitShowJSErrors() {
 	}
 
 }
+
+function nuSetHideTabIfOnlyOne() {
+
+	if (window.nuUXOptions.nuHideTabTitleIfOnlyOne && $('.nuTab').length === 1) {
+
+		const nuHideTabTitleIfOnlyOne = window.nuUXOptions.nuHideTabTitleIfOnlyOne;
+		let hideTab = false;
+		switch (nuHideTabTitleIfOnlyOne.toLowerCase()) {
+			case "globeadmin":
+				hideTab = nuGlobalAccess()
+				break;
+			case "user":
+				hideTab = !nuGlobalAccess();
+				break;
+			case "everyone":
+				hideTab = true;
+				break;
+		}
+
+		if (hideTab) {
+			$('.nuTab').hide();
+		}
+
+	}
+
+}
+
 
 function nuAddHome() {
 
@@ -4748,8 +4777,8 @@ function nuBrowseRow(elOrEvent, columnNumberOrId) {
 
 	// Normalize to a jQuery-wrapped element
 	const $invoked = (elOrEvent && elOrEvent.target)
-	 ? $(elOrEvent.currentTarget || elOrEvent.target)
-	 : $(elOrEvent);
+		? $(elOrEvent.currentTarget || elOrEvent.target)
+		: $(elOrEvent);
 
 	// Read the row index from the invoking element
 	const rowAttr = $invoked.attr('data-nu-row');
