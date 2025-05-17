@@ -1403,7 +1403,7 @@ function nuINPUTCalc($id, thisObj, p) {
 function nuINPUTSetValue($id, thisObj, inputType) {
 
 	if (inputType == 'button') {
-		$id.html(nuTranslate(thisObj.value));
+		$id.html(`<span class="nuButtonLabel">${nuTranslate(thisObj.value)}</span>`)
 		$id.attr("data-nu-org-label", thisObj.value);
 	} else {
 
