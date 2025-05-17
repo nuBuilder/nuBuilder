@@ -494,7 +494,7 @@ function nuUpdateExistingSession() {
 	if ((($timeout * 60) + $_SESSION['nubuilder_session_data']['SESSION_TIMESTAMP']) >= time()) {
 		$_SESSION['nubuilder_session_data']['SESSION_TIMESTAMP'] = time();
 	} else {
-		nuDie('Your session has timed out.');
+		nuDie(nuTranslate('Your session has timed out.'));
 	}
 
 }
