@@ -1505,7 +1505,7 @@ function nuAttachFontAwesome(id, iconClass, size = 'medium', appendToEnd = false
 	let targetObj = $(target);
 	if (targetObj.length === 0) return;
 
-	const needsSpace = targetObj.html().trim().length > 0 ? '&nbsp;' : '';
+	const needsSpace = targetObj.text().trim().length > 0 ? '&nbsp;' : '';
 	const content = appendToEnd ? needsSpace + iconHtml : iconHtml + needsSpace;
 
 	appendToEnd ? targetObj.append(content) : targetObj.prepend(content);
