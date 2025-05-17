@@ -2497,8 +2497,18 @@ function nuSetValue(id, value, method, change) {
 		return true;
 	}
 
-	if (method === undefined && obj.is(':button')) {
-		obj.text(value);
+	if (method === undefined && (obj.is('button') || (obj.is('input') && obj.attr('type') === 'button'))) {
+		if (obj.is('button')) {
+			const label = obj.find('.nuButtonLabel');
+			if (label.length) {
+				label.text(value);
+			} else {
+				obj.text(value);
+			}
+		} else {
+			// It's an <input type="button">
+			obj.val(value);
+		}
 	} else if (obj.is(':checkbox') || obj.is(':radio')) {
 		if (change) obj.prop('checked', value).trigger("change");
 	} else if (obj.is('select') && method === 'text') {
