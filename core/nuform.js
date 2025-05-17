@@ -2010,7 +2010,7 @@ function nuRUN(w, i, l, p, prop) {
 			'value': nuTranslate(obj.label),
 			'onclick': nuRUNGetOnClickEvent(obj)
 		})
-			.html(nuTranslate(obj.label))
+			.html(`<span class="nuButtonLabel">${nuTranslate(obj.label)}</span>`)
 			.addClass('nuButton');
 
 		$('#' + id).attr("data-nu-org-label", obj.label);
