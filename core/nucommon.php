@@ -54,9 +54,9 @@ function nuSetTimeLimit($seconds) {
 
 function nuTT() {
 
-	$fn = '___nu' . uniqid('1') . '___';
-
-	return $fn;								//--create a unique name for a Temp Table
+	// Generate a unique table name with a prefix (used to create a temporary table)
+	$unique_name = '___nu' . uniqid('1', true) . '___';
+	return str_replace('.', '_', $unique_name);
 
 }
 

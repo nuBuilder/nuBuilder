@@ -537,46 +537,46 @@ function nuDefaultObject($r, $t) {
 	$labelOnTop = null;
 
 	/*
-																																						  if (nuIsMobile() && isset($r->sob_all_json)) {
+																																												  if (nuIsMobile() && isset($r->sob_all_json)) {
 
-																																							  $json = $r->sob_all_json;
-																																							  if ($json != '') {
+																																													  $json = $r->sob_all_json;
+																																													  if ($json != '') {
 
-																																								  $obj	= nuJsonDecode($json, true);
+																																														  $obj	= nuJsonDecode($json, true);
 
-																																								  $type		= nuObjKey($obj,'type', null);
+																																														  $type		= nuObjKey($obj,'type', null);
 
-																																								  if ($type != null) {
+																																														  if ($type != null) {
 
-																																									  $mobile		= nuObjKey($type,'mobile', null);
+																																															  $mobile		= nuObjKey($type,'mobile', null);
 
-																																									  if ($mobile == true) {
+																																															  if ($mobile == true) {
 
-																																										  $visible	= nuObjKey($mobile,'visible', null);
-																																										  $name		= nuObjKey($mobile,'name', null);
-																																										  $labelOnTop	= nuObjKey($mobile,'labelontop', null);
-																																										  $labelOnTop	= $labelOnTop == null || $labelOnTop == true;
+																																																  $visible	= nuObjKey($mobile,'visible', null);
+																																																  $name		= nuObjKey($mobile,'name', null);
+																																																  $labelOnTop	= nuObjKey($mobile,'labelontop', null);
+																																																  $labelOnTop	= $labelOnTop == null || $labelOnTop == true;
 
-																																										  $size		= nuObjKey($mobile,'size');
-																																										  if ($size != null) {
-																																											  $width		= nuObjKey($size, 'width', null);
-																																											  $height		= nuObjKey($size, 'height', null);
-																																										  }
+																																																  $size		= nuObjKey($mobile,'size');
+																																																  if ($size != null) {
+																																																	  $width		= nuObjKey($size, 'width', null);
+																																																	  $height		= nuObjKey($size, 'height', null);
+																																																  }
 
-																																										  $location		= nuObjKey($mobile,'location');
-																																										  if ($location != null) {
-																																											  $top		= nuObjKey($location, 'top', null);
-																																											  $left		= nuObjKey($location, 'left', null);
-																																										  }
+																																																  $location		= nuObjKey($mobile,'location');
+																																																  if ($location != null) {
+																																																	  $top		= nuObjKey($location, 'top', null);
+																																																	  $left		= nuObjKey($location, 'left', null);
+																																																  }
 
-																																									  }
+																																															  }
 
-																																								  }
+																																														  }
 
-																																							  }
+																																													  }
 
-																																						  }
-																																						  */
+																																												  }
+																																												  */
 
 	$o->mobile = $mobile;
 	$o->labelOnTop = $labelOnTop;
@@ -1239,13 +1239,14 @@ function nuBrowseRows($f) {
 	$s .= " LIMIT " . ($start < 0 ? 0 : $start) . ", $rows";
 
 	$s = str_replace('$' . $f->primary_key . '$', $f->primary_key, $s);
+
 	$t = nuRunQuery($s);
 
 	while ($r = db_fetch_row($t)) {
 		$a[] = $r;
 	}
 
-	nuRunQuery(nuReplaceHashVariables('DROP TABLE IF EXISTS #TABLE_ID#'));
+	nuRunQuery(nuReplaceHashVariables('DROP TABLE IF EXISTS `#TABLE_ID#`'));
 
 	return [$a, $rowData, $S->SQL];
 
