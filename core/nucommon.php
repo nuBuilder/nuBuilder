@@ -2485,14 +2485,8 @@ function nuGlobalAccess($post = false) {
 
 }
 
-function nuFormatDate($d, $format) {
-
-	if (nuTrim($d) == "")
-		return "";
-
-	$date = DateTime::createFromFormat('Y-m-d', $d);
-	return $date->format($format);
-
+function nuFormatDate($dateString, $outputFormat, $inputFormat = 'Y-m-d') {
+	return nuFormatDateTime($dateString, $outputFormat, $inputFormat);
 }
 
 function nuFormatDateTime($dateString, $outputFormat, $inputFormat = 'Y-m-d H:i:s') {
