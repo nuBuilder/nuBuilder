@@ -2495,13 +2495,18 @@ function nuFormatDate($d, $format) {
 
 }
 
-function nuFormatDateTime($d, $format) {
+function nuFormatDateTime($dateString, $outputFormat, $inputFormat = 'Y-m-d H:i:s') {
 
-	if (nuTrim($d) == "")
+	if (nuTrim($dateString) == "") {
 		return "";
+	}
 
-	$date = DateTime::createFromFormat('Y-m-d H:i:s', $d);
-	return $date->format($format);
+	$dateObject = DateTime::createFromFormat($inputFormat, $dateString);
+	if ($dateObject === false) {
+		return "";
+	}
+
+	return $dateObject->format($outputFormat);
 
 }
 
