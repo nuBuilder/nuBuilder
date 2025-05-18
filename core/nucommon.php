@@ -998,10 +998,19 @@ function nuGetUserAccess() {
 		$sessionData['SESSION_SSS_TIME_EXISTS'] = in_array("sss_time", db_field_names('zzzzsys_session'));
 	}
 
+
+	global $nuConfigTimeOut;
+	$gcLifetime = 36000; // 10 hours
+	if (isset($nuConfigTimeOut) && is_int($nuConfigTimeOut) && $nuConfigTimeOut > 0) {
+		$gcLifetime = 60 * $nuConfigTimeOut;
+	}
+
 	if ($sessionData['SESSION_SSS_TIME_EXISTS']) {
-		$s = time();
-		nuRunQuery("UPDATE zzzzsys_session SET sss_time = $s WHERE zzzzsys_session_id = ? ", [$sessionId]);
-		nuRunQuery("DELETE FROM zzzzsys_session WHERE sss_time < $s - 36000");										//-- 10 hours
+		$now = time();
+		nuRunQuery('UPDATE zzzzsys_session SET sss_time = ? WHERE zzzzsys_session_id = ?', [$now, $sessionId]);
+
+		$expiryThreshold = $now - $gcLifetime;
+		nuRunQuery('DELETE FROM zzzzsys_session WHERE sss_time < ?', [$expiryThreshold]);
 	}
 
 	return $A;
