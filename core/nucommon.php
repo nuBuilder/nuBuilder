@@ -2612,18 +2612,17 @@ function nuAddToHashCookies($i, $nj, $global = false) {
 }
 
 function nuDeleteFiles($file_list = []) {
-	if (!is_array($file_list) || empty($file_list())) {
+
+	if (!is_array($file_list) || empty($file_list)) {
 		return;
 	}
-	if (nuIsArrayAssociative($file_list)) {
-		foreach ($file_list as $filename => $filesource) {
-			@unlink($filesource);
-		}
-	} else {
-		foreach ($file_list as $file) {
+
+	foreach ($file_list as $file) {
+		if (is_string($file) && file_exists($file)) {
 			@unlink($file);
 		}
 	}
+
 }
 
 function nuIsArrayAssociative($arr) {
