@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 21, 2025 at 02:52 PM
+-- Generation Time: May 21, 2025 at 05:37 PM
 -- Server version: 8.2.0
 -- PHP Version: 7.4.33
 
@@ -673,7 +673,8 @@ INSERT INTO `zzzzsys_event` (`zzzzsys_event_id`, `sev_zzzzsys_object_id`, `sev_e
 ('nu67c945696912cde', 'nu67c940bf969f659', 'onchange', 'nuUserSetNameParts(this);', NULL),
 ('nu67c943c0ae2172f', 'nu5bad6cb33ad88b7', 'onchange', 'nuUserSetNameParts(this);', NULL),
 ('nu67c9bd2c42d0474', 'nu67c940d83501a9a', 'onchange', 'nuUserSetNameParts(this);', NULL),
-('nu67f84bdfdb15c65', 'nu5bad6cb33ed5ffe', 'oninput', 'nuDisable(\'nuProcRunProcedureButton\');', NULL);
+('nu67f84bdfdb15c65', 'nu5bad6cb33ed5ffe', 'oninput', 'nuDisable(\'nuProcRunProcedureButton\');', NULL),
+('nu682e0f0f128485f', 'nu682ce4b0a6444a8', 'onclick', 'if (nuIsNewRecord() || !nuIsSaved()) {\n    nuMessage(nuTranslate(\'Form must be saved first..\'));\n} else {\n    nuPopup(\'nu682ce623ae184f0\'); // nuimportaccesslevel\n}', NULL);
 
 -- --------------------------------------------------------
 
@@ -849,7 +850,7 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`, `inf_json`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.7-2025.05.21.00', NULL),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.7-2025.05.21.01', NULL),
 ('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.7-2025.05.18.04', NULL);
 
 -- --------------------------------------------------------
@@ -1569,7 +1570,7 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu67f1436f5c9633b', 'nuform', 'zzzzsys_form', 'select', 'savedItemsDropdown', 'Versions', 'nu5bad6cb37026348', 300, 29, 912, 166, 22, '1', 'right', '0', '2', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', '|', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('nu67f22e3baab43be', 'nufile', 'zzzzsys_file', 'run', 'run_nufile_associated_objects', '', 'nu67f22d53d2c87ad', 90, 28, 22, 844, 441, '0', 'center', '0', '0', NULL, '0', NULL, NULL, NULL, NULL, 'nu67f22e3ba027e23', '#RECORD_ID#', 'i', NULL, 'F', NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('nu6819850150e77b6', 'nuobject', 'zzzzsys_object', 'run', 'sob_input_nuformat_edit_button', '', 'nu5bad6cb36a4af06', 1000, 86, 411, 30, 22, '1', 'center', '0', '0', NULL, '0', NULL, NULL, NULL, NULL, 'nuformat', NULL, 'b', '3', 'F', NULL, NULL, NULL, '0', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'zzzzsys_tab', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'fa-regular fa-pen-to-square', NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-('nu682ce4b0a6444a8', 'nuform', 'zzzzsys_form', 'run', 'acl_copy_from_form_button', 'Import...', 'nu5fdb9ff026348', 500, 14, 985, 200, 25, '1', 'center', '0', '0', NULL, '0', NULL, NULL, NULL, NULL, 'nu682ce623ae184f0', NULL, 'b', '3', 'F', NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('nu682ce4b0a6444a8', 'nuform', 'zzzzsys_form', 'input', 'acl_copy_from_form_button', 'Import...', 'nu5fdb9ff026348', 500, 14, 985, 200, 25, '1', 'center', '0', '0', NULL, '1', NULL, NULL, NULL, NULL, 'nu682ce623ae184f0', NULL, NULL, NULL, 'F', NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'button', NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('nu682ce623b704846', 'nu682ce623ae184f0', NULL, 'lookup', 'cpa_form_id', 'Form', 'nu682ce623ae19b8a', 10, 43, 163, 100, 22, '1', 'left', '1', '0', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, 'sfo_code', 'sfo_description', '250', NULL, 'nu682ddc25aa0bb5f', NULL, NULL, 'zzzzsys_form', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '[\'North\',\'South\',\'East\',\'West\']', NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('nu682ce623b71fd0f', 'nu682ce623ae184f0', NULL, 'input', 'cpa_delete_all', 'Remove all existing', 'nu682ce623ae19b8a', 20, 75, 163, 16, 22, '1', 'right', '0', '2', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'N|$ 1,000.00', 'checkbox', NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('nu682ce623b73ff72', 'nu682ce623ae184f0', NULL, 'select', 'cpa_conflict', 'If exists', 'nu682ce623ae19b8a', 30, 85, 163, 100, 22, '1', 'left', '1', '0', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', '0|Skip|\n1|Overwrite', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
