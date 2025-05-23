@@ -223,11 +223,12 @@ function nuFFInsertTab($tabId, $formId) {
 
 }
 
-function nuFFInsertForm($formId, $formType, $formCode, $formDesc, $table, $Pk) {
+function nuFFInsertForm($formId, $formType, $formCode, $formDesc, $table, $pk) {
 
 	$insert = "
 		INSERT INTO zzzzsys_form
 			(zzzzsys_form_id,
+			sfo_status,
 			sfo_type,
 			sfo_code,
 			sfo_description,
@@ -244,16 +245,18 @@ function nuFFInsertForm($formId, $formType, $formCode, $formDesc, $table, $Pk) {
 	";
 
 	$table = $formType == 'launch' ? '' : $table;
-	$Pk = $formType == 'launch' ? '' : $Pk;
+	$pk = $formType == 'launch' ? '' : $pk;
 	$sql = $formType == 'launch' ? '' : "SELECT * FROM $table";
+	$status = '1'; // -- active
 
 	$arg = [
 		$formId,								// -- zzzzsys_form_id
+		$status,								// -- sfo_status
 		$formType,								// -- sfo_type
 		$formCode,								// -- sfo_code
 		ucfirst($formDesc),						// -- sfo_description
 		$table,									// -- sfo_table
-		$Pk,									// -- sfo_primary_key
+		$pk,									// -- sfo_primary_key
 		$sql,									// -- sfo_browse_sql
 		'',										// -- sfo_browse_redirect_form_id
 		'0',									// -- sfo_browse_row_height
