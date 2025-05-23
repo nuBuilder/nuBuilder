@@ -166,6 +166,10 @@ function nuRunUpdate($jsonId, $u = null, $p = null) {
 	nuAppendToSystemTables();
 	nuPrintUpdateMessage('Inserted TEMP FILES into SYSTEM FILES', $i);
 	$i++;
+	
+	nuOtherUpdates();
+	nuPrintUpdateMessage('Other Table Tweaks', $i);
+	$i++;	
 
 	// Import language files
 	nuImportLanguageFiles();

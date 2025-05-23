@@ -29,6 +29,7 @@ function nuAlterSystemTables() {
 		"ALTER TABLE `zzzzsys_form` ADD `sfo_style` MEDIUMTEXT NULL DEFAULT NULL AFTER `sfo_edit_javascript`;",
 		"ALTER TABLE `zzzzsys_form` ADD `sfo_mobile_view` VARCHAR(1) NULL DEFAULT NULL AFTER `sfo_style`;",
 		"ALTER TABLE `zzzzsys_form` ADD `sfo_group` VARCHAR(100) NULL DEFAULT NULL AFTER `sfo_description`;",
+		"ALTER TABLE `zzzzsys_form` ADD `sfo_status` VARCHAR(1) NULL DEFAULT NULL AFTER `sfo_group`;",
 		"ALTER TABLE `zzzzsys_session` ADD `sss_hashcookies` MEDIUMTEXT NULL DEFAULT NULL AFTER `sss_access`;",
 		"ALTER TABLE `zzzzsys_session` ADD COLUMN sss_login_time timestamp NULL DEFAULT current_timestamp() AFTER sss_time;",
 		"ALTER TABLE `zzzzsys_tab` ADD `syt_access` VARCHAR(1) NULL DEFAULT NULL AFTER `syt_help`;",
@@ -368,10 +369,6 @@ function nuAppendToSystemTables() {
 			nuDropDatabaseObject("sys_" . $table, ['TABLE']);
 		}
 
-
-		// $s		= "UPDATE zzzzsys_setup SET set_denied = '1'";
-		// nuRunQuery($s);
-
 	} catch (Throwable $e) {
 		nuInstallException($e);
 	} catch (Exception $e) {
@@ -451,6 +448,10 @@ function nuSetCollation() {
 
 	}
 
+}
+
+function nuOtherUpdates() {
+	nuRunQueryNoDebug("UPDATE `zzzzsys_form` SET sfo_status = '1' WHERE IFNULL(sfo_status,'') = '' ");
 }
 
 function nuGetSupportedLanguagesAsJson() {

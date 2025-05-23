@@ -58,7 +58,9 @@ function nuBeforeEdit($FID, $RID) {
 
 		if (!$globalAccess) {
 			$ft = nuGetFormPermission($FID, 'slf_form_type');
-			if (($recordID == "" && $ft == '1') || ($recordID !== "" && $ft == '0')) {
+			$formSatus = nuGetFormStatus($FID);
+			
+			if (($recordID == "" && $ft == '1') || ($recordID !== "" && $ft == '0') || $formSatus != '1' /* active */) {
 				nuDisplayError(nuTranslate('Access Denied'));
 				return;
 			}
@@ -1520,6 +1522,11 @@ function nuGetFormPermission($formId, $permissionField) {
 	return $value;
 
 }
+
+function nuGetFormStatus($formId) {
+	return db_fetch_value('zzzzsys_form', 'zzzzsys_form_id', $formId, 'sfo_status');
+}
+
 
 function nuFormAccessList($accessData) {
 
