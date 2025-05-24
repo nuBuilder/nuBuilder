@@ -13,6 +13,7 @@ window.nuOnDisableGlobal = null;
 window.top.document.nuHideMessage = true;
 window.nuDragID = 1000;
 window.nuLastForm = '';
+window.nuLastFocus = null;
 window.nuNEW = '';
 window.nuColor = '';
 window.nuImage = '';
@@ -662,15 +663,21 @@ function nuCreateDialog(t) {
 
 			}
 
-			nuMessageRemove(true);
-			$('#nuDragDialog').remove();
-			$('#nuModal').remove();
-			$('body').off('.popup');
+			this.closeDialog();
 
 		}
 
 	}
 
+	this.closeDialog = function () {
+
+		nuMessageRemove(true);
+		$('#nuDragDialog').remove();
+		$('#nuModal').remove();
+		$('body').off('.popup');
+
+		nuFocusElement(window.nuLastFocus);
+	};
 
 	this.down = function (event) {
 
@@ -837,6 +844,7 @@ function nuBindCtrlEvents() {
 				$(ae).trigger("blur").trigger("focus");
 				if (nuFormsUnsaved() == 0) {
 					nuClosePopup();
+					// nuDialog.closeDialog();
 				} else {
 					if (confirm(nuTranslate('Leave this form without saving?'))) {
 						nuClosePopup();
@@ -1383,9 +1391,18 @@ function nuOnFocus(e) {
 	$('.nuTabSelected').attr('nu-data-active-element', document.activeElement.id);
 }
 
+function nuFocusElement(element) {
+
+	if (element && element.length) {
+		element.trigger("focus");
+	}
+
+}
+
 function nuClick(e) {
 
 	const target = $(e.target);
+
 	const parentClasses = target.parents().map(function () {
 		return this.className;
 	}).get();
@@ -1737,6 +1754,7 @@ function nuClosePopup() {
 
 	parent.$('#nuModal').remove();
 	parent.$('#nuDragDialog').remove();
+
 
 }
 
