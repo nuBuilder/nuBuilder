@@ -4024,7 +4024,7 @@ function nuBuildOptionsList(items, parentId, contextType) {
 				position: 'absolute',
 				top: topPos - 4,
 				left: 30,
-				width: 35 + maxWidth - (contextType === 'subform' ? 55 : 0),
+				width: maxWidth - (contextType === 'subform' ? 55 : 0) + 10,
 				height: 0
 			})
 			: $('<div>')
