@@ -2668,8 +2668,13 @@ function nuSetLabelText(id, text, translate) {
 		text = nuTranslate(text);
 	}
 
+	let obj = $('#' + id);
+	if (obj.is('label')) {
+		id = id.slice(6);  // Remove 'label_' prefix
+		obj = $('#' + id);
+	}
+
 	const label = $('#label_' + id);
-	const obj = $('#' + id);
 	const left = obj.nuCSSNumber('left');
 	const top = obj.nuCSSNumber('top');
 
