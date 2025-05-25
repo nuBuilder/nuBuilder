@@ -2481,6 +2481,17 @@ function nuGetValue(id, method) {
 		return obj.text();
 	}
 
+	if (obj.is('label')) {
+		switch (method) {
+			case 'for':
+				return obj.attr('for') || null;
+			case 'html':
+				return obj.html();
+			default:
+				return obj.text();
+		}
+	}
+
 	switch (method) {
 		case 'html':
 			return obj.html();
