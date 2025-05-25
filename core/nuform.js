@@ -5046,8 +5046,8 @@ function nuBuildLookup(id, search, like) {
 	const target = obj.attr('data-nu-target');
 	const prefix = obj.attr('data-nu-prefix');
 	window.nuSubformRow = Number(prefix.substr(prefix.length - 3));
-	window.nuLastFocus = $('#'  + target + 'code');
-	
+	window.nuLastFocus = $('#' + target + 'code');
+
 	if (arguments.length < 3) {
 		like = '';
 	}

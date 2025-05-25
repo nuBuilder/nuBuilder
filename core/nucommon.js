@@ -2803,6 +2803,24 @@ function nuInsertAtCaret(id, string) {
 
 }
 
+function nuComposeURL(url, text, target = '_blank', protocol = '', title = '') {
+
+	if (!url || typeof url !== 'string' || url.trim() === '') {
+		return text;
+	}
+
+	url = url.trim();
+	protocol = protocol.trim();
+	title = title.trim();
+
+	if (protocol === 'mailto:' || protocol === 'tel:') {
+		return `<a href="${protocol}${url}" title="${title}">${text}</a>`;
+	}
+
+	return `<a href="${protocol}${url}" target="${target}" title="${title}">${text}</a>`;
+
+}
+
 function nuGetURLParameterValue(parameterName) {
 	const urlParams = new URLSearchParams(window.location.search);
 	return urlParams.get(parameterName);
