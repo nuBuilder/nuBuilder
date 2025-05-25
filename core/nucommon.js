@@ -2550,6 +2550,18 @@ function nuSetValue(id, value, method, change) {
 		});
 	} else if (obj.hasClass('nuEditor')) {
 		nuTinyMCESetContent(id, value)
+	} else if (obj.is('label')) {
+		switch (method) {
+			case 'for':
+				obj.attr('for', value);
+				break;
+			case 'text':
+				obj.text(value);
+				break;
+			default:
+				nuSetLabelText(id, value, change);
+
+		}
 	} else {
 		switch (method) {
 			case 'html':
