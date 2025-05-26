@@ -233,7 +233,7 @@ function nuAdminToolsCreateMenuConfig(menuType, event) {
 
 	const baseMenus = {
 		Tools: [
-			{ text: nuContextMenuItemText("AI Prompt Generator", "fas fa-magic"), action: () => nuAdminToolsOpenForm('nu683303b24440729', '-1', event, 'popup') }
+			{ text: nuContextMenuItemText("AI Prompt Generator", "fas fa-magic"), action: () => nuAdminToolsOpenForm('nupromptgenerator', '-1', event, 'popup') }
 		]
 	};
 

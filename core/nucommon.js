@@ -902,7 +902,7 @@ function nuBindCtrlEvents() {
 				// Actions available on 'browse' or 'edit' form types
 				...(isBrowseOrEdit && {
 					'f': { action: () => nuPopup("nuform", formId), condition: globalAccess },
-					'k': { action: () => nuPopup("nu683303b24440729", "-1", ''), condition: globalAccess },
+					'k': { action: () => nuPopup("nupromptgenerator", "-1", ''), condition: globalAccess },
 					'o': { action: () => nuPopup("nuobject", "", formId), condition: globalAccess },
 					'm': { action: () => nuShowFormInfo(), condition: globalAccess },
 					'v': { action: () => nuShowVersionInfo(), condition: globalAccess },
