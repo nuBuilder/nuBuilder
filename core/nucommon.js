@@ -175,7 +175,7 @@ $.fn.nuFocusWithoutScrolling = function () {
 	let x = element.scrollX, y = element.scrollY;
 
 	this.attr('inputmode', 'none');
-	this.trigger("focus");
+	nuSetFocus(this);
 	this.removeAttr('inputmode');
 
 	element.scrollTo(x, y);
@@ -536,13 +536,13 @@ function nuLogin(loginTopRow, nuconfigNuWelcomeBodyInnerHTML, logonMode = 'norma
 	}
 
 	if (window.nuLoginU == '' && window.nuLoginP == '') {
-		$('#nuusername').trigger("focus");
+		$('#nuusername').nuSetFocus();
 	}
 
 	if (window.nuLoginU != '' && window.nuLoginP == '') {
 
 		$('#nuusername').val(window.nuLoginU);
-		$('#nupassword').trigger("focus");
+		$('#nupassword').nuSetFocus();
 
 	}
 
@@ -679,7 +679,7 @@ function nuCreateDialog(t) {
 		$('#nuModal').remove();
 		$('body').off('.popup');
 
-		nuFocusElement(window.nuLastFocus);
+		nuSetFocus(window.nuLastFocus);
 	};
 
 	this.down = function (event) {
@@ -844,7 +844,7 @@ function nuBindCtrlEvents() {
 				$('#nuOptionsListBox').remove();
 			} else if (parent.$('#nuModal').length === 1) {
 				let ae = document.activeElement;
-				$(ae).trigger("blur").trigger("focus");
+				$(ae).trigger("blur").nuSetFocus();
 				if (nuFormsUnsaved() == 0) {
 					nuClosePopup();
 					// nuDialog.closeDialog();
@@ -1394,14 +1394,6 @@ function nuOnFocus(e) {
 	$('.nuTabSelected').attr('nu-data-active-element', document.activeElement.id);
 }
 
-function nuFocusElement(element) {
-
-	if (element && element.length) {
-		element.trigger("focus");
-	}
-
-}
-
 function nuClick(e) {
 
 	const target = $(e.target);
@@ -1660,7 +1652,7 @@ function nuAddRow(id, setFocus = true) {
 	if (setFocus) {
 		const newIndex = nuPad3(o.rows.length) + o.fields[1];
 		const $newInput = $(`#${id}${newIndex}`);
-		$newInput.trigger("focus");
+		$newInput.nuSetFocus();
 	}
 
 }
@@ -2850,7 +2842,7 @@ function nuInsertAtCaret(id, string) {
 	const value = txt.val();
 
 	txt.val(value.substring(0, caretPos) + string + value.substring(caretPos));
-	txt.trigger("focus");
+	txt.nuSetFocus();
 
 	const endOfText = caretPos + string.length;
 	txt.prop('selectionStart', endOfText);

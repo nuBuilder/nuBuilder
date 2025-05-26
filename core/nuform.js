@@ -248,7 +248,7 @@ function nuBuildForm(formObj) {
 
 	window.nuPORTRAITSCREEN = false;
 	if (!nuIsMobile()) {
-		$('#nuSearchField').trigger("focus");
+		$('#nuSearchField').nuSetFocus();
 	} else {
 		if (nuUXOptions.nuDevMobileView2) {
 			nuInitMobileView();
@@ -2441,7 +2441,7 @@ function nuSubformFocusLastRow(id, f) {
 	const c = f === undefined ? sf.fields[1] : sf.fields.indexOf(f);
 	const r = sf.rows.length - 1;
 
-	$('#' + id + nuPad3(r) + c).trigger("focus");
+	$('#' + id + nuPad3(r) + c).nuSetFocus();
 
 }
 
@@ -2573,7 +2573,7 @@ function nuSubformMoveFocus(activeElement, d) {
 
 	let row = activeElement.attr('data-nu-prefix').slice(-3);
 	let nextRow = $('#' + activeElement.attr('data-nu-form') + nuPad3(Number(row) + d) + activeElement.attr('id').substr(activeElement.attr('data-nu-form').length + 3));
-	if (nextRow.length == 1 && !nextRow.prop('disabled')) nextRow.trigger("focus");
+	if (nextRow.length == 1 && !nextRow.prop('disabled')) nextRow.nuSetFocus();
 
 	return true;
 
@@ -5152,7 +5152,7 @@ function nuPopulateLookup(form, targetId, setFocus) {
 		}
 
 		if (i === 1 && setFocus !== false) {
-			$element.trigger("focus");
+			$element.nuSetFocus();
 		}
 	}
 
