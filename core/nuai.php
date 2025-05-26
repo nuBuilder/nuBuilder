@@ -23,10 +23,10 @@ function nuAIPromptGetTableInformation($tableName) {
 		$colName = $col['Field'];
 		$colType = $col['Type'];
 		$isPK = in_array($colName, $primaryKeys) ? ' (PK)' : '';
-		$schemaParts[] = "$colName: $colType$isPK";
+		$schemaParts[] = "`$colName`: $colType$isPK";
 	}
 
-	return "Table $tableName: " . implode(', ', $schemaParts);
+	return $schemaParts;
 }
 
 
@@ -48,7 +48,10 @@ function nuAIPromptBuildPromptInformation($paramsJson) {
 	if (!empty($tables)) {
 		$lines[] = 'Table schemas:';
 		foreach ($tables as $tableName) {
-			$lines[] = nuAIPromptGetTableInformation($tableName);
+
+			$schemaParts = nuAIPromptGetTableInformation($tableName);
+			$lines[] = "Table `$tableName`: " . implode(', ', $schemaParts);
+			$lines[] = ''; // blank line
 		}
 		$lines[] = ''; // blank line
 	}
