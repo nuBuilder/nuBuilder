@@ -155,6 +155,16 @@ function nuAddAdminButtons() {
 		nuAddIconToBreadcrumbHolder('nuDebugButton', 'nuDebug Results', 'nuOpenNuDebug(2)', 'fa fa-bug', '3px');
 	}
 
+	if ((window.nuUXOptions.nuToolsIcon || devMode && nuMainForm(true))) {
+		nuAddIconToBreadcrumbHolder(
+			'nuToolsButton',
+			'Tools',
+			'nuAdminToolsClick(this, event, \'Tools\')',
+			'fa fa-gear',
+			'3px'
+		);
+	}
+
 	if (window.nuUXOptions.nuRefreshIcon) {
 		nuAddIconToBreadcrumbHolder('nuRefreshButton', 'Refresh', 'nuGetBreadcrumb()', 'fas fa-sync-alt', '3px');
 	}
@@ -208,6 +218,38 @@ function nuAddAdminButtons() {
 
 	}
 
+}
+
+function nuAdminToolsOpenForm(f, r, event, popup = false) {
+	if (popup) {
+		nuPopup(f, r, '');
+	} else {
+		let n = event.ctrlKey ? '2' : '0';
+		nuForm(f, r, '', '', n);
+	}
+}
+
+function nuAdminToolsCreateMenuConfig(menuType, event) {
+
+	const baseMenus = {
+		Tools: [
+			{ text: nuContextMenuItemText("AI Prompt Generator", "fas fa-magic"), action: () => nuAdminToolsOpenForm('nu683303b24440729', '-1', event, 'popup') }
+		]
+	};
+
+	const menu = [{ text: nuTranslate(menuType) }, ...baseMenus[menuType]];
+	return menu;
+
+}
+
+function nuAdminToolsOpenMenu(event, menu, element) {
+	event.stopPropagation();
+	ctxmenu.show(menu, element);
+}
+
+function nuAdminToolsClick(element, event, menuType) {
+	const menu = nuAdminToolsCreateMenuConfig(menuType, event);
+	nuAdminToolsOpenMenu(event, menu, element);
 }
 
 // Set Browse Column Widths in a Browse Screen
