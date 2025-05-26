@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 26, 2025 at 07:00 PM
+-- Generation Time: May 26, 2025 at 07:04 PM
 -- Server version: 8.2.0
 -- PHP Version: 7.4.33
 
@@ -602,17 +602,17 @@ INSERT INTO `zzzzsys_event` (`zzzzsys_event_id`, `sev_zzzzsys_object_id`, `sev_e
 ('nu60e4d4c999e5e4a', 'nu5bad6cb3278653c', 'onchange', 'nuFormUpdateDisplayDatalists();', NULL),
 ('nu60e61e9c56651ae', 'nu5bad6cb327ee8dc', 'ondblclick', 'nuOpenAce(\'SQL\', this.id);', NULL),
 ('nu60e96ee3e5dcc3f', 'nu60e96ee3e51e1bb', 'onclick', 'var n = Number(sob_all_top.value) + (event.ctrlKey ? -27 : 27);\n$(\'#sob_all_top\').val(n < 0 ? 0 : n).change();', NULL),
-('nu60e9719f5e49e66', 'nu60e9719f5d9bc8b', 'onclick', 'nuSetValue(\'sob_all_height\', this.innerHTML)', NULL),
-('nu60e971e1683aaa1', 'nu60e971e1676ca2d', 'onclick', 'nuSetValue(\'sob_all_height\', this.innerHTML)', NULL),
-('nu60e97221bc52ce0', 'nu60e97221bb95958', 'onclick', 'nuSetValue(\'sob_all_height\', this.innerHTML)', NULL),
-('nu60e9724c20900a9', 'nu60e9724c1fdd7c5', 'onclick', 'nuSetValue(\'sob_all_height\', this.innerHTML)', NULL),
-('nu60e9732db35a7f1', 'nu60e9732db2a4125', 'onclick', 'nuSetValue(\'sob_all_width\', this.innerHTML)', NULL),
-('nu60e973518b05887', 'nu60e973518a26f21', 'onclick', 'nuSetValue(\'sob_all_width\', this.innerHTML)', NULL),
-('nu60e97365095aa8c', 'nu60e9736508a9b31', 'onclick', 'nuSetValue(\'sob_all_width\', this.innerHTML)', NULL),
-('nu60e973b671d891a', 'nu60e973b6711a030', 'onclick', '$(\'#sob_all_width\').val(400).change();', NULL),
-('nu60e974dd2eac661', 'nu60e974dd2df427c', 'onclick', 'nuSetValue(\'sob_all_width\', this.innerHTML)', NULL),
-('nu60e97510251557f', 'nu60e975102462aff', 'onclick', 'nuSetValue(\'sob_all_height\', this.innerHTML)', NULL),
-('nu60e9756969dff71', 'nu60e97569692fac5', 'onclick', 'nuSetValue(\'sob_all_width\', this.innerHTML)', NULL),
+('nu60e9719f5e49e66', 'nu60e9719f5d9bc8b', 'onclick', 'nuSetValue(\'sob_all_height\', nuGetValue(this.id))', NULL),
+('nu60e971e1683aaa1', 'nu60e971e1676ca2d', 'onclick', 'nuSetValue(\'sob_all_height\', nuGetValue(this.id))', NULL),
+('nu60e97221bc52ce0', 'nu60e97221bb95958', 'onclick', 'nuSetValue(\'sob_all_height\', nuGetValue(this.id))', NULL),
+('nu60e9724c20900a9', 'nu60e9724c1fdd7c5', 'onclick', 'nuSetValue(\'sob_all_height\', nuGetValue(this.id))', NULL),
+('nu60e9732db35a7f1', 'nu60e9732db2a4125', 'onclick', 'nuSetValue(\'sob_all_width\', nuGetValue(this.id))', NULL),
+('nu60e973518b05887', 'nu60e973518a26f21', 'onclick', 'nuSetValue(\'sob_all_width\', nuGetValue(this.id))', NULL),
+('nu60e97365095aa8c', 'nu60e9736508a9b31', 'onclick', 'nuSetValue(\'sob_all_height\', nuGetValue(this.id))', NULL),
+('nu60e973b671d891a', 'nu60e973b6711a030', 'onclick', 'nuSetValue(\'sob_all_width\', nuGetValue(this.id))', NULL),
+('nu60e974dd2eac661', 'nu60e974dd2df427c', 'onclick', 'nuSetValue(\'sob_all_width\', nuGetValue(this.id))', NULL),
+('nu60e97510251557f', 'nu60e975102462aff', 'onclick', 'nuSetValue(\'sob_all_height\', nuGetValue(this.id))', NULL),
+('nu60e9756969dff71', 'nu60e97569692fac5', 'onclick', 'nuSetValue(\'sob_all_width\', nuGetValue(this.id))', NULL),
 ('nu60e975e9337f224', 'nu60e975e932d74ef', 'onclick', 'var n = Number(sob_all_left.value) + (event.ctrlKey ? -50 : 50);\n$(\'#sob_all_left\').val(n < 0 ? 0 : n).change();', NULL),
 ('nu62cca90dc177496', 'nu62cca90dbd7f63c', 'onclick', 'nuHomeMenuClick(this, event, \'Report\');', NULL),
 ('nu60f901bdb3a8e1c', 'nu60f8fd56e325e76', 'onclick', 'var n = Number(sob_all_top.value) + (event.ctrlKey ? -50 : 50);\n$(\'#sob_all_top\').val(n < 0 ? 0 : n).change();', NULL),
@@ -863,7 +863,7 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`, `inf_json`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.7-2025.05.26.00', NULL),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.7-2025.05.26.01', NULL),
 ('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.7-2025.05.26.11', NULL);
 
 -- --------------------------------------------------------
