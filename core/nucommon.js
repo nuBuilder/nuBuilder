@@ -2590,13 +2590,13 @@ function nuSetText(i, v) {
 
 function nuSetFocus(id) {
 
-	const $id = nujQueryObj(id);
+	const $el = nujQueryObj(id);
 	if (!$el || $el.length === 0) {
 		console.warn("Element not found.");
 		return false;
 	}
 
-	$($id).trigger("focus");
+	$($el).trigger("focus");
 
 	return new Promise((resolve) => {
 		setTimeout(() => {
@@ -2604,7 +2604,7 @@ function nuSetFocus(id) {
 			if (!active || typeof active === "undefined") {
 				resolve(false);
 			} else {
-				resolve(active === $id[0]);
+				resolve(active === $el[0]);
 			}
 		}, 0);
 	});
