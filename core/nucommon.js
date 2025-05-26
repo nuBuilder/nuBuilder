@@ -1483,6 +1483,27 @@ function nuSelectNextTab(i, includeInvisible = false, byUser = true) {
 
 }
 
+function nuSelectToArray(id, type = 'value') {
+
+	var result = [];
+	$('#' + id + ' option:selected').each(function () {
+		var txt = $(this).text();
+		if (txt === '') return;
+		if (type === 'text') {
+			result.push(txt);
+		} else if (type === 'value') {
+			result.push($(this).val());
+		} else if (type === 'index') {
+			result.push($(this).index() + 1);
+		} else {
+			throw new Error('nuSelectToArray: unknown type "' + type + '"');
+		}
+	});
+
+	return result;
+
+}
+
 function nuModifyHolders(action, ...args) {
 	const actions = {
 		0: '#nuActionHolder',
