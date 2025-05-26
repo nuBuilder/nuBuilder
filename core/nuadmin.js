@@ -151,7 +151,7 @@ function nuAddAdminButtons() {
 	const isEdit = form_type.includes("edit");
 	const isLaunch = form_type.includes("launch");
 
-	if ((window.nuUXOptions.nuDebugIcon || devMode) && nuMainForm()) {
+	if ((window.nuUXOptions.nuDebugIcon || devMode) && nuMainForm(true)) {
 		nuAddIconToBreadcrumbHolder('nuDebugButton', 'nuDebug Results', 'nuOpenNuDebug(2)', 'fa fa-bug', '3px');
 	}
 
