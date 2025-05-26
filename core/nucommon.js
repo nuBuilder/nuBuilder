@@ -258,6 +258,9 @@ jQuery.fn.extend({
 	nuIsEnabled: function () {
 		return nuIsEnabled(this.attr('id'));
 	},
+	nuSetFocus: function () {
+		return nuSetFocus(this.attr('id'));
+	},
 	nuSetPlaceholder: function (placeholder, translate) {
 		return this.each(function () {
 			return nuSetPlaceholder(this.id, placeholder, translate);
@@ -2582,6 +2585,30 @@ function nuSetValue(id, value, method, change) {
 
 function nuSetText(i, v) {
 	return nuSetValue(i, v, 'text');
+}
+
+
+function nuSetFocus(id) {
+
+	const $id = nujQueryObj(id);
+	if (!$el || $el.length === 0) {
+		console.warn("Element not found.");
+		return false;
+	}
+
+	$($id).trigger("focus");
+
+	return new Promise((resolve) => {
+		setTimeout(() => {
+			const active = document.activeElement;
+			if (!active || typeof active === "undefined") {
+				resolve(false);
+			} else {
+				resolve(active === $id[0]);
+			}
+		}, 0);
+	});
+
 }
 
 function nuCurrentDate(format) {
