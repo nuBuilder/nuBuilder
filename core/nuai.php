@@ -30,12 +30,11 @@ function nuAIPromptGetTableInformation($tableName) {
 }
 
 
-function nuAIPromptBuildPromptInformation($paramsJson) {
+function nuAIPromptBuildPromptInformation($params) {
 
-	$parsed = nuDecode($paramsJson);
-	$tableJson = $parsed['tables'] ?? '[]';
-	$languageJson = $parsed['languages'] ?? '[]';
-	$scopeJson = $parsed['scopes'] ?? '[]';
+	$tableJson = $params['tables'] ?? '[]';
+	$languageJson = $params['languages'] ?? '[]';
+	$scopeJson = $params['scopes'] ?? '[]';
 
 	$tables = json_decode($tableJson, true, 512, JSON_THROW_ON_ERROR);
 	$languages = json_decode($languageJson, true, 512, JSON_THROW_ON_ERROR);
