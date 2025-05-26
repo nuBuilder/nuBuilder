@@ -4819,6 +4819,41 @@ function nuBrowseRow(elOrEvent, columnNumberOrId) {
 
 }
 
+function nuBrowseLoop(columns, callback) {
+
+	const props = nuCurrentProperties();
+	if (!Array.isArray(columns) || columns.length === 0) {
+		const colCount = props.column_widths.length;
+		columns = Array.from({ length: colCount }, (_, i) => i);
+	}
+
+	const cells = document.querySelectorAll('#nuRECORD .nuCell');
+	const results = [];
+
+	cells.forEach(cell => {
+		const row = parseInt(cell.getAttribute('data-nu-row'), 10);
+		const column = +cell.getAttribute('data-nu-column');
+		const columnId = cell.getAttribute('data-nu-column-id');
+
+		const isMatch = columns.some(colSpec =>
+			(typeof colSpec === 'number' && column === colSpec) ||
+			(typeof colSpec === 'string' && colSpec === columnId)
+		);
+		if (!isMatch) return;
+
+		const cellText = cell.textContent;
+		const cellHtml = cell.innerHTML;
+		const ret = callback(row, column, columnId, cellText, cellHtml);
+
+		if (ret !== undefined) {
+			results.push(ret);
+		}
+
+	});
+
+	return results;
+
+}
 
 function nuClickSearchColumn(e) {
 
