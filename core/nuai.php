@@ -35,10 +35,12 @@ function nuAIPromptBuildPromptInformation($params) {
 	$tableJson = $params['tables'] ?? '[]';
 	$languageJson = $params['languages'] ?? '[]';
 	$scopeJson = $params['scopes'] ?? '[]';
+	$tagJson = $params['tags'] ?? '[]';
 
 	$tables = json_decode($tableJson, true, 512, JSON_THROW_ON_ERROR);
 	$languages = json_decode($languageJson, true, 512, JSON_THROW_ON_ERROR);
-	$scope = json_decode($scopeJson, true, 512, JSON_THROW_ON_ERROR);
+	$scopes = json_decode($scopeJson, true, 512, JSON_THROW_ON_ERROR);
+	$tags = json_decode($tagJson, true, 512, JSON_THROW_ON_ERROR);
 
 	// Prepare lines of output
 	$lines = [];
@@ -81,11 +83,27 @@ function nuAIPromptBuildPromptInformation($params) {
 		'PHP BD' => 'Context: PHP BD event (Before delete)',
 		'Form Custom Code' => 'Context: Form Custom Code. Do not add <script> tags, just the code itself.',
 		'Setup -> Header' => 'Context: Setup -> Header',
+		'Browse Form' => 'Context: Browse Form. Use nuBuilder JS functions for client-side interactions.',
+		'Edit Form' => 'Context: Edit Form. Use nuBuilder JS functions for client-side interactions.'
 	];
 
-	foreach ($scope as $sc) {
+	foreach ($scopes as $sc) {
 		if (isset($scopeMessages[$sc])) {
 			$lines[] = $scopeMessages[$sc];
+		}
+	}
+
+	// 4) Tag-specific notes
+	$tagMessages = [
+		'Hash Cookies' => 'Hash Cookies: https://wiki.nubuilder.cloud/index.php?title=Hash_Cookies',
+		'Setup' => 'Setup: https://wiki.nubuilder.cloud/index.php?title=Setup',
+		'Update' => 'Update: https://wiki.nubuilder.cloud/index.php?title=Updating',
+		'2FA' => '2FA: https://wiki.nubuilder.cloud/index.php?title=Two_Factor_Authentication_-_2FA'
+	];
+
+	foreach ($tags as $tag) {
+		if (isset($tagMessages[$tag])) {
+			$lines[] = $tagMessages[$tag];
 		}
 	}
 
