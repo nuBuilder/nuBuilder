@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 26, 2025 at 07:04 PM
+-- Generation Time: May 27, 2025 at 03:59 AM
 -- Server version: 8.2.0
 -- PHP Version: 7.4.33
 
@@ -355,55 +355,56 @@ CREATE TABLE `zzzzsys_config` (
 --
 
 INSERT INTO `zzzzsys_config` (`zzzzsys_config_id`, `zzzzsys_setup_id`, `cfg_order`, `cfg_category`, `cfg_title`, `cfg_setting`, `cfg_value`, `cfg_description`, `cfg_type`, `cfg_effective`, `cfg_json`) VALUES
-('nu62a0a02105071cb', '1', 30, 'Admin', 'Objects Icon', 'nuObjectsIcon', 'true', 'Show Objects (Obj) icon', 2, '1', NULL),
-('nu62a0a02105062e5', '1', 40, 'Admin', 'PHP Icons', 'nuPHPIcon', 'true', 'Show PHP (BE, BS, AS, BB) icons', 2, '1', NULL),
-('nu62a0a02105079da', '1', 50, 'Admin', 'Properties Icon', 'nuPropertiesIcon', 'true', 'Show Properties (Prop) icon', 2, '1', NULL),
-('nu62a0a0210506a8f', '1', 60, 'Admin', 'Refresh Icons', 'nuRefreshIcon', 'true', 'Show Refresh icon', 2, '1', NULL),
+('nu62a0a02105071cb', '1', 40, 'Admin', 'Objects Icon', 'nuObjectsIcon', 'true', 'Show Objects (Obj) icon', 2, '1', NULL),
+('nu62a0a02105062e5', '1', 50, 'Admin', 'PHP Icons', 'nuPHPIcon', 'true', 'Show PHP (BE, BS, AS, BB) icons', 2, '1', NULL),
+('nu62a0a02105079da', '1', 60, 'Admin', 'Properties Icon', 'nuPropertiesIcon', 'true', 'Show Properties (Prop) icon', 2, '1', NULL),
+('nu62a0a0210506a8f', '1', 70, 'Admin', 'Refresh Icons', 'nuRefreshIcon', 'true', 'Show Refresh icon', 2, '1', NULL),
 ('nu62a0a0210505b68', '1', 10, 'Admin', 'Debug Icon', 'nuDebugIcon', 'true', 'Show Debug icon', 2, '1', NULL),
-('nu62a0a02105011e4', '1', 20, 'Admin', 'Debug Mode', 'nuDebugMode', 'true', 'If the element does not exist when using functions such as nuGetValue() or nuSetValue(), a warning will be output to the Developer Console', 2, '1', NULL),
-('nu62a0a02104dee61', '1', 70, 'Admin', 'Globeadmin User IDs', '$nuConfigDBGlobeadminUsers', '', 'User Ids with \'globeadmin\' permissions, separated by commas', 1, '1', NULL),
-('nu62bdc792e1efb3a', '1', 80, 'Admin', 'Admin Home Form ID', '$nuConfigGlobeadminHome', 'nuhome', 'Home form ID for administrator. Default: nuhome', 1, '3', NULL),
-('nu62a0a02104e96df', '1', 90, 'Admin', 'Enable DB Update', '$nuConfigEnableDatabaseUpdate', 'true', 'Enable updating the database within nuBuilder', 2, '1', NULL),
-('nu62a0a02104e542c', '1', 100, 'Form', 'Additional 1 Label', '$nuConfigUserAdditional1Label', '', 'User Form: If not blank, rename the Label \'Additional 1\'', 1, '1', NULL),
-('nu62a0a02104e64e6', '1', 110, 'Form', 'Additional 2 Label', '$nuConfigUserAdditional2Label', '', 'User Form: If not blank, rename the Label \'Additional 2\'', 1, '1', NULL),
-('nu62a0a02104e72e8', '1', 120, 'Form', 'Code Label', '$nuConfigUserCodeLabel', '', 'User Form: If not blank, rename the Label \'Code\'', 1, '1', NULL),
-('nu62a0a02104fba72', '1', 130, 'Form', 'Autosize Browse Columns', 'nuAutosizeBrowseColumns', 'true', 'Autosize columns to fit the document width', 2, '1', NULL),
-('nu62a0a02104fd939', '1', 140, 'Form', 'Browse Pagination Info', 'nuBrowsePaginationInfo', 'default', 'Default Format is= \'{StartRow} - {EndRow} \' + nuTranslate(\'of\') + \' \' + \'{TotalRows}\'.', 1, '1', NULL),
-('nu62a0a0210502912', '1', 150, 'Form', 'Mobile View', 'nuMobileView', 'true', 'Optimise view for mobile devices', 2, '1', NULL),
-('nu634795d35e9b070', '1', 160, 'Form', 'Close After Save', 'nuEditCloseAfterSave', 'None', 'Close forms after saving', 1, '1', NULL),
-('nu62a0a02104fc425', '1', 170, 'Form', 'Show Back Button', 'nuShowBackButton', 'false', 'Show a Back Button', 2, '1', NULL),
-('nu62a0a02104f8bad', '1', 190, 'Browser', 'Enable Browser Back Button', 'nuEnableBrowserBackButton', 'true', 'Enable the browser\'s Back button', 2, '1', NULL),
-('nu62a0a0210501e50', '1', 200, 'Browser', 'Browser Tab Title Prefix', 'nuBrowserTabTitlePrefix', 'nuBuilder', 'Prefix in the Browser Tab', 1, '1', NULL),
-('nu62a0a02104ffe04', '1', 210, 'Browser', 'Show Browser Tab Title', 'nuShowBrowserTabTitle', 'true', 'Show the Form Title in the Browser Tab', 2, '1', NULL),
-('nu62a0a02104dfbee', '1', 230, 'Settings', 'Title', '$nuConfigTitle', 'nuBuilder 4.5', 'nuBuilder Title', 1, '1', NULL),
-('nu62a0a02104e8621', '1', 240, 'Settings', 'Backup Location', '$nuConfigBackupLocation', '', 'Backup location: Default: If left blank, backups are stored in /core/libs/mysqldump/dumps. Make sure to turn off directory listing!', 1, '1', NULL),
-('nu62a0a02104ea45f', '1', 250, 'Settings', 'Keep Session Alive', '$nuConfigKeepSessionAlive', 'true', 'Use a timer to keep the session alive', 2, '2', NULL),
-('nu62a0a02104eb409', '1', 260, 'Settings', 'Keep-alive Interval', '$nuConfigKeepSessionAliveInterval', '600', 'Keep-alive interval. Default 600 s (10 min)', 1, '2', NULL),
-('nu62a0a02104ec632', '1', 270, 'Settings', 'MD5 Password Hash', '$nuUseMd5PasswordHash', 'false', 'If set to true, MD5 is used to hash passwords, otherwise password_hash(), which is recommended', 2, '1', NULL),
-('nu62a0a02104f9b3c', '1', 280, 'Settings', 'Prevent Double Click', 'nuPreventButtonDblClick', 'true', 'Prevent double clicks on buttons', 2, '1', NULL),
-('nu62a0a02104e08d7', '1', 290, 'Settings', 'Session Timeout', '$nuConfigTimeOut', '1440', 'Session Timeout. Default: 1440 (24h)', 3, '1', NULL),
-('nu62a0a02104e45ba', '1', 300, 'Settings', 'Show JavaScript Errors', 'nuShowJSErrors', 'globeadmin', 'Show JavaScript errors in a popup in addition to the developer console', 1, '1', NULL),
-('nu62a0a02104ff0bf', '1', 310, 'Settings', 'Show Logged-in User', 'nuShowLoggedInUser', 'true', 'Show the logged in User', 2, '1', NULL),
-('nu62a0a02104fe599', '1', 320, 'Settings', 'Show nuBuilder Link', 'nuShowNuBuilderLink', 'false', 'Show the link to nubuilder com', 2, '1', NULL),
-('nu62a0a02104fab5f', '1', 330, 'Settings', 'Show Properties on Middle Click', 'nuShowPropertiesOnMiddleClick', 'true', 'Show the Object Properties on middle mouse click', 2, '1', NULL),
-('nu62a0a02104f4b8c', '1', 340, 'Includes', 'Include Apex Charts', '$nuConfigIncludeApexCharts', 'false', 'Include apex charts (libs/apexcharts)', 2, '2', NULL),
-('nu62a0a02104f3db0', '1', 350, 'Includes', 'Include Google Charts', '$nuConfigIncludeGoogleCharts', 'true', 'Include external link to www.gstatic.com', 2, '2', NULL),
-('nu62a0a02104f230f', '1', 360, 'Includes', 'Include TinyMCE', '$nuConfigIncludeTinyMCE', 'true', 'Include TinyMCE WYSIWYG', 2, '1', NULL),
-('nu62a0a021050465f', '1', 370, '3rd Party', 'Ace Theme', 'nuAceTheme', 'dawn', 'Ace theme. Default: Monokai', 9, '0', NULL),
-('nu62a0a021050464c', '1', 380, '3rd Party', 'Select2 Theme', 'nuSelect2Theme', 'default', 'select2 theme (default, classic) Default: default', 1, '0', NULL),
-('nu62a0a0210503957', '1', 390, '3rd Party', 'Calendar Start of Week', 'nuCalendarStartOfWeek', '', 'nuCalendar: Start day of the week. 0:Sunday, 1:Monday', 3, '1', NULL),
-('nu62a0a0210503958', '1', 400, '3rd Party', 'Calendar Week Numbers', 'nuCalendarWeekNumbers', 'None', 'nuCalendar: Week numbers to display', 1, '1', NULL),
-('nu62a0a02104ed59e', '1', 410, '2FA', 'Admin 2FA', '$nuConfig2FAAdmin', 'false', 'Use 2FA authentication for administrator', 2, '1', NULL),
-('nu62a0a02104ee392', '1', 420, '2FA', 'User 2FA', '$nuConfig2FAUser', 'false', 'Use 2FA authentication for users', 2, '1', NULL),
-('nu62a0a02104ef4e4', '1', 430, '2FA', '2FA Form ID', '$nuConfig2FAFormID', 'nuauthentication', '2FA form ID. Default id: nuauthentication', 1, '1', NULL),
-('nu62a0a02104f17ad', '1', 440, '2FA', 'Show Remember Me', '$nuConfig2FAShowRememberMe', 'false', 'Show a checkbox \'Remember me for X days\' in the authentication form', 2, '1', NULL),
-('nu62a0a02104f06aa', '1', 450, '2FA', 'Token Validity Time', '$nuConfig2FATokenValidityTime', '168', '2FA Token Validity Time. Default: 7 days (7 * 24 hours)', 3, '1', NULL),
-('nu62a0a02104e1480', '1', 460, 'Demo', 'Demo Mode', '$nuConfigIsDemo', 'false', 'Demo Mode: Restricted rights. Saving not permitted.', 2, '3', NULL),
-('nu62a0a02104e340b', '1', 470, 'Demo', 'Demo User Password', '$nuConfigDemoDBGlobeadminPassword', '', 'Demo Mode: Demo User Password', 1, '1', NULL),
-('nu62a0a02104e283a', '1', 480, 'Demo', 'Demo Username', '$nuConfigDemoDBGlobeadminUsername', '', 'Demo Mode: Specify a Demo Username and Password if $nuConfigIsDemo is set to true', 1, '1', NULL),
-('nu62a0a02104e45bc', '1', 490, 'Demo', 'Allowed Form IDs', '$nuConfigDemoSavingAllowedIds', '', 'Demo Mode: Saving allowed in the specified form Ids. Separated by comma.', 1, '1', NULL),
-('nu62a0a02104ffe05', '1', 220, 'Browser', 'Show Permalink URL', 'nuShowURLPermaLink', 'false', 'Show Permalink in URL bar', 2, '1', NULL),
-('nu62a0a02104fc315', '1', 180, 'Form', 'Hide Tab Title if only one', 'nuHideTabTitleIfOnlyOne', 'none', 'Hide tab title if there is just one tab', 1, '1', NULL);
+('nu62a0a02105011e4', '1', 30, 'Admin', 'Debug Mode', 'nuDebugMode', 'true', 'If the element does not exist when using functions such as nuGetValue() or nuSetValue(), a warning will be output to the Developer Console', 2, '1', NULL),
+('nu62a0a02104dee61', '1', 80, 'Admin', 'Globeadmin User IDs', '$nuConfigDBGlobeadminUsers', '', 'User Ids with \'globeadmin\' permissions, separated by commas', 1, '1', NULL),
+('nu62bdc792e1efb3a', '1', 90, 'Admin', 'Admin Home Form ID', '$nuConfigGlobeadminHome', 'nuhome', 'Home form ID for administrator. Default: nuhome', 1, '3', NULL),
+('nu62a0a02104e96df', '1', 100, 'Admin', 'Enable DB Update', '$nuConfigEnableDatabaseUpdate', 'true', 'Enable updating the database within nuBuilder', 2, '1', NULL),
+('nu62a0a02104e542c', '1', 110, 'Form', 'Additional 1 Label', '$nuConfigUserAdditional1Label', '', 'User Form: If not blank, rename the Label \'Additional 1\'', 1, '1', NULL),
+('nu62a0a02104e64e6', '1', 120, 'Form', 'Additional 2 Label', '$nuConfigUserAdditional2Label', '', 'User Form: If not blank, rename the Label \'Additional 2\'', 1, '1', NULL),
+('nu62a0a02104e72e8', '1', 130, 'Form', 'Code Label', '$nuConfigUserCodeLabel', '', 'User Form: If not blank, rename the Label \'Code\'', 1, '1', NULL),
+('nu62a0a02104fba72', '1', 140, 'Form', 'Autosize Browse Columns', 'nuAutosizeBrowseColumns', 'true', 'Autosize columns to fit the document width', 2, '1', NULL),
+('nu62a0a02104fd939', '1', 150, 'Form', 'Browse Pagination Info', 'nuBrowsePaginationInfo', 'default', 'Default Format is= \'{StartRow} - {EndRow} \' + nuTranslate(\'of\') + \' \' + \'{TotalRows}\'.', 1, '1', NULL),
+('nu62a0a0210502912', '1', 160, 'Form', 'Mobile View', 'nuMobileView', 'true', 'Optimise view for mobile devices', 2, '1', NULL),
+('nu634795d35e9b070', '1', 170, 'Form', 'Close After Save', 'nuEditCloseAfterSave', 'None', 'Close forms after saving', 1, '1', NULL),
+('nu62a0a02104fc425', '1', 180, 'Form', 'Show Back Button', 'nuShowBackButton', 'false', 'Show a Back Button', 2, '1', NULL),
+('nu62a0a02104f8bad', '1', 200, 'Browser', 'Enable Browser Back Button', 'nuEnableBrowserBackButton', 'true', 'Enable the browser\'s Back button', 2, '1', NULL),
+('nu62a0a0210501e50', '1', 210, 'Browser', 'Browser Tab Title Prefix', 'nuBrowserTabTitlePrefix', 'nuBuilder', 'Prefix in the Browser Tab', 1, '1', NULL),
+('nu62a0a02104ffe04', '1', 220, 'Browser', 'Show Browser Tab Title', 'nuShowBrowserTabTitle', 'true', 'Show the Form Title in the Browser Tab', 2, '1', NULL),
+('nu62a0a02104dfbee', '1', 240, 'Settings', 'Title', '$nuConfigTitle', 'nuBuilder 4.5', 'nuBuilder Title', 1, '1', NULL),
+('nu62a0a02104e8621', '1', 250, 'Settings', 'Backup Location', '$nuConfigBackupLocation', '', 'Backup location: Default: If left blank, backups are stored in /core/libs/mysqldump/dumps. Make sure to turn off directory listing!', 1, '1', NULL),
+('nu62a0a02104ea45f', '1', 260, 'Settings', 'Keep Session Alive', '$nuConfigKeepSessionAlive', 'true', 'Use a timer to keep the session alive', 2, '2', NULL),
+('nu62a0a02104eb409', '1', 270, 'Settings', 'Keep-alive Interval', '$nuConfigKeepSessionAliveInterval', '600', 'Keep-alive interval. Default 600 s (10 min)', 1, '2', NULL),
+('nu62a0a02104ec632', '1', 280, 'Settings', 'MD5 Password Hash', '$nuUseMd5PasswordHash', 'false', 'If set to true, MD5 is used to hash passwords, otherwise password_hash(), which is recommended', 2, '1', NULL),
+('nu62a0a02104f9b3c', '1', 290, 'Settings', 'Prevent Double Click', 'nuPreventButtonDblClick', 'true', 'Prevent double clicks on buttons', 2, '1', NULL),
+('nu62a0a02104e08d7', '1', 300, 'Settings', 'Session Timeout', '$nuConfigTimeOut', '1440', 'Session Timeout. Default: 1440 (24h)', 3, '1', NULL),
+('nu62a0a02104e45ba', '1', 310, 'Settings', 'Show JavaScript Errors', 'nuShowJSErrors', 'globeadmin', 'Show JavaScript errors in a popup in addition to the developer console', 1, '1', NULL),
+('nu62a0a02104ff0bf', '1', 320, 'Settings', 'Show Logged-in User', 'nuShowLoggedInUser', 'true', 'Show the logged in User', 2, '1', NULL),
+('nu62a0a02104fe599', '1', 330, 'Settings', 'Show nuBuilder Link', 'nuShowNuBuilderLink', 'false', 'Show the link to nubuilder com', 2, '1', NULL),
+('nu62a0a02104fab5f', '1', 340, 'Settings', 'Show Properties on Middle Click', 'nuShowPropertiesOnMiddleClick', 'true', 'Show the Object Properties on middle mouse click', 2, '1', NULL),
+('nu62a0a02104f4b8c', '1', 350, 'Includes', 'Include Apex Charts', '$nuConfigIncludeApexCharts', 'false', 'Include apex charts (libs/apexcharts)', 2, '2', NULL),
+('nu62a0a02104f3db0', '1', 360, 'Includes', 'Include Google Charts', '$nuConfigIncludeGoogleCharts', 'true', 'Include external link to www.gstatic.com', 2, '2', NULL),
+('nu62a0a02104f230f', '1', 370, 'Includes', 'Include TinyMCE', '$nuConfigIncludeTinyMCE', 'true', 'Include TinyMCE WYSIWYG', 2, '1', NULL),
+('nu62a0a021050465f', '1', 380, '3rd Party', 'Ace Theme', 'nuAceTheme', 'dawn', 'Ace theme. Default: Monokai', 9, '0', NULL),
+('nu62a0a021050464c', '1', 390, '3rd Party', 'Select2 Theme', 'nuSelect2Theme', 'default', 'select2 theme (default, classic) Default: default', 1, '0', NULL),
+('nu62a0a0210503957', '1', 400, '3rd Party', 'Calendar Start of Week', 'nuCalendarStartOfWeek', '', 'nuCalendar: Start day of the week. 0:Sunday, 1:Monday', 3, '1', NULL),
+('nu62a0a0210503958', '1', 410, '3rd Party', 'Calendar Week Numbers', 'nuCalendarWeekNumbers', 'None', 'nuCalendar: Week numbers to display', 1, '1', NULL),
+('nu62a0a02104ed59e', '1', 420, '2FA', 'Admin 2FA', '$nuConfig2FAAdmin', 'false', 'Use 2FA authentication for administrator', 2, '1', NULL),
+('nu62a0a02104ee392', '1', 430, '2FA', 'User 2FA', '$nuConfig2FAUser', 'false', 'Use 2FA authentication for users', 2, '1', NULL),
+('nu62a0a02104ef4e4', '1', 440, '2FA', '2FA Form ID', '$nuConfig2FAFormID', 'nuauthentication', '2FA form ID. Default id: nuauthentication', 1, '1', NULL),
+('nu62a0a02104f17ad', '1', 450, '2FA', 'Show Remember Me', '$nuConfig2FAShowRememberMe', 'false', 'Show a checkbox \'Remember me for X days\' in the authentication form', 2, '1', NULL),
+('nu62a0a02104f06aa', '1', 460, '2FA', 'Token Validity Time', '$nuConfig2FATokenValidityTime', '168', '2FA Token Validity Time. Default: 7 days (7 * 24 hours)', 3, '1', NULL),
+('nu62a0a02104e1480', '1', 470, 'Demo', 'Demo Mode', '$nuConfigIsDemo', 'false', 'Demo Mode: Restricted rights. Saving not permitted.', 2, '3', NULL),
+('nu62a0a02104e340b', '1', 480, 'Demo', 'Demo User Password', '$nuConfigDemoDBGlobeadminPassword', '', 'Demo Mode: Demo User Password', 1, '1', NULL),
+('nu62a0a02104e283a', '1', 490, 'Demo', 'Demo Username', '$nuConfigDemoDBGlobeadminUsername', '', 'Demo Mode: Specify a Demo Username and Password if $nuConfigIsDemo is set to true', 1, '1', NULL),
+('nu62a0a02104e45bc', '1', 500, 'Demo', 'Allowed Form IDs', '$nuConfigDemoSavingAllowedIds', '', 'Demo Mode: Saving allowed in the specified form Ids. Separated by comma.', 1, '1', NULL),
+('nu62a0a02104ffe05', '1', 230, 'Browser', 'Show Permalink URL', 'nuShowURLPermaLink', 'false', 'Show Permalink in URL bar', 2, '1', NULL),
+('nu62a0a02104fc315', '1', 190, 'Form', 'Hide Tab Title if only one', 'nuHideTabTitleIfOnlyOne', 'none', 'Hide tab title if there is just one tab', 1, '1', NULL),
+('nu62a0a0510504b91', '1', 20, 'Admin', 'Tools Icon', 'nuToolsIcon', 'true', 'Show Tools icon', 2, '1', NULL);
 
 -- --------------------------------------------------------
 
@@ -863,7 +864,7 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`, `inf_json`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.7-2025.05.26.01', NULL),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.7-2025.05.27.00', NULL),
 ('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.7-2025.05.26.11', NULL);
 
 -- --------------------------------------------------------
