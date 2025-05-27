@@ -151,11 +151,11 @@ function nuAddAdminButtons() {
 	const isEdit = form_type.includes("edit");
 	const isLaunch = form_type.includes("launch");
 
-	if ((window.nuUXOptions.nuDebugIcon || devMode) && nuMainForm(true)) {
+	if ((window.nuUXOptions.nuDebugIcon || devMode) && (nuMainForm(true) || nuIsPopup())) {
 		nuAddIconToBreadcrumbHolder('nuDebugButton', 'nuDebug Results', 'nuOpenNuDebug(2)', 'fa fa-bug', '3px');
 	}
 
-	if ((window.nuUXOptions.nuToolsIcon || devMode && nuMainForm(true))) {
+	if ((window.nuUXOptions.nuToolsIcon || devMode) && (nuMainForm(true) || nuIsPopup())) {
 		nuAddIconToBreadcrumbHolder(
 			'nuToolsButton',
 			'Tools',
