@@ -4775,7 +4775,7 @@ function nuSetBrowseColumnWidth(column, width) {
 
 function nuBrowseRow(elOrEvent, columnNumberOrId) {
 
-	// Normalize to a jQuery-wrapped element
+	// Normalise to a jQuery-wrapped element
 	const $invoked = (elOrEvent && elOrEvent.target)
 		? $(elOrEvent.currentTarget || elOrEvent.target)
 		: $(elOrEvent);
@@ -4817,6 +4817,10 @@ function nuBrowseRow(elOrEvent, columnNumberOrId) {
 		$cell
 	};
 
+}
+
+function nuBrowseCells(row) {
+	return $(`div[id^='nucell_${row}_']`);
 }
 
 function nuBrowseLoop(columns, callback) {
