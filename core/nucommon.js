@@ -2605,11 +2605,12 @@ function nuSetText(i, v) {
 function nuSetFocus(id) {
 
 	const $el = nujQueryObj(id);
+	/*
 	if (!$el || $el.length === 0) {
-		console.warn("Element not found.");
+		console.warn("Element not found.", id);
 		return false;
 	}
-
+	*/
 	$($el).trigger("focus");
 
 	return new Promise((resolve) => {

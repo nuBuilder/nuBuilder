@@ -247,7 +247,7 @@ function nuBuildForm(formObj) {
 	nuCursor('default');
 
 	window.nuPORTRAITSCREEN = false;
-	if (!nuIsMobile()) {
+	if (!nuIsMobile() && formType == 'browse') {
 		$('#nuSearchField').nuSetFocus();
 	} else {
 		if (nuUXOptions.nuDevMobileView2) {
