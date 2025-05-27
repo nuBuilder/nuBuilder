@@ -4820,7 +4820,7 @@ function nuBrowseRow(elOrEvent, columnNumberOrId) {
 }
 
 function nuBrowseCells(row) {
-	return $(`div[id^='nucell_${row}_']`);
+	return $(`div.nuBrowseTable[id^='nucell_${row}_']`);
 }
 
 function nuBrowseLoop(columns, callback) {
