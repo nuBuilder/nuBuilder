@@ -241,7 +241,7 @@ function nuFFInsertForm($formId, $formType, $formCode, $formDesc, $table, $pk) {
 			sfo_browse_title_multiline
 			)
 		VALUES
-			(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+			(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 	";
 
 	$table = $formType == 'launch' ? '' : $table;
