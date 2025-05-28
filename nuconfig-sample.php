@@ -49,7 +49,7 @@
 // AI Config & Credentials
 
 $nuAIConfig = [
-	'chatgpt' => [
+	'openai' => [
 		'api_key' => 'sk-proj-xxxxxxxxxx',
 		'base_url' => 'https://api.openai.com/v1/chat/completions',
 	]

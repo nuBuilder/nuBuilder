@@ -180,11 +180,11 @@ function nuAIPromptGetTagsFromPrompt($params) {
 	$response = nuGetAIResponse($instruction);
 
 	/*
-				 return [
-					 'error' => false,
-					 'result' => ['Update', '2FA']
-				 ];
-			 */
+					return [
+						'error' => false,
+						'result' => ['Update', '2FA']
+					];
+				*/
 
 	if ($response['error']) {
 		return [
@@ -244,15 +244,15 @@ function nuGetAIResponse($prompt, $aiConfig = '', $postData = []) {
 		];
 	}
 
-	// If nothing (or an empty array) was passed, use chatgpt as default
+	// If nothing (or an empty array) was passed, use openai as default
 	if (empty($aiConfig) || !is_array($aiConfig)) {
-		if (!isset($nuAIConfig['chatgpt']) || !is_array($nuAIConfig['chatgpt'])) {
+		if (!isset($nuAIConfig['openai']) || !is_array($nuAIConfig['openai'])) {
 			return [
 				'error' => true,
-				'message' => 'Default AI configuration ($nuAIConfig[\'chatgpt\']) is not set or is invalid. Please add configuration in nuconfig.php',
+				'message' => 'Default AI configuration ($nuAIConfig[\'openai\']) is not set or is invalid. Please add configuration in nuconfig.php',
 			];
 		}
-		$aiConfig = $nuAIConfig['chatgpt'];
+		$aiConfig = $nuAIConfig['openai'];
 	}
 
 	// Validate config
