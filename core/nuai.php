@@ -112,33 +112,33 @@ function nuAIPromptBuildPromptInformation($params) {
 
 	// 4) Tag-specific notes (all topics from documentation)
 	$tagMessages = [
-		'Setup' => 'Setup: https://wiki.nubuilder.cloud/index.php?title=Setup',
-		'Installation' => 'Installation: https://github.com/nuBuilder/nuBuilder/wiki/nuBuilder-Installation-Guide',
-		'Updating' => 'Updating: https://wiki.nubuilder.cloud/index.php?title=Updating',
-		'Forms' => 'Forms: https://wiki.nubuilder.cloud/index.php?title=Forms',
-		'Objects' => 'Objects: https://wiki.nubuilder.cloud/index.php?title=Objects',
-		'Cloner' => 'Cloner: https://wiki.nubuilder.cloud/index.php?title=Cloner',
-		'Reports' => 'Reports: https://wiki.nubuilder.cloud/index.php?title=Reports',
-		'Report Builder' => 'Report Builder: https://wiki.nubuilder.cloud/index.php?title=Report_Builder',
-		'Report Designer' => 'Report Designer: https://wiki.nubuilder.cloud/index.php?title=Report_Designer',
-		'Procedures' => 'Procedures: https://wiki.nubuilder.cloud/index.php?title=Procedures',
-		'User Access' => 'User Access: https://wiki.nubuilder.cloud/index.php?title=User_Access',
-		'2FA' => 'Two Factor Authentication (2FA): https://wiki.nubuilder.cloud/index.php?title=Two_Factor_Authentication_-_2FA',
-		'Functions' => 'Functions: https://wiki.nubuilder.cloud/index.php?title=Functions',
-		'File Includes' => 'Custom File Includes: https://wiki.nubuilder.cloud/index.php?title=Custom_File_Includes',
-		'Search' => 'Search: https://wiki.nubuilder.cloud/index.php?title=Search',
-		'Hash Cookies' => 'Hash Cookies: https://wiki.nubuilder.cloud/index.php?title=Hash_Cookies',
-		'Translations' => 'Translations: https://wiki.nubuilder.cloud/index.php?title=Translations',
-		'Files' => 'Files: https://wiki.nubuilder.cloud/index.php?title=Files',
-		'Navigation' => 'Navigation: https://wiki.nubuilder.cloud/index.php?title=Navigation',
-		'Database' => 'Database: https://wiki.nubuilder.cloud/index.php?title=Database',
-		'File Manager' => 'File Manager: https://wiki.nubuilder.cloud/index.php?title=File_Manager',
-		'Logging Activity' => 'Logging Activity: https://wiki.nubuilder.cloud/index.php?title=Logging_Activity',
-		'Logging in' => 'Logging in: https://wiki.nubuilder.cloud/index.php?title=Login',
-		'SSO' => 'Single sign-on (SSO): https://wiki.nubuilder.cloud/index.php?title=Single_sign-on_(SSO)',
-		'SQL Builder' => 'SQL Builder: https://wiki.nubuilder.cloud/index.php?title=SQL_Builder',
-		'Format Builder' => 'Format Builder: https://wiki.nubuilder.cloud/index.php?title=Format_Builder',
-		'CSV Transfer' => 'CSV Transfer: https://wiki.nubuilder.cloud/index.php?title=CSV_Transfer',
+		'nusetup' => 'Setup: https://wiki.nubuilder.cloud/index.php?title=Setup',
+		'nuinstallation' => 'Installation: https://github.com/nuBuilder/nuBuilder/wiki/nuBuilder-Installation-Guide',
+		'nuupdating' => 'Updating: https://wiki.nubuilder.cloud/index.php?title=Updating',
+		'nuforms' => 'Forms: https://wiki.nubuilder.cloud/index.php?title=Forms',
+		'nuobjects' => 'Objects: https://wiki.nubuilder.cloud/index.php?title=Objects',
+		'nucloner' => 'Cloner: https://wiki.nubuilder.cloud/index.php?title=Cloner',
+		'nureports' => 'Reports: https://wiki.nubuilder.cloud/index.php?title=Reports',
+		'nureport_builder' => 'Report Builder: https://wiki.nubuilder.cloud/index.php?title=Report_Builder',
+		'nureport_designer' => 'Report Designer: https://wiki.nubuilder.cloud/index.php?title=Report_Designer',
+		'nuprocedures' => 'Procedures: https://wiki.nubuilder.cloud/index.php?title=Procedures',
+		'nuuser_access' => 'User Access: https://wiki.nubuilder.cloud/index.php?title=User_Access',
+		'nu2fa' => 'Two Factor Authentication (2FA): https://wiki.nubuilder.cloud/index.php?title=Two_Factor_Authentication_-_2FA',
+		'nufunctions' => 'Functions: https://wiki.nubuilder.cloud/index.php?title=Functions',
+		'nufile_includes' => 'Custom File Includes: https://wiki.nubuilder.cloud/index.php?title=Custom_File_Includes',
+		'nusearch' => 'Search: https://wiki.nubuilder.cloud/index.php?title=Search',
+		'nuhash_cookies' => 'Hash Cookies: https://wiki.nubuilder.cloud/index.php?title=Hash_Cookies',
+		'nutranslations' => 'Translations: https://wiki.nubuilder.cloud/index.php?title=Translations',
+		'nufiles' => 'Files: https://wiki.nubuilder.cloud/index.php?title=Files',
+		'nunavigation' => 'Navigation: https://wiki.nubuilder.cloud/index.php?title=Navigation',
+		'nudatabase' => 'Database: https://wiki.nubuilder.cloud/index.php?title=Database',
+		'nufile_manager' => 'File Manager: https://wiki.nubuilder.cloud/index.php?title=File_Manager',
+		'nulogging_activity' => 'Logging Activity: https://wiki.nubuilder.cloud/index.php?title=Logging_Activity',
+		'nulogging_in' => 'Logging in: https://wiki.nubuilder.cloud/index.php?title=Login',
+		'nusso' => 'Single sign-on (SSO): https://wiki.nubuilder.cloud/index.php?title=Single_sign-on_(SSO)',
+		'nusql_builder' => 'SQL Builder: https://wiki.nubuilder.cloud/index.php?title=SQL_Builder',
+		'nuformat_builder' => 'Format Builder: https://wiki.nubuilder.cloud/index.php?title=Format_Builder',
+		'nucsv_transfer' => 'CSV Transfer: https://wiki.nubuilder.cloud/index.php?title=CSV_Transfer',
 	];
 
 	$hasTag = false;
@@ -178,11 +178,11 @@ function nuAIPromptGetTagsFromPrompt($params) {
 	$response = nuGetAIResponse($instruction);
 
 	/*
-		   return [
-			   'error' => false,
-			   'result' => ['Update', '2FA']
-		   ];
-	   */
+			  return [
+				  'error' => false,
+				  'result' => ['Update', '2FA']
+			  ];
+		  */
 
 	if ($response['error']) {
 		return [
