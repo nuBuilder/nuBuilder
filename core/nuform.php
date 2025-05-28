@@ -291,6 +291,7 @@ function nuGetFormModifyObject($object, $formObject, $row, $recordId, $data, $nu
 				}
 			} else {
 				$displaySql = trim(nuReplaceHashVariables($row->sob_display_sql));
+				$displaySql = str_replace("#OBJECT_ID#", $object->object_id, $displaySql);
 				$displayResult = nuRunQuery($displaySql);
 				if (db_num_rows($displayResult) >= 1) {
 					$displayRow = db_fetch_row($displayResult);
