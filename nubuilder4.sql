@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 28, 2025 at 08:36 PM
+-- Generation Time: May 28, 2025 at 08:47 PM
 -- Server version: 8.2.0
 -- PHP Version: 7.4.33
 
@@ -888,7 +888,7 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`, `inf_json`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.7-2025.05.28.04', NULL),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.7-2025.05.28.05', NULL),
 ('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.7-2025.05.28.07', NULL);
 
 -- --------------------------------------------------------
@@ -1895,13 +1895,6 @@ CREATE TABLE `zzzzsys_prompt_generator` (
   `pge_tag` varchar(3000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `sph_template` varchar(1) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `zzzzsys_prompt_generator`
---
-
-INSERT INTO `zzzzsys_prompt_generator` (`zzzzsys_prompt_generator_id`, `pge_code`, `pge_description`, `pge_table`, `pge_language`, `pge_scope`, `pge_prompt`, `pge_tag`, `sph_template`) VALUES
-('nu683761fb187f0c2', 'test', NULL, NULL, NULL, NULL, 'I believe i haven\'t red the (pdf) guide till the end, but i\'ve been googling for some examples or hints on how to style an object/element the css way.\nThere are config options including some styling (class and css) for an object but not an example to be seen.\nPlease those who know gimme link or something. I also want to now how to install and update nubuilder and how two factor works.', '[\"nuupdating\"]', NULL);
 
 -- --------------------------------------------------------
 
