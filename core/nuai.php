@@ -158,46 +158,74 @@ function nuAIPromptBuildPromptInformation($params) {
 
 }
 
+function nuAIPromptExtractJSON($input) {
+
+	// Match content between ```json and ```
+	if (preg_match('/```json\s*(\[.*?\])\s*```/s', $input, $matches)) {
+		return $matches[1];
+	}
+
+	// If the whole string looks like a JSON array, return it directly
+	if (preg_match('/^\s*\[.*\]\s*$/s', $input)) {
+		return trim($input);
+	}
+
+	return '[]';
+
+}
+
 function nuAIPromptGetTagsFromPrompt($params) {
+
+	$test = false; // Set to true for testing purposes, to return a predefined response
 
 	$tags = is_string($params['tags'] ?? '') ? json_decode($params['tags'], true, 512, JSON_THROW_ON_ERROR) : ($params['tags'] ?? []);
 	$prompt = $params['prompt'] ?? '';
 
 	$instruction = "
-		Please follow these steps exactly:
-		1. Use the complete array of tags below.
-		2. Then list only the tags from that array which appear in the prompt but not all tags again.
-		Do not include any other text or comments.
+		You are given a user message and a fixed list of tags.
+		Your job is to pick which tags best represent the **topics** or **concerns** in the message, even if the exact tag text doesn’t appear verbatim.
 
-		Prompt:
+		## Matching rules:
+		2. If the user’s message is asking about that feature area—regardless of exact wording—include the full tag.
+		3. Tags are case-insensitive and based on conceptual relevance, not substring matching.
+
+		## Output format:
+		- A JSON array of matching tags only.
+		- No extra text, comments, or formatting.
+
+		## User message:
 		$prompt
 
-		Tags:
+		## Tags:
+
 	";
 
 	$instruction = $instruction . implode(",", $tags);
 
-	$response = nuGetAIResponse($instruction);
-
-	/*
-					return [
-						'error' => false,
-						'result' => ['Update', '2FA']
-					];
-				*/
+	if ($test) {
+		$response = [
+			'error' => false,
+			'reply' => '["Objects", "Installation", "Updating", "2FA"]'
+		];
+	} else {
+		$response = nuGetAIResponse($instruction);
+	}
 
 	if ($response['error']) {
 		return [
 			'error' => true,
 			'message' => "<h3>Error</h3><p>" . htmlspecialchars($response['message']) . "</p>"
 		];
-
 	}
 
-	$reply = $response['reply'];
+	$array = json_decode(nuAIPromptExtractJSON($response['reply']), true);
+	if (json_last_error() !== JSON_ERROR_NONE) {
 
-	$array = explode(",", $reply);
-	$array = array_map('trim', $array);
+		return [
+			'error' => true,
+			'message' => "<h3>Error</h3><p>" . htmlspecialchars("Invalid JSON: " . json_last_error_msg() . "<br>Response:" . $response['reply']) . "</p>"
+		];
+	}
 
 	return [
 		'error' => false,
@@ -263,7 +291,6 @@ function nuGetAIResponse($prompt, $aiConfig = '', $postData = []) {
 		];
 	}
 
-	$aiConfig['api_key'] = '123';
 	// Endpoint and headers
 	$url = $aiConfig['base_url'];
 	$headers = [
