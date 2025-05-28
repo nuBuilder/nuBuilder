@@ -1484,26 +1484,39 @@ function nuSelectNextTab(i, includeInvisible = false, byUser = true) {
 
 }
 
-function nuSelectToArray(id, type = 'value') {
+function nuSelectToArray(id, type = 'value', selectedOnly = true) {
 
-	var result = [];
-	$('#' + id + ' option:selected').each(function () {
+	let result = [];
+	// Choose whether to loop only selected options or all options
+	const selector = selectedOnly
+		? '#' + id + ' option:selected'
+		: '#' + id + ' option';
+
+	$(selector).each(function () {
 		var txt = $(this).text();
-		if (txt === '') return;
-		if (type === 'text') {
-			result.push(txt);
-		} else if (type === 'value') {
-			result.push($(this).val());
-		} else if (type === 'index') {
-			result.push($(this).index() + 1);
-		} else {
-			throw new Error('nuSelectToArray: unknown type "' + type + '"');
+		// Skip blank-text options in all cases
+		if (txt.trim() === '') return;
+
+		switch (type) {
+			case 'text':
+				result.push(txt);
+				break;
+			case 'value':
+				result.push($(this).val());
+				break;
+			case 'index':
+				// +1 if you want 1-based indexing
+				result.push($(this).index() + 1);
+				break;
+			default:
+				throw new Error('nuSelectToArray: unknown type "' + type + '"');
 		}
 	});
 
 	return result;
 
 }
+
 
 function nuModifyHolders(action, ...args) {
 	const actions = {
