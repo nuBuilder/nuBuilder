@@ -67,7 +67,8 @@ function nuAlterSystemTables() {
 		"ALTER TABLE `zzzzsys_email_log` CHANGE `eml_created_at` `eml_created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP;",
 		"ALTER TABLE `zzzzsys_email_log` CHANGE `eml_sent_at` `eml_sent_at` TIMESTAMP NULL DEFAULT NULL;",
 		"ALTER TABLE `zzzzsys_config` ADD `cfg_title` VARCHAR(50) NULL DEFAULT NULL AFTER `cfg_category`;",
-		"ALTER TABLE `zzzzsys_prompt_generator` ADD `pge_tag` VARCHAR(3000) NULL DEFAULT NULL AFTER `pge_prompt`;"
+		"ALTER TABLE `zzzzsys_prompt_generator` ADD `pge_tag` VARCHAR(3000) NULL DEFAULT NULL AFTER `pge_prompt`;",
+		"ALTER TABLE `zzzzsys_prompt_generator` ADD `sph_template` VARCHAR(1) NULL DEFAULT NULL AFTER `pge_tag`;"
 	];
 
 	foreach ($alterTableSQL as $sqlStatement) {
@@ -338,7 +339,7 @@ function nuRemoveNuRecords() {
 		["table" => "sys_zzzzsys_timezone", "where" => '1'],
 		["table" => "sys_zzzzsys_prompt_generator"],
 		["table" => "sys_zzzzsys_item"]
-		
+
 	];
 
 	foreach ($queries as $query) {

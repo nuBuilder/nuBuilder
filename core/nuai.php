@@ -139,6 +139,8 @@ function nuAIPromptBuildPromptInformation($params) {
 		'nusql_builder' => 'SQL Builder: https://wiki.nubuilder.cloud/index.php?title=SQL_Builder',
 		'nuformat_builder' => 'Format Builder: https://wiki.nubuilder.cloud/index.php?title=Format_Builder',
 		'nucsv_transfer' => 'CSV Transfer: https://wiki.nubuilder.cloud/index.php?title=CSV_Transfer',
+		'nufast_form_builder' => 'Fast Form Builder: https://wiki.nubuilder.cloud/index.php?title=Form_Builder'
+
 	];
 
 	$hasTag = false;
@@ -178,11 +180,11 @@ function nuAIPromptGetTagsFromPrompt($params) {
 	$response = nuGetAIResponse($instruction);
 
 	/*
-			  return [
-				  'error' => false,
-				  'result' => ['Update', '2FA']
-			  ];
-		  */
+				 return [
+					 'error' => false,
+					 'result' => ['Update', '2FA']
+				 ];
+			 */
 
 	if ($response['error']) {
 		return [
