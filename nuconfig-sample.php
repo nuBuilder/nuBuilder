@@ -27,14 +27,14 @@
 
 // SSO:
 
-	$nuConfigLogonMode			        = 'normal';	 		        // normal/sso/both->Leave as 'normal' unless you want to enable SSO.
-										                            // The sso/both options include a single sign on button.
-										                            // See SSO_README.txt
-	$nuConfigSsoOnlyExcept		         = array('globeadmin');		// If $nuConfigLogonMode=='both', only the SSO login option is displayed *unless* the last user to
-										                            // log in (from this browser) matches one of the listed users in this setting.
-										                            // For SSO users, use the full email address in the array, here.
-                                                                	// E.g. array('globeadmin','user@example.com');
-                                                                	// This causes the username/password to be displayed (otherwise it is hidden).
+	$nuConfigLogonMode					= 'normal';	 				// normal/sso/both->Leave as 'normal' unless you want to enable SSO.
+																	// The sso/both options include a single sign on button.
+																	// See SSO_README.txt
+	$nuConfigSsoOnlyExcept				 = array('globeadmin');		// If $nuConfigLogonMode=='both', only the SSO login option is displayed *unless* the last user to
+																	// log in (from this browser) matches one of the listed users in this setting.
+																	// For SSO users, use the full email address in the array, here.
+																	// E.g. array('globeadmin','user@example.com');
+																	// This causes the username/password to be displayed (otherwise it is hidden).
 
 // Includes:
 
@@ -46,12 +46,19 @@
 
 	$nuConfigSettingsFromDB				= true;						//-- Use settings from setup->settings if set to true (default)	
 
+// AI Config & Credentials
 
+$nuAIConfig = [
+	'chatgpt' => [
+		'api_key' => 'sk-proj-xxxxxxxxxx',
+		'base_url' => 'https://api.openai.com/v1/chat/completions',
+	]
+];
 
 // Uncomment this block to customise just the top line of the login form (default = nuBuilder Forte logo)
 // This must be one (or could be more) table rows inside <tr> and </tr> :-
 /*
-    $nuConfigLoginScreenTopRow = "
+	$nuConfigLoginScreenTopRow = "
 							<tr>
 								<td align='center' style='padding:0px 0px 0px 33px; text-align:center;'>
 								<img src='core/graphics/logo.png'><br><br>

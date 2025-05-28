@@ -64,7 +64,8 @@ $GLOBALS['sys_table_prefix'] = [
 	'user' => 'sus',
 	'user_permission' => 'upe',
 	'permission_item' => 'pme',
-	'prompt_generator' => 'pge'
+	'prompt_generator' => 'pge',
+	'item' => 'itm'
 ];
 
 function nuRunQueryNoDebug($query, $params = [], $isInsert = false) {

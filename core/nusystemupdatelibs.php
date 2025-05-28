@@ -336,7 +336,9 @@ function nuRemoveNuRecords() {
 		["table" => "sys_zzzzsys_permission_item"],
 		["table" => "sys_zzzzsys_user_permission"],
 		["table" => "sys_zzzzsys_timezone", "where" => '1'],
-		["table" => "sys_zzzzsys_prompt_generator"]
+		["table" => "sys_zzzzsys_prompt_generator"],
+		["table" => "sys_zzzzsys_item"]
+		
 	];
 
 	foreach ($queries as $query) {
@@ -413,6 +415,7 @@ function nuSystemList() {
 	$t[] = 'zzzzsys_permission_item';
 	$t[] = 'zzzzsys_email_log';
 	$t[] = 'zzzzsys_prompt_generator';
+	$t[] = 'zzzzsys_item';
 
 	return $t;
 }
