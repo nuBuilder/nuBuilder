@@ -1620,6 +1620,74 @@ function nuButtonIcon(id) {
 
 }
 
+function nuButtonLoading(buttonId, spinning = true, autoEnableAfterSeconds = 0) {
+
+	const button = document.getElementById(buttonId);
+	if (spinning) {
+		if (!button || nuIsDisabled(button.id)) return;
+	} else {
+		if (!button) return;
+	}
+
+	if (button._spinnerTimer) {
+		clearTimeout(button._spinnerTimer);
+		delete button._spinnerTimer;
+	}
+	if (button._spinnerMonitor) {
+		clearInterval(button._spinnerMonitor);
+		delete button._spinnerMonitor;
+	}
+
+	const originalIcon = button.querySelector('i:not([nu-data-spinner])');
+	if (spinning) {
+		button.dataset.spinnerStart = Date.now();
+		button.disabled = true;
+		button.classList.add('disabled');
+		if (originalIcon) originalIcon.style.display = 'none';
+
+		if (!button.querySelector('[nu-data-spinner]')) {
+			const spinner = document.createElement('i');
+			spinner.className = 'fa-fw fa fa-spinner fa-spin';
+			spinner.setAttribute('nu-data-spinner', 'true');
+			button.appendChild(spinner);
+		}
+
+		if (autoEnableAfterSeconds > 0) {
+			button._spinnerMonitor = setInterval(() => {
+				if (!document.getElementById(buttonId)) {
+					clearTimeout(button._spinnerTimer);
+					clearInterval(button._spinnerMonitor);
+					delete button._spinnerTimer;
+					delete button._spinnerMonitor;
+				}
+			}, 300);
+
+			button._spinnerTimer = setTimeout(() => {
+				if (button._spinnerMonitor) {
+					clearInterval(button._spinnerMonitor);
+					delete button._spinnerMonitor;
+				}
+
+				const stillThere = document.getElementById(buttonId);
+				const started = Number(button.dataset.spinnerStart || 0);
+				if (stillThere && (Date.now() - started >= autoEnableAfterSeconds * 1000)) {
+					nuButtonLoading(buttonId, false);
+				}
+			}, autoEnableAfterSeconds * 1000);
+		}
+	} else {
+		button.disabled = false;
+		button.classList.remove('disabled');
+
+		const oldSpinner = button.querySelector('[nu-data-spinner]');
+		if (oldSpinner) oldSpinner.remove();
+		if (originalIcon) originalIcon.style.display = '';
+
+		delete button.dataset.spinnerStart;
+	}
+
+}
+
 function nuChart(chartId, chartType, dataArray, chartTitle, xAxisTitle, yAxisTitle, seriesType, isStacked) {
 
 	const chartElement = document.getElementById(chartId);
