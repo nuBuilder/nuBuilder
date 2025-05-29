@@ -247,7 +247,7 @@ function nuAIPromptGetResponse($params) {
 	$prompt = $params['prompt'] ?? '';
 
 	$response = nuGetAIResponse($prompt);
-	// If the response is an error, return it
+
 	if ($response['error']) {
 		return [
 			'error' => true,
@@ -266,11 +266,10 @@ function nuAIPromptGetResponse($params) {
 
 }
 
-function nuGetAIResponse($prompt, $aiConfig = '', $postData = []) {
+function nuResolveAIConfig($override = null) {
 
 	global $nuAIConfig;
 
-	// Check if global $nuAIConfig is set and is an array
 	if (!isset($nuAIConfig) || !is_array($nuAIConfig)) {
 		return [
 			'error' => true,
@@ -278,40 +277,53 @@ function nuGetAIResponse($prompt, $aiConfig = '', $postData = []) {
 		];
 	}
 
-	// If nothing (or an empty array) was passed, use openai as default
-	if (empty($aiConfig) || !is_array($aiConfig)) {
-		if (!isset($nuAIConfig['openai']) || !is_array($nuAIConfig['openai'])) {
+	$cfg = $override;
+	if (empty($cfg) || !is_array($cfg)) {
+		if (empty($nuAIConfig['openai']) || !is_array($nuAIConfig['openai'])) {
 			return [
 				'error' => true,
-				'message' => 'Default AI configuration ($nuAIConfig[\'openai\']) is not set or is invalid. Please add configuration in nuconfig.php',
+				'message' => 'Default AI configuration ($nuAIConfig[\'openai\']) is not set or is invalid. Please add configuration in nuconfig.php.',
 			];
 		}
-		$aiConfig = $nuAIConfig['openai'];
+		$cfg = $nuAIConfig['openai'];
 	}
 
-	// Validate config
-	if (empty($aiConfig['api_key']) || empty($aiConfig['base_url'])) {
+	if (empty($cfg['api_key']) || empty($cfg['base_url'])) {
 		return [
 			'error' => true,
 			'message' => 'Invalid AI configuration: api_key and base_url are required.',
 		];
 	}
 
-	// $aiConfig['api_key'] = 'test';
+	return [
+		'error' => false,
+		'config' => $cfg,
+	];
 
-	// Endpoint and headers
+}
+
+function nuGetAIResponse($prompt, $aiConfigOverride = '', $postData = []) {
+
+	// Testing:
+	// return ['error' => true, 'message' => $prompt];
+
+	$resolved = nuResolveAIConfig($aiConfigOverride);
+	if (!empty($resolved['error'])) {
+		return $resolved;
+	}
+
+	$aiConfig = $resolved['config'];
+	$apiKey = $aiConfig['api_key'];
 	$url = $aiConfig['base_url'];
+
 	$headers = [
-		"Content-Type: application/json",
-		"Authorization: Bearer " . $aiConfig['api_key'],
+		'Content-Type: application/json',
+		'Authorization: Bearer ' . $apiKey,
 	];
 
-	// Base payload for chat-completions
-	$messages = [
-		['role' => 'user', 'content' => $prompt],
-	];
+	$messages = [['role' => 'user', 'content' => $prompt]];
 
-	$postDataDefault = [
+	$defaults = [
 		'model' => 'gpt-4o',
 		'messages' => $messages,
 		'max_tokens' => 4000,
@@ -321,63 +333,107 @@ function nuGetAIResponse($prompt, $aiConfig = '', $postData = []) {
 		'presence_penalty' => 0.0,
 	];
 
-	// Merge defaults with overrides
-	$payload = array_replace($postDataDefault, $postData);
+	$payload = array_replace($defaults, $postData);
 
-	// Initialize cURL
 	$ch = curl_init();
-	curl_setopt_array($ch, [
-		CURLOPT_URL => $url,
-		CURLOPT_POST => true,
-		CURLOPT_HTTPHEADER => $headers,
-		CURLOPT_POSTFIELDS => json_encode($payload),
-		CURLOPT_RETURNTRANSFER => true,
-		CURLOPT_TIMEOUT => 15,
-		// For local testing only – disable SSL verification
-		CURLOPT_SSL_VERIFYPEER => false,
-		CURLOPT_SSL_VERIFYHOST => false,
-	]);
+	$opts = nuBuildCurlOptions($url, $headers, $payload, 15);
+	curl_setopt_array($ch, $opts);
 
-	// Execute request
 	$response = curl_exec($ch);
 	$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-	// cURL error?
 	if (curl_errno($ch)) {
-		$errorMsg = curl_error($ch);
+		$err = curl_error($ch);
 		curl_close($ch);
-		return [
-			'error' => true,
-			'message' => "Request Error: $errorMsg",
-		];
+		return ['error' => true, 'message' => "Request Error: $err"];
 	}
 	curl_close($ch);
 
-	// Decode response
+
 	$data = json_decode($response, true);
-
-
 	if ($httpCode !== 200 || !is_array($data)) {
-		$errMessage = $data['error']['message'] ?? 'Unknown error or invalid JSON response';
-		return [
-			'error' => true,
-			'message' => "API Error (HTTP $httpCode): $errMessage",
-		];
+		$msg = $data['error']['message'] ?? 'Unknown error or invalid JSON';
+		return ['error' => true, 'message' => "API Error (HTTP $httpCode): $msg"];
 	}
-
-	// Extract result
-	$reply = $data['choices'][0]['message']['content'] ?? 'No response generated.';
-
-	$responseId = $data['id'] ?? null;
-	$responseModel = $data['model'] ?? null;
-	$usage = $data['usage'] ?? null;
 
 	return [
 		'error' => false,
-		'reply' => $reply,
-		'id' => $responseId,
-		'model' => $responseModel,
-		'usage' => $usage,
+		'reply' => $data['choices'][0]['message']['content'] ?? '',
+		'id' => $data['id'] ?? null,
+		'model' => $data['model'] ?? null,
+		'usage' => $data['usage'] ?? null,
 	];
 
 }
+
+function nuBuildCurlOptions($url, $headers, $payload = null, $timeout = 15) {
+
+	$opts = [
+		CURLOPT_URL => $url,
+		CURLOPT_HTTPHEADER => $headers,
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_TIMEOUT => $timeout,
+	];
+
+	if ($payload !== null) {
+		$opts[CURLOPT_POST] = true;
+		$opts[CURLOPT_POSTFIELDS] = is_string($payload) ? $payload : json_encode($payload);
+	} else {
+		$opts[CURLOPT_HTTPGET] = true;
+	}
+
+	$caBundle = ini_get('curl.cainfo') ?: ini_get('openssl.cafile');
+	if ($caBundle) {
+		$opts[CURLOPT_SSL_VERIFYPEER] = true;
+		$opts[CURLOPT_SSL_VERIFYHOST] = 2;
+	} else {
+		$opts[CURLOPT_SSL_VERIFYPEER] = false;
+		$opts[CURLOPT_SSL_VERIFYHOST] = 0;
+	}
+
+	return $opts;
+
+}
+
+
+function nuAITestCredentials($aiConfigOverride = '') {
+
+	$resolved = nuResolveAIConfig($aiConfigOverride);
+	if (!empty($resolved['error'])) {
+		return ['success' => false, 'message' => $resolved['error']];
+	}
+	$apiKey = $resolved['config']['api_key'];
+	$url = 'https://api.openai.com/v1/models';
+
+	$headers = [
+		'Content-Type: application/json',
+		"Authorization: Bearer $apiKey",
+	];
+
+	$ch = curl_init();
+	$opts = nuBuildCurlOptions($url, $headers, null, 15);
+	curl_setopt_array($ch, $opts);
+
+	$resp = curl_exec($ch);
+	$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	$curlErr = curl_errno($ch) ? curl_error($ch) : null;
+	curl_close($ch);
+
+	if ($curlErr) {
+		return ['success' => false, 'message' => "cURL error: $curlErr"];
+	}
+
+	if ($httpCode === 200) {
+		return ['success' => true, 'message' => 'Credentials are valid!'];
+	}
+
+	$data = json_decode($resp, true);
+	$apiMsg = $data['error']['message'] ?? 'Unknown API error';
+	return [
+		'success' => false,
+		'http_code' => $httpCode,
+		'message' => $apiMsg,
+		'raw' => $resp,
+	];
+
+}
+
