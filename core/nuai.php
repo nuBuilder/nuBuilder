@@ -176,7 +176,7 @@ function nuAIPromptExtractJSON($input) {
 
 function nuAIPromptGetTagsFromPrompt($params) {
 
-	$test = false; // Set to true for testing purposes, to return a predefined response
+	$testing = false; // For testing purposes, to return a predefined response. 0 = successful, 1 = error
 
 	$tags = is_string($params['tags'] ?? '') ? json_decode($params['tags'], true, 512, JSON_THROW_ON_ERROR) : ($params['tags'] ?? []);
 	$prompt = $params['prompt'] ?? '';
@@ -202,7 +202,12 @@ function nuAIPromptGetTagsFromPrompt($params) {
 
 	$instruction = $instruction . implode(",", $tags);
 
-	if ($test) {
+	if ($testing === 1) {
+		return [
+			'error' => true,
+			'message' => "<h3>Error</h3><p>Test error: Simulated error response for testing purposes.</p>"
+		];
+	} else if ($testing === 0) {
 		$response = [
 			'error' => false,
 			'reply' => '["Objects", "Installation", "Updating", "2FA"]'
@@ -290,6 +295,8 @@ function nuGetAIResponse($prompt, $aiConfig = '', $postData = []) {
 			'message' => 'Invalid AI configuration: api_key and base_url are required.',
 		];
 	}
+
+	// $aiConfig['api_key'] = 'test';
 
 	// Endpoint and headers
 	$url = $aiConfig['base_url'];
