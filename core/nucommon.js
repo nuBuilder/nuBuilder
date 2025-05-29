@@ -1629,6 +1629,7 @@ function nuButtonLoading(buttonId, spinning = true, autoEnableAfterSeconds = 0) 
 		if (!button) return;
 	}
 
+	// clear any old timers/monitors
 	if (button._spinnerTimer) {
 		clearTimeout(button._spinnerTimer);
 		delete button._spinnerTimer;
@@ -1638,35 +1639,50 @@ function nuButtonLoading(buttonId, spinning = true, autoEnableAfterSeconds = 0) 
 		delete button._spinnerMonitor;
 	}
 
+	// find the “real” icon (if any) so we can hide it
 	const originalIcon = button.querySelector('i:not([nu-data-spinner])');
+
 	if (spinning) {
 		button.dataset.spinnerStart = Date.now();
 		button.disabled = true;
 		button.classList.add('disabled');
 		if (originalIcon) originalIcon.style.display = 'none';
 
+		// only add one spinner
 		if (!button.querySelector('[nu-data-spinner]')) {
+			// create the spinner <i>
 			const spinner = document.createElement('i');
 			spinner.className = 'fa-fw fa fa-spinner fa-spin';
 			spinner.setAttribute('nu-data-spinner', 'true');
-			button.appendChild(spinner);
+
+			// decide where to put it:
+			const label = button.querySelector('.nuButtonLabel');
+			if (label) {
+				// insert right before the text label
+				label.parentNode.insertBefore(spinner, label);
+				// preserve a bit of spacing
+				label.parentNode.insertBefore(document.createTextNode(' '), label);
+			} else {
+				// no label ⇒ icon-only button
+				button.appendChild(spinner);
+			}
 		}
 
+		// if we should auto-re-enable later...
 		if (autoEnableAfterSeconds > 0) {
+			// watch for the button being removed from the DOM
 			button._spinnerMonitor = setInterval(() => {
 				if (!document.getElementById(buttonId)) {
-					clearTimeout(button._spinnerTimer);
 					clearInterval(button._spinnerMonitor);
-					delete button._spinnerTimer;
+					clearTimeout(button._spinnerTimer);
 					delete button._spinnerMonitor;
+					delete button._spinnerTimer;
 				}
 			}, 300);
 
 			button._spinnerTimer = setTimeout(() => {
-				if (button._spinnerMonitor) {
-					clearInterval(button._spinnerMonitor);
-					delete button._spinnerMonitor;
-				}
+				clearInterval(button._spinnerMonitor);
+				delete button._spinnerMonitor;
 
 				const stillThere = document.getElementById(buttonId);
 				const started = Number(button.dataset.spinnerStart || 0);
@@ -1675,17 +1691,20 @@ function nuButtonLoading(buttonId, spinning = true, autoEnableAfterSeconds = 0) 
 				}
 			}, autoEnableAfterSeconds * 1000);
 		}
+
 	} else {
+		// turn it off
 		button.disabled = false;
 		button.classList.remove('disabled');
 
+		// remove the spinner
 		const oldSpinner = button.querySelector('[nu-data-spinner]');
 		if (oldSpinner) oldSpinner.remove();
+		// bring back the original icon
 		if (originalIcon) originalIcon.style.display = '';
 
 		delete button.dataset.spinnerStart;
 	}
-
 }
 
 function nuChart(chartId, chartType, dataArray, chartTitle, xAxisTitle, yAxisTitle, seriesType, isStacked) {
