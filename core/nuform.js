@@ -7198,43 +7198,41 @@ function nuPrompt(text, caption, defaultValue, format, fctn) {
 function nuOnPromptClose(val, ok) {
 }
 
-function nuAddBrowseTitleSelect(index, data, w) {
+function nuAddBrowseTitleSelect(columnIndex, optionsData, customWidth, style) {
 
-	if (!Array.isArray(data)) return;
+	if (!Array.isArray(optionsData) || optionsData.length === 0) return null;
 
-	var id = "nuBrowseTitle" + index + "_select";
-	var list = document.createElement('select');
-	list.setAttribute("id", id);
+	const { column_widths: columnWidths, browse_columns: browseColumns } = nuCurrentProperties();
+	const selectId = `nuBrowseTitle${columnIndex}_select`;
+	const containerSelector = `#nuBrowseTitle${columnIndex}`;
+	const computedWidth = typeof customWidth !== 'undefined'
+		? customWidth
+		: (columnWidths === 0
+			? browseColumns[columnIndex].width
+			: columnWidths[columnIndex] - 3
+		);
 
-	if (w === undefined) {
-		w = nuCurrentProperties().column_widths == 0 ? nuCurrentProperties().browse_columns[index].width : nuCurrentProperties().column_widths[index] - 3;
-	}
+	const cssProps = { width: `${computedWidth}px`, ...(style || {}) };
+	const $select = $('<select>', { id: selectId, css: cssProps });
 
-	list.setAttribute('style', 'width:' + w + 'px');
-
-	var is1DArray = data[0][0] === undefined;
-	data.forEach(function (a) {
-		var opt = document.createElement('option');
-		opt.value = is1DArray ? a : a[0];
-		opt.innerHTML = is1DArray ? a : a[1];
-		list.appendChild(opt);
+	const isSimpleArray = !Array.isArray(optionsData[0]);
+	optionsData.forEach(item => {
+		const [value, label] = isSimpleArray ? [item, item] : item;
+		$('<option>', { value, text: label }).appendTo($select);
 	});
 
-	var obj = $('#nuBrowseTitle' + index);
-	obj.append('<br/>').append(list);
+	const $container = $(containerSelector);
+	$container.append('<br/>', $select);
 
-	$('#' + id).on('change', function () {
-		nuSetProperty(this.id, this.value);
+	$select.on('change', () => {
+		nuSetProperty(selectId, $select.val());
 		nuSearchAction();
 	});
 
-	obj.on('mousedown', '> select', function (e) {
-		e.stopPropagation();
-	});
+	$container.on('mousedown', 'select', e => e.stopPropagation());
+	$select.val(nuGetProperty(selectId));
 
-	$("#" + id).val(nuGetProperty(id));
-
-	return $('#' + id);
+	return $select;
 
 }
 
