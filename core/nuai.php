@@ -45,9 +45,9 @@ function nuAIPromptBuildPromptInformation($params) {
 	$lines = [];
 
 	// Header instruction for AI
-	$lines[] = 'You are an AI assistant specialized in nuBuilder Forte development. Generate code snippets and explanations following nuBuilder conventions';
-	$lines[] = 'Use the information below if they are relevant to the prompt. It is provided to help you understand the context and requirements for generating code snippets:';
-	$lines[] = '';  // blank line
+	// $lines[] = 'You are an AI assistant specialized in nuBuilder Forte development. Generate code snippets and explanations following nuBuilder conventions';
+	// $lines[] = 'Use the information below if they are relevant to the prompt. It is provided to help you understand the context and requirements for generating code snippets:';
+	// $lines[] = '';  // blank line
 
 	// 1) Table schemas
 	if (!empty($tables)) {

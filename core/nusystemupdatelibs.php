@@ -68,7 +68,9 @@ function nuAlterSystemTables() {
 		"ALTER TABLE `zzzzsys_email_log` CHANGE `eml_sent_at` `eml_sent_at` TIMESTAMP NULL DEFAULT NULL;",
 		"ALTER TABLE `zzzzsys_config` ADD `cfg_title` VARCHAR(50) NULL DEFAULT NULL AFTER `cfg_category`;",
 		"ALTER TABLE `zzzzsys_prompt_generator` ADD `pge_tag` VARCHAR(3000) NULL DEFAULT NULL AFTER `pge_prompt`;",
-		"ALTER TABLE `zzzzsys_prompt_generator` ADD `sph_template` VARCHAR(1) NULL DEFAULT NULL AFTER `pge_tag`;"
+		"ALTER TABLE `zzzzsys_prompt_generator` ADD `sph_template` VARCHAR(1) NULL DEFAULT NULL AFTER `pge_tag`;",
+		"ALTER TABLE `zzzzsys_prompt_generator` CHANGE `sph_template` `pge_template` VARCHAR(1) DEFAULT NULL;",
+		"ALTER TABLE `zzzzsys_prompt_generator` ADD `pge_instruction` VARCHAR(3000) NULL DEFAULT NULL AFTER `sph_template`;"
 	];
 
 	foreach ($alterTableSQL as $sqlStatement) {
