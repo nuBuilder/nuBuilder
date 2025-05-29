@@ -61,13 +61,14 @@ function nuAIPromptBuildPromptInformation($params) {
 
 	// 2) Language-specific notes
 	$languageMessages = [
-		'JavaScript' => 'Use nuBuilder JS functions: https://wiki.nubuilder.cloud/index.php?title=Javascript',
-		'PHP' => 'Use nuBuilder PDO PHP functions (nuRunQuery(), db_fetch_array(), etc.) without PHP tags.',
-		'MySQL' => 'Database: MySQL',
-		'CSS' => 'Technology: CSS',
-		'HTML' => 'Technology: HTML',
-		'SQL' => 'Use the nuBuilder SQL Builder: https://wiki.nubuilder.cloud/index.php?title=SQL_Builder',
+		'nuhtml' => 'Technology: HTML',
+		'nujavascript' => 'Use nuBuilder JS functions: https://wiki.nubuilder.cloud/index.php?title=Javascript',
+		'nujquery' => 'Technology: jQuery',
+		'nuphp' => 'Use nuBuilder PDO PHP functions (nuRunQuery(), db_fetch_array(), etc.) without PHP tags.',
+		'numysql' => 'Database: MySQL',
+		'nucss' => 'Technology: CSS',
 	];
+
 	$hasLang = false;
 	foreach ($languages as $lang) {
 		if (isset($languageMessages[$lang])) {
@@ -84,16 +85,16 @@ function nuAIPromptBuildPromptInformation($params) {
 
 	// 3) Scope-specific notes
 	$scopeMessages = [
-		'PHP Procedure' => 'Context: PHP Procedure. Use nuJavaScriptCallback(), nuRunPHPHidden(), etc as appropriate.',
-		'PHP BB' => 'Context: PHP Before Browse (BB). Use nuCreateTableFromSelect().',
-		'PHP BE' => 'Context: PHP Before Edit (BE). Use nuAddJavaScript() to inject JS.',
-		'PHP BS' => 'Context: PHP Before Save (BS).',
-		'PHP AS' => 'Context: PHP After Save (AS).',
-		'PHP BD' => 'Context: PHP Before Delete (BD).',
-		'Form Custom Code' => 'Context: Form Custom Code (no <script> tags).',
-		'Setup -> Header' => 'Context: Global header code (Setup -> Header).',
-		'Browse Form' => 'Context: Browse Form client-side JS.',
-		'Edit Form' => 'Context: Edit Form client-side JS.',
+		'nubrowse_form' => 'Context: Browse Form client-side JS.',
+		'nuedit_form' => 'Context: Edit Form client-side JS.',
+		'nuform_custom_code' => 'Context: Form Custom Code (no <script> tags).',
+		'nuphp_procedure' => 'Context: PHP Procedure. Use nuJavaScriptCallback(), nuRunPHPHidden(), etc as appropriate.',
+		'nuphp_bb' => 'Context: PHP Before Browse (BB). Use nuCreateTableFromSelect().',
+		'nuphp_be' => 'Context: PHP Before Edit (BE). Use nuAddJavaScript() to inject JS.',
+		'nuphp_bs' => 'Context: PHP Before Save (BS).',
+		'nuphp_bd' => 'Context: PHP Before Delete (BD).',
+		'nuphp_as' => 'Context: PHP After Save (AS).',
+		'nusetup_header' => 'Context: Global header code (Setup -> Header).',
 	];
 
 	$hasScope = false;
