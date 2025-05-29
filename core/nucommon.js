@@ -2404,7 +2404,7 @@ function nuSelectSelectedTextArray(id) {
 }
 
 function nuSelectSetIndex(id, index) {
-	$("#" + id).prop("selectedIndex", index).change();
+	$("#" + id).prop("selectedIndex", index).trigger('change');
 }
 
 function nuPasteText(id, callback) {
