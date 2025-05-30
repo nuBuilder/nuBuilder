@@ -124,6 +124,7 @@ function nuAIPromptBuildPromptInformation($params) {
 		'nureport_designer' => 'Report Designer: https://wiki.nubuilder.cloud/index.php?title=Report_Designer',
 		'nuprocedures' => 'Procedures: https://wiki.nubuilder.cloud/index.php?title=Procedures',
 		'nuuser_access' => 'User Access: https://wiki.nubuilder.cloud/index.php?title=User_Access',
+		'nuusers' => 'Users: https://wiki.nubuilder.cloud/index.php?title=User_Access',
 		'nu2fa' => 'Two Factor Authentication (2FA): https://wiki.nubuilder.cloud/index.php?title=Two_Factor_Authentication_-_2FA',
 		'nufunctions' => 'Functions: https://wiki.nubuilder.cloud/index.php?title=Functions',
 		'nufile_includes' => 'Custom File Includes: https://wiki.nubuilder.cloud/index.php?title=Custom_File_Includes',
@@ -141,7 +142,6 @@ function nuAIPromptBuildPromptInformation($params) {
 		'nuformat_builder' => 'Format Builder: https://wiki.nubuilder.cloud/index.php?title=Format_Builder',
 		'nucsv_transfer' => 'CSV Transfer: https://wiki.nubuilder.cloud/index.php?title=CSV_Transfer',
 		'nufast_form_builder' => 'Fast Form Builder: https://wiki.nubuilder.cloud/index.php?title=Form_Builder'
-
 	];
 
 	$hasTag = false;
