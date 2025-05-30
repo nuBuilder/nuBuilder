@@ -943,7 +943,7 @@ function nuContextMenuCurrentTargetUpdateId() {
 		if (nuObjectClassList(strIdNoLabel).containsAny(['nuHtml', 'nuImage', 'nuContentBoxContainer', 'nuSubform'])) {
 			return idNoLabel.attr('id');
 		} else if (idNoLabel.hasClass('select2-hidden-accessible')) {
-			return strIdNoLabel + '_select2';
+			return strIdNoLabel;
 		} else {
 			let id = t.hasClass('nuSubformTitle') ? t.attr('data-nu-field') : idNoLabel.attr('data-nu-field');
 			id = id === undefined ? contextMenuCurrentTarget.id : id;
