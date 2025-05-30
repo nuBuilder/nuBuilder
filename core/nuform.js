@@ -7202,9 +7202,28 @@ function nuAddBrowseTitleSelect(columnIndex, optionsData, customWidth, style) {
 
 	if (!Array.isArray(optionsData) || optionsData.length === 0) return null;
 
+	let columnId = null;
+	const isNum = typeof columnIndex === 'number';
+
+	if (!isNum) {
+		columnId = columnIndex;
+		columnIndex = nuCurrentProperties().browse_columns.findIndex(
+			object => object.id === columnIndex
+		);
+	}
+
 	const { column_widths: columnWidths, browse_columns: browseColumns } = nuCurrentProperties();
 	const selectId = `nuBrowseTitle${columnIndex}_select`;
+	let propertyId = '';
+
+	if (isNum) {
+		propertyId = `nuBrowseTitle${columnIndex}_select`;
+	} else {
+		propertyId = `nuBrowseTitle_${columnId}_select`;
+	}
+
 	const containerSelector = `#nuBrowseTitle${columnIndex}`;
+
 	const computedWidth = typeof customWidth !== 'undefined'
 		? customWidth
 		: (columnWidths === 0
@@ -7222,18 +7241,26 @@ function nuAddBrowseTitleSelect(columnIndex, optionsData, customWidth, style) {
 	});
 
 	const $container = $(containerSelector);
+	if ($container.length === 0) {
+		console.warn(`nuAddBrowseTitleSelect2: no container found for selector "${containerSelector}"`);
+		return null;
+	}
+
 	$container.append('<br/>', $select);
 
 	$select.on('change', () => {
-		nuSetProperty(selectId, $select.val());
+		nuSetProperty(propertyId, $select.val());
 		nuSearchAction();
 	});
 
 	$container.on('mousedown', 'select', e => e.stopPropagation());
-	$select.val(nuGetProperty(selectId));
+
+	$select.val(nuGetProperty(propertyId));
+	if (!isNum) {
+		$select.attr('data-nu-title-id', columnId)
+	}
 
 	return $select;
-
 }
 
 function nuDatalistValueRestoreValue(i) {
