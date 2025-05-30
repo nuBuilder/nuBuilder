@@ -7198,37 +7198,37 @@ function nuPrompt(text, caption, defaultValue, format, fctn) {
 function nuOnPromptClose(val, ok) {
 }
 
-function nuAddBrowseTitleSelect(columnIndex, optionsData, customWidth, style) {
+function nuAddBrowseTitleSelect(column, optionsData, customWidth, style) {
 
 	if (!Array.isArray(optionsData) || optionsData.length === 0) return null;
 
 	let columnId = null;
-	const isNum = typeof columnIndex === 'number';
+	const isNum = typeof column === 'number';
 
 	if (!isNum) {
-		columnId = columnIndex;
-		columnIndex = nuCurrentProperties().browse_columns.findIndex(
-			object => object.id === columnIndex
+		columnId = column;
+		column = nuCurrentProperties().browse_columns.findIndex(
+			object => object.id === column
 		);
 	}
 
 	const { column_widths: columnWidths, browse_columns: browseColumns } = nuCurrentProperties();
-	const selectId = `nuBrowseTitle${columnIndex}_select`;
+	const selectId = `nuBrowseTitle${column}_select`;
 	let propertyId = '';
 
 	if (isNum) {
-		propertyId = `nuBrowseTitle${columnIndex}_select`;
+		propertyId = `nuBrowseTitle${column}_select`;
 	} else {
 		propertyId = `nuBrowseTitle_${columnId}_select`;
 	}
 
-	const containerSelector = `#nuBrowseTitle${columnIndex}`;
+	const containerSelector = `#nuBrowseTitle${column}`;
 
 	const computedWidth = typeof customWidth !== 'undefined'
 		? customWidth
 		: (columnWidths === 0
-			? browseColumns[columnIndex].width
-			: columnWidths[columnIndex] - 3
+			? browseColumns[column].width
+			: columnWidths[column] - 3
 		);
 
 	const cssProps = { width: `${computedWidth}px`, ...(style || {}) };
