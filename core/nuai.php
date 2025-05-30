@@ -112,48 +112,69 @@ function nuAIPromptBuildPromptInformation($params) {
 	}
 
 	// 4) Tag-specific notes (all topics from documentation)
+	$wikiBase = 'https://wiki.nubuilder.cloud/index.php?title=';
+
 	$tagMessages = [
-		'nusetup' => 'Setup: https://wiki.nubuilder.cloud/index.php?title=Setup',
-		'nuinstallation' => 'Installation: https://github.com/nuBuilder/nuBuilder/wiki/nuBuilder-Installation-Guide',
-		'nuupdating' => 'Updating: https://wiki.nubuilder.cloud/index.php?title=Updating',
-		'nuforms' => 'Forms: https://wiki.nubuilder.cloud/index.php?title=Forms',
-		'nuobjects' => 'Objects: https://wiki.nubuilder.cloud/index.php?title=Objects',
-		'nucloner' => 'Cloner: https://wiki.nubuilder.cloud/index.php?title=Cloner',
-		'nureports' => 'Reports: https://wiki.nubuilder.cloud/index.php?title=Reports',
-		'nureport_builder' => 'Report Builder: https://wiki.nubuilder.cloud/index.php?title=Report_Builder',
-		'nureport_designer' => 'Report Designer: https://wiki.nubuilder.cloud/index.php?title=Report_Designer',
-		'nuprocedures' => 'Procedures: https://wiki.nubuilder.cloud/index.php?title=Procedures',
-		'nuuser_access' => 'User Access: https://wiki.nubuilder.cloud/index.php?title=User_Access',
-		'nuusers' => 'Users: https://wiki.nubuilder.cloud/index.php?title=User_Access',
-		'nu2fa' => 'Two Factor Authentication (2FA): https://wiki.nubuilder.cloud/index.php?title=Two_Factor_Authentication_-_2FA',
-		'nufunctions' => 'Functions: https://wiki.nubuilder.cloud/index.php?title=Functions',
-		'nufile_includes' => 'Custom File Includes: https://wiki.nubuilder.cloud/index.php?title=Custom_File_Includes',
-		'nusearch' => 'Search: https://wiki.nubuilder.cloud/index.php?title=Search',
-		'nuhash_cookies' => 'Hash Cookies: https://wiki.nubuilder.cloud/index.php?title=Hash_Cookies',
-		'nutranslations' => 'Translations: https://wiki.nubuilder.cloud/index.php?title=Translations',
-		'nufiles' => 'Files: https://wiki.nubuilder.cloud/index.php?title=Files',
-		'nunavigation' => 'Navigation: https://wiki.nubuilder.cloud/index.php?title=Navigation',
-		'nudatabase' => 'Database: https://wiki.nubuilder.cloud/index.php?title=Database',
-		'nufile_manager' => 'File Manager: https://wiki.nubuilder.cloud/index.php?title=File_Manager',
-		'nulogging_activity' => 'Logging Activity: https://wiki.nubuilder.cloud/index.php?title=Logging_Activity',
-		'nulogging_in' => 'Logging in: https://wiki.nubuilder.cloud/index.php?title=Login',
-		'nusso' => 'Single sign-on (SSO): https://wiki.nubuilder.cloud/index.php?title=Single_sign-on_(SSO)',
-		'nusql_builder' => 'SQL Builder: https://wiki.nubuilder.cloud/index.php?title=SQL_Builder',
-		'nuformat_builder' => 'Format Builder: https://wiki.nubuilder.cloud/index.php?title=Format_Builder',
-		'nucsv_transfer' => 'CSV Transfer: https://wiki.nubuilder.cloud/index.php?title=CSV_Transfer',
-		'nufast_form_builder' => 'Fast Form Builder: https://wiki.nubuilder.cloud/index.php?title=Form_Builder'
+		'nusetup' => ['desc' => 'Setup', 'slug' => 'Setup'],
+		'nuinstallation' => [
+			'desc' => 'Installation',
+			'slug' => 'nuBuilder-Installation-Guide',
+			'url' => 'https://github.com/nuBuilder/nuBuilder/wiki/nuBuilder-Installation-Guide'
+		],
+		'nuupdating' => ['desc' => 'Updating', 'slug' => 'Updating'],
+		'nuforms' => ['desc' => 'Forms', 'slug' => 'Forms'],
+		'nuobjects' => ['desc' => 'Objects', 'slug' => 'Objects'],
+		'nucloner' => ['desc' => 'Cloner', 'slug' => 'Cloner'],
+		'nureports' => ['desc' => 'Reports', 'slug' => 'Reports'],
+		'nureport_builder' => ['desc' => 'Report Builder', 'slug' => 'Report_Builder'],
+		'nureport_designer' => ['desc' => 'Report Designer', 'slug' => 'Report_Designer'],
+		'nuprocedures' => ['desc' => 'Procedures', 'slug' => 'Procedures'],
+		'nuuser_access' => ['desc' => 'User Access', 'slug' => 'User_Access'],
+		'nuusers' => ['desc' => 'Users', 'slug' => 'User_Access'],
+		'nu2fa' => ['desc' => 'Two Factor Authentication (2FA)', 'slug' => 'Two_Factor_Authentication_-_2FA'],
+		'nufunctions' => ['desc' => 'Functions', 'slug' => 'Functions'],
+		'nufile_includes' => ['desc' => 'Custom File Includes', 'slug' => 'Custom_File_Includes'],
+		'nusearch' => ['desc' => 'Search', 'slug' => 'Search'],
+		'nuitems' => ['desc' => 'Items', 'slug' => 'Items'],
+		'nuhash_cookies' => ['desc' => 'Hash Cookies', 'slug' => 'Hash_Cookies'],
+		'nutranslations' => ['desc' => 'Translations', 'slug' => 'Translations'],
+		'nufiles' => ['desc' => 'Files', 'slug' => 'Files'],
+		'nunavigation' => ['desc' => 'Navigation', 'slug' => 'Navigation'],
+		'nudatabase' => ['desc' => 'Database', 'slug' => 'Database'],
+		'nufile_manager' => ['desc' => 'File Manager', 'slug' => 'File_Manager'],
+		'nulogging_activity' => ['desc' => 'Logging Activity', 'slug' => 'Logging_Activity'],
+		'nulogging_in' => ['desc' => 'Logging in', 'slug' => 'Login'],
+		'nusso' => ['desc' => 'Single sign-on (SSO)', 'slug' => 'Single_sign-on_(SSO)'],
+		'nusql_builder' => ['desc' => 'SQL Builder', 'slug' => 'SQL_Builder'],
+		'nuformat_builder' => ['desc' => 'Format Builder', 'slug' => 'Format_Builder'],
+		'nucsv_transfer' => ['desc' => 'CSV Transfer', 'slug' => 'CSV_Transfer'],
+		'nufast_form_builder' => ['desc' => 'Fast Form Builder', 'slug' => 'Form_Builder'],
+		'nuaiprompt_generator' => ['desc' => 'AI Prompt Generator', 'slug' => 'AI_Prompt_Generator'],
 	];
 
-	$hasTag = false;
+	$hasTagHeader = false;
+
 	foreach ($tags as $tag) {
-		if (isset($tagMessages[$tag])) {
-			if (!$hasTag) {
-				$lines[] = '## Topics & References';
-				$hasTag = true;
-			}
-			$lines[] = "- {$tagMessages[$tag]}";
+		// now checks the right array
+		if (!isset($tagMessages[$tag])) {
+			continue;
 		}
+
+		if (!$hasTagHeader) {
+			$lines[] = '## Topics & References';
+			$hasTagHeader = true;
+		}
+
+		$entry = $tagMessages[$tag];
+		$label = $entry['desc'];
+		$url = !empty($entry['url'])
+			? $entry['url']
+			: $wikiBase . $entry['slug'];
+
+		$lines[] = "- {$label}: {$url}";
 	}
+
+
 
 	return implode(PHP_EOL, $lines);
 
