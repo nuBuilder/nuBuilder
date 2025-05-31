@@ -151,7 +151,7 @@ function nuAIPromptBuildPromptInformation($params) {
 		'nuformat_builder' => ['desc' => 'Format Builder', 'slug' => 'Format_Builder'],
 		'nucsv_transfer' => ['desc' => 'CSV Transfer', 'slug' => 'CSV_Transfer'],
 		'nufast_form_builder' => ['desc' => 'Fast Form Builder', 'slug' => 'Form_Builder'],
-		'nuaiprompt_generator' => ['desc' => 'AI Prompt Generator', 'slug' => 'AI_Prompt_Generator'],
+		'nuaiprompt_generator' => ['desc' => 'Prompt Generator', 'slug' => 'Prompt_Generator'],
 	];
 
 	$hasTagHeader = false;
