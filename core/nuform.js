@@ -7503,6 +7503,7 @@ function nuUppyGetLanguageCodeAndLocale(language) {
 		{ language: 'Greek', code: 'el_GR', locale: Uppy.locales.el_GR },
 		{ language: 'German', code: 'de_DE', locale: Uppy.locales.de_DE },
 		{ language: 'French', code: 'fr_FR', locale: Uppy.locales.fr_FR },
+		{ language: 'Hungarian', code: 'hu_HU', locale:  Uppy.locales.hu_HU},		
 		{ language: 'Dutch', code: 'nl_NL', locale: Uppy.locales.nl_NL },
 		{ language: 'Danish', code: 'da_DK', locale: Uppy.locales.da_DK },
 		{ language: 'Czech', code: 'cs_CZ', locale: Uppy.locales.cs_CZ },
