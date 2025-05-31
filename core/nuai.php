@@ -61,10 +61,10 @@ function nuAIPromptBuildPromptInformation($params) {
 
 	// 2) Language-specific notes
 	$languageMessages = [
-		'nuhtml' => 'Technology: HTML',
-		'nujavascript' => 'Use nuBuilder JS functions: https://wiki.nubuilder.cloud/index.php?title=Javascript',
+		'nuhtml' => 'Technology: HTML (nuBuilder templates: [Wiki](https://wiki.nubuilder.cloud/index.php?title=HTML))',
+		'nujavascript' => 'Use nuBuilder JS functions: [Wiki](https://wiki.nubuilder.cloud/index.php?title=Javascript) | [Code Base](https://raw.githubusercontent.com/nuBuilder/nuBuilder/refs/heads/master/core/nucommon.js)',
 		'nujquery' => 'Technology: jQuery',
-		'nuphp' => 'Use nuBuilder PDO PHP functions (nuRunQuery(), db_fetch_array(), etc.) without PHP tags.',
+		'nuphp' => 'Use nuBuilder PDO PHP functions (nuRunQuery(), db_fetch_array(), etc.) [Documentation](https://wiki.nubuilder.cloud/index.php?title=PHP) | [GitHub](https://raw.githubusercontent.com/nuBuilder/nuBuilder/refs/heads/master/core/nucommon.php)',
 		'numysql' => 'Database: MySQL',
 		'nucss' => 'Technology: CSS',
 	];
@@ -79,22 +79,24 @@ function nuAIPromptBuildPromptInformation($params) {
 			$lines[] = "- {$languageMessages[$lang]}";
 		}
 	}
+
 	if ($hasLang) {
 		$lines[] = '';  // blank line
 	}
 
 	// 3) Scope-specific notes
+
 	$scopeMessages = [
-		'nubrowse_form' => 'Context: Browse Form client-side JS.',
-		'nuedit_form' => 'Context: Edit Form client-side JS.',
-		'nuform_custom_code' => 'Context: Form Custom Code (no <script> tags).',
-		'nuphp_procedure' => 'Context: PHP Procedure. Use nuJavaScriptCallback(), nuRunPHPHidden(), etc as appropriate.',
-		'nuphp_bb' => 'Context: PHP Before Browse (BB). Use nuCreateTableFromSelect().',
-		'nuphp_be' => 'Context: PHP Before Edit (BE). Use nuAddJavaScript() to inject JS.',
-		'nuphp_bs' => 'Context: PHP Before Save (BS).',
-		'nuphp_bd' => 'Context: PHP Before Delete (BD).',
-		'nuphp_as' => 'Context: PHP After Save (AS).',
-		'nusetup_header' => 'Context: Global header code (Setup -> Header).',
+		'nubrowse_form' => 'Browse Form (client-side JS): place logic that runs when displaying record lists.',
+		'nuedit_form' => 'Edit Form (client-side JS): use this to handle events/validation when editing a record.',
+		'nuform_custom_code' => 'Form Custom Code (JavaScript only—omit <script> tags): any additional JS to run on forms.',
+		'nuphp_procedure' => 'PHP Procedure: for custom server-side logic. Call from JS with nuJavaScriptCallback() or nuRunPHPHidden().',
+		'nuphp_bb' => 'PHP Before Browse (BB): execute before listing records. Commonly use nuCreateTableFromSelect().',
+		'nuphp_be' => 'PHP Before Edit (BE): runs before loading the Edit form. You can inject JS via nuAddJavaScript().',
+		'nuphp_bs' => 'PHP Before Save (BS): validate or modify data server-side before insert/update.',
+		'nuphp_bd' => 'PHP Before Delete (BD): validate or prevent deletion server-side.',
+		'nuphp_as' => 'PHP After Save (AS): post-save logic (e.g., sending notifications, logging).',
+		'nusetup_header' => 'Global Header (server-side PHP/JS): code that should execute on all pages.'
 	];
 
 	$hasScope = false;
@@ -104,7 +106,7 @@ function nuAIPromptBuildPromptInformation($params) {
 				$lines[] = '## Context & Scopes';
 				$hasScope = true;
 			}
-			$lines[] = "- {$scopeMessages[$sc]}";
+			$lines[] = "- Context: {$scopeMessages[$sc]}";
 		}
 	}
 	if ($hasScope) {
