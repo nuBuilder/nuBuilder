@@ -249,7 +249,7 @@ function nuCreateTableFromSelect($tableName, $select, $params = [], $temporary =
 		$select
 	);
 
-	nuRunQuery($query, $params);
+	return nuRunQuery($query, $params);
 
 }
 
