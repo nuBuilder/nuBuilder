@@ -2267,22 +2267,31 @@ function nuDisableAllObjects(excludeTypes, excludeIds) {
 
 }
 
-function nuInsertTextAtCaret(i, text) {
+function nuInsertTextAtCaret(id, textToInsert) {
 
-	var o = $('#' + i);
+	const $textarea = $('#' + id);
+	const element = $textarea[0];
 
-	const textarea = o[0];
+	element.focus();
 
-	textarea.setRangeText(
-		text,
-		textarea.selectionStart,
-		textarea.selectionEnd,
-		'end'
-	);
+	if (document.queryCommandSupported('insertText')) {
+		const selectionStart = element.selectionStart;
+		const selectionEnd = element.selectionEnd;
+		element.setSelectionRange(selectionStart, selectionEnd);
+		document.execCommand('insertText', false, textToInsert);
+	} else {
+		element.setRangeText(
+			textToInsert,
+			element.selectionStart,
+			element.selectionEnd,
+			'end'
+		);
+	}
 
-	o.trigger("change");
+	$textarea.trigger("change");
 
 }
+
 
 function nuObjectIdFromId(id) {
 
@@ -3238,5 +3247,22 @@ function nuTogglePosition(id, top = null, left = null) {
 		{ styleProp: 'top', dataAttr: 'data-nu-org-top', value: top },
 		{ styleProp: 'left', dataAttr: 'data-nu-org-left', value: left }
 	]);
+
+}
+
+
+function nuGetSelectedText(inputOrId) {
+
+	const input = typeof inputOrId === 'string'
+		? document.getElementById(inputOrId)
+		: inputOrId;
+
+	if (!input || typeof input.selectionStart !== 'number') {
+		return '';
+	}
+
+	const start = input.selectionStart;
+	const end = input.selectionEnd;
+	return input.value.substring(start, end);
 
 }
