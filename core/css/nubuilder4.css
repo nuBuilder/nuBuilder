@@ -1054,7 +1054,7 @@ input[type=radio] {
 }
 
 .nuReadonly:not(.nuPreventDblClick) {
-	background-color: rgba(239, 239, 239, 0.3);
+	background-color: rgb(239, 239, 239, 0.3);
 	border: 1px solid #ebebeb;
 	color: rgb(84, 84, 84)
 }
@@ -1803,7 +1803,6 @@ pre.nuFormInfoBrowseSQL {
 
 .ctxmenu li.submenu::after {
 	color: #655e5e;
-	;
 	font-size: 11px;
 	content: "";
 	position: absolute;
