@@ -91,6 +91,7 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 
 		.nuCopyBackButton.red {
 			background-color: red !important;
+			border-color: #dc3545 !important;
 		}
 
 		button.btn.beautify::before {
@@ -152,14 +153,14 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 		window.nuACEObjectLabel = $el.attr('data-nu-label') || $el.attr('title') || $el.attr('id');
 		document.title = window.nuACEObjectId + " - Ace Editor";
 
-		function nuLoad() { 
+		function nuLoad() {
 			ace.require("ace/ext/language_tools");
 			window.beautify = ace.require("ace/ext/beautify");
 			window.editor = ace.edit("nu_editor");
 
 			editor.setShowPrintMargin(false);
 			const theme = "ace/theme/" + (window.nuACETheme ? window.nuACETheme : 'monokai');
-		debugger;
+			debugger;
 			editor.setTheme(theme);
 			editor.setOptions({
 				enableBasicAutocompletion: true,
