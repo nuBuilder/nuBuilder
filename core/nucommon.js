@@ -3193,3 +3193,50 @@ function nuCountDefinedArguments(...args) {
 	return args.filter(arg => arg !== undefined).length;
 }
 
+function nuToggleStyleAttribute(id, attributes) {
+
+	const el = document.getElementById(id);
+
+	if (!el) {
+		console.error(`Element with id "${id}" not found.`);
+		return;
+	}
+
+	let isModified = attributes.some(attr => el.hasAttribute(attr.dataAttr));
+
+	if (isModified) {
+		attributes.forEach(attr => {
+			const originalValue = el.getAttribute(attr.dataAttr);
+			if (originalValue !== null) {
+				el.style[attr.styleProp] = originalValue;
+				el.removeAttribute(attr.dataAttr);
+			}
+		});
+	} else {
+		attributes.forEach(attr => {
+			el.setAttribute(attr.dataAttr, el.style[attr.styleProp] || '');
+			if (attr.value !== null) {
+				el.style[attr.styleProp] = typeof attr.value === 'number' ? `${attr.value}px` : attr.value;
+			}
+		});
+	}
+
+}
+
+function nuToggleSize(id, height = null, width = null) {
+
+	nuToggleStyleAttribute(id, [
+		{ styleProp: 'height', dataAttr: 'data-nu-org-height', value: height },
+		{ styleProp: 'width', dataAttr: 'data-nu-org-width', value: width }
+	]);
+
+}
+
+function nuTogglePosition(id, top = null, left = null) {
+
+	nuToggleStyleAttribute(id, [
+		{ styleProp: 'top', dataAttr: 'data-nu-org-top', value: top },
+		{ styleProp: 'left', dataAttr: 'data-nu-org-left', value: left }
+	]);
+
+}
