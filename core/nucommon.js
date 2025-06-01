@@ -2820,8 +2820,15 @@ function nuSetLabelText(id, text, translate) {
 	const left = obj.nuCSSNumber('left');
 	const top = obj.nuCSSNumber('top');
 
+	let visibleText = text;
+	if (/<[a-z][\s\S]*>/i.test(text)) {
+		const tmp = document.createElement('div');
+		tmp.innerHTML = text;
+		visibleText = tmp.textContent || tmp.innerText || '';
+	}
+
 	// Use the same font styling as the label or fallback to obj
-	const lwidth = nuGetWordWidth(text, label.length ? label : obj);
+	const lwidth = nuGetWordWidth(visibleText, label.length ? label : obj);
 
 	label.css({
 		'top': top,
