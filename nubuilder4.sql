@@ -15,7 +15,7 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8mb3 */;
 
 --
 -- Database: `nubuilder4`
@@ -924,7 +924,7 @@ CREATE TABLE `zzzzsys_item` (
   `itm_object_id` varchar(25) DEFAULT NULL,
   `itm_sort_order` int NOT NULL,
   `itm_tag` varchar(1000) DEFAULT NULL,
-  `itm_additional1` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `itm_additional1` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci,
   `itm_additional2` varchar(2000) DEFAULT NULL,
   `itm_notes` varchar(2000) DEFAULT NULL,
   `itm_css` varchar(100) DEFAULT NULL,
@@ -936,7 +936,7 @@ CREATE TABLE `zzzzsys_item` (
   `itm_updated_on` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `itm_access_level` varchar(2000) DEFAULT NULL,
   `itm_json` mediumtext
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `zzzzsys_item`
@@ -1975,17 +1975,17 @@ INSERT INTO `zzzzsys_php` (`zzzzsys_php_id`, `sph_code`, `sph_description`, `sph
 --
 
 CREATE TABLE `zzzzsys_prompt_generator` (
-  `zzzzsys_prompt_generator_id` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `pge_code` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `pge_description` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `pge_table` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `pge_language` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `pge_scope` varchar(300) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `pge_prompt` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  `pge_tag` varchar(3000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `pge_template` varchar(1) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `pge_instruction` varchar(3000) COLLATE utf8mb4_unicode_ci DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `zzzzsys_prompt_generator_id` varchar(25) NOT NULL,
+  `pge_code` varchar(300) DEFAULT NULL,
+  `pge_description` varchar(300) DEFAULT NULL,
+  `pge_table` varchar(1000) DEFAULT NULL,
+  `pge_language` varchar(1000) DEFAULT NULL,
+  `pge_scope` varchar(300) DEFAULT NULL,
+  `pge_prompt` longtext,
+  `pge_tag` varchar(3000) DEFAULT NULL,
+  `pge_template` varchar(1) DEFAULT NULL,
+  `pge_instruction` varchar(3000) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
 
@@ -2011,10 +2011,10 @@ CREATE TABLE `zzzzsys_report` (
 --
 
 CREATE TABLE `zzzzsys_report_data` (
-  `zzzzsys_report_data_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `srd_code` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `srd_description` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `zzzzsys_report_data_id` varchar(100) NOT NULL,
+  `srd_code` varchar(300) DEFAULT NULL,
+  `srd_description` varchar(300) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
 
