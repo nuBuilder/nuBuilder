@@ -1257,7 +1257,7 @@ function nuJSInclude($filePath) {
 	$timestamp = filemtime($filePath);
 	$url = "{$filePath}?ts={$timestamp}";
 
-	echo '<script src="' . htmlspecialchars($url, ENT_QUOTES) . '" type="text/javascript"></script>' . PHP_EOL;
+	echo '<script src="' . htmlspecialchars($url, ENT_QUOTES) . '"></script>' . PHP_EOL;
 
 }
 

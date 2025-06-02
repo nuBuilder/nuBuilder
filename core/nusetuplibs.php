@@ -1,27 +1,29 @@
 <?php
 
 require_once('nusystemupdatelibs.php');
-require_once(dirname(__FILE__). '/../nuconfig.php'); // nuconfig must be loaded before using nubuilder_session_dat
+require_once(dirname(__FILE__) . '/../nuconfig.php'); // nuconfig must be loaded before using nubuilder_session_dat
 
 function nuImportNewDB() {
 
 	$t = nuRunQuery("SHOW TABLES");
-	while($r = db_fetch_row($t)){
-		if($r[0] == 'zzzzsys_object'){return;}
+	while ($r = db_fetch_row($t)) {
+		if ($r[0] == 'zzzzsys_object') {
+			return;
+		}
 	}
-	$file						= __DIR__."/../nubuilder4.sql";
-	@$handle					= fopen($file, "r");
-	$temp						= "";
-	if($handle){
-		while(($line = fgets($handle)) !== false){
-			if($line[0] != "-" AND $line[0] != "/" AND $line[0] != "\n"){
-				$line 			= trim($line);
-				$temp 			.= $line;
-				if(substr($line, -1) == ";"){
-					$temp	= rtrim($temp,';');
-					$temp	= str_replace('ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER','', $temp);
+	$file = __DIR__ . "/../nubuilder4.sql";
+	@$handle = fopen($file, "r");
+	$temp = "";
+	if ($handle) {
+		while (($line = fgets($handle)) !== false) {
+			if ($line[0] != "-" and $line[0] != "/" and $line[0] != "\n") {
+				$line = trim($line);
+				$temp .= $line;
+				if (substr($line, -1) == ";") {
+					$temp = rtrim($temp, ';');
+					$temp = str_replace('ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER', '', $temp);
 					nuRunQuery($temp);
-					$temp	= "";
+					$temp = "";
 				}
 			}
 		}
@@ -48,48 +50,48 @@ function nuConfigScript() {
 
 			while ($r = db_fetch_array($t)) {
 
-				$cat		= $r['cfg_category'];
-				$setting	= $r['cfg_setting'];
-				$php		= $setting[0] == '$';
+				$cat = $r['cfg_category'];
+				$setting = $r['cfg_setting'];
+				$php = $setting[0] == '$';
 
 				if ($php) {
-					$code .= $r['cfg_setting'] . " = " . nuCleanConfigValue($r['cfg_value']) .";\n";
+					$code .= $r['cfg_setting'] . " = " . nuCleanConfigValue($r['cfg_value']) . ";\n";
 				} else {
 
-					if ($js == "") { 
+					if ($js == "") {
 						$code .= "\$nuJSOptions = \"\n";
 						$js = "window.nuUXOptions = {}; \n";
 					}
-					$js .= 'nuUXOptions' . "['". $r['cfg_setting'] . "']"	. " = " . nuCleanConfigValue($r['cfg_value']) ."; \n";
+					$js .= 'nuUXOptions' . "['" . $r['cfg_setting'] . "']" . " = " . nuCleanConfigValue($r['cfg_value']) . "; \n";
 
 				}
 
 			}
 
-			$code .= $js."\";\n";
+			$code .= $js . "\";\n";
 
 		}
 
 	}
 
-    return [
-        'code' => $code,
-        'js' => $js
-    ];
+	return [
+		'code' => $code,
+		'js' => $js
+	];
 
 }
 
 function nuCleanConfigValue($v) {
 
-    if (in_array(strtolower($v), ["true", "false"])) {
-        return strtolower($v);
-    } else {
-        if (is_numeric($v)) {
-            return $v;
-        } else {
-            return "'". addslashes($v)."'";
-        }
-    }
+	if (in_array(strtolower($v), ["true", "false"])) {
+		return strtolower($v);
+	} else {
+		if (is_numeric($v)) {
+			return $v;
+		} else {
+			return "'" . addslashes($v) . "'";
+		}
+	}
 
 }
 
@@ -103,14 +105,14 @@ function nuInclude($pfile, $type, $refreshCache = true) {
 
 	foreach ($files as $file) {
 
-		$timestamp = $refreshCache ? ( $_SESSION['nuinclude'][$file] ?? date("YmdHis") ) : 1;
+		$timestamp = $refreshCache ? ($_SESSION['nuinclude'][$file] ?? date("YmdHis")) : 1;
 		if ($refreshCache && !isset($_SESSION['nuinclude'][$file])) {
 			$_SESSION['nuinclude'][$file] = $timestamp;
 		}
 
 		switch ($type) {
 			case 'script':
-				echo "<script src='{$file}?ts={$timestamp}' type='text/javascript'></script>\n";
+				echo "<script src='{$file}?ts={$timestamp}'></script>\n";
 				break;
 			case 'stylesheet':
 				echo "<link rel='stylesheet' href='{$file}?ts={$timestamp}' />\n";
@@ -120,15 +122,15 @@ function nuInclude($pfile, $type, $refreshCache = true) {
 
 }
 
-function nuJSIndexInclude($pfile, $refreshCache = true){
+function nuJSIndexInclude($pfile, $refreshCache = true) {
 	nuInclude($pfile, 'script', $refreshCache);
 }
 
-function nuCSSIndexInclude($pfile, $refreshCache = true){
+function nuCSSIndexInclude($pfile, $refreshCache = true) {
 	nuInclude($pfile, 'stylesheet', $refreshCache);
 }
 
-function nuJSChartsInclude(){
+function nuJSChartsInclude() {
 
 	global $nuConfigIncludeGoogleCharts;
 	global $nuConfigIncludeApexCharts;
