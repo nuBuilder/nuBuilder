@@ -319,7 +319,7 @@ function nuOpenPropertiesOnMiddleClick(e) {
 				// Form Properties
 				nuForm('nuform', nuFormId(), '', '', 2);
 			} else {
-				const objId = nuObjectIdFromId(e.target.id);
+				const objId = nuGetObjectId(e.target.id);
 				if (objId !== null) {
 					// Object Properties
 					nuForm('nuobject', objId, '', '', '2');
@@ -995,7 +995,7 @@ function nuContextMenuClone() { }
 
 function nuContextMenuObjectPopup(e) {
 
-	let objId = nuObjectIdFromId(nuContextMenuCurrentTargetUpdateId());
+	let objId = nuGetObjectId(nuContextMenuCurrentTargetUpdateId());
 
 	if ((nuIsMacintosh() ? e.metaKey : e.ctrlKey) === true) {
 		nuForm('nuobject', objId, '', '', '2');

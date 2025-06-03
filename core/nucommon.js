@@ -2294,7 +2294,7 @@ function nuInsertTextAtCaret(id, textToInsert) {
 }
 
 
-function nuObjectIdFromId(id) {
+function nuGetObjectId(id) {
 
 	if (id !== null && window.nuSERVERRESPONSE) {
 		const obj = window.nuSERVERRESPONSE.objects.find(object => object.id === id);
