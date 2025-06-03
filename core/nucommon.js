@@ -100,6 +100,22 @@ String.prototype.nuWithoutNumbers = function () {
 	return this.replace(/\d+/g, '');
 }
 
+String.prototype.nuStripBoundaryTags = function (openTag, closeTag) {
+
+	let result = this.trim().toString();
+
+	if (result.startsWith(openTag)) {
+		result = result.slice(openTag.length);
+	}
+
+	if (result.endsWith(closeTag)) {
+		result = result.slice(0, -closeTag.length);
+	}
+
+	return result;
+
+};
+
 String.prototype.nuInsertString = function (index, string) {
 	if (index > 0) {
 		return this.substring(0, index) + string + this.substring(index);
