@@ -3918,6 +3918,7 @@ function nuGetOptionsList(formId, subformId, globalAccess, type) {
 		DebugResults: ['nuDebug Results', 'nuOptionsListAction("nudebug","")', 'fa-bug', 'D'],
 		Database: ['Database', 'nuVendorLogin("PMA")', 'fa-database', 'E'],
 		Sessions: ['Sessions', 'nuForm("nusession","","", "", 2)', 'fas fa-key', 'J'],
+		Cloner: ['Cloner', 'nuPopup("nucloner","-")', 'far fa-clone fa-fw', 'Z'],
 		FileManager: ['File Manager', 'nuVendorLogin("TFM")', 'far fa-file-code', 'Q'],
 		Backup: ['Backup', 'nuRunBackup()', 'far fa-hdd', 'B'],
 		Setup: ['Setup', 'nuForm("nusetup","1","", "", 2)', 'fa-cogs', 'U'],
@@ -3967,7 +3968,7 @@ function nuGetOptionsList(formId, subformId, globalAccess, type) {
 		menuList.push(
 			ITEMS.DebugResults, ITEMS.Divider,
 			ITEMS.Database, ITEMS.Sessions,
-			ITEMS.FileManager, ITEMS.Backup,
+			ITEMS.Cloner, ITEMS.FileManager, ITEMS.Backup,
 			ITEMS.Setup, ITEMS.FormInfo,
 			ITEMS.VersionInfo
 		);
@@ -7503,7 +7504,7 @@ function nuUppyGetLanguageCodeAndLocale(language) {
 		{ language: 'Greek', code: 'el_GR', locale: Uppy.locales.el_GR },
 		{ language: 'German', code: 'de_DE', locale: Uppy.locales.de_DE },
 		{ language: 'French', code: 'fr_FR', locale: Uppy.locales.fr_FR },
-		{ language: 'Hungarian', code: 'hu_HU', locale:  Uppy.locales.hu_HU},		
+		{ language: 'Hungarian', code: 'hu_HU', locale: Uppy.locales.hu_HU },
 		{ language: 'Dutch', code: 'nl_NL', locale: Uppy.locales.nl_NL },
 		{ language: 'Danish', code: 'da_DK', locale: Uppy.locales.da_DK },
 		{ language: 'Czech', code: 'cs_CZ', locale: Uppy.locales.cs_CZ },

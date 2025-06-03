@@ -912,6 +912,7 @@ function nuBindCtrlEvents() {
 					'b': { action: () => nuRunBackup(), condition: globalAccess },
 					'u': { action: () => nuForm('nusetup', '1', '', '', 2), condition: globalAccess },
 					'd': { action: () => nuPopup("nudebug", ""), condition: globalAccess },
+					'z': { action: () => nuPopup("nucloner", "-1"), condition: globalAccess },
 					'x': { action: () => nuPrettyPrintMessage(e, nuCurrentProperties()), condition: globalAccess },
 					'l': { action: () => nuAskLogout(), condition: true }
 				}),
