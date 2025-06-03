@@ -220,25 +220,46 @@ function nuAddAdminButtons() {
 
 }
 
-function nuAdminToolsOpenForm(f, r, event, popup = false) {
-	if (popup) {
+function nuAdminToolsRun(f, r, event, type = false) {
+
+	if (type === 'procedure') {
+		nuRunPHP(f);
+	} else if (type) {
 		nuPopup(f, r, '');
 	} else {
 		let n = event.ctrlKey ? '2' : '0';
 		nuForm(f, r, '', '', n);
 	}
+
 }
 
 function nuAdminToolsCreateMenuConfig(menuType, event) {
 
 	const baseMenus = {
 		Tools: [
-			{ text: nuContextMenuItemText("Prompt Generator", "fas fa-magic"), action: () => nuAdminToolsOpenForm('nupromptgenerator', '-1', event, 'popup') }
+			{
+				text: nuContextMenuItemText("Prompt Generator", "fa-fw fa-solid fa-magic"),
+				action: () => nuAdminToolsRun('nupromptgenerator', '-1', event, 'popup')
+			},
+			...(nuSERVERRESPONSE.table !== '' && nuFormType() !== 'browse' ? [{
+				text: nuContextMenuItemText("Inspect Record", "fa-fw fa-solid fa-binoculars"),
+				action: () => {
+					nuAdminPreInspectRecordJS();
+					nuAdminToolsRun('NUINSPECTRECORD', null, event, 'procedure');
+				}
+			}] : [])
 		]
 	};
 
 	const menu = [{ text: nuTranslate(menuType) }, ...baseMenus[menuType]];
 	return menu;
+
+}
+
+function nuAdminPreInspectRecordJS() {
+
+	nuSetProperty('NUINSPECTRECORD_table', nuSERVERRESPONSE.table);
+	nuSetProperty('NUINSPECTRECORD_record_id', nuRecordId())
 
 }
 
