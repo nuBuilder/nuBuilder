@@ -2293,12 +2293,21 @@ function nuInsertTextAtCaret(id, textToInsert) {
 
 }
 
-
 function nuGetObjectId(id) {
 
-	if (id !== null && window.nuSERVERRESPONSE) {
-		const obj = window.nuSERVERRESPONSE.objects.find(object => object.id === id);
-		return obj ? obj.object_id : null;
+	const objects = window.nuSERVERRESPONSE?.objects;
+	if (!Array.isArray(objects)) {
+		return null;
+	}
+
+	const matchByObjectId = objects.find(item => item.object_id === id);
+	if (matchByObjectId) {
+		return matchByObjectId.id;
+	}
+
+	const matchById = objects.find(item => item.id === id);
+	if (matchById) {
+		return matchById.object_id;
 	}
 
 	return null;
