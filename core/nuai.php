@@ -1,6 +1,7 @@
 <?php
 
 function nuAIPromptGetTableInformation($tableName) {
+
 	// Get column info
 	$columnsQuery = "SHOW COLUMNS FROM `$tableName`";
 	$columnsResult = nuRunQuery($columnsQuery);
@@ -29,13 +30,20 @@ function nuAIPromptGetTableInformation($tableName) {
 	return $schemaParts;
 }
 
+function nuAIPromptParseParamArray($params, $key) {
+
+	$value = $params[$key] ?? [];
+	return is_string($value) ? json_decode($value, true, 512, JSON_THROW_ON_ERROR) : $value;
+
+}
+
 function nuAIPromptBuildPromptInformation($params) {
 
 	// Allow JSON strings or arrays
-	$tables = is_string($params['tables'] ?? '') ? json_decode($params['tables'], true, 512, JSON_THROW_ON_ERROR) : ($params['tables'] ?? []);
-	$languages = is_string($params['languages'] ?? '') ? json_decode($params['languages'], true, 512, JSON_THROW_ON_ERROR) : ($params['languages'] ?? []);
-	$scopes = is_string($params['scopes'] ?? '') ? json_decode($params['scopes'], true, 512, JSON_THROW_ON_ERROR) : ($params['scopes'] ?? []);
-	$tags = is_string($params['tags'] ?? '') ? json_decode($params['tags'], true, 512, JSON_THROW_ON_ERROR) : ($params['tags'] ?? []);
+	$tables = nuAIPromptParseParamArray($params, 'tables');
+	$languages = nuAIPromptParseParamArray($params, 'languages');
+	$scopes = nuAIPromptParseParamArray($params, 'scopes');
+	$tags = nuAIPromptParseParamArray($params, 'tags');
 
 	// Deduplicate
 	$languages = array_unique($languages);
@@ -44,12 +52,8 @@ function nuAIPromptBuildPromptInformation($params) {
 
 	$lines = [];
 
-	// Header instruction for AI
-	// $lines[] = 'You are an AI assistant specialized in nuBuilder Forte development. Generate code snippets and explanations following nuBuilder conventions';
-	// $lines[] = 'Use the information below if they are relevant to the prompt. It is provided to help you understand the context and requirements for generating code snippets:';
-	// $lines[] = '';  // blank line
-
 	// 1) Table schemas
+
 	if (!empty($tables)) {
 		$lines[] = '## Table Schemas';
 		foreach ($tables as $tableName) {
@@ -60,12 +64,24 @@ function nuAIPromptBuildPromptInformation($params) {
 	}
 
 	// 2) Language-specific notes
+
+	$nuGitHubBase = 'https://raw.githubusercontent.com/nuBuilder/nuBuilder/refs/heads/master/core/';
+	$nuWikiBase = 'https://wiki.nubuilder.cloud/index.php?title=';
+
 	$languageMessages = [
-		'nuhtml' => 'Technology: HTML (nuBuilder templates: [Wiki](https://wiki.nubuilder.cloud/index.php?title=HTML))',
-		'nujavascript' => 'Use nuBuilder JS functions: [Wiki](https://wiki.nubuilder.cloud/index.php?title=Javascript) | [Code Base](https://raw.githubusercontent.com/nuBuilder/nuBuilder/refs/heads/master/core/nucommon.js)',
+		'nuhtml' => "Technology: HTML — nuBuilder templates: [Wiki]({$nuWikiBase}HTML)",
+
+		'nujavascript' => "Use nuBuilder JavaScript functions: " .
+			"[Wiki]({$nuWikiBase}Javascript) | " .
+			"[nucommon.js]({$nuGitHubBase}nucommon.js) | [nuform.js]({$nuGitHubBase}nuform.js)",
+
 		'nujquery' => 'Technology: jQuery',
-		'nuphp' => 'Use nuBuilder PDO PHP functions (nuRunQuery(), db_fetch_array(), etc.) [Documentation](https://wiki.nubuilder.cloud/index.php?title=PHP) | [GitHub](https://raw.githubusercontent.com/nuBuilder/nuBuilder/refs/heads/master/core/nucommon.php)',
+
+		'nuphp' => "Use nuBuilder PDO PHP functions (e.g., nuRunQuery(), db_fetch_array()): " .
+			"[Documentation]({$nuWikiBase}PHP) | [nucommon.php]({$nuGitHubBase}nucommon.php)",
+
 		'numysql' => 'Database: MySQL',
+
 		'nucss' => 'Technology: CSS',
 	];
 
@@ -416,7 +432,6 @@ function nuBuildCurlOptions($url, $headers, $payload = null, $timeout = 15) {
 	return $opts;
 
 }
-
 
 function nuAITestCredentials($aiConfigOverride = '') {
 
