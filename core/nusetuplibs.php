@@ -95,96 +95,106 @@ function nuCleanConfigValue($v) {
 
 }
 
-function nuInclude($pfile, $type, $refreshCache = true) {
+function nuMergeIncludeFiles(&$filesArray, $config) {
 
-	if (empty($pfile)) {
+	if (empty($config)) {
 		return;
 	}
 
-	$files = is_array($pfile) ? $pfile : [$pfile];
+	if (is_array($config)) {
+		$filesArray = array_merge($filesArray, $config);
+	} else {
+		$filesArray[] = $config;
+	}
 
-	foreach ($files as $file) {
+}
 
-		$timestamp = $refreshCache ? ($_SESSION['nuinclude'][$file] ?? date("YmdHis")) : 1;
-		if ($refreshCache && !isset($_SESSION['nuinclude'][$file])) {
+function nuInclude($files, $type, $refreshCache = true) {
+
+	if (empty($files)) {
+		return;
+	}
+
+	$fileList = is_array($files) ? $files : [$files];
+
+	foreach ($fileList as $file) {
+		if ($refreshCache) {
+			$timestamp = $_SESSION['nuinclude'][$file] ?? date('YmdHis');
 			$_SESSION['nuinclude'][$file] = $timestamp;
+		} else {
+			$timestamp = 1;
 		}
 
 		switch ($type) {
 			case 'script':
-				echo "<script src='{$file}?ts={$timestamp}'></script>\n";
+				echo "\t<script src=\"{$file}?ts={$timestamp}\"></script>\n";
 				break;
 			case 'stylesheet':
-				echo "<link rel='stylesheet' href='{$file}?ts={$timestamp}' />\n";
+				echo "\t<link rel=\"stylesheet\" href=\"{$file}?ts={$timestamp}\">\n";
 				break;
 		}
 	}
 
 }
 
-function nuJSIndexInclude($pfile, $refreshCache = true) {
-	nuInclude($pfile, 'script', $refreshCache);
+function nuJSIndexInclude($files, $refreshCache = true) {
+	nuInclude($files, 'script', $refreshCache);
 }
 
-function nuCSSIndexInclude($pfile, $refreshCache = true) {
-	nuInclude($pfile, 'stylesheet', $refreshCache);
-}
-
-function nuJSChartsInclude() {
-
-	global $nuConfigIncludeGoogleCharts;
-	global $nuConfigIncludeApexCharts;
-
-	if ($nuConfigIncludeGoogleCharts != false) {
-		$pfile = "https://www.gstatic.com/charts/loader.js";
-		nuInclude($pfile, 'script');
-	}
-
-	if ($nuConfigIncludeApexCharts != false) {
-		$pfile = "third_party/apexcharts/apexcharts.min.js";
-		nuInclude($pfile, 'script');
-	}
+function nuCSSIndexInclude($files, $refreshCache = true) {
+	nuInclude($files, 'stylesheet', $refreshCache);
 }
 
 function nuIncludeFiles() {
 
-	global $nuConfigIncludeTinyMCE;
-	global $nuConfigIncludeJS;
-	global $nuConfigIncludeCSS;
+	global $nuConfigIncludeGoogleCharts, $nuConfigIncludeApexCharts;
+	global $nuConfigIncludeTinyMCE, $nuConfigIncludeJS, $nuConfigIncludeCSS;
 
-	nuJSIndexInclude('third_party/jquery/jquery-3.7.1.min.js', false);
-	nuJSIndexInclude('core/nuwysiwyg.js');
-	nuJSIndexInclude('core/nuformclass.js');
-	nuJSIndexInclude('core/nuform.js');
-	nuJSIndexInclude('core/nuformdrag.js');
-	nuJSIndexInclude('core/numobile.js');
-	nuJSIndexInclude('core/nucommon.js');
-	nuJSIndexInclude('core/nuadmin.js');
-	nuJSIndexInclude('core/nureportjson.js');
-	nuJSIndexInclude('core/nuajax.js');
-	nuJSChartsInclude();
-	nuJSIndexInclude('third_party/ctxmenu/ctxmenu.min.js');
-	nuJSIndexInclude('third_party/vanillajs-datepicker/datepicker-full.min.js');
-	nuJSIndexInclude('third_party/jquery/jquery-confirm.min.js');
-	nuCSSIndexInclude('third_party/uppy/uppy.min.css');
-	nuJSIndexInclude('third_party/uppy/uppy.min.js');
+	$jsFiles = [
+		'core/nuwysiwyg.js',
+		'core/nuformclass.js',
+		'core/nuform.js',
+		'core/nuformdrag.js',
+		'core/numobile.js',
+		'core/nucommon.js',
+		'core/nuadmin.js',
+		'core/nureportjson.js',
+		'core/nuajax.js',
+		'third_party/ctxmenu/ctxmenu.min.js',
+		'third_party/vanillajs-datepicker/datepicker-full.min.js',
+		'third_party/jquery/jquery-confirm.min.js',
+		'third_party/uppy/uppy.min.js',
+		'third_party/select2/select2.min.js'
+	];
 
-	nuJSIndexInclude('third_party/select2/select2.min.js');
-
-	if (isset($nuConfigIncludeTinyMCE) && $nuConfigIncludeTinyMCE != false) {
-
-		nuJSIndexInclude('third_party/tinymce/tinymce.min.js');
+	if (!empty($nuConfigIncludeGoogleCharts)) {
+		$jsFiles[] = 'https://www.gstatic.com/charts/loader.js';
 	}
 
-	nuCSSIndexInclude('core/css/nubuilder4.css');
+	if (!empty($nuConfigIncludeApexCharts)) {
+		$jsFiles[] = 'third_party/apexcharts/apexcharts.min.js';
+	}
 
-	$nuConfigIncludeJS = isset($nuConfigIncludeJS) ? $nuConfigIncludeJS : '';
-	nuJSIndexInclude($nuConfigIncludeJS);
-	$nuConfigIncludeCSS = isset($nuConfigIncludeCSS) ? $nuConfigIncludeCSS : '';
-	nuCSSIndexInclude($nuConfigIncludeCSS);
+	if (!empty($nuConfigIncludeTinyMCE)) {
+		$jsFiles[] = 'third_party/tinymce/tinymce.min.js';
+	}
 
-	nuCSSIndexInclude('third_party/select2/select2.min.css');
-	nuCSSIndexInclude('third_party/vanillajs-datepicker/datepicker.min.css');
-	nuCSSIndexInclude('third_party/jquery/jquery-confirm.min.css');
+	nuMergeIncludeFiles($jsFiles, $nuConfigIncludeJS);
+
+	echo "<script src=\"third_party/jquery/jquery-3.7.1.min.js\"></script>\n";
+	nuJSIndexInclude($jsFiles);
+
+	$cssFiles = [
+		'core/css/nubuilder4.css',
+		'third_party/fontawesome/css/all.min.css',
+		'third_party/uppy/uppy.min.css',
+		'third_party/select2/select2.min.css',
+		'third_party/vanillajs-datepicker/datepicker.min.css',
+		'third_party/jquery/jquery-confirm.min.css'
+	];
+
+	nuMergeIncludeFiles($cssFiles, $nuConfigIncludeCSS);
+
+	nuCSSIndexInclude($cssFiles);
 
 }
