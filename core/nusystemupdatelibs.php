@@ -93,6 +93,13 @@ function nuAlterSystemTables() {
 		nuRunQueryNoDebug('UPDATE `zzzzsys_setup` SET set_style = ?', [$style]);
 	}
 
+	if (array_search('set_include', $setupColumns) == false) {
+		nuRunQueryNoDebug("ALTER TABLE `zzzzsys_setup` ADD `set_include` LONGTEXT NULL DEFAULT NULL AFTER `set_header`;");
+		$include = "// Add external CSS/JS file here\r\n\r\n/*\r\n<link rel=\"stylesheet\" href=\"path_to_css.css\"/>\r\n\r\n<script src=\"path_to_js.js\"></script>\r\n*/";
+
+		nuRunQueryNoDebug('UPDATE `zzzzsys_setup` SET set_include = ?', [$include]);
+	}
+
 	nuCreateJSONColumns();
 
 }

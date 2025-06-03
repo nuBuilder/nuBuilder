@@ -7,7 +7,8 @@ function nuLoadBody() {
 
 function nuGetJS_login($nuBrowseFunction, $target, $loginTopRow, $welcome, $formId, $recordId, $isSession, $logonMode, $onlySsoExcept, $lastUser) {
 
-	$h2 = "function nuLoad(){
+	$h2 = "
+		function nuLoad(){
 		nuBindCtrlEvents();
 		window.nuDefaultBrowseFunction	= '$nuBrowseFunction';
 		window.nuBrowseFunction			= '$nuBrowseFunction';

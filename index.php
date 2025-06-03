@@ -38,8 +38,7 @@ if (!isset($_SESSION['nubuilder_session_data']['NB_PATH']) || dirname($_SESSION[
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv='Content-type' content='text/html;charset=UTF-8'>
-	<meta name="theme-color" content="##00adef">
-
+	<meta name="theme-color" content="#00adef">
 	<?php
 
 	function nuGetErrorConfigNotFound() {
@@ -94,9 +93,9 @@ if (!isset($_SESSION['nubuilder_session_data']['NB_PATH']) || dirname($_SESSION[
 
 		$obj = db_fetch_object($stmt);
 		$style = $obj->set_style ?? '';
-		$style = '</script>' . (nuEndsWithStyleTag($style) ? $style : '<style>' . $style . '</style>') . '<script>';
+		$style = '</script>' . (nuEndsWithStyleTag($style) ? $style : "<style>$style</style>") . '<script>';
 
-		return "\n\n" . $obj->set_header . $style . "\n\n";
+		return "\n\n{$obj->set_header}$style\n\n";
 	}
 
 	function nuEndsWithStyleTag($style) {
@@ -114,8 +113,6 @@ if (!isset($_SESSION['nubuilder_session_data']['NB_PATH']) || dirname($_SESSION[
 	nuIncludeFiles();
 
 	?>
-
-	<link href="third_party/fontawesome/css/all.min.css" rel="stylesheet">
 
 	<script>
 
