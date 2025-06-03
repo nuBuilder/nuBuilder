@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 03, 2025 at 06:06 AM
+-- Generation Time: Jun 03, 2025 at 12:31 PM
 -- Server version: 8.2.0
 -- PHP Version: 7.4.33
 
@@ -907,7 +907,7 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`, `inf_json`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.7-2025.06.03.02', NULL),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.7-2025.06.03.03', NULL),
 ('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.7-2025.06.03.06', NULL);
 
 -- --------------------------------------------------------
@@ -1043,7 +1043,10 @@ INSERT INTO `zzzzsys_item` (`zzzzsys_item_id`, `itm_value`, `itm_description`, `
 ('nu683bff9414d872b', 'nu59e446589b75a6d', 'Textarea', 'nubuilder', '', 'nu60741457ef6f315', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, NULL, NULL),
 ('nu683bff9414d8ae7', 'nu59e446589cf91a2', 'File', 'nubuilder', '', 'nu60741457ef6f315', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, NULL, NULL),
 ('nu683bff9414d8d39', 'nu59e446589d1c64d', 'Image', 'nubuilder', '', 'nu60741457ef6f315', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, NULL, NULL),
-('nu683bff9414d916d', 'nu59e44658a0c7724', 'Subform', 'nubuilder', '', 'nu60741457ef6f315', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, NULL, NULL);
+('nu683bff9414d916d', 'nu59e44658a0c7724', 'Subform', 'nubuilder', '', 'nu60741457ef6f315', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, NULL, NULL),
+('nu683eae95a2bf066', 'subform', 'Subform', 'nubuilder', NULL, 'nu5bad6cb329fdf13', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, NULL, NULL),
+('nu683eae7b182a96d', 'editor', 'WYSIWYG Editor', 'nubuilder', NULL, 'nu5bad6cb329fdf13', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, NULL, NULL),
+('nu683eae4d1d9b44b', 'contentbox', 'ContentBox', 'nubuilder', NULL, 'nu5bad6cb329fdf13', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
