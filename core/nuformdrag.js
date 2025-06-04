@@ -1462,25 +1462,35 @@ function nuDragElement(element, dragHeaderOffset) {
 	}
 
 	function elementDrag(e) {
+
 		e = e || window.event;
 		e.preventDefault();
 
-		// calculate new cursor position
-		if (e.clientX) {
-			endX = startX - e.clientX;
-			endY = startY - e.clientY;
-			startX = e.clientX;
-			startY = e.clientY;
+		let clientX, clientY;
+
+		// Detect touch or mouse
+		if (e.touches && e.touches.length > 0) {
+			clientX = e.touches[0].clientX;
+			clientY = e.touches[0].clientY;
+		} else if (typeof e.clientX === 'number') {
+			clientX = e.clientX;
+			clientY = e.clientY;
 		} else {
-			endX = startX - e.touches[0].clientX;
-			endY = startY - e.touches[0].clientY;
-			startX = e.touches[0].clientX;
-			startY = e.touches[0].clientY;
+			// Exit early if neither clientX nor touches are available
+			return;
 		}
 
-		// set the new position
-		element.style.left = (element.offsetLeft - endX) + "px";
-		element.style.top = (element.offsetTop - endY) + "px";
+		endX = startX - clientX;
+		endY = startY - clientY;
+		startX = clientX;
+		startY = clientY;
+
+		// Ensure element is defined
+		if (typeof element !== 'undefined') {
+			element.style.left = (element.offsetLeft - endX) + "px";
+			element.style.top = (element.offsetTop - endY) + "px";
+		}
+
 	}
 
 	function dragStop() {
