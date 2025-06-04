@@ -5664,6 +5664,9 @@ function nuUpdateMessage(actionMessage) {
 	} else if (actionMessage === 'save') {
 		msg = 'Record Saved';
 		msgClass = 'nuUpdateMessageSave';
+	} else if (actionMessage === 'refresh_required') {
+		msg = 'Refresh Required';
+		msgClass = 'nuUpdateMessageRefreshRequired';
 	}
 
 	$("#nuProgressUpdate").hide();
@@ -5678,7 +5681,10 @@ function nuUpdateMessage(actionMessage) {
 
 	nuSetObjectBounds(div, top, left, null, null, true);
 
-	$("#nuNowUpdated").fadeToggle(3000);
+	if (actionMessage !== 'refresh_required') {
+		$("#nuNowUpdated").fadeToggle(3000);
+	}
+
 	$('.nuActionButton').show();
 
 }

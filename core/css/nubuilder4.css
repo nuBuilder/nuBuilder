@@ -906,7 +906,7 @@ input[type=radio] {
 	height: 40px;
 	padding: 0 6px;
 	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-	border-color: #0a1005;
+	border-color: #326e00;
 	border-width: 0 0 1px
 }
 
@@ -1413,6 +1413,12 @@ input[type=radio] {
 	background-color: #EDEDED;
 	border-color: #01A6F5;
 	color: #01A6F5
+}
+
+.nuUpdateMessageRefreshRequired {
+	background-color: #EDEDED;
+	border-color: #afafaf;
+	color: #690024
 }
 
 .nuErrorDisplay {
