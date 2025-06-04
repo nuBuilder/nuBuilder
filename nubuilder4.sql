@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 04, 2025 at 06:41 AM
+-- Generation Time: Jun 04, 2025 at 06:46 AM
 -- Server version: 8.2.0
 -- PHP Version: 7.4.33
 
@@ -359,9 +359,9 @@ CREATE TABLE `zzzzsys_code_snippet` (
 --
 
 INSERT INTO `zzzzsys_code_snippet` (`zzzzsys_code_snippet_id`, `cot_code`, `cot_description`, `cot_group`, `cot_url`, `cot_source_code`, `cot_language`, `cot_scope`, `cot_updated_on`, `cot_json`) VALUES
-('nu5fdb1a7c5b3d3b2', 'nuBeforeSave', 'Before a record is saved, nuBuilder checks for the existance of a function called nuBeforeSave().\nIf this exists it will use its return value to decide whether to continue saving the record.', 'nubuilde', 'https://wiki.nubuilder.cloud/index.php?title=Javascript#nuBeforeSave', 'function nuBeforeSave() {\n\n    if ($(\'#cus_name\').val() === \'something\') { /* condition(s) here */\n\n        nuMessage(\'Error message here.\');\n\n        // Cancel saving         \n        return false;\n\n    }\n\n    // Continue Saving\n    return true;\n\n}', 'JavaScript', '[\"0\"]', '2025-05-16 00:16:38', NULL),
-('nu65f5feb50d4d041', 'nuDebug', NULL, 'nubuilde', NULL, 'nuDebug::setFlag(\'Test\')->log(\'Error: Failed to retrieve data..\');\n', 'PHP', '[\"3\"]', '2025-05-16 00:16:21', NULL),
-('nu682683a594b7932', 'nuSelectBrowse', 'This is a built in function that runs when any record on a Browse Form is selected.', 'nubuilde', 'https://wiki.nubuilder.cloud/index.php?title=Javascript#nuSelectBrowse', 'function nuSelectBrowse(event, element) {\n\n    //  Example 1: Get info about the selected cell\n    const { pk, row, column, html, value, $cell } = nuBrowseRow(element);\n    console.log(pk, row, column, html, value, $cell);\n\n    // Example 2: Get the row number of the selected cell\n    const cell = nuBrowseRow(element);\n    console.log(cell.row);\n    \n    // Example 3: Get the value of column 2 in the same row\n    // 0 = 1st column, 1 = 2nd column or pass the column primary key\n    const otherCell = nuBrowseRow(element, 1); \n    console.log(otherCell.value);\n\n    // Open the current Form in a new browser tab\n    nuForm(nuFormId(), pk, \'\', \'\', \'2\');\n\n}', 'JavaScript', '[\"0\"]', '2025-05-16 00:18:23', NULL);
+('nu5fdb1a7c5b3d3b2', 'nuBeforeSave', 'Before a record is saved, nuBuilder checks for the existance of a function called nuBeforeSave().\nIf this exists it will use its return value to decide whether to continue saving the record.', 'nubuilder', 'https://wiki.nubuilder.cloud/index.php?title=Javascript#nuBeforeSave', 'function nuBeforeSave() {\n\n    if (nuGetValue(\'cus_name\') !== \'something\') { /* condition(s) here */\n\n        nuMessage(\'Error message here.\');\n\n        // Cancel saving         \n        return false;\n\n    }\n\n    // Continue Saving\n    return true;\n\n}', 'JavaScript', '[\"0\"]', '2025-06-04 06:45:35', NULL),
+('nu65f5feb50d4d041', 'nuDebug', NULL, 'nubuilder', NULL, 'nuDebug::setFlag(\'Test\')->log(\'Error: Failed to retrieve data..\');\n', 'PHP', '[\"3\"]', '2025-06-04 06:44:34', NULL),
+('nu682683a594b7932', 'nuSelectBrowse', 'This is a built in function that runs when any record on a Browse Form is selected.', 'nubuilder', 'https://wiki.nubuilder.cloud/index.php?title=Javascript#nuSelectBrowse', 'function nuSelectBrowse(event, element) {\n\n    //  Example 1: Get info about the selected cell\n    const { pk, row, column, html, value, $cell } = nuBrowseRow(element);\n    console.log(pk, row, column, html, value, $cell);\n\n    // Example 2: Get the row number of the selected cell\n    const cell = nuBrowseRow(element);\n    console.log(cell.row);\n    \n    // Example 3: Get the value of column 2 in the same row\n    // 0 = 1st column, 1 = 2nd column or pass the column primary key\n    const otherCell = nuBrowseRow(element, 1); \n    console.log(otherCell.value);\n\n    // Open the current Form in a new browser tab\n    nuForm(nuFormId(), pk, \'\', \'\', \'2\');\n\n}', 'JavaScript', '[\"0\"]', '2025-06-04 06:44:40', NULL);
 
 -- --------------------------------------------------------
 
@@ -909,7 +909,7 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`, `inf_json`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.7-2025.06.04.02', NULL),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.7-2025.06.04.03', NULL),
 ('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.7-2025.06.04.00', NULL);
 
 -- --------------------------------------------------------
