@@ -679,7 +679,7 @@ function nuContextMenuBeforeRender(menu, event) {
 					item.html = nuContextMenuPositionText(id, item.tag);
 					break;
 				case 'Object':
-					item.text = `Object: ${(nuFormType() === 'edit' ? nuContextMenuCurrentTargetUpdateId() : nuContextMenuCurrentTargetBrowseIdText())}`;
+					item.text = `Object: ${(nuFormType() === 'edit' ? nuContextMenuCurrentTargetEditIdText() : nuContextMenuCurrentTargetBrowseIdText())}`;
 					break;
 				case 'Access':
 					item.subMenu.forEach((sub) => {
@@ -997,6 +997,19 @@ function nuContextMenuCurrentTargetBrowseIdText() {
 
 }
 
+function nuContextMenuCurrentTargetEditIdText() {
+
+	const id = nuContextMenuCurrentTargetUpdateId();
+	let t = $('#' + contextMenuCurrentTarget.id);
+
+	if (t.hasClass('nuTab')) {
+		return contextMenuCurrentTarget.id + ' (' + t.attr('data-nu-tab-id') + ')';
+	} else {
+		return id;
+	}
+
+}
+
 function nuContextMenuCopyIdToClipboard() {
 
 	let t = $('#' + contextMenuCurrentTarget.id);
@@ -1004,6 +1017,8 @@ function nuContextMenuCopyIdToClipboard() {
 	let id = '';
 	if (t.hasClass('nuSort')) {
 		id = t.parent().attr('data-nu-title-id');
+	} else if (t.hasClass('nuTab')) {
+		id = t.attr('data-nu-tab-id');
 	} else {
 		id = t.hasClass('nuSubformTitle') ? nuContextMenuCurrentTargetUpdateId() : nuContextMenuCurrentTargetId();
 	}
