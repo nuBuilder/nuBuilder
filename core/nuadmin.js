@@ -451,6 +451,13 @@ var subMenuHidden = {
 	action: () => nuContextMenuUpdateAccess(2)
 };
 
+var subMenuTabVisible = {
+	text: nuContextMenuItemText("Visible", "fa fa-pencil-square-o"),
+	tag: "Visible",
+	faicon: "far fa-edit",
+	action: () => nuContextMenuUpdateAccess(null)
+};
+
 var subMenuHiddenUser = {
 	text: nuContextMenuItemText("Hidden (User)", "fa fa-eye-slash"),
 	tag: "Hidden (User)",
@@ -582,6 +589,7 @@ var nuContextMenuDefinitionTab = [
 		text: "Access",
 		tag: "Access",
 		subMenu: [
+			subMenuTabVisible,
 			subMenuHidden,
 			subMenuHiddenUser
 		]
@@ -823,10 +831,22 @@ function nuContextMenuUpdateAccess(v) {
 		nuDisable(id);
 	}
 
-	$('#' + id).attr('data-nu-access', v);
+	$id = $('#' + id);
+	$id.attr('data-nu-access', v);
 
-	let column = $('#' + id).hasClass('nuTab') ? 'syt_access' : 'sob_all_access';
+	const isTab = $id.hasClass('nuTab');
+	if (isTab) {
+		if (v === null) { //-- visible
+			$id.removeClass('nuTabAccessHiddenUser')
+		}
+		else if (v == 3) { //-- hidden (user)
+			$id.addClass('nuTabAccessHiddenUser');
+		}
+	}
+
+	let column = isTab ? 'syt_access' : 'sob_all_access';
 	nuContextMenuUpdateObject(v, column);
+
 }
 
 function nuContextMenuUpdateAlign(v) {
