@@ -960,12 +960,6 @@ function nuContextMenuUpdateAction(action) {
 		nuContextMenuShowTabSelector(function (selectedTab) {
 			if (selectedTab) {
 				nuContextMenuUpdateObject(null, selectedTab, action);
-				if (nuIsSaved()) {
-					nuGetBreadcrumb();
-				} else {
-					nuUpdateMessage('refresh_required');
-				}
-
 				return;
 			}
 		});
