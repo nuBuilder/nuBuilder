@@ -472,6 +472,18 @@ var subMenuHiddenUserReadonly = {
 	action: () => nuContextMenuUpdateAccess(4)
 }
 
+var menuActions = {
+	text: "Actions",
+	tag: "Actions",
+	subMenu: [
+		{
+			text: "Delete",
+			tag: "Delete",
+			action: function () { nuContextMenuUpdateAction('delete') }
+		}
+	]
+}
+
 var menuAccess = {
 	text: "Access",
 	tag: "Access",
@@ -678,7 +690,43 @@ function nuContextMenuBeforeRender(menu, event) {
 	const id = nuContextMenuCurrentTargetId();
 	const $currentTarget = $('#' + contextMenuCurrentTarget.id);
 	const isButton = $currentTarget.is(":button");
+	const isTab = $currentTarget.hasClass('nuTab');
+	const isBrowseTitle = $currentTarget.hasClass('nuSort');
+	const isSubformTitle = $currentTarget.hasClass('nuSubformTitle');
+	const isAdmitButton = $currentTarget.hasClass('nuAdminButton');
 	const isSelect = $('#' + nuContextMenuCurrentTargetUpdateId()).is("select");
+	const disableMoveToTab = $('.nuTab').length < 2;
+
+	if (!isTab && !isBrowseTitle && !isSubformTitle && !isAdmitButton) {
+		const alreadyIncluded = menu.some(item => item && item.tag === "Actions");
+
+		if (!alreadyIncluded) {
+
+			const moveExists = menuActions.subMenu.some(item => item && item.tag === "Move");
+
+			if (disableMoveToTab) {
+				const moveIndex = menuActions.subMenu.findIndex(item => item && item.tag === "Move");
+				if (moveIndex !== -1) {
+					menuActions.subMenu.splice(moveIndex, 1);
+				}
+			}
+
+			if (!disableMoveToTab && !moveExists) {
+				menuActions.subMenu.splice(0, 0, {
+					text: "Move to Tab",
+					tag: "Move",
+					action: function () { nuContextMenuUpdateAction('move') }
+				});
+			}
+
+			const accessIndex = menu.findIndex(item => item && item.tag === "Access");
+			if (accessIndex !== -1) {
+				menu.splice(accessIndex, 0, menuActions, { isDivider: true });
+			} else {
+				menu.push(menuActions, { isDivider: true });
+			}
+		}
+	}
 
 	menu.forEach((item) => {
 		if (Object.prototype.hasOwnProperty.call(item, "tag")) {
@@ -846,6 +894,85 @@ function nuContextMenuUpdateAccess(v) {
 
 	let column = isTab ? 'syt_access' : 'sob_all_access';
 	nuContextMenuUpdateObject(v, column);
+
+}
+
+function nuContextMenuShowTabSelector(callback) {
+
+	const selectedId = nuGetSelectedTabId();
+	const options = $('.nuTab').map(function (i, el) {
+		const tabId = $(el).attr('data-nu-tab-id')
+		if (tabId === selectedId) return null;
+		const html = $(el).html().trim();
+		return `<option value="${tabId}">${html}</option>`;
+	}).get().join('');
+
+	const confirmContent = `
+            <select id="nuSelectTabList" size="5" style="width: 97%; height: 100px;">
+            ${options}
+        </select>
+    `;
+
+	$.confirm({
+		title: 'Move to Tab',
+		content: confirmContent,
+		boxWidth: '250px',
+		useBootstrap: false,
+		modal: true,
+		closeIcon: true,
+		buttons: {
+			confirm: {
+				text: 'OK',
+				btnClass: 'btn-blue',
+				action: function () {
+					const selected = this.$content.find('select').val();
+					if (callback) callback(selected);
+				}
+			},
+			cancel: {
+				text: 'Cancel',
+				btnClass: 'btn-default'
+			}
+		},
+		onContentReady: function () {
+			const $select = this.$content.find('select');
+			if ($select.find('option').length === 1) {
+				$select.prop('selectedIndex', 0).trigger('change');
+			}
+			$('.jconfirm-scrollpane').css('visibility', 'visible');
+			$('#nuSelectTabList').nuSetFocus();
+		}
+	});
+
+}
+
+
+function nuContextMenuUpdateAction(action) {
+
+	if (action === 'delete') {
+		if (!confirm(nuTranslate("Delete This Object?"))) {
+			return;
+		}
+
+	} else if (action === 'move') {
+
+		nuContextMenuShowTabSelector(function (selectedTab) {
+			if (selectedTab) {
+				nuContextMenuUpdateObject(null, selectedTab, action);
+				if (nuIsSaved()) {
+					nuGetBreadcrumb();
+				} else {
+					nuUpdateMessage('refresh_required');
+				}
+
+				return;
+			}
+		});
+
+		return;
+	}
+
+	nuContextMenuUpdateObject(null, null, action);
 
 }
 
@@ -1061,7 +1188,7 @@ function nuContextMenuObjectPopup(e) {
 
 }
 
-function nuContextMenuUpdateObject(value, column) {
+function nuContextMenuUpdateObject(value, column, action = 'update') {
 
 	let isSfTitle = $('#title_' + nuContextMenuCurrentTargetId()).hasClass('nuSubformTitle');
 	let isTab = $('#' + nuContextMenuCurrentTargetId()).hasClass('nuTab');
@@ -1081,6 +1208,7 @@ function nuContextMenuUpdateObject(value, column) {
 	nuSetProperty(p + '_form_id', formId);
 	nuSetProperty(p + '_type', isTab ? 'tab' : nuFormType());
 	nuSetProperty(p + '_column', column);
+	nuSetProperty(p + '_action', action);
 	nuRunPHPHidden(p);
 
 }
