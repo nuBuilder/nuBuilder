@@ -1092,33 +1092,35 @@ function nuContextMenuUpdate() {
 		? 'label, button, .nu_run, .nuWord, .nuImage, .nuContentBoxTitle, .nuTab, .nuSubformTitle, .nuAdminButton'
 		: '.nuSort, .nuAdminButton';
 
-	$(selector).each((index, element) => {
+	$(selector)
+		.filter((i, el) => !el.hasAttribute('data-nu-no-context-menu'))
+		.each((index, element) => {
 
-		if (!element.id) return;
+			if (!element.id) return;
 
-		const el = `#${element.id}`;
-		const $el = $(el);
+			const el = `#${element.id}`;
+			const $el = $(el);
 
-		if (el !== '#' && $el.length > 0) {
-			let menuDefinition;
+			if (el !== '#' && $el.length > 0) {
+				let menuDefinition;
 
-			if ($el.hasClass('nuAdminButton')) {
-				menuDefinition = nuContextMenuDefinitionAdminButton;
-			} else if ($el.hasClass('nuTab')) {
-				menuDefinition = nuContextMenuDefinitionTab;
-			} else if ($el.hasClass('nuSubformTitle')) {
-				menuDefinition = nuContextMenuDefinitionSubform;
-			} else {
-				menuDefinition = typeEdit
-					? nuContextMenuDefinitionEdit
-					: nuContextMenuDefinitionBrowse;
+				if ($el.hasClass('nuAdminButton')) {
+					menuDefinition = nuContextMenuDefinitionAdminButton;
+				} else if ($el.hasClass('nuTab')) {
+					menuDefinition = nuContextMenuDefinitionTab;
+				} else if ($el.hasClass('nuSubformTitle')) {
+					menuDefinition = nuContextMenuDefinitionSubform;
+				} else {
+					menuDefinition = typeEdit
+						? nuContextMenuDefinitionEdit
+						: nuContextMenuDefinitionBrowse;
+				}
+
+				ctxmenu.update(el, menuDefinition, {
+					onBeforeShow: (menu, event) => nuContextMenuBeforeRender(menu, event),
+				});
 			}
-
-			ctxmenu.update(el, menuDefinition, {
-				onBeforeShow: (menu, event) => nuContextMenuBeforeRender(menu, event),
-			});
-		}
-	});
+		});
 
 }
 

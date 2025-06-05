@@ -912,7 +912,7 @@ function nuAddActionButton(id, value, func, text, icon, insertAfterElement) {
 	}
 
 	id = "nu" + id + "Button";
-	let html = `<button id='${id}' type='button' class='${nuClass}' title = '${text}' onclick='${func}'>${value}` + "</button>";
+	let html = `<button id='${id}' type='button' class='${nuClass}' title='${text}' onclick='${func}' data-nu-no-context-menu>${value}</button>`;
 
 	if (insertAfterElement) {
 		$(html).insertAfter('#' + insertAfterElement);
