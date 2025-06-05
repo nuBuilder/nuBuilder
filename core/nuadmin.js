@@ -917,6 +917,7 @@ function nuContextMenuShowTabSelector(callback) {
 		title: 'Move to Tab',
 		content: confirmContent,
 		boxWidth: '250px',
+		container: '#nuhtml',
 		useBootstrap: false,
 		modal: true,
 		closeIcon: true,
