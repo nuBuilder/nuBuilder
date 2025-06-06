@@ -80,7 +80,7 @@ function nuAIPromptBuildPromptInformation($params) {
 		'nuphp' => "Use nuBuilder PDO PHP functions (e.g., nuRunQuery(), db_fetch_array()): " .
 			"[Documentation]({$nuWikiBase}PHP) | [nucommon.php]({$nuGitHubBase}nucommon.php) | [nudatabase.php]({$nuGitHubBase}nudatabase.php)",
 
-		'numysql' => 'Database: MySQL',
+		'mysql' => "Database: MySQL — [Naming Conventions]({$nuWikiBase}Naming_Conventions)",
 
 		'nucss' => 'Technology: CSS',
 	];
