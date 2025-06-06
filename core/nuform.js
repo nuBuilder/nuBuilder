@@ -7442,24 +7442,33 @@ function nuSetBrowseNoSearchResultsMessage(str) {
 	$('.nuBrowseNoResults').html(nuTranslate(str));
 }
 
-function nuSetSaveButtonProperties(sb, t, l, h, w, fs) {
+function nuSetSaveButtonProperties(id, top, left, hight, width, fontSizeOrStyle) {
 
-	sb.css({
-		"top": t + "px",
-		"left": l + "px",
-		"width": w + "px",
+	id.css({
+		"top": top + "px",
+		"left": left + "px",
+		"width": width + "px",
 		"position": "absolute",
-		"height": h + "px",
+		"height": hight + "px",
 		"margin": "unset"
 	});
 
-	sb.attr('data-nu-tab', '0');
-	sb.attr('data-nu-form', '');
+	id.attr('data-nu-tab', '0');
+	id.attr('data-nu-form', '');
 
-	if (fs) sb[0].style.fontSize = fs + "px";
-	if (nuSelectedTabNumber() !== '0') sb.css('display', 'none');
+	if (fontSizeOrStyle !== undefined) {
+		if (typeof fontSizeOrStyle === 'number') {
+			id[0].style.fontSize = fontSizeOrStyle + "px";
+		} else {
+			id.css(fontSizeOrStyle);
+		}
+	}
 
-	return sb;
+	if (nuSelectedTabNumber() !== '0') {
+		id.css('display', 'none');
+	}
+
+	return id;
 
 }
 
