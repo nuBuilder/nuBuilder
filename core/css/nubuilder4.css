@@ -292,7 +292,7 @@ input[type=radio] {
 .nuTabHolder {
 	display: flex;
 	border-bottom: 1px solid #ddd;
-	background-color: transparent;
+	background-color: white;
 	height: 30px;
 	align-items: center;
 	padding: 0;
@@ -836,11 +836,11 @@ input[type=radio] {
 
 .nuTab:hover {
 	cursor: pointer;
-	background-color: #f0f0f0;
+	background-color: var(--nu-edit-body);
 }
 
 .nuTabSelected {
-	background-color: #fff;
+	background-color: var(--nu-edit-body);
 	border-top: 2px solid #2d84d1;
 	border-left: 1px solid #ddd;
 	border-right: 1px solid #ddd;
