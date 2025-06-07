@@ -915,8 +915,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`, `inf_json`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.7-2025.06.05.01', NULL),
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.7-2025.06.05.03', NULL);
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.8-2025.06.07.00', NULL),
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.8-2025.06.07.00', NULL);
 
 -- --------------------------------------------------------
 

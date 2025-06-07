@@ -1,4 +1,4 @@
-# nuBuilder Forte 4.7
+# nuBuilder Forte 4.8
 
 **A powerful, open-source, low-code platform for rapidly building custom web-based database applications.**
 

@@ -1,5 +1,5 @@
 === nuBuilder Forte ===
-Name: nuBuilder 4.7
+Name: nuBuilder 4.8
 
 Contributors: Steven Copley, kev1n, Janusz, Neil, Nilesh, Ap.Muthu
 License: [GPLv3](https://www.gnu.org/licenses/old-licenses/gpl-3.0.html)
