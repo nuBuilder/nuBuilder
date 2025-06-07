@@ -2178,7 +2178,7 @@ function nuSUBFORMnuTabHolderAddCSS(tabId, rowTop, rowWidth) {
 			'position': 'absolute',
 			'padding': '12px 0px 0px 0px'
 		})
-		.addClass('nuTabHolder')
+		.addClass('nuSubformTitleHolder')
 		.attr('data-nu-subform', tabId)
 		.prepend('&nbsp;&nbsp;&nbsp;');
 
@@ -3515,7 +3515,7 @@ function nuBuildSubformTitle(o, l, w, id, col) {
 		.attr('data-nu-field', o.id)
 		.attr('data-nu-subform', id)
 		.attr('data-nu-order', 'asc')
-		.addClass('nuTabHolder nuSubformTitle')
+		.addClass('nuSubformTitleHolder nuSubformTitle')
 		.addClass(o.input == 'number' || o.input == 'nuNumber' ? 'number' : 'text');
 
 	oTitle.on('click', e => {

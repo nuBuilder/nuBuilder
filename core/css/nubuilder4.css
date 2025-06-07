@@ -300,6 +300,15 @@ input[type=radio] {
 	overflow: visible;
 }
 
+.nuSubformTitleHolder {
+	background-color: white;
+	border-style: solid;
+	border-width: 0 0 1px;
+	border-color: lightgrey;
+	padding: 10px 0 0;
+	overflow: visible
+}
+
 .nuActionHolder {
 	padding: 10px 0;
 	background-color: white;
