@@ -952,28 +952,31 @@ input[type=radio] {
 }
 
 .nuActionButton {
-	color: white;
-	background-color: #378bd5;
-	display: inline;
-	border-style: solid;
-	font-size: 12px;
-	height: 20px;
-	padding: 0 6px;
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-	border-radius: 3px;
-	cursor: pointer;
-	border-color: #2a8bcc;
-	border-width: 0 0 1px;
-	margin: 0 0 0 10px
+	background-color: #2d84d1;
+	color: #ebeeef;
+	border: 1px solid #e3e3e3;
+	font-size: 13px;
+	height: 26px;
+	margin-left: 8px;
+	border-radius: 4px;
+	min-width: 36px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 7px;
+	box-shadow: none;
+	transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.nuActionButton:hover {
+	background-color: #1c6fb5;
+	color: #ffffff;
+	box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
 }
 
 .nuActionButton:active {
-	background-color: #266ca7;
-	border-color: #1f5482
-}
-
-.nuActionButton:not(.nuReadonly):hover {
-	color: #E2EAFF
+	background-color: #165a96;
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .nuActionButtonIcon {
@@ -998,18 +1001,28 @@ input[type=radio] {
 }
 
 .nuAdminButton {
-	margin-bottom: 10px;
+	margin-bottom: 15px !important;
 	background-color: #fafafa;
 	background-image: none;
 	color: var(--nu-label);
 	border-color: #d3d3d3;
+	border-width: 0 0 1px;
+	margin: 0 0 8px 10px;
+	font-size: 12px;
+	height: 20px;
 	text-shadow: none;
 	border-radius: 3px;
+	padding: 0 6px
 }
 
 .nuAdminButton:not(.nuReadonly):active {
 	background-color: #096341 ! important;
 	transform: scale(0.90);
+}
+
+.nuAdminButton:not(.nuReadonly):hover {
+	background-color: #00ADEF;
+	color: white
 }
 
 .nuAdminButtonUsed {
@@ -1023,11 +1036,6 @@ input[type=radio] {
 
 #nuBackBtnButton.nuActionButton:disabled {
 	background-color: #f0f0f0
-}
-
-.nuAdminButton:not(.nuReadonly):hover {
-	background-color: #00ADEF;
-	color: white
 }
 
 .nuSaveButtonEdited {
@@ -1110,17 +1118,63 @@ input[type=radio] {
 }
 
 .nuSearch {
-	height: 26px;
-	box-sizing: border-box;
-	padding: 0 5px 0 10px;
-	border: 1px solid #e3e3e3;
+	border: none !important;
+	outline: none !important;
+	height: 100%;
+	padding: 0 5px;
+	font-size: 13px;
 	color: #2c3e50;
-	outline: none;
-	border-radius: 10px;
-	margin-right: 5px;
+	background: rgb(248 248 248 / 28%);
+	margin-right: -5px;
+	box-sizing: border-box;
+	flex: 1;
+	transition: box-shadow 0.2s ease;
+	-webkit-appearance: none;
+	appearance: none
+}
+
+.nuSearchWrapper {
+	display: inline-flex;
+	align-items: center;
+	border: 1px solid #e3e3e3;
+	border-radius: 9px;
+	overflow: hidden;
+	height: 30px;
+	transition: border-color 0.2s ease;
 	margin-left: 10px;
-	transition: border-color .2s ease;
-	vertical-align: middle !important
+	margin-right: 5px;
+	vertical-align: middle;
+	margin-top: -5px;
+}
+
+.nuSearchWrapper:hover {
+	border-color: #c8c8c8;
+}
+
+.nuSearchWrapper:focus-within {
+	border-color: #66afe9;
+	box-shadow: 0 0 0 1px rgba(102, 175, 233, 0.4);
+}
+
+.nuSearchBtn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	padding: 0 12px;
+	background-color: #f8f8f8;
+	border: none;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+}
+
+.nuSearchBtn:hover {
+	background-color: #e0e0e0;
+}
+
+.nuSearchBtn:focus {
+	outline: none;
+	background-color: #e0e0e0;
 }
 
 #nuModal {
