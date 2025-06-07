@@ -290,12 +290,14 @@ input[type=radio] {
 }
 
 .nuTabHolder {
-	background-color: white;
-	border-style: solid;
-	border-width: 0 0 1px;
-	border-color: lightgrey;
-	padding: 10px 0 0;
-	overflow: visible
+	display: flex;
+	border-bottom: 1px solid #ddd;
+	background-color: transparent;
+	height: 30px;
+	align-items: center;
+	padding: 0;
+	margin: 0;
+	overflow: visible;
 }
 
 .nuActionHolder {
@@ -808,31 +810,34 @@ input[type=radio] {
 }
 
 .nuTab {
-	display: inline;
-	border-style: solid;
-	border-width: 0;
-	border-color: #CCCCCC;
-	font-size: 14px;
-	padding: 3px 7px;
-	height: 33px
+	height: 30px;
+	line-height: 30px;
+	padding: 0 12px;
+	margin: 0 2px;
+	background-color: var(--nu-edit-body);
+	border: 1px solid #ddd;
+	border-bottom: none;
+	color: #333;
+	font-size: 13px;
+	font-family: 'Segoe UI', sans-serif;
+	cursor: pointer;
+	transition: background-color 0.2s ease-in-out;
+	border-radius: 3px;
 }
 
 .nuTab:hover {
 	cursor: pointer;
-	background-color: #f4f4f4;
-	border-radius: 4px 4px 0px 0px
+	background-color: #f0f0f0;
 }
 
 .nuTabSelected {
-	background-color: transparent;
-	display: inline;
-	font-size: 14px;
-	padding: 3px 7px 0;
-	margin-left: 1px;
-	border-radius: 0;
-	border-style: solid;
-	border-color: #606060;
-	border-width: 0 0 2px
+	background-color: #fff;
+	border-top: 2px solid #2d84d1;
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+	border-bottom: 1px solid #fff;
+	font-weight: 600;
+	color: #000;
 }
 
 .nuSubform {
