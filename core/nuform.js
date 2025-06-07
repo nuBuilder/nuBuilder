@@ -7485,21 +7485,27 @@ function nuSetSaveButtonPosition(t, l, h, w, fs) {
 
 }
 
-function nuAttachSaveButtonTo(i, dx, dy, h, w, fs) {
+function nuAttachSaveButtonTo(id, dx, dy, hight, width, fontSize) {
 
-	var sb = $('#nuSaveButton');
-	var dest = $('#' + i);
-
-	if (dest === undefined || nuDebugOut(dest, i)) return false;
+	const sb = $('#nuSaveButton');
+	const dest = $('#' + id);
+	if (dest === undefined || nuDebugOut(dest, id)) return false;
 
 	dest.after(sb);
 
+	$('#nuSaveButton')
+		.append('<span style="margin-left:8px;">' + nuTranslate('Save') + '</span>')
+		.css({
+			'width': 'auto',
+			'padding-right': '10px'
+		});
+
 	if (!dx || dx == 0) dx = 0;
 	if (!dy || dy == 0) dy = 0;
-	if (!w || w == 0) w = sb.nuCSSNumber("width");
-	if (!h || h == 0) h = sb.nuCSSNumber("height");
+	if (!width || width == 0) width = sb.nuCSSNumber("width");
+	if (!hight || hight == 0) hight = sb.nuCSSNumber("height");
 
-	return nuSetSaveButtonProperties(sb, dest.nuCSSNumber("top") + dest.nuCSSNumber("height") + 15 + dy, dest.nuCSSNumber("left") + dx, h, w, fs);
+	return nuSetSaveButtonProperties(sb, dest.nuCSSNumber("top") + dest.nuCSSNumber("height") + 15 + dy, dest.nuCSSNumber("left") + dx, hight, width, fontSize);
 
 }
 
