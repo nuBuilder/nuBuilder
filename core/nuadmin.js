@@ -46,13 +46,13 @@ function nuShowFormInfo() {
 	const formattedBrowseSQL = String(browseSQLRaw).replace(/\s{2,}/g, '\n');
 
 	const escapeForHTMLAttribute = str => str.replace(/\n/g, '\\n').replace(/'/g, "\\'");
-	const copyButtonHTML = (value, label) => `<button type="button" class="nuActionButton nuAdminButton" onclick="navigator.clipboard.writeText(nuTranslate('${escapeForHTMLAttribute(value)}'))">${nuTranslate(label)}</button>`;
+	const copyButtonHTML = (value, label) => `<button type="button" class="nuAdminButton" onclick="navigator.clipboard.writeText(nuTranslate('${escapeForHTMLAttribute(value)}'))">${nuTranslate(label)}</button>`;
 
 	const formIdCopyButton = copyButtonHTML(formId, 'Copy');
 	const formCodeCopyButton = copyButtonHTML(formCode, 'Copy');
 	const browseCopyButton = copyButtonHTML(formattedBrowseSQL, 'Copy SQL');
 	const permalinkButton = nuUXOptions.nuShowURLPermaLink ? copyButtonHTML(window.location.href, 'Copy Permalink') : '';
-	const currPropsButton = `<button type="button" class="nuActionButton nuAdminButton" onclick="nuFormInfoCurrentProperties()">${nuTranslate('Current Properties')}</button>`;
+	const currPropsButton = `<button type="button" class="nuAdminButton" onclick="nuFormInfoCurrentProperties()">${nuTranslate('Current Properties')}</button>`;
 
 	const recordIdCopyButton = isEditMode && recordId ? copyButtonHTML(recordId, 'Copy') : '';  // Adding Record ID copy button
 
@@ -87,7 +87,7 @@ function nuAddAdminButton(id, obj) {
 	const inputId = `nu${id}Button`;
 
 	const button = `
-	<input id="${inputId}" type="button" title="${nuTranslate(title)}" class="nuActionButton nuAdminButton" value="${nuTranslate(obj.value)}" onclick="${obj.func}">
+	<input id="${inputId}" type="button" title="${nuTranslate(title)}" class="nuAdminButton" value="${nuTranslate(obj.value)}" onclick="${obj.func}">
   `;
 
 	$('#nuActionHolder').prepend(button);
@@ -214,7 +214,7 @@ function nuAddAdminButtons() {
 		$('#nuActionHolder').css('height', `+=${heightToAdd}px`);
 
 		const lastAdminButton = $('.nuAdminButton').last();
-		$('<br style="user-select:none">').insertAfter(lastAdminButton);
+		$('<p style="display:block; margin:0px; user-select:none;"></p>').insertAfter(lastAdminButton);
 
 	}
 
