@@ -952,31 +952,51 @@ input[type=radio] {
 }
 
 .nuActionButton {
-	background-color: #2d84d1;
-	color: #ebeeef;
-	border: 1px solid #e3e3e3;
-	font-size: 13px;
-	height: 26px;
-	margin-left: 8px;
+	--btn-bg: #2d84d1;
+	--btn-bg-hover: #145b96;
+	--btn-bg-active: #165a96;
+	--btn-text: #fff;
+	background: linear-gradient(to bottom, var(--btn-bg) 0%, #307fcc 100%);
+	color: var(--btn-text);
+	border: none;
 	border-radius: 4px;
-	min-width: 36px;
+	padding: 0 14px;
+	height: 32px;
+	margin-left: 8px;
+	min-width: 48px;
+	font-size: 14px;
+	font-weight: 500;
+	letter-spacing: 0.5px;
+	cursor: pointer;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	padding: 0 7px;
-	box-shadow: none;
-	transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12),
+		0 1px 3px rgba(0, 0, 0, 0.08);
+	transition:
+		background 0.2s ease,
+		box-shadow 0.2s ease,
+		transform 0.1s ease;
 }
 
 .nuActionButton:hover {
-	background-color: #1c6fb5;
-	color: #ffffff;
-	box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+	background-color: var(--btn-bg-hover);
+	box-shadow:
+		0 4px 12px rgba(0, 0, 0, 0.16),
+		0 2px 4px rgba(0, 0, 0, 0.10);
 }
 
 .nuActionButton:active {
-	background-color: #165a96;
-	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+	background: var(--btn-bg-active);
+	box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.2);
+	transform: translateY(0);
+}
+
+.nuActionButton:focus {
+	outline: none;
+	box-shadow:
+		0 2px 6px rgba(0, 0, 0, 0.12),
+		0 0 0 3px rgba(30, 120, 215, 0.4);
 }
 
 .nuActionButtonIcon {
