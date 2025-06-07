@@ -834,38 +834,54 @@ function nuAddActionButtons(form) {
 
 	const recordId = nuRecordId();
 	const arrangingObjects = nuArrangingObjects(recordId);
-
-	var button = form.buttons;
+	const button = form.buttons;
 	const isMobile = nuIsMobile();
 
 	if (nuFormType() == 'browse') {
+		const searchValue = nuDefine(nuFORM.getProperty('search'));
+		const filter = nuDefine(nuFORM.getProperty('filter'));
 
-		var s = nuDefine(nuFORM.getProperty('search'));
-		var f = nuDefine(nuFORM.getProperty('filter'));
+		$('#nuActionHolder').append(
+			'<div class="nuSearchWrapper">' +
+			'<input '
+			+ 'id="nuSearchField" '
+			+ 'type="text" '
+			+ 'class="nuSearch" '
+			+ 'onkeypress="nuSearchPressed(event)" '
+			+ 'onkeydown="nuArrowPressed(event)" '
+			+ 'value="' + searchValue + '" '
+			+ '/>' +
+			'<button '
+			+ 'type="button" '
+			+ 'id="nuSearchBtn" '
+			+ 'class="nuSearchBtn" '
+			+ 'title="Search">'
+			+ '<i class="fa-solid fa-magnifying-glass"></i>' +
+			'</button>' +
+			'</div>'
+		).append(
+			"<input id='nuFilter' style='visibility:hidden;width:0px' value='" + filter + "'>"
+		);
 
-		$('#nuActionHolder').append("<input id='nuSearchField' type='text' class='nuSearch' onfocus='this.value = this.value;' onkeypress='nuSearchPressed(event)' onkeydown='nuArrowPressed(event)' value='" + s + "'>")
-			.append("<input id='nuFilter' style='visibility:hidden;width:0px' value='" + f + "'>");
+		$('#nuSearchBtn').on('click', function () {
+			nuSearchAction();
+		});
 
-		const searchCaption = isMobile ? "<i class='fa-fw fa fa-search fa-lg'></i>" : "<i class='fa-fw fa fa-search'></i>" + "&nbsp;" + nuTranslate('Search');
-		const printCaption = nuTranslate('Print');
-		const addCaption = isMobile ? "<i class='fa-fw fa fa-add fa-lg'></i>" : nuTranslate('Add');
-
-		nuAddActionButton("Search", searchCaption, 'nuSearchAction()');
+		const printCaption = "<i class='fa-solid fa-fw fa-print fa-lg'></i>";
+		const addCaption = "<i class='fa-fw fa fa-add fa-lg'></i>";
 
 		if (button.Add == 1) {
-			nuAddActionButton('Add', addCaption, 'nuAddAction()');
+			nuAddActionButton('Add', addCaption, 'nuAddAction()').attr('title', nuTranslate('Add'));
 		}
 
 		if (button.Print == 1 && nuFORM.getCurrent().browse_rows.length > 0 && !isMobile) {
-			nuAddActionButton('Print', printCaption, 'nuPrintAction()');
+			nuAddActionButton('Print', printCaption, 'nuPrintAction()').attr('title', nuTranslate('Print'));
 		}
 
 		nuSearchFieldSetSearchType(isMobile);
 
 	} else {
-
 		if (!arrangingObjects) {
-
 			if (button.Save == 1 && form.form_type != 'launch') {
 				if ((nuIsNewRecord() && form.data_mode == 0) || form.data_mode != 0) {
 					nuAddActionButton('Save');
@@ -873,17 +889,22 @@ function nuAddActionButtons(form) {
 			}
 
 			if (recordId != -1) {
-
-				if (button.Delete == 1) { nuAddActionButton('Delete'); }
-				if (button.Clone == 1) { nuAddActionButton('Clone'); }
-
+				if (button.Delete == 1) {
+					nuAddActionButton('Delete');
+				}
+				if (button.Clone == 1) {
+					nuAddActionButton('Clone');
+				}
 			}
 
-			if (button.RunHidden != '') { nuAddActionButton('runhidden', 'Run', button.RunHidden); }
-			if (button.Run != '') { nuAddActionButton('run', 'Run', button.Run); }
+			if (button.RunHidden != '') {
+				nuAddActionButton('RunHidden', 'Run', button.RunHidden);
+			}
 
+			if (button.Run != '') {
+				nuAddActionButton('Run', 'Run', button.Run);
+			}
 		}
-
 	}
 
 	if (isMobile) {
@@ -892,28 +913,75 @@ function nuAddActionButtons(form) {
 
 }
 
-function nuAddActionButton(id, value, func, text, icon, insertAfterElement) {
+function nuAddActionButton(id, value, func, title, icon, insertAfterElement) {
 
-	if (arguments.length == 1) {
-		value = id;
-		func = 'nu' + id + 'Action()';
+	const ICON_BASE = 'fa-regular fa-fw fa-lg';
+
+	const defaults = {
+		Save: {
+			value: 'Save',
+			func: 'nuSaveAction()',
+			text: '',
+			iconSuffix: 'fa-floppy-disk'
+		},
+		Delete: {
+			value: 'Delete',
+			func: 'nuDeleteAction()',
+			text: '',
+			iconSuffix: 'fa-square-minus'
+		},
+		Clone: {
+			value: 'Clone',
+			func: 'nuCloneAction()',
+			text: '',
+			iconSuffix: 'fa-clone'
+		},
+		RunHidden: {
+			value: 'Run',
+			func: 'nuRunHiddenAction()',
+			text: '',
+			iconSuffix: 'fa-circle-play'
+		},
+		Run: {
+			value: 'Run',
+			func: 'nuRunAction()',
+			text: '',
+			iconSuffix: 'fa-circle-play'
+		}
+	};
+
+	if (['Save', 'Delete', 'Clone', 'Run'].includes(id)) {
+		const def = defaults[id] || {
+			value: id,
+			func: `nu${id}Action()`,
+			text: id,
+			iconSuffix: null
+		};
+
+		value = value ?? def.value;
+		func = func ?? def.func;
+		title = title ?? def.text;
+		icon = icon ?? (def.iconSuffix ? `${ICON_BASE} ${def.iconSuffix}` : null);
 	}
 
-	if (typeof (value) == 'object') {
+	if (typeof value === 'object') {
 		value = nuUseMobileView() ? value.valueMobile : nuTranslate(nuDefine('value'));
 	} else {
 		value = nuTranslate(nuDefine(value));
 	}
 
-	text = nuTranslate(nuDefine(text));
+	title = nuTranslate(nuDefine(title));
 
 	let nuClass = "nuActionButton";
-	if (id == 'Save' || id == 'Add' || id == 'Clone' || id == 'Delete') {
-		nuClass += " " + "nu" + id + "Button";
+	if (['Save', 'Add', 'Clone', 'Delete'].includes(id)) {
+		nuClass += " nu" + id + "Button";
 	}
 
-	id = "nu" + id + "Button";
-	let html = `<button id='${id}' type='button' class='${nuClass}' title='${text}' onclick='${func}' data-nu-no-context-menu>${value}</button>`;
+	const elementId = "nu" + id + "Button";
+
+	let html = `<button id="${elementId}" type="button" class="${nuClass}"
+						 title="${title}"
+						 onclick="${func}">${value}</button>`;
 
 	if (insertAfterElement) {
 		$(html).insertAfter('#' + insertAfterElement);
@@ -922,14 +990,15 @@ function nuAddActionButton(id, value, func, text, icon, insertAfterElement) {
 	}
 
 	if (icon) {
-		nuAddInputIcon(id, icon);
+		nuAddInputIcon(elementId, icon);
 	}
 
 	if (nuIsMobile()) {
 		$('.nuActionButton').css('height', '28px');
 	}
 
-	return $('#' + id);
+	return $('#' + elementId);
+
 }
 
 function nuAddActionButtonSaveClose(caption) {
