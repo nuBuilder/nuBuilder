@@ -19,7 +19,6 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 		.toolbar {
 			display: flex;
 			align-items: center;
-			gap: 10px;
 			padding: 8px;
 			background: #f0f0f0;
 			border-bottom: 1px solid #ccc;
@@ -36,8 +35,6 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 		}
 
 		.toolbar button.btn {
-			width: 30px;
-			height: 20px;
 			padding: 0;
 			display: flex;
 			align-items: center;
@@ -90,8 +87,8 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 		}
 
 		.nuCopyBackButton.red {
-			background-color: red !important;
-			border-color: #dc3545 !important;
+			background-color: #dc3545 !important;
+			box-shadow: inset 0 0 0 1px #dc3545;
 		}
 
 		button.btn.beautify::before {
@@ -143,6 +140,52 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 			margin-top: 5px;
 			margin-left: 10px;
 		}
+
+		.btn-toggle {
+			padding: 6px 12px;
+			display: flex;
+			align-items: center;
+			justify-content: flex-start;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			background-color: #f7f7f7;
+			color: #333;
+			font-size: 14px;
+			cursor: pointer;
+			transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+		}
+
+		.btn-toggle:hover {
+			background-color: #e6e6e6;
+		}
+
+		.btn-toggle input[type="checkbox"] {
+			position: absolute;
+			opacity: 0;
+			pointer-events: none;
+		}
+
+		.btn-toggle i {
+			margin-right: 8px;
+			font-size: 16px;
+		}
+
+		.btn-toggle .checked-icon {
+			display: none;
+		}
+
+		.btn-toggle input[type="checkbox"]:checked~.checked-icon {
+			display: inline-block;
+		}
+
+		.btn-toggle input[type="checkbox"]:checked~.unchecked-icon {
+			display: none;
+		}
+
+		.btn-toggle input[type="checkbox"]:checked~span,
+		.btn-toggle input[type="checkbox"]:checked~i {
+			background-color: transparent;
+		}
 	</style>
 
 	<script>
@@ -157,20 +200,16 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 			ace.require("ace/ext/language_tools");
 			window.beautify = ace.require("ace/ext/beautify");
 			window.editor = ace.edit("nu_editor");
-
 			editor.setShowPrintMargin(false);
 			const theme = "ace/theme/" + (window.nuACETheme ? window.nuACETheme : 'monokai');
-			debugger;
 			editor.setTheme(theme);
 			editor.setOptions({
 				enableBasicAutocompletion: true,
 				enableSnippets: true,
 				enableLiveAutocompletion: true
 			});
-
 			window.startValue = opener.window.document.getElementById(nuACEObjectId).value;
 			editor.setFontSize(14);
-
 			var language = window.nuACELanguage.toUpperCase();
 			const languageModes = {
 				'HTML': { mode: 'html' },
@@ -180,21 +219,17 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 				'SQL': { mode: 'sql' },
 				'CSS': { mode: 'css' },
 			};
-
 			if (languageModes[language]) {
 				const { mode } = languageModes[language];
 				editor.getSession().setMode({ path: `ace/mode/${mode}`, inline: true });
 			}
-
 			document.getElementById('nu_language').innerHTML =
 				window.nuACELanguage === window.nuACEObjectLabel
 					? window.nuACEObjectLabel
 					: window.nuACEObjectLabel + " (" + window.nuACELanguage + ")";
-
 			if (language.includes('SQL')) {
 				document.getElementById('nuACEBeautifyButton').style.display = 'none';
 			}
-
 			if ($('#' + window.nuACEObjectId, window.opener.document)[0].id == 'deb_message') {
 				$('#btn_save_close').remove();
 				$('#btn_save').remove();
@@ -202,30 +237,23 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 				let btnSaveClose = document.getElementById('btn_save_close');
 				btnSaveClose.value = 'Apply & Close';
 				btnSaveClose.title = 'Copy changes back and Close (Ctrl+Shift+C)';
-
 				let btnSave = document.getElementById('btn_save');
 				btnSave.value = 'Apply';
 				btnSave.title = 'Copy changes back (Ctrl+Shift+S)';
 			}
-
 			nuResize();
-
 			editor.renderer.setScrollMargin(10, 0, 0, 10);
 			editor.setValue(window.startValue);
 			editor.focus();
 			editor.navigateFileStart();
-
 			editor.on('change', function () {
 				nuSetEdited(true);
 			});
-
-			// Disable Ace Ctrl+, shortcut
 			editor.commands.addCommand({
 				name: 'showSettingsMenu',
 				bindKey: {},
 				exec: editor.commands.byName['showSettingsMenu'].exec
 			});
-
 			editor.commands.addCommand({
 				name: "showKeyboardShortcuts",
 				bindKey: { win: "Ctrl-Shift-k", mac: "Command-Shift-k" },
@@ -236,12 +264,9 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 					})
 				}
 			})
-
 			document.addEventListener('keydown', nuACEhandleCtrlComma);
 			nuSetEdited(false);
 			editor.getSession().getUndoManager().reset();
-
-			// Retrieve auto-save state from localStorage, default is checked (true)
 			var autoSave = localStorage.getItem('auto_save');
 			if (autoSave === null) {
 				autoSave = true;
@@ -249,25 +274,21 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 				autoSave = (autoSave === 'true');
 			}
 			document.getElementById('btn_save_on_apply_checkbox').checked = autoSave;
-
-			// Save auto-save state when checkbox changes
 			document.getElementById('btn_save_on_apply_checkbox').addEventListener('change', function () {
 				localStorage.setItem('auto_save', this.checked);
 			});
-
 			document.addEventListener('keydown', function (e) {
 				if (e.ctrlKey && e.shiftKey) {
 					const key = e.key.toLowerCase();
 					if (key === 's') {
 						e.preventDefault();
-						document.getElementById('btn_save').click(); // Apply
+						document.getElementById('btn_save').click();
 					} else if (key === 'c') {
 						e.preventDefault();
-						document.getElementById('btn_save_close').click(); // Apply & Close
+						document.getElementById('btn_save_close').click();
 					}
 				}
 			});
-
 		}
 
 		function nuACEhandleCtrlComma(event) {
@@ -281,7 +302,7 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 		}
 
 		function nuSetEdited(edited = true) {
-			$('.nuCopyBackButton').toggleClass('red', edited);
+			$('.nuCopyBackButton').toggleClass('nuSaveButtonEdited', edited);
 			$('.undo').toggleClass('nuReadonly', !edited);
 			$(".undo").prop("disabled", !edited);
 		}
@@ -322,7 +343,6 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 			} else {
 				opener.window.document.getElementById(window.nuACEObjectId).fireEvent("onchange");
 			}
-			// Call nuSaveAction only if Auto Save is checked
 			if (document.getElementById('btn_save_on_apply_checkbox').checked) {
 				window.opener.nuSaveAction();
 				if (!close) showSavedIndicator();
@@ -362,10 +382,14 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 			style="display:none; margin-left: 10px; margin-right: 5px; font-weight:bold; color:green;">
 			Saved!
 		</span>
-		<input type="checkbox" id="btn_save_on_apply_checkbox">
-		<label for="btn_save_on_apply_checkbox" style="margin-left: 5px;">Save on Apply</label>
+		<label class="btn btn-toggle" style="margin-left: 5px;">
+			<input type="checkbox" id="btn_save_on_apply_checkbox">
+			<i class="fa-regular fa-square unchecked-icon"></i>
+			<i class="fa-regular fa-square-check checked-icon"></i>
+			<span>Save on Apply</span>
+		</label>
 		<button class="btn undo nuActionButton nuReadonly" title="Undo" onclick="editor.undo()" disabled></button>
-		<button class="btn find nuActionButton" title="Find" onclick="editor.execCommand('find');"></button>
+		<button class="btn find nuActionButton" title="Search" onclick="editor.execCommand('find');"></button>
 		<button class="btn searchreplace nuActionButton" title="Search and Replace"
 			onclick="editor.execCommand('replace');"></button>
 		<button class="btn commentout nuActionButton" title="Toggle Comment Lines"
