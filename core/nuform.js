@@ -385,6 +385,7 @@ function nuSetHideTabIfOnlyOne() {
 
 		if (hideTab) {
 			$('.nuTab').hide();
+			$('.nuTabHolder').hide();
 		}
 
 	}
