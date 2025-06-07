@@ -7562,13 +7562,6 @@ function nuAttachSaveButtonTo(id, dx, dy, hight, width, fontSize) {
 
 	dest.after(sb);
 
-	$('#nuSaveButton')
-		.append('<span style="margin-left:8px;">' + nuTranslate('Save') + '</span>')
-		.css({
-			'width': 'auto',
-			'padding-right': '10px'
-		});
-
 	if (!dx || dx == 0) dx = 0;
 	if (!dy || dy == 0) dy = 0;
 	if (!width || width == 0) width = sb.nuCSSNumber("width");
