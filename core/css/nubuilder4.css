@@ -776,7 +776,6 @@ input[type=radio] {
 
 .nuBrowseFooter .nuPaginationInfo {
 	flex: 1 1 auto;
-	text-align: right;
 	padding-left: 16px;
 }
 
