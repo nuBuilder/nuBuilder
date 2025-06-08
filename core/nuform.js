@@ -4771,13 +4771,22 @@ function nuBrowseCreateFooter(currentForm, topOffset, leftOffset, rowHeight) {
 
 function nuBrowseCreateFooterHtml(currentForm) {
 
-	const last = `<span id="nuLast" onclick="nuGetPage(${currentForm.page_number})" class="nuBrowsePage">&#9668;</span>`;
-	const next = `<span id="nuNext" onclick="nuGetPage(${currentForm.page_number + 2})" class="nuBrowsePage">&#x25BA;</span>`;
-	const pageLabel = '&nbsp;Page&nbsp;';
-	const currentPageInput = `<input id="browsePage" style="text-align:center;margin:3px 0px 0px 0px;width:40px" onchange="nuGetPage(this.value)" value="${currentForm.page_number + 1}" class="browsePage"/>`;
-	const totalPagesLabel = ' / ' + (currentForm.pages === 0 ? 1 : currentForm.pages) + ' ';
+	const isFirstPage = currentForm.page_number === 0;
+	const isLastPage = currentForm.page_number + 1 >= currentForm.pages;
+	const totalPages = currentForm.pages === 0 ? 1 : currentForm.pages;
+	const disabledStyle = ' style="opacity: 0.3; pointer-events: none;"';
 
-	return last + pageLabel + currentPageInput + totalPagesLabel + next;
+	const nuFirst = `<span id="nuFirst" class="nuBrowsePage"${isFirstPage ? disabledStyle : ''}><i class="fa fa-step-backward" style="font-size: 16px" onclick="nuGetPage(1)"></i></span>`;
+	const nuLast = `<span id="nuLast" onclick="nuGetPage(${currentForm.page_number})" class="nuBrowsePage"${isFirstPage ? disabledStyle : ''}">&#9668;</span>`;
+	const currentPageInput = `<input id="browsePage" style="text-align:center;margin:3px 0px 0px 0px;width:40px" onchange="nuGetPage(this.value)" value="${currentForm.page_number + 1}" class="browsePage"/>`;
+	const nuNext = `<span id="nuNext" onclick="nuGetPage(${currentForm.page_number + 2})" class="nuBrowsePage"${isLastPage ? disabledStyle : ''}">&#x25BA;</span>`;
+	const nuEnd = `<span id="nuEnd" class="nuBrowsePage"${isLastPage ? disabledStyle : ''}><i class="fa fa-step-forward" style="font-size: 16px" onclick="nuGetPage(${totalPages})"></i></span>`;
+
+	const startRecord = currentForm.page_number * 20 + 1;
+	const endRecord = Math.min((currentForm.page_number + 1) * 20, currentForm.total_records || 0);
+	const paginationInfo = `<span class="nuPaginationInfo">${startRecord} - ${endRecord} of ${currentForm.total_records || 0}</span>`;
+
+	return nuFirst + nuLast + '&nbsp;Page&nbsp;' + currentPageInput + ` / ${totalPages} ` + nuNext + nuEnd + paginationInfo;
 
 }
 
