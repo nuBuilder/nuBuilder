@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 08, 2025 at 02:50 AM
+-- Generation Time: Jun 08, 2025 at 03:13 AM
 -- Server version: 8.2.0
 -- PHP Version: 7.4.33
 
@@ -2123,7 +2123,7 @@ CREATE TABLE `zzzzsys_setup` (
 --
 
 INSERT INTO `zzzzsys_setup` (`zzzzsys_setup_id`, `set_time_out_minutes`, `set_zzzzsys_timezone_id`, `set_language`, `set_languages_included`, `set_smtp_username`, `set_smtp_password`, `set_smtp_host`, `set_smtp_from_address`, `set_smtp_from_name`, `set_smtp_port`, `set_smtp_use_authentication`, `set_smtp_use_ssl`, `set_header`, `set_include`, `set_style`, `set_denied`, `set_json`) VALUES
-('1', 480, '5281a1220508372', NULL, '[\"Afrikaans\",\"Arabic\",\"Armenian\",\"Catalan\",\"Chinese\",\"Czech\",\"Danish\",\"Dutch\",\"French\",\"German\",\"Greek\",\"Hindi\", \"Hungarian\", \"Italian\",\"Japanese\",\"Malay\",\"Polish\",\"Portuguese\",\"Romanian\",\"Russian\",\"Spanish\",\"Tamil\",\"Vietnamese\"]', '1', '1', '1', '1', '1', 1, '1', '1', '// Functions placed here are available anywhere in nuBuilder.\n\ng\n// Runs after each Edit Form loads\nfunction nuLoadEditGlobal(formId, formCode) {\n\n}\n\n// Runs after each Browse Form loads\nfunction nuLoadBrowseGlobal(formId, formCode) {\n\n}\n\n// Runs after each Edit and Browse Form loads\nfunction nuOnLoad(formId, formCode) {\n\n}', '// Add external CSS/JS file here\n\n<!--\n\n<link rel=\"stylesheet\" type=\"text/css\" href=\"path_to_css.css\"/>\n\n<script src=\"path_to_js.js\"></script>\n\n-->', '/* Define your own styles, override styles from nubuilder4.css */\n\n/*\n .nuActionButton {\n background-color: #579cb7\n}\n\n*/', '0', NULL);
+('1', 480, '5281a1220508372', NULL, '[\"Afrikaans\",\"Arabic\",\"Armenian\",\"Catalan\",\"Chinese\",\"Czech\",\"Danish\",\"Dutch\",\"French\",\"German\",\"Greek\",\"Hindi\", \"Hungarian\", \"Italian\",\"Japanese\",\"Malay\",\"Polish\",\"Portuguese\",\"Romanian\",\"Russian\",\"Spanish\",\"Tamil\",\"Vietnamese\"]', '1', '1', '1', '1', '1', 1, '1', '1', '// Functions placed here are available anywhere in nuBuilder.\n\n\n// Runs after each Edit Form loads\nfunction nuLoadEditGlobal(formId, formCode) {\n\n}\n\n// Runs after each Browse Form loads\nfunction nuLoadBrowseGlobal(formId, formCode) {\n\n}\n\n// Runs after each Edit and Browse Form loads\nfunction nuOnLoad(formId, formCode) {\n\n}', '// Add external CSS/JS file here\n\n<!--\n\n<link rel=\"stylesheet\" type=\"text/css\" href=\"path_to_css.css\"/>\n\n<script src=\"path_to_js.js\"></script>\n\n-->', '/* Define your own styles, override styles from nubuilder4.css */\n\n/*\n .nuActionButton {\n background-color: #579cb7\n}\n\n*/', '0', NULL);
 
 -- --------------------------------------------------------
 
