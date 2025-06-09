@@ -5021,7 +5021,7 @@ function nuSearchPressed(e) {
 	e.preventDefault();
 
 	if (window.nuBROWSEROW === -1) {
-		$('#nuSearchButton').trigger("click");
+		nuSearchAction();
 		return;
 	}
 
