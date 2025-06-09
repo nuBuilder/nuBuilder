@@ -950,7 +950,7 @@ input[type=radio] {
 	border-top: 2px solid #2d84d1;
 	border-left: 1px solid #ddd;
 	border-right: 1px solid #ddd;
-	border-bottom: 1px solid #fff;
+	border-bottom: 2px solid rgb(250 251 253);
 	font-weight: 600;
 	color: #000;
 }
