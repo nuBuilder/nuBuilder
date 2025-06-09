@@ -712,8 +712,7 @@ input[type=radio] {
 	width: auto;
 	background-color: transparent;
 	border: none;
-	font-size: 14px;
-	font-weight: 600;
+	font-size: 13px;
 	color: #0073aa;
 	height: 29px;
 	white-space: nowrap;
@@ -1059,38 +1058,27 @@ input[type=radio] {
 }
 
 .nuActionButton {
-	--btn-bg: #2d84d1;
-	--btn-bg-hover: #145b96;
-	--btn-bg-active: #165a96;
-	--btn-text: #fff;
-	background: linear-gradient(to bottom, var(--btn-bg) 0%, #307fcc 100%);
-	color: var(--btn-text);
-	border: none;
+	background: white;
+	color: #1f2937;
+	border: 1.5px solid #e5e7eb;
 	border-radius: 6px;
-	padding: 0 14px;
-	height: 29px;
+	padding: 0 16px;
+	height: 32px;
 	margin-left: 8px;
 	min-width: 48px;
 	font-size: 14px;
 	font-weight: 500;
-	letter-spacing: 0.5px;
 	cursor: pointer;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12),
-		0 1px 3px rgba(0, 0, 0, 0.08);
-	transition:
-		background 0.2s ease,
-		box-shadow 0.2s ease,
-		transform 0.1s ease;
+	transition: all 0.2s ease;
+	font-family: inherit;
 }
 
 .nuActionButton:hover {
 	background-color: var(--btn-bg-hover);
-	box-shadow:
-		0 4px 12px rgba(0, 0, 0, 0.16),
-		0 2px 4px rgba(0, 0, 0, 0.10);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08)
 }
 
 .nuActionButton:active {
@@ -1932,6 +1920,152 @@ pre.nuFormInfoBrowseSQL {
 	font-family: var(--nu-font-sans-serif);
 }
 
+.nuSearchablePopup {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 999;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.nuSearchablePopup .popup-header {
+	display: flex;
+	align-items: center;
+	padding: 12px 16px;
+	border-bottom: 1px solid #eee;
+	background-color: #f8f9fa;
+	border-radius: 4px 4px 0 0;
+}
+
+.nuSearchablePopup .filter-container {
+	flex: 1;
+	margin-right: 12px;
+}
+
+.nuSearchablePopup .filter-input {
+	width: 100%;
+	padding: 8px 12px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 14px;
+	outline: none;
+	box-sizing: border-box;
+}
+
+.nuSearchablePopup .filter-input:focus {
+	border-color: #007bff;
+	box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.nuSearchablePopup .close-btn {
+	background: none;
+	border: none;
+	font-size: 24px;
+	color: #666;
+	cursor: pointer;
+	padding: 4px 8px;
+	border-radius: 4px;
+	line-height: 1;
+	transition: all 0.2s ease;
+}
+
+.nuSearchablePopup .close-btn:hover {
+	background-color: #e9ecef;
+	color: #333;
+}
+
+.nuSearchablePopup .options-container {
+	height: 300px;
+	overflow-y: auto;
+	border-radius: 0 0 4px 4px;
+	background-color: #fff;
+}
+
+.nuSearchablePopup .options {
+	min-height: 100%;
+	overflow-y: auto;
+}
+
+.nuSearchablePopup .no-results {
+	padding: 20px 16px;
+	text-align: center;
+	color: #666;
+	font-style: italic;
+	background-color: #f9f9f9;
+}
+
+.nuSearchablePopup .listbox-item {
+	padding: 5px 16px 5px 16px;
+	font-family: var(--nu-font-sans-serif);
+	font-size: 13px;
+	cursor: pointer;
+	border-bottom: 1px solid #eee;
+	transition: background-color 0.2s ease;
+	user-select: none;
+}
+
+.nuSearchablePopup .listbox-item:last-child {
+	border-bottom: none;
+}
+
+.nuSearchablePopup .listbox-item:hover {
+	background-color: #e6f3ff;
+}
+
+.nuSearchablePopup .listbox-item.even {
+	background-color: #f9f9f9;
+}
+
+.nuSearchablePopup .listbox-item.odd {
+	background-color: #ffffff;
+}
+
+.nuSearchablePopup .listbox-item.even:hover {
+	background-color: #e6f3ff;
+}
+
+.nuSearchablePopup .listbox-item.odd:hover {
+	background-color: #e6f3ff;
+}
+
+.nuSearchablePopup .popup-content {
+	position: absolute;
+	background-color: #fff;
+	width: 350px;
+	height: 400px;
+	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+	z-index: 1;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+.nuBrowserFilterSelectedText {
+	position: absolute;
+	top: 27px;
+	left: 10px;
+	background-color: #e8f4fd;
+	border: 1px solid #b3d9ff;
+	border-radius: 3px;
+	padding: 2px 6px;
+	font-size: 11px;
+	color: #0066cc;
+	white-space: nowrap;
+	z-index: 1000;
+	margin-top: 2px;
+	max-width: 150px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
 .ctxmenu {
 	position: fixed;
 	max-height: 100vh;
@@ -2062,5 +2196,5 @@ pre.nuFormInfoBrowseSQL {
 }
 
 .tox .tox-edit-area::before {
-	border: none !important;
+	border: none !important
 }
