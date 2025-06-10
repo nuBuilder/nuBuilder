@@ -4539,7 +4539,8 @@ function nuDownBrowseResize(e, source) {
 	if (target.classList.contains('nuBrowserFilterSelectedTextContent')) {
 		return;
 	}
-	if (e.target.tagName === 'I') {
+
+	if (e.target.tagName.toLowerCase() === 'i') {
 		return;
 	}
 
