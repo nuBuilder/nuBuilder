@@ -7471,20 +7471,20 @@ $.fn.nuSearchablePopup = function (options) {
 	};
 
 	const $popup = $(`
-    <div class="nuSearchablePopup" style="position: fixed; z-index: 10000; width: 300px; max-width: 300px;">
-      <div class="popup-content">
-        <div class="popup-header">
-          <div class="filter-container">
-            <input type="text" class="filter-input" placeholder="${settings.searchPlaceholder}">
-          </div>
-          <button class="close-btn">&times;</button>
-        </div>
-        <div class="options-container">
-          <div class="options"></div>
-        </div>
-      </div>
-    </div>
-  `).hide();
+		<div class="nuSearchablePopup" style="position: fixed; z-index: 10000; width: 300px; max-width: 300px;">
+		<div class="popup-content">
+			<div class="popup-header">
+			<button class="close-btn" title="Close">&times;</button>
+			<div class="filter-container">
+				<input type="text" class="filter-input" placeholder="${settings.searchPlaceholder}">
+			</div>
+			</div>
+			<div class="options-container">
+			<div class="options"></div>
+			</div>
+		</div>
+		</div>
+	`).hide();
 
 	const $options = $popup.find('.options');
 	const $filterInput = $popup.find('.filter-input');

@@ -1961,6 +1961,7 @@ pre.nuFormInfoBrowseSQL {
 	color: #666;
 	cursor: pointer;
 	padding: 4px 8px;
+	margin-right: 8px;
 	border-radius: 4px;
 	line-height: 1;
 	transition: all 0.2s ease;
