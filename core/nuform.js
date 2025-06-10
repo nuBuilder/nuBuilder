@@ -4535,6 +4535,10 @@ function nuGetColumWidths() {
 
 function nuDownBrowseResize(e, source) {
 
+	let target = e.target;
+	if (target.classList.contains('nuBrowserFilterSelectedTextContent')) {
+		return;
+	}
 	if (e.target.tagName === 'I') {
 		return;
 	}
@@ -7349,6 +7353,311 @@ function nuAddBrowseTitleSelect(column, optionsData, customWidth, style) {
 	return $select;
 }
 
+function nuAddBrowseFilter(column) {
+
+	let columnId = null;
+	const isNum = typeof column === 'number';
+
+	if (!isNum) {
+		columnId = column;
+		column = 'nuBrowseTitle' + nuCurrentProperties().browse_columns.findIndex(
+			object => object.id === column
+		);
+	} else {
+		column = 'nuBrowseTitle' + column;
+	}
+
+	const $parent = $('#' + column);
+	const $nusort = $parent.find('.nuSort');
+	$parent.find('.nuBrowseFilterIcon, .nuBrowserFilterSelectedText').remove();
+
+	const $newDiv = $('<span>', {
+		id: nuID(),
+		class: 'nuBrowseFilterIcon',
+		css: {
+			display: 'inline-block',
+			position: 'relative'
+		}
+	});
+
+	$newDiv.data('column', column);
+	$newDiv.data('column_id', columnId);
+
+	const $newIcon = $('<i>', {
+		class: 'fas fa-filter',
+		css: {
+			'margin-left': '10px',
+			display: 'inline-block',
+			'font-size': '13px'
+		}
+	});
+
+	$newDiv.append($newIcon);
+	const $selectedText = $('<div>', {
+		class: 'nuBrowserFilterSelectedText',
+		css: {
+			display: 'none',
+			position: 'absolute',
+			top: '27px',
+			cursor: 'pointer'
+		}
+	});
+
+	const $clearIcon = $('<i>', {
+		class: 'fas fa-times',
+		css: {
+			'margin-right': '4px',
+			'font-size': '10px'
+		}
+	});
+
+	const $textSpan = $('<span>', {
+		class: 'nuBrowserFilterSelectedTextContent'
+	});
+
+	$selectedText.append($clearIcon).append($textSpan);
+
+	$selectedText.insertAfter($nusort);
+	$newDiv.insertAfter($selectedText);
+
+	return $newDiv;
+}
+
+$.fn.nuSearchablePopup = function (options) {
+	const settings = $.extend({
+		title: "Select Options",
+		items: [],
+		searchPlaceholder: "Filter options...",
+		positionAtMouse: true,
+		onSelected: function (selectedItem) { },
+		onClear: function () { }
+	}, options);
+
+
+	function convertTo2DIf1D(arr) {
+		const is1D = Array.isArray(arr) && arr.every(item => !Array.isArray(item));
+		if (is1D) {
+			return arr.map(item => [item, item]);
+		}
+		return arr;
+	}
+
+	settings.items = convertTo2DIf1D(settings.items);
+	const $this = $(this);
+
+	const column = $this.data('column');
+	const columnId = $this.data('column_id');
+
+	const getFilterIcon = () => {
+		return column ? $('#' + column).find('.nuBrowseFilterIcon') : $();
+	};
+
+	const toggleIcon = (filterActive, selectedText = '') => {
+		const $filterIcon = getFilterIcon();
+		const $txt = $filterIcon.siblings('.nuBrowserFilterSelectedText');
+		if (filterActive) {
+			$('#' + $filterIcon.attr('id')).css('color', 'red');
+			$txt.find('.nuBrowserFilterSelectedTextContent').text(selectedText);
+			$txt.show();
+		} else {
+			$('#' + $filterIcon.attr('id')).css('color', '');
+			$txt.hide().find('.nuBrowserFilterSelectedTextContent').text('');
+		}
+	};
+
+	const $popup = $(`
+    <div class="nuSearchablePopup" style="position: fixed; z-index: 10000; width: 300px; max-width: 300px;">
+      <div class="popup-content">
+        <div class="popup-header">
+          <div class="filter-container">
+            <input type="text" class="filter-input" placeholder="${settings.searchPlaceholder}">
+          </div>
+          <button class="close-btn">&times;</button>
+        </div>
+        <div class="options-container">
+          <div class="options"></div>
+        </div>
+      </div>
+    </div>
+  `).hide();
+
+	const $options = $popup.find('.options');
+	const $filterInput = $popup.find('.filter-input');
+	const $closeBtn = $popup.find('.close-btn');
+
+	const renderItems = (filterText = '') => {
+
+		$options.empty();
+
+		const filteredItems = settings.items.filter(item =>
+			item[1].toLowerCase().includes(filterText.toLowerCase())
+		);
+
+		if (filteredItems.length === 0) {
+			$options.append($('<div>').addClass('no-results').text('No results found'));
+		} else {
+			$.each(filteredItems, (index, item) => {
+				const $item = $('<div>')
+					.addClass('listbox-item')
+					.attr('data-value', item[0])
+					.text(item[1]);
+				if (index % 2 === 0) $item.addClass('even');
+				else $item.addClass('odd');
+				$item.on('click', function (e) {
+					e.stopPropagation();
+					const selectedValue = $(this).attr('data-value');
+					const selectedLabel = $(this).html();
+
+					if (columnId) {
+						nuSetProperty(columnId + '_filter', selectedValue);
+					} else if (column) {
+						nuSetProperty(column + '_filter', selectedValue);
+					}
+
+					toggleIcon(true, selectedLabel);
+					settings.onSelected(selectedValue, selectedLabel, false);
+					$popup.hide();
+					nuGetBreadcrumb();
+				});
+				$options.append($item);
+			});
+		}
+	};
+
+	$filterInput.on('input', function () {
+		renderItems($(this).val());
+	});
+
+	$filterInput.on('keydown', function (e) {
+		if (e.key === 'Enter') {
+			e.preventDefault();
+
+			const $visibleItems = $options.find('.listbox-item');
+
+			if ($visibleItems.length === 1) {
+				const $selectedItem = $visibleItems.first();
+				const selectedValue = $selectedItem.attr('data-value');
+				const selectedLabel = $selectedItem.html();
+
+				if (columnId) {
+					nuSetProperty(columnId + '_filter', selectedValue);
+				} else if (column) {
+					nuSetProperty(column + '_filter', selectedValue);
+				}
+
+				toggleIcon(true, selectedLabel);
+				settings.onSelected(selectedValue, selectedLabel, false);
+				$popup.hide();
+				nuGetBreadcrumb();
+			}
+		}
+	});
+
+	$closeBtn.on('click', function (e) {
+		e.stopPropagation();
+		$popup.hide();
+	});
+
+	$popup.on('click', function (e) {
+		if (e.target === this) $popup.hide();
+	});
+
+	$popup.find('.popup-content').on('click', function (e) {
+		e.stopPropagation();
+	});
+
+	$this.on('click', (e) => {
+		$filterInput.val('');
+		renderItems();
+		$popup.appendTo($('#nuhtml'));
+
+		if (settings.positionAtMouse) {
+
+			const mouseX = e.pageX;
+			const mouseY = e.pageY;
+			const windowWidth = $(window).width();
+			const windowHeight = $(window).height();
+			const popupWidth = 300;
+			const popupHeight = 400;
+
+			let left = mouseX;
+			let top = mouseY;
+
+			if (left + popupWidth > windowWidth) {
+				left = windowWidth - popupWidth - 10;
+			}
+
+			if (top + popupHeight > windowHeight) {
+				top = mouseY - popupHeight;
+				if (top < 0) {
+					top = 10;
+				}
+			}
+
+			$popup.css({
+				position: 'fixed',
+				left: left + 'px',
+				top: top + 'px',
+				height: '400px',
+				transform: 'none',
+				'justify-content': 'unset',
+				'align-items': 'unset'
+			});
+		} else {
+			$popup.css({
+				position: 'fixed',
+				left: '50%',
+				top: '50%',
+				transform: 'translate(-50%, -50%)'
+			});
+		}
+
+		$popup.show();
+
+		if (!nuIsMobile()) {
+			$filterInput.trigger("focus");
+		}
+
+	});
+
+	if (column) {
+		const $clearElement = $('#' + column).find('.nuBrowserFilterSelectedText');
+		$clearElement.on('click', (e) => {
+			e.stopPropagation();
+			this.clearFilter();
+			settings.onClear();
+		});
+
+		let existingValue;
+		if (columnId) {
+			existingValue = nuGetProperty(columnId + '_filter');
+		} else {
+			existingValue = nuGetProperty(column + '_filter');
+		}
+
+		if (existingValue) {
+			const existingItem = settings.items.find(item => item[0] == existingValue);
+			if (existingItem) {
+				toggleIcon(true, existingItem[1]);
+				settings.onSelected(existingValue, existingItem[1], true);
+			}
+		}
+	}
+
+	this.clearFilter = function () {
+
+		if (columnId) {
+			nuSetProperty(columnId + '_filter', '');
+		} else {
+			nuSetProperty(column + '_filter', '');
+		}
+
+		toggleIcon(false);
+		nuGetBreadcrumb();
+	};
+
+};
+
 function nuDatalistValueRestoreValue(i) {
 
 	let t = $('#' + i);
@@ -7367,7 +7676,6 @@ function nuDatalistValueRestoreValue(i) {
 
 }
 
-// Show all dropdown items when clicking on the datalist arrow down button
 function nuDatalistShowAllOnArrowClick(i) {
 
 	$('#' + i)
