@@ -7419,16 +7419,37 @@ $.fn.nuSearchablePopup = function (options) {
 
 
 	function convertTo2DIf1D(arr) {
+
 		const is1D = Array.isArray(arr) && arr.every(item => !Array.isArray(item));
 		if (is1D) {
 			return arr.map(item => [item, item]);
 		}
+
 		return arr;
+
 	}
 
-	settings.items = convertTo2DIf1D(settings.items);
-	const $this = $(this);
+	function flattenSingleElementArrays(arr) {
 
+		if (!Array.isArray(arr)) return arr;
+		if (arr.length > 1) {
+			const restAreArrays = arr.slice(1).every(item => Array.isArray(item) && item.length === 1);
+			if (restAreArrays) {
+				return arr.slice(1).map(item => item[0]);
+			}
+		}
+		if (arr.every(item => Array.isArray(item) && item.length === 1)) {
+			return arr.map(item => item[0]);
+		}
+
+		return arr;
+
+	}
+
+	settings.items = flattenSingleElementArrays(settings.items);
+	settings.items = convertTo2DIf1D(settings.items);
+
+	const $this = $(this);
 	const column = $this.data('column');
 	const columnId = $this.data('column_id');
 
