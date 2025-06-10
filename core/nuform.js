@@ -4508,7 +4508,7 @@ function nuSetBrowseColumns(columnWidths) {
 
 	const browseFooterWidth = left - 7;
 
-	//	$('#nuBrowseFooter').css('width', `${browseFooterWidth}px`);
+	$('#nuBrowseFooter').css('width', `${browseFooterWidth}px`);
 
 	nuFORM.breadcrumbs[nuFORM.breadcrumbs.length - 1].column_widths = columnWidths;
 
@@ -4537,15 +4537,15 @@ function nuGetColumWidths() {
 function nuDownBrowseResize(e, source) {
 
 	let target = e.target;
-	if (target.classList.contains('nuBrowserFilterSelectedTextContent')) {
+	const classList = target.classList;
+	if (classList.contains('nuBrowserFilterSelectedTextContent') || classList.contains('nuBrowseFilterIcon')) {
 		return;
 	}
 
-	if (e.target.tagName.toLowerCase() === 'i') {
+	if (target.tagName.toLowerCase() === 'i') {
 		return;
 	}
-
-	const id = e.target.id.replace('nusort_', 'nuBrowseTitle');
+	const id = target.id.replace('nusort_', 'nuBrowseTitle');
 
 	window.nuBROWSERESIZE.mouse_down = true;
 	window.nuBROWSERESIZE.pointer = source;
