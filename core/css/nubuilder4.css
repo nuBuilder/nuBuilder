@@ -762,7 +762,6 @@ input[type=radio] {
 	left: 0;
 	width: 100%;
 	background-color: #ffffff;
-	border-top: 1px solid #d0d0d0;
 	padding: 10px 16px;
 	display: flex;
 	align-items: center;
