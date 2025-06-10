@@ -34,6 +34,10 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 			margin-right: 10px;
 		}
 
+		.toolbar>* {
+			margin-bottom: 10px;
+		}
+
 		.toolbar button.btn {
 			padding: 0;
 			display: flex;
@@ -142,7 +146,7 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 		}
 
 		.btn-toggle {
-			padding: 6px 12px;
+			padding: 5px 12px;
 			display: flex;
 			align-items: center;
 			justify-content: flex-start;
