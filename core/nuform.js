@@ -4750,7 +4750,7 @@ function nuBrowseSetCellContentAndEvents($div, browseRows, rowIndex, colIndex, c
 
 function nuBrowseCreateFooter(currentForm, topOffset, leftOffset, rowHeight) {
 
-	const footerTopOffset = topOffset + rowHeight + 10;
+	const footerTopOffset = topOffset + rowHeight + 20;
 	const divFooter = nuCreateElementWithId('div', 'nuBrowseFooter', 'nuRECORD');
 	const footerHtml = nuBrowseCreateFooterHtml(currentForm);
 
