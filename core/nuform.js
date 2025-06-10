@@ -4679,8 +4679,6 @@ function nuBrowseTable() {
 	nuBrowseCreateFooter(currentForm, topOffset, leftOffset, rowHeight);
 
 	nuHighlightSearch();
-	nuBrowseBorders();
-
 	nuBrowseUpdateParentDocumentStyles(topOffset + rowHeight + 140);
 
 }
@@ -6558,20 +6556,6 @@ function nuResponsiveWrap(width, wrap) {
 		} else {
 			nuResponseNoWrap();
 		}
-
-	}
-
-}
-
-function nuBrowseBorders() {
-
-	var r = nuSERVERRESPONSE.rows;
-	var c = nuSERVERRESPONSE.browse_columns.length;
-
-	for (var i = 0; i < c; i++) {
-
-		$('#nucell_0_' + i).addClass('nuBrowseBorderTop');
-		$('#nucell_' + (r - 1) + '_' + i).addClass('nuBrowseBorderBottom');
 
 	}
 

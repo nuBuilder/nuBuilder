@@ -844,15 +844,6 @@ input[type=radio] {
 	outline: none;
 }
 
-
-.nuBrowseBorderTop {
-	border-top: solid #9f9e9e 1px !important
-}
-
-.nuBrowseBorderBottom {
-	border-bottom: solid #9f9e9e 1px !important
-}
-
 .nuSelectBrowse {
 	height: 70px;
 	border-style: solid;
