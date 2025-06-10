@@ -668,6 +668,7 @@ function nuGetEditForm($F, $R) {
 	$f->primary_key = $r->sfo_primary_key;
 	$f->redirect_form_id = $r->sfo_browse_redirect_form_id == '' ? $r->zzzzsys_form_id : $r->sfo_browse_redirect_form_id;
 	$f->redirect_other_form_id = $r->sfo_browse_redirect_form_id == '' ? '' : $r->sfo_browse_redirect_form_id;
+	$f->browse_target = $r->sfo_browse_target ?? '';
 	$f->order = $SQL->orderBy;
 	$f->where = $SQL->where;
 	$f->from = $SQL->from;

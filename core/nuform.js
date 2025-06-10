@@ -286,6 +286,7 @@ function nuSetFormProperties(formObj) {
 		'record_id', 'session_id',
 		'user_id',
 		'redirect_form_id',
+		'browse_target',
 		'redirect_other_form_id', 'title',
 		'row_height', 'rows',
 		'browse_columns', 'browse_sql',
@@ -6453,33 +6454,33 @@ function nuRedefineNuSelectBrowse() {
 
 	nuSelectBrowse = function (e, t) {
 
-		const y = window.nuBrowseFunction;					//-- browse, lookup or custom function name
+		const browseFunction = window.nuBrowseFunction;					//-- browse, lookup or custom function name
 		const pk = $('#' + t.id).attr('data-nu-primary-key');
 		const formId = window.nuFORM.getProperty('form_id');
-		const formIdRedirect = window.nuFORM.getProperty('redirect_form_id');
+		const formIdRedirect = window.nuFORM.getProperty('redirect_form_id'); 
+		let browseTarget = window.nuFORM.getProperty('browse_target');
 		const formType = window.nuFORM.getProperty('form_type');
 		const ro = window.nuFORM.getProperty('redirect_other_form_id');
 
 		if (formType == 'browse' && ro == '' && parent.$('#nuDragDialog').length == 0) {
-
 			nuSelectBrowse = function (e, t) { }
 			return;
 		}
 
 		nuCursor('progress');
 
-		if (y == 'browse') {
-
-			nuForm(formIdRedirect == '' ? formId : formIdRedirect, pk);
-
-		} else if (y == 'lookup') {
-
+		if (browseFunction == 'browse') {
+			const browseFormId = formIdRedirect == '' ? formId : formIdRedirect;			
+			if (browseTarget === '') browseTarget = '0'; 				// default: new breadcrumb
+			if (browseTarget != 3) {
+				nuForm(browseFormId, pk, '', '', browseTarget);
+			} else {
+				nuPopup(browseFormId, pk, '');
+			}				
+		} else if (browseFunction == 'lookup') {
 			window.parent.nuGetLookupId(pk, window.nuTARGET);			//-- called from parent window
-
 		} else {
-
-			window[y](e);
-
+			window[browseFunction](e);
 		}
 
 		if ((nuIsMacintosh() ? e.metaKey : e.ctrlKey) == false) {
