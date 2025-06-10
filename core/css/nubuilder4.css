@@ -146,7 +146,7 @@
 }
 
 .nuRelatedTab {
-	color: red;
+	color: red !important;
 }
 
 .php {
