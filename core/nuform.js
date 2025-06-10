@@ -4508,7 +4508,7 @@ function nuSetBrowseColumns(columnWidths) {
 
 	const browseFooterWidth = left - 7;
 
-	$('#nuBrowseFooter').css('width', `${browseFooterWidth}px`);
+	//	$('#nuBrowseFooter').css('width', `${browseFooterWidth}px`);
 
 	nuFORM.breadcrumbs[nuFORM.breadcrumbs.length - 1].column_widths = columnWidths;
 
@@ -4760,13 +4760,8 @@ function nuBrowseCreateFooter(currentForm, topOffset, leftOffset, rowHeight) {
 		.addClass('nuBrowseFooter')
 		.html(footerHtml)
 		.css({
-			'text-align': 'center',
-			width: leftOffset - 7,
-			top: footerTopOffset,
-			left: 7,
-			height: 25,
-			position: 'absolute',
-			padding: '5px 0px'
+			width: 400,
+			top: footerTopOffset
 		});
 
 	nuBrowseAdditionalNavButtons();
@@ -6457,7 +6452,7 @@ function nuRedefineNuSelectBrowse() {
 		const browseFunction = window.nuBrowseFunction;					//-- browse, lookup or custom function name
 		const pk = $('#' + t.id).attr('data-nu-primary-key');
 		const formId = window.nuFORM.getProperty('form_id');
-		const formIdRedirect = window.nuFORM.getProperty('redirect_form_id'); 
+		const formIdRedirect = window.nuFORM.getProperty('redirect_form_id');
 		let browseTarget = window.nuFORM.getProperty('browse_target');
 		const formType = window.nuFORM.getProperty('form_type');
 		const ro = window.nuFORM.getProperty('redirect_other_form_id');
@@ -6470,13 +6465,13 @@ function nuRedefineNuSelectBrowse() {
 		nuCursor('progress');
 
 		if (browseFunction == 'browse') {
-			const browseFormId = formIdRedirect == '' ? formId : formIdRedirect;			
+			const browseFormId = formIdRedirect == '' ? formId : formIdRedirect;
 			if (browseTarget === '') browseTarget = '0'; 				// default: new breadcrumb
 			if (browseTarget != 3) {
 				nuForm(browseFormId, pk, '', '', browseTarget);
 			} else {
 				nuPopup(browseFormId, pk, '');
-			}				
+			}
 		} else if (browseFunction == 'lookup') {
 			window.parent.nuGetLookupId(pk, window.nuTARGET);			//-- called from parent window
 		} else {

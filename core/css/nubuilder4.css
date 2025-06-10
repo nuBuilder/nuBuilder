@@ -759,8 +759,8 @@ input[type=radio] {
 .nuBrowseFooter {
 	position: absolute;
 	bottom: 0;
-	left: 0;
-	width: 100%;
+	left: 7px;
+	height: 30px;
 	background-color: #ffffff;
 	padding: 10px 16px;
 	display: flex;
@@ -779,18 +779,16 @@ input[type=radio] {
 
 .nuBrowseFooter .nuBrowsePage {
 	margin: 0 4px;
-	padding: 4px 8px;
+	padding: 4px 2px;
 	font-size: 13px;
 	color: #0073aa;
 	background-color: transparent;
-	border: 1px solid transparent;
 	border-radius: 3px;
 	cursor: pointer;
 	text-decoration: none;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	min-width: 24px;
 	min-height: 24px;
 	transition: color 0.15s ease;
 }
