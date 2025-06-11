@@ -1,3 +1,5 @@
+useTabs: false, // Use spaces, not tabs
+
 <?php
 require_once('nusessiondata.php');
 require_once('nusetuplibs.php');
@@ -6,7 +8,7 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 
 // Include additional JS files from config
 global $nuConfigIncludeJS;
-$jsFiles = nuArrayFlatten($nuConfigIncludeJS, 'ace');
+$jsFiles = nuArrayFlatten($nuConfigIncludeJS, 'formatters');
 nuJSIndexInclude($jsFiles);
 ?>
 
@@ -215,7 +217,7 @@ nuJSIndexInclude($jsFiles);
 				'JS': { mode: 'javascript' },
 				'MYSQL': { mode: 'mysql' },
 				'PHP': { mode: 'php' },
-				'SQL': { mode: 'sql' },
+				'SQL': { mode: 'mysql' },
 				'CSS': { mode: 'css' },
 			};
 			return languageModes[language];
@@ -251,7 +253,7 @@ nuJSIndexInclude($jsFiles);
 					? window.nuACEObjectLabel
 					: window.nuACEObjectLabel + " (" + window.nuACELanguage + ")";
 
-			if (language.includes('SQL')) {
+			if (language.includes('SQL') && typeof sqlFormatter === 'undefined') {
 				document.getElementById('nuACEBeautifyButton').style.display = 'none';
 			}
 
@@ -386,8 +388,27 @@ nuJSIndexInclude($jsFiles);
 				const code = editor.getValue();
 				const formatted = beautifiers[language](code, beautifyOptions);
 				editor.setValue(formatted, -1);
-				console.log(`Beautified ${language} code with ${beautifiers[language].name}`);
+				// console.log(`Beautified ${language} code with ${beautifiers[language].name}`);
 				return;
+			} else if (language === 'SQL' && typeof sqlFormatter !== 'undefined') {
+				const code = editor.getValue();
+				const formatted = sqlFormatter.format(code, {
+					language: 'mysql', // SQL dialect: 'mysql', 'postgresql', 'sql', etc.
+					tabWidth: 2, // Indent with 2 spaces
+					keywordCase: 'upper', // Uppercase SQL keywords
+					dataTypeCase: 'upper', // Uppercase data types
+					functionCase: 'lower', // Lowercase function names
+					identifierCase: 'preserve', // Keep identifiers as-is (experimental)
+					logicalOperatorNewline: 'before', // Newline before AND/OR/XOR
+					expressionWidth: 50, // Max chars in parenthesized expressions before wrapping
+					linesBetweenQueries: 2, // Two newlines between queries
+					denseOperators: false, // Add spaces around operators
+					newlineBeforeSemicolon: false, // Semicolon stays on same line
+					params: {}, // No placeholder replacement
+					paramTypes: {}, // No special param types
+				});
+				editor.setValue(formatted, -1);
+				// console.log('Beautified SQL code with sqlFormatter');
 			}
 
 			beautify.beautify(editor.session);

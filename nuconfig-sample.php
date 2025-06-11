@@ -47,10 +47,11 @@ $nuConfigIncludeJS = '';
 			'https://code.jquery.com/jquery-migrate-3.4.1.js',
 
 		],
-		'ace' => [
+		'formatters' => [
 			'https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.3/beautify.min.js',
 			'https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.3/beautify-html.min.js',
-			'https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.3/beautify-css.js'
+			'https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.3/beautify-css.js',
+			'https://cdn.jsdelivr.net/npm/sql-formatter@15.6.4/dist/sql-formatter.min.js'
 		]
 	];
 
