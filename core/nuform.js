@@ -916,59 +916,89 @@ function nuAddActionButtons(form) {
 
 function nuAddActionButton(id, value, func, title, icon, insertAfterElement) {
 
-	const ICON_BASE = 'fa-regular fa-fw fa-lg';
+	const DEFAULT_ICON_BASE = 'fa-regular';
+	const ICON_SIZE_CLASSES = 'fa-fw fa-lg';
 
 	const defaults = {
 		Save: {
 			value: 'Save',
 			func: 'nuSaveAction()',
 			text: '',
-			iconSuffix: 'fa-floppy-disk'
+			iconSuffix: 'fa-floppy-disk',
+			iconBaseClass: DEFAULT_ICON_BASE
 		},
 		SaveClose: {
 			value: 'Save & Close',
 			func: 'nuSaveAction(true)',
 			text: '',
-			iconSuffix: 'fa-floppy-disk'
+			iconSuffix: 'fa-floppy-disk',
+			iconBaseClass: DEFAULT_ICON_BASE
 		},
 		Delete: {
 			value: 'Delete',
 			func: 'nuDeleteAction()',
 			text: '',
-			iconSuffix: 'fa-square-minus'
+			iconSuffix: 'fa-square-minus',
+			iconBaseClass: DEFAULT_ICON_BASE
 		},
 		Clone: {
 			value: 'Clone',
 			func: 'nuCloneAction()',
 			text: '',
-			iconSuffix: 'fa-clone'
+			iconSuffix: 'fa-clone',
+			iconBaseClass: DEFAULT_ICON_BASE
+		},
+		BuildFastForm: {
+			value: 'Build Fast Form',
+			func: 'nuRunPHPHidden("RUNFF", true)',
+			text: '',
+			iconSuffix: 'fa-bolt',
+			iconBaseClass: 'fa-solid'
+		},
+		BuildFastReport: {
+			value: 'Build Fast Reoprt',
+			func: 'nuRunPHPHidden("RUNFR", true)',
+			text: '',
+			iconSuffix: 'fa-bolt',
+			iconBaseClass: 'fa-solid'
 		},
 		RunHidden: {
 			value: 'Run',
 			func: 'nuRunHiddenAction()',
 			text: '',
-			iconSuffix: 'fa-circle-play'
+			iconSuffix: 'fa-circle-play',
+			iconBaseClass: DEFAULT_ICON_BASE
 		},
 		Run: {
 			value: 'Run',
 			func: 'nuRunAction()',
 			text: '',
-			iconSuffix: 'fa-circle-play'
+			iconSuffix: 'fa-circle-play',
+			iconBaseClass: DEFAULT_ICON_BASE
 		}
 	};
 
-	if (['Save', 'SaveClose', 'Delete', 'Clone', 'Run'].includes(id)) {
+	if (['Save', 'SaveClose', 'Delete', 'Clone', 'Run', 'RunHidden', 'BuildFastForm', 'BuildFastReport'].includes(id)) {
 		const def = defaults[id] || {
 			value: id,
 			func: `nu${id}Action()`,
 			text: id,
-			iconSuffix: null
+			iconSuffix: null,
+			iconBaseClass: DEFAULT_ICON_BASE
 		};
 
 		value = value ?? def.value;
 		func = func ?? def.func;
 		title = title ?? def.text;
-		icon = icon ?? (def.iconSuffix ? `${ICON_BASE} ${def.iconSuffix}` : null);
+
+		const baseClass = def.iconBaseClass ?? DEFAULT_ICON_BASE;
+
+		icon = icon ?? (
+			def.iconSuffix
+				? `${baseClass} ${ICON_SIZE_CLASSES} ${def.iconSuffix}`
+				: null
+		);
+
 	}
 
 	if (typeof value === 'object') {
