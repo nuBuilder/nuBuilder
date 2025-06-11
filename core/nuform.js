@@ -925,6 +925,12 @@ function nuAddActionButton(id, value, func, title, icon, insertAfterElement) {
 			text: '',
 			iconSuffix: 'fa-floppy-disk'
 		},
+		SaveClose: {
+			value: 'Save & Close',
+			func: 'nuSaveAction(true)',
+			text: '',
+			iconSuffix: 'fa-floppy-disk'
+		},
 		Delete: {
 			value: 'Delete',
 			func: 'nuDeleteAction()',
@@ -951,7 +957,7 @@ function nuAddActionButton(id, value, func, title, icon, insertAfterElement) {
 		}
 	};
 
-	if (['Save', 'Delete', 'Clone', 'Run'].includes(id)) {
+	if (['Save', 'SaveClose', 'Delete', 'Clone', 'Run'].includes(id)) {
 		const def = defaults[id] || {
 			value: id,
 			func: `nu${id}Action()`,
@@ -1017,7 +1023,8 @@ function nuAddActionButton(id, value, func, title, icon, insertAfterElement) {
 
 function nuAddActionButtonSaveClose(caption) {
 
-	nuAddActionButton('SaveClose', nuTranslate(caption === undefined ? 'Save & Close' : caption), "nuSaveAction(true)", '', '', 'nuSaveButton');
+	caption = nuDefine(caption, 'Save & Close');
+	nuAddActionButton('SaveClose', caption);
 	$('#nuSaveCloseButton').addClass('nuSaveButton');
 
 }
