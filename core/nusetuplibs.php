@@ -145,6 +145,30 @@ function nuCSSIndexInclude($files, $refreshCache = true) {
 	nuInclude($files, 'stylesheet', $refreshCache);
 }
 
+
+function nuArrayFlatten($data, $section = null) {
+
+	if (is_array($data) && $section !== null) {
+
+		if (!isset($data[$section])) {
+			return [];
+		}
+
+		$sectionData = $data[$section];
+		if (array_values($sectionData) === $sectionData) {
+			return $sectionData;
+		}
+		return array_merge(...array_values($sectionData));
+	}
+
+	if (array_values($data) === $data) {
+		return $data;
+	}
+
+	return array_merge(...array_values($data));
+
+}
+
 function nuIncludeFiles() {
 
 	global $nuConfigIncludeGoogleCharts, $nuConfigIncludeApexCharts;
@@ -179,9 +203,13 @@ function nuIncludeFiles() {
 		$jsFiles[] = 'third_party/tinymce/tinymce.min.js';
 	}
 
+
+	$nuConfigIncludeJS = nuArrayFlatten($nuConfigIncludeJS, 'core');
 	nuMergeIncludeFiles($jsFiles, $nuConfigIncludeJS);
 
 	echo "<script src=\"third_party/jquery/jquery-3.7.1.min.js\"></script>\n";
+
+
 	nuJSIndexInclude($jsFiles);
 
 	$cssFiles = [
