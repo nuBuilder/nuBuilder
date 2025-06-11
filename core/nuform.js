@@ -7545,6 +7545,10 @@ $.fn.nuSearchablePopup = function (options) {
 
 	$filterInput.on('keydown', function (e) {
 
+		if (e.key === 'Escape') {
+			$popup.hide();
+		}
+
 		if (e.key === 'Enter') {
 			e.preventDefault();
 
