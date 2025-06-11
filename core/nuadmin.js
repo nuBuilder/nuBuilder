@@ -1205,7 +1205,10 @@ function nuContextMenuUpdate() {
 		: '.nuSort, .nuAdminButton';
 
 	$(selector)
-		.filter((i, el) => !el.hasAttribute('data-nu-no-context-menu'))
+		.filter((i, el) =>
+			!el.hasAttribute('data-nu-no-context-menu') &&
+			!el.classList.contains('nuActionButton')
+		)
 		.each((index, element) => {
 
 			if (!element.id) return;
