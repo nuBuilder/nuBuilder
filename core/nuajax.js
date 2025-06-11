@@ -775,6 +775,8 @@ function nuUpdateData(action, instruction) {
 
 				}
 
+				parent.$('#' + nuGetValue('sob_all_id')).nuRemove();
+
 				window.nuFORM.removeLast();						//-- return to browse
 				if ($('.nuBreadcrumb').length == 0) {
 					window.close();
