@@ -1,7 +1,15 @@
 <?php
 require_once('nusessiondata.php');
+require_once('nusetuplibs.php');
+require_once('../nuconfig.php');
 $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
+
+// Include additional JS files from config
+global $nuConfigIncludeJS;
+$jsFiles = nuArrayFlatten($nuConfigIncludeJS, 'ace');
+nuJSIndexInclude($jsFiles);
 ?>
+
 <!DOCTYPE html>
 <html>
 
@@ -200,7 +208,21 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 		window.nuACEObjectLabel = $el.attr('data-nu-label') || $el.attr('title') || $el.attr('id');
 		document.title = window.nuACEObjectId + " - Ace Editor";
 
+		function nuGetAceLanguageMode(language) {
+			const languageModes = {
+				'TEXT': { mode: 'text' },
+				'HTML': { mode: 'html' },
+				'JS': { mode: 'javascript' },
+				'MYSQL': { mode: 'mysql' },
+				'PHP': { mode: 'php' },
+				'SQL': { mode: 'sql' },
+				'CSS': { mode: 'css' },
+			};
+			return languageModes[language];
+		}
+
 		function nuLoad() {
+
 			ace.require("ace/ext/language_tools");
 			window.beautify = ace.require("ace/ext/beautify");
 			window.editor = ace.edit("nu_editor");
@@ -212,28 +234,27 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 				enableSnippets: true,
 				enableLiveAutocompletion: true
 			});
+
 			window.startValue = opener.window.document.getElementById(nuACEObjectId).value;
 			editor.setFontSize(14);
+
 			var language = window.nuACELanguage.toUpperCase();
-			const languageModes = {
-				'HTML': { mode: 'html' },
-				'JS': { mode: 'javascript' },
-				'MYSQL': { mode: 'mysql' },
-				'PHP': { mode: 'php' },
-				'SQL': { mode: 'sql' },
-				'CSS': { mode: 'css' },
-			};
-			if (languageModes[language]) {
-				const { mode } = languageModes[language];
+			const languageMode = nuGetAceLanguageMode(language);
+
+			if (languageMode) {
+				const { mode } = languageMode;
 				editor.getSession().setMode({ path: `ace/mode/${mode}`, inline: true });
 			}
+
 			document.getElementById('nu_language').innerHTML =
 				window.nuACELanguage === window.nuACEObjectLabel
 					? window.nuACEObjectLabel
 					: window.nuACEObjectLabel + " (" + window.nuACELanguage + ")";
+
 			if (language.includes('SQL')) {
 				document.getElementById('nuACEBeautifyButton').style.display = 'none';
 			}
+
 			if ($('#' + window.nuACEObjectId, window.opener.document)[0].id == 'deb_message') {
 				$('#btn_save_close').remove();
 				$('#btn_save').remove();
@@ -245,6 +266,7 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 				btnSave.value = 'Apply';
 				btnSave.title = 'Copy changes back (Ctrl+Shift+S)';
 			}
+
 			nuResize();
 			editor.renderer.setScrollMargin(10, 0, 0, 10);
 			editor.setValue(window.startValue);
@@ -253,11 +275,13 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 			editor.on('change', function () {
 				nuSetEdited(true);
 			});
+
 			editor.commands.addCommand({
 				name: 'showSettingsMenu',
 				bindKey: {},
 				exec: editor.commands.byName['showSettingsMenu'].exec
 			});
+
 			editor.commands.addCommand({
 				name: "showKeyboardShortcuts",
 				bindKey: { win: "Ctrl-Shift-k", mac: "Command-Shift-k" },
@@ -271,16 +295,19 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 			document.addEventListener('keydown', nuACEhandleCtrlComma);
 			nuSetEdited(false);
 			editor.getSession().getUndoManager().reset();
+
 			var autoSave = localStorage.getItem('auto_save');
 			if (autoSave === null) {
 				autoSave = true;
 			} else {
 				autoSave = (autoSave === 'true');
 			}
+
 			document.getElementById('btn_save_on_apply_checkbox').checked = autoSave;
 			document.getElementById('btn_save_on_apply_checkbox').addEventListener('change', function () {
 				localStorage.setItem('auto_save', this.checked);
 			});
+
 			document.addEventListener('keydown', function (e) {
 				if (e.ctrlKey && e.shiftKey) {
 					const key = e.key.toLowerCase();
@@ -319,7 +346,52 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 		}
 
 		function nuAceBeautify() {
+
+			var language = window.nuACELanguage.toUpperCase();
+
+			const beautifyOptions = {
+				indent_size: 4,						// number of spaces per indent
+				indent_char: ' ',					// character for indentation (space or tab)
+				indent_with_tabs: false,			// use tabs instead of spaces
+				indent_level: 0,			 		// initial indent level
+				eol: '\n',						 	// newline character(s)
+				preserve_newlines: true,			// keep existing line breaks
+				max_preserve_newlines: 10,		 	// max consecutive blank lines
+				space_in_paren: false,		 		// spaces inside parentheses
+				space_in_empty_paren: false,		// space in empty parens
+				space_before_conditional: true,		// space before `if (`
+				space_after_anon_function: false, 	// space before `function ()`
+				jslint_happy: false,				// jslint-stricter mode
+				brace_style: 'preserve-inline',		// brace position style
+				break_chained_methods: false,		// break chained method calls onto new lines
+				keep_array_indentation: true, 		// preserve array indent
+				keep_function_indentation: false, 	// preserve function indent
+				unescape_strings: false,			// decode \xNN escape sequences
+				wrap_line_length: 0,				// wrap lines at N chars (0 = no wrap)
+				wrap_attributes: 'auto',			// (HTML/CSS) wrap tag attributes
+				wrap_attributes_indent_size: 4,		// indent size for wrapped attributes
+				end_with_newline: false,			// end output with a newline
+				e4x: false,							// (JSX/E4X) leave XML literals alone
+				comma_first: false,					// commas at start of line, not end
+				good_stuff: false					// enable Crockford’s styling preferences
+			}
+
+			const beautifiers = {
+				'JS': js_beautify,
+				'HTML': html_beautify,
+				'CSS': css_beautify
+			};
+
+			if (beautifiers[language] && typeof beautifiers[language] === 'function') {
+				const code = editor.getValue();
+				const formatted = beautifiers[language](code, beautifyOptions);
+				editor.setValue(formatted, -1);
+				console.log(`Beautified ${language} code with ${beautifiers[language].name}`);
+				return;
+			}
+
 			beautify.beautify(editor.session);
+
 		}
 
 		function nuAceShowInvisibles() {

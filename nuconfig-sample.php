@@ -42,15 +42,18 @@ $nuConfigIncludeJS = '';
 
 // Example to use a multidimensional associative array that holds URLs grouped by category.
 /*
-$nuConfigIncludeJS = [
-	'core' => [ // only include in core
-		'https://code.jquery.com/jquery-migrate-3.4.1.js',
+	$nuConfigIncludeJS = [
+		'core' => [
+			'https://code.jquery.com/jquery-migrate-3.4.1.js',
 
-	],
-	'ace' => [ // only include in ace editor
-		'https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.3/beautify.min.js'
-	]
-];
+		],
+		'ace' => [
+			'https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.3/beautify.min.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.3/beautify-html.min.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.3/beautify-css.js'
+		]
+	];
+
 */
 
 $nuConfigIncludeCSS = '';
