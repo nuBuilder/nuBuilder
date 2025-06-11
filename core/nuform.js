@@ -981,8 +981,7 @@ function nuAddActionButton(id, value, func, title, icon, insertAfterElement) {
 	const elementId = "nu" + id + "Button";
 
 	let html = `<button id="${elementId}" type="button" class="${nuClass}"
-						 title="${title}"
-						 onclick="${func}">${value}</button>`;
+						 title="${title}">${value}</button>`;
 
 	if (insertAfterElement) {
 		$(html).insertAfter('#' + insertAfterElement);
@@ -995,7 +994,21 @@ function nuAddActionButton(id, value, func, title, icon, insertAfterElement) {
 	}
 
 	if (nuIsMobile()) {
-		$('.nuActionButton').css('height', '28px');
+		$('.nuActionButton').css('height', '35px');
+	}
+
+	if (func) {
+		$('#' + elementId).off('click').on('click', function () {
+			if (typeof func === 'string') {
+				try {
+					new Function(func)();
+				} catch (e) {
+					console.error('Error executing button action:', e);
+				}
+			} else if (typeof func === 'function') {
+				func();
+			}
+		});
 	}
 
 	return $('#' + elementId);
@@ -7415,7 +7428,7 @@ $.fn.nuSearchablePopup = function (options) {
 	}, options);
 
 
-	function convertTo2DIf1D(arr) {
+	function nuArrayTo2Dif1D(arr) {
 
 		const is1D = Array.isArray(arr) && arr.every(item => !Array.isArray(item));
 		if (is1D) {
@@ -7426,7 +7439,7 @@ $.fn.nuSearchablePopup = function (options) {
 
 	}
 
-	function flattenSingleElementArrays(arr) {
+	function nuArrayFlattenSingles(arr) {
 
 		if (!Array.isArray(arr)) return arr;
 		if (arr.length > 1) {
@@ -7443,8 +7456,8 @@ $.fn.nuSearchablePopup = function (options) {
 
 	}
 
-	settings.items = flattenSingleElementArrays(settings.items);
-	settings.items = convertTo2DIf1D(settings.items);
+	settings.items = nuArrayFlattenSingles(settings.items);
+	settings.items = nuArrayTo2Dif1D(settings.items);
 
 	const $this = $(this);
 	const column = $this.data('column');
@@ -7531,6 +7544,7 @@ $.fn.nuSearchablePopup = function (options) {
 	});
 
 	$filterInput.on('keydown', function (e) {
+
 		if (e.key === 'Enter') {
 			e.preventDefault();
 
