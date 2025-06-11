@@ -685,7 +685,7 @@ function nuPrintAction() {
 
 }
 
-function nuUpdateData(action, instruction, _close) {
+function nuUpdateData(action, instruction) {
 
 	if (action == 'save') {
 
@@ -802,11 +802,13 @@ function nuUpdateData(action, instruction, _close) {
 			} else {
 
 				window.last_action = 'save';
-				nuForm(formId, data.record_id, data.filter, data.search, 1);		//-- go to saved or created record
-
 				if (instruction === 'close') {
 					nuFORM.edited = false;
-					nuOpenPreviousBreadcrumb();
+					if (!nuOpenPreviousBreadcrumb()) {
+						window.close();
+					}
+				} else {
+					nuForm(formId, data.record_id, data.filter, data.search, 1);		//-- go to saved or created record
 				}
 			}
 
