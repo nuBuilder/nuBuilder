@@ -1147,10 +1147,10 @@ input[type=radio] {
 }
 
 .nuSaveButtonEdited {
-	background-color: #f44336 !important;
+	background-color: #fff9f8 !important;
 	background: unset;
-	color: #fff;
-	border-color: #dc3545
+	color: #dc3545;
+	border-color: #efcfd2;
 }
 
 .nuDebugButtonHighlight {
