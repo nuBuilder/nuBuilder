@@ -2106,9 +2106,8 @@ function nuPreventButtonDblClick() {
 
 function nuAddBackButton() {
 
-	var b = $('.nuBreadcrumb').length;
-	if (b > 0) {
-		nuAddActionButton('BackBtn', nuTranslate('Back'), 'if (!nuFORM.edited) { nuDisable(this.id) }; nuOpenPreviousBreadcrumb();');
+	if ($('.nuBreadcrumb').length > 0) {
+		nuAddActionButton('Back');
 	}
 
 }

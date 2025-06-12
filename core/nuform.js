@@ -941,6 +941,13 @@ function nuAddActionButton(id, value, func, title, icon, insertAfterElement) {
 			iconSuffix: 'fa-square-minus',
 			iconBaseClass: DEFAULT_ICON_BASE
 		},
+		Back: {
+			value: 'Back',
+			func: 'nuBackAction(this)',
+			text: '',
+			iconSuffix: 'fa-left-long',
+			iconBaseClass: 'fa-solid'
+		},
 		Clone: {
 			value: 'Clone',
 			func: 'nuCloneAction()',
@@ -978,7 +985,7 @@ function nuAddActionButton(id, value, func, title, icon, insertAfterElement) {
 		}
 	};
 
-	if (['Save', 'SaveClose', 'Delete', 'Clone', 'Run', 'RunHidden', 'BuildFastForm', 'BuildFastReport'].includes(id)) {
+	if (['Save', 'SaveClose', 'Delete', 'Clone', 'Run', 'Back', 'RunHidden', 'BuildFastForm', 'BuildFastReport'].includes(id)) {
 		const def = defaults[id] || {
 			value: id,
 			func: `nu${id}Action()`,
@@ -5679,6 +5686,16 @@ function nuCloneAction() {
 	if (window.nuOnClone) {
 		nuOnClone();
 	}
+
+}
+
+function nuBackAction() {
+
+	if (!nuFORM.edited) {
+		nuDisable(this.id)
+	};
+
+	nuOpenPreviousBreadcrumb();
 
 }
 
