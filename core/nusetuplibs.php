@@ -145,7 +145,7 @@ function nuCSSIndexInclude($files, $refreshCache = true) {
 	nuInclude($files, 'stylesheet', $refreshCache);
 }
 
-
+/*
 function nuArrayFlatten($data, $section = null) {
 
 	if (is_array($data) && $section !== null) {
@@ -168,6 +168,7 @@ function nuArrayFlatten($data, $section = null) {
 	return array_merge(...array_values($data));
 
 }
+*/
 
 function nuIncludeFiles() {
 
@@ -204,7 +205,7 @@ function nuIncludeFiles() {
 	}
 
 
-	$nuConfigIncludeJS = nuArrayFlatten($nuConfigIncludeJS, 'core');
+	// $nuConfigIncludeJS = nuArrayFlatten($nuConfigIncludeJS, 'core');
 	nuMergeIncludeFiles($jsFiles, $nuConfigIncludeJS);
 
 	echo "<script src=\"third_party/jquery/jquery-3.7.1.min.js\"></script>\n";
