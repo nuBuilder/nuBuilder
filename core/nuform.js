@@ -4539,7 +4539,7 @@ function nuResizeBrowseColumns(force) {
 		}
 
 		for (let i = 0; i < columnWidths.length; i++) {
-			columnWidths[i] = parseInt((window.innerWidth - 30) * columnWidths[i] / totalWidth) - padding;
+			columnWidths[i] = parseInt((window.innerWidth - 30) * columnWidths[i] / totalWidth);
 		}
 
 		nuSetBrowseColumns(columnWidths);
@@ -4753,6 +4753,7 @@ function nuBrowseTable() {
 	nuBrowseCreateFooter(currentForm, topOffset, leftOffset, rowHeight);
 
 	nuHighlightSearch();
+	nuBrowseBorders();
 	nuBrowseUpdateParentDocumentStyles(topOffset + rowHeight + 140);
 
 }
@@ -4808,7 +4809,6 @@ function nuBrowseSetCellAttributes(div, rowIndex, colIndex, column) {
 	div.style.padding = (column.width < 0 ? 0 : undefined) + 'px';
 	div.style.borderWidth = (column.width < 0 ? 0 : undefined) + 'px';
 	div.classList.add(`nuCell${(rowIndex / 2 === parseInt(rowIndex / 2, 10)) ? 'Even' : 'Odd'}`);
-
 }
 
 function nuBrowseSetCellContentAndEvents($div, browseRows, rowIndex, colIndex, currentColumn) {
@@ -6635,6 +6635,20 @@ function nuResponsiveWrap(width, wrap) {
 		} else {
 			nuResponseNoWrap();
 		}
+
+	}
+
+}
+
+function nuBrowseBorders() {
+
+	var r = nuSERVERRESPONSE.rows;
+	var c = nuSERVERRESPONSE.browse_columns.length;
+
+	for (var i = 0; i < c; i++) {
+
+		$('#nucell_0_' + i).addClass('nuBrowseBorderTop');
+		$('#nucell_' + (r - 1) + '_' + i).addClass('nuBrowseBorderBottom');
 
 	}
 

@@ -9,7 +9,7 @@
 	--nu-html: #faf3ef;
 	--nu-sql: #eaf6ff;
 	--nu-css: #f4f7f4;
-	--nu-border: #ddd;
+	--nu-border: #e9ecef;
 	--nu-body: #fdfdfd;
 	--nu-edit-body: rgb(245 247 250 / 45%);
 	--nu-font-sans-serif: "Noto Sans", "Helvetica Neue", Arial, sans-serif;
@@ -256,17 +256,15 @@ input[type=radio] {
 }
 
 .nuCell {
-	border-bottom: 1px solid #e0e0e0;
+	border-bottom: 1px solid var(--nu-border);
 	font-family: Arial, sans-serif;
 	font-size: 13px;
-	color: #333333;
-	padding-left: 8px;
-	padding-right: 8px;
+	color: #34373a;
 	line-height: 18px;
 }
 
 .nuCellEven {
-	background-color: #f9f9f9;
+	background-color: #fbfbfb;
 }
 
 .nuCellOdd {
@@ -566,6 +564,7 @@ input[type=radio] {
 	margin: 0 5px;
 	position: absolute;
 	background-color: transparent;
+	/*	border: 1px solid var(--nu-border);; */
 	width: auto
 }
 
@@ -711,6 +710,9 @@ input[type=radio] {
 	left: auto;
 	width: auto;
 	background-color: transparent;
+	padding-right: 20px;
+	border-top: 1px solid var(--nu-border);
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 	border: none;
 	font-size: 13px;
 	color: #0073aa;
@@ -723,7 +725,7 @@ input[type=radio] {
 }
 
 .nuBrowseTitleSingeleline {
-	padding: 8px 12px 0 0px
+	/*	padding: 8px 12px 0 0px */
 }
 
 .nuBrowseTitleMultiline {
@@ -732,7 +734,7 @@ input[type=radio] {
 	min-height: 50px;
 	white-space: normal;
 	cursor: default;
-	padding: 0px;
+	/*	padding: 1px 20px 5px 0px; */
 }
 
 .nuBrowseTitle .nuSort {
@@ -744,16 +746,20 @@ input[type=radio] {
 
 .nuBrowseTable {
 	height: 70px;
-	border-style: solid;
-	border-color: #ebebeb70;
-	border-top: 1px solid var(--nu-border);
-	border-width: 1px;
-	padding: 1px 10px 5px 10px;
+	padding: 1px 0px 5px 10px;
 	position: absolute;
 	top: 75px;
-	font: 13px var(--nu-font-sans-serif);
+	font: 13px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 	line-height: 150%;
 	white-space: nowrap
+}
+
+.nuBrowseBorderTop {
+	/*	border-top: solid #d0d0d0 1px !important */
+}
+
+.nuBrowseBorderBottom {
+	border-bottom: solid #d0d0d0 1px !important
 }
 
 .nuBrowseFooter {
@@ -845,13 +851,12 @@ input[type=radio] {
 	height: 70px;
 	border-style: solid;
 	border-width: 1px;
-	padding: 1px 10px 5px 10px;
+	padding: 1px 0px 5px 10px;
 	position: absolute;
 	top: 75px;
+	font: 13px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 	background-color: #edf7ff !important;
-	border-color: #ebebeb70;
-	font: 13px var(--nu-font-sans-serif) !important;
-	line-height: 150%;
+	border-color: transparent;
 	white-space: nowrap
 }
 
@@ -1047,7 +1052,7 @@ input[type=radio] {
 
 .nuActionButton {
 	background: white;
-	color: #1f2937;
+	color: #495057;
 	border: 1.5px solid #e5e7eb;
 	border-radius: 6px;
 	padding: 0 6px;
@@ -1966,7 +1971,8 @@ pre.nuFormInfoBrowseSQL {
 }
 
 .nuSearchablePopup .close-btn:hover {
-	background-color: #e9ecef;
+	background-color: var(--nu-border);
+	;
 	color: #333;
 }
 
