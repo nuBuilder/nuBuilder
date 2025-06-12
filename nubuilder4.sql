@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 12, 2025 at 05:30 AM
+-- Generation Time: Jun 12, 2025 at 10:45 AM
 -- Server version: 8.2.0
 -- PHP Version: 8.3.4
 
@@ -609,7 +609,7 @@ INSERT INTO `zzzzsys_event` (`zzzzsys_event_id`, `sev_zzzzsys_object_id`, `sev_e
 ('nu5ff4a8cb2258088', 'nu5ff4a82b76d96d6', 'onclick', 'if (!nuIsSaved()) {\n nuTranslate(\'Save the settings first\');\n} else {\n nuPopup(\'nuemailtest\',\'-1\')\n}', NULL),
 ('nu5ff4b6479adf58a', 'nu5ff4b5f53f85f69', 'onclick', 'nuemailtestLoadDatafromLS();', NULL),
 ('nu5ff4b67643ec503', 'nu5ff4b56934a1973', 'onclick', 'nuemailtestSaveDatatoLS();', NULL),
-('nu5ff5b7b1bb92f1a', 'nu5ff5b7b1b918a4b', 'onclick', 'var form_id =  $(\'#sob_run_zzzzsys_form_id\').val(); if (form_id !== \'\') { 	nuForm(\'nuform\',form_id,\'\',\'\',2);} else { nuMessage([nuTranslate(\'Select a (Run) Form first.\')]); }', NULL),
+('nu5ff5b7b1bb92f1a', 'nu5ff5b7b1b918a4b', 'onclick', 'const formId = nuGetValue(\'sob_run_zzzzsys_form_id\');\n\nif (!formId) {\n    nuMessage([nuTranslate(\'Select a Run Item first.\')]);\n    return;\n}\n\nconst runType = nuGetValue(\'sob_run_type\');\n\nswitch (runType) {\n    case \'P\':\n        nuForm(\'nuprocedure\', formId, \'\', \'\', 2);\n        break;\n    case \'R\':\n        nuForm(\'nubuildreport\', formId, \'\', \'\', 2);\n        break;\n    default: // \'F\' or any other\n        nuForm(\'nuform\', formId, \'\', \'\', 2);\n        break;\n}', NULL),
 ('nu5ff727ad73226b8', 'nu5ff727ad6f17b85', 'onclick', 'nuForm(\'nuaccess\',sus_zzzzsys_access_id.value,\'\',\'\',2);', NULL),
 ('nu60013e0629f72ae', 'nu60013e0626d80ce', 'onclick', 'var form_id =  $(\'#sob_subform_zzzzsys_form_id\').val(); if (form_id !== \'\') { 	nuForm(\'nuform\',form_id,\'\',\'\',2);} else { nuMessage([nuTranslate(\'Select a Form (Subform) first.\')]); }', NULL),
 ('nu60028804f2e662b', 'nu60028804f043b86', 'onclick', 'var objType =  nuGetValue(\'sob_all_type\',\'text\')\nif (objType !== \'\') { \n    nuSelectTabByTitle(objType); \n}', NULL),
@@ -909,8 +909,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`, `inf_json`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.8-2025.06.12.00', NULL),
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.8-2025.06.12.03', NULL);
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.8-2025.06.12.01', NULL),
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.8-2025.06.12.07', NULL);
 
 -- --------------------------------------------------------
 
@@ -1596,7 +1596,7 @@ INSERT INTO `zzzzsys_object` (`zzzzsys_object_id`, `sob_all_zzzzsys_form_id`, `s
 ('nu61ade403495a778', 'nufrlaunch', NULL, 'contentbox', 'contentbox_fr', '', 'nu5bad6cb3737e773', 10, 0, 7, 1041, 656, '1', 'left', '0', '0', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '[\'North\',\'South\',\'East\',\'West\']', NULL, 'data-nu-mobile-hidden', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('nu61ade47ac8a12e3', 'nubuildreport', 'zzzzsys_report', 'contentbox', 'contentbox_report', '', 'nu5bad6cb36804778', 10, 5, 13, 731, 316, '1', 'left', '0', '0', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', 'browse|Browse|edit|Edit|browseedit|Browse and Edit|criteria|Criteria or Home|procedure|Procedure|report|Report', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'data-nu-mobile-hidden', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('nu61ade564071b92d', 'nuprocedure', 'zzzzsys_php', 'contentbox', 'contentbox_php', '', 'nu5bad6cb36b27343', 10, 0, 20, 940, 550, '1', 'left', '0', '0', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'data-nu-mobile-hidden', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-('nu61ade7febed4755', 'nuprocedure', 'zzzzsys_php', 'contentbox', 'contentbox_acl', 'Access levels that can use this procedure', 'nu5fdf7df2d873dd1', 150, 21, 13, 557, 535, '1', 'left', '0', '0', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'data-nu-mobile-hidden', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('nu61ade7febed4755', 'nuprocedure', 'zzzzsys_php', 'contentbox', 'contentbox_acl', '<n>Access levels that can use this procedure</n>', 'nu5fdf7df2d873dd1', 150, 21, 13, 557, 535, '1', 'left', '0', '0', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'data-nu-mobile-hidden', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('nu61ade9896dd4f69', 'nuform', 'zzzzsys_form', 'contentbox', 'contentbox_main', '', 'nu5bad6cb36791fd5', 10, 0, 20, 1168, 530, '1', 'left', '0', '0', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'data-nu-mobile-hidden', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('nu61ade9d739835b9', 'nuform', 'zzzzsys_form', 'contentbox', 'contentbox_browse', '', 'nu5bad6cb36757b92', 180, 1, 20, 1168, 530, '1', 'left', '0', '0', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'data-nu-mobile-hidden', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('nu61adea3da348f04', 'nuform', 'zzzzsys_form', 'contentbox', 'contentbox_custom', '', 'nu5bad6cb37026348', 310, 0, 20, 1168, 530, '1', 'left', '0', '0', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'data-nu-mobile-hidden', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
