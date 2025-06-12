@@ -868,15 +868,12 @@ function nuAddActionButtons(form) {
 			nuSearchAction();
 		});
 
-		const printCaption = "<i class='fa-solid fa-fw fa-print fa-lg'></i>";
-		const addCaption = "<i class='fa-fw fa fa-add fa-lg'></i>";
-
 		if (button.Add == 1) {
-			nuAddActionButton('Add', addCaption, 'nuAddAction()').attr('title', nuTranslate('Add'));
+			nuAddActionButton('Add');
 		}
 
 		if (button.Print == 1 && nuFORM.getCurrent().browse_rows.length > 0 && !isMobile) {
-			nuAddActionButton('Print', printCaption, 'nuPrintAction()').attr('title', nuTranslate('Print'));
+			nuAddActionButton('Print');
 		}
 
 		nuSearchFieldSetSearchType(isMobile);
@@ -941,6 +938,20 @@ function nuAddActionButton(id, value, func, title, icon, insertAfterElement) {
 			iconSuffix: 'fa-square-minus',
 			iconBaseClass: DEFAULT_ICON_BASE
 		},
+		Add: {
+			value: '',
+			func: 'nuAddAction()',
+			text: '',
+			iconSuffix: 'fa-plus',
+			iconBaseClass: 'fa-solid'
+		},
+		Print: {
+			value: '',
+			func: 'nuPrintAction()',
+			text: '',
+			iconSuffix: 'fa-table-list',
+			iconBaseClass: 'fa-solid'
+		},
 		Back: {
 			value: 'Back',
 			func: 'nuBackAction(this)',
@@ -985,7 +996,7 @@ function nuAddActionButton(id, value, func, title, icon, insertAfterElement) {
 		}
 	};
 
-	if (['Save', 'SaveClose', 'Delete', 'Clone', 'Run', 'Back', 'RunHidden', 'BuildFastForm', 'BuildFastReport'].includes(id)) {
+	if (['Save', 'SaveClose', 'Delete', 'Clone', 'Add', 'Print', 'Run', 'Back', 'RunHidden', 'BuildFastForm', 'BuildFastReport'].includes(id)) {
 		const def = defaults[id] || {
 			value: id,
 			func: `nu${id}Action()`,
