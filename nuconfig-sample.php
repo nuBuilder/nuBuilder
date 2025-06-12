@@ -39,24 +39,6 @@ $nuConfigSsoOnlyExcept = ['globeadmin'];		// If $nuConfigLogonMode=='both', only
 
 $nuConfigIncludeJS = '';
 //-- Include one or more JavaScript File(s).  E.g. 'myjslib.js' or ['myjslib1.js','myjslib2.js']
-
-// Example to use a multidimensional associative array that holds URLs grouped by category.
-/*
-	$nuConfigIncludeJS = [
-		'core' => [
-			'https://code.jquery.com/jquery-migrate-3.4.1.js',
-
-		],
-		'formatters' => [
-			'https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.3/beautify.min.js',
-			'https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.3/beautify-html.min.js',
-			'https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.3/beautify-css.js',
-			'https://cdn.jsdelivr.net/npm/sql-formatter@15.6.4/dist/sql-formatter.min.js'
-		]
-	];
-
-*/
-
 $nuConfigIncludeCSS = '';
 //-- Include one or more CSS File(s). E.g. 'mystyles.css' or ['mystyles1.css','mystyles2.css']
 $nuConfigIncludePHP = '';

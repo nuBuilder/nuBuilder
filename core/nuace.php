@@ -1,15 +1,8 @@
-useTabs: false, // Use spaces, not tabs
-
 <?php
 require_once('nusessiondata.php');
 require_once('nusetuplibs.php');
 require_once('../nuconfig.php');
 $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
-
-// Include additional JS files from config
-global $nuConfigIncludeJS;
-$jsFiles = nuArrayFlatten($nuConfigIncludeJS, 'formatters');
-nuJSIndexInclude($jsFiles);
 ?>
 
 <!DOCTYPE html>
@@ -22,6 +15,14 @@ nuJSIndexInclude($jsFiles);
 	<script src="../third_party/ace/src-min-noconflict/ace.js" charset="utf-8"></script>
 	<script src="../third_party/ace/src-min-noconflict/ext-language_tools.js" charset="utf-8"></script>
 	<script src="../third_party/ace/src-min-noconflict/ext-beautify.js" charset="utf-8"></script>
+	<?php
+	$includeFormatters = [
+		'../third_party/formatter/beautify.min.js',
+		'../third_party/formatter/beautify-html.min.js',
+		'../third_party/formatter/beautify-css.js',
+		'../third_party/formatter/sql-formatter.min.js'];
+	nuJSIndexInclude($includeFormatters);
+	?>
 	<link rel="stylesheet" href="css/nubuilder4.css">
 	<link rel="stylesheet" href="../third_party/fontawesome/css/all.min.css">
 
@@ -388,7 +389,6 @@ nuJSIndexInclude($jsFiles);
 				const code = editor.getValue();
 				const formatted = beautifiers[language](code, beautifyOptions);
 				editor.setValue(formatted, -1);
-				// console.log(`Beautified ${language} code with ${beautifiers[language].name}`);
 				return;
 			} else if (language === 'SQL' && typeof sqlFormatter !== 'undefined') {
 				const code = editor.getValue();
@@ -408,7 +408,7 @@ nuJSIndexInclude($jsFiles);
 					paramTypes: {}, // No special param types
 				});
 				editor.setValue(formatted, -1);
-				// console.log('Beautified SQL code with sqlFormatter');
+				return;
 			}
 
 			beautify.beautify(editor.session);
