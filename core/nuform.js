@@ -956,7 +956,7 @@ function nuAddActionButton(id, value, func, title, icon, insertAfterElement) {
 			value: 'Back',
 			func: 'nuBackAction(this)',
 			text: '',
-			iconSuffix: 'fa-left-long',
+			iconSuffix: 'fa-chevron-left',
 			iconBaseClass: 'fa-solid'
 		},
 		Clone: {
