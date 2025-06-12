@@ -4594,6 +4594,10 @@ function nuGetColumWidths() {
 function nuDownBrowseResize(e, source) {
 
 	let target = e.target;
+	if (!target || !target.id) {
+		return;
+	}
+
 	const classList = target.classList;
 	if (classList.contains('nuBrowserFilterSelectedTextContent') || classList.contains('nuBrowseFilterIcon')) {
 		return;
