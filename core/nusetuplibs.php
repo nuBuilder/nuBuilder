@@ -204,13 +204,12 @@ function nuIncludeFiles() {
 		$jsFiles[] = 'third_party/tinymce/tinymce.min.js';
 	}
 
-
-	// $nuConfigIncludeJS = nuArrayFlatten($nuConfigIncludeJS, 'core');
-	nuMergeIncludeFiles($jsFiles, $nuConfigIncludeJS);
-
 	echo "<script src=\"third_party/jquery/jquery-3.7.1.min.js\"></script>\n";
 
-
+	// $nuConfigIncludeJS = nuArrayFlatten($nuConfigIncludeJS, 'core');
+	if (isset($nuConfigIncludeJS) && !empty($nuConfigIncludeJS)) {
+		nuMergeIncludeFiles($jsFiles, $nuConfigIncludeJS);
+	}
 	nuJSIndexInclude($jsFiles);
 
 	$cssFiles = [
@@ -222,8 +221,9 @@ function nuIncludeFiles() {
 		'third_party/jquery/jquery-confirm.min.css'
 	];
 
-	nuMergeIncludeFiles($cssFiles, $nuConfigIncludeCSS);
-
+	if (isset($nuConfigIncludeCSS) && !empty($nuConfigIncludeCSS)) {
+		nuMergeIncludeFiles($cssFiles, $nuConfigIncludeCSS);
+	}
 	nuCSSIndexInclude($cssFiles);
 
 }
