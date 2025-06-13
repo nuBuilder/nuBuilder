@@ -1153,6 +1153,13 @@ input[type=radio] {
 	border-color: #efcfd2;
 }
 
+.nuDragOptionsSaveButtonEdited {
+	background-color: #f44336 !important;
+	background: unset;
+	color: #fff;
+	border-color: #dc3545
+}
+
 .nuDebugButtonHighlight {
 	color: #ff5454;
 }
