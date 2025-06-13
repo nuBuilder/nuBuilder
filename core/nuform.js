@@ -578,26 +578,39 @@ function nuBrowseStickyColumns($record) {
 
 }
 
-function nuBrowseRowsPerPageFilter(rowsPerPageOptions) {
+function nuBrowseRowsPerPageFilter(rowsPerPageOptions, insertBeforeTarget = '#nuFirst', customStyle) {
 
 	if (nuFormType() !== 'browse') return;
 
+	const defaultOptions = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200];
+	const options = rowsPerPageOptions ?? defaultOptions;
+	const isDefaultPosition = insertBeforeTarget === '#nuFirst';
+	const defaultMarginLeft = isDefaultPosition ? '0px' : '20px';
+	const defaultMarginRight = isDefaultPosition ? '10px' : '0px';
+	const defaultStyle = `margin-left: ${defaultMarginLeft}; margin-right: ${defaultMarginRight}; width: 50px; height: 22px; text-align: left`;
+	const style = customStyle ?? defaultStyle;
+
 	const selectId = 'nuBrowseRowsPerPage';
 	const hashCookie = 'ROWS_PER_PAGE';
-	const selectStyle = 'margin-left: 20px; width: 50px; height: 22px; text-align: left';
-	const selectElement = $(`<select style="${selectStyle}" id="${selectId}" aria-label="Number of Rows per Page"></select>`);
+	const selectElement = $(
+		`<select id="${selectId}" style="${style}" aria-label="Number of Rows per Page"></select>`
+	);
 
-	selectElement.attr('title', nuTranslate('Number of Rows'));
-	selectElement.append($(`<option value="" disabled selected>${nuGetProperty('rows')}</option>`));
+	selectElement
+		.attr('title', nuTranslate('Number of Rows'))
+		.append(`<option value="" disabled selected>${nuGetProperty('rows')}</option>`);
 
-	rowsPerPageOptions = rowsPerPageOptions || [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200];
-	for (let optionValue of rowsPerPageOptions) {
-		$(`<option value="${optionValue}">${optionValue}</option>`).appendTo(selectElement);
+	for (let val of options) {
+		selectElement.append(`<option value="${val}">${val}</option>`);
 	}
 
-	selectElement.insertBefore('#nuSearchField');
+	const $target = insertBeforeTarget instanceof jQuery
+		? insertBeforeTarget
+		: $(insertBeforeTarget);
 
-	selectElement.on("change", function () {
+	selectElement.insertBefore($target);
+
+	selectElement.on('change', function () {
 		nuSetProperty('page_number', 0);
 		nuSetProperty(hashCookie, this.value);
 		nuSearchAction();
@@ -606,6 +619,7 @@ function nuBrowseRowsPerPageFilter(rowsPerPageOptions) {
 	selectElement.val(nuGetProperty(hashCookie) ?? '');
 
 }
+
 
 function nuPrintIncludeColumns($arr) {
 	nuSetProperty('nuPrintincludedColumns', nuEncode($arr));
