@@ -5699,8 +5699,7 @@ function nuCloneAction() {
 	$('#nuCloneButton').css('visibility', 'hidden');
 	$('#nuDeleteButton').css('visibility', 'hidden');
 
-	$('.nuSaveButton')
-		.css('background-color', 'red')
+	$('.nuSaveButton').addClass('nuSaveButtonEdited')
 		.css('visibility', 'visible');
 
 	nuCLONE = true;
