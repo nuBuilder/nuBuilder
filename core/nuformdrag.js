@@ -1433,7 +1433,6 @@ function nuDragElement(element, dragHeaderOffset) {
 	element.ontouchstart = dragStart;
 
 	function dragStart(e) {
-		e = e || window.event;
 		if (dragHeaderOffset !== undefined) {
 
 			let touch = (e.touches?.[0]) || (e.pointerType && e.pointerType === 'touch' && e);
@@ -1463,7 +1462,6 @@ function nuDragElement(element, dragHeaderOffset) {
 
 	function elementDrag(e) {
 
-		e = e || window.event;
 		e.preventDefault();
 
 		let clientX, clientY;
