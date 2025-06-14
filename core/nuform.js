@@ -489,6 +489,8 @@ function nuFormModification() {
 
 	if (nuFormType() == 'browse') {
 
+		if (window['nuBrowseNoData'] || window['nuBrowseNoSearchResults']) $('.nuBrowseFooter').hide();
+
 		if (!nuIsIframe()) {
 
 			$record = $('#nuRECORD');
@@ -508,6 +510,7 @@ function nuFormModification() {
 			nuBrowseStickyColumns($record);
 
 			document.body.style.overflow = 'hidden';
+
 		}
 	} else {
 		document.body.style.overflow = 'visible';
