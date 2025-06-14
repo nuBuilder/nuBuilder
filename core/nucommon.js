@@ -636,7 +636,7 @@ function nuPopup(formId, recordId, filter) {
 
 function nuOptionsListAction(f, r, filter, e) {
 
-	const isCtrlOrMetaPressed = nuIsMacintosh() ? e.metaKey : e.ctrlKey;
+	const isCtrlOrMetaPressed = e ? (nuIsMacintosh() ? e.metaKey : e.ctrlKey) : false;
 	if (!isCtrlOrMetaPressed) {
 		nuPopup(f, r, filter);
 	} else {
