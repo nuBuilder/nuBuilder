@@ -7293,7 +7293,6 @@ function nuAddBrowseAdditionalNavButtons() {
 	}
 
 }
-
 class nuPromptModal {
 
 	constructor() {
@@ -7302,6 +7301,8 @@ class nuPromptModal {
 		this.headElement = document.getElementById('nuprompthead');
 		this.bodyElement = document.getElementById('nupromptbody');
 		this.footElement = document.getElementById('nupromptfoot');
+
+		this.callback = null; // store function reference
 	}
 
 	displayModal(visible = false) {
@@ -7325,32 +7326,49 @@ class nuPromptModal {
 		this.bodyElement.innerHTML =
 			`${text}<br><input id="prompt_value1" style="width: 450px; margin-top: 10px; border: 1px solid #CCC; padding: 10px; border-radius: 4px;" />`;
 		this.footElement.innerHTML =
-			`<button class="nuActionButton" onclick="nuPromptWindow.ok('${fctn}', true)">OK</button> <button class="nuActionButton" onclick="nuPromptWindow.cancel('${fctn}', false)">Cancel</button>`;
+			`<button class="nuActionButton" onclick="nuPromptWindow.ok()">OK</button> <button class="nuActionButton" onclick="nuPromptWindow.cancel()">Cancel</button>`;
 
 		const inputElement = document.getElementById("prompt_value1");
-		inputElement.value = nuDefine(defaultValue, '')
-		inputElement.onkeyup = (e) => this.handleKeyup(e, fctn);
+		inputElement.value = nuDefine(defaultValue, '');
+		inputElement.onkeyup = (e) => this.handleKeyup(e);
+
+		// store callback
+		this.callback = fctn;
+
 		inputElement.focus();
 	}
 
-	handleKeyup(e, fctn) {
+	handleKeyup(e) {
 		if (e.key === "Enter") {
-			this.ok(fctn);
+			this.ok();
 		} else if (e.key === "Escape") {
-			this.cancel(fctn);
+			this.cancel();
 		}
 	}
 
-	cancel(fctn) {
-		window[fctn](null, false);
+	cancel() {
+		this.invokeCallback(null, false);
 		this.displayModal(false);
 	}
 
-	ok(fctn) {
-		const value = document.getElementById('prompt_value1')
-			.value;
-		window[fctn](value, true);
+	ok() {
+		const value = document.getElementById('prompt_value1').value;
+		this.invokeCallback(value, true);
 		this.displayModal(false);
+	}
+
+	invokeCallback(value, confirmed) {
+		if (typeof this.callback === 'string') {
+			if (typeof window[this.callback] === 'function') {
+				window[this.callback](value, confirmed);
+			} else {
+				console.error('Callback function not found:', this.callback);
+			}
+		} else if (typeof this.callback === 'function') {
+			this.callback(value, confirmed);
+		} else {
+			console.error('Invalid callback type');
+		}
 	}
 
 }
@@ -7360,12 +7378,12 @@ function nuPrompt(text, caption, defaultValue, format, fctn) {
 	if (!document.getElementById('nupromptmodal')) {
 		const nuPromptDiv =
 			`
-		<div id="nupromptmodal"></div>
-		<div id="nuprompt">
-		  <div id="nuprompthead"></div>
-		  <div id="nupromptbody"></div>
-		  <div id="nupromptfoot"></div>
-		</div>`;
+        <div id="nupromptmodal"></div>
+        <div id="nuprompt">
+          <div id="nuprompthead"></div>
+          <div id="nupromptbody"></div>
+          <div id="nupromptfoot"></div>
+        </div>`;
 		document.body.insertAdjacentHTML('beforeend', nuPromptDiv);
 		nuPromptWindow = new nuPromptModal();
 	}
