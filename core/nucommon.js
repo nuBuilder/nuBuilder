@@ -634,13 +634,15 @@ function nuPopup(formId, recordId, filter) {
 
 }
 
-function nuOptionsListAction(f, r, filter) {
+function nuOptionsListAction(f, r, filter, e) {
 
-	if (!(nuIsMacintosh() ? window.event.metaKey : window.event.ctrlKey)) {
-		nuPopup(f, r, filter)
+	const isCtrlOrMetaPressed = nuIsMacintosh() ? e.metaKey : e.ctrlKey;
+	if (!isCtrlOrMetaPressed) {
+		nuPopup(f, r, filter);
 	} else {
 		nuForm(f, r, filter, '', '');
 	}
+
 }
 
 //-- object for dragging dialog --//
