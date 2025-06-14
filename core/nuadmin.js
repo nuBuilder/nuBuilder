@@ -2,8 +2,14 @@ function nuEditPHP(type) {
 	nuForm('nuphp', nuFormId() + '_' + type, 'justphp', '', 2);
 }
 
-function nuOpenCurrentFormProperties() {
-	nuForm('nuform', nuFormId(), '', '', 2);
+function nuOpenCurrentFormProperties(event) {
+
+	if (event.ctrlKey || event.metaKey) {
+		nuPopup('nuform', nuFormId(), '');
+	} else {
+		nuForm('nuform', nuFormId(), '', '', 2);
+	}
+
 }
 
 function nuOpenCurrentObjectList() {
@@ -110,7 +116,7 @@ function nuAddAdminButtons() {
 		nuProperties: {
 			title: nuTranslate("Form Properties"),
 			value: "Prop",
-			func: "nuOpenCurrentFormProperties();"
+			func: "nuOpenCurrentFormProperties(event);"
 		},
 		nuObjects: {
 			title: nuTranslate("Object List"),
