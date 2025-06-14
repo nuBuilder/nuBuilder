@@ -252,15 +252,17 @@ function nuAdminPreInspectRecordJS() {
 
 }
 
-function nuAdminToolsOpenMenu(event, menu, element) {
+function nuOpenContextMenu(event, menu, element) {
+	debugger;
 	event.stopPropagation();
 	ctxmenu.show(menu, element);
 }
 
 function nuAdminToolsClick(element, event, menuType) {
 	const menu = nuAdminToolsCreateMenuConfig(menuType, event);
-	nuAdminToolsOpenMenu(event, menu, element);
+	nuOpenContextMenu(event, menu, element);
 }
+
 
 // Set Browse Column Widths in a Browse Screen
 
@@ -586,7 +588,13 @@ var nuContextMenuDefinitionTab = [
 	menuObject, {
 		isDivider: true
 	},
-	menuRename, {
+	menuRename,
+	{
+		text: nuTranslate('Add') + '...',
+		tag: "addTab",
+		action: () => nuContextMenuAddTabPrompt()
+	},
+	{
 		text: "Access",
 		tag: "Access",
 		subMenu: [
@@ -1061,6 +1069,22 @@ function nuContextMenuLabelPromptCallback(value, ok) {
 
 }
 
+
+function nuContextMenuAddTabPromptCallback(tabNr, tabName) {
+
+	const formId = nuFormId();
+	const title = tabName.trim() || nuTranslate("New Tab");
+	const order = (parseInt(tabNr) + 1) * 10 + 1;
+
+	nuRunPHPHiddenWithParams('NUBROWSEADDTAB', 'NUBROWSEADDTAB_params', {
+		form_id: formId,
+		title: title,
+		order: order
+	});
+
+}
+
+
 function nuContextMenuLabelPrompt() {
 
 	const label = contextMenuCurrentTarget.id;
@@ -1078,6 +1102,25 @@ function nuContextMenuLabelPrompt() {
 	value = nuFormType() == 'edit' ? value : value.trim();
 
 	nuPrompt(nuTranslate("Label") + ':', nuTranslate("Object") + ': ' + id, value, '', 'nuContextMenuLabelPromptCallback');
+
+}
+
+function nuContextMenuAddTabPrompt() {
+
+	const id = nuContextMenuCurrentTargetId();
+	const tabNr = id.slice(5);
+
+	nuPrompt(
+		nuTranslate("Tab Name") + ':',
+		nuTranslate("Add new Tab"),
+		nuTranslate('New Tab'),
+		'',
+		function (tabName, confirmed) {
+			if (confirmed) {
+				nuContextMenuAddTabPromptCallback(tabNr, tabName);
+			}
+		}
+	);
 
 }
 
