@@ -1090,18 +1090,23 @@ function nuContextMenuLabelPrompt() {
 	const label = contextMenuCurrentTarget.id;
 	const id = nuContextMenuCurrentTargetId();
 	const obj = $('#' + contextMenuCurrentTarget.id);
+	let caption = obj.attr('data-nu-org-label');
 
-	let value = obj.attr('data-nu-org-label');
-
-	if (typeof value === 'undefined') {
-		value = obj.is(":button") ? value : $('#' + label).html();
+	if (caption) {
+		caption = nuTranslate("Tab") + ': ' + caption
+	} else {
+		caption = nuTranslate("Object") + ': ' + id
 	}
 
-	value = obj.is(":button") && obj.attr('data-nu-label') ? obj.html() : value;
+	let defaultValue = obj.attr('data-nu-org-label');
+	if (typeof defaultValue === 'undefined') {
+		defaultValue = obj.is(":button") ? defaultValue : $('#' + label).html();
+	}
 
-	value = nuFormType() == 'edit' ? value : value.trim();
+	defaultValue = obj.is(":button") && obj.attr('data-nu-label') ? obj.html() : defaultValue;
+	defaultValue = nuFormType() == 'edit' ? defaultValue : defaultValue.trim();
 
-	nuPrompt(nuTranslate("Label") + ':', nuTranslate("Object") + ': ' + id, value, '', 'nuContextMenuLabelPromptCallback');
+	nuPrompt(nuTranslate("Label") + ':', caption, defaultValue, '', 'nuContextMenuLabelPromptCallback');
 
 }
 
@@ -1112,7 +1117,7 @@ function nuContextMenuAddTabPrompt() {
 
 	nuPrompt(
 		nuTranslate("Tab Name") + ':',
-		nuTranslate("Add new Tab"),
+		nuTranslate("Add Tab"),
 		nuTranslate('New Tab'),
 		'',
 		function (tabName, confirmed) {
@@ -1177,7 +1182,7 @@ function nuContextMenuCurrentTargetEditIdText() {
 	let t = $('#' + contextMenuCurrentTarget.id);
 
 	if (t.hasClass('nuTab')) {
-		return contextMenuCurrentTarget.id + ' (' + t.attr('data-nu-tab-id') + ')';
+		return t.attr('data-nu-org-label');
 	} else {
 		return id;
 	}
