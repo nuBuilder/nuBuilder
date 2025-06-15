@@ -42,6 +42,7 @@ function nuInitJSOptions() {
 
 function nuBuildForm(formObj) {
 
+	$('.nuSearchablePopup').remove();
 	nuInitJSOptions();
 
 	window.nuOnSetSelect2Options = null;		// can be overwritten by nuAddJavaScript()
