@@ -21,72 +21,72 @@
 }
 
 .nu_button {
-	background-color: #2563eb !important;
+	background-color: #1e53c6 !important;
 	color: #fff !important;
 }
 
 .nu_display {
-	background-color: #fdebd0 !important;
+	background-color: #f5d7a6 !important;
 }
 
 .nu_dropdown {
-	background-color: #b7f0d4 !important;
+	background-color: #9ed9bb !important;
 }
 
 .nu_html {
-	background-color: #f9cbcc !important;
+	background-color: #e6b2b3 !important;
 }
 
 .nu_contentbox {
-	background-color: #e4d4ce !important;
+	background-color: #cdbcb4 !important;
 }
 
 .nu_editor {
-	background-color: #d1c6f7 !important;
+	background-color: #b3a7e0 !important;
 }
 
 .nu_input {
-	background-color: #c0e5ff !important;
+	background-color: #9fcbe6 !important;
 }
 
 .nu_image {
-	background-color: #ffe6d1 !important;
+	background-color: #ffd1a3 !important;
 }
 
 .nu_word {
-	background-color: #a3dee5 !important;
+	background-color: #7fcad1 !important;
 }
 
 .nu_lookup {
-	background-color: #fcf3cf !important;
+	background-color: #f7e6a6 !important;
 }
 
 .nu_subform {
-	background-color: #d4efdf !important;
+	background-color: #b8dfc2 !important;
 }
 
 .nu_run {
-	background-color: #eaf7c6 !important;
+	background-color: #cbe6a1 !important;
 }
 
 .nu_textarea {
-	background-color: #d1e3f7 !important;
+	background-color: #a9c7e6 !important;
 }
 
 .nu_select {
-	background-color: #f1d8e4 !important;
+	background-color: #e3b8cb !important;
 }
 
 .nu_calc {
-	background-color: #ece7e7 !important;
+	background-color: #cfc7c7 !important;
 }
 
 .nu_Report {
-	background-color: #b3e5ea !important;
+	background-color: #8fd1d7 !important;
 }
 
 .nu_Procedure {
-	background-color: #c6f7e3 !important;
+	background-color: #a7e0c6 !important;
 }
 
 .nu_browseedit {
@@ -935,7 +935,7 @@ input[type=radio] {
 
 .nuTab:hover {
 	cursor: pointer;
-	background-color: var(--nu-edit-body);
+	background-color: #f5f5f5;
 }
 
 .nuTabSelected {
@@ -1113,7 +1113,7 @@ input[type=radio] {
 	background-color: #fafafa;
 	background-image: none;
 	color: var(--nu-label);
-	border-color: #d3d3d3;
+	border-color: #dbdbdb;
 	border-width: 0 0 1px;
 	margin: 0 0 8px 10px;
 	font-size: 12px;
@@ -1129,8 +1129,7 @@ input[type=radio] {
 }
 
 .nuAdminButton:not(.nuReadonly):hover {
-	background-color: #00ADEF;
-	color: white
+	background-color: #f5f5f5;
 }
 
 .nuAdminButtonUsed {
@@ -1790,7 +1789,7 @@ span.nuActionButton {
 	top: 20px;
 	height: 36px;
 	left: 10px;
-	width: 230px;
+	width: 180px;
 	font-size: larger;
 	font-weight: bolder
 }
