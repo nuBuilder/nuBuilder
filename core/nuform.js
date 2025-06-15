@@ -8228,13 +8228,19 @@ function nuSetCalendarOnTop() {
 
 }
 
-function nuTabSetMarkerIfData(tabId, fieldId) {
 
-	if (!tabId || !fieldId) return;
+function nuTabSetMarkerIfData(tabId, fieldIdOrFlag) {
+
+	if (!tabId || fieldIdOrFlag == null) return;
 
 	const tab = document.querySelector(`[data-nu-tab-id="${tabId}"]`);
-	const value = nuGetValue(fieldId).trim();
+	if (!tab) return;
 
-	tab.classList.toggle("nuTabMarker", value !== "");
+	const shouldMark =
+		typeof fieldIdOrFlag === 'boolean'
+			? fieldIdOrFlag
+			: String(nuGetValue(fieldIdOrFlag) || '').trim() !== '';
+
+	tab.classList.toggle('nuTabMarker', shouldMark);
 
 }
