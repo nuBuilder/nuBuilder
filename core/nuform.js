@@ -8229,7 +8229,7 @@ function nuSetCalendarOnTop() {
 }
 
 
-function nuTabSetMarkerIfData(tabId, fieldIdOrFlag) {
+function nuTabSetMarker(tabId, fieldIdOrFlag) {
 
 	if (!tabId || fieldIdOrFlag == null) return;
 
