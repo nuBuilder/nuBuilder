@@ -651,25 +651,16 @@ function nuSaveScrollPositions() {
 }
 
 function nuEvaluateOnLoadEvents(formType) {
-
+	
 	if (formType === 'browse') return;
 
-	const serverResponse = JSON.parse(JSON.stringify(nuSERVERRESPONSE));
-
-	for (const obj of serverResponse.objects) {
-		if (obj.js.length > 0) {
-			for (const jsEvent of obj.js) {
-				if (jsEvent.event === 'onnuload') {
-					let modifiedJS = jsEvent.js
-						.replaceAll('(this)', `("#${obj.id}")`)
-						.replaceAll('this.', `${obj.id}.`);
-
-					eval(modifiedJS);
-				}
-			}
-		}
+	for (const { id, js } of JSON.parse(JSON.stringify(nuSERVERRESPONSE)).objects) {
+		js.filter(e => e.event === 'onnuload').forEach(e => {
+			let modifiedJS = e.js.replaceAll('(this)', `("#${id}")`).replaceAll('this.', `${id}.`);
+			eval(modifiedJS);
+		});
 	}
-
+	
 }
 
 function nuDisplayLoggedInUser() {
