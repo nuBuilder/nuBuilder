@@ -271,7 +271,7 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 			}
 
 			nuResize();
-			editor.renderer.setScrollMargin(10, 0, 0, 10);
+			editor.renderer.setScrollMargin(10, 20, 0, 10);
 			editor.setValue(window.startValue);
 			editor.focus();
 			editor.navigateFileStart();
@@ -345,7 +345,7 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 			const toolbarHeight = document.querySelector('.toolbar').offsetHeight;
 			const editorContainer = document.getElementById('editor-container');
 			editorContainer.style.top = toolbarHeight + 'px';
-			editorContainer.style.height = (window.innerHeight - toolbarHeight) + 'px';
+			editorContainer.style.height = (window.innerHeight - toolbarHeight - 5) + 'px';
 		}
 
 		function nuAceBeautify() {
