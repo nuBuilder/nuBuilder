@@ -962,7 +962,6 @@ function nuContextMenuUpdateAction(action) {
 		nuContextMenuShowTabSelector(function (selectedTab) {
 			if (selectedTab) {
 				nuContextMenuUpdateObject(null, selectedTab, action);
-				return;
 			}
 		});
 
