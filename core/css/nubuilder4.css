@@ -1746,6 +1746,14 @@ input[type=radio] {
 	width: 100%
 }
 
+.nuTabMarker:after {
+	content: "\f00c";
+	font-family: "Font Awesome 6 Free";
+	font-weight: 900;
+	color: green;
+	margin-left: 5px;
+}
+
 #nuResponseTabs {
 	top: -5px;
 	left: 5px;

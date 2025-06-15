@@ -8227,3 +8227,14 @@ function nuSetCalendarOnTop() {
 	$innerDiv.css({ position: 'absolute', top: offset.top, left: offset.left });
 
 }
+
+function nuTabSetMarkerIfData(tabId, fieldId) {
+
+	if (!tabId || !fieldId) return;
+
+	const tab = document.querySelector(`[data-nu-tab-id="${tabId}"]`);
+	const value = nuGetValue(fieldId).trim();
+
+	tab.classList.toggle("nuTabMarker", value !== "");
+
+}
