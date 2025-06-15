@@ -2692,7 +2692,8 @@ function nuSetValue(id, value, method, change) {
 			obj.val(value);
 		}
 	} else if (obj.is(':checkbox') || obj.is(':radio')) {
-		if (change) obj.prop('checked', value).trigger("change");
+		obj.prop('checked', value);
+		if (change) obj.trigger("change");
 	} else if (obj.is('select') && method === 'text') {
 		$('#' + id + ' option').each(function () {
 			if ($(this).text().nuReplaceNonBreakingSpaces() === value) {
