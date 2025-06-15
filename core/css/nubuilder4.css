@@ -17,93 +17,93 @@
 }
 
 .nu_browse {
-	background-color: #8de2e2 !important
+	background-color: #cbe3ef !important;
 }
 
 .nu_button {
-	background-color: #98AFC7 !important
+	background-color: #2563eb !important;
+	color: #fff !important;
 }
 
 .nu_display {
-	background-color: #c79a63 !important
+	background-color: #e9dbc7 !important;
 }
 
 .nu_dropdown {
-	background-color: #7bce98 !important
+	background-color: #cfe7db !important;
 }
 
 .nu_html {
-	background-color: #df7bb9 !important
+	background-color: #f3cfe3 !important;
 }
 
 .nu_contentbox {
-	background-color: #43cbdd !important
+	background-color: #e3e8ee !important;
 }
 
 .nu_editor {
-	background-color: #918fd4 !important
+	background-color: #cfd3f7 !important;
 }
 
 .nu_input {
-	background-color: #8db3dd !important
+	background-color: #e5eaf1 !important;
 }
 
 .nu_image {
-	background-color: #c3998a !important
+	background-color: #f0e1cf !important;
 }
 
 .nu_word {
-	background-color: #68c994 !important
+	background-color: #cfeee0 !important;
 }
 
 .nu_lookup {
-	background-color: #EDDA74 !important
+	background-color: #fff6cc !important;
 }
 
 .nu_subform {
-	background-color: #f3b6b1 !important
+	background-color: #f3cccc !important;
 }
 
 .nu_run {
-	background-color: #cbc287 !important
+	background-color: #f0efc7 !important;
 }
 
 .nu_textarea {
-	background-color: #babedb !important
+	background-color: #e3e5f0 !important;
 }
 
 .nu_select {
-	background-color: #caa5f6 !important
+	background-color: #e3d1f7 !important;
 }
 
 .nu_calc {
-	background-color: #B6B6B4 !important
+	background-color: #e0e0e0 !important;
 }
 
 .nu_browseedit {
-	background-color: #a0a7d6 !important
+	background-color: #d3d5f7 !important;
 }
 
 .nu_edit {
-	background-color: #68c994 !important
+	background-color: #cfeee0 !important;
 }
 
 .nu_launch {
-	background-color: #dd6eb3 !important
+	background-color: #f3cfe3 !important;
 }
 
 .nu_Form {
-	background-color: #FABA74 !important
+	background-color: #ffd59a !important;
 }
 
 .nu_Report {
-	background-color: #62D3FF !important
+	background-color: #b3e5ea !important;
 }
 
 .nu_Procedure {
-	background-color: #9FD275 !important
+	background-color: #cfe7db !important;
 }
-
 
 /* noto-sans-regular - latin */
 @font-face {
