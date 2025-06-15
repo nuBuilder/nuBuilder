@@ -949,7 +949,6 @@ function nuContextMenuShowTabSelector(callback) {
 
 }
 
-
 function nuContextMenuUpdateAction(action) {
 
 	if (action === 'delete') {

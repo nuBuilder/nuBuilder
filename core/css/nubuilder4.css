@@ -17,7 +17,7 @@
 }
 
 .nu_browse {
-	background-color: #cbe3ef !important;
+	background-color: #b6e0fe !important;
 }
 
 .nu_button {
@@ -26,59 +26,67 @@
 }
 
 .nu_display {
-	background-color: #e9dbc7 !important;
+	background-color: #fdebd0 !important;
 }
 
 .nu_dropdown {
-	background-color: #cfe7db !important;
+	background-color: #b7f0d4 !important;
 }
 
 .nu_html {
-	background-color: #f3cfe3 !important;
+	background-color: #f9cbcc !important;
 }
 
 .nu_contentbox {
-	background-color: #e3e8ee !important;
+	background-color: #e4d4ce !important;
 }
 
 .nu_editor {
-	background-color: #cfd3f7 !important;
+	background-color: #d1c6f7 !important;
 }
 
 .nu_input {
-	background-color: #e5eaf1 !important;
+	background-color: #c0e5ff !important;
 }
 
 .nu_image {
-	background-color: #f0e1cf !important;
+	background-color: #ffe6d1 !important;
 }
 
 .nu_word {
-	background-color: #cfeee0 !important;
+	background-color: #a3dee5 !important;
 }
 
 .nu_lookup {
-	background-color: #fff6cc !important;
+	background-color: #fcf3cf !important;
 }
 
 .nu_subform {
-	background-color: #f3cccc !important;
+	background-color: #d4efdf !important;
 }
 
 .nu_run {
-	background-color: #f0efc7 !important;
+	background-color: #eaf7c6 !important;
 }
 
 .nu_textarea {
-	background-color: #e3e5f0 !important;
+	background-color: #d1e3f7 !important;
 }
 
 .nu_select {
-	background-color: #e3d1f7 !important;
+	background-color: #f1d8e4 !important;
 }
 
 .nu_calc {
-	background-color: #e0e0e0 !important;
+	background-color: #ece7e7 !important;
+}
+
+.nu_Report {
+	background-color: #b3e5ea !important;
+}
+
+.nu_Procedure {
+	background-color: #c6f7e3 !important;
 }
 
 .nu_browseedit {
@@ -95,14 +103,6 @@
 
 .nu_Form {
 	background-color: #ffd59a !important;
-}
-
-.nu_Report {
-	background-color: #b3e5ea !important;
-}
-
-.nu_Procedure {
-	background-color: #cfe7db !important;
 }
 
 /* noto-sans-regular - latin */
