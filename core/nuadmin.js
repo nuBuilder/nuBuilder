@@ -259,7 +259,6 @@ function nuAdminPreInspectRecordJS() {
 }
 
 function nuOpenContextMenu(event, menu, element) {
-	debugger;
 	event.stopPropagation();
 	ctxmenu.show(menu, element);
 }

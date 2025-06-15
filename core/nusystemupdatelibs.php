@@ -72,7 +72,8 @@ function nuAlterSystemTables() {
 		"ALTER TABLE `zzzzsys_prompt_generator` ADD `sph_template` VARCHAR(1) NULL DEFAULT NULL AFTER `pge_tag`;",
 		"ALTER TABLE `zzzzsys_prompt_generator` DROP `sph_template`;",
 		"ALTER TABLE `zzzzsys_prompt_generator` ADD `pge_instruction` VARCHAR(3000) NULL DEFAULT NULL AFTER `sph_template`;",
-		"ALTER TABLE `zzzzsys_item` ADD `itm_group` VARCHAR(100) NULL DEFAULT NULL AFTER `itm_description`;"
+		"ALTER TABLE `zzzzsys_item` ADD `itm_group` VARCHAR(100) NULL DEFAULT NULL AFTER `itm_description`;",
+		"ALTER TABLE `zzzzsys_note` ADD `not_text` longtext NULL DEFAULT NULL AFTER `not_content`;"
 	];
 
 	foreach ($alterTableSQL as $sqlStatement) {
