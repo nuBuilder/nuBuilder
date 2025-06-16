@@ -651,7 +651,7 @@ function nuSaveScrollPositions() {
 }
 
 function nuEvaluateOnLoadEvents(formType) {
-	
+
 	if (formType === 'browse') return;
 
 	for (const { id, js } of JSON.parse(JSON.stringify(nuSERVERRESPONSE)).objects) {
@@ -660,7 +660,7 @@ function nuEvaluateOnLoadEvents(formType) {
 			eval(modifiedJS);
 		});
 	}
-	
+
 }
 
 function nuDisplayLoggedInUser() {
