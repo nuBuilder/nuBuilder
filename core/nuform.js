@@ -4372,17 +4372,24 @@ function nuSelectTabById(id) {
 }
 
 function nuRemoveTabByTitle(title) {
+
 	const index = nuGetTabIndexByTitle(title);
 	if (index > -1) {
 		$('#nuTab' + index).remove();
 	}
+
+	nuSetHideTabIfOnlyOne();
+
 }
 
 function nuShowTabByTitle(title, visible) {
+
 	const index = nuGetTabIndexByTitle(title);
 	if (index > -1) {
 		nuShow('nuTab' + index, visible);
 	}
+	nuSetHideTabIfOnlyOne();
+
 }
 
 function nuRemoveTabs(t) {
@@ -4390,6 +4397,8 @@ function nuRemoveTabs(t) {
 	for (let i = 0; i < arguments.length; i++) {
 		$('#nuTab' + arguments[i]).remove();
 	}
+
+	nuSetHideTabIfOnlyOne();
 
 }
 
@@ -4401,6 +4410,8 @@ function nuRemoveTabById(id) {
 	} else {
 		$('div[data-nu-tab-id=' + id + ']').filter('.nuTab').remove();
 	}
+
+	nuSetHideTabIfOnlyOne();
 
 }
 
@@ -4416,6 +4427,8 @@ function nuShowTabById(id, visible) {
 	} else {
 		$('div[data-nu-tab-id=' + id + ']').filter('.nuTab').nuShow(visible);
 	}
+
+	nuSetHideTabIfOnlyOne();
 
 }
 
