@@ -307,10 +307,26 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 			const languageMode = nuGetAceLanguageMode(language);
 
 			if (languageMode) {
-				const { mode } = languageMode;
-				editor.getSession().setMode({ path: `ace/mode/${mode}`, inline: true });
-			}
 
+				const { mode } = languageMode;
+				editor.getSession().setMode({
+					path: `ace/mode/${mode}`,
+					inline: true
+				});
+
+				if (language === 'CSS') {
+					const DISABLED_RULES = ['important'];
+
+					function configureCSSLintWorker() {
+						if (editor.session.$worker) {
+							editor.session.$worker.call('setDisabledRules', [DISABLED_RULES.join('|')]);
+						}
+					}
+					editor.session.on('changeMode', configureCSSLintWorker);
+					configureCSSLintWorker();
+				}
+
+			}
 			document.getElementById('nu_language').innerHTML =
 				window.nuACELanguage === window.nuACEObjectLabel
 					? window.nuACEObjectLabel
