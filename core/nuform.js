@@ -1097,8 +1097,9 @@ function nuActionButtonsToggleVisibility() {
 
 	if (!addButton || !printButton) return;
 
-	const printButtonAligned = addButton.offsetTop === nuSearchField.offsetTop;
-	const addButtonAligned = addButton.offsetTop === nuSearchField.offsetTop;
+	const tolerance = 5;
+	const printButtonAligned = Math.abs(addButton.offsetTop - nuSearchField.offsetTop) <= tolerance;
+	const addButtonAligned = Math.abs(addButton.offsetTop - nuSearchField.offsetTop) <= tolerance;
 
 	printButton.style.display = printButtonAligned ? '' : 'none';
 	addButton.style.display = addButtonAligned ? '' : 'none';
