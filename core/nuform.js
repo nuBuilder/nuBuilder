@@ -4585,6 +4585,8 @@ function nuResizeBrowseColumns(force) {
 
 	}
 
+	nuTogglePaginationInfo();
+
 }
 
 function nuSetBrowseColumns(columnWidths) {
@@ -4704,6 +4706,8 @@ function nuDragBrowseColumn(e, p) {
 			}
 
 		}
+
+		nuTogglePaginationInfo();
 
 	}
 
@@ -7223,10 +7227,15 @@ function nuShowBrowsePaginationInfo(f) {
 
 		const p = f.nuFormat({ StartRow: startRow, EndRow: endRow, TotalRows: totalRows });
 
-		$('#nuBrowseFooter').append('<span class="nuPaginationInfo">' + p + '</span>');
+		$('#nuBrowseFooter').append('<span class="nuPaginationInfo" id="nuPaginationInfo">' + p + '</span>');
 
+		nuTogglePaginationInfo();
 	}
 
+}
+
+function nuTogglePaginationInfo() {
+	nuShow('nuPaginationInfo', $('#nuBrowseFooter').nuCSSNumber('width') > 335);
 }
 
 function nuPrintEditForm(hideObjects, showObjects) {
@@ -8255,3 +8264,4 @@ function nuTabSetMarker(tabId, fieldIdOrFlag) {
 	tab.classList.toggle('nuTabMarker', shouldMark);
 
 }
+
