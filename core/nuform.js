@@ -19,7 +19,7 @@ function nuInitJSOptions() {
 		'nuSelect2Theme': 'default',			// select2 theme (default, classic) Default: default
 		'nuEditCloseAfterSave': 'None',			// Close forms after saving. Values: none, All, User, System
 		'nuShowJSErrors': 'None',				// Show JS errors in alert message
-		'nuHideTabTitleIfOnlyOne': 'None',		// Hide tab title if only one tab. Values: None, globeadmin, user, everyone
+		'nuHideTabTitleIfOnlyOne': 'None',		// Hide tab title if only one tab. Values: none, globeadmin, user, everyone
 		'nuShowURLPermaLink': false,			// Show URL permalink
 		'nuDebugIcon': true,
 		'nuPHPIcon': true,
@@ -369,7 +369,7 @@ function nuInitShowJSErrors() {
 
 function nuSetHideTabIfOnlyOne() {
 
-	if (window.nuUXOptions.nuHideTabTitleIfOnlyOne && $('.nuTab').length === 1) {
+	if (window.nuUXOptions.nuHideTabTitleIfOnlyOne && $('.nuTab:visible').length === 1) {
 
 		const nuHideTabTitleIfOnlyOne = window.nuUXOptions.nuHideTabTitleIfOnlyOne;
 		let hideTab = false;
