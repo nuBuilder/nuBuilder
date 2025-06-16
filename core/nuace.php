@@ -427,30 +427,37 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 		}
 
 		function nuAceSave(close) {
+
 			window.nuWarn = 0;
-			if (!opener.window.document.getElementById(window.nuACEObjectId)) {
+			const opDoc = opener.window.document;
+			const aceElem = opDoc.getElementById(window.nuACEObjectId);
+
+			if (!aceElem) {
 				alert('The opening Form is no longer available.');
 				return;
 			}
+
 			nuSetEdited(false);
-			opener.window.document.getElementById(window.nuACEObjectId).value = editor.getValue();
-			if ("createEvent" in document) {
-				var evt = document.createEvent("HTMLEvents");
-				evt.initEvent("change", false, true);
-				opener.window.document.getElementById(window.nuACEObjectId).dispatchEvent(evt);
+			aceElem.value = editor.getValue();
+
+			if ('createEvent' in document) {
+				const evt = document.createEvent('HTMLEvents');
+				evt.initEvent('change', false, true);
+				aceElem.dispatchEvent(evt);
 			} else {
-				opener.window.document.getElementById(window.nuACEObjectId).fireEvent("onchange");
+				aceElem.fireEvent('onchange');
 			}
-			if (document.getElementById('btn_save_on_apply_checkbox').checked) {
-				window.opener.nuSaveAction();
+
+			const checkbox = document.getElementById('btn_save_on_apply_checkbox');
+			if (checkbox.checked) {
+				opener.window.nuSaveAction();
 				if (!close) showSavedIndicator();
 			}
-			if (close) {
-				window.close();
-			} else {
-				nuRemoveButtonBgColor();
-			}
+
+			close ? window.close() : nuRemoveButtonBgColor();
+
 		}
+
 
 		function nuRemoveButtonBgColor() {
 			$('#btn_save_close').css('background-color', '');
