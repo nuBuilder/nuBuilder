@@ -930,7 +930,7 @@ input[type=radio] {
 	font-family: 'Segoe UI', sans-serif;
 	cursor: pointer;
 	transition: background-color 0.2s ease-in-out;
-	border-radius: 3px;
+	border-radius: 5px 5px 0 0
 }
 
 .nuTab:hover {
