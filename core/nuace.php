@@ -261,6 +261,7 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 			if ($('#' + window.nuACEObjectId, window.opener.document)[0].id == 'deb_message') {
 				$('#btn_save_close').remove();
 				$('#btn_save').remove();
+				$('.btn-toggle').remove();
 			} else {
 				let btnSaveClose = document.getElementById('btn_save_close');
 				btnSaveClose.value = 'Apply & Close';
