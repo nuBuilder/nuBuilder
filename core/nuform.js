@@ -763,6 +763,7 @@ function nuCSSPropertySum(id, arr) {
 }
 
 function nuDialogHeadersHeight() {
+
 	let height = 0;
 	const arr = [
 		"nuBreadcrumbHolder",
@@ -776,6 +777,7 @@ function nuDialogHeadersHeight() {
 	});
 
 	return height;
+
 }
 
 function nuTotalHeight(id) {
@@ -4796,11 +4798,11 @@ function nuBrowseTable() {
 		}
 	}
 
-	nuBrowseCreateFooter(currentForm, topOffset, leftOffset, rowHeight);
+	const footerHeight = nuBrowseCreateFooter(currentForm, topOffset, leftOffset, rowHeight);
 
 	nuHighlightSearch();
 	nuBrowseBorders();
-	nuBrowseUpdateParentDocumentStyles(topOffset + rowHeight + 140);
+	nuBrowseUpdateParentDocumentStyles(topOffset + footerHeight + nuTotalHeight('nuActionHolder') + 120);
 
 }
 
@@ -4883,6 +4885,8 @@ function nuBrowseCreateFooter(currentForm, topOffset, leftOffset, rowHeight) {
 		});
 
 	nuBrowseAdditionalNavButtons();
+
+	return nuTotalHeight('nuBrowseFooter');
 
 }
 
