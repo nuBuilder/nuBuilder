@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 16, 2025 at 01:31 PM
+-- Generation Time: Jun 17, 2025 at 06:07 AM
 -- Server version: 8.2.0
 -- PHP Version: 8.3.4
 
@@ -123,7 +123,7 @@ INSERT INTO `zzzzsys_browse` (`zzzzsys_browse_id`, `sbr_zzzzsys_form_id`, `sbr_t
 ('nu5bad6cb37505eea', 'nuobject', 'Form', 'sfo_description', 'l', '', 60, 210, NULL),
 ('nu5bad6cb37547640', 'nuobject', 'Tab', 'syt_title', 'l', '', 70, 135, NULL),
 ('nu5bad6cb375a3782', 'nuobject', 'Object', 'sob_all_id', 'l', '', 30, 235, NULL),
-('nu5bad6cb375afa75', 'nuobject', 'Type', 'sob_all_type', 'l', '', 10, 110, NULL),
+('nu5bad6cb375afa75', 'nuobject', 'Type', 'sob_all_type', 'l', '', 10, 120, NULL),
 ('nu5bad6cb375bd72e', 'nuobject', 'Label', 'sob_all_label', 'l', '', 50, 180, NULL),
 ('nu5bad6cb375c8f2a', 'nutab', 'Type', 'sfo_type', 'l', '', 40, 100, NULL),
 ('nu5bad6cb375d23fd', 'nunonsystemform', 'Code', 'sfo_code', 'l', '', 20, 150, NULL),
@@ -166,7 +166,7 @@ INSERT INTO `zzzzsys_browse` (`zzzzsys_browse_id`, `sbr_zzzzsys_form_id`, `sbr_t
 ('nu5bad6cb3772dd22', 'nutranslate', 'Language', 'trl_language', 'l', '', 10, 140, NULL),
 ('nu5bad6cb37737185', 'nutranslate', 'English', 'trl_english', 'l', '', 20, 345, NULL),
 ('nu5bad6cb377406bb', 'nutranslate', 'Translation', 'trl_translation', 'l', '', 30, 430, NULL),
-('nu5bad6cb37749ba7', 'nucalcobjects', 'object.subform', 'CONCAT(thechild,IF(theparent = \'\',\'\',\'.\'),theparent)', 'c', '', 10, 200, NULL),
+('nu5bad6cb37749ba7', 'nucalcobjects', 'object.subform', 'CONCAT(thechild,IF(theparent = \'\',\'\',\'.\'),theparent)', 'c', '', 10, 250, NULL),
 ('nu5bad6cb377531c6', 'nucalcobjects', ' ', 'theform', 'l', '', 30, 0, NULL),
 ('nu5bad6cb37765e82', 'nucalcobjects', ' ', 'thevalue', 'l', '', 40, 2, NULL),
 ('nu5bad6cb3777c5ee', 'nucalcobjects', 'Object', 'thechild', 'l', '', 20, 0, NULL),
@@ -178,11 +178,11 @@ INSERT INTO `zzzzsys_browse` (`zzzzsys_browse_id`, `sbr_zzzzsys_form_id`, `sbr_t
 ('nu5bad6cb377c33ea', 'nufile', 'Code', 'sfi_code', 'l', '', 10, 200, NULL),
 ('nu5bad6cb377d2981', 'nufile', 'Description', 'sfi_description', 'l', '', 20, 300, NULL),
 ('nu5bad6cb3781d394', 'nufile', 'JSON', 'sfi_json', 'l', '', 30, 0, NULL),
-('nu5bad6cb3783715c', 'nufile', 'Image', 'NULL', 'c', '', 40, 200, NULL),
+('nu5bad6cb3783715c', 'nufile', 'Image', 'NULL', 'c', '', 40, 300, NULL),
 ('nu5bad6cb37849637', 'nufile', 'Group', 'sfi_group', 'l', '', 50, 150, NULL),
-('nu5bad6cb3786de92', 'nuselect', 'Description', 'sse_description', 'l', '', 20, 1180, NULL),
-('nu5bad6cb3787ca71', 'nulaunchable', 'Type', 'sfo_type', 'l', '', 10, 80, NULL),
-('nu5bad6cb37889036', 'nulaunchable', 'Code', 'sfo_code', 'l', '', 20, 100, NULL),
+('nu5bad6cb3786de92', 'nuselect', 'Description', 'sse_description', 'l', '', 20, 600, NULL),
+('nu5bad6cb3787ca71', 'nulaunchable', 'Type', 'sfo_type', 'l', '', 10, 100, NULL),
+('nu5bad6cb37889036', 'nulaunchable', 'Code', 'sfo_code', 'l', '', 20, 240, NULL),
 ('nu5bad6cb3789662e', 'nulaunchable', 'Description', 'sfo_description', 'l', '', 30, 400, NULL),
 ('nu5bad6cb378aa4cf', 'nulaunchable', 'Table', 'sfo_table', 'l', '', 40, 200, NULL),
 ('nu5bad6cb378b79f4', 'nudebug', 'When', 'deb_added', 'l', '', 30, 130, NULL),
@@ -217,7 +217,7 @@ INSERT INTO `zzzzsys_browse` (`zzzzsys_browse_id`, `sbr_zzzzsys_form_id`, `sbr_t
 ('nu5fe179294648601', 'nuform', ' ', 'null', 'l', '', 10, 50, NULL),
 ('nu5fed7ae8d82586a', 'nuobjectgrid', 'Code', 'sfo_code', 'l', '', 10, 250, NULL),
 ('nu5ff0df492665285', 'nuaccess', 'Home', 'sfo_code', 'l', '', 40, 300, NULL),
-('nu60fd004179b7f95', 'nuselect', 'Code', 'sse_code', 'l', '', 10, 545, NULL),
+('nu60fd004179b7f95', 'nuselect', 'Code', 'sse_code', 'l', '', 10, 300, NULL),
 ('nu61bb9991f1c4d45', 'nudebug', 'User', 'IFNULL(sus_name, deb_user_id)', 'l', '', 40, 170, NULL),
 ('nu61d7d0231fff5c5', 'nuaccess', 'Group', 'sal_group', 'l', NULL, 30, 280, NULL),
 ('nu635294e972c14ef', 'nuemailtemplate', 'Description', 'emt_description', 'l', '', 90, 270, NULL),
@@ -920,8 +920,8 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`, `inf_json`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.8-2025.06.16.02', NULL),
-('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.8-2025.06.16.10', NULL);
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.8-2025.06.17.00', NULL),
+('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.8-2025.06.17.02', NULL);
 
 -- --------------------------------------------------------
 
