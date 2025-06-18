@@ -21,6 +21,7 @@ function nuInitJSOptions() {
 		'nuShowJSErrors': 'None',				// Show JS errors in alert message
 		'nuHideTabTitleIfOnlyOne': 'None',		// Hide tab title if only one tab. Values: none, globeadmin, user, everyone
 		'nuShowURLPermaLink': false,			// Show URL permalink
+		'nuPrintButton': false,
 		'nuDebugIcon': true,
 		'nuPHPIcon': true,
 		'nuRefreshIcon': true,
@@ -1103,7 +1104,7 @@ function nuActionButtonsToggleVisibility() {
 	const printButtonAligned = Math.abs(addButton.offsetTop - nuSearchField.offsetTop) <= tolerance;
 	const addButtonAligned = Math.abs(addButton.offsetTop - nuSearchField.offsetTop) <= tolerance;
 
-	printButton.style.display = printButtonAligned ? '' : 'none';
+	printButton.style.display = (nuUXOptions.nuPrintButton !== false && printButtonAligned) ? '' : 'none';
 	addButton.style.display = addButtonAligned ? '' : 'none';
 
 }
