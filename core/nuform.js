@@ -988,7 +988,7 @@ function nuAddActionButton(id, value, func, title, icon, insertAfterElement) {
 			iconBaseClass: 'fa-solid'
 		},
 		BuildFastReport: {
-			value: 'Build Fast Reoprt',
+			value: 'Build Fast Report',
 			func: 'nuRunPHPHidden("RUNFR", true)',
 			text: '',
 			iconSuffix: 'fa-bolt',
