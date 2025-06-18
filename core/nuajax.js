@@ -1,4 +1,4 @@
-function nuAjax(w, successCallback, errorCallback) {
+function nuAjax(w, successCallback, errorCallback, completeCallback) {
 
 	try {
 		const data = JSON.stringify(nuAddEditFieldsToHash(w));
@@ -19,12 +19,17 @@ function nuAjax(w, successCallback, errorCallback) {
 				if (showError) {
 					nuAjaxShowError(jqXHR, errorThrown);
 				}
+			})
+			.always((jqXHRorData, textStatus, jqXHRorError) => {
+				if (typeof completeCallback === "function") {
+					completeCallback(jqXHRorData, textStatus, jqXHRorError);
+				}
 			});
 
 	} catch (error) {
 		console.error('nuAjax Error:', error);
 	}
-
+	
 }
 
 function nuAjaxShowError(jqXHR, errorThrown) {
