@@ -1034,6 +1034,12 @@ function nuAddActionButton(id, value, func, title, icon, insertAfterElement) {
 
 	}
 
+	if (nuFormType() !== 'browse' && $('.nuActionButton').length === 0 && $('.nuAdminButton').length === 0) {
+		if (nuTotalHeight('nuActionHolder') < 70) {
+			$('.nuActionHolder').css('height', '70')
+		}
+	}
+
 	if (typeof value === 'object') {
 		value = nuUseMobileView() ? value.valueMobile : nuTranslate(nuDefine('value'));
 	} else {
@@ -1048,7 +1054,6 @@ function nuAddActionButton(id, value, func, title, icon, insertAfterElement) {
 	}
 
 	const elementId = "nu" + id + "Button";
-
 	let html = `<button id="${elementId}" type="button" class="${nuClass}"
 						 title="${title}">${value}</button>`;
 
