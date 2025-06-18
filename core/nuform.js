@@ -395,7 +395,6 @@ function nuUpdateDebugButtonTitle() {
 		.attr("title", title);
 }
 
-
 function nuInitShowJSErrors() {
 
 	if (window.nuUXOptions.nuShowJSErrors) {
@@ -1013,7 +1012,7 @@ function nuAddActionButton(id, value, func, title, icon, insertAfterElement) {
 			value: '',
 			func: 'nuPrintAction()',
 			text: '',
-			iconSuffix: 'fa-table-list',
+			iconSuffix: 'fa-list-ul',
 			iconBaseClass: 'fa-solid'
 		},
 		Back: {
@@ -4133,7 +4132,7 @@ function nuGetOptionsList(formId, subformId, globalAccess, type) {
 		FormObjectList: ['Form Object List', `nuOptionsListAction("nuobject", "", "${formId}")`, 'fa-th-list', 'O'],
 		Search: ['Search', 'nuSearchAction()', 'fas fa-search', 'S'],
 		Add: ['Add', 'nuAddAction()', 'fas fa-plus', 'A'],
-		Print: ['Print', 'nuPrintAction()', 'fas fa-print', 'P'],
+		Print: ['Print', 'nuPrintAction()', 'fa fa-list-ul', 'P'],
 		Save: ['Save', 'nuSaveAction()', 'far fa-save', 'S'],
 		Delete: ['Delete', 'nuDeleteAction()', 'far fa-trash-alt', 'Y'],
 		Clone: ['Clone', 'nuCloneAction()', 'far fa-clone', 'C'],
@@ -4143,7 +4142,7 @@ function nuGetOptionsList(formId, subformId, globalAccess, type) {
 		DebugResults: ['nuDebug Results', 'nuOptionsListAction("nudebug","")', 'fa-bug', 'D'],
 		Database: ['Database', 'nuVendorLogin("PMA")', 'fa-database', 'E'],
 		Sessions: ['Sessions', 'nuForm("nusession","","", "", 2)', 'fas fa-key', 'J'],
-		Cloner: ['Cloner', 'nuPopup("nucloner","-1")', 'far fa-clone fa-fw', 'Z'],
+		Cloner: ['Cloner', 'nuPopup("nucloner","-1")', 'far fa-clone', 'Z'],
 		FileManager: ['File Manager', 'nuVendorLogin("TFM")', 'far fa-file-code', 'Q'],
 		Backup: ['Backup', 'nuRunBackup()', 'far fa-hdd', 'B'],
 		Setup: ['Setup', 'nuForm("nusetup","1","", "", 2)', 'fa-cogs', 'U'],
@@ -4238,6 +4237,7 @@ function nuBuildOptionsList(items, parentId, contextType) {
 	}, 0);
 
 	items.forEach(([text, action, iconCls, shortcut], idx) => {
+		iconCls += ' fa-fw';
 		const topPos = TITLE_HEIGHT + idx * ITEM_HEIGHT;
 		const isDivider = (text === '');
 		const handler = (typeof action === 'function')
