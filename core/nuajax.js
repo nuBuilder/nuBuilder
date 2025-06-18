@@ -29,7 +29,7 @@ function nuAjax(w, successCallback, errorCallback, completeCallback) {
 	} catch (error) {
 		console.error('nuAjax Error:', error);
 	}
-	
+
 }
 
 function nuAjaxShowError(jqXHR, errorThrown) {
@@ -354,7 +354,11 @@ function nuRunPHP(code, iFrame = '', runBeforeSave = false) {
 
 	};
 
-	nuAjax(last, successCallback);
+	const completeCallback = function () {
+		nuUpdateDebugButtonTitle();
+	};
+
+	nuAjax(last, successCallback, null, completeCallback);
 
 }
 
@@ -392,18 +396,20 @@ function nuRunPHPHidden(code, options = null) {
 	last.nuFORMdata = nuFORM.data();
 	last.hash = nuHashFromEditForm();
 
-	var successCallback = function (data, _textStatus, _jqXHR) {
+	const successCallback = function (data, _textStatus) {
 
 		var fm = data;
-
 		if (nuDisplayError(fm)) { return; };
-
 		window.nuSERVERRESPONSE_HIDDEN = fm;
 		eval(fm.callback + ';');
 
 	};
 
-	nuAjax(last, successCallback);
+	const completeCallback = function () {
+		nuUpdateDebugButtonTitle();
+	};
+
+	nuAjax(last, successCallback, null, completeCallback);
 
 }
 

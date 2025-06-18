@@ -1904,10 +1904,10 @@ function nuSendEmailEx($args, $emailLogOptions) {
 function nuUser($userId = null) {
 
 	$query = "
-        SELECT *
-        FROM zzzzsys_user
-        WHERE zzzzsys_user_id = ?
-    ";
+		SELECT *
+		FROM zzzzsys_user
+		WHERE zzzzsys_user_id = ?
+	";
 
 	$idToFetch = ($userId === null) ? nuHash()['USER_ID'] : $userId;
 
@@ -2812,3 +2812,50 @@ function nuGetSelectType($processedSql) {
 	}
 
 }
+function nuGetLastDebugMessages() {
+
+	$sql = "
+		SELECT
+			d.deb_message,
+			IFNULL(u.sus_name,'globeadmin') as sus_name
+		FROM
+			zzzzsys_debug d
+		LEFT JOIN
+			zzzzsys_user u ON d.deb_user_id = u.zzzzsys_user_id
+		ORDER BY
+			d.deb_added DESC
+		LIMIT 4
+	";
+
+	$result = nuRunQuery($sql);
+	$messages = [];
+
+	while ($row = db_fetch_array($result)) {
+		$fullMessage = $row['deb_message'];
+		$firstLine = strtok($fullMessage, "\n");
+		$timestampStr = substr($firstLine, 0, 19);
+		$messageText = substr($firstLine, 22);
+
+		$snippet = '';
+		$colonPos = strpos($fullMessage, ':');
+		if ($colonPos !== false) {
+			$afterColon = substr($fullMessage, $colonPos + 1);
+			$afterColonNoBreaks = preg_replace('/\s+/', ' ', $afterColon);
+			$snippet = substr(trim($afterColonNoBreaks), 0, 180) . '...';
+		}
+
+		$messages[] = [
+			'timestamp_from_message' => $timestampStr,
+			'where' => $messageText,
+			'user' => $row['sus_name'],
+			'message' => $snippet
+		];
+	}
+
+	return json_encode(
+		$messages,
+		JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP
+	);
+
+}
+

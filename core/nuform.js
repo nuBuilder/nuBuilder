@@ -244,7 +244,7 @@ function nuBuildForm(formObj) {
 	const globalAccess = nuGlobalAccess();
 	if (globalAccess) {
 		nuContextMenuUpdate();
-		nuUpdateDebugButton();
+		nuUpdateDebugButtonTitle();
 	}
 
 	nuSetSaved(true);
@@ -335,14 +335,31 @@ function nuEditDoCloseAfterSave(formObj) {
 
 }
 
-function nuUpdateDebugButton() {
+function nuDebugLastMessages() {
 
-	const debugMessages = nuSERVERRESPONSE && nuSERVERRESPONSE.nu_debug;
+	if (!nuSERVERRESPONSE || !nuSERVERRESPONSE.nu_debug_last) {
+		return '';
+	}
+	const debugMessages = JSON.parse(nuSERVERRESPONSE.nu_debug_last);
+	return debugMessages.map(item =>
+		`User: ${item.user}\nTimestamp: ${item.timestamp_from_message}\nWhere: ${item.where}\nMessage: ${item.message}`
+	).join('\n\n');
+
+}
+
+function nuUpdateDebugButtonTitle() {
+
+	if (!nuGlobalAccess()) return;
+
+	const debugMessages = nuSERVERRESPONSE?.nu_debug;
+	const lastMessages = nuDebugLastMessages();
 
 	if (Array.isArray(debugMessages) && debugMessages.length > 0) {
 		$("#nuDebugButton")
 			.addClass("nuDebugButtonHighlight")
-			.attr("title", debugMessages.join(" "));
+			.attr("title", debugMessages.join(" ") + '\n' + lastMessages);
+	} else {
+		$("#nuDebugButton").attr("title", lastMessages);
 	}
 
 }
