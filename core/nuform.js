@@ -353,16 +353,48 @@ function nuUpdateDebugButtonTitle() {
 
 	const debugMessages = nuSERVERRESPONSE?.nu_debug;
 	const lastMessages = nuDebugLastMessages();
+	let title = nuTranslate("No messages");
 
 	if (Array.isArray(debugMessages) && debugMessages.length > 0) {
-		$("#nuDebugButton")
-			.addClass("nuDebugButtonHighlight")
-			.attr("title", debugMessages.join(" ") + '\n' + lastMessages);
+		$("#nuDebugButton").addClass("nuDebugButtonHighlight");
+		title = debugMessages.join(" ");
+
 	} else {
-		$("#nuDebugButton").attr("title", lastMessages);
+		title = lastMessages;
 	}
 
+	$("#nuDebugButton").attr("title", title);
+
 }
+
+function nuUpdateDebugButtonTitle() {
+
+	if (!nuGlobalAccess()) return;
+
+	const debugMessages = nuSERVERRESPONSE?.nu_debug;
+	const lastMessages = nuDebugLastMessages();
+
+	let titleParts = [];
+
+	if (Array.isArray(debugMessages) && debugMessages.length > 0) {
+		titleParts.push(debugMessages.join(" "));
+	}
+
+	if (lastMessages) {
+		titleParts.push(lastMessages);
+	}
+
+	let title = titleParts.join('\n').trim();
+
+	if (!title) {
+		title = "No messages";
+	}
+
+	$("#nuDebugButton")
+		.toggleClass("nuDebugButtonHighlight", Array.isArray(debugMessages) && debugMessages.length > 0)
+		.attr("title", title);
+}
+
 
 function nuInitShowJSErrors() {
 

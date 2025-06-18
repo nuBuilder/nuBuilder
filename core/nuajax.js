@@ -20,9 +20,9 @@ function nuAjax(w, successCallback, errorCallback, completeCallback) {
 					nuAjaxShowError(jqXHR, errorThrown);
 				}
 			})
-			.always((jqXHRorData, textStatus, jqXHRorError) => {
+			.always((jqXHR, textStatus, errorThrown) => {
 				if (typeof completeCallback === "function") {
-					completeCallback(jqXHRorData, textStatus, jqXHRorError);
+					completeCallback(jqXHR, textStatus, errorThrown);
 				}
 			});
 
