@@ -1110,27 +1110,31 @@ input[type=radio] {
 }
 
 .nuAdminButton {
-	margin-bottom: 15px !important;
-	background-color: #fafafa;
-	background-image: none;
-	color: var(--nu-label);
-	border-color: #dbdbdb;
-	border-width: 0 0 1px;
 	margin: 0 0 8px 10px;
-	font-size: 12px;
+	padding: 0 6px;
 	height: 20px;
-	text-shadow: none;
+	font-size: 12px;
+	color: var(--nu-label);
+	background: #fafafa;
+	border: none;
+	border-bottom: 1px solid #dbdbdb;
 	border-radius: 3px;
-	padding: 0 6px
-}
-
-.nuAdminButton:not(.nuReadonly):active {
-	background-color: #096341 ! important;
-	transform: scale(0.90);
+	text-shadow: none;
+	background-image: none;
+	outline: none
 }
 
 .nuAdminButton:not(.nuReadonly):hover {
 	background-color: #f5f5f5;
+}
+
+.nuAdminButton:not(.nuReadonly):active {
+	background-color: #e7f3ea;
+	transform: scale(0.90);
+}
+
+.nuAdminButton:focus-visible {
+	outline: none
 }
 
 .nuAdminButtonUsed {
