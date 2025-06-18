@@ -2826,36 +2826,32 @@ function nuGetLastDebugMessages() {
 			d.deb_added DESC
 		LIMIT 4
 	";
-
 	$result = nuRunQuery($sql);
 	$messages = [];
-
 	while ($row = db_fetch_array($result)) {
 		$fullMessage = $row['deb_message'];
 		$firstLine = strtok($fullMessage, "\n");
 		$timestampStr = substr($firstLine, 0, 19);
 		$messageText = substr($firstLine, 22);
-
 		$snippet = '';
-		$colonPos = strpos($fullMessage, ':');
-		if ($colonPos !== false) {
-			$afterColon = substr($fullMessage, $colonPos + 1);
-			$afterColonNoBreaks = preg_replace('/\s+/', ' ', $afterColon);
-			$snippet = substr(trim($afterColonNoBreaks), 0, 180) . '...';
+		$lines = explode("\n", $fullMessage);
+		if (count($lines) >= 5 && strlen($lines[4]) >= 5) {
+			$textFromFifthLine = substr($lines[4], 4);
+			$remainingLines = array_slice($lines, 5);
+			$fullText = $textFromFifthLine . (empty($remainingLines) ? '' : "\n" . implode("\n", $remainingLines));
+			$fullTextNoBreaks = preg_replace('/\s+/', ' ', $fullText);
+			$snippet = substr(trim($fullTextNoBreaks), 0, 180) . '...';
 		}
-
 		$messages[] = [
 			'timestamp_from_message' => $timestampStr,
-			'where' => $messageText,
+			'where' => strip_tags($messageText),
 			'user' => $row['sus_name'],
-			'message' => $snippet
+			'message' => strip_tags($snippet)
 		];
 	}
-
 	return json_encode(
 		$messages,
 		JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP
 	);
 
 }
-
