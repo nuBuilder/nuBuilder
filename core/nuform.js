@@ -1082,7 +1082,7 @@ function nuAddActionButton(id, value, func, title, icon, insertAfterElement) {
 
 	}
 
-	if (nuFormType() !== 'browse' && $('.nuActionButton').length === 0 && $('.nuAdminButton').length === 0) {
+	if (nuSERVERRESPONSE.form_type === 'launch' && $('.nuActionButton').length === 0 && $('.nuAdminButton').length === 0) {
 		if (nuTotalHeight('nuActionHolder') < 70) {
 			$('.nuActionHolder').css('height', '70')
 		}
