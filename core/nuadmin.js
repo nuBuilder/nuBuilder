@@ -214,7 +214,7 @@ function nuAddAdminButtons() {
 		if (isLaunch) heightToAdd = 5;
 		$('#nuActionHolder').css('height', `+=${heightToAdd}px`);
 		const lastAdminButton = $('.nuAdminButton').last();
-		$('<p style="display:block; margin:0px; user-select:none;"></p>').insertAfter(lastAdminButton);
+		$('<p style="display:block; margin-bottom: 4px; user-select:none;"></p>').insertAfter(lastAdminButton);
 
 	}
 
