@@ -223,6 +223,7 @@ function nuBuildForm(formObj) {
 			$('.nuBuilderLink').remove();
 		}
 
+
 	nuInitSetBrowseWidthHelper();
 
 	if (window.nuMESSAGES.length > 0) {
@@ -240,7 +241,8 @@ function nuBuildForm(formObj) {
 	nuProcessAfterSave();
 
 	nuAddFormStyle(formObj.style);
-
+	nuSetBrowseHeight();
+	
 	const globalAccess = nuGlobalAccess();
 	if (globalAccess) {
 		nuContextMenuUpdate();
@@ -790,8 +792,8 @@ function nuSetBody(f) {
 
 		var height = f.dimensions === null ? 0 : f.dimensions.edit.height;
 		$body.addClass('nuEditBody')
-			.css('width', window.innerWidth - 1)
-			.css('height', height);
+			.css('width', window.innerWidth - 1);
+		//	.css('height', height);
 
 	}
 
@@ -4853,12 +4855,25 @@ function nuBrowseTable() {
 		}
 	}
 
+
 	const footerHeight = nuBrowseCreateFooter(currentForm, topOffset, leftOffset, rowHeight);
 
 	nuHighlightSearch();
 	nuBrowseBorders();
-	nuBrowseUpdateParentDocumentStyles(topOffset + footerHeight + nuTotalHeight('nuActionHolder') + 120);
 
+}
+
+function nuSetBrowseHeight() {
+	
+	const cellsHeight = nuTotalHeight('nucell_0_0') * nuCurrentProperties().row_height;
+	const footerHeight = nuTotalHeight('nuBrowseFooter');
+	const dialogTitleHeight = $('#dialogTitle', window.parent.document.body).nuCSSNumber('height');
+	const actionHolderHeight = nuTotalHeight('nuActionHolder');
+	const BreadcrumbOlderHeight = nuTotalHeight('nuBreadcrumbHolder');
+	const nuBodyHeight =  nuTotalHeight('nubody');
+	const totalHeight = cellsHeight + footerHeight + dialogTitleHeight + actionHolderHeight + BreadcrumbOlderHeight + 10;
+	nuBrowseUpdateParentDocumentStyles(totalHeight);	
+	
 }
 
 function nuBrowseCalculateInitialTopOffset(rowHeight) {
@@ -8336,4 +8351,3 @@ function nuTabSetMarker(tabId, fieldIdOrFlag) {
 	tab.classList.toggle('nuTabMarker', shouldMark);
 
 }
-
