@@ -794,7 +794,7 @@ function nuReformat(element) {
 		return currentValue;
 	}
 	const reapplyFormat = function (value, format) {
-		let rawValue = nuFORM.removeFormatting(value, format);
+		let rawValue = nuFORM.removeFormatting(value, format, element.id);
 		return nuFORM.addFormatting(rawValue, format);
 	};
 

@@ -668,7 +668,7 @@ class nuFormObject {
 			value = JSON.stringify(value);
 		}
 
-		values[counter] = nuFORM.removeFormatting(value, dataFormat);
+		values[counter] = nuFORM.removeFormatting(value, dataFormat, element.id);
 		edited[counter] = $this.hasClass('nuEdited') ? 1 : 0;
 
 		counter++;
@@ -989,7 +989,7 @@ class nuFormObject {
 	}
 
 
-	removeFormatting(v, f) {
+	removeFormatting(v, f, id) {
 
 		if (v === undefined || v === '') { return ''; }
 		if (f === undefined || f === '') { return v; }
@@ -1000,15 +1000,27 @@ class nuFormObject {
 		if (f[0] === 'N') {  // number formatting
 			var CF = nuGetNumberFormat(f); // CF[0]=sign, CF[1]=separator, CF[2]=decimal, CF[3]=places
 
+			let rawValue = '';
 			if (CF[2] === '') {
-				return v.replace(CF[0], '')
+				rawValue = v.replace(CF[0], '')
 					.replace(' ', '')
 					.nuReplaceAll(CF[1], '');
 			}
-			return v.replace(CF[0], '')
+
+			rawValue = v.replace(CF[0], '')
 				.replace(' ', '')
 				.nuReplaceAll(CF[1], '')
 				.replace(CF[2], '.');
+
+			if (typeof window.nuOnRawValueFormatted === 'function') {
+				let modifiedValue = window.nuOnRawValueFormatted(id, rawValue, f);
+				if (modifiedValue !== undefined) {
+					rawValue = modifiedValue;
+				}
+			}
+
+			return rawValue;
+
 		}
 
 		if (f[0] === 'D') {  // date formatting
@@ -1069,6 +1081,9 @@ class nuFormObject {
 
 			// Create the new Date object using the parsed parts.
 			var oDate = new Date(d.y, Number(d.m) - 1, d.d, Number(d.h), Number(d.n), Number(d.s), 0);
+
+
+
 			var y = String(oDate.getFullYear()) + '-';
 			var m = nuPad2(oDate.getMonth() + 1) + '-';
 			var a = nuPad2(oDate.getDate()) + ' ';
@@ -1076,10 +1091,22 @@ class nuFormObject {
 			var n = nuPad2(oDate.getMinutes()) + ':';
 			var s = nuPad2(oDate.getSeconds());
 
+			let rawValue = '';
 			if (hasTime) {
-				return y + m + a + h + n + s;
+				rawValue = y + m + a + h + n + s;
+			} else {
+				rawValue = String(y + m + a).trim();
 			}
-			return String(y + m + a).trim();
+
+			if (typeof window.nuOnRawValueFormatted === 'function') {
+				let modifiedValue = window.nuOnRawValueFormatted(id, rawValue, f);
+				if (modifiedValue !== undefined) {
+					rawValue = modifiedValue;
+				}
+			}
+
+			return rawValue;
+
 		}
 
 	}
