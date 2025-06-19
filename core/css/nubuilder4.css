@@ -255,6 +255,14 @@ input[type=radio] {
 	margin: 0 0 0 4px;
 }
 
+#nuhtml {
+	height: 100%
+}
+
+#nubody {
+	height: 100%
+}
+
 .nuCell {
 	border-bottom: 1px solid var(--nu-border);
 	font-family: Arial, sans-serif;
