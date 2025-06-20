@@ -4636,11 +4636,12 @@ function nuResizeBrowseColumns(force) {
 
 		let totalWidth = 0;
 		for (let i = 0; i < columnWidths.length; i++) {
-			totalWidth = totalWidth + columnWidths[i];
+			console.log('columnWidths ' + i + ':', columnWidths[i]);
+			totalWidth = totalWidth + columnWidths[i] + padding;
 		}
 
 		for (let i = 0; i < columnWidths.length; i++) {
-			columnWidths[i] = parseInt((window.innerWidth - 30) * columnWidths[i] / totalWidth);
+			columnWidths[i] = parseInt((window.innerWidth - 20) * columnWidths[i] / totalWidth);
 		}
 
 		nuSetBrowseColumns(columnWidths);
