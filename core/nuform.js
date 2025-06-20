@@ -242,7 +242,7 @@ function nuBuildForm(formObj) {
 
 	nuAddFormStyle(formObj.style);
 	nuSetBrowseHeight();
-	
+
 	const globalAccess = nuGlobalAccess();
 	if (globalAccess) {
 		nuContextMenuUpdate();
@@ -4864,16 +4864,16 @@ function nuBrowseTable() {
 }
 
 function nuSetBrowseHeight() {
-	
+
+	if (nuFormType() !== 'browse') return;
 	const cellsHeight = nuTotalHeight('nucell_0_0') * nuCurrentProperties().row_height;
 	const footerHeight = nuTotalHeight('nuBrowseFooter');
 	const dialogTitleHeight = $('#dialogTitle', window.parent.document.body).nuCSSNumber('height');
 	const actionHolderHeight = nuTotalHeight('nuActionHolder');
 	const BreadcrumbOlderHeight = nuTotalHeight('nuBreadcrumbHolder');
-	const nuBodyHeight =  nuTotalHeight('nubody');
 	const totalHeight = cellsHeight + footerHeight + dialogTitleHeight + actionHolderHeight + BreadcrumbOlderHeight + 10;
-	nuBrowseUpdateParentDocumentStyles(totalHeight);	
-	
+	nuBrowseUpdateParentDocumentStyles(totalHeight);
+
 }
 
 function nuBrowseCalculateInitialTopOffset(rowHeight) {
