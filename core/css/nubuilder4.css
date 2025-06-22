@@ -1014,6 +1014,12 @@ input[type=radio] {
 	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25)
 }
 
+.nuButton:focus,
+.input_button:focus {
+	outline: none;
+	box-shadow: 0 0 0 3px rgba(55, 139, 213, 0.5)
+}
+
 .nuButton:not(.nuReadonly):not(.nuUserHomeButton):not(.nuSaveButtonEdited):hover {
 	background-color: #2e73b1;
 	color: #e2eaff;
@@ -1030,6 +1036,11 @@ input[type=radio] {
 	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 	border-color: #326e00;
 	border-width: 0 0 1px
+}
+
+.nuUserHomeButton:focus {
+	outline: none;
+	box-shadow: 0 0 0 1px #7ee12c
 }
 
 .nuUserHomeButton:hover {
