@@ -7761,7 +7761,10 @@ $.fn.nuSearchablePopup = function (options) {
 					nuGetBreadcrumb();
 				});
 				$options.append($item);
+				$item.nuHighlight(filterText);
 			});
+
+
 		}
 	};
 
