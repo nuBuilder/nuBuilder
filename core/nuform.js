@@ -4636,7 +4636,6 @@ function nuResizeBrowseColumns(force) {
 
 		let totalWidth = 0;
 		for (let i = 0; i < columnWidths.length; i++) {
-			console.log('columnWidths ' + i + ':', columnWidths[i]);
 			totalWidth = totalWidth + columnWidths[i] + padding;
 		}
 
