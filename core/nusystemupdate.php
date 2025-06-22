@@ -60,15 +60,14 @@ function nuSetupGetConfig() {
 function nuSetupGetDefaultFormats() {
 
 	$formatColumns = db_field_names('zzzzsys_format');
-	if(array_search('srm_default', $formatColumns) === false){
+	if (array_search('srm_default', $formatColumns) === false) {
 		return null;
-	}	
+	}
 
 	$sysConfig = nuRunQueryNoDebug("SELECT zzzzsys_format_id, srm_default FROM zzzzsys_format  WHERE srm_default IS NOT NULL");
 	return $sysConfig;
 
 }
-
 
 function nuSetupRestoreConfig($sysConfig) {
 
@@ -98,6 +97,13 @@ function nuSetupRestoreDefaultFormats($defaultFormats) {
 function nuRunUpdate($jsonId, $u = null, $p = null) {
 
 	$nuSQLFile = 'nubuilder4.sql';
+
+	if ($u === null && isset($_GET['u'])) {
+		$u = $_GET['u'];
+	}
+	if ($p === null && isset($_GET['p'])) {
+		$p = $_GET['p'];
+	}
 
 	if (!nuUpdateAllowed($jsonId, $u, $p)) {
 		return;
@@ -166,10 +172,10 @@ function nuRunUpdate($jsonId, $u = null, $p = null) {
 	nuAppendToSystemTables();
 	nuPrintUpdateMessage('Inserted TEMP FILES into SYSTEM FILES', $i);
 	$i++;
-	
+
 	nuOtherUpdates();
 	nuPrintUpdateMessage('Other Table Tweaks', $i);
-	$i++;	
+	$i++;
 
 	// Import language files
 	nuImportLanguageFiles();
