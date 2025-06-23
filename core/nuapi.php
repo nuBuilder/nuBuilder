@@ -179,6 +179,7 @@ if ($callType != 'logout') {
 		$f->forms[0]->style = nuObjKey($GLOBALS, 'STYLE');
 		$f->forms[0]->javascript_bc = nuObjKey($GLOBALS, 'EXTRAJS_BC');
 		$f->forms[0]->target = nuObjKey($state, 'target');
+		$f->forms[0]->timezone = $setup->set_timezone;
 
 		$buttons = nuButtons($formId, $state);
 		$f->forms[0]->buttons = $buttons[0];

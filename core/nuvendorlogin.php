@@ -12,10 +12,11 @@ $sessionData	= $_SESSION['nubuilder_session_data'];
 $appId = isset($_GET['appId']) ? $_GET['appId'] : "";
 $table = isset($_GET['table']) ? $_GET['table'] : "";
 
+
 if($sessionData['IS_DEMO']){
 	echo('Not available in the Demo');
 	return;
-} 
+}
 
 if (nuObjKey($sessionData,'SESSION_2FA_STATUS') == 'PENDING') {
 	echo('Access denied.');
@@ -78,7 +79,10 @@ function nuGetVendorURL($appId, $table) {
 	}
 
 	setcookie("nu_".$appId, $_SESSION['nubuilder_session_data']['SESSION_ID'], $cookieOptions);
-	
+
+	$timezone = isset($_GET['timezone']) ? $_GET['timezone'] : "Etc/UTC";
+	setcookie("nu_timezone", $timezone, $cookieOptions);
+
 	return $page;
-	
+
 }

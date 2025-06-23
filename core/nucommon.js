@@ -1979,7 +1979,7 @@ function nuEmbedObject(json, containerId, width, height) {
 
 function nuVendorLogin(appId, table) {
 	const tableName = table || nuSERVERRESPONSE.table;
-	window.open("core/nuvendorlogin.php?sessid=" + window.nuSESSION + "&appId=" + appId + "&table=" + tableName);
+	window.open("core/nuvendorlogin.php?sessid=" + window.nuSESSION + "&appId=" + appId + "&table=" + tableName + "&table=" + tableName + "&timezone=" + nuSERVERRESPONSE.timezone);
 }
 
 function nuIsMobile() {
