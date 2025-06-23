@@ -2591,6 +2591,61 @@ function nuSubformValue(t, id) {
 
 }
 
+function nuSubformGetObjectId(sfId, fieldName, rowIndex) {
+
+	const subform = nuSubformObject(sfId);
+	if (!subform?.rows?.length) return null;
+
+	if (rowIndex === undefined) {
+		rowIndex = nuCurrentRow();
+	}
+
+	const targetIndex = rowIndex === -1
+		? subform.rows.length - 1
+		: rowIndex;
+
+	const objId = `${sfId}${nuPad3(targetIndex)}${fieldName}`;
+	return objId;
+
+}
+
+function nuSubformSetValue(sfId, fieldName, value, options = {}) {
+
+	const {
+		rowIndex,
+		method = "value",
+		change = true,
+		onlyIfBlank = false
+	} = options;
+
+	const objId = nuSubformGetObjectId(sfId, fieldName, rowIndex);
+	if (!objId) return;
+
+	if (onlyIfBlank) {
+		const currentValue = nuGetValue(objId, method);
+		if (currentValue !== '') {
+			return;
+		}
+	}
+
+	nuSetValue(objId, value, method, change);
+
+}
+
+function nuSubformGetValue(sfId, fieldName, options = {}) {
+
+	const {
+		rowIndex,
+		method = "value"
+	} = options;
+
+	const objId = nuSubformGetObjectId(sfId, fieldName, rowIndex);
+	if (!objId) return null;
+
+	return nuGetValue(objId, method);
+
+}
+
 function nuSubformColumnArray(id, column, includeDeleted = false) {
 
 	var a = [];
