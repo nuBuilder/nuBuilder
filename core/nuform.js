@@ -4921,7 +4921,7 @@ function nuBrowseTable() {
 function nuSetBrowseHeight() {
 
 	if (nuFormType() !== 'browse') return;
-	const cellsHeight = nuTotalHeight('nucell_0_0') * nuCurrentProperties().row_height;
+	const cellsHeight = nuTotalHeight('nucell_0_0') * nuCurrentProperties().rows;
 	const footerHeight = nuTotalHeight('nuBrowseFooter');
 	const dialogTitleHeight = $('#dialogTitle', window.parent.document.body).nuCSSNumber('height');
 	const actionHolderHeight = nuTotalHeight('nuActionHolder');
