@@ -358,7 +358,20 @@ function nuGetFormModifyObject($object, $formObject, $row, $recordId, $data, $nu
 	if ($row->sob_all_type == 'select') {
 		$object->multiple = $row->sob_select_multiple;
 		$object->select2 = $row->sob_select_2 ?? null;
-		$object->options = nuSelectOptions($row->sob_select_sql, $object->object_id);
+
+		$object->options = null;
+		$selectProcedure = $row->sob_select_procedure ?? '';
+		if ($selectProcedure) {
+			$code = nuProcedure($selectProcedure);
+			if ($code !== '') {
+				nuEval($selectProcedure, true);
+				$object->options = $_POST['nuRunPHPHiddenResult'];
+			}
+		} else {
+
+			$object->options = nuSelectOptions($row->sob_select_sql, $object->object_id);
+		}
+
 	}
 
 	if ($row->sob_all_type == 'run') {

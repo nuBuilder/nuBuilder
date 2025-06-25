@@ -21,6 +21,7 @@ function nuAlterSystemTables() {
 		"ALTER TABLE `zzzzsys_object` ADD `sob_all_style` VARCHAR(1000) NULL DEFAULT NULL AFTER `sob_all_style_type`;",
 		"ALTER TABLE `zzzzsys_object` ADD `sob_all_json` MEDIUMTEXT NULL DEFAULT NULL AFTER `sob_image_zzzzsys_file_id`;",
 		"ALTER TABLE `zzzzsys_object` ADD `sob_all_access_condition` VARCHAR(1000) NULL DEFAULT NULL AFTER `sob_all_access`;",
+		"ALTER TABLE `zzzzsys_object` ADD `sob_select_procedure` VARCHAR(25) NULL DEFAULT NULL AFTER `sob_select_sql`;",
 		"ALTER TABLE `zzzzsys_form` ADD `sfo_browse_title_multiline` VARCHAR(1) NULL DEFAULT '0' AFTER `sfo_browse_rows_per_page`;",
 		"ALTER TABLE `zzzzsys_form` ADD `sfo_browse_autoresize_columns` VARCHAR(1) NULL DEFAULT NULL AFTER `sfo_browse_title_multiline`;",
 		"ALTER TABLE `zzzzsys_form` ADD `sfo_breadcrumb_title` VARCHAR(100) NULL DEFAULT NULL AFTER `sfo_description`;",
