@@ -1291,7 +1291,7 @@ input[type=radio] {
 
 .nuSearchWrapper:focus-within {
 	border-color: #66afe9;
-	box-shadow: 0 0 0 1px rgba(102, 175, 233, 0.4);
+	box-shadow: 0 0 0 1px #2d84d1;
 }
 
 .nuSearchBtn {
