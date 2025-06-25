@@ -1017,7 +1017,7 @@ input[type=radio] {
 .nuButton:focus,
 .input_button:focus {
 	outline: none;
-	box-shadow: 0 0 0 3px rgba(55, 139, 213, 0.5)
+	box-shadow: 0 0 0 1px #1f4c75;
 }
 
 .nuButton:not(.nuReadonly):not(.nuUserHomeButton):not(.nuSaveButtonEdited):hover {
