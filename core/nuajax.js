@@ -641,9 +641,8 @@ function nuGetLookupCode(event) {
 
 	if (event.currentTarget && event.currentTarget.value.length == 0) {
 		window.nuLOOKUPCLEARING = true;
-		$('#' + nuTarget).addClass('nuEdited');
-		nuSetValue(nuTarget, '');
-		nuSetValue(nuTarget + 'description', '');
+		$('#' + nuTarget).val('').addClass('nuEdited');
+		$('#' + nuTarget + 'description').val('');
 		window.nuLOOKUPCLEARING = false;
 		return;
 	}
@@ -672,7 +671,6 @@ function nuGetLookupCode(event) {
 	nuAjax(last, successCallback);
 
 }
-
 
 function nuPrintAction() {
 
