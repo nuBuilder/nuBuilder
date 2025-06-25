@@ -315,7 +315,7 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 				});
 
 				if (language === 'CSS') {
-					const DISABLED_RULES = ['important'];
+					const DISABLED_RULES = ['important', 'order-alphabetical'];
 
 					function configureCSSLintWorker() {
 						if (editor.session.$worker) {
