@@ -1094,7 +1094,7 @@ input[type=radio] {
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08)
 }
 
-.nuActionButton:active {
+.nuActionButton:active:not([disabled]) {
 	background: var(--btn-bg-active);
 	box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.2);
 	transform: translateY(0);
