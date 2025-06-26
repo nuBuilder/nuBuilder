@@ -2091,7 +2091,7 @@ function nuIsIframe() {
 }
 
 function nuIsPopup() {
-	return window.frameElement && $(window.frameElement).closest('.nuDragDialog').length > 0;
+	return !!(window.frameElement && $(window.frameElement).closest('.nuDragDialog').length > 0);
 }
 
 function nuPreventButtonDblClick() {
