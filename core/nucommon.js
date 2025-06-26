@@ -2914,6 +2914,79 @@ function nuAddCSSStyle(styleString, id = 'nucssstyle') {
 
 }
 
+function nuAddStyleFromArray(id, obj) {
+
+	var arr = JSON.parse(obj.style);
+
+	for (let key in arr) {
+
+		if (Object.prototype.hasOwnProperty.call(arr, key)) {
+
+			let obj2;
+			if (key == 'label') {
+				obj2 = $('#' + 'label' + '_' + id);
+			} else {
+				obj2 = $('#' + id + ' .' + key);
+				if (obj2.length === 0) {
+					obj2 = $('#' + id);
+				}
+			}
+
+			if (obj.style_type == 'CSS') {
+
+				let css = obj2[0].getAttribute("style");
+				css = css === null ? arr[key] : css += ';' + arr[key];
+				obj2[0].setAttribute("style", css);
+
+			} else if (obj.style_type == 'Class') {
+				nuAddRemoveClasses(obj2, arr[key]);
+			}
+
+		}
+
+	}
+
+}
+
+function nuAddRemoveClasses($id, style) {
+
+	const classes = style.split(/\s+/).filter(Boolean);
+	classes.forEach(className => {
+		if (className.startsWith('-')) {
+			$id.removeClass(className.substring(1));
+		} else {
+			$id.addClass(className);
+		}
+	});
+
+}
+
+function nuAddStyle(id, obj) {
+	const $id = $('#' + id);
+
+	if (obj.style_type !== '' && obj.style !== '') {
+
+		if (obj.style_type == 'CSS') {
+
+			if (obj.style.startsWith('{')) {
+				nuAddStyleFromArray(id, obj);
+			} else {
+				let css = $id[0].getAttribute("style");
+				css = css === null ? obj.style : css + obj.style;
+				$id[0].setAttribute("style", css);
+			}
+		} else if (obj.style_type == 'Class') {
+
+			if (obj.style.startsWith('{')) {
+				nuAddStyleFromArray(id, obj);
+			} else {
+				nuAddRemoveClasses($id, obj.style);
+			}
+
+		}
+	}
+}
+
 function nuObjectClassList(id) {
 
 	const element = $('#' + id);
