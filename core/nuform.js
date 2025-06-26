@@ -1951,9 +1951,9 @@ function nuAddStyle(id, obj) {
 
 function nuAddDblClickOpenObjectProperties(obj, objId) {
 	if (nuGlobalAccess()) {
-		obj.on('dblclick', function () {
+		obj.on('dblclick', function (e) {
 			nuDestroyWindowProperty('nudatepickers');
-			nuOptionsListAction("nuobject", objId);
+			nuOptionsListAction("nuobject", objId, '', e);
 		});
 	}
 }
