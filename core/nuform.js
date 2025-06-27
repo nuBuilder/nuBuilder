@@ -4121,10 +4121,10 @@ function nuGetOptionsList(formId, subformId, globalAccess, type) {
 		Divider: ['', '', '', ''],
 		AddObject: ['Add Object', 'nuPopup("nuobject","-1","")', 'fa fa-plus', 'H'],
 		ArrangeObjects: ['Arrange Objects', `nuPopup("${formId}", "-2")`, 'fas fa-arrows-alt', 'A'],
-		FormProperties: ['Form Properties', `nuOptionsListAction("nuform", "${formId}")`, 'fa-cog', 'F'],
+		FormProperties: ['Form Properties', `nuOptionsListAction("nuform", "${formId}", "", event)`, 'fa-cog', 'F'],
 		SearchableColumns: ['Searchable Columns', 'nuGetSearchList()', 'fa-columns', 'C'],
 		SubformObject: [nuTranslate('Subform Object'), subformAction, 'fa-cog', ''],
-		FormObjectList: ['Form Object List', `nuOptionsListAction("nuobject", "", "${formId}")`, 'fa-th-list', 'O'],
+		FormObjectList: ['Form Object List', `nuOptionsListAction("nuobject", "", "${formId}", event)`, 'fa-th-list', 'O'],
 		Search: ['Search', 'nuSearchAction()', 'fas fa-search', 'S'],
 		Add: ['Add', 'nuAddAction()', 'fas fa-plus', 'A'],
 		Print: ['Print', 'nuPrintAction()', 'fa fa-list-ul', 'P'],
@@ -4134,7 +4134,7 @@ function nuGetOptionsList(formId, subformId, globalAccess, type) {
 		Refresh: ['Refresh', 'if (nuGlobalAccess()) { nuRunPHPHidden("nu_set_refresh_cache"); } else { nuGetBreadcrumb(); }', 'fas fa-sync-alt', 'R'],
 		Help: ['Help', nuFORMHELP[subformId], 'fa-question-circle', '?'],
 		ChangePassword: ['Change Password', 'nuPopup("nupassword","","")', 'fa-password', 'Q'],
-		DebugResults: ['nuDebug Results', 'nuOptionsListAction("nudebug","")', 'fa-bug', 'D'],
+		DebugResults: ['nuDebug Results', 'nuOptionsListAction("nudebug","","", event)', 'fa-bug', 'D'],
 		Database: ['Database', 'nuVendorLogin("PMA")', 'fa-database', 'E'],
 		Sessions: ['Sessions', 'nuForm("nusession","","", "", 2)', 'fas fa-key', 'J'],
 		Cloner: ['Cloner', 'nuPopup("nucloner","-1")', 'far fa-clone', 'Z'],
@@ -4266,7 +4266,14 @@ function nuBuildOptionsList(items, parentId, contextType) {
 				})
 				.html(text);
 
-		$entry.on('click', handler).appendTo(BOX_SEL);
+		$entry.on('click', function (e) {
+			if (typeof action === 'function') {
+				action(e);
+			} else {
+				new Function('event', action).call(this, e);
+			}
+		}).appendTo(BOX_SEL);
+
 		if (shortcut && contextType !== 'subform') {
 			$('<div>')
 				.addClass('nuOptionsItemShortcutKey')
