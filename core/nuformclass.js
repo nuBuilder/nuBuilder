@@ -1171,9 +1171,9 @@ function nuSetProperty(name, value, persist) {
 
 	nuFORM.setProperty(name, value);
 	if (persist === true) { // global scope
-		nuSetProperty('NUSETHASHCOOKIE_NAME', name);
-		nuSetProperty('NUSETHASHCOOKIE_VALUE', value);
-		nuRunPHPHidden('NUSETHASHCOOKIE');
+		nuSetProperty('nu_set_hash_cookie_name', name);
+		nuSetProperty('nu_set_hash_cookie_value', value);
+		nuRunPHPHidden('nu_set_hash_cookie');
 	}
 
 }

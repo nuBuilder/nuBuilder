@@ -37,7 +37,7 @@ function nuFormInfoCurrentProperties() {
 }
 
 function nuShowVersionInfo() {
-	nuRunPHPHidden('NUVERSIONINFO');
+	nuRunPHPHidden('nu_version_info');
 }
 
 function nuShowFormInfo() {
@@ -245,7 +245,7 @@ function nuAdminToolsCreateMenuConfig(menuType, event) {
 				text: nuContextMenuItemText("Inspect Record", "fa-fw fa-solid fa-binoculars"),
 				action: () => {
 					nuAdminPreInspectRecordJS();
-					nuAdminToolsRun('NUINSPECTRECORD', null, event, 'procedure');
+					nuAdminToolsRun('nu_inspect_record', null, event, 'procedure');
 				}
 			}] : [])
 		]
@@ -258,8 +258,8 @@ function nuAdminToolsCreateMenuConfig(menuType, event) {
 
 function nuAdminPreInspectRecordJS() {
 
-	nuSetProperty('NUINSPECTRECORD_table', nuSERVERRESPONSE.table);
-	nuSetProperty('NUINSPECTRECORD_record_id', nuRecordId())
+	nuSetProperty('nu_inspect_record_table', nuSERVERRESPONSE.table);
+	nuSetProperty('nu_inspect_record_record_id', nuRecordId())
 
 }
 
@@ -1084,7 +1084,7 @@ function nuContextMenuAddTabPromptCallback(tabNr, tabName) {
 	const title = tabName.trim() || nuTranslate("New Tab");
 	const order = (parseInt(tabNr) + 1) * 10 + 1;
 
-	nuRunPHPHiddenWithParams('NUBROWSEADDTAB', 'NUBROWSEADDTAB_params', {
+	nuRunPHPHiddenWithParams('nu_browse_add_tab', 'nu_browse_add_tab_params', {
 		form_id: formId,
 		title: title,
 		order: order
@@ -1241,7 +1241,7 @@ function nuContextMenuUpdateObject(value, column, action = 'update') {
 	}
 
 	let formId = isSfTitle ? nuContextMenuGetFormId('title_' + nuContextMenuCurrentTargetId()) : nuContextMenuGetFormId(id);
-	let p = 'NUUPDATEOBJECT';
+	let p = 'nu_update_object';
 
 	nuSetProperty(p + '_id', isTab ? $('#' + nuContextMenuCurrentTargetId()).attr('data-nu-tab-id') : id);
 	nuSetProperty(p + '_value', value);

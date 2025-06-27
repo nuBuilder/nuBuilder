@@ -614,7 +614,7 @@ function nuUpdateDatabaseExecStatements($sql, $nuMainTable, $mainRecordId) {
 
 function nuUpdateDatabaseRunBeforeDeleteEvent(&$nudata) {
 
-	$p = nuProcedure('nuBeforeDelete');
+	$p = nuProcedure('nu_before_delete');
 	if ($p != '') {
 		eval ($p);
 	}
@@ -629,7 +629,7 @@ function nuUpdateDatabaseRunBeforeDeleteEvent(&$nudata) {
 function nuUpdateDatabaseRunBeforeSaveEvents(&$nudata, $nuDataFormId) {
 
 	// Global Before Save event
-	$proc = nuProcedure('nuBeforeSave');
+	$proc = nuProcedure('nu_before_save');
 	if ($proc != '') {
 		eval ($proc);
 	}

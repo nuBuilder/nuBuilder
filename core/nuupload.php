@@ -15,7 +15,7 @@ function nuUploadFile() {
 	header('Content-Type: text/plain; charset=utf-8');
 
 	// error_log(print_r($_POST,true));
-	$proc = isset($_POST["procedure"]) ? $_POST["procedure"] : 'NUUPLOADFILE_TEMPLATE';
+	$proc = isset($_POST["procedure"]) ? $_POST["procedure"] : 'nu_upload_file_template';
 	$sessionId = isset($_POST["session_id"]) ? $_POST["session_id"] : '';
 
 	$result = json_encode('{}');

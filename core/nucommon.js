@@ -2079,10 +2079,10 @@ function nuImportUsersFromCSV(file, delimiter) {
 
 	file = nuDefine(file, 'user_import.csv');
 
-	nuSetProperty('NUIMPORTUSERS_file', file);
-	nuSetProperty('NUIMPORTUSERS_delimiter', delimiter);
+	nuSetProperty('nu_import_users_file', file);
+	nuSetProperty('nu_import_users_delimiter', delimiter);
 
-	nuRunPHP('NUIMPORTUSERS', '', 0);
+	nuRunPHP('nu_import_users', '', 0);
 
 }
 
@@ -2894,7 +2894,7 @@ function nuRunBackup() {
 
 	if (confirm(nuTranslate("Perform the Backup now?"))) {
 		nuMessage(`${nuTranslate('Information')}`, `${nuTranslate('Backup is running')}` + "...");
-		nuRunPHPHidden("NUBACKUP");
+		nuRunPHPHidden("nu_backup");
 	}
 
 }

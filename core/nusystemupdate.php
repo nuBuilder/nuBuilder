@@ -203,8 +203,8 @@ function nuRunUpdate($jsonId, $u = null, $p = null) {
 
 
 	// Run nuAfterUpdate
-	nuRunPHPHidden('nuAfterUpdate');
-	nuPrintUpdateMessage('Run nuAfterUpdate', $i);
+	nuRunPHPHidden('nu_after_update');
+	nuPrintUpdateMessage('Run nu_after_update', $i);
 	$i++;
 
 	nuPrintUpdateMessage('You will need to log in again for the changes to take effect');

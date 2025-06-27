@@ -13,7 +13,7 @@ function nuFormProperties($formId, $columns = '') {
 function nuBeforeBrowse($formId) {
 
 	$_POST['nuMessages'] = [];
-	$procedure = nuProcedure('nuBeforeBrowse');
+	$procedure = nuProcedure('nu_before_save');
 
 	if ($procedure != '') {
 		eval ($procedure);
@@ -106,7 +106,7 @@ function nuBeforeEdit($FID, $RID) {
 
 
 	if ($recordID != '' || $formType == 'launch') {
-		$p = nuProcedure('nuBeforeEdit');
+		$p = nuProcedure('nu_before_edit');
 		if ($p != '') {
 			eval ($p);
 		}

@@ -74,7 +74,26 @@ function nuAlterSystemTables() {
 		"ALTER TABLE `zzzzsys_prompt_generator` DROP `sph_template`;",
 		"ALTER TABLE `zzzzsys_prompt_generator` ADD `pge_instruction` VARCHAR(3000) NULL DEFAULT NULL AFTER `sph_template`;",
 		"ALTER TABLE `zzzzsys_item` ADD `itm_group` VARCHAR(100) NULL DEFAULT NULL AFTER `itm_description`;",
-		"ALTER TABLE `zzzzsys_note` ADD `not_text` longtext NULL DEFAULT NULL AFTER `not_content`;"
+		"ALTER TABLE `zzzzsys_note` ADD `not_text` longtext NULL DEFAULT NULL AFTER `not_content`;",
+
+		"UPDATE `zzzzsys_php` SET `sph_code` = REPLACE(`sph_code`, 'NUAUTHENTICATION2FA', 'nu_authentication_2fa') WHERE IFNULL(`sph_code`, '') LIKE '%NUAUTHENTICATION2FA%';",
+		"UPDATE `zzzzsys_php` SET `sph_code` = REPLACE(`sph_code`, 'NUCHECKPASSWORDPOLICY', 'nu_check_password_policy') WHERE IFNULL(`sph_code`, '') LIKE '%NUCHECKPASSWORDPOLICY%';",
+		"UPDATE `zzzzsys_php` SET `sph_code` = REPLACE(`sph_code`, 'NUDEBUGRESULTADDED', 'nu_debug_result_added') WHERE IFNULL(`sph_code`, '') LIKE '%NUDEBUGRESULTADDED%';",
+		"UPDATE `zzzzsys_php` SET `sph_code` = REPLACE(`sph_code`, 'NUSENDWELCOMEEMAIL', 'nu_send_welcome_email') WHERE IFNULL(`sph_code`, '') LIKE '%NUSENDWELCOMEEMAIL%';",
+		"UPDATE `zzzzsys_php` SET `sph_code` = REPLACE(`sph_code`, 'NUUPLOADFILE', 'nu_upload_file') WHERE IFNULL(`sph_code`, '') LIKE '%NUUPLOADFILE%';",
+		"UPDATE `zzzzsys_php` SET `sph_code` = REPLACE(`sph_code`, 'nuBeforeSave', 'nu_before_save') WHERE IFNULL(`sph_code`, '') = 'nuBeforeSave';",
+		"UPDATE `zzzzsys_php` SET `sph_code` = REPLACE(`sph_code`, 'nuAfterSave', 'nu_after_save') WHERE IFNULL(`sph_code`, '') = 'nuAfterSave';",
+		"UPDATE `zzzzsys_php` SET `sph_code` = REPLACE(`sph_code`, 'nuBeforeEdit', 'nu_before_edit') WHERE IFNULL(`sph_code`, '') = 'nuBeforeEdit';",
+		"UPDATE `zzzzsys_php` SET `sph_code` = REPLACE(`sph_code`, 'nuBeforeBrowse', 'nu_before_browse') WHERE IFNULL(`sph_code`, '') = 'nuBeforeBrowse';",
+		"UPDATE `zzzzsys_php` SET `sph_code` = REPLACE(`sph_code`, 'nuBeforeDelete', 'nu_before_delete') WHERE IFNULL(`sph_code`, '') = 'nuBeforeDelete';",
+		"UPDATE `zzzzsys_php` SET `sph_code` = REPLACE(`sph_code`, 'nuAfterDelete', 'nu_after_delete') WHERE IFNULL(`sph_code`, '') = 'nuAfterDelete';",
+		"UPDATE `zzzzsys_php` SET `sph_code` = REPLACE(`sph_code`, 'nuStartup', 'nu_startup') WHERE IFNULL(`sph_code`, '') = 'nuStartup';",
+		"UPDATE `zzzzsys_php` SET `sph_code` = REPLACE(`sph_code`, 'nuCheckPasswordPolicy', 'nu_check_password_policy') WHERE IFNULL(`sph_code`, '') = 'nuCheckPasswordPolicy';",
+		"UPDATE `zzzzsys_php` SET `sph_code` = REPLACE(`sph_code`, 'nuInvalidLogin', 'nu_invalid_login') WHERE IFNULL(`sph_code`, '') = 'nuInvalidLogin';",
+		"UPDATE `zzzzsys_php` SET `sph_code` = REPLACE(`sph_code`, 'nuAfterUpdate', 'nu_after_update') WHERE IFNULL(`sph_code`, '') = 'nuAfterUpdate';",
+		"UPDATE `zzzzsys_php` SET `sph_code` = REPLACE(`sph_code`, 'nuSendWelcomeEmail', 'nu_send_welcome_email') WHERE IFNULL(`sph_code`, '') = 'nuSendWelcomeEmail';",
+		"UPDATE `zzzzsys_object` SET sob_html_code = REPLACE(sob_html_code, 'procedure: ''NUUPLOADFILE_TEMPLATE''', 'procedure: ''nu_upload_file_template''') WHERE IFNULL(sob_html_code, '') LIKE '%NUUPLOADFILE_TEMPLATE%';",
+		"UPDATE `zzzzsys_object` SET sob_html_code = REPLACE(sob_html_code, 'procedure: ''NUUPLOADFILE''', 'procedure: ''nu_upload_file''') WHERE IFNULL(sob_html_code, '') LIKE '%NUUPLOADFILE%';"
 	];
 
 	foreach ($alterTableSQL as $sqlStatement) {

@@ -1033,14 +1033,14 @@ function nuAddActionButton(id, value, func, title, icon, insertAfterElement) {
 		},
 		BuildFastForm: {
 			value: 'Build Fast Form',
-			func: 'nuRunPHPHidden("RUNFF", true)',
+			func: 'nuRunPHPHidden("nu_run_fast_form", true)',
 			text: '',
 			iconSuffix: 'fa-bolt',
 			iconBaseClass: 'fa-solid'
 		},
 		BuildFastReport: {
 			value: 'Build Fast Report',
-			func: 'nuRunPHPHidden("RUNFR", true)',
+			func: 'nuRunPHPHidden("nu_run_fast_report", true)',
 			text: '',
 			iconSuffix: 'fa-bolt',
 			iconBaseClass: 'fa-solid'
@@ -3243,7 +3243,7 @@ function nuSubformRefreshSelectObject(prefix, selectId, formId, removeBlank) {
 
 	formId = nuDefine(formId);
 
-	const p = 'NUREFRESHSELECTOBJECT';
+	const p = 'nu_refresh_select_object';
 	nuSetProperty(p + '_prefix', prefix);
 	nuSetProperty(p + '_selectid', selectId);
 	nuSetProperty(p + '_formid', formId);
@@ -3263,7 +3263,7 @@ function nuSubformRefreshDisplayObject(prefix, displayId, formId) {
 
 	formId = nuDefine(formId);
 
-	const p = 'NUREFRESHDISPLAYOBJECT';
+	const p = 'nu_refresh_display_object';
 	nuSetProperty(p + '_prefix', prefix);
 	nuSetProperty(p + '_displayid', displayId);
 	nuSetProperty(p + '_formid', formId);
@@ -4131,7 +4131,7 @@ function nuGetOptionsList(formId, subformId, globalAccess, type) {
 		Save: ['Save', 'nuSaveAction()', 'far fa-save', 'S'],
 		Delete: ['Delete', 'nuDeleteAction()', 'far fa-trash-alt', 'Y'],
 		Clone: ['Clone', 'nuCloneAction()', 'far fa-clone', 'C'],
-		Refresh: ['Refresh', 'if (nuGlobalAccess()) { nuRunPHPHidden("NUSETREFRESHCACHE"); } else { nuGetBreadcrumb(); }', 'fas fa-sync-alt', 'R'],
+		Refresh: ['Refresh', 'if (nuGlobalAccess()) { nuRunPHPHidden("nu_set_refresh_cache"); } else { nuGetBreadcrumb(); }', 'fas fa-sync-alt', 'R'],
 		Help: ['Help', nuFORMHELP[subformId], 'fa-question-circle', '?'],
 		ChangePassword: ['Change Password', 'nuPopup("nupassword","","")', 'fa-password', 'Q'],
 		DebugResults: ['nuDebug Results', 'nuOptionsListAction("nudebug","")', 'fa-bug', 'D'],

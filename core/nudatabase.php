@@ -572,7 +572,7 @@ function nuDebugResult($nuDebugMsg, $flag = null) {
 	$nuDebugFlag = $flag ?? '';
 
 	if (function_exists('nuProcedure')) {
-		$proc = nuProcedure('NUDEBUGRESULTADDED');
+		$proc = nuProcedure('nu_debug_result_added');
 		if ($proc != '') {
 			eval ($proc);
 		}
