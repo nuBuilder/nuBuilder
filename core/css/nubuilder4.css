@@ -1071,27 +1071,27 @@ input[type=radio] {
 }
 
 .nuActionButton {
-	background: white;
-	color: #495057;
-	border: 1.5px solid #e5e7eb;
-	border-radius: 6px;
-	padding: 0 6px;
-	height: 32px;
-	margin-left: 8px;
-	min-width: 48px;
-	font-size: 14px;
-	font-weight: 500;
-	cursor: pointer;
 	display: inline-flex;
 	align-items: center;
-	justify-content: center;
-	transition: all 0.2s ease;
+	gap: 0.5rem;
+	font-size: 14px;
+	font-weight: 500;
 	font-family: inherit;
+	color: #1f2937;
+	background-color: #f9fafbbf;
+	border: 1px solid #e5e7eb;
+	border-radius: 6px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+	cursor: pointer;
+	transition: background-color 0.2s, box-shadow 0.2s;
+	height: 31px;
+	padding: 0 6px;
+	margin-left: 8px;
 }
 
 .nuActionButton:hover {
-	background-color: var(--btn-bg-hover);
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08)
+	background-color: #f3f4f6;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
 }
 
 .nuActionButton:active:not([disabled]) {
