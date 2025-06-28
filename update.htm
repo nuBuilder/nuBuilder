@@ -1,363 +1,796 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Cache-Control" content="no-cache">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>nuBuilder Update</title>
-    <link rel="stylesheet" href="third_party/bootstrap/bootstrap.min.css?v=5.3.3">
+    <title>nuBuilder Update Wizard</title>
     <link rel="stylesheet" href="third_party/fontawesome/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
-        html {
-            height: 100%;
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: rgb(245 247 250 / 45%);
+            min-height: 100vh;
+            padding-left: 6px;
+            padding-top: 4px;
+            color: #334155;
         }
-        p {
-            color: grey;
-        }
-        ul {
-            padding-left: 20px;
-            list-style-type: disc;
-        }
-        li {
-            margin-left: 0;
-        }       
-        #heading_outside_nu {
-            color: red;
-        }
-        #heading {
-            color: #673AB7;
-            font-weight: normal;
-        }
-        #msform {
-            text-align: center;
-            position: relative;
-            margin: 22px;
-        }
-        #msform fieldset {
+
+        .wizard-container {
             background: white;
-            border: 0 none;
-            border-radius: 0.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            padding: 24px;
             width: 100%;
-            padding-bottom: 20px;
-            position: relative;
-            display: none; 
-        }
-        #msform fieldset:first-of-type {
-            display: block; /* Only the first fieldset is displayed */
-        }
-        .card {
-            padding: 15px;
-        }       
-        .form-card {
-            text-align: left;
-        }
-        #msform input,
-        #msform textarea {
-            padding: 8px 15px;
-            border: 1px solid #ccc;
-            margin-bottom: 25px;
-            width: 100%;
-            font-family: montserrat;
-            color: #2C3E50;
-            background-color: #ECEFF1;
-            font-size: 16px;
-        }
-        #msform input:focus,
-        #msform textarea:focus {
-            border: 1px solid #673AB7;
-            outline-width: 0;
-        }
-        #msform .action-button {
-            width: 30%;
-            background: #673AB7;
-            color: white;
-            border-radius: 0;
-            padding: 10px 15px;
-            margin: 10px 5px;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-        }
-        #msform .action-button:hover {
-            background-color: #311B92;
-        }
-        #progressbar {
-            margin-bottom: 30px;
+            max-width: 100%;
+            height: calc(100vh - 32px);
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
-            color: lightgrey;
         }
-        #progressbar .active {
-            color: #673AB7;
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+            flex-shrink: 0;
         }
-        #progressbar li {
-            list-style-type: none;
-            font-size: 15px;
-            width: 25%;
-            float: left;
+
+        .main-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 16px;
+        }
+
+        .outside-warning {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .outside-warning .icon {
+            color: #d97706;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .outside-warning .text {
+            color: #92400e;
+            font-weight: 500;
+        }
+
+        .progress-section {
+            margin-bottom: 20px;
+            flex-shrink: 0;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
             position: relative;
-            font-weight: 400;
         }
-        #progressbar #backup:before {
-            font-family: 'Font Awesome 6 Free';
-            content: '\f0a0';
-        }
-        #progressbar #download:before {
-            font-family: 'Font Awesome 6 Free';
-            content: "\f358";
-        }
-        #progressbar #prepare:before {
-            font-family: 'Font Awesome 6 Free';
-            content: "\f1c6";
-        }
-        #progressbar #update:before {
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            content: "\f058";
-        }
-        #progressbar li:before {
-            width: 50px;
-            height: 50px;
-            line-height: 45px;
-            display: block;
-            font-size: 20px;
-            color: #ffffff;
-            background: lightgray;
-            border-radius: 50%;
-            margin: 0 auto 10px auto;
-            padding: 2px;
-        }
-        #progressbar li:after {
+
+        .progress-steps::before {
             content: '';
-            width: 100%;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
             height: 2px;
-            background: lightgray;
+            background: #e2e8f0;
+            z-index: 1;
+        }
+
+        .progress-line {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            height: 2px;
+            background: #3b82f6;
+            transition: width 0.4s ease;
+            z-index: 2;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 3;
+            flex: 1;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f1f5f9;
+            color: #94a3b8;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            margin-bottom: 8px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .step.active .step-circle {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .step.completed .step-circle {
+            background: #1ab884;
+            color: white;
+            border-color: #10b981;
+        }
+
+        .step-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-align: center;
+            transition: color 0.3s ease;
+        }
+
+        .step.active .step-label {
+            color: #3b82f6;
+        }
+
+        .step.completed .step-label {
+            color: #10b981;
+        }
+
+        .progress-bar-container {
+            background: #f1f5f9;
+            height: 4px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #3b82f6;
+            border-radius: 2px;
+            transition: width 0.4s ease;
+        }
+
+        .content-section {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 16px;
+        }
+
+        .step-content {
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .step-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: #3b82f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        .step-description {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .instruction-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .instruction-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .instruction-item::before {
+            content: '';
             position: absolute;
             left: 0;
-            top: 25px;
-            z-index: -1;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #3b82f6;
+            border-radius: 8px 0 0 8px;
         }
-        #progressbar li.active:before,
-        #progressbar li.active:after {
-            background: #673AB7;
+
+        .instruction-text {
+            color: #475569;
+            line-height: 1.5;
+            font-weight: 500;
+            margin: 0;
+            font-size: 14px;
         }
-        .progress {
-            height: 20px;
+
+        .instruction-text a {
+            color: #3b82f6;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all 0.2s ease;
         }
-        .progress-bar {
-            background-color: #673AB7;
+
+        .instruction-text a:hover {
+            color: #2563eb;
+            border-bottom-color: #2563eb;
         }
-        #msform .action-button-previous {
-            width: 30%;
-            background: #616161; 
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 16px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
             color: white;
-            border-radius: 0;
-            padding: 10px 15px;
-            margin: 10px 5px;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         }
-        #msform .action-button-previous:hover {
-            background-color: #000000;
+
+        .btn-primary:hover {
+            background: #2563eb;
         }
-        .justify-content-container {
-            justify-content: center!important;
-            padding-left: 10px;
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
         }
-        @media (max-width: 576px) {
-            .container-fluid {
-                padding-left: 0 !important;
-                padding-right: 0 !important; 
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .btn-success {
+            background: #1ab884;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+        }
+
+        .final-step {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .final-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #10b981;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            margin-bottom: 16px;
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .warning-box .warning-title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            color: #92400e;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .warning-box .warning-text {
+            color: #92400e;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        /* Compact mobile layout */
+        @media (max-width: 768px) {
+            body {
+                padding: 8px;
             }
-            .justify-content-container {
-                justify-content: left!important;
-            }       
-            ul {
-                padding-left: 15px; 
+
+            .wizard-container {
+                padding: 16px;
+                height: calc(100vh - 16px);
             }
-            #msform input,
-            #msform textarea {
+
+            .main-title {
+                font-size: 20px;
+            }
+
+            .progress-steps {
+                margin-bottom: 12px;
+            }
+
+            .step-circle {
+                width: 36px;
+                height: 36px;
                 font-size: 14px;
             }
-            #msform .action-button,
-            #msform .action-button-previous {
-                width: auto;
-                padding: 10px 20px;
+
+            .step-label {
+                font-size: 11px;
             }
-            .fs-title,
-            .steps {
-                font-size: 18px;
+
+            .controls {
+                flex-wrap: wrap;
+            }
+
+            .btn {
+                flex: 1;
+                min-width: 120px;
+                justify-content: center;
             }
         }
+
+        /* Hide scrollbars while maintaining scroll functionality */
+        .content-section::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .content-section::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .content-section::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .content-section::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
     </style>
-    <script src="third_party/jquery/jquery-3.7.1.min.js"></script>
-    <script src="third_party/bootstrap/bootstrap.bundle.min.js?v=5.3.3"></script>
-    <script>
-        $(document).ready(function() {
-        
-            var p = window.frameElement;
-            if (p === null) { 
-                $('#nulogo').show(); 
-                $('#heading_steps').show();
-                $('input[name ="next"]').prop('disabled', true);
-                $('#startupdateskip').prop('disabled', true);		
-            } else {
-                $('#nulogo').remove(); 
-                $('#heading_outside_nu').remove();
-            }
-    
-            var current_fs, next_fs, previous_fs; // fieldsets
-            var opacity;
-            var current = 1;
-            var steps = $("fieldset").length;
-        
-            setProgressBar(current);
-    
-            $(".next").click(function() {
-                if ($(this).attr('id') == 'startupdate' || $(this).attr('id') == 'startupdateskip') {
-                    parent.nuSystemUpdate();
-                    return;
-                }
-            
-                current_fs = $(this).parent();
-                next_fs = $(this).parent().next();
-                $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
-                next_fs.show();
-                current_fs.hide();
-                setProgressBar(++current);
-            });
-    
-            $(".previous").click(function() {
-                current_fs = $(this).parent();
-                previous_fs = $(this).parent().prev();
-                $("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
-                previous_fs.show();
-                current_fs.hide();
-                setProgressBar(--current);
-            });
-    
-            function setProgressBar(curStep) {
-                var percent = parseFloat(100 / steps) * curStep;
-                $(".progress-bar").css("width", percent + "%");
-            }
-        });
-    </script>
 </head>
-<body oncontextmenu="return false" class="snippet-body">
-    <div class="container-fluid">
-        <div class="row justify-content-container">
-            <div class="col-11 col-sm-9 col-md-7 col-lg-8 col-xl-5 text-center p-0 mb-2">
-                <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
-                    <h2 id="heading">nuBuilder Update</h2>
-                    <div class="text-center">
-                        <img id="nulogo" style="display: none;" src="core/graphics/logo.png" alt="nuBuilder Forte">
-                    </div>
-                    <br>
-                    <p id="heading_steps">To update nuBuilder follow these steps:</p>
-                    <p id="heading_outside_nu">Log in to nuBuilder, click the Update Button on the Database Tab of the Home Form to start the Update process.</p>
-                    <form id="msform">
-                        <!-- progressbar -->
-                        <ul id="progressbar">
-                            <li class="active" id="backup"><strong>Backup</strong></li>
-                            <li id="download"><strong>Download</strong></li>
-                            <li id="prepare"><strong>Prepare</strong></li>
-                            <li id="update"><strong>Update</strong></li>
-                        </ul>
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <br> 
-                        <!-- fieldsets -->
-                        <fieldset>
-                            <div class="form-card">
-                                <div class="row">
-                                    <div class="col-7">
-                                        <h2 class="fs-title">Database Backup</h2>
-                                    </div>
-                                    <div class="col-5">
-                                        <h2 class="steps">Step 1 - 4</h2>
-                                    </div>
-                                </div>
-                                <ul>
-                                    <li>
-                                        Ensure you back up your database before proceeding with this update.<br>
-                                        You can export your nuBuilder database to a file using phpMyAdmin or the mysqldump utility.<br>
-                                        The backup will consist of a single file containing all nuBuilder tables and data (e.g., nubuilder4.sql).
-                                    </li>
-                                    <li>
-                                        Back up your nuBuilder files as well. For example, you can add them to an archive named 20240611_backup_nubuilder4.zip.
-                                    </li>
-                                </ul>
-                            </div>
-                            <input type="button" name="next" class="next action-button" value="Next">
-                            <input type="button" id="startupdateskip" style="width:240px" class="next action-button" value="Skip Wizard / Update now">
-                        </fieldset>
-                        <fieldset>
-                            <div class="form-card">
-                                <div class="row">
-                                    <div class="col-7">
-                                        <h2 class="fs-title">Download Instructions:</h2>
-                                    </div>
-                                    <div class="col-5">
-                                        <h2 class="steps">Step 2 - 4</h2>
-                                    </div>
-                                </div>
-                                <ul>
-                                    <li>Pull the latest nuBuilder files from either Sourceforge or Github.</li>
-                                    <li>Alternatively, use a subversion client to obtain the latest files.</li>
-                                </ul>
-                            </div>
-                            <input type="button" name="next" class="next action-button" value="Next">
-                            <input type="button" name="previous" class="previous action-button-previous" value="Previous">
-                        </fieldset>
-                        <fieldset>
-                            <div class="form-card">
-                                <div class="row">
-                                    <div class="col-7">
-                                        <h2 class="fs-title">Delete & Unpack:</h2>
-                                    </div>
-                                    <div class="col-5">
-                                        <h2 class="steps">Step 3 - 4</h2>
-                                    </div>
-                                </div>
-                                <ul>
-                                    <li>
-                                        Delete all files and folders in your nuBuilder directory except for nuconfig.php.<br>
-                                        Do not delete any files that do not belong to the nuBuilder core files.
-                                    </li>
-                                    <li>
-                                        Extract the downloaded .zip file to your nuBuilder root directory.
-                                    </li>
-                                </ul>
-                            </div>
-                            <input type="button" name="next" class="next action-button" value="Next">
-                            <input type="button" name="previous" class="previous action-button-previous" value="Previous">
-                        </fieldset>
-                        <fieldset>
-                            <div class="form-card">
-                                <div class="row">
-                                    <div class="col-7">
-                                        <h2 class="fs-title">Update</h2>
-                                    </div>
-                                    <div class="col-5">
-                                        <h2 class="steps">Step 4 - 4</h2>
-                                    </div>
-                                </div>
-                                <ul>
-                                    <li>You are now ready to proceed with the update.</li>
-                                    <li>After completing the update, thoroughly test your site to ensure there are no issues.</li>
-                                    <li>It is recommended to use a test environment to verify changes before applying them to the production environment.</li>
-                                </ul>
-                                <br>
-                            </div>
-                            <input type="button" id="startupdate" name="next" class="next action-button" value="Update">
-                        </fieldset>
-                    </form>
-                </div>
+
+<body>
+    <div class="wizard-container">
+        <div class="header">
+            <h1 class="main-title">nuBuilder Update Wizard</h1>
+            <p class="subtitle">Follow these steps to safely update your nuBuilder installation</p>
+            <div id="outside-warning" class="outside-warning" style="display: none;">
+                <i class="fas fa-exclamation-triangle icon"></i>
+                <div class="text">Please log in to nuBuilder and click the Update Button on the Database Tab of the Home
+                    Form to start the Update process.</div>
             </div>
         </div>
+
+        <div class="progress-section">
+            <div class="progress-steps">
+                <div class="progress-line" id="progress-line"></div>
+                <div class="step active" data-step="1">
+                    <div class="step-circle">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="step-label">Backup</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-circle">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <div class="step-label">Download</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-circle">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <div class="step-label">Prepare</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-circle">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="step-label">Update</div>
+                </div>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <!-- Step 1: Backup -->
+            <div class="step-content active" data-step="1">
+                <div class="step-header">
+                    <div class="step-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div>
+                        <h2 class="step-title">Database Backup</h2>
+                        <p class="step-description">Secure your data before proceeding with the update</p>
+                    </div>
+                </div>
+
+                <ul class="instruction-list">
+                    <li class="instruction-item">
+                        <p class="instruction-text">
+                            <strong>Database Backup:</strong> Export your nuBuilder database using <a href="#"
+                                onclick="parent.nuVendorLogin('PMA'); return false;">phpMyAdmin</a> or the <a href="#"
+                                onclick="parent.nuRunBackup(); return false;">nuBuilder backup utility</a>.
+                            This will create a single file containing all nuBuilder tables and data (e.g.,
+                            nubuilder4.sql).
+                        </p>
+                    </li>
+                    <li class="instruction-item">
+                        <p class="instruction-text">
+                            <strong>File Backup:</strong> Create an archive of your nuBuilder files.
+                            Consider naming it with today's date for easy identification
+                            (e.g., <span id="backupName"></span>_backup_nubuilder4.zip).
+                        </p>
+                    </li>
+                </ul>
+
+                <div class="warning-box">
+                    <div class="warning-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Critical Step
+                    </div>
+                    <div class="warning-text">
+                        Always ensure you have a complete backup before proceeding. This is your safety net in case
+                        anything goes wrong during the update process.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Download -->
+            <div class="step-content" data-step="2">
+                <div class="step-header">
+                    <div class="step-icon">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <div>
+                        <h2 class="step-title">Download Latest Files</h2>
+                        <p class="step-description">Get the newest version of nuBuilder</p>
+                    </div>
+                </div>
+
+                <ul class="instruction-list">
+                    <li class="instruction-item">
+                        <p class="instruction-text">
+                            <strong>Stable Release:</strong> Download the latest stable version from
+                            <a href="https://github.com/nuBuilder/nuBuilder/releases" target="_blank"><strong>GitHub
+                                    Releases</strong></a>
+                        </p>
+                    </li>
+                    <li class="instruction-item">
+                        <p class="instruction-text">
+                            <strong>Latest Development Version:</strong> Download the current development build from
+                            <a href="https://github.com/nuBuilder/nuBuilder/archive/refs/heads/master.zip"
+                                target="_blank">GitHub master branch</a>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Step 3: Prepare -->
+            <div class="step-content" data-step="3">
+                <div class="step-header">
+                    <div class="step-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <div>
+                        <h2 class="step-title">Prepare Installation</h2>
+                        <p class="step-description">Clean up and extract the new files</p>
+                    </div>
+                </div>
+
+                <ul class="instruction-list">
+                    <li class="instruction-item">
+                        <p class="instruction-text">
+                            <strong>Clean Directory:</strong> Delete all files and folders in your nuBuilder directory
+                            <strong>except for nuconfig.php</strong>. Preserve any custom files that don't belong to
+                            nuBuilder core.
+                        </p>
+                    </li>
+                    <li class="instruction-item">
+                        <p class="instruction-text">
+                            <strong>Extract Files:</strong> Extract the downloaded .zip file to your nuBuilder root
+                            directory.
+                            Ensure all files are properly placed in the correct structure.
+                        </p>
+                    </li>
+                </ul>
+
+                <div class="warning-box">
+                    <div class="warning-title">
+                        <i class="fas fa-info-circle"></i>
+                        Important Note
+                    </div>
+                    <div class="warning-text">
+                        Be careful not to delete nuconfig.php or any custom modifications you've made.
+                        Only remove core nuBuilder files that will be replaced.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Update -->
+            <div class="step-content" data-step="4">
+                <div class="final-step">
+                    <div class="final-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h2 class="step-title">Ready to Update</h2>
+                    <p class="step-description">All preparations are complete</p>
+                </div>
+
+                <ul class="instruction-list">
+                    <li class="instruction-item">
+                        <p class="instruction-text">
+                            <strong>Execute Update:</strong> You are now ready to proceed with the nuBuilder update
+                            process.
+                        </p>
+                    </li>
+                    <li class="instruction-item">
+                        <p class="instruction-text">
+                            <strong>Post-Update Testing:</strong> After completion, thoroughly test your site to ensure
+                            everything works correctly and all customizations are preserved.
+                        </p>
+                    </li>
+                    <li class="instruction-item">
+                        <p class="instruction-text">
+                            <strong>Best Practice:</strong> Consider testing the update in a staging environment
+                            before applying changes to production.
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-secondary" id="prev-btn" style="display: none;">
+                <i class="fas fa-arrow-left"></i>
+                Previous
+            </button>
+            <div style="flex: 1;"></div>
+            <button class="btn btn-primary" id="next-btn">
+                Next
+                <i class="fas fa-arrow-right"></i>
+            </button>
+            <button class="btn btn-warning" id="skip-btn">
+                <i class="fas fa-forward"></i>
+                Skip Wizard
+            </button>
+            <button class="btn btn-success" id="update-btn" style="display: none;">
+                <i class="fas fa-rocket"></i>
+                Start Update
+            </button>
+        </div>
     </div>
+
+    <script>
+        class UpdateWizard {
+            constructor() {
+                this.currentStep = 1;
+                this.totalSteps = 4;
+                this.init();
+            }
+
+            init() {
+                this.checkFrameContext();
+                this.bindEvents();
+                this.updateProgress();
+                this.setCurrentDate();
+            }
+
+            setCurrentDate() {
+                const today = new Date();
+                const yyyy = today.getFullYear();
+                const mm = String(today.getMonth() + 1).padStart(2, '0');
+                const dd = String(today.getDate()).padStart(2, '0');
+                document.getElementById('backupName').textContent = `${yyyy}${mm}${dd}`;
+            }
+
+            checkFrameContext() {
+                const isInFrame = window.frameElement !== null;
+                const outsideWarning = document.getElementById('outside-warning');
+                const nextBtn = document.getElementById('next-btn');
+                const skipBtn = document.getElementById('skip-btn');
+
+                if (!isInFrame) {
+                    outsideWarning.style.display = 'flex';
+                    nextBtn.disabled = true;
+                    skipBtn.disabled = true;
+                } else {
+                    outsideWarning.style.display = 'none';
+                }
+            }
+
+            bindEvents() {
+                document.getElementById('next-btn').addEventListener('click', () => this.nextStep());
+                document.getElementById('prev-btn').addEventListener('click', () => this.prevStep());
+                document.getElementById('skip-btn').addEventListener('click', () => this.startUpdate());
+                document.getElementById('update-btn').addEventListener('click', () => this.startUpdate());
+            }
+
+            nextStep() {
+                if (this.currentStep < this.totalSteps) {
+                    this.currentStep++;
+                    this.updateProgress();
+                    this.updateContent();
+                    this.updateControls();
+                }
+            }
+
+            prevStep() {
+                if (this.currentStep > 1) {
+                    this.currentStep--;
+                    this.updateProgress();
+                    this.updateContent();
+                    this.updateControls();
+                }
+            }
+
+            updateProgress() {
+                const progressBar = document.getElementById('progress-bar');
+                const progressLine = document.getElementById('progress-line');
+                const steps = document.querySelectorAll('.step');
+
+                const progressPercent = (this.currentStep / this.totalSteps) * 100;
+                const linePercent = ((this.currentStep - 1) / (this.totalSteps - 1)) * 100;
+
+                progressBar.style.width = progressPercent + '%';
+                progressLine.style.width = linePercent + '%';
+
+                steps.forEach((step, index) => {
+                    const stepNumber = index + 1;
+                    step.classList.remove('active', 'completed');
+
+                    if (stepNumber < this.currentStep) {
+                        step.classList.add('completed');
+                        step.querySelector('.step-circle i').className = 'fas fa-check';
+                    } else if (stepNumber === this.currentStep) {
+                        step.classList.add('active');
+                        this.resetStepIcon(step, stepNumber);
+                    } else {
+                        this.resetStepIcon(step, stepNumber);
+                    }
+                });
+            }
+
+            resetStepIcon(step, stepNumber) {
+                const icon = step.querySelector('.step-circle i');
+                const iconClasses = ['fas fa-database', 'fas fa-download', 'fas fa-cog', 'fas fa-rocket'];
+                icon.className = iconClasses[stepNumber - 1];
+            }
+
+            updateContent() {
+                document.querySelectorAll('.step-content').forEach((content) => {
+                    content.classList.remove('active');
+                });
+
+                const currentContent = document.querySelector(`.step-content[data-step="${this.currentStep}"]`);
+                if (currentContent) {
+                    currentContent.classList.add('active');
+                }
+            }
+
+            updateControls() {
+                const prevBtn = document.getElementById('prev-btn');
+                const nextBtn = document.getElementById('next-btn');
+                const updateBtn = document.getElementById('update-btn');
+
+                prevBtn.style.display = this.currentStep > 1 ? 'inline-flex' : 'none';
+
+                if (this.currentStep === this.totalSteps) {
+                    nextBtn.style.display = 'none';
+                    updateBtn.style.display = 'inline-flex';
+                } else {
+                    nextBtn.style.display = 'inline-flex';
+                    updateBtn.style.display = 'none';
+                }
+            }
+
+            startUpdate() {
+                if (window.parent && typeof window.parent.nuSystemUpdate === 'function') {
+                    window.parent.nuSystemUpdate();
+                } else {
+                    console.log('Update process started');
+                    alert('Update process would start here. Please ensure you are running this from within nuBuilder.');
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new UpdateWizard();
+        });
+
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
+    </script>
 </body>
+
 </html>
