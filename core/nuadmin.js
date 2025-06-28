@@ -93,10 +93,25 @@ function nuAddAdminButton(id, obj) {
 	const inputId = `nu${id}Button`;
 
 	const button = `
-	<input id="${inputId}" type="button" title="${nuTranslate(title)}" class="nuAdminButton" value="${nuTranslate(obj.value)}" onclick="${obj.func}">
-  `;
+        <input id="${inputId}" type="button" title="${nuTranslate(title)}" class="nuAdminButton" value="${nuTranslate(obj.value)}">
+    `;
 
 	$('#nuActionHolder').prepend(button);
+
+	if (id === 'Properties') {
+		$('#' + inputId).on('click', function (e) {
+			nuOpenCurrentFormProperties(e);
+		});
+	} else {
+		if (typeof obj.func === "function") {
+			$('#' + inputId).on('click', obj.func);
+		} else if (typeof obj.func === "string") {
+			let funcStr = obj.func.replace(/\(event\);?/, "();");
+			$('#' + inputId).on('click', function () {
+				eval(funcStr);
+			});
+		}
+	}
 
 	const events = nuSERVERRESPONSE.events;
 	if (events) {
@@ -107,7 +122,6 @@ function nuAddAdminButton(id, obj) {
 	}
 
 	return 1;
-
 }
 
 function nuAddAdminButtons() {
