@@ -554,7 +554,7 @@ function nuFFCreatedMessage($table, $TT, $isNew, $formId, $formType, $formCode) 
 
 	$js .= "
 		nuMessage([m1, m2]);
-		$('#nunuRunPHPHiddenButton').remove();
+		$('#nuBuildFastFormButton').remove(); 
 	";
 
 	nuJavaScriptCallback($js);
@@ -613,7 +613,7 @@ function nuBuildFastReport() {
 
 		nuMessage([m1, m2]);
 
-		$('#nunuRunPHPHiddenButton').remove();
+		$('#nuBuildFastFormButton').remove();
 
 	";
 
