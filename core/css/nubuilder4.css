@@ -1199,7 +1199,7 @@ input[type=radio] {
 .nuSaveButtonEdited {
 	background-color: #fff9f8 !important;
 	background: unset;
-	color: #dc3545;
+	color: #d2182a;
 	border-color: #efcfd2;
 }
 
