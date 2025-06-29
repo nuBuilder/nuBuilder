@@ -42,8 +42,6 @@ function nuCreateDrag() {
 
 	}
 
-
-
 	this.getSelected = function () {
 
 		var s = document.getElementsByClassName('nuDragSelected');
@@ -56,7 +54,6 @@ function nuCreateDrag() {
 		}
 
 	}
-
 
 	this.down = function (event) {
 
@@ -85,10 +82,7 @@ function nuCreateDrag() {
 		this.startY = event.clientY;
 		this.moveX = 0;
 		this.moveY = 0;
-
-
 		this.setSelectedCoordinates();
-
 		this.selectBox(event);
 
 	}
@@ -177,7 +171,6 @@ function nuCreateDrag() {
 		return b;
 	}
 
-
 	this.canMove = function (event) {
 
 		if (this.left + (this.moveX - this.lastMoveX) + this.areaLeft() < this.areaLeft()) { return false; }
@@ -199,7 +192,6 @@ function nuCreateDrag() {
 		return true;
 
 	}
-
 
 	this.moveSelected = function () {
 
@@ -280,7 +272,6 @@ function nuCreateDrag() {
 		}
 
 	}
-
 
 	this.selectBox = function (event) {
 
@@ -401,7 +392,6 @@ function nuCreateDrag() {
 
 	}
 
-
 	this.areaLeft = function (a) {
 
 		if (arguments.length == 1) {
@@ -450,7 +440,6 @@ function nuCreateDrag() {
 			.addClass('nuDragArea nuDragNoSelect');
 
 	}
-
 
 	this.createObject = function (id, prop) {
 

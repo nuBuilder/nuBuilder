@@ -1389,18 +1389,11 @@ function nuCanMove() {
 
 function nuGetTopArea() {
 
-	var nuActionHolder = parseInt($('#nuActionHolder').css('height'), 10);
-	var nuTabHolder = parseInt($('#nuTabHolder').css('height'), 10);
-	var dialogTitle = parseInt(parent.window.$('#dialogTitle').css('height'), 10);
+	const element = document.getElementById('nuRECORD');
+	const rect = element.getBoundingClientRect();
+	const absoluteTop = rect.top + window.scrollY;
 
-	var nuBreadcrumbHolder;
-	if ($('#nuBreadcrumbHolder').length == 1) {
-		nuBreadcrumbHolder = parseInt($('#nuBreadcrumbHolder').css('height'), 10);
-	} else {
-		nuBreadcrumbHolder = 0;
-	}
-
-	return nuActionHolder + nuBreadcrumbHolder + nuTabHolder + dialogTitle;
+	return absoluteTop;
 
 }
 
