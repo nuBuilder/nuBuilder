@@ -2166,20 +2166,20 @@ function nuSetPlaceholder(i, placeholder = null, translate = true) {
 
 }
 
-function nuSetToolTip(i, message, labelHover) {
+function nuSetToolTip(id, message, labelHover) {
 
 	const setToolTip = selector => {
 		$(selector)
 			.on("mouseenter", function () {
-				$(this).attr("title", message);
+				$(this).attr("title", nuTranslate(message));
 			})
 			.on("mouseleave", function () {
 				$(this).removeAttr("title");
 			});
 	};
 
-	setToolTip("#" + i);
-	if (labelHover) setToolTip("#label_" + i);
+	setToolTip("#" + id);
+	if (labelHover) setToolTip("#label_" + id);
 
 }
 
