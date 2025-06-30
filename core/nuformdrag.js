@@ -670,7 +670,7 @@ function nuCreateDragOptionsBox(form) {
 
 	nuAddContentBoxFrames();
 	nuShowContentBoxFrames();
-	nuToggleHiddenObjects(); // hide hidden objects by dafault
+	nuToggleHiddenObjects();
 
 	if ($('div.nuTab[id^="nuTab"]').length == 1) {
 		$('#move_tab_btn', window.parent.document.body).css('visibility', 'hidden');
@@ -693,36 +693,54 @@ function nuDragToggleTabOrder() {
 
 	const select = parentDoc.querySelector('#nuDragOptionsFields');
 	Array.from(select.options).forEach((option, index) => {
-		let target = $('#' + option.value, nuGetNuDragDialogIframes(true))[0] || document.getElementById(option.value);
+		const target =
+			$('#' + option.value, nuGetNuDragDialogIframes(true))[0] ||
+			document.getElementById(option.value);
 		if (target && target.getAttribute('data-drag') === '1') {
 			const marker = document.createElement("div");
 			marker.className = "nu-drag-marker";
 			marker.textContent = index;
-			marker.style.position = "absolute";
-			marker.style.top = "0";
-			marker.style.right = "0";
-			marker.style.left = "auto";
-			marker.style.transform = "translate(-2px, 2px)";
+			const width = target.getBoundingClientRect().width;
+			if (width < 50) {
+				marker.style.position = "absolute";
+				marker.style.top = "50%";
+				marker.style.left = "100%";
+				marker.style.transform = "translate(4px, -50%)";
+				if (getComputedStyle(target).overflow === "hidden") {
+					target.style.overflow = "visible";
+				}
+			} else {
+				marker.style.position = "absolute";
+				marker.style.top = "0";
+				marker.style.right = "0";
+				marker.style.left = "auto";
+				marker.style.transform = "translate(-2px, 2px)";
+			}
 			marker.style.backgroundColor = "red";
 			marker.style.color = "white";
 			marker.style.padding = "2px 5px";
-			marker.style.margin = "0px";
+			marker.style.margin = "0";
 			marker.style.fontSize = "12px";
 			marker.style.zIndex = "9999";
 			marker.style.borderRadius = "4px";
 			marker.style.boxShadow = "0 1px 3px rgba(0,0,0,0.2)";
 			marker.style.pointerEvents = "none";
+
 			if (getComputedStyle(target).position === "static") {
 				target.style.position = "relative";
 			}
+
 			if (target.classList.contains('nu_contentbox')) {
 				target.parentElement.querySelector('.nuContentBoxFrame').appendChild(marker);
 			} else {
 				target.appendChild(marker);
 			}
+
 		}
 	});
+
 }
+
 
 function nuToggleHiddenObjects() {
 	$('.nuDragHidden', nuGetNuDragDialogIframes(true)).each(function () {
