@@ -1584,7 +1584,8 @@ input[type=radio] {
 }
 
 .nuDragOptionsButtonDisabled {
-	color: gray !important;
+	background-color: #d3d3d3 !important;
+	color: #9b9b9b;
 	text-shadow: none
 }
 
