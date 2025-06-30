@@ -590,7 +590,7 @@ function nuDragGenerateOptionsControlPanel(dragOptionsBoxWidth, dragOptionsBoxMi
 							<td>${nuDragCreateButton("move_tab_btn", `${classNuDragOptionsButton} nuDragOptionsSaveButtonEdited`, "", "Move to Tab", "nuMoveNuDrag")}</td>
 						</tr>
 						<td>
-							${nuDragCreateCheckbox("nuShowDragLabels", "Show Labels", "nuToggleDragLabels", "fas fa-text-slash")}
+							${nuDragCreateCheckbox("nuShowDragLabels", "Show Labels", "nuToggleDragLabels", "fas fa-text-slash", false)}
 							${nuDragCreateCheckbox("nuShowTaborder", "Tab Order", "nuDragToggleTabOrder", "fa-solid fa-list-ol fa-fw")}
 							${nuDragCreateCheckbox("nuShowHiddenObjects", "Show Hidden Objects", "nuToggleHiddenObjects", "fas fa-eye-slash")}
 						</td>
@@ -751,6 +751,7 @@ function nuToggleHiddenObjects() {
 }
 
 function nuToggleDragLabels() {
+
 	$('.nuDragLabel', nuGetNuDragDialogIframes(true)).each(function () {
 		$(this).css('visibility', function (i, visibility) {
 			return visibility === 'visible' ? 'hidden' : 'visible';
@@ -765,6 +766,9 @@ function nuToggleDragLabels() {
 			$this.text($this.attr('data-drag-button-label')).attr('data-drag-value-visible', '');
 		}
 	});
+
+	nuDragToggleTabOrder();
+
 }
 
 function nuShowContentBoxFrames() {
