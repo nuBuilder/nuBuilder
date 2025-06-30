@@ -1540,7 +1540,7 @@ function nuGatherFormAndSessionData($home, $globalAccess) {
 			$p = nuProcedureAccessList($access);
 
 			if (!in_array($formAndSessionData->record_id, $p)) { 		//form_id is record_id for getphp^
-				$stmt = nuRunQuery("SELECT sph_code FROM zzzzsys_php WHERE zzzzsys_php_id = ?", [$formAndSessionData->record_id]);
+				$stmt = nuRunQuery("SELECT sph_code FROM zzzzsys_php WHERE zzzzsys_php_id = ? AND IFNULL(sph_status,'1') = '1'", [$formAndSessionData->record_id]);
 				nuDisplayErrorAccessDenied($callType, $stmt);
 			}
 
