@@ -1414,7 +1414,6 @@ input[type=radio] {
 }
 
 #dialogTitleWords {
-	background: linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(246, 246, 246, 1) 60%, rgba(237, 237, 237, 1) 100%);
 	background: rgb(255, 255, 255);
 	height: 30px;
 	padding-top: 9px
