@@ -1324,10 +1324,12 @@ function nuDRAG(w, i, l, p, prop) {
 	const nuObjectType = p + obj.type;
 
 	let tagType = 'div';
+	/*
 	if (nuObjectType == 'textarea' || nuObjectType == 'input') {
 		tagType = nuObjectType;
 	}
-
+	*/
+	
 	const drgDiv = nuCreateElementWithId(tagType, id, p + 'nuRECORD');
 	let $id = $(drgDiv);
 

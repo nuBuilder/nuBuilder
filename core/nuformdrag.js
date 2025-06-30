@@ -472,6 +472,8 @@ function nuMoveUpOrder() {
 
 	}
 
+	nuDragToggleTabOrder();
+
 }
 
 function nuMoveDownOrder() {
@@ -511,6 +513,8 @@ function nuMoveDownOrder() {
 
 	}
 
+	nuDragToggleTabOrder();
+
 }
 
 function nuFindFieldInState(tabNo, fieldID) {
@@ -539,12 +543,13 @@ function nuDragCreateSelectBox(id, className, extraStyle = '') {
 	return `<select id="${id}" class="${className}" style="${extraStyle}"></select>`;
 }
 
-function nuDragCreateCheckbox(id, title, onClickFunction, iconClass, marginLeft = '') {
+function nuDragCreateCheckbox(id, title, onClickFunction, iconClass, checked = true, marginLeft = '') {
+	const checkedAttribute = checked ? 'checked' : '';
 
-	return `<input type="checkbox" checked id="${id}" title="${title}" onclick="${onClickFunction}();" style="margin-left: ${marginLeft}">
+	return `<input type="checkbox" ${checkedAttribute} id="${id}" title="${title}" onclick="${onClickFunction}();" style="margin-left: ${marginLeft}">
 			<label for="${id}"><i class="${iconClass}"></i></label>`;
-
 }
+
 
 function nuDragGenerateOptionsControlPanel(dragOptionsBoxWidth, dragOptionsBoxMinHeight, classNuDragOptionsButton) {
 
@@ -586,7 +591,8 @@ function nuDragGenerateOptionsControlPanel(dragOptionsBoxWidth, dragOptionsBoxMi
 						</tr>
 						<td>
 							${nuDragCreateCheckbox("nuShowDragLabels", "Show Labels", "nuToggleDragLabels", "fas fa-text-slash")}
-							${nuDragCreateCheckbox("nuShowHiddenObjects", "Show Hidden Objects", "nuToggleHiddenObjects", "fas fa-eye-slash", "30px")}
+							${nuDragCreateCheckbox("nuShowTaborder", "Tab Order", "nuDragToggleTabOrder", "fa-solid fa-list-ol fa-fw")}
+							${nuDragCreateCheckbox("nuShowHiddenObjects", "Show Hidden Objects", "nuToggleHiddenObjects", "fas fa-eye-slash")}
 						</td>
 						<td>
 							${nuDragCreateButton("save_btn", `${classNuDragOptionsButton} nuDragOptionsSaveButtonEdited`, "fa-fw fa-regular fa-lg fa-floppy-disk", "Save", "nuSaveNuDrag")}
@@ -642,6 +648,8 @@ function nuCreateDragOptionsBox(form) {
 			nuCheckIfMovingTabOrderAllowed($nuDragOptionsFields);
 			nuCheckIfMovingFieldToOtherTabAllowed($nuDragOptionsFields);
 
+			nuDragToggleTabOrder();
+
 		});
 
 	nuCheckIfMovingTabOrderAllowed($('#nuDragOptionsFields'));
@@ -672,6 +680,48 @@ function nuCreateDragOptionsBox(form) {
 	$('#nuRECORD').css('height', window.innerHeight);
 	$('.nuRECORD').css("width", "99.3%");
 
+	nuDragToggleTabOrder();
+
+}
+
+function nuDragToggleTabOrder() {
+
+	$('.nu-drag-marker', nuGetNuDragDialogIframes(true)).remove();
+
+	const parentDoc = window.parent.document;
+	if (!parentDoc.querySelector('#nuShowTaborder').checked) return;
+
+	const select = parentDoc.querySelector('#nuDragOptionsFields');
+	Array.from(select.options).forEach((option, index) => {
+		let target = $('#' + option.value, nuGetNuDragDialogIframes(true))[0] || document.getElementById(option.value);
+		if (target && target.getAttribute('data-drag') === '1') {
+			const marker = document.createElement("div");
+			marker.className = "nu-drag-marker";
+			marker.textContent = index;
+			marker.style.position = "absolute";
+			marker.style.top = "0";
+			marker.style.right = "0";
+			marker.style.left = "auto";
+			marker.style.transform = "translate(-2px, 2px)";
+			marker.style.backgroundColor = "red";
+			marker.style.color = "white";
+			marker.style.padding = "2px 5px";
+			marker.style.margin = "0px";
+			marker.style.fontSize = "12px";
+			marker.style.zIndex = "9999";
+			marker.style.borderRadius = "4px";
+			marker.style.boxShadow = "0 1px 3px rgba(0,0,0,0.2)";
+			marker.style.pointerEvents = "none";
+			if (getComputedStyle(target).position === "static") {
+				target.style.position = "relative";
+			}
+			if (target.classList.contains('nu_contentbox')) {
+				target.parentElement.querySelector('.nuContentBoxFrame').appendChild(marker);
+			} else {
+				target.appendChild(marker);
+			}
+		}
+	});
 }
 
 function nuToggleHiddenObjects() {
