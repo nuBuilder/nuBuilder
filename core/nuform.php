@@ -323,32 +323,36 @@ function nuGetFormModifyObject($object, $formObject, $row, $recordId, $data, $nu
 	if ($row->sob_all_type == 'editor' || ($row->sob_all_type == 'input' && $fileTarget == 1)) {
 		$object->html = nuReplaceHashVariables($row->sob_html_code);
 	}
-	if ($row->sob_all_type == 'html') {
-		if ($row->sob_html_chart_type == '') {
-			$object->html = nuReplaceHashVariables($row->sob_html_code);
-		} else {
-			$object->html = '';
-			$htmljs = addslashes($row->sob_html_javascript);
-			$verticalLabel = $row->sob_html_vertictal_label ?? '';
-			$horizontalLabel = $row->sob_html_horizontal_label ?? '';
-			$title = $row->sob_html_title ?? '';
-			$chart_options = [
-				'p' => ['type' => 'PieChart', 'stacked' => false, 'chart_type' => 'pie'],
-				'l' => ['type' => 'ComboChart', 'stacked' => false, 'chart_type' => 'lines'],
-				'b' => ['type' => 'ComboChart', 'stacked' => false, 'chart_type' => 'bars'],
-				'bs' => ['type' => 'ComboChart', 'stacked' => true, 'chart_type' => 'bars'],
-				'bh' => ['type' => 'BarChart', 'stacked' => false, 'chart_type' => 'bars'],
-				'bhs' => ['type' => 'BarChart', 'stacked' => true, 'chart_type' => 'bars']
-			];
-			$chart_type = $row->sob_html_chart_type ?? '';
-			if (array_key_exists($chart_type, $chart_options)) {
-				$type = $chart_options[$chart_type]['type'];
-				$stacked = $chart_options[$chart_type]['stacked'];
-				$chart_type = $chart_options[$chart_type]['chart_type'];
-				$htmlj = "\nnuChart('$row->sob_all_id', '$type', '$htmljs', '$title', '$horizontalLabel', '$verticalLabel', '$chart_type', $stacked);";
-				nuAddJavaScript($htmlj);
-			}
+
+	if ($row->sob_all_type == 'chart') {
+
+		// $object->html = '';
+		$htmljs = addslashes($row->sob_html_javascript);
+		$verticalLabel = $row->sob_html_vertictal_label ?? '';
+		$horizontalLabel = $row->sob_html_horizontal_label ?? '';
+		$title = $row->sob_html_title ?? '';
+		$chart_options = [
+			'p' => ['type' => 'PieChart', 'stacked' => false, 'chart_type' => 'pie'],
+			'l' => ['type' => 'ComboChart', 'stacked' => false, 'chart_type' => 'lines'],
+			'b' => ['type' => 'ComboChart', 'stacked' => false, 'chart_type' => 'bars'],
+			'bs' => ['type' => 'ComboChart', 'stacked' => true, 'chart_type' => 'bars'],
+			'bh' => ['type' => 'BarChart', 'stacked' => false, 'chart_type' => 'bars'],
+			'bhs' => ['type' => 'BarChart', 'stacked' => true, 'chart_type' => 'bars']
+		];
+
+		$chart_type = $row->sob_html_chart_type ?? '';
+		if (array_key_exists($chart_type, $chart_options)) {
+			$type = $chart_options[$chart_type]['type'];
+			$stacked = $chart_options[$chart_type]['stacked'];
+			$chart_type = $chart_options[$chart_type]['chart_type'];
+			$htmlj = "\nnuChart('$row->sob_all_id', '$type', '$htmljs', '$title', '$horizontalLabel', '$verticalLabel', '$chart_type', $stacked);";
+			nuAddJavaScript($htmlj);
 		}
+
+	}
+
+	if ($row->sob_all_type == 'html') {
+		$object->html = nuReplaceHashVariables($row->sob_html_code);
 	}
 
 	if ($row->sob_all_type == 'image') {

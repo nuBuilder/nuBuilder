@@ -94,7 +94,9 @@ function nuAlterSystemTables() {
 		"UPDATE `zzzzsys_php` SET `sph_code` = REPLACE(`sph_code`, 'nuAfterUpdate', 'nu_after_update') WHERE IFNULL(`sph_code`, '') = 'nuAfterUpdate';",
 		"UPDATE `zzzzsys_php` SET `sph_code` = REPLACE(`sph_code`, 'nuSendWelcomeEmail', 'nu_send_welcome_email') WHERE IFNULL(`sph_code`, '') = 'nuSendWelcomeEmail';",
 		"UPDATE `zzzzsys_object` SET sob_html_code = REPLACE(sob_html_code, 'procedure: ''NUUPLOADFILE_TEMPLATE''', 'procedure: ''nu_upload_file_template''') WHERE IFNULL(sob_html_code, '') LIKE '%NUUPLOADFILE_TEMPLATE%';",
-		"UPDATE `zzzzsys_object` SET sob_html_code = REPLACE(sob_html_code, 'procedure: ''NUUPLOADFILE''', 'procedure: ''nu_upload_file''') WHERE IFNULL(sob_html_code, '') LIKE '%NUUPLOADFILE%';"
+		"UPDATE `zzzzsys_object` SET sob_html_code = REPLACE(sob_html_code, 'procedure: ''NUUPLOADFILE''', 'procedure: ''nu_upload_file''') WHERE IFNULL(sob_html_code, '') LIKE '%NUUPLOADFILE%';",
+		"UPDATE `zzzzsys_object` SET sob_all_type = 'chart' WHERE sob_all_type = 'html' AND IFNULL(sob_html_chart_type,'') <> '' "
+
 	];
 
 	foreach ($alterTableSQL as $sqlStatement) {
