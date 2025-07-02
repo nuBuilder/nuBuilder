@@ -1329,7 +1329,7 @@ function nuDRAG(w, i, l, p, prop) {
 		tagType = nuObjectType;
 	}
 	*/
-	
+
 	const drgDiv = nuCreateElementWithId(tagType, id, p + 'nuRECORD');
 	let $id = $(drgDiv);
 
@@ -4832,7 +4832,7 @@ function nuBrowseTable() {
 	const columns = currentForm.browse_columns;
 	const rows = currentForm.browse_rows;
 	const rowCount = rows.length;
-	const rowHeight = currentForm.row_height;
+	const rowHeight = currentForm.row_height + 5;
 
 	let incrementalWidth = 0;
 	let topOffset = nuBrowseCalculateInitialTopOffset(rowHeight);
@@ -4840,7 +4840,7 @@ function nuBrowseTable() {
 
 	for (let rowIndex = 0; rowIndex < currentForm.rows; rowIndex++) {
 		leftOffset = 7;
-		topOffset += rowHeight + 7;
+		topOffset += rowHeight + 1;
 
 		if (rowCount === 0 && rowIndex > 0) {
 			nuBrowseHandleNoDataScenario();
@@ -4924,6 +4924,11 @@ function nuBrowseSetCellAttributes(div, rowIndex, colIndex, column) {
 	div.style.padding = (column.width < 0 ? 0 : undefined) + 'px';
 	div.style.borderWidth = (column.width < 0 ? 0 : undefined) + 'px';
 	div.classList.add(`nuCell${(rowIndex / 2 === parseInt(rowIndex / 2, 10)) ? 'Even' : 'Odd'}`);
+
+	if (colIndex === 0) {
+		div.classList.add('nuBrowseBorderLeft');
+	}
+
 }
 
 function nuBrowseSetCellContentAndEvents($div, browseRows, rowIndex, colIndex, currentColumn) {

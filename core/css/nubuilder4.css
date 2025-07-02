@@ -718,7 +718,7 @@ input[type=radio] {
 	left: auto;
 	width: auto;
 	background-color: transparent;
-	padding-right: 20px;
+	padding-right: 10px;
 	border-top: 1px solid var(--nu-border);
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 	border: none;
@@ -742,7 +742,6 @@ input[type=radio] {
 	min-height: 50px;
 	white-space: normal;
 	cursor: default;
-	/*	padding: 1px 20px 5px 0px; */
 }
 
 .nuBrowseTitle .nuSort {
@@ -754,7 +753,7 @@ input[type=radio] {
 
 .nuBrowseTable {
 	height: 70px;
-	padding: 1px 0px 5px 10px;
+	padding: 0px 0px 0px 10px;
 	position: absolute;
 	top: 75px;
 	font: 13px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -762,12 +761,14 @@ input[type=radio] {
 	white-space: nowrap
 }
 
-.nuBrowseBorderTop {
-	/*	border-top: solid #d0d0d0 1px !important */
-}
-
 .nuBrowseBorderBottom {
 	border-bottom: solid #d0d0d0 1px !important
+}
+
+.nuBrowseBorderLeft {
+	border-left-style: solid;
+	border-left-color: #ebebeb70;
+	border-left-width: 1px;
 }
 
 .nuBrowseFooter {
@@ -860,7 +861,7 @@ input[type=radio] {
 	height: 70px;
 	border-style: solid;
 	border-width: 1px;
-	padding: 1px 0px 5px 10px;
+	padding: 0px 0px 0px 10px;
 	position: absolute;
 	top: 75px;
 	font: 13px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
