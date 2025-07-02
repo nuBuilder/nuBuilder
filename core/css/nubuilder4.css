@@ -765,6 +765,12 @@ input[type=radio] {
 	border-bottom: solid #d0d0d0 1px !important
 }
 
+.nuBrowseBorderTop {
+	border-top-style: solid;
+	border-top-color: #ebebeb70;
+	border-top-width: 1px;
+}
+
 .nuBrowseBorderLeft {
 	border-left-style: solid;
 	border-left-color: #ebebeb70;

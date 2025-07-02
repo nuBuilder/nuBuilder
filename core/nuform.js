@@ -4929,6 +4929,10 @@ function nuBrowseSetCellAttributes(div, rowIndex, colIndex, column) {
 		div.classList.add('nuBrowseBorderLeft');
 	}
 
+	if (rowIndex === 0) {
+		div.classList.add('nuBrowseBorderTop');
+	}
+
 }
 
 function nuBrowseSetCellContentAndEvents($div, browseRows, rowIndex, colIndex, currentColumn) {
