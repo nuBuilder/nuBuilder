@@ -62,6 +62,7 @@ function nuAlterSystemTables() {
 		"ALTER TABLE `zzzzsys_select` ADD `sse_code` VARCHAR(50) NULL DEFAULT NULL AFTER `zzzzsys_select_id`;",
 		"ALTER TABLE `zzzzsys_code_snippet` CHANGE `cot_updated_on` `cot_updated_on` TIMESTAMP on update CURRENT_TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP;",
 		"ALTER TABLE `zzzzsys_code_snippet` ADD `cot_group` VARCHAR(80) NULL DEFAULT NULL AFTER `cot_description`;",
+		"ALTER TABLE `zzzzsys_code_snippet`  ADD `cot_template` VARCHAR(1) NULL DEFAULT NULL AFTER `cot_scope`",
 		"ALTER TABLE `zzzzsys_cloner` ADD `clo_tables_include` MEDIUMTEXT NULL DEFAULT NULL AFTER `clo_iframe_forms`;",
 		"ALTER TABLE `zzzzsys_cloner` ADD `clo_tables_exclude` MEDIUMTEXT NULL DEFAULT NULL AFTER `clo_tables_include`;",
 		"ALTER TABLE `zzzzsys_email_template` ADD `emt_template` VARCHAR(1) NULL DEFAULT '0' AFTER `emt_group`;",
