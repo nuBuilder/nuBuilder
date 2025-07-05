@@ -1075,7 +1075,13 @@ function nuContextMenuLabelPromptCallback(value, ok) {
 			nuSetLabelText(contextMenuCurrentTarget.id.substring(6), value, true);
 		} else {
 			objLabel.html(nuTranslate(value));
-			objLabel.attr('data-nu-org-label', value);
+
+			if (objLabel.hasClass('nuSort')) {
+				objLabel.parent().attr('data-nu-org-title', value);
+			} else {
+				objLabel.attr('data-nu-org-label', value);
+			}
+
 			const icon = objLabel.attr('nu-data-icon');
 			if (icon) {
 				nuAddInputIcon(contextMenuCurrentTarget.id, icon);
@@ -1090,7 +1096,6 @@ function nuContextMenuLabelPromptCallback(value, ok) {
 	}
 
 }
-
 
 function nuContextMenuAddTabPromptCallback(tabNr, tabName) {
 
@@ -1109,20 +1114,30 @@ function nuContextMenuAddTabPromptCallback(tabNr, tabName) {
 
 function nuContextMenuLabelPrompt() {
 
-	const label = contextMenuCurrentTarget.id;
 	const id = nuContextMenuCurrentTargetId();
 	const obj = $('#' + contextMenuCurrentTarget.id);
-	let caption = obj.attr('data-nu-org-label');
 
-	if (caption) {
-		caption = nuTranslate("Tab") + ': ' + caption
+	let caption = '';
+	if (obj.hasClass('nuSort')) {
+		caption = obj.parent().attr('data-nu-org-title');
 	} else {
-		caption = nuTranslate("Object") + ': ' + id
+		caption = obj.attr('data-nu-org-label');
 	}
 
-	let defaultValue = obj.attr('data-nu-org-label');
-	if (typeof defaultValue === 'undefined') {
-		defaultValue = obj.is(":button") ? defaultValue : $('#' + label).html();
+	let defaultValue = '';
+
+	const objType = nuTranslate(
+		obj.hasClass('nuTab') ? 'Tab' :
+			obj.hasClass('nuSort') ? 'Title' :
+				'Object'
+	);
+
+	if (caption) {
+		defaultValue = caption;
+		caption = objType + ': ' + caption
+	} else {
+		defaultValue = id;
+		caption = objType + ': ' + id;
 	}
 
 	defaultValue = obj.is(":button") && obj.attr('data-nu-label') ? obj.html() : defaultValue;
@@ -1194,7 +1209,7 @@ function nuContextMenuCurrentTargetBrowseId() {
 function nuContextMenuCurrentTargetBrowseIdText() {
 
 	let id = contextMenuCurrentTarget.id;
-	return $('#' + id).parent().attr('id') + ' (' + $('#' + id).parent().attr('data-nu-title-id') + ')';
+	return $('#' + id).parent().attr('id');
 
 }
 

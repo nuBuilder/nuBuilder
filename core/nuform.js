@@ -4553,7 +4553,8 @@ function nuBrowseTitle(columns, index, left, multiline) {
 			'width': columnWidth,
 			'left': left
 		})
-		.attr('data-nu-title-id', columns[index].id);
+		.attr('data-nu-title-id', columns[index].id)
+		.attr('data-nu-org-title', columns[index].title)
 
 	if (columnWidth === 0) {
 		element.hide();
@@ -4562,6 +4563,7 @@ function nuBrowseTitle(columns, index, left, multiline) {
 	$('#nusearch_' + index).attr('checked', columnIndex === -1);
 
 	return left + nuTotalWidth(elementId);
+	
 }
 
 
