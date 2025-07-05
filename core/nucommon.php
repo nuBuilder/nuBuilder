@@ -1168,9 +1168,9 @@ function nuGetDefaultFormats() {
 	$stmt = nuRunQuery($query);
 	while ($row = db_fetch_array($stmt)) {
 		if ($row['srm_type'] === 'Date' && empty($formats['Date'])) {
-			$formats['Date'] = $row['srm_format'];
+			$formats['Date'] = 'D|'. $row['srm_format'];
 		} elseif ($row['srm_type'] === 'Number' && empty($formats['Number'])) {
-			$formats['Number'] = $row['srm_format'];
+			$formats['Number'] = 'N|'. $row['srm_format'];
 		}
 
 		if (!empty($formats['Date']) && !empty($formats['Number'])) {
