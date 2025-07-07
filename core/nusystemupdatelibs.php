@@ -136,9 +136,9 @@ function nuAlterSystemTables() {
 
 function nuCopySystemTables() {
 
-	nuDropDatabaseObject('zzzzsys_report_data', ['VIEW', 'TABLE']);
-	nuDropDatabaseObject('zzzzsys_run_list', ['VIEW', 'TABLE']);
-	nuDropDatabaseObject('zzzzsys_object_list', ['VIEW', 'TABLE']);
+	nuDropDatabaseObject('zzzzsys_report_data', ['TABLE', 'VIEW']);
+	nuDropDatabaseObject('zzzzsys_run_list', ['TABLE', 'VIEW']);
+	nuDropDatabaseObject('zzzzsys_object_list', ['TABLE', 'VIEW']);
 
 	$t = nuSystemList();
 
