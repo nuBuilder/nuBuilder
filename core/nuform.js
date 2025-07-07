@@ -4563,7 +4563,7 @@ function nuBrowseTitle(columns, index, left, multiline) {
 	$('#nusearch_' + index).attr('checked', columnIndex === -1);
 
 	return left + nuTotalWidth(elementId);
-	
+
 }
 
 
@@ -5114,6 +5114,7 @@ function nuBrowseLoop(columns, callback) {
 	const results = [];
 
 	cells.forEach(cell => {
+
 		const row = parseInt(cell.getAttribute('data-nu-row'), 10);
 		const column = +cell.getAttribute('data-nu-column');
 		const columnId = cell.getAttribute('data-nu-column-id');
@@ -5122,11 +5123,16 @@ function nuBrowseLoop(columns, callback) {
 			(typeof colSpec === 'number' && column === colSpec) ||
 			(typeof colSpec === 'string' && colSpec === columnId)
 		);
+
 		if (!isMatch) return;
 
-		const cellText = cell.textContent;
-		const cellHtml = cell.innerHTML;
-		const ret = callback(row, column, columnId, cellText, cellHtml);
+		cell.row = row;
+		cell.column = column;
+		cell.columnId = columnId;
+		cell.text = cell.textContent;
+		cell.html = cell.innerHTML;
+
+		const ret = callback(cell);
 
 		if (ret !== undefined) {
 			results.push(ret);
