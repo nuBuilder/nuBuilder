@@ -4268,7 +4268,7 @@ function fm_show_header_login()
             #editor {
                 position: absolute;
                 right: 15px;
-                top: 100px;
+                top: 110px;
                 bottom: 15px;
                 left: 15px
             }
