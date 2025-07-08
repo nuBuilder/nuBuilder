@@ -3863,23 +3863,16 @@ function nuAddBreadcrumb(i) {
 
 function nuMainForm(ignoreOpener = false) {
 
-	if (opener && !ignoreOpener) {
-
-		try {
-			return nuDocumentID == opener.nuDocumentID;
-		} catch (error) {
-			return false;
-		}
-	}
-
-	return nuDocumentID == parent.nuDocumentID;
+	const readID = w => { try { return w.nuDocumentID } catch { } };
+	const src = (!ignoreOpener && opener) ? opener : parent;
+	const id = readID(src);
+	return id == null || id === nuDocumentID;
 
 }
 
 function nuSetBrowseTitle(title) {
 	nuSetTitle(title, true);
 }
-
 
 function nuSetTitle(title, browse) {
 
