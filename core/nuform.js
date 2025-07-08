@@ -126,6 +126,10 @@ function nuBuildForm(formObj) {
 
 	nuGetStartingTab();
 
+	if (nuGlobalAccess()) {
+		nuAddAdminButtons();
+	}
+
 	if (formType == 'edit' && nuIsNewRecord() && (firstObject !== null)) {
 		firstObject.nuFocusWithoutScrolling();
 	}
@@ -186,10 +190,6 @@ function nuBuildForm(formObj) {
 		nuSetBrowserTabTitle(nuUXOptions.nuBrowserTabTitlePrefix);
 	} else {
 		document.title = nuUXOptions.nuBrowserTabTitlePrefix;
-	}
-
-	if (nuGlobalAccess()) {
-		nuAddAdminButtons();
 	}
 
 	if (nuUXOptions.nuEnableBrowserBackButton) {
@@ -1084,10 +1084,17 @@ function nuAddActionButton(id, value, func, title, icon, insertAfterElement) {
 
 	}
 
-	if (nuSERVERRESPONSE.form_type === 'launch' && $('.nuActionButton').length === 0 && $('.nuAdminButton').length === 0) {
-		if (nuTotalHeight('nuActionHolder') < 70) {
-			$('.nuActionHolder').css('height', '70')
+	if (nuSERVERRESPONSE.form_type === 'launch' && $('.nuActionButton').length === 0) {
+
+		const hasAdminButtons = $('.nuAdminButton').length > 0;
+		const actionHolderHeight = nuTotalHeight('nuActionHolder');
+
+		if (actionHolderHeight < 72 && hasAdminButtons) {
+			$('.nuActionHolder').css('height', '72')
+		} else if (actionHolderHeight < 45 && !hasAdminButtons) {
+			$('.nuActionHolder').css('height', '45')
 		}
+
 	}
 
 	if (typeof value === 'object') {
