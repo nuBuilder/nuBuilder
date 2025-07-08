@@ -4652,7 +4652,7 @@ function nuResizeBrowseColumns(force) {
 		$('#nuDragDialog', window.parent.document).css('width', browseFooterWidth + 14);
 		$('#nuWindow', window.parent.document).css('width', browseFooterWidth);
 
-		document.body.style.width = bodyWidth;
+		// document.body.style.width = bodyWidth;
 
 	}
 
