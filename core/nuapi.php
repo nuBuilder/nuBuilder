@@ -87,7 +87,7 @@ if (count($formAndSessionData->errors) == 0) {
 	if ($callType == 'logout')
 		nuLogout();
 	elseif ($callType == 'login')
-		nuRunLoginProcedure('nuStartup');
+		nuRunLoginProcedure('nu_startup');
 	elseif ($callType == 'ssologin')
 		nuSsoLoginCheckParams();
 
