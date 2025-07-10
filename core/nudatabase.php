@@ -145,27 +145,42 @@ function nuQueryExtractQueryComponents($query) {
 	];
 }
 
+
+function nuGetDBParams() {
+	global $nuDB,
+	$nuConfigDBHost,
+	$nuConfigDBName,
+	$nuConfigDBUser,
+	$nuConfigDBPassword,
+	$nuConfigDBCharacterSet;
+
+	return [
+		'DBHost' => $nuConfigDBHost,
+		'DBName' => $nuConfigDBName,
+		'DBUser' => $nuConfigDBUser,
+		'DBPassword' => $nuConfigDBPassword,
+		'DBCharset' => $nuConfigDBCharacterSet,
+		'DB' => $nuDB
+	];
+}
+
+
 function nuRunQuery($sql, $params = [], $isInsert = false) {
 
-	global $nuDB;
-	global $DBHost;
-	global $DBName;
-	global $DBUser;
-	global $DBPassword;
-
-	global $DBCharset;
-
-	if ($sql == '') {
+	$dbParams = nuGetDBParams();
+	if ($sql === '') {
 		$params = [];
-		$params[0] = $DBHost;
-		$params[1] = $DBName;
-		$params[2] = $DBUser;
-		$params[3] = $DBPassword;
-		$params[4] = $nuDB;
-		$params[5] = $DBCharset;
+		$params[0] = $dbParams['DBHost'];
+		$params[1] = $dbParams['DBName'];
+		$params[2] = $dbParams['DBUser'];
+		$params[3] = $dbParams['DBPassword'];
+		$params[4] = $dbParams['DB'];
+		$params[5] = $dbParams['DBCharset'];
+
 		return $params;
 	}
 
+	$nuDB = $dbParams['DB'];
 	$sqlParts = nuQueryExtractQueryComponents($sql);
 	$commands = $sqlParts['commands'];
 	if (!empty($commands)) {
