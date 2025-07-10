@@ -1,37 +1,128 @@
 <?php
-require_once ('nusessiondata.php');
-require_once ('nucommon.php');
-require_once ('nudata.php');
+require_once('nusessiondata.php');
+require_once('nucommon.php');
+require_once('nudata.php');
 
 print "<meta charset='utf-8'>";
 
-$debugId = $_GET['i'] ?? ''; 
+$debugId = $_GET['i'] ?? '';
 
-$sessionVariable = "nuPrint_".$debugId;
+$sessionVariable = "nuPrint_" . $debugId;
 $jsonData = isset($_SESSION[$sessionVariable]) ? json_decode($_SESSION[$sessionVariable]) : null;
+
 if ($jsonData === null) {
 	$jsonData = nuGetDebugMessageData($debugId);
-	$_SESSION[$sessionVariable] = json_encode($jsonData );
-} 
+	$_SESSION[$sessionVariable] = json_encode($jsonData);
+}
 
 if ($jsonData) {
 	$columns = $jsonData->columns;
 	$sqlQuery = $jsonData->sql;
 
-	$_POST['nuHash'] = (array)$jsonData->hash;
+	$_POST['nuHash'] = (array) $jsonData->hash;
 	$hash = nuHash();
 	$_POST['nuHash']['TABLE_ID'] = $hash['browse_table_id'];
 	nuEval($hash['form_id'] . '_BB');
-	
+
 	if (nuHasErrors()) {
-		echo implode("<br>",$_POST['nuErrors']);
+		echo implode("<br>", $_POST['nuErrors']);
 	}
-	
+
 	$data = nuExecuteQueryAndFetchData($sqlQuery);
 	$tableHtml = nuRunHTMLGenerateHTMLTable($columns, $data, $hash);
 
+
 	print $tableHtml;
-	
+
+	echo <<<HTML
+<style>
+#nuPrintDownloadBtn {
+	position: fixed;
+	top: 24px;
+	right: 24px;
+	z-index: 9999;
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	background: #1e53c6;
+	color: #fff;
+	border: none;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	font-size: 28px;
+	transition: background 0.2s;
+}
+#nuPrintDownloadBtn:hover {
+	background: #17429a;
+}
+</style>
+
+<button id="nuPrintDownloadBtn" title="Download CSV (Ctrl+Shift+D)">
+	<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+	stroke-linecap="round" stroke-linejoin="round">
+	<circle cx="12" cy="12" r="10" stroke="#fff" fill="#1e53c6"/>
+	<path d="M12 8v6M12 14l-3-3m3 3l3-3" stroke="#fff"/>
+	<rect x="8" y="16" width="8" height="2" rx="1" fill="#fff"/>
+	</svg>
+</button>
+
+<script>
+
+function tableToCSV(table) {
+
+	let csv = [];
+	for (let row of table.rows) {
+	let rowData = [];
+	for (let cell of row.cells) {
+		let text = cell.innerText.replace(/"/g, '""');
+		if (/[",\\n]/.test(text)) {
+		text = '"' + text + '"';
+		}
+		rowData.push(text);
+	}
+	csv.push(rowData.join(","));
+	}
+
+	return csv.join("\\r\\n");
+
+}
+
+function nuDownloadCSV() {
+
+	const table = document.querySelector('table');
+	if (!table) return;
+	const csv = tableToCSV(table);
+	const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv' });
+	const url = URL.createObjectURL(blob);
+	const a = document.createElement('a');
+	a.href = url;
+	a.download = 'table.csv';
+	document.body.appendChild(a);
+	a.click();
+	document.body.removeChild(a);
+	URL.revokeObjectURL(url);
+
+}
+
+document.getElementById('nuPrintDownloadBtn').onclick = nuDownloadCSV;
+document.addEventListener('keydown', function(e) {
+    if (
+        (e.ctrlKey || e.metaKey) &&
+        e.shiftKey &&
+        (e.key === 'd' || e.key === 'D')
+    ) {
+        e.preventDefault();
+        nuDownloadCSV();
+    }
+});
+
+</script>
+
+HTML;
+
 	nuRunHTMLCleanup($debugId, $hash);
 
 } else {
@@ -57,7 +148,7 @@ function nuRunHTMLGenerateTableHeader($columns, $includeHiddenColumns = false, $
 	$tableHtml = "<TR>";
 
 	$columnCount = count($columns);
-	for ($col = 0;$col < $columnCount;$col++) {
+	for ($col = 0; $col < $columnCount; $col++) {
 
 		$column = $columns[$col];
 		$printColumn = nuRunHTMLPrintColumn($col, $column, $includeHiddenColumns, $includedColumns);
@@ -91,7 +182,7 @@ function nuRunHTMLGenerateTableData($columns, $data, $includeHiddenColumns = fal
 		$tableHtml .= "\n<TR>\n";
 
 		$columnCount = count($columns);
-		for ($col = 0;$col < $columnCount;$col++) {
+		for ($col = 0; $col < $columnCount; $col++) {
 
 			$column = $columns[$col];
 			$printColumn = nuRunHTMLPrintColumn($col, $column, $includeHiddenColumns, $includedColumns);
@@ -119,7 +210,7 @@ function nuRunHTMLGenerateHTMLTable($columns, $data, $hash) {
 	$includeHiddenColumns = nuObjKey($hash, 'nuPrintincludeHiddenColumns', null) == '1' ? true : false;
 	$includedColumns = nuObjKey($hash, 'nuPrintincludedColumns', []);
 
-	if (! is_array($includedColumns)) {
+	if (!is_array($includedColumns)) {
 		$includedColumns = $includedColumns === '' ? [] : explode(',', nuDecode($includedColumns));
 	}
 
@@ -154,14 +245,13 @@ function nuGetColumnAlias($column) {
 
 	if (preg_match('/\bAS\s+(\w+)\b/i', $column, $matches)) {
 		return $matches[1];
-	}
-	else {
+	} else {
 		return false;
 	}
 
 }
 
-function nuAddJavaScript($js, $bc = false, $first = false){
+function nuAddJavaScript($js, $bc = false, $first = false) {
 	// dummy
 }
 
