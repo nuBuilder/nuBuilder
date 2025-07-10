@@ -1168,9 +1168,9 @@ function nuGetDefaultFormats() {
 	$stmt = nuRunQuery($query);
 	while ($row = db_fetch_array($stmt)) {
 		if ($row['srm_type'] === 'Date' && empty($formats['Date'])) {
-			$formats['Date'] = 'D|'. $row['srm_format'];
+			$formats['Date'] = 'D|' . $row['srm_format'];
 		} elseif ($row['srm_type'] === 'Number' && empty($formats['Number'])) {
-			$formats['Number'] = 'N|'. $row['srm_format'];
+			$formats['Number'] = 'N|' . $row['srm_format'];
 		}
 
 		if (!empty($formats['Date']) && !empty($formats['Number'])) {
@@ -2164,7 +2164,7 @@ function nuGetCSVDelimiterFromValue($value) {
 
 function nuImportUsersFromCSV($csvfile, $fieldseparator, $lineseparator) {
 
-	global $DBCharset, $DBPort;
+	global $nuConfigDBCharacterSet, $nuConfigDBPort;
 
 	$fieldseparator = nuGetCSVDelimiterFromValue($fieldseparator);
 
@@ -2174,8 +2174,8 @@ function nuImportUsersFromCSV($csvfile, $fieldseparator, $lineseparator) {
 	}
 
 	$db = nuRunQuery('');
-	$pdo = new PDO("mysql:host=$db[0];dbname=$db[1];charset=$DBCharset;port=$DBPort", $db[2], $db[3], [
-		PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $DBCharset",
+	$pdo = new PDO("mysql:host=$db[0];dbname=$db[1];charset=$nuConfigDBCharacterSet;port=$nuConfigDBPort", $db[2], $db[3], [
+		PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $nuConfigDBCharacterSet",
 		PDO::MYSQL_ATTR_LOCAL_INFILE => true
 	]);
 
