@@ -678,9 +678,16 @@ function nuBrowseRowsPerPageFilter(rowsPerPageOptions, insertBeforeTarget = '#nu
 
 }
 
+function nuPrintIncludeColumns(arr) {
+	nuSetProperty('nuPrintIncludedColumns', nuEncode(arr));
+}
 
-function nuPrintIncludeColumns($arr) {
-	nuSetProperty('nuPrintincludedColumns', nuEncode($arr));
+function nuPrintExcludeColumns(arr) {
+	nuSetProperty('nuPrintExcludedColumns', nuEncode(arr));
+}
+
+function nuPrintIncludeHiddenColumns(include) {
+	nuSetProperty('nuPrintIncludeHiddenColumns', include ? '1' : '0');
 }
 
 function nuRestoreScrollPositions() {

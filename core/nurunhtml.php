@@ -7,7 +7,7 @@ print "<meta charset='utf-8'>";
 
 $debugId = $_GET['i'] ?? '';
 
-$sessionVariable = "nuPrint_" . $debugId;
+$sessionVariable = "nuPrint_$debugId";
 $jsonData = isset($_SESSION[$sessionVariable]) ? json_decode($_SESSION[$sessionVariable]) : null;
 
 if ($jsonData === null) {
@@ -71,7 +71,7 @@ if ($jsonData) {
 
 <script>
 
-function tableToCSV(table) {
+function nuTableToCSV(table) {
 
 	let csv = [];
 	for (let row of table.rows) {
@@ -94,7 +94,7 @@ function nuDownloadCSV() {
 
 	const table = document.querySelector('table');
 	if (!table) return;
-	const csv = tableToCSV(table);
+	const csv = nuTableToCSV(table);
 	const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv' });
 	const url = URL.createObjectURL(blob);
 	const a = document.createElement('a');
@@ -109,14 +109,14 @@ function nuDownloadCSV() {
 
 document.getElementById('nuPrintDownloadBtn').onclick = nuDownloadCSV;
 document.addEventListener('keydown', function(e) {
-    if (
-        (e.ctrlKey || e.metaKey) &&
-        e.shiftKey &&
-        (e.key === 'd' || e.key === 'D')
-    ) {
-        e.preventDefault();
-        nuDownloadCSV();
-    }
+	if (
+		(e.ctrlKey || e.metaKey) &&
+		e.shiftKey &&
+		(e.key === 'd' || e.key === 'D')
+	) {
+		e.preventDefault();
+		nuDownloadCSV();
+	}
 });
 
 </script>
@@ -143,7 +143,7 @@ function nuGetDebugMessageData($debugId) {
 
 }
 
-function nuRunHTMLGenerateTableHeader($columns, $includeHiddenColumns = false, $includedColumns = []) {
+function nuRunHTMLGenerateTableHeader($columns, $includeHiddenColumns = false, $includedColumns = [], $excludedColumns = []) {
 
 	$tableHtml = "<TR>";
 
@@ -151,7 +151,7 @@ function nuRunHTMLGenerateTableHeader($columns, $includeHiddenColumns = false, $
 	for ($col = 0; $col < $columnCount; $col++) {
 
 		$column = $columns[$col];
-		$printColumn = nuRunHTMLPrintColumn($col, $column, $includeHiddenColumns, $includedColumns);
+		$printColumn = nuRunHTMLPrintColumn($col, $column, $includeHiddenColumns, $includedColumns, $excludedColumns);
 		if ($printColumn) {
 			$style = "style='font-size:12px;width:{$column->width}px;text-align:{$column->align}'";
 			$tableHtml .= "<TH $style>" . nuTranslate($column->title) . "</TH>\n";
@@ -163,17 +163,21 @@ function nuRunHTMLGenerateTableHeader($columns, $includeHiddenColumns = false, $
 
 }
 
-function nuRunHTMLPrintColumn($col, $column, $includeHiddenColumns, $includedColumns) {
+function nuRunHTMLPrintColumn($col, $column, $includeHiddenColumns, $includedColumns, $excludedColumns = []) {
 
 	if (count($includedColumns) > 0) {
 		return array_search($col, $includedColumns) !== false;
-	} else {
-		return $column->width > 0 || $includeHiddenColumns === true;
 	}
+
+	if (count($excludedColumns) > 0 && array_search($col, $excludedColumns) !== false) {
+		return false;
+	}
+
+	return $column->width > 0 || $includeHiddenColumns === true;
 
 }
 
-function nuRunHTMLGenerateTableData($columns, $data, $includeHiddenColumns = false, $includedColumns = []) {
+function nuRunHTMLGenerateTableData($columns, $data, $includeHiddenColumns = false, $includedColumns = [], $excludedColumns = []) {
 
 	$tableHtml = "";
 
@@ -185,7 +189,7 @@ function nuRunHTMLGenerateTableData($columns, $data, $includeHiddenColumns = fal
 		for ($col = 0; $col < $columnCount; $col++) {
 
 			$column = $columns[$col];
-			$printColumn = nuRunHTMLPrintColumn($col, $column, $includeHiddenColumns, $includedColumns);
+			$printColumn = nuRunHTMLPrintColumn($col, $column, $includeHiddenColumns, $includedColumns, $excludedColumns);
 			if ($printColumn) {
 				$display = $column->display;
 				$alias = nuGetColumnAlias($display);
@@ -207,16 +211,21 @@ function nuRunHTMLGenerateTableData($columns, $data, $includeHiddenColumns = fal
 
 function nuRunHTMLGenerateHTMLTable($columns, $data, $hash) {
 
-	$includeHiddenColumns = nuObjKey($hash, 'nuPrintincludeHiddenColumns', null) == '1' ? true : false;
-	$includedColumns = nuObjKey($hash, 'nuPrintincludedColumns', []);
+	$includeHiddenColumns = nuObjKey($hash, 'nuPrintIncludeHiddenColumns', null) == '1' ? true : false;
+	$includedColumns = nuObjKey($hash, 'nuPrintIncludedColumns', []);
+	$excludedColumns = nuObjKey($hash, 'nuPrintExcludedColumns', []);
 
 	if (!is_array($includedColumns)) {
 		$includedColumns = $includedColumns === '' ? [] : explode(',', nuDecode($includedColumns));
 	}
 
+	if (!is_array($excludedColumns)) {
+		$excludedColumns = $excludedColumns === '' ? [] : explode(',', nuDecode($excludedColumns));
+	}
+
 	$tableHtml = "<TABLE border=1; style='border-collapse: collapse'>\n";
-	$tableHtml .= nuRunHTMLGenerateTableHeader($columns, $includeHiddenColumns, $includedColumns);
-	$tableHtml .= nuRunHTMLGenerateTableData($columns, $data, $includeHiddenColumns, $includedColumns);
+	$tableHtml .= nuRunHTMLGenerateTableHeader($columns, $includeHiddenColumns, $includedColumns, $excludedColumns);
+	$tableHtml .= nuRunHTMLGenerateTableData($columns, $data, $includeHiddenColumns, $includedColumns, $excludedColumns);
 	$tableHtml .= "</TABLE>";
 
 	return $tableHtml;
@@ -254,4 +263,3 @@ function nuGetColumnAlias($column) {
 function nuAddJavaScript($js, $bc = false, $first = false) {
 	// dummy
 }
-
