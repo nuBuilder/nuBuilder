@@ -35,7 +35,7 @@ if (db_num_rows($stmt) === 1) {
 	$globalAccess	= $access->session->global_access == '1';
 	$userId 		= $access->session->zzzzsys_user_id;
 
-	$userHasTFMAccess = $appId === 'TFM' && strpos($nuConfigFileMangerUsers,  $userId, 0) !== false;
+	$userHasTFMAccess = $appId === 'TFM' && strpos($nuConfigFileMangerUsers ?? '', $userId, 0) !== false;
 
 	if ($globalAccess || $userHasTFMAccess) {
 		$page		= nuGetVendorURL($appId, $table);
