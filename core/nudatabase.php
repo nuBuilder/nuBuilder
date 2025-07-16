@@ -28,6 +28,7 @@ try {
 	echo 'Connection to the nuBuilder database failed: ' . $e->getMessage();
 	echo '<br><br>Verify and update the settings in nuconfig.php';
 	echo '<br><br>Restart your browser after modifying nuconfig.php in order for changes to be reflected';
+	header('HTTP/1.0 403 Forbidden');
 	die();
 }
 
