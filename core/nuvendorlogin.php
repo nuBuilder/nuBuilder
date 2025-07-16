@@ -1,25 +1,25 @@
 <?php
-require_once('nusessiondata.php');
-require_once('nucommon.php');
-require_once('nuprocesslogins.php');
-require_once(dirname(__FILE__) . '/../nuconfig.php');
+require_once 'nusessiondata.php';
+require_once 'nucommon.php';
+require_once 'nuprocesslogins.php';
+require_once dirname(__FILE__) . '/../nuconfig.php';
 
 global $nuConfigFileMangerUsers;
 
 $sessionId = $_REQUEST['sessid'];
 $sessionData = $_SESSION['nubuilder_session_data'];
 
-$appId = isset($_GET['appId']) ? $_GET['appId'] : "";
-$table = isset($_GET['table']) ? $_GET['table'] : "";
+$appId = $_GET['appId'] ?? "";
+$table = $_GET['table'] ?? "";
 
 
 if ($sessionData['IS_DEMO']) {
-	echo ('Not available in the Demo');
+	echo 'Not available in the Demo';
 	return;
 }
 
 if (nuObjKey($sessionData, 'SESSION_2FA_STATUS') == 'PENDING') {
-	echo ('Access denied.');
+	echo 'Access denied.';
 	return;
 }
 
@@ -54,20 +54,23 @@ function nuGetVendorURL($appId, $table) {
 	$time = time();
 
 	$page = null;
-	if ($appId == 'PMA') {
+	switch ($appId) {
+		case 'PMA':
+			$dbName = $_SESSION['nubuilder_session_data']['DB_NAME'];
+			$table = $table == "" ? "" : "&table=$table";
 
-		$dbName = $_SESSION['nubuilder_session_data']['DB_NAME'];
-		$table = $table == "" ? "" : "&table=$table";
-
-		if ($table) {
-			$page = "../third_party/nudb/index.php?route=/sql&pos=0&db=$dbName&table=$table&$time=$time";
-		} else {
-			$page = "../third_party/nudb/index.php?route=/database/structure&server=1&db=$dbName&$time=$time";
-		}
-
-	} elseif ($appId == 'TFM') {
-		$page = "../third_party/tinyfilemanager/tinyfilemanager.php";
+			if ($table) {
+				$page = "../third_party/nudb/index.php?route=/sql&pos=0&db=$dbName&table=$table&$time=$time";
+			} else {
+				$page = "../third_party/nudb/index.php?route=/database/structure&server=1&db=$dbName&$time=$time";
+			}
+			break;
+		case 'TFM':
+			$page = "../third_party/tinyfilemanager/tinyfilemanager.php";
+			break;
 	}
+
+	$timezone = $_GET['timezone'] ?? "Etc/UTC";
 
 	$cookieOptions = [
 		'httponly' => true,
@@ -78,10 +81,7 @@ function nuGetVendorURL($appId, $table) {
 		$cookieOptions['secure'] = true;
 	}
 
-	setcookie("nu_" . $appId, $_SESSION['nubuilder_session_data']['SESSION_ID'], $cookieOptions);
-
-	$timezone = isset($_GET['timezone']) ? $_GET['timezone'] : "Etc/UTC";
-
+	setcookie("nu_$appId", $_SESSION['nubuilder_session_data']['SESSION_ID'], $cookieOptions);
 	setcookie("nu_timezone", $timezone, $cookieOptions);
 
 	return $page;
