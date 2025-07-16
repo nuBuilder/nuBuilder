@@ -636,6 +636,72 @@ function nuBrowseStickyColumns($record) {
 
 }
 
+function nuBrowseStyleStatusColumn(column) {
+	const statusConfig = {
+		active: {
+			color: '#28a745',
+			bgColor: '#d4edda',
+			icon: '✓',
+			text: 'Active'
+		},
+		draft: {
+			color: '#6c757d',
+			bgColor: '#e2e3e5',
+			icon: '&#9998;',
+			text: 'Draft',
+			italic: true
+		},
+		archived: {
+			color: '#6c757d',
+			bgColor: '#f1f3f5',
+			icon: '&#128230;',
+			text: 'Archived'
+		}
+	};
+
+	function createStatusHtml(config) {
+		return `
+			<span class="status-enhanced status-${config.text.toLowerCase()}" style="
+				color: ${config.color};
+				position: relative;
+				padding-left: 24px;
+				display: inline-flex;
+				align-items: center;
+				font-size: 13px;
+				${config.italic ? 'font-style: italic;' : ''}
+			">
+				<span class="status-icon" style="
+					position: absolute;
+					left: 0;
+					top: 50%;
+					transform: translateY(-50%);
+					background: ${config.bgColor};
+					color: ${config.color};
+					padding: 3px 6px;
+					border-radius: 50%;
+					font-size: 10px;
+					font-weight: bold;
+					line-height: 1;
+					box-shadow: 0 1px 3px rgba(${config.color === '#28a745' ? '40, 167, 69' : '108, 117, 125'}, 0.3);
+				">${config.icon}</span>
+				${config.text}
+			</span>
+		`;
+	}
+
+	nuBrowseLoop([column], function (cell) {
+		const $cell = $(cell);
+		const cellText = $cell.text().trim().toLowerCase();
+
+		for (const [status, config] of Object.entries(statusConfig)) {
+			if (cellText.includes(status)) {
+				$cell.html(createStatusHtml(config));
+				break;
+			}
+		}
+	});
+}
+
 function nuBrowseRowsPerPageFilter(rowsPerPageOptions, insertBeforeTarget = '#nuFirst', customStyle) {
 
 	if (nuFormType() !== 'browse') return;
@@ -8358,7 +8424,6 @@ function nuSetCalendarOnTop() {
 	$innerDiv.css({ position: 'absolute', top: offset.top, left: offset.left });
 
 }
-
 
 function nuTabSetMarker(tabId, fieldIdOrFlag) {
 
