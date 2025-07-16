@@ -867,6 +867,18 @@ input[type=radio] {
 	outline: none;
 }
 
+.nuBrowseFilterIcon {
+	color: #9cbecd;
+	margin-left: 10px;
+	display: inline-block;
+	font-size: 13px;
+}
+
+.nuBrowseFilterIcon:hover {
+	color: #0073aa;
+	cursor: pointer;
+}
+
 .nuSelectBrowse {
 	height: 70px;
 	border-style: solid;

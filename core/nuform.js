@@ -7708,12 +7708,7 @@ function nuAddBrowseFilter(column) {
 	$newDiv.data('column_id', columnId);
 
 	const $newIcon = $('<i>', {
-		class: 'fas fa-filter',
-		css: {
-			'margin-left': '10px',
-			display: 'inline-block',
-			'font-size': '13px'
-		}
+		class: 'fas fa-filter'
 	});
 
 	$newDiv.append($newIcon);
