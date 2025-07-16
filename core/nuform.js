@@ -636,6 +636,38 @@ function nuBrowseStickyColumns($record) {
 
 }
 
+function nuBrowseStyleBadge(column) {
+
+	function createBadgeHtml(text) {
+		return `
+			<span class="text-badge" style="
+				background-color: #e7f3ff;
+				color: #2964bd;
+				border: none;
+				border-color: transparent;
+				border-radius: 12px;
+				padding: 2px 10px;
+				box-shadow: none;
+				display: inline-block;
+				white-space: nowrap;
+				line-height: 1.2;
+				transition: all 0.2s ease;
+				margin-top:2px
+			">${text}</span>
+		`;
+	}
+
+	nuBrowseLoop([column], function (cell) {
+		const $cell = $(cell);
+		const cellText = $cell.text().trim();
+
+		if (cellText && cellText.length > 0) {
+			$cell.html(createBadgeHtml(cellText));
+		}
+	});
+
+}
+
 function nuBrowseStyleStatusColumn(column) {
 	const statusConfig = {
 		active: {
