@@ -669,6 +669,7 @@ function nuBrowseStyleBadge(column) {
 }
 
 function nuBrowseStyleStatusColumn(column) {
+
 	const statusConfig = {
 		active: {
 			color: '#28a745',
@@ -696,7 +697,7 @@ function nuBrowseStyleStatusColumn(column) {
 			<span class="status-enhanced status-${config.text.toLowerCase()}" style="
 				color: ${config.color};
 				position: relative;
-				padding-left: 24px;
+				padding-left: 28px;
 				display: inline-flex;
 				align-items: center;
 				font-size: 13px;
@@ -709,11 +710,15 @@ function nuBrowseStyleStatusColumn(column) {
 					transform: translateY(-50%);
 					background: ${config.bgColor};
 					color: ${config.color};
-					padding: 3px 6px;
+					width: 20px;
+					height: 20px;
 					border-radius: 50%;
 					font-size: 10px;
 					font-weight: bold;
 					line-height: 1;
+					display: flex;
+					align-items: center;
+					justify-content: center;
 					box-shadow: 0 1px 3px rgba(${config.color === '#28a745' ? '40, 167, 69' : '108, 117, 125'}, 0.3);
 				">${config.icon}</span>
 				${config.text}
@@ -724,7 +729,6 @@ function nuBrowseStyleStatusColumn(column) {
 	nuBrowseLoop([column], function (cell) {
 		const $cell = $(cell);
 		const cellText = $cell.text().trim().toLowerCase();
-
 		for (const [status, config] of Object.entries(statusConfig)) {
 			if (cellText.includes(status)) {
 				$cell.html(createStatusHtml(config));
@@ -732,6 +736,7 @@ function nuBrowseStyleStatusColumn(column) {
 			}
 		}
 	});
+    
 }
 
 function nuBrowseRowsPerPageFilter(rowsPerPageOptions, insertBeforeTarget = '#nuFirst', customStyle) {
