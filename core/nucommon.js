@@ -1053,12 +1053,26 @@ function nuPreview(a) {
 
 function nuPopEvent(e, formId, nuEvent) {
 
+	const isCtrlOrMetaPressed = e ? (nuIsMacintosh() ? e.metaKey : e.ctrlKey) : false;
 	const recordId = nuRecordId();
+	const id = `${recordId}_${nuEvent}`;
+	let filter;
 
-	if (formId === 'nuphp') {
-		nuPopup('nuphp', recordId + '_' + nuEvent, 'justphp');
-	} else if (formId === 'nuselect') {
-		nuPopup('nuselect', recordId + '_' + nuEvent, 'justsql');
+	switch (formId) {
+		case 'nuphp':
+			filter = 'justphp';
+			break;
+		case 'nuselect':
+			filter = 'justsql';
+			break;
+		default:
+			console.warn(`nuPopEvent: unknown formId "${formId}"`);
+			return;
+	}
+	if (!isCtrlOrMetaPressed) {
+		nuPopup(formId, id, filter);
+	} else {
+		nuForm(formId, id, filter, '', '');
 	}
 
 }
