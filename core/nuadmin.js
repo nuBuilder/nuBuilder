@@ -4,7 +4,8 @@ function nuEditPHP(type) {
 
 function nuOpenCurrentFormProperties(event) {
 
-	if (event.ctrlKey || event.metaKey) {
+	const isCtrlOrCmdPressed = nuIsCtrlOrCmdPressed(e);
+	if (isCtrlOrCmdPressed) {
 		nuPopup('nuform', nuFormId(), '');
 	} else {
 		nuForm('nuform', nuFormId(), '', '', 2);
@@ -1249,7 +1250,8 @@ function nuContextMenuObjectPopup(e) {
 
 	let objId = nuGetObjectId(nuContextMenuCurrentTargetUpdateId());
 
-	if ((nuIsMacintosh() ? e.metaKey : e.ctrlKey) === true) {
+	const isCtrlOrCmdPressed = nuIsCtrlOrCmdPressed(e);
+	if (isCtrlOrCmdPressed) {
 		nuForm('nuobject', objId, '', '', '2');
 	} else {
 		nuPopup("nuobject", objId, '');
@@ -2181,7 +2183,8 @@ function nuPrettyPrintMessage(event, properties) {
 
 	const title = nuTranslate('Current Properties') + ' : ' + nuGetProperty('form_code');
 
-	if (event !== undefined && (nuIsMacintosh() ? event.metaKey : event.ctrlKey)) {
+	const isCtrlOrCmdPressed = nuIsCtrlOrCmdPressed(e);
+	if (event !== undefined && isCtrlOrCmdPressed) {
 		const newWindow = window.open();
 		newWindow.document.title = title;
 		$(newWindow.document.body).html(prettyPrintedTable);

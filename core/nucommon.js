@@ -636,8 +636,8 @@ function nuPopup(formId, recordId, filter) {
 
 function nuOptionsListAction(f, r, filter, e) {
 
-	const isCtrlOrMetaPressed = e ? (nuIsMacintosh() ? e.metaKey : e.ctrlKey) : false;
-	if (!isCtrlOrMetaPressed) {
+	const isCtrlOrCmdPressed = nuIsCtrlOrCmdPressed(e);
+	if (!isCtrlOrCmdPressed) {
 		nuPopup(f, r, filter);
 	} else {
 		nuForm(f, r, filter, '', '');
@@ -830,7 +830,8 @@ function nuBindCtrlEvents() {
 
 	const nuCtrlKeydownListener = function (e) {
 
-		if (e.key === 'F3' || ((nuIsMacintosh() ? e.metaKey : e.ctrlKey) && e.key === 'f')) { // exclude Ctrl + f
+		const isCtrlOrCmdPressed = nuIsCtrlOrCmdPressed(e);
+		if (e.key === 'F3' || (isCtrlOrCmdPressed && e.key === 'f')) { // exclude Ctrl + f
 			window.nuNEW = 0;
 		} else {
 			if (e.key == 'Control') {
@@ -877,7 +878,8 @@ function nuBindCtrlEvents() {
 
 		}
 
-		if ((nuIsMacintosh() ? e.metaKey : e.ctrlKey) && e.shiftKey) {
+		const isCtrlOrCmdPressed = nuIsCtrlOrCmdPressed(e);
+		if (isCtrlOrCmdPressed && e.shiftKey) {
 
 			window.nuNEW = 0;
 
@@ -1053,7 +1055,7 @@ function nuPreview(a) {
 
 function nuPopEvent(e, formId, nuEvent) {
 
-	const isCtrlOrMetaPressed = e ? (nuIsMacintosh() ? e.metaKey : e.ctrlKey) : false;
+	const isCtrlOrCmdPressed = nuIsCtrlOrCmdPressed(e);
 	const recordId = nuRecordId();
 	const id = `${recordId}_${nuEvent}`;
 	let filter;
@@ -1069,12 +1071,16 @@ function nuPopEvent(e, formId, nuEvent) {
 			console.warn(`nuPopEvent: unknown formId "${formId}"`);
 			return;
 	}
-	if (!isCtrlOrMetaPressed) {
+	if (!isCtrlOrCmdPressed) {
 		nuPopup(formId, id, filter);
 	} else {
 		nuForm(formId, id, filter, '', '');
 	}
 
+}
+
+function nuIsCtrlOrCmdPressed(e) {
+	return e ? (nuIsMacintosh() ? e.metaKey : e.ctrlKey) : false;
 }
 
 function nuPopPHP(e, nuEvent) {
@@ -1919,7 +1925,8 @@ function nuClosePopup() {
 
 function nuStopClick(e) {
 
-	if (window.nuCLICKER != '' && ((nuIsMacintosh() ? e.metaKey : e.ctrlKey) == false)) {
+	const isCtrlOrCmdPressed = nuIsCtrlOrCmdPressed(e);
+	if (window.nuCLICKER != '' && !isCtrlOrCmdPressed) {
 		$(e.target).prop('onclick', null).off('click');
 	}
 }

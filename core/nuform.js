@@ -736,7 +736,7 @@ function nuBrowseStyleStatusColumn(column) {
 			}
 		}
 	});
-    
+
 }
 
 function nuBrowseRowsPerPageFilter(rowsPerPageOptions, insertBeforeTarget = '#nuFirst', customStyle) {
@@ -6789,7 +6789,8 @@ function nuRedefineNuSelectBrowse() {
 			window[browseFunction](e);
 		}
 
-		if ((nuIsMacintosh() ? e.metaKey : e.ctrlKey) == false) {
+		const isCtrlOrCmdPressed = nuIsCtrlOrCmdPressed(e);
+		if (!isCtrlOrCmdPressed) {
 			nuSelectBrowse = function (e, t) { } 						//-- so that it doesn't run twice.
 		}
 
