@@ -2018,7 +2018,12 @@ function nuIsMobile() {
 }
 
 function nuIsMacintosh() {
-	return /mac/i.test(navigator.userAgentData ? navigator.userAgentData.platform : navigator.platform);
+
+	if (navigator.userAgentData?.platform) {
+		return /mac/i.test(navigator.userAgentData.platform);
+	}
+	return /macintosh|mac os x/i.test(navigator.userAgent);
+
 }
 
 function nuTransformScale() {
