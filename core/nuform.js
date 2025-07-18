@@ -1222,7 +1222,9 @@ function nuAddActionButton(id, value, func, title, icon, insertAfterElement) {
 
 	const elementId = "nu" + id + "Button";
 	let html = `<button id="${elementId}" type="button" class="${nuClass}"
-						 title="${title}">${value}</button>`;
+		title="${title}">` +
+		(value ? `<span class="nuButtonLabel">${value}</span>` : '') +
+		`</button>`;
 
 	if (insertAfterElement) {
 		$(html).insertAfter('#' + insertAfterElement);

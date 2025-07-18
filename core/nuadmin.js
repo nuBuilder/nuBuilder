@@ -2,7 +2,7 @@ function nuEditPHP(type) {
 	nuForm('nuphp', nuFormId() + '_' + type, 'justphp', '', 2);
 }
 
-function nuOpenCurrentFormProperties(event) {
+function nuOpenCurrentFormProperties(e) {
 
 	const isCtrlOrCmdPressed = nuIsCtrlOrCmdPressed(e);
 	if (isCtrlOrCmdPressed) {
@@ -2183,7 +2183,7 @@ function nuPrettyPrintMessage(event, properties) {
 
 	const title = nuTranslate('Current Properties') + ' : ' + nuGetProperty('form_code');
 
-	const isCtrlOrCmdPressed = nuIsCtrlOrCmdPressed(e);
+	const isCtrlOrCmdPressed = nuIsCtrlOrCmdPressed(event);
 	if (event !== undefined && isCtrlOrCmdPressed) {
 		const newWindow = window.open();
 		newWindow.document.title = title;

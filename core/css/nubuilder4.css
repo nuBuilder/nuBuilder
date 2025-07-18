@@ -1096,7 +1096,7 @@ input[type=radio] {
 .nuActionButton {
 	display: inline-flex;
 	align-items: center;
-	gap: 0.5rem;
+	gap: 0.25rem;
 	font-size: 14px;
 	font-weight: 500;
 	font-family: inherit;
