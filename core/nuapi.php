@@ -50,8 +50,9 @@ if ($refreshCache && !$globalAccess) {
 	nuUpdateFormSchema(true);
 }
 
-if (empty($user))
+if (empty($user)) {
 	nuDie(nuTranslate('Your session has timed out.'));
+}	
 
 $formAndSessionData = nuGatherFormAndSessionData($user['HOME_ID'], $globalAccess);
 $sessionData = $_SESSION['nubuilder_session_data'];

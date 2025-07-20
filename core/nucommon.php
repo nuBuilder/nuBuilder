@@ -1893,8 +1893,6 @@ function nuSendEmailEx($args, $emailLogOptions) {
 		"json" => $json
 	];
 
-	nuDebug($params);
-
 	nuRunQuery($insert, $params, true);
 
 	return $sendResult;
