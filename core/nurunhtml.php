@@ -22,6 +22,8 @@ if ($jsonData) {
 	$_POST['nuHash'] = (array) $jsonData->hash;
 	$hash = nuHash();
 	$_POST['nuHash']['TABLE_ID'] = $hash['browse_table_id'];
+	$formDescription = $_POST['nuHash']['form_description'];
+
 	nuEval($hash['form_id'] . '_BB');
 
 	if (nuHasErrors()) {
@@ -30,7 +32,33 @@ if ($jsonData) {
 
 	$data = nuExecuteQueryAndFetchData($sqlQuery);
 	$tableHtml = nuRunHTMLGenerateHTMLTable($columns, $data, $hash);
+	$sanitizedFilename = nuSanitizeFilename($formDescription) . '.csv';
 
+	/*
+		Call in JS:
+		var exportOptions  = {
+			delimiter: ';',
+			lineTerminator: '\r\n',
+			includeHeaders: true,
+			bom: true,
+			fileName: 'custom_export.csv'
+		};
+
+		nuSetProperty('nuPrintCSVExportOptions', nuEncode(JSON.stringify(exportOptions)));
+
+	*/
+
+	$csvOptions = nuDecode(nuObjKey($hash, 'nuPrintCSVExportOptions', []));
+	if (!is_array($csvOptions)) {
+		$csvOptions = [];
+	}
+
+	// Get fileName from csvOptions, with fallback to formDescription + '.csv'
+	$fileName = isset($csvOptions['fileName']) ?
+		nuSanitizeFilename($csvOptions['fileName']) :
+		nuSanitizeFilename($formDescription . '.csv');
+
+	$csvOptionsJson = json_encode($csvOptions);
 
 	print $tableHtml;
 
@@ -71,35 +99,50 @@ if ($jsonData) {
 
 <script>
 
-function nuTableToCSV(table) {
+const downloadFilename = '{$fileName}';
+const csvExportOptions = {$csvOptionsJson};
 
-	let csv = [];
-	for (let row of table.rows) {
-	let rowData = [];
-	for (let cell of row.cells) {
-		let text = cell.innerText.replace(/"/g, '""');
-		if (/[",\\n]/.test(text)) {
-		text = '"' + text + '"';
-		}
-		rowData.push(text);
-	}
-	csv.push(rowData.join(","));
-	}
+function nuTableToCSV(table, options = {}) {
+	const {
+		delimiter = ';',
+		lineTerminator = '\\r\\n',
+		includeHeaders = true,
+		bom = false
+	} = options;
 
-	return csv.join("\\r\\n");
+	const rows = Array.from(table.rows);
+	const dataRows = includeHeaders ? rows : rows.slice(1);
+	const escapeRE = new RegExp('["' + delimiter + '\\r\\n]');
 
+	const csvLines = dataRows.map(row =>
+		Array.from(row.cells).map(cell => {
+			let text = cell.textContent.replace(/"/g, '""');
+			if (escapeRE.test(text)) {
+				text = '"' + text + '"';
+			}
+			return text;
+		}).join(delimiter)
+	);
+
+	const csv = csvLines.join(lineTerminator);
+	return bom ? '\uFEFF' + csv : csv;
 }
 
-function nuDownloadCSV() {
+
+function nuRunHTMLDownloadCSV() {
 
 	const table = document.querySelector('table');
 	if (!table) return;
-	const csv = nuTableToCSV(table);
-	const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv' });
+
+	const csv = nuTableToCSV(table, csvExportOptions);
+
+	const shouldAddBOM = csvExportOptions.bom !== undefined ? csvExportOptions.bom : false;
+	const csvContent = shouldAddBOM ? csv : csv.replace(/^\uFEFF/, '');
+	const blob = new Blob([csvContent], { type: 'text/csv' });
 	const url = URL.createObjectURL(blob);
 	const a = document.createElement('a');
 	a.href = url;
-	a.download = 'table.csv';
+	a.download = downloadFilename;
 	document.body.appendChild(a);
 	a.click();
 	document.body.removeChild(a);
@@ -107,7 +150,7 @@ function nuDownloadCSV() {
 
 }
 
-document.getElementById('nuPrintDownloadBtn').onclick = nuDownloadCSV;
+document.getElementById('nuPrintDownloadBtn').onclick = nuRunHTMLDownloadCSV;
 document.addEventListener('keydown', function(e) {
 	if (
 		(e.ctrlKey || e.metaKey) &&
@@ -115,7 +158,7 @@ document.addEventListener('keydown', function(e) {
 		(e.key === 'd' || e.key === 'D')
 	) {
 		e.preventDefault();
-		nuDownloadCSV();
+		nuRunHTMLDownloadCSV();
 	}
 });
 

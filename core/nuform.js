@@ -793,6 +793,10 @@ function nuPrintIncludeHiddenColumns(include) {
 	nuSetProperty('nuPrintIncludeHiddenColumns', include ? '1' : '0');
 }
 
+function nuPrintCSVExportOptions(options) {
+	nuSetProperty('nuPrintCSVExportOptions', nuEncode(JSON.stringify(options)));
+}
+
 function nuRestoreScrollPositions() {
 
 	$(function () {
