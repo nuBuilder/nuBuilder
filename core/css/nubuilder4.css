@@ -868,14 +868,14 @@ input[type=radio] {
 }
 
 .nuBrowseFilterIcon {
-	color: #7ab2cb;
+	color: #6ca3bc;
 	margin-left: 10px;
 	display: inline-block;
 	font-size: 13px;
 }
 
 .nuBrowseFilterIcon:hover {
-	color: #0073aa;
+	color: #0274ab;
 	cursor: pointer;
 }
 
