@@ -33,77 +33,142 @@ if ($jsonData) {
 
 	$data = nuExecuteQueryAndFetchData($sqlQuery);
 	$tableHtml = nuRunHTMLGenerateHTMLTable($columns, $data, $hash);
+
+	// wrap the table so it doesn't overlap the fixed buttons
+	$tableWrapperStyles = "margin:20px 80px 0 0;";	// top/right/bottom/left
+	print "<div id='nuPrintTableWrapper' style='{$tableWrapperStyles}'>"
+		. $tableHtml .
+		"</div>";
+
 	$sanitizedFilename = nuSanitizeFilename($formDescription) . '.csv';
-
-	/*
-		Call in JS:
-		var exportOptions  = {
-			delimiter: ';',
-			lineTerminator: '\r\n',
-			includeHeaders: true,
-			bom: true,
-			fileName: 'custom_export.csv',
-			autoDownload: false,
-			autoClose: false
-		};
-
-		nuPrintCSVExportOptions(exportOptions);
-
-	*/
 
 	$csvOptions = nuDecode(nuObjKey($hash, 'nuPrintCSVExportOptions', []));
 	if (!is_array($csvOptions)) {
 		$csvOptions = [];
 	}
 
-	// Get fileName from csvOptions, with fallback to formDescription + '.csv'
+	// File-name fallback
 	$fileName = isset($csvOptions['fileName']) ?
 		nuSanitizeFilename($csvOptions['fileName']) :
 		nuSanitizeFilename($formDescription . '.csv');
 
 	$csvOptionsJson = json_encode($csvOptions);
 
-	print $tableHtml;
-
 	echo <<<HTML
 <style>
-#nuPrintDownloadBtn {
-	position: fixed;
-	top: 24px;
-	right: 24px;
-	z-index: 9999;
-	width: 48px;
-	height: 48px;
-	border-radius: 50%;
-	background: #1e53c6;
-	color: #fff;
-	border: none;
-	box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	cursor: pointer;
-	font-size: 28px;
-	transition: background 0.2s;
-}
-#nuPrintDownloadBtn:hover {
-	background: #17429a;
-}
+	/* Settings (⚙) button */
+	#nuPrintOptionsBtn {
+		position: fixed; top: 24px; right: 24px;
+		z-index: 9999; width: 48px; height: 48px;
+		border-radius: 50%; background: #1e53c6; color: #fff;
+		border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+		display: flex; align-items: center; justify-content: center;
+		cursor: pointer; font-size: 24px; transition: background .2s;
+	}
+	#nuPrintOptionsBtn:hover { background: #17429a; }
+
+	/* Download button */
+	#nuPrintDownloadBtn {
+		position: fixed; top: 80px; right: 24px;
+		z-index: 9999; width: 48px; height: 48px;
+		border-radius: 50%; background: #1e53c6; color: #fff;
+		border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+		display: flex; align-items: center; justify-content: center;
+		cursor: pointer; font-size: 28px; transition: background .2s;
+	}
+	#nuPrintDownloadBtn:hover { background: #17429a; }
+
+	/* Modal */
+	.modal {
+		display: none; position: fixed; z-index: 10000;
+		left: 0; top: 0; width: 100%; height: 100%;
+		background: rgba(0,0,0,0.5);
+	}
+	.modal-content {
+		background: #fff; margin: 10% auto; padding: 20px;
+		border-radius: 4px; width: 300px;
+	}
+	.modal-header { font-size: 18px; margin-bottom: 10px; }
+	.modal-body label { display: block; margin: 8px 0 4px; }
+	.modal-body input[type="text"],
+	.modal-body input[type="checkbox"] { margin-right: 6px; }
+	.modal-footer {
+		text-align: right; margin-top: 12px;
+	}
+	.modal-footer button {
+		margin-left: 8px; padding: 6px 12px; font-size: 14px;
+	}
 </style>
 
+<button id="nuPrintOptionsBtn" title="CSV Options (Ctrl+Shift+O)">⚙</button>
 <button id="nuPrintDownloadBtn" title="Download CSV (Ctrl+Shift+D)">
-	<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-	stroke-linecap="round" stroke-linejoin="round">
-	<circle cx="12" cy="12" r="10" stroke="#fff" fill="#1e53c6"/>
-	<path d="M12 8v6M12 14l-3-3m3 3l3-3" stroke="#fff"/>
-	<rect x="8" y="16" width="8" height="2" rx="1" fill="#fff"/>
+	<svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+			 stroke="currentColor" stroke-width="2" stroke-linecap="round"
+			 stroke-linejoin="round">
+		<circle cx="12" cy="12" r="10" stroke="#fff" fill="#1e53c6"/>
+		<path d="M12 8v6M12 14l-3-3m3 3l3-3" stroke="#fff"/>
+		<rect x="8" y="16" width="8" height="2" rx="1" fill="#fff"/>
 	</svg>
 </button>
 
-<script>
+<div id="nuPrintOptionsModal" class="modal">
+	<div class="modal-content">
+		<div class="modal-header">CSV Export Options</div>
+		<div class="modal-body">
+			<label>
+				Delimiter:
+				<input type="text"
+							 id="optDelimiter"
+							 list="optDelimiterList"
+							 placeholder="Choose delimiter…"
+							 title="Type or press ↓ to see options">
+			</label>
+			<datalist id="optDelimiterList">
+				<option value=",">Comma ( , )</option>
+				<option value=";">Semicolon ( ; )</option>
+				<option value="\t">Tab ( \t )</option>
+				<option value="|">Pipe ( | )</option>
+				<option value=":">Colon ( : )</option>
+				<option value=" ">Space ( )</option>
+			</datalist>
 
-const downloadFilename = '{$fileName}';
-const csvExportOptions = {$csvOptionsJson};
+			<label>
+				Line Terminator:
+				<input type="text"
+							 id="optLineTerminator"
+							 list="optLineTerminatorList"
+							 placeholder="Choose terminator…"
+							 title="Type or press ↓ to see options">
+			</label>
+			<datalist id="optLineTerminatorList">
+				<option value="\\r\\n">CR+LF (\\r\\n)</option>
+				<option value="\\n">LF (\\n)</option>
+				<option value="\\r">CR (\\r)</option>
+			</datalist>
+
+			<label>
+				<input type="checkbox" id="optIncludeHeaders">
+				Include Headers
+			</label>
+			<label>
+				<input type="checkbox" id="optBOM">
+				Add BOM (UTF-8)
+			</label>
+			<label>
+				File Name:
+				<input type="text" id="optFileName" value="">
+			</label>
+		</div>
+		<div class="modal-footer">
+			<button id="optCancelBtn">Cancel</button>
+			<button id="optSaveBtn">Save</button>
+		</div>
+	</div>
+</div>
+
+<script>
+let downloadFilename = '{$fileName}';
+let csvExportOptions = {$csvOptionsJson};
 
 function nuTableToCSV(table, options = {}) {
 	const {
@@ -112,7 +177,6 @@ function nuTableToCSV(table, options = {}) {
 		includeHeaders = true,
 		bom = false
 	} = options;
-
 	const rows = Array.from(table.rows);
 	const dataRows = includeHeaders ? rows : rows.slice(1);
 	const escapeRE = new RegExp('["' + delimiter + '\\r\\n]');
@@ -120,28 +184,19 @@ function nuTableToCSV(table, options = {}) {
 	const csvLines = dataRows.map(row =>
 		Array.from(row.cells).map(cell => {
 			let text = cell.textContent.replace(/"/g, '""');
-			if (escapeRE.test(text)) {
-				text = '"' + text + '"';
-			}
+			if (escapeRE.test(text)) text = '"' + text + '"';
 			return text;
 		}).join(delimiter)
 	);
-
 	const csv = csvLines.join(lineTerminator);
 	return bom ? '\uFEFF' + csv : csv;
 }
 
-
 function nuRunHTMLDownloadCSV() {
-
 	const table = document.querySelector('table');
 	if (!table) return;
-
 	const csv = nuTableToCSV(table, csvExportOptions);
-
-	const shouldAddBOM = csvExportOptions.bom !== undefined ? csvExportOptions.bom : false;
-	const csvContent = shouldAddBOM ? csv : csv.replace(/^\uFEFF/, '');
-	const blob = new Blob([csvContent], { type: 'text/csv' });
+	const blob = new Blob([csv], { type: 'text/csv' });
 	const url = URL.createObjectURL(blob);
 	const a = document.createElement('a');
 	a.href = url;
@@ -150,28 +205,59 @@ function nuRunHTMLDownloadCSV() {
 	a.click();
 	document.body.removeChild(a);
 	URL.revokeObjectURL(url);
-
 }
 
 document.getElementById('nuPrintDownloadBtn').onclick = nuRunHTMLDownloadCSV;
-document.addEventListener('keydown', function(e) {
-	if (
-		(e.ctrlKey || e.metaKey) &&
-		e.shiftKey &&
-		(e.key === 'd' || e.key === 'D')
-	) {
-		e.preventDefault();
-		nuRunHTMLDownloadCSV();
+document.addEventListener('keydown', e => {
+	if ((e.ctrlKey||e.metaKey) && e.shiftKey) {
+		if (e.key.toLowerCase() === 'd') {
+			e.preventDefault();
+			nuRunHTMLDownloadCSV();
+		}
+		if (e.key.toLowerCase() === 'o') {
+			e.preventDefault();
+			openOptions();
+		}
 	}
 });
 
-if (csvExportOptions.autoDownload) {
-	nuRunHTMLDownloadCSV();
-	if (csvExportOptions.autoClose) {
-		window.close();
-	}
+// Modal logic
+const modal = document.getElementById('nuPrintOptionsModal');
+const btnOpen = document.getElementById('nuPrintOptionsBtn');
+const btnSave = document.getElementById('optSaveBtn');
+const btnCancel = document.getElementById('optCancelBtn');
+
+const fldDelimiter	 = document.getElementById('optDelimiter');
+const fldLineTerm = document.getElementById('optLineTerminator');
+const fldHeaders = document.getElementById('optIncludeHeaders');
+const fldBOM = document.getElementById('optBOM');
+const fldFileName= document.getElementById('optFileName');
+
+function openOptions() {
+	fldDelimiter.value		= csvExportOptions.delimiter		|| ',';
+	fldLineTerm.value		 = csvExportOptions.lineTerminator|| '\\r\\n';
+	fldHeaders.checked		= csvExportOptions.includeHeaders!==false;
+	fldBOM.checked				= csvExportOptions.bom					===true;
+	fldFileName.value		 = downloadFilename;
+	modal.style.display	 = 'block';
+}
+function closeOptions() {
+	modal.style.display = 'none';
 }
 
+btnOpen.onclick	 = openOptions;
+btnCancel.onclick = closeOptions;
+window.onclick		= evt => { if (evt.target === modal) closeOptions(); };
+
+btnSave.onclick = () => {
+	csvExportOptions.delimiter			= fldDelimiter.value;
+	csvExportOptions.lineTerminator = fldLineTerm.value;
+	csvExportOptions.includeHeaders= fldHeaders.checked;
+	csvExportOptions.bom						= fldBOM.checked;
+	downloadFilename								= fldFileName.value.trim() || downloadFilename;
+	csvExportOptions.fileName			 = downloadFilename;
+	closeOptions();
+};
 </script>
 
 HTML;
@@ -183,17 +269,13 @@ HTML;
 }
 
 function nuGetDebugMessageData($debugId) {
-
 	$select = "SELECT deb_message AS json FROM zzzzsys_debug WHERE zzzzsys_debug_id = ? ";
 	$stmt = nuRunQuery($select, [$debugId]);
-
 	if (db_num_rows($stmt) == 0) {
 		return false;
 	}
-
 	$obj = db_fetch_object($stmt);
 	return json_decode($obj->json);
-
 }
 
 function nuRunHTMLGenerateTableHeader($columns, $includeHiddenColumns = false, $includedColumns = [], $excludedColumns = []) {
