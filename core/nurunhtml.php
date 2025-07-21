@@ -42,10 +42,12 @@ if ($jsonData) {
 			lineTerminator: '\r\n',
 			includeHeaders: true,
 			bom: true,
-			fileName: 'custom_export.csv'
+			fileName: 'custom_export.csv',
+			autoDownload: false,
+			autoClose: false
 		};
 
-		nuSetProperty('nuPrintCSVExportOptions', nuEncode(JSON.stringify(exportOptions)));
+		nuPrintCSVExportOptions(exportOptions);
 
 	*/
 
@@ -163,6 +165,13 @@ document.addEventListener('keydown', function(e) {
 	}
 });
 
+if (csvExportOptions.autoDownload) {
+	nuRunHTMLDownloadCSV();
+	if (csvExportOptions.autoClose) {
+		window.close();
+	}
+}
+
 </script>
 
 HTML;
@@ -251,7 +260,7 @@ function nuRunHTMLGenerateTableData($columns, $data, $useBrowseFormats = false, 
 
 				$style = "style='font-size:12px;width:{$column->width}px;text-align:{$column->align}'";
 
-				$tableHtml .= "<TD $style>" . $value . "</TD>\n";
+				$tableHtml .= "<TD $style>$value</TD>\n";
 			}
 		}
 		$tableHtml .= "</TR>";
