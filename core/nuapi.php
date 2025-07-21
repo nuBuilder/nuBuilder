@@ -52,7 +52,7 @@ if ($refreshCache && !$globalAccess) {
 
 if (empty($user)) {
 	nuDie(nuTranslate('Your session has timed out.'));
-}	
+}
 
 $formAndSessionData = nuGatherFormAndSessionData($user['HOME_ID'], $globalAccess);
 $sessionData = $_SESSION['nubuilder_session_data'];
@@ -165,8 +165,8 @@ if ($callType != 'logout') {
 		if ($globalAccess) {
 			$f->forms[0]->nu_debug_last = nuGetLastDebugMessages();
 			$f->forms[0]->nu_debug = $GLOBALS['ERRORS'] ?? null;
-		}	
-		
+		}
+
 		$f->forms[0]->log_again = nuObjKey($_POST, 'nuLogAgain');
 		$f->forms[0]->global_access = $globalAccess ? '1' : '0';
 		$f->forms[0]->data_mode = $globalAccess ? null : nuGetFormPermission($formId, 'slf_data_mode');

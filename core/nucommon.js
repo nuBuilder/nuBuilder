@@ -450,6 +450,27 @@ function nuDisplayError(errorObj) {
 
 }
 
+function nuFormatAjaxErrorRemoveJSON(responseText) {
+
+	if (typeof responseText !== 'string') {
+		return responseText
+	}
+
+	const normalized = responseText.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+	const lines = normalized.split('\n');
+
+	if (lines.length >= 3) {
+		const third = lines[2].trim();
+		const idPayloadRe = /^\{\s*"id"\s*:\s*".*?"\s*\}$/;
+		if (idPayloadRe.test(third)) {
+			return lines.slice(0, 2).join('\n');
+		}
+	}
+
+	return responseText;
+
+}
+
 function nuFormatAjaxErrorMessage(jqXHR, exception) {
 
 	const errorMessages = {
@@ -463,7 +484,7 @@ function nuFormatAjaxErrorMessage(jqXHR, exception) {
 	};
 
 	const errorMessage = errorMessages[jqXHR.status] || errorMessages[exception] ||
-		[`<h3>${nuTranslate('Uncaught Error.')}</h3>`, jqXHR.responseText]
+		[`<h3>${nuTranslate('Uncaught Error.')}</h3>`, nuFormatAjaxErrorRemoveJSON(jqXHR.responseText)]
 
 	return errorMessage;
 

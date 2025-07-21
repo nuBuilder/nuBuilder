@@ -86,7 +86,6 @@ if ( $_SESSION['nubuilder_session_data']['SESSION_ID'] == 'tempanonreport' ) {
 	nuUpdateExistingSession();
 
 } else {
-
 	nuDie(nuTranslate('Your session has timed out.'));
 
 }
