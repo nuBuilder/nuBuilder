@@ -1005,12 +1005,12 @@ class nuFormObject {
 				rawValue = v.replace(CF[0], '')
 					.replace(' ', '')
 					.nuReplaceAll(CF[1], '');
-			}
-
-			rawValue = v.replace(CF[0], '')
-				.replace(' ', '')
-				.nuReplaceAll(CF[1], '')
-				.replace(CF[2], '.');
+			} else {
+				rawValue = v.replace(CF[0], '')
+					.replace(' ', '')
+					.nuReplaceAll(CF[1], '')
+					.replace(CF[2], '.');
+			}	
 
 			if (typeof window.nuOnRawValueFormatted === 'function') {
 				let modifiedValue = window.nuOnRawValueFormatted(id, rawValue, f);
