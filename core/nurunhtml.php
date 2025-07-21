@@ -16,6 +16,7 @@ if ($jsonData === null) {
 }
 
 if ($jsonData) {
+
 	$columns = $jsonData->columns;
 	$sqlQuery = $jsonData->sql;
 
@@ -220,7 +221,7 @@ function nuRunHTMLPrintColumn($col, $column, $includeHiddenColumns, $includedCol
 
 }
 
-function nuRunHTMLGenerateTableData($columns, $data, $includeHiddenColumns = false, $includedColumns = [], $excludedColumns = []) {
+function nuRunHTMLGenerateTableData($columns, $data, $useBrowseFormats = false, $includeHiddenColumns = false, $includedColumns = [], $excludedColumns = []) {
 
 	$tableHtml = "";
 
@@ -240,12 +241,21 @@ function nuRunHTMLGenerateTableData($columns, $data, $includeHiddenColumns = fal
 
 				$value = $row[$display] ?? "";
 				$value = $display == 'null' || $display == '""' ? '' : $value;
+
+				if ($useBrowseFormats) {
+					$format = $column->format ?? "";
+					if (!empty($format) && !empty($value)) {
+						$value = nuAddFormatting($value, $format);
+					}
+				}
+
 				$style = "style='font-size:12px;width:{$column->width}px;text-align:{$column->align}'";
 
 				$tableHtml .= "<TD $style>" . $value . "</TD>\n";
 			}
 		}
 		$tableHtml .= "</TR>";
+
 	}
 
 	return $tableHtml;
@@ -257,6 +267,7 @@ function nuRunHTMLGenerateHTMLTable($columns, $data, $hash) {
 	$includeHiddenColumns = nuObjKey($hash, 'nuPrintIncludeHiddenColumns', null) == '1' ? true : false;
 	$includedColumns = nuObjKey($hash, 'nuPrintIncludedColumns', []);
 	$excludedColumns = nuObjKey($hash, 'nuPrintExcludedColumns', []);
+	$useBrowseFormats = nuObjKey($hash, 'nuPrintUseBrowseFormats', false);
 
 	if (!is_array($includedColumns)) {
 		$includedColumns = $includedColumns === '' ? [] : explode(',', nuDecode($includedColumns));
@@ -268,7 +279,7 @@ function nuRunHTMLGenerateHTMLTable($columns, $data, $hash) {
 
 	$tableHtml = "<TABLE border=1; style='border-collapse: collapse'>\n";
 	$tableHtml .= nuRunHTMLGenerateTableHeader($columns, $includeHiddenColumns, $includedColumns, $excludedColumns);
-	$tableHtml .= nuRunHTMLGenerateTableData($columns, $data, $includeHiddenColumns, $includedColumns, $excludedColumns);
+	$tableHtml .= nuRunHTMLGenerateTableData($columns, $data, $useBrowseFormats, $includeHiddenColumns, $includedColumns, $excludedColumns);
 	$tableHtml .= "</TABLE>";
 
 	return $tableHtml;
