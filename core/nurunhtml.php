@@ -34,8 +34,7 @@ if ($jsonData) {
 	$data = nuExecuteQueryAndFetchData($sqlQuery);
 	$tableHtml = nuRunHTMLGenerateHTMLTable($columns, $data, $hash);
 
-	// wrap the table so it doesn't overlap the fixed buttons
-	$tableWrapperStyles = "margin:20px 80px 0 0;";	// top/right/bottom/left
+	$tableWrapperStyles = "margin:20px 80px 0 0;";
 	print "<div id='nuPrintTableWrapper' style='{$tableWrapperStyles}'>"
 		. $tableHtml .
 		"</div>";
@@ -56,7 +55,6 @@ if ($jsonData) {
 
 	echo <<<HTML
 <style>
-	/* Settings (⚙) button */
 	#nuPrintOptionsBtn {
 		position: fixed; top: 24px; right: 24px;
 		z-index: 9999; width: 48px; height: 48px;
@@ -67,7 +65,6 @@ if ($jsonData) {
 	}
 	#nuPrintOptionsBtn:hover { background: #17429a; }
 
-	/* Download button */
 	#nuPrintDownloadBtn {
 		position: fixed; top: 80px; right: 24px;
 		z-index: 9999; width: 48px; height: 48px;
@@ -78,7 +75,6 @@ if ($jsonData) {
 	}
 	#nuPrintDownloadBtn:hover { background: #17429a; }
 
-	/* Modal */
 	.modal {
 		display: none; position: fixed; z-index: 10000;
 		left: 0; top: 0; width: 100%; height: 100%;
@@ -234,12 +230,12 @@ const fldBOM = document.getElementById('optBOM');
 const fldFileName= document.getElementById('optFileName');
 
 function openOptions() {
-	fldDelimiter.value		= csvExportOptions.delimiter		|| ',';
-	fldLineTerm.value		 = csvExportOptions.lineTerminator|| '\\r\\n';
-	fldHeaders.checked		= csvExportOptions.includeHeaders!==false;
-	fldBOM.checked				= csvExportOptions.bom					===true;
-	fldFileName.value		 = downloadFilename;
-	modal.style.display	 = 'block';
+	fldDelimiter.value	= csvExportOptions.delimiter || ',';
+	fldLineTerm.value = csvExportOptions.lineTerminator || JSON.stringify("\\r\\n").slice(1, -1);
+	fldHeaders.checked	= csvExportOptions.includeHeaders !== false;
+	fldBOM.checked		= csvExportOptions.bom === true;
+	fldFileName.value	= downloadFilename;
+	modal.style.display	= 'block';
 }
 function closeOptions() {
 	modal.style.display = 'none';
@@ -250,12 +246,12 @@ btnCancel.onclick = closeOptions;
 window.onclick		= evt => { if (evt.target === modal) closeOptions(); };
 
 btnSave.onclick = () => {
-	csvExportOptions.delimiter			= fldDelimiter.value;
+	csvExportOptions.delimiter = fldDelimiter.value;
 	csvExportOptions.lineTerminator = fldLineTerm.value;
-	csvExportOptions.includeHeaders= fldHeaders.checked;
-	csvExportOptions.bom						= fldBOM.checked;
-	downloadFilename								= fldFileName.value.trim() || downloadFilename;
-	csvExportOptions.fileName			 = downloadFilename;
+	csvExportOptions.includeHeaders = fldHeaders.checked;
+	csvExportOptions.bom = fldBOM.checked;
+	downloadFilename = fldFileName.value.trim() || downloadFilename;
+	csvExportOptions.fileName = downloadFilename;
 	closeOptions();
 };
 </script>
