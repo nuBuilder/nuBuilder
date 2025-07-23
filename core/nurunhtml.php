@@ -34,7 +34,7 @@ if ($jsonData) {
 	$data = nuExecuteQueryAndFetchData($sqlQuery);
 	$tableHtml = nuRunHTMLGenerateHTMLTable($columns, $data, $hash);
 
-	$tableWrapperStyles = "margin:20px 80px 0 0;";
+	$tableWrapperStyles = "margin:20px 0 0 80px;";
 	print "<div id='nuPrintTableWrapper' style='{$tableWrapperStyles}'>"
 		. $tableHtml .
 		"</div>";
@@ -46,7 +46,6 @@ if ($jsonData) {
 		$csvOptions = [];
 	}
 
-	// File-name fallback
 	$fileName = isset($csvOptions['fileName']) ?
 		nuSanitizeFilename($csvOptions['fileName']) :
 		nuSanitizeFilename($formDescription . '.csv');
@@ -55,25 +54,29 @@ if ($jsonData) {
 
 	echo <<<HTML
 <style>
-	#nuPrintOptionsBtn {
-		position: fixed; top: 24px; right: 24px;
+	.nu-button {
+		position: fixed; left: 24px;
 		z-index: 9999; width: 48px; height: 48px;
 		border-radius: 50%; background: #1e53c6; color: #fff;
 		border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 		display: flex; align-items: center; justify-content: center;
 		cursor: pointer; font-size: 24px; transition: background .2s;
 	}
-	#nuPrintOptionsBtn:hover { background: #17429a; }
+	.nu-button:hover { background: #17429a; }
+
+	#nuPrintOptionsBtn {
+		top: 136px;
+	}
 
 	#nuPrintDownloadBtn {
-		position: fixed; top: 80px; right: 24px;
-		z-index: 9999; width: 48px; height: 48px;
-		border-radius: 50%; background: #1e53c6; color: #fff;
-		border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-		display: flex; align-items: center; justify-content: center;
-		cursor: pointer; font-size: 28px; transition: background .2s;
+		top: 80px;
+		font-size: 28px;
 	}
-	#nuPrintDownloadBtn:hover { background: #17429a; }
+
+	#nuPrintCopyBtn {
+		top: 24px;
+		font-size: 20px;
+	}
 
 	.modal {
 		display: none; position: fixed; z-index: 10000;
@@ -94,10 +97,30 @@ if ($jsonData) {
 	.modal-footer button {
 		margin-left: 8px; padding: 6px 12px; font-size: 14px;
 	}
+
+	.copy-toast {
+		position: fixed; top: 20px; left: 50%;
+		transform: translateX(-50%);
+		background: #28a745; color: white;
+		padding: 12px 24px; border-radius: 4px;
+		box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+		z-index: 10001; opacity: 0;
+		transition: opacity 0.3s ease;
+	}
+	.copy-toast.show {
+		opacity: 1;
+	}
 </style>
 
-<button id="nuPrintOptionsBtn" title="CSV Options (Ctrl+Shift+O)">⚙</button>
-<button id="nuPrintDownloadBtn" title="Download CSV (Ctrl+Shift+D)">
+<button id="nuPrintCopyBtn" class="nu-button" title="Copy Table (Ctrl+Shift+C)">
+	<svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+			 stroke="currentColor" stroke-width="2" stroke-linecap="round"
+			 stroke-linejoin="round">
+		<rect x="9" y="9" width="13" height="13" rx="2" ry="2" stroke="#fff"/>
+		<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="#fff"/>
+	</svg>
+</button>
+<button id="nuPrintDownloadBtn" class="nu-button" title="Download CSV (Ctrl+Shift+D)">
 	<svg width="28" height="28" viewBox="0 0 24 24" fill="none"
 			 stroke="currentColor" stroke-width="2" stroke-linecap="round"
 			 stroke-linejoin="round">
@@ -106,6 +129,9 @@ if ($jsonData) {
 		<rect x="8" y="16" width="8" height="2" rx="1" fill="#fff"/>
 	</svg>
 </button>
+<button id="nuPrintOptionsBtn" class="nu-button" title="CSV Options (Ctrl+Shift+O)">⚙</button>
+
+<div id="copyToast" class="copy-toast">Table copied to clipboard!</div>
 
 <div id="nuPrintOptionsModal" class="modal">
 	<div class="modal-content">
@@ -203,7 +229,61 @@ function nuRunHTMLDownloadCSV() {
 	URL.revokeObjectURL(url);
 }
 
+function showToast(message) {
+	const toast = document.getElementById('copyToast');
+	toast.textContent = message;
+	toast.classList.add('show');
+	setTimeout(() => {
+		toast.classList.remove('show');
+	}, 2000);
+}
+
+async function nuRunHTMLCopyTable() {
+  const table = document.querySelector('table');
+  if (!table) {
+    showToast('No table found to copy');
+    return;
+  }
+
+  const rows = Array.from(table.rows);
+  const tsv = rows
+    .map(row => {
+      const cells = Array.from(row.querySelectorAll('th, td'));
+      return cells.map(cell => cell.innerText.trim()).join('\t');
+    })
+    .join('\\r\\n');
+
+  try {
+    const htmlBlob = new Blob([table.outerHTML], { type: 'text/html' });
+    const textBlob = new Blob([tsv], { type: 'text/plain' });
+    const clipboardItem = new ClipboardItem({
+      'text/html': htmlBlob,
+      'text/plain': textBlob
+    });
+
+    await navigator.clipboard.write([clipboardItem]);
+    showToast('Table copied to clipboard!');
+  } catch (err) {
+    console.error('Clipboard API failed, falling back to execCommand:', err);
+
+    const range = document.createRange();
+    range.selectNode(table);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    if (document.execCommand('copy')) {
+      showToast('Table copied to clipboard!');
+    } else {
+      showToast('Copy failed – please press Ctrl+C manually');
+    }
+    sel.removeAllRanges();
+  }
+}
+
+// Event listeners
 document.getElementById('nuPrintDownloadBtn').onclick = nuRunHTMLDownloadCSV;
+document.getElementById('nuPrintCopyBtn').onclick = nuRunHTMLCopyTable;
+
 document.addEventListener('keydown', e => {
 	if ((e.ctrlKey||e.metaKey) && e.shiftKey) {
 		if (e.key.toLowerCase() === 'd') {
@@ -214,12 +294,16 @@ document.addEventListener('keydown', e => {
 			e.preventDefault();
 			openOptions();
 		}
+		if (e.key.toLowerCase() === 'c') {
+			e.preventDefault();
+			nuRunHTMLCopyTable();
+		}
 	}
 });
 
 // Modal logic
 const modal = document.getElementById('nuPrintOptionsModal');
-const btnOpen = document.getElementById('nuPrintOptionsBtn');
+const btnOptions = document.getElementById('nuPrintOptionsBtn');
 const btnSave = document.getElementById('optSaveBtn');
 const btnCancel = document.getElementById('optCancelBtn');
 
@@ -241,7 +325,7 @@ function closeOptions() {
 	modal.style.display = 'none';
 }
 
-btnOpen.onclick	 = openOptions;
+btnOptions.onclick	 = openOptions;
 btnCancel.onclick = closeOptions;
 window.onclick		= evt => { if (evt.target === modal) closeOptions(); };
 
