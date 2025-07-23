@@ -222,8 +222,6 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 
 		window.nuACEObjectLabel = label || title || id;
 
-		document.title = window.nuACEObjectId + " - Ace Editor";
-
 		function nuAceGetURLParam(name, defaultValue = null) {
 			try {
 				const url = new URL(window.location.href);
@@ -327,10 +325,13 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 				}
 
 			}
-			document.getElementById('nu_language').innerHTML =
-				window.nuACELanguage === window.nuACEObjectLabel
-					? window.nuACEObjectLabel
-					: window.nuACEObjectLabel + " (" + window.nuACELanguage + ")";
+
+			const objInfo = window.nuACELanguage === window.nuACEObjectLabel
+				? window.nuACEObjectLabel
+				: window.nuACEObjectLabel + " (" + window.nuACELanguage + ")";
+
+			document.getElementById('nu_language').innerHTML = objInfo;
+			document.title = objInfo + " - Ace Editor";
 
 			if (language.includes('SQL') && typeof sqlFormatter === 'undefined') {
 				document.getElementById('nuACEBeautifyButton').style.display = 'none';
