@@ -38,7 +38,7 @@
 }
 
 .nu_html {
-	background-color: #d0a3a4 !important;
+	background-color: #d0b3b3 !important;
 }
 
 .nu_contentbox {
@@ -46,7 +46,7 @@
 }
 
 .nu_editor {
-	background-color: #b3a7e0 !important;
+	background-color: #b8aeda !important;
 }
 
 .nu_input {
@@ -62,7 +62,7 @@
 }
 
 .nu_lookup {
-	background-color: #e2d08b !important;
+	background-color: #e0d4a5 !important;
 }
 
 .nu_subform {
@@ -70,7 +70,7 @@
 }
 
 .nu_run {
-	background-color: #cbe6a1 !important;
+	background-color: #b8d58a !important;
 }
 
 .nu_textarea {
@@ -437,7 +437,7 @@ input[type=radio] {
 
 .nuOptions::before {
 	content: "\f0c9";
-	font-family: "Font Awesome 5 Free";
+	font-family: "Font Awesome 6 Free";
 	font-weight: 900;
 	margin-left: 5px
 }
@@ -470,7 +470,7 @@ input[type=radio] {
 
 .nuOptionsSubform::before {
 	content: "\f0c9";
-	font-family: "Font Awesome 5 Free";
+	font-family: "Font Awesome 6 Free";
 	font-weight: 600;
 	margin-left: 0px
 }
