@@ -25,6 +25,8 @@ if ($jsonData) {
 	$_POST['nuHash']['TABLE_ID'] = $hash['browse_table_id'];
 	$formDescription = $_POST['nuHash']['form_description'];
 
+	print "<title>" . 'Print: ' . htmlspecialchars($formDescription) . "</title>";
+
 	nuEval($hash['form_id'] . '_BB');
 
 	if (nuHasErrors()) {
@@ -338,6 +340,7 @@ btnSave.onclick = () => {
 	csvExportOptions.fileName = downloadFilename;
 	closeOptions();
 };
+
 </script>
 
 HTML;
