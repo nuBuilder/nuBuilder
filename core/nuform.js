@@ -865,7 +865,7 @@ function nuAddHomeLogout() {
 
 		if (!nuIsMobile() || $('.nuBreadcrumb').length == 0) {
 			$('#nuBreadcrumbHolder').append('<span id="nulink"><a href="https://www.nubuilder.com" class="nuBuilderLink" target="_blank">nuBuilder</a></span>');
-			nuAddIconToBreadCrumb('nuLogout', 'Log out', 16, 'nuAskLogout()', 'fas fa-sign-out-alt');
+			nuAddIconToBreadCrumb('nuLogout', 'Log out', 16, 'nuAskLogout()', 'fa-solid fa-sign-out-alt');
 		}
 
 	}
@@ -4237,30 +4237,30 @@ function nuGetOptionsList(formId, subformId, globalAccess, type) {
 	const ITEMS = {
 		Divider: ['', '', '', ''],
 		AddObject: ['Add Object', 'nuPopup("nuobject","-1","")', 'fa fa-plus', 'H'],
-		ArrangeObjects: ['Arrange Objects', `nuPopup("${formId}", "-2")`, 'fas fa-arrows-alt', 'A'],
+		ArrangeObjects: ['Arrange Objects', `nuPopup("${formId}", "-2")`, 'fa-solid fa-arrows-alt', 'A'],
 		FormProperties: ['Form Properties', `nuOptionsListAction("nuform", "${formId}", "", event)`, 'fa-cog', 'F'],
 		SearchableColumns: ['Searchable Columns', 'nuGetSearchList()', 'fa-columns', 'C'],
 		SubformObject: [nuTranslate('Subform Object'), subformAction, 'fa-cog', ''],
 		FormObjectList: ['Form Object List', `nuOptionsListAction("nuobject", "", "${formId}", event)`, 'fa-th-list', 'O'],
-		Search: ['Search', 'nuSearchAction()', 'fas fa-search', 'S'],
-		Add: ['Add', 'nuAddAction()', 'fas fa-plus', 'A'],
+		Search: ['Search', 'nuSearchAction()', 'fa-solid fa-search', 'S'],
+		Add: ['Add', 'nuAddAction()', 'fa-solid fa-plus', 'A'],
 		Print: ['Print', 'nuPrintAction()', 'fa fa-list-ul', 'P'],
 		Save: ['Save', 'nuSaveAction()', 'far fa-save', 'S'],
 		Delete: ['Delete', 'nuDeleteAction()', 'far fa-trash-alt', 'Y'],
 		Clone: ['Clone', 'nuCloneAction()', 'far fa-clone', 'C'],
-		Refresh: ['Refresh', 'if (nuGlobalAccess()) { nuRunPHPHidden("nu_set_refresh_cache"); } else { nuGetBreadcrumb(); }', 'fas fa-sync-alt', 'R'],
+		Refresh: ['Refresh', 'if (nuGlobalAccess()) { nuRunPHPHidden("nu_set_refresh_cache"); } else { nuGetBreadcrumb(); }', 'fa-solid fa-sync-alt', 'R'],
 		Help: ['Help', nuFORMHELP[subformId], 'fa-question-circle', '?'],
 		ChangePassword: ['Change Password', 'nuPopup("nupassword","","")', 'fa-password', 'Q'],
 		DebugResults: ['nuDebug Results', 'nuOptionsListAction("nudebug","","", event)', 'fa-bug', 'D'],
 		Database: ['Database', 'nuVendorLogin("PMA")', 'fa-database', 'E'],
-		Sessions: ['Sessions', 'nuForm("nusession","","", "", 2)', 'fas fa-key', 'J'],
+		Sessions: ['Sessions', 'nuForm("nusession","","", "", 2)', 'fa-solid fa-key', 'J'],
 		Cloner: ['Cloner', 'nuPopup("nucloner","-1")', 'far fa-clone', 'Z'],
 		FileManager: ['File Manager', 'nuVendorLogin("TFM")', 'far fa-file-code', 'Q'],
 		Backup: ['Backup', 'nuRunBackup()', 'far fa-hdd', 'B'],
 		Setup: ['Setup', 'nuForm("nusetup","1","", "", 2)', 'fa-cogs', 'U'],
 		FormInfo: ['Form Info', 'nuShowFormInfo()', 'fa-info', 'M'],
 		VersionInfo: ['Version Info', 'nuShowVersionInfo()', 'fa-info', 'V'],
-		Logout: ['Log out', 'nuAskLogout()', 'fas fa-sign-out-alt', 'L']
+		Logout: ['Log out', 'nuAskLogout()', 'fa-solid fa-sign-out-alt', 'L']
 	};
 
 	const menuList = [];
@@ -6428,7 +6428,7 @@ function nuMessage(options, options2, options3, options4) {
 	const header = $('<div>', { class: 'nuMessageHeader' });
 	const titleElement = $('<div>', { class: 'nuMessageTitle', html: title });
 
-	let closeButtonClass = 'fas fa-times nuMessageClose';
+	let closeButtonClass = 'fa-solid fa-times nuMessageClose';
 	if (nuIsMobile()) closeButtonClass += ' fa-2x';
 	const closeButton = $('<i>', { class: closeButtonClass });
 
@@ -7724,7 +7724,7 @@ function nuAddBrowseFilter(column) {
 	$newDiv.data('column_id', columnId);
 
 	const $newIcon = $('<i>', {
-		class: 'fas fa-filter'
+		class: 'fa-solid fa-filter'
 	});
 
 	$newDiv.append($newIcon);
@@ -7739,7 +7739,7 @@ function nuAddBrowseFilter(column) {
 	});
 
 	const $clearIcon = $('<i>', {
-		class: 'fas fa-times',
+		class: 'fa-solid fa-times',
 		css: {
 			'margin-right': '4px',
 			'font-size': '10px'
@@ -8172,11 +8172,11 @@ function nuAccessFormSetButtonIcons(force) {
 	}
 
 	if (nuIsMobile() || force === true) {
-		setInnerHTML(title_accformslf_add_button, 'fas fa-plus');
-		setInnerHTML(title_accformslf_print_button, 'fas fa-print');
-		setInnerHTML(title_accformslf_save_button, 'fas fa-save');
-		setInnerHTML(title_accformslf_clone_button, 'fas fa-clone');
-		setInnerHTML(title_accformslf_delete_button, 'fas fa-trash-alt');
+		setInnerHTML(title_accformslf_add_button, 'fa-solid fa-plus');
+		setInnerHTML(title_accformslf_print_button, 'fa-solid fa-print');
+		setInnerHTML(title_accformslf_save_button, 'fa-solid fa-save');
+		setInnerHTML(title_accformslf_clone_button, 'fa-solid fa-clone');
+		setInnerHTML(title_accformslf_delete_button, 'fa-solid fa-trash-alt');
 	}
 
 }

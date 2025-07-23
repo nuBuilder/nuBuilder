@@ -192,7 +192,7 @@ function nuAddAdminButtons() {
 	}
 
 	if (window.nuUXOptions.nuRefreshIcon) {
-		nuAddIconToBreadcrumbHolder('nuRefreshButton', 'Refresh', 'nuGetBreadcrumb()', 'fas fa-sync-alt', '3px');
+		nuAddIconToBreadcrumbHolder('nuRefreshButton', 'Refresh', 'nuGetBreadcrumb()', 'fa-solid fa-sync-alt', '3px');
 	}
 
 	let buttonCount = 0;
