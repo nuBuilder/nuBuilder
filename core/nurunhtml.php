@@ -112,6 +112,12 @@ if ($jsonData) {
 	.copy-toast.show {
 		opacity: 1;
 	}
+
+	.align-l { text-align: left; }
+	.align-c { text-align: center; }
+	.align-r { text-align: right; }
+	table { font-size: 12px; }
+
 </style>
 
 <button id="nuPrintCopyBtn" class="nu-button" title="Copy Table (Ctrl+Shift+C)">
@@ -362,23 +368,20 @@ function nuGetDebugMessageData($debugId) {
 }
 
 function nuRunHTMLGenerateTableHeader($columns, $includeHiddenColumns = false, $includedColumns = [], $excludedColumns = []) {
-
 	$tableHtml = "<TR>";
 
 	$columnCount = count($columns);
 	for ($col = 0; $col < $columnCount; $col++) {
-
 		$column = $columns[$col];
 		$printColumn = nuRunHTMLPrintColumn($col, $column, $includeHiddenColumns, $includedColumns, $excludedColumns);
 		if ($printColumn) {
-			$style = "style='font-size:12px;width:{$column->width}px;text-align:{$column->align}'";
-			$tableHtml .= "<TH $style>" . nuTranslate($column->title) . "</TH>\n";
+			// Use class for alignment
+			$alignClass = 'align-' . strtolower(substr($column->align, 0, 1)); // l/c/r
+			$tableHtml .= "<TH class='$alignClass'>" . nuTranslate($column->title) . "</TH>\n";
 		}
 	}
-
 	$tableHtml .= "</TR>";
 	return $tableHtml;
-
 }
 
 function nuRunHTMLPrintColumn($col, $column, $includeHiddenColumns, $includedColumns, $excludedColumns = []) {
@@ -396,48 +399,34 @@ function nuRunHTMLPrintColumn($col, $column, $includeHiddenColumns, $includedCol
 }
 
 function nuRunHTMLGenerateTableData($columns, $data, $useBrowseFormats = false, $includeHiddenColumns = false, $includedColumns = [], $excludedColumns = []) {
-
 	$tableHtml = "";
-
 	foreach ($data as $row) {
-
 		$tableHtml .= "\n<TR>\n";
-
 		$columnCount = count($columns);
 		for ($col = 0; $col < $columnCount; $col++) {
-
 			$column = $columns[$col];
 			$printColumn = nuRunHTMLPrintColumn($col, $column, $includeHiddenColumns, $includedColumns, $excludedColumns);
 			if ($printColumn) {
 				$display = $column->display;
 				$alias = nuGetColumnAlias($display);
 				$display = $alias ? $alias : $display;
-
 				$value = $row[$display] ?? "";
 				$value = $display == 'null' || $display == '""' ? '' : $value;
-
 				if ($useBrowseFormats) {
 					$format = $column->format ?? "";
 					if (!empty($format) && !empty($value)) {
 						$value = nuAddFormatting($value, $format);
 					}
 				}
-
-				$style = "style='font-size:12px;width:{$column->width}px;text-align:{$column->align}'";
-
-				$tableHtml .= "<TD $style>$value</TD>\n";
+				$alignClass = 'align-' . strtolower(substr($column->align, 0, 1)); // l/c/r
+				$tableHtml .= "<TD class='$alignClass'>$value</TD>\n";
 			}
 		}
 		$tableHtml .= "</TR>";
-
 	}
-
 	return $tableHtml;
-
 }
-
 function nuRunHTMLGenerateHTMLTable($columns, $data, $hash) {
-
 	$includeHiddenColumns = nuObjKey($hash, 'nuPrintIncludeHiddenColumns', null) == '1' ? true : false;
 	$includedColumns = nuObjKey($hash, 'nuPrintIncludedColumns', []);
 	$excludedColumns = nuObjKey($hash, 'nuPrintExcludedColumns', []);
@@ -446,18 +435,27 @@ function nuRunHTMLGenerateHTMLTable($columns, $data, $hash) {
 	if (!is_array($includedColumns)) {
 		$includedColumns = $includedColumns === '' ? [] : explode(',', nuDecode($includedColumns));
 	}
-
 	if (!is_array($excludedColumns)) {
 		$excludedColumns = $excludedColumns === '' ? [] : explode(',', nuDecode($excludedColumns));
 	}
 
-	$tableHtml = "<TABLE border=1; style='border-collapse: collapse'>\n";
+	// Output <colgroup> for column widths
+	$colgroup = "<colgroup>\n";
+	foreach ($columns as $col => $column) {
+		if (nuRunHTMLPrintColumn($col, $column, $includeHiddenColumns, $includedColumns, $excludedColumns)) {
+			$width = intval($column->width);
+			$colgroup .= "<col style='width:{$width}px;'>\n";
+		}
+	}
+	$colgroup .= "</colgroup>\n";
+
+	$tableHtml = "<TABLE border=1 style='border-collapse: collapse; font-size:12px;'>\n";
+	$tableHtml .= $colgroup;
 	$tableHtml .= nuRunHTMLGenerateTableHeader($columns, $includeHiddenColumns, $includedColumns, $excludedColumns);
 	$tableHtml .= nuRunHTMLGenerateTableData($columns, $data, $useBrowseFormats, $includeHiddenColumns, $includedColumns, $excludedColumns);
 	$tableHtml .= "</TABLE>";
 
 	return $tableHtml;
-
 }
 
 function nuExecuteQueryAndFetchData($sql, $params = []) {
