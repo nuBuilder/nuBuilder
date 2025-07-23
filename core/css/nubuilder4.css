@@ -1334,8 +1334,7 @@ input[type=radio] {
 	transition: border-color 0.2s ease;
 	margin-left: 10px;
 	margin-right: 5px;
-	vertical-align: middle;
-	margin-top: -5px;
+	vertical-align: top;
 }
 
 .nuSearchWrapper:hover {
