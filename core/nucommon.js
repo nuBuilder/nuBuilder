@@ -1599,23 +1599,25 @@ function nuRemoveHolders(...args) {
 
 function nuAttachFontAwesome(id, iconClass, size = 'medium', appendToEnd = false) {
 
-	const sizeMap = {
-		small: '12px',
-		medium: '16px',
-		large: '24px'
-	};
+	const fontSizeStyle =
+		size === 'small' ? 'font-size: small;'
+			: size === 'large' ? 'font-size: x-large;'
+				: size === 'medium' ? ''
+					: `font-size: ${size};`;
 
-	const actualSize = sizeMap[size] || size;
+	const marginStyle = appendToEnd ? 'margin-left: 3px;' : 'margin-right: 3px;';
+	const combinedStyle = `${fontSizeStyle}${marginStyle}`;
+	const styleAttr = combinedStyle ? ` style="${combinedStyle}"` : '';
 
-	let target = typeof id === 'string' ? `#${id}` : id;
-	const iconHtml = `<i style="font-size:${actualSize};" class="fa-width-auto ${iconClass}"></i>`;
-	let targetObj = $(target);
-	if (targetObj.length === 0) return;
+	const iconHtml = `<i${styleAttr} class="fa-width-auto ${iconClass}"></i>`;
+	const $target = $(typeof id === 'string' ? `#${id}` : id);
 
-	const needsSpace = targetObj.text().trim().length > 0 ? '&nbsp;' : '';
-	const content = appendToEnd ? needsSpace + iconHtml : iconHtml + needsSpace;
+	if (!$target.length) return;
 
-	appendToEnd ? targetObj.append(content) : targetObj.prepend(content);
+	const sep = $target.text().trim() ? '&nbsp;' : '';
+	const content = appendToEnd ? sep + iconHtml : iconHtml + sep;
+
+	appendToEnd ? $target.append(content) : $target.prepend(content);
 
 }
 
