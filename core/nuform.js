@@ -1285,6 +1285,7 @@ function nuAddActionButtonSaveClose(caption) {
 		}, options);
 
 		return this.each(function () {
+
 			const $label = $('<label>', {
 				class: 'nuActionCheckbox',
 				style: 'margin-left: 5px;'
@@ -1292,7 +1293,7 @@ function nuAddActionButtonSaveClose(caption) {
 			const $checkbox = $('<input>', {
 				type: 'checkbox',
 				id: settings.id,
-				checked: settings.checked
+				checked: nuGetProperty(settings.id + '_filter') === '1' || settings.checked
 			});
 			const $iconUnchecked = $('<i>', { class: 'fa-regular fa-square unchecked-icon' });
 			const $iconChecked = $('<i>', { class: 'fa-regular fa-square-check checked-icon' });
@@ -1301,6 +1302,7 @@ function nuAddActionButtonSaveClose(caption) {
 			$label.append($checkbox, $iconUnchecked, $iconChecked, $span);
 
 			$checkbox.on('change', function () {
+				nuSetProperty(settings.id + '_filter', this.checked ? '1' : '0');
 				settings.onToggle(this.checked);
 			});
 
