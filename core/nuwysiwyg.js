@@ -108,7 +108,7 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 		contextmenu: _contextmenu,
 		skin: 'oxide',
 		content_css: 'default',
-		cache_suffix: '?v=7.7.0',
+		cache_suffix: '?v=8.0.0',
 		license_key: 'gpl',
 		setup: function (editor) {
 
