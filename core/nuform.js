@@ -5410,7 +5410,7 @@ function nuSearchAction(searchValue, filterValue) {
 		window.nuFORM.setProperty('page_number', 0);
 	}
 
-	nuDisable('nuSearchField');
+	nuDisableSearchField();
 	nuGetBreadcrumb();
 
 }
@@ -8471,3 +8471,21 @@ function nuTabSetMarker(tabId, fieldIdOrFlag) {
 
 }
 
+
+function nuHideSearchField() {
+
+	const $searchField = $('.nuSearchWrapper');
+	if ($searchField.length > 0) {
+		$searchField.hide()
+	}
+
+}
+
+function nuDisableSearchField() {
+
+	const $wrapper = $('.nuSearchWrapper');
+	if ($wrapper.length > 0) {
+		$wrapper.find('#nuSearchField, #nuSearchBtn').prop('disabled', true);
+	}
+
+}

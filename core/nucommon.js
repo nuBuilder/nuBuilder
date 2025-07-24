@@ -1302,15 +1302,6 @@ function nuHide(ids) {
 	}
 }
 
-function nuHideSearchField() {
-
-	const $searchField = $('.nuSearchWrapper');
-	if ($searchField.length > 0) {
-		$searchField.hide()
-	}
-
-}
-
 function nuRemove(id) {
 
 	const elementIds = Array.isArray(id) ? id : [id];
