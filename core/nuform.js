@@ -5096,7 +5096,7 @@ function nuBrowseCreateFooterHtml(currentForm) {
 	const totalPages = currentForm.pages === 0 ? 1 : currentForm.pages;
 	const disabledStyle = ' style="opacity: 0.3; pointer-events: none;"';
 
-	const nuFirst = `<span id="nuFirst" class="nuBrowsePage"${isFirstPage ? disabledStyle : ''}><i class="fa fa-step-backward" style="font-size: 16px" onclick="nuGetPage(1)"></i></span>`;
+	const nuFirst = `<span id="nuFirst" class="nuBrowsePage"${isFirstPage ? disabledStyle : ''}><i class="fa fa-step-backward" style="font-size: 16px" onclick="nuGetPage()"></i></span>`;
 	const nuLast = `<span id="nuLast" onclick="nuGetPage(${currentForm.page_number})" class="nuBrowsePage"${isFirstPage ? disabledStyle : ''}">&#9668;</span>`;
 	const currentPageInput = `<input id="browsePage" onchange="nuGetPage(this.value)" value="${currentForm.page_number + 1}" class="browsePage"/>`;
 	const nuNext = `<span id="nuNext" onclick="nuGetPage(${currentForm.page_number + 2})" class="nuBrowsePage"${isLastPage ? disabledStyle : ''}">&#x25BA;</span>`;
@@ -5118,7 +5118,7 @@ function nuBrowseAdditionalNavButtons() {
 		'pointer-events': 'none'
 	};
 
-	const firstBtn = '<span id="nuFirst" class="nuBrowsePage"><i class="fa fa-step-backward" style="font-size: 16px" onclick="nuGetPage(1)">&nbsp;&nbsp;&nbsp;&nbsp;</i></span>';
+	const firstBtn = '<span id="nuFirst" class="nuBrowsePage"><i class="fa fa-step-backward" style="font-size: 16px" onclick="nuGetPage()">&nbsp;&nbsp;&nbsp;&nbsp;</i></span>';
 	$(firstBtn).insertBefore('#nuLast');
 
 	const endBtn = `<span id="nuEnd" class="nuBrowsePage">&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-step-forward nuBrowsePage" style="font-size: 16px" onclick="nuGetPage(${lastPage})"></i></span>`;
@@ -5456,7 +5456,7 @@ function nuSortBrowse(column) {
 
 }
 
-function nuGetPage(pageNumber) {
+function nuGetPage(pageNumber = 1) {
 
 	let paddedPageNumber = parseInt('00' + pageNumber, 10);
 
@@ -7508,7 +7508,7 @@ function nuAddBrowseAdditionalNavButtons() {
 		var currentPage = Number($('#browsePage').val());
 		var lastPage = nuCurrentProperties().pages;
 
-		var html = '<span id="nuFirst" class="nuBrowsePage" style="font-size: 15px;"><i class="fa fa-step-backward ml-5 mr-5" onclick="nuGetPage(1)">&nbsp;&nbsp;&nbsp;&nbsp;</i></span>';
+		var html = '<span id="nuFirst" class="nuBrowsePage" style="font-size: 15px;"><i class="fa fa-step-backward ml-5 mr-5" onclick="nuGetPage()">&nbsp;&nbsp;&nbsp;&nbsp;</i></span>';
 		$(html).insertBefore("#nuLast");
 
 		html = '<span id="nuEnd" class="nuBrowsePage" style="font-size: 15px;">&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-step-forward ml-5 mr-5" onclick="nuGetPage(' + lastPage + ')"></i></span>';
@@ -7874,7 +7874,7 @@ $.fn.nuSearchablePopup = function (options) {
 					toggleIcon(true, selectedLabel);
 					settings.onSelected(selectedValue, selectedLabel, false);
 					$popup.hide();
-					nuGetPage(1);
+					nuGetPage();
 				});
 				$options.append($item);
 				$item.nuHighlight(filterText);
@@ -7913,7 +7913,7 @@ $.fn.nuSearchablePopup = function (options) {
 				toggleIcon(true, selectedLabel);
 				settings.onSelected(selectedValue, selectedLabel, false);
 				$popup.hide();
-				nuGetPage(1);
+				nuGetPage();
 			}
 		}
 	});
@@ -8018,7 +8018,7 @@ $.fn.nuSearchablePopup = function (options) {
 		}
 
 		toggleIcon(false);
-		nuGetPage(1);
+		nuGetPage();
 	};
 
 };
