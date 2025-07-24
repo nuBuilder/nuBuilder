@@ -455,7 +455,7 @@ function nuAddHome() {
 
 		let breadCrumb = $('#nuBreadcrumb0').length > 0 ? $('#nuBreadcrumb0') : $('#nuHomeGap');
 		breadCrumb
-			.html('<i class="fa fa-home fa-fw" style="font-size:17px;"></i>')
+			.html('<i class="fa fa-home fa-width-auto" style="font-size:17px;"></i>')
 			.attr('title', nuTranslate('Home'))
 			.attr('onclick', '')
 			.attr('onclick', 'nuForm("' + window.nuLoginH + '", -1, "", "", 1);')
@@ -1097,7 +1097,7 @@ function nuAddActionButtons(form) {
 function nuAddActionButton(id, value, func, title, icon, insertAfterElement) {
 
 	const DEFAULT_ICON_BASE = 'fa-regular';
-	const ICON_SIZE_CLASSES = 'fa-fw fa-lg';
+	const ICON_SIZE_CLASSES = 'fa-width-auto fa-lg';
 
 	const defaults = {
 		Save: {
@@ -4237,7 +4237,7 @@ function nuOptions(formId, subformId, t, access) {
 				$('#' + id)
 					.attr('title', nuTranslate('Options'))
 					.attr('onclick', 'nuGetOptionsList("' + formId + '", "' + subformId + '", "' + access + '", "' + t + '")')
-					.addClass('nuIcon nuOptionsSubform fa-fw');
+					.addClass('nuIcon nuOptionsSubform fa-width-auto');
 
 			}
 
@@ -4248,7 +4248,7 @@ function nuOptions(formId, subformId, t, access) {
 			$('#' + id)
 				.attr('title', 'Options')
 				.attr('onclick', 'nuGetOptionsList("' + formId + '", "' + subformId + '", "' + access + '", "' + t + '")')
-				.addClass('nuIcon nuOptions fa-fw');
+				.addClass('nuIcon nuOptions fa-width-auto');
 
 		}
 
@@ -4406,7 +4406,7 @@ function nuBuildOptionsList(items, parentId, contextType) {
 	}, 0);
 
 	items.forEach(([text, action, iconCls, shortcut], idx) => {
-		iconCls += ' fa-fw';
+		iconCls += ' fa-width-auto';
 		const topPos = TITLE_HEIGHT + idx * ITEM_HEIGHT;
 		const isDivider = (text === '');
 		const handler = (typeof action === 'function')

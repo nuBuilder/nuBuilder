@@ -252,11 +252,11 @@ function nuAdminToolsCreateMenuConfig(menuType, event) {
 	const baseMenus = {
 		Tools: [
 			{
-				text: nuContextMenuItemText("Prompt Generator", "fa-fw fa-solid fa-magic"),
+				text: nuContextMenuItemText("Prompt Generator", "fa-width-auto fa-solid fa-magic"),
 				action: () => nuAdminToolsRun('nupromptgenerator', '-1', event, 'popup')
 			},
 			...(nuSERVERRESPONSE.table !== '' && nuFormType() !== 'browse' ? [{
-				text: nuContextMenuItemText("Inspect Record", "fa-fw fa-solid fa-binoculars"),
+				text: nuContextMenuItemText("Inspect Record", "fa-width-auto fa-solid fa-binoculars"),
 				action: () => {
 					nuAdminPreInspectRecordJS();
 					nuAdminToolsRun('nu_inspect_record', null, event, 'procedure');
@@ -392,7 +392,7 @@ function nuAddIconToBreadcrumbHolder(id, title, oClick, iClass, paddingLeft) {
       class="nuBreadcrumbIcon"${paddingStyle}
       onclick="${oClick}"
     >
-      <i class="${iClass} fa-fw"></i>
+      <i class="${iClass} fa-width-auto"></i>
     </div>
     `;
 
@@ -406,7 +406,7 @@ function nuAddIconToBreadcrumbHolderX(i, title, oClick, iClass, paddingLeft) {
 
 	const h = `
 	<div id="${i}" title="${title}" style="font-size: 16px; display: inline-block; cursor: pointer; padding-left: ${paddingLeft}" onclick="${oClick}">
-		<i class="${iClass} fa-fw"></i>
+		<i class="${iClass} fa-width-auto"></i>
 	</div>
   `;
 	const fragment = nuCreateAppendHTML(h);
@@ -814,7 +814,7 @@ function nuContextMenuBeforeRender(menu, event) {
 }
 
 function nuContextMenuItemText(label, iconClass) {
-	return '<i class="' + iconClass + ' fa-fw" aria-hidden="true"></i> <span style="padding-left:8px; white-space:nowrap; display: inline;">' + nuTranslate(label) + '</span>';
+	return '<i class="' + iconClass + ' fa-width-auto" aria-hidden="true"></i> <span style="padding-left:8px; white-space:nowrap; display: inline;">' + nuTranslate(label) + '</span>';
 }
 
 function nuContextMenuGetWordWidth(w) {

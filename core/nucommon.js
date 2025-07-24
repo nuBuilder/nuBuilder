@@ -1608,7 +1608,7 @@ function nuAttachFontAwesome(id, iconClass, size = 'medium', appendToEnd = false
 	const actualSize = sizeMap[size] || size;
 
 	let target = typeof id === 'string' ? `#${id}` : id;
-	const iconHtml = `<i style="font-size:${actualSize};" class="fa-fw ${iconClass}"></i>`;
+	const iconHtml = `<i style="font-size:${actualSize};" class="fa-width-auto ${iconClass}"></i>`;
 	let targetObj = $(target);
 	if (targetObj.length === 0) return;
 
@@ -1712,7 +1712,7 @@ function nuButtonLoading(buttonId, spinning = true, autoEnableAfterSeconds = 0) 
 		if (!button.querySelector('[nu-data-spinner]')) {
 			// create the spinner <i>
 			const spinner = document.createElement('i');
-			spinner.className = 'fa-fw fa fa-spinner fa-spin';
+			spinner.className = 'fa-width-auto fa fa-spinner fa-spin';
 			spinner.setAttribute('nu-data-spinner', 'true');
 
 			// decide where to put it:
