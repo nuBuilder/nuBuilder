@@ -486,6 +486,10 @@ function db_quote($s) {
 
 }
 
+function nuEncode($value) {
+	return base64_encode(json_encode($value));
+}
+
 function nuEncodeQueryRowResults($sql, $args = [], $prefixedData = []) {
 
 	$stmt = nuRunQuery($sql, $args);
@@ -493,10 +497,9 @@ function nuEncodeQueryRowResults($sql, $args = [], $prefixedData = []) {
 	while ($row = db_fetch_row($stmt)) {
 		$results[] = $row;
 	}
-	return base64_encode(json_encode($results));
+	return nuEncode($results);
 
 }
-;
 
 function nuViewExists($view) {
 
