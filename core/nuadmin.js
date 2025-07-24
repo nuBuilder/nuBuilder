@@ -174,10 +174,10 @@ function nuAddAdminButtons() {
 
 	if (nuMainForm(true) || nuIsPopup()) {
 		if (window.nuUXOptions.nuDebugIcon || devMode) {
-			nuAddIconToBreadcrumbHolder('nuDebugButton', 'nuDebug Results', 'nuOpenNuDebug(2)', 'fa fa-bug', '3px');
+			nuAddIconToBreadcrumbHolder('nuDebugButton', 'nuDebug Results', 'nuOpenNuDebug(2)', 'fa fa-bug');
 		}
 		if (window.nuUXOptions.nuDatabaseIcon || devMode) {
-			nuAddIconToBreadcrumbHolder('nuDatabaseIcon', 'Database', "nuVendorLogin('PMA')", 'fa fa-database', '3px');
+			nuAddIconToBreadcrumbHolder('nuDatabaseIcon', 'Database', "nuVendorLogin('PMA')", 'fa fa-database');
 		}
 	}
 
@@ -186,13 +186,12 @@ function nuAddAdminButtons() {
 			'nuToolsButton',
 			'Tools',
 			'nuAdminToolsClick(this, event, \'Tools\')',
-			'fa fa-gear',
-			'3px'
+			'fa fa-gear'
 		);
 	}
 
 	if (window.nuUXOptions.nuRefreshIcon) {
-		nuAddIconToBreadcrumbHolder('nuRefreshButton', 'Refresh', 'nuGetBreadcrumb()', 'fa-solid fa-sync-alt', '3px');
+		nuAddIconToBreadcrumbHolder('nuRefreshButton', 'Refresh', 'nuGetBreadcrumb()', 'fa-solid fa-sync-alt');
 	}
 
 	let buttonCount = 0;
@@ -380,7 +379,30 @@ function nuOpenNuDebug(w) {
 	nuForm('nudebug', '', '', '', w);
 }
 
-function nuAddIconToBreadcrumbHolder(i, title, oClick, iClass, paddingLeft) {
+function nuAddIconToBreadcrumbHolder(id, title, oClick, iClass, paddingLeft) {
+
+	const paddingStyle = paddingLeft != null
+		? ` style="padding-left: ${paddingLeft};"`
+		: '';
+
+	const html = `
+    <div
+      id="${id}"
+      title="${title}"
+      class="nuBreadcrumbIcon"${paddingStyle}
+      onclick="${oClick}"
+    >
+      <i class="${iClass} fa-fw"></i>
+    </div>
+    `;
+
+	const fragment = nuCreateAppendHTML(html);
+	const options = $('#nuBreadcrumbHolder').find("[id$=nuOptions]");
+	$(fragment).insertAfter(options);
+
+}
+
+function nuAddIconToBreadcrumbHolderX(i, title, oClick, iClass, paddingLeft) {
 
 	const h = `
 	<div id="${i}" title="${title}" style="font-size: 16px; display: inline-block; cursor: pointer; padding-left: ${paddingLeft}" onclick="${oClick}">

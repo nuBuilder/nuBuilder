@@ -865,19 +865,19 @@ function nuAddHomeLogout() {
 
 		if (!nuIsMobile() || $('.nuBreadcrumb').length == 0) {
 			$('#nuBreadcrumbHolder').append('<span id="nulink"><a href="https://www.nubuilder.com" class="nuBuilderLink" target="_blank">nuBuilder</a></span>');
-			nuAddIconToBreadCrumb('nuLogout', 'Log out', 16, 'nuAskLogout()', 'fa-solid fa-sign-out-alt');
+			nuAddIconToBreadCrumb2('nuLogout', 'Log out', 16, 'nuAskLogout()', 'fa-solid fa-sign-out-alt');
 		}
 
 	}
 
 }
 
-function nuAddIconToBreadCrumb(id, title, right, handler, iconClass) {
+function nuAddIconToBreadCrumb2(id, title, right, handler, iconClass) {
 
 	const div = nuCreateElementWithId('div', id, 'nuBreadcrumbHolder');
 
 	$(div)
-		.addClass('nuBreadcrumbIcon')
+		.addClass('nuBreadcrumbIcon2')
 		.attr('onclick', handler)
 		.css('right', right)
 		.html(`<i class="${iconClass}" style="font-size:17px;"></i>`)
