@@ -1274,6 +1274,60 @@ function nuAddActionButtonSaveClose(caption) {
 
 }
 
+(function ($) {
+
+	$.fn.nuActionCheckbox = function (options) {
+		const settings = $.extend({
+			id: 'nu_toggle_checkbox',
+			text: 'Toggle',
+			checked: false,
+			onToggle: function (checked) { }
+		}, options);
+
+		return this.each(function () {
+			const $label = $('<label>', {
+				class: 'nuActionCheckbox',
+				style: 'margin-left: 5px;'
+			});
+			const $checkbox = $('<input>', {
+				type: 'checkbox',
+				id: settings.id,
+				checked: settings.checked
+			});
+			const $iconUnchecked = $('<i>', { class: 'fa-regular fa-square unchecked-icon' });
+			const $iconChecked = $('<i>', { class: 'fa-regular fa-square-check checked-icon' });
+			const $span = $('<span>').text(settings.text);
+
+			$label.append($checkbox, $iconUnchecked, $iconChecked, $span);
+
+			$checkbox.on('change', function () {
+				settings.onToggle(this.checked);
+			});
+
+			$(this).empty().append($label);
+		});
+	};
+
+}(jQuery));
+
+function nuAddActionCheckbox(id, text, checked, insertAfterElement, onChecked) {
+
+	const opts = { id, text, checked };
+	if (typeof onChecked === 'function') {
+		opts.onChecked = onChecked;
+	}
+
+	const $span = $('<span></span>');
+	if (insertAfterElement) {
+		$span.insertAfter('#' + insertAfterElement);
+	} else {
+		$span.appendTo('#nuActionHolder');
+	}
+
+	$span.nuActionCheckbox(opts);
+
+}
+
 function nuActionButtonsToggleVisibility() {
 
 	const nuSearchField = document.getElementById('nuSearchField');

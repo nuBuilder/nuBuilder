@@ -371,7 +371,7 @@ input[type=radio] {
 	cursor: pointer
 }
 
-.nuBreadcrumbIcon {
+.nuBreadcrumbIcon2 {
 	font-size: 17px;
 	display: inline-block;
 	cursor: pointer;
@@ -434,7 +434,7 @@ input[type=radio] {
 }
 
 .nuOptions:hover {
-	color: red
+	color: #cee8ff
 }
 
 .nuOptions::before {
@@ -1139,6 +1139,56 @@ input[type=radio] {
 	width: 28px
 }
 
+.nuActionCheckbox {
+	display: inline-flex;
+	align-items: center;
+	padding: 5px 10px;
+	border: 1px solid #e5e7eb;
+	border-radius: 6px;
+	background-color: #f9fafbbf;
+	color: #333;
+	font-size: 14px;
+	cursor: pointer;
+	width: auto;
+	max-width: 100%;
+	white-space: nowrap;
+	box-sizing: border-box;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.nuActionCheckbox:hover {
+	background-color: #f3f4f6;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+.nuActionCheckbox input[type="checkbox"] {
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.nuActionCheckbox i {
+	margin-right: 8px;
+	font-size: 16px;
+}
+
+.nuActionCheckbox .checked-icon {
+	display: none;
+}
+
+.nuActionCheckbox input[type="checkbox"]:checked~.checked-icon {
+	display: inline-block;
+}
+
+.nuActionCheckbox input[type="checkbox"]:checked~.unchecked-icon {
+	display: none;
+}
+
+.nuActionCheckbox input[type="checkbox"]:checked~span,
+.nuActionCheckbox input[type="checkbox"]:checked~i {
+	background-color: transparent;
+}
+
 .nuToolButton {
 	box-shadow: inset 0px 1px 0px 0px #ffffff;
 	background: linear-gradient(to bottom, #ffffff 5%, #f6f6f6 100%);
@@ -1166,6 +1216,17 @@ input[type=radio] {
 	background: linear-gradient(to bottom, #e6e6e6 5%, #ffffff 100%);
 	transform: translateY(1px);
 	outline: none;
+}
+
+.nuBreadcrumbIcon {
+	font-size: 16px;
+	display: inline-block;
+	cursor: pointer;
+	padding-left: 3px
+}
+
+.nuBreadcrumbIcon:hover {
+	color: #cee8ff
 }
 
 .nuQuickButton {
