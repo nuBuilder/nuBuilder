@@ -274,6 +274,10 @@ function nuTrim($s) {
 	return trim($s ?? '');
 }
 
+function nuAddSlashes($s) {
+	return addslashes($s ?? '');
+}
+
 function nuJsonDecode($json, $associative = null) {
 	return json_decode($json ?? '', $associative);
 }
@@ -286,9 +290,9 @@ function nuSetHashList($p) {
 
 	if (!is_null($p)) {
 
-		$fid = addslashes(nuObjKey($p, 'form_id', ''));
-		$rid = addslashes(nuObjKey($p, 'record_id', ''));
-		$formGroup = addslashes(nuObjKey($p, 'form_group', ''));
+		$fid = nuAddSlashes(nuObjKey($p, 'form_id', ''));
+		$rid = nuAddSlashes(nuObjKey($p, 'record_id', ''));
+		$formGroup = nuAddSlashes(nuObjKey($p, 'form_group', ''));
 
 		$A = nuGetUserAccess();
 
@@ -315,7 +319,7 @@ function nuSetHashList($p) {
 								if ($value == null) {
 									$value = '';
 								}
-								$r[$fld] = addslashes($value ?? '');
+								$r[$fld] = nuAddSlashes($value ?? '');
 							}
 
 						}
@@ -329,7 +333,7 @@ function nuSetHashList($p) {
 		foreach ($p as $key => $value) {														//-- The 'opener' Form's properties
 
 			if (gettype($value) == 'string' or is_numeric($value)) {
-				$h[$key] = addslashes($value ?? '');
+				$h[$key] = nuAddSlashes($value ?? '');
 			} else {
 				$h[$key] = '';
 			}
@@ -341,7 +345,7 @@ function nuSetHashList($p) {
 			foreach ($p['hash'] as $key => $value) {											//-- The 'opener' Form's hash variables
 
 				if (gettype($value) == 'string' or is_numeric($value)) {
-					$h[$key] = addslashes($value ?? '');
+					$h[$key] = nuAddSlashes($value ?? '');
 				} else {
 					$h[$key] = '';
 				}
@@ -350,14 +354,14 @@ function nuSetHashList($p) {
 
 		}
 
-		$h['PREVIOUS_RECORD_ID'] = addslashes($rid ?? '');
-		$h['RECORD_ID'] = addslashes($rid ?? '');
-		$h['NEW_RECORD'] = addslashes($rid == -1 ? '1' : '0');
-		$h['FORM_ID'] = addslashes($fid ?? '');
-		$h['FORM_GROUP'] = addslashes($formGroup ?? '');
-		$h['SUBFORM_ID'] = addslashes(nuObjKey($_POST['nuSTATE'], 'object_id', ''));
-		$h['ID'] = addslashes(nuObjKey($_POST['nuSTATE'], 'primary_key', ''));
-		$h['CODE'] = addslashes(nuObjKey($_POST['nuSTATE'], 'code', ''));
+		$h['PREVIOUS_RECORD_ID'] = nuAddSlashes($rid ?? '');
+		$h['RECORD_ID'] = nuAddSlashes($rid ?? '');
+		$h['NEW_RECORD'] = nuAddSlashes($rid == -1 ? '1' : '0');
+		$h['FORM_ID'] = nuAddSlashes($fid ?? '');
+		$h['FORM_GROUP'] = nuAddSlashes($formGroup ?? '');
+		$h['SUBFORM_ID'] = nuAddSlashes(nuObjKey($_POST['nuSTATE'], 'object_id', ''));
+		$h['ID'] = nuAddSlashes(nuObjKey($_POST['nuSTATE'], 'primary_key', ''));
+		$h['CODE'] = nuAddSlashes(nuObjKey($_POST['nuSTATE'], 'code', ''));
 
 	}
 
@@ -1241,7 +1245,7 @@ function nuBuildTempTable($name_id, $tt, $rd = 0) {
 		}
 
 		$p = nuReplaceHashVariables($c);
-		$tt = addslashes($tt ?? '');
+		$tt = nuAddSlashes($tt ?? '');
 
 		$P = '$sql = "CREATE TABLE ' . $tt . ' ' . $p . '";';
 		$P .= 'nuRunQuery($sql);';
@@ -2597,7 +2601,7 @@ function nuSetGlobalPropertiesJS() {
 	$js = '';
 
 	foreach ($gp as $property => $value) {
-		$js .= "nuSetProperty('$property', '" . addslashes($value ?? '') . "');\n";
+		$js .= "nuSetProperty('$property', '" . nuAddSlashes($value ?? '') . "');\n";
 	}
 	if ($js !== '') {
 		nuAddJavaScript($js, false, true);
