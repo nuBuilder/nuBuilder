@@ -7734,7 +7734,7 @@ function nuAddBrowseFilter(column) {
 		css: {
 			display: 'none',
 			position: 'absolute',
-			top: '27px',
+			top: '25px',
 			cursor: 'pointer'
 		}
 	});
