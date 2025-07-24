@@ -22,9 +22,12 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 		'../third_party/formatter/beautify-css.js',
 		'../third_party/formatter/sql-formatter.min.js'];
 	nuJSIndexInclude($includeFormatters);
+
+	$includeCSS = [
+		'../third_party/fontawesome/css/all.min.css',
+		'css/nubuilder4.css'];
+	nuCSSIndexInclude($includeCSS);
 	?>
-	<link rel="stylesheet" href="css/nubuilder4.css">
-	<link rel="stylesheet" href="../third_party/fontawesome/css/all.min.css">
 
 	<style>
 		.toolbar {
@@ -110,42 +113,42 @@ $jquery = "../third_party/jquery/jquery-3.7.1.min.js";
 
 		button.btn.beautify::before {
 			content: "\f0d0";
-			font-family: "Font Awesome 5 Free";
+			font-family: "Font Awesome 7 Free";
 			font-weight: 900;
 			margin-left: 1px;
 		}
 
 		button.btn.commentout::before {
 			content: "\f7a5";
-			font-family: "Font Awesome 5 Free";
+			font-family: "Font Awesome 7 Free";
 			font-weight: 900;
 			margin-left: 1px;
 		}
 
 		button.btn.undo::before {
 			content: "\f2ea";
-			font-family: "Font Awesome 5 Free";
+			font-family: "Font Awesome 7 Free";
 			font-weight: 900;
 			margin-left: 1px;
 		}
 
 		button.btn.showinvisibles::before {
 			content: "\f06e";
-			font-family: "Font Awesome 5 Free";
+			font-family: "Font Awesome 7 Free";
 			font-weight: 900;
 			margin-left: 1px;
 		}
 
 		button.btn.find::before {
 			content: "\f002";
-			font-family: "Font Awesome 5 Free";
+			font-family: "Font Awesome 7 Free";
 			font-weight: 900;
 			margin-left: 1px;
 		}
 
 		button.btn.searchreplace::before {
 			content: "\f362";
-			font-family: "Font Awesome 5 Free";
+			font-family: "Font Awesome 7 Free";
 			font-weight: 900;
 			margin-left: 1px;
 		}

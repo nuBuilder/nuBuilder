@@ -383,7 +383,7 @@ function nuOpenNuDebug(w) {
 function nuAddIconToBreadcrumbHolder(i, title, oClick, iClass, paddingLeft) {
 
 	const h = `
-	<div id="${i}" title="${title}" style="font-size: 17px; display: inline-block; cursor: pointer; padding-left: ${paddingLeft}" onclick="${oClick}">
+	<div id="${i}" title="${title}" style="font-size: 16px; display: inline-block; cursor: pointer; padding-left: ${paddingLeft}" onclick="${oClick}">
 		<i class="${iClass} fa-fw"></i>
 	</div>
   `;

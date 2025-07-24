@@ -363,7 +363,8 @@ input[type=radio] {
 	color: white;
 	display: inline-block;
 	font-size: 12px;
-	user-select: none
+	user-select: none;
+	margin-right: 1px;
 }
 
 .nuBreadcrumb:hover {
@@ -424,11 +425,12 @@ input[type=radio] {
 	font-size: 17px !important;
 	height: 15px;
 	padding-left: 5px;
-	padding-right: 10px;
+	padding-right: 15px;
 	right: 5px;
 	text-align: right;
 	top: 5px;
-	width: 15px
+	width: 15px;
+	margin-right: 5px;
 }
 
 .nuOptions:hover {
@@ -437,9 +439,12 @@ input[type=radio] {
 
 .nuOptions::before {
 	content: "\f0c9";
-	font-family: "Font Awesome 6 Free";
+	font-family: "Font Awesome 7 Free";
 	font-weight: 900;
-	margin-left: 5px
+	display: inline-block;
+	text-align: center;
+	width: 1.25em;
+	margin-left: 5px;
 }
 
 .nuSubformFilter {
@@ -470,7 +475,7 @@ input[type=radio] {
 
 .nuOptionsSubform::before {
 	content: "\f0c9";
-	font-family: "Font Awesome 6 Free";
+	font-family: "Font Awesome 7 Free";
 	font-weight: 600;
 	margin-left: 0px
 }
@@ -868,7 +873,7 @@ input[type=radio] {
 }
 
 .nuBrowseFilterIcon {
-	color: #026b9ea1;
+	color: #0274aba8;
 	margin-left: 10px;
 	display: inline-block;
 	font-size: 13px;
@@ -1358,7 +1363,7 @@ input[type=radio] {
 }
 
 .nuSearchBtn:hover {
-	background-color: #e0e0e0;
+	background-color: #f3f4f6;
 }
 
 .nuSearchBtn:focus {
@@ -1820,7 +1825,7 @@ input[type=radio] {
 
 .nuTabMarker:after {
 	content: "\f00c";
-	font-family: "Font Awesome 6 Free";
+	font-family: "Font Awesome 7 Free";
 	font-weight: 900;
 	color: green;
 	margin-left: 5px;

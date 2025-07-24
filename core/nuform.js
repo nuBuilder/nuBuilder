@@ -3953,7 +3953,7 @@ function nuAddBreadcrumb(i) {
 	const bc = window.nuFORM.breadcrumbs[i];
 	const id = 'nuBreadcrumb' + i;
 	var div = document.createElement('div');
-	const h = '<div id="nuarrow' + i + '" class="nuBreadcrumbArrow">&nbsp;<i class="fa fa-caret-right"></i>&nbsp;</div>';
+	const h = '<div id="nuarrow' + i + '" class="nuBreadcrumbArrow"><i class="fa fa-caret-right"></i></div>';
 
 	div.setAttribute('id', id);
 
@@ -4012,7 +4012,7 @@ function nuSetTitle(title, browse) {
 	nuFORM.setProperty('title', title);
 
 	const b = $('.nuBreadcrumb').length;
-	let h = '<div id="nuarrow' + (b - 1) + '" class="nuBreadcrumbArrow">&nbsp;<i class="fa fa-caret-right"></i>&nbsp;</div>';
+	let h = '<div id="nuarrow' + (b - 1) + '" class="nuBreadcrumbArrow"><i class="fa fa-caret-right"></i></div>';
 
 	if (nuFORM.breadcrumbs.length == 1) {
 		h = '';
