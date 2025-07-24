@@ -1278,10 +1278,10 @@ function nuAddActionButtonSaveClose(caption) {
 
 	$.fn.nuActionCheckbox = function (options) {
 		const settings = $.extend({
-			id: 'nu_toggle_checkbox',
-			text: 'Toggle',
+			id: nuID(),
+			text: 'Checkbox',
 			checked: false,
-			onToggle: function (checked) { }
+			onChecked: function (checked) { }
 		}, options);
 
 		return this.each(function () {
@@ -1303,7 +1303,7 @@ function nuAddActionButtonSaveClose(caption) {
 
 			$checkbox.on('change', function () {
 				nuSetProperty(settings.id + '_filter', this.checked ? '1' : '0');
-				settings.onToggle(this.checked);
+				settings.onChecked(this.checked);
 			});
 
 			$(this).empty().append($label);
