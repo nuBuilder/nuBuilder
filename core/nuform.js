@@ -7874,7 +7874,7 @@ $.fn.nuSearchablePopup = function (options) {
 					toggleIcon(true, selectedLabel);
 					settings.onSelected(selectedValue, selectedLabel, false);
 					$popup.hide();
-					nuGetBreadcrumb();
+					nuGetPage(1);
 				});
 				$options.append($item);
 				$item.nuHighlight(filterText);
@@ -7913,7 +7913,7 @@ $.fn.nuSearchablePopup = function (options) {
 				toggleIcon(true, selectedLabel);
 				settings.onSelected(selectedValue, selectedLabel, false);
 				$popup.hide();
-				nuGetBreadcrumb();
+				nuGetPage(1);
 			}
 		}
 	});
@@ -8018,7 +8018,7 @@ $.fn.nuSearchablePopup = function (options) {
 		}
 
 		toggleIcon(false);
-		nuGetBreadcrumb();
+		nuGetPage(1);
 	};
 
 };
@@ -8470,3 +8470,4 @@ function nuTabSetMarker(tabId, fieldIdOrFlag) {
 	tab.classList.toggle('nuTabMarker', shouldMark);
 
 }
+
