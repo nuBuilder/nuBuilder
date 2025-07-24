@@ -1320,6 +1320,7 @@ function nuBuildEditObjects(formObj, p, o, prop) {
 				'calc': nuINPUT,
 				'run': nuRUN,
 				'html': nuHTML,
+				'chart': nuHTML,
 				'contentbox': nuCONTENTBOX,
 				'editor': nuEDITOR,
 				'image': nuIMAGE,
