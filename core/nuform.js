@@ -1312,21 +1312,16 @@ function nuAddActionButtonSaveClose(caption) {
 
 }(jQuery));
 
-function nuAddActionCheckbox(id, text, checked, insertAfterElement, onChecked) {
+function nuAddActionCheckbox(settings = {}) {
 
-	const opts = { id, text, checked };
-	if (typeof onChecked === 'function') {
-		opts.onChecked = onChecked;
-	}
-
+	const { insertAfterElement, ...pluginOpts } = settings;
 	const $span = $('<span></span>');
 	if (insertAfterElement) {
 		$span.insertAfter('#' + insertAfterElement);
 	} else {
 		$span.appendTo('#nuActionHolder');
 	}
-
-	$span.nuActionCheckbox(opts);
+	$span.nuActionCheckbox(pluginOpts);
 
 }
 
