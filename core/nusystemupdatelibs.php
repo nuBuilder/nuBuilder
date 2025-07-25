@@ -502,11 +502,10 @@ function nuOtherUpdates() {
 function nuGetSupportedLanguagesAsJson() {
 
 	$languages = [
-		"Afrikaans", "Arabic", "Armenian", "Catalan", "Chinese",
-		"Czech", "Danish", "Dutch", "French", "German", "Greek",
-		"Hindi", "Hungarian", "Italian", "Japanese", "Malay", "Polish",
-		"Portuguese", "Romanian", "Russian", "Slovak", "Spanish",
-		"Tamil", "Vietnamese"
+		"Afrikaans", "Arabic", "Armenian", "Catalan", "Chinese", "Czech", "Danish", "Dutch",
+		"French", "German", "Greek", "Hindi", "Hungarian", "Italian", "Japanese", "Malay",
+		"Norwegian", "Polish", "Portuguese (Brazil)", "Portuguese", "Romanian", "Russian",
+		"Slovak", "Spanish", "Tamil", "Turkish", "Vietnamese"
 	];
 
 	return json_encode($languages);
