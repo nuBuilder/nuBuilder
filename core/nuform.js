@@ -1281,32 +1281,61 @@ function nuAddActionButtonSaveClose(caption) {
 			id: nuID(),
 			text: 'Checkbox',
 			checked: false,
+			storage: 'property',  // 'property' | 'session' | 'local'
 			onChecked: function (checked) { }
 		}, options);
 
+		function getStorageValue(key) {
+			switch (settings.storage) {
+				case 'session':
+					return nuGetStorageItem(key, 'session');
+				case 'local':
+					return nuGetStorageItem(key, 'local');
+				default:
+					return nuGetProperty(key);
+			}
+		}
+
+		function setStorageValue(key, value) {
+			switch (settings.storage) {
+				case 'session':
+					nuSetStorageItem(key, value, 'session');
+					break;
+				case 'local':
+					nuSetStorageItem(key, value, 'local');
+					break;
+				default:
+					nuSetProperty(key, value);
+			}
+		}
+
 		return this.each(function () {
+			const key = settings.id + '_filter';
+			const initial = getStorageValue(key) === '1' || settings.checked;
 
 			const $label = $('<label>', {
 				class: 'nuActionCheckbox',
 				style: 'margin-left: 5px;'
 			});
+
 			const $checkbox = $('<input>', {
 				type: 'checkbox',
 				id: settings.id,
-				checked: nuGetProperty(settings.id + '_filter') === '1' || settings.checked
+				checked: initial
 			});
+
 			const $iconUnchecked = $('<i>', { class: 'fa-regular fa-square unchecked-icon' });
 			const $iconChecked = $('<i>', { class: 'fa-regular fa-square-check checked-icon' });
 			const $span = $('<span>').text(settings.text);
 
 			$label.append($checkbox, $iconUnchecked, $iconChecked, $span);
+			$(this).empty().append($label);
 
 			$checkbox.on('change', function () {
-				nuSetProperty(settings.id + '_filter', this.checked ? '1' : '0');
+				const val = this.checked ? '1' : '0';
+				setStorageValue(key, val);
 				settings.onChecked(this.checked);
 			});
-
-			$(this).empty().append($label);
 		});
 	};
 
