@@ -1599,25 +1599,37 @@ function nuRemoveHolders(...args) {
 
 function nuAttachFontAwesome(id, iconClass, size = 'medium', appendToEnd = false) {
 
+	const $target = $(typeof id === 'string' ? `#${id}` : id);
+	if (!$target.length) return;
+	const text = $target.text().trim();
+
+	if (!text) {
+		$target.css('padding', '0 9px');
+	}
+
 	const fontSizeStyle =
 		size === 'small' ? 'font-size: small;'
 			: size === 'large' ? 'font-size: x-large;'
 				: size === 'medium' ? ''
 					: `font-size: ${size};`;
 
-	const marginStyle = appendToEnd ? 'margin-left: 3px;' : 'margin-right: 3px;';
+	const marginStyle = text
+		? (appendToEnd ? 'margin-left: 3px;' : 'margin-right: 3px;')
+		: '';
+
 	const combinedStyle = `${fontSizeStyle}${marginStyle}`;
 	const styleAttr = combinedStyle ? ` style="${combinedStyle}"` : '';
-
 	const iconHtml = `<i${styleAttr} class="fa-width-auto ${iconClass}"></i>`;
-	const $target = $(typeof id === 'string' ? `#${id}` : id);
+	const sep = text ? '&nbsp;' : '';
+	const content = appendToEnd
+		? sep + iconHtml
+		: iconHtml + sep;
 
-	if (!$target.length) return;
-
-	const sep = $target.text().trim() ? '&nbsp;' : '';
-	const content = appendToEnd ? sep + iconHtml : iconHtml + sep;
-
-	appendToEnd ? $target.append(content) : $target.prepend(content);
+	if (appendToEnd) {
+		$target.append(content);
+	} else {
+		$target.prepend(content);
+	}
 
 }
 
