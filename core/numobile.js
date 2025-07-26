@@ -286,7 +286,7 @@ function nuSetMobileView() {
 	nuSERVERRESPONSE.objects.forEach((obj, index) => {
 
 		const { id, type: objType, tab: objTab, read } = obj;
-		const objHidden = read == 2 || ((read == 2 || read == 3) && !nuGlobalAccess())
+		const objHidden = read == 2 || (read == 3 && !nuGlobalAccess());
 
 		let element = $(`#${id}`);
 		let { height } = nuMobileViewGetNewObjectDimensions(element);
