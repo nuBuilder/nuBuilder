@@ -652,7 +652,7 @@ function nuBrowseStyleBadge(column) {
 				white-space: nowrap;
 				line-height: 1.2;
 				transition: all 0.2s ease;
-				margin-top:2px
+				margin-top:1px
 			">${text}</span>
 		`;
 	}
