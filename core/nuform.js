@@ -5036,7 +5036,7 @@ function nuBrowseTable() {
 	}
 
 
-	const footerHeight = nuBrowseCreateFooter(currentForm, topOffset, leftOffset, rowHeight);
+	nuBrowseCreateFooter(currentForm, topOffset, leftOffset, rowHeight);
 
 	nuHighlightSearch();
 	nuBrowseBorders();
