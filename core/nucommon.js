@@ -2584,7 +2584,7 @@ jQuery.fn.nuHighlight = function (pattern, accentInsensitive = true) {
 
 					// Split into [before][match][after]
 					const afterMatch = node.splitText(startOrig);
-					const rest = afterMatch.splitText(endOrig - startOrig);
+					// const rest = afterMatch.splitText(endOrig - startOrig);
 
 					// Wrap only the matched text
 					const span = document.createElement('span');
