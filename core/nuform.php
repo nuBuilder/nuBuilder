@@ -1853,7 +1853,7 @@ function nuFormDimensions($formId) {
 		}
 
 		$maxEditHeight = max($maxEditHeight, $obj->sob_all_top + $objectHeight);
-		$maxGridRowHeight = max($maxGridRowHeight, $objectHeight, 27);
+		$maxGridRowHeight = max($maxGridRowHeight, $objectHeight, 29);
 	}
 
 	// Calculate browse dimensions
