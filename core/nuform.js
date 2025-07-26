@@ -4828,11 +4828,11 @@ function nuResizeBrowseColumns(force) {
 	} else {
 
 		const browseFooterWidth = nuTotalWidth('nuBrowseFooter') + 22;
-		const bodyWidth = `${browseFooterWidth}px`;
 
 		$('#nuDragDialog', window.parent.document).css('width', browseFooterWidth + 14);
 		$('#nuWindow', window.parent.document).css('width', browseFooterWidth);
 
+		// const bodyWidth = `${browseFooterWidth}px`;
 		// document.body.style.width = bodyWidth;
 
 	}
