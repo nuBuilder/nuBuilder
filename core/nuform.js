@@ -355,26 +355,6 @@ function nuUpdateDebugButtonTitle() {
 
 	const debugMessages = nuSERVERRESPONSE?.nu_debug;
 	const lastMessages = nuDebugLastMessages();
-	let title = nuTranslate("No messages");
-
-	if (Array.isArray(debugMessages) && debugMessages.length > 0) {
-		$("#nuDebugButton").addClass("nuDebugButtonHighlight");
-		title = debugMessages.join(" ");
-
-	} else {
-		title = lastMessages;
-	}
-
-	$("#nuDebugButton").attr("title", title);
-
-}
-
-function nuUpdateDebugButtonTitle() {
-
-	if (!nuGlobalAccess()) return;
-
-	const debugMessages = nuSERVERRESPONSE?.nu_debug;
-	const lastMessages = nuDebugLastMessages();
 
 	let titleParts = [];
 
