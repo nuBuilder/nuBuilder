@@ -534,7 +534,7 @@ function nuFindFieldInState(tabNo, fieldID) {
 function nuDragCreateButton(id, className, iconClass, text, onClickFunction) {
 
 	return `<button id="${id}" class="${className}" onclick="${onClickFunction}();">
-				<i class="${iconClass} fa-fw"></i> ${text}
+				<i class="${iconClass}"></i> ${text}
 			</button>`;
 
 }
@@ -590,12 +590,12 @@ function nuDragGenerateOptionsControlPanel(dragOptionsBoxWidth, dragOptionsBoxMi
 							<td>${nuDragCreateButton("move_tab_btn", `${classNuDragOptionsButton} nuDragOptionsSaveButtonEdited`, "", "Move to Tab", "nuMoveNuDrag")}</td>
 						</tr>
 						<td>
-							${nuDragCreateCheckbox("nuShowDragLabels", "Show Labels", "nuToggleDragLabels", "fas fa-text-slash", false)}
-							${nuDragCreateCheckbox("nuShowTaborder", "Tab Order", "nuDragToggleTabOrder", "fa-solid fa-list-ol fa-fw")}
-							${nuDragCreateCheckbox("nuShowHiddenObjects", "Show Hidden Objects", "nuToggleHiddenObjects", "fas fa-eye-slash")}
+							${nuDragCreateCheckbox("nuShowDragLabels", "Show Labels", "nuToggleDragLabels", "fa-solid fa-text-slash", false)}
+							${nuDragCreateCheckbox("nuShowTaborder", "Tab Order", "nuDragToggleTabOrder", "fa-solid fa-list-ol")}
+							${nuDragCreateCheckbox("nuShowHiddenObjects", "Show Hidden Objects", "nuToggleHiddenObjects", "fa-solid fa-eye-slash")}
 						</td>
 						<td>
-							${nuDragCreateButton("save_btn", `${classNuDragOptionsButton} nuDragOptionsSaveButtonEdited`, "fa-fw fa-regular fa-lg fa-floppy-disk", "Save", "nuSaveNuDrag")}
+							${nuDragCreateButton("save_btn", `${classNuDragOptionsButton} nuDragOptionsSaveButtonEdited`, " fa-regular fa-lg fa-floppy-disk", "Save", "nuSaveNuDrag")}
 						</td>
 					</tbody>
 				</table>
@@ -672,6 +672,7 @@ function nuCreateDragOptionsBox(form) {
 	nuShowContentBoxFrames();
 	nuToggleHiddenObjects();
 
+
 	if ($('div.nuTab[id^="nuTab"]').length == 1) {
 		$('#move_tab_btn', window.parent.document.body).css('visibility', 'hidden');
 		$('#nuDragOptionsTabsDropdown', window.parent.document.body).css('visibility', 'hidden');
@@ -740,7 +741,6 @@ function nuDragToggleTabOrder() {
 	});
 
 }
-
 
 function nuToggleHiddenObjects() {
 	$('.nuDragHidden', nuGetNuDragDialogIframes(true)).each(function () {
