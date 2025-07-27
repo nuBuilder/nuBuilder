@@ -3,31 +3,55 @@ function nuAjax(w, successCallback, errorCallback, completeCallback) {
 	try {
 		const data = JSON.stringify(nuAddEditFieldsToHash(w));
 
-		$.ajax({
-			async: true,
-			dataType: "json",
-			url: "core/nuapi.php",
+		fetch("core/nuapi.php", {
 			method: "POST",
-			data: { nuSTATE: data }
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded"
+			},
+			body: new URLSearchParams({ nuSTATE: data })
 		})
-			.done(successCallback)
-			.fail((jqXHR, textStatus, errorThrown) => {
+			.then(async response => {
+				let json;
+				try {
+					json = await response.json();
+				} catch (e) {
+					throw { response, error: e, textStatus: "parsererror" };
+				}
+
+				if (response.ok) {
+					if (typeof successCallback === "function") {
+						successCallback(json);
+					}
+				} else {
+					throw { response, error: new Error(response.statusText), textStatus: "error" };
+				}
+
+				return response;
+			})
+			.catch(err => {
 				let showError = true;
 				if (typeof errorCallback === "function") {
-					showError = errorCallback(jqXHR, textStatus, errorThrown);
+					showError = errorCallback(err.response || null, err.textStatus || "error", err.error?.message || err);
 				}
 				if (showError) {
-					nuAjaxShowError(jqXHR, errorThrown);
+					nuAjaxShowError(err.response || null, err.error?.message || err);
 				}
+				return err.response;
 			})
-			.always((jqXHR, textStatus, errorThrown) => {
+			.finally((response) => {
 				if (typeof completeCallback === "function") {
-					completeCallback(jqXHR, textStatus, errorThrown);
+					completeCallback(response || null, response?.statusText || "complete");
 				}
 			});
 
 	} catch (error) {
-		console.error('nuAjax Error:', error);
+		console.error("nuAjax Error:", error);
+		if (typeof errorCallback === "function") {
+			errorCallback(null, "error", error.message);
+		}
+		if (typeof completeCallback === "function") {
+			completeCallback(null, "error", error.message);
+		}
 	}
 
 }
