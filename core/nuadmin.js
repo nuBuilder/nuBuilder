@@ -402,19 +402,6 @@ function nuAddIconToBreadcrumbHolder(id, title, oClick, iClass, paddingLeft) {
 
 }
 
-function nuAddIconToBreadcrumbHolderX(i, title, oClick, iClass, paddingLeft) {
-
-	const h = `
-	<div id="${i}" title="${title}" style="font-size: 16px; display: inline-block; cursor: pointer; padding-left: ${paddingLeft}" onclick="${oClick}">
-		<i class="${iClass} fa-width-auto"></i>
-	</div>
-  `;
-	const fragment = nuCreateAppendHTML(h);
-	const options = $('#nuBreadcrumbHolder').find("[id$=nuOptions]");
-	$(fragment).insertAfter(options);
-
-}
-
 function nuShowObjectTooltip() {
 
 	if (nuGlobalAccess()) {
@@ -814,7 +801,7 @@ function nuContextMenuBeforeRender(menu, event) {
 }
 
 function nuContextMenuItemText(label, iconClass) {
-	return '<i class="' + iconClass + ' fa-width-auto" aria-hidden="true"></i> <span style="padding-left:8px; white-space:nowrap; display: inline;">' + nuTranslate(label) + '</span>';
+	return '<i class="' + iconClass + '" aria-hidden="true"></i> <span style="padding-left:8px; white-space:nowrap; display: inline;">' + nuTranslate(label) + '</span>';
 }
 
 function nuContextMenuGetWordWidth(w) {
