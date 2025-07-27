@@ -1505,9 +1505,10 @@ function nuEventName($eventName) {
 		'OS' => 'On Submit'
 	];
 
-	return $events[$eventName];
+	return $events[$eventName] ?? '';
 
 }
+
 
 function nuFailIfUnsetHashCookies($string) {
 	return preg_match('/#[^#]+#/', $string);
@@ -1569,13 +1570,14 @@ function nuEval($phpid, $returnOutput = false) {
 	}
 
 	$code = $r->sph_code;
+	$description = $r->sph_description;
 	$php = nuReplaceHashVariables($r->sph_php);
 
 	if (trim($php) == '') {
 		return '';
 	}
 
-	$_POST['nuSystemEval'] = nuEvalMessage($phpid, $code);
+	$_POST['nuSystemEval'] = nuEvalMessage($phpid, $code, $description);
 
 	$nuDataSet = isset($_POST['nudata']);
 	$nudata = $nuDataSet ? $_POST['nudata'] : '';
@@ -1681,27 +1683,27 @@ function nuExceptionHandler($e, $code) {
 
 }
 
-function nuEvalMessage($phpid, $code) {
+function nuEvalMessage($phpid, $code, $description) {
 
-	$i = explode('_', $phpid);
+	$parts = explode('_', $phpid);
 
-	if (count($i) == 1) {
-		return "Procedure <b>$code</b>";
+	if (count($parts) == 1) {
+		return "Procedure <b>$code ($description)</b>";
 	}
 
-	if ($i[1] != 'AB') {
+	if ($parts[1] != 'AB') {
 
-		$event = nuEventName($i[1]);
+		$event = nuEventName($parts[1]);
 		$s = "SELECT sfo_code FROM zzzzsys_form WHERE zzzzsys_form_id = ?	";
-		$t = nuRunQuery($s, [$i[0]]);
+		$t = nuRunQuery($s, [$parts[0]]);
 		$O = db_fetch_object($t);
 
 		return "<i>$event</i> of Form <b>$O->sfo_code</b>";
 
 	}
 
-	$s = "SELECT sob_all_id, sfo_code FROM zzzzsys_object JOIN zzzzsys_form ON zzzzsys_form_id = sob_all_zzzzsys_form_id	WHERE zzzzsys_object_id = ?	";
-	$t = nuRunQuery($s, [$i[0]]);
+	$s = "SELECT sob_all_id, sfo_code FROM zzzzsys_object JOIN zzzzsys_form ON zzzzsys_form_id = sob_all_zzzzsys_form_id WHERE zzzzsys_object_id = ?	";
+	$t = nuRunQuery($s, [$parts[0]]);
 	$O = db_fetch_object($t);
 
 	return "<i>Before Browse</i> of Object <b>$O->sob_all_id</b> on Form <b>$O->sfo_code</b>";
