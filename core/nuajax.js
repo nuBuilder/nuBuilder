@@ -53,37 +53,35 @@ function nuHasHiddenModalDragDialog() {
 	return parent.$('#nuModal').length > 0 && parent.$('#nuModal').siblings(".nuDragDialog").css("visibility") == "hidden";
 }
 
-function nuForm(f, r, filter, search, n, like) {
+function nuForm(formId, recordId, filter, search, target, like) {
 
-	if (n == 2) {
-
+	if (target == 2) {
 		window.nuNEW = 1;
 		search = '';
-
 	}
 
-	if (like == undefined) {
+	if (like === undefined) {
 		like = '';
 	} else {
 		like = nuDecode(like);
 	}
 
-	if (nuOpenNewBrowserTab('getform', f, r, filter)) { return; }
+	if (nuOpenNewBrowserTab('getform', formId, recordId, filter)) { return; }
 
-	if (n != 1) {	//-- add a new breadcrumb
+	if (target != 1) {	//-- add a new breadcrumb
 		window.nuFORM.addBreadcrumb();
 	}
 
-	var current = window.nuFORM.getCurrent();
+	const current = window.nuFORM.getCurrent();
 	current.search = search;
 
-	if (current.filter == '') {
+	if (current.filter === '') {
 
-		if (filter != '') {
+		if (filter !== '') {
 			current.filter = filter;
 		} else {
 
-			if (window.nuFILTER != '') {
+			if (window.nuFILTER !== '') {
 				current.filter = window.nuFILTER;
 			}
 
@@ -91,12 +89,12 @@ function nuForm(f, r, filter, search, n, like) {
 
 	}
 
-	var last = $.extend(true, {}, current);
+	const last = $.extend(true, {}, current);
 
 	last.call_type = 'getform';
-	last.form_id = f;
-	last.record_id = r;
-	last.filter = filter == '' ? window.nuFILTER : filter;
+	last.form_id = formId;
+	last.record_id = recordId;
+	last.filter = filter === '' ? window.nuFILTER : filter;
 	last.search = search;
 
 	if (parent.nuHashFromEditForm === undefined) {
@@ -108,9 +106,9 @@ function nuForm(f, r, filter, search, n, like) {
 	last.AAA = 'hw';
 	last.like = like;
 
-	var successCallback = function (data, _textStatus, _jqXHR) {
+	const successCallback = function (data, _textStatus, _jqXHR) {
 
-		var fm = data;
+		const fm = data;
 
 		if (!fm || nuDisplayError(fm)) {
 
@@ -120,11 +118,10 @@ function nuForm(f, r, filter, search, n, like) {
 
 			if (!fm) {
 				nuMessage(`${nuTranslate('Error')}`, `${nuTranslate('Error loading the form')}`);
-			} else
-				if (parent.$('#nuDragDialog').css('visibility') == 'hidden') {
-					parent.nuDisplayError(fm);
-					parent.$('#nuDragDialog').remove();
-				}
+			} else if (parent.$('#nuDragDialog').css('visibility') == 'hidden') {
+				parent.nuDisplayError(fm);
+				parent.$('#nuDragDialog').remove();
+			}
 
 			nuFORM.breadcrumbs.pop();
 
@@ -132,7 +129,7 @@ function nuForm(f, r, filter, search, n, like) {
 
 		} else {
 
-			var last = window.nuFORM.getCurrent();
+			const last = window.nuFORM.getCurrent();
 			last.record_id = fm.record_id;
 
 			nuBuildForm(fm);
