@@ -776,7 +776,7 @@ function nuUpdateData(action, instruction) {
 
 		if (data.errors_validation_title) {
 			data.errors = addErrorTitle(data.errors, data.errors_validation_title);
-		} else if (data.errors) {
+		} else if (data.errors.length > 0) {
 			data.errors = addErrorTitle(data.errors, nuTranslate('Error'));
 		}
 
