@@ -3,6 +3,40 @@ function nuAjax(w, successCallback, errorCallback, completeCallback) {
 	try {
 		const data = JSON.stringify(nuAddEditFieldsToHash(w));
 
+		$.ajax({
+			async: true,
+			dataType: "json",
+			url: "core/nuapi.php",
+			method: "POST",
+			data: { nuSTATE: data }
+		})
+			.done(successCallback)
+			.fail((jqXHR, textStatus, errorThrown) => {
+				let showError = true;
+				if (typeof errorCallback === "function") {
+					showError = errorCallback(jqXHR, textStatus, errorThrown);
+				}
+				if (showError) {
+					nuAjaxShowError(jqXHR, errorThrown);
+				}
+			})
+			.always((jqXHR, textStatus, errorThrown) => {
+				if (typeof completeCallback === "function") {
+					completeCallback(jqXHR, textStatus, errorThrown);
+				}
+			});
+
+	} catch (error) {
+		console.error('nuAjax Error:', error);
+	}
+
+}
+
+function nuAjax_(w, successCallback, errorCallback, completeCallback) {
+
+	try {
+		const data = JSON.stringify(nuAddEditFieldsToHash(w));
+
 		fetch("core/nuapi.php", {
 			method: "POST",
 			headers: {
