@@ -87,6 +87,7 @@ class nuBuilderSessionData {
 	'USER_EMAIL'				=> '',
 	'USER_DISPLAY_NAME'			=> '',
 	'USER_ROLES'				=> '',
+	'HOST'						=> '',
 	'DB_DRIVER'					=> '',
 	'DB_PORT'					=> '',
 	'DB_NAME'					=> '',
@@ -131,7 +132,7 @@ class nuBuilderSessionData {
 		$this->nubuilder['DB_NAME']					= $nuConfigDBName;
 		$this->nubuilder['DB_USER']					= $nuConfigDBUser;
 		$this->nubuilder['DB_PASSWORD']				= $nuConfigDBPassword;
-		$this->nubuilder['DB_HOST']					= $nuConfigDBHost;
+		$this->nubuilder['HOST']					= $nuConfigDBHost;
 		$this->nubuilder['DB_CHARSET']				= 'utf8';
 		$this->nubuilder['DB_OPTIONS']				= $nuConfigDBOptions;
 
