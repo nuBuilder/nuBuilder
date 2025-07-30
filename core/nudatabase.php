@@ -39,6 +39,7 @@ $GLOBALS['sys_table_prefix'] = [
 	'access_report' => 'srp',
 	'browse' => 'sbr',
 	'cloner' => 'clo',
+	'app_cloner' => 'cla',
 	'code_snippet' => 'cot',
 	'config' => 'cfg',
 	'debug' => 'deb',

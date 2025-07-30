@@ -57,6 +57,8 @@ function nuAlterSystemTables() {
 		"ALTER TABLE `zzzzsys_php` ADD `sph_demo` VARCHAR(1) NULL DEFAULT '1' AFTER `sph_global`;",
 		"ALTER TABLE `zzzzsys_php` ADD `sph_status` VARCHAR(1) NULL DEFAULT NULL AFTER `sph_group`;",
 		"ALTER TABLE `zzzzsys_php` ADD `sph_category` VARCHAR(100) NULL DEFAULT NULL AFTER `sph_group`;",
+		"ALTER TABLE `zzzzsys_php` ADD `sph_javascript` TEXT NULL DEFAULT NULL AFTER `sph_php`",
+		"ALTER TABLE `zzzzsys_php` ADD `sph_javascript_active` VARCHAR(1) NULL DEFAULT NULL AFTER `sph_javascript`",
 		"ALTER TABLE `zzzzsys_setup` ADD `set_smtp_use_ssl` VARCHAR(1) NULL DEFAULT '1' AFTER `set_smtp_use_authentication`;",
 		"ALTER TABLE `zzzzsys_format` ADD `srm_default` VARCHAR(1) NULL DEFAULT NULL AFTER `srm_type`;",
 		"ALTER TABLE `zzzzsys_report` CHANGE `sre_zzzzsys_php_id` `sre_zzzzsys_php_id` VARCHAR(200) NULL DEFAULT NULL;",
@@ -369,6 +371,7 @@ function nuRemoveNuRecords() {
 		["table" => "sys_zzzzsys_note_category"],
 		["table" => "sys_zzzzsys_code_snippet"],
 		["table" => "sys_zzzzsys_cloner"],
+		["table" => "sys_zzzzsys_app_cloner"],
 		["table" => "sys_zzzzsys_info"],
 		["table" => "sys_zzzzsys_email_template"],
 		["table" => "sys_zzzzsys_email_log"],
@@ -377,7 +380,6 @@ function nuRemoveNuRecords() {
 		["table" => "sys_zzzzsys_timezone", "where" => '1'],
 		["table" => "sys_zzzzsys_prompt_generator"],
 		["table" => "sys_zzzzsys_item"]
-
 	];
 
 	foreach ($queries as $query) {
@@ -444,6 +446,7 @@ function nuSystemList() {
 	$t[] = 'zzzzsys_translate';
 	$t[] = 'zzzzsys_user';
 	$t[] = 'zzzzsys_cloner';
+	$t[] = 'zzzzsys_app_cloner';
 	$t[] = 'zzzzsys_code_snippet';
 	$t[] = 'zzzzsys_note';
 	$t[] = 'zzzzsys_email_template';

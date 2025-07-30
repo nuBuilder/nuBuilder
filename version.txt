@@ -1,5 +1,5 @@
 nuBuilder Forte 4.9
 
-DB Version: V.4.9-2025.07.26.02
-Files Version: V.4.9-2025.07.28.01
+DB Version: V.4.9-2025.07.30.00
+Files Version: V.4.9-2025.07.30.00
 (V.MajorVersion-CurrentDate.BuildNumber)
