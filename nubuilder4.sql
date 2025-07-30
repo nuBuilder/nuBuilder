@@ -702,7 +702,7 @@ INSERT INTO `zzzzsys_event` (`zzzzsys_event_id`, `sev_zzzzsys_object_id`, `sev_e
 ('nu60e9724c20900a9', 'nu60e9724c1fdd7c5', 'onclick', 'nuSetValue(\'sob_all_height\', nuGetValue(this.id))', NULL),
 ('nu60e9732db35a7f1', 'nu60e9732db2a4125', 'onclick', 'nuSetValue(\'sob_all_width\', nuGetValue(this.id))', NULL),
 ('nu60e973518b05887', 'nu60e973518a26f21', 'onclick', 'nuSetValue(\'sob_all_width\', nuGetValue(this.id))', NULL),
-('nu60e97365095aa8c', 'nu60e9736508a9b31', 'onclick', 'nuSetValue(\'sob_all_height\', nuGetValue(this.id));', NULL),
+('nu60e97365095aa8c', 'nu60e9736508a9b31', 'onclick', 'nuSetValue(\'sob_all_width\', nuGetValue(this.id));', NULL),
 ('nu60e973b671d891a', 'nu60e973b6711a030', 'onclick', 'nuSetValue(\'sob_all_width\', nuGetValue(this.id))', NULL),
 ('nu60e974dd2eac661', 'nu60e974dd2df427c', 'onclick', 'nuSetValue(\'sob_all_width\', nuGetValue(this.id))', NULL),
 ('nu60e97510251557f', 'nu60e975102462aff', 'onclick', 'nuSetValue(\'sob_all_height\', nuGetValue(this.id))', NULL),
@@ -989,7 +989,7 @@ CREATE TABLE `zzzzsys_info` (
 --
 
 INSERT INTO `zzzzsys_info` (`zzzzsys_info_id`, `inf_code`, `inf_details`, `inf_json`) VALUES
-('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.8-2025.07.30.00', NULL),
+('nu5fe23e83aea3466', 'nuDBVersion', 'V.4.8-2025.07.30.01', NULL),
 ('nu5fe23e83aea3467', 'nuFilesVersion', 'V.4.8-2025.07.30.00', NULL);
 
 -- --------------------------------------------------------
