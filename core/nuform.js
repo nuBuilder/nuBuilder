@@ -8515,7 +8515,7 @@ function nuSetCalendarOnTop() {
 
 }
 
-function nuTabSetMarker(tabId, fieldIdOrFlag) {
+function nuTabSetMarker(tabId, fieldIdOrFlag, className = 'nuTabMarker') {
 
 	if (!tabId || fieldIdOrFlag == null) return;
 
@@ -8527,10 +8527,11 @@ function nuTabSetMarker(tabId, fieldIdOrFlag) {
 			? fieldIdOrFlag
 			: String(nuGetValue(fieldIdOrFlag) || '').trim() !== '';
 
-	tab.classList.toggle('nuTabMarker', shouldMark);
+	className.split(/\s+/).forEach(cls => {
+		tab.classList.toggle(cls, shouldMark);
+	});
 
 }
-
 
 function nuHideSearchField() {
 
