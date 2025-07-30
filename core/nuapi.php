@@ -13,6 +13,24 @@ if ($nuState == null && !empty($_FILES["file"])) {
 	return;
 }
 
+if ($nuState == null && isset($_GET['progressId']) && !empty($_GET['progressId'])) {
+	header("Content-Type: text/plain; charset=UTF-8");
+    $progressId = basename($_GET['progressId']);
+    if (preg_match('/^[a-zA-Z0-9_\-]+$/', $progressId)) {
+		$file = __DIR__ . "/../temp/nu_app_cloner_progress_$progressId.log";
+        if (file_exists($file)) {
+            echo file_get_contents($file);
+        } else {
+            echo "No progress yet.";
+        }       
+    } else {
+        echo "";
+    }
+	
+	return;
+
+}
+
 if ($nuState == null) {
 	http_response_code(400);
 	return;
