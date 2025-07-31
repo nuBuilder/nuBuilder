@@ -995,7 +995,7 @@ function nuLogout() {
 	nuRunQuery($deleteSql, [$sessionId]);
 
 	// Unset session data
-	unset($_SESSION['nubuilder_session_data']['SESSION_ID']);
+	unset($_SESSION['nubuilder_session_data']);
 
 	// Unset cached include files
 	unset($_SESSION['nuinclude']);
