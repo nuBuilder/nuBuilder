@@ -259,6 +259,16 @@ input[type=radio] {
 	margin: 0 0 0 4px;
 }
 
+input[type="checkbox"]:focus-visible {
+	outline: 1px solid rgba(0, 123, 255, 0.5);
+	outline-offset: 1px;
+	border-radius: 4px;
+}
+
+input[type="search"] {
+	box-sizing: unset
+}
+
 #nuhtml {
 	height: 100%
 }
