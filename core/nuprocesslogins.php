@@ -59,8 +59,8 @@ function nuCheckUserLoginRequest() {
 		WHERE sus_login_name = ?
 		";
 
-	$sqlMd5 = $sql . " AND sus_login_password = ?";
-	$sqlToken = $sql . " AND sus_json LIKE ? ";
+	$sqlMd5 = "$sql AND sus_login_password = ?";
+	$sqlToken = "$sql AND sus_json LIKE ? ";
 
 	$rs = nuRunQuery($sqlMd5, [
 		$_POST['nuSTATE']['username'],
@@ -130,28 +130,6 @@ function nuCheckIsLoginRequest($callType = 'login') {
 	return ($_POST['nuSTATE']['call_type'] ?? null) === $callType;
 }
 
-function nuGetIPAddress() {
-
-	if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
-		$_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
-		$_SERVER['HTTP_CLIENT_IP'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
-	}
-
-	$client = @$_SERVER['HTTP_CLIENT_IP'];
-	$forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
-	$remote = $_SERVER['REMOTE_ADDR'];
-
-	if (filter_var($client, FILTER_VALIDATE_IP)) {
-		$ip = $client;
-	} elseif (filter_var($forward, FILTER_VALIDATE_IP)) {
-		$ip = $forward;
-	} else {
-		$ip = $remote;
-	}
-	return $ip;
-
-}
-
 function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 
 	global $nuConfig2FAAdmin, $nuConfigDevMode;
@@ -186,7 +164,7 @@ function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 	$sessionIds->user_permissions = '';
 	$sessionIds->dev_mode = isset($nuConfigDevMode) ? (string) ((int) $nuConfigDevMode) : '0';
 
-	if ($nuConfig2FAAdmin) {
+	if ($nuConfig2FAAdmin && !nu2FASafeIPAddr('globeadmin')) {
 		if (nu2FALocalTokenOK($sessionIds->sus_login_name)) {
 			$sessionIds->zzzzsys_form_id = $_SESSION['nubuilder_session_data']['HOME_ID'];
 		} else {
@@ -342,7 +320,7 @@ function nuLoginSetupNOTGlobeadmin($new = true, $sSoUserName = "", $changePasswo
 	} else {
 
 		$salUse2FA = isset($getAccessLevelOBJ->sal_use_2fa) && $getAccessLevelOBJ->sal_use_2fa;
-		if ($nuConfig2FAUser && $new && $salUse2FA) {
+		if (($nuConfig2FAUser && !nu2FASafeIPAddr('user', '*')) && $new && $salUse2FA) {
 			if (!nu2FALocalTokenOK($sessionIds->zzzzsys_user_id)) {
 				$sessionIds->zzzzsys_form_id = $_SESSION['nubuilder_session_data']['2FA_FORM_ID'];
 				$_SESSION['nubuilder_session_data']['SESSION_2FA_STATUS'] = 'PENDING';

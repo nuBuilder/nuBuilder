@@ -57,6 +57,26 @@ $nuAIConfig = [
 	]
 ];
 
+// 2FA: Bypass check for defined IPs.
+
+/*
+
+$nuConfig2FASafeIPAddresses = [
+	'globeadmin' => [
+		'192.168.0.1', 
+		'::1'
+	],
+	'user' => [
+		'*' => [ 		// Applies to all users
+		'192.168.0.1', 
+		'::1'
+	]
+
+];
+
+*/
+
+
 // Uncomment this block to customise just the top line of the login form (default = nuBuilder Forte logo)
 // This must be one (or could be more) table rows inside <tr> and </tr> :-
 /*
