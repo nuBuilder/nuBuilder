@@ -1134,9 +1134,9 @@ input[type="search"] {
 }
 
 .nuActionButton:active:not([disabled]) {
-	background: var(--btn-bg-active);
-	box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.2);
-	transform: translateY(0);
+	background-color: #f0f2f6;
+	box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.15);
+	transform: translateY(1px) scale(0.98);
 }
 
 .nuActionButton:focus {
@@ -1169,6 +1169,12 @@ input[type="search"] {
 .nuActionCheckbox:hover {
 	background-color: #f3f4f6;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+.nuActionCheckbox:active:not([disabled]) {
+	background-color: #f0f2f6;
+	box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.15);
+	transform: translateY(1px) scale(0.98);
 }
 
 .nuActionCheckbox input[type="checkbox"] {
