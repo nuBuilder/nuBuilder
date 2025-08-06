@@ -21,6 +21,7 @@ class nuBuilderCloner {
 	private const int INSERT_BATCH_SIZE = 1000;
 	private const array VALID_INSERT_TYPES = ['INSERT', 'INSERT IGNORE', 'REPLACE'];
 	private const array VALID_CREATE_DATABASE_OPTIONS = ['create', 'fail', 'clear'];
+	private const array VALID_FILE_MODE_OPTIONS = ['create', 'fail', 'clear', 'overwrite'];
 	private const int PROGRESS_UPDATE_INTERVAL = 100;
 
 	private ?string $srcDB;
@@ -32,7 +33,8 @@ class nuBuilderCloner {
 	private array $config;
 	private array $statistics = [];
 	private $logHandle = null;
-	private int $progressNr = 0;
+	private int $progressNr = 1;
+	private bool $showProgress = false;
 	private array $dryRunActions = []; // Store actions that would be performed
 
 	public function __construct(array $config = [], ?string $srcDB = null) {
@@ -47,6 +49,7 @@ class nuBuilderCloner {
 			'databaseMode' => 'fail',
 			'databaseCollation' => 'utf8mb4_unicode_ci',
 			'copyFiles' => true,
+			'fileMode' => 'fail',
 			'progressId' => null,
 			'includeTablesAndViews' => [], // If empty, include all tables/views except those in excludeTablesAndViews
 			'excludeTablesAndViews' => []  // Tables/views to exclude
@@ -55,6 +58,8 @@ class nuBuilderCloner {
 		if ($this->config['logFile']) {
 			$this->initializeLogging();
 		}
+
+		$this->showProgress = $this->config['showProgress'] && !empty($this->config['progressId']);
 	}
 
 	public function __destruct() {
@@ -103,18 +108,24 @@ class nuBuilderCloner {
 		foreach ($tableNames as $tableName) {
 			$shouldInclude = true;
 
+			// Always include tables starting with 'zzzzsys_'
+			if (strpos($tableName, 'zzzzsys_') === 0) {
+				$filtered[] = $tableName;
+				continue;
+			}
+
 			// If includeTablesAndViews is not empty, only include tables in that list
 			if (!empty($includeList)) {
 				$shouldInclude = in_array($tableName, $includeList, true);
 				if (!$shouldInclude) {
-					$skipped[] = $tableName . " (not in include list)";
+					$skipped[] = "$tableName (not in include list)";
 				}
 			}
 
 			// Always exclude tables in excludeTablesAndViews
 			if ($shouldInclude && in_array($tableName, $excludeList, true)) {
 				$shouldInclude = false;
-				$skipped[] = $tableName . " (in exclude list)";
+				$skipped[] = "$tableName (in exclude list)";
 			}
 
 			if ($shouldInclude) {
@@ -190,26 +201,10 @@ class nuBuilderCloner {
 				$this->executeSQL("COMMIT; SET FOREIGN_KEY_CHECKS = 1; SET UNIQUE_CHECKS = 1; SET AUTOCOMMIT = 1;");
 			}
 
-			// Only copy folder contents if the config option is enabled
+			// Handle file copying based on copyFiles config and fileMode
 			if ($this->config['copyFiles']) {
-				$folderCopied = $this->copyFolderContents($sourcePath, $targetPath);
-				if ($folderCopied || $this->config['dryRun']) {
-					// Get source database charset and collation if possible
-					$charsetInfo = $this->getSourceDatabaseCharset();
-					$dbCharset = $charsetInfo['charset'] ?? $targetCharset;
-					$dbCollation = $charsetInfo['collation'] ?? $this->config['databaseCollation'];
-
-					$configUpdates = [
-						'nuConfigDBHost' => $targetHost,
-						'nuConfigDBName' => $targetDB,
-						'nuConfigDBPort' => $targetPort,
-						'nuConfigDBUser' => $targetUsername,
-						'nuConfigDBPassword' => $targetPassword,
-						'nuConfigDBCharacterSet' => $dbCharset,
-						'nuConfigDBCollate' => $dbCollation
-					];
-
-					$this->updateConfigFile($targetPath . '/nuconfig.php', $configUpdates);
+				if (!$this->handleFileCopying($sourcePath, $targetPath, $targetHost, $targetDB, $targetPort, $targetUsername, $targetPassword, $targetCharset)) {
+					return false;
 				}
 			} else {
 				$this->log("File copying skipped (copyFiles is disabled)");
@@ -232,6 +227,197 @@ class nuBuilderCloner {
 			$this->targetPDO = null;
 		}
 	}
+
+	/**
+	 * Handle file copying based on fileMode option
+	 */
+	private function handleFileCopying(string $sourcePath, string $targetPath, string $targetHost, string $targetDB, int $targetPort, string $targetUsername, string $targetPassword, string $targetCharset): bool {
+		$fileMode = $this->config['fileMode'];
+
+		// Check if target directory exists
+		$targetExists = is_dir($targetPath);
+
+		switch ($fileMode) {
+			case 'create':
+				// Create directory if it doesn't exist, proceed if it does
+				if ($targetExists) {
+					$this->log("Target directory '$targetPath' already exists");
+					if ($this->config['dryRun']) {
+						$this->dryRunActions[] = "Target directory '$targetPath' already exists";
+					}
+				} else {
+					$this->log("Target directory '$targetPath' will be created");
+					if ($this->config['dryRun']) {
+						$this->dryRunActions[] = "Would create target directory '$targetPath'";
+					}
+				}
+				break;
+
+			case 'fail':
+				// Fail if directory exists
+				if ($targetExists) {
+					$this->sendError("Target directory '$targetPath' already exists. File copying aborted (fileMode = 'fail').");
+					return false;
+				}
+				$this->log("Target directory '$targetPath' does not exist and will be created");
+				if ($this->config['dryRun']) {
+					$this->dryRunActions[] = "Would create target directory '$targetPath'";
+				}
+				break;
+
+			case 'clear':
+				// Clear directory contents if it exists, create if it doesn't
+				if ($targetExists) {
+					$this->log("Target directory '$targetPath' exists and will be cleared");
+					if ($this->config['dryRun']) {
+						$this->dryRunActions[] = "Target directory '$targetPath' exists and will be cleared";
+					}
+					if (!$this->clearTargetDirectory($targetPath)) {
+						return false;
+					}
+				} else {
+					$this->log("Target directory '$targetPath' does not exist and will be created");
+					if ($this->config['dryRun']) {
+						$this->dryRunActions[] = "Would create target directory '$targetPath'";
+					}
+				}
+				break;
+
+			case 'overwrite':
+				// Overwrite existing files without deleting others
+				if ($targetExists) {
+					$this->log("Target directory '$targetPath' exists. Files will be overwritten during copy.");
+					if ($this->config['dryRun']) {
+						$this->dryRunActions[] = "Target directory '$targetPath' exists. Files will be overwritten during copy.";
+					}
+				} else {
+					$this->log("Target directory '$targetPath' does not exist and will be created");
+					if ($this->config['dryRun']) {
+						$this->dryRunActions[] = "Would create target directory '$targetPath'";
+					}
+				}
+				break;
+
+			default:
+				$this->sendError("Invalid fileMode option: '$fileMode'. Must be one of: " . implode(', ', self::VALID_FILE_MODE_OPTIONS));
+				return false;
+		}
+
+		// Proceed with file copying
+		$folderCopied = $this->copyFolderContents($sourcePath, $targetPath);
+
+		if ($folderCopied || $this->config['dryRun']) {
+			// Get source database charset and collation if possible
+			$charsetInfo = $this->getSourceDatabaseCharset();
+			$dbCharset = $charsetInfo['charset'] ?? $targetCharset;
+			$dbCollation = $charsetInfo['collation'] ?? $this->config['databaseCollation'];
+
+			$configUpdates = [
+				'nuConfigDBHost' => $targetHost,
+				'nuConfigDBName' => $targetDB,
+				'nuConfigDBPort' => $targetPort,
+				'nuConfigDBUser' => $targetUsername,
+				'nuConfigDBPassword' => $targetPassword,
+				'nuConfigDBCharacterSet' => $dbCharset,
+				'nuConfigDBCollate' => $dbCollation
+			];
+
+			$this->updateConfigFile($targetPath . '/nuconfig.php', $configUpdates);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Clear target directory contents
+	 */
+	private function clearTargetDirectory(string $targetPath): bool {
+		if ($this->config['dryRun']) {
+			$this->dryRunActions[] = "Would clear all contents from directory '$targetPath'";
+			$this->simulateClearDirectory($targetPath);
+			return true;
+		}
+
+		try {
+			$this->showProgress("Clearing target directory...");
+			$clearedCount = $this->recursiveDelete($targetPath, false); // false = don't delete the directory itself
+			$this->statistics['files_cleared'] = $clearedCount;
+			$this->log("Cleared $clearedCount files/directories from '$targetPath'");
+			$this->showProgress("Directory cleared ($clearedCount items)", $clearedCount, true);
+			return true;
+		} catch (Exception $e) {
+			$this->sendError("Failed to clear target directory: " . $e->getMessage());
+			return false;
+		}
+	}
+
+	/**
+	 * Simulate clearing directory for dry run
+	 */
+	private function simulateClearDirectory(string $targetPath): void {
+		$count = $this->countDirectoryContents($targetPath);
+		$this->statistics['files_cleared'] = $count;
+		if ($count > 0) {
+			$this->dryRunActions[] = "Would delete $count files/directories";
+		}
+	}
+
+	/**
+	 * Count files and directories in a directory
+	 */
+	private function countDirectoryContents(string $path): int {
+		if (!is_dir($path)) {
+			return 0;
+		}
+
+		$count = 0;
+		$iterator = new RecursiveIteratorIterator(
+			new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS),
+			RecursiveIteratorIterator::CHILD_FIRST
+		);
+
+		foreach ($iterator as $file) {
+			$count++;
+		}
+
+		return $count;
+	}
+
+	/**
+	 * Recursively delete directory contents
+	 */
+	private function recursiveDelete(string $path, bool $deleteRoot = true): int {
+		if (!is_dir($path)) {
+			return 0;
+		}
+
+		$count = 0;
+		$iterator = new RecursiveIteratorIterator(
+			new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS),
+			RecursiveIteratorIterator::CHILD_FIRST
+		);
+
+		foreach ($iterator as $file) {
+			if ($file->isDir()) {
+				if (rmdir($file->getRealPath())) {
+					$count++;
+				}
+			} else {
+				if (unlink($file->getRealPath())) {
+					$count++;
+				}
+			}
+		}
+
+		if ($deleteRoot && is_dir($path)) {
+			if (rmdir($path)) {
+				$count++;
+			}
+		}
+
+		return $count;
+	}
+
 
 	private function handleDatabaseCreation(string $host, string $db, string $usr, string $pwd, string $charset, int $port): bool {
 		$createDatabaseOption = $this->config['databaseMode'];
@@ -622,6 +808,12 @@ class nuBuilderCloner {
 			return $this->sendError('Invalid databaseMode option. Must be one of: ' . implode(', ', self::VALID_CREATE_DATABASE_OPTIONS) . ' or boolean');
 		}
 
+		// Validate fileMode option
+		$fileModeOption = $this->config['fileMode'];
+		if (!in_array($fileModeOption, self::VALID_FILE_MODE_OPTIONS, true)) {
+			return $this->sendError('Invalid fileMode option. Must be one of: ' . implode(', ', self::VALID_FILE_MODE_OPTIONS));
+		}
+
 		$validOpts = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 		if (array_diff($opts, $validOpts)) {
 			return $this->sendError('Invalid table insert options provided (Must be one or more of 1,2,3,4,5,6,7,8,9)');
@@ -657,11 +849,8 @@ class nuBuilderCloner {
 	}
 
 	private function processCloneOperations(array $opts, string $insertType): void {
-		$operations = [
-			6 => ['method' => 'cloneFunctions', 'desc' => 'functions'],
-			7 => ['method' => 'cloneProcedures', 'desc' => 'procedures'],
-			8 => ['method' => 'cloneTriggers', 'desc' => 'triggers'],
-			9 => ['method' => 'cloneEvents', 'desc' => 'events'],
+		// PHASE 1: Create database structure first (tables and views)
+		$structureOperations = [
 			1 => [
 				['method' => 'cloneDBCreateSQL', 'args' => ["TABLE_NAME LIKE 'zzzzsys%'"], 'desc' => 'nuBuilder system tables'],
 				['method' => 'cloneDBViewsSQL', 'args' => ["TABLE_NAME LIKE 'zzzzsys%'"], 'desc' => 'nuBuilder system views']
@@ -672,29 +861,22 @@ class nuBuilderCloner {
 			]
 		];
 
-		// Process structure operations
-		foreach ($operations as $opt => $actions) {
+		// Process structure operations first
+		foreach ($structureOperations as $opt => $actions) {
 			if (in_array($opt, $opts)) {
-				if (!is_array($actions[0] ?? null)) {
-					$actions = [$actions];
-				}
 				foreach ($actions as $action) {
-					$this->showProgress("Cloning {$action['desc']}...");
+					$this->showProgress("Creating {$action['desc']}...");
 					$method = $action['method'];
 					$args = $action['args'] ?? [];
 
-					// Store count before operation for comparison
 					$beforeCount = $this->getStatisticCount($method);
-
 					$this->$method(...$args);
-
-					// Show completion progress with actual count
 					$this->showCompletionProgress($method, $action['desc'], $beforeCount);
 				}
 			}
 		}
 
-		// Process data operations
+		// PHASE 2: Insert data into tables
 		if (array_intersect([3, 4, 5], $opts) === [3, 4, 5]) {
 			$this->showProgress("Cloning all table data...");
 			$beforeRows = $this->statistics['rows_copied'] ?? 0;
@@ -724,7 +906,28 @@ class nuBuilderCloner {
 				$this->showProgress("Completed ($userRows)", $userRows, true);
 			}
 		}
+
+		// PHASE 3: Create database objects that depend on tables/views (functions, procedures, triggers, events)
+		$dependentOperations = [
+			6 => ['method' => 'cloneFunctions', 'desc' => 'functions'],
+			7 => ['method' => 'cloneProcedures', 'desc' => 'procedures'],
+			8 => ['method' => 'cloneTriggers', 'desc' => 'triggers'],
+			9 => ['method' => 'cloneEvents', 'desc' => 'events']
+		];
+
+		// Process dependent operations last
+		foreach ($dependentOperations as $opt => $config) {
+			if (in_array($opt, $opts)) {
+				$this->showProgress("Cloning {$config['desc']}...");
+				$method = $config['method'];
+
+				$beforeCount = $this->getStatisticCount($method);
+				$this->$method();
+				$this->showCompletionProgress($method, $config['desc'], $beforeCount);
+			}
+		}
 	}
+
 
 	private function getStatisticCount(string $method): int {
 		$statMap = [
@@ -775,25 +978,63 @@ class nuBuilderCloner {
 		]);
 	}
 
+
+	private function shouldProcessRoutine(string $routineName, string $tableName = null): bool {
+		// If no table filtering is configured, process all routines
+		if (empty($this->config['includeTablesAndViews']) && empty($this->config['excludeTablesAndViews'])) {
+			return true;
+		}
+
+		// For triggers, we can check the associated table
+		if ($tableName !== null) {
+			$includeList = $this->config['includeTablesAndViews'];
+			$excludeList = $this->config['excludeTablesAndViews'];
+
+			// If includeTablesAndViews is not empty, only include if table is in that list
+			if (!empty($includeList) && !in_array($tableName, $includeList, true)) {
+				return false;
+			}
+
+			// Always exclude if table is in excludeTablesAndViews
+			if (in_array($tableName, $excludeList, true)) {
+				return false;
+			}
+		}
+
+		// For functions, procedures, and events without table association,
+		// we might want to include them all or add more sophisticated filtering
+		return true;
+	}
+
 	private function cloneRoutineType(string $type, array $config): void {
 		$count = 0;
+		$failedRoutines = [];
 
 		if ($type === 'TRIGGER') {
 			$stmt = nuRunQuery("SHOW TRIGGERS FROM `{$this->srcDB}`");
 			while ($row = db_fetch_array($stmt)) {
 				$name = $row['Trigger'];
-				$createStmt = nuRunQuery("SHOW CREATE TRIGGER `$name`");
-				$create = db_fetch_row($createStmt)[2];
-				$create = preg_replace("/CREATE[\s\S]+?TRIGGER/", "CREATE TRIGGER", $create, 1);
+				$table = $row['Table'];
 
-				if ($this->config['dryRun']) {
-					$this->dryRunActions[] = "Drop trigger: $name";
-					$this->dryRunActions[] = "Create trigger: $name";
-				} else {
-					$this->executeSQL("{$config['drop']} `$name`");
-					$this->executeSQL($create);
+				if ($this->shouldProcessRoutine($name, $table)) {
+					try {
+						$createStmt = nuRunQuery("SHOW CREATE TRIGGER `$name`");
+						$create = db_fetch_row($createStmt)[2];
+						$create = preg_replace("/CREATE[\s\S]+?TRIGGER/", "CREATE TRIGGER", $create, 1);
+
+						if ($this->config['dryRun']) {
+							$this->dryRunActions[] = "Drop trigger: $name (on table: $table)";
+							$this->dryRunActions[] = "Create trigger: $name (on table: $table)";
+						} else {
+							$this->executeSQL("{$config['drop']} `$name`");
+							$this->executeSQL($create);
+						}
+						$count++;
+					} catch (Exception $e) {
+						$failedRoutines[] = "$name (table: $table) - " . $e->getMessage();
+						$this->log("WARNING: Failed to clone trigger '$name': " . $e->getMessage());
+					}
 				}
-				$count++;
 			}
 		} elseif ($type === 'EVENT') {
 			$se = "SELECT * FROM `INFORMATION_SCHEMA`.`EVENTS` WHERE `EVENT_SCHEMA` = ?";
@@ -801,41 +1042,66 @@ class nuBuilderCloner {
 				$stmt = nuRunQuery($config['show'] . " WHERE Db = ?", [$this->srcDB]);
 				while ($row = db_fetch_array($stmt)) {
 					$name = $row['Name'];
-					$createStmt = nuRunQuery("SHOW CREATE EVENT `$name`");
-					$create = db_fetch_row($createStmt)[3];
-					$create = preg_replace("/CREATE[\s\S]+?EVENT/", "CREATE EVENT", $create, 1);
 
-					if ($this->config['dryRun']) {
-						$this->dryRunActions[] = "Drop event: $name";
-						$this->dryRunActions[] = "Create event: $name";
-					} else {
-						$this->executeSQL("{$config['drop']} `$name`");
-						$this->executeSQL($create);
+					if ($this->shouldProcessRoutine($name)) {
+						try {
+							$createStmt = nuRunQuery("SHOW CREATE EVENT `$name`");
+							$create = db_fetch_row($createStmt)[3];
+							$create = preg_replace("/CREATE[\s\S]+?EVENT/", "CREATE EVENT", $create, 1);
+
+							if ($this->config['dryRun']) {
+								$this->dryRunActions[] = "Drop event: $name";
+								$this->dryRunActions[] = "Create event: $name";
+							} else {
+								$this->executeSQL("{$config['drop']} `$name`");
+								$this->executeSQL($create);
+							}
+							$count++;
+						} catch (Exception $e) {
+							$failedRoutines[] = "$name - " . $e->getMessage();
+							$this->log("WARNING: Failed to clone event '$name': " . $e->getMessage());
+						}
 					}
-					$count++;
 				}
 			}
 		} else {
+			// Functions and Procedures
 			$stmt = nuRunQuery($config['show'] . " WHERE Db = ?", [$this->srcDB]);
 			while ($row = db_fetch_row($stmt)) {
 				$name = $row[1];
-				$createStmt = nuRunQuery("SHOW CREATE $type `$name`");
-				$create = db_fetch_row($createStmt)[2];
-				$create = preg_replace("/CREATE[\s\S]+?$type/", "CREATE $type", $create, 1);
 
-				if ($this->config['dryRun']) {
-					$this->dryRunActions[] = "Drop $type: $name";
-					$this->dryRunActions[] = "Create $type: $name";
-				} else {
-					$this->executeSQL("{$config['drop']} `$name`");
-					$this->executeSQL($create);
+				if ($this->shouldProcessRoutine($name)) {
+					try {
+						$createStmt = nuRunQuery("SHOW CREATE $type `$name`");
+						$create = db_fetch_row($createStmt)[2];
+						$create = preg_replace("/CREATE[\s\S]+?$type/", "CREATE $type", $create, 1);
+
+						if ($this->config['dryRun']) {
+							$this->dryRunActions[] = "Drop $type: $name";
+							$this->dryRunActions[] = "Create $type: $name";
+						} else {
+							$this->executeSQL("{$config['drop']} `$name`");
+							$this->executeSQL($create);
+						}
+						$count++;
+					} catch (Exception $e) {
+						$failedRoutines[] = "$name - " . $e->getMessage();
+						$this->log("WARNING: Failed to clone $type '$name': " . $e->getMessage());
+					}
 				}
-				$count++;
 			}
 		}
 
 		$this->statistics[strtolower($type) . 's'] = $count;
-		$this->log("Cloned $count {$type}(s)" . ($this->config['dryRun'] ? " (dry run)" : ""));
+
+		$message = "Cloned $count {$type}(s)" . ($this->config['dryRun'] ? " (dry run)" : "");
+		if (!empty($failedRoutines)) {
+			$message .= " (" . count($failedRoutines) . " failed)";
+			$this->log("Failed $type(s): " . implode(', ', array_slice($failedRoutines, 0, 3)) .
+				(count($failedRoutines) > 3 ? " and " . (count($failedRoutines) - 3) . " more..." : ""));
+		}
+
+		$this->log($message);
 	}
 
 	private function getTableNames(string $sql): array {
@@ -1183,34 +1449,44 @@ class nuBuilderCloner {
 	}
 
 	private function showProgress(string $message, int $count = 0, bool $completed = false, bool $increment = false): void {
-		if ($this->config['showProgress'] && !empty($this->config['progressId'])) {
 
-			$progressId = $this->config['progressId'];
-			$file = __DIR__ . "/../temp/nu_app_cloner_progress_$progressId.log";
+		$this->log($message);
 
-			$progressNr = $this->progressNr;
+		if (!$this->showProgress)
+			return;
 
-			if ($completed) {
-				$newEntry = '<i><span style="color: grey;">' . $message . '</span></i>' . PHP_EOL;
-			} else {
-				$newEntry = "<b>$progressNr</b> $message";
-			}
+		$progressId = $this->config['progressId'];
+		$progressNr = $this->progressNr;
+		$file = __DIR__ . "/../temp/nu_app_cloner_progress_$progressId.log";
 
-			if ($increment) {
-				$newEntry .= PHP_EOL;
-			}
+		if ($progressNr === 1) {
+			// Delete all progress log files in the same directory with the prefix and suffix
+			$progressDir = dirname($file);
+			foreach (glob($progressDir . '/nu_app_cloner_progress_*.log') as $progressFile) {
+				@unlink($progressFile);
 
-			$existing = file_exists($file) ? file_get_contents($file) : '';
-
-			// Prepend new message
-			file_put_contents($file, $existing . $newEntry);
-
-			if ($completed === true || $increment === true) {
-				$this->progressNr++;
 			}
 		}
 
-		$this->log($message);
+		if ($completed) {
+			$newEntry = '<i><span style="color: grey;">' . $message . '</span></i>' . PHP_EOL;
+		} else {
+			$newEntry = "<b>$progressNr</b> $message";
+		}
+
+		if ($increment) {
+			$newEntry .= PHP_EOL;
+		}
+
+		$existing = file_exists($file) ? file_get_contents($file) : '';
+
+		// Prepend new message
+		file_put_contents($file, $existing . $newEntry);
+
+		if ($completed === true || $increment === true) {
+			$this->progressNr++;
+		}
+
 	}
 
 	private function sendError(string $message): bool {
@@ -1234,13 +1510,21 @@ class nuBuilderCloner {
 	}
 
 	private function nuAppClonerCallback(string $type, string $message): void {
-		$js = "nuMessage('$type', '" . addslashes($message) . "');";
+
+		$escapedMessage = str_replace(
+			['\\', '`', '${'],
+			['\\\\', '\`', '\\${'],
+			$message
+		);
+
+		$js = "nuMessage('$type', `{$escapedMessage}`);";
 
 		if ($type === 'error') {
 			$js .= "window.stopPolling = true;";
 		}
 
 		nuJavaScriptCallback($js);
+
 	}
 
 	private function sendSuccessMessage(string $targetDB, string $sourcePath, string $targetPath): void {
@@ -1299,6 +1583,12 @@ class nuBuilderCloner {
 			}
 		}
 
+		// Add file clearing statistics
+		if (isset($this->statistics['files_cleared']) && $this->statistics['files_cleared'] > 0) {
+			$verb = $this->config['dryRun'] ? "would clear" : "cleared";
+			$stats[] = "$verb {$this->statistics['files_cleared']} files/directories from target directory";
+		}
+
 		if (isset($this->statistics['tables_created'])) {
 			$verb = $this->config['dryRun'] ? "would create" : "created";
 			$stats[] = "$verb {$this->statistics['tables_created']} tables";
@@ -1329,6 +1619,17 @@ class nuBuilderCloner {
 			$stats[] = "<br>$verb $this->fileCount files";
 			$stats[] = "from: $sourcePath";
 			$stats[] = "to: $targetPath";
+
+			// Add fileMode information - UPDATED to include 'overwrite'
+			$fileMode = $this->config['fileMode'];
+			$fileModeText = match ($fileMode) {
+				'create' => 'Create directory if not exists, proceed if exists',
+				'fail' => 'Fail if target directory exists',
+				'clear' => 'Clear directory contents if exists, create if not',
+				'overwrite' => 'Overwrite existing files without deleting others',
+				default => "Unknown fileMode: $fileMode"
+			};
+			$stats[] = "File mode: $fileModeText";
 		} else {
 			$stats[] = "<br>File copying was skipped";
 		}
