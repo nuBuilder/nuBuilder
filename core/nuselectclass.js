@@ -91,6 +91,7 @@ class nuSelectObject {
 
 		const aliasInput = document.createElement('input');
 		aliasInput.setAttribute('id', 'alias' + this.boxID);
+		aliasInput.setAttribute('title', 'Alias'); 
 		$('#' + this.boxID).append(aliasInput);
 		$('#' + aliasInput.id)
 			.css({
