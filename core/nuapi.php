@@ -4,7 +4,8 @@ header("Cache-Control: no-cache, must-revalidate");
 
 // File Upload
 $nuState = $_POST['nuSTATE'] ?? null;
-if ($nuState == null && !empty($_FILES["file"])) {
+
+if ($nuState === null && !empty($_FILES["file"])) {
 	require_once 'nuupload.php';
 	$upload = nuUploadFile();
 	if (nuHasErrors()) {
@@ -15,7 +16,7 @@ if ($nuState == null && !empty($_FILES["file"])) {
 }
 
 // Progress
-if ($nuState == null && isset($_GET['progressId']) && !empty($_GET['progressId'])) {
+if ($nuState === null && isset($_GET['progressId']) && !empty($_GET['progressId'])) {
 	header("Content-Type: text/plain; charset=UTF-8");
 	$progressId = basename($_GET['progressId']);
 	if (preg_match('/^[a-zA-Z0-9_\-]+$/', $progressId)) {
