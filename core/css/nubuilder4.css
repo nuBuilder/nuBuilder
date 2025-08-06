@@ -294,7 +294,7 @@ input[type="search"] {
 }
 
 .nuHomeGap {
-	width: 10px;
+	padding-left: 8px;
 	display: inline-block;
 	white-space: nowrap
 }
