@@ -2030,6 +2030,15 @@ function nuApplyAttributes(id, attrs) {
 				} else {
 					el.setAttribute(key, value);
 				}
+				/*
+
+				 else if (value === 'left-aligned') {
+									//	$('#' + id).nuLabelLeftAligned();
+								}
+
+				*/
+
+
 				break;
 			default:
 				el.setAttribute(key, value);
@@ -3294,12 +3303,17 @@ function nuSubformAddFilter(filter) {
 			let hide = false;
 			let rec = $('#' + rows[row].obj);
 
+			// Extract the actual row number from the record ID
+			let recordId = rows[row].obj;
+			let actualRowNumber = parseInt(recordId.replace(sfName, '').replace('nuRECORD', ''));
+
 			if (arrFilter !== null) {
 
 				for (let columnId in arrFilter) {
 
 					let data = [];
-					data.val = nuSubformFilterCellValue(sfName, columnId, row);
+					// Use the actual row number instead of the visual row index
+					data.val = nuSubformFilterCellValue(sfName, columnId, actualRowNumber);
 					data.filter = arrFilter[columnId].value;
 					data.type = arrFilter[columnId].type;
 					data.optionAll = arrFilter[columnId].all;
@@ -3308,7 +3322,7 @@ function nuSubformAddFilter(filter) {
 						(data.type == 'select' && (data.val.toLowerCase() == data.filter.toLowerCase() || data.optionAll));
 
 					if (window.nuSubformOnFilterRows) {
-						hide = nuSubformOnFilterRows(sfName, data, row, rows.length);
+						hide = nuSubformOnFilterRows(sfName, data, actualRowNumber, rows.length);
 					} else {
 
 						if (!data.isMatch && !data.optionBlank && rows.length - 1 !== row) {
@@ -3353,6 +3367,7 @@ function nuSortSubform(sfName, c, e) {
 	var t = false;
 	const objSf = $('#' + sfName);
 	var noAdd = objSf.attr('data-nu-add') == '0';
+	const isFiltered = objSf.data('nu-filtered') === true;
 
 	const records = $("[ID^='" + sfName + "'][ID$='nuRECORD']");
 	const newRecord = records.last();
@@ -3363,6 +3378,11 @@ function nuSortSubform(sfName, c, e) {
 		var id = this.id;
 
 		if (id !== newRecordId) { // exclude new record
+
+			// If filtering is active, only process visible rows
+			if (isFiltered && $(this).is(':hidden')) {
+				return; // skip hidden rows when filtering is active
+			}
 
 			const f = this.id.replaceAll('nuRECORD', '');
 			h = parseInt($(this).css('height'), 10);
@@ -3406,14 +3426,23 @@ function nuSortSubform(sfName, c, e) {
 	for (let i = 0; i < rows.length; i++) {
 
 		$('#' + rows[i].form).css('top', top).data('nu-top-position', top); // save top position
-		top = top + h;
+		top = top + h + 1; // Add 1 for consistent spacing
 
 	}
 
-	newRecord.css('top', top).data('nu-top-position', top);
+	// Position the new record at the bottom of visible rows
+	if (!isFiltered || newRecord.is(':visible')) {
+		newRecord.css('top', top).data('nu-top-position', top);
+	}
 
-	if (objSf.data('nu-filtered') === true) {
-		objSf.find('.nuSubformFilter').first().trigger("change");
+	// If filtering was active, reapply the filter to ensure proper positioning
+	if (isFiltered) {
+		// Get the current filter configuration
+		const filterSelects = objSf.find('.nuSubformFilter');
+		if (filterSelects.length > 0) {
+			// Trigger change on the first filter to reapply all filters
+			filterSelects.first().trigger("change");
+		}
 	}
 
 }
