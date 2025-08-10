@@ -68,6 +68,8 @@ function nuAlterSystemTables() {
 		"ALTER TABLE `zzzzsys_code_snippet`  ADD `cot_template` VARCHAR(1) NULL DEFAULT NULL AFTER `cot_scope`",
 		"ALTER TABLE `zzzzsys_cloner` ADD `clo_tables_include` MEDIUMTEXT NULL DEFAULT NULL AFTER `clo_iframe_forms`;",
 		"ALTER TABLE `zzzzsys_cloner` ADD `clo_tables_exclude` MEDIUMTEXT NULL DEFAULT NULL AFTER `clo_tables_include`;",
+		"ALTER TABLE `zzzzsys_app_cloner` CHANGE `cla_create_database` `cla_target_db_mode` VARCHAR(10)",
+		"ALTER TABLE `zzzzsys_app_cloner` ADD `cla_copy_files_mode` VARCHAR(10) NULL DEFAULT NULL AFTER `cla_copy_files`",
 		"ALTER TABLE `zzzzsys_email_template` ADD `emt_template` VARCHAR(1) NULL DEFAULT '0' AFTER `emt_group`;",
 		"ALTER TABLE `zzzzsys_email_template` ADD `emt_category` VARCHAR(100) NULL DEFAULT NULL AFTER `emt_group`;",
 		"ALTER TABLE `pdf_temp` ADD `pdf_code` VARCHAR(100) NULL DEFAULT NULL AFTER `pdf_added_by`;",
@@ -101,7 +103,7 @@ function nuAlterSystemTables() {
 		"UPDATE `zzzzsys_object` SET sob_html_code = REPLACE(sob_html_code, 'procedure: ''NUUPLOADFILE_TEMPLATE''', 'procedure: ''nu_upload_file_template''') WHERE IFNULL(sob_html_code, '') LIKE '%NUUPLOADFILE_TEMPLATE%';",
 		"UPDATE `zzzzsys_object` SET sob_html_code = REPLACE(sob_html_code, 'procedure: ''NUUPLOADFILE''', 'procedure: ''nu_upload_file''') WHERE IFNULL(sob_html_code, '') LIKE '%NUUPLOADFILE%';",
 		"UPDATE `zzzzsys_object` SET sob_all_type = 'chart' WHERE sob_all_type = 'html' AND IFNULL(sob_html_chart_type,'') <> '' "
-
+		//	"ALTER TABLE `zzzzsys_php` CHANGE `sph_javascript_active` `sph_javascript_scope` VARCHAR(50)  NULL DEFAULT NULL;"
 	];
 
 	foreach ($alterTableSQL as $sqlStatement) {
