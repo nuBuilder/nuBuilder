@@ -2367,3 +2367,105 @@ pre.nuFormInfoBrowseSQL {
 .tox .tox-edit-area::before {
 	border: none !important
 }
+
+/* Info bar */
+
+.nu-info-bar {
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+	font-size: 14px;
+	line-height: 1.4;
+	padding: 10px 16px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	user-select: none;
+	overflow: hidden;
+}
+
+.nu-info-bar.nu-info-bar--clickable {
+	cursor: pointer;
+}
+
+.nu-info-bar__content {
+	display: flex;
+	align-items: center;
+	margin-left: 40px;
+}
+
+.nu-info-bar__content i {
+	margin-right: 8px;
+	flex-shrink: 0;
+}
+
+.nu-info-bar__close {
+	position: absolute !important;
+	left: 12px !important;
+	right: auto !important;
+	top: 50% !important;
+	transform: translateY(-50%) !important;
+	background: none !important;
+	border: none !important;
+	font-size: 16px !important;
+	cursor: pointer !important;
+	padding: 4px !important;
+	border-radius: 2px !important;
+	transition: all 0.2s ease !important;
+	z-index: 10 !important;
+	width: 24px !important;
+	height: 24px !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+}
+
+.nu-info-bar__close:hover {
+	background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Light theme colors */
+.nu-info-bar--light.nu-info-bar--info {
+	background-color: #d1ecf1;
+	color: #0c5460;
+	border-left: 4px solid #17a2b8;
+}
+
+.nu-info-bar--light.nu-info-bar--success {
+	background-color: #d4edda;
+	color: #155724;
+	border-left: 4px solid #28a745;
+}
+
+.nu-info-bar--light.nu-info-bar--warning {
+	background-color: #fff3cd;
+	color: #856404;
+	border-left: 4px solid #ffc107;
+}
+
+.nu-info-bar--light.nu-info-bar--error {
+	background-color: #f8d7da;
+	color: #721c24;
+	border-left: 4px solid #dc3545;
+}
+
+/* Dark theme colors */
+.nu-info-bar--dark.nu-info-bar--info {
+	background-color: #17a2b8;
+	color: #ffffff;
+}
+
+.nu-info-bar--dark.nu-info-bar--success {
+	background-color: #28a745;
+	color: #ffffff;
+}
+
+.nu-info-bar--dark.nu-info-bar--warning {
+	background-color: #ffc107;
+	color: #212529;
+}
+
+.nu-info-bar--dark.nu-info-bar--error {
+	background-color: #dc3545;
+	color: #ffffff;
+}
+
+.nu-info-bar--dark .nu-info-bar__close:hover {
+	background-color: rgba(255, 255, 255, 0.2);
+}

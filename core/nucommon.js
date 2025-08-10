@@ -2946,6 +2946,8 @@ function nuSetLabelText(id, text, translate) {
 
 	if (obj.attr('data-nu-label-position') === 'top') {
 		obj.nuLabelOnTop();
+	} else if (obj.attr('data-nu-label-position') === 'left-aligned') {
+		//	obj.nuLabelLeftAligned();
 	}
 
 }
@@ -3438,3 +3440,371 @@ function nuGetSelectedText(inputOrId) {
 	return input.value.substring(start, end);
 
 }
+
+// Info Bar jQuery Plugin
+
+(function ($) {
+	'use strict';
+
+	// Plugin defaults
+	const defaults = {
+		// Content and styling
+		html: '<i class="fas fa-info-circle"></i> This is an info message',
+		type: 'info', // info, success, warning, error
+		theme: 'light', // light, dark
+		icon: null, // Font Awesome icon class (overrides default type icon)
+		customClass: null, // Additional CSS class to apply
+
+		// Behavior
+		autoClose: true,
+		autoCloseDelay: 5000, // 5 seconds
+		showCloseButton: true,
+		allowMultiple: false,
+
+		// Animation
+		animationDuration: 300,
+		animationType: 'slide', // slide, fade
+		slideDirection: 'down', // down, up
+
+		// Positioning
+		position: 'top', // top, bottom
+		fixed: true, // if true, positions fixed at viewport top and pushes content down
+		zIndex: 10000, // increased to ensure it appears above nuBuilder elements
+
+		// Styling
+		opacity: 1, // custom opacity (0-1)
+		closeOnClick: false, // close when clicking anywhere on the bar (not just X button)
+
+		// Callbacks
+		onShow: null,
+		onClose: null,
+		onClick: null
+	};
+
+	// Main plugin function
+	$.fn.nuInfoBar = function (options) {
+		const settings = $.extend({}, defaults, options);
+
+		return this.each(function () {
+			const $container = $(this);
+
+			// Create and show the info bar
+			createInfoBar($container, settings);
+		});
+	};
+
+	// Static method to show info bar on nuBuilder
+	$.nuInfoBar = function (options) {
+		const $nuhtml = $('#nuhtml');
+		if ($nuhtml.length === 0) {
+			console.warn('nuBuilder container (#nuhtml) not found');
+			return;
+		}
+
+		return $nuhtml.nuInfoBar(options);
+	};
+
+	// Static method to show info bar on nuBuilder with fixed positioning
+	$.nuInfoBar.fixed = function (options) {
+		return $.nuInfoBar($.extend({}, options, { fixed: true }));
+	};
+
+	// Static methods for different types
+	function createTypedInfoBar(type, defaultIcon, message, options) {
+		options = options || {};
+		const icon = options.icon || defaultIcon;
+		const finalHtml = `<i class="${icon}"></i> ${message}`;
+		const finalOptions = $.extend({}, options, {
+			html: finalHtml,
+			type: type
+		});
+		return $.nuInfoBar(finalOptions);
+	}
+
+	$.nuInfoBar.info = function (message, options) {
+		return createTypedInfoBar('info', 'fas fa-info-circle', message, options);
+	};
+
+	$.nuInfoBar.success = function (message, options) {
+		return createTypedInfoBar('success', 'fas fa-check-circle', message, options);
+	};
+
+	$.nuInfoBar.warning = function (message, options) {
+		return createTypedInfoBar('warning', 'fas fa-exclamation-triangle', message, options);
+	};
+
+	$.nuInfoBar.error = function (message, options) {
+		return createTypedInfoBar('error', 'fas fa-times-circle', message, options);
+	};
+
+	// Utility functions
+	$.nuInfoBar.updateContent = function (newHtml) {
+		$('.nu-info-bar .nu-info-bar__content').html(newHtml);
+	};
+
+	$.nuInfoBar.closeAll = function () {
+		$('.nu-info-bar').each(function () {
+			const $bar = $(this);
+			// Trigger close with a basic settings object
+			closeInfoBar($bar, {
+				animationType: 'slide',
+				animationDuration: 300,
+				position: 'top',
+				fixed: true
+			});
+		});
+
+		// Reset all padding immediately after closing all bars
+		const $target = $('#nuhtml').length > 0 ? $('#nuhtml') : $('body');
+		$target.css({
+			'padding-top': '0px',
+			'padding-bottom': '0px'
+		});
+	};
+
+	// Create and manage info bar
+	function createInfoBar($container, settings) {
+		// Remove existing bars if not allowing multiple
+		if (!settings.allowMultiple) {
+			const $existingBars = $('.nu-info-bar');
+			const hasFixedBars = $existingBars.filter(function () {
+				return $(this).css('position') === 'fixed';
+			}).length > 0;
+
+			$existingBars.remove();
+
+			// Reset padding if removing fixed bars
+			if (hasFixedBars) {
+				// For nuBuilder, reset padding on #nuhtml if it exists, otherwise body
+				const $target = $('#nuhtml').length > 0 ? $('#nuhtml') : $('body');
+				$target.css({
+					'padding-top': '0px',
+					'padding-bottom': '0px'
+				});
+			}
+		}
+
+		// Create info bar element
+		let classes = `nu-info-bar nu-info-bar--${settings.type} nu-info-bar--${settings.theme}`;
+		if (settings.customClass) {
+			classes += ` ${settings.customClass}`;
+		}
+		if (settings.closeOnClick) {
+			classes += ` nu-info-bar--clickable`;
+		}
+
+		const $infoBar = $('<div>', {
+			class: classes,
+			css: {
+				position: settings.fixed ? 'fixed' : 'absolute',
+				top: settings.position === 'top' ? 0 : 'auto',
+				bottom: settings.position === 'bottom' ? 0 : 'auto',
+				left: 0,
+				right: 0,
+				zIndex: settings.zIndex,
+				opacity: settings.opacity,
+				display: 'none'
+			}
+		});
+
+		// Create close button if enabled
+		if (settings.showCloseButton) {
+			const $closeBtn = $('<button>', {
+				class: 'nu-info-bar__close',
+				html: '<i class="fas fa-times"></i>',
+				click: function (e) {
+					e.preventDefault();
+					closeInfoBar($infoBar, settings);
+				}
+			});
+			$infoBar.append($closeBtn);
+		}
+
+		// Create content wrapper
+		const $content = $('<div>', {
+			class: 'nu-info-bar__content',
+			html: settings.html
+		});
+
+		$infoBar.append($content);
+
+		// Add click handler for close on click or custom onClick
+		$infoBar.on('click', function (e) {
+			// Don't trigger if clicking the close button
+			if (!$(e.target).closest('.nu-info-bar__close').length) {
+				if (settings.closeOnClick) {
+					closeInfoBar($infoBar, settings);
+				} else if (settings.onClick) {
+					settings.onClick.call(this, e);
+				}
+			}
+		});
+
+		// Make container relative if not already positioned (only for non-fixed)
+		if (!settings.fixed && $container.css('position') === 'static') {
+			$container.css('position', 'relative');
+		}
+
+		// Append to appropriate parent
+		if (settings.fixed) {
+			// For nuBuilder, append to #nuhtml if it exists, otherwise body
+			const $nuhtml = $('#nuhtml');
+			if ($nuhtml.length > 0) {
+				$nuhtml.append($infoBar);
+			} else {
+				$('body').append($infoBar);
+			}
+		} else {
+			$container.append($infoBar);
+		}
+
+		// Show with animation
+		showInfoBar($infoBar, settings);
+
+		// Auto close if enabled
+		if (settings.autoClose && settings.autoCloseDelay > 0) {
+			setTimeout(function () {
+				closeInfoBar($infoBar, settings);
+			}, settings.autoCloseDelay);
+		}
+
+		return $infoBar;
+	}
+
+	// Show info bar with animation
+	function showInfoBar($infoBar, settings) {
+		// Handle both milliseconds and jQuery duration strings
+		const duration = typeof settings.animationDuration === 'string' ?
+			settings.animationDuration : settings.animationDuration;
+
+		if (settings.animationType === 'fade') {
+			// Fade animation
+			$infoBar.css('opacity', 0).show().animate({
+				opacity: settings.opacity
+			}, duration);
+		} else {
+			// Slide animation (default)
+			$infoBar.show();
+			const slideDistance = $infoBar.outerHeight();
+
+			// Adjust slide direction based on position
+			let initialTransform;
+			if (settings.position === 'bottom') {
+				initialTransform = settings.slideDirection === 'down' ?
+					`translateY(${slideDistance}px)` : `translateY(-${slideDistance}px)`;
+			} else {
+				initialTransform = settings.slideDirection === 'down' ?
+					`translateY(-${slideDistance}px)` : `translateY(${slideDistance}px)`;
+			}
+
+			$infoBar.css('transform', initialTransform);
+
+			// Trigger slide animation
+			setTimeout(function () {
+				$infoBar.css({
+					'transform': 'translateY(0)',
+					'transition': `transform ${duration}ms ease-out`
+				});
+			}, 10);
+		}
+
+		// If fixed positioning, push content down or up
+		if (settings.fixed) {
+			const infoBarHeight = $infoBar.outerHeight();
+			// For nuBuilder, adjust padding on #nuhtml if it exists, otherwise body
+			const $target = $('#nuhtml').length > 0 ? $('#nuhtml') : $('body');
+
+			if (settings.position === 'top') {
+				$target.css({
+					'padding-top': infoBarHeight + 'px',
+					'transition': `padding-top ${duration}ms ease-out`
+				});
+			} else if (settings.position === 'bottom') {
+				$target.css({
+					'padding-bottom': infoBarHeight + 'px',
+					'transition': `padding-bottom ${duration}ms ease-out`
+				});
+			}
+		}
+
+		// Call onShow callback
+		if (settings.onShow) {
+			const callbackDelay = typeof duration === 'string' ? 400 : duration;
+			setTimeout(function () {
+				settings.onShow.call($infoBar[0]);
+			}, callbackDelay);
+		}
+	}
+
+	// Close info bar with animation
+	function closeInfoBar($infoBar, settings) {
+		// Handle both milliseconds and jQuery duration strings
+		const duration = typeof settings.animationDuration === 'string' ?
+			settings.animationDuration : settings.animationDuration;
+
+		if (settings.animationType === 'fade') {
+			// Fade animation
+			$infoBar.animate({
+				opacity: 0
+			}, duration, function () {
+				$infoBar.remove();
+				if (settings.onClose) {
+					settings.onClose.call($infoBar[0]);
+				}
+			});
+		} else {
+			// Slide animation (default)
+			const slideDistance = $infoBar.outerHeight();
+
+			// Adjust slide direction based on position
+			let finalTransform;
+			if (settings.position === 'bottom') {
+				finalTransform = settings.slideDirection === 'down' ?
+					`translateY(${slideDistance}px)` : `translateY(-${slideDistance}px)`;
+			} else {
+				finalTransform = settings.slideDirection === 'down' ?
+					`translateY(-${slideDistance}px)` : `translateY(${slideDistance}px)`;
+			}
+
+			$infoBar.css({
+				'transform': finalTransform,
+				'transition': `transform ${duration}ms ease-in`
+			});
+
+			const callbackDelay = typeof duration === 'string' ? 400 : duration;
+			setTimeout(function () {
+				$infoBar.remove();
+				if (settings.onClose) {
+					settings.onClose.call($infoBar[0]);
+				}
+			}, callbackDelay);
+		}
+
+		// If fixed positioning, remove padding from body
+		if (settings.fixed) {
+			// Check if there are other fixed info bars remaining
+			const remainingBars = $('.nu-info-bar').not($infoBar).filter(function () {
+				return $(this).css('position') === 'fixed';
+			}).length;
+
+			if (remainingBars === 0) {
+				const transitionDuration = typeof duration === 'string' ? duration : duration + 'ms';
+				// For nuBuilder, adjust padding on #nuhtml if it exists, otherwise body
+				const $target = $('#nuhtml').length > 0 ? $('#nuhtml') : $('body');
+
+				if (settings.position === 'top') {
+					$target.css({
+						'padding-top': '0px',
+						'transition': `padding-top ${transitionDuration} ease-in`
+					});
+				} else if (settings.position === 'bottom') {
+					$target.css({
+						'padding-bottom': '0px',
+						'transition': `padding-bottom ${transitionDuration} ease-in`
+					});
+				}
+			}
+		}
+	}
+
+})(jQuery);
