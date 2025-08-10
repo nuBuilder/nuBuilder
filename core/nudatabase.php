@@ -25,11 +25,60 @@ try {
 	$nuDB = new PDO("mysql:host=$dbHost;dbname=$dbName;charset=$dbCharset;port=$dbPort", $dbUser, $dbPassword, $dbOptions);
 	$nuDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-	echo 'Connection to the nuBuilder database failed: ' . $e->getMessage();
-	echo '<br><br>Verify and update the settings in nuconfig.php';
-	echo '<br><br>Restart your browser after modifying nuconfig.php in order for changes to be reflected';
+	echo '<div style="max-width:500px;margin:32px auto;padding:24px;background:#f9f5f5;border:1px solid #db4d4d;border-radius:7px;box-shadow:0 2px 8px #f0f0f0;">';
+	echo '<h2 style="color:#b10000;font-size:1.4em;margin-top:0;">Connection to the nuBuilder database failed</h2>';
+	echo '<div style="color:#b10000;">' . htmlspecialchars($e->getMessage()) . '</div>';
+	echo '<div style="margin:16px 0 0 0;color:#333;">Verify and update the settings in <b>nuconfig.php</b>.<br>Restart your browser after modifying <b>nuconfig.php</b> in order for changes to be reflected.</div>';
+
+	// Add: Offer to create the database if "Unknown database" error
+	if (strpos($e->getMessage(), 'Unknown database') !== false) {
+		echo '<div style="margin-top:20px;padding:16px;background:#f7fcff;border:1px solid #aadeff;border-radius:6px;">';
+		echo '<b style="color:#0084b1;">It looks like the database <span style="color:#005580;">' . htmlspecialchars($dbName) . '</span> does not exist.</b><br>';
+		echo '<span style="color:#333;">To create it, please enter your database username and <i>(optionally)</i> password:</span>';
+		echo '<form method="post" style="margin-top:10px;">';
+		echo '<div style="margin-bottom:10px;"><label style="width:100px;display:inline-block;">DB User:</label> <input type="text" name="create_db_user" required style="padding:5px;border-radius:3px;border:1px solid #bbb;"></div>';
+		echo '<div style="margin-bottom:10px;"><label style="width:100px;display:inline-block;">DB Password:</label> <input type="password" name="create_db_password" style="padding:5px;border-radius:3px;border:1px solid #bbb;"></div>';
+		echo '<input type="hidden" name="create_db_name" value="' . htmlspecialchars($dbName) . '">';
+		echo '<input type="hidden" name="create_db_host" value="' . htmlspecialchars($dbHost) . '">';
+		echo '<input type="hidden" name="create_db_port" value="' . htmlspecialchars($dbPort) . '">';
+		echo '<button type="submit" name="create_db_submit" style="background:#0084b1;color:#fff;padding:7px 18px;border:none;border-radius:3px;cursor:pointer;">Create Database</button>';
+		echo '</form>';
+
+		// Handle the form submission
+		if (
+			isset($_POST['create_db_submit']) &&
+			isset($_POST['create_db_user'], $_POST['create_db_name'], $_POST['create_db_host'], $_POST['create_db_port'])
+		) {
+			$createDbUser = $_POST['create_db_user'];
+			$createDbPassword = $_POST['create_db_password'] ?? '';
+			$createDbName = $_POST['create_db_name'];
+			$createDbHost = $_POST['create_db_host'];
+			$createDbPort = $_POST['create_db_port'];
+
+			echo '<div style="margin-top:14px;">';
+			try {
+				if ($createDbPassword === '') {
+					$pdo = new PDO("mysql:host=$createDbHost;port=$createDbPort", $createDbUser);
+				} else {
+					$pdo = new PDO("mysql:host=$createDbHost;port=$createDbPort", $createDbUser, $createDbPassword);
+				}
+				$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				$sql = "CREATE DATABASE `$createDbName` CHARACTER SET $dbCharset";
+				$pdo->exec($sql);
+				echo '<span style="color:#0a7d30;font-weight:bold;">Database created successfully!</span> <span style="color:#333;">Please reload the page.</span>';
+			} catch (PDOException $ce) {
+				echo '<span style="color:#b10000;font-weight:bold;">Failed to create database:</span> <span style="color:#333;">' . htmlspecialchars($ce->getMessage()) . '</span>';
+			}
+			echo '</div>';
+		}
+		echo '</div>'; // end info box
+	}
+
+	echo '</div>'; // end main box
+
 	header('HTTP/1.0 403 Forbidden');
 	die();
+
 }
 
 $GLOBALS['sys_table_prefix'] = [
