@@ -58,6 +58,10 @@ function nuBuildForm(formObj) {
 
 	if (nuNeedToLoginAgain(formObj)) return;
 
+	if (window.nuInfoBarHideOnFormClose) {
+		$.nuInfoBar.closeAll({ animationType: 'none', animationDuration: 0 });
+	}
+
 	const formType = nuFormType();
 	nuSetDefaultWindowProperties(formObj, formType);
 

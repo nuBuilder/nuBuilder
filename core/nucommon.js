@@ -3460,6 +3460,7 @@ function nuGetSelectedText(inputOrId) {
 		autoCloseDelay: 5000, // 5 seconds
 		showCloseButton: true,
 		allowMultiple: false,
+		hideOnFormClose: true, // Hide info bar when form closes
 
 		// Animation
 		animationDuration: 300,
@@ -3542,16 +3543,21 @@ function nuGetSelectedText(inputOrId) {
 		$('.nu-info-bar .nu-info-bar__content').html(newHtml);
 	};
 
-	$.nuInfoBar.closeAll = function () {
+	$.nuInfoBar.closeAll = function (options) {
+		// Default close options
+		const closeDefaults = {
+			animationType: 'slide',
+			animationDuration: 300,
+			position: 'top',
+			fixed: true
+		};
+
+		// Merge with provided options
+		const closeSettings = $.extend({}, closeDefaults, options);
 		$('.nu-info-bar').each(function () {
 			const $bar = $(this);
-			// Trigger close with a basic settings object
-			closeInfoBar($bar, {
-				animationType: 'slide',
-				animationDuration: 300,
-				position: 'top',
-				fixed: true
-			});
+			// Trigger close with merged settings
+			closeInfoBar($bar, closeSettings);
 		});
 
 		// Reset all padding immediately after closing all bars
@@ -3564,6 +3570,9 @@ function nuGetSelectedText(inputOrId) {
 
 	// Create and manage info bar
 	function createInfoBar($container, settings) {
+		// Set global hideOnFormClose variable
+		window.nuInfoBarHideOnFormClose = settings.hideOnFormClose;
+
 		// Remove existing bars if not allowing multiple
 		if (!settings.allowMultiple) {
 			const $existingBars = $('.nu-info-bar');
