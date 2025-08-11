@@ -3447,6 +3447,8 @@ function nuGetSelectedText(inputOrId) {
 
 // Info Bar jQuery Plugin
 
+// Info Bar jQuery Plugin
+
 (function ($) {
 	'use strict';
 
@@ -3465,11 +3467,17 @@ function nuGetSelectedText(inputOrId) {
 		showCloseButton: true,
 		allowMultiple: false,
 		hideOnFormClose: true, // Hide info bar when form closes
+		shakeOnShow: false, // Shake the info bar when it's shown
+		modal: false, // If true, blocks clicks outside and shakes on outside clicks
 
 		// Animation
 		animationDuration: 300,
 		animationType: 'slide', // slide, fade
 		slideDirection: 'down', // down, up
+
+		// Shake animation
+		shakeDuration: 500, // Duration of shake animation in ms
+		shakeIntensity: 5, // Shake distance in pixels
 
 		// Positioning
 		position: 'top', // top, bottom
@@ -3483,11 +3491,66 @@ function nuGetSelectedText(inputOrId) {
 		// Callbacks
 		onShow: null,
 		onClose: null,
-		onClick: null
+		onClick: null,
+		onShake: null // Called when shake animation completes
 	};
+
+	// Add CSS animations for shake effect and modal styles
+	const shakeCSS = `
+		@keyframes nu-info-bar-horizontal-shake {
+			0% { transform: translateX(0) }
+			25% { transform: translateX(var(--shake-intensity, 5px)) }
+			50% { transform: translateX(calc(-1 * var(--shake-intensity, 5px))) }
+			75% { transform: translateX(var(--shake-intensity, 5px)) }
+			100% { transform: translateX(0) }
+		}
+
+		@keyframes nu-info-bar-vertical-shake {
+			0% { transform: translateY(0) }
+			25% { transform: translateY(var(--shake-intensity, 5px)) }
+			50% { transform: translateY(calc(-1 * var(--shake-intensity, 5px))) }
+			75% { transform: translateY(var(--shake-intensity, 5px)) }
+			100% { transform: translateY(0) }
+		}
+
+		.nu-info-bar--shaking-horizontal {
+			animation: nu-info-bar-horizontal-shake var(--shake-duration, 500ms) ease-in-out;
+		}
+
+		.nu-info-bar--shaking-vertical {
+			animation: nu-info-bar-vertical-shake var(--shake-duration, 500ms) ease-in-out;
+		}
+
+		.nu-info-bar--modal {
+			box-shadow: 0 0 0 99999px rgba(0, 0, 0, 0.3);
+			position: relative;
+		}
+
+		.nu-info-bar--modal::before {
+			content: '';
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: rgba(0, 0, 0, 0.1);
+			z-index: -1;
+			pointer-events: none;
+		}
+	`;
+
+	// Inject CSS if not already present
+	if (!$('#nu-info-bar-shake-styles').length) {
+		$('head').append(`<style id="nu-info-bar-shake-styles">${shakeCSS}</style>`);
+	}
 
 	// Main plugin function
 	$.fn.nuInfoBar = function (options) {
+		// Handle modal defaults
+		if (options && options.modal && !options.hasOwnProperty('autoClose')) {
+			options.autoClose = false;
+		}
+
 		const settings = $.extend({}, defaults, options);
 
 		return this.each(function () {
@@ -3500,6 +3563,11 @@ function nuGetSelectedText(inputOrId) {
 
 	// Static method to show info bar on nuBuilder
 	$.nuInfoBar = function (options) {
+		// Handle modal defaults
+		if (options && options.modal && !options.hasOwnProperty('autoClose')) {
+			options.autoClose = false;
+		}
+
 		const $nuhtml = $('#nuhtml');
 		if ($nuhtml.length === 0) {
 			console.warn('nuBuilder container (#nuhtml) not found');
@@ -3523,6 +3591,12 @@ function nuGetSelectedText(inputOrId) {
 			html: finalHtml,
 			type: type
 		});
+
+		// Handle modal defaults
+		if (finalOptions.modal && !options.hasOwnProperty('autoClose')) {
+			finalOptions.autoClose = false;
+		}
+
 		return $.nuInfoBar(finalOptions);
 	}
 
@@ -3542,6 +3616,50 @@ function nuGetSelectedText(inputOrId) {
 		return createTypedInfoBar('error', 'fas fa-times-circle', message, options);
 	};
 
+	// Shake functionality
+	$.nuInfoBar.shake = function (options) {
+		const shakeSettings = $.extend({}, {
+			direction: 'horizontal', // horizontal, vertical
+			duration: 500,
+			intensity: 5,
+			selector: '.nu-info-bar', // Target specific info bars
+			onComplete: null
+		}, options);
+
+		const $targetBars = $(shakeSettings.selector);
+
+		if ($targetBars.length === 0) {
+			console.warn('No info bars found to shake');
+			return;
+		}
+
+		$targetBars.each(function () {
+			const $bar = $(this);
+			shakeInfoBar($bar, shakeSettings);
+		});
+
+		return $targetBars;
+	};
+
+	// Shake the most recent info bar
+	$.nuInfoBar.shakeLast = function (options) {
+		const $lastBar = $('.nu-info-bar').last();
+		if ($lastBar.length === 0) {
+			console.warn('No info bars found to shake');
+			return;
+		}
+
+		const shakeSettings = $.extend({}, {
+			direction: 'horizontal',
+			duration: 500,
+			intensity: 5,
+			onComplete: null
+		}, options);
+
+		shakeInfoBar($lastBar, shakeSettings);
+		return $lastBar;
+	};
+
 	// Utility functions
 	$.nuInfoBar.updateContent = function (newHtml) {
 		$('.nu-info-bar .nu-info-bar__content').html(newHtml);
@@ -3553,15 +3671,20 @@ function nuGetSelectedText(inputOrId) {
 			animationType: 'slide',
 			animationDuration: 300,
 			position: 'top',
-			fixed: true
+			fixed: true,
+			modal: false // Default for cleanup
 		};
 
 		// Merge with provided options
 		const closeSettings = $.extend({}, closeDefaults, options);
 		$('.nu-info-bar').each(function () {
 			const $bar = $(this);
-			// Trigger close with merged settings
-			closeInfoBar($bar, closeSettings);
+			// Check if this bar is modal and clean up accordingly
+			const isModal = $bar.hasClass('nu-info-bar--modal');
+			const barSettings = $.extend({}, closeSettings, { modal: isModal });
+
+			// Trigger close with appropriate settings
+			closeInfoBar($bar, barSettings);
 		});
 
 		// Reset all padding immediately after closing all bars
@@ -3571,6 +3694,53 @@ function nuGetSelectedText(inputOrId) {
 			'padding-bottom': '0px'
 		});
 	};
+
+	// Modal info bar shortcuts
+	$.nuInfoBar.modal = function (options) {
+		return $.nuInfoBar($.extend({}, options, { modal: true }));
+	};
+
+	$.nuInfoBar.modal.info = function (message, options) {
+		return createTypedInfoBar('info', 'fas fa-info-circle', message, $.extend({}, options, { modal: true }));
+	};
+
+	$.nuInfoBar.modal.success = function (message, options) {
+		return createTypedInfoBar('success', 'fas fa-check-circle', message, $.extend({}, options, { modal: true }));
+	};
+
+	$.nuInfoBar.modal.warning = function (message, options) {
+		return createTypedInfoBar('warning', 'fas fa-exclamation-triangle', message, $.extend({}, options, { modal: true }));
+	};
+
+	$.nuInfoBar.modal.error = function (message, options) {
+		return createTypedInfoBar('error', 'fas fa-times-circle', message, $.extend({}, options, { modal: true }));
+	};
+
+	// Shake an info bar
+	function shakeInfoBar($infoBar, settings) {
+		// Set CSS custom properties for animation
+		$infoBar.css({
+			'--shake-duration': settings.duration + 'ms',
+			'--shake-intensity': settings.intensity + 'px'
+		});
+
+		// Remove any existing shake classes
+		$infoBar.removeClass('nu-info-bar--shaking-horizontal nu-info-bar--shaking-vertical');
+
+		// Add appropriate shake class
+		const shakeClass = settings.direction === 'vertical' ?
+			'nu-info-bar--shaking-vertical' : 'nu-info-bar--shaking-horizontal';
+
+		$infoBar.addClass(shakeClass);
+
+		// Remove shake class after animation completes
+		setTimeout(function () {
+			$infoBar.removeClass(shakeClass);
+			if (settings.onComplete) {
+				settings.onComplete.call($infoBar[0]);
+			}
+		}, settings.duration);
+	}
 
 	// Create and manage info bar
 	function createInfoBar($container, settings) {
@@ -3604,6 +3774,9 @@ function nuGetSelectedText(inputOrId) {
 		}
 		if (settings.closeOnClick) {
 			classes += ` nu-info-bar--clickable`;
+		}
+		if (settings.modal) {
+			classes += ` nu-info-bar--modal`;
 		}
 
 		const $infoBar = $('<div>', {
@@ -3641,11 +3814,48 @@ function nuGetSelectedText(inputOrId) {
 
 		$infoBar.append($content);
 
+		// Modal behavior - capture clicks outside the info bar
+		if (settings.modal) {
+			const modalClickHandler = function (e) {
+				// Check if click is outside the info bar
+				if (!$(e.target).closest($infoBar).length) {
+					// Prevent the click from doing anything
+					e.preventDefault();
+					e.stopPropagation();
+					e.stopImmediatePropagation();
+
+					// Shake the info bar to draw attention
+					shakeInfoBar($infoBar, {
+						direction: 'horizontal',
+						duration: settings.shakeDuration,
+						intensity: settings.shakeIntensity,
+						onComplete: settings.onShake
+					});
+
+					return false;
+				}
+			};
+
+			// Store the handler for cleanup later
+			$infoBar.data('modalClickHandler', modalClickHandler);
+
+			// Add event listener with high priority (capture phase)
+			setTimeout(function () {
+				document.addEventListener('click', modalClickHandler, true);
+				document.addEventListener('mousedown', modalClickHandler, true);
+				document.addEventListener('touchstart', modalClickHandler, true);
+			}, 100); // Small delay to avoid capturing the creation click
+		}
+
 		// Add click handler for close on click or custom onClick
 		$infoBar.on('click', function (e) {
 			// Don't trigger if clicking the close button
 			if (!$(e.target).closest('.nu-info-bar__close').length) {
-				if (settings.closeOnClick) {
+				// In modal mode, don't allow closing by clicking the bar itself unless explicitly allowed
+				if (settings.modal && settings.closeOnClick) {
+					// Only close if explicitly allowed in modal mode
+					closeInfoBar($infoBar, settings);
+				} else if (!settings.modal && settings.closeOnClick) {
 					closeInfoBar($infoBar, settings);
 				} else if (settings.onClick) {
 					settings.onClick.call(this, e);
@@ -3740,6 +3950,19 @@ function nuGetSelectedText(inputOrId) {
 			}
 		}
 
+		// Shake on show if enabled
+		if (settings.shakeOnShow) {
+			const shakeDelay = typeof duration === 'string' ? 400 : duration;
+			setTimeout(function () {
+				shakeInfoBar($infoBar, {
+					direction: 'horizontal',
+					duration: settings.shakeDuration,
+					intensity: settings.shakeIntensity,
+					onComplete: settings.onShake
+				});
+			}, shakeDelay);
+		}
+
 		// Call onShow callback
 		if (settings.onShow) {
 			const callbackDelay = typeof duration === 'string' ? 400 : duration;
@@ -3751,6 +3974,16 @@ function nuGetSelectedText(inputOrId) {
 
 	// Close info bar with animation
 	function closeInfoBar($infoBar, settings) {
+		// Clean up modal event listeners
+		if (settings.modal) {
+			const modalClickHandler = $infoBar.data('modalClickHandler');
+			if (modalClickHandler) {
+				document.removeEventListener('click', modalClickHandler, true);
+				document.removeEventListener('mousedown', modalClickHandler, true);
+				document.removeEventListener('touchstart', modalClickHandler, true);
+			}
+		}
+
 		// Handle both milliseconds and jQuery duration strings
 		const duration = typeof settings.animationDuration === 'string' ?
 			settings.animationDuration : settings.animationDuration;
