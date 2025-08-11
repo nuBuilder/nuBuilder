@@ -870,9 +870,9 @@ function nuUpdateData(action, instruction) {
 				window.last_action = 'save';
 				if (instruction === 'close') {
 					nuFORM.edited = false;
-					if (!nuOpenPreviousBreadcrumb()) {
-						window.close();
-					}
+					window.nuTimesSaved++;
+					nuProcessAfterSave();
+					nuCloseAfterSave();
 				} else {
 					nuForm(formId, data.record_id, data.filter, data.search, 1);		//-- go to saved or created record
 				}
