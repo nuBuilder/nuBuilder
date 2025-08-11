@@ -2531,20 +2531,23 @@ function nuSUBFORMScrollDivAddCSS(id, SF, scrId, rowTop, rowWidth) {
 
 }
 
-function nuSUBFORMnuTabHolderAddCSS(tabId, rowTop, rowWidth) {
+function nuSUBFORMnuTabHolderAddCSS(tabId, sfType, rowTop, rowWidth) {
 
-	nuSetObjectBounds($('#' + tabId), 0, 0, rowWidth, rowTop)
+	const objBounds = nuSetObjectBounds($('#' + tabId), 0, 0, rowWidth, rowTop);
+
+	objBounds
 		.css({
 			'overflow-x': 'hidden',
 			'overflow-y': 'hidden',
 			'position': 'absolute',
-			'padding': '12px 0px 0px 0px'
+			...(sfType === 'g' && { padding: '12px 0 0 0' })
 		})
 		.addClass('nuSubformTitleHolder')
 		.attr('data-nu-subform', tabId)
 		.prepend('&nbsp;&nbsp;&nbsp;');
 
 }
+
 
 function nuSUBFORMnuRECORDAddCSS(frmId, rowTop, rowWidth, rowHeight, even) {
 
@@ -2572,7 +2575,7 @@ function nuGetSubformDimensions(SF) {
 	let rowHeight = Number(SF.dimensions[sfType].height + (sfTypeGrid ? 0 : 10));
 	let rowWidth = Number(SF.dimensions[sfType].width + (sfTypeGrid ? 55 : 10));
 	rowWidth = SF.delete == '1' ? rowWidth - 3 : rowWidth - 25;
-	rowTop = sfTypeGrid ? 52 : 33;
+	rowTop = sfTypeGrid ? 52 : 21;
 
 	return { rowHeight, rowWidth, rowTop };
 }
@@ -2602,7 +2605,7 @@ function nuSUBFORM(w, i, l, p, prop) {
 	tabDiv.setAttribute('id', tabId);
 	$('#' + id).prepend(tabDiv);
 
-	nuSUBFORMnuTabHolderAddCSS(tabId, rowTop, rowWidth);
+	nuSUBFORMnuTabHolderAddCSS(tabId, SF.subform_type, rowTop, rowWidth);
 
 	if (SF.subform_type == 'f') {
 		nuAddEditTabs(id, SF.forms[0]);
@@ -2624,7 +2627,7 @@ function nuSUBFORM(w, i, l, p, prop) {
 	let scrDiv = nuCreateElementWithId('div', scrId, id);
 	scrDiv.setAttribute('class', 'nuSubformScrollDiv');
 
-	nuSUBFORMScrollDivAddCSS(id, SF, scrId, rowTop, rowWidth);
+	nuSUBFORMScrollDivAddCSS(id, SF, scrId, rowTop + 12, rowWidth);
 
 	rowTop = 0;
 	let prefix;
@@ -3916,7 +3919,9 @@ function nuGetSubformRowSize(o, SF, id) {
 
 		if (SF.subform_type == 'g') {							//-- grid
 
-			nuBuildSubformTitle(o[i], l, w, id, i);
+			const title = nuBuildSubformTitle(o[i], l, w, id, i);
+			title.css('border', 'none');
+
 			l = l + w + (o[i].read == 2 ? 0 : 6);
 
 		}
@@ -3973,6 +3978,8 @@ function nuBuildSubformTitle(o, l, w, id, col) {
 
 	if (o.valid == 1) { oTitle.addClass('nuBlank'); }
 	if (o.valid == 2) { oTitle.addClass('nuDuplicate'); }
+
+	return oTitle;
 
 }
 
@@ -4240,6 +4247,10 @@ function nuEditTab(p, t, i) {
 		.attr('data-nu-tab-id', t.id)
 		.attr('onclick', 'nuSelectTab(this, true)')
 		.attr("data-nu-org-label", t.title);
+
+	if (p !== '') {
+		$('#' + tabId).addClass('nuSubformTab');
+	}
 
 	if (t.access !== undefined) {
 		if (t.access == '2') nuHide('nuTab' + i);

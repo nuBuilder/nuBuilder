@@ -330,7 +330,11 @@ input[type="search"] {
 	border-width: 0 0 1px;
 	border-color: lightgrey;
 	padding: 10px 0 0;
-	overflow: visible
+	overflow: visible;
+}
+
+.nuSubformTitleHolderGrid {
+	border: none;
 }
 
 .nuActionHolder {
@@ -1035,6 +1039,12 @@ input[type="search"] {
 .nuSubformDeleteTicked {
 	color: #eb2314 !important;
 	text-decoration: line-through
+}
+
+.nuSubformTab {
+	display: inline;
+	line-height: unset;
+	padding: 2px 12px 2px 16px;
 }
 
 .nuButton,
