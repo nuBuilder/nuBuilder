@@ -902,6 +902,10 @@ function nuBindCtrlEvents() {
 		const isCtrlOrCmdPressed = nuIsCtrlOrCmdPressed(e);
 		if (isCtrlOrCmdPressed && e.shiftKey) {
 
+			if (typeof nuSERVERRESPONSE === 'undefined') {
+				return;
+			}
+
 			window.nuNEW = 0;
 
 			const globalAccess = nuGlobalAccess();
