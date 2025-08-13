@@ -666,6 +666,7 @@ function nuCreateDragOptionsBox(form) {
 	  style='top: 2px; right: 15px; width: 21px; height: 21px; text-align: center; padding-left: 5px; position: absolute;'>`;
 
 	$('body').append(help);
+	$('#nuDragDialog', window.parent.document.body).css('min-height','570px');
 
 	nuAddContentBoxFrames();
 	nuShowContentBoxFrames();
