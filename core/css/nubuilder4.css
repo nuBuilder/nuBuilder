@@ -1319,7 +1319,7 @@ input[type="search"] {
 .nuSaveButtonEdited {
 	background-color: #fff9f8 !important;
 	background: unset;
-	color: #d2182a;
+	color: #d2182a !important;
 	border-color: #efcfd2;
 }
 
@@ -1659,7 +1659,7 @@ input[type="search"] {
 .nuDragOptionsButton {
 	text-align: left;
 	display: block;
-	background-color: #fbfdff !important;
+	background-color: #fbfdff;
 	color: black;
 	text-shadow: none;
 	height: 25px;

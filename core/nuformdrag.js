@@ -212,8 +212,22 @@ function nuUpdateDragFieldsListbox() {
 		$('#nuDragOptionsFields option[id="drag_' + $(this).prop('id') + '"]', window.parent.document.body).prop('selected', 'selected');
 	});
 
+	nuUpdateDragOptionsButtonState();
 	nuCheckIfMovingTabOrderAllowed($('#nuDragOptionsFields', window.parent.document.body));
 	nuCheckIfMovingFieldToOtherTabAllowed($('#nuDragOptionsFields', window.parent.document.body));
+}
+
+function nuUpdateDragOptionsButtonState() {
+
+    const hasMultipleSelections = $('.nuDragSelected').length >= 2;
+
+    $('.nuDragOptionsButton', window.parent.document.body)
+        .not('#move_tab_btn, #save_btn')
+        .toggleClass('nuDragOptionsButtonDisabled', !hasMultipleSelections);
+	
+	$('#move_tab_btn, #save_btn', window.parent.document.body).removeClass('nuDragOptionsButtonDisabled');
+	$('#save_btn', window.parent.document.body).addClass('nuSaveButtonEdited');
+	
 }
 
 function nuCreateBox(event) {
@@ -586,7 +600,7 @@ function nuDragGenerateOptionsControlPanel(dragOptionsBoxWidth, dragOptionsBoxMi
 						</tr>
 						<tr>
 							<td>${nuDragCreateSelectBox("nuDragOptionsTabsDropdown", "nuDragOptionsTabsDropdown", "border: none")}</td>
-							<td>${nuDragCreateButton("move_tab_btn", `${classNuDragOptionsButton} nuDragOptionsSaveButtonEdited fa-solid fa-angle-right`, "", "", "nuMoveNuDrag", "Move to Tab")}</td>
+							<td>${nuDragCreateButton("move_tab_btn", `${classNuDragOptionsButton} fa-solid fa-angle-right`, "", "", "nuMoveNuDrag", "Move to Tab")}</td>
 						</tr>
 						<td>
 							${nuDragCreateCheckbox("nuShowDragLabels", "Show Labels", "nuToggleDragLabels", "fa-solid fa-text-slash", false)}
@@ -594,7 +608,7 @@ function nuDragGenerateOptionsControlPanel(dragOptionsBoxWidth, dragOptionsBoxMi
 							${nuDragCreateCheckbox("nuShowHiddenObjects", "Show Hidden Objects", "nuToggleHiddenObjects", "fa-solid fa-eye-slash")}
 						</td>
 						<td>
-							${nuDragCreateButton("save_btn", `${classNuDragOptionsButton} nuDragOptionsSaveButtonEdited`, " fa-regular fa-lg fa-floppy-disk", "Save", "nuSaveNuDrag")}
+							${nuDragCreateButton("save_btn", `${classNuDragOptionsButton}`, " fa-regular fa-lg fa-floppy-disk", "Save", "nuSaveNuDrag")}
 						</td>
 					</tbody>
 				</table>
@@ -607,7 +621,7 @@ function nuCreateDragOptionsBox(form) {
 
 	const dragOptionsBoxWidth = 400;
 	const dragOptionsBoxMinHeight = 520;
-	const classNuDragOptionsButton = "nuDragOptionsButton nuButton";
+	const classNuDragOptionsButton = "nuDragOptionsButton nuDragOptionsButtonDisabled nuButton";
 
 	const optionsBoxHTML = nuDragGenerateOptionsControlPanel(dragOptionsBoxWidth, dragOptionsBoxMinHeight, classNuDragOptionsButton);
 
