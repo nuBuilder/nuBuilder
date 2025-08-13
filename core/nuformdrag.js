@@ -531,12 +531,11 @@ function nuFindFieldInState(tabNo, fieldID) {
 
 }
 
-function nuDragCreateButton(id, className, iconClass, text, onClickFunction) {
-
-	return `<button id="${id}" class="${className}" onclick="${onClickFunction}();">
+function nuDragCreateButton(id, className, iconClass, text, onClickFunction, title = "") {
+	const style = text === "" ? 'padding-left: 10px; padding-right: 15px;' : '';
+	return `<button id="${id}" class="${className}" onclick="${onClickFunction}();" title="${title}" style="${style}">
 				<i class="${iconClass}"></i> ${text}
 			</button>`;
-
 }
 
 function nuDragCreateSelectBox(id, className, extraStyle = '') {
@@ -563,31 +562,31 @@ function nuDragGenerateOptionsControlPanel(dragOptionsBoxWidth, dragOptionsBoxMi
 					<tbody>
 						<tr>
 							<td>${nuDragCreateButton("move_up_btn", classNuDragOptionsButton, "nuDragOptionsIcon fa fa-arrow-up", "Up", "nuMoveUpOrder")}</td>
-							<td>${nuDragCreateButton("move_top_btn", classNuDragOptionsButton, "nuDragOptionsIcon270 fa fa-step-forward", "Top", "nuAlignTop")}</td>
+							<td>${nuDragCreateButton("move_top_btn", classNuDragOptionsButton, "nuDragOptionsIcon nuDragOptionsIcon270 fa fa-step-forward", "Top", "nuAlignTop")}</td>
 						</tr>
 						<tr>
 							<td>${nuDragCreateButton("move_down_btn", classNuDragOptionsButton, "nuDragOptionsIcon fa fa-arrow-down", "Down", "nuMoveDownOrder")}</td>
-							<td>${nuDragCreateButton("move_bottom_btn", classNuDragOptionsButton, "nuDragOptionsIcon90 fa fa-step-forward", "Bottom", "nuAlignBottom")}</td>
+							<td>${nuDragCreateButton("move_bottom_btn", classNuDragOptionsButton, "nuDragOptionsIcon nuDragOptionsIcon90 fa fa-step-forward", "Bottom", "nuAlignBottom")}</td>
 						</tr>
 						<tr>
 							<td>${nuDragCreateButton("move_ver_btn", classNuDragOptionsButton, "nuDragOptionsIcon fa fa-bars", "Vertical", "nuSpaceVertically")}</td>
-							<td>${nuDragCreateButton("move_left_btn", classNuDragOptionsButton, "nuDragOptionsIcon180 fa fa-step-forward", "Left", "nuAlignLeft")}</td>
+							<td>${nuDragCreateButton("move_left_btn", classNuDragOptionsButton, "nuDragOptionsIcon nuDragOptionsIcon180 fa fa-step-forward", "Left", "nuAlignLeft")}</td>
 						</tr>
 						<tr>
-							<td>${nuDragCreateButton("move_hor_btn", classNuDragOptionsButton, "nuDragOptionsIcon90 fa fa-bars", "Horizontal", "nuSpaceHorizontally")}</td>
+							<td>${nuDragCreateButton("move_hor_btn", classNuDragOptionsButton, "nuDragOptionsIcon nuDragOptionsIcon90 fa fa-bars", "Horizontal", "nuSpaceHorizontally")}</td>
 							<td>${nuDragCreateButton("move_right_btn", classNuDragOptionsButton, "nuDragOptionsIcon fa fa-step-forward", "Right", "nuAlignRight")}</td>
 						</tr>
 						<tr>
-							<td>${nuDragCreateButton("move_short_btn", classNuDragOptionsButton, "nuDragOptionsIcon135 fa-solid fa-down-left-and-up-right-to-center", "Shortest", "nuResizeToLowest")}</td>
-							<td>${nuDragCreateButton("move_thin_btn", classNuDragOptionsButton, "nuDragOptionsIcon45 fa-solid fa-down-left-and-up-right-to-center", "Thinnest", "nuResizeToThinnest")}</td>
+							<td>${nuDragCreateButton("move_short_btn", classNuDragOptionsButton, "nuDragOptionsIcon nuDragOptionsIcon nuDragOptionsIcon135 fa-solid fa-down-left-and-up-right-to-center", "Shortest", "nuResizeToLowest")}</td>
+							<td>${nuDragCreateButton("move_thin_btn", classNuDragOptionsButton, "nuDragOptionsIcon nuDragOptionsIcon nuDragOptionsIcon45 fa-solid fa-down-left-and-up-right-to-center", "Thinnest", "nuResizeToThinnest")}</td>
 						</tr>
 						<tr>
-							<td>${nuDragCreateButton("move_tall_btn", classNuDragOptionsButton, "nuDragOptionsIcon180 fa-solid fa-arrows-up-down", "Tallest", "nuResizeToHighest")}</td>
-							<td>${nuDragCreateButton("move_wide_btn", classNuDragOptionsButton, "nuDragOptionsIcon90 fa-solid fa-arrows-up-down", "Widest", "nuResizeToWidest")}</td>
+							<td>${nuDragCreateButton("move_tall_btn", classNuDragOptionsButton, "nuDragOptionsIcon nuDragOptionsIcon180 fa-solid fa-arrows-up-down", "Tallest", "nuResizeToHighest")}</td>
+							<td>${nuDragCreateButton("move_wide_btn", classNuDragOptionsButton, "nuDragOptionsIcon nuDragOptionsIcon90 fa-solid fa-arrows-up-down", "Widest", "nuResizeToWidest")}</td>
 						</tr>
 						<tr>
-							<td>${nuDragCreateSelectBox("nuDragOptionsTabsDropdown", "nuDragOptionsButton", "border: none")}</td>
-							<td>${nuDragCreateButton("move_tab_btn", `${classNuDragOptionsButton} nuDragOptionsSaveButtonEdited`, "", "Move to Tab", "nuMoveNuDrag")}</td>
+							<td>${nuDragCreateSelectBox("nuDragOptionsTabsDropdown", "nuDragOptionsTabsDropdown", "border: none")}</td>
+							<td>${nuDragCreateButton("move_tab_btn", `${classNuDragOptionsButton} nuDragOptionsSaveButtonEdited fa-solid fa-angle-right`, "", "", "nuMoveNuDrag", "Move to Tab")}</td>
 						</tr>
 						<td>
 							${nuDragCreateCheckbox("nuShowDragLabels", "Show Labels", "nuToggleDragLabels", "fa-solid fa-text-slash", false)}
