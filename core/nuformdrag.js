@@ -679,7 +679,9 @@ function nuCreateDragOptionsBox(form) {
 	}
 
 	$('#nuRECORD').css('height', window.innerHeight);
-	$('.nuRECORD').css("width", "99.3%");
+	$('#nuRECORD').css("width", "98%");
+	parent.$('#nuWindow').css("height", "90%");
+	
 
 	nuDragToggleTabOrder();
 
