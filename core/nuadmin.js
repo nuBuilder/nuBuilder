@@ -306,7 +306,7 @@ function nuSetBrowseColumnWidths() {
 		for (let i = 0; i < sf.rows.length; i++) {
 
 			if (sf.deleted[i] == 0) {
-				const c = $("div[id='nuBrowseTitle" + i + "']", window.parent.document);
+				const c = nuSelectInParentDocument("div[id='nuBrowseTitle" + i + "']");
 				const w = Math.ceil(nuRoundNearest(parseFloat(c[0].style.width), 5)).toString();
 				$('#' + 'zzzzsys_browse_sf' + nuPad3(i) + 'sbr_width').val(w.replace('px', '')).change();
 			}

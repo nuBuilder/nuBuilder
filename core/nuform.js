@@ -245,6 +245,7 @@ function nuBuildForm(formObj) {
 	nuProcessAfterSave();
 
 	nuAddFormStyle(formObj.style);
+	// nuAddObjectStyles(formObj.objects);
 	nuSetBrowseHeight();
 
 	const globalAccess = nuGlobalAccess();
@@ -5092,7 +5093,7 @@ function nuSetBrowseHeight() {
 	if (nuFormType() !== 'browse') return;
 	const cellsHeight = nuTotalHeight('nucell_0_0') * nuCurrentProperties().rows;
 	const footerHeight = nuTotalHeight('nuBrowseFooter');
-	const dialogTitleHeight = $('#dialogTitle', window.parent.document.body).nuCSSNumber('height');
+	const dialogTitleHeight = nuSelectInParentDocument('#dialogTitle').nuCSSNumber('height');
 	const actionHolderHeight = nuTotalHeight('nuActionHolder');
 	const BreadcrumbOlderHeight = nuTotalHeight('nuBreadcrumbHolder');
 	const totalHeight = cellsHeight + footerHeight + dialogTitleHeight + actionHolderHeight + BreadcrumbOlderHeight + 10;
@@ -5240,14 +5241,13 @@ function nuBrowseAdditionalNavButtons() {
 
 function nuBrowseUpdateParentDocumentStyles(totalHeight) {
 
-	const parentDocument = window.parent.document;
-	$('#nuDragDialog', parentDocument).css({
+	nuSelectInParentDocument('#nuDragDialog').css({
 		height: totalHeight + 30,
 		visibility: 'visible',
 		overflow: 'hidden'
 	});
 
-	$('#nuWindow', parentDocument).css({
+	nuSelectInParentDocument('#nuWindow').css({
 		height: totalHeight - 14
 	});
 
@@ -6260,6 +6260,19 @@ function nuAddFormStyle(style) {
 
 }
 
+function nuAddObjectStyles() {
+
+	if (typeof nuLabelCustomPosition === "function") {
+		/*
+		document.querySelectorAll('[data-nu-label-position="custom"]').forEach(el => {
+
+		});
+		*/
+
+	}
+
+}
+
 function nuHashFromEditForm() {
 
 	var A = {};
@@ -6617,14 +6630,12 @@ function nuMessageRemove(force = false) {
 
 function nuWindowPosition() {
 
-	const p = window.parent.document;
-
-	let d = $('#nuDragDialog', p);
+	let d = nuSelectInParentDocument('#nuDragDialog');
 	let { l, t, w, h } = nuObjectPosition(d);
 
 	window.nuDialogSize = { left: l, top: t, width: w, height: h };
 
-	d = $('#nuWindow', p);
+	d = nuSelectInParentDocument('#nuWindow');
 
 	w = parseInt(d.css('width'), 10);
 	h = parseInt(d.css('height'), 10);
