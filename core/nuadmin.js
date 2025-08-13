@@ -1295,6 +1295,8 @@ function nuContextMenuUpdateObject(value, column, action = 'update') {
 
 function nuContextMenuUpdate() {
 
+	if (nuArrangingObjects()) return;
+	
 	const typeEdit = nuFormType() === 'edit';
 	const selector = typeEdit
 		? 'label, button, .nu_run, .nuWord, .nuImage, .nuContentBoxTitle, .nuTab, .nuSubformTitle, .nuAdminButton'
