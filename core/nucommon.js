@@ -300,6 +300,37 @@ jQuery.fn.extend({
 
 });
 
+function nuSelectInParentContext(selector, context = 'document') {
+
+	if (window === window.parent) {
+		console.warn('Not in a frame context');
+		return $([]);
+	}
+
+	try {
+		const parentContext = context === 'body'
+			? window.parent.document.body
+			: window.parent.document;
+
+		return $(selector, parentContext);
+	} catch (e) {
+		if (e.name === 'SecurityError') {
+			console.warn('Cross-origin access denied');
+		} else {
+			console.warn('Error accessing parent context:', e.message);
+		}
+		return $([]);
+	}
+}
+
+function nuSelectInParentDocument(selector) {
+	return nuSelectInParentContext(selector, 'document');
+}
+
+function nuSelectInParentBody(selector) {
+	return nuSelectInParentContext(selector, 'body');
+}
+
 function nujQueryObj(id) {
 
 	if (typeof id === 'string') {
