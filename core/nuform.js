@@ -7990,7 +7990,8 @@ $.fn.nuSearchablePopup = function (options) {
 					toggleIcon(true, selectedLabel);
 					settings.onSelected(selectedValue, selectedLabel, false);
 					$popup.hide();
-					nuGetPage();
+					window.nuFORM.getCurrent().page_number = 1;
+					nuSearchAction();
 				});
 				$options.append($item);
 				$item.nuHighlight(filterText);
@@ -8134,7 +8135,10 @@ $.fn.nuSearchablePopup = function (options) {
 		}
 
 		toggleIcon(false);
-		nuGetPage();
+		window.nuFORM.getCurrent().page_number = 1;
+		nuSearchAction();
+
+
 	};
 
 };
