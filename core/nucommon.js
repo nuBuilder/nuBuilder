@@ -303,7 +303,6 @@ jQuery.fn.extend({
 function nuSelectInParentContext(selector, context = 'document') {
 
 	if (window === window.parent) {
-		console.warn('Not in a frame context');
 		return $([]);
 	}
 

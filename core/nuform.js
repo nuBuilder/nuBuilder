@@ -6630,17 +6630,18 @@ function nuMessageRemove(force = false) {
 
 function nuWindowPosition() {
 
-	let d = nuSelectInParentDocument('#nuDragDialog');
-	let { l, t, w, h } = nuObjectPosition(d);
+	let dialog = nuSelectInParentDocument('#nuDragDialog');
+	if (dialog.length !== 0) {
+		let { l, t, w, h } = nuObjectPosition(dialog);
+		window.nuDialogSize = { left: l, top: t, width: w, height: h };
+	}
 
-	window.nuDialogSize = { left: l, top: t, width: w, height: h };
-
-	d = nuSelectInParentDocument('#nuWindow');
-
-	w = parseInt(d.css('width'), 10);
-	h = parseInt(d.css('height'), 10);
-
-	window.nuWindowSize = { width: w, height: h };
+	win = nuSelectInParentDocument('#nuWindow');
+	if (win.length !== 0) {
+		w = parseInt(win.css('width'), 10);
+		h = parseInt(win.css('height'), 10);
+		window.nuWindowSize = { width: w, height: h };
+	}
 
 }
 

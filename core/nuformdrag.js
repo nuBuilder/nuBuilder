@@ -144,7 +144,9 @@ function nuBindDragEvents() {
 
 	$(document).on('keydown.nuformdrag', nuDragKeydownListener);
 	$(window.parent.document).on('keydown.nuformdrag', nuDragKeydownListener);
+
 }
+
 
 function getKeyDirection(key) {
 	const directions = {
