@@ -2108,9 +2108,7 @@ pre.nuFormInfoBrowseSQL {
 	position: fixed;
 	top: 0;
 	left: 0;
-	width: 100%;
 	height: 100%;
-	background-color: rgba(0, 0, 0, 0.5);
 	z-index: 999;
 	display: flex;
 	flex-direction: column;
@@ -2144,7 +2142,7 @@ pre.nuFormInfoBrowseSQL {
 
 .nuSearchablePopup .filter-input:focus {
 	border-color: #007bff;
-	box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+	box-shadow: 0 0 0 1px rgba(0, 123, 255, 0.25);
 }
 
 .nuSearchablePopup .close-btn {
@@ -2155,14 +2153,13 @@ pre.nuFormInfoBrowseSQL {
 	cursor: pointer;
 	padding: 4px 8px;
 	margin-right: 8px;
-	border-radius: 4px;
+	border-radius: 50%;
 	line-height: 1;
 	transition: all 0.2s ease;
 }
 
 .nuSearchablePopup .close-btn:hover {
 	background-color: var(--nu-border);
-	;
 	color: #333;
 }
 
@@ -2232,6 +2229,176 @@ pre.nuFormInfoBrowseSQL {
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
+}
+
+/* nuSearchableMultiPopup Plugin Styles */
+
+.nuSearchableMultiPopup {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	z-index: 999;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.nuSearchableMultiPopup .popup-header {
+	display: flex;
+	align-items: center;
+	margin-bottom: 1em;
+}
+
+.nuSearchableMultiPopup .close-btn {
+	background: none;
+	border: none;
+	font-size: 1.5em;
+	cursor: pointer;
+	color: #666;
+	width: 30px;
+	height: 30px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	margin-right: 10px;
+}
+
+.nuSearchableMultiPopup .close-btn:hover {
+	background-color: #f0f0f0;
+	color: #000;
+}
+
+.nuSearchableMultiPopup .filter-container {
+	flex: 1;
+}
+
+.nuSearchableMultiPopup .filter-container input[type="text"] {
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	border: 1px solid #DDDDDD;
+	border-radius: 4px;
+	font-size: 14px;
+	outline: none;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.nuSearchableMultiPopup .nuCheckboxOptions {
+	max-height: 50vh;
+	overflow-y: none;
+	padding: 1em;
+}
+
+.nuSearchableMultiPopup .nuCheckboxOptions .nuCheckboxItem {
+	margin-bottom: 0;
+	display: flex;
+	align-items: center;
+	font-family: var(--nu-font-sans-serif);
+	font-size: 13px;
+	padding: 0.5em;
+	transition: background-color 0.2s ease;
+}
+
+
+.nuSearchableMultiPopup .nuCheckboxOptions .nuCheckboxItem:nth-child(even) {
+	background-color: #f8f9fa;
+}
+
+.nuSearchableMultiPopup .nuCheckboxOptions .nuCheckboxItem:nth-child(odd) {
+	background-color: #ffffff;
+}
+
+.nuSearchableMultiPopup .nuCheckboxOptions .nuCheckboxItem:nth-child(even):hover {
+	background-color: #e6f3ff;
+}
+
+.nuSearchableMultiPopup .nuCheckboxOptions .nuCheckboxItem:nth-child(odd):hover {
+	background-color: #e6f3ff;
+}
+
+.nuSearchableMultiPopup .nuCheckboxOptions input[type="checkbox"] {
+	margin-right: 0.5em;
+	order: 1;
+}
+
+.nuSearchableMultiPopup .nuCheckboxOptions label {
+	order: 2;
+	flex: 1;
+	cursor: pointer;
+	margin: 0;
+}
+
+.nuSearchableMultiPopup .nuOptionsContainer {
+	min-height: 250px;
+	max-height: 350px;
+	overflow-y: auto;
+	border: 1px solid #DDDDDD;
+	border-radius: 4px;
+}
+
+.nuSearchableMultiPopup .nuPopupContent {
+	position: absolute;
+	background-color: #f9f9f9;
+	min-width: 300px;
+	min-height: 300px;
+	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+	z-index: 1;
+	padding-bottom: 5px;
+	padding-top: 5px;
+	padding-right: 5px;
+	padding-left: 5px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	background-color: #fff;
+	padding: 10px;
+	text-align: left;
+}
+
+.nuSearchableMultiPopup .nuPopupContent .nuButtons {
+	margin-top: 10px;
+}
+
+.nuSearchableMultiPopup .nuPopupContent .nuApply,
+.nuSearchableMultiPopup .nuPopupContent .nuClear {
+	margin-top: 10px;
+	padding: 0.7em;
+	border-radius: 0.5em;
+	border: none;
+	background-color: #337ab7;
+	color: #fff;
+	cursor: pointer;
+	margin-left: 10px;
+	font-size: 0.8em;
+}
+
+.nuSearchableMultiPopup .nuApply.disabled {
+	background-color: #e0e0e0;
+	color: #a0a0a0;
+	cursor: default;
+}
+
+.nuNoSelect {
+	user-select: none;
+	position: relative;
+}
+
+.nuPlaceholderNumber {
+	position: absolute;
+	top: 8px;
+	right: 0;
+	padding: 6px;
+	color: #555;
+	background-color: transparent;
+	pointer-events: none;
+}
+
+.nuInputNumber {
+	padding-right: 50px;
 }
 
 .nuBrowserFilterSelectedText {

@@ -43,7 +43,7 @@ function nuInitJSOptions() {
 
 function nuBuildForm(formObj) {
 
-	$('.nuSearchablePopup').remove();
+	$('.nuSearchablePopup, .nuSearchableMultiPopup').remove();
 	nuInitJSOptions();
 
 	window.nuOnSetSelect2Options = null;		// can be overwritten by nuAddJavaScript()
@@ -1266,7 +1266,7 @@ function nuAddActionButtonSaveClose(caption) {
 			id: nuID(),
 			text: 'Checkbox',
 			checked: false,
-			storage: 'property',  // 'property' | 'session' | 'local'
+			storage: 'property',	// 'property' | 'session' | 'local'
 			onChecked: function (checked) { }
 		}, options);
 
@@ -2587,7 +2587,7 @@ function nuSUBFORM(w, i, l, p, prop) {
 	var subformRows = w.objects[i];							//-- All rows
 
 	let id = p + SF.id;
-	nuCreateElementWithId('div', id, p + 'nuRECORD');  		//-- Edit Form Id
+	nuCreateElementWithId('div', id, p + 'nuRECORD');		//-- Edit Form Id
 	nuAddDataTab(id, SF.tab, p);
 	nuSUBFORMAddCSS(id, SF);
 	nuAddJSObjectEvents(id, SF.js);
@@ -2677,7 +2677,7 @@ function nuWrapWithForm(element, formAction, formMethod) {
 	form.id = 'myForm'; // Set the desired ID
 
 	// form.action = formAction;
-	//  form.method = formMethod;
+	// form.method = formMethod;
 
 	// 2. Get the element's parent (to insert the form before it)
 	const parent = element.parentNode;
@@ -4757,7 +4757,7 @@ function nuBrowseTitle(columns, index, left, multiline) {
 		return `<span id="nusort_${index}" class="nuSort" onclick="nuSortBrowse(${index})">
 				 ${nuTranslate(title)}
 				 <i id="nuSortIcon" class="fa ${sortIconClass}"></i>
-			  </span>`;
+				</span>`;
 	}
 
 	const currentForm = window.nuFORM.getCurrent();
@@ -4968,7 +4968,7 @@ function nuDragBrowseColumn(e, p) {
 
 	const targetId = e.target.id;
 
-	if (targetId === '' || targetId === 'nuSearchField') { //  ctxmenu or Search field
+	if (targetId === '' || targetId === 'nuSearchField') { 	//	ctxmenu or Search field
 		return;
 	}
 
@@ -7727,12 +7727,12 @@ function nuPrompt(text, caption, defaultValue, format, fctn) {
 	if (!document.getElementById('nupromptmodal')) {
 		const nuPromptDiv =
 			`
-        <div id="nupromptmodal"></div>
-        <div id="nuprompt">
-          <div id="nuprompthead"></div>
-          <div id="nupromptbody"></div>
-          <div id="nupromptfoot"></div>
-        </div>`;
+		<div id="nupromptmodal"></div>
+		<div id="nuprompt">
+			<div id="nuprompthead"></div>
+			<div id="nupromptbody"></div>
+			<div id="nupromptfoot"></div>
+		</div>`;
 		document.body.insertAdjacentHTML('beforeend', nuPromptDiv);
 		nuPromptWindow = new nuPromptModal();
 	}
@@ -7875,7 +7875,393 @@ function nuAddBrowseFilter(column) {
 	return $newDiv;
 }
 
+var nuSearchablePopupUtils = {
+
+	PropertyManager: {
+		getFilterKey(column, columnId) {
+			return columnId ? `${columnId}_filter` : `${column}_filter`;
+		},
+
+		getFilterValue(column, columnId) {
+			const key = this.getFilterKey(column, columnId);
+			return nuGetProperty(key);
+		},
+
+		setFilterValue(column, columnId, value) {
+			const key = this.getFilterKey(column, columnId);
+			nuSetProperty(key, value);
+		},
+
+		clearFilterValue(column, columnId) {
+			this.setFilterValue(column, columnId, '');
+		}
+	},
+
+	ArrayNormalizer: {
+		to2DArray(arr) {
+			const is1D = Array.isArray(arr) && arr.every(item => !Array.isArray(item));
+			return is1D ? arr.map(item => [item, item]) : arr;
+		},
+
+		flattenSingles(arr) {
+			if (!Array.isArray(arr)) return arr;
+
+			if (arr.length > 1) {
+				const restAreArrays = arr.slice(1).every(item => Array.isArray(item) && item.length === 1);
+				if (restAreArrays) {
+					return arr.slice(1).map(item => item[0]);
+				}
+			}
+
+			if (arr.every(item => Array.isArray(item) && item.length === 1)) {
+				return arr.map(item => item[0]);
+			}
+
+			return arr;
+		},
+
+		normalize(items) {
+			const flattened = this.flattenSingles(items);
+			return this.to2DArray(flattened);
+		}
+	},
+
+	PositionManager: {
+		calculatePosition(mouseX, mouseY, popupWidth = 300, popupHeight = 400) {
+			const windowWidth = $(window).width();
+			const windowHeight = $(window).height();
+
+			let left = mouseX;
+			let top = mouseY;
+
+			if (left + popupWidth > windowWidth) {
+				left = windowWidth - popupWidth - 10;
+			}
+
+			if (top + popupHeight > windowHeight) {
+				top = mouseY - popupHeight;
+				if (top < 0) {
+					top = 10;
+				}
+			}
+
+			return { left, top };
+		},
+
+		applyPosition($popup, position, centered = false) {
+			if (centered) {
+				$popup.css({
+					position: 'fixed',
+					left: '50%',
+					top: '50%',
+					transform: 'translate(-50%, -50%)'
+				});
+			} else {
+				$popup.css({
+					position: 'fixed',
+					left: position.left + 'px',
+					top: position.top + 'px',
+					height: '400px',
+					transform: 'none',
+					'justify-content': 'unset',
+					'align-items': 'unset'
+				});
+			}
+		}
+	},
+
+	FilterIconManager: {
+		getFilterIcon(column) {
+			return column ? $('#' + column).find('.nuBrowseFilterIcon') : $();
+		},
+
+		setupClearEvent(column, clearFilterFn, onClearCallback) {
+			if (!column) return;
+
+			const $clearElement = $('#' + column).find('.nuBrowserFilterSelectedText');
+			$clearElement.on('click', (e) => {
+				e.stopPropagation();
+				clearFilterFn();
+				onClearCallback();
+			});
+		}
+	}
+};
+
+$.fn.nuSearchableMultiPopup = function (options) {
+	const settings = $.extend({
+		title: "Select Options",
+		items: [],
+		searchPlaceholder: "Search...",
+		searchText: "Search",
+		applyText: "Apply",
+		clearText: "Clear All",
+		selectText: "Select All",
+		checked: [],
+		positionAtMouse: true,
+		onSelected: function (selectedItems) { },
+		onClear: function () { }
+	}, options);
+
+	settings.items = nuSearchablePopupUtils.ArrayNormalizer.normalize(settings.items);
+
+	const normalizedItems = settings.items.map(item => ({
+		value: item[0],
+		label: item[1]
+	}));
+
+	const $this = $(this);
+	const column = $this.data('column');
+	const columnId = $this.data('column_id');
+
+	const nuToggleIcon = (filterActive, selectedCount = 0, tooltipText = '') => {
+		const $filterIcon = nuSearchablePopupUtils.FilterIconManager.getFilterIcon(column);
+		const $txt = $filterIcon.siblings('.nuBrowserFilterSelectedText');
+
+		if (filterActive && selectedCount > 0) {
+			$('#' + $filterIcon.attr('id')).css('color', 'red');
+			const displayText = selectedCount === 1 ?
+				(tooltipText.split('\n')[0] || '1 item') :
+				`${selectedCount} items`;
+
+			$txt.find('.nuBrowserFilterSelectedTextContent').text(displayText);
+			const finalTooltip = tooltipText || `${selectedCount} items selected`;
+
+			if (selectedCount > 1) {
+				$filterIcon.attr('title', finalTooltip);
+				$txt.attr('title', finalTooltip);
+			}
+
+			$txt.show();
+		} else {
+			$('#' + $filterIcon.attr('id')).css('color', '');
+			$txt.hide().find('.nuBrowserFilterSelectedTextContent').text('');
+
+			$filterIcon.removeAttr('title');
+			$txt.removeAttr('title');
+		}
+	};
+
+	const $popup = $(`
+		<div class="nuSearchableMultiPopup">
+			<div class="nuPopupContent">
+				<div class="popup-header">
+					<button class="close-btn" title="Close">&times;</button>
+					<div class="filter-container">
+						<input type="text" id="nuPopupSearch" class="nuInputNumber" placeholder="${settings.searchPlaceholder}">
+					</div>
+				</div>
+				<div class="nuOptionsContainer">
+					<div class="nuCheckboxOptions"></div>
+				</div>
+				<div class="nuButtons">
+					<button class="nuClear"><i class="fa-solid fa-filter-circle-xmark"></i> ${settings.clearText}</button>
+					<button class="nuApply"><i class="fa-solid fa-filter"></i>${settings.applyText}</button>
+				</div>
+			</div>
+		</div>
+	`).hide();
+
+	const $search = $popup.find('.filter-container input');
+	const $options = $popup.find('.nuCheckboxOptions');
+	const $applyButton = $popup.find('.nuApply');
+	const $clearButton = $popup.find('.nuClear');
+	const $closeBtn = $popup.find('.close-btn');
+
+	const nuGetCheckboxes = () => $options.find('input[type="checkbox"]');
+
+	const nuUpdateClearButton = (updateIcon = true) => {
+		const checkedCheckboxes = nuGetCheckboxes().filter(':checked');
+		const checkedCount = checkedCheckboxes.length;
+		$applyButton.prop('disabled', false);
+
+		if (checkedCount === 0) {
+			$clearButton.html(`<i class="fa-regular fa-check-square"></i> ${settings.selectText}`);
+			$clearButton.attr('data-action', 'select-all');
+		} else {
+			$clearButton.html(`<i class="fa-solid fa-filter-circle-xmark"></i> ${settings.clearText}`);
+			$clearButton.attr('data-action', 'clear-all');
+		}
+
+		if (updateIcon) {
+			const selectedLabels = [];
+			checkedCheckboxes.each(function () {
+				const $checkbox = $(this);
+				const label = $checkbox.next('label').text();
+				selectedLabels.push(label);
+			});
+
+			const tooltipText = selectedLabels.join('\n');
+			nuToggleIcon(checkedCount > 0, checkedCount, tooltipText);
+		}
+	};
+
+	const nuTickCheckboxesWithString = (searchString) => {
+		nuGetCheckboxes().each((index, checkbox) => {
+			const labelText = $(checkbox).next('label').text().toLowerCase();
+			if (labelText.includes(searchString)) {
+				$(checkbox).prop('checked', true);
+			}
+		});
+	};
+
+	const nuRenderItems = () => {
+		$options.empty();
+
+		$.each(normalizedItems, (index, item) => {
+			const checkboxId = `nuCheckbox${index}`;
+			const $checkbox = $('<input type="checkbox">')
+				.attr('id', checkboxId)
+				.attr('value', item.value);
+
+			const $label = $('<label>')
+				.attr('for', checkboxId)
+				.text(item.label)
+				.addClass('nuNoSelect');
+
+			const $div = $('<div>')
+				.addClass('nuCheckboxItem')
+				.append($checkbox)
+				.append($label);
+
+			if (Array.isArray(settings.checked) && settings.checked.includes(item.value)) {
+				$checkbox.prop('checked', true);
+			}
+
+			$options.append($div);
+		});
+
+		nuUpdateClearButton();
+	};
+
+	$options.on('change', 'input[type="checkbox"]', () => {
+		nuUpdateClearButton(false);
+	});
+
+	$options.on('click', '.nuCheckboxItem', function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		const $checkbox = $(this).find('input[type="checkbox"]');
+		const currentState = $checkbox.prop('checked');
+		$checkbox.prop('checked', !currentState).trigger('change');
+	});
+
+	$search.on('input', () => {
+		nuGetCheckboxes().prop('checked', false);
+		const searchString = $search.val().trim().toLowerCase();
+		nuTickCheckboxesWithString(searchString);
+		nuUpdateClearButton(false);
+	});
+
+	$closeBtn.on('click', function (e) {
+		e.stopPropagation();
+		$popup.hide();
+	});
+
+	$applyButton.on('click', function () {
+		let selectedItems = [];
+		let selectedLabels = [];
+
+		nuGetCheckboxes().filter(':checked').each(function (index, checkbox) {
+			const $checkbox = $(checkbox);
+			selectedItems.push($checkbox.val());
+			selectedLabels.push($checkbox.next('label').text());
+		});
+
+		nuSearchablePopupUtils.PropertyManager.setFilterValue(column, columnId, selectedItems.join(','));
+
+		const tooltipText = selectedLabels.join('\n');
+		nuToggleIcon(selectedItems.length > 0, selectedItems.length, tooltipText);
+
+		$popup.hide();
+		settings.onSelected(selectedItems);
+		window.nuFORM.getCurrent().page_number = 1;
+		nuSearchAction();
+	});
+
+	$clearButton.on('click', function () {
+		const action = $(this).attr('data-action');
+		if (action === 'select-all') {
+			nuGetCheckboxes().prop('checked', true);
+		} else {
+			nuGetCheckboxes().prop('checked', false);
+			settings.onClear();
+		}
+		nuUpdateClearButton(false);
+	});
+
+	$popup.on('click', function (e) {
+		if (e.target === this) $popup.hide();
+	});
+
+	$popup.find('.nuPopupContent').on('click', function (e) {
+		e.stopPropagation();
+	});
+
+	$this.on('click', (e) => {
+		nuRenderItems();
+		$popup.appendTo($('#nuhtml'));
+
+		const position = settings.positionAtMouse
+			? nuSearchablePopupUtils.PositionManager.calculatePosition(e.pageX, e.pageY)
+			: null;
+
+		nuSearchablePopupUtils.PositionManager.applyPosition($popup, position, !settings.positionAtMouse);
+		$popup.show();
+		$search.val('').focus();
+		nuUpdateClearButton();
+	});
+
+	nuSearchablePopupUtils.FilterIconManager.setupClearEvent(column, () => {
+		this.clearFilter();
+	}, settings.onClear);
+
+	if (column) {
+		const existingValue = nuSearchablePopupUtils.PropertyManager.getFilterValue(column, columnId);
+		if (existingValue) {
+			const existingItems = existingValue.split(',').filter(item => item);
+			if (existingItems.length > 0) {
+				settings.checked = existingItems;
+
+				const existingLabels = [];
+				existingItems.forEach(value => {
+					const foundItem = normalizedItems.find(item =>
+						String(item.value) === String(value) || item.value == value
+					);
+					if (foundItem) {
+						existingLabels.push(foundItem.label);
+					}
+				});
+
+				const tooltipText = existingLabels.length > 0 ? existingLabels.join('\n') : '';
+				nuToggleIcon(true, existingItems.length, tooltipText);
+				settings.onSelected(existingItems, null, true);
+			}
+		}
+	}
+
+	this.clearFilter = function () {
+		nuSearchablePopupUtils.PropertyManager.clearFilterValue(column, columnId);
+		settings.checked = [];
+		nuToggleIcon(false);
+		window.nuFORM.getCurrent().page_number = 1;
+		nuSearchAction();
+	};
+
+	return this;
+};
+
 $.fn.nuSearchablePopup = function (options) {
+
+	if (options && options.multiSelect === true) {
+		const checkboxOptions = $.extend({}, options);
+		delete checkboxOptions.multiSelect;
+		if (checkboxOptions.searchPlaceholder === undefined) {
+			checkboxOptions.searchPlaceholder = "Search...";
+		}
+		return this.nuSearchableMultiPopup(checkboxOptions);
+	}
+
 	const settings = $.extend({
 		title: "Select Options",
 		items: [],
@@ -7885,48 +8271,14 @@ $.fn.nuSearchablePopup = function (options) {
 		onClear: function () { }
 	}, options);
 
-
-	function nuArrayTo2Dif1D(arr) {
-
-		const is1D = Array.isArray(arr) && arr.every(item => !Array.isArray(item));
-		if (is1D) {
-			return arr.map(item => [item, item]);
-		}
-
-		return arr;
-
-	}
-
-	function nuArrayFlattenSingles(arr) {
-
-		if (!Array.isArray(arr)) return arr;
-		if (arr.length > 1) {
-			const restAreArrays = arr.slice(1).every(item => Array.isArray(item) && item.length === 1);
-			if (restAreArrays) {
-				return arr.slice(1).map(item => item[0]);
-			}
-		}
-		if (arr.every(item => Array.isArray(item) && item.length === 1)) {
-			return arr.map(item => item[0]);
-		}
-
-		return arr;
-
-	}
-
-	settings.items = nuArrayFlattenSingles(settings.items);
-	settings.items = nuArrayTo2Dif1D(settings.items);
+	settings.items = nuSearchablePopupUtils.ArrayNormalizer.normalize(settings.items);
 
 	const $this = $(this);
 	const column = $this.data('column');
 	const columnId = $this.data('column_id');
 
-	const getFilterIcon = () => {
-		return column ? $('#' + column).find('.nuBrowseFilterIcon') : $();
-	};
-
 	const toggleIcon = (filterActive, selectedText = '') => {
-		const $filterIcon = getFilterIcon();
+		const $filterIcon = nuSearchablePopupUtils.FilterIconManager.getFilterIcon(column);
 		const $txt = $filterIcon.siblings('.nuBrowserFilterSelectedText');
 		if (filterActive) {
 			$('#' + $filterIcon.attr('id')).css('color', 'red');
@@ -7940,17 +8292,17 @@ $.fn.nuSearchablePopup = function (options) {
 
 	const $popup = $(`
 		<div class="nuSearchablePopup" style="position: fixed; z-index: 10000; width: 300px; max-width: 300px;">
-		<div class="popup-content">
-			<div class="popup-header">
-			<button class="close-btn" title="Close">&times;</button>
-			<div class="filter-container">
-				<input type="text" class="filter-input" placeholder="${settings.searchPlaceholder}">
+			<div class="popup-content">
+				<div class="popup-header">
+					<button class="close-btn" title="Close">&times;</button>
+					<div class="filter-container">
+						<input id="nuPopupSearch" type="text" class="filter-input" placeholder="${settings.searchPlaceholder}">
+					</div>
+				</div>
+				<div class="options-container">
+					<div class="options"></div>
+				</div>
 			</div>
-			</div>
-			<div class="options-container">
-			<div class="options"></div>
-			</div>
-		</div>
 		</div>
 	`).hide();
 
@@ -7959,7 +8311,6 @@ $.fn.nuSearchablePopup = function (options) {
 	const $closeBtn = $popup.find('.close-btn');
 
 	const renderItems = (filterText = '') => {
-
 		$options.empty();
 
 		const filteredItems = settings.items.filter(item =>
@@ -7976,28 +8327,23 @@ $.fn.nuSearchablePopup = function (options) {
 					.text(item[1]);
 				if (index % 2 === 0) $item.addClass('even');
 				else $item.addClass('odd');
+
 				$item.on('click', function (e) {
 					e.stopPropagation();
 					const selectedValue = $(this).attr('data-value');
 					const selectedLabel = $(this).html();
 
-					if (columnId) {
-						nuSetProperty(columnId + '_filter', selectedValue);
-					} else if (column) {
-						nuSetProperty(column + '_filter', selectedValue);
-					}
-
+					nuSearchablePopupUtils.PropertyManager.setFilterValue(column, columnId, selectedValue);
 					toggleIcon(true, selectedLabel);
 					settings.onSelected(selectedValue, selectedLabel, false);
 					$popup.hide();
 					window.nuFORM.getCurrent().page_number = 1;
 					nuSearchAction();
 				});
+
 				$options.append($item);
 				$item.nuHighlight(filterText);
 			});
-
-
 		}
 	};
 
@@ -8006,14 +8352,12 @@ $.fn.nuSearchablePopup = function (options) {
 	});
 
 	$filterInput.on('keydown', function (e) {
-
 		if (e.key === 'Escape') {
 			$popup.hide();
 		}
 
 		if (e.key === 'Enter') {
 			e.preventDefault();
-
 			const $visibleItems = $options.find('.listbox-item');
 
 			if ($visibleItems.length === 1) {
@@ -8021,16 +8365,12 @@ $.fn.nuSearchablePopup = function (options) {
 				const selectedValue = $selectedItem.attr('data-value');
 				const selectedLabel = $selectedItem.html();
 
-				if (columnId) {
-					nuSetProperty(columnId + '_filter', selectedValue);
-				} else if (column) {
-					nuSetProperty(column + '_filter', selectedValue);
-				}
-
+				nuSearchablePopupUtils.PropertyManager.setFilterValue(column, columnId, selectedValue);
 				toggleIcon(true, selectedLabel);
 				settings.onSelected(selectedValue, selectedLabel, false);
 				$popup.hide();
-				nuGetPage();
+				window.nuFORM.getCurrent().page_number = 1;
+				nuSearchAction();
 			}
 		}
 	});
@@ -8053,70 +8393,24 @@ $.fn.nuSearchablePopup = function (options) {
 		renderItems();
 		$popup.appendTo($('#nuhtml'));
 
-		if (settings.positionAtMouse) {
+		const position = settings.positionAtMouse
+			? nuSearchablePopupUtils.PositionManager.calculatePosition(e.pageX, e.pageY)
+			: null;
 
-			const mouseX = e.pageX;
-			const mouseY = e.pageY;
-			const windowWidth = $(window).width();
-			const windowHeight = $(window).height();
-			const popupWidth = 300;
-			const popupHeight = 400;
-
-			let left = mouseX;
-			let top = mouseY;
-
-			if (left + popupWidth > windowWidth) {
-				left = windowWidth - popupWidth - 10;
-			}
-
-			if (top + popupHeight > windowHeight) {
-				top = mouseY - popupHeight;
-				if (top < 0) {
-					top = 10;
-				}
-			}
-
-			$popup.css({
-				position: 'fixed',
-				left: left + 'px',
-				top: top + 'px',
-				height: '400px',
-				transform: 'none',
-				'justify-content': 'unset',
-				'align-items': 'unset'
-			});
-		} else {
-			$popup.css({
-				position: 'fixed',
-				left: '50%',
-				top: '50%',
-				transform: 'translate(-50%, -50%)'
-			});
-		}
-
+		nuSearchablePopupUtils.PositionManager.applyPosition($popup, position, !settings.positionAtMouse);
 		$popup.show();
 
 		if (!nuIsMobile()) {
 			$filterInput.trigger("focus");
 		}
-
 	});
 
+	nuSearchablePopupUtils.FilterIconManager.setupClearEvent(column, () => {
+		this.clearFilter();
+	}, settings.onClear);
+
 	if (column) {
-		const $clearElement = $('#' + column).find('.nuBrowserFilterSelectedText');
-		$clearElement.on('click', (e) => {
-			e.stopPropagation();
-			this.clearFilter();
-			settings.onClear();
-		});
-
-		let existingValue;
-		if (columnId) {
-			existingValue = nuGetProperty(columnId + '_filter');
-		} else {
-			existingValue = nuGetProperty(column + '_filter');
-		}
-
+		const existingValue = nuSearchablePopupUtils.PropertyManager.getFilterValue(column, columnId);
 		if (existingValue) {
 			const existingItem = settings.items.find(item => item[0] == existingValue);
 			if (existingItem) {
@@ -8127,20 +8421,13 @@ $.fn.nuSearchablePopup = function (options) {
 	}
 
 	this.clearFilter = function () {
-
-		if (columnId) {
-			nuSetProperty(columnId + '_filter', '');
-		} else {
-			nuSetProperty(column + '_filter', '');
-		}
-
+		nuSearchablePopupUtils.PropertyManager.clearFilterValue(column, columnId);
 		toggleIcon(false);
 		window.nuFORM.getCurrent().page_number = 1;
 		nuSearchAction();
-
-
 	};
 
+	return this;
 };
 
 function nuDatalistValueRestoreValue(i) {
