@@ -245,7 +245,7 @@ function nuBuildForm(formObj) {
 	nuProcessAfterSave();
 
 	nuAddFormStyle(formObj.style);
-	// nuAddObjectStyles(formObj.objects);
+	nuAddObjectFunctions();
 	nuSetBrowseHeight();
 
 	const globalAccess = nuGlobalAccess();
@@ -498,6 +498,7 @@ function nuSetDefaultWindowProperties(f, formType) {
 	window.nuOnSelectTab = null;
 	window.nuOnAddAction = false;
 	window.onSubformTitleClick = null;
+	window.nuOnHelpIconClick = null;
 	window.nuOnMessage = null;
 	window.nuFormatValueCleared = null;
 	window.nuDisplayObjectRefreshed = null;
@@ -6260,17 +6261,143 @@ function nuAddFormStyle(style) {
 
 }
 
-function nuAddObjectStyles() {
+function nuAddObjectFunctions() {
+
+	nuAttachHelpIconsToObjects({
+		gapRight: 8,
+		iconSize: 16,
+		onClick: (element, helpText) => {
+			if (window.nuOnHelpIconClick) {
+				nuOnHelpIconClick(element, helpText);
+			}
+		}
+	});
 
 	if (typeof nuLabelCustomPosition === "function") {
 		/*
 		document.querySelectorAll('[data-nu-label-position="custom"]').forEach(el => {
-
 		});
 		*/
-
 	}
 
+}
+
+function nuAttachHelpIconsToObjects({
+
+	selector = '[nu-help-text]',   // 'input[nu-help-text], textarea[nu-help-text], select[nu-help-text]',
+	gapRight = 8,                 // px gap outside right edge
+	iconSize = 16,                // px
+	zIndex = 50,
+	iconClasses = 'fa-solid fa-circle-question',
+	onClick = null,               // optional: (el, helpHTML) => {}
+} = {}) {
+
+	let tooltip = document.getElementById('nu-help-tooltip');
+	if (!tooltip) {
+		tooltip = document.createElement('div');
+		tooltip.id = 'nu-help-tooltip';
+		tooltip.className = 'nuHelpToolTip';
+		tooltip.style.zIndex = String(zIndex + 1);
+		document.body.appendChild(tooltip);
+	}
+
+	let overlay = document.getElementById('nu-help-overlay');
+	if (!overlay) {
+		overlay = document.createElement('div');
+		overlay.id = 'nu-help-overlay';
+		overlay.className = 'nuHelpOverlay';
+		overlay.style.zIndex = String(zIndex);
+		document.body.appendChild(overlay);
+	}
+
+	const ICONS = nuAttachHelpIconsToObjects._icons || new Map();
+	nuAttachHelpIconsToObjects._icons = ICONS;
+
+	const fields = Array.from(document.querySelectorAll(selector))
+		.filter(el => el.hasAttribute('nu-help-text'));
+	const current = new Set(fields);
+
+	fields.forEach((el) => {
+		let rec = ICONS.get(el);
+		if (!rec) {
+			const icon = document.createElement('i');
+			icon.className = iconClasses;
+			icon.style.position = 'absolute';
+			icon.style.fontSize = iconSize + 'px';
+			icon.style.lineHeight = '1';
+			icon.style.pointerEvents = 'auto';
+			icon.style.opacity = '0.95';
+			icon.style.cursor = onClick ? 'pointer' : 'help';
+			icon.style.color = '#53a1c4';
+
+			icon.addEventListener('mouseenter', () => {
+				const helpText = el.getAttribute('nu-help-text') || '';
+				if (helpText.trim()) {
+					tooltip.innerHTML = helpText;
+					tooltip.style.display = 'block';
+					const r = icon.getBoundingClientRect();
+					const pageX = window.pageXOffset;
+					const pageY = window.pageYOffset;
+					tooltip.style.left = (r.left + pageX) + 'px';
+					tooltip.style.top = (r.bottom + pageY + 4) + 'px';
+				}
+			});
+
+			icon.addEventListener('mouseleave', () => {
+				tooltip.style.display = 'none';
+			});
+
+			if (typeof onClick === 'function') {
+				icon.addEventListener('click', (e) => {
+					e.preventDefault();
+					e.stopPropagation();
+					onClick(el, el.getAttribute('nu-help-text') || '');
+				});
+			}
+
+			overlay.appendChild(icon);
+
+			const ro = new ResizeObserver(() => positionIcon(el, icon));
+			ro.observe(el);
+			const mo = new MutationObserver(() => { });
+			mo.observe(el, { attributes: true, attributeFilter: ['nu-help-text'] });
+
+			rec = { icon, ro, mo };
+			ICONS.set(el, rec);
+		}
+
+		positionIcon(el, rec.icon);
+	});
+
+	ICONS.forEach((rec, el) => {
+		if (!current.has(el) || !document.body.contains(el)) {
+			try { rec.ro.disconnect(); } catch { }
+			try { rec.mo.disconnect(); } catch { }
+			if (rec.icon.parentNode === overlay) overlay.removeChild(rec.icon);
+			ICONS.delete(el);
+		}
+	});
+
+	if (!nuAttachHelpIconsToObjects._bound) {
+		const refreshAll = () => {
+			ICONS.forEach(({ icon }, el) => positionIcon(el, icon));
+		};
+		window.addEventListener('scroll', refreshAll, { passive: true });
+		window.addEventListener('resize', refreshAll);
+		nuAttachHelpIconsToObjects._bound = true;
+	}
+
+	nuAttachHelpIconsToObjects.refresh = () => {
+		ICONS.forEach(({ icon }, el) => positionIcon(el, icon));
+	};
+
+	function positionIcon(el, icon) {
+		const r = el.getBoundingClientRect();
+		const pageX = window.pageXOffset;
+		const pageY = window.pageYOffset;
+		icon.style.left = (r.right + gapRight + pageX) + 'px';
+		icon.style.top = (r.top + pageY + Math.round(r.height / 2) - Math.round(iconSize / 2)) + 'px';
+	}
 }
 
 function nuHashFromEditForm() {
