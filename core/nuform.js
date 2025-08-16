@@ -6290,6 +6290,10 @@ function nuAttachHelpIconsToObjects({
 	iconClasses = 'fa-solid fa-circle-question',
 	onClick = null,
 	tooltipPosition = 'top',
+	arrowSize = 'default', // New: 'small', 'default', 'large'
+	theme = 'dark', // New: 'dark', 'light', 'blue', 'green', 'purple'
+	animationDuration = 200, // New: fade animation timing
+	accessibility = true, // New: accessibility features
 } = {}) {
 
 	let tooltip = document.getElementById('nu-help-tooltip');
@@ -6298,6 +6302,8 @@ function nuAttachHelpIconsToObjects({
 		tooltip.id = 'nu-help-tooltip';
 		tooltip.className = 'nuHelpToolTip';
 		tooltip.style.zIndex = String(zIndex + 1);
+		tooltip.setAttribute('role', 'tooltip');
+		tooltip.setAttribute('aria-hidden', 'true');
 		document.body.appendChild(tooltip);
 	}
 
@@ -6307,6 +6313,7 @@ function nuAttachHelpIconsToObjects({
 		overlay.id = 'nu-help-overlay';
 		overlay.className = 'nuHelpOverlay';
 		overlay.style.zIndex = String(zIndex);
+		overlay.setAttribute('aria-hidden', 'true');
 		document.body.appendChild(overlay);
 	}
 
@@ -6314,7 +6321,11 @@ function nuAttachHelpIconsToObjects({
 	nuAttachHelpIconsToObjects._icons = ICONS;
 
 	const fields = Array.from(document.querySelectorAll(selector))
-		.filter(el => el.hasAttribute('nu-help-icon-text'));
+		.filter(el => {
+			const helpText = el.getAttribute('nu-help-icon-text');
+			return helpText && helpText.trim();
+		});
+
 	const current = new Set(fields);
 
 	fields.forEach((el) => {
@@ -6322,47 +6333,91 @@ function nuAttachHelpIconsToObjects({
 		if (!rec) {
 			const icon = document.createElement('i');
 			icon.className = iconClasses;
-			icon.style.position = 'absolute';
-			icon.style.fontSize = iconSize + 'px';
-			icon.style.lineHeight = '1';
-			icon.style.pointerEvents = 'auto';
-			icon.style.opacity = '0.95';
-			icon.style.cursor = onClick ? 'pointer' : 'help';
-			icon.style.color = '#53a1c4';
 
+			Object.assign(icon.style, {
+				position: 'absolute',
+				fontSize: iconSize + 'px',
+				lineHeight: '1',
+				pointerEvents: 'auto',
+				opacity: '0.95',
+				cursor: onClick ? 'pointer' : 'help',
+				color: 'var(--help-icon-color, #53a1c4)',
+				transition: `opacity ${animationDuration}ms ease`,
+				zIndex: String(zIndex)
+			});
+
+			if (accessibility) {
+				const helpText = el.getAttribute('nu-help-icon-text') || '';
+				icon.setAttribute('aria-label', 'Help: ' + helpText);
+				icon.setAttribute('tabindex', '0');
+				icon.setAttribute('role', 'button');
+
+				icon.addEventListener('keydown', (e) => {
+					if (e.key === 'Enter' || e.key === ' ') {
+						e.preventDefault();
+						if (onClick) {
+							onClick(el, helpText);
+						} else {
+							showTooltip(icon, el, helpText);
+						}
+					}
+					if (e.key === 'Escape') {
+						hideTooltip();
+					}
+				});
+			}
+
+			let hoverTimeout;
 			icon.addEventListener('mouseenter', () => {
+				clearTimeout(hoverTimeout);
 				const helpText = el.getAttribute('nu-help-icon-text') || '';
 				if (helpText.trim()) {
-					tooltip.innerHTML = helpText;
-					const elementPosition = el.getAttribute('nu-help-icon-position') || tooltipPosition;
-					const arrowClass = getArrowClass(elementPosition);
-					tooltip.className = `nuHelpToolTip ${arrowClass}`;
-					tooltip.style.display = 'block';
-
-					positionTooltip(icon, tooltip, elementPosition);
+					showTooltip(icon, el, helpText);
 				}
 			});
 
 			icon.addEventListener('mouseleave', () => {
-				tooltip.style.display = 'none';
+				hoverTimeout = setTimeout(hideTooltip, 100); // Small delay for better UX
 			});
 
 			if (typeof onClick === 'function') {
 				icon.addEventListener('click', (e) => {
 					e.preventDefault();
 					e.stopPropagation();
+					hideTooltip();
 					onClick(el, el.getAttribute('nu-help-icon-text') || '');
 				});
 			}
 
 			overlay.appendChild(icon);
 
-			const ro = new ResizeObserver(() => positionIcon(el, icon));
+			const ro = new ResizeObserver((entries) => {
+				try {
+					positionIcon(el, icon);
+				} catch (error) {
+					console.warn('Error positioning help icon:', error);
+				}
+			});
 			ro.observe(el);
-			const mo = new MutationObserver(() => { });
-			mo.observe(el, { attributes: true, attributeFilter: ['nu-help-icon-text', 'nu-help-icon-position'] });
 
-			rec = { icon, ro, mo };
+			const mo = new MutationObserver((mutations) => {
+				mutations.forEach(mutation => {
+					if (mutation.type === 'attributes') {
+						if (mutation.attributeName === 'nu-help-icon-text') {
+							const newText = el.getAttribute('nu-help-icon-text');
+							if (accessibility && newText) {
+								icon.setAttribute('aria-label', 'Help: ' + newText);
+							}
+						}
+					}
+				});
+			});
+			mo.observe(el, {
+				attributes: true,
+				attributeFilter: ['nu-help-icon-text', 'nu-help-icon-position', 'nu-help-icon-arrow-size', 'nu-help-icon-theme']
+			});
+
+			rec = { icon, ro, mo, element: el };
 			ICONS.set(el, rec);
 		}
 
@@ -6371,19 +6426,47 @@ function nuAttachHelpIconsToObjects({
 
 	ICONS.forEach((rec, el) => {
 		if (!current.has(el) || !document.body.contains(el)) {
-			try { rec.ro.disconnect(); } catch { }
-			try { rec.mo.disconnect(); } catch { }
-			if (rec.icon.parentNode === overlay) overlay.removeChild(rec.icon);
+			try {
+				rec.ro?.disconnect();
+			} catch (error) {
+				console.warn('Error disconnecting ResizeObserver:', error);
+			}
+			try {
+				rec.mo?.disconnect();
+			} catch (error) {
+				console.warn('Error disconnecting MutationObserver:', error);
+			}
+			if (rec.icon?.parentNode === overlay) {
+				try {
+					overlay.removeChild(rec.icon);
+				} catch (error) {
+					console.warn('Error removing icon:', error);
+				}
+			}
 			ICONS.delete(el);
 		}
 	});
 
 	if (!nuAttachHelpIconsToObjects._bound) {
-		const refreshAll = () => {
-			ICONS.forEach(({ icon }, el) => positionIcon(el, icon));
-		};
+		const refreshAll = debounce(() => {
+			ICONS.forEach(({ icon }, el) => {
+				try {
+					positionIcon(el, icon);
+				} catch (error) {
+					console.warn('Error refreshing icon position:', error);
+				}
+			});
+		}, 16); // ~60fps
+
 		window.addEventListener('scroll', refreshAll, { passive: true });
-		window.addEventListener('resize', refreshAll);
+		window.addEventListener('resize', refreshAll, { passive: true });
+
+		document.addEventListener('click', (e) => {
+			if (!e.target.closest('.nuHelpToolTip') && !e.target.closest('[class*="fa-circle-question"]')) {
+				hideTooltip();
+			}
+		});
+
 		nuAttachHelpIconsToObjects._bound = true;
 	}
 
@@ -6391,22 +6474,124 @@ function nuAttachHelpIconsToObjects({
 		ICONS.forEach(({ icon }, el) => positionIcon(el, icon));
 	};
 
+	nuAttachHelpIconsToObjects.destroy = () => {
+		ICONS.forEach((rec) => {
+			try { rec.ro?.disconnect(); } catch { }
+			try { rec.mo?.disconnect(); } catch { }
+			rec.icon?.remove();
+		});
+		ICONS.clear();
+		tooltip?.remove();
+		overlay?.remove();
+		nuAttachHelpIconsToObjects._bound = false;
+	};
+
+	function debounce(func, wait) {
+		let timeout;
+		return function executedFunction(...args) {
+			const later = () => {
+				clearTimeout(timeout);
+				func(...args);
+			};
+			clearTimeout(timeout);
+			timeout = setTimeout(later, wait);
+		};
+	}
+
+	function showTooltip(icon, el, helpText) {
+		tooltip.innerHTML = sanitizeHTML(helpText);
+		const elementPosition = el.getAttribute('nu-help-icon-position') || tooltipPosition;
+		const elementArrowSize = el.getAttribute('nu-help-icon-arrow-size') || arrowSize;
+		const elementTheme = el.getAttribute('nu-help-icon-theme') || theme;
+		const arrowClass = getArrowClass(elementPosition);
+		const arrowSizeClass = elementArrowSize !== 'default' ? `arrow-${elementArrowSize}` : '';
+		const themeClass = elementTheme !== 'dark' ? `theme-${elementTheme}` : '';
+
+		tooltip.className = `nuHelpToolTip ${arrowClass} ${arrowSizeClass} ${themeClass}`.trim();
+		tooltip.style.display = 'block';
+		tooltip.setAttribute('aria-hidden', 'false');
+
+		requestAnimationFrame(() => {
+			positionTooltip(icon, tooltip, elementPosition);
+			tooltip.style.opacity = '1';
+			tooltip.style.transition = `opacity ${animationDuration}ms ease`;
+		});
+	}
+
+	function hideTooltip() {
+		tooltip.style.opacity = '0';
+		tooltip.setAttribute('aria-hidden', 'true');
+		setTimeout(() => {
+			tooltip.style.display = 'none';
+		}, animationDuration);
+	}
+
+	function sanitizeHTML(html) {
+
+		const allowedTags = ['br', 'strong', 'b', 'em', 'i', 'u', 'small', 'code', 'span'];
+		const allowedAttributes = ['class', 'style'];
+
+		const temp = document.createElement('div');
+		temp.innerHTML = html;
+
+		function cleanElement(element) {
+			const children = Array.from(element.childNodes);
+
+			children.forEach(child => {
+				if (child.nodeType === Node.TEXT_NODE) {
+					return;
+				}
+
+				if (child.nodeType === Node.ELEMENT_NODE) {
+					const tagName = child.tagName.toLowerCase();
+
+					if (allowedTags.includes(tagName)) {
+
+						const attributes = Array.from(child.attributes);
+						attributes.forEach(attr => {
+							if (!allowedAttributes.includes(attr.name.toLowerCase())) {
+								child.removeAttribute(attr.name);
+							}
+						});
+						cleanElement(child);
+					} else {
+						const textNode = document.createTextNode(child.textContent);
+						child.parentNode.replaceChild(textNode, child);
+					}
+				} else {
+					child.parentNode.removeChild(child);
+				}
+			});
+		}
+
+		cleanElement(temp);
+		return temp.innerHTML;
+	}
+
 	function positionIcon(el, icon) {
-		const r = el.getBoundingClientRect();
-		const pageX = window.pageXOffset;
-		const pageY = window.pageYOffset;
-		icon.style.left = (r.right + gapRight + pageX) + 'px';
-		icon.style.top = (r.top + pageY + Math.round(r.height / 2) - Math.round(iconSize / 2)) + 'px';
+		try {
+			const r = el.getBoundingClientRect();
+			const pageX = window.pageXOffset;
+			const pageY = window.pageYOffset;
+
+			const iconLeft = r.right + gapRight + pageX;
+			const iconTop = r.top + pageY + Math.round(r.height / 2) - Math.round(iconSize / 2);
+
+			icon.style.left = Math.max(0, iconLeft) + 'px';
+			icon.style.top = Math.max(0, iconTop) + 'px';
+		} catch (error) {
+			console.warn('Error positioning icon:', error);
+		}
 	}
 
 	function getArrowClass(position) {
-		switch (position) {
-			case 'top': return 'arrow-bottom';
-			case 'bottom': return 'arrow-top';
-			case 'left': return 'arrow-right';
-			case 'right': return 'arrow-left';
-			default: return 'arrow-top';
-		}
+		const arrowMap = {
+			'top': 'arrow-bottom',
+			'bottom': 'arrow-top',
+			'left': 'arrow-right',
+			'right': 'arrow-left'
+		};
+		return arrowMap[position] || 'arrow-top';
 	}
 
 	function positionTooltip(icon, tooltip, position) {
@@ -6419,58 +6604,45 @@ function nuAttachHelpIconsToObjects({
 		const iconCenterY = iconRect.top + iconRect.height / 2;
 
 		let tooltipLeft, tooltipTop, arrowPosition;
-
-		switch (position) {
-			case 'top':
+		const positions = {
+			top: () => {
 				tooltipLeft = iconCenterX + pageX - tooltip.offsetWidth / 2;
 				tooltipTop = iconRect.top + pageY - tooltip.offsetHeight - gap;
-
 				arrowPosition = tooltip.offsetWidth / 2;
 				tooltip.style.setProperty('--arrow-left', arrowPosition + 'px');
-				break;
-
-			case 'bottom':
+			},
+			bottom: () => {
 				tooltipLeft = iconCenterX + pageX - tooltip.offsetWidth / 2;
 				tooltipTop = iconRect.bottom + pageY + gap;
-
 				arrowPosition = tooltip.offsetWidth / 2;
 				tooltip.style.setProperty('--arrow-left', arrowPosition + 'px');
-				break;
-
-			case 'left':
+			},
+			left: () => {
 				tooltipLeft = iconRect.left + pageX - tooltip.offsetWidth - gap;
 				tooltipTop = iconCenterY + pageY - tooltip.offsetHeight / 2;
-
 				arrowPosition = tooltip.offsetHeight / 2;
 				tooltip.style.setProperty('--arrow-top', arrowPosition + 'px');
-				break;
-
-			case 'right':
-
+			},
+			right: () => {
 				tooltipLeft = iconRect.right + pageX + gap;
 				tooltipTop = iconCenterY + pageY - tooltip.offsetHeight / 2;
-
 				arrowPosition = tooltip.offsetHeight / 2;
 				tooltip.style.setProperty('--arrow-top', arrowPosition + 'px');
-				break;
+			}
+		};
 
-			default:
+		(positions[position] || positions.bottom)();
 
-				tooltipLeft = iconCenterX + pageX - tooltip.offsetWidth / 2;
-				tooltipTop = iconRect.bottom + pageY + gap;
-				arrowPosition = tooltip.offsetWidth / 2;
-				tooltip.style.setProperty('--arrow-left', arrowPosition + 'px');
-		}
-
-
-		const viewportWidth = window.innerWidth;
-		const viewportHeight = window.innerHeight;
-		const scrollX = window.pageXOffset;
-		const scrollY = window.pageYOffset;
+		const viewport = {
+			width: window.innerWidth,
+			height: window.innerHeight,
+			scrollX: window.pageXOffset,
+			scrollY: window.pageYOffset
+		};
 
 		if (position === 'top' || position === 'bottom') {
-			const minLeft = scrollX + 10;
-			const maxLeft = scrollX + viewportWidth - tooltip.offsetWidth - 10;
+			const minLeft = viewport.scrollX + 10;
+			const maxLeft = viewport.scrollX + viewport.width - tooltip.offsetWidth - 10;
 
 			if (tooltipLeft < minLeft) {
 				const adjustment = minLeft - tooltipLeft;
@@ -6486,8 +6658,8 @@ function nuAttachHelpIconsToObjects({
 		}
 
 		if (position === 'left' || position === 'right') {
-			const minTop = scrollY + 10;
-			const maxTop = scrollY + viewportHeight - tooltip.offsetHeight - 10;
+			const minTop = viewport.scrollY + 10;
+			const maxTop = viewport.scrollY + viewport.height - tooltip.offsetHeight - 10;
 
 			if (tooltipTop < minTop) {
 				const adjustment = minTop - tooltipTop;
@@ -6505,7 +6677,6 @@ function nuAttachHelpIconsToObjects({
 		tooltip.style.left = tooltipLeft + 'px';
 		tooltip.style.top = tooltipTop + 'px';
 	}
-
 }
 
 function nuHashFromEditForm() {
