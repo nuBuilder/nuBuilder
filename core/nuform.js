@@ -6283,13 +6283,13 @@ function nuAddObjectFunctions() {
 }
 
 function nuAttachHelpIconsToObjects({
-
-	selector = '[nu-help-text]',   // 'input[nu-help-text], textarea[nu-help-text], select[nu-help-text]',
-	gapRight = 8,                 // px gap outside right edge
-	iconSize = 16,                // px
+	selector = '[nu-help-icon-text]',
+	gapRight = 8,
+	iconSize = 16,
 	zIndex = 50,
 	iconClasses = 'fa-solid fa-circle-question',
-	onClick = null,               // optional: (el, helpHTML) => {}
+	onClick = null,
+	tooltipPosition = 'top',
 } = {}) {
 
 	let tooltip = document.getElementById('nu-help-tooltip');
@@ -6314,7 +6314,7 @@ function nuAttachHelpIconsToObjects({
 	nuAttachHelpIconsToObjects._icons = ICONS;
 
 	const fields = Array.from(document.querySelectorAll(selector))
-		.filter(el => el.hasAttribute('nu-help-text'));
+		.filter(el => el.hasAttribute('nu-help-icon-text'));
 	const current = new Set(fields);
 
 	fields.forEach((el) => {
@@ -6331,15 +6331,15 @@ function nuAttachHelpIconsToObjects({
 			icon.style.color = '#53a1c4';
 
 			icon.addEventListener('mouseenter', () => {
-				const helpText = el.getAttribute('nu-help-text') || '';
+				const helpText = el.getAttribute('nu-help-icon-text') || '';
 				if (helpText.trim()) {
 					tooltip.innerHTML = helpText;
+					const elementPosition = el.getAttribute('nu-help-icon-position') || tooltipPosition;
+					const arrowClass = getArrowClass(elementPosition);
+					tooltip.className = `nuHelpToolTip ${arrowClass}`;
 					tooltip.style.display = 'block';
-					const r = icon.getBoundingClientRect();
-					const pageX = window.pageXOffset;
-					const pageY = window.pageYOffset;
-					tooltip.style.left = (r.left + pageX) + 'px';
-					tooltip.style.top = (r.bottom + pageY + 4) + 'px';
+
+					positionTooltip(icon, tooltip, elementPosition);
 				}
 			});
 
@@ -6351,7 +6351,7 @@ function nuAttachHelpIconsToObjects({
 				icon.addEventListener('click', (e) => {
 					e.preventDefault();
 					e.stopPropagation();
-					onClick(el, el.getAttribute('nu-help-text') || '');
+					onClick(el, el.getAttribute('nu-help-icon-text') || '');
 				});
 			}
 
@@ -6360,7 +6360,7 @@ function nuAttachHelpIconsToObjects({
 			const ro = new ResizeObserver(() => positionIcon(el, icon));
 			ro.observe(el);
 			const mo = new MutationObserver(() => { });
-			mo.observe(el, { attributes: true, attributeFilter: ['nu-help-text'] });
+			mo.observe(el, { attributes: true, attributeFilter: ['nu-help-icon-text', 'nu-help-icon-position'] });
 
 			rec = { icon, ro, mo };
 			ICONS.set(el, rec);
@@ -6398,6 +6398,114 @@ function nuAttachHelpIconsToObjects({
 		icon.style.left = (r.right + gapRight + pageX) + 'px';
 		icon.style.top = (r.top + pageY + Math.round(r.height / 2) - Math.round(iconSize / 2)) + 'px';
 	}
+
+	function getArrowClass(position) {
+		switch (position) {
+			case 'top': return 'arrow-bottom';
+			case 'bottom': return 'arrow-top';
+			case 'left': return 'arrow-right';
+			case 'right': return 'arrow-left';
+			default: return 'arrow-top';
+		}
+	}
+
+	function positionTooltip(icon, tooltip, position) {
+		const iconRect = icon.getBoundingClientRect();
+		const pageX = window.pageXOffset;
+		const pageY = window.pageYOffset;
+		const gap = 8;
+
+		const iconCenterX = iconRect.left + iconRect.width / 2;
+		const iconCenterY = iconRect.top + iconRect.height / 2;
+
+		let tooltipLeft, tooltipTop, arrowPosition;
+
+		switch (position) {
+			case 'top':
+				tooltipLeft = iconCenterX + pageX - tooltip.offsetWidth / 2;
+				tooltipTop = iconRect.top + pageY - tooltip.offsetHeight - gap;
+
+				arrowPosition = tooltip.offsetWidth / 2;
+				tooltip.style.setProperty('--arrow-left', arrowPosition + 'px');
+				break;
+
+			case 'bottom':
+				tooltipLeft = iconCenterX + pageX - tooltip.offsetWidth / 2;
+				tooltipTop = iconRect.bottom + pageY + gap;
+
+				arrowPosition = tooltip.offsetWidth / 2;
+				tooltip.style.setProperty('--arrow-left', arrowPosition + 'px');
+				break;
+
+			case 'left':
+				tooltipLeft = iconRect.left + pageX - tooltip.offsetWidth - gap;
+				tooltipTop = iconCenterY + pageY - tooltip.offsetHeight / 2;
+
+				arrowPosition = tooltip.offsetHeight / 2;
+				tooltip.style.setProperty('--arrow-top', arrowPosition + 'px');
+				break;
+
+			case 'right':
+
+				tooltipLeft = iconRect.right + pageX + gap;
+				tooltipTop = iconCenterY + pageY - tooltip.offsetHeight / 2;
+
+				arrowPosition = tooltip.offsetHeight / 2;
+				tooltip.style.setProperty('--arrow-top', arrowPosition + 'px');
+				break;
+
+			default:
+
+				tooltipLeft = iconCenterX + pageX - tooltip.offsetWidth / 2;
+				tooltipTop = iconRect.bottom + pageY + gap;
+				arrowPosition = tooltip.offsetWidth / 2;
+				tooltip.style.setProperty('--arrow-left', arrowPosition + 'px');
+		}
+
+
+		const viewportWidth = window.innerWidth;
+		const viewportHeight = window.innerHeight;
+		const scrollX = window.pageXOffset;
+		const scrollY = window.pageYOffset;
+
+		if (position === 'top' || position === 'bottom') {
+			const minLeft = scrollX + 10;
+			const maxLeft = scrollX + viewportWidth - tooltip.offsetWidth - 10;
+
+			if (tooltipLeft < minLeft) {
+				const adjustment = minLeft - tooltipLeft;
+				tooltipLeft = minLeft;
+				arrowPosition = Math.max(10, arrowPosition - adjustment);
+				tooltip.style.setProperty('--arrow-left', arrowPosition + 'px');
+			} else if (tooltipLeft > maxLeft) {
+				const adjustment = tooltipLeft - maxLeft;
+				tooltipLeft = maxLeft;
+				arrowPosition = Math.min(tooltip.offsetWidth - 10, arrowPosition + adjustment);
+				tooltip.style.setProperty('--arrow-left', arrowPosition + 'px');
+			}
+		}
+
+		if (position === 'left' || position === 'right') {
+			const minTop = scrollY + 10;
+			const maxTop = scrollY + viewportHeight - tooltip.offsetHeight - 10;
+
+			if (tooltipTop < minTop) {
+				const adjustment = minTop - tooltipTop;
+				tooltipTop = minTop;
+				arrowPosition = Math.max(10, arrowPosition - adjustment);
+				tooltip.style.setProperty('--arrow-top', arrowPosition + 'px');
+			} else if (tooltipTop > maxTop) {
+				const adjustment = tooltipTop - maxTop;
+				tooltipTop = maxTop;
+				arrowPosition = Math.min(tooltip.offsetHeight - 10, arrowPosition + adjustment);
+				tooltip.style.setProperty('--arrow-top', arrowPosition + 'px');
+			}
+		}
+
+		tooltip.style.left = tooltipLeft + 'px';
+		tooltip.style.top = tooltipTop + 'px';
+	}
+
 }
 
 function nuHashFromEditForm() {
