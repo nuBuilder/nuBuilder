@@ -2043,13 +2043,14 @@ function nuApplyAttributes(id, attrs) {
 					}
 					el.setAttribute(key, value);
 				}
-				/*
 
-				 else if (value === 'left-aligned') {
-									//	$('#' + id).nuLabelLeftAligned();
-								}
-
-				*/
+				break;
+			case 'nu-label-position':
+				if (value === 'top') {
+					$('#' + id).nuLabelOnTop();
+				} else {
+					el.setAttribute(key, value);
+				}
 				break;
 			default:
 				el.setAttribute(key, value);
