@@ -5878,63 +5878,57 @@ function nuChooseEventList() {
 
 }
 
-function nuChangeFile(e) {
+function nuChangeFile(event) {
 
-	if (e.target.id.substr(-8) == 'nuDelete') {
-
+	if (event.target.id.substr(-8) === 'nuDelete') {
 		nuHasBeenEdited();
 		return;
-
 	}
 
-	var id = e.target.id;
-	var theTextarea = id.substr(0, id.length - 6);
+	const inputId = event.target.id;
+	const textareaId = inputId.substr(0, inputId.length - 6);
 
-	if ($('#' + id).val() == '') { return; }
+	if ($('#' + inputId).val() === '') { return; }
 
-	var a = $('#' + id)[0].files[0];
-	var r = new FileReader();
+	const file = $('#' + inputId)[0].files[0];
+	const reader = new FileReader();
 
-	r.onload = function () {
-
-		var f = btoa(r.result);
-		var obj = { 'file': f, 'name': a.name, 'size': a.size, 'type': a.type };
-		var json = JSON.stringify(obj);
+	reader.onload = function () {
+		const encodedFile = btoa(reader.result);
+		const fileData = { file: encodedFile, name: file.name, size: file.size, type: file.type };
+		const jsonString = JSON.stringify(fileData);
 
 		if (window.nuOnFileLoad) {
-			if (nuOnFileLoad(e, id, json) === false) { return; }
+			if (nuOnFileLoad(event, inputId, jsonString) === false) { return; }
 		} else {
-			if (a.size > 300000) {
+			if (file.size > 300000) {
 				nuMessage(nuTranslate('Error'), [nuTranslate('File is too large, cannot be saved. Must be under 300Kb')]);
-				$('#' + id).val('');
+				$('#' + inputId).val('');
 				return;
 			}
 		}
 
-		$('#' + theTextarea).val(json).addClass('nuEdited');
+		$('#' + textareaId).val(jsonString).addClass('nuEdited');
 
 		if (window.nuOnFileLoaded) {
-			nuOnFileLoaded(e, id, json);
+			nuOnFileLoaded(event, inputId, jsonString);
 		}
-
 	};
 
-	r.readAsDataURL(a);
+	reader.readAsDataURL(file);
 
-	var t = $('#' + id)[0];
-	var p = $('#' + theTextarea).attr('data-nu-prefix');
+	const fileInput = $('#' + inputId)[0];
+	const prefix = $('#' + textareaId).attr('data-nu-prefix');
 
-	$('#' + p + 'nuDelete').prop('checked', false);
-	$('#' + theTextarea).addClass('nuEdited');
+	$('#' + prefix + 'nuDelete').prop('checked', false);
+	$('#' + textareaId).addClass('nuEdited');
 
 	nuHasBeenEdited();
 
-	if (p == '') { return; }
+	if (prefix === '') { return; }
 
-	nuAddSubformRow(t, e);
-
+	nuAddSubformRow(fileInput, event);
 }
-
 
 function nuCalculateForm(setAsEdited) {
 
