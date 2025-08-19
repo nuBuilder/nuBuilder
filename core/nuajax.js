@@ -647,6 +647,7 @@ function nuGetLookupId(pk, id, setFocus, setEdited) {
 	var l = $('#' + id);
 
 	var last = nuFORM.getCurrent();
+	delete last.hash; 
 
 	last.session_id = nuSESSION;
 	last.call_type = 'getlookupid';
