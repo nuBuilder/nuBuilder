@@ -10,6 +10,7 @@ window.nuOnTabSelectedGlobal = null;
 window.nuOnPopupOpenedGlobal = null;
 window.nuOnOptionsListLoadedGlobal = null;
 window.nuOnDisableGlobal = null;
+window.nuOnLabelPositionCustom = null;
 window.top.document.nuHideMessage = true;
 window.nuDragID = 1000;
 window.nuLastForm = '';
@@ -2980,8 +2981,10 @@ function nuSetLabelText(id, text, translate) {
 
 	if (obj.attr('data-nu-label-position') === 'top') {
 		obj.nuLabelOnTop();
-	} else if (obj.attr('data-nu-label-position') === 'left-aligned') {
-		//	obj.nuLabelLeftAligned();
+	} else if (obj.attr('data-nu-label-position') === 'custom') {
+		if (typeof window.nuOnLabelPositionCustom === 'function') {
+			nuOnLabelPositionCustom(id);
+		}
 	}
 
 }

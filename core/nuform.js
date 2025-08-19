@@ -2032,17 +2032,6 @@ function nuApplyAttributes(id, attrs) {
 					nuHasNotBeenEdited();
 				}
 				break;
-			case 'value':
-				if (value && nuIsNewRecord()) {
-					const type = $('#' + id).attr('data-nu-type');
-					if (type === 'lookup') {
-						nuGetLookupId(value, id, false, false);
-					} else {
-						$('#' + id).nuSetValue(value);
-					}
-					nuHasNotBeenEdited();
-				}
-				break;
 			case 'nu-help-icon-text':
 			case 'nu-help-icon-position':
 				if ($id.hasClass('nuHiddenLookup')) {
@@ -5946,6 +5935,7 @@ function nuChangeFile(e) {
 
 }
 
+
 function nuCalculateForm(setAsEdited) {
 
 	if (window.nuEnableCalculation == false) return;
@@ -6290,10 +6280,10 @@ function nuAddObjectFunctions() {
 	});
 
 	if (typeof nuLabelCustomPosition === "function") {
-		/*
-		document.querySelectorAll('[data-nu-label-position="custom"]').forEach(el => {
-		});
-		*/
+
+		if (typeof window.nuOnLabelCustomPosition === 'function') {
+			window.nuOnLabelCustomPosition();
+		}
 	}
 
 }
