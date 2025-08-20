@@ -740,7 +740,7 @@ input[type="search"] {
 	position: absolute;
 	left: auto;
 	width: auto;
-	background-color: transparent;
+	background-color: #fff;
 	padding-right: 10px;
 	border-top: 1px solid var(--nu-border);
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
