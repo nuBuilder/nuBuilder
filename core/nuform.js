@@ -8357,9 +8357,9 @@ var nuSearchablePopupUtils = {
 			if (!Array.isArray(arr)) return arr;
 
 			if (arr.length > 1) {
-				const restAreArrays = arr.slice(1).every(item => Array.isArray(item) && item.length === 1);
-				if (restAreArrays) {
-					return arr.slice(1).map(item => item[0]);
+				const allAreSingleArrays = arr.every(item => Array.isArray(item) && item.length === 1);
+				if (allAreSingleArrays) {
+					return arr.map(item => item[0]);
 				}
 			}
 
@@ -8717,6 +8717,7 @@ $.fn.nuSearchablePopup = function (options) {
 		items: [],
 		searchPlaceholder: "Filter options...",
 		positionAtMouse: true,
+		emptyText: "(empty)", // Add this new option
 		onSelected: function (selectedItem) { },
 		onClear: function () { }
 	}, options);
@@ -8774,17 +8775,18 @@ $.fn.nuSearchablePopup = function (options) {
 				const $item = $('<div>')
 					.addClass('listbox-item')
 					.attr('data-value', item[0])
-					.text(item[1]);
+					.text(item[1] || settings.emptyText);
 				if (index % 2 === 0) $item.addClass('even');
 				else $item.addClass('odd');
 
 				$item.on('click', function (e) {
 					e.stopPropagation();
 					const selectedValue = $(this).attr('data-value');
-					const selectedLabel = $(this).html();
+					const originalItem = settings.items.find(itm => itm[0] == selectedValue);
+					const selectedLabel = originalItem ? originalItem[1] : '';
 
 					nuSearchablePopupUtils.PropertyManager.setFilterValue(column, columnId, selectedValue);
-					toggleIcon(true, selectedLabel);
+					toggleIcon(true, selectedLabel || settings.emptyText);
 					settings.onSelected(selectedValue, selectedLabel, false);
 					$popup.hide();
 					window.nuFORM.getCurrent().page_number = 1;
