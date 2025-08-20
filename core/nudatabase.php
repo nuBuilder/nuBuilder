@@ -543,10 +543,16 @@ function nuEncode($value) {
 function nuEncodeQueryRowResults($sql, $args = [], $prefixedData = []) {
 
 	$stmt = nuRunQuery($sql, $args);
-	$results = $prefixedData;
+
+	$results = [];
+	if (!empty($prefixedData)) {
+		$results[] = $prefixedData;
+	}
+
 	while ($row = db_fetch_row($stmt)) {
 		$results[] = $row;
 	}
+
 	return nuEncode($results);
 
 }
