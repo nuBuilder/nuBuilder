@@ -3409,6 +3409,21 @@ function nuSetWindowProperty(key, property, value) {
 
 }
 
+function nuCallWindowFunction(fnName, ...args) {
+
+	const obj = args.length && typeof args[0] === 'object' && args[0] !== null && !(args[0] instanceof Element)
+		? args.shift()
+		: window;
+
+	const fn = obj?.[fnName];
+	if (typeof fn === 'function') {
+		return fn(...args);
+	}
+
+	return undefined;
+
+}
+
 function nuCountDefinedArguments(...args) {
 	return args.filter(arg => arg !== undefined).length;
 }
