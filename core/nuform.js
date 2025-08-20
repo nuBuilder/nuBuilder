@@ -108,9 +108,8 @@ function nuBuildForm(formObj) {
 	nuAddEditTabs('', formObj);
 	nuSetHideTabIfOnlyOne();
 
-	if (typeof window.nuBeforeAddActionButtons === 'function') {
-		nuBeforeAddActionButtons();
-	}
+	nuCallWindowFunction("nuBeforeAddActionButtons");
+
 
 	nuAddActionButtons(formObj);
 	nuRecordProperties(formObj, '');
@@ -1243,8 +1242,8 @@ function nuAddActionButton(id, value, func, title, icon, insertAfterElement) {
 				} catch (e) {
 					console.error('Error executing button action:', e);
 				}
-			} else if (typeof func === 'function') {
-				func();
+			} else {
+				nuCallWindowFunction(func);
 			}
 		});
 	}
@@ -6213,13 +6212,12 @@ function nuAbortSave() {
 
 }
 
-function nuSetSaved(v) {
+function nuSetSaved(isSaved) {
 
-	if (window.nuOnSetSaved) {
-		nuOnSetSaved(v);
-	}
+	nuCallWindowFunction('nuOnSetSaved', isSaved);
 
-	window.nuSAVED = v;
+	window.nuSAVED = isSaved;
+
 }
 
 function nuFormsUnsaved() {
@@ -6229,10 +6227,8 @@ function nuFormsUnsaved() {
 		let t = $(this)[0];
 
 		try {
-			if (typeof t.contentWindow.nuIsSaved === 'function') {
-				if (!t.contentWindow.nuIsSaved()) {
-					c++;
-				}
+			if (nuCallWindowFunction("nuIsSaved", t.contentWindow) === false) {
+				c++;
 			}
 		} catch (e) {
 			// catch "DOMException: Blocked a frame with origin"
@@ -6275,12 +6271,8 @@ function nuAddObjectFunctions() {
 		}
 	});
 
-	if (typeof nuLabelCustomPosition === "function") {
+	nuCallWindowFunction("nuOnLabelCustomPosition");
 
-		if (typeof window.nuOnLabelCustomPosition === 'function') {
-			window.nuOnLabelCustomPosition();
-		}
-	}
 
 }
 
@@ -6347,13 +6339,7 @@ function nuAttachHelpIconsToObjects({
 				accessibility
 			};
 
-			if (typeof window.nuOnAddHelpIcon === 'function') {
-				try {
-					window.nuOnAddHelpIcon(el, elementSettings);
-				} catch (error) {
-					console.warn('Error in nuOnAddHelpIcon callback:', error);
-				}
-			}
+			nuCallWindowFunction("nuOnAddHelpIcon", el, elementSettings);
 
 			const icon = document.createElement('i');
 			icon.className = elementSettings.iconClasses;
@@ -6387,9 +6373,8 @@ function nuAttachHelpIconsToObjects({
 							elementSettings.onClick(el, helpText);
 						}
 
-						if (typeof window.nuOnHelpIconClick === 'function') {
-							window.nuOnHelpIconClick(el, helpText);
-						}
+						nuCallWindowFunction("nuOnHelpIconClick", el, helpText);
+
 						if (!elementSettings.onClick) {
 							showTooltip(icon, el, helpText, elementSettings);
 						}
@@ -6419,14 +6404,8 @@ function nuAttachHelpIconsToObjects({
 				e.stopPropagation();
 				hideTooltip();
 				const helpText = el.getAttribute('nu-help-icon-text') || '';
-				if (typeof elementSettings.onClick === 'function') {
-					elementSettings.onClick(el, helpText);
-				}
-
-
-				if (typeof window.nuOnHelpIconClick === 'function') {
-					window.nuOnHelpIconClick(el, helpText);
-				}
+				nuCallWindowFunction("onClick", elementSettings, el, helpText);
+				nuCallWindowFunction("nuOnHelpIconClick", el, helpText);
 			});
 
 			overlay.appendChild(icon);
@@ -7643,31 +7622,28 @@ function nuGetIframeProperty(frameId, property) {
 
 	const el = document.getElementById(frameId);
 	if (!el) return null;
-	const win = el.contentWindow;
-	if (win && typeof win.nuGetProperty === 'function') {
-		return win.nuGetProperty(property);
-	}
 
-	return null;
+	return nuCallWindowFunction("nuGetProperty", el.contentWindow, property) ?? null;
 
 }
 
 function nuSetIframeProperty(frameId, property, value, refresh = true) {
 
 	const el = document.getElementById(frameId);
-
-	if (!el) return false;
+	if (!el || !el.contentWindow) return false;
 
 	const win = el.contentWindow;
-	if (win && typeof win.nuSetProperty === 'function') {
-		win.nuSetProperty(property, value);
-		if (refresh && typeof win.nuGetBreadcrumb === 'function') {
-			win.nuGetBreadcrumb();
-		}
-		return true;
-	}
 
-	return false;
+
+	const hasSetter = typeof win.nuSetProperty === 'function';
+	if (!hasSetter) return false;
+
+	nuCallWindowFunction("nuSetProperty", win, property, value);
+
+	if (refresh) {
+		nuCallWindowFunction("nuGetBreadcrumb", win);
+	}
+	return true;
 
 }
 
@@ -8953,13 +8929,9 @@ function nuSetSelect2(id, obj) {
 	};
 
 	let objSelect2OptionsDefault = { options: select2OptionsDefault };
-	let select2UserOptions = [];
-
-	if (typeof window.nuOnSetSelect2Options === 'function') {
-		select2UserOptions = window.nuOnSetSelect2Options(id, objSelect2OptionsDefault);
-	}
-
+	let select2UserOptions = nuCallWindowFunction("nuOnSetSelect2Options", id, objSelect2OptionsDefault) || [];
 	let select2Options = Object.assign(select2UserOptions, objSelect2OptionsDefault.options);
+
 	// select2Options = {...objSelect2OptionsDefault.options, ...select2UserOptions};
 
 	$id.data('nu-org-height', $id.outerHeight());
@@ -9278,10 +9250,7 @@ function nuPopupCalendar(pThis, d) {
 	let objCalendarOptionsDefault = { options: calendarOptionsDefault };
 	let calendarUserOptions = [];
 
-	if (typeof window.nuOnSetCalendarOptions === 'function') {
-		calendarUserOptions = window.nuOnSetCalendarOptions(id, objCalendarOptionsDefault);
-	}
-
+	calendarUserOptions = nuCallWindowFunction("nuOnSetCalendarOptions", id, objCalendarOptionsDefault);
 	let calendarOptions = Object.assign(calendarUserOptions, objCalendarOptionsDefault.options);
 
 	Datepicker.locales.en = {

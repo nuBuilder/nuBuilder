@@ -2554,9 +2554,7 @@ function nuPasteText(id, callback) {
 	navigator.clipboard.readText()
 		.then(text => {
 			nuSetValue(id, text);
-			if (typeof callback === 'function') {
-				callback();
-			}
+			nuCallWindowFunction(callback);
 		});
 
 }
@@ -2982,9 +2980,7 @@ function nuSetLabelText(id, text, translate) {
 	if (obj.attr('data-nu-label-position') === 'top') {
 		obj.nuLabelOnTop();
 	} else if (obj.attr('data-nu-label-position') === 'custom') {
-		if (typeof window.nuOnLabelPositionCustom === 'function') {
-			nuOnLabelPositionCustom(id);
-		}
+		nuCallWindowFunction("nuOnLabelPositionCustom", id);
 	}
 
 }
