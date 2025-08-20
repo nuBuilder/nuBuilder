@@ -5528,6 +5528,7 @@ function nuSearchAction(searchValue, filterValue) {
 
 function nuAddAction() {
 
+	if (nuFormType() !== 'browse') return;
 	const bc = window.nuFORM.getCurrent();
 
 	if (window.nuOnAddAction) {
