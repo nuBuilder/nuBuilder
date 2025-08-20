@@ -8717,7 +8717,7 @@ $.fn.nuSearchablePopup = function (options) {
 		items: [],
 		searchPlaceholder: "Filter options...",
 		positionAtMouse: true,
-		emptyText: "(empty)", // Add this new option
+		emptyText: nuTranslate("(empty)"),
 		onSelected: function (selectedItem) { },
 		onClear: function () { }
 	}, options);
@@ -8775,19 +8775,22 @@ $.fn.nuSearchablePopup = function (options) {
 				const $item = $('<div>')
 					.addClass('listbox-item')
 					.attr('data-value', item[0])
-					.text(item[1] || settings.emptyText);
+					.text(item[1] || nuTranslate(settings.emptyText));
 				if (index % 2 === 0) $item.addClass('even');
 				else $item.addClass('odd');
 
 				$item.on('click', function (e) {
 					e.stopPropagation();
 					const selectedValue = $(this).attr('data-value');
-					const originalItem = settings.items.find(itm => itm[0] == selectedValue);
-					const selectedLabel = originalItem ? originalItem[1] : '';
+
+					const originalItem = filteredItems.find(itm => itm[0] == selectedValue);
+					const actualLabel = originalItem ? originalItem[1] : '';
+
+					const displayLabel = actualLabel || nuTranslate(settings.emptyText);
 
 					nuSearchablePopupUtils.PropertyManager.setFilterValue(column, columnId, selectedValue);
-					toggleIcon(true, selectedLabel || settings.emptyText);
-					settings.onSelected(selectedValue, selectedLabel, false);
+					toggleIcon(true, displayLabel);
+					settings.onSelected(selectedValue, actualLabel, false);
 					$popup.hide();
 					window.nuFORM.getCurrent().page_number = 1;
 					nuSearchAction();
@@ -8815,16 +8818,20 @@ $.fn.nuSearchablePopup = function (options) {
 			if ($visibleItems.length === 1) {
 				const $selectedItem = $visibleItems.first();
 				const selectedValue = $selectedItem.attr('data-value');
-				const selectedLabel = $selectedItem.html();
+
+				const originalItem = filteredItems.find(itm => itm[0] == selectedValue);
+				const actualLabel = originalItem ? originalItem[1] : '';
+				const displayLabel = actualLabel || nuTranslate(settings.emptyText);
 
 				nuSearchablePopupUtils.PropertyManager.setFilterValue(column, columnId, selectedValue);
-				toggleIcon(true, selectedLabel);
-				settings.onSelected(selectedValue, selectedLabel, false);
+				toggleIcon(true, displayLabel);
+				settings.onSelected(selectedValue, actualLabel, false);
 				$popup.hide();
 				window.nuFORM.getCurrent().page_number = 1;
 				nuSearchAction();
 			}
 		}
+
 	});
 
 	$closeBtn.on('click', function (e) {
@@ -8866,7 +8873,8 @@ $.fn.nuSearchablePopup = function (options) {
 		if (existingValue) {
 			const existingItem = settings.items.find(item => item[0] == existingValue);
 			if (existingItem) {
-				toggleIcon(true, existingItem[1]);
+				const displayLabel = existingItem[1] || nuTranslate(settings.emptyText);
+				toggleIcon(true, displayLabel);
 				settings.onSelected(existingValue, existingItem[1], true);
 			}
 		}
