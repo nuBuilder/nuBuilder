@@ -1223,7 +1223,7 @@ function nuBrowseColumns($form) {
 
 function nuBrowseExpandNuEqualsFilter($sql) {
 
-	$pattern = '/nu_equals_filter\s*\(\s*([\'"])([^\'"]+)\1\s*,\s*([\'"])([^\'"]+)\3(?:\s*,\s*([\'"])([^\'"]*)\5)?\s*\)/i';
+	$pattern = '/nu_filter_match\s*\(\s*([\'"])([^\'"]+)\1\s*,\s*([\'"])([^\'"]+)\3(?:\s*,\s*([\'"])([^\'"]*)\5)?\s*\)/i';
 
 	return preg_replace_callback($pattern, function ($m) {
 		$column = $m[2]; 							// e.g., column_name
