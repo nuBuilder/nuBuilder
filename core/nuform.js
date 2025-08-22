@@ -8315,7 +8315,7 @@ var nuSearchablePopupUtils = {
 		},
 
 		setFilterValue(column, columnId, value) {
-			const key = this.getFilterKey(column, columnId);
+			const key = this.getFilterKey(column, columnId); debugger;
 			nuSetProperty(key, value);
 		},
 
@@ -8426,6 +8426,7 @@ $.fn.nuSearchableMultiPopup = function (options) {
 		selectText: "Select All",
 		checked: [],
 		positionAtMouse: true,
+		emptyText: nuTranslate("(empty)"),
 		onSelected: function (selectedItems) { },
 		onClear: function () { }
 	}, options);
@@ -8541,9 +8542,10 @@ $.fn.nuSearchableMultiPopup = function (options) {
 				.attr('id', checkboxId)
 				.attr('value', item.value);
 
+			const displayLabel = item.label || nuTranslate(settings.emptyText);
 			const $label = $('<label>')
 				.attr('for', checkboxId)
-				.text(item.label)
+				.text(displayLabel)
 				.addClass('nuNoSelect');
 
 			const $div = $('<div>')
@@ -8656,7 +8658,8 @@ $.fn.nuSearchableMultiPopup = function (options) {
 						String(item.value) === String(value) || item.value == value
 					);
 					if (foundItem) {
-						existingLabels.push(foundItem.label);
+						const displayLabel = foundItem.label || nuTranslate(settings.emptyText);
+						existingLabels.push(displayLabel);
 					}
 				});
 
@@ -8865,6 +8868,7 @@ $.fn.nuSearchablePopup = function (options) {
 	};
 
 	return this;
+
 };
 
 function nuDatalistValueRestoreValue(i) {
