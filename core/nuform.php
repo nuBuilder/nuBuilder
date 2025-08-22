@@ -1221,6 +1221,33 @@ function nuBrowseColumns($form) {
 	return $columns;
 }
 
+function nuBrowseExpandNuEqualsFilter($sql) {
+
+	$pattern = '/nu_equals_filter\s*\(\s*([\'"])([^\'"]+)\1\s*,\s*([\'"])([^\'"]+)\3(?:\s*,\s*([\'"])([^\'"]*)\5)?\s*\)/i';
+
+	return preg_replace_callback($pattern, function ($m) {
+		$column = $m[2]; 							// e.g., column_name
+		$token = $m[4]; 							// e.g., 68a7263f0b3c449
+		$emptyValue = isset($m[6]) ? $m[6] : '-1'; 	// empty value substitution
+		$ph = "#{$token}_filter#";
+
+		$block = <<<SQL
+(
+  (LEFT('{$ph}',1) = '#' OR TRIM('{$ph}') = '')
+  OR (
+       LEFT('{$ph}',1) <> '#' AND TRIM('{$ph}') <> ''
+       AND (
+            (FIND_IN_SET('{$emptyValue}', '{$ph}') > 0 AND IFNULL({$column},'') = '')
+            OR FIND_IN_SET({$column}, '{$ph}') > 0
+       )
+     )
+)
+SQL;
+		return $block;
+	}, $sql);
+
+}
+
 function nuBrowseRows($f) {
 
 	if (nuTrim($f->record_id) != '') {
@@ -1248,7 +1275,9 @@ function nuBrowseRows($f) {
 		return [[], 0];
 	}
 
-	$S = new nuSqlString(nuReplaceHashVariables($r->sfo_browse_sql));
+	$S = nuBrowseExpandNuEqualsFilter($r->sfo_browse_sql);
+
+	$S = new nuSqlString(nuReplaceHashVariables($S));
 
 	$S->addField('$' . $f->primary_key . '$');
 
