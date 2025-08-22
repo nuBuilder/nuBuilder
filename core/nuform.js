@@ -9254,7 +9254,10 @@ function nuPopupCalendar(pThis, d) {
 	let objCalendarOptionsDefault = { options: calendarOptionsDefault };
 	let calendarUserOptions = [];
 
-	calendarUserOptions = nuCallWindowFunction("nuOnSetCalendarOptions", id, objCalendarOptionsDefault);
+	if (typeof window.nuOnSetCalendarOptions === 'function') {
+		calendarUserOptions = window.nuOnSetCalendarOptions(id, objCalendarOptionsDefault);
+	}
+
 	let calendarOptions = Object.assign(calendarUserOptions, objCalendarOptionsDefault.options);
 
 	Datepicker.locales.en = {
