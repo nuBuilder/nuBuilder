@@ -2033,6 +2033,7 @@ function nuApplyAttributes(id, attrs) {
 				break;
 			case 'nu-help-icon-text':
 			case 'nu-help-icon-position':
+
 				if ($id.hasClass('nuHiddenLookup')) {
 					const descWidth = $('#' + id + 'description').width();
 					if (descWidth === 0) {
@@ -2040,8 +2041,8 @@ function nuApplyAttributes(id, attrs) {
 					} else {
 						el = document.getElementById(id + 'description');
 					}
-					el.setAttribute(key, value);
 				}
+				el.setAttribute(key, value);
 
 				break;
 			case 'nu-label-position':
