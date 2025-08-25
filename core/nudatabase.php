@@ -36,6 +36,8 @@ try {
 		echo '<b style="color:#0084b1;">It looks like the database <span style="color:#005580;">' . htmlspecialchars($dbName) . '</span> does not exist.</b><br>';
 		echo '<span style="color:#333;">To create it, please enter your database username and <i>(optionally)</i> password:</span>';
 		echo '<form method="post" style="margin-top:10px;">';
+		echo "<small>(Creating the database only works if this user has CREATE DATABASE privileges)</small><br><br>";
+
 		echo '<div style="margin-bottom:10px;"><label style="width:100px;display:inline-block;">DB User:</label> <input type="text" name="create_db_user" required style="padding:5px;border-radius:3px;border:1px solid #bbb;"></div>';
 		echo '<div style="margin-bottom:10px;"><label style="width:100px;display:inline-block;">DB Password:</label> <input type="password" name="create_db_password" style="padding:5px;border-radius:3px;border:1px solid #bbb;"></div>';
 		echo '<input type="hidden" name="create_db_name" value="' . htmlspecialchars($dbName) . '">';
