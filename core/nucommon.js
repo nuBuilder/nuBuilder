@@ -345,6 +345,24 @@ function nujQueryObj(id) {
 
 }
 
+function nuElement(id) {
+
+	if (typeof id === 'string') {
+		if (/^[#.\[]/.test(id)) {
+			return Array.from(document.querySelectorAll(id));
+		}
+		let el = document.getElementById(id);
+		return el ? [el] : [];
+	} else if (id instanceof HTMLElement) {
+		return [id];
+	} else if (id instanceof NodeList || Array.isArray(id)) {
+		return Array.from(id);
+	} else {
+		return [];
+	}
+
+}
+
 function nuPad4(id, pad = '0') {
 	return nuPad(id, 4, pad);
 }
