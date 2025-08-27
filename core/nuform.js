@@ -6274,7 +6274,6 @@ function nuAddObjectFunctions() {
 
 	nuCallWindowFunction("nuOnLabelCustomPosition");
 
-
 }
 
 function nuAttachHelpIconsToObjects({

@@ -346,7 +346,6 @@ function nujQueryObj(id) {
 }
 
 function nuElement(id) {
-
 	if (typeof id === 'string') {
 		if (/^[#.\[]/.test(id)) {
 			return Array.from(document.querySelectorAll(id));
@@ -360,7 +359,6 @@ function nuElement(id) {
 	} else {
 		return [];
 	}
-
 }
 
 function nuPad4(id, pad = '0') {
@@ -2295,6 +2293,29 @@ function nuSetToolTip(id, message, labelHover) {
 
 	setToolTip("#" + id);
 	if (labelHover) setToolTip("#label_" + id);
+
+}
+
+function nuSetAdvancedToolTip(selector, toolTipText, options = {}) {
+
+	const defaults = { createIcon: false, toolTipText };
+
+	let elements = nuElement(selector);
+	if (elements.length === 0 && typeof selector === "string") {
+		elements = Array.from(document.querySelectorAll(`#${selector}`));
+	}
+
+	let cssSelector = selector;
+	if (typeof selector === "string" && !/^[#.\[]/.test(selector)) {
+		cssSelector = `#${selector}`;
+	}
+
+	const merged = Object.fromEntries(
+		Object.entries({ ...defaults, ...options, selector: cssSelector }).filter(([, v]) => v != null)
+	);
+
+	elements.forEach(el => el.setAttribute("nu-help-icon-text", toolTipText));
+	nuAttachHelpIconsToObjects(merged);
 
 }
 
