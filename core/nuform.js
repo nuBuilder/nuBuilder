@@ -6272,6 +6272,13 @@ function nuAddObjectFunctions() {
 		}
 	});
 
+	document.querySelectorAll('[nu-help-text]').forEach(el => {
+		let helpText = el.getAttribute('nu-help-text');
+		if (el.id) {
+			nuSetAdvancedToolTip(el.id, helpText);
+		}
+	});
+
 	nuCallWindowFunction("nuOnLabelCustomPosition");
 
 }
