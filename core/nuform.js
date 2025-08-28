@@ -244,7 +244,7 @@ function nuBuildForm(formObj) {
 	nuProcessAfterSave();
 
 	nuAddFormStyle(formObj.style);
-	nuAddObjectFunctions();
+	nuAddObjectFunctions(formType);
 	nuSetBrowseHeight();
 
 	const globalAccess = nuGlobalAccess();
@@ -6260,7 +6260,9 @@ function nuAddFormStyle(style) {
 
 }
 
-function nuAddObjectFunctions() {
+function nuAddObjectFunctions(formType) {
+
+	if (formType === 'browse') return;
 
 	nuAttachHelpIconsToObjects({
 		gapRight: 8,
