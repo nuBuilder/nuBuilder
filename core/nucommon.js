@@ -2279,12 +2279,16 @@ function nuSetPlaceholder(i, placeholder = null, translate = true) {
 
 }
 
-function nuSetToolTip(id, message, labelHover) {
+function nuSetToolTip(id, options, labelHover) {
+
+	if (options && typeof options === "object") {
+		nuSetAdvancedToolTip(id, options);
+	}
 
 	const setToolTip = selector => {
 		$(selector)
 			.on("mouseenter", function () {
-				$(this).attr("title", nuTranslate(message));
+				$(this).attr("title", nuTranslate(options));
 			})
 			.on("mouseleave", function () {
 				$(this).removeAttr("title");
@@ -2296,17 +2300,24 @@ function nuSetToolTip(id, message, labelHover) {
 
 }
 
-function nuSetAdvancedToolTip(selector, toolTipText, options = {}) {
+function nuSetAdvancedToolTip(selector, arg2 = {}, arg3 = {}) {
+	// Allow (selector, options) OR (selector, text, options)
+	let options;
+	if (typeof arg2 === 'string') {
+		options = { ...arg3, text: arg2 };
+	} else {
+		options = arg2 || {};
+	}
 
-	const defaults = { createIcon: false, toolTipText };
+	const defaults = { createIcon: false };
 
 	let elements = nuElement(selector);
-	if (elements.length === 0 && typeof selector === "string") {
+	if (elements.length === 0 && typeof selector === 'string') {
 		elements = Array.from(document.querySelectorAll(`#${selector}`));
 	}
 
 	let cssSelector = selector;
-	if (typeof selector === "string" && !/^[#.\[]/.test(selector)) {
+	if (typeof selector === 'string' && !/^[#.\[]/.test(selector)) {
 		cssSelector = `#${selector}`;
 	}
 
@@ -2314,7 +2325,10 @@ function nuSetAdvancedToolTip(selector, toolTipText, options = {}) {
 		Object.entries({ ...defaults, ...options, selector: cssSelector }).filter(([, v]) => v != null)
 	);
 
-	elements.forEach(el => el.setAttribute("nu-help-icon-text", toolTipText));
+	if (merged.text != null && merged.text !== '') {
+		elements.forEach(el => el.setAttribute('nu-help-icon-text', merged.text));
+	}
+
 	nuAttachHelpIconsToObjects(merged);
 
 }
