@@ -2283,6 +2283,7 @@ function nuSetToolTip(id, options, labelHover) {
 
 	if (options && typeof options === "object") {
 		nuSetAdvancedToolTip(id, options);
+		return;
 	}
 
 	const setToolTip = selector => {
@@ -2304,7 +2305,7 @@ function nuSetAdvancedToolTip(selector, arg2 = {}, arg3 = {}) {
 	// Allow (selector, options) OR (selector, text, options)
 	let options;
 	if (typeof arg2 === 'string') {
-		options = { ...arg3, text: arg2 };
+		options = { ...arg3, content: arg2 };
 	} else {
 		options = arg2 || {};
 	}
@@ -2325,11 +2326,11 @@ function nuSetAdvancedToolTip(selector, arg2 = {}, arg3 = {}) {
 		Object.entries({ ...defaults, ...options, selector: cssSelector }).filter(([, v]) => v != null)
 	);
 
-	if (merged.text != null && merged.text !== '') {
-		elements.forEach(el => el.setAttribute('nu-help-icon-text', merged.text));
+	if (merged.content != null && merged.content !== '') {
+		elements.forEach(el => el.setAttribute('nu-tooltip-icon', merged.content));
 	}
 
-	nuAttachHelpIconsToObjects(merged);
+	nuAttachToolTip(merged);
 
 }
 
