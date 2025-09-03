@@ -1613,7 +1613,7 @@ function nuINPUTfileFileSystem($formId, w, i, l, p, prop, id) {
 
 	nuCreateElementWithId('div', 'nuBreadcrumb0', p + 'nuRECORD');
 
-	obj = nuLabelOrPosition(obj, w, i, l, p, prop);
+	obj = nuLabelOrPosition(obj, i, l, p, prop);
 
 	nuAddDataTab(id, obj.tab, p);
 
@@ -1925,7 +1925,7 @@ function nuINPUT(formObj, index, layer, prefix, properties) {
 		inputElementType = 'div';
 	}
 
-	obj = nuLabelOrPosition(obj, formObj, index, layer, prefix, properties);
+	obj = nuLabelOrPosition(obj, index, layer, prefix, properties);
 
 	let elementId = objectId;
 	if (inputElementType === 'input' && inputType === 'file' && !isFileInputWithTarget) {
@@ -2157,7 +2157,7 @@ function nuSetAccess(id, r) {
 
 }
 
-function nuLabelOrPosition(obj, w, i, l, p, prop) {
+function nuLabelOrPosition(obj, i, l, p, prop) {
 
 	if (obj.parent_type == 'g') {
 
@@ -2167,7 +2167,7 @@ function nuLabelOrPosition(obj, w, i, l, p, prop) {
 	} else {
 
 		if (obj.input != 'button' && prop.title !== 'Insert-Snippet') {			//-- Input Object
-			nuLabel(w, i, p, prop);
+			nuLabel(i, p, prop);
 		}
 
 	}
@@ -2202,7 +2202,7 @@ function nuHTML(w, i, l, p, prop, id) {
 
 	const div = nuCreateElementWithId('div', id, p + 'nuRECORD');
 
-	obj = nuLabelOrPosition(obj, w, i, l, p, prop);
+	obj = nuLabelOrPosition(obj, i, l, p, prop);
 
 	nuAddDataTab(id, obj.tab, p);
 
@@ -2266,7 +2266,7 @@ function nuIMAGE(w, i, l, p, prop) {
 
 	const img = nuCreateElementWithId('img', id, p + 'nuRECORD');
 
-	obj = nuLabelOrPosition(obj, w, i, l, p, prop);
+	obj = nuLabelOrPosition(obj, i, l, p, prop);
 
 	nuAddDataTab(id, obj.tab, p);
 
@@ -2365,7 +2365,7 @@ function nuRUN(w, i, l, p, prop) {
 	if (obj.run_method != 'b') {
 		tagName = 'iframe';
 		if (obj.parent_type !== 'g') {
-			nuLabel(w, i, p, prop);
+			nuLabel(i, p, prop);
 		}
 	}
 
@@ -2416,7 +2416,7 @@ function nuSELECT(w, i, l, p, prop) {
 	let obj = prop.objects[i];
 	const id = p + obj.id;
 
-	obj = nuLabelOrPosition(obj, w, i, l, p, prop);
+	obj = nuLabelOrPosition(obj, i, l, p, prop);
 
 	const sel = nuCreateElementWithId('select', id, p + 'nuRECORD');
 
@@ -2667,7 +2667,7 @@ function nuSUBFORM(w, i, l, p, prop) {
 
 	}
 
-	nuLabelOrPosition(SF, w, i, l, p, prop);
+	nuLabelOrPosition(SF, i, l, p, prop);
 	nuSetAccess(id, SF.read);
 	nuAddStyle(id, SF);
 
@@ -3794,9 +3794,9 @@ function nuLabelGetValidationClass(validationId) {
 
 }
 
-function nuLabel(w, i, p, prop) {
+function nuLabel(index, prefix, prop) {
 
-	let obj = prop.objects[i];
+	let obj = prop.objects[index];
 
 	if (!obj.label && obj.type === 'subform') {
 		obj.label = ' ';
@@ -3806,17 +3806,17 @@ function nuLabel(w, i, p, prop) {
 		return;
 	}
 
-	const id = 'label_' + p + obj.id;
+	const id = 'label_' + prefix + obj.id;
 	// Workaround: Prevent label from being added twice for Editor
 	let objLabel = document.getElementById(id);
 	if (objLabel) {
 		return objLabel;
 	}
 
-	objLabel = nuCreateElementWithId('label', id, p + 'nuRECORD');
+	objLabel = nuCreateElementWithId('label', id, prefix + 'nuRECORD');
 	const label = nuTranslate(String(obj.label));
 	const lwidth = nuGetWordWidth(label, 'label');
-	const forId = obj.type == 'lookup' ? p + obj.id + 'code' : p + obj.id;
+	const forId = obj.type == 'lookup' ? prefix + obj.id + 'code' : prefix + obj.id;
 
 	if (obj.type === 'subform') {
 		const subform = nuSubformObject(forId);
@@ -3829,7 +3829,7 @@ function nuLabel(w, i, p, prop) {
 		objLabel.setAttribute('for', forId);
 	}
 
-	nuAddDataTab(id, obj.tab, p);
+	nuAddDataTab(id, obj.tab, prefix);
 	nuSetObjectBounds(objLabel, obj.top, Number(obj.left) - lwidth + -17, Number(lwidth + 12)).html(label);
 
 	nuAddDblClickOpenObjectProperties($('#' + id), obj.object_id);
