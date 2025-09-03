@@ -1371,7 +1371,7 @@ function nuBuildEditObjects(formObj, prefix, o, prop) {
 		if (arrangingObjects) {
 
 			$("body").css("overflow", "hidden");
-			left = left + nuDRAG(formObj, objIndex, left, prefix, prop);
+			left = left + nuDRAG(objIndex, prefix, prop);
 
 		} else {
 
@@ -1512,11 +1512,11 @@ function nuRecordProperties(w, p, l) {
 
 }
 
-function nuDRAG(w, i, l, p, prop) {
+function nuDRAG(id, prefix, prop) {
 
-	const obj = prop.objects[i];
-	const id = p + obj.id;
-	const nuObjectType = p + obj.type;
+	const obj = prop.objects[id];
+	const newId = prefix + obj.id;
+	const nuObjectType = prefix + obj.type;
 
 	let tagType = 'div';
 	/*
@@ -1525,7 +1525,7 @@ function nuDRAG(w, i, l, p, prop) {
 	}
 	*/
 
-	const drgDiv = nuCreateElementWithId(tagType, id, p + 'nuRECORD');
+	const drgDiv = nuCreateElementWithId(tagType, newId, prefix + 'nuRECORD');
 	let $id = $(drgDiv);
 
 	nuSetObjectBounds(drgDiv, obj.top, obj.left, obj.width, obj.height)
@@ -1547,16 +1547,16 @@ function nuDRAG(w, i, l, p, prop) {
 		.attr('data-nu-object-id', obj.object_id);
 
 	if (tagType == 'div') {
-		$id.text(id);
+		$id.text(newId);
 	} else {
-		$id.val(id).attr('spellcheck', 'false').prop('readonly', true);
+		$id.val(newId).attr('spellcheck', 'false').prop('readonly', true);
 	}
 
 	if (obj.input == 'button' || nuObjectType == 'run') {
 		$id.attr('data-drag-button-label', obj.label);
 	}
 
-	nuAddDataTab(id, obj.tab, p);
+	nuAddDataTab(newId, obj.tab, prefix);
 
 	return Number(obj.width);
 
