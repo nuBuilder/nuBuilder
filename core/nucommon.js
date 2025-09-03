@@ -2608,7 +2608,7 @@ function nuPasteText(id, callback) {
 	navigator.clipboard.readText()
 		.then(text => {
 			nuSetValue(id, text);
-			nuCallWindowFunction(callback);
+			nuCallWindowFunction(callback, id, text);
 		});
 
 }
