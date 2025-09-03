@@ -110,7 +110,6 @@ function nuBuildForm(formObj) {
 
 	nuCallWindowFunction("nuBeforeAddActionButtons");
 
-
 	nuAddActionButtons(formObj);
 	nuRecordProperties(formObj, '');
 
@@ -1460,45 +1459,45 @@ function nuAddJSObjectEvents(id, events) {
 	}
 }
 
-function nuRecordProperties(w, p, l) {
+function nuRecordProperties(formObj, prefix, left) {
 
-	var del = p + 'nuDelete';
-	var sf = p.substr(0, p.length - 3);
+	const del = prefix + 'nuDelete';
+	const sf = prefix.substr(0, prefix.length - 3);
 
 	const chk = nuCreateElementWithId('input', del);
 
 	chk.setAttribute('title', nuTranslate('Delete This Row When Saved'));
-	chk.setAttribute('type', w.deletable == '0' ? 'text' : 'checkbox');
+	chk.setAttribute('type', formObj.deletable == '0' ? 'text' : 'checkbox');
 	chk.setAttribute('onclick', 'nuChange(event)');
 
-	$('#' + p + 'nuRECORD')
+	$('#' + prefix + 'nuRECORD')
 		.append(chk)
 		.addClass('nuSection')
-		.attr('data-nu-form-id', w.id)
-		.attr('data-nu-table', w.table)
-		.attr('data-nu-primary-key', w.record_id)
-		.attr('data-nu-foreign-key', w.foreign_key)
-		.attr('data-nu-foreign-field', p == '' ? '' : w.foreign_key_name);
+		.attr('data-nu-form-id', formObj.id)
+		.attr('data-nu-table', formObj.table)
+		.attr('data-nu-primary-key', formObj.record_id)
+		.attr('data-nu-foreign-key', formObj.foreign_key)
+		.attr('data-nu-foreign-field', prefix == '' ? '' : formObj.foreign_key_name);
 
-	var objDel = $('#' + del);
+	const objDel = $('#' + del);
 	objDel
 		.attr('data-nu-data', '')
 		.addClass('nuSubformCheckbox')
-		.addClass(w.table);
+		.addClass(formObj.table);
 
 	if (arguments.length == 3) {
 
 		objDel
-			.prop('checked', w.record_id == -1)
-			.attr('data-nu-checkbox', w.deletable == '0' ? '' : sf)
+			.prop('checked', formObj.record_id == -1)
+			.attr('data-nu-checkbox', formObj.deletable == '0' ? '' : sf)
 			.css({
 				'top': 3,
-				'left': Number(l) + 2,
+				'left': Number(left) + 2,
 				'position': 'absolute',
 				'visibility': 'visible'
 			});
 
-		if (w.deletable == '0') {
+		if (formObj.deletable == '0') {
 			objDel.css({ 'width': 0, 'height': 0, 'left': -10, 'top': 10, 'tabindex': '-1' });			//-- allows tabbing when there is no checkbox.
 		}
 
