@@ -1606,18 +1606,18 @@ function nuINPUTfileDatabase($formId, obj, id, p) {
 
 }
 
-function nuINPUTfileFileSystem($formId, w, i, l, p, prop, id) {
+function nuINPUTfileFileSystem(formObj, index, layer, prefix, prop, id) {
 
-	var obj = prop.objects[i];
-	id = id !== undefined ? id : p + obj.id;
+	var obj = prop.objects[index];
+	id = id !== undefined ? id : prefix + obj.id;
 
-	nuCreateElementWithId('div', 'nuBreadcrumb0', p + 'nuRECORD');
+	nuCreateElementWithId('div', 'nuBreadcrumb0', prefix + 'nuRECORD');
 
-	obj = nuLabelOrPosition(obj, i, l, p, prop);
+	obj = nuLabelOrPosition(obj, index, layer, prefix, prop);
 
-	nuAddDataTab(id, obj.tab, p);
+	nuAddDataTab(id, obj.tab, prefix);
 
-	let html = w.objects[i].html;
+	let html = formObj.objects[index].html;
 	html = html.replaceAll('#uppy_div#', id + '_uppy_div');
 	html = html.replaceAll('#this_object_id#', id);
 	html = html.replaceAll('nuInitUppy()', 'nuInitUppy' + '_' + id + '()');
@@ -1944,7 +1944,7 @@ function nuINPUT(formObj, index, layer, prefix, properties) {
 	}
 
 	if (isFileInputWithTarget) {
-		nuINPUTfileFileSystem(formId, formObj, index, layer, prefix, properties, elementId);
+		nuINPUTfileFileSystem(formObj, index, layer, prefix, properties, elementId);
 	}
 
 	nuApplyInputTypeSpecificBehaviors($id, inputType, objType, thisObj, obj, prefix);
