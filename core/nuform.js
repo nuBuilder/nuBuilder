@@ -1358,7 +1358,7 @@ function nuActionButtonsToggleVisibility() {
 
 }
 
-function nuBuildEditObjects(formObj, p, o, prop) {
+function nuBuildEditObjects(formObj, prefix, o, prop) {
 
 	if (typeof (formObj.objects) != 'object') { return; }
 
@@ -1371,7 +1371,7 @@ function nuBuildEditObjects(formObj, p, o, prop) {
 		if (arrangingObjects) {
 
 			$("body").css("overflow", "hidden");
-			left = left + nuDRAG(formObj, objIndex, left, p, prop);
+			left = left + nuDRAG(formObj, objIndex, left, prefix, prop);
 
 		} else {
 
@@ -1397,8 +1397,8 @@ function nuBuildEditObjects(formObj, p, o, prop) {
 			};
 
 			// Execute the function based on the type
-			if (typeFunctionMap[t] && (t !== 'subform' || p === '')) {
-				let newLeft = typeFunctionMap[t](formObj, objIndex, left, p, prop);
+			if (typeFunctionMap[t] && (t !== 'subform' || prefix === '')) {
+				let newLeft = typeFunctionMap[t](formObj, objIndex, left, prefix, prop);
 				left += newLeft;
 			}
 
@@ -1407,13 +1407,13 @@ function nuBuildEditObjects(formObj, p, o, prop) {
 			}
 
 			const tableColumn = formObj.objects[objIndex].table_column;
-			$('#' + p + obj.id).attr('data-nu-table-column', tableColumn);
+			$('#' + prefix + obj.id).attr('data-nu-table-column', tableColumn);
 
 			if (obj.visible === false) {
 				nuHide(obj.id);
 			}
 
-			nuAddAttributes(p + obj.id, obj.attributes);
+			nuAddAttributes(prefix + obj.id, obj.attributes);
 
 			if (!(t == 'contentbox' && nuIsMobile())) {
 				left = left + 2;
@@ -2157,17 +2157,17 @@ function nuSetAccess(id, r) {
 
 }
 
-function nuLabelOrPosition(obj, i, l, p, prop) {
+function nuLabelOrPosition(obj, id, left, prefix, prop) {
 
 	if (obj.parent_type == 'g') {
 
-		obj.left = l;
+		obj.left = left;
 		obj.top = 3;
 
 	} else {
 
 		if (obj.input != 'button' && prop.title !== 'Insert-Snippet') {			//-- Input Object
-			nuLabel(i, p, prop);
+			nuLabel(id, prefix, prop);
 		}
 
 	}
