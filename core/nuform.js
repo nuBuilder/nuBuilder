@@ -2049,7 +2049,7 @@ function nuApplyAttributes(id, attrs) {
 				if (value === 'top') {
 					$('#' + id).nuLabelOnTop();
 				} else {
-					el.setAttribute(key, value);
+					el.setAttribute('data-' + key, value);
 				}
 				break;
 			default:
