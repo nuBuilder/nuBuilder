@@ -936,30 +936,26 @@ function nuDialogHeadersHeight() {
 }
 
 function nuTotalHeight(id) {
-	const arrProperties = [
-		"height",
-		"padding-top",
-		"padding-bottom",
-		"border-top-width",
-		"border-bottom-width",
-		"margin-top",
-		"margin-bottom",
-	];
-	return nuCSSPropertySum(id, arrProperties);
+    const elem = document.getElementById(id);
+    if (!elem) return 0;
+
+    const style = getComputedStyle(elem);
+    return elem.getBoundingClientRect().height +
+        parseFloat(style.marginTop) +
+        parseFloat(style.marginBottom);
 }
 
 function nuTotalWidth(id) {
-	const arrProperties = [
-		"width",
-		"padding-left",
-		"padding-right",
-		"border-left-width",
-		"border-right-width",
-		"margin-left",
-		"margin-right",
-	];
-	return nuCSSPropertySum(id, arrProperties);
+	
+    const elem = document.getElementById(id);
+    if (!elem) return 0;
+
+    const style = getComputedStyle(elem);
+    return elem.getBoundingClientRect().width +
+        parseFloat(style.marginLeft) +
+        parseFloat(style.marginRight);
 }
+
 
 function nuTotalHolderWidth(id) {
 	const arrProperties = [
