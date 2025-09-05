@@ -5154,11 +5154,17 @@ function nuBrowseCalculateInitialTopOffset(rowHeight) {
 
 function nuBrowseHandleNoDataScenario() {
 
-	const searchLengthZero = nuCurrentProperties().search.length === 0;
+	const props = nuCurrentProperties();
+	if (!props || typeof props.search === 'undefined') {
+		return;
+	}
+
+	const searchLengthZero = props.search.length === 0;
 	const noDataMessage = searchLengthZero ? 'No data to display' : 'No search results found';
 	const firstCellClass = searchLengthZero ? 'nuBrowseNoData' : 'nuBrowseNoResults';
+
 	$('#nucell_0_0').html(nuTranslate(noDataMessage)).addClass(firstCellClass);
-	window[`nuBrowseNo${firstCellClass === 'nuBrowseNoData' ? 'Data' : 'SearchResults'}`] = true;
+	window[firstCellClass === 'nuBrowseNoData' ? 'nuBrowseNoData' : 'nuBrowseNoSearchResults'] = true;
 
 }
 
