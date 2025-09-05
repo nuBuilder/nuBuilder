@@ -936,37 +936,24 @@ function nuDialogHeadersHeight() {
 }
 
 function nuTotalHeight(id) {
-    const elem = document.getElementById(id);
-    if (!elem) return 0;
+	const elem = document.getElementById(id);
+	if (!elem) return 0;
 
-    const style = getComputedStyle(elem);
-    return elem.getBoundingClientRect().height +
-        parseFloat(style.marginTop) +
-        parseFloat(style.marginBottom);
+	const style = getComputedStyle(elem);
+	return elem.getBoundingClientRect().height +
+		parseFloat(style.marginTop) +
+		parseFloat(style.marginBottom);
 }
 
 function nuTotalWidth(id) {
-	
-    const elem = document.getElementById(id);
-    if (!elem) return 0;
 
-    const style = getComputedStyle(elem);
-    return elem.getBoundingClientRect().width +
-        parseFloat(style.marginLeft) +
-        parseFloat(style.marginRight);
-}
+	const elem = document.getElementById(id);
+	if (!elem) return 0;
 
-
-function nuTotalHolderWidth(id) {
-	const arrProperties = [
-		"padding-left",
-		"padding-right",
-		"border-left-width",
-		"border-right-width",
-		"margin-left",
-		"margin-right",
-	];
-	return nuCSSPropertySum(id, arrProperties);
+	const style = getComputedStyle(elem);
+	return elem.getBoundingClientRect().width +
+		parseFloat(style.marginLeft) +
+		parseFloat(style.marginRight);
 }
 
 function nuDefine(v, defaultValue = '') {
