@@ -4919,13 +4919,10 @@ function nuResizeBrowseColumns(force) {
 
 	} else {
 
-		const browseFooterWidth = nuTotalWidth('nuBrowseFooter') + 22;
+		const browseFooterWidth = nuTotalWidth('nuBrowseFooter') + 50;
 
 		$('#nuDragDialog', window.parent.document).css('width', browseFooterWidth + 14);
 		$('#nuWindow', window.parent.document).css('width', browseFooterWidth);
-
-		// const bodyWidth = `${browseFooterWidth}px`;
-		// document.body.style.width = bodyWidth;
 
 	}
 
@@ -5143,7 +5140,7 @@ function nuSetBrowseHeight() {
 	const dialogTitleHeight = nuSelectInParentDocument('#dialogTitle').nuCSSNumber('height');
 	const actionHolderHeight = nuTotalHeight('nuActionHolder');
 	const BreadcrumbOlderHeight = nuTotalHeight('nuBreadcrumbHolder');
-	const totalHeight = cellsHeight + footerHeight + dialogTitleHeight + actionHolderHeight + BreadcrumbOlderHeight + 10;
+	const totalHeight = cellsHeight + footerHeight + dialogTitleHeight + actionHolderHeight + BreadcrumbOlderHeight + 20;
 	nuBrowseUpdateParentDocumentStyles(totalHeight);
 
 }
