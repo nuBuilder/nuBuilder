@@ -622,6 +622,63 @@ function nuBrowseStickyColumns($record) {
 
 }
 
+function nuStickyHeader(opts = {}) {
+
+	const apply = () => {
+		const crumbH = nuTotalHeight('nuBreadcrumbHolder');
+		const actionH = nuTotalHeight('nuActionHolder');
+
+		const {
+			actionTop = crumbH,
+			stickyTabs = true,
+			tabsTop = actionTop + actionH + 1,
+			important = true,
+			clear = false,
+		} = opts;
+
+		const set = (el, prop, val) =>
+			el && el.style.setProperty(prop, val, important ? 'important' : '');
+		const remove = el => {
+			el?.style.removeProperty('position');
+			el?.style.removeProperty('top');
+			el?.style.removeProperty('z-index');
+		};
+
+		const all = document.querySelectorAll('.nuBreadcrumbHolder, .nuActionHolder, .nuTabHolder');
+		if (clear) { all.forEach(remove); return; }
+
+		all.forEach(el => set(el, 'margin-top', '0'));
+
+		document.querySelectorAll('.nuBreadcrumbHolder').forEach(el => {
+			set(el, 'position', 'sticky');
+			set(el, 'top', `0px`);
+			set(el, 'z-index', '1000');
+		});
+
+		document.querySelectorAll('.nuActionHolder').forEach(el => {
+			set(el, 'position', 'sticky');
+			set(el, 'top', `${actionTop}px`);
+			set(el, 'z-index', '999');
+		});
+
+		const tabs = document.querySelectorAll('.nuTabHolder');
+		if (stickyTabs) {
+			tabs.forEach(el => {
+				set(el, 'position', 'sticky');
+				set(el, 'top', `${tabsTop}px`);
+				set(el, 'z-index', '998');
+			});
+		} else {
+			tabs.forEach(remove);
+		}
+	};
+
+	apply();
+	addEventListener('resize', apply, { passive: true });
+	if (document.fonts?.ready) document.fonts.ready.then(apply);
+
+}
+
 function nuBrowseStyleBadge(column) {
 
 	function createBadgeHtml(text) {
