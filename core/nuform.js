@@ -218,6 +218,10 @@ function nuBuildForm(formObj) {
 		nuShowBrowsePaginationInfo((nuUXOptions.nuBrowsePaginationInfo));
 	}
 
+	if (nuUXOptions.nuEditStickyHeaders) {
+		nuEditStickyHeaders();
+	}
+
 	if (nuUXOptions.nuShowLoggedInUser) {
 		nuDisplayLoggedInUser();
 	} else
@@ -622,7 +626,7 @@ function nuBrowseStickyColumns($record) {
 
 }
 
-function nuStickyHeader(opts = {}) {
+function nuEditStickyHeaders(opts = {}) {
 
 	const apply = () => {
 		const crumbH = nuTotalHeight('nuBreadcrumbHolder');
@@ -652,13 +656,13 @@ function nuStickyHeader(opts = {}) {
 		document.querySelectorAll('.nuBreadcrumbHolder').forEach(el => {
 			set(el, 'position', 'sticky');
 			set(el, 'top', `0px`);
-			set(el, 'z-index', '1000');
+			set(el, 'z-index', '100');
 		});
 
 		document.querySelectorAll('.nuActionHolder').forEach(el => {
 			set(el, 'position', 'sticky');
 			set(el, 'top', `${actionTop}px`);
-			set(el, 'z-index', '999');
+			set(el, 'z-index', '99');
 		});
 
 		const tabs = document.querySelectorAll('.nuTabHolder');
@@ -666,7 +670,7 @@ function nuStickyHeader(opts = {}) {
 			tabs.forEach(el => {
 				set(el, 'position', 'sticky');
 				set(el, 'top', `${tabsTop}px`);
-				set(el, 'z-index', '998');
+				set(el, 'z-index', '98');
 			});
 		} else {
 			tabs.forEach(remove);

@@ -3545,8 +3545,6 @@ function nuGetSelectedText(inputOrId) {
 
 // Info Bar jQuery Plugin
 
-// Info Bar jQuery Plugin
-
 (function ($) {
 	'use strict';
 
