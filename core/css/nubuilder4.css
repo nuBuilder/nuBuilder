@@ -339,7 +339,7 @@ input[type="search"] {
 }
 
 .nuActionHolder {
-	padding: 5px 0px 10px 0px;
+	padding: 8px 0px 10px 0px;
 	background-color: white;
 	height: 35px;
 	text-align: left;
@@ -354,7 +354,6 @@ input[type="search"] {
 	color: white;
 	font-size: 12px;
 	padding: 5px 0;
-	margin-bottom: 4px;
 	position: sticky;
 	top: 0;
 	min-height: 22.5px;
@@ -1897,7 +1896,7 @@ input[type="search"] {
 	position: absolute;
 	width: 100%;
 	opacity: .7;
-	z-index: 4
+	z-index: 200;
 }
 
 #nuPopupModal {

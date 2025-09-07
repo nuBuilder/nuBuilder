@@ -21,12 +21,13 @@ function nuInitJSOptions() {
 		'nuShowJSErrors': 'None',				// Show JS errors in alert message
 		'nuHideTabTitleIfOnlyOne': 'None',		// Hide tab title if only one tab. Values: none, globeadmin, user, everyone
 		'nuShowURLPermaLink': false,			// Show URL permalink
-		'nuPrintButton': false,
-		'nuDebugIcon': true,
-		'nuPHPIcon': true,
-		'nuRefreshIcon': true,
-		'nuObjectsIcon': true,
-		'nuPropertiesIcon': true
+		'nuPrintButton': false,					// Show Print Button
+		'nuDebugIcon': true,					// Show Debug Icon
+		'nuPHPIcon': true,						// Show PHP Icon
+		'nuRefreshIcon': true,					// Show Refresh Icon
+		'nuObjectsIcon': true,					// Show Objects Icon
+		'nuPropertiesIcon': true,				// Show Properties Icon
+		'nuEditStickyHeaders': true				// Sticky Headers in Edit Forms
 	};
 
 	if (typeof window.nuUXOptions === "undefined") {
