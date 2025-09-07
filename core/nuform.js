@@ -27,7 +27,7 @@ function nuInitJSOptions() {
 		'nuRefreshIcon': true,					// Show Refresh Icon
 		'nuObjectsIcon': true,					// Show Objects Icon
 		'nuPropertiesIcon': true,				// Show Properties Icon
-		'nuEditStickyHeaders': true				// Sticky Headers in Edit Forms
+		'nuStickyHeaders': true					// Sticky Headers in Edit Forms
 	};
 
 	if (typeof window.nuUXOptions === "undefined") {
@@ -219,8 +219,8 @@ function nuBuildForm(formObj) {
 		nuShowBrowsePaginationInfo((nuUXOptions.nuBrowsePaginationInfo));
 	}
 
-	if (nuUXOptions.nuEditStickyHeaders) {
-		nuEditStickyHeaders();
+	if (nuUXOptions.nuStickyHeaders) {
+		nuStickyHeaders();
 	}
 
 	if (nuUXOptions.nuShowLoggedInUser) {
@@ -627,7 +627,7 @@ function nuBrowseStickyColumns($record) {
 
 }
 
-function nuEditStickyHeaders(opts = {}) {
+function nuStickyHeaders(opts = {}) {
 
 	const apply = () => {
 		const crumbH = nuTotalHeight('nuBreadcrumbHolder');
