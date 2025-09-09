@@ -222,7 +222,7 @@ function nuPasswordChangeStatusPending($globalAccess, $sessionData, $callType, $
 	return false;
 }
 
-function nuGetIPAddress(): ?string {
+function nuGetIPAddress() {
 
 	$ipSources = [
 		'HTTP_CF_CONNECTING_IP', // Cloudflare-provided IP
@@ -270,7 +270,7 @@ function nuGet2FASafeIPAddresses(...$keys) {
 	return $value;
 }
 
-function nu2FASafeIPAddr(...$keys): bool {
+function nu2FASafeIPAddr(...$keys) {
 
 	$allowedIPs = nuGet2FASafeIPAddresses(...$keys);
 	$clientIP = nuGetIPAddress();
@@ -281,7 +281,7 @@ function nu2FASafeIPAddr(...$keys): bool {
 
 	// Convert array to semicolon-separated string for compatibility
 	$ipConfig = is_array($allowedIPs)
-		? implode(';', array_map('strval', $allowedIPs))
+		? implode(';', array_map(function($item) { return strval($item); }, $allowedIPs))
 		: (is_string($allowedIPs) ? $allowedIPs : '');
 
 	if (empty($ipConfig)) {
@@ -290,25 +290,25 @@ function nu2FASafeIPAddr(...$keys): bool {
 
 	$validPatterns = array_filter(
 		array_map('trim', explode(';', $ipConfig)),
-		fn($pattern) => !empty($pattern) && nuIsValidIPPattern($pattern)
+		function($pattern) { return !empty($pattern) && nuIsValidIPPattern($pattern); }
 	);
 
 	return !empty($validPatterns) && nuMatchesAnyIPPattern($clientIP, $validPatterns);
 }
 
-function nuIsValidIPPattern(string $pattern): bool {
+function nuIsValidIPPattern($pattern) {
 	// IPv4 pattern validation
-	if (str_contains($pattern, '.')) {
+	if (strpos($pattern, '.') !== false) {
 		$testPattern = str_replace('*', '0', $pattern);
 		return filter_var($testPattern, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false;
 	}
 
 	// IPv6 pattern validation
-	if (str_contains($pattern, ':')) {
+	if (strpos($pattern, ':') !== false) {
 		$testPattern = str_replace('*', '0', $pattern);
 
 		// Handle IPv6 double colon compression
-		if (str_contains($testPattern, '::')) {
+		if (strpos($testPattern, '::') !== false) {
 			$parts = explode('::', $testPattern);
 			if (count($parts) === 2) {
 				$leftParts = $parts[0] ? explode(':', $parts[0]) : [];
@@ -328,7 +328,7 @@ function nuIsValidIPPattern(string $pattern): bool {
 	return false;
 }
 
-function nuMatchesAnyIPPattern(string $ip, array $patterns): bool {
+function nuMatchesAnyIPPattern($ip, $patterns) {
 	foreach ($patterns as $pattern) {
 		if (nuMatchesIPPattern($ip, $pattern)) {
 			return true;
@@ -337,9 +337,9 @@ function nuMatchesAnyIPPattern(string $ip, array $patterns): bool {
 	return false;
 }
 
-function nuMatchesIPPattern(string $ip, string $pattern): bool {
+function nuMatchesIPPattern($ip, $pattern) {
 	$isIPv4 = filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false;
-	$isPatternIPv4 = str_contains($pattern, '.');
+	$isPatternIPv4 = strpos($pattern, '.') !== false;
 
 	// IP version mismatch
 	if ($isIPv4 !== $isPatternIPv4) {
@@ -351,7 +351,7 @@ function nuMatchesIPPattern(string $ip, string $pattern): bool {
 		: nuMatchesIPv6Pattern($ip, $pattern);
 }
 
-function nuMatchesIPv4Pattern(string $ip, string $pattern): bool {
+function nuMatchesIPv4Pattern($ip, $pattern) {
 	$ipParts = explode('.', $ip);
 	$patternParts = explode('.', $pattern);
 
@@ -368,7 +368,7 @@ function nuMatchesIPv4Pattern(string $ip, string $pattern): bool {
 	return true;
 }
 
-function nuMatchesIPv6Pattern(string $ip, string $pattern): bool {
+function nuMatchesIPv6Pattern($ip, $pattern) {
 	$normalizedIP = nuNormaliseIPv6($ip);
 	$normalizedPattern = nuNormaliseIPv6($pattern);
 
@@ -392,16 +392,16 @@ function nuMatchesIPv6Pattern(string $ip, string $pattern): bool {
 	return true;
 }
 
-function nuNormaliseIPv6(string $ipv6): string|false {
-	$hasWildcards = str_contains($ipv6, '*');
+function nuNormaliseIPv6($ipv6) {
+	$hasWildcards = strpos($ipv6, '*') !== false;
 
 	// Handle IPv4-mapped IPv6 addresses with wildcards specially
-	if ($hasWildcards && str_contains($ipv6, '::ffff:')) {
+	if ($hasWildcards && strpos($ipv6, '::ffff:') !== false) {
 		// For IPv4-mapped addresses with wildcards, preserve the structure
 		$parts = explode(':', $ipv6);
 		if (count($parts) >= 2) {
 			$lastPart = end($parts);
-			if (str_contains($lastPart, '*')) {
+			if (strpos($lastPart, '*') !== false) {
 				// This is an IPv4-mapped address with IPv4 wildcard
 				$ipv4Part = $lastPart;
 				$prefix = str_replace($lastPart, '', $ipv6);
@@ -446,7 +446,7 @@ function nuNormaliseIPv6(string $ipv6): string|false {
 		$expandedParts = explode(':', $expanded);
 
 		// Handle double colon expansion for wildcard restoration
-		if (str_contains($ipv6, '::')) {
+		if (strpos($ipv6, '::') !== false) {
 			$doubleColonPos = strpos($ipv6, '::');
 			$beforeDouble = $doubleColonPos === 0 ? [] : explode(':', substr($ipv6, 0, $doubleColonPos));
 			$afterDouble = $doubleColonPos + 2 >= strlen($ipv6) ? [] : explode(':', substr($ipv6, $doubleColonPos + 2));
@@ -471,16 +471,16 @@ function nuNormaliseIPv6(string $ipv6): string|false {
 	return $expanded;
 }
 
-function nuExpandIPv6(string $ipv6): string {
+function nuExpandIPv6($ipv6) {
 	// Already fully expanded
-	if (!str_contains($ipv6, '::') && substr_count($ipv6, ':') === 7) {
+	if (strpos($ipv6, '::') === false && substr_count($ipv6, ':') === 7) {
 		$parts = explode(':', $ipv6);
-		return implode(':', array_map(fn($part) => str_pad($part, 4, '0', STR_PAD_LEFT), $parts));
+		return implode(':', array_map(function($part) { return str_pad($part, 4, '0', STR_PAD_LEFT); }, $parts));
 	}
 
 	// Expand double colon notation
-	if (str_contains($ipv6, '::')) {
-		[$left, $right] = explode('::', $ipv6);
+	if (strpos($ipv6, '::') !== false) {
+		list($left, $right) = explode('::', $ipv6);
 		$leftParts = $left ? explode(':', $left) : [];
 		$rightParts = $right ? explode(':', $right) : [];
 		$missingParts = 8 - count($leftParts) - count($rightParts);
@@ -490,5 +490,5 @@ function nuExpandIPv6(string $ipv6): string {
 		$allParts = explode(':', $ipv6);
 	}
 
-	return implode(':', array_map(fn($part) => str_pad($part, 4, '0', STR_PAD_LEFT), $allParts));
+	return implode(':', array_map(function($part) { return str_pad($part, 4, '0', STR_PAD_LEFT); }, $allParts));
 }
