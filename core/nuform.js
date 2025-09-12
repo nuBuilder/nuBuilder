@@ -636,7 +636,7 @@ function nuStickyHeaders(opts = {}) {
 		const {
 			actionTop = crumbH,
 			stickyTabs = true,
-			tabsTop = actionTop + actionH + 1,
+			tabsTop = actionTop + actionH,
 			important = true,
 			clear = false,
 		} = opts;
