@@ -4903,7 +4903,8 @@ function nuResizeBrowseColumns(force) {
 
 	const currentForm = nuFORM.getCurrent();
 	const columnWidths = nuArrayColumn(nuSERVERRESPONSE.browse_columns, 'width').map(Number);
-	const padding = nuTotalWidth('nucell_0_0') - $('#nucell_0_0').width();
+	const firstCellId = nuBrowseGetFirstRowCellId();
+	const padding = nuTotalWidth(firstCellId) - $('#' + firstCellId).width();
 
 	if ((currentForm.refreshed != 0 && force !== true) && nuMainForm()) {
 		return;
@@ -4937,7 +4938,8 @@ function nuResizeBrowseColumns(force) {
 
 function nuSetBrowseColumns(columnWidths) {
 
-	const padding = nuTotalWidth('nucell_0_0') - $('#nucell_0_0').width();
+	const firstCellId = nuBrowseGetFirstRowCellId();
+	const padding = nuTotalWidth(firstCellId) - $('#' + firstCellId).width();
 	let left = 7;
 
 	columnWidths.forEach((width, i) => {
@@ -4958,11 +4960,11 @@ function nuSetBrowseColumns(columnWidths) {
 	nuFORM.breadcrumbs[nuFORM.breadcrumbs.length - 1].column_widths = columnWidths;
 
 	if (nuCurrentProperties().browse_filtered_rows === 0) {
-		const nucell00 = document.getElementById('nucell_0_0');
-		nucell00.style.width = `${browseFooterWidth - 22}px`;
-		nucell00.style.zIndex = '2';
+		const firstCellElement = document.getElementById(firstCellId);
+		firstCellElement.style.width = `${browseFooterWidth - 22}px`;
+		firstCellElement.style.zIndex = '2';
 
-		$("div[id^='nucell_']").not('#nucell_0_0').hide();
+		$("div[id^='nucell_']").not('#' + firstCellId).hide();
 	}
 
 }
@@ -5137,10 +5139,27 @@ function nuBrowseTable() {
 
 }
 
+function nuBrowseGetFirstRowCellId() {
+
+	const props = nuCurrentProperties();
+	const maxCols = props.browse_columns.length;
+
+	for (let colIndex = 0; colIndex < maxCols; colIndex++) {
+		const cellId = `nucell_0_${colIndex}`;
+
+		if (nuIsVisible(cellId)) {
+			return cellId;
+		}
+	}
+
+	return '';
+
+}
+
 function nuSetBrowseHeight() {
 
 	if (nuFormType() !== 'browse') return;
-	const cellsHeight = nuTotalHeight('nucell_0_0') * nuCurrentProperties().rows;
+	const cellsHeight = nuTotalHeight(nuBrowseGetFirstRowCellId()) * nuCurrentProperties().rows;
 	const footerHeight = nuTotalHeight('nuBrowseFooter');
 	const dialogTitleHeight = nuSelectInParentDocument('#dialogTitle').nuCSSNumber('height');
 	const actionHolderHeight = nuTotalHeight('nuActionHolder');
@@ -5165,7 +5184,7 @@ function nuBrowseHandleNoDataScenario() {
 	const noDataMessage = searchLengthZero ? 'No data to display' : 'No search results found';
 	const firstCellClass = searchLengthZero ? 'nuBrowseNoData' : 'nuBrowseNoResults';
 
-	$('#nucell_0_0').html(nuTranslate(noDataMessage)).addClass(firstCellClass);
+	$('#' + nuBrowseGetFirstRowCellId()).html(nuTranslate(noDataMessage)).addClass(firstCellClass);
 	window[firstCellClass === 'nuBrowseNoData' ? 'nuBrowseNoData' : 'nuBrowseNoSearchResults'] = true;
 
 }
