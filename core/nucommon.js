@@ -2784,8 +2784,12 @@ function nuGetValue(id, method) {
 		return nuTinyMCEGetContent(id);
 	}
 
-	if (obj.is('select') && method === 'text') {
-		return obj.find("option:selected").text().nuReplaceNonBreakingSpaces();
+	if (obj.is('select')) {
+		if (method === 'val' || method === undefined) {
+			return obj.val() === null ? '' : obj.val();
+		} else if (method === 'text') {
+			return obj.find("option:selected").text().nuReplaceNonBreakingSpaces();
+		}
 	}
 
 	if (!method && obj.is(':button')) {
@@ -2852,14 +2856,23 @@ function nuSetValue(id, value, method, change) {
 	} else if (obj.is(':checkbox') || obj.is(':radio')) {
 		obj.prop('checked', value);
 		if (change) obj.trigger("change");
-	} else if (obj.is('select') && method === 'text') {
-		$('#' + id + ' option').each(function () {
-			if ($(this).text().nuReplaceNonBreakingSpaces() === value) {
-				$(this).prop("selected", "selected");
-				if (change) obj.trigger("change");
-				return true;
-			}
-		});
+	} else if (obj.is('select')) {
+		const hasEmptyOption = obj.find('option[value=""]').length > 0;
+		if (value == null || (value === '' && !hasEmptyOption)) {
+			obj.prop("selectedIndex", -1);
+			if (change) obj.trigger("change");
+		} else if (method === 'text') {
+			$('#' + id + ' option').each(function () {
+				if ($(this).text().nuReplaceNonBreakingSpaces() === value) {
+					$(this).prop("selected", "selected");
+					if (change) obj.trigger("change");
+					return false; // break loop
+				}
+			});
+		} else {
+			obj.val(value);
+			if (change) obj.trigger("change");
+		}
 	} else if (obj.hasClass('nuEditor')) {
 		nuTinyMCESetContent(id, value)
 	} else if (obj.is('label')) {
@@ -2872,7 +2885,6 @@ function nuSetValue(id, value, method, change) {
 				break;
 			default:
 				nuSetLabelText(id, value, change);
-
 		}
 	} else {
 		switch (method) {

@@ -2514,7 +2514,9 @@ function nuSELECT(w, i, l, p, prop) {
 		eval('a = ' + s);
 	}
 
-	$sel.append('<option value=""></option>');
+	if (obj.valid == 0) {
+		$sel.append('<option value=""></option>');
+	}
 
 	let hasSelected = false;
 	if (obj.options !== null) {
@@ -2532,6 +2534,10 @@ function nuSELECT(w, i, l, p, prop) {
 
 		}
 
+	}
+
+	if (!hasSelected && obj.valid != 0) {
+		$sel.prop('selectedIndex', -1);
 	}
 
 	nuAddJSObjectEvents(id, obj.js);

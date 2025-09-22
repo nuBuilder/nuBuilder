@@ -658,7 +658,7 @@ class nuFormObject {
 		const dataFormat = $this.attr('data-nu-format');
 		const inputType = $this.attr('type');
 
-		let value = $this.val();
+		let value = $this.val() === null ? '' : $this.val();
 
 		if (inputType == 'checkbox') {
 			value = $this.prop("checked") ? 1 : 0;
@@ -991,7 +991,7 @@ class nuFormObject {
 
 	removeFormatting(v, f, id) {
 
-		if (v === undefined || v === '') { return ''; }
+		if (v === undefined || v === '' || v === null) { return ''; }
 		if (f === undefined || f === '') { return v; }
 
 		v = String(v);
@@ -1010,7 +1010,7 @@ class nuFormObject {
 					.replace(' ', '')
 					.nuReplaceAll(CF[1], '')
 					.replace(CF[2], '.');
-			}	
+			}
 
 			if (typeof window.nuOnRawValueFormatted === 'function') {
 				let modifiedValue = window.nuOnRawValueFormatted(id, rawValue, f);
