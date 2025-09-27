@@ -1,27 +1,27 @@
 <?php
 
-//  Clone a nuBuilder application - IMPROVED DRY RUN MODE + CLEAR DATABASE OPTION + TABLE/VIEW FILTERING
+// Clone a nuBuilder application - IMPROVED DRY RUN MODE + CLEAR DATABASE OPTION + TABLE/VIEW FILTERING + SQL EXPORT
 /*
-	numeric array $opts is used to determine what content is cloned
-	1 = CREATE statements for all nuBuilder system tables and views
-	2 = CREATE statements for all non-nuBuilder tables and views
-	3 = INSERT statements for all nuBuilder system records
-	4 = INSERT statements for all records in the zzzzsys tables which define the user's own application
-	5 = INSERT statements for all non-nuBuilder tables
-	6 = FUNCTIONS
-	7 = PROCEDURES
-	8 = TRIGGERS
-	9 = EVENTS
+numeric array $opts is used to determine what content is cloned
+1 = CREATE statements for all nuBuilder system tables and views
+2 = CREATE statements for all non-nuBuilder tables and views
+3 = INSERT statements for all nuBuilder system records
+4 = INSERT statements for all records in the zzzzsys tables which define the user's own application
+5 = INSERT statements for all non-nuBuilder tables
+6 = FUNCTIONS
+7 = PROCEDURES
+8 = TRIGGERS
+9 = EVENTS
 */
 
 declare(strict_types=1);
 
-// Include the improved cloner class
 class nuBuilderCloner {
 	private const int INSERT_BATCH_SIZE = 1000;
 	private const array VALID_INSERT_TYPES = ['INSERT', 'INSERT IGNORE', 'REPLACE'];
 	private const array VALID_CREATE_DATABASE_OPTIONS = ['create', 'fail', 'clear'];
 	private const array VALID_FILE_MODE_OPTIONS = ['create', 'fail', 'clear', 'overwrite'];
+	private const array VALID_SQL_EXPORT_FORMATS = ['mysql', 'mssql'];
 	private const int PROGRESS_UPDATE_INTERVAL = 100;
 
 	// Routine type metadata for unified processing
@@ -87,8 +87,19 @@ class nuBuilderCloner {
 			'copyFiles' => true,
 			'fileMode' => 'fail',
 			'progressId' => null,
-			'includeTablesAndViews' => [], // If empty, include all tables/views except those in excludeTablesAndViews
-			'excludeTablesAndViews' => []  // Tables/views to exclude
+			'includeTablesAndViews' => [],
+			'excludeTablesAndViews' => [],
+			// New SQL export options
+			'sqlExport' => [
+				'enabled' => false,
+				'format' => 'mysql',
+				'includeDropStatements' => true,
+				'includeCreateDatabase' => true,
+				'includeUseDatabase' => true,
+				'maxRowsPerInsert' => 1000,
+				'addComments' => true,
+				'disableConstraints' => true
+			]
 		], $config);
 
 		if ($this->config['logFile']) {
@@ -104,120 +115,576 @@ class nuBuilderCloner {
 		}
 	}
 
-	private function initializeLogging(): void {
-		$logFile = $this->config['logFile'];
-		$logDir = dirname($logFile);
+	/**
+	 * Export complete SQL statements for database recreation
+	 */
 
-		if (!is_dir($logDir)) {
-			if (!mkdir($logDir, 0755, true)) {
-				$this->sendError("Cannot create log directory: $logDir");
-				return;
+	public function exportToSQL(
+		string $targetDB,
+		array $opts,
+		string $insertType = 'INSERT',
+		string $format = 'mysql'
+	): string {
+		try {
+			$this->startTime = microtime(true);
+			$format = $this->oneOf($format, self::VALID_SQL_EXPORT_FORMATS, 'SQL format');
+			$insertType = $this->oneOf($insertType, self::VALID_INSERT_TYPES, 'Insert type');
+
+			$this->log("Starting SQL export for database '$targetDB' in $format format...");
+
+			$sql = [];
+			$exportConfig = $this->config['sqlExport'];
+
+			// Add header comments
+			if ($exportConfig['addComments']) {
+				$sql[] = $this->getSQLHeader($targetDB, $format);
 			}
-		}
 
-		$this->logHandle = @fopen($logFile, 'a');
-		if (!$this->logHandle) {
-			$this->sendError("Cannot open log file: $logFile");
+			// Add database creation
+			if ($exportConfig['includeCreateDatabase']) {
+				$sql[] = $this->getSQLCreateDatabase($targetDB, $format);
+			}
+
+			// Add USE database statement
+			if ($exportConfig['includeUseDatabase']) {
+				$sql[] = $this->getSQLUseDatabase($targetDB, $format);
+			}
+
+			// Disable constraints for faster loading
+			if ($exportConfig['disableConstraints']) {
+				$sql[] = $this->getSQLDisableConstraints($format);
+			}
+
+			// PHASE 1: Create database structure (tables and views)
+			if (in_array(1, $opts)) {
+				$sql[] = $this->getSQLComment("nuBuilder system tables and views", $format);
+				$sql[] = $this->exportCreateTablesSQL("TABLE_NAME LIKE 'zzzzsys%'", $format, $exportConfig['includeDropStatements']);
+				$sql[] = $this->exportCreateViewsSQL("TABLE_NAME LIKE 'zzzzsys%'", $format, $exportConfig['includeDropStatements']);
+			}
+
+			if (in_array(2, $opts)) {
+				$sql[] = $this->getSQLComment("User tables and views", $format);
+				$sql[] = $this->exportCreateTablesSQL("TABLE_NAME NOT LIKE 'zzzzsys%'", $format, $exportConfig['includeDropStatements']);
+				$sql[] = $this->exportCreateViewsSQL("TABLE_NAME NOT LIKE 'zzzzsys%'", $format, $exportConfig['includeDropStatements']);
+			}
+
+			// PHASE 2: Insert data
+			if (array_intersect([3, 4, 5], $opts) === [3, 4, 5]) {
+				$sql[] = $this->getSQLComment("All table data", $format);
+				$sql[] = $this->exportInsertSQL($insertType, "TRUE", "TRUE", $format);
+			} else {
+				if (in_array(3, $opts)) {
+					$sql[] = $this->getSQLComment("nuBuilder system records", $format);
+					$sql[] = $this->exportInsertSQL($insertType, "TABLE_NAME LIKE 'zzzzsys%'", "|t|_id LIKE 'nu%'", $format);
+				}
+				if (in_array(4, $opts)) {
+					$sql[] = $this->getSQLComment("Application records", $format);
+					$sql[] = $this->exportInsertSQL($insertType, "TABLE_NAME LIKE 'zzzzsys%'", "|t|_id NOT LIKE 'nu%'", $format);
+				}
+				if (in_array(5, $opts)) {
+					$sql[] = $this->getSQLComment("User table data", $format);
+					$sql[] = $this->exportInsertSQL($insertType, "(TABLE_NAME NOT LIKE 'zzzzsys%' AND TABLE_NAME NOT LIKE '___nu%')", "TRUE", $format);
+				}
+			}
+
+			// PHASE 3: Database objects (functions, procedures, triggers, events)
+			$objectTypes = [
+				6 => ['type' => 'FUNCTION', 'desc' => 'Functions'],
+				7 => ['type' => 'PROCEDURE', 'desc' => 'Procedures'],
+				8 => ['type' => 'TRIGGER', 'desc' => 'Triggers'],
+				9 => ['type' => 'EVENT', 'desc' => 'Events']
+			];
+
+			foreach ($objectTypes as $opt => $config) {
+				if (in_array($opt, $opts)) {
+					$sql[] = $this->getSQLComment($config['desc'], $format);
+					$sql[] = $this->exportRoutineSQL($config['type'], $format, $exportConfig['includeDropStatements']);
+				}
+			}
+
+			// Re-enable constraints
+			if ($exportConfig['disableConstraints']) {
+				$sql[] = $this->getSQLEnableConstraints($format);
+			}
+
+			// Add footer comments
+			if ($exportConfig['addComments']) {
+				$sql[] = $this->getSQLFooter($format);
+			}
+
+			$result = implode("\n", array_filter($sql));
+			$this->log("SQL export completed. Generated " . strlen($result) . " characters of SQL.");
+
+			return $result;
+
+		} catch (Exception $e) {
+			$this->log("ERROR during SQL export: " . $e->getMessage());
+			throw $e;
+		}
+	}
+
+
+	private function getSQLHeader(string $targetDB, string $format): string {
+		$timestamp = date('Y-m-d H:i:s');
+		$sourceDB = $this->srcDB;
+		$comment = $format === 'mssql' ? '--' : '--';
+
+		return "$comment ========================================\n" .
+			"$comment nuBuilder Database Export\n" .
+			"$comment Generated on: $timestamp\n" .
+			"$comment Source Database: $sourceDB\n" .
+			"$comment Target Database: $targetDB\n" .
+			"$comment Format: $format\n" .
+			"$comment ========================================\n\n";
+	}
+
+	private function getSQLFooter(string $format): string {
+		$timestamp = date('Y-m-d H:i:s');
+		$comment = $format === 'mssql' ? '--' : '--';
+
+		return "\n$comment ========================================\n" .
+			"$comment Export completed on: $timestamp\n" .
+			"$comment ========================================\n";
+	}
+
+	private function getSQLComment(string $text, string $format): string {
+		$comment = $format === 'mssql' ? '--' : '--';
+		return "\n$comment " . str_repeat('=', 50) . "\n$comment $text\n$comment " . str_repeat('=', 50) . "\n";
+	}
+
+	private function getSQLCreateDatabase(string $targetDB, string $format): string {
+		$charsetInfo = $this->getSourceDatabaseCharset();
+		$charset = $charsetInfo['charset'] ?? 'utf8mb4';
+		$collation = $charsetInfo['collation'] ?? $this->config['databaseCollation'];
+
+		if ($format === 'mssql') {
+			return "IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = N'$targetDB')\n" .
+				"CREATE DATABASE [$targetDB]\n" .
+				"COLLATE SQL_Latin1_General_CP1_CI_AS;\nGO\n";
 		} else {
-			$this->log("=== Clone operation started ===");
+			return "CREATE DATABASE IF NOT EXISTS `$targetDB` CHARACTER SET $charset COLLATE $collation;\n";
 		}
 	}
 
-	/**
-	 * Centralized dry run helper - logs action and optionally SQL
-	 */
-	private function dry(string $action, ?string $sql = null): void {
-		$this->dryRunActions[] = $action;
-		if ($sql !== null) {
-			$this->log("Would execute: " . substr($sql, 0, 100) . (strlen($sql) > 100 ? '...' : ''));
+	private function getSQLUseDatabase(string $targetDB, string $format): string {
+		if ($format === 'mssql') {
+			return "USE [$targetDB];\nGO\n";
 		} else {
-			$this->log($action);
+			return "USE `$targetDB`;\n";
 		}
 	}
 
-	/**
-	 * Execute SQL or log dry run action
-	 */
-	private function execOrDry(string $sql, ?string $action = null): void {
-		if ($this->config['dryRun']) {
-			$this->dry($action ?? "Would execute SQL", $sql);
-			return;
+	private function getSQLDisableConstraints(string $format): string {
+		if ($format === 'mssql') {
+			return "-- Disable constraints for faster loading\n" .
+				"EXEC sp_MSforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT ALL';\n" .
+				"GO\n";
+		} else {
+			return "-- Disable constraints for faster loading\n" .
+				"SET FOREIGN_KEY_CHECKS = 0;\n" .
+				"SET UNIQUE_CHECKS = 0;\n" .
+				"SET AUTOCOMMIT = 0;\n";
 		}
-		$this->executeSQL($sql);
 	}
 
-	/**
-	 * Validate input value against allowed options
-	 */
-	private function oneOf(string $value, array $allowed, string $label): string {
-		if (!in_array($value, $allowed, true)) {
-			throw new InvalidArgumentException("$label must be one of: " . implode(', ', $allowed));
+	private function getSQLEnableConstraints(string $format): string {
+		if ($format === 'mssql') {
+			return "\n-- Re-enable constraints\n" .
+				"EXEC sp_MSforeachtable 'ALTER TABLE ? CHECK CONSTRAINT ALL';\n" .
+				"GO\n";
+		} else {
+			return "\n-- Re-enable constraints\n" .
+				"COMMIT;\n" .
+				"SET FOREIGN_KEY_CHECKS = 1;\n" .
+				"SET UNIQUE_CHECKS = 1;\n" .
+				"SET AUTOCOMMIT = 1;\n";
 		}
-		return $value;
 	}
 
-	/**
-	 * Filter tables/views based on include/exclude configuration with optimized lookups
-	 */
-	private function filterTablesAndViews(array $tableNames): array {
-		$includeMap = array_flip($this->config['includeTablesAndViews']);
-		$excludeMap = array_flip($this->config['excludeTablesAndViews']);
+	private function exportCreateTablesSQL(string $where, string $format, bool $includeDrop): string {
+		$tables = $this->getTableNames("SELECT TABLE_NAME FROM information_schema.TABLES WHERE ($where) AND (TABLE_TYPE='BASE TABLE' AND `TABLE_SCHEMA`= ?)");
+		$sql = [];
 
-		// Log filtering configuration
-		if ($includeMap) {
-			$this->log("Include filter active: " . implode(', ', array_keys($includeMap)));
+		foreach ($tables as $table) {
+			$stmt = nuRunQuery("SHOW CREATE TABLE `$table`");
+			$create = db_fetch_row($stmt)[1];
+
+			if ($format === 'mssql') {
+				$create = $this->convertMySQLToMSSQL($create, $table);
+			}
+
+			if ($includeDrop) {
+				if ($format === 'mssql') {
+					$sql[] = "IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[$table]') AND type in (N'U'))";
+					$sql[] = "DROP TABLE [$table];";
+					$sql[] = "GO";
+				} else {
+					$sql[] = "DROP TABLE IF EXISTS `$table`;";
+				}
+			}
+
+			$sql[] = $create . ($format === 'mssql' ? "\nGO" : ";");
 		}
-		if ($excludeMap) {
-			$this->log("Exclude filter active: " . implode(', ', array_keys($excludeMap)));
+
+		return implode("\n", $sql);
+	}
+
+	private function exportCreateViewsSQL(string $where, string $format, bool $includeDrop): string {
+		$views = $this->getViewsInDependencyOrder($where);
+		$sql = [];
+
+		foreach ($views as $view => $create) {
+			if ($format === 'mssql') {
+				$create = $this->convertMySQLViewToMSSQL($create, $view);
+			}
+
+			if ($includeDrop) {
+				if ($format === 'mssql') {
+					$sql[] = "IF EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[$view]'))";
+					$sql[] = "DROP VIEW [$view];";
+					$sql[] = "GO";
+				} else {
+					$sql[] = "DROP VIEW IF EXISTS `$view`;";
+				}
+			}
+
+			$sql[] = $create . ($format === 'mssql' ? "\nGO" : ";");
 		}
 
-		$filtered = [];
-		$skipped = [];
+		return implode("\n", $sql);
+	}
 
-		foreach ($tableNames as $tableName) {
-			// Always include zzzzsys_ tables
-			if (str_starts_with($tableName, 'zzzzsys_')) {
-				$filtered[] = $tableName;
+	private function exportInsertSQL(string $insertType, string $tableWhere, string $rowWhere, string $format): string {
+		$tables = $this->getTableNames("SELECT TABLE_NAME FROM information_schema.TABLES WHERE ($tableWhere) AND (TABLE_TYPE='BASE TABLE' AND `TABLE_SCHEMA`= ?)");
+		$sql = [];
+
+		foreach ($tables as $table) {
+			$tableSQL = $this->exportTableInsertSQL($insertType, $table, str_replace("|t|", $table, $rowWhere), $format);
+			if (!empty($tableSQL)) {
+				$sql[] = $tableSQL;
+			}
+		}
+
+		return implode("\n\n", $sql);
+	}
+
+	private function exportTableInsertSQL(string $insertType, string $table, string $rowWhere, string $format): string {
+		$cols = db_field_names($table);
+		$maxRows = $this->config['sqlExport']['maxRowsPerInsert'];
+
+		$countStmt = nuRunQuery("SELECT COUNT(*) FROM `$table` WHERE $rowWhere");
+		$totalRows = db_fetch_row($countStmt)[0];
+
+		if ($totalRows == 0) {
+			return "";
+		}
+
+		$sql = [];
+		$sql[] = "-- Inserting $totalRows rows into table '$table'";
+
+		$pkName = $this->getPrimaryKeyName($table);
+		$orderClause = ($pkName === '') ? '' : "ORDER BY `$pkName`";
+
+		$stmt = nuRunQuery("SELECT * FROM `$table` WHERE $rowWhere $orderClause");
+
+		$rowCount = 0;
+		$batch = [];
+
+		if ($format === 'mssql') {
+			$columnList = '([' . implode('], [', $cols) . '])';
+			$tableName = "[$table]";
+		} else {
+			$columnList = '(`' . implode('`, `', $cols) . '`)';
+			$tableName = "`$table`";
+		}
+
+		while ($row = db_fetch_row($stmt)) {
+			$values = array_map(function ($col) use ($format) {
+				if (is_null($col)) {
+					return 'NULL';
+				}
+				return $this->formatValueForSQL($col, $format);
+			}, $row);
+
+			$batch[] = '(' . implode(', ', $values) . ')';
+			$rowCount++;
+
+			if ($rowCount % $maxRows === 0 || $rowCount === $totalRows) {
+				$batchSQL = $this->formatInsertType($insertType, $format) . " INTO $tableName $columnList VALUES\n" .
+					implode(",\n", $batch) .
+					($format === 'mssql' ? ";\nGO" : ";");
+				$sql[] = $batchSQL;
+				$batch = [];
+			}
+		}
+
+		return implode("\n\n", $sql);
+	}
+
+	private function exportRoutineSQL(string $type, string $format, bool $includeDrop): string {
+		$meta = self::ROUTINE_META[$type];
+		$sql = [];
+
+		$showQuery = str_replace('%DB%', $this->srcDB, $meta['show']);
+		$queryParams = ($type === 'TRIGGER') ? [] : [$this->srcDB];
+
+		$stmt = nuRunQuery($showQuery, $queryParams);
+
+		while ($row = is_string($meta['nameIdx']) ? db_fetch_array($stmt) : db_fetch_row($stmt)) {
+			$name = is_string($meta['nameIdx']) ? $row[$meta['nameIdx']] : $row[$meta['nameIdx']];
+			$table = $meta['tableCol'] ? $row[$meta['tableCol']] : null;
+
+			if (!$this->shouldProcessRoutine($name, $table)) {
 				continue;
 			}
 
-			// Check include filter
-			if ($includeMap && !isset($includeMap[$tableName])) {
-				$skipped[] = "$tableName (not in include list)";
-				continue;
+			try {
+				$createStmt = nuRunQuery(sprintf($meta['showCreate'], $name));
+				$create = db_fetch_row($createStmt)[$meta['createIdx']];
+				$create = preg_replace("/CREATE[\s\S]+?$type/", "CREATE $type", $create, 1);
+
+				if ($format === 'mssql') {
+					$create = $this->convertMySQLRoutineToMSSQL($create, $type, $name);
+				}
+
+				if ($includeDrop) {
+					if ($format === 'mssql') {
+						$dropSQL = $this->getMSSQLDropStatement($type, $name);
+					} else {
+						$dropSQL = sprintf($meta['drop'], $name) . ";";
+					}
+					$sql[] = $dropSQL;
+				}
+
+				$sql[] = $create . ($format === 'mssql' ? "\nGO" : ";");
+
+			} catch (Exception $e) {
+				$sql[] = "-- WARNING: Failed to export $type '$name': " . $e->getMessage();
 			}
-
-			// Check exclude filter
-			if (isset($excludeMap[$tableName])) {
-				$skipped[] = "$tableName (in exclude list)";
-				continue;
-			}
-
-			$filtered[] = $tableName;
 		}
 
-		// Log filtering results
-		if ($skipped) {
-			$this->log("Filtered out " . count($skipped) . " tables/views: " . implode(', ', array_slice($skipped, 0, 10)) . (count($skipped) > 10 ? " and " . (count($skipped) - 10) . " more..." : ""));
-		}
-
-		if ($filtered) {
-			$this->log("Including " . count($filtered) . " tables/views: " . implode(', ', array_slice($filtered, 0, 10)) . (count($filtered) > 10 ? " and " . (count($filtered) - 10) . " more..." : ""));
-		}
-
-		return $filtered;
+		return implode("\n\n", $sql);
 	}
 
-	/**
-	 * Run a step with before/after statistics tracking and progress reporting
-	 */
-	private function runStep(callable $fn, string $desc, ?string $statKey = null): void {
-		$this->showProgress("$desc...");
-		$before = $statKey ? ($this->statistics[$statKey] ?? 0) : 0;
-		$fn();
-		$after = $statKey ? ($this->statistics[$statKey] ?? 0) : 0;
-		$delta = max(0, $after - $before);
-		$this->showProgress("Completed ($delta)", $delta, true);
+	private function formatInsertType(string $insertType, string $format): string {
+		if ($format === 'mssql') {
+			return match ($insertType) {
+				'INSERT IGNORE' => 'INSERT',
+				'REPLACE' => 'INSERT',
+				default => $insertType
+			};
+		}
+		return $insertType;
+	}
+
+	private function formatValueForSQL($value, string $format): string {
+		if (is_null($value)) {
+			return 'NULL';
+		}
+
+		// For SQL Server, be more careful about what we consider "numeric"
+		if ($format === 'mssql') {
+			// Only treat as numeric if it's actually a pure number
+			if (is_numeric($value) && !is_string($value)) {
+				return (string) $value;
+			}
+			// For string values that look numeric, still quote them to avoid type confusion
+			return "N'" . str_replace("'", "''", (string) $value) . "'";
+		} else {
+			// MySQL behavior - be more permissive with numeric detection
+			if (is_numeric($value)) {
+				return (string) $value;
+			}
+			return nuDBQuote($value);
+		}
+	}
+
+	private function convertMySQLToMSSQL(string $mysqlCreate, string $tableName): string {
+		$mssqlCreate = $mysqlCreate;
+
+		// Remove backticks
+		$mssqlCreate = str_replace('`', '', $mssqlCreate);
+
+		// Fix table name with proper brackets
+		$mssqlCreate = preg_replace('/CREATE TABLE\s+(\w+)/', 'CREATE TABLE [$1]', $mssqlCreate);
+
+		// Data type mappings - order matters! More specific types first
+		$typeMap = [
+			// Handle AUTO_INCREMENT patterns first
+			'/\bINT\(\d+\)\s+AUTO_INCREMENT\b/i' => 'INT IDENTITY(1,1)',
+			'/\bAUTO_INCREMENT\b/i' => 'IDENTITY(1,1)',
+
+			// Text types - specific to general
+			'/\bMEDIUMTEXT\b/i' => 'NVARCHAR(MAX)',
+			'/\bLONGTEXT\b/i' => 'NVARCHAR(MAX)',
+			'/\bTEXT\b/i' => 'NVARCHAR(MAX)',
+			'/\bTINYTEXT\b/i' => 'NVARCHAR(255)',
+
+			// Varchar types
+			'/\bVARCHAR\(/i' => 'NVARCHAR(',
+			'/\bCHAR\(/i' => 'NCHAR(',
+
+			// Integer types with size specifications
+			'/\bBIGINT\(\d+\)/i' => 'BIGINT',
+			'/\bINT\(\d+\)/i' => 'INT',
+			'/\bSMALLINT\(\d+\)/i' => 'SMALLINT',
+			'/\bTINYINT\(\d+\)/i' => 'TINYINT',
+			'/\bTINYINT\(1\)/i' => 'BIT',
+
+			// Decimal types
+			'/\bDECIMAL\(/i' => 'DECIMAL(',
+			'/\bNUMERIC\(/i' => 'NUMERIC(',
+			'/\bFLOAT\(/i' => 'FLOAT(',
+			'/\bDOUBLE\b/i' => 'FLOAT',
+
+			// Date/time types
+			'/\bDATETIME\b/i' => 'DATETIME2',
+			'/\bTIMESTAMP\b/i' => 'DATETIME2',
+			'/\bDATE\b/i' => 'DATE',
+			'/\bTIME\b/i' => 'TIME',
+			'/\bYEAR\b/i' => 'SMALLINT',
+
+			// Binary types
+			'/\bBLOB\b/i' => 'VARBINARY(MAX)',
+			'/\bMEDIUMBLOB\b/i' => 'VARBINARY(MAX)',
+			'/\bLONGBLOB\b/i' => 'VARBINARY(MAX)',
+			'/\bTINYBLOB\b/i' => 'VARBINARY(255)',
+			'/\bBINARY\(/i' => 'BINARY(',
+			'/\bVARBINARY\(/i' => 'VARBINARY(',
+
+			// Boolean
+			'/\bBOOLEAN\b/i' => 'BIT',
+
+			// JSON (SQL Server 2016+)
+			'/\bJSON\b/i' => 'NVARCHAR(MAX)'
+		];
+
+		// Apply replacements using preg_replace for better control
+		foreach ($typeMap as $pattern => $replacement) {
+			$mssqlCreate = preg_replace($pattern, $replacement, $mssqlCreate);
+		}
+
+		// Remove MySQL-specific clauses
+		$mssqlCreate = preg_replace('/ENGINE=\w+/i', '', $mssqlCreate);
+		$mssqlCreate = preg_replace('/DEFAULT CHARSET=\w+/i', '', $mssqlCreate);
+		$mssqlCreate = preg_replace('/COLLATE=\w+/i', '', $mssqlCreate);
+
+		// Remove MySQL column-level CHARACTER SET and COLLATE specifications
+		$mssqlCreate = preg_replace('/\s+CHARACTER SET \w+/i', '', $mssqlCreate);
+		$mssqlCreate = preg_replace('/\s+COLLATE \w+/i', '', $mssqlCreate);
+
+		// Handle MySQL timestamp auto-update syntax
+		$mssqlCreate = preg_replace('/\s+ON UPDATE CURRENT_TIMESTAMP/i', '', $mssqlCreate);
+		$mssqlCreate = preg_replace('/DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP/i', 'DEFAULT GETDATE()', $mssqlCreate);
+		$mssqlCreate = preg_replace('/DEFAULT CURRENT_TIMESTAMP/i', 'DEFAULT GETDATE()', $mssqlCreate);
+
+		// Fix PRIMARY KEY constraint
+		$mssqlCreate = preg_replace(
+			'/PRIMARY KEY\s*\(([^)]+)\)/',
+			'CONSTRAINT [PK_' . $tableName . '] PRIMARY KEY ($1)',
+			$mssqlCreate
+		);
+
+		// Remove MySQL KEY definitions and collect them for separate CREATE INDEX statements
+		$indexes = [];
+
+		// Handle UNIQUE constraints with USING clause
+		$mssqlCreate = preg_replace_callback(
+			'/,?\s*UNIQUE\s+KEY\s+(\w+)\s*\(([^)]+)\)\s*USING\s+\w+/i',
+			function ($matches) use (&$indexes, $tableName) {
+				$indexName = $matches[1];
+				$columns = $matches[2];
+				$indexes[] = "CREATE UNIQUE INDEX [IX_{$tableName}_{$indexName}] ON [$tableName] ($columns);";
+				return ''; // Remove from table definition
+			},
+			$mssqlCreate
+		);
+
+		// Handle regular UNIQUE constraints
+		$mssqlCreate = preg_replace_callback(
+			'/,?\s*UNIQUE\s+KEY\s+(\w+)\s*\(([^)]+)\)/',
+			function ($matches) use (&$indexes, $tableName) {
+				$indexName = $matches[1];
+				$columns = $matches[2];
+				$indexes[] = "CREATE UNIQUE INDEX [IX_{$tableName}_{$indexName}] ON [$tableName] ($columns);";
+				return ''; // Remove from table definition
+			},
+			$mssqlCreate
+		);
+
+		// Handle orphaned UNIQUE USING BTREE (missing columns) - remove entirely
+		$mssqlCreate = preg_replace('/,?\s*UNIQUE\s+USING\s+\w+\s*(?!\()/i', '', $mssqlCreate);
+
+		// Handle regular KEY definitions
+		$mssqlCreate = preg_replace_callback(
+			'/,?\s*KEY\s+(\w+)\s*\(([^)]+)\)/',
+			function ($matches) use (&$indexes, $tableName) {
+				$indexName = $matches[1];
+				$columns = $matches[2];
+				$indexes[] = "CREATE INDEX [IX_{$tableName}_{$indexName}] ON [$tableName] ($columns);";
+				return ''; // Remove from table definition
+			},
+			$mssqlCreate
+		);
+
+		// Clean up extra commas and whitespace
+		$mssqlCreate = preg_replace('/,\s*,/', ',', $mssqlCreate);
+		$mssqlCreate = preg_replace('/,\s*\)/', ')', $mssqlCreate);
+		$mssqlCreate = preg_replace('/\s+/', ' ', $mssqlCreate);
+
+		// Add the table creation and then the indexes
+		$result = trim($mssqlCreate);
+		if (!empty($indexes)) {
+			$result .= "\nGO\n" . implode("\nGO\n", $indexes);
+		}
+
+		return $result;
+	}
+
+	private function convertMySQLViewToMSSQL(string $mysqlView, string $viewName): string {
+		$mssqlView = str_replace('`', '', $mysqlView);
+		$mssqlView = str_replace("`$this->srcDB`.", "", $mssqlView);
+
+		// Fix view name with proper brackets
+		$mssqlView = preg_replace('/CREATE VIEW\s+(\w+)/', 'CREATE VIEW [$1]', $mssqlView);
+
+		return $mssqlView;
+	}
+
+	private function convertMySQLRoutineToMSSQL(string $mysqlRoutine, string $type, string $name): string {
+		$mssqlRoutine = str_replace('`', '', $mysqlRoutine);
+
+		// Basic MySQL to SQL Server syntax conversions
+		switch ($type) {
+			case 'FUNCTION':
+				// SQL Server functions have different syntax
+				$mssqlRoutine = str_replace('DELIMITER ;;', '', $mssqlRoutine);
+				$mssqlRoutine = str_replace(';;', '', $mssqlRoutine);
+				$mssqlRoutine = preg_replace('/CREATE FUNCTION\s+(\w+)/', 'CREATE FUNCTION [$1]', $mssqlRoutine);
+				break;
+
+			case 'PROCEDURE':
+				$mssqlRoutine = str_replace('DELIMITER ;;', '', $mssqlRoutine);
+				$mssqlRoutine = str_replace(';;', '', $mssqlRoutine);
+				$mssqlRoutine = preg_replace('/CREATE PROCEDURE\s+(\w+)/', 'CREATE PROCEDURE [$1]', $mssqlRoutine);
+				break;
+
+			case 'TRIGGER':
+				$mssqlRoutine = preg_replace('/CREATE TRIGGER\s+(\w+)/', 'CREATE TRIGGER [$1]', $mssqlRoutine);
+				break;
+		}
+
+		return $mssqlRoutine;
+	}
+
+	private function getMSSQLDropStatement(string $type, string $name): string {
+		return match ($type) {
+			'FUNCTION' => "IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[$name]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))\nDROP FUNCTION [$name];\nGO",
+			'PROCEDURE' => "IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[$name]') AND type in (N'P', N'PC'))\nDROP PROCEDURE [$name];\nGO",
+			'TRIGGER' => "IF EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[$name]'))\nDROP TRIGGER [$name];\nGO",
+			'EVENT' => "-- Events are not directly supported in MSSQL (use SQL Server Agent Jobs instead)\n-- DROP EVENT [$name];",
+			default => "-- Unknown routine type: $type"
+		};
 	}
 
 	public function cloneDatabase(
@@ -245,12 +712,10 @@ class nuBuilderCloner {
 				$this->dryRunActions = [];
 			}
 
-			// Handle database creation/validation based on databaseMode option
 			if (!$this->handleDatabaseCreation($targetHost, $targetDB, $targetUsername, $targetPassword, $targetCharset, $targetPort)) {
 				return false;
 			}
 
-			// Test target database connection (only if not dry run or if database exists)
 			if (!$this->config['dryRun'] || $this->databaseExists($targetHost, $targetDB, $targetUsername, $targetPassword, $targetCharset, $targetPort)) {
 				if (!$this->testConnection($targetHost, $targetDB, $targetUsername, $targetPassword, $targetCharset, $targetPort)) {
 					return false;
@@ -258,12 +723,10 @@ class nuBuilderCloner {
 
 				if (!$this->config['dryRun']) {
 					$this->targetPDO = $this->createPDOConnection($targetHost, $targetDB, $targetUsername, $targetPassword, $targetCharset, $targetPort);
-					// Disable constraints for faster inserts
 					$this->executeSQL("SET FOREIGN_KEY_CHECKS = 0; SET UNIQUE_CHECKS = 0; SET AUTOCOMMIT = 0;");
 				}
 			}
 
-			// Clear database if option is enabled
 			if ($this->config['databaseMode'] === 'clear') {
 				$this->clearTargetDatabase($targetDB);
 			}
@@ -272,11 +735,9 @@ class nuBuilderCloner {
 
 			if (!$this->config['dryRun']) {
 				$this->compareRecordCounts($targetDB);
-				// Re-enable constraints
 				$this->executeSQL("COMMIT; SET FOREIGN_KEY_CHECKS = 1; SET UNIQUE_CHECKS = 1; SET AUTOCOMMIT = 1;");
 			}
 
-			// Handle file copying based on copyFiles config and fileMode
 			if ($this->config['copyFiles']) {
 				if (!$this->handleFileCopying($sourcePath, $targetPath, $targetHost, $targetDB, $targetPort, $targetUsername, $targetPassword, $targetCharset)) {
 					return false;
@@ -289,7 +750,6 @@ class nuBuilderCloner {
 			}
 
 			$this->sendSuccessMessage($targetDB, $sourcePath, $targetPath);
-
 			return true;
 		} catch (Exception $e) {
 			$this->log("ERROR: " . $e->getMessage());
@@ -303,26 +763,158 @@ class nuBuilderCloner {
 		}
 	}
 
-	/**
-	 * Handle file copying based on fileMode option - simplified logic
-	 */
+	private function processCloneOperations(array $opts, string $insertType, string $targetFormat = 'mysql'): void {
+		if (in_array(1, $opts)) {
+			$this->runStep(fn() => $this->cloneDBCreateSQL("TABLE_NAME LIKE 'zzzzsys%'"), "Creating nuBuilder system tables", 'tables_created');
+			$this->runStep(fn() => $this->cloneDBViewsSQL("TABLE_NAME LIKE 'zzzzsys%'"), "Creating nuBuilder system views", 'views_created');
+		}
+
+		if (in_array(2, $opts)) {
+			$this->runStep(fn() => $this->cloneDBCreateSQL("TABLE_NAME NOT LIKE 'zzzzsys%'"), "Creating user tables", 'tables_created');
+			$this->runStep(fn() => $this->cloneDBViewsSQL("TABLE_NAME NOT LIKE 'zzzzsys%'"), "Creating user views", 'views_created');
+		}
+
+		if (array_intersect([3, 4, 5], $opts) === [3, 4, 5]) {
+			$this->runStep(fn() => $this->cloneDBInsertSQL($insertType, "TRUE", "TRUE", $targetFormat), "Cloning all table data", 'rows_copied');
+		} else {
+			if (in_array(3, $opts)) {
+				$this->runStep(fn() => $this->cloneDBInsertSQL($insertType, "TABLE_NAME LIKE 'zzzzsys%'", "|t|_id LIKE 'nu%'", $targetFormat), "Cloning nuBuilder system records", 'rows_copied');
+			}
+			if (in_array(4, $opts)) {
+				$this->runStep(fn() => $this->cloneDBInsertSQL($insertType, "TABLE_NAME LIKE 'zzzzsys%'", "|t|_id NOT LIKE 'nu%'", $targetFormat), "Cloning application records", 'rows_copied');
+			}
+			if (in_array(5, $opts)) {
+				$this->runStep(fn() => $this->cloneDBInsertSQL($insertType, "(TABLE_NAME NOT LIKE 'zzzzsys%' AND TABLE_NAME NOT LIKE '___nu%')", "TRUE", $targetFormat), "Cloning user table data", 'rows_copied');
+			}
+		}
+
+		$dependentOperations = [
+			6 => ['method' => 'cloneFunctions', 'desc' => 'functions', 'stat' => 'functions'],
+			7 => ['method' => 'cloneProcedures', 'desc' => 'procedures', 'stat' => 'procedures'],
+			8 => ['method' => 'cloneTriggers', 'desc' => 'triggers', 'stat' => 'triggers'],
+			9 => ['method' => 'cloneEvents', 'desc' => 'events', 'stat' => 'events']
+		];
+
+		foreach ($dependentOperations as $opt => $config) {
+			if (in_array($opt, $opts)) {
+				$this->runStep(fn() => $this->{$config['method']}(), "Cloning {$config['desc']}", $config['stat']);
+			}
+		}
+	}
+
+
+	// Helper methods continue below...
+	private function initializeLogging(): void {
+		$logFile = $this->config['logFile'];
+		$logDir = dirname($logFile);
+
+		if (!is_dir($logDir)) {
+			if (!mkdir($logDir, 0755, true)) {
+				$this->sendError("Cannot create log directory: $logDir");
+				return;
+			}
+		}
+
+		$this->logHandle = @fopen($logFile, 'a');
+		if (!$this->logHandle) {
+			$this->sendError("Cannot open log file: $logFile");
+		} else {
+			$this->log("=== Clone operation started ===");
+		}
+	}
+
+	private function dry(string $action, ?string $sql = null): void {
+		$this->dryRunActions[] = $action;
+		if ($sql !== null) {
+			$this->log("Would execute: " . substr($sql, 0, 100) . (strlen($sql) > 100 ? '...' : ''));
+		} else {
+			$this->log($action);
+		}
+	}
+
+	private function execOrDry(string $sql, ?string $action = null): void {
+		if ($this->config['dryRun']) {
+			$this->dry($action ?? "Would execute SQL", $sql);
+			return;
+		}
+		$this->executeSQL($sql);
+	}
+
+	private function oneOf(string $value, array $allowed, string $label): string {
+		if (!in_array($value, $allowed, true)) {
+			throw new InvalidArgumentException("$label must be one of: " . implode(', ', $allowed));
+		}
+		return $value;
+	}
+
+	private function filterTablesAndViews(array $tableNames): array {
+		$includeMap = array_flip($this->config['includeTablesAndViews']);
+		$excludeMap = array_flip($this->config['excludeTablesAndViews']);
+
+		if ($includeMap) {
+			$this->log("Include filter active: " . implode(', ', array_keys($includeMap)));
+		}
+		if ($excludeMap) {
+			$this->log("Exclude filter active: " . implode(', ', array_keys($excludeMap)));
+		}
+
+		$filtered = [];
+		$skipped = [];
+
+		foreach ($tableNames as $tableName) {
+			if (str_starts_with($tableName, 'zzzzsys_')) {
+				$filtered[] = $tableName;
+				continue;
+			}
+
+			if ($includeMap && !isset($includeMap[$tableName])) {
+				$skipped[] = "$tableName (not in include list)";
+				continue;
+			}
+
+			if (isset($excludeMap[$tableName])) {
+				$skipped[] = "$tableName (in exclude list)";
+				continue;
+			}
+
+			$filtered[] = $tableName;
+		}
+
+		if ($skipped) {
+			$this->log("Filtered out " . count($skipped) . " tables/views: " . implode(', ', array_slice($skipped, 0, 10)) . (count($skipped) > 10 ? " and " . (count($skipped) - 10) . " more..." : ""));
+		}
+
+		if ($filtered) {
+			$this->log("Including " . count($filtered) . " tables/views: " . implode(', ', array_slice($filtered, 0, 10)) . (count($filtered) > 10 ? " and " . (count($filtered) - 10) . " more..." : ""));
+		}
+
+		return $filtered;
+	}
+
+	private function runStep(callable $fn, string $desc, ?string $statKey = null): void {
+		$this->showProgress("$desc...");
+		$before = $statKey ? ($this->statistics[$statKey] ?? 0) : 0;
+		$fn();
+		$after = $statKey ? ($this->statistics[$statKey] ?? 0) : 0;
+		$delta = max(0, $after - $before);
+		$this->showProgress("Completed ($delta)", $delta, true);
+	}
+
 	private function handleFileCopying(string $sourcePath, string $targetPath, string $targetHost, string $targetDB, int $targetPort, string $targetUsername, string $targetPassword, string $targetCharset): bool {
 		$exists = is_dir($targetPath);
 		$mode = $this->config['fileMode'];
 
-		$announce = function (string $msg) use ($targetPath) {
+		$announce = function (string $msg) {
 			$this->log($msg);
 			if ($this->config['dryRun'])
 				$this->dry($msg);
 		};
 
-		// Handle fail mode
 		if ($mode === 'fail' && $exists) {
 			$this->sendError("Target directory '$targetPath' already exists. File copying aborted (fileMode = 'fail').");
 			return false;
 		}
 
-		// Handle clear mode
 		if ($mode === 'clear' && $exists) {
 			$announce("Target directory '$targetPath' exists and will be cleared");
 			if (!$this->config['dryRun'] && !$this->clearTargetDirectory($targetPath)) {
@@ -330,21 +922,17 @@ class nuBuilderCloner {
 			}
 		}
 
-		// Handle overwrite mode
 		if ($mode === 'overwrite' && $exists) {
 			$announce("Target directory '$targetPath' exists. Files will be overwritten during copy.");
 		}
 
-		// Handle directory creation
 		if (!$exists) {
 			$announce("Target directory '$targetPath' will be created");
 		}
 
-		// Proceed with file copying
 		$folderCopied = $this->copyFolderContents($sourcePath, $targetPath);
 
 		if ($folderCopied || $this->config['dryRun']) {
-			// Get source database charset and collation if possible
 			$charsetInfo = $this->getSourceDatabaseCharset();
 			$dbCharset = $charsetInfo['charset'] ?? $targetCharset;
 			$dbCollation = $charsetInfo['collation'] ?? $this->config['databaseCollation'];
@@ -365,9 +953,6 @@ class nuBuilderCloner {
 		return true;
 	}
 
-	/**
-	 * Clear target directory contents
-	 */
 	private function clearTargetDirectory(string $targetPath): bool {
 		if ($this->config['dryRun']) {
 			$this->dry("Would clear all contents from directory '$targetPath'");
@@ -377,180 +962,13 @@ class nuBuilderCloner {
 
 		try {
 			$this->showProgress("Clearing target directory...");
-			$clearedCount = $this->recursiveDelete($targetPath, false); // false = don't delete the directory itself
+			$clearedCount = $this->recursiveDelete($targetPath, false);
 			$this->statistics['files_cleared'] = $clearedCount;
 			$this->log("Cleared $clearedCount files/directories from '$targetPath'");
 			$this->showProgress("Directory cleared ($clearedCount items)", $clearedCount, true);
 			return true;
 		} catch (Exception $e) {
 			$this->sendError("Failed to clear target directory: " . $e->getMessage());
-			return false;
-		}
-	}
-
-	/**
-	 * Simulate clearing directory for dry run
-	 */
-	private function simulateClearDirectory(string $targetPath): void {
-		$count = $this->countDirectoryContents($targetPath);
-		$this->statistics['files_cleared'] = $count;
-		if ($count > 0) {
-			$this->dry("Would delete $count files/directories");
-		}
-	}
-
-	/**
-	 * Count files and directories in a directory
-	 */
-	private function countDirectoryContents(string $path): int {
-		if (!is_dir($path)) {
-			return 0;
-		}
-
-		$count = 0;
-		$iterator = new RecursiveIteratorIterator(
-			new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS),
-			RecursiveIteratorIterator::CHILD_FIRST
-		);
-
-		foreach ($iterator as $file) {
-			$count++;
-		}
-
-		return $count;
-	}
-
-	/**
-	 * Recursively delete directory contents
-	 */
-	private function recursiveDelete(string $path, bool $deleteRoot = true): int {
-		if (!is_dir($path)) {
-			return 0;
-		}
-
-		$count = 0;
-		$iterator = new RecursiveIteratorIterator(
-			new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS),
-			RecursiveIteratorIterator::CHILD_FIRST
-		);
-
-		foreach ($iterator as $file) {
-			if ($file->isDir()) {
-				if (rmdir($file->getRealPath())) {
-					$count++;
-				}
-			} else {
-				if (unlink($file->getRealPath())) {
-					$count++;
-				}
-			}
-		}
-
-		if ($deleteRoot && is_dir($path)) {
-			if (rmdir($path)) {
-				$count++;
-			}
-		}
-
-		return $count;
-	}
-
-	private function handleDatabaseCreation(string $host, string $db, string $usr, string $pwd, string $charset, int $port): bool {
-		$createDatabaseOption = $this->config['databaseMode'];
-
-		// Check if database exists
-		$dbExists = $this->databaseExists($host, $db, $usr, $pwd, $charset, $port);
-
-		switch ($createDatabaseOption) {
-			case 'create':
-				// Create database if it doesn't exist
-				if (!$dbExists) {
-					return $this->createDatabase($host, $db, $usr, $pwd, $charset, $port);
-				} else {
-					$this->log("Target database '$db' already exists");
-					if ($this->config['dryRun']) {
-						$this->dry("Target database '$db' already exists");
-					}
-					return true;
-				}
-
-			case 'fail':
-				// Fail if database exists
-				if ($dbExists) {
-					$this->sendError("Target database '$db' already exists. Operation aborted (databaseMode = 'fail').");
-					return false;
-				} else {
-					return $this->createDatabase($host, $db, $usr, $pwd, $charset, $port);
-				}
-
-			case 'clear':
-				// Clear database if it exists, create if it doesn't
-				if ($dbExists) {
-					$this->log("Target database '$db' exists and will be cleared");
-					if ($this->config['dryRun']) {
-						$this->dry("Target database '$db' exists and will be cleared");
-					}
-					return true; // Database clearing will be handled later in the process
-				} else {
-					return $this->createDatabase($host, $db, $usr, $pwd, $charset, $port);
-				}
-
-			default:
-				// Invalid option
-				$this->sendError("Invalid databaseMode option: '$createDatabaseOption'. Must be one of: " . implode(', ', self::VALID_CREATE_DATABASE_OPTIONS));
-				return false;
-
-		}
-	}
-
-	private function createDatabase(string $host, string $db, string $usr, string $pwd, string $charset, int $port): bool {
-		try {
-			// First, try to connect without specifying a database
-			$dsn = "mysql:host=$host;charset=$charset;port=$port";
-			$pdo = new PDO($dsn, $usr, $pwd, [
-				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-				PDO::ATTR_EMULATE_PREPARES => false
-			]);
-
-			$this->log("Target database '$db' does not exist. Creating it...");
-
-			if ($this->config['dryRun']) {
-				$this->log("Would create database: $db");
-				$this->dry("Create database: $db");
-
-				// Get source database charset and collation if possible
-				$charsetInfo = $this->getSourceDatabaseCharset();
-				$dbCharset = $charsetInfo['charset'] ?? $charset;
-				$dbCollation = $charsetInfo['collation'] ?? $this->config['databaseCollation'];
-
-				$this->dry("Database charset: $dbCharset, collation: $dbCollation");
-				$pdo = null;
-				return true;
-			}
-
-			// Get source database charset and collation if possible
-			$charsetInfo = $this->getSourceDatabaseCharset();
-			$dbCharset = $charsetInfo['charset'] ?? $charset;
-			$dbCollation = $charsetInfo['collation'] ?? $this->config['databaseCollation'];
-
-			// Create the database
-			$sql = "CREATE DATABASE IF NOT EXISTS `$db` CHARACTER SET $dbCharset COLLATE $dbCollation";
-			$pdo->exec($sql);
-
-			$this->log("Database '$db' created successfully with charset '$dbCharset' and collation '$dbCollation'");
-			$this->statistics['database_created'] = true;
-
-			$pdo = null;
-			return true;
-
-		} catch (PDOException $e) {
-			// If we can't connect without a database, it might be a permission issue
-			if (strpos($e->getMessage(), 'Access denied') !== false) {
-				$this->log("WARNING: Cannot create database - access denied. Database must exist.");
-				$this->sendError("Cannot create database '$db'. Please create it manually or provide credentials with CREATE privilege.");
-			} else {
-				$this->sendError("Database creation failed: " . $e->getMessage());
-			}
 			return false;
 		}
 	}
@@ -594,7 +1012,6 @@ class nuBuilderCloner {
 	}
 
 	private function simulateClearDatabase(): void {
-		// Simulate counting objects that would be cleared
 		$objects = [
 			'events' => $this->countTargetObjects('events'),
 			'triggers' => $this->countTargetObjects('triggers'),
@@ -615,7 +1032,6 @@ class nuBuilderCloner {
 
 	private function countTargetObjects(string $type): int {
 		if ($this->config['dryRun'] && !$this->targetPDO) {
-			// For dry run without connection, return simulated counts
 			return 0;
 		}
 
@@ -649,9 +1065,6 @@ class nuBuilderCloner {
 		}
 	}
 
-	/**
-	 * Generic helper for dropping objects from INFORMATION_SCHEMA
-	 */
 	private function dropInfoSchemaObjects(string $sqlSelect, callable $dropper): int {
 		$count = 0;
 		foreach ($this->targetPDO->query($sqlSelect) as $row) {
@@ -695,14 +1108,12 @@ class nuBuilderCloner {
 
 	private function dropAllViews(): int {
 		$count = 0;
-		// Get all views first
 		$views = [];
 		$stmt = $this->targetPDO->query("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_SCHEMA = DATABASE()");
 		while ($row = $stmt->fetch()) {
 			$views[] = $row[0];
 		}
 
-		// Drop views in reverse dependency order (simple approach: try multiple times)
 		$maxAttempts = count($views) + 1;
 		$attempt = 0;
 
@@ -716,19 +1127,16 @@ class nuBuilderCloner {
 					$droppedThisRound[] = $index;
 					$count++;
 				} catch (Exception $e) {
-					// View might have dependencies, try next round
 					if ($attempt == $maxAttempts) {
 						$this->log("Warning: Could not drop view '$viewName': " . $e->getMessage());
 					}
 				}
 			}
 
-			// Remove successfully dropped views
 			foreach (array_reverse($droppedThisRound) as $index) {
 				unset($views[$index]);
 			}
 
-			// If no views were dropped this round, force drop remaining
 			if (empty($droppedThisRound) && !empty($views)) {
 				foreach ($views as $viewName) {
 					try {
@@ -747,8 +1155,6 @@ class nuBuilderCloner {
 
 	private function dropAllTables(): int {
 		$count = 0;
-
-		// Disable foreign key checks to avoid dependency issues
 		$this->executeSQL("SET FOREIGN_KEY_CHECKS = 0");
 
 		try {
@@ -759,7 +1165,6 @@ class nuBuilderCloner {
 				$count++;
 			}
 		} finally {
-			// Re-enable foreign key checks
 			$this->executeSQL("SET FOREIGN_KEY_CHECKS = 1");
 		}
 
@@ -797,8 +1202,7 @@ class nuBuilderCloner {
 
 	private function getSourceDatabaseCharset(): array {
 		try {
-			$stmt = nuRunQuery("SELECT DEFAULT_CHARACTER_SET_NAME, DEFAULT_COLLATION_NAME
- 								FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?", [$this->srcDB]);
+			$stmt = nuRunQuery("SELECT DEFAULT_CHARACTER_SET_NAME, DEFAULT_COLLATION_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?", [$this->srcDB]);
 			if ($row = db_fetch_row($stmt)) {
 				return [
 					'charset' => $row[0],
@@ -821,14 +1225,13 @@ class nuBuilderCloner {
 			return $this->sendError('The target database cannot be the same as the source database.');
 		}
 
-		// Validate insert type
 		$this->oneOf($insertType, self::VALID_INSERT_TYPES, 'Insert type');
-
-		// Validate database mode
 		$this->oneOf($this->config['databaseMode'], self::VALID_CREATE_DATABASE_OPTIONS, 'Database mode');
-
-		// Validate file mode
 		$this->oneOf($this->config['fileMode'], self::VALID_FILE_MODE_OPTIONS, 'File mode');
+
+		if ($this->config['sqlExport']['enabled']) {
+			$this->oneOf($this->config['sqlExport']['format'], self::VALID_SQL_EXPORT_FORMATS, 'SQL export format');
+		}
 
 		$validOpts = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 		if (array_diff($opts, $validOpts)) {
@@ -843,7 +1246,6 @@ class nuBuilderCloner {
 			return $this->sendError('The target folder cannot be the same as the source folder.');
 		}
 
-		// Validate table/view filtering arrays
 		if (!is_array($this->config['includeTablesAndViews'])) {
 			return $this->sendError('includeTablesAndViews must be an array.');
 		}
@@ -864,57 +1266,11 @@ class nuBuilderCloner {
 		]);
 	}
 
-	private function processCloneOperations(array $opts, string $insertType): void {
-		// PHASE 1: Create database structure first (tables and views)
-		if (in_array(1, $opts)) {
-			$this->runStep(fn() => $this->cloneDBCreateSQL("TABLE_NAME LIKE 'zzzzsys%'"), "Creating nuBuilder system tables", 'tables_created');
-			$this->runStep(fn() => $this->cloneDBViewsSQL("TABLE_NAME LIKE 'zzzzsys%'"), "Creating nuBuilder system views", 'views_created');
-		}
-
-		if (in_array(2, $opts)) {
-			$this->runStep(fn() => $this->cloneDBCreateSQL("TABLE_NAME NOT LIKE 'zzzzsys%'"), "Creating user tables", 'tables_created');
-			$this->runStep(fn() => $this->cloneDBViewsSQL("TABLE_NAME NOT LIKE 'zzzzsys%'"), "Creating user views", 'views_created');
-		}
-
-		// PHASE 2: Insert data into tables
-		if (array_intersect([3, 4, 5], $opts) === [3, 4, 5]) {
-			$this->runStep(fn() => $this->cloneDBInsertSQL($insertType, "TRUE", "TRUE"), "Cloning all table data", 'rows_copied');
-		} else {
-			if (in_array(3, $opts)) {
-				$this->runStep(fn() => $this->cloneDBInsertSQL($insertType, "TABLE_NAME LIKE 'zzzzsys%'", "|t|_id LIKE 'nu%'"), "Cloning nuBuilder system records", 'rows_copied');
-			}
-			if (in_array(4, $opts)) {
-				$this->runStep(fn() => $this->cloneDBInsertSQL($insertType, "TABLE_NAME LIKE 'zzzzsys%'", "|t|_id NOT LIKE 'nu%'"), "Cloning application records", 'rows_copied');
-			}
-			if (in_array(5, $opts)) {
-				$this->runStep(fn() => $this->cloneDBInsertSQL($insertType, "(TABLE_NAME NOT LIKE 'zzzzsys%' AND TABLE_NAME NOT LIKE '___nu%')", "TRUE"), "Cloning user table data", 'rows_copied');
-			}
-		}
-
-		// PHASE 3: Create database objects that depend on tables/views (functions, procedures, triggers, events)
-		$dependentOperations = [
-			6 => ['method' => 'cloneFunctions', 'desc' => 'functions', 'stat' => 'functions'],
-			7 => ['method' => 'cloneProcedures', 'desc' => 'procedures', 'stat' => 'procedures'],
-			8 => ['method' => 'cloneTriggers', 'desc' => 'triggers', 'stat' => 'triggers'],
-			9 => ['method' => 'cloneEvents', 'desc' => 'events', 'stat' => 'events']
-		];
-
-		foreach ($dependentOperations as $opt => $config) {
-			if (in_array($opt, $opts)) {
-				$this->runStep(fn() => $this->{$config['method']}(), "Cloning {$config['desc']}", $config['stat']);
-			}
-		}
-	}
-
-	/**
-	 * Unified routine cloning with metadata-driven approach
-	 */
 	private function cloneRoutine(string $type): void {
 		$meta = self::ROUTINE_META[$type];
 		$count = 0;
 		$failedRoutines = [];
 
-		// Prepare the show query
 		$showQuery = str_replace('%DB%', $this->srcDB, $meta['show']);
 		$queryParams = ($type === 'TRIGGER') ? [] : [$this->srcDB];
 
@@ -971,29 +1327,23 @@ class nuBuilderCloner {
 	}
 
 	private function shouldProcessRoutine(string $routineName, string $tableName = null): bool {
-		// If no table filtering is configured, process all routines
 		if (empty($this->config['includeTablesAndViews']) && empty($this->config['excludeTablesAndViews'])) {
 			return true;
 		}
 
-		// For triggers, we can check the associated table
 		if ($tableName !== null) {
 			$includeList = $this->config['includeTablesAndViews'];
 			$excludeList = $this->config['excludeTablesAndViews'];
 
-			// If includeTablesAndViews is not empty, only include if table is in that list
 			if (!empty($includeList) && !in_array($tableName, $includeList, true)) {
 				return false;
 			}
 
-			// Always exclude if table is in excludeTablesAndViews
 			if (in_array($tableName, $excludeList, true)) {
 				return false;
 			}
 		}
 
-		// For functions, procedures, and events without table association,
-		// we might want to include them all or add more sophisticated filtering
 		return true;
 	}
 
@@ -1004,7 +1354,6 @@ class nuBuilderCloner {
 			$tables[] = $row[0];
 		}
 
-		// Apply table/view filtering
 		return $this->filterTablesAndViews($tables);
 	}
 
@@ -1025,21 +1374,20 @@ class nuBuilderCloner {
 		$this->log("Created $count table(s)" . ($this->config['dryRun'] ? " (dry run)" : ""));
 	}
 
-	private function cloneDBInsertSQL(string $insertType, string $tableWhere, string $rowWhere): void {
+	private function cloneDBInsertSQL(string $insertType, string $tableWhere, string $rowWhere, string $format = 'mysql'): void {
 		$tables = $this->getTableNames("SELECT TABLE_NAME FROM information_schema.TABLES WHERE ($tableWhere) AND (TABLE_TYPE='BASE TABLE' AND `TABLE_SCHEMA`= ?)");
 
 		foreach ($tables as $table) {
-			$this->cloneDBTableInserts($insertType, $table, str_replace("|t|", $table, $rowWhere));
+			$this->cloneDBTableInserts($insertType, $table, str_replace("|t|", $table, $rowWhere), $format);
 		}
 	}
 
-	private function cloneDBTableInserts(string $insertType, string $table, string $rowWhere): void {
+	private function cloneDBTableInserts(string $insertType, string $table, string $rowWhere, string $format = 'mysql'): void {
 		$cols = db_field_names($table);
 		$columnList = '(`' . implode('`,`', $cols) . '`)';
 		$pkName = $this->getPrimaryKeyName($table);
 		$orderClause = ($pkName === '') ? '' : "ORDER BY `$pkName`";
 
-		// Count total rows to be copied
 		$countStmt = nuRunQuery("SELECT COUNT(*) FROM `$table` WHERE $rowWhere");
 		$totalRows = db_fetch_row($countStmt)[0];
 
@@ -1058,33 +1406,146 @@ class nuBuilderCloner {
 
 		$stmt = nuRunQuery("SELECT * FROM `$table` WHERE $rowWhere $orderClause");
 
+		// Get column information for SQL Server strict formatting
+		$columnInfo = [];
+		if ($format === 'mssql') {
+			$columnInfo = $this->getColumnInfo($table);
+		}
+
 		$this->executeSQL("ALTER TABLE `$table` DISABLE KEYS");
 
 		$rowCount = 0;
 		$batch = [];
 
 		while ($row = db_fetch_row($stmt)) {
-			$values = array_map(fn($col) => is_null($col) ? 'NULL' : nuDBQuote($col), $row);
+			$values = [];
+
+			if ($format === 'mssql') {
+				// Use SQL Server strict formatting with column type awareness
+				for ($i = 0; $i < count($row); $i++) {
+					$colName = $cols[$i];
+					$colInfo = $columnInfo[$colName] ?? null;
+					$values[] = $this->formatValueForSQLServerStrict($row[$i], $colInfo, $colName);
+				}
+			} else {
+				// Use MySQL formatting (original behavior)
+				$values = array_map(fn($col) => is_null($col) ? 'NULL' : nuDBQuote($col), $row);
+			}
+
 			$batch[] = '(' . implode(',', $values) . ')';
 			$rowCount++;
 
 			if ($rowCount % self::INSERT_BATCH_SIZE === 0) {
-				$this->executeBatchInsert($insertType, $table, $columnList, $batch);
+				$this->executeBatchInsert($insertType, $table, $columnList, $batch, $format);
 				$batch = [];
 			}
 		}
 
 		if (!empty($batch)) {
-			$this->executeBatchInsert($insertType, $table, $columnList, $batch);
+			$this->executeBatchInsert($insertType, $table, $columnList, $batch, $format);
 		}
 
 		$this->executeSQL("ALTER TABLE `$table` ENABLE KEYS");
 		$this->statistics['rows_copied'] = ($this->statistics['rows_copied'] ?? 0) + $rowCount;
 	}
 
-	private function executeBatchInsert(string $insertType, string $table, string $columnList, array $batch): void {
-		$sql = "$insertType INTO `$table` $columnList VALUES " . implode(',', $batch);
+	private function executeBatchInsert(string $insertType, string $table, string $columnList, array $batch, string $format = 'mysql'): void {
+		if ($format === 'mssql') {
+			// Convert to SQL Server format
+			$mssqlColumnList = str_replace('`', '', $columnList);
+			$mssqlColumnList = str_replace('(', '([', $mssqlColumnList);
+			$mssqlColumnList = str_replace(',', '], [', $mssqlColumnList);
+			$mssqlColumnList = str_replace(')', '])', $mssqlColumnList);
+			$mssqlTableName = "[$table]";
+
+			$sql = "$insertType INTO $mssqlTableName $mssqlColumnList VALUES " . implode(',', $batch);
+		} else {
+			$sql = "$insertType INTO `$table` $columnList VALUES " . implode(',', $batch);
+		}
+
 		$this->executeSQL($sql);
+	}
+
+
+
+	private function formatValueForSQLServerStrict($value, ?array $colInfo, string $colName): string {
+		// Handle NULL values (including string representations of NULL)
+		if (is_null($value) || $value === '' ||
+			strtolower(trim((string) $value)) === 'null' ||
+			strtolower(trim((string) $value)) === 'nil') {
+			return 'NULL';
+		}
+
+		// Determine if this is definitely a numeric column
+		$isNumericColumn = false;
+
+		// Check column type info if available
+		if ($colInfo && isset($colInfo['type'])) {
+			$numericTypes = ['int', 'integer', 'bigint', 'smallint', 'tinyint', 'mediumint',
+				'decimal', 'numeric', 'float', 'double', 'real', 'bit'];
+			$isNumericColumn = in_array($colInfo['type'], $numericTypes);
+		}
+
+		// Also check column name patterns for common numeric columns
+		if (!$isNumericColumn) {
+			$numericColumnPatterns = [
+				'/_(id|order|width|height|size|count|num|amount|price|qty|total|position|index|level|rank)$/i',
+				'/^(id|count|number|amount|price|quantity|total|order|width|height|size)$/i'
+			];
+
+			foreach ($numericColumnPatterns as $pattern) {
+				if (preg_match($pattern, $colName)) {
+					$isNumericColumn = true;
+					break;
+				}
+			}
+		}
+
+		// Only leave unquoted if it's definitely numeric AND the value is numeric
+		if ($isNumericColumn && is_numeric($value)) {
+			return (string) $value;
+		}
+
+		// For all other cases, quote with N' prefix for SQL Server Unicode compatibility
+		$stringValue = (string) $value;
+		$escapedValue = str_replace("'", "''", $stringValue);
+
+		// Always use N' prefix for SQL Server string values to ensure Unicode compatibility
+		return "N'$escapedValue'";
+	}
+
+
+
+	private function getColumnInfo(string $table): array {
+		$columnInfo = [];
+		try {
+			$stmt = nuRunQuery("
+			SELECT
+				COLUMN_NAME,
+				DATA_TYPE,
+				IS_NULLABLE,
+				CHARACTER_SET_NAME,
+				COLLATION_NAME,
+				COLUMN_TYPE
+			FROM INFORMATION_SCHEMA.COLUMNS
+			WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?
+			ORDER BY ORDINAL_POSITION",
+				[$this->srcDB, $table]
+			);
+
+			while ($row = db_fetch_array($stmt)) {
+				$columnInfo[$row['COLUMN_NAME']] = [
+					'type' => strtolower($row['DATA_TYPE']),
+					'nullable' => $row['IS_NULLABLE'] === 'YES',
+					'charset' => $row['CHARACTER_SET_NAME'],
+					'collation' => $row['COLLATION_NAME'],
+					'full_type' => $row['COLUMN_TYPE']
+				];
+			}
+		} catch (Exception $e) {
+			$this->log("Warning: Could not get column info for table $table: " . $e->getMessage());
+		}
+		return $columnInfo;
 	}
 
 	private function getPrimaryKeyName(string $tableName): string {
@@ -1112,7 +1573,6 @@ class nuBuilderCloner {
 		$viewDefinitions = [];
 		$orderedViews = [];
 
-		// Get all view definitions
 		foreach ($views as $view) {
 			$stmt = nuRunQuery("SHOW CREATE VIEW `$view`");
 			$create = db_fetch_row($stmt)[1];
@@ -1121,8 +1581,7 @@ class nuBuilderCloner {
 			$viewDefinitions[$view] = $create;
 		}
 
-		// Sort views by dependency
-		$maxIterations = count($views) * count($views); // Prevent infinite loops
+		$maxIterations = count($views) * count($views);
 		$iteration = 0;
 
 		while (!empty($viewDefinitions) && $iteration++ < $maxIterations) {
@@ -1180,7 +1639,7 @@ class nuBuilderCloner {
 			$this->log("Would copy files from '$source' to '$destination'");
 			$this->dry("Copy folder contents from '$source' to '$destination'");
 			$this->simulateFileCopy($source, $destination);
-			return true; // Fixed: return true for dry run
+			return true;
 		} else {
 			$this->showProgress("Copying files...", 0, false, true);
 			$this->recursiveCopy($source, $destination);
@@ -1237,7 +1696,6 @@ class nuBuilderCloner {
 		}
 
 		if (!file_exists($filePath)) {
-			// Ignore exception - the config file might be excluded
 			return false;
 		}
 
@@ -1245,15 +1703,132 @@ class nuBuilderCloner {
 
 		foreach ($newValues as $varName => $newValue) {
 			$quotedValue = is_numeric($newValue) ? $newValue : '"' . addslashes($newValue) . '"';
-
-			// Regex: matches e.g., $nuConfigDBHost = "...";
 			$pattern = '/(\$' . preg_quote($varName, '/') . '\s*=\s*)(["\']?.*?["\']?)(\s*;)/';
-			$replacement = "\${1}$quotedValue\${3}";
-
+			$replacement = '${1}' . $quotedValue . '${3}';
 			$contents = preg_replace($pattern, $replacement, $contents, 1);
 		}
 
 		return file_put_contents($filePath, $contents) !== false;
+	}
+
+	private function recursiveDelete(string $path, bool $deleteRoot = true): int {
+		if (!is_dir($path)) {
+			return 0;
+		}
+
+		$count = 0;
+		$iterator = new RecursiveIteratorIterator(
+			new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS),
+			RecursiveIteratorIterator::CHILD_FIRST
+		);
+
+		foreach ($iterator as $file) {
+			if ($file->isDir()) {
+				if (rmdir($file->getRealPath())) {
+					$count++;
+				}
+			} else {
+				if (unlink($file->getRealPath())) {
+					$count++;
+				}
+			}
+		}
+
+		if ($deleteRoot && is_dir($path)) {
+			if (rmdir($path)) {
+				$count++;
+			}
+		}
+
+		return $count;
+	}
+
+	private function handleDatabaseCreation(string $host, string $db, string $usr, string $pwd, string $charset, int $port): bool {
+		$createDatabaseOption = $this->config['databaseMode'];
+		$dbExists = $this->databaseExists($host, $db, $usr, $pwd, $charset, $port);
+
+		switch ($createDatabaseOption) {
+			case 'create':
+				if (!$dbExists) {
+					return $this->createDatabase($host, $db, $usr, $pwd, $charset, $port);
+				} else {
+					$this->log("Target database '$db' already exists");
+					if ($this->config['dryRun']) {
+						$this->dry("Target database '$db' already exists");
+					}
+					return true;
+				}
+
+			case 'fail':
+				if ($dbExists) {
+					$this->sendError("Target database '$db' already exists. Operation aborted (databaseMode = 'fail').");
+					return false;
+				} else {
+					return $this->createDatabase($host, $db, $usr, $pwd, $charset, $port);
+				}
+
+			case 'clear':
+				if ($dbExists) {
+					$this->log("Target database '$db' exists and will be cleared");
+					if ($this->config['dryRun']) {
+						$this->dry("Target database '$db' exists and will be cleared");
+					}
+					return true;
+				} else {
+					return $this->createDatabase($host, $db, $usr, $pwd, $charset, $port);
+				}
+
+			default:
+				$this->sendError("Invalid databaseMode option: '$createDatabaseOption'. Must be one of: " . implode(', ', self::VALID_CREATE_DATABASE_OPTIONS));
+				return false;
+		}
+	}
+
+	private function createDatabase(string $host, string $db, string $usr, string $pwd, string $charset, int $port): bool {
+		try {
+			$dsn = "mysql:host=$host;charset=$charset;port=$port";
+			$pdo = new PDO($dsn, $usr, $pwd, [
+				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+				PDO::ATTR_EMULATE_PREPARES => false
+			]);
+
+			$this->log("Target database '$db' does not exist. Creating it...");
+
+			if ($this->config['dryRun']) {
+				$this->log("Would create database: $db");
+				$this->dry("Create database: $db");
+
+				$charsetInfo = $this->getSourceDatabaseCharset();
+				$dbCharset = $charsetInfo['charset'] ?? $charset;
+				$dbCollation = $charsetInfo['collation'] ?? $this->config['databaseCollation'];
+
+				$this->dry("Database charset: $dbCharset, collation: $dbCollation");
+				$pdo = null;
+				return true;
+			}
+
+			$charsetInfo = $this->getSourceDatabaseCharset();
+			$dbCharset = $charsetInfo['charset'] ?? $charset;
+			$dbCollation = $charsetInfo['collation'] ?? $this->config['databaseCollation'];
+
+			$sql = "CREATE DATABASE IF NOT EXISTS `$db` CHARACTER SET $dbCharset COLLATE $dbCollation";
+			$pdo->exec($sql);
+
+			$this->log("Database '$db' created successfully with charset '$dbCharset' and collation '$dbCollation'");
+			$this->statistics['database_created'] = true;
+
+			$pdo = null;
+			return true;
+
+		} catch (PDOException $e) {
+			if (strpos($e->getMessage(), 'Access denied') !== false) {
+				$this->log("WARNING: Cannot create database - access denied. Database must exist.");
+				$this->sendError("Cannot create database '$db'. Please create it manually or provide credentials with CREATE privilege.");
+			} else {
+				$this->sendError("Database creation failed: " . $e->getMessage());
+			}
+			return false;
+		}
 	}
 
 	private function recursiveCopy(string $source, string $destination): void {
@@ -1295,7 +1870,6 @@ class nuBuilderCloner {
 						touch($dstFile, $dt);
 						$this->fileCount++;
 
-						// Show progress every 500 files
 						if ($this->config['showProgress'] && $this->fileCount % 500 === 0) {
 							$this->log("Progress: Copied {$this->fileCount} files so far");
 							$this->showProgress("Copied {$this->fileCount} files...", $this->fileCount, false, true);
@@ -1334,7 +1908,6 @@ class nuBuilderCloner {
 		$progressId = $this->config['progressId'];
 		$file = __DIR__ . "/../temp/nu_app_cloner_progress_$progressId.log";
 
-		// Clean up old progress files on first progress update
 		if ($this->progressNr === 1) {
 			$progressDir = dirname($file);
 			foreach (glob($progressDir . '/nu_app_cloner_progress_*.log') as $progressFile) {
@@ -1353,13 +1926,11 @@ class nuBuilderCloner {
 		}
 
 		$existing = file_exists($file) ? file_get_contents($file) : '';
-
-		// Append new message (fixed comment - was saying "prepend")
 		file_put_contents($file, $existing . $newEntry);
 	}
 
 	private function sendError(string $message): bool {
-		$this->nuAppClonerCallback('error', $message); // Fixed: lowercase 'error'
+		$this->nuAppClonerCallback('error', $message);
 		return false;
 	}
 
@@ -1370,11 +1941,6 @@ class nuBuilderCloner {
 		if ($this->logHandle && is_resource($this->logHandle)) {
 			@fwrite($this->logHandle, $logMessage);
 			@fflush($this->logHandle);
-		}
-
-		if ($this->config['dryRun']) {
-			// Optional: Add small delay for dry run to make it feel more realistic
-			// usleep(50000); // 0.05 seconds delay for dry run
 		}
 	}
 
@@ -1402,14 +1968,12 @@ class nuBuilderCloner {
 			"$this->srcRows records in $this->srcDB (source)",
 		];
 
-		// Only show target record count if not dry run
 		if (!$this->config['dryRun']) {
 			$stats[] = "$this->tgtRows records in $targetDB (target)";
 		} else {
 			$stats[] = "Would copy {$this->statistics['rows_copied']} records to $targetDB (target)";
 		}
 
-		// Add filtering information to the success message
 		$includeList = $this->config['includeTablesAndViews'];
 		$excludeList = $this->config['excludeTablesAndViews'];
 
@@ -1431,7 +1995,6 @@ class nuBuilderCloner {
 			}
 		}
 
-		// Add database clearing statistics
 		if (isset($this->statistics['objects_cleared'])) {
 			$cleared = $this->statistics['objects_cleared'];
 			$totalCleared = array_sum($cleared);
@@ -1445,40 +2008,23 @@ class nuBuilderCloner {
 					}
 				}
 				if (!empty($clearDetails)) {
-					$stats[] = "  (" . implode(', ', $clearDetails) . ")";
+					$stats[] = " (" . implode(', ', $clearDetails) . ")";
 				}
 			}
 		}
 
-		// Add file clearing statistics
 		if (isset($this->statistics['files_cleared']) && $this->statistics['files_cleared'] > 0) {
 			$verb = $this->config['dryRun'] ? "would clear" : "cleared";
 			$stats[] = "$verb {$this->statistics['files_cleared']} files/directories from target directory";
 		}
 
-		if (isset($this->statistics['tables_created'])) {
-			$verb = $this->config['dryRun'] ? "would create" : "created";
-			$stats[] = "$verb {$this->statistics['tables_created']} tables";
-		}
-		if (isset($this->statistics['views_created'])) {
-			$verb = $this->config['dryRun'] ? "would create" : "created";
-			$stats[] = "$verb {$this->statistics['views_created']} views";
-		}
-		if (isset($this->statistics['functions'])) {
-			$verb = $this->config['dryRun'] ? "would create" : "created";
-			$stats[] = "$verb {$this->statistics['functions']} functions";
-		}
-		if (isset($this->statistics['procedures'])) {
-			$verb = $this->config['dryRun'] ? "would create" : "created";
-			$stats[] = "$verb {$this->statistics['procedures']} procedures";
-		}
-		if (isset($this->statistics['triggers'])) {
-			$verb = $this->config['dryRun'] ? "would create" : "created";
-			$stats[] = "$verb {$this->statistics['triggers']} triggers";
-		}
-		if (isset($this->statistics['events'])) {
-			$verb = $this->config['dryRun'] ? "would create" : "created";
-			$stats[] = "$verb {$this->statistics['events']} events";
+		$objectTypes = ['tables_created', 'views_created', 'functions', 'procedures', 'triggers', 'events'];
+		foreach ($objectTypes as $type) {
+			if (isset($this->statistics[$type])) {
+				$verb = $this->config['dryRun'] ? "would create" : "created";
+				$displayName = str_replace('_created', '', $type);
+				$stats[] = "$verb {$this->statistics[$type]} $displayName";
+			}
 		}
 
 		if ($this->config['copyFiles']) {
@@ -1487,7 +2033,6 @@ class nuBuilderCloner {
 			$stats[] = "from: $sourcePath";
 			$stats[] = "to: $targetPath";
 
-			// Add fileMode information
 			$fileMode = $this->config['fileMode'];
 			$fileModeText = match ($fileMode) {
 				'create' => 'Create directory if not exists, proceed if exists',
@@ -1506,7 +2051,6 @@ class nuBuilderCloner {
 		if ($this->config['dryRun']) {
 			$message = "DRY RUN COMPLETED - No actual changes were made<br><br>$message";
 
-			// Add dry run actions summary
 			if (!empty($this->dryRunActions)) {
 				$message .= '<br><br><strong>Actions that would be performed:</strong><br>';
 				$actionSummary = array_count_values($this->dryRunActions);
@@ -1522,4 +2066,31 @@ class nuBuilderCloner {
 
 		$this->nuAppClonerCallback('Success', $message);
 	}
+
+	private function simulateClearDirectory(string $targetPath): void {
+		$count = $this->countDirectoryContents($targetPath);
+		$this->statistics['files_cleared'] = $count;
+		if ($count > 0) {
+			$this->dry("Would delete $count files/directories");
+		}
+	}
+
+	private function countDirectoryContents(string $path): int {
+		if (!is_dir($path)) {
+			return 0;
+		}
+
+		$count = 0;
+		$iterator = new RecursiveIteratorIterator(
+			new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS),
+			RecursiveIteratorIterator::CHILD_FIRST
+		);
+
+		foreach ($iterator as $file) {
+			$count++;
+		}
+
+		return $count;
+	}
+
 }
