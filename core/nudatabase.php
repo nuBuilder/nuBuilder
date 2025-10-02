@@ -430,8 +430,33 @@ function db_field_info($tableName) {
 	$types = [];
 	$primaryKeys = [];
 
-	$query = "DESCRIBE `$tableName`";
-	$stmt = nuRunQueryNoDebug($query);
+	if (nuMSSQL()) {
+		// Use INFORMATION_SCHEMA for MSSQL to get consistent column layout
+		$query = "
+			SELECT
+				C.COLUMN_NAME AS [Field],
+				C.DATA_TYPE + CASE
+					WHEN C.CHARACTER_MAXIMUM_LENGTH IS NULL THEN ''
+					WHEN C.CHARACTER_MAXIMUM_LENGTH > 99999 THEN ''
+					ELSE '(' + CAST(C.CHARACTER_MAXIMUM_LENGTH AS VARCHAR(5)) + ')'
+				END AS [Type],
+				C.IS_NULLABLE AS [Null],
+				CASE WHEN TC.CONSTRAINT_TYPE = 'PRIMARY KEY' THEN 'PRI' ELSE '' END AS [Key]
+			FROM INFORMATION_SCHEMA.COLUMNS C
+			LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE KCU
+				ON C.TABLE_NAME = KCU.TABLE_NAME AND C.COLUMN_NAME = KCU.COLUMN_NAME
+				AND C.TABLE_CATALOG = KCU.TABLE_CATALOG
+			LEFT JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS TC
+				ON KCU.CONSTRAINT_NAME = TC.CONSTRAINT_NAME AND KCU.TABLE_CATALOG = TC.TABLE_CATALOG
+			WHERE C.TABLE_NAME = ? AND C.TABLE_CATALOG = DB_NAME()
+			ORDER BY C.ORDINAL_POSITION
+		";
+		$stmt = nuRunQueryNoDebug($query, [$tableName]);
+	} else {
+		// Use DESCRIBE for MySQL
+		$query = "DESCRIBE `$tableName`";
+		$stmt = nuRunQueryNoDebug($query);
+	}
 
 	while ($row = db_fetch_row($stmt)) {
 		$fields[] = $row[0];
