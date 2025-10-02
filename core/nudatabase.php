@@ -474,8 +474,14 @@ function db_field_info($tableName) {
 function db_field_names($tableName) {
 
 	$fieldNames = [];
-	$describeQuery = "DESCRIBE `$tableName`";
-	$stmt = nuRunQuery($describeQuery);
+
+	if (nuMSSQL()) {
+		$query = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ? AND TABLE_CATALOG = DB_NAME() ORDER BY ORDINAL_POSITION";
+		$stmt = nuRunQuery($query, [$tableName]);
+	} else {
+		$query = "DESCRIBE `$tableName`";
+		$stmt = nuRunQuery($query);
+	}
 
 	while ($row = db_fetch_row($stmt)) {
 		$fieldNames[] = $row[0];
@@ -484,7 +490,6 @@ function db_field_names($tableName) {
 	return $fieldNames;
 
 }
-
 
 function db_field_types($tableName) {
 
