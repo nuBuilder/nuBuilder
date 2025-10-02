@@ -809,7 +809,7 @@ function nuQuotise($string, $char) {
 }
 
 function nuIdentColumn($s) {
-	return !nuMSSQL() ? nuQuotize($s, '`') : "[$s]";
+	return !nuMSSQL() ? nuQuotise($s, '`') : "[$s]";
 }
 
 function nuCreateTableFromSelect($tableName, $select, $params = [], $temporary = false) {
