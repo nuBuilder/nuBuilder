@@ -1615,16 +1615,25 @@ function nuGetDBColumnLengh(tableName, id) {
 	if (columnIndex === -1) return 0;
 
 	const dataType = tableSchema[tableName].types[columnIndex].toUpperCase();
+
+	// Handle MySQL and MSSQL text types
 	switch (dataType) {
 		case "TINYTEXT": return 255;
 		case "TEXT": return 65535;
 		case "MEDIUMTEXT": return 16777215;
-		default:
-			if (dataType.includes('CHAR')) {
-				return parseInt(dataType.match(/\d+/), 10) || 0;
-			}
-			return 0;
+		case "LONGTEXT": return 4294967295; // MySQL LONGTEXT
+		case "NTEXT": return 1073741823; // MSSQL ntext max
+		case "VARCHAR(MAX)": return 2147483647; // MSSQL varchar(max)
+		case "NVARCHAR(MAX)": return 1073741823; // MSSQL nvarchar(max)
 	}
+
+	// Match CHAR, VARCHAR, NVARCHAR, NCHAR with length
+	const match = dataType.match(/^N?(?:VAR)?CHAR\((\d+)\)$/);
+	if (match) {
+		return parseInt(match[1], 10);
+	}
+
+	return 0;
 
 }
 
