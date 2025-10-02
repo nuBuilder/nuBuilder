@@ -2005,7 +2005,6 @@ function nuClosePopup() {
 	parent.$('#nuModal').remove();
 	parent.$('#nuDragDialog').remove();
 
-
 }
 
 function nuStopClick(e) {
@@ -2084,6 +2083,11 @@ function nuEmbedObject(json, containerId, width, height) {
 }
 
 function nuVendorLogin(appId, table) {
+
+	if (nuMSSQL() && appId === 'PMA') {
+		nuMessage(nuTranslate('Information'),nuTranslate('Not supported'));
+		return;
+	}
 
 	const tableName = table || nuSERVERRESPONSE.table;
 	const params = new URLSearchParams({
