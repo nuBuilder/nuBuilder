@@ -309,18 +309,6 @@ function nuRunQueryString($sql, $sqlWithHK) {
 
 }
 
-function nuCreateTableFromSelect($tableName, $select, $params = [], $temporary = false) {
-
-	$query = sprintf(
-		'CREATE' . ($temporary ? ' TEMPORARY' : '') . ' TABLE `%s` AS (%s)',
-		$tableName,
-		$select
-	);
-
-	return nuRunQuery($query, $params);
-
-}
-
 function nuSanitizeSqlQuery($query) {
 
 	// List of SQL commands to remove
@@ -758,4 +746,25 @@ function nuID_DEV() {
 	$prefix = $nuConfigDBUser == 'nudev' ? 'nu' : '';
 	return $prefix . $uniqueId . substr($hash, 0, 2);
 
+}
+
+function nuCreateTableFromSelect($tableName, $select, $params = [], $temporary = false) {
+
+	if (!nuMSSQL()) {
+		$query = sprintf(
+			'CREATE' . ($temporary ? ' TEMPORARY' : '') . ' TABLE `%s` AS (%s)',
+			$tableName,
+			$select
+		);
+	} else {
+		$pos = strrpos($select, 'FROM');
+		$query = substr($select, 0, $pos) . ' INTO [' . $tableName . '] ' . substr($select, $pos);
+	}
+
+	return nuRunQuery($query, $params);
+
+}
+
+function nuSchemaWhereCurrentDBSQL() {
+	return nuMSSQL() ? ' TABLE_CATALOG = db_name() ' : ' table_schema = DATABASE() ';
 }
