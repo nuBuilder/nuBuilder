@@ -166,7 +166,7 @@ if ($callType != 'logout') {
 		$f->forms[0]->access_level_group = $user['ACCESS_LEVEL_GROUP'];
 
 		$isDemo = nuDemo(false);
-		$f->forms[0]->database = $sessionData['DB_NAME'];
+		$f->forms[0]->db_name = $sessionData['DB_NAME'];
 		$f->forms[0]->host = $globalAccess && !$isDemo ? $sessionData['HOST'] : '';
 		$f->forms[0]->dimensions = $formAndSessionData->dimensions ?? null;
 		$f->forms[0]->translation = $formAndSessionData->translation;

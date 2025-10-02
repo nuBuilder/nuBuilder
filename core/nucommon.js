@@ -1988,8 +1988,8 @@ function nuUserLanguage() {
 	}
 }
 
-function nuDatabase() {
-	return nuSERVERRESPONSE.database;
+function nuDatabaseName() {
+	return nuSERVERRESPONSE.db_name;
 }
 
 function nuClosePopup() {
