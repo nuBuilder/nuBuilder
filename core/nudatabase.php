@@ -485,21 +485,38 @@ function db_field_exists($tableName, $fieldName) {
 function db_primary_key($tableName) {
 
 	$primaryKeys = [];
-	$query = "DESCRIBE `$tableName`";
-	$stmt = nuRunQuery($query);
 
-	while ($row = db_fetch_row($stmt)) {
+	if (nuMSSQL()) {
+		$query = "
+			SELECT KCU.COLUMN_NAME
+			FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE KCU
+			JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS TC
+				ON KCU.CONSTRAINT_NAME = TC.CONSTRAINT_NAME
+				AND KCU.TABLE_CATALOG = TC.TABLE_CATALOG
+			WHERE KCU.TABLE_NAME = ?
+				AND KCU.TABLE_CATALOG = DB_NAME()
+				AND TC.CONSTRAINT_TYPE = 'PRIMARY KEY'
+			ORDER BY KCU.ORDINAL_POSITION
+		";
+		$stmt = nuRunQuery($query, [$tableName]);
 
-		if ($row[3] == 'PRI') {
+		while ($row = db_fetch_row($stmt)) {
 			$primaryKeys[] = $row[0];
 		}
+	} else {
+		$query = "DESCRIBE `$tableName`";
+		$stmt = nuRunQuery($query);
 
+		while ($row = db_fetch_row($stmt)) {
+			if ($row[3] == 'PRI') {
+				$primaryKeys[] = $row[0];
+			}
+		}
 	}
 
 	return $primaryKeys;
 
 }
-
 
 function nuDBQuote($s) {
 
