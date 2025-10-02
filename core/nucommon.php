@@ -931,7 +931,6 @@ function nuAddToHashList($J, $run) {
 
 }
 
-
 function nuGetUserPermissions($userId = null) {
 
 	if ($userId === null) {
@@ -942,10 +941,10 @@ function nuGetUserPermissions($userId = null) {
 					SELECT
 						pme_ident
 					FROM
-						`zzzzsys_user_permission`
+						zzzzsys_user_permission
 					LEFT JOIN zzzzsys_permission_item ON zzzzsys_permission_item_id = upe_ident
 					WHERE
-						upe_zzzzsys_user_id = ? AND IFNULL(upe_active, '0') = '1'
+						upe_zzzzsys_user_id = ? AND COALESCE(upe_active, '0') = '1'
 				";
 
 	$stmt = nuRunQuery($query, [$userId]);
