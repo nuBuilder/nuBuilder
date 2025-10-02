@@ -274,8 +274,14 @@ function nuTrim($s) {
 	return trim($s ?? '');
 }
 
-function nuAddSlashes($s) {
-	return addslashes($s ?? '');
+function nuAddslashes($s) {
+
+	if (nuMSSQL()) {
+		return str_replace("'", "''", $s ?? '');
+	} else {
+		return addslashes($s ?? '');
+	}
+
 }
 
 function nuJsonDecode($json, $associative = null) {
