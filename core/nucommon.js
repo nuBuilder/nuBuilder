@@ -2085,7 +2085,7 @@ function nuEmbedObject(json, containerId, width, height) {
 function nuVendorLogin(appId, table) {
 
 	if (nuMSSQL() && appId === 'PMA') {
-		nuMessage(nuTranslate('Information'),nuTranslate('Not supported'));
+		nuMessage(nuTranslate('Information'), nuTranslate('Not supported'));
 		return;
 	}
 
