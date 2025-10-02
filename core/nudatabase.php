@@ -601,7 +601,7 @@ function nuViewExists($view) {
 function nuGetSysTables() {
 
 	$tables = [];
-	$stmt = nuRunQuery("SELECT table_name as TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = DATABASE() AND TABLE_NAME LIKE 'zzzzsys_%'");
+	$stmt = nuRunQuery("SELECT table_name as TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE " . nuSchemaWhereCurrentDBSQL() . " AND TABLE_NAME LIKE 'zzzzsys_%'");
 	while ($row = db_fetch_row($stmt)) {
 		$tables[] = $row[0];
 	}
@@ -613,7 +613,7 @@ function nuGetSysTables() {
 function nuGetUserTables() {
 
 	$tables = [];
-	$stmt = nuRunQuery("SELECT table_name as TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = DATABASE() AND TABLE_NAME NOT LIKE 'zzzzsys_%'");
+	$stmt = nuRunQuery("SELECT table_name as TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE " . nuSchemaWhereCurrentDBSQL() . " AND TABLE_NAME NOT LIKE 'zzzzsys_%'");
 	while ($row = db_fetch_row($stmt)) {
 		$tables[] = $row[0];
 	}
@@ -787,6 +787,24 @@ function nuID_DEV() {
 
 	$prefix = $nuConfigDBUser == 'nudev' ? 'nu' : '';
 	return $prefix . $uniqueId . substr($hash, 0, 2);
+
+}
+
+function nuQuotise($string, $char) {
+
+	if (empty($string) || $string === null) {
+		return;
+	}
+
+	if ($string[0] != $char) {
+		$string = $char . $string;
+	}
+
+	if (substr($string, -1) != $char) {
+		$string .= $char;
+	}
+
+	return $string;
 
 }
 
