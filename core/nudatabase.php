@@ -748,6 +748,10 @@ function nuID_DEV() {
 
 }
 
+function nuIdentColumn($s) {
+	return !nuMSSQL() ? nuQuotize($s, '`') : "[$s]";
+}
+
 function nuCreateTableFromSelect($tableName, $select, $params = [], $temporary = false) {
 
 	if (!nuMSSQL()) {
