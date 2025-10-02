@@ -1992,6 +1992,14 @@ function nuDatabaseName() {
 	return nuSERVERRESPONSE.db_name;
 }
 
+function nuDatabaseType() {
+	return nuSERVERRESPONSE.db_type;
+}
+
+function nuMSSQL() {
+	return nuSERVERRESPONSE.db_type == 'sqlsrv';
+}
+
 function nuClosePopup() {
 
 	parent.$('#nuModal').remove();
