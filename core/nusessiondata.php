@@ -42,7 +42,7 @@ function nuSetSafeSessionName($name) {
 function nuLoadNewSession() {
 
 	global
-	$nuConfigDBDriver, $nuConfigDBPort, $nuConfigDBHost, $nuConfigDBName, $nuConfigDBUser, $nuConfigDBPassword,
+	$nuConfigDBType, $nuConfigDBPort, $nuConfigDBHost, $nuConfigDBName, $nuConfigDBUser, $nuConfigDBPassword,
 	$nuConfigDBGlobeadminUsername, $nuConfigDBGlobeadminPassword, $nuConfigDBGlobeadminUsers,
 	$nuConfigDemoDBGlobeadminUsername, $nuConfigDemoDBGlobeadminPassword, $nuConfigGlobeadminHome, $nuConfigDemoSavingAllowedIds,
 	$nuConfig2FAAdmin, $nuConfig2FAUser, $nuConfig2FAFormID, $nuConfig2FATokenValidityTime, $nuConfig2FAShowRememberMe,
@@ -52,7 +52,7 @@ function nuLoadNewSession() {
 	$nuConfigDBPort = $nuConfigDBPort ?? '3306';
 	$sessionData = new nuBuilderSessionData();
 
-	$sessionData->constructSession($nuConfigDBDriver, $nuConfigDBPort, $nuConfigDBHost, $nuConfigDBName, $nuConfigDBUser, $nuConfigDBPassword, $nuConfigDBGlobeadminUsername, $nuConfigDBGlobeadminPassword, $nuConfigDBGlobeadminUsers, $nuConfigDemoDBGlobeadminUsername, $nuConfigDemoDBGlobeadminPassword, $nuConfigGlobeadminHome, $nuConfigDemoSavingAllowedIds, $nuConfig2FAAdmin, $nuConfig2FAUser, $nuConfig2FAFormID, $nuConfig2FATokenValidityTime, $nuConfig2FAShowRememberMe, $nuConfigUserAdditional1Label, $nuConfigUserAdditional2Label, $nuConfigUserCodeLabel, $nuUseMd5PasswordHash, $nuConfigDBOptions, $nuConfigIsDemo);
+	$sessionData->constructSession($nuConfigDBType, $nuConfigDBPort, $nuConfigDBHost, $nuConfigDBName, $nuConfigDBUser, $nuConfigDBPassword, $nuConfigDBGlobeadminUsername, $nuConfigDBGlobeadminPassword, $nuConfigDBGlobeadminUsers, $nuConfigDemoDBGlobeadminUsername, $nuConfigDemoDBGlobeadminPassword, $nuConfigGlobeadminHome, $nuConfigDemoSavingAllowedIds, $nuConfig2FAAdmin, $nuConfig2FAUser, $nuConfig2FAFormID, $nuConfig2FATokenValidityTime, $nuConfig2FAShowRememberMe, $nuConfigUserAdditional1Label, $nuConfigUserAdditional2Label, $nuConfigUserCodeLabel, $nuUseMd5PasswordHash, $nuConfigDBOptions, $nuConfigIsDemo);
 
 	$_SESSION['nubuilder_session_data'] = $sessionData->getNubuilderSessionData();
 
@@ -106,7 +106,7 @@ class nuBuilderSessionData {
 		'USER_DISPLAY_NAME' => '',
 		'USER_ROLES' => '',
 		'HOST' => '',
-		'DB_DRIVER' => '',
+		'DB_TYPE' => '',
 		'DB_PORT' => '',
 		'DB_NAME' => '',
 		'DB_USER' => '',
@@ -136,14 +136,14 @@ class nuBuilderSessionData {
 	}
 
 	public function constructSession(
-		$nuConfigDBDriver, $nuConfigDBPort, $nuConfigDBHost, $nuConfigDBName, $nuConfigDBUser,
+		$nuConfigDBType, $nuConfigDBPort, $nuConfigDBHost, $nuConfigDBName, $nuConfigDBUser,
 		$nuConfigDBPassword, $nuConfigDBGlobeadminUsername, $nuConfigDBGlobeadminPassword,
 		$nuConfigDBGlobeadminUsers, $nuConfigDemoDBGlobeadminUsername, $nuConfigDemoDBGlobeadminPassword, $nuConfigGlobeadminHome, $nuConfigDemoSavingAllowedIds,
 		$nuConfig2FAAdmin, $nuConfig2FAUser, $nuConfig2FAFormID, $nuConfig2FATokenValidityTime, $nuConfig2FAShowRememberMe,
 		$nuConfigUserAdditional1Label, $nuConfigUserAdditional2Label, $nuConfigUserCodeLabel,
 		$nuUseMd5PasswordHash, $nuConfigDBOptions, $nuConfigIsDemo = false) {
 
-		$this->nubuilder['DB_DRIVER'] = $nuConfigDBDriver;
+		$this->nubuilder['DB_TYPE'] = $nuConfigDBType;
 		$this->nubuilder['DB_PORT'] = $nuConfigDBPort;
 
 		$this->nubuilder['DB_NAME'] = $nuConfigDBName;
