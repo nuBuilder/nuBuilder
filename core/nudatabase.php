@@ -768,3 +768,8 @@ function nuCreateTableFromSelect($tableName, $select, $params = [], $temporary =
 function nuSchemaWhereCurrentDBSQL() {
 	return nuMSSQL() ? ' TABLE_CATALOG = db_name() ' : ' table_schema = DATABASE() ';
 }
+
+function nuMSSQL() {
+	global $nuConfigDBType;
+	return $nuConfigDBType == 'sqlsrv';
+}
