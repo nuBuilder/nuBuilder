@@ -137,13 +137,13 @@ function nuBuildForm(formObj) {
 		firstObject.nuFocusWithoutScrolling();
 	}
 
+	nuDragTitleEvents();
+
 	if (nuArrangingObjects(formObj.record_id)) {
 		nuCreateDragOptionsBox(formObj);
 	} else {
 		nuAddJavaScript(formObj.javascript);
 	}
-
-	nuDragTitleEvents();
 
 	nuAddHome();
 
