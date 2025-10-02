@@ -4475,10 +4475,24 @@ function nuGetOptionsList(formId, subformId, globalAccess, type) {
 
 	if (isAdmin && !isSubform) {
 		menuList.push(
-			ITEMS.DebugResults, ITEMS.Divider,
-			ITEMS.Database, ITEMS.Sessions,
-			ITEMS.Cloner, ITEMS.FileManager, ITEMS.Backup,
-			ITEMS.Setup, ITEMS.FormInfo,
+			ITEMS.DebugResults, ITEMS.Divider
+		);
+	}
+
+	if (isAdmin && !isSubform && !nuMSSQL()) {
+		menuList.push(
+			ITEMS.Database
+		);
+	}
+
+	if (isAdmin && !isSubform) {
+		menuList.push(
+			ITEMS.Sessions,
+			ITEMS.Cloner,
+			ITEMS.FileManager,
+			ITEMS.Backup,
+			ITEMS.Setup,
+			ITEMS.FormInfo,
 			ITEMS.VersionInfo
 		);
 	}
