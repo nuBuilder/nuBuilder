@@ -387,12 +387,14 @@ function nuInitialiseDragState() {
 	});
 }
 
-function nuSetTabOrderDataAttrs() {
-	const currentTabNo = nuDragGetCurrentTabNumber();
+function nuSetTabOrderDataAttrs(tabNo = null) {
+	const currentTabNo = tabNo !== null ? tabNo : nuDragGetCurrentTabNumber();
 
-	for (let i = 0; i < window.nuDragOptionsState.tabs[currentTabNo].objects.length; i++) {
-		const field = window.nuDragOptionsState.tabs[currentTabNo].objects[i];
-		nuSelectInParentDocument('#nuDragOptionsFields option[id="drag_' + field.id + '"]').attr('data-nu-tab-order', field.tab_order);
+	if (window.nuDragOptionsState && window.nuDragOptionsState.tabs[currentTabNo]) {
+		for (let i = 0; i < window.nuDragOptionsState.tabs[currentTabNo].objects.length; i++) {
+			const field = window.nuDragOptionsState.tabs[currentTabNo].objects[i];
+			nuSelectInParentDocument('#nuDragOptionsFields option[id="drag_' + field.id + '"]').attr('data-nu-tab-order', field.tab_order);
+		}
 	}
 }
 
@@ -564,6 +566,7 @@ function nuCreateDragOptionsBox(form) {
 	const tabSelected = $('.nuTabSelected');
 	const tab = tabSelected.length > 0 ? tabSelected.attr('id').replace('nuTab', '') : 0;
 	nuPopulateFieldsList(tab);
+	nuSetTabOrderDataAttrs(tab);
 	nuPopulateTabDropdown(tab);
 
 	setupTabClickHandlers();
@@ -594,9 +597,8 @@ function setupTabClickHandlers() {
 
 			const nuTabFilter = Number($(this).attr('data-nu-tab-filter'));
 			nuPopulateFieldsList(nuTabFilter);
-			nuPopulateTabDropdown(nuTabFilter);
-
-			const $nuDragOptionsFields = nuSelectInParentDocument('#nuDragOptionsFields');
+			nuSetTabOrderDataAttrs(nuTabFilter);
+			nuPopulateTabDropdown(nuTabFilter); const $nuDragOptionsFields = nuSelectInParentDocument('#nuDragOptionsFields');
 			nuCheckIfMovingTabOrderAllowed($nuDragOptionsFields);
 			nuCheckIfMovingFieldToOtherTabAllowed($nuDragOptionsFields);
 
@@ -1212,7 +1214,7 @@ function nuPopulateFieldsList(currentlySelectedTabNo) {
 		tabOrderSearch += 10;
 	}
 
-	nuSetTabOrderDataAttrs();
+	nuSetTabOrderDataAttrs(currentlySelectedTabNo);
 }
 
 function nuGetMinTabOrderInTab(currentTabNo) {
