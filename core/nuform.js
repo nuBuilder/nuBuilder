@@ -1083,7 +1083,7 @@ function nuAddActionButtons(form) {
 		});
 
 		if (button.Add == 1) {
-			nuAddActionButton('Add');
+			nuAddActionButton('Add', undefined, undefined, 'Add New Record');
 		}
 
 		if (button.Print == 1 && nuFORM.getCurrent().browse_rows.length > 0 && !isMobile) {
