@@ -209,12 +209,11 @@ function nuPrepareQuery($sql) {
 	return $sql;
 }
 
-
 function nuRunQueryNoDebug($query, $params = [], $isInsert = false) {
 
 	global $nuDB;
 
-	$stmt = $nuDB->prepare($query);
+	$stmt = $nuDB->prepare(nuPrepareQuery($query));
 
 	try {
 		$stmt->execute($params);
@@ -229,7 +228,7 @@ function nuRunQueryTest($query, $params = []) {
 
 	global $nuDB;
 
-	$stmt = $nuDB->prepare($query);
+	$stmt = $nuDB->prepare(nuPrepareQuery($query));
 
 	try {
 		$stmt->execute($params);
