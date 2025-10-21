@@ -306,7 +306,6 @@ function nuGetDBParams() {
 	];
 }
 
-
 function nuRunQuery($sql, $params = [], $isInsert = false) {
 
 	$dbParams = nuGetDBParams();
@@ -331,7 +330,14 @@ function nuRunQuery($sql, $params = [], $isInsert = false) {
 		}
 	}
 
-	$stmt = $nuDB->prepare($sqlParts['query']);
+	$sql1 = $sqlParts['query'];
+	$sql = nuPrepareQuery($sql1);
+
+	if (nuMSSQL()) {
+		$stmt = $nuDB->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL]);
+	} else {
+		$stmt = $nuDB->prepare($sql);
+	}
 
 	try {
 		$stmt->execute($params);
