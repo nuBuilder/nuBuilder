@@ -752,12 +752,18 @@ function nuCanCreateView() {
 
 	$testViewName = "nu_test_view_" . mt_rand();
 
-	$createViewSql = "CREATE VIEW `$testViewName` AS SELECT `zzzzsys_debug_id` FROM `zzzzsys_debug` LIMIT 1";
+	$createViewSql = nuMSSQL()
+		? "CREATE VIEW [$testViewName] AS SELECT TOP 1 [zzzzsys_debug_id] FROM [zzzzsys_debug];"
+		: "CREATE VIEW `$testViewName` AS SELECT `zzzzsys_debug_id` FROM `zzzzsys_debug` LIMIT 1;";
+
 	$result = nuRunQueryTest($createViewSql);
 
 	if ($result === true) {
 		// If the view creation succeeds, attempt to drop the view to clean up.
-		$dropViewSql = "DROP VIEW IF EXISTS `$testViewName`";
+		$dropViewSql = nuMSSQL()
+			? "IF OBJECT_ID(N'$testViewName', N'V') IS NOT NULL DROP VIEW [$testViewName];"
+			: "DROP VIEW IF EXISTS `$testViewName`;";
+
 		nuRunQueryNoDebug($dropViewSql);
 		return true;
 	}
