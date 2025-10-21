@@ -26,6 +26,7 @@ function nuBeforeBrowse($formId) {
 	nuEval("{$formId}_BB");
 
 }
+
 function nuBeforeEdit($FID, $RID) {
 
 	$r = nuFormProperties($FID);
@@ -50,7 +51,7 @@ function nuBeforeEdit($FID, $RID) {
 
 	if ($ct == 'getform') {
 
-		$logfield = $r->sfo_table . '_nulog';
+		$logfield = "{$r->sfo_table}_nulog";
 		$cts = nuGetJSONData('clientTableSchema');
 		$user = $_POST['nuHash']['USER_ID'];
 		$globalAccess = nuGlobalAccess(true);
@@ -70,7 +71,7 @@ function nuBeforeEdit($FID, $RID) {
 
 			if (in_array($logfield, $cts[$r->sfo_table]['names'])) {								//-- valid log field name
 
-				$S = "SELECT $logfield FROM `$r->sfo_table` WHERE `$r->sfo_primary_key` = ? ";
+				$S = "SELECT $logfield FROM 	$r->sfo_table	 WHERE 	$r->sfo_primary_key	 = ? ";
 
 				$T = nuRunQuery($S, [$RID]);
 
@@ -93,7 +94,7 @@ function nuBeforeEdit($FID, $RID) {
 				}
 
 				$je = nuAddSlashes(json_encode($jd));
-				$S = "UPDATE `$r->sfo_table` SET $logfield = '$je' WHERE `$r->sfo_primary_key` = ? ";
+				$S = "UPDATE 	$r->sfo_table	 SET $logfield = '$je' WHERE 	$r->sfo_primary_key	 = ? ";
 				$T = nuRunQuery($S, [$RID]);
 
 			} else {
@@ -103,7 +104,6 @@ function nuBeforeEdit($FID, $RID) {
 		}
 
 	}
-
 
 	if ($recordID != '' || $formType == 'launch') {
 		$p = nuProcedure('nu_before_edit');
@@ -116,7 +116,6 @@ function nuBeforeEdit($FID, $RID) {
 
 		nuEval($FID . '_BE');
 	}
-
 
 	$js = $r->sfo_javascript;
 	$jb = $r->sfo_browse_javascript ?? '';
