@@ -1821,28 +1821,28 @@ function nuSendEmailEx($args, $emailLogOptions) {
 	}
 
 	$insert = "
-		INSERT INTO `zzzzsys_email_log`(
-				`zzzzsys_email_log_id`,
-				`eml_from`,
-				`eml_to`,
-				`eml_cc`,
-				`eml_bcc`,
-				`eml_subject`,
-				`eml_body`,
-				`eml_file`,
-				`eml_from_name`,
-				`eml_html`,
-				`eml_reply_to`,
-				`eml_sent_at`,
-				`eml_state`,
-				`eml_importance`,
-				`eml_form_id`,
-				`eml_user_id`,
-				`eml_error`,
-				`eml_record_id`,
-				`eml_table_name`,
-				`eml_tag`,
-				`eml_json`
+		INSERT INTO zzzzsys_email_log(
+				zzzzsys_email_log_id,
+				eml_from,
+				eml_to,
+				eml_cc,
+				eml_bcc,
+				eml_subject,
+				eml_body,
+				eml_file,
+				eml_from_name,
+				eml_html,
+				eml_reply_to,
+				eml_sent_at,
+				eml_state,
+				eml_importance,
+				eml_form_id,
+				eml_user_id,
+				eml_error,
+				eml_record_id,
+				eml_table_name,
+				eml_tag,
+				eml_json
 				)
 		VALUES(
 				:ID,
