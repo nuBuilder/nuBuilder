@@ -1042,11 +1042,18 @@ function nuRemoveNonCharacters($s) {
 
 }
 
+
 function nuGetSubformRecords($record, $tabs) {
 
 	$formId = nuGetEditForm($record->sob_subform_zzzzsys_form_id, '');
 	$whereClause = $formId->where == '' ? '' : ' AND (' . substr($formId->where, 6) . ')';
-	$selectQuery = "SELECT `$formId->primary_key` $formId->from WHERE (IFNULL(`$record->sob_subform_foreign_key`,'-1') = '$record->subform_fk') $whereClause $formId->order";
+	$pkField = nuMSSQL() ? "[$formId->primary_key]" : "	$formId->primary_key	";
+	$fkField = nuMSSQL() ? "[$record->sob_subform_foreign_key]" : "	$record->sob_subform_foreign_key	";
+
+	$selectQuery = "
+    SELECT $pkField $formId->from
+    WHERE (COALESCE($fkField,'-1') = '$record->subform_fk')
+    $whereClause $formId->order";
 
 	$originalRecordId = $_POST['nuHash']['RECORD_ID'];
 
