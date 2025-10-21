@@ -2673,27 +2673,28 @@ function nuSanitizeFilename($file) {
 
 }
 
+
 function nuGetEmailTemplateData($code, $language = '', $group = '') {
 
 	$sql = "
 			SELECT
-				`zzzzsys_email_template_id`,
-				`emt_form_id`,
-				`emt_group`,
-				`emt_language`,
-				`emt_description`,
-				`emt_code`,
-				`emt_body`,
-				`emt_subject`,
-				`emt_to`,
-				`emt_cc`,
-				`emt_bcc`
+				zzzzsys_email_template_id,
+				emt_form_id,
+				emt_group,
+				emt_language,
+				emt_description,
+				emt_code,
+				emt_body,
+				emt_subject,
+				emt_to,
+				emt_cc,
+				emt_bcc
 			FROM
-				`zzzzsys_email_template`
+				zzzzsys_email_template
 			WHERE
-				`emt_code` = ?
-				AND IFNULL(`emt_language`,'') = ?
-				AND IFNULL(`emt_group`,'') = ?
+				emt_code = ?
+				AND COALESCE(emt_language,'') = ?
+				AND COALESCE(emt_group,'') = ?
 			LIMIT 1
 		";
 
