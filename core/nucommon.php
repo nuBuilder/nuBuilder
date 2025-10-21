@@ -2817,6 +2817,7 @@ function nuEnsureFileExtension($filename, $desiredExtension, $forceExtension = f
 
 function nuGetSelectType($processedSql) {
 
+	$processedSql = preg_replace('/^-- .*$/m', '', $processedSql); // remove SQL comments starting with --
 	$sqlFirstChars = nuTrim(substr($processedSql, 0, 20));
 	$sqlFirstCharsNoSpaces = preg_replace('/\s+/', '', $sqlFirstChars);
 
