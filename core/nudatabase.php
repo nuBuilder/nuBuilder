@@ -517,7 +517,8 @@ function db_fetch_row($obj, $fetchAll = false) {
 
 function db_update_value($table, $pk, $recordId, $column, $newValue) {
 
-	$update = "UPDATE `$table` SET `$column` = ? WHERE `$pk` = ?";
+	$esc = fn($id) => nuMSSQL() ? "[$id]" : "`$id`";
+	$update = "UPDATE {$esc($table)} SET {$esc($column)} = ? WHERE {$esc($pk)} = ?";
 	return nuRunQuery($update, [$newValue, $recordId]);
 
 }
