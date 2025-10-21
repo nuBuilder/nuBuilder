@@ -1184,7 +1184,7 @@ function nuPunctuation($text) {
 
 function nuGetDefaultFormats() {
 
-	$query = "SELECT srm_format, srm_type FROM zzzzsys_format WHERE IFNULL(srm_default, '') = '1'";
+	$query = "SELECT srm_format, srm_type FROM zzzzsys_format WHERE COALESCE(srm_default, '') = '1'";
 	$formats = ['Date' => '', 'Number' => ''];
 
 	$stmt = nuRunQuery($query);
