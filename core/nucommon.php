@@ -42,7 +42,9 @@ function nuClientTimeZone() {
 	$offset = sprintf('%+d:%02d', $hrs * $sgn, $mins);
 
 	// set timezone setting for MYSQL
-	nuRunQuery("SET time_zone = '$offset'");
+	if (!nuMSSQL()) {
+		nuRunQuery("SET time_zone = '$offset'");
+	}
 
 }
 
