@@ -944,6 +944,10 @@ function nuIdentColumn($s) {
 	return !nuMSSQL() ? nuQuotise($s, '`') : "[$s]";
 }
 
+function nuTableInfoSQL() {
+	return nuMSSQL() ? 'sp_columns ' : 'DESCRIBE ';
+}
+
 function nuCreateTableFromSelect($tableName, $select, $params = [], $temporary = false) {
 
 	if (!nuMSSQL()) {
