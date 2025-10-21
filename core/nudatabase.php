@@ -121,6 +121,95 @@ $GLOBALS['sys_table_prefix'] = [
 	'item' => 'itm'
 ];
 
+/**
+ * Prepares the SQL query by applying conditional compilation based on
+ * the target database directives (-- #IF_MSSQL / -- #IF_MYSQL / -- #ELSE),
+ * and then applying necessary compatibility replacements (e.g., MySQL functions to MSSQL).
+ *
+ * @param string $sql The raw SQL query string.
+ * @return string The prepared SQL query string for the current target database.
+ */
+
+function nuPrepareQuery($sql) {
+
+	$sql1 = $sql;
+	$extracted_sql = '';
+	$else_content = '';
+
+	try {
+		$target_db_key = nuMSSQL() ? 'IF_MSSQL' : 'IF_MYSQL';
+
+		$lines = explode("\n", $sql);
+		$current_directive = null;
+		$buffer = '';
+
+		foreach ($lines as $line) {
+			if (preg_match('/--\s*#(IF_MSSQL|IF_MYSQL|ELSE|ENDIF)/i', $line, $m)) {
+				$directive = strtoupper($m[1]);
+
+				if ($directive === 'ENDIF') {
+					// Save the last active block
+					if ($current_directive === $target_db_key) {
+						$extracted_sql = trim($buffer);
+					} elseif ($current_directive === 'ELSE') {
+						$else_content = trim($buffer);
+					}
+					$current_directive = null;
+					$buffer = '';
+				} elseif ($directive === 'ELSE') {
+					// Flush IF block before switching to ELSE
+					if ($current_directive === $target_db_key) {
+						$extracted_sql = trim($buffer);
+					}
+					$current_directive = 'ELSE';
+					$buffer = '';
+				} else {
+					// Start new IF block
+					$current_directive = $directive;
+					$buffer = '';
+				}
+			} elseif ($current_directive) {
+				$buffer .= $line . "\n";
+			}
+		}
+
+		// fallback to ELSE if target block was never captured
+		if (empty($extracted_sql) && !empty($else_content)) {
+			$extracted_sql = $else_content;
+		}
+
+		if (!empty($extracted_sql)) {
+			$sql = $extracted_sql;
+		}
+
+	} catch (Throwable $error) {
+		///	nuLog($sql, $error->getMessage());
+	}
+
+	// --- 2. COMPATIBILITY REPLACEMENTS ---
+	if (nuMSSQL()) {
+		$sql = preg_replace('/\bIFNULL\s*\(([^,]+),\s*([^)]+)\)/i', 'COALESCE($1, $2)', $sql);
+		$sql = preg_replace('/`([^`]+)`/', '[$1]', $sql);
+
+		$sql = preg_replace_callback(
+			'/FIND_IN_SET\s*\(\s*([^)]+)\s*,\s*([^)]+)\)/i',
+			function ($m) {
+				$val = trim($m[1]);
+				$csv = trim($m[2]);
+				return "CHARINDEX(',' + CAST($val AS VARCHAR) + ',', ',' + $csv + ',')";
+			},
+			$sql
+		);
+
+		$sql = preg_replace('/\bNOW\s*\(\s*\)/i', 'GETDATE()', $sql);
+		$sql = preg_replace('/\bCHAR_LENGTH\s*\(\s*([^)]+)\)/i', 'LEN($1)', $sql);
+		$sql = preg_replace('/table_schema\s*=\s*DATABASE\(\)/i', 'TABLE_CATALOG = db_name()', $sql);
+	}
+
+	return $sql;
+}
+
+
 function nuRunQueryNoDebug($query, $params = [], $isInsert = false) {
 
 	global $nuDB;
