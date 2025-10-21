@@ -2039,7 +2039,7 @@ function nuFormatVarArgs($format, $values) {
 
 function nuToCSV($table, $file, $d) {
 
-	$T = nuRunQuery("SELECT * FROM `$table`");
+	$T = nuRunQuery("SELECT * FROM $table");
 	$a = [];
 	$c = db_field_names($table);
 
