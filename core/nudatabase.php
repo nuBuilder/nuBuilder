@@ -525,7 +525,8 @@ function db_update_value($table, $pk, $recordId, $column, $newValue) {
 
 function db_fetch_value($table, $pk, $recordId, $column) {
 
-	$select = "SELECT `$column` FROM `$table` WHERE `$pk` = ?";
+	$esc = fn($id) => nuMSSQL() ? "[$id]" : "`$id`";
+	$select = "SELECT {$esc($column)} FROM {$esc($table)} WHERE {$esc($pk)} = ?";
 	$stmt = nuRunQuery($select, [$recordId]);
 	if (db_num_rows($stmt) == 1) {
 		$arr = db_fetch_array($stmt);
