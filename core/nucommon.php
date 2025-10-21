@@ -1410,7 +1410,7 @@ function nuBuildViewSchema() {
 
 function nuGetTableNamesSQL($tableType = null) {
 
-	$sql = "SELECT table_name as TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = DATABASE()";
+	$sql = "SELECT table_name as TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE " . nuSchemaWhereCurrentDBSQL();
 	if ($tableType) {
 		$sql .= " AND TABLE_TYPE = '$tableType'";
 	}
