@@ -2259,13 +2259,15 @@ function nuListTables() {
 
 function nuBuildCurrencyFormats() {
 
-	$t = nuRunQuery("SHOW COLUMNS FROM zzzzsys_format LIKE 'srm_currency'");
+	if (!nuMSSQL()) {
+		$t = nuRunQuery("SHOW COLUMNS FROM zzzzsys_format LIKE 'srm_currency'");
 
-	if (db_num_rows($t) == 0) {
-		nuRunQuery("ALTER TABLE zzzzsys_format ADD srm_currency VARCHAR(25) NULL DEFAULT NULL AFTER srm_format");
+		if (db_num_rows($t) == 0) {
+			nuRunQuery("ALTER TABLE zzzzsys_format ADD srm_currency VARCHAR(25) NULL DEFAULT NULL AFTER srm_format");
+		}
 	}
 
-	$s = "SELECT zzzzsys_format_id, srm_format FROM zzzzsys_format WHERE srm_type = 'Number' AND ISNULL(srm_currency)";
+	$s = "SELECT zzzzsys_format_id, srm_format FROM zzzzsys_format WHERE srm_type = 'Number' AND srm_currency IS NULL";
 	$t = nuRunQuery($s);
 
 	while ($r = db_fetch_object($t)) {
