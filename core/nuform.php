@@ -821,15 +821,15 @@ function nuGetLookupValues($objectRow, $lookupObject) {
 	$result = db_fetch_object($stmt);
 	$sqlString = new nuSqlString(nuReplaceHashVariables($result->sfo_browse_sql));
 
+	$pkField = nuMSSQL() ? "[$result->sfo_primary_key]" : "	$result->sfo_primary_key";
 	$selectQuery = "
-		SELECT
-			$result->sfo_primary_key,
-			$objectRow->sob_lookup_code,
-			$objectRow->sob_lookup_description
-			$sqlString->from
-		WHERE
-			`$result->sfo_primary_key` = ?
-	";
+	SELECT
+		$result->sfo_primary_key,
+		$objectRow->sob_lookup_code,
+		$objectRow->sob_lookup_description
+		$sqlString->from
+	WHERE
+		$pkField = ?";
 
 	$selectQuery = nuReplaceHashVariables($selectQuery);
 	$selectStmt = nuRunQuery($selectQuery, [$lookupObject->value]);
@@ -847,6 +847,7 @@ function nuGetLookupValues($objectRow, $lookupObject) {
 	$lookupValues[] = [$fieldPrefix . 'description', $lookupRow[2] ?? ''];
 
 	return $lookupValues;
+
 }
 
 function nuGetAllLookupList() {
