@@ -2386,7 +2386,7 @@ function nuTranslateWriteSQL($f, $row, $counter, $total) {
 
 function nuTranslateGenerateFile($l, $table = 'zzzzsys_translate') {
 
-	$s = "SELECT * FROM `$table` WHERE trl_language = ? ORDER BY `trl_language`, trl_english";
+	$s = "SELECT * FROM $table WHERE trl_language = ? ORDER BY trl_language, trl_english";
 	$t = nuRunQuery($s, [$l]);
 
 	$total = db_num_rows($t);
@@ -2394,7 +2394,7 @@ function nuTranslateGenerateFile($l, $table = 'zzzzsys_translate') {
 
 		$counter = 0;
 
-		$f = fopen(__DIR__ . "/languages/" . $l . '.sql', "w+") or die("Unable to open the file " . $l);
+		$f = fopen(__DIR__ . "/languages/" . $l . '.sql', "w+") or die("Unable to open the file $l");
 		while ($row = db_fetch_array($t)) {
 
 			$id = $row['zzzzsys_translate_id'];
