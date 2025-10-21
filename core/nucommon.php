@@ -377,7 +377,12 @@ function nuSetHashList($p) {
 	}
 
 	$cj = [];
-	$cq = "SELECT sss_hashcookies FROM zzzzsys_session WHERE LENGTH(sss_hashcookies) > 0 AND zzzzsys_session_id = ? ";
+	if (nuMSSQL()) {
+		$cq = "SELECT sss_hashcookies FROM zzzzsys_session WHERE LEN(sss_hashcookies) > 0 AND zzzzsys_session_id = ? ";
+	} else {
+		$cq = "SELECT sss_hashcookies FROM zzzzsys_session WHERE LENGTH(sss_hashcookies) > 0 AND zzzzsys_session_id = ? ";
+	}
+
 	$ct = nuRunQuery($cq, [$_SESSION['nubuilder_session_data']['SESSION_ID']]);
 
 	$cr = db_fetch_object($ct);
@@ -396,7 +401,6 @@ function nuSetHashList($p) {
 	}
 
 }
-
 function nuRunReport($report_id) {
 
 	$id = nuID();
