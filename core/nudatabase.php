@@ -717,7 +717,7 @@ function nuEncodeQueryRowResults($sql, $args = [], $prefixedData = []) {
 
 function nuViewExists($view) {
 
-	$sql = "SELECT table_name as TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'VIEW' AND table_schema = DATABASE() AND TABLE_NAME = ?";
+	$sql = "SELECT table_name as TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'VIEW' AND " . nuSchemaWhereCurrentDBSQL() . " AND TABLE_NAME = ?";
 	$qry = nuRunQuery($sql, [$view]);
 
 	return db_num_rows($qry);
