@@ -2834,20 +2834,28 @@ function nuGetSelectType($processedSql) {
 	}
 
 }
+
 function nuGetLastDebugMessages() {
 
 	$sql = "
-		SELECT
-			d.deb_message,
-			IFNULL(u.sus_name,'globeadmin') as sus_name
-		FROM
-			zzzzsys_debug d
-		LEFT JOIN
-			zzzzsys_user u ON d.deb_user_id = u.zzzzsys_user_id
-		ORDER BY
-			d.deb_added DESC
-		LIMIT 4
+	SELECT
+		" . (nuMSSQL() ? "TOP 4" : "") . "
+		d.deb_message,
+		COALESCE(u.sus_name,'globeadmin') as sus_name
+	FROM
+		zzzzsys_debug d
+	LEFT JOIN
+		zzzzsys_user u ON d.deb_user_id = u.zzzzsys_user_id
+	ORDER BY
+		d.deb_added DESC
+
 	";
+
+	if (nuMSSQL()) {
+		// MSSQL uses TOP N, so remove LIMIT clause if present
+		$sql = preg_replace('/LIMIT\s+\d+/i', '', $sql);
+	}
+
 	$result = nuRunQuery($sql);
 	$messages = [];
 	while ($row = db_fetch_array($result)) {
