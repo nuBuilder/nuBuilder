@@ -2064,6 +2064,7 @@ function nuToCSV($table, $file, $d) {
 
 }
 
+
 function nuFromCSV($file, $table, $d, $delete) {
 
 	if (in_array($table, nuListTables())) {
@@ -2122,17 +2123,17 @@ function nuFromCSV($file, $table, $d, $delete) {
 
 		$name = $a[0][$i];
 		$size = $w[$i];
-		$columns[] = '`' . $name . '`';
+		$columns[] = '' . $name . '';
 
 		if ($size > 3000) {
-			$c[] = "`$name` TEXT DEFAULT NULL";
+			$c[] = "$name TEXT DEFAULT NULL";
 		} else {
-			$c[] = "`$name` VARCHAR($size) DEFAULT NULL";
+			$c[] = "$name VARCHAR($size) DEFAULT NULL";
 		}
 
 	}
 
-	nuRunQuery("CREATE TABLE `$table` (" . implode(',', $c) . ") CHARSET=utf8;");
+	nuRunQuery("CREATE TABLE $table (" . implode(',', $c) . ") CHARSET=utf8;");
 
 	if (!in_array($table, nuListTables())) {
 
@@ -2141,7 +2142,7 @@ function nuFromCSV($file, $table, $d, $delete) {
 
 	}
 
-	$s1 = "INSERT INTO `$table` (" . implode(',', $columns) . ") VALUES ";
+	$s1 = "INSERT INTO $table (" . implode(',', $columns) . ") VALUES ";
 
 	$count = count($a);
 	for ($I = 1; $I < $count; $I++) {
@@ -2159,7 +2160,7 @@ function nuFromCSV($file, $table, $d, $delete) {
 
 	nuRunQuery($s1 . implode(',', $rows));
 
-	nuRunQuery("ALTER TABLE `$table` ADD PRIMARY KEY(`$id`);");
+	nuRunQuery("ALTER TABLE $table ADD PRIMARY KEY($id);");
 
 	if ($delete == '1')
 		unlink('../temp/' . $file);
