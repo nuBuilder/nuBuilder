@@ -948,6 +948,36 @@ function nuTableInfoSQL() {
 	return nuMSSQL() ? 'sp_columns ' : 'DESCRIBE ';
 }
 
+function nuDescribeTableSQL($table) {
+
+	if (!nuMSSQL())
+		return "DESCRIBE $table";
+
+	return "
+		SELECT
+		   C.column_name AS [Field],
+		   DATA_TYPE + CASE
+						 WHEN CHARACTER_MAXIMUM_LENGTH IS NULL THEN ''
+						 WHEN CHARACTER_MAXIMUM_LENGTH > 99999 THEN ''
+						 ELSE '(' + Cast(CHARACTER_MAXIMUM_LENGTH AS VARCHAR(5)) + ')'
+					   END AS [Type],
+		   IS_NULLABLE AS [Null],
+		   Case When CONSTRAINT_TYPE = 'PRIMARY KEY' THEN 'PRI' ELSE '' END as [Key]
+		FROM
+		   INFORMATION_SCHEMA.Columns C
+		   JOIN
+			  INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE U
+			  ON U.TABLE_NAME = C.table_name
+		   JOIN
+			  INFORMATION_SCHEMA.TABLE_CONSTRAINTS T
+			  ON U.CONSTRAINT_NAME = T.CONSTRAINT_NAME
+		WHERE
+		   C.table_name = '$table'
+		   and C.TABLE_CATALOG = DB_NAME()
+	";
+
+}
+
 function nuCreateTableFromSelect($tableName, $select, $params = [], $temporary = false) {
 
 	if (!nuMSSQL()) {
