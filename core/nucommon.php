@@ -1233,11 +1233,9 @@ function nuBuildTempTable($name_id, $tt, $rd = 0) {
 	}
 
 	if ($x[0] == 'TABLE') {
-
-		$P = "	nuRunQuery('CREATE TABLE $tt SELECT * FROM $id');;";
-
-		eval ($P);
-
+		// $P = "	nuRunQuery('CREATE TABLE $tt SELECT * FROM $id');;";
+		// eval ($P);
+		nuCreateTableFromSelectSQL($tt, "SELECT * FROM $id");
 	}
 
 	if ($x[0] == 'SQL') {
