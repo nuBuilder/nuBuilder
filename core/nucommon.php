@@ -1259,10 +1259,12 @@ function nuBuildTempTable($name_id, $tt, $rd = 0) {
 		$p = nuReplaceHashVariables($c);
 		$tt = nuAddSlashes($tt ?? '');
 
-		$P = '$sql = "CREATE TABLE ' . $tt . ' ' . $p . '";';
-		$P .= 'nuRunQuery($sql);';
-
-		eval ($P);
+		nuCreateTableFromSelectSQL($tt, $p);
+		/*
+				$P = '$sql = "CREATE TABLE ' . $tt . ' ' . $p . '";';
+				$P .= 'nuRunQuery($sql);';
+				eval ($P);
+		*/
 
 	}
 
