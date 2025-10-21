@@ -600,11 +600,26 @@ function db_field_names($tableName) {
 function db_field_types($tableName) {
 
 	$fieldTypes = [];
-	$describeQuery = "DESCRIBE `$tableName`";
-	$stmt = nuRunQuery($describeQuery);
+
+	if (nuMSSQL()) {
+		$query = "
+			SELECT DATA_TYPE + CASE
+				WHEN CHARACTER_MAXIMUM_LENGTH IS NULL THEN ''
+				WHEN CHARACTER_MAXIMUM_LENGTH > 99999 THEN ''
+				ELSE '(' + CAST(CHARACTER_MAXIMUM_LENGTH AS VARCHAR(5)) + ')'
+			END AS [Type]
+			FROM INFORMATION_SCHEMA.COLUMNS
+			WHERE TABLE_NAME = ? AND TABLE_CATALOG = DB_NAME()
+			ORDER BY ORDINAL_POSITION
+		";
+		$stmt = nuRunQuery($query, [$tableName]);
+	} else {
+		$query = "DESCRIBE `$tableName`";
+		$stmt = nuRunQuery($query);
+	}
 
 	while ($row = db_fetch_row($stmt)) {
-		$fieldTypes[] = $row[1];
+		$fieldTypes[] = nuMSSQL() ? $row[0] : $row[1];
 	}
 
 	return $fieldTypes;
