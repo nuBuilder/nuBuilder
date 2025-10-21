@@ -110,10 +110,14 @@ class nuSqlString {
 
 	public function __construct($sql) {
 
-		$sql = nuSQLRemoveComments($sql);
+		$sql = nuSQLRemoveComments(nuPrepareQuery($sql));
 		$sql = str_replace(chr(13), ' ', $sql);				//-- remove carrige returns
 		$sql = str_replace(chr(10), ' ', $sql);				//-- remove line feeds
-		$sql = rtrim($sql, ';'); 								//-- strip trailing ;
+		$sql = rtrim($sql, ';'); 							//-- strip trailing ;
+
+		if (nuMSSQL()) {
+			$sql = str_replace('LOCATE(', 'CHARINDEX(', $sql);
+		}
 
 		$from_string = stristr($sql, ' from ');
 		$where_string = stristr($sql, ' where ');
@@ -137,7 +141,7 @@ class nuSqlString {
 
 		$orderBy = $orderBy_string;
 		$this->from = $from;
-		$this->where = $where == '' ? 'WHERE 1' : $where;
+		$this->where = $where == '' ? 'WHERE (1=1) ' : $where;
 		$this->groupBy = $groupBy;
 		$this->having = $having;
 		$this->orderBy = $orderBy;
