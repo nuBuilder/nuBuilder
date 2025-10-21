@@ -2417,9 +2417,9 @@ function nuTranslateGenerateFile($l, $table = 'zzzzsys_translate') {
 
 }
 
-function nuTranslateExport($l = '', $table = 'zzzzsys_translate') {
+function nuTranslateExport($language = '', $table = 'zzzzsys_translate') {
 
-	if ($l == '') {
+	if ($language === '') {
 
 		$s = "SELECT DISTINCT trl_language FROM `$table` ORDER BY `trl_language`";
 		$t = nuRunQuery($s);
@@ -2428,7 +2428,7 @@ function nuTranslateExport($l = '', $table = 'zzzzsys_translate') {
 		}
 
 	} else {
-		nuTranslateGenerateFile($l, $table);
+		nuTranslateGenerateFile($language, $table);
 	}
 }
 
@@ -2581,7 +2581,7 @@ function nuHasProperty($property, &$value = null, $allowEmpty = true) {
 function nuSetProperty($i, $nj, $global = false) {
 
 	if ($global) {
-		$s = "SELECT IFNULL(sss_hashcookies,'') AS sss_hashcookies FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
+		$s = "SELECT COALESCE(sss_hashcookies,'') AS sss_hashcookies FROM zzzzsys_session WHERE zzzzsys_session_id = ? ";
 		$t = nuRunQuery($s, [$_SESSION['nubuilder_session_data']['SESSION_ID']]);
 
 		if (db_num_rows($t) == 1) {
