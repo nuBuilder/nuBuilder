@@ -1320,11 +1320,11 @@ function nuBrowseRows($f) {
 
 	}
 
-	$where = nuTrim(nuBrowseWhereClause($flds, $filter . ' ' . $search));
+	$where = nuTrim(nuBrowseWhereClause($flds, "$filter $search"));
 	$__x = nuHash();
 	$like = $__x['like'] ?? '';
 	unset($__x);
-	$like = str_replace('\\"', '"', $like);
+	$like = str_replace('\\"', "'", $like);
 	$haswhere = $where != '()';
 	$haslike = $like != '';
 	$hardwhere = $S->getWhere();
@@ -1349,17 +1349,30 @@ function nuBrowseRows($f) {
 	$S->SQL = str_replace('$' . $f->primary_key . '$', $f->primary_key, $S->SQL);
 
 	if ($displayContainsPK) {
-		$sCount = str_replace('$' . $f->primary_key . '$,', '', $s);
+		$sCount = str_replace("\${$f->primary_key}\$,", '', $s);
 	} else {
-		$sCount = str_replace('$' . $f->primary_key . '$', $f->primary_key, $s);
+		$sCount = str_replace("\${$f->primary_key}\$", $f->primary_key, $s);
 	}
 
-	$t = nuRunQuery('SELECT COUNT(*) FROM (' . $sCount . ') nuTCount');
-	$rowData = !nuErrorFound() ? db_fetch_row($t)[0] : 0;
+	if (nuMSSQL()) {
 
-	$s .= " LIMIT " . ($start < 0 ? 0 : $start) . ", $rows";
+		$t = nuRunQuery($sCount);
+		$rowData = db_num_rows($t);
 
-	$s = str_replace('$' . $f->primary_key . '$', $f->primary_key, $s);
+		// Ensure ORDER BY exists
+		if (stripos($sCount, 'ORDER BY') === false) {
+			$sCount .= " ORDER BY {$f->primary_key}";  // use a default column
+		}
+
+		$s = $sCount . " OFFSET " . ($start < 0 ? 0 : $start) . " ROWS FETCH NEXT " . $rows . " ROWS ONLY";
+
+	} else {
+		$t = nuRunQuery('SELECT COUNT(*) FROM (' . $sCount . ') nuTCount');
+		$rowData = !nuErrorFound() ? db_fetch_row($t)[0] : 0;
+		$s .= " LIMIT " . ($start < 0 ? 0 : $start) . ", $rows";
+		$s = str_replace('$' . $f->primary_key . '$', $f->primary_key, $s);
+	}
+
 
 	$t = nuRunQuery($s);
 
@@ -1367,7 +1380,7 @@ function nuBrowseRows($f) {
 		$a[] = $r;
 	}
 
-	nuRunQuery(nuReplaceHashVariables('DROP TABLE IF EXISTS `#TABLE_ID#`'));
+	nuRunQuery(nuReplaceHashVariables('DROP TABLE IF EXISTS #TABLE_ID#'));
 
 	return [$a, $rowData, $S->SQL];
 
