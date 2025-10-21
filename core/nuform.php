@@ -208,31 +208,31 @@ function nuGetFormProcessObjects($formObject, $formId, $recordId, $data, $defaul
 		return [$formObjects, $cloneableObjects];
 	}
 
-	$sqlQuery = "
-		SELECT
-			*
-		FROM
-			zzzzsys_form
+	$selectQuery = "
+		SELECT *
+		FROM zzzzsys_form
 		INNER JOIN zzzzsys_object ON sob_all_zzzzsys_form_id = zzzzsys_form_id
 		INNER JOIN zzzzsys_tab ON zzzzsys_tab_id = sob_all_zzzzsys_tab_id
-		WHERE
-			zzzzsys_form_id = ?
+
+		WHERE zzzzsys_form_id = ?
 		ORDER BY
-			IF(sob_all_type = 'contentbox', -1, sob_all_order),
+			CASE WHEN sob_all_type = 'contentbox' THEN -1 ELSE sob_all_order END,
 			syt_order,
-			(sob_all_type = 'run'),
+			CASE WHEN sob_all_type = 'run' THEN 1 ELSE 0 END,
 			sob_all_zzzzsys_tab_id
 	";
 
 	$dbFields = ($data !== []) ? db_field_names($formObject->table) : [];
 
-	$stmt = nuRunQuery($sqlQuery, [$formId]);
+	$stmt = nuRunQuery($selectQuery, [$formId]);
 	while ($row = db_fetch_object($stmt)) {
 		$object = nuDefaultObject($row, $defaultTabs);
 		nuGetFormModifyObject($object, $formObject, $row, $recordId, $data, $numObjects, $cloneableObjects, $dbFields);
 		$formObjects[] = $object;
 	}
+
 	return [$formObjects, $cloneableObjects];
+
 }
 
 function nuGetFormModifyObject($object, $formObject, $row, $recordId, $data, $numObjects, &$cloneableObjects, $dbFields) {
