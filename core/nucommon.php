@@ -84,6 +84,9 @@ function nuSQLRemoveComments($sql) {
 	// Remove block comments /* */
 	$sql = preg_replace('/\/\*[\s\S]*?\*\//', '', $sql);
 
+	// Remove -- comments, but not -- #
+	$sql = preg_replace('/^\s*--(?! #).*$/m', '', $sql);
+
 	return $sql;
 
 }
