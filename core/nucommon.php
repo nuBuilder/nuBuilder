@@ -1452,7 +1452,7 @@ function nuUpdateTableSchema($call_type, $force_update = false) {
 function nuListSystemTables() {
 
 	$a = [];
-	$t = nuRunQuery("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = DATABASE()");
+	$t = nuRunQuery("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE " . nuSchemaWhereCurrentDBSQL());
 
 	while ($r = db_fetch_row($t)) {
 
