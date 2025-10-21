@@ -58,6 +58,7 @@ function nuTT() {
 
 	// Generate a unique table name with a prefix (used to create a temporary table)
 	$unique_name = '___nu' . uniqid('1', true) . '___';
+
 	return str_replace('.', '_', $unique_name);
 
 }
@@ -73,7 +74,6 @@ function nuErrorFound() {
 }
 
 function nuSQLRemoveComments($sql) {
-
 	if (empty($sql)) {
 		return '';
 	}
@@ -88,7 +88,6 @@ function nuSQLRemoveComments($sql) {
 	$sql = preg_replace('/^\s*--(?! #).*$/m', '', $sql);
 
 	return $sql;
-
 }
 
 class nuSqlString {
@@ -405,6 +404,7 @@ function nuSetHashList($p) {
 	}
 
 }
+
 function nuRunReport($report_id) {
 
 	$id = nuID();
@@ -1237,8 +1237,9 @@ function nuBuildTempTable($name_id, $tt, $rd = 0) {
 	}
 
 	if ($x[0] == 'TABLE') {
-		// $P = "	nuRunQuery('CREATE TABLE $tt SELECT * FROM $id');;";
-		// eval ($P);
+
+		//	$P = "	nuRunQuery('CREATE TABLE $tt SELECT * FROM $id');;";
+		//	eval ($P);
 		nuCreateTableFromSelectSQL($tt, "SELECT * FROM $id");
 	}
 
@@ -1269,7 +1270,6 @@ function nuBuildTempTable($name_id, $tt, $rd = 0) {
 				$P .= 'nuRunQuery($sql);';
 				eval ($P);
 		*/
-
 	}
 
 }
@@ -1385,6 +1385,7 @@ function nuBuildTableSchema() {
 
 	$tableSchemas = [];
 	$stmt = nuRunQuery(nuGetTableNamesSQL());
+
 	while ($row = db_fetch_object($stmt)) {
 		$tableName = $row->TABLE_NAME;
 		$tableInfo = db_field_info($tableName);
@@ -2068,7 +2069,6 @@ function nuToCSV($table, $file, $d) {
 
 }
 
-
 function nuFromCSV($file, $table, $d, $delete) {
 
 	if (in_array($table, nuListTables())) {
@@ -2677,7 +2677,6 @@ function nuSanitizeFilename($file) {
 
 }
 
-
 function nuGetEmailTemplateData($code, $language = '', $group = '') {
 
 	$sql = "
@@ -2839,7 +2838,6 @@ function nuGetSelectType($processedSql) {
 	}
 
 }
-
 function nuGetLastDebugMessages() {
 
 	$sql = "
@@ -2853,7 +2851,6 @@ function nuGetLastDebugMessages() {
 		zzzzsys_user u ON d.deb_user_id = u.zzzzsys_user_id
 	ORDER BY
 		d.deb_added DESC
-
 	";
 
 	if (nuMSSQL()) {

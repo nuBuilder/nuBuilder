@@ -416,20 +416,37 @@ function nuSanitizeSqlQuery($query) {
 
 }
 
+
 function db_is_auto_id($table, $primaryKey) {
 
 	global $nuConfigIntegerPKsAuto;
 
-	$query = "SHOW COLUMNS FROM `$table` WHERE `Field` = ?";
-	$stmt = nuRunQuery($query, [$primaryKey]);
+	if (nuMSSQL()) {
+		// For MSSQL, check if the column is an identity column
+		$query = "
+			SELECT COLUMNPROPERTY(OBJECT_ID(?), ?, 'IsIdentity') AS IsIdentity, DATA_TYPE
+			FROM INFORMATION_SCHEMA.COLUMNS
+			WHERE TABLE_NAME = ? AND COLUMN_NAME = ?
+		";
+		$stmt = nuRunQuery($query, [$table, $primaryKey, $table, $primaryKey]);
+		if (db_num_rows($stmt) == 0) {
+			nuDisplayError(nuTranslate("The primary key is invalid") . ": " . $primaryKey);
+			return false;
+		}
+		$row = db_fetch_object($stmt);
+		return $row->IsIdentity == 1 || ($nuConfigIntegerPKsAuto && str_contains($row->DATA_TYPE, 'int'));
+	} else {
+		// MySQL/MariaDB
+		$query = "SHOW COLUMNS FROM `$table` WHERE `Field` = ?";
+		$stmt = nuRunQuery($query, [$primaryKey]);
 
-	if (db_num_rows($stmt) == 0) {
-		nuDisplayError(nuTranslate("The primary key is invalid") . ": " . $primaryKey);
-		return false;
+		if (db_num_rows($stmt) == 0) {
+			nuDisplayError(nuTranslate("The primary key is invalid") . ": " . $primaryKey);
+			return false;
+		}
+		$row = db_fetch_object($stmt);
+		return $row->Extra == 'auto_increment' || ($nuConfigIntegerPKsAuto && str_contains($row->Type, 'int'));
 	}
-
-	$row = db_fetch_object($stmt);
-	return ($row->Extra == 'auto_increment' || ($nuConfigIntegerPKsAuto && str_contains($row->Type, 'int')));
 
 }
 
