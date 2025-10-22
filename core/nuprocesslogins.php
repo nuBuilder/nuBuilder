@@ -43,21 +43,30 @@ function nuCheckUserLoginRequest() {
 
 	global $nuConfigLoginAsUser;
 
-	if (db_field_exists("zzzzsys_user", "sus_json") == false) {
-		nuRunQuery("ALTER TABLE zzzzsys_user ADD sus_json MEDIUMTEXT NULL DEFAULT NULL;");
+	if (!db_field_exists("zzzzsys_user", "sus_json")) {
+		$sql = nuMSSQL()
+			? "ALTER TABLE zzzzsys_user ADD sus_json NVARCHAR(MAX) NULL;"
+			: "ALTER TABLE zzzzsys_user ADD sus_json MEDIUMTEXT NULL DEFAULT NULL;";
+		nuRunQuery($sql);
 	}
 
-	if (db_field_exists("zzzzsys_user", "sus_change_password") == false) {
-		nuRunQuery("ALTER TABLE `zzzzsys_user` ADD `sus_change_password` VARCHAR(1) NULL DEFAULT NULL AFTER `sus_expires_on`;");
+	if (!nuMSSQL()) {
+		// The AFTER clause is MySQL-specific. MSSQL doesn't support positioning columns during ALTER TABLE.
+		if (db_field_exists("zzzzsys_user", "sus_change_password") == false) {
+			nuRunQuery("ALTER TABLE zzzzsys_user ADD sus_change_password VARCHAR(1) NULL DEFAULT NULL AFTER sus_expires_on;");
+		}
 	}
 
-	$sql = "
-		SELECT IF (sus_expires_on < CURDATE() AND NOT sus_expires_on IS NULL, 1, 0) AS expired,
-		zzzzsys_user_id AS user_id, sus_login_name AS login_name, sus_name AS user_name,
-		sus_login_password as user_password, sus_json, sus_change_password as change_password
-		FROM zzzzsys_user JOIN zzzzsys_access  ON zzzzsys_access_id = sus_zzzzsys_access_id
-		WHERE sus_login_name = ?
-		";
+	$sql = "SELECT " . (nuMSSQL()
+		? "CASE WHEN sus_expires_on < CURDATE() AND sus_expires_on IS NOT NULL THEN 1 ELSE 0 END"
+		: "IF(sus_expires_on < CURDATE() AND sus_expires_on IS NOT NULL, 1, 0)"
+	) . " AS expired,
+    zzzzsys_user_id AS user_id, sus_login_name AS login_name, sus_name AS user_name,
+    sus_login_password AS user_password, sus_json, sus_change_password AS change_password
+    FROM zzzzsys_user
+    JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id
+    WHERE sus_login_name = ?";
+
 
 	$sqlMd5 = "$sql AND sus_login_password = ?";
 	$sqlToken = "$sql AND sus_json LIKE ? ";
