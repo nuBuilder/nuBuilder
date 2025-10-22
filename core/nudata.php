@@ -609,12 +609,12 @@ function nuUpdateDatabaseSetValues($formIndex, $table, $primaryKey, $foreignKey,
 
 	if ($nv != 'autoid') {
 		$updateData->values[] = $primaryKeyValue;
-		$updateData->inserts[] = $primaryKey;
+		$updateData->inserts[] = nuIdentColumn($primaryKey);
 	}
 
 	if ($foreignKey != '') {
 		$updateData->values[] = "'$mainRecordId'";
-		$updateData->inserts[] = "`$foreignKey`";
+		$updateData->inserts[] = nuIdentColumn($foreignKey);
 	}
 
 	return $mainRecordId;
