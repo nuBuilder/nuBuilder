@@ -139,6 +139,7 @@ function nuCheckIsLoginRequest($callType = 'login') {
 	return ($_POST['nuSTATE']['call_type'] ?? null) === $callType;
 }
 
+
 function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 
 	global $nuConfig2FAAdmin, $nuConfigDevMode;
@@ -218,7 +219,12 @@ function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 	$storeSessionInTable->access_level_group = '';
 	$storeSessionInTableJSON = json_encode($storeSessionInTable);
 
-	$sql = "INSERT INTO zzzzsys_session SET sss_access = ?, zzzzsys_session_id = ?";
+	if (nuMSSQL()) {
+		$sql = "INSERT INTO zzzzsys_session (sss_access, zzzzsys_session_id) VALUES (?, ?)";
+	} else {
+		$sql = "INSERT INTO zzzzsys_session SET sss_access = ?, zzzzsys_session_id = ?";
+	}
+
 	$values = [
 		$storeSessionInTableJSON,
 		$_SESSION['nubuilder_session_data']['SESSION_ID']
@@ -227,6 +233,7 @@ function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 	nuRunQuery($sql, $values);
 
 	return true;
+
 }
 
 function nuLoginSetupNOTGlobeadmin($new = true, $sSoUserName = "", $changePassword = false) {
