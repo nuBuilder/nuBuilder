@@ -535,7 +535,7 @@ function nuUpdateDatabaseAddNuLog(&$updateData, $userId, $table) {
 	$jd->added = ['user' => $userId, 'time' => time()];
 	$je = nuAddSlashes(json_encode($jd));
 	$updateData->values[] = "'$je'";
-	$updateData->inserts[] = "`$table" . "_nulog`";
+	$updateData->inserts[] = nuIdentColumn($table . "_nulog");
 
 }
 
