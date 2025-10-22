@@ -398,6 +398,7 @@ function nuUpdateDatabase() {
 	$nuDataFormId = $nudata[0]->object_id;
 
 	$clientTableSchema = nuGetJSONData('clientTableSchema');
+
 	$userId = $nuHash['USER_ID'];
 
 	if (!$deleteAction) {
@@ -409,6 +410,7 @@ function nuUpdateDatabase() {
 	$sql = [];
 
 	$countNuData = count($nudata);
+
 	for ($formIndex = 0; $formIndex < $countNuData; $formIndex++) {
 
 		$sf = $nudata[$formIndex];
@@ -421,8 +423,13 @@ function nuUpdateDatabase() {
 		$table = $sf->table;
 		$primaryKey = $sf->primary_key;
 		$foreignKey = $sf->foreign_key;
+
 		if ($formIndex > 0) {
-			$query = "SELECT `sob_subform_zzzzsys_form_id` FROM `zzzzsys_object` WHERE `zzzzsys_object_id` = ? LIMIT 1";
+			if (nuMSSQL()) {
+				$query = "SELECT TOP 1 sob_subform_zzzzsys_form_id FROM zzzzsys_object WHERE zzzzsys_object_id = ?";
+			} else {
+				$query = "SELECT `sob_subform_zzzzsys_form_id` FROM `zzzzsys_object` WHERE `zzzzsys_object_id` = ? LIMIT 1";
+			}
 			$stmt = nuRunQuery($query, [$sf->object_id]);
 			$formId = db_fetch_row($stmt)[0];
 		} else {
@@ -435,6 +442,7 @@ function nuUpdateDatabase() {
 		$log = in_array($table . '_nulog', $tableColumns);
 
 		$countRows = count($rows);
+
 		for ($row = 0; $row < $countRows; $row++) {
 
 			$rowEdited = nuEditedRow($edited[$row], $fields, $tableColumns);
@@ -450,7 +458,7 @@ function nuUpdateDatabase() {
 				$currentRow = $rows[$row];
 				$recordId = $currentRow[0];
 
-				$mainRecordId = nuUpdateDatabaseSetValues($formIndex, $table, $primaryKey, $foreignKey, $recordId, $mainRecordId, $updateData); // prev: $values, $insertColumns
+				$mainRecordId = nuUpdateDatabaseSetValues($formIndex, $table, $primaryKey, $foreignKey, $recordId, $mainRecordId, $updateData);
 
 				$countR = count($currentRow);
 				for ($r = 1; $r < $countR; $r++) {
