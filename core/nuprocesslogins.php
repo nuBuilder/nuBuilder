@@ -417,23 +417,22 @@ function nuGetAccessLevelQuery() {
 function nuGetFormAccessQuery() {
 
 	return "SELECT
-				`slf_zzzzsys_form_id` AS `id`,
-				`slf_add_button` AS `add_btn`,
-				`slf_save_button` AS `save_btn`,
-				`slf_delete_button` AS `delete_btn`,
-				`slf_clone_button` AS `clone_btn`,
-				`slf_print_button` AS `print_btn`
+				slf_zzzzsys_form_id AS id,
+				slf_add_button AS add_btn,
+				slf_save_button AS save_btn,
+				slf_delete_button AS delete_btn,
+				slf_clone_button AS clone_btn,
+				slf_print_button AS print_btn
 			FROM
-				`zzzzsys_user`
+				zzzzsys_user
 			JOIN
-				`zzzzsys_access` ON `zzzzsys_access_id` = `sus_zzzzsys_access_id`
+				zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id
 			JOIN
-				`zzzzsys_access_form` ON `zzzzsys_access_id` = `slf_zzzzsys_access_id`
+				zzzzsys_access_form ON zzzzsys_access_id = slf_zzzzsys_access_id
 			WHERE
-				`zzzzsys_user_id` = ?";
+				zzzzsys_user_id = ?";
 
 }
-
 
 function nuGetReportIdsQuery() {
 
