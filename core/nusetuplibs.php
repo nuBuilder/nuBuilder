@@ -1,17 +1,23 @@
 <?php
 
-require_once('nusystemupdatelibs.php');
-require_once(dirname(__FILE__) . '/../nuconfig.php'); // nuconfig must be loaded before using nubuilder_session_dat
+require_once 'nusystemupdatelibs.php';
+require_once dirname(__FILE__) . '/../nuconfig.php'; // nuconfig must be loaded before using nubuilder_session_dat
 
 function nuImportNewDB() {
 
-	$t = nuRunQuery("SHOW TABLES");
-	while ($r = db_fetch_row($t)) {
-		if ($r[0] == 'zzzzsys_object') {
-			return;
-		}
+	global $nuConfigDBType;
+	$sqlFile = $nuConfigDBType === "sqlsrv" ? "nubuilder4_mssql.sql" : "nubuilder4.sql";
+
+	$t = nuRunQuery("SELECT table_name as TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'zzzzsys_object' AND " . nuSchemaWhereCurrentDBSQL());
+	if (db_num_rows($t) == 1) {
+		return;
 	}
-	$file = __DIR__ . "/../nubuilder4.sql";
+
+	// sqlsrv_temp - skip for MSSQL for now
+	if ($nuConfigDBType === "sqlsrv")
+		return;
+
+	$file = __DIR__ . "/../" . $sqlFile;
 	@$handle = fopen($file, "r");
 	$temp = "";
 	if ($handle) {
@@ -19,11 +25,17 @@ function nuImportNewDB() {
 			if ($line[0] != "-" and $line[0] != "/" and $line[0] != "\n") {
 				$line = trim($line);
 				$temp .= $line;
-				if (substr($line, -1) == ";") {
-					$temp = rtrim($temp, ';');
-					$temp = str_replace('ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER', '', $temp);
-					nuRunQuery($temp);
-					$temp = "";
+
+				$processLine = ($nuConfigDBType == "sqlsrv" && substr($line, 0, 2) == 'GO') || ($nuConfigDBType != "sqlsrv" && substr($line, -1) == ";");
+				if ($processLine) {
+					if ($nuConfigDBType == "sqlsrv") {
+						$temp = rtrim($temp, 'GO');
+					} else {
+						$temp = rtrim($temp, ';');
+						$temp = str_replace('ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER', '', $temp);
+						nuRunQuery($temp);
+						$temp = "";
+					}
 				}
 			}
 		}
