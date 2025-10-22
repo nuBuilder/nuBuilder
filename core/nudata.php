@@ -272,12 +272,12 @@ function nuUpdateDatabaseSave($recordId, $row, $pk, $table, $deleted, $log, $use
 
 			$je = nuAddSlashes(json_encode($logData));
 			$sql[] = "UPDATE $tableId SET $logFieldId = '$je' WHERE $pkId = '$recordId';";
-
 		}
 
 	}
 
 }
+
 function nuUpdateDatabaseDelete($table, $pk, $deleted, $rows, $action, &$sqls) {
 
 	$deletedCount = count($deleted);
@@ -285,8 +285,7 @@ function nuUpdateDatabaseDelete($table, $pk, $deleted, $rows, $action, &$sqls) {
 		$id = $rows[$i][0];
 		if ($action == 'delete' || $deleted[$i] == '1') {
 			if ($id != '-1') {
-				$sql = "DELETE FROM $table WHERE `$pk` = '$id';";
-				$sqls[] = $sql;
+				$sqls[] = "DELETE FROM " . nuIdentColumn($table) . " WHERE " . nuIdentColumn($pk) . " = '$id';";
 			}
 		}
 	}
@@ -296,7 +295,6 @@ function nuUpdateDatabaseDelete($table, $pk, $deleted, $rows, $action, &$sqls) {
 function nuGetDBTypesSetNullWhenEmpty() {
 
 	global $nuConfigDBTypesSetNullWhenEmpty;
-
 	if (!is_array($nuConfigDBTypesSetNullWhenEmpty)) {
 		if (nuMSSQL()) {
 			$nuConfigDBTypesSetNullWhenEmpty = [
@@ -336,10 +334,9 @@ function nuGetDBTypesSetNullWhenEmpty() {
 			//	"boolean",
 		}
 	}
-
 	return $nuConfigDBTypesSetNullWhenEmpty;
-
 }
+
 
 function nuUpdateDatabaseHasDataModePermission($formId, $recordID, $deleteAction) {
 
@@ -396,7 +393,6 @@ function nuUpdateDatabase() {
 
 	$nuMainTable = $nudata[0]->table;
 	$nuDataFormId = $nudata[0]->object_id;
-
 	$clientTableSchema = nuGetJSONData('clientTableSchema');
 
 	$userId = $nuHash['USER_ID'];
@@ -484,7 +480,6 @@ function nuUpdateDatabase() {
 
 				if ($action == 'save') {
 					nuUpdateDatabaseSave($recordId, $row, $primaryKey, $table, $deleted, $log, $userId, $sql, $updateData);
-
 				}
 
 			}
@@ -507,7 +502,6 @@ function nuUpdateDatabase() {
 	if (nuHasErrors()) {
 		return;
 	}
-
 
 	$mainRecordId = nuUpdateDatabaseExecStatements($sql, $nuMainTable, $mainRecordId);
 
@@ -1042,4 +1036,3 @@ function nuLogout() {
 	unset($_SESSION['nuinclude']);
 
 }
-
