@@ -758,7 +758,8 @@ function nuBuildPrimaryKey($tableName, $primaryKey) {
 function nuEditedRow($row, $columnNames, $tableColumns) {
 
 	foreach ($row as $i => $value) {
-		if (in_array($columnNames[$i], $tableColumns) && $value > 0) {
+		$columnName = $columnNames[$i] ?? 'UNDEFINED';
+		if (in_array($columnName, $tableColumns) && $value > 0) {
 			return true;
 		}
 	}
