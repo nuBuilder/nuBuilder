@@ -468,7 +468,7 @@ function nuGetPHPIdsQuery() {
 			JOIN
 				zzzzsys_php ON zzzzsys_php_id = slp_zzzzsys_php_id
 			WHERE
-				zzzzsys_user_id = ? AND IFNULL(sph_status, '1') = '1'
+				zzzzsys_user_id = ? AND COALESCE(sph_status, '1') = '1'
 			GROUP BY
 				slp_zzzzsys_php_id";
 
