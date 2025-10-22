@@ -380,12 +380,22 @@ function nuLoginSetupNOTGlobeadmin($new = true, $sSoUserName = "", $changePasswo
 
 	$storeSessionInTableJSON = json_encode($storeSessionInTable);
 
-	nuRunQuery("REPLACE INTO zzzzsys_session SET sss_access = ?, zzzzsys_session_id = ?", [
+	$sql = nuMSSQL()
+		? "MERGE zzzzsys_session AS t
+       USING (SELECT ? AS sss_access, ? AS zzzzsys_session_id) AS s
+       ON (t.zzzzsys_session_id = s.zzzzsys_session_id)
+       WHEN MATCHED THEN UPDATE SET sss_access = s.sss_access
+       WHEN NOT MATCHED THEN INSERT (sss_access, zzzzsys_session_id)
+       VALUES (s.sss_access, s.zzzzsys_session_id);"
+		: "REPLACE INTO zzzzsys_session SET sss_access = ?, zzzzsys_session_id = ?";
+
+	nuRunQuery($sql, [
 		$storeSessionInTableJSON,
 		$_SESSION['nubuilder_session_data']['SESSION_ID']
 	]);
 
 	return true;
+
 }
 
 function nuGetAccessLevelQuery() {
