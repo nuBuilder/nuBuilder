@@ -181,13 +181,15 @@ function nuDuplicate($form, $subformFK, $row, $fieldLabel) {
 	$pk = $form->rows[$row][0];
 	$value = $form->rows[$row][$fieldLabel];
 
-	$query = "SELECT `$form->primary_key` FROM `$form->table` WHERE `$field` = ? AND `$form->primary_key` != ?";
+	$query = "SELECT " . nuIdentColumn($form->primary_key) . " FROM " . nuIdentColumn($form->table) . " WHERE " . nuIdentColumn($field) . " = ? AND " . nuIdentColumn($form->primary_key) . " != ?";
+	$params = [$value, $pk];
 
 	if (isset($subformFK) && trim($subformFK) !== '') {
-		$query .= " AND `$subformFK` = '" . nuRecordId() . "'";
+		$query .= " AND " . nuIdentColumn($subformFK) . " = ?";
+		$params[] = nuRecordId();
 	}
 
-	$stmt = nuRunQuery($query, [$value, $pk]);
+	$stmt = nuRunQuery($query, $params);
 
 	return db_num_rows($stmt) > 0;
 
