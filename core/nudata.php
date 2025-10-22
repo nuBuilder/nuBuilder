@@ -239,19 +239,24 @@ function nuUpdateDatabaseSave($recordId, $row, $pk, $table, $deleted, $log, $use
 	$values = ' VALUES (' . implode(', ', $updateData->values) . ')';
 	$inserts = ' (' . implode(', ', $updateData->inserts) . ')';
 
+	// Use appropriate identifier escaping
+	$tableId = $table;
+	$pkId = nuIdentColumn($pk);
+	$logFieldId = nuIdentColumn($table . '_nulog');
+
 	if ($recordId == '-1') {
 
 		if ($deleted[$row] == '0') {
-			$sql[] = "INSERT INTO `$table` $inserts $values;";
+			$sql[] = "INSERT INTO $tableId $inserts $values;";
 		}
 
 	} else {
 
-		$sql[] = "UPDATE `$table` SET $columns WHERE `$pk` = '$recordId';";
+		$sql[] = "UPDATE $tableId SET $columns WHERE $pkId = '$recordId';";
 
 		if ($log) {
 
-			$stmt = nuRunQuery("SELECT `$table" . "_nulog` FROM `$table` WHERE `$pk` = '$recordId';");
+			$stmt = nuRunQuery("SELECT $logFieldId FROM $tableId WHERE $pkId = '$recordId';");
 			$logRow = db_fetch_row($stmt);
 			$logData = json_decode($logRow[0]);
 
@@ -266,14 +271,13 @@ function nuUpdateDatabaseSave($recordId, $row, $pk, $table, $deleted, $log, $use
 			}
 
 			$je = nuAddSlashes(json_encode($logData));
-			$sql[] = "UPDATE `$table` SET `$table" . "_nulog` = '$je' WHERE `$pk` = '$recordId';";
+			$sql[] = "UPDATE $tableId SET $logFieldId = '$je' WHERE $pkId = '$recordId';";
 
 		}
 
 	}
 
 }
-
 function nuUpdateDatabaseDelete($table, $pk, $deleted, $rows, $action, &$sqls) {
 
 	$deletedCount = count($deleted);
