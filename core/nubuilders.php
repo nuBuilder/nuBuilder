@@ -109,13 +109,13 @@ function nuFFNumber() {
 	$s = "
 
 		SELECT
-			COALESCE(MAX(CAST(SUBSTRING(`sfo_code`, 3) as UNSIGNED)),0) + 1 as num
+			COALESCE(MAX(CAST(SUBSTRING(sfo_code, 3) as UNSIGNED)),0) + 1 as num
 		FROM (
 		SELECT
-			`sfo_code`
-		FROM `zzzzsys_form`
-		WHERE `sfo_code` LIKE 'FF%'
-		AND SUBSTRING(`sfo_code`, 3) REGEXP '^-?[0-9]+$'
+			sfo_code
+		FROM zzzzsys_form
+		WHERE sfo_code LIKE 'FF%'
+		AND SUBSTRING(sfo_code, 3) REGEXP '^-?[0-9]+$'
 		) T
 
 	";
@@ -131,12 +131,12 @@ function nuFFNewTableSQL($table, $pk, $columns, $isNew) {
 
 	$start = "CREATE TABLE $table";
 	$a = [];
-	$a[] = "`$pk` VARCHAR(25) NOT NULL";
+	$a[] = "$pk VARCHAR(25) NOT NULL";
 	$h = nuHash();
 	$fk = $h['fastform_fk'];
 
 	if ($h['fastform_type'] == 'subform' && $isNew) {
-		$a[] = "`$fk` VARCHAR(25) DEFAULT NULL";
+		$a[] = "$fk VARCHAR(25) DEFAULT NULL";
 	}
 
 	$count = count($columns);
@@ -194,7 +194,7 @@ function nuFFCreateTable($sF, $formType, $table, $Pk, $isNew, $drop) {
 	if ($drop) {
 		$stmt = nuRunQueryTest($sql);
 		if (is_bool($stmt)) {
-			nuRunQuery("DROP TABLE IF EXISTS `$table`;");
+			nuRunQuery("DROP TABLE IF EXISTS $table;");
 			return '';
 		} else {
 			return nuFFError($stmt->getMessage(), $sql);
@@ -300,11 +300,8 @@ function nuFFIsNewTable($table, &$Pk, $formType) {
 
 }
 
-function nuFFTempCreate($TT) {
-
-	$sql = "CREATE TABLE $TT SELECT * FROM zzzzsys_object WHERE 1=0";
-	nuRunQuery($sql);
-
+function nuFFTempCreate($tableName) {
+	nuCreateTableFromSelectSQL($tableName, "SELECT * FROM zzzzsys_object WHERE 1=0");
 }
 
 function nuFFTempInsertSampleObjects($sF, $formType, $TT) {
@@ -409,7 +406,7 @@ function nuFFInsertBrowse($sF, $formId, $formType, $defaultFormats) {
 
 	$count = count($sF->rows);
 	for ($i = 0; $i < $count; $i++) {
-		
+
 		if ($sF->rows[$i][6] == 1 && $sF->deleted[$i] == 0) {	//-- ff_browse ticked and not set as deleted
 
 			$label = $sF->rows[$i][1];							//-- ff_label
@@ -430,15 +427,15 @@ function nuFFInsertBrowse($sF, $formId, $formType, $defaultFormats) {
 					(?, ?, ?, ?, ?, ?, ?, ?)
 
 			";
-			
+
 			$inputType = $sF->rows[$i][4];
 			$defaultFormat = '';
 			if ($inputType === 'nu59e446589b0af4c') { 			// Date
 				$defaultFormat = $defaultFormats['Date'];
 			} else if ($inputType === 'nu59e446589b20a14') {  	// Number
 				$defaultFormat = $defaultFormats['Number'];
-			}	
-				
+			}
+
 			$array = [nuID(), $formId, $label, $id, 'l', $defaultFormat, ($i + 1) * 10, 250];
 
 			nuRunQuery($sql, $array);
@@ -456,7 +453,7 @@ function nuFFInsertObjects($table, $TT, $formType, $formId, $defaultFormats) {
 	}
 
 	nuRunQuery("INSERT INTO zzzzsys_object SELECT * FROM $TT");
-	
+
 	$sqlUpdateFormat = "UPDATE zzzzsys_object SET sob_input_format = ? WHERE sob_input_type = ? AND sob_all_zzzzsys_form_id  = ?";
 	nuRunQuery($sqlUpdateFormat, [$defaultFormats['Date'], 'nuDate', $formId]);
 	nuRunQuery($sqlUpdateFormat, [$defaultFormats['Number'], 'nuNumber', $formId]);
@@ -554,7 +551,7 @@ function nuFFCreatedMessage($table, $TT, $isNew, $formId, $formType, $formCode) 
 
 	$js .= "
 		nuMessage([m1, m2]);
-		$('#nuBuildFastFormButton').remove(); 
+		$('#nuBuildFastFormButton').remove();
 	";
 
 	nuJavaScriptCallback($js);

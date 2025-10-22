@@ -67,7 +67,6 @@ function nuCheckUserLoginRequest() {
     JOIN zzzzsys_access ON zzzzsys_access_id = sus_zzzzsys_access_id
     WHERE sus_login_name = ?";
 
-
 	$sqlMd5 = "$sql AND sus_login_password = ?";
 	$sqlToken = "$sql AND sus_json LIKE ? ";
 
@@ -138,7 +137,6 @@ function nuCheckUserLoginRequest() {
 function nuCheckIsLoginRequest($callType = 'login') {
 	return ($_POST['nuSTATE']['call_type'] ?? null) === $callType;
 }
-
 
 function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 
@@ -233,7 +231,6 @@ function nuLoginSetupGlobeadmin($loginName, $userId, $userName) {
 	nuRunQuery($sql, $values);
 
 	return true;
-
 }
 
 function nuLoginSetupNOTGlobeadmin($new = true, $sSoUserName = "", $changePassword = false) {
@@ -433,6 +430,7 @@ function nuGetFormAccessQuery() {
 				zzzzsys_user_id = ?";
 
 }
+
 
 function nuGetReportIdsQuery() {
 

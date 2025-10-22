@@ -1036,3 +1036,4 @@ function nuLogout() {
 	unset($_SESSION['nuinclude']);
 
 }
+
