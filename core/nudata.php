@@ -296,29 +296,50 @@ function nuUpdateDatabaseDelete($table, $pk, $deleted, $rows, $action, &$sqls) {
 function nuGetDBTypesSetNullWhenEmpty() {
 
 	global $nuConfigDBTypesSetNullWhenEmpty;
-	if (!is_array($nuConfigDBTypesSetNullWhenEmpty)) {
-		$nuConfigDBTypesSetNullWhenEmpty = [
-			"integer",
-			"int",
-			"mediumint",
-			"longint",
-			"decimal",
-			"float",
-			"real",
-			"double",
-			"serial",
-			"date",
-			"datetime",
-			"timestamp",
-			"year",
-		];
-		//	"tinyint",
-		//	"bit",
-		//	"boolean",
-	}
-	return $nuConfigDBTypesSetNullWhenEmpty;
-}
 
+	if (!is_array($nuConfigDBTypesSetNullWhenEmpty)) {
+		if (nuMSSQL()) {
+			$nuConfigDBTypesSetNullWhenEmpty = [
+				"int",
+				"bigint",
+				"smallint",
+				"tinyint",
+				"decimal",
+				"numeric",
+				"float",
+				"real",
+				"date",
+				"datetime",
+				"datetime2",
+				"smalldatetime",
+				"timestamp",
+				"time",
+			];
+		} else {
+			$nuConfigDBTypesSetNullWhenEmpty = [
+				"integer",
+				"int",
+				"mediumint",
+				"longint",
+				"decimal",
+				"float",
+				"real",
+				"double",
+				"serial",
+				"date",
+				"datetime",
+				"timestamp",
+				"year",
+			];
+			//	"tinyint",
+			//	"bit",
+			//	"boolean",
+		}
+	}
+
+	return $nuConfigDBTypesSetNullWhenEmpty;
+
+}
 
 function nuUpdateDatabaseHasDataModePermission($formId, $recordID, $deleteAction) {
 
