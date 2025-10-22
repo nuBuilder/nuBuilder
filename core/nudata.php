@@ -573,14 +573,14 @@ function nuUpdateDatabaseGetUpdateValue($field, $value, $formId, $recordId, $tab
 
 		if (!empty($filteredNullableTypes) && $v == '') { //-- numeric and date types: null if empty
 			$updateData->values[] = "null";
-			$updateData->columns[] = "`$field` = null";
+			$updateData->columns[] = nuIdentColumn($field) . " = null";
 		} else {
 			$add = nuAddSlashes($v);
 			$updateData->values[] = "'$add'";
-			$updateData->columns[] = "`$field` = '$add'";
+			$updateData->columns[] = nuIdentColumn($field) . " = '$add'";
 		}
 
-		$updateData->inserts[] = "`$field`";
+		$updateData->inserts[] = nuIdentColumn($field);
 
 	}
 
