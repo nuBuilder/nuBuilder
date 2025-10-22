@@ -832,7 +832,7 @@ function nuUpdateCounter($id) {
 
 	for ($i = 0; $i < 10; $i++) {
 
-		nuRunQuery("UPDATE zzzzsys_object SET sob_input_javascript = ? WHERE zzzzsys_object_id = ? AND IFNULL(sob_input_javascript,'') = ?", [$uniqueId, $id, '']);
+		nuRunQuery("UPDATE zzzzsys_object SET sob_input_javascript = ? WHERE zzzzsys_object_id = ? AND COALESCE(sob_input_javascript,'') = ?", [$uniqueId, $id, '']);
 
 		$result = nuRunQuery($sql, [$id]);
 		$row = db_fetch_object($result);
