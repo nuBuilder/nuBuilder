@@ -629,12 +629,17 @@ function nuUpdateDatabaseExecStatements($sql, $nuMainTable, $mainRecordId) {
 		$countSql = count($sql);
 		for ($i = 0; $i < $countSql; $i++) {
 			$sqlLine = $sql[$i];
-			$insert = "INSERT INTO $nuMainTable";
+
+			// Use appropriate identifier escaping for the database
+			$tableIdentifier = nuMSSQL() ? "[$nuMainTable]" : "`$nuMainTable`";
+			$insert = "INSERT INTO $tableIdentifier";
 
 			nuRunQuery($sqlLine);
 
 			if (substr($sqlLine, 0, strlen($insert)) == $insert || $mainRecordId == 'autoid') {
-				$stmt = nuRunQuery('SELECT LAST_INSERT_ID()');
+				// Use appropriate function to get last inserted ID
+				$lastIdQuery = nuMSSQL() ? 'SELECT SCOPE_IDENTITY()' : 'SELECT LAST_INSERT_ID()';
+				$stmt = nuRunQuery($lastIdQuery);
 				$row = db_fetch_row($stmt);
 				if ($row !== false && isset($row[0])) {
 					$result = $row[0];
