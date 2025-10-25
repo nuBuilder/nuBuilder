@@ -6,6 +6,7 @@ $_POST['RunQuery'] = 0;
 
 $sessionData = $_SESSION['nubuilder_session_data'] ?? null;
 
+$dbType = $sessionData['DB_TYPE'] ?? $nuConfigDBType ?? 'mysql';
 $dbHost = $sessionData['DB_HOST'] ?? $nuConfigDBHost;
 $dbName = $sessionData['DB_NAME'] ?? $nuConfigDBName;
 $dbPort = $sessionData['DB_PORT'] ?? ($nuConfigDBPort ?? '3306');
@@ -22,7 +23,14 @@ if (is_array($dbOptions)) {
 }
 
 try {
-	$nuDB = new PDO("mysql:host=$dbHost;dbname=$dbName;charset=$dbCharset;port=$dbPort", $dbUser, $dbPassword, $dbOptions);
+
+	if ($dbType != 'sqlsrv') {
+		$dsn = "mysql:host=$dbHost;dbname=$dbName;charset=$dbCharset;port=$dbPort";
+	} else {
+		$dsn = "sqlsrv:Server=$dbHost;Database=$dbName";	
+	}
+
+	$nuDB = new PDO($dsn, $dbUser, $dbPassword, $dbOptions);
 	$nuDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
 	echo '<div style="max-width:500px;margin:32px auto;padding:24px;background:#f9f5f5;border:1px solid #db4d4d;border-radius:7px;box-shadow:0 2px 8px #f0f0f0;">';
@@ -64,9 +72,13 @@ try {
 				} else {
 					$pdo = new PDO("mysql:host=$createDbHost;port=$createDbPort", $createDbUser, $createDbPassword);
 				}
+
 				$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-				$sql = "CREATE DATABASE `$createDbName` CHARACTER SET $dbCharset";
+				$sql = nuMSSQL()
+					? "CREATE DATABASE [$createDbName];"
+					: "CREATE DATABASE `$createDbName` CHARACTER SET $dbCharset";
 				$pdo->exec($sql);
+
 				echo '<span style="color:#0a7d30;font-weight:bold;">Database created successfully!</span> <span style="color:#333;">Please reload the page.</span>';
 			} catch (PDOException $ce) {
 				echo '<span style="color:#b10000;font-weight:bold;">Failed to create database:</span> <span style="color:#333;">' . htmlspecialchars($ce->getMessage()) . '</span>';
@@ -207,6 +219,7 @@ function nuPrepareQuery($sql) {
 	}
 
 	return $sql;
+
 }
 
 function nuRunQueryNoDebug($query, $params = [], $isInsert = false) {
@@ -305,6 +318,7 @@ function nuGetDBParams() {
 	];
 }
 
+
 function nuRunQuery($sql, $params = [], $isInsert = false) {
 
 	$dbParams = nuGetDBParams();
@@ -398,6 +412,7 @@ function nuRunQueryString($sql, $sqlWithHK) {
 		return nuRunQuery(nuSanitizeSqlQuery($sqlWithHK), $args);
 
 	} else {
+
 		return nuRunQuery(nuSanitizeSqlQuery($sql));
 	}
 
@@ -421,7 +436,6 @@ function nuSanitizeSqlQuery($query) {
 
 }
 
-
 function db_is_auto_id($table, $primaryKey) {
 
 	global $nuConfigIntegerPKsAuto;
@@ -444,13 +458,12 @@ function db_is_auto_id($table, $primaryKey) {
 		// MySQL/MariaDB
 		$query = "SHOW COLUMNS FROM `$table` WHERE `Field` = ?";
 		$stmt = nuRunQuery($query, [$primaryKey]);
-
 		if (db_num_rows($stmt) == 0) {
 			nuDisplayError(nuTranslate("The primary key is invalid") . ": " . $primaryKey);
 			return false;
 		}
 		$row = db_fetch_object($stmt);
-		return $row->Extra == 'auto_increment' || ($nuConfigIntegerPKsAuto && str_contains($row->Type, 'int'));
+		return ($row->Extra == 'auto_increment' || ($nuConfigIntegerPKsAuto && str_contains($row->Type, 'int')));
 	}
 
 }
@@ -726,7 +739,6 @@ function nuViewExists($view) {
 
 	$sql = "SELECT table_name as TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'VIEW' AND " . nuSchemaWhereCurrentDBSQL() . " AND TABLE_NAME = ?";
 	$qry = nuRunQuery($sql, [$view]);
-
 	return db_num_rows($qry);
 
 }
@@ -951,6 +963,14 @@ function nuIdentColumn($s) {
 	return !nuMSSQL() ? nuQuotise($s, '`') : "[$s]";
 }
 
+function nuIdentTables($sql) {
+
+	return preg_replace_callback('/#TABLE_ID#/i', function($m) {
+		return nuIdentColumn($m[0]);
+	}, $sql);
+
+}
+
 function nuTableInfoSQL() {
 	return nuMSSQL() ? 'sp_columns ' : 'DESCRIBE ';
 }
@@ -999,6 +1019,35 @@ function nuCreateTableFromSelect($tableName, $select, $params = [], $temporary =
 	}
 
 	return nuRunQuery($query, $params);
+
+}
+
+function nuCreateTableFromSelect2($tableName, $select, $params = [], $temporary = false) {
+
+	if (!nuMSSQL()) {
+		$query = sprintf(
+			'CREATE' . ($temporary ? ' TEMPORARY' : '') . ' TABLE `%s` AS (%s)',
+			$tableName,
+			$select
+		);
+	} else {
+		// MSSQL logic
+		if (strpos($select, '/* #MSSQL_INTO_NEW_TABLE */') !== false) {
+			// Replace marker with INTO clause
+			$query = str_replace('/* #MSSQL_INTO_NEW_TABLE */', "INTO [$tableName]", $select);
+		} else {
+			// Fallback: insert INTO before FROM
+			$pos = strrpos($select, 'FROM');
+			if ($pos !== false) {
+				$query = substr($select, 0, $pos) . 'INTO [' . $tableName . '] ' . substr($select, $pos);
+			} else {
+				// If FROM not found, just return original select
+				$query = $select;
+			}
+		}
+	}
+
+	return $query;
 
 }
 
