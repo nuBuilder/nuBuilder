@@ -114,14 +114,14 @@ function nuBeforeEdit($FID, $RID) {
 			return;
 		}
 
-		nuEval($FID . '_BE');
+		nuEval("{$FID}_BE");
 	}
 
 	$js = $r->sfo_javascript;
 	$jb = $r->sfo_browse_javascript ?? '';
 	$je = $r->sfo_edit_javascript ?? '';
 
-	$js .= $recordID == '' ? ' ' . $jb : ' ' . $je;
+	$js .= $recordID === '' ? "\n$jb" : "\n$je";
 
 	$GLOBALS['STYLE'] = $r->sfo_style ?? '';
 	$GLOBALS['EXTRAJS'] .= $js;

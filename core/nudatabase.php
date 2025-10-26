@@ -27,7 +27,7 @@ try {
 	if ($dbType != 'sqlsrv') {
 		$dsn = "mysql:host=$dbHost;dbname=$dbName;charset=$dbCharset;port=$dbPort";
 	} else {
-		$dsn = "sqlsrv:Server=$dbHost;Database=$dbName";	
+		$dsn = "sqlsrv:Server=$dbHost;Database=$dbName";
 	}
 
 	$nuDB = new PDO($dsn, $dbUser, $dbPassword, $dbOptions);
