@@ -1240,7 +1240,7 @@ function nuBuildTempTable($name_id, $tt, $rd = 0) {
 
 		//	$P = "	nuRunQuery('CREATE TABLE $tt SELECT * FROM $id');;";
 		//	eval ($P);
-		nuCreateTableFromSelectSQL($tt, "SELECT * FROM $id");
+		nuCreateTableFromSelect($tt, "SELECT * FROM $id");
 	}
 
 	if ($x[0] == 'SQL') {
@@ -1264,7 +1264,7 @@ function nuBuildTempTable($name_id, $tt, $rd = 0) {
 		$p = nuReplaceHashVariables($c);
 		$tt = nuAddSlashes($tt ?? '');
 
-		nuCreateTableFromSelectSQL($tt, $p);
+		nuCreateTableFromSelect($tt, $p);
 		/*
 				$P = '$sql = "CREATE TABLE ' . $tt . ' ' . $p . '";';
 				$P .= 'nuRunQuery($sql);';
