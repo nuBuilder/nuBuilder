@@ -129,6 +129,12 @@ function nuInitTinyMCE(id, options, mobile, toolbar, toolbar_groups, menubar, co
 				}
 			});
 
+			editor.on('SetContent', (e) => {
+				if (window.nuTinyMCEOnSetContent) {
+					nuTinyMCEOnSetContent(e, editor, id);
+				}
+			});
+
 			editor.on("change", function () {
 				if (window.isShortcutSave) {
 					return;

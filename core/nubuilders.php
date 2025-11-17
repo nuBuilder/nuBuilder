@@ -301,7 +301,7 @@ function nuFFIsNewTable($table, &$Pk, $formType) {
 }
 
 function nuFFTempCreate($tableName) {
-	nuCreateTableFromSelectSQL($tableName, "SELECT * FROM zzzzsys_object WHERE 1=0");
+	nuCreateTableFromSelect($tableName, "SELECT * FROM zzzzsys_object WHERE 1=0");
 }
 
 function nuFFTempInsertSampleObjects($sF, $formType, $TT) {
