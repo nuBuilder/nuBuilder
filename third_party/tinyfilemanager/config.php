@@ -1,12 +1,13 @@
 <?php
-// ***
-// TFM Config will be stored here, do not remove
+//Default Configuration
+$CONFIG = '{"lang":"de","error_reporting":false,"show_hidden":false,"hide_Cols":false,"theme":"light"}';
 // ***
 
 require_once(dirname(__FILE__). '/../../nuconfig.php');
 
 global $nuConfigFileMangerUsers;
 
+	
 if (! isset($nuTfmNotAuth)) {
 
 	$sessionId = isset($_COOKIE['nu_TFM']) ? $_COOKIE["nu_TFM"] : '';
@@ -108,7 +109,7 @@ $edit_files = true;
 
 // Default timezone for date() and time()
 // Doc - http://php.net/manual/en/timezones.php
-$default_timezone = 'Etc/UTC'; // UTC
+$default_timezone = isset($_COOKIE['nu_timezone']) ? $_COOKIE["nu_timezone"] : 'Etc/UTC';
 
 // Root path for file manager
 // use absolute path of directory i.e: '/var/www/folder' or $_SERVER['DOCUMENT_ROOT'].'/folder'
