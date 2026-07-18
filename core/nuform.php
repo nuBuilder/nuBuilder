@@ -159,6 +159,10 @@ function nuGetFormObject($formId, $recordId, $numObjects, $defaultTabs = null) {
 		return $response->forms[0];
 	}
 
+	// Ensure that for launch forms, we always treat it as a new record (record_id = '-1') to trigger the Before Edit event.
+    if ($formObject->form_type === 'launch') {
+        $recordId = '-1';
+    }
 	nuGetFormSetBasicProperties($formObject, $formId, $recordId);
 
 	$data = nuGetFormData($formObject, $recordId);
@@ -1549,7 +1553,14 @@ function nuGatherFormAndSessionData($home, $globalAccess) {
 	if ($formId) {
 		$formAndSessionData->form_id = $formId;
 	} else {
-		$formAndSessionData->form_id = $home == '' ? $sessionData['GLOBEADMIN_HOME'] : $home;
+    // Check if this is a launch form and set record_id to -1
+    if ($formAndSessionData->form_id) {
+        $formProperties = nuFormProperties($formAndSessionData->form_id);
+        if ($formProperties && $formProperties->sfo_type === 'launch') {
+            $formAndSessionData->record_id = '-1';
+            // Also set the form_type in nuState for nuBeforeEdit
+            $_POST['nuSTATE']['form_type'] = 'launch';
+        }
 	}
 
 	if (isset($nuState['login_form_id'])) {
