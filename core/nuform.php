@@ -1553,6 +1553,8 @@ function nuGatherFormAndSessionData($home, $globalAccess) {
 	if ($formId) {
 		$formAndSessionData->form_id = $formId;
 	} else {
+		$formAndSessionData->form_id = $home == '' ? $sessionData['GLOBEADMIN_HOME'] : $home;
+	}
     // Check if this is a launch form and set record_id to -1
     if ($formAndSessionData->form_id) {
         $formProperties = nuFormProperties($formAndSessionData->form_id);
