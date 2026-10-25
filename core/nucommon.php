@@ -2651,7 +2651,7 @@ function nuDeleteFiles($file_list = []) {
 }
 
 function nuIsArrayAssociative($arr) {
-	return array_key_exists('0', $arr) ? false : true;
+	return !array_is_list($arr);
 }
 
 function nuDemo($showError = true) {
