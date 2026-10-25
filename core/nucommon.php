@@ -108,49 +108,57 @@ class nuSqlString {
 	public $SQL = '';
 
 	public function __construct($sql) {
+		$sql = nuSQLRemoveComments($sql);
+		$sql = str_replace(chr(13), ' ', $sql);
+		$sql = str_replace(chr(10), ' ', $sql);
+		$sql = rtrim($sql, ';');
 
-		$sql = nuSQLRemoveComments(nuPrepareQuery($sql));
-		$sql = str_replace(chr(13), ' ', $sql);				//-- remove carrige returns
-		$sql = str_replace(chr(10), ' ', $sql);				//-- remove line feeds
-		$sql = rtrim($sql, ';'); 							//-- strip trailing ;
+		// Detect query complexity before parsing
+		if ($this->nuDetectSQLComplexity($sql)) {
+			// If complex query — wrap it
+			$this->originalSQL = $sql;
+			$sql = "SELECT * FROM ($sql) AS wrapped";
+			$this->from = "FROM ($sql) AS wrapped_query";
+			;
+			$this->where = 'WHERE 1';
+			$this->groupBy = "";
+			$this->having = "";
+			$this->orderBy = "";
+		} else {
+			// Standard parsing (now works with wrapped query)
+			$from_string = stristr($sql, ' from ');
+			$where_string = stristr($sql, ' where ');
+			$groupBy_string = stristr($sql, ' group by ');
+			$having_string = stristr($sql, ' having ');
+			$orderBy_string = stristr($sql, ' order by ');
 
-		if (nuMSSQL()) {
-			$sql = str_replace('LOCATE(', 'CHARINDEX(', $sql);
+			$from = str_replace($where_string, '', $from_string);
+			$from = str_replace($groupBy_string, '', $from);
+			$from = str_replace($having_string, '', $from);
+			$from = str_replace($orderBy_string, '', $from);
+
+			$where = str_replace($groupBy_string, '', $where_string);
+			$where = str_replace($having_string, '', $where);
+			$where = str_replace($orderBy_string, '', $where);
+
+			$groupBy = str_replace($having_string, '', $groupBy_string);
+			$groupBy = str_replace($orderBy_string, '', $groupBy);
+
+			$having = str_replace($orderBy_string, '', $having_string);
+
+			$orderBy = $orderBy_string;
+			$this->from = $from;
+
+			$this->where = $where == '' ? 'WHERE 1' : $where;
+			$this->groupBy = $groupBy;
+			$this->having = $having;
+			$this->orderBy = $orderBy;
 		}
 
-		$from_string = stristr($sql, ' from ');
-		$where_string = stristr($sql, ' where ');
-		$groupBy_string = stristr($sql, ' group by ');
-		$having_string = stristr($sql, ' having ');
-		$orderBy_string = stristr($sql, ' order by ');
-
-		$from = str_replace($where_string, '', $from_string);
-		$from = str_replace($groupBy_string, '', $from);
-		$from = str_replace($having_string, '', $from);
-		$from = str_replace($orderBy_string, '', $from);
-
-		$where = str_replace($groupBy_string, '', $where_string);
-		$where = str_replace($having_string, '', $where);
-		$where = str_replace($orderBy_string, '', $where);
-
-		$groupBy = str_replace($having_string, '', $groupBy_string);
-		$groupBy = str_replace($orderBy_string, '', $groupBy);
-
-		$having = str_replace($orderBy_string, '', $having_string);
-
-		$orderBy = $orderBy_string;
-		$this->from = $from;
-		$this->where = $where == '' ? 'WHERE (1=1) ' : $where;
-		$this->groupBy = $groupBy;
-		$this->having = $having;
-		$this->orderBy = $orderBy;
-
-		if ($from == '') {
-
+		if ($this->from == '') {
 			$this->from = 'FROM zzzzsys_setup';
 			$this->where = 'WHERE 0';
 			$this->addField('*');
-
 		}
 
 		$this->Dfrom = $this->from;
@@ -160,7 +168,33 @@ class nuSqlString {
 		$this->DorderBy = $this->orderBy;
 
 		$this->buildSQL();
+	}
 
+	private function nuDetectSQLComplexity($sql) {
+		$upper = strtoupper($sql);
+
+		// Presence of UNION
+		if (stripos($upper, ' UNION ') !== false) {
+			return true;
+		}
+
+		// Multiple SELECT statements (nested queries)
+		if (substr_count($upper, 'SELECT') > 1) {
+			return true;
+		}
+
+		// Field aliases between SELECT and FROM
+		// Looks for pattern: "AS name" or space + name
+		if (preg_match('/SELECT\s+.*\s+AS\s+\w+/i', $sql)) {
+			return true;
+		}
+
+		// Subqueries in FROM clause: FROM (...SELECT...)
+		if (preg_match('/FROM\s*\(/i', $sql)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public function restoreDefault($pString) {
