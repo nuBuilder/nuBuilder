@@ -1074,16 +1074,15 @@ function nuAddFormatting($v, $f) {
 	if ($v == '' || $f == '') {
 		return $v;
 	}
-	$m = $v < 0 ? '-' : '';
 
-	if ($f[0] == 'N') {												//-- number  '456.789','N|€ 1,000.00'
-		$CF = nuGetNumberFormat(substr($f, 2));						//-- CF[0]=sign, CF[1]=separator, CF[2]=decimal, CF[3]=places
-
+	if ($f[0] == 'N') {									    		//-- number  '456.789','N|€ 1,000.00'
+		$CF = nuGetNumberFormat(substr($f, 2));			    		//-- CF[0]=sign, CF[1]=separator, CF[2]=decimal, CF[3]=places
+		if ($CF === null) {
+			return $v;
+		}
 		$nf = number_format($v, intval($CF[3]), $CF[2], $CF[1]);
-		$nm = str_replace('-', '', $nf);
 
-		return $m . $CF[0] . ' ' . $nm;
-
+		return ($CF[0] != '' ? $CF[0] . ' ' : '') . $nf;
 	}
 
 	if ($f[0] == 'D') {	//-- date
@@ -1129,16 +1128,20 @@ function nuAddFormatting($v, $f) {
 }
 
 function nuGetNumberFormat($f) {
+	static $cache = null;
 
-	$s = "SELECT srm_format, srm_currency FROM zzzzsys_format";
-	$t = nuRunQuery($s);
+	if ($cache === null) {
+		$cache = array();
+		$s = "SELECT srm_format, srm_currency FROM zzzzsys_format";
+		$t = nuRunQuery($s);
+		$rows = db_fetch_all_array($t);
 
-	while ($r = db_fetch_object($t)) {
-		if ($r->srm_format === $f) {
-			return nuJsonDecode($r->srm_currency);
+		foreach ($rows as $r) {
+			$cache[$r['srm_format']] = nuJsonDecode($r['srm_currency']);
 		}
 	}
 
+	return isset($cache[$f]) ? $cache[$f] : null;
 }
 
 function nuAddThousandSpaces($s, $c) {
