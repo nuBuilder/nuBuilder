@@ -4,7 +4,7 @@ function nuLoadReport(b) {
 
 	window.addEventListener("keydown", function (e) {
 
-		if (['ArrowUp', 'ArrowDown'].indexOf(e.key) > -1) {
+		if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(e.key) > -1) {
 			e.preventDefault();
 		}
 

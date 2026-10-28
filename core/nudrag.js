@@ -173,10 +173,11 @@ function nuCreateDrag() {
 
 	this.canMove = function (event) {
 
+		if (this.isReport) { return true; }   // free movement in the report designer
+
 		if (this.left + (this.moveX - this.lastMoveX) + this.areaLeft() < this.areaLeft()) { return false; }
 		if (this.right + (this.moveX - this.lastMoveX) > this.areaWidth()) { return false; }
 		if (this.top + (this.moveY - this.lastMoveY) + this.areaTop() < this.areaTop()) { return false; }
-		if (this.isReport) { return true; }
 		if (this.bottom + (this.moveY - this.lastMoveY) > this.areaHeight()) { return false; }
 
 		return true;
